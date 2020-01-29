@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0300CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7C7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6E92070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2F220CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tVUcSHXY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DnNqfCFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgA2PhC (ORCPT
+        id S1726909AbgA2Pg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:37:02 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60604 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726833AbgA2Pg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 10:36:57 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TFQoiR017203;
-        Wed, 29 Jan 2020 16:36:36 +0100
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29562 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726750AbgA2Pgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 10:36:53 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TFNBY9019444;
+        Wed, 29 Jan 2020 16:36:38 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=ModWfcPVL11pDbldKiIfu4cEgpiFqYjfGN2Wl6uy2ZA=;
- b=tVUcSHXY/C4gpsuiANoE6knkOnKdN86BPDgQqo98oanEVfrD3ZRrCTqVYtdzMYNwBL1V
- 0Wc44xbsBqj3xJM4RFa1usVs9nvwODfyVIyRldD75DTE6CKNKvzj4lb3P50Rb4WMQcIT
- MI/YOiqb6lUTSreq13EvcL0bp2tElA28rDthqcpvsmGNJiLZbF2j4MWEOV2K/O2NzVpA
- I5oVurCnv6P19g71cYbb5yQEupBNten0xZAUT9bAiBFgM6kqJATZesY9bH9914xV6AW/
- hCG5ABanpk3x1YaEmU8gwp0dor9rJhIxGjZFhFiqMLYR7K6XDaGttj89VUOxhJxPzAzF CQ== 
+ bh=wgw0wJHxD0KqntR0Tj8TO+wUsOBJhHj4e4NzjycWHY0=;
+ b=DnNqfCFPPQOr0IV5DnGJH2VN3Olbe6oSMkOAWI+gSpdh1nP60QH26H7a8sFhzOptAXOU
+ j7GOsZE7S6GdLcpwcY/9TOi+EZGkGnKY6EfwUBJpyTXDW+sovjABpkKBrXHGoICXj+yw
+ U9vJ1fnl/qVKTsXLsVh0G/3HSE2iFYbfwqDKzmlxEfR1RQCV42t1fi1fBmu9wHHzKmgT
+ HvXuXa23hPeO2LOZ6YTHq9fkjFnV1Jh6GBFew5yAj4GjqXtNvGejnGMHiwd14Txk7JYL
+ rXzHcjXe5Ojv2yc7A4+uvz1q1fwq72vzHWR5BsQrUsgA77QAhxq2a8nxoacqAecW9DPT GA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekkvu2-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrcay3vb6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 16:36:36 +0100
+        Wed, 29 Jan 2020 16:36:38 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA6ED100039;
-        Wed, 29 Jan 2020 16:36:35 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A580A10002A;
+        Wed, 29 Jan 2020 16:36:37 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE05B2BC7C2;
-        Wed, 29 Jan 2020 16:36:35 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 986FD2BC7C2;
+        Wed, 29 Jan 2020 16:36:37 +0100 (CET)
 Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 16:36:35
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 16:36:37
  +0100
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Vinod Koul <vkoul@kernel.org>,
@@ -59,16 +59,16 @@ CC:     <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@st.com>,
         Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH 2/8] dmaengine: stm32-dma: use reset controller only at probe time
-Date:   Wed, 29 Jan 2020 16:36:22 +0100
-Message-ID: <20200129153628.29329-3-amelie.delaunay@st.com>
+Subject: [PATCH 5/8] dmaengine: stm32-dma: use dma_set_max_seg_size to set the sg limit
+Date:   Wed, 29 Jan 2020 16:36:25 +0100
+Message-ID: <20200129153628.29329-6-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200129153628.29329-1-amelie.delaunay@st.com>
 References: <20200129153628.29329-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
@@ -77,53 +77,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+This patch adds dma_set_max_seg_size to define sg dma constraint.
+This constraint may be taken into account by client to scatter/gather
+its buffer.
 
-Remove reset controller reference from device instance since it is
-used only at probe time.
-
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- drivers/dma/stm32-dma.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/dma/stm32-dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 136deabd1aa3..e31414796ec4 100644
+index 25f7281932bd..b7e18cfcd439 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
-@@ -207,7 +207,6 @@ struct stm32_dma_device {
- 	struct dma_device ddev;
- 	void __iomem *base;
- 	struct clk *clk;
--	struct reset_control *rst;
- 	bool mem2mem;
- 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
- };
-@@ -1275,6 +1274,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	struct dma_device *dd;
- 	const struct of_device_id *match;
- 	struct resource *res;
-+	struct reset_control *rst;
- 	int i, ret;
- 
- 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
-@@ -1309,11 +1309,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
- 						"st,mem2mem");
- 
--	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
--	if (!IS_ERR(dmadev->rst)) {
--		reset_control_assert(dmadev->rst);
-+	rst = devm_reset_control_get(&pdev->dev, NULL);
-+	if (!IS_ERR(rst)) {
-+		reset_control_assert(rst);
- 		udelay(2);
--		reset_control_deassert(dmadev->rst);
-+		reset_control_deassert(rst);
+@@ -1323,6 +1323,8 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 		reset_control_deassert(rst);
  	}
  
++	dma_set_max_seg_size(&pdev->dev, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
++
  	dma_cap_set(DMA_SLAVE, dd->cap_mask);
+ 	dma_cap_set(DMA_PRIVATE, dd->cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
 -- 
 2.17.1
 
