@@ -2,98 +2,141 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE04C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C10C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A5320702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580322452;
-	bh=f12VNTnwamNTzYxxDrW7lJ2Jh5Ydcry5UuYmbV4B71s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CH8CSxPj/pAwSSSXoTH1zJd7pU1hJggwGihEvGm0KEqbi3EZkQGZ2mX9GBaH8UGmM
-	 3JsrQ/pGUFDf9feVUVqaH6noE1G+MD4M1DJViVFvHhYI0Mt/wd4xn4RFq/eOkCk7e3
-	 b4AmQEdYKp1jjSnjdXXMn3AZRdyHGyj0oJYvzlF0=
+	by mail.kernel.org (Postfix) with ESMTP id ABFEB20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="cnQ8lM9G";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="pORAGBls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbgA2S1b (ORCPT
+        id S1727490AbgA2S3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:27:31 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41248 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgA2S1b (ORCPT
+        Wed, 29 Jan 2020 13:29:25 -0500
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:64665 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgA2S3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:27:31 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so782095eds.8;
-        Wed, 29 Jan 2020 10:27:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YgwXL5RlE8u/644YX8TClNL9wlJ237mv6DTllirKfdw=;
-        b=ZSeHE0YXCw2cYqDN34HdokoPVq6JQufYPq4GvE1aZ9UwHIj1YDyWwykL5oXApUx2Bs
-         +fmus+Df0Y94WHPASPCo8I6/MR1WCDxekuhONa3B54mpL0UyvZIA9mTEPBr+E6QPzMPd
-         vOjRkaO69Zt9QruiOY4aPTHpZOcKPcElrukSlF/YPcmde6R27ILyeeCnpFhliqkb+/0K
-         l/UKmMqVZbusdutmnzOR7ZqEiSESL5kL8YUnHfUe1XMORv5jpWoz15Ltl6/Zww5hYYda
-         jU8suIWWhsgXMFZ1gCjtE0Tu+eFEzt1v3nQ9yztC+vZ2aOuOU1miavbe+tVLwnkjpoN6
-         5TIQ==
-X-Gm-Message-State: APjAAAX9325W5HpyPuxhWc5zSTgXHy9GbhehE4/nck7NApwgZYpTztQM
-        1qr/E68Uyt8y4GNpTHGKLUQ=
-X-Google-Smtp-Source: APXvYqzNl3/Wu+e5/GgHKeNIpy9A4hBqgGhZDdTgGHrw4RyxsH3VoEDMXQeX6RrJv2L7+SmRAbEiUg==
-X-Received: by 2002:a05:6402:2211:: with SMTP id cq17mr275330edb.94.1580322448751;
-        Wed, 29 Jan 2020 10:27:28 -0800 (PST)
-Received: from kozik-lap ([194.230.155.229])
-        by smtp.googlemail.com with ESMTPSA id s16sm317790edy.51.2020.01.29.10.27.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 10:27:28 -0800 (PST)
-Date:   Wed, 29 Jan 2020 19:27:25 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [GIT PULL] USB/Thunderbolt/PHY patches for 5.6-rc1
-Message-ID: <20200129182725.GA13441@kozik-lap>
-References: <20200129101401.GA3858221@kroah.com>
- <CAHk-=wgwBfz0CtAFZMDy=A_Wz0+=dzrfWWiHESUD9CxnV=Xyjw@mail.gmail.com>
- <20200129182027.GA13142@kozik-lap>
- <CAHk-=wg67HWkPawJRFffOS25CL0tjzF7tbk-mJot9oT8siqPfg@mail.gmail.com>
+        Wed, 29 Jan 2020 13:29:25 -0500
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 61EDB9848E;
+        Wed, 29 Jan 2020 13:29:20 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=YxxwQE+PtbwtcZ+NqxkckFVWffE=; b=cnQ8lM
+        9G3KTywMmY8D9CKRbfZJMGIIua6NuyuVegI4Xo4h4Qc0X1h8tV1yEcm/30GdYdsX
+        ayKAfRqAo4ixrU8LuNCR1VKQ6UR0+/yy1qK/fe5lswT8iEUlJSaD8ximRasBS8+r
+        CT6VyNismy0OaWxNiEolbRjy8NaeEOPIBqp68=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 5B35E9848D;
+        Wed, 29 Jan 2020 13:29:20 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=NdIYJBAwqC4KSuECezBIT82kVNCH/WoHKxRtrK6IxoQ=; b=pORAGBlsTZzDG0Tj0Sxthu+kGt1vR1jyU34spcH3FkXhX1n/PGyqYH9tZNoYJ4HcFaiIXgK94sr6zgr9M8DtnFssoxQ5axF9dZ7YL7ORah2PBMjNfNrjgW21l52U1IK/uo+5gZ4+9jQBh2+8iMVKDbar//JtDF6Tz0ud1p/V4IE=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 4B16D9848A;
+        Wed, 29 Jan 2020 13:29:17 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 5C44C2DA013B;
+        Wed, 29 Jan 2020 13:29:15 -0500 (EST)
+Date:   Wed, 29 Jan 2020 13:29:15 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Quentin Perret <qperret@google.com>
+cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, maennich@google.com,
+        kernel-team@android.com, jeyu@kernel.org
+Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+In-Reply-To: <20200129181541.105335-1-qperret@google.com>
+Message-ID: <nycvar.YSQ.7.76.2001291327540.1655@knanqh.ubzr>
+References: <20200129181541.105335-1-qperret@google.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg67HWkPawJRFffOS25CL0tjzF7tbk-mJot9oT8siqPfg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 421A8A84-42C5-11EA-ACFE-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 10:23:54AM -0800, Linus Torvalds wrote:
-> On Wed, Jan 29, 2020 at 10:20 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > The I2C fix for this is in Wolfram's tree already:
-> 
-> It was never an i2c error.
-> 
-> It was an error in that commit that made a change that introduced a new warning.
-> 
-> It is *not* acceptable to break things and say "somebody else will fix
-> it up later".
-> 
-> If it's broken in the PHY tree, then the PHY tree is broken. It's that simple.
-> 
-> We don't enable compile testing that causes warnings.
+On Wed, 29 Jan 2020, Quentin Perret wrote:
 
-I never said it was an I2C error but only that the fix is there already.
-The error in first place was mine because I did not spot the
-bisectability problem when preparing the entire set of
-compile-testing patches.
+> CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
+> from ksymtab. This works really well when using in-tree drivers, but
+> cannot be used in its current form if some of them are out-of-tree.
+> 
+> Indeed, even if the list of symbols required by out-of-tree drivers is
+> known at compile time, the only solution today to guarantee these don't
+> get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
+> space, but also makes it difficult to control the ABI usable by vendor
+> modules in distribution kernels such as Android. Being able to control
+> the kernel ABI surface is particularly useful to ship a unique Generic
+> Kernel Image (GKI) for all vendors.
+> 
+> As such, attempt to improve the situation by enabling users to specify a
+> symbol 'whitelist' at compile time. Any symbol specified in this
+> whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
+> even if it has no in-tree user. The whitelist is defined as a simple
+> text file, listing symbols, one per line.
+> 
+> Signed-off-by: Quentin Perret <qperret@google.com>
 
-Best regards,
-Krzysztof
+Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
 
+
+> ---
+> v2: make sure to quote the whitelist path properly (Nicolas)
+> ---
+>  init/Kconfig                | 12 ++++++++++++
+>  scripts/adjust_autoksyms.sh |  1 +
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a34064a031a5..d9c977ef7de5 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
+>  
+>  	  If unsure, or if you need to build out-of-tree modules, say N.
+>  
+> +config UNUSED_KSYMS_WHITELIST
+> +	string "Whitelist of symbols to keep in ksymtab"
+> +	depends on TRIM_UNUSED_KSYMS
+> +	help
+> +	  By default, all unused exported symbols will be trimmed from the
+> +	  build when TRIM_UNUSED_KSYMS is selected.
+> +
+> +	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
+> +	  exported at all times, even in absence of in-tree users. The value to
+> +	  set here is the path to a text file containing the list of symbols,
+> +	  one per line.
+> +
+>  endif # MODULES
+>  
+>  config MODULES_TREE_LOOKUP
+> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+> index a904bf1f5e67..8e1b7f70e800 100755
+> --- a/scripts/adjust_autoksyms.sh
+> +++ b/scripts/adjust_autoksyms.sh
+> @@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
+>  EOT
+>  sed 's/ko$/mod/' modules.order |
+>  xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+> +cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+>  sort -u |
+>  sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+>  
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
+> 
