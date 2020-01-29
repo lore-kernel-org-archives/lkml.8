@@ -2,215 +2,135 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC93C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C09AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7646620716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84D120716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="j/GZoeZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgA2HZa (ORCPT
+        id S1726216AbgA2H0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 02:25:30 -0500
-Received: from mga07.intel.com ([134.134.136.100]:7883 "EHLO mga07.intel.com"
+        Wed, 29 Jan 2020 02:26:43 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:22127 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgA2HZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 02:25:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 23:25:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,376,1574150400"; 
-   d="scan'208";a="232324595"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 28 Jan 2020 23:25:01 -0800
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     broonie@kernel.org, vigneshr@ti.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v8 1/2] dt-bindings: spi: Add schema for Cadence QSPI Controller driver
-Date:   Wed, 29 Jan 2020 15:24:54 +0800
-Message-Id: <20200129072455.35807-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200129072455.35807-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200129072455.35807-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        id S1726091AbgA2H0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 02:26:42 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 486w5q6898z9txVs;
+        Wed, 29 Jan 2020 08:26:39 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=j/GZoeZ7; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id fPfSf9D4r1FM; Wed, 29 Jan 2020 08:26:39 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 486w5q51hdz9txVr;
+        Wed, 29 Jan 2020 08:26:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580282799; bh=5Fxvw/jc8y//pgWf3Spr5zDn1R4mwLPSzwzdVvG6uYE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j/GZoeZ7wNtfHmMjeTo0R1mIA/Jal8yTZuk8S1UKYG452qCeEkzIOsUiHWQUbSUyA
+         xN2AF+i5Dd7yrwJNyYNINzj08Cqz55AfcregSWbEZxjqj7g9/tN/qj4szTYq+Jf9oz
+         itEzCxCoNxR03K2bPrvRD7TAnf0KTL/yWQEVRw14=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 913908B7FE;
+        Wed, 29 Jan 2020 08:26:40 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FlKTzVgQvj4i; Wed, 29 Jan 2020 08:26:40 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 88FFC8B768;
+        Wed, 29 Jan 2020 08:26:39 +0100 (CET)
+Subject: Re: [RFC PATCH v4 10/11] lib: vdso: Allow arches to override the ns
+ shift operation
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+References: <cover.1579196675.git.christophe.leroy@c-s.fr>
+ <c8ce9baaef0dc7273e4bcc31f353b17b655113d1.1579196675.git.christophe.leroy@c-s.fr>
+ <CALCETrWJcB9=MuSw5yx6arcb_np=E=awTyLRSi=r8BJySf_aXw@mail.gmail.com>
+ <877e1rfa40.fsf@nanos.tec.linutronix.de>
+ <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
+ <87mua64tv0.fsf@nanos.tec.linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1329105a-aa6b-bd40-3a62-5c7e130d2a7b@c-s.fr>
+Date:   Wed, 29 Jan 2020 08:26:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <87mua64tv0.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Add dt-bindings documentation for Cadence-QSPI controller to support
-spi based flash memories.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 147 +++++++++++++++++++++
- 1 file changed, 147 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+Le 29/01/2020 à 08:14, Thomas Gleixner a écrit :
+> Andy Lutomirski <luto@kernel.org> writes:
+> 
+>> On Thu, Jan 16, 2020 at 11:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>>
+>>> Andy Lutomirski <luto@kernel.org> writes:
+>>>> On Thu, Jan 16, 2020 at 9:58 AM Christophe Leroy
+>>>>
+>>>> Would mul_u64_u64_shr() be a good alternative?  Could we adjust it to
+>>>> assume the shift is less than 32?  That function exists to benefit
+>>>> 32-bit arches.
+>>>
+>>> We'd want mul_u64_u32_shr() for this. The rules for mult and shift are:
+>>>
+>>
+>> That's what I meant to type...
+> 
+> Just that it does not work. The math is:
+> 
+>       ns = d->nsecs;   // That's the nsec value shifted left by d->shift
+> 
+>       ns += ((cur - d->last) & d->mask) * mult;
+> 
+>       ns >>= d->shift;
+> 
+> So we cannot use mul_u64_u32_shr() because we need the addition there
+> before shifting. And no, we can't drop the fractional part of
+> d->nsecs. Been there, done that, got sporadic time going backwards
+> problems as a reward. Need to look at that again as stuff has changed
+> over time.
+> 
+> On x86 we enforce that mask is 64bit, so the & operation is not there,
+> but due to the nasties of TSC we have that conditional
+> 
+>      if (cur > last)
+>         return (cur - last) * mult;
+>      return 0;
+> 
+> Christophe, on PPC the decrementer/RTC clocksource masks are 64bit as
+> well, so you can spare that & operation there too.
+> 
 
-diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-new file mode 100644
-index 000000000000..1a4d6e8d0d0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-@@ -0,0 +1,147 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Cadence QSPI Flash Controller support
-+
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+description: |
-+  Binding Documentation for Cadence QSPI controller,This controller is
-+  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-+  has been tested On Intel's LGM SoC.
-+
-+  - compatible : should be one of the following:
-+        Generic default - "cdns,qspi-nor".
-+        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
-+        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
-+        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+           - ti,k2g-qspi
-+        - const: cdns,qspi-nor
-+
-+      - items:
-+        - enum:
-+           - ti,am654-ospi
-+        - const: cdns,qspi-nor
-+
-+      - items:
-+        - enum:
-+           - intel,lgm-qspi
-+        - const: cdns,qspi-nor
-+
-+      - items:
-+        - const: cdns,qspi-nor
-+
-+  reg:
-+    maxItems: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  cdns,fifo-depth:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Size of the data FIFO in words.
-+
-+  cdns,fifo-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Bus width of the data FIFO in bytes.
-+
-+  cdns,trigger-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      32-bit indirect AHB trigger address.
-+
-+  cdns,rclk-en:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Flag to indicate that QSPI return clock is used to latch the read data
-+      rather than the QSPI clock. Make sure that QSPI return clock is populated
-+      on the board before using this property.
-+
-+# subnode's properties
-+patternProperties:
-+  "^.*@[0-9a-fA-F]+$":
-+    type: object
-+    description:
-+      flash device uses the subnodes below defined properties.
-+
-+  cdns,read-delay:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Delay for read capture logic, in clock cycles.
-+
-+  cdns,tshsl-ns:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Delay in nanoseconds for the length that the master mode chip select
-+      outputs are de-asserted between transactions.
-+
-+  cdns,tsd2d-ns:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Delay in nanoseconds between one chip select being de-activated
-+      and the activation of another.
-+
-+  cdns,tchsh-ns:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Delay in nanoseconds between last bit of current transaction and
-+      deasserting the device chip select (qspi_n_ss_out).
-+
-+  cdns,tslch-ns:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Delay in nanoseconds between setting qspi_n_ss_out low and
-+      first bit transfer.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - cdns,fifo-depth
-+  - cdns,fifo-width
-+  - cdns,trigger-address
-+
-+examples:
-+  - |
-+    qspi: spi@ff705000 {
-+          compatible = "cdns,qspi-nor";
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          reg = <0xff705000 0x1000>,
-+                <0xffa00000 0x1000>;
-+          interrupts = <0 151 4>;
-+          clocks = <&qspi_clk>;
-+          cdns,fifo-depth = <128>;
-+          cdns,fifo-width = <4>;
-+          cdns,trigger-address = <0x00000000>;
-+
-+          flash0: n25q00@0 {
-+              compatible = "jedec,spi-nor";
-+              reg = <0x0>;
-+              cdns,read-delay = <4>;
-+              cdns,tshsl-ns = <50>;
-+              cdns,tsd2d-ns = <50>;
-+              cdns,tchsh-ns = <4>;
-+              cdns,tslch-ns = <4>;
-+          };
-+    };
-+
--- 
-2.11.0
+Yes, I did it already. It spares reading d->mast, that the main advantage.
 
+Christophe
