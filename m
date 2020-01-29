@@ -2,102 +2,102 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809B9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C919CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F4D2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pt8QwOzB"
+	by mail.kernel.org (Postfix) with ESMTP id A95DC205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgA2BGy (ORCPT
+        id S1726833AbgA2BIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 20:06:54 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41098 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgA2BGy (ORCPT
+        Tue, 28 Jan 2020 20:08:34 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43818 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbgA2BIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 20:06:54 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so12364972oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 17:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uf7ZtdoPuDYnW6BY3uedFbO/qLdqSJUxxoOzopLMW9M=;
-        b=Pt8QwOzBXjW66PxCSTX99DDGcRWg6jtxSkrcuZ+wgWsoXokzro3CWrc+Wx3z7/MkoJ
-         gHEQKS2HN2F0y1Isx6JzDfLU7YEiassIw5tUFpRk5JWtu8WI8RmVpdHdSDyA7YrQmZLm
-         Tk7sZqODy75bpBGJbuTNN3kAI2it4EGM+1nQCPyikfol0yEN01JeMSPyCLYe7EzOZrM0
-         CRY1t9kNDplrz753e5ji24lpFO3Wp9YhdR2SdV2X0Ok/9OQ8dxb23jeo6s0o3OWXJQUt
-         JRs//7lc5+4leRNtm20P2zXmoqgXHntEraBuQym7IWr9/SK19ZOlqqcLpJ8PI7w0TTa0
-         kg5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uf7ZtdoPuDYnW6BY3uedFbO/qLdqSJUxxoOzopLMW9M=;
-        b=cMvOOA2HMBil0FGOgFeJQJpbElyQqlTgRK+Zhgj33SojNdqqYlNcvdWlAjmC3He8pe
-         8CSW+QiipaDhXY/YVMSbIdtcbwid5eGMIGRLov+FjH66IUQpvNX1AU4i0utZhKy356K1
-         iOm3ANiLLfXbm0c3tuzJt/IXGBT7aODZTZt/jLob2lfNtcE8QZzI61J/fKCEneaLooId
-         jSWN3RsiZOfBZ5hhC421rxkQFpQ1JvAQZN74x0dV6he/y0VtvzaL9fHU337JTg4EEwha
-         4qx3kATWbbUBjrqqMMReQcp1+H/uanoS07IOn1hxv/Zv1eDvWzGgdMxcpyeM5lIUMPEL
-         VAYA==
-X-Gm-Message-State: APjAAAXNuyNiKA8+rLxuUIXwBRVB1WgM3mJRwrqTD4gWMGJ72CJ/0xmZ
-        8sGWtgWkgkIFIXLDJIMpCI6eRRNXixYVGgT8E4XB3Q==
-X-Google-Smtp-Source: APXvYqxBiTzP51y2MtQD9sHQn3uWViwsP4arDIb8LMfzcBjsxOFfG7RGcAyoDI9mJDTfzfaT1GfOt1mul0igU61QQDs=
-X-Received: by 2002:aca:6542:: with SMTP id j2mr4877351oiw.69.1580260012836;
- Tue, 28 Jan 2020 17:06:52 -0800 (PST)
+        Tue, 28 Jan 2020 20:08:34 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id EE9ED3A2496;
+        Wed, 29 Jan 2020 12:08:30 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iwbqH-0005zH-9B; Wed, 29 Jan 2020 12:08:29 +1100
+Date:   Wed, 29 Jan 2020 12:08:29 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] fuse: Convert from readpages to readahead
+Message-ID: <20200129010829.GK18610@dread.disaster.area>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-12-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200129002222.213154-1-shakeelb@google.com> <20200129005922.GA74965@romley-ivt3.sc.intel.com>
-In-Reply-To: <20200129005922.GA74965@romley-ivt3.sc.intel.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 28 Jan 2020 17:06:41 -0800
-Message-ID: <CALvZod7RnRBcNdEdAwOo=rnCO9E7Ap8j=sDDsK0dHVkh9uq+Dw@mail.gmail.com>
-Subject: Re: [PATCH] x86/resctrl: fix redundant task movement
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Stephane Eranian <eranian@google.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125013553.24899-12-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=XQoKVZl3_x8TtcCbSDwA:9
+        a=dkzf7bQtNeN5L-sv:21 a=BzqqMxnNl6DEKTpg:21 a=CjuIK1q_8ugA:10
+        a=WSd5SQCJy8UA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 4:49 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
->
-> On Tue, Jan 28, 2020 at 04:22:22PM -0800, Shakeel Butt wrote:
-> > Currently a task can be moved to a rdtgroup multiple times or between
-> > resource or monitoring groups. This can cause multiple task works are
-> > added, waste memory and degrade performance.
-> >
-> > To fix the issue, only move the task to a rdtgroup when the task
-> > is not in the rdgroup. Don't try to move the task to the rdtgroup
-> > again when the task is already in the rdtgroup.
->
-> Hi, Shakeel,
->
-> Acutally we are working on replacing the callback by a synchronous way
-> to update closid and rmid when moving a task to a resource group. The
-> reason is the task may use old (even invalid) closid and rmid before
-> they are updated.
->
-> With the new way to update closid and rmid, the issues related to
-> the callbacks will be fixed as well.
->
-> We will release the new patches soon.
->
-> Thanks.
+On Fri, Jan 24, 2020 at 05:35:52PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Use the new readahead operation in fuse.  Switching away from the
+> read_cache_pages() helper gets rid of an implicit call to put_page(),
+> so we can get rid of the get_page() call in fuse_readpages_fill().
+> We can also get rid of the call to fuse_wait_on_page_writeback() as
+> this page is newly allocated and so cannot be under writeback.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+.....
+> @@ -968,19 +962,24 @@ static int fuse_readpages(struct file *file, struct address_space *mapping,
+>  	data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
+>  ;
+>  	data.ia = fuse_io_alloc(NULL, data.max_pages);
+> -	err = -ENOMEM;
+>  	if (!data.ia)
+>  		goto out;
+>  
+> -	err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
+> -	if (!err) {
+> -		if (data.ia->ap.num_pages)
+> -			fuse_send_readpages(data.ia, file);
+> -		else
+> -			fuse_io_free(data.ia);
+> +	while (nr_pages--) {
+> +		struct page *page = readahead_page(mapping, start++);
+> +		int err = fuse_readpages_fill(&data, page);
+> +
+> +		if (!err)
+> +			continue;
+> +		nr_pages++;
+> +		goto out;
+>  	}
 
-Sounds good to me. I didn't get any response on the previous email
-therefore I code this up.
+That's some pretty convoluted logic. Perhaps:
 
-Shakeel
+	for (; nr_pages > 0 ; nr_pages--) {
+		struct page *page = readahead_page(mapping, start++);
+
+		if (fuse_readpages_fill(&data, page))
+			goto out;
+	}
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
