@@ -2,391 +2,425 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45722C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB748C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052F320708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/u9azcT"
+	by mail.kernel.org (Postfix) with ESMTP id 87F1B20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgA2Idj (ORCPT
+        id S1726261AbgA2Ih2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:33:39 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35074 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgA2Idi (ORCPT
+        Wed, 29 Jan 2020 03:37:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54620 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgA2Ih2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:33:38 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so13378897ljb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 00:33:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
-        b=R/u9azcTl+DGupC8/CjwKz3v5x01jxH6uTAtggx+wjukx1boRoZhdgDiN35HjCVB3k
-         yKR1MWYHP5I352RVe9+L8IiOcW7EirEyAj5i8R+bOcqWc5lbrgzqzwPSp5ocxO+067m4
-         ktsLi5JH0H7DivSWNoDP++bOHD3Fyk+GRVOTzgoQXYNUW0yIJFp0svAo/JmO6bFGMAo6
-         inYZJjtEUV5dozDWl0wfm8EhDX4rEd2yrwyU1o0KiCp97SVpIFKTc/yeLBGoHR/i3opX
-         VvqIKSCf/cFbMxB1L1NtkSmrr2gMEvC8x3Qqh8l+V4IWVK2ZJZSijGoM+yRZp00Cb9FL
-         OySw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
-        b=Mg+km+gmAY7R0BHoVzlQ8JzGibsoO2DBBb1JPjrsrdfSRHYFDsUzoT3Q2GI6Y/2xMl
-         1NtwbTlLqDjzJmtrHFA11aWlpNC7StQwg8l5QArYCKdsUiqHa3JWE+dvKjgOnRxA/G8O
-         9Uz+r4/AdRKlVO4tsr+j04CGBKmB0x4uekZPDpdWQaM2/tkYIPGstGOHl//IR3uahvDb
-         uP5SyHWwYwjBTF30woz1Uzv7uCQ3TYRmCCeJ+U8cdgErfiv/HxjS1dMGgSyN7KAdDVZS
-         5/mtGoi2Sa+QOKnxcrHe24Zum2P8/R4/dgYTdYoHqRWGONPgfXWjNSdaGFLnqBOHdxIK
-         jWgA==
-X-Gm-Message-State: APjAAAXJiWcFrT1wtKL0rQNySq2A5WQp8pn6l3bjMJTq5LHYhIccMWrb
-        52uo9znMVB0TJJWiRgOEdxM6Mrixlse0nceeeodEXQ==
-X-Google-Smtp-Source: APXvYqzkKtapc1PfWAsmDSzwPAtKNZyY44hIqed2cgRqMIp40xGMdpTevktjiH8FbZPtB7g+4X0SX/4edadlgM6fWEA=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr16351913ljc.39.1580286815112;
- Wed, 29 Jan 2020 00:33:35 -0800 (PST)
+        Wed, 29 Jan 2020 03:37:28 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C36AF291A32
+Subject: Re: [PATCH v8 1/4] platform: chrome: Add cros-usbpd-notify driver
+To:     Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@google.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, sre@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+References: <20200124231834.63628-1-pmalani@chromium.org>
+ <adcf2a99-d6d8-cd4e-e22d-9ce539d87b7f@collabora.com>
+ <20200127184439.GA150048@google.com>
+ <CACeCKafdroLXf62aHeP8CZPuiR02EEmKAGmhHczzoSyX0bFv5g@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <dc1fec43-1bb0-53de-af17-a91fea42a3f5@collabora.com>
+Date:   Wed, 29 Jan 2020 09:37:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Jan 2020 09:33:24 +0100
-Message-ID: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
-Subject: [GIT PULL] Pin control bulk changes for the v5.6 kernel cycle
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACeCKafdroLXf62aHeP8CZPuiR02EEmKAGmhHczzoSyX0bFv5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-here is the bulk of pin control changes for v5.6, nothing too
-exciting about this.
 
-Some changes hit arch/sh and arch/arm but are well isolated
-and acknowledged by the respective arch maintainers.
+On 29/1/20 2:11, Prashant Malani wrote:
+> On Mon, Jan 27, 2020 at 10:44 AM Benson Leung <bleung@google.com> wrote:
+>>
+>> On Mon, Jan 27, 2020 at 03:58:42PM +0100, Enric Balletbo i Serra wrote:
+>>> Hi Prashant,
+>>>
+>>> On 25/1/20 0:18, Prashant Malani wrote:
+>>>> From: Jon Flatley <jflat@chromium.org>
+>>>>
+>>>> ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
+>>>> related events. The existing cros-usbpd-charger driver relies on these
+>>>> events without ever actually receiving them on ACPI platforms. This is
+>>>> because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
+>>>> ACPI driver that offers firmware updates to USB-C chargers.
+>>>>
+>>>> Introduce a new platform driver under cros-ec, the ChromeOS embedded
+>>>> controller, that handles these PD events and dispatches them
+>>>> appropriately over a notifier chain to all drivers that use them.
+>>>>
+>>>> On platforms that don't have the ACPI device defined, the driver gets
+>>>> instantiated for ECs which support the EC_FEATURE_USB_PD feature bit,
+>>>> and the notification events will get delivered using the MKBP event
+>>>> handling mechanism.
+>>>>
+>>>> Co-Developed-by: Prashant Malani <pmalani@chromium.org>
+>>>> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+>>>> Reviewed-by: Benson Leung <bleung@chromium.org>
+>>>> Signed-off-by: Jon Flatley <jflat@chromium.org>
+>>>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>>>> ---
+>>>>
+>>>
+>>> Just a nit below but for my own reference:
+>>>
+>>> Acked-for-chrome-platform: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>
+>>> I am not sure if we're on time to get this merged on this merge window, though.
+>>
+>> I'm OK with creating a branch for this series and merging it into
+>> chrome-platform-5.7 once Linus releases v5.6-rc1 late next week.
+> Thanks; I'm guessing one of the maintainers will perform the creation
+> of chrome-platform-5.7 and merge this patch into that branch.
+> Also, kindly pick https://lkml.org/lkml/2020/1/24/2068 , i.e patch 4/4
+> of this series (I think an earlier version of this patch, i.e
+> https://lkml.org/lkml/2020/1/17/628 was marked "Reviewed-by: Sebastian
+> Reichel <sebastian.reichel@collabora.com>"
+> 
 
-The major details are in the signed tag as usual.
+That patch should go through Sebastian's tree, we will create an immutable
+branch for him when rc1 is released.
 
-Please pull it in!
+Thanks,
+ Enric
 
-Yours,
-Linus Walleij
-
-The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46=
-:
-
-  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.6-1
-
-for you to fetch changes up to 122ce22cb37b087e7e28ebb16044a622b0a22233:
-
-  pinctrl: madera: Remove extra blank line (2020-01-24 00:31:41 +0100)
-
-----------------------------------------------------------------
-This is the bulk of pin control changes for the v5.6 kernel cycle:
-
-Core changes:
-
-- Dropped the chained IRQ setup callback into GPIOLIB as we
-  got rid of the last users of that in this changeset.
-
-New drivers:
-
-- New driver for Ingenic X1830.
-
-- New driver for Freescale i.MX8MP.
-
-Driver enhancements:
-
-- Fix all remaining Intel drivers to pass their IRQ chips
-  along with the GPIO chips.
-
-- Intel Baytrail allocates its irqchip dynamically.
-
-- Intel Lynxpoint is thoroughly rewritten and modernized.
-
-- Aspeed AST2600 pin muxing and configuration is much
-  improved.
-
-- Qualcomm SC7180 functions are updated and wakeup interrupt
-  map is provided.
-
-- A whole slew of Renesas SH-PFC cleanups and improvements.
-
-- Fix up the Intel DT bindings to use the generic YAML
-  DT bindings schema. (A first user of this.)
-
-----------------------------------------------------------------
-Andrew Jeffery (1):
-      dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
-
-Andy Shevchenko (31):
-      pinctrl: baytrail: Allocate IRQ chip dynamic
-      pinctrl: baytrail: Group GPIO IRQ chip initialization
-      pinctrl: baytrail: Move IRQ valid mask initialization to a
-dedicated callback
-      pinctrl: intel: Share struct intel_pinctrl for wider use
-      pinctrl: baytrail: Keep pointer to struct device instead of its conta=
-iner
-      pinctrl: baytrail: Use local variable to keep device pointer
-      pinctrl: baytrail: Reuse struct intel_pinctrl in the driver
-      pinctrl: lynxpoint: Move GPIO driver to pin controller folder
-      pinctrl: lynxpoint: Use raw_spinlock for locking
-      pinctrl: lynxpoint: Correct amount of pins
-      pinctrl: lynxpoint: Drop useless assignment
-      pinctrl: lynxpoint: Use %pR to print IO resource
-      pinctrl: lynxpoint: Use standard pattern for memory allocation
-      pinctrl: lynxpoint: Assume 2 bits for mode selector
-      pinctrl: lynxpoint: Relax GPIO request rules
-      pinctrl: lynxpoint: Keep pointer to struct device instead of its cont=
-ainer
-      pinctrl: lynxpoint: Switch to memory mapped IO accessors
-      pinctrl: lynxpoint: Convert unsigned to unsigned int
-      pinctrl: lynxpoint: Extract lp_gpio_acpi_use() for future use
-      pinctrl: lynxpoint: Move ->remove closer to ->probe()
-      pinctrl: lynxpoint: Move lp_irq_type() closer to IRQ related routines
-      pinctrl: lynxpoint: Move ownership check to IRQ chip
-      pinctrl: lynxpoint: Implement ->irq_ack() callback
-      pinctrl: lynxpoint: Implement intel_gpio_get_direction callback
-      pinctrl: lynxpoint: Add pin control data structures
-      pinctrl: lynxpoint: Reuse struct intel_pinctrl in the driver
-      pinctrl: lynxpoint: Add pin control operations
-      pinctrl: lynxpoint: Implement ->pin_dbg_show()
-      pinctrl: lynxpoint: Add GPIO <-> pin mapping ranges via callback
-      pinctrl: lynxpoint: Switch to pin control API
-      pinctrl: lynxpoint: Update summary in the driver
-
-Anson Huang (2):
-      dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
-      pinctrl: freescale: Add i.MX8MP pinctrl driver support
-
-Ben Dooks (Codethink) (4):
-      pinctrl: tegra: fix missing __iomem in suspend/resume
-      pinctrl: actions: remove duplicate dsi entry
-      pinctrl: qcom: make 'm_voc_groups' static
-      pinctrl: artpec6: fix __iomem on reg in set
-
-Boyan Ding (1):
-      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
-
-Charles Keepax (1):
-      pinctrl: madera: Remove extra blank line
-
-Chris Brandt (1):
-      pinctrl: rza1: Reduce printed messages
-
-Geert Uytterhoeven (10):
-      pinctrl: sh-pfc: Make legacy function GPIO handling less fragile
-      pinctrl: sh-pfc: Remove use of ARCH_R8A7796
-      pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
-      pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
-      pinctrl: sh-pfc: sh7264: Fix Port K I/O Register 0 definition
-      pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
-      pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
-      sh: sh7264: Remove bogus SSU GPIO function definitions
-      sh: sh7269: Remove bogus SSU GPIO function definitions
-      pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers
-
-Hamish Martin (1):
-      pinctrl: iproc: Set irq handler based on trig type
-
-Hans de Goede (3):
-      pinctrl: Allow modules to use pinctrl_[un]register_mappings
-      pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
-      pinctrl: baytrail: Replace WARN with dev_info_once when setting
-direct-irq pin to output
-
-Johnny Huang (6):
-      pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
-      pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
-      pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
-      pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
-      pinctrl: aspeed: Use masks to describe pinconf bitfields
-      pinctrl: aspeed-g6: Add AST2600 pinconf support
-
-Julia Lawall (3):
-      pinctrl: ssbi-mpp: constify copied structure
-      pinctrl: qcom: ssbi-gpio: constify copied structure
-      pinctrl: nuvoton: npcm7xx: constify copied structure
-
-Krzysztof Kozlowski (3):
-      pinctrl: samsung: Enable compile test for build coverage
-      pinctrl: samsung: Clarify the option titles/names
-      pinctrl: samsung: Fix missing OF and GPIOLIB dependency on
-S3C24xx and S3C64xx
-
-Linus Walleij (10):
-      Merge branch 'ib-pinctrl-default-state' into devel
-      Merge tag 'v5.5-rc3' into devel
-      Merge branch 'ib-pinctrl-unreg-mappings' into devel
-      Merge tag 'sh-pfc-for-v5.6-tag1' of
-git://git.kernel.org/.../geert/renesas-drivers into devel
-      pinctrl: intel: Add GPIO <-> pin mapping ranges via callback
-      pinctrl: intel: Pass irqchip when adding gpiochip
-      pinctrl: dt-bindings: Fix some errors in the lgm and pinmux schema
-      Merge tag 'samsung-pinctrl-5.6' of
-https://git.kernel.org/.../pinctrl/samsung into devel
-      Merge tag 'intel-pinctrl-v5.6-1' of
-git://git.kernel.org/.../pinctrl/intel into devel
-      gpio: Drop the chained IRQ handler assign function
-
-Ma Feng (1):
-      pinctrl: armada-37xx: Remove unneeded semicolon
-
-Martin Blumenstingl (1):
-      pinctrl: meson: meson8b: add the GPIOH pinmux settings for ETH_RXD{2,=
-3}
-
-Matti Vaittinen (3):
-      pinctrl: baytrail: Use GPIO direction definitions
-      pinctrl: cherryview: Use GPIO direction definitions
-      pinctrl: intel: Use GPIO direction definitions
-
-Maulik Shah (1):
-      pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
-
-Mika Westerberg (2):
-      pinctrl: sunrisepoint: Add Coffee Lake-S ACPI ID
-      pinctrl: tigerlake: Tiger Lake uses _HID enumeration
-
-Nishad Kamdar (3):
-      pinctrl: mediatek: Use the correct style for SPDX License Identifier
-      pinctrl: meson-axg: Use the correct style for SPDX License Identifier
-      pinctrl: stm32: Use the correct style for SPDX License Identifier
-
-Paul Cercueil (5):
-      pinctrl: ingenic: Remove platform ID table
-      pinctrl: ingenic: Put ingenic_chip_info pointer in match data
-      pinctrl: ingenic: Remove duplicated ingenic_chip_info structures
-      pinctrl: ingenic: Factorize irq_set_type function
-      pinctrl: ingenic: Use devm_platform_ioremap_resource()
-
-Peng Fan (2):
-      pinctrl: sunxi: sun50i-h5 use platform_irq_count
-      pinctrl: mvebu: armada-37xx: use use platform api
-
-Rahul Tanwar (1):
-      dt-bindings: pinctrl: intel: Update to use generic bindings
-
-Rajendra Nayak (2):
-      dt-bindings: pinctrl: qcom: Add new qup functions for sc7180
-      pinctrl: qcom: sc7180: Add new qup functions
-
-Rayagonda Kokatanur (1):
-      pinctrl: iproc: Use platform_get_irq_optional() to avoid error messag=
-e
-
-Stephen Boyd (1):
-      pinctrl: qcom: Don't lock around irq_set_irq_wake()
-
-Ulf Hansson (1):
-      pinctrl: core: Add pinctrl_select_default_state() and export it
-
-=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) (5):
-      pinctrl: Ingenic: Fix bugs in X1000 and X1500.
-      pinctrl: Ingenic: Add missing parts for X1000 and X1500.
-      pinctrl: Ingenic: Introduce reg_offset and use it instead hard code.
-      dt-bindings: pinctrl: Add bindings for Ingenic X1830.
-      pinctrl: Ingenic: Add pinctrl driver for X1830.
-
- .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |   9 +-
- .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |  69 ++
- .../bindings/pinctrl/ingenic,pinctrl.txt           |   8 +-
- .../devicetree/bindings/pinctrl/intel,lgm-io.yaml  |  75 ++
- .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 ---
- .../devicetree/bindings/pinctrl/pinmux-node.yaml   |   2 +-
- .../bindings/pinctrl/qcom,sc7180-pinctrl.txt       |   5 +-
- Documentation/driver-api/gpio/driver.rst           |   5 -
- MAINTAINERS                                        |   1 -
- arch/arm/mach-u300/core.c                          |   2 +-
- arch/sh/include/cpu-sh2a/cpu/sh7264.h              |   6 -
- arch/sh/include/cpu-sh2a/cpu/sh7269.h              |  17 +-
- drivers/gpio/Kconfig                               |   8 -
- drivers/gpio/Makefile                              |   1 -
- drivers/gpio/gpio-lynxpoint.c                      | 471 ----------
- drivers/gpio/gpio-mt7621.c                         |   3 +-
- drivers/gpio/gpio-xgs-iproc.c                      |   3 +-
- drivers/gpio/gpiolib.c                             |  25 +-
- drivers/pinctrl/actions/pinctrl-s700.c             |   1 -
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 170 ++--
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 212 ++---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 387 +++++++-
- drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  50 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  38 +-
- drivers/pinctrl/aspeed/pinmux-aspeed.h             |   1 +
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  10 +-
- drivers/pinctrl/cirrus/pinctrl-madera-core.c       |   1 -
- drivers/pinctrl/core.c                             |  74 +-
- drivers/pinctrl/core.h                             |   4 -
- drivers/pinctrl/devicetree.c                       |   4 +-
- drivers/pinctrl/freescale/Kconfig                  |   7 +
- drivers/pinctrl/freescale/Makefile                 |   1 +
- drivers/pinctrl/freescale/pinctrl-imx8mp.c         | 345 ++++++++
- drivers/pinctrl/intel/Kconfig                      |  13 +
- drivers/pinctrl/intel/Makefile                     |   1 +
- drivers/pinctrl/intel/pinctrl-baytrail.c           | 311 ++++---
- drivers/pinctrl/intel/pinctrl-cherryview.c         |   5 +-
- drivers/pinctrl/intel/pinctrl-intel.c              | 101 +--
- drivers/pinctrl/intel/pinctrl-intel.h              |  44 +
- drivers/pinctrl/intel/pinctrl-lynxpoint.c          | 975 +++++++++++++++++=
-++++
- drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |   2 +
- drivers/pinctrl/intel/pinctrl-tigerlake.c          | 547 ++++++------
- drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h      |   2 +-
- drivers/pinctrl/meson/pinctrl-meson-axg-pmx.h      |   2 +-
- drivers/pinctrl/meson/pinctrl-meson8b.c            |   7 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  16 +-
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |   2 +-
- drivers/pinctrl/pinctrl-artpec6.c                  |   2 +-
- drivers/pinctrl/pinctrl-ingenic.c                  | 637 +++++++++-----
- drivers/pinctrl/pinctrl-rza1.c                     |   4 +-
- drivers/pinctrl/qcom/pinctrl-msm.c                 |   5 -
- drivers/pinctrl/qcom/pinctrl-msm8976.c             |   2 +-
- drivers/pinctrl/qcom/pinctrl-sc7180.c              |  78 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |   2 +-
- drivers/pinctrl/samsung/Kconfig                    |  16 +-
- drivers/pinctrl/sh-pfc/Kconfig                     |  12 +-
- drivers/pinctrl/sh-pfc/Makefile                    |   4 +-
- drivers/pinctrl/sh-pfc/core.c                      |  57 +-
- drivers/pinctrl/sh-pfc/gpio.c                      |  11 +-
- drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |   4 +-
- .../sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c}   |  26 +-
- .../sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c}       |  39 +-
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |   6 +-
- drivers/pinctrl/sh-pfc/pfc-sh7264.c                |  33 +-
- drivers/pinctrl/sh-pfc/pfc-sh7269.c                |  39 +-
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |   4 +-
- drivers/pinctrl/stm32/pinctrl-stm32.h              |   2 +-
- drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c          |  13 +-
- drivers/pinctrl/tegra/pinctrl-tegra.c              |   4 +-
- include/linux/gpio/driver.h                        |   5 -
- include/linux/pinctrl/consumer.h                   |   6 +
- include/linux/pinctrl/machine.h                    |   5 +
- 73 files changed, 3379 insertions(+), 1798 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-io.=
-yaml
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
- delete mode 100644 drivers/gpio/gpio-lynxpoint.c
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mp.c
- create mode 100644 drivers/pinctrl/intel/pinctrl-lynxpoint.c
- rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c} (99%=
-)
- rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c} (99%)
+> Thanks!
+>>
+>>>
+>>> Thanks,
+>>>  Enric
+>>>
+>>>> Changes in v8(pmalani@chromium.org):
+>>>> - Fix style nits.
+>>>> - Remove unrequired header.
+>>>> - Remove #ifdef CONFIG_OF dependency for platform driver registration.
+>>>> - Add module compile text to Kconfig help section.
+>>>>
+>>>> Changes in v7(pmalani@chromium.org):
+>>>> - Removed use of module_platform_driver() and module_acpi_driver() since
+>>>>   that was causing redefinition compilation errors on arm64 defconfig.
+>>>>   Instead, explicitly defined the init and exit routines and
+>>>>   register/unregister the platform and ACPI drivers there.
+>>>> - Alphabetize #include header.
+>>>>
+>>>> Changes in v6(pmalani@chromium.org):
+>>>> - Fix build error from typo in cros_usbpd_notify_acpi_device_ids
+>>>>   variable name.
+>>>>
+>>>> Changes in v5(pmalani@chromium.org):
+>>>> - Split the driver into platform and ACPI variants, each enclosed by
+>>>>   CONFIG_OF and CONFIG_ACPI #ifdefs respectively.
+>>>> - Updated the copyright year to 2020.
+>>>> - Reworded the commit message and Kconfig description to incorporate
+>>>>   the modified driver structure.
+>>>>
+>>>> Changes in v4(pmalani@chromium.org):
+>>>> - No code changes, but added new version so that versioning is
+>>>>   consistent with the next patch in the series.
+>>>>
+>>>> Changes in v3 (pmalani@chromium.org):
+>>>> - Renamed driver and files from "cros_ec_pd_notify" to
+>>>>   "cros_usbpd_notify" to be more consistent with other naming.
+>>>> - Moved the change to include cros-usbpd-notify in the charger MFD
+>>>>   into a separate follow-on patch.
+>>>>
+>>>> Changes in v2 (pmalani@chromium.org):
+>>>> - Removed dependency on DT entry; instead, we will instantiate
+>>>>   the driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
+>>>> - Modified the cros-ec-pd-notify device to be an mfd_cell under
+>>>>   usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
+>>>>   to derive the cros EC structs appropriately.
+>>>> - Replaced "usbpd_notify" with "pd_notify" in functions and structures.
+>>>> - Addressed comments from upstream maintainer.
+>>>>
+>>>>  drivers/platform/chrome/Kconfig               |  13 ++
+>>>>  drivers/platform/chrome/Makefile              |   1 +
+>>>>  drivers/platform/chrome/cros_usbpd_notify.c   | 170 ++++++++++++++++++
+>>>>  .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
+>>>>  4 files changed, 201 insertions(+)
+>>>>  create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
+>>>>  create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
+>>>>
+>>>> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+>>>> index 5f57282a28da0..e45e0fe057586 100644
+>>>> --- a/drivers/platform/chrome/Kconfig
+>>>> +++ b/drivers/platform/chrome/Kconfig
+>>>> @@ -226,6 +226,19 @@ config CROS_USBPD_LOGGER
+>>>>       To compile this driver as a module, choose M here: the
+>>>>       module will be called cros_usbpd_logger.
+>>>>
+>>>> +config CROS_USBPD_NOTIFY
+>>>> +   tristate "ChromeOS Type-C power delivery event notifier"
+>>>> +   depends on CROS_EC
+>>>
+>>> Like other cros-ec subdevices I am wondering if we should depend on
+>>> MFD_CROS_EC_DEV instead of CROS_EC (as doesn't really makes sense to only
+>>> depends on CROS_EC)
+>>>
+>>> Also, like other cros-ec subdevices, we might be interested on have a:
+>>>
+>>>        default MFD_CROS_EC_DEV
+>>>
+>>> So it is selected when the cros-ec dev is configured by default.
+>>>
+>>> Thanks,
+>>>
+>>>  Enric
+>>>
+>>>> +   help
+>>>> +     If you say Y here, you get support for Type-C PD event notifications
+>>>> +     from the ChromeOS EC. On ACPI platorms this driver will bind to the
+>>>> +     GOOG0003 ACPI device, and on platforms which don't have this device it
+>>>> +     will get initialized on ECs which support the feature
+>>>> +     EC_FEATURE_USB_PD.
+>>>> +
+>>>> +     To compile this driver as a module, choose M here: the
+>>>> +     module will be called cros_usbpd_notify.
+>>>> +
+>>>>  source "drivers/platform/chrome/wilco_ec/Kconfig"
+>>>>
+>>>>  endif # CHROMEOS_PLATFORMS
+>>>> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+>>>> index aacd5920d8a18..f6465f8ef0b5e 100644
+>>>> --- a/drivers/platform/chrome/Makefile
+>>>> +++ b/drivers/platform/chrome/Makefile
+>>>> @@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)             += cros_ec_debugfs.o
+>>>>  obj-$(CONFIG_CROS_EC_SENSORHUB)            += cros_ec_sensorhub.o
+>>>>  obj-$(CONFIG_CROS_EC_SYSFS)                += cros_ec_sysfs.o
+>>>>  obj-$(CONFIG_CROS_USBPD_LOGGER)            += cros_usbpd_logger.o
+>>>> +obj-$(CONFIG_CROS_USBPD_NOTIFY)            += cros_usbpd_notify.o
+>>>>
+>>>>  obj-$(CONFIG_WILCO_EC)                     += wilco_ec/
+>>>> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
+>>>> new file mode 100644
+>>>> index 0000000000000..6ead5c62b3c5f
+>>>> --- /dev/null
+>>>> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
+>>>> @@ -0,0 +1,170 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>> +/*
+>>>> + * Copyright 2020 Google LLC
+>>>> + *
+>>>> + * This driver serves as the receiver of cros_ec PD host events.
+>>>> + */
+>>>> +
+>>>> +#include <linux/acpi.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mfd/cros_ec.h>
+>>>> +#include <linux/platform_data/cros_ec_proto.h>
+>>>> +#include <linux/platform_data/cros_usbpd_notify.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +
+>>>> +#define DRV_NAME "cros-usbpd-notify"
+>>>> +#define ACPI_DRV_NAME "GOOG0003"
+>>>> +
+>>>> +static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
+>>>> +
+>>>> +/**
+>>>> + * cros_usbpd_register_notify - Register a notifier callback for PD events.
+>>>> + * @nb: Notifier block pointer to register
+>>>> + *
+>>>> + * On ACPI platforms this corresponds to host events on the ECPD
+>>>> + * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
+>>>> + * for USB PD events.
+>>>> + *
+>>>> + * Return: 0 on success or negative error code.
+>>>> + */
+>>>> +int cros_usbpd_register_notify(struct notifier_block *nb)
+>>>> +{
+>>>> +   return blocking_notifier_chain_register(&cros_usbpd_notifier_list,
+>>>> +                                           nb);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
+>>>> +
+>>>> +/**
+>>>> + * cros_usbpd_unregister_notify - Unregister notifier callback for PD events.
+>>>> + * @nb: Notifier block pointer to unregister
+>>>> + *
+>>>> + * Unregister a notifier callback that was previously registered with
+>>>> + * cros_usbpd_register_notify().
+>>>> + */
+>>>> +void cros_usbpd_unregister_notify(struct notifier_block *nb)
+>>>> +{
+>>>> +   blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
+>>>> +
+>>>> +#ifdef CONFIG_ACPI
+>>>> +
+>>>> +static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
+>>>> +{
+>>>> +   return 0;
+>>>> +}
+>>>> +
+>>>> +static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
+>>>> +{
+>>>> +   blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
+>>>> +}
+>>>> +
+>>>> +static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
+>>>> +   { ACPI_DRV_NAME, 0 },
+>>>> +   { }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
+>>>> +
+>>>> +static struct acpi_driver cros_usbpd_notify_acpi_driver = {
+>>>> +   .name = DRV_NAME,
+>>>> +   .class = DRV_NAME,
+>>>> +   .ids = cros_usbpd_notify_acpi_device_ids,
+>>>> +   .ops = {
+>>>> +           .add = cros_usbpd_notify_add_acpi,
+>>>> +           .notify = cros_usbpd_notify_acpi,
+>>>> +   },
+>>>> +};
+>>>> +
+>>>> +#endif /* CONFIG_ACPI */
+>>>> +
+>>>> +static int cros_usbpd_notify_plat(struct notifier_block *nb,
+>>>> +                             unsigned long queued_during_suspend,
+>>>> +                             void *data)
+>>>> +{
+>>>> +   struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
+>>>> +   u32 host_event = cros_ec_get_host_event(ec_dev);
+>>>> +
+>>>> +   if (!host_event)
+>>>> +           return NOTIFY_BAD;
+>>>> +
+>>>> +   if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+>>>> +           blocking_notifier_call_chain(&cros_usbpd_notifier_list,
+>>>> +                                        host_event, NULL);
+>>>> +           return NOTIFY_OK;
+>>>> +   }
+>>>> +   return NOTIFY_DONE;
+>>>> +}
+>>>> +
+>>>> +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
+>>>> +{
+>>>> +   struct device *dev = &pdev->dev;
+>>>> +   struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
+>>>> +   struct notifier_block *nb;
+>>>> +   int ret;
+>>>> +
+>>>> +   nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
+>>>> +   if (!nb)
+>>>> +           return -ENOMEM;
+>>>> +
+>>>> +   nb->notifier_call = cros_usbpd_notify_plat;
+>>>> +   dev_set_drvdata(dev, nb);
+>>>> +
+>>>> +   ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
+>>>> +                                          nb);
+>>>> +   if (ret < 0) {
+>>>> +           dev_err(dev, "Failed to register notifier\n");
+>>>> +           return ret;
+>>>> +   }
+>>>> +
+>>>> +   return 0;
+>>>> +}
+>>>> +
+>>>> +static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
+>>>> +{
+>>>> +   struct device *dev = &pdev->dev;
+>>>> +   struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
+>>>> +   struct notifier_block *nb =
+>>>> +           (struct notifier_block *)dev_get_drvdata(dev);
+>>>> +
+>>>> +   blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier, nb);
+>>>> +
+>>>> +   return 0;
+>>>> +}
+>>>> +
+>>>> +static struct platform_driver cros_usbpd_notify_plat_driver = {
+>>>> +   .driver = {
+>>>> +           .name = DRV_NAME,
+>>>> +   },
+>>>> +   .probe = cros_usbpd_notify_probe_plat,
+>>>> +   .remove = cros_usbpd_notify_remove_plat,
+>>>> +};
+>>>> +
+>>>> +static int __init cros_usbpd_notify_init(void)
+>>>> +{
+>>>> +   int ret;
+>>>> +
+>>>> +   ret = platform_driver_register(&cros_usbpd_notify_plat_driver);
+>>>> +   if (ret < 0)
+>>>> +           return ret;
+>>>> +
+>>>> +#ifdef CONFIG_ACPI
+>>>> +   acpi_bus_register_driver(&cros_usbpd_notify_acpi_driver);
+>>>> +#endif
+>>>> +   return 0;
+>>>> +}
+>>>> +
+>>>> +static void __exit cros_usbpd_notify_exit(void)
+>>>> +{
+>>>> +#ifdef CONFIG_ACPI
+>>>> +   acpi_bus_unregister_driver(&cros_usbpd_notify_acpi_driver);
+>>>> +#endif
+>>>> +   platform_driver_unregister(&cros_usbpd_notify_plat_driver);
+>>>> +}
+>>>> +
+>>>> +module_init(cros_usbpd_notify_init);
+>>>> +module_exit(cros_usbpd_notify_exit);
+>>>> +
+>>>> +MODULE_LICENSE("GPL");
+>>>> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
+>>>> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
+>>>> +MODULE_ALIAS("platform:" DRV_NAME);
+>>>> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
+>>>> new file mode 100644
+>>>> index 0000000000000..4f2791722b6d3
+>>>> --- /dev/null
+>>>> +++ b/include/linux/platform_data/cros_usbpd_notify.h
+>>>> @@ -0,0 +1,17 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>> +/*
+>>>> + * ChromeOS EC Power Delivery Notifier Driver
+>>>> + *
+>>>> + * Copyright 2020 Google LLC
+>>>> + */
+>>>> +
+>>>> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+>>>> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+>>>> +
+>>>> +#include <linux/notifier.h>
+>>>> +
+>>>> +int cros_usbpd_register_notify(struct notifier_block *nb);
+>>>> +
+>>>> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
+>>>> +
+>>>> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+>>>>
+>>
+>> --
+>> Benson Leung
+>> Staff Software Engineer
+>> Chrome OS Kernel
+>> Google Inc.
+>> bleung@google.com
+>> Chromium OS Project
+>> bleung@chromium.org
