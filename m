@@ -2,163 +2,133 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704B7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E07C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BEB9206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA03206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQmNA8ZE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZwMaTKzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgA2Vk5 (ORCPT
+        id S1726646AbgA2Vph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:40:57 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28256 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726222AbgA2Vk5 (ORCPT
+        Wed, 29 Jan 2020 16:45:37 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42449 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgA2Vpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 16:40:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580334055;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8pjsr+8GgeZRx08ogbJ32q6tJdvfyOSXMDX5qngbmsc=;
-        b=DQmNA8ZEhs7sdGr0Bzf29Ar8KJ/RnSYZwakAkdsbBW4NHJDznSIOGtH+NpYx5uB4jUlcXu
-        sXyCmjAfljWqI1upTaf6OA1SXCbqJ0YcDCfhLwOgrO9hnn95Qu++9eVMXWzP2zYbNtdnwM
-        vXVoAheN5Kx+PVznQ0ktO7V/dzNLYNk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-BKFe_yzwM1CxZrLAq07h-g-1; Wed, 29 Jan 2020 16:40:53 -0500
-X-MC-Unique: BKFe_yzwM1CxZrLAq07h-g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2ECCA18A6EC1;
-        Wed, 29 Jan 2020 21:40:51 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE8F687B07;
-        Wed, 29 Jan 2020 21:40:47 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 14:40:46 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 3/3] iommu/uapi: Add helper function for size lookup
-Message-ID: <20200129144046.3f91e4c1@w520.home>
-In-Reply-To: <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        Wed, 29 Jan 2020 16:45:36 -0500
+Received: by mail-pg1-f196.google.com with SMTP id s64so475567pgb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 13:45:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nclDQAc57fGVBDFTZcvntg/YEiVwsYbbmEE1VCKKHLg=;
+        b=ZwMaTKzujzRvsoOYh4RoVaxZqJcaDKslwpdjnDms9u/KmNgAXwun1IqcFfAiO+gq1i
+         mX9dIMgPRPLi/SsGh4rboYXE+P83RWPLszMjStuactkkeBOxADTViB237qKrw+zH1LqX
+         ZwMJmGfgoTt1OXiQeWv1VcSSYlMYwCe9Ds5Un6Bl1gJzcZtXxnSR6twaVUzw9PBYsjKR
+         J0Ptii7KP0h/aELgFOoCRE2Q/JOsK/obCwC3hOMvL7yGNDRrJKqSN4V2JaTAENG4/XKM
+         jCta6txXwdOK1SaPsone8HpNOVpOj3cEL9sOPK7fXVejm+MnK1sACZmkS7sIDqOAR3O5
+         Ec5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nclDQAc57fGVBDFTZcvntg/YEiVwsYbbmEE1VCKKHLg=;
+        b=XEbbD+uTD0FALVfBR6nPOU1Py9LQqJBdpNW1+ni49rDLm4/ptVXqey40/XES6z4sBv
+         c+v25Rry6/dH5ZM2kGIY6lxuzq714Ad5G8dDP5OdR9LGh9O1GyuSlwfyRrCb+lvlpZlS
+         1k2tTcyE3rbMkHbYDS54vHtG4mEjqIVvrHdGCnCnIaYQFOby/TPW63jmMi8JH5f7bFaS
+         k+I/lgPmltMYV4WwHNtZDODKjJEa2Ekm5BadVa2RCnhG5iRDvztvZMC0HPYpx6zudZ85
+         7rqo2Y7VcOXn5TGxPEDIh6zUVKBTkJbcmvE1keK7TBclAJabHzd9gT8Ylk3hrj8C5w1i
+         dOiQ==
+X-Gm-Message-State: APjAAAXKosYnf1D5ZwMWRePXbMp9SysF4On/ilLKIwM/3eEfGtcI8EWe
+        Sig7tpxZ3+zmaN+gmyNye/eaAlDsVCcAouHhwftxLdER0M4=
+X-Google-Smtp-Source: APXvYqzIW92YmXpOGHWgyhnVOCnqTnMqWsQFTenOWcSvmwUlWqxTwRcCT7ZYdui69Mp9XEVYFxK5oXQGEWYB53kahxk=
+X-Received: by 2002:a62:38c9:: with SMTP id f192mr1625175pfa.165.1580334334643;
+ Wed, 29 Jan 2020 13:45:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200129201244.65261-1-john.stultz@linaro.org>
+In-Reply-To: <20200129201244.65261-1-john.stultz@linaro.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 29 Jan 2020 13:45:23 -0800
+Message-ID: <CAKwvOd=EvaSJFcpjh6gSRMrb=D5hwJHNR3wz6uEg3fmqmoGqfg@mail.gmail.com>
+Subject: Re: [PATCH] drm: msm: Fix return type of dsi_mgr_connector_mode_valid
+ for kCFI
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 22:02:04 -0800
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+On Wed, Jan 29, 2020 at 12:12 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> I was hitting kCFI crashes when building with clang, and after
+> some digging finally narrowed it down to the
+> dsi_mgr_connector_mode_valid() function being implemented as
+> returning an int, instead of an enum drm_mode_status.
+>
+> This patch fixes it, and appeases the opaque word of the kCFI
+> gods (seriously, clang inlining everything makes the kCFI
+> backtraces only really rough estimates of where things went
+> wrong).
+>
+> Thanks as always to Sami for his help narrowing this down.
+>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Cc: Sean Paul <sean@poorly.run>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Alistair Delva <adelva@google.com>
+> Cc: Amit Pundir <amit.pundir@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: freedreno@lists.freedesktop.org
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-> IOMMU UAPI can be extended in the future by adding new
-> fields at the end of each user data structure. Since we use
-> a unified UAPI version for compatibility checking, a lookup
-> function is needed to find the correct user data size to copy
-> from user.
-> 
-> This patch adds a helper function based on a 2D lookup with
-> version and type as input arguments.
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+John, thanks for fixing this. Our inliner is a point of pride
+(inlining indirect function calls; you're welcome). ;)
+Indeed, the function pointer member `mode_valid` in `struct
+drm_connector_helper_funcs` in
+include/drm/drm_modeset_helper_vtables.h returns an `enum
+drm_mode_status`.
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
->  drivers/iommu/iommu.c | 22 ++++++++++++++++++++++
->  include/linux/iommu.h |  6 ++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 7dd51c5d2ba1..9e5de9abebdf 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1696,6 +1696,28 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> index 271aa7bbca925..355a60b4a536f 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> @@ -336,7 +336,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
+>         return num;
 >  }
->  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
->  
-> +
-> +/**
-> + * Maintain a UAPI version to user data structure size lookup for each
-> + * API function types we support. e.g. bind guest pasid, cache invalidation.
-> + * As data structures being extended with new members, the offsetofend()
-> + * will identify the new sizes.
-> + */
-> +const static int iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = {
-> +	/* IOMMU_UAPI_BIND_GPASID */
-> +	{offsetofend(struct iommu_gpasid_bind_data, vtd)},
-> +	/* IOMMU_UAPI_CACHE_INVAL */
-> +	{offsetofend(struct iommu_cache_invalidate_info, addr_info)},
-> +	/* IOMMU_UAPI_PAGE_RESP */
-> +	{offsetofend(struct iommu_page_response, code)},
-> +};
-> +
-> +int iommu_uapi_get_data_size(int type, int version)
-> +{
-
-Seems like this is asking for a bounds check,
-
-  if (type >= NR_IOMMU_UAPI_TYPE || version > IOMMU_UAPI_VERSION)
-  	return -EINVAL;
-
-If we add new types in future versions, I assume we'd back fill the
-table with -EINVAL as well (rather than zero).  Thanks,
-
-Alex
-
-> +	return iommu_uapi_data_size[type][version - 1];
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_uapi_get_data_size);
-> +
->  static void __iommu_detach_device(struct iommu_domain *domain,
->  				  struct device *dev)
+>
+> -static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+> +static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+>                                 struct drm_display_mode *mode)
 >  {
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 9718c109ea0a..416fe02160ba 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -500,6 +500,7 @@ extern int iommu_report_device_fault(struct device *dev,
->  				     struct iommu_fault_event *evt);
->  extern int iommu_page_response(struct device *dev,
->  			       struct iommu_page_response *msg);
-> +extern int iommu_uapi_get_data_size(int type, int version);
->  
->  extern int iommu_group_id(struct iommu_group *group);
->  extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
-> @@ -885,6 +886,11 @@ static inline int iommu_page_response(struct device *dev,
->  	return -ENODEV;
->  }
->  
-> +static int iommu_uapi_get_data_size(int type, int version)
-> +{
-> +	return -ENODEV;
-> +}
-> +
->  static inline int iommu_group_id(struct iommu_group *group)
->  {
->  	return -ENODEV;
+>         int id = dsi_mgr_connector_get_id(connector);
+> --
 
+-- 
+Thanks,
+~Nick Desaulniers
