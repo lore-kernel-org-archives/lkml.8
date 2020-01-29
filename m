@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8D8C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 03:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C55C35249
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 03:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975F42070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 03:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992322070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 03:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EhqNcx+B"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nFQ9T3Pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgA2DY3 (ORCPT
+        id S1727077AbgA2DYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 22:24:29 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6363 "EHLO
+        Tue, 28 Jan 2020 22:24:37 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6376 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgA2DYX (ORCPT
+        with ESMTP id S1726871AbgA2DYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 22:24:23 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e30fab10000>; Tue, 28 Jan 2020 19:23:29 -0800
+        Tue, 28 Jan 2020 22:24:25 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e30fab10002>; Tue, 28 Jan 2020 19:23:29 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
+  by hqpgpgate101.nvidia.com (PGP Universal service);
   Tue, 28 Jan 2020 19:24:19 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 Jan 2020 19:24:19 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+        by hqpgpgate101.nvidia.com on Tue, 28 Jan 2020 19:24:19 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
  2020 03:24:19 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Wed, 29 Jan 2020 03:24:19 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e30fae20006>; Tue, 28 Jan 2020 19:24:19 -0800
+        id <B5e30fae30005>; Tue, 28 Jan 2020 19:24:19 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -57,9 +57,9 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
         John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 2/8] mm/gup: split get_user_pages_remote() into two routines
-Date:   Tue, 28 Jan 2020 19:24:11 -0800
-Message-ID: <20200129032417.3085670-3-jhubbard@nvidia.com>
+Subject: [PATCH v2 6/8] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN) reporting
+Date:   Tue, 28 Jan 2020 19:24:15 -0800
+Message-ID: <20200129032417.3085670-7-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129032417.3085670-1-jhubbard@nvidia.com>
 References: <20200129032417.3085670-1-jhubbard@nvidia.com>
@@ -68,117 +68,142 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580268209; bh=OqBHG8Cvzy5SUmSIVRhUFA6MUB8FlDhy13/SE4T+y3g=;
+        t=1580268209; bh=BR5qP9yDgHwmms8MxoALGGT7QIGUZw1rw8GRkZlTQFY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=EhqNcx+BId5ScdK+8BMY3I/PtU+jyKecY6pV0vMefq0prO4cXpetrJaJ5PHh6xGaZ
-         eU3OGY49mCA8O/v7N9MGRqIvYndPComezY4hbrqVVKhTtQupjlXKlfezeWjbQOEYzx
-         CFHAKZmXD5oJ/WIjZR/q0fjLYncCWMa5vBxQc0aofppP4JFA8a7DpZ3kpnVofKMYeh
-         vRQW882CJadvtV0E4NNYqfhk6Y32VNjdvMcckCOh+U+DAIyilI+N1b3UAoPKpTRCZ8
-         oiQ/GBLvR2SHBS3WPh6TtL2ZCPeL6m2DAHdS2XuZE6o85azFfCgPFgtZnecQFtUSO8
-         TYLXdYjcsIrag==
+        b=nFQ9T3Plvdjga7ESszH/TTmMo2dq9KemHTy4oyIwG8+mvuav1sSzZUU/CsVXO4uqG
+         xkK+Vv/udS+xWFaIRVTPRPOgGf9tkLA4daR3jYi+DP2gmM4KMSAbCCoxgtWaRj8SH3
+         18WhbdSSVXcEK3zKvhuJ7r7VmmtKXQiwxhH9DLVtq6gWvoywUyWMAZL0+YqPc1aFvS
+         P/5XuBVdYY+mtxW1M76o3X94bBDVHmHDP/UDbppjRR3Zhgt/271ttfPSByDWBzvTTb
+         HpM82D+sICghg9fJ7ITMwpRDyJYrjdts4MLkUgkFYxUFDTKGSeEXW55Efux6DpldqY
+         nBB3Ijr9uKFlw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An upcoming patch requires reusing the implementation of
-get_user_pages_remote(). Split up get_user_pages_remote() into an outer
-routine that checks flags, and an implementation routine that will be
-reused. This makes subsequent changes much easier to understand.
+Now that pages are "DMA-pinned" via pin_user_page*(), and unpinned via
+unpin_user_pages*(), we need some visibility into whether all of this is
+working correctly.
 
-There should be no change in behavior due to this patch.
+Add two new fields to /proc/vmstat:
+
+    nr_foll_pin_requested
+    nr_foll_pin_returned
+
+These are documented in Documentation/core-api/pin_user_pages.rst.
+They represent the number of pages (since boot time) that have been
+pinned ("nr_foll_pin_requested") and unpinned ("nr_foll_pin_returned"),
+via pin_user_pages*() and unpin_user_pages*().
+
+In the absence of long-running DMA or RDMA operations that hold pages
+pinned, the above two fields will normally be equal to each other.
 
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- mm/gup.c | 56 +++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 23 deletions(-)
+ include/linux/mmzone.h |  2 ++
+ mm/gup.c               | 21 +++++++++++++++++++++
+ mm/vmstat.c            |  2 ++
+ 3 files changed, 25 insertions(+)
 
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 462f6873905a..392868bc4763 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -243,6 +243,8 @@ enum node_stat_item {
+ 	NR_DIRTIED,		/* page dirtyings since bootup */
+ 	NR_WRITTEN,		/* page writings since bootup */
+ 	NR_KERNEL_MISC_RECLAIMABLE,	/* reclaimable non-slab kernel pages */
++	NR_FOLL_PIN_REQUESTED,	/* via: pin_user_page(), gup flag: FOLL_PIN */
++	NR_FOLL_PIN_RETURNED,	/* pages returned via unpin_user_page() */
+ 	NR_VM_NODE_STAT_ITEMS
+ };
+=20
 diff --git a/mm/gup.c b/mm/gup.c
-index 1b521e0ac1de..b699500da077 100644
+index 03e7a5cfa6a9..d536bda383c4 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -1557,6 +1557,37 @@ static __always_inline long __gup_longterm_locked(st=
-ruct task_struct *tsk,
- }
- #endif /* CONFIG_FS_DAX || CONFIG_CMA */
+@@ -29,6 +29,19 @@ struct follow_page_context {
+ 	unsigned int page_mask;
+ };
 =20
-+#ifdef CONFIG_MMU
-+static long __get_user_pages_remote(struct task_struct *tsk,
-+				    struct mm_struct *mm,
-+				    unsigned long start, unsigned long nr_pages,
-+				    unsigned int gup_flags, struct page **pages,
-+				    struct vm_area_struct **vmas, int *locked)
++#ifdef CONFIG_DEBUG_VM
++static inline void __update_proc_vmstat(struct page *page,
++					enum node_stat_item item, int count)
 +{
-+	/*
-+	 * Parts of FOLL_LONGTERM behavior are incompatible with
-+	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-+	 * vmas. However, this only comes up if locked is set, and there are
-+	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
-+	 * allow what we can.
-+	 */
-+	if (gup_flags & FOLL_LONGTERM) {
-+		if (WARN_ON_ONCE(locked))
-+			return -EINVAL;
-+		/*
-+		 * This will check the vmas (even if our vmas arg is NULL)
-+		 * and return -ENOTSUPP if DAX isn't allowed in this case:
-+		 */
-+		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
-+					     vmas, gup_flags | FOLL_TOUCH |
-+					     FOLL_REMOTE);
-+	}
-+
-+	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
-+				       locked,
-+				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
++	mod_node_page_state(page_pgdat(page), item, count);
 +}
++#else
++static inline void __update_proc_vmstat(struct page *page,
++					enum node_stat_item item, int count)
++{
++}
++#endif
 +
- /*
-  * get_user_pages_remote() - pin user pages in memory
-  * @tsk:	the task_struct to use for page fault accounting, or
-@@ -1619,7 +1650,6 @@ static __always_inline long __gup_longterm_locked(str=
-uct task_struct *tsk,
-  * should use get_user_pages because it cannot pass
-  * FAULT_FLAG_ALLOW_RETRY to handle_mm_fault.
-  */
--#ifdef CONFIG_MMU
- long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
- 		unsigned long start, unsigned long nr_pages,
- 		unsigned int gup_flags, struct page **pages,
-@@ -1632,28 +1662,8 @@ long get_user_pages_remote(struct task_struct *tsk, =
-struct mm_struct *mm,
- 	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
- 		return -EINVAL;
+ static void hpage_pincount_add(struct page *page, int refs)
+ {
+ 	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
+@@ -86,6 +99,8 @@ static __maybe_unused struct page *try_grab_compound_head=
+(struct page *page,
+ 	if (flags & FOLL_GET)
+ 		return try_get_compound_head(page, refs);
+ 	else if (flags & FOLL_PIN) {
++		int orig_refs =3D refs;
++
+ 		/*
+ 		 * When pinning a compound page of order > 1 (which is what
+ 		 * hpage_pincount_available() checks for), use an exact count to
+@@ -104,6 +119,7 @@ static __maybe_unused struct page *try_grab_compound_he=
+ad(struct page *page,
+ 		if (hpage_pincount_available(page))
+ 			hpage_pincount_add(page, refs);
 =20
--	/*
--	 * Parts of FOLL_LONGTERM behavior are incompatible with
--	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
--	 * vmas. However, this only comes up if locked is set, and there are
--	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
--	 * allow what we can.
--	 */
--	if (gup_flags & FOLL_LONGTERM) {
--		if (WARN_ON_ONCE(locked))
--			return -EINVAL;
--		/*
--		 * This will check the vmas (even if our vmas arg is NULL)
--		 * and return -ENOTSUPP if DAX isn't allowed in this case:
--		 */
--		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
--					     vmas, gup_flags | FOLL_TOUCH |
--					     FOLL_REMOTE);
--	}
--
--	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
--				       locked,
--				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
-+	return __get_user_pages_remote(tsk, mm, start, nr_pages, gup_flags,
-+				       pages, vmas, locked);
++		__update_proc_vmstat(page, NR_FOLL_PIN_REQUESTED, orig_refs);
+ 		return page;
+ 	}
+=20
+@@ -159,6 +175,8 @@ bool __must_check try_grab_page(struct page *page, unsi=
+gned int flags)
+ 		 * once, so that the page really is pinned.
+ 		 */
+ 		page_ref_add(page, refs);
++
++		__update_proc_vmstat(page, NR_FOLL_PIN_REQUESTED, 1);
+ 	}
+=20
+ 	return true;
+@@ -179,6 +197,7 @@ static bool __unpin_devmap_managed_user_page(struct pag=
+e *page)
+=20
+ 	count =3D page_ref_sub_return(page, refs);
+=20
++	__update_proc_vmstat(page, NR_FOLL_PIN_RETURNED, 1);
+ 	/*
+ 	 * devmap page refcounts are 1-based, rather than 0-based: if
+ 	 * refcount is 1, then the page is free and the refcount is
+@@ -229,6 +248,8 @@ void unpin_user_page(struct page *page)
+=20
+ 	if (page_ref_sub_and_test(page, refs))
+ 		__put_page(page);
++
++	__update_proc_vmstat(page, NR_FOLL_PIN_RETURNED, 1);
  }
- EXPORT_SYMBOL(get_user_pages_remote);
+ EXPORT_SYMBOL(unpin_user_page);
 =20
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 78d53378db99..b56808bae1b4 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1168,6 +1168,8 @@ const char * const vmstat_text[] =3D {
+ 	"nr_dirtied",
+ 	"nr_written",
+ 	"nr_kernel_misc_reclaimable",
++	"nr_foll_pin_requested",
++	"nr_foll_pin_returned",
+=20
+ 	/* enum writeback_stat_item counters */
+ 	"nr_dirty_threshold",
 --=20
 2.25.0
 
