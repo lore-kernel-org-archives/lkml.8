@@ -2,162 +2,146 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6C5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF62DC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962A820716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FE3214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QuQutsuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgA2WjO (ORCPT
+        id S1726791AbgA2Wkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:39:14 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:33891 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgA2WjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:39:14 -0500
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <rjones@gateworks.com>)
-        id 1iwvxA-0007j9-Ne; Wed, 29 Jan 2020 22:36:56 +0000
-From:   Robert Jones <rjones@gateworks.com>
-To:     Sunil Goutham <sgoutham@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH net] net: thunderx: workaround BGX TX Underflow issue
-Date:   Wed, 29 Jan 2020 14:36:09 -0800
-Message-Id: <20200129223609.9327-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.9.2
+        Wed, 29 Jan 2020 17:40:37 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47701 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgA2Wkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:40:36 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 487JNL1XxSz9sPJ;
+        Thu, 30 Jan 2020 09:40:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580337634;
+        bh=caZ7dEbqWZapx56yImJF3r7lW4Ok3Y+DvZQIvGtEqkE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QuQutsuKJev2qpmJR0x8ryq+rtskYHechjS11DslypiLkkM/Tmh/ratyuPZOXIpmf
+         AOF/CsmQZGnX1rj3w5XmMHNweihO7mXHZ6Le+OWA4DyO2cQS5EK0pTCGrVSyY6dJYZ
+         I0iQIs5SaAMK1UaUe1ZYw6zagGeYvjAhNSaz2FDOb8l9hQPwLwl+8098GBoCuzTtma
+         ai5pblaC/t+SoP98OwjZsUBShH3SZHR7Gw2kerbjCb7d6gwjGHEQhsLEkK+a0/euPx
+         XxxDQvI++6ucSAcBjTK9+KOK92guuOrFpVaXYw2DZ0JPF1ZMWTTS+bXOIKHq4n95Jf
+         x9ZKedgqKuBLw==
+Date:   Thu, 30 Jan 2020 09:40:32 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: linux-next: build failure after merge of the vfs tree
+Message-ID: <20200130094032.78ea9f8d@canb.auug.org.au>
+In-Reply-To: <20200124134124.57759b06@canb.auug.org.au>
+References: <20200110175729.3b5d2338@canb.auug.org.au>
+        <20200124134124.57759b06@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/LZiAlRbMu0VYtHB6LQg1gzN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+--Sig_/LZiAlRbMu0VYtHB6LQg1gzN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-While it is not yet understood why a TX underflow can easily occur
-for SGMII interfaces resulting in a TX wedge. It has been found that
-disabling/re-enabling the LMAC resolves the issue.
+Hi all,
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Reviewed-by: Robert Jones <rjones@gateworks.com>
----
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 54 +++++++++++++++++++++++
- drivers/net/ethernet/cavium/thunder/thunder_bgx.h |  9 ++++
- 2 files changed, 63 insertions(+)
+On Fri, 24 Jan 2020 13:41:24 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> On Fri, 10 Jan 2020 17:57:29 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > After merging the vfs tree, today's linux-next build (x86_64 allnoconfi=
+g)
+> > failed like this:
+> >=20
+> > fs/inode.c:1615:5: error: redefinition of 'bmap'
+> >  1615 | int bmap(struct inode *inode, sector_t *block)
+> >       |     ^~~~
+> > In file included from fs/inode.c:7:
+> > include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
+> >  2867 | static inline int bmap(struct inode *inode,  sector_t *block)
+> >       |                   ^~~~
+> >=20
+> > Caused by commit
+> >=20
+> >   65a805fdd75f ("fibmap: Use bmap instead of ->bmap method in ioctl_fib=
+map")
+> >=20
+> > I have added this patch for today:
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Fri, 10 Jan 2020 17:53:19 +1100
+> > Subject: [PATCH] fs: fix up for !CONFIG_BLOCK and bmap
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  fs/inode.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index 9f894b25af2b..590f36daa006 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
+> >  }
+> >  EXPORT_SYMBOL(iput);
+> > =20
+> > +#ifdef CONFIG_BLOCK
+> >  /**
+> >   *	bmap	- find a block number in a file
+> >   *	@inode:  inode owning the block number being requested
+> > @@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL(bmap);
+> > +#endif
+> > =20
+> >  /*
+> >   * With relative atime, only update atime if the previous atime is
+> > --=20
+> > 2.24.0 =20
+>=20
+> I am still applying this patch each day ...
 
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index c4f6ec0..078ecea 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -74,6 +74,7 @@ struct bgx {
- 	struct pci_dev		*pdev;
- 	bool                    is_dlm;
- 	bool                    is_rgx;
-+	char			irq_name[7];
- };
+Ping?
 
- static struct bgx *bgx_vnic[MAX_BGX_THUNDER];
-@@ -1535,6 +1536,53 @@ static int bgx_init_phy(struct bgx *bgx)
- 	return bgx_init_of_phy(bgx);
- }
+--=20
+Cheers,
+Stephen Rothwell
 
-+static irqreturn_t bgx_intr_handler(int irq, void *data)
-+{
-+	struct bgx *bgx = (struct bgx *)data;
-+	struct device *dev = &bgx->pdev->dev;
-+	u64 status, val;
-+	int lmac;
-+
-+	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-+		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-+		if (status & GMI_TXX_INT_UNDFLW) {
-+			dev_err(dev, "BGX%d lmac%d UNDFLW\n", bgx->bgx_id,
-+				lmac);
-+			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-+			val &= ~CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+			val |= CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+		}
-+		/* clear interrupts */
-+		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bgx_register_intr(struct pci_dev *pdev)
-+{
-+	struct bgx *bgx = pci_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	int num_vec, ret;
-+
-+	/* Enable MSI-X */
-+	num_vec = pci_msix_vec_count(pdev);
-+	ret = pci_alloc_irq_vectors(pdev, num_vec, num_vec, PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		dev_err(dev, "Req for #%d msix vectors failed\n", num_vec);
-+		return 1;
-+	}
-+	sprintf(bgx->irq_name, "BGX%d", bgx->bgx_id);
-+	ret = request_irq(pci_irq_vector(pdev, GMPX_GMI_TX_INT),
-+		bgx_intr_handler, 0, bgx->irq_name, bgx);
-+	if (ret)
-+		return 1;
-+
-+	return 0;
-+}
-+
- static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int err;
-@@ -1604,6 +1652,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+--Sig_/LZiAlRbMu0VYtHB6LQg1gzN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
- 	bgx_init_hw(bgx);
+-----BEGIN PGP SIGNATURE-----
 
-+	bgx_register_intr(pdev);
-+
- 	/* Enable all LMACs */
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
- 		err = bgx_lmac_enable(bgx, lmac);
-@@ -1614,6 +1664,10 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 				bgx_lmac_disable(bgx, --lmac);
- 			goto err_enable;
- 		}
-+
-+		/* enable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmac, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-+			       GMI_TXX_INT_UNDFLW);
- 	}
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4yCeAACgkQAVBC80lX
+0GzYNQf9HOxdBP1EZzn2vHqFBhmbPnA8Icv3kyhoehkQsYdSjQNfykgGPK38Dz0x
+IWbPHbOu8darWLkQm2EMxlHkWwak+O5HTnIxE8v/r0+XLnTfUKUUnNsKIE9m1EMJ
+FOZ5O+W0T3b/wg5MPTHVhUeauzUYlVHniMQPQSJBm5dThcXE3Rt5Frr9rTvFjAqt
+MjYm+XBGYJ9Dn3aro9g0ma2GLnWk5FPTXqq5VO0cNHIwlBcaXN/Tlh8ULyYWR3u9
+vCzRAhvjLCYDyKr6qxBm99Ed2VJPE9r6kB5MfKlxvvp0mnhEMDR1ZfoGO2BuBeix
+2DRtrlxaikJ+R2+DVIeZSvjvSI+7mA==
+=JBkA
+-----END PGP SIGNATURE-----
 
- 	return 0;
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-index 2588870..cdea493 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-@@ -180,6 +180,15 @@
- #define BGX_GMP_GMI_TXX_BURST		0x38228
- #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
- #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-+#define BGX_GMP_GMI_TXX_INT		0x38500
-+#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-+#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-+#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-+#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-+#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-+#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
-
- #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
- #define BGX_MSIX_VEC_0_29_CTL		0x400008
---
-2.9.2
-
+--Sig_/LZiAlRbMu0VYtHB6LQg1gzN--
