@@ -2,84 +2,83 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3565AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFECC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F9E206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HkrrDZHu"
+	by mail.kernel.org (Postfix) with ESMTP id B9DAC20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 06:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580279898;
+	bh=igzXSD+i/BUOTNjEhBzvGFgosW6UsPn3MYnWYPPr584=;
+	h=In-Reply-To:References:From:Subject:To:Cc:Date:List-ID:From;
+	b=Aj0vhq2EOTUEibgCvRHgQ0wx6azhGqFHPHye9Oj9XPJ1JokPH7XW+jZPPABcRquxK
+	 EKON7v+Ibs/FgekGGCNa7nmH7wVX3DTx3OplnlDj8YB8K0LceE6lr18uSDiirbVAE4
+	 iAG1J7YBIsC0KIGiMEWTygDu54mZUKdCQS3/JJN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgA2GeI (ORCPT
+        id S1726116AbgA2GiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 01:34:08 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27271 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725966AbgA2GeH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 01:34:07 -0500
-X-UUID: 34e162673faa47b69fdf43c08316f37c-20200129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ujk6W1itj+kyGPWCpmoTXw9A47Q4LtnJX0OapEkv6Rs=;
-        b=HkrrDZHup2REa8MtxmosCkPS2cLm6biREC/G85Xxz2ifw/hufxhyJQyE7nO/eyv2UbcbOJrp6r7QWC/kYf3/gCYxNXbcvGX9QAwrgXNf2ZDE+B+nfo73VozsGay5X4rLIqZw3nigefKFzduoYRwFJtYM/gN7PAk9bJffEryUGbs=;
-X-UUID: 34e162673faa47b69fdf43c08316f37c-20200129
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1775390333; Wed, 29 Jan 2020 14:33:57 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 29 Jan 2020 14:32:35 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 29 Jan 2020 14:34:03 +0800
-Message-ID: <1580279636.15794.0.camel@mtksdccf07>
-Subject: RE: [EXT] [PATCH v2 4/5] scsi: ufs: fix auto-hibern8 error detection
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-Date:   Wed, 29 Jan 2020 14:33:56 +0800
-In-Reply-To: <BN7PR08MB56840A622E2170C4F913A5D7DB0A0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <20200124150743.15110-1-stanley.chu@mediatek.com>
-         <20200124150743.15110-5-stanley.chu@mediatek.com>
-         <BN7PR08MB56840A622E2170C4F913A5D7DB0A0@BN7PR08MB5684.namprd08.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 29 Jan 2020 01:38:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgA2GiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 01:38:18 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E1BA2064C;
+        Wed, 29 Jan 2020 06:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580279897;
+        bh=igzXSD+i/BUOTNjEhBzvGFgosW6UsPn3MYnWYPPr584=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=xiWwiGuk8lYNmW+eBP/+gr9yInn1cPjsco52iuZ9S6JXKnAomKSJfupwmKOw5pxzz
+         G25KAASmOaSBSHmvgg3bfNN0uJl1iS37fZYcmRuxDWSv9xcjD0yZa4glNu7iBFBdIq
+         ocgTvBUvE8BLu4TOUrnFbXui9GIX6ftD2fnOLpJs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200128072002.79250-4-brendanhiggins@google.com>
+References: <20200128072002.79250-1-brendanhiggins@google.com> <20200128072002.79250-4-brendanhiggins@google.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 3/7] kunit: test: create a single centralized executor for all tests
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        akpm@linux-foundation.org, alan.maguire@oracle.com,
+        anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        davidgow@google.com, frowand.list@gmail.com, jdike@addtoit.com,
+        keescook@chromium.org, richard@nod.at, rppt@linux.ibm.com,
+        skhan@linuxfoundation.org, yzaikin@google.com
+Cc:     gregkh@linuxfoundation.org, logang@deltatee.com, mcgrof@kernel.org,
+        knut.omang@oracle.com, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 28 Jan 2020 22:38:16 -0800
+Message-Id: <20200129063817.3E1BA2064C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmVhbiwNCg0KT24gVHVlLCAyMDIwLTAxLTI4IGF0IDE1OjUyICswMDAwLCBCZWFuIEh1byAo
-YmVhbmh1bykgd3JvdGU6DQo+IEhpLCBTdGFubGV5IA0KPiBEbyB5b3UgdGhpbmsgaXQgaXMgbmVj
-ZXNzYXJ5IHRvIGFkZCBmaXhlcyB0YWcsIGFuZCBjb21iaW5lIHRoaXMgcGF0Y2ggd2l0aCBwcmV2
-aW91cyBwYXRjaCB0bw0KPiBzaW5nbGUgcGF0Y2g/ICBUaGF0IHdpbGwgYmUgZWFzaWVyIHRvIGRv
-d24gcG9ydCB0byB0aGUgb2xkZXIga2VybmVsLg0KDQpPSyEgSSB3aWxsIHVwZGF0ZSB0aGlzIHBh
-dGNoIGFjY29yZGluZyB0byB5b3VyIHN1Z2dlc3Rpb25zIGluIG5leHQNCnZlcnNpb24uDQoNClRo
-YW5rcywNClN0YW5sZXkNCg0K
+Quoting Brendan Higgins (2020-01-27 23:19:58)
+> From: Alan Maguire <alan.maguire@oracle.com>
+>=20
+> Add a centralized executor to dispatch tests rather than relying on
+> late_initcall to schedule each test suite separately.  Centralized
+> execution is for built-in tests only; modules will execute tests
+> when loaded.
+>=20
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Co-developed-by: Iurii Zaikin <yzaikin@google.com>
+> Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
