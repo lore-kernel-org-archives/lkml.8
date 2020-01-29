@@ -2,32 +2,33 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URI_WP_DIRINDEX,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D5AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959BDC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB70C20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D5622522
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgA2MGp (ORCPT
+        id S1726751AbgA2MGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:06:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:59027 "EHLO mga03.intel.com"
+        Wed, 29 Jan 2020 07:06:47 -0500
+Received: from mga03.intel.com ([134.134.136.65]:59029 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgA2MGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:06:40 -0500
+        id S1726712AbgA2MGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:06:42 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 04:06:38 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 04:06:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,377,1574150400"; 
-   d="scan'208";a="222433133"
+   d="scan'208";a="222433157"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga008.jf.intel.com with ESMTP; 29 Jan 2020 04:06:38 -0800
+  by orsmga008.jf.intel.com with ESMTP; 29 Jan 2020 04:06:39 -0800
 From:   "Liu, Yi L" <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, eric.auger@redhat.com
 Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
@@ -36,116 +37,114 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         jean-philippe.brucker@arm.com, peterx@redhat.com,
         iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC v3 0/8] vfio: expose virtual Shared Virtual Addressing to VMs
-Date:   Wed, 29 Jan 2020 04:11:44 -0800
-Message-Id: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
+Subject: [RFC v3 8/8] vfio/type1: Add vSVA support for IOMMU-backed mdevs
+Date:   Wed, 29 Jan 2020 04:11:52 -0800
+Message-Id: <1580299912-86084-9-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
+References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on
-Intel platforms allows address space sharing between device DMA and
-applications. SVA can reduce programming complexity and enhance security.
+From: Liu Yi L <yi.l.liu@intel.com>
 
-This VFIO series is intended to expose SVA usage to VMs. i.e. Sharing
-guest application address space with passthru devices. This is called
-vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/IOMMU
-changes. For IOMMU and QEMU changes, they are in separate series (listed
-in the "Related series").
+Recent years, mediated device pass-through framework (e.g. vfio-mdev)
+are used to achieve flexible device sharing across domains (e.g. VMs).
+Also there are hardware assisted mediated pass-through solutions from
+platform vendors. e.g. Intel VT-d scalable mode which supports Intel
+Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
+backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
+In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-domain
+concept, which means mdevs are protected by an iommu domain which is
+aux-domain of its physical device. Details can be found in the KVM
+presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
 
-The high-level architecture for SVA virtualization is as below, the key
-design of vSVA support is to utilize the dual-stage IOMMU translation (
-also known as IOMMU nesting translation) capability in host IOMMU.
+https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
+Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
 
+This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
+out the physical device of an IOMMU-backed mdev and then invoking IOMMU
+requests to IOMMU layer with the physical device and the mdev's aux
+domain info.
 
-    .-------------.  .---------------------------.
-    |   vIOMMU    |  | Guest process CR3, FL only|
-    |             |  '---------------------------'
-    .----------------/
-    | PASID Entry |--- PASID cache flush -
-    '-------------'                       |
-    |             |                       V
-    |             |                CR3 in GPA
-    '-------------'
-Guest
-------| Shadow |--------------------------|--------
-      v        v                          v
-Host
-    .-------------.  .----------------------.
-    |   pIOMMU    |  | Bind FL for GVA-GPA  |
-    |             |  '----------------------'
-    .----------------/  |
-    | PASID Entry |     V (Nested xlate)
-    '----------------\.------------------------------.
-    |             |   |SL for GPA-HPA, default domain|
-    |             |   '------------------------------'
-    '-------------'
-Where:
- - FL = First level/stage one page tables
- - SL = Second level/stage two page tables
+With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
+on IOMMU-backed mdevs.
 
-There are roughly four parts in this patchset which are
-corresponding to the basic vSVA support for PCI device
-assignment
- 1. vfio support for PASID allocation and free for VMs
- 2. vfio support for guest page table binding request from VMs
- 3. vfio support for IOMMU cache invalidation from VMs
- 4. vfio support for vSVA usage on IOMMU-backed mdevs
+Cc: Kevin Tian <kevin.tian@intel.com>
+CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC: Jun Tian <jun.j.tian@intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-The complete vSVA kernel upstream patches are divided into three phases:
-    1. Common APIs and PCI device direct assignment
-    2. IOMMU-backed Mediated Device assignment
-    3. Page Request Services (PRS) support
-
-This RFC patchset is aiming for the phase 1 and phase 2, and works
-together with the VT-d driver[1] changes and QEMU changes[2]. Complete
-set for current vSVA can be found in below branch. This branch also
-includes the patches for exposing PASID capability to VM, which will be
-in another patchset.
-https://github.com/luxis1999/linux-vsva: vsva-linux-5.5-rc3
-old version: https://github.com/jacobpan/linux.git:siov_sva.
-
-Related series:
-[1] [PATCH V9 00/10] Nested Shared Virtual Address (SVA) VT-d support:
-    https://lkml.org/lkml/2020/1/29/37
-    [PATCH 0/3] IOMMU user API enhancement:
-    https://lkml.org/lkml/2020/1/29/45
-
-[2] [RFC v3 00/25] intel_iommu: expose Shared Virtual Addressing to VMs
-    The complete QEMU set can be found in below link:
-    https://github.com/luxis1999/qemu.git: sva_vtd_v9_rfcv3
-
-Changelog:
-	- RFC v2 -> v3:
-	  a) Refine the whole patchset to fit the roughly parts in this series
-	  b) Adds complete vfio PASID management framework. e.g. pasid alloc,
-	  free, reclaim in VM crash/down and per-VM PASID quota to prevent
-	  PASID abuse.
-	  c) Adds IOMMU uAPI version check and page table format check to ensure
-	  version compatibility and hardware compatibility.
-	  d) Adds vSVA vfio support for IOMMU-backed mdevs.
-
-	- RFC v1 -> v2:
-	  Dropped vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE.
-
-Liu Yi L (8):
-  vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-  vfio/type1: Make per-application (VM) PASID quota tunable
-  vfio: Reclaim PASIDs when application is down
-  vfio/type1: Add VFIO_NESTING_GET_IOMMU_UAPI_VERSION
-  vfio/type1: Report 1st-level/stage-1 page table format to userspace
-  vfio/type1: Bind guest page tables to host
-  vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-  vfio/type1: Add vSVA support for IOMMU-backed mdevs
-
- drivers/vfio/vfio.c             | 183 +++++++++++++++++
- drivers/vfio/vfio_iommu_type1.c | 421 ++++++++++++++++++++++++++++++++++++++++
- include/linux/vfio.h            |  21 ++
- include/uapi/linux/vfio.h       | 148 ++++++++++++++
- 4 files changed, 773 insertions(+)
-
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 2168318..5aea355 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -127,6 +127,7 @@ struct vfio_regions {
+ 
+ struct domain_capsule {
+ 	struct iommu_domain *domain;
++	struct vfio_group *group;
+ 	void *data;
+ };
+ 
+@@ -143,6 +144,7 @@ static int vfio_iommu_for_each_dev(struct vfio_iommu *iommu,
+ 	list_for_each_entry(d, &iommu->domain_list, next) {
+ 		dc.domain = d->domain;
+ 		list_for_each_entry(g, &d->group_list, next) {
++			dc.group = g;
+ 			ret = iommu_group_for_each_dev(g->iommu_group,
+ 						       &dc, fn);
+ 			if (ret)
+@@ -2372,7 +2374,12 @@ static int vfio_bind_gpasid_fn(struct device *dev, void *data)
+ 	struct iommu_gpasid_bind_data *gbind_data =
+ 		(struct iommu_gpasid_bind_data *) dc->data;
+ 
+-	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
++	if (dc->group->mdev_group)
++		return iommu_sva_bind_gpasid(dc->domain,
++			vfio_mdev_get_iommu_device(dev), gbind_data);
++	else
++		return iommu_sva_bind_gpasid(dc->domain,
++						dev, gbind_data);
+ }
+ 
+ static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
+@@ -2381,7 +2388,12 @@ static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
+ 	struct iommu_gpasid_bind_data *gbind_data =
+ 		(struct iommu_gpasid_bind_data *) dc->data;
+ 
+-	return iommu_sva_unbind_gpasid(dc->domain, dev,
++	if (dc->group->mdev_group)
++		return iommu_sva_unbind_gpasid(dc->domain,
++					vfio_mdev_get_iommu_device(dev),
++					gbind_data->hpasid);
++	else
++		return iommu_sva_unbind_gpasid(dc->domain, dev,
+ 						gbind_data->hpasid);
+ }
+ 
+@@ -2454,7 +2466,12 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
+ 	struct iommu_cache_invalidate_info *cache_inv_info =
+ 		(struct iommu_cache_invalidate_info *) dc->data;
+ 
+-	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
++	if (dc->group->mdev_group)
++		return iommu_cache_invalidate(dc->domain,
++			vfio_mdev_get_iommu_device(dev), cache_inv_info);
++	else
++		return iommu_cache_invalidate(dc->domain,
++						dev, cache_inv_info);
+ }
+ 
+ static long vfio_iommu_type1_ioctl(void *iommu_data,
 -- 
 2.7.4
 
