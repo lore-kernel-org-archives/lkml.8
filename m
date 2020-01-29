@@ -2,116 +2,146 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D086C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCA02070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mmdzqguz"
+	by mail.kernel.org (Postfix) with ESMTP id 41AF9206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580341827;
+	bh=i1b3hLCH1Gs+/tr3OV841mRGkpkDAEOISeaQCZyZrOQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=njmNnu7yXbUVVhUhHiz6vY5An7LTwu03KpzlJc81FFyiYh4Z4XHOifK8PF8AQkhN7
+	 +ANfZkfKwwT/K/bturhyGpuwP4CXJgsyzOoZJ7oSenuSowgjirmYAJz14zSVbcQM16
+	 n1S9tRbzaKXKfg22WltYgoq78NIQkdailbrM1s9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgA2Xt3 (ORCPT
+        id S1727135AbgA2Xu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:49:29 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45296 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgA2Xt2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:49:28 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 203so933525lfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 15:49:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hZuYO1iwTS6qTMEuTEAkXWId/UBWv4N98s5kLzpeWFk=;
-        b=Mmdzqguz0RYjmqywHXsnnBq1PdYo4sEDQvqeVgCcrxrK3x4W6UMUDCboC/Le9yM/eX
-         4+GaCZCfx4fDwOpfU7dHJTWHzF+yfSKLllDfGhshvjXnlZPG3siNr2aa6jyb/1ZYnJtX
-         EpWbRtyk0rfwFsoj1VzGp/DiH69QHf88kVbL0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hZuYO1iwTS6qTMEuTEAkXWId/UBWv4N98s5kLzpeWFk=;
-        b=dFmjPBZFEr5wS25evGaB/KpKWuLGShGqFUFmJjJ4fpIuQNXPqotWJZ/l73nDl0Eubk
-         Jb5nA34hRogXimQdZKnW3S2EB5ardo1ogsLckZfMXMEn5NWyvdb8VdI0Lmy+ROw4feTL
-         +XMlHC4HGnQJgwZNSFigyXhJJlomaGkLrR9qif/JWxZdoWwtUGPjC/YnTZgdwEfGoqIQ
-         ffhxPhvCeAAd3CIySup/vPGfp1wBKCsP6Uaxqc91aIoiH2DROv0syxG2yJs7NLG9HSjR
-         4FvrDucMJVaxeg7E3cQjtz95V6Qe6Z0us2/cvXG28Mx8/h5HnHM2yOCnWcWMh7xpKtwI
-         lKcQ==
-X-Gm-Message-State: APjAAAWOKL9OZSXfpuVo+aK2habT/2DeETeG8jP5N0f8fSS3D12S+osa
-        9nQdugebi4k6jMOMkSNxTl7i3lgzLwI=
-X-Google-Smtp-Source: APXvYqxU2+MdW4SeY8JKXKu8BcRQPvkBdnoIA3V8xMOFDs+740uYM8SusCWx9Iu3lOcr0AI4Ej3ZVA==
-X-Received: by 2002:a19:8456:: with SMTP id g83mr965603lfd.0.1580341766561;
-        Wed, 29 Jan 2020 15:49:26 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id s22sm1791142ljm.41.2020.01.29.15.49.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 15:49:25 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id h23so1302388ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 15:49:25 -0800 (PST)
-X-Received: by 2002:a2e:85ce:: with SMTP id h14mr988980ljj.41.1580341764990;
- Wed, 29 Jan 2020 15:49:24 -0800 (PST)
+        Wed, 29 Jan 2020 18:50:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbgA2Xu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:50:26 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BDF3207FD;
+        Wed, 29 Jan 2020 23:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580341824;
+        bh=i1b3hLCH1Gs+/tr3OV841mRGkpkDAEOISeaQCZyZrOQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=k0s5dhP7pq96HKrXmC2chaGr4cxNjbQMFqYnKobzqei9MgqW8lc2kFYhjAp3TlU05
+         OLDOnI5zJcSnniudLqJcoQYL85YaE7Q7t7JV/8UzfX5apVPROWhUhX2ds/y404vJlQ
+         gU/QI/3KAvkIiMb9cK4l1IwPvXOKjqXcLTF2Xwlo=
+Received: by mail-qt1-f171.google.com with SMTP id t13so1034491qto.3;
+        Wed, 29 Jan 2020 15:50:24 -0800 (PST)
+X-Gm-Message-State: APjAAAWATiRLNvHWvZQ9oPuYLnlYgqphvDVVX09li8ctVPG3pqwB7NkR
+        FtLB/vvWTPhSPnL96vSQPjneBdl0d68vhH/vHA==
+X-Google-Smtp-Source: APXvYqweOtFMOBZ4ZqSFpkFdqQDXTy+Ds72RuExd6hhx+wJrqGomLaKLz02DcLzs8hWOlY/luUq8LrojYSvrYGLgL5I=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr2025771qtc.136.1580341823509;
+ Wed, 29 Jan 2020 15:50:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
- <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
- <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
- <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
- <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
- <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
- <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
- <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de>
- <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
- <87pnf342pr.fsf@nanos.tec.linutronix.de> <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
- <877e1a2d11.fsf@nanos.tec.linutronix.de> <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
- <874kwd3lbn.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kwd3lbn.fsf@nanos.tec.linutronix.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 29 Jan 2020 15:48:48 -0800
-X-Gmail-Original-Message-ID: <CAE=gft52iBTJyyvDTXeHdEYnpSSROvrQsweuXjd6OuaLO47ACw@mail.gmail.com>
-Message-ID: <CAE=gft52iBTJyyvDTXeHdEYnpSSROvrQsweuXjd6OuaLO47ACw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
+References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+ <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com> <CAD=FV=XLq4-EdsuKnDjuc3-6P3i6o-tV5MJbdFbvAscF_ouOpg@mail.gmail.com>
+In-Reply-To: <CAD=FV=XLq4-EdsuKnDjuc3-6P3i6o-tV5MJbdFbvAscF_ouOpg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 29 Jan 2020 17:50:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLVaJMidm2QcpmxXeT+Q+uU8esm1shdRs3BVoeRYqhJng@mail.gmail.com>
+Message-ID: <CAL_JsqLVaJMidm2QcpmxXeT+Q+uU8esm1shdRs3BVoeRYqhJng@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
+ clean cruft
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
+        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 3:16 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Wed, Jan 29, 2020 at 5:26 PM Doug Anderson <dianders@chromium.org> wrote:
 >
-> Evan,
+> Hi,
 >
-> Evan Green <evgreen@chromium.org> writes:
-> > On Wed, Jan 29, 2020 at 1:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Wed, Jan 29, 2020 at 2:01 PM Rob Herring <robh+dt@kernel.org> wrote:
 > >
-> >> Could you please add some instrumentation to see how often this stuff
-> >> actually triggers spurious interrupts?
+> > On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
+> > > because it required a property to be either (3 entries big),
+> > > (3 entries big), or (7 entries big), but not more than one of those
+> > > things.  That didn't make a ton of sense.
+> > >
+> > > This patch splits all of the exceptional device trees (AKA those that
+> > > would have needed if/then/else rules) from qcom,gcc.yaml.  It also
+> > > cleans up some cruft found while doing that.
+> > >
+> > > After this lands, this worked for me atop clk-next:
+> > >   for f in \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
+> > >     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
+> > >       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
+> > >       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+> > >   done
 > >
-> > In about 10 minutes of this script running, I got 142 hits. My script
-> > can toggle the HT cpus on and off about twice per second.
-> > Here's my diff (sorry it's mangled by gmail). If you're looking for
-> > something else, let me know, or I can run a patch.
-> >
-> No, that's good data. Your testing is hiting the critical path and as
-> you did not complain about negative side effects it seems to hold up to
-> the expectations. I'm going to convert this to real patch with a
-> proper changelog tomorrow.
+> > Note that using DT_SCHEMA_FILES may hide some errors in examples as
+> > all other schemas (including the core ones) are not used for
+> > validation. So just 'make dt_binding_check' needs to pass (ignoring
+> > any other unrelated errors as it breaks frequently). Supposedly a
+> > patch is coming explaining this in the documentation.
 >
-> Thanks for your help!
+> That seems like it's going to be a huge pain going forward, but OK.
 
-Sounds good, please CC me on it and I'll be sure to test the final
-result as well.
--Evan
+Use of DT_SCHEMA_FILES hiding problems or having to run 'make
+dt_binding_check' on everything?
+
+I could probably rework things such that you can check a single
+binding example against all schema, but dtbs still get validated by
+just a single schema.
+
+The other option is proper makefiles in every directory so you can do
+'make Documentation/devicetree/bindings/clk/'. But like compiling a
+directory, that doesn't catch all issues (linking).
+
+> I
+> kept running "dtbs_check" with the DT_SCHEMA_FILES since I guess this
+> was OK?  Then I ran this atop next-20200129:
+
+Yes, that's really where DT_SCHEMA_FILES is most useful IMO.
+
+> # Delete broken yaml:
+> rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+
+Been waiting on the fix to be applied since Dec...
+
+> ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
+>
+> ...and that seemed OK to me.  I've updated the commit message to
+> include what I did.  Hopefully it's right.
+
+Probably is. There are cases where a new schema breaks another file's
+example. If someone has a gcc node in another example for example.
+
+Rob
