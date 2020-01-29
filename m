@@ -2,101 +2,119 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68869C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BA8C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4D420716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZdO1rpUQ"
+	by mail.kernel.org (Postfix) with ESMTP id DE98220716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgA2QDE (ORCPT
+        id S1726880AbgA2QGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:03:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48688 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2QDE (ORCPT
+        Wed, 29 Jan 2020 11:06:15 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50897 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgA2QGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:03:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=up63fpfGYOvkp3SBYBCK24upbKtaXQK6d7PtLy0cev8=; b=ZdO1rpUQOR0SM6EoYPZcn4JDT
-        rNZ3sHm8mZrDvYiY5E3OQPXSNDtuzvvyYWMTEfJJZm7ouV0Pfkxt0A5w5clE3nTH9HCbHEx86BBtp
-        6juLb2UL5QT61MbPuGdmvcU/tcfri/3PyajzJEp4x/xWLGljUIFmn8Nbh9jSYIgvZPMeSteD03SRw
-        XYVnL8Ln47CE0D+Gws6DTVw/6tlYFzTf2p7maGQN02vRE6V+Yvb02p2UIYDlWoPVTPRMbx//gBNSU
-        kcgzWSPUmFGN/EOY7lygHL3FaH5qWjL6DuOx//Gd9S2BC8EuEpH9DWXQ/4igwg3lKKFEeFt3kDOEM
-        1D+RgIX9g==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwpnv-0007TM-3C; Wed, 29 Jan 2020 16:02:59 +0000
-Subject: Re: mmotm 2020-01-28-20-05 uploaded (security/security.c)
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-References: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
- <56177bc4-441d-36f4-fe73-4e86edf02899@infradead.org>
- <CAHC9VhRW68ccE_8HJnv4anFdSgkY2Yk3612LPCT5o4+vXQGqQA@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <30511826-765f-6b10-7bad-b950b3941295@infradead.org>
-Date:   Wed, 29 Jan 2020 08:02:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Jan 2020 11:06:15 -0500
+Received: by mail-il1-f198.google.com with SMTP id z12so152518ilh.17
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 08:06:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fEUlUjM8SEojeOk6pwtcSTQDu8D7nALBWF21TUkUjFQ=;
+        b=aqwDoLWOubj20N9ArKCx1vy9aOBnGCE2Sunm93HukkPNcU8+3JGGOp+dlcbfFFKM0A
+         TgVrSlVLvonk1UZEWkSVjjZuCs2EE06A1ydeSemC5qe1UGfJLQaR8/NJ8AB3O1rPokv9
+         9d4q+acTLHhUR2189uFbgGorvQuN5XtXP6Np6WuyYoiTF9GivSRDVBFnR7ks/clb7HB2
+         LfDg83L57sqbOnIi9q3nTDyzmg5ZLT8WEqW0MALD9NhyOGhOqiO2WfDw3n6q6VSZU5LA
+         BfeckS9RGYYZz04yeJMzQ+adt4uamdjAqTUJNKh4WZYpv/qUxvlBXsoDED9noQm+W226
+         Jr7Q==
+X-Gm-Message-State: APjAAAWMMzWJMmUAzQvq9fVmGwGa5MpT10nfrTWfXwJBJLLUZ8D7JMgC
+        zPRtCQV+n+j+1Keo57G9ifx3uL3R/9k5/uoX94V5m5Ze0xAd
+X-Google-Smtp-Source: APXvYqxRd2se19n9AMGBF0tsd+V/QMOOXynWF3G0Gosz8cItmjCbMWlTR4gOeDt0e9z2keIjwUnyAv5NoJ294QR5X7nnb81NTilm
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhRW68ccE_8HJnv4anFdSgkY2Yk3612LPCT5o4+vXQGqQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:914a:: with SMTP id t71mr26674745ild.293.1580313974646;
+ Wed, 29 Jan 2020 08:06:14 -0800 (PST)
+Date:   Wed, 29 Jan 2020 08:06:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000017ad0d059d498531@google.com>
+Subject: memory leak in snd_pcm_hw_params
+From:   syzbot <syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, perex@perex.cz,
+        sumit.semwal@linaro.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/29/20 5:51 AM, Paul Moore wrote:
-> On Tue, Jan 28, 2020 at 11:52 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 1/28/20 8:06 PM, akpm@linux-foundation.org wrote:
->>> The mm-of-the-moment snapshot 2020-01-28-20-05 has been uploaded to
->>>
->>>    http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> mmotm-readme.txt says
->>>
->>> README for mm-of-the-moment:
->>>
->>> http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>> more than once a week.
->>>
->>
->> security/security.c contains duplicate lines for <lockdown_reasons> array:
-> 
-> Hmmm.  Commit 59438b46471a ("security,lockdown,selinux: implement
-> SELinux lockdown"), which was merged into Linus' tree during the
-> current merge window, moved the lockdown_reasons array from
-> security/lockdown/lockdown.c to security/security.c; is there another
-> tree in linux-next which is moving lockdown_reasons into
-> security/security.c?
-> 
+Hello,
 
-Somehow in mmotm those lines of code were merged 2x:
-once from origin.patch and once from linux-next.patch.
+syzbot found the following crash on:
 
-Looks more like a mmotm merge issue, not a security/ issue.
+HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1351cf66e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e97a1bc78afb77f
+dashboard link: https://syzkaller.appspot.com/bug?extid=30edd0f34bfcdc548ac4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e97735e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13cd9bc9e00000
 
--- 
-~Randy
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com
 
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff888108fdefc0 (size 64):
+  comm "syz-executor222", pid 7310, jiffies 4294946025 (age 13.660s)
+  hex dump (first 32 bytes):
+    07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 10 33 02 00 c9 ff ff 00 00 00 00 00 00 00 00  ..3.............
+  backtrace:
+    [<00000000c59c6b0c>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000c59c6b0c>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000c59c6b0c>] slab_alloc mm/slab.c:3320 [inline]
+    [<00000000c59c6b0c>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<00000000478172ce>] kmalloc include/linux/slab.h:556 [inline]
+    [<00000000478172ce>] kzalloc include/linux/slab.h:670 [inline]
+    [<00000000478172ce>] snd_pcm_lib_malloc_pages+0x12b/0x200 sound/core/pcm_memory.c:404
+    [<0000000091532e16>] snd_pcm_hw_params+0x720/0x830 sound/core/pcm_native.c:691
+    [<000000002070a986>] snd_pcm_kernel_ioctl+0xb5/0x170 sound/core/pcm_native.c:3238
+    [<00000000394e99f4>] snd_pcm_oss_change_params_locked+0x745/0x1140 sound/core/oss/pcm_oss.c:944
+    [<00000000c81f42ac>] snd_pcm_oss_change_params+0x43/0x80 sound/core/oss/pcm_oss.c:1087
+    [<000000007710a1c0>] snd_pcm_oss_make_ready+0x55/0xc0 sound/core/oss/pcm_oss.c:1146
+    [<0000000069305204>] snd_pcm_oss_sync.isra.0+0xb8/0x310 sound/core/oss/pcm_oss.c:1707
+    [<00000000692460c8>] snd_pcm_oss_release+0xef/0x100 sound/core/oss/pcm_oss.c:2545
+    [<0000000013ba02c9>] __fput+0xed/0x300 fs/file_table.c:280
+    [<0000000080810f18>] ____fput+0x16/0x20 fs/file_table.c:313
+    [<00000000e6bb3aa6>] task_work_run+0x9d/0xc0 kernel/task_work.c:113
+    [<00000000b6ce71eb>] exit_task_work include/linux/task_work.h:22 [inline]
+    [<00000000b6ce71eb>] do_exit+0x3fa/0xe20 kernel/exit.c:801
+    [<0000000045ce7ad3>] do_group_exit+0x4b/0xe0 kernel/exit.c:899
+    [<00000000aeb85903>] __do_sys_exit_group kernel/exit.c:910 [inline]
+    [<00000000aeb85903>] __se_sys_exit_group kernel/exit.c:908 [inline]
+    [<00000000aeb85903>] __x64_sys_exit_group+0x1c/0x20 kernel/exit.c:908
+    [<000000008b12db16>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
+
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
