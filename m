@@ -2,49 +2,56 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A20C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E1FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A357920CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3189C20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgA2FR7 (ORCPT
+        id S1726814AbgA2FSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 00:17:59 -0500
-Received: from ozlabs.org ([203.11.71.1]:36931 "EHLO ozlabs.org"
+        Wed, 29 Jan 2020 00:18:05 -0500
+Received: from ozlabs.org ([203.11.71.1]:54909 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgA2FRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726670AbgA2FRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 00:17:41 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 486sF01mqkz9sS3; Wed, 29 Jan 2020 16:17:40 +1100 (AEDT)
+        id 486sDz55YZz9sRp; Wed, 29 Jan 2020 16:17:39 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: f1dbc1c5c70d0d4c60b5d467ba941fba167c12f6
-In-Reply-To: <5577aef8-1d5a-ca95-ff0a-9c7b5977e5bf@linux.ibm.com>
-To:     Michael Bringmann <mwb@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Gustavo Walbon <gwalbon@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: 3d4247fcc938d0ab5cf6fdb752dae07fdeab9736
+In-Reply-To: <031dec5487bde9b2181c8b3c9800e1879cf98c1a.1579024426.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, erhard_f@mailbox.org,
+        dja@axtens.net
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: [PATCH v2] Fix display of Maximum Memory
-Message-Id: <486sF01mqkz9sS3@ozlabs.org>
-Date:   Wed, 29 Jan 2020 16:17:40 +1100 (AEDT)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] powerpc/32: add support of KASAN_VMALLOC
+Message-Id: <486sDz55YZz9sRp@ozlabs.org>
+Date:   Wed, 29 Jan 2020 16:17:39 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-15 at 14:53:59 UTC, Michael Bringmann wrote:
-> Correct overflow problem in calculation+display of Maximum Memory
-> value to syscfg where 32bits is insufficient.
+On Tue, 2020-01-14 at 17:54:00 UTC, Christophe Leroy wrote:
+> Add support of KASAN_VMALLOC on PPC32.
 > 
-> Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
+> To allow this, the early shadow covering the VMALLOC space
+> need to be removed once high_memory var is set and before
+> freeing memblock.
+> 
+> And the VMALLOC area need to be aligned such that boundaries
+> are covered by a full shadow page.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/f1dbc1c5c70d0d4c60b5d467ba941fba167c12f6
+https://git.kernel.org/powerpc/c/3d4247fcc938d0ab5cf6fdb752dae07fdeab9736
 
 cheers
