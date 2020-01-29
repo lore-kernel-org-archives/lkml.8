@@ -2,104 +2,230 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A83C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586BA206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D674220720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 17:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0QCwtzx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdkONAdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgA2RUX (ORCPT
+        id S1727235AbgA2RUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 12:20:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38019 "EHLO
+        Wed, 29 Jan 2020 12:20:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58237 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726906AbgA2RUX (ORCPT
+        with ESMTP id S1727107AbgA2RUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 12:20:23 -0500
+        Wed, 29 Jan 2020 12:20:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580318422;
+        s=mimecast20190719; t=1580318442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cQH6ZYTqwW+stKfQ8AjSjdZ36iZukpGr3cI8BWThvC4=;
-        b=L0QCwtzxiYFUwpHeLBSs9jB4qamgw/izGYCl7RXVxtyvNBL/wpugtF3WEKy/Xlp0dM0uaL
-        hOqJLz0v5vAwQM3JR67x/5vmqlaRX7tEVCn3s6ctyaabz3IETmMFp7Rddfafg9ttCDl6ct
-        9boneQy2Qj4yOLO66NYLMTt+uX1CWyY=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CDEy69IL/eMYtpmDS3XjUwKwXrl7W0ck1hqzenez+2c=;
+        b=gdkONAdzy+pd4yBkwcpuqpZLD1tKOLuPAfVsUnlWO7rcuC1kTdGJKLdue/bsmp/OY7xuYs
+        5cFgLjxxDhHJ1+JIjQMxTbQuH9riVpH97zM1ktcYGcOhHaTyfjwadxP5SNI/i5/7XhPWd8
+        CXIujZGQTeQw/kl/4HEv7DpiMnb0mNY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-vKpp2hkHOK6vd_qVuq69pQ-1; Wed, 29 Jan 2020 12:20:03 -0500
-X-MC-Unique: vKpp2hkHOK6vd_qVuq69pQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-358-IuDla0bKOH2KmPPH79RJLw-1; Wed, 29 Jan 2020 12:20:20 -0500
+X-MC-Unique: IuDla0bKOH2KmPPH79RJLw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3CFA1010418;
-        Wed, 29 Jan 2020 17:20:00 +0000 (UTC)
-Received: from treble (ovpn-120-83.rdu2.redhat.com [10.10.120.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D43CF60C85;
-        Wed, 29 Jan 2020 17:19:58 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 11:19:56 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject: Re: mmotm 2020-01-28-20-05 uploaded (objtool warnings)
-Message-ID: <20200129171956.wlwz5gr6fva5iae7@treble>
-References: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
- <5f2400c0-3d9d-9bfd-315e-a26bedb165a7@infradead.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46763477;
+        Wed, 29 Jan 2020 17:20:19 +0000 (UTC)
+Received: from localhost (ovpn-117-180.ams2.redhat.com [10.36.117.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7B5F5DE53;
+        Wed, 29 Jan 2020 17:20:11 +0000 (UTC)
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Avi Kivity <avi@scylladb.com>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [RFC] eventfd: add EFD_AUTORESET flag
+Date:   Wed, 29 Jan 2020 17:20:10 +0000
+Message-Id: <20200129172010.162215-1-stefanha@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5f2400c0-3d9d-9bfd-315e-a26bedb165a7@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 08:43:35AM -0800, Randy Dunlap wrote:
-> On 1/28/20 8:06 PM, akpm@linux-foundation.org wrote:
-> > The mm-of-the-moment snapshot 2020-01-28-20-05 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> 
-> on x86_64: (duh)
-> 
-> > gcc --version
-> gcc (SUSE Linux) 7.5.0
-> 
-> 
-> fs/namei.o: warning: objtool: do_renameat2()+0x46d: unreachable instruction
-> kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x2b: unreachable instruction
-> drivers/iio/adc/vf610_adc.o: warning: objtool: vf610_set_conversion_mode()+0x4e: unreachable instruction
-> 
-> 
-> Full randconfig file is attached.
-> 
-> Do you want the .o files, Josh?
+Some applications simply use eventfd for inter-thread notifications
+without requiring counter or semaphore semantics.  They wait for the
+eventfd to become readable using poll(2)/select(2) and then call read(2)
+to reset the counter.
 
-I'm able to recreate with your config, so I don't need the .o files.
+This patch adds the EFD_AUTORESET flag to reset the counter when
+f_ops->poll() finds the eventfd is readable, eliminating the need to
+call read(2) to reset the counter.
 
-Thanks.
+This results in a small but measurable 1% performance improvement with
+QEMU virtio-blk emulation.  Each read(2) takes 1 microsecond execution
+time in the event loop according to perf.
 
--- 
-Josh
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+---
+Does this look like a reasonable thing to do?  I'm not very familiar
+with f_ops->poll() or the eventfd internals, so maybe I'm overlooking a
+design flaw.
+
+I've tested this with QEMU and it works fine:
+https://github.com/stefanha/qemu/commits/eventfd-autoreset
+---
+ fs/eventfd.c            | 99 +++++++++++++++++++++++++----------------
+ include/linux/eventfd.h |  3 +-
+ 2 files changed, 62 insertions(+), 40 deletions(-)
+
+diff --git a/fs/eventfd.c b/fs/eventfd.c
+index 8aa0ea8c55e8..208f6b9e2234 100644
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -116,45 +116,62 @@ static __poll_t eventfd_poll(struct file *file, pol=
+l_table *wait)
+=20
+ 	poll_wait(file, &ctx->wqh, wait);
+=20
+-	/*
+-	 * All writes to ctx->count occur within ctx->wqh.lock.  This read
+-	 * can be done outside ctx->wqh.lock because we know that poll_wait
+-	 * takes that lock (through add_wait_queue) if our caller will sleep.
+-	 *
+-	 * The read _can_ therefore seep into add_wait_queue's critical
+-	 * section, but cannot move above it!  add_wait_queue's spin_lock acts
+-	 * as an acquire barrier and ensures that the read be ordered properly
+-	 * against the writes.  The following CAN happen and is safe:
+-	 *
+-	 *     poll                               write
+-	 *     -----------------                  ------------
+-	 *     lock ctx->wqh.lock (in poll_wait)
+-	 *     count =3D ctx->count
+-	 *     __add_wait_queue
+-	 *     unlock ctx->wqh.lock
+-	 *                                        lock ctx->qwh.lock
+-	 *                                        ctx->count +=3D n
+-	 *                                        if (waitqueue_active)
+-	 *                                          wake_up_locked_poll
+-	 *                                        unlock ctx->qwh.lock
+-	 *     eventfd_poll returns 0
+-	 *
+-	 * but the following, which would miss a wakeup, cannot happen:
+-	 *
+-	 *     poll                               write
+-	 *     -----------------                  ------------
+-	 *     count =3D ctx->count (INVALID!)
+-	 *                                        lock ctx->qwh.lock
+-	 *                                        ctx->count +=3D n
+-	 *                                        **waitqueue_active is false**
+-	 *                                        **no wake_up_locked_poll!**
+-	 *                                        unlock ctx->qwh.lock
+-	 *     lock ctx->wqh.lock (in poll_wait)
+-	 *     __add_wait_queue
+-	 *     unlock ctx->wqh.lock
+-	 *     eventfd_poll returns 0
+-	 */
+-	count =3D READ_ONCE(ctx->count);
++	if (ctx->flags & EFD_AUTORESET) {
++		unsigned long flags;
++		__poll_t requested =3D poll_requested_events(wait);
++
++		spin_lock_irqsave(&ctx->wqh.lock, flags);
++		count =3D ctx->count;
++
++		/* Reset counter if caller is polling for read */
++		if (count !=3D 0 && (requested & EPOLLIN)) {
++			ctx->count =3D 0;
++			events |=3D EPOLLOUT;
++			/* TODO is a EPOLLOUT wakeup necessary here? */
++		}
++
++		spin_unlock_irqrestore(&ctx->wqh.lock, flags);
++	} else {
++		/*
++		 * All writes to ctx->count occur within ctx->wqh.lock.  This read
++		 * can be done outside ctx->wqh.lock because we know that poll_wait
++		 * takes that lock (through add_wait_queue) if our caller will sleep.
++		 *
++		 * The read _can_ therefore seep into add_wait_queue's critical
++		 * section, but cannot move above it!  add_wait_queue's spin_lock acts
++		 * as an acquire barrier and ensures that the read be ordered properly
++		 * against the writes.  The following CAN happen and is safe:
++		 *
++		 *     poll                               write
++		 *     -----------------                  ------------
++		 *     lock ctx->wqh.lock (in poll_wait)
++		 *     count =3D ctx->count
++		 *     __add_wait_queue
++		 *     unlock ctx->wqh.lock
++		 *                                        lock ctx->qwh.lock
++		 *                                        ctx->count +=3D n
++		 *                                        if (waitqueue_active)
++		 *                                          wake_up_locked_poll
++		 *                                        unlock ctx->qwh.lock
++		 *     eventfd_poll returns 0
++		 *
++		 * but the following, which would miss a wakeup, cannot happen:
++		 *
++		 *     poll                               write
++		 *     -----------------                  ------------
++		 *     count =3D ctx->count (INVALID!)
++		 *                                        lock ctx->qwh.lock
++		 *                                        ctx->count +=3D n
++		 *                                        **waitqueue_active is false*=
+*
++		 *                                        **no wake_up_locked_poll!**
++		 *                                        unlock ctx->qwh.lock
++		 *     lock ctx->wqh.lock (in poll_wait)
++		 *     __add_wait_queue
++		 *     unlock ctx->wqh.lock
++		 *     eventfd_poll returns 0
++		 */
++		count =3D READ_ONCE(ctx->count);
++	}
+=20
+ 	if (count > 0)
+ 		events |=3D EPOLLIN;
+@@ -400,6 +417,10 @@ static int do_eventfd(unsigned int count, int flags)
+ 	if (flags & ~EFD_FLAGS_SET)
+ 		return -EINVAL;
+=20
++	/* Semaphore semantics don't make sense when autoreset is enabled */
++	if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
++		return -EINVAL;
++
+ 	ctx =3D kmalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
+diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
+index ffcc7724ca21..27577fafc553 100644
+--- a/include/linux/eventfd.h
++++ b/include/linux/eventfd.h
+@@ -21,11 +21,12 @@
+  * shared O_* flags.
+  */
+ #define EFD_SEMAPHORE (1 << 0)
++#define EFD_AUTORESET (1 << 6) /* aliases O_CREAT */
+ #define EFD_CLOEXEC O_CLOEXEC
+ #define EFD_NONBLOCK O_NONBLOCK
+=20
+ #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
+-#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
++#define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE | EFD_AUTO=
+RESET)
+=20
+ struct eventfd_ctx;
+ struct file;
+--=20
+2.24.1
 
