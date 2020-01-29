@@ -6,98 +6,80 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8953C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6CCC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88022070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C203920716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vl9O8cXT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uoHQrrL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgA2Mn4 (ORCPT
+        id S1726314AbgA2M4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:43:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55064 "EHLO
+        Wed, 29 Jan 2020 07:56:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55238 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgA2Mn4 (ORCPT
+        with ESMTP id S1726068AbgA2M4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:43:56 -0500
+        Wed, 29 Jan 2020 07:56:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jevnuIC5gZOp8gmdjzUHYbGt3WgdQxyaTB8XVPmRRP4=; b=Vl9O8cXT21pITlblL5uiZDvZY
-        /S9Bmy7jPCHEK6ajpjhPBx4oDBUnbj9dUMhe1awhrh/uMflr1GVuscoFQ3heunMeuwUsEcTKaGQFx
-        JD7RzlDWzxr3m4PWe/m1CxOq4lAyAefJDXDll0EJgM+RtbVMOsNrJ2QerGO9A273sHtL5AoVhSpW4
-        oyy1v8+HsJeLT3kUfuq6hHy4QiSRUDYDVjcA1faIeZYPZ5ivn23PUFsuOEKQUJFLIGwapsxkX0AOs
-        fO4qRvUsGstcp6Lw0omSpW3zwmgnY/SkMNRHuWnoRkHtviljbLVdA8DiExmyRJ/CvG1KGDg4iGBhk
-        us8fT0X0w==;
+         bh=SLgmNjaM2cFkmb1tZ6hEg2KCmNp2rU4V4QwYCqC2LIk=; b=uoHQrrL5EvNo0CZjPA/Azrhq8
+        ylfDQUgwONKpZb5NNNOmfeh1FruhN4CV7DZQluMt1CH9bLo5RCf+eYK1YWqiwaHniAAINWJcnlxYN
+        5szs4Okfx1mE31BHAmui2CoCPhcyKGY+IkYkEwENcoxDzXXEPWtwKaG1IOj/JcIynG5BrlqTmT6Eo
+        fmXyWY1nN5DIgcJ/KvYAtYGxQLbUWFiotg6O+3J7eoA8tTPqnO88nZgI0K+zJaEVqvfCIW4zJKz2m
+        dxZ+mwMVodHeKz+FqX1imyRDBthA5WPFjUB/n+C40/PDdirgJ6ddfQvpGx7BCGGlhOOXNwUsCU1rh
+        iq+rldLJQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwmhG-0000bD-Gi; Wed, 29 Jan 2020 12:43:54 +0000
+        id 1iwmtH-0005jA-0E; Wed, 29 Jan 2020 12:56:19 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 234053035D4;
-        Wed, 29 Jan 2020 13:42:10 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7489F300DD5;
+        Wed, 29 Jan 2020 13:54:33 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DFECE2B7159FA; Wed, 29 Jan 2020 13:43:52 +0100 (CET)
-Date:   Wed, 29 Jan 2020 13:43:52 +0100
+        id D141F2B77DA21; Wed, 29 Jan 2020 13:56:15 +0100 (CET)
+Date:   Wed, 29 Jan 2020 13:56:15 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] m68k,mm: Extend table allocator for multiple sizes
-Message-ID: <20200129124352.GP14879@hirez.programming.kicks-ass.net>
-References: <20200129103941.304769381@infradead.org>
- <20200129104345.491163937@infradead.org>
- <20200129121752.GB31582@willie-the-truck>
+To:     sjpark@amazon.com
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        sj38.park@gmail.com, acme@kernel.org, amit@kernel.org,
+        brendan.d.gregg@gmail.com, corbet@lwn.net, dwmw@amazon.com,
+        mgorman@suse.de, rostedt@goodmis.org, kirill@shutemov.name,
+        brendanhiggins@google.com, colin.king@canonical.com,
+        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
+Message-ID: <20200129125615.GQ14879@hirez.programming.kicks-ass.net>
+References: <41BBD985-4B3D-4F87-B69D-D8CFE6EC0EBE@lca.pw>
+ <20200128120033.27016-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129121752.GB31582@willie-the-truck>
+In-Reply-To: <20200128120033.27016-1-sjpark@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 12:17:53PM +0000, Will Deacon wrote:
-> On Wed, Jan 29, 2020 at 11:39:45AM +0100, Peter Zijlstra wrote:
+On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
 
-> > +extern void *get_pointer_table(int type);
-> 
-> Could be prettier/obfuscated with an enum type?
+> I worried whether it could be a bother to send the mail to everyone in the
+> section, but seems it was an unnecessary worry.  Adding those to recipients.
+> You can get the original thread of this patchset from
+> https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
 
-Definitely, but then we get to bike-shed on names :-)
+I read first patch (the document) and still have no friggin clue.
 
-enum m68k_table_type {
-	TABLE_BIG = 0,
-	TABLE_SMALL,
-};
 
-Is not exactly _that_ much better, and while TABLE_PTE works,
-TABLE_PGD_PMD is a bit crap.
-
-> > --- a/arch/m68k/mm/memory.c
-> > +++ b/arch/m68k/mm/memory.c
-
-> > -pmd_t *get_pointer_table (void)
-> > +void *get_pointer_table (int type)
-> >  {
-> > -	ptable_desc *dp = ptable_list.next;
-> > -	unsigned char mask = PD_MARKBITS (dp);
-> > -	unsigned char tmp;
-> > -	unsigned int off;
-> > +	ptable_desc *dp = ptable_list[type].next;
-> > +	unsigned int mask, tmp, off;
-> 
-> nit, but if you do:
-> 
-> 	unsigned int mask = list_empty(&ptable_list[type]) ? 0 : PD_MARKBITS(dp);
-> 
-> then you can leave the existing mask logic as-is.
-
-Indeed!
