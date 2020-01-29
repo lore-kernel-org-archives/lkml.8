@@ -2,138 +2,219 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7ECC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B678C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF56520708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roHPqOct"
+	by mail.kernel.org (Postfix) with ESMTP id 1552220708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgA2THE (ORCPT
+        id S1728494AbgA2THe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:07:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37275 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgA2THD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:07:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so797100wru.4;
-        Wed, 29 Jan 2020 11:07:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=al7sS8M/717VVwE5/5undtsrujO0rBt1ejoTK551OXU=;
-        b=roHPqOct4H2fUnD1pHVGmgmSikEmDQNoEYZkr6TOdKdwQEtvlV+qs5evNQE98ZWUAD
-         VRKeTtA7jci2d9tKD/kkRkO2+uJ+hAzyc2SPdAQnVP78nGVlesuEqpcFMrODYP1OE81I
-         G9Px2zca/2/XI9FjUS1YcTpaEHobU5Zc6iVp/q1nkCQ7mo969s1NLZYSM2R3cssius5F
-         qsQHUkdpC1g4GvEbBjn3wfvSwRU3UXsXbkviMhc2LPwRvp/c2Ry12AzUfZxlJLhGs6JI
-         8ysXin9KRNZjjCD8yCip8Y9cdyTQFpXd9erT6mwd7e6MDOZEz184ea30jKLHCa3/OOtx
-         wOKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=al7sS8M/717VVwE5/5undtsrujO0rBt1ejoTK551OXU=;
-        b=Aedo691K4H/3OVHjhI50wOKIoDNtVY1pmztbCkK1vq1L0MMtraoCFVn9EvPXa/vHaM
-         3B0BCtmRYG5GWeB4ssK9Hz9pl9r45Ce7yMlHbrX9ecyMfTtqq59J23WIaRshGILXBdcm
-         /SRqD7jyCoeW5/CxmfAYZlhIfnGiVMivFLAftq+1hiEVqGVEwSf/uDS9AZSJ/Sgl0qKi
-         cKGXX3ytxP+20L1PSFzF7474t3QxL05RfupBns1tNHGlndTzevtQxRFUlYYq29+1kDuU
-         34DhA22zJdnc9WFDKU0SXK5rUSRT1Rrpvn8V4+sMfmbhMo7UVbJ6Ii4H/LD21vo1CglY
-         BjFA==
-X-Gm-Message-State: APjAAAXAP3Hij29zhZMmPvG6X46Kek/inVw782W3LGMRaM/XKVdVSuPP
-        0TMLXUFFEPfmMDi/q9eUahs=
-X-Google-Smtp-Source: APXvYqxsho39zIYkW621J2+3KehlPpfaeZRm1g1ckm9qtB1a/J+Ibv7yleSTCW/ngxMKmpetgLZC/A==
-X-Received: by 2002:adf:e3cd:: with SMTP id k13mr310720wrm.338.1580324820489;
-        Wed, 29 Jan 2020 11:07:00 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:8f9:806b:30e8:a48e])
-        by smtp.gmail.com with ESMTPSA id a9sm3301053wmm.15.2020.01.29.11.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 11:06:59 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     sjpark@amazon.com, akpm@linux-foundation.org,
-        SeongJae Park <sjpark@amazon.de>, sj38.park@gmail.com,
-        acme@kernel.org, amit@kernel.org, brendan.d.gregg@gmail.com,
-        corbet@lwn.net, dwmw@amazon.com, mgorman@suse.de,
-        rostedt@goodmis.org, kirill@shutemov.name,
-        brendanhiggins@google.com, colin.king@canonical.com,
-        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Re: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Date:   Wed, 29 Jan 2020 20:06:45 +0100
-Message-Id: <20200129190645.2137-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129180709.GS14879@hirez.programming.kicks-ass.net> (raw)
+        Wed, 29 Jan 2020 14:07:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59656 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727635AbgA2THd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 14:07:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB1EAAE3D;
+        Wed, 29 Jan 2020 19:07:30 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: optimize barrier usage for Rmw atomics
+To:     Davidlohr Bueso <dave@stgolabs.net>, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+References: <20200129180324.24099-1-dave@stgolabs.net>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <25e3abe7-5e86-2180-424a-ceef7402c257@suse.com>
+Date:   Wed, 29 Jan 2020 21:07:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200129180324.24099-1-dave@stgolabs.net>
+Content-Type: multipart/mixed;
+ boundary="------------961A561BD5F9D1A717978A8F"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 19:07:09 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
+This is a multi-part message in MIME format.
+--------------961A561BD5F9D1A717978A8F
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-> On Wed, Jan 29, 2020 at 03:37:58PM +0100, sjpark@amazon.com wrote:
-> > On Wed, 29 Jan 2020 13:56:15 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
-> > > 
-> > > > I worried whether it could be a bother to send the mail to everyone in the
-> > > > section, but seems it was an unnecessary worry.  Adding those to recipients.
-> > > > You can get the original thread of this patchset from
-> > > > https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
-> > > 
-> > > I read first patch (the document) and still have no friggin clue.
-> > 
-> > Do you mean the document has insufficient description only?  If so, could you
-> > please point me me which information do you want to be added?
+
+
+On 29.01.20 г. 20:03 ч., Davidlohr Bueso wrote:
+> Use smp_mb__after_atomic() instead of smp_mb() and avoid the
+> unnecessary barrier for non LL/SC architectures, such as x86.
 > 
-> There was a lot of words; but I'm still not sure what it actually does.
-
-Sorry for my bad writing skill.  Will restructure and wordsmith it for next
-spin.
-
-> 
-> I've read some of the code that followed; is it simply sampling the
-> page-table access bit? It did some really weird things though, like that
-> whole 3 regions thing.
-
-Because simple Accessed bit sampling cannot preserve the accuracy of the
-monitored access patterns, we use the mechanism called 'region based sampling'.
-The patch introducing the mechanism would seems weird, mainly because it relies
-on another mechanism follows the patch.  I should mentioned about it with the
-patch.  I will add the description in next spin so people can understand that.
-
-> 
-> Also, you wrote you wanted feedback from perf people; but it doesn't use
-> perf, what are you asking?
-
-DAMON aims to be another source of data that perf, other profiling tools, or
-even other kernel space code can use.  Therefore I wanted to get some opinions
-about whether this data seems useful and how perf developers want the interface
-of DAMON to be shaped for co-operation with perf.  Will make this more clear
-with next spin's cover letter.
-
-> 
-> Perf can do address based sampling of memops, I suspect you can create
-> something using that.
-
-If you're saying implementing DAMON in 'perf mem', I think it would conflict
-with abovely explained DAMON's goal.
-
-Else, if you're saying it would be the right place to handle the DAMON
-generated data, I agree, thank you for pointing me that.  Will keep it in mind
-while shaping the interface of DAMON.
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 
 
-Thanks,
-SeongJae Park
+While on the topic of this I've been sitting on the following local
+patch for about a year, care to review the barriers:
+
+
+
+
+--------------961A561BD5F9D1A717978A8F
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-btrfs-Fix-memory-ordering-of-unlocked-dio-reads-vs-t.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-btrfs-Fix-memory-ordering-of-unlocked-dio-reads-vs-t.pa";
+ filename*1="tch"
+
+From e659e5db649be01aec20515aef8ca48143e10c0b Mon Sep 17 00:00:00 2001
+From: Nikolay Borisov <nborisov@suse.com>
+Date: Wed, 7 Mar 2018 17:19:12 +0200
+Subject: [PATCH] btrfs: Fix memory ordering of unlocked dio reads vs truncate
+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+---
+ fs/btrfs/btrfs_inode.h | 17 -----------------
+ fs/btrfs/inode.c       | 41 ++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 34 insertions(+), 24 deletions(-)
+
+diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
+index 4e12a477d32e..e84f58cca02e 100644
+--- a/fs/btrfs/btrfs_inode.h
++++ b/fs/btrfs/btrfs_inode.h
+@@ -317,23 +317,6 @@ struct btrfs_dio_private {
+ 			blk_status_t);
+ };
+ 
+-/*
+- * Disable DIO read nolock optimization, so new dio readers will be forced
+- * to grab i_mutex. It is used to avoid the endless truncate due to
+- * nonlocked dio read.
+- */
+-static inline void btrfs_inode_block_unlocked_dio(struct btrfs_inode *inode)
+-{
+-	set_bit(BTRFS_INODE_READDIO_NEED_LOCK, &inode->runtime_flags);
+-	smp_mb();
+-}
+-
+-static inline void btrfs_inode_resume_unlocked_dio(struct btrfs_inode *inode)
+-{
+-	smp_mb__before_atomic();
+-	clear_bit(BTRFS_INODE_READDIO_NEED_LOCK, &inode->runtime_flags);
+-}
+-
+ /* Array of bytes with variable length, hexadecimal format 0x1234 */
+ #define CSUM_FMT				"0x%*phN"
+ #define CSUM_FMT_VALUE(size, bytes)		size, bytes
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 6d2bb58d277a..d64600268c3a 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4626,10 +4626,29 @@ static int btrfs_setsize(struct inode *inode, struct iattr *attr)
+ 
+ 		truncate_setsize(inode, newsize);
+ 
+-		/* Disable nonlocked read DIO to avoid the endless truncate */
+-		btrfs_inode_block_unlocked_dio(BTRFS_I(inode));
++		/*
++		 * This code is very subtle. It is essentially a lock of its
++		 * own type. BTRFS allows multiple DIO readers to race with
++		 * writers so long as they don't read beyond EOF of an inode.
++		 * However, if we have a pending truncate we'd like to signal
++		 * DIO readers they should fall back to DIO_LOCKING semantics.
++		 * This ensures that multiple aggressive DIO readers cannot
++		 * starve the truncating thread.
++		 *
++		 * This semantics is achieved by the use of the below flag. If
++		 * new readers come after the flag has been cleared then the
++		 * state is still consistent, since the RELEASE semantics of
++		 * clear_bit_unlock ensure the truncate inode size will be
++		 * visible and DIO readers will bail out.
++		 *
++		 * The implied memory barrier by inode_dio_wait is paired with
++		 * smp_mb__before_atomic in btrfs_direct_IO.
++		 */
++		set_bit(BTRFS_INODE_READDIO_NEED_LOCK,
++			&BTRFS_I(inode)->runtime_flags);
+ 		inode_dio_wait(inode);
+-		btrfs_inode_resume_unlocked_dio(BTRFS_I(inode));
++		clear_bit_unlock(BTRFS_INODE_READDIO_NEED_LOCK,
++				 &BTRFS_I(inode)->runtime_flags);
+ 
+ 		ret = btrfs_truncate(inode, newsize == oldsize);
+ 		if (ret && inode->i_nlink) {
+@@ -8070,11 +8089,19 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+ 		dio_data.unsubmitted_oe_range_end = (u64)offset;
+ 		current->journal_info = &dio_data;
+ 		down_read(&BTRFS_I(inode)->dio_sem);
+-	} else if (test_bit(BTRFS_INODE_READDIO_NEED_LOCK,
++	} else {
++		/*
++		 * This barrier is paired with the implied barrier in
++		 * inode_dio_wait. It ensures that READDIO_NEED_LOCK is
++		 * visible if we have a pending truncate.
++		 */
++		smp_mb__before_atomic();
++		if (test_bit(BTRFS_INODE_READDIO_NEED_LOCK,
+ 				     &BTRFS_I(inode)->runtime_flags)) {
+-		inode_dio_end(inode);
+-		flags = DIO_LOCKING | DIO_SKIP_HOLES;
+-		wakeup = false;
++			inode_dio_end(inode);
++			flags = DIO_LOCKING | DIO_SKIP_HOLES;
++			wakeup = false;
++		}
+ 	}
+ 
+ 	ret = __blockdev_direct_IO(iocb, inode,
+-- 
+2.17.1
+
+
+--------------961A561BD5F9D1A717978A8F--
