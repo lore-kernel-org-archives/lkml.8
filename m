@@ -2,101 +2,146 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123CCC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144BCC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D661920702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D656E2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EVcta/+f"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="QgiIWV/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgA2IDb (ORCPT
+        id S1726246AbgA2IGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:03:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34000 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgA2IDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:03:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so19012147wrr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 00:03:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=G6NVfjnf+2wI9Kb71Q+m8fQvu5IYQ+TJQVOTRCuEuaY=;
-        b=EVcta/+f/X/6+jhozt2aSz6eCaPCtI8SWUMDLDPY05wIjOMzGFJFAWEptCplEeT8WQ
-         7dNayoGj1lZbX024CwyAd3Rv8aFljgvYIlb1j9rcRTr5eAZvOES2ka/NKCpCgMJBlyJ3
-         b1kC6kKbKyI7rDIXpuSpGRqxaX+g91zABG1QvzJdNB+Y7VPH+pJI/NqhZbjD7XR3knjz
-         XX9eiGawEd0qzu1wA7aPa9NCYos2yc57DPB/ddkhC7OsE5kDbwISBRuf9DN1WwXbco4Z
-         6ViWqU3e549dtiFLzOrEeCtCwPd6Wr2kb57EoKD0YQSDmuy1VN7QCHhk4MGxo62RxLeR
-         mfgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G6NVfjnf+2wI9Kb71Q+m8fQvu5IYQ+TJQVOTRCuEuaY=;
-        b=hExju8o8pvXnpXo2+RLp8fbGNFb7ETmCIRC3+4pl87uGTnf/VMqE5VI3LB8RcHiUF/
-         durPQqieBzB/r3iuNehZkgzxRqGTKUqu1q0KD0bK7ukZVzo8jiFRHGIF2ZXwgfKcjnbz
-         OQ/dNlkCcSuW/dLagj5O8e5ImLgV39B7tuJ6jJOH6h9fYM1ik0kdW1DVW2ZfxW8NZm/X
-         CQm1qfcprGRZ9Aw61nPA9Y2zj/Vv72k7Rm/jfTLFpf67yTxO8VSvReVkyq+EV7nZtvVA
-         wz6PREKmYybT/xmdbYOT1pfIivv8X5ph6pkeKUhJq4YLBdnQ8xtebZX9Rvr6949FNY1Y
-         4X2w==
-X-Gm-Message-State: APjAAAVqTVdzvPF3AnvKryYM4f1vWXvRl3SF5qkSiTmvzlCgm5DIil4+
-        8BV9WRc8w406syvBq8EHLIA06vxXGN8=
-X-Google-Smtp-Source: APXvYqwoKks1q7FdLLF+8ULYtxzJVQzSZqmRmoasrF+BdGBxIqvfEoBFp+UNV8lhh/c8UjdHSw6Ijg==
-X-Received: by 2002:a5d:66c3:: with SMTP id k3mr33982048wrw.370.1580285008617;
-        Wed, 29 Jan 2020 00:03:28 -0800 (PST)
-Received: from localhost.localdomain (amontpellier-651-1-419-170.w92-133.abo.wanadoo.fr. [92.133.102.170])
-        by smtp.gmail.com with ESMTPSA id o15sm1761215wra.83.2020.01.29.00.03.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 29 Jan 2020 00:03:28 -0800 (PST)
-From:   Loic Poulain <loic.poulain@linaro.org>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com
-Cc:     linux-kernel@vger.kernel.org,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH] tty_port: Restore tty port default ops on unregistering
-Date:   Wed, 29 Jan 2020 09:07:04 +0100
-Message-Id: <1580285224-7712-1-git-send-email-loic.poulain@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Jan 2020 03:06:50 -0500
+Received: from mail-db8eur05on2108.outbound.protection.outlook.com ([40.107.20.108]:10208
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgA2IGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 03:06:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f72Y1REEW9JpKXFak8mX+u9o2CtRpDXoDKrAHy/zSYpY+I9VGj02hgwGOebnCbjEmlFebohMLFjo5cDV6Dz8+1PHUQIyf/NxpaWLEoxGZX55fF4WyJaNOpEvw+J7N5G8s5lYqwq+Q/FKcKjSldEAJC8kX0OkoQHo8WmchJWPQ8DsiwahdYUjgY8OG34wTKsoOOsXLagh6TUPLIsuTd1mJHzMA/BMKs8Qv59CH9vk1F7kvWX7MBp3vHNRidlh6YtGWXkjGba82/Iol6O2f3FIC3xrcp2mmCbPpb9ubzky2wLSdo7pfUGTZRMk4+gCGEgNXTpJ5IKoArgZsuYhNtOtUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YA+IxNNhZXAZarUdhmtadRKZ3bSHnOcids1aLsayQOw=;
+ b=H8+8y+gcAO3aF66DtBgkiupf/SSvpsj5ygXyIYTkrbWWCc/ceNAF2+/smGZ4YzO+drC/whH0qAmkYcoUjd+1jqVgyTZ/PRySbcWHjATCkdxAV5NaYsR9BGSLoL0tEPhnivxvpPoRKGohy8jGwiVP9A2Xu9jbQYHZl/CR5V3016vPQDiR/QhvADHryyyFuhCf8AQ2KbBGgKLvQCUJlKNdHE9R1eK3nHus7O8fdS6CsBcnbT8ysxVswfgT+SSbV534+iuTcc6H3QIY5dN5bCByeRbKvyhQZDOwgoRFzy8f8RkMQJasqyXcOAbxxjgBRYOBl5OQAO5tA86UD6AiYu8q9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YA+IxNNhZXAZarUdhmtadRKZ3bSHnOcids1aLsayQOw=;
+ b=QgiIWV/7qb003Qs7mwZorr5vizhJreKHOB8RKvV9146/6KLU8FdExsyHaCatOBCUwWMSzATsj3zDI4eqHDkTt0TNzztIJreI9hoPfccAcOFnOBlYAheCz5uXrXUbvGMrmiRy71Yaea9NJlQu/zcc2WcITyhgS6hqJZof1H+AmvU=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3580.eurprd02.prod.outlook.com (52.134.66.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.22; Wed, 29 Jan 2020 08:06:33 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2665.027; Wed, 29 Jan 2020
+ 08:06:32 +0000
+Received: from [192.168.13.3] (213.112.137.122) by HE1PR06CA0146.eurprd06.prod.outlook.com (2603:10a6:7:16::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend Transport; Wed, 29 Jan 2020 08:06:31 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Johan Hovold <johan@kernel.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next][V2] i2c: xiic: fix indentation issue
+Thread-Topic: [PATCH][next][V2] i2c: xiic: fix indentation issue
+Thread-Index: AQHV1PvGmbkS3JsMKku+pbwF3sqcKKf+WLcAgAAReoCAAADJgIACM4iAgAAX7YCAAJWdAA==
+Date:   Wed, 29 Jan 2020 08:06:32 +0000
+Message-ID: <f8c236de-4ed6-49dc-e5b7-283ebb859199@axentia.se>
+References: <20200127102303.44133-1-colin.king@canonical.com>
+ <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
+ <20200127120535.GC1847@kadam>
+ <89661e5e-7662-81a5-ec36-57367825de5e@canonical.com>
+ <35ed6501-3b26-36a9-d332-d4ed3366ebd8@axentia.se>
+ <3b287fb5-e344-c13a-2803-09c2958b9b0d@canonical.com>
+In-Reply-To: <3b287fb5-e344-c13a-2803-09c2958b9b0d@canonical.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-originating-ip: [213.112.137.122]
+x-clientproxiedby: HE1PR06CA0146.eurprd06.prod.outlook.com
+ (2603:10a6:7:16::33) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c39b6653-5cb5-46e2-7048-08d7a4922716
+x-ms-traffictypediagnostic: DB3PR0202MB3580:
+x-microsoft-antispam-prvs: <DB3PR0202MB358052A74A019793FAF31705BC050@DB3PR0202MB3580.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:341;
+x-forefront-prvs: 02973C87BC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39830400003)(136003)(366004)(199004)(189003)(31696002)(508600001)(8936002)(2906002)(36756003)(31686004)(81156014)(8676002)(81166006)(66446008)(86362001)(6486002)(66556008)(64756008)(5660300002)(71200400001)(26005)(4326008)(186003)(66476007)(956004)(2616005)(66946007)(53546011)(52116002)(16526019)(316002)(16576012)(54906003)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3580;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e23Ipoi6H93eYGUEw2lpJM8EFfefqjj+znORdfhIAOSufGHjc2XvjN6+3U2rpl3SAe4XqIilzrYD/MPfXRBIadOEXvE74RT0AJpuGxpBJkQa3Tp5jbai/Cs/g+ojilVgsXfnQR/HedP1i4Qw02DPd+a3RWxagWytdAHtlkrx0/+0rmAwIzkE/SMuthRsnoS0+4YU92DQ8A4zY9/LVyG9VLj9F5OP/ma10dur7TfVvMddctAbuht94ZRDCj50MErT1Zok+qFP59XRLcKjDRH557LBGCtjXRXt4uuL56IWMzBDOSYehS7tbYOkt0iO7srZ+Y5xmLNguUi+5HVBzd4IZ4gJ8AguEz4P8/dfwO+nSb5zD82bb6R+sQKaBtVTLWBQGi/0w7om4UpssP0gLkKu7mFDCxPQrgn1A8NpvMdQ7KQvYCWJSFmELi1ALg+JBFco
+x-ms-exchange-antispam-messagedata: 2F3JeTa5T8wSpN9xEhMoaFslrRnwUXzdLOdnpmlK+vsgPA/qg486orZDCeG+4FKdRC29swqOf0CIB4mVdBTC4h0TTxaHcr+gwKgNZH1KSrhVyrYv0qK0tBEBXKJLJLMMzYtM8YLd+mezcojq/w/TJQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C71D27A5CDBB8849A01AB6970F676569@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: c39b6653-5cb5-46e2-7048-08d7a4922716
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2020 08:06:32.7614
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vfgtHayPNMFksAn55MMOeUCe6mDhG84NdB7VzKqy2c/QIoehvpmBNmCDMcAh+vR6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3580
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a port is unregistered from serdev, its serdev specific client_ops
-pointer is nullified, which can lead to future null pointer dereference.
-Fix that by restoring default client_ops when port is unregistered from
-serdev.
-
-port registering/unregistering can happen several times, at least it
-happens when statically registered 8250 ISA port are replaced at boot
-time by e.g. device-tree defined 8250 ports.
-
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- drivers/tty/tty_port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 044c3cb..bf893da 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -203,8 +203,10 @@ void tty_port_unregister_device(struct tty_port *port,
- 	int ret;
- 
- 	ret = serdev_tty_port_unregister(port);
--	if (ret == 0)
-+	if (ret == 0) {
-+		port->client_ops = &default_client_ops;
- 		return;
-+	}
- 
- 	tty_unregister_device(driver, index);
- }
--- 
-2.7.4
-
+T24gMjAyMC0wMS0yOSAwMDoxMCwgQ29saW4gSWFuIEtpbmcgd3JvdGU6DQo+IE9uIDI4LzAxLzIw
+MjAgMjE6NDUsIFBldGVyIFJvc2luIHdyb3RlOg0KPj4gT24gMjAyMC0wMS0yNyAxMzowOCwgQ29s
+aW4gSWFuIEtpbmcgd3JvdGU6DQo+Pj4gT24gMjcvMDEvMjAyMCAxMjowNSwgRGFuIENhcnBlbnRl
+ciB3cm90ZToNCj4+Pj4gT24gTW9uLCBKYW4gMjcsIDIwMjAgYXQgMTI6MDM6MDJQTSArMDEwMCwg
+TWljaGFsIFNpbWVrIHdyb3RlOg0KPj4+Pj4gT24gMjcuIDAxLiAyMCAxMToyMywgQ29saW4gS2lu
+ZyB3cm90ZToNCj4+Pj4+PiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
+YWwuY29tPg0KPj4+Pj4+DQo+Pj4+Pj4gVGhlcmUgaXMgYSBzdGF0ZW1lbnQgdGhhdCBpcyBpbmRl
+bnRlZCBvbmUgbGV2ZWwgdG9vIGRlZXBseSwgcmVtb3ZlDQo+Pj4+Pj4gdGhlIGV4dHJhbmVvdXMg
+dGFiLg0KPj4+Pj4+DQo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGlu
+LmtpbmdAY2Fub25pY2FsLmNvbT4NCj4+Pj4+PiAtLS0NCj4+Pj4+PiBWMjogZml4IHR5cGUgaW4g
+Y29tbWl0IG1lc3NhZ2UNCj4+Pj4+PiAtLS0NCj4+Pj4+PiAgZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy14aWljLmMgfCAyICstDQo+Pj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KPj4+Pj4+DQo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1
+c3Nlcy9pMmMteGlpYy5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMNCj4+Pj4+PiBp
+bmRleCBiMTdkMzBjOWFiNDAuLjkwYzFjMzYyMzk0ZCAxMDA2NDQNCj4+Pj4+PiAtLS0gYS9kcml2
+ZXJzL2kyYy9idXNzZXMvaTJjLXhpaWMuYw0KPj4+Pj4+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nl
+cy9pMmMteGlpYy5jDQo+Pj4+Pj4gQEAgLTI2MSw3ICsyNjEsNyBAQCBzdGF0aWMgaW50IHhpaWNf
+Y2xlYXJfcnhfZmlmbyhzdHJ1Y3QgeGlpY19pMmMgKmkyYykNCj4+Pj4+PiAgCQl4aWljX2dldHJl
+ZzgoaTJjLCBYSUlDX0RSUl9SRUdfT0ZGU0VUKTsNCj4+Pj4+PiAgCQlpZiAodGltZV9hZnRlcihq
+aWZmaWVzLCB0aW1lb3V0KSkgew0KPj4+Pj4+ICAJCQlkZXZfZXJyKGkyYy0+ZGV2LCAiRmFpbGVk
+IHRvIGNsZWFyIHJ4IGZpZm9cbiIpOw0KPj4+Pj4+IC0JCQkJcmV0dXJuIC1FVElNRURPVVQ7DQo+
+Pj4+Pj4gKwkJCXJldHVybiAtRVRJTUVET1VUOw0KPj4+Pj4+ICAJCX0NCj4+Pj4+PiAgCX0NCj4+
+Pj4+PiAgDQo+Pj4+Pj4NCj4+Pj4+DQo+Pj4+PiBBcyB3YXMgc3VnZ2VzdGVkIGJ5IFBldGVyIHlv
+dSBzaG91bGQgYWxzbyBhZGQgRml4ZXM6IDxzaGExPiAoInBhdGNoDQo+Pj4+PiBzdWJqZWN0IikN
+Cj4+Pj4+DQo+Pj4+DQo+Pj4+IEl0J3Mgbm90IHJlYWxseSBhIGJ1Z2ZpeCwgaXQncyBqdXN0IGEg
+Y2xlYW51cC4NCj4+Pg0KPj4+IEknbSBzdXJwcmlzZWQgaSB3YXNuJ3QgYXNrZWQgZm9yIGEgYnVn
+IG51bWJlciB0b28uDQo+Pg0KPj4gVmVyeSBmdW5ueS4NCj4gDQo+IEFwb2xvZ2llcyBmb3IgYmVp
+bmcgZmxpcHBhbnQuIEkgZGlkbid0IG1lYW4gdG8gb2ZmZW5kLiBNeSBiYWQgIzEuDQoNCkFwb2xv
+Z3kgYWNjZXB0ZWQsIG5vIGhhcmQgZmVlbGluZ3MuIERvbid0IHdvcnJ5IGFib3V0IGl0LCBhbmQg
+c29ycnkgb24gbXkNCnBhcnQgZm9yIGEgcG9zc2libGUgb3ZlcnJlYWN0aW9uIQ0KDQpDaGVlcnMs
+DQpQZXRlcg0K
