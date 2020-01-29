@@ -2,127 +2,88 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488B8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79809C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2456A20702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4403820702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:18:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dRZ3NVX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgA2WQn (ORCPT
+        id S1726719AbgA2WSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:16:43 -0500
-Received: from mga02.intel.com ([134.134.136.20]:4886 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbgA2WQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:16:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 14:16:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="261959927"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jan 2020 14:16:31 -0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
-        yang.shi@linux.alibaba.com, rientjes@google.com, david@redhat.com,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [Patch v4 2/4] mm/migrate.c: wrap do_move_pages_to_node() and store_status()
-Date:   Thu, 30 Jan 2020 06:16:14 +0800
-Message-Id: <20200129221616.25432-3-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129221616.25432-1-richardw.yang@linux.intel.com>
-References: <20200129221616.25432-1-richardw.yang@linux.intel.com>
+        Wed, 29 Jan 2020 17:18:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41614 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgA2WSX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:18:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=g1xN3pkWgTiIog0aZR6ocu7odeQml1rb1vpE5DQa10I=; b=dRZ3NVX5DnCiK3wUCKQz95Ly7
+        GcAWGsQMcJR6ipsCH1/++PKoQPrXTgWuaJ1U3G4vEW0MXXHGoM82xc1//NHKjIAB3a4Cd4wPKwLJl
+        lsgHL3rFQsyVSARRF10jMF5fyG1qwrLorHVwrTM6q+WGbssh0E4xGJCThEmpiRLb1QvsZNHjaMdYT
+        H+bLteE8w9ExY5qhYZaeUakav4gvWV+Vm7RYQPmoLQgEGbLGgtBK6eMgaR58ZNp2pEFjX5B6KzaCR
+        ut7vl6u0fWfGRJeqxdkj246fhxNxBkdPvdKBHFPd/yVDlvxhVOTcBfyM+cUAHPRPI/2eHc4oozrWI
+        c1iOefcEQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwvfC-0003Tr-Ay; Wed, 29 Jan 2020 22:18:22 +0000
+Subject: Re: linux-next: Tree for Jan 29 (security/smack/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+References: <20200129155431.76bd7f25@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e66a563e-b612-c5b6-7bdd-b55113a9b822@infradead.org>
+Date:   Wed, 29 Jan 2020 14:18:20 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200129155431.76bd7f25@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Usually, do_move_pages_to_node() and store_status() are used in
-combination. We have three similar call sites.
+On 1/28/20 8:54 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add any v5.7 material to your linux-next included
+> branches until after v5.6-rc1 has been released.
+> 
+> Changes since 20200128:
+> 
 
-Let's provide a wrapper for both function calls -
-move_pages_and_store_status - to make the calling code easier to
-maintain and fix (as noted by Yang Shi, the return value handling of
-do_move_pages_to_node() has a flaw).
+../security/smack/smack_lsm.c: In function ‘smack_post_notification’:
+../security/smack/smack_lsm.c:4383:7: error: dereferencing pointer to incomplete type ‘struct watch_notification’
+  if (n->type == WATCH_TYPE_META)
+       ^~
+  CC      kernel/time/hrtimer.o
+../security/smack/smack_lsm.c:4383:17: error: ‘WATCH_TYPE_META’ undeclared (first use in this function); did you mean ‘TCA_PIE_BETA’?
+  if (n->type == WATCH_TYPE_META)
+                 ^~~~~~~~~~~~~~~
+                 TCA_PIE_BETA
 
-[david@redhat.com rephrase changelog]
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
----
- mm/migrate.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+Probably just missing
+#include <linux/watch_queue.h>
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 4c2a21856717..92e8c9396368 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1583,6 +1583,18 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
- 	return err;
- }
- 
-+static int move_pages_and_store_status(struct mm_struct *mm, int node,
-+		struct list_head *pagelist, int __user *status,
-+		int start, int nr)
-+{
-+	int err;
-+
-+	err = do_move_pages_to_node(mm, pagelist, node);
-+	if (err)
-+		return err;
-+	return store_status(status, start, node, nr);
-+}
-+
- /*
-  * Migrate an array of page address onto an array of nodes and fill
-  * the corresponding array of status.
-@@ -1626,10 +1638,8 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 			current_node = node;
- 			start = i;
- 		} else if (node != current_node) {
--			err = do_move_pages_to_node(mm, &pagelist, current_node);
--			if (err)
--				goto out;
--			err = store_status(status, start, current_node, i - start);
-+			err = move_pages_and_store_status(mm, current_node,
-+					&pagelist, status, start, i - start);
- 			if (err)
- 				goto out;
- 			start = i;
-@@ -1658,10 +1668,8 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		if (err)
- 			goto out_flush;
- 
--		err = do_move_pages_to_node(mm, &pagelist, current_node);
--		if (err)
--			goto out;
--		err = store_status(status, start, current_node, i - start);
-+		err = move_pages_and_store_status(mm, current_node, &pagelist,
-+				status, start, i - start);
- 		if (err)
- 			goto out;
- 		current_node = NUMA_NO_NODE;
-@@ -1671,9 +1679,8 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		return err;
- 
- 	/* Make sure we do not overwrite the existing error */
--	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
--	if (!err1)
--		err1 = store_status(status, start, current_node, i - start);
-+	err1 = move_pages_and_store_status(mm, current_node, &pagelist,
-+				status, start, i - start);
- 	if (err >= 0)
- 		err = err1;
- out:
+
 -- 
-2.17.1
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
