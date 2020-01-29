@@ -2,101 +2,118 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31A4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEBCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886DB2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0AC24688
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgA2AqN (ORCPT
+        id S1727035AbgA2Aqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:46:13 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:57488 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726583AbgA2AqN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:46:13 -0500
-Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7DEE13A22C7;
-        Wed, 29 Jan 2020 11:46:10 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iwbUf-0005pB-EV; Wed, 29 Jan 2020 11:46:09 +1100
-Date:   Wed, 29 Jan 2020 11:46:09 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 06/12] btrfs: Convert from readpages to readahead
-Message-ID: <20200129004609.GI18610@dread.disaster.area>
-References: <20200125013553.24899-1-willy@infradead.org>
- <20200125013553.24899-7-willy@infradead.org>
+        Tue, 28 Jan 2020 19:46:52 -0500
+Received: from mga07.intel.com ([134.134.136.100]:19872 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgA2Aqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 19:46:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 16:46:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,376,1574150400"; 
+   d="scan'208";a="222916704"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jan 2020 16:46:25 -0800
+Date:   Wed, 29 Jan 2020 08:46:37 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+Subject: Re: [Patch v2 3/4] mm/migrate.c: check pagelist in
+ move_pages_and_store_status()
+Message-ID: <20200129004637.GD12835@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-4-richardw.yang@linux.intel.com>
+ <f7f70c42-a9a6-6c84-cdb5-230205703ddf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200125013553.24899-7-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=UZ-t7uxK7-gaYzqRExwA:9
-        a=IundfOnBDp5_hQnb:21 a=yYqAdPtR5S2h3kNd:21 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <f7f70c42-a9a6-6c84-cdb5-230205703ddf@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 05:35:47PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Use the new readahead operation in btrfs
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Cc: linux-btrfs@vger.kernel.org
-> ---
->  fs/btrfs/extent_io.c | 15 ++++-----------
->  fs/btrfs/extent_io.h |  2 +-
->  fs/btrfs/inode.c     | 18 +++++++++---------
->  3 files changed, 14 insertions(+), 21 deletions(-)
-> 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 2f4802f405a2..b1e2acbec165 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4283,7 +4283,7 @@ int extent_writepages(struct address_space *mapping,
->  	return ret;
->  }
->  
-> -int extent_readpages(struct address_space *mapping, struct list_head *pages,
-> +unsigned extent_readahead(struct address_space *mapping, pgoff_t start,
->  		     unsigned nr_pages)
->  {
->  	struct bio *bio = NULL;
-> @@ -4294,20 +4294,13 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
->  	int nr = 0;
->  	u64 prev_em_start = (u64)-1;
->  
-> -	while (!list_empty(pages)) {
-> +	while (nr_pages) {
->  		u64 contig_end = 0;
->  
-> -		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
-> -			struct page *page = lru_to_page(pages);
-> +		for (nr = 0; nr < ARRAY_SIZE(pagepool) && nr_pages--;) {
+On Tue, Jan 28, 2020 at 11:21:13AM +0100, David Hildenbrand wrote:
+>On 22.01.20 02:16, Wei Yang wrote:
+>> When pagelist is empty, it is not necessary to do the move and store.
+>> Also it consolidate the empty list check in one place.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> ---
+>>  mm/migrate.c | 9 +++------
+>>  1 file changed, 3 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index a4d3bd6475e1..80d2bba57265 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1499,9 +1499,6 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>>  {
+>>  	int err;
+>>  
+>> -	if (list_empty(pagelist))
+>> -		return 0;
+>> -
+>>  	err = migrate_pages(pagelist, alloc_new_node_page, NULL, node,
+>>  			MIGRATE_SYNC, MR_SYSCALL);
+>>  	if (err)
+>> @@ -1589,6 +1586,9 @@ static int move_pages_and_store_status(struct mm_struct *mm, int node,
+>>  {
+>>  	int err;
+>>  
+>> +	if (list_empty(pagelist))
+>> +		return 0;
+>> +
+>>  	err = do_move_pages_to_node(mm, pagelist, node);
+>>  	if (err)
+>>  		return err;
+>> @@ -1676,9 +1676,6 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>>  		current_node = NUMA_NO_NODE;
+>>  	}
+>>  out_flush:
+>> -	if (list_empty(&pagelist))
+>> -		return err;
+>
+>
+>Am I wrong or are you discarding an error here? (err could be !0)
+>
 
-What is stopping nr_pages from going negative here, and then looping
-forever on the outer nr_pages loop? Perhaps "while(nr_pages > 0) {"
-would be better there?
+This is not obvious in this code snippet. If you look into the source code, it
+might help you get the whole picture.
 
--Dave.
+The following comment says:
+
+  Make sure we do not overwrite the existing error
+
+So we didn't eat error here.
+
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
+
 -- 
-Dave Chinner
-david@fromorbit.com
+Wei Yang
+Help you, Help me
