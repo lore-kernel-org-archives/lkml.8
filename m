@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6B7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1A1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C061F20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7BFA20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgA2QW4 (ORCPT
+        id S1727273AbgA2QXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:22:56 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37444 "EHLO
+        Wed, 29 Jan 2020 11:23:13 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:55015 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727089AbgA2QWx (ORCPT
+        by vger.kernel.org with ESMTP id S1727184AbgA2QWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:22:53 -0500
+        Wed, 29 Jan 2020 11:22:55 -0500
 Received: from [109.168.11.45] (port=34038 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iwq79-005NDl-2T; Wed, 29 Jan 2020 17:22:51 +0100
+        id 1iwq7A-005NDl-Qh; Wed, 29 Jan 2020 17:22:52 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 18/28] docs: i2c: smbus-protocol: fix punctuation
-Date:   Wed, 29 Jan 2020 16:19:43 +0100
-Message-Id: <20200129151953.31582-19-luca@lucaceresoli.net>
+Subject: [PATCH v3 25/28] docs: i2c: old-module-parameters: use monospace instead of ""
+Date:   Wed, 29 Jan 2020 16:19:50 +0100
+Message-Id: <20200129151953.31582-26-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
 References: <20200129151953.31582-1-luca@lucaceresoli.net>
@@ -54,7 +54,9 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Remove misplaced dot before colon.
+Use a monospace (literal) formatting for better readability of sysfs
+attributes and the "dummy" client name. This looks much more readable in
+ReST-generated output.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
@@ -62,24 +64,39 @@ Reviewed-by: Jean Delvare <jdelvare@suse.de>
 ---
 
 Changes in v2:
- - fix subject line (Jean Delvare)
+ - reword commit message to not mention filenames (Jean Delvare)
 ---
- Documentation/i2c/smbus-protocol.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/i2c/old-module-parameters.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
-index de7285de5e93..7350e4b2c2fa 100644
---- a/Documentation/i2c/smbus-protocol.rst
-+++ b/Documentation/i2c/smbus-protocol.rst
-@@ -146,7 +146,7 @@ Implemented by i2c_smbus_write_word_data()
+diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
+index 92a403d21a62..3b93cb88eebc 100644
+--- a/Documentation/i2c/old-module-parameters.rst
++++ b/Documentation/i2c/old-module-parameters.rst
+@@ -10,9 +10,9 @@ I2C device driver binding control from user-space
+ Up to kernel 2.6.32, many I2C drivers used helper macros provided by
+ <linux/i2c.h> which created standard module parameters to let the user
+ control how the driver would probe I2C buses and attach to devices. These
+-parameters were known as "probe" (to let the driver probe for an extra
+-address), "force" (to forcibly attach the driver to a given device) and
+-"ignore" (to prevent a driver from probing a given address).
++parameters were known as ``probe`` (to let the driver probe for an extra
++address), ``force`` (to forcibly attach the driver to a given device) and
++``ignore`` (to prevent a driver from probing a given address).
  
- This is the opposite of the Read Word operation. 16 bits
- of data are written to a device, to the designated register that is
--specified through the Comm byte.::
-+specified through the Comm byte::
+ With the conversion of the I2C subsystem to the standard device driver
+ binding model, it became clear that these per-module parameters were no
+@@ -47,8 +47,8 @@ New method (sysfs interface)::
+   # echo dummy 0x2f > /sys/bus/i2c/devices/i2c-1/new_device
+   # modprobe <driver>
  
-   S Addr Wr [A] Comm [A] DataLow [A] DataHigh [A] P
- 
+-Of course, it is important to instantiate the "dummy" device before loading
++Of course, it is important to instantiate the ``dummy`` device before loading
+ the driver. The dummy device will be handled by i2c-core itself, preventing
+ other drivers from binding to it later on. If there is a real device at the
+ problematic address, and you want another driver to bind to it, then simply
+-pass the name of the device in question instead of "dummy".
++pass the name of the device in question instead of ``dummy``.
 -- 
 2.25.0
 
