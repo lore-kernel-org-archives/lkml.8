@@ -2,84 +2,78 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6CCC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2437C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C203920716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uoHQrrL5"
+	by mail.kernel.org (Postfix) with ESMTP id 8E77F20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580302673;
+	bh=5t9UhEXD3qw3kJC/YZY2e/10WCd7xRYsojeM9CyBOD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qW8kMMBWdiTS1nIpd0GIC8qT2Hbw7z+H3ZwdNg79M1Ln0O91QWvQ2DHL/5SeLnCSa
+	 KP/GLVp8kPlmiOu5cDz5zwSGBJ3k7roDBmzUpgMuMcxNBXVonAxXz5y3YgzWt9BIIu
+	 xgTdKe06U7l5s/+dmK0uolCIUQcOuqCrCoKALIV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgA2M4t (ORCPT
+        id S1726528AbgA2M5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:56:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55238 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgA2M4t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:56:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SLgmNjaM2cFkmb1tZ6hEg2KCmNp2rU4V4QwYCqC2LIk=; b=uoHQrrL5EvNo0CZjPA/Azrhq8
-        ylfDQUgwONKpZb5NNNOmfeh1FruhN4CV7DZQluMt1CH9bLo5RCf+eYK1YWqiwaHniAAINWJcnlxYN
-        5szs4Okfx1mE31BHAmui2CoCPhcyKGY+IkYkEwENcoxDzXXEPWtwKaG1IOj/JcIynG5BrlqTmT6Eo
-        fmXyWY1nN5DIgcJ/KvYAtYGxQLbUWFiotg6O+3J7eoA8tTPqnO88nZgI0K+zJaEVqvfCIW4zJKz2m
-        dxZ+mwMVodHeKz+FqX1imyRDBthA5WPFjUB/n+C40/PDdirgJ6ddfQvpGx7BCGGlhOOXNwUsCU1rh
-        iq+rldLJQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwmtH-0005jA-0E; Wed, 29 Jan 2020 12:56:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 29 Jan 2020 07:57:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgA2M5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:57:52 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7489F300DD5;
-        Wed, 29 Jan 2020 13:54:33 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D141F2B77DA21; Wed, 29 Jan 2020 13:56:15 +0100 (CET)
-Date:   Wed, 29 Jan 2020 13:56:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     sjpark@amazon.com
-Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
-        sj38.park@gmail.com, acme@kernel.org, amit@kernel.org,
-        brendan.d.gregg@gmail.com, corbet@lwn.net, dwmw@amazon.com,
-        mgorman@suse.de, rostedt@goodmis.org, kirill@shutemov.name,
-        brendanhiggins@google.com, colin.king@canonical.com,
-        minchan@kernel.org, vdavydov.dev@gmail.com, vdavydov@parallels.com,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: Re: [PATCH v2 0/9] Introduce Data Access MONitor (DAMON)
-Message-ID: <20200129125615.GQ14879@hirez.programming.kicks-ass.net>
-References: <41BBD985-4B3D-4F87-B69D-D8CFE6EC0EBE@lca.pw>
- <20200128120033.27016-1-sjpark@amazon.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9933620716;
+        Wed, 29 Jan 2020 12:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580302672;
+        bh=5t9UhEXD3qw3kJC/YZY2e/10WCd7xRYsojeM9CyBOD4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tv1kiJCXtNSwcu5EH3FWVId6hs482wRFXnypbYVo4zlWbJB9KHuutLnADHgJ/I0V+
+         HOMWCz2wIVivdj22CnwoiSJro4CkQoWtPyU4q514yKIBFPo4gXlXDlKXaf1IJsfzjL
+         V9EIChToSqBVZ1wru8xB8UEZ/rAq/WGEz5LV3XAM=
+Date:   Wed, 29 Jan 2020 13:57:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/92] 4.19.100-stable review
+Message-ID: <20200129125749.GA15245@kroah.com>
+References: <20200128135809.344954797@linuxfoundation.org>
+ <20200129113106.GA28178@duo.ucw.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128120033.27016-1-sjpark@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200129113106.GA28178@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 01:00:33PM +0100, sjpark@amazon.com wrote:
+On Wed, Jan 29, 2020 at 12:31:06PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > This is the start of the stable review cycle for the 4.19.100 release.
+> > There are 92 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> > Anything received after that time might be too late.
+> 
+> It builds and basic tests work in our configurations.
+> 
+> https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/112957173
 
-> I worried whether it could be a bother to send the mail to everyone in the
-> section, but seems it was an unnecessary worry.  Adding those to recipients.
-> You can get the original thread of this patchset from
-> https://lore.kernel.org/linux-mm/20200128085742.14566-1-sjpark@amazon.com/
+That's nice to see, thanks for testing and letting me know.
 
-I read first patch (the document) and still have no friggin clue.
-
-
+greg k-h
