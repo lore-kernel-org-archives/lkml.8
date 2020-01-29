@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB022C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8096C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86293206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978A8206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgA2Xqz (ORCPT
+        id S1727277AbgA2Xq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:46:55 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46692 "EHLO mga06.intel.com"
+        Wed, 29 Jan 2020 18:46:57 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46688 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbgA2Xqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727217AbgA2Xqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 18:46:50 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551761"
+   d="scan'208";a="309551753"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:44 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 23/26] KVM: x86: Handle Intel PT CPUID adjustment in vendor code
-Date:   Wed, 29 Jan 2020 15:46:37 -0800
-Message-Id: <20200129234640.8147-24-sean.j.christopherson@intel.com>
+Subject: [PATCH 20/26] KVM: x86: Handle PKU CPUID adjustment in SVM code
+Date:   Wed, 29 Jan 2020 15:46:34 -0800
+Message-Id: <20200129234640.8147-21-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,66 +49,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the Processor Trace CPUID adjustment into vendor code to eliminate
-an instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
-pattern in the common CPUID handling code, and to pave the way toward
-eventually removing ->pt_supported().
+Move the clearing of the PKU CPUID bit into SVM, which does not yet
+support virtualizing PKU, to eliminate an instance of the undesirable
+"unsigned f_* = *_supported ? F(*) : 0" pattern in the common CPUID
+handling code.  Drop ->pku_supported() since CPUID adjustment was the
+only user.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c   | 3 +--
- arch/x86/kvm/svm.c     | 1 +
- arch/x86/kvm/vmx/vmx.c | 2 ++
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 -
+ arch/x86/kvm/cpuid.c            | 4 +---
+ arch/x86/kvm/svm.c              | 7 +------
+ arch/x86/kvm/vmx/capabilities.h | 5 -----
+ arch/x86/kvm/vmx/vmx.c          | 1 -
+ 5 files changed, 2 insertions(+), 16 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b9c871c03bf5..8a685509c218 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1167,7 +1167,6 @@ struct kvm_x86_ops {
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 	bool (*pt_supported)(void);
+-	bool (*pku_supported)(void);
+ 
+ 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 75971c254b4d..eb61a1d83598 100644
+index d835f4662fba..e376d648f94d 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -321,7 +321,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
- 
- static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+@@ -323,7 +323,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
  {
--	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
  	unsigned f_la57;
+-	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
  
  	/* cpuid 7.0.ebx */
-@@ -330,7 +329,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
- 		F(BMI2) | F(ERMS) | F(INVPCID) | F(RTM) | F(MPX) | F(RDSEED) |
- 		F(ADX) | F(SMAP) | F(AVX512IFMA) | F(AVX512F) | F(AVX512PF) |
- 		F(AVX512ER) | F(AVX512CD) | F(CLFLUSHOPT) | F(CLWB) | F(AVX512DQ) |
--		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | f_intel_pt;
-+		F(SHA_NI) | F(AVX512BW) | F(AVX512VL) | F(INTEL_PT);
+ 	const u32 kvm_cpuid_7_0_ebx_x86_features =
+@@ -335,7 +334,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
  
  	/* cpuid 7.0.ecx*/
  	const u32 kvm_cpuid_7_0_ecx_x86_features =
+-		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
++		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
+ 		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+ 		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+ 		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+@@ -363,7 +362,6 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+ 		/* Set LA57 based on hardware capability. */
+ 		entry->ecx |= f_la57;
+-		entry->ecx |= f_pku;
+ 		/* PKU is not yet implemented for shadow paging. */
+ 		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+ 			cpuid_entry_clear(entry, X86_FEATURE_PKU);
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 7d6f46399e5a..350cdf91a576 100644
+index 4ea530ff6a0c..1092d5e6c683 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -6066,6 +6066,7 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- 		cpuid_entry_clear(entry, X86_FEATURE_PKU);
+@@ -6060,6 +6060,7 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ 			cpuid_entry_clear(entry, X86_FEATURE_X2APIC);
+ 		break;
+ 	case 0x7:
++		cpuid_entry_clear(entry, X86_FEATURE_PKU);
  		cpuid_entry_clear(entry, X86_FEATURE_MPX);
  		cpuid_entry_clear(entry, X86_FEATURE_INVPCID);
-+		cpuid_entry_clear(entry, X86_FEATURE_INTEL_PT);
  		break;
- 	case 0x80000001:
- 		if (nested)
+@@ -6120,11 +6121,6 @@ static bool svm_has_wbinvd_exit(void)
+ 	return true;
+ }
+ 
+-static bool svm_pku_supported(void)
+-{
+-	return false;
+-}
+-
+ #define PRE_EX(exit)  { .exit_code = (exit), \
+ 			.stage = X86_ICPT_PRE_EXCEPT, }
+ #define POST_EX(exit) { .exit_code = (exit), \
+@@ -7484,7 +7480,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.xsaves_supported = svm_xsaves_supported,
+ 	.umip_emulated = svm_umip_emulated,
+ 	.pt_supported = svm_pt_supported,
+-	.pku_supported = svm_pku_supported,
+ 
+ 	.set_supported_cpuid = svm_set_supported_cpuid,
+ 
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 0a0b1494a934..7cae355e3490 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -145,11 +145,6 @@ static inline bool vmx_umip_emulated(void)
+ 		SECONDARY_EXEC_DESC;
+ }
+ 
+-static inline bool vmx_pku_supported(void)
+-{
+-	return boot_cpu_has(X86_FEATURE_PKU);
+-}
+-
+ static inline bool cpu_has_vmx_rdtscp(void)
+ {
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl &
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 941ac7296735..35134dbed2f0 100644
+index 6bcdfb8744d3..3845ca7da6e0 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7149,6 +7149,8 @@ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- 			cpuid_entry_clear(entry, X86_FEATURE_MPX);
- 		if (!cpu_has_vmx_invpcid())
- 			cpuid_entry_clear(entry, X86_FEATURE_INVPCID);
-+		if (!vmx_pt_mode_is_host_guest())
-+			cpuid_entry_clear(entry, X86_FEATURE_INTEL_PT);
+@@ -7900,7 +7900,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.xsaves_supported = vmx_xsaves_supported,
+ 	.umip_emulated = vmx_umip_emulated,
+ 	.pt_supported = vmx_pt_supported,
+-	.pku_supported = vmx_pku_supported,
  
- 		if (vmx_umip_emulated())
- 			cpuid_entry_set(entry, X86_FEATURE_UMIP);
+ 	.request_immediate_exit = vmx_request_immediate_exit,
+ 
 -- 
 2.24.1
 
