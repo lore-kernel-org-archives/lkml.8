@@ -2,88 +2,121 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79809C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D88C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4403820702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50B820716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dRZ3NVX5"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="L0wTNSd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgA2WSX (ORCPT
+        id S1726774AbgA2WTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:18:23 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41614 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgA2WSX (ORCPT
+        Wed, 29 Jan 2020 17:19:11 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38665 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgA2WTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:18:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g1xN3pkWgTiIog0aZR6ocu7odeQml1rb1vpE5DQa10I=; b=dRZ3NVX5DnCiK3wUCKQz95Ly7
-        GcAWGsQMcJR6ipsCH1/++PKoQPrXTgWuaJ1U3G4vEW0MXXHGoM82xc1//NHKjIAB3a4Cd4wPKwLJl
-        lsgHL3rFQsyVSARRF10jMF5fyG1qwrLorHVwrTM6q+WGbssh0E4xGJCThEmpiRLb1QvsZNHjaMdYT
-        H+bLteE8w9ExY5qhYZaeUakav4gvWV+Vm7RYQPmoLQgEGbLGgtBK6eMgaR58ZNp2pEFjX5B6KzaCR
-        ut7vl6u0fWfGRJeqxdkj246fhxNxBkdPvdKBHFPd/yVDlvxhVOTcBfyM+cUAHPRPI/2eHc4oozrWI
-        c1iOefcEQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwvfC-0003Tr-Ay; Wed, 29 Jan 2020 22:18:22 +0000
-Subject: Re: linux-next: Tree for Jan 29 (security/smack/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-References: <20200129155431.76bd7f25@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e66a563e-b612-c5b6-7bdd-b55113a9b822@infradead.org>
-Date:   Wed, 29 Jan 2020 14:18:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Jan 2020 17:19:11 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so432738pjz.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 14:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gm6baxWqlVJBYjrTuitTNaBr1MkKZDLEKcjPTz92Yuw=;
+        b=L0wTNSd/ba+/Jir8Y8zAOCd7bzmaRvQDYfPfI8/l5zQ/mCR76l00gBEDLWTaLHWYed
+         oJM+kdxg6sizMD60HCiFYaoJapHuqErPhDUoNTBNc3XtG4v/jLGEqonFFwajIcmS5S8H
+         rn1JDRJEIgVmwOZqhTfq8qfszi6iq44EBMiW0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gm6baxWqlVJBYjrTuitTNaBr1MkKZDLEKcjPTz92Yuw=;
+        b=BKqptmQz1zlhbDEnUZo2Yt6bZLE+m1dBBmUKM01FpFSsCNBByC3SaZI2tnoBAtQaHu
+         sI9X9DZmcmrvd/eBsI/JSPuikgE/a4Kjg2aZVPfGYdBXI+S7oj9rO6pYzGqQPRKlz9ri
+         kHTPlueLzJ7Ce6xaN2u+/AL6A97iv1q4q9xCGbzwrDJ73RDwH1IN2kIYfBXUFvdnnTfr
+         +WaKaKsmYi7IS8QLnditClNCCdonL0381nk+vICOIAeixBCYEJJLiaFOSFy9L3jKVkjH
+         UlzFXZm1uJFEqyFfqOksm+fXclbOfrEpuLWbPy6k+7rsLgc4P3E67HMsBRfnqzCzppej
+         zXxw==
+X-Gm-Message-State: APjAAAUNxQ/YlU/twU0rlam7yGjqT9SJWfU+7kccDf9YB6jd80CLYIQN
+        7qeM6dQ6xtmBraAQiaopiWs2jQ==
+X-Google-Smtp-Source: APXvYqyVTFJ4QGYL+Go0ew04cMV55S2wewIfTCwD5Ah3U4M1HkXDKHhZSGpRe9nEJkt5UHJBefNCPA==
+X-Received: by 2002:a17:90a:3243:: with SMTP id k61mr2157855pjb.43.1580336350700;
+        Wed, 29 Jan 2020 14:19:10 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id gx2sm3676730pjb.18.2020.01.29.14.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 14:19:10 -0800 (PST)
+Date:   Wed, 29 Jan 2020 17:19:09 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH 2/2] events: callchain: Use RCU API to access RCU pointer
+Message-ID: <20200129221909.GA74354@google.com>
+References: <20200129160813.14263-1-frextrite@gmail.com>
+ <20200129160813.14263-2-frextrite@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200129155431.76bd7f25@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129160813.14263-2-frextrite@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 8:54 PM, Stephen Rothwell wrote:
-> Hi all,
+On Wed, Jan 29, 2020 at 09:38:13PM +0530, Amol Grover wrote:
+> callchain_cpus_entries is annotated as an RCU pointer.
+> Hence rcu_dereference_protected or similar RCU API is
+> required to dereference the pointer.
 > 
-> Please do not add any v5.7 material to your linux-next included
-> branches until after v5.6-rc1 has been released.
+> This fixes the following sparse warning
+> kernel/events/callchain.c:65:17: warning: incorrect type in assignment
 > 
-> Changes since 20200128:
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  kernel/events/callchain.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-
-../security/smack/smack_lsm.c: In function ‘smack_post_notification’:
-../security/smack/smack_lsm.c:4383:7: error: dereferencing pointer to incomplete type ‘struct watch_notification’
-  if (n->type == WATCH_TYPE_META)
-       ^~
-  CC      kernel/time/hrtimer.o
-../security/smack/smack_lsm.c:4383:17: error: ‘WATCH_TYPE_META’ undeclared (first use in this function); did you mean ‘TCA_PIE_BETA’?
-  if (n->type == WATCH_TYPE_META)
-                 ^~~~~~~~~~~~~~~
-                 TCA_PIE_BETA
-
-
-Probably just missing
-#include <linux/watch_queue.h>
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index f91e1f41d25d..a672d02a1b3a 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
+> @@ -62,7 +62,8 @@ static void release_callchain_buffers(void)
+>  {
+>  	struct callchain_cpus_entries *entries;
+>  
+> -	entries = callchain_cpus_entries;
+> +	entries = rcu_dereference_protected(callchain_cpus_entries,
+> +					    lockdep_is_held(&callchain_mutex));
 
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+thanks,
+
+ - Joel
+
+
+>  	RCU_INIT_POINTER(callchain_cpus_entries, NULL);
+>  	call_rcu(&entries->rcu_head, release_callchain_buffers_rcu);
+>  }
+> -- 
+> 2.24.1
+> 
