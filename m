@@ -6,37 +6,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987F1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5787C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B89206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8789F20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgA2QW4 (ORCPT
+        id S1727260AbgA2QXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:22:56 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46449 "EHLO
+        Wed, 29 Jan 2020 11:23:04 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:60576 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727161AbgA2QWx (ORCPT
+        by vger.kernel.org with ESMTP id S1727189AbgA2QW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:22:53 -0500
+        Wed, 29 Jan 2020 11:22:56 -0500
 Received: from [109.168.11.45] (port=34038 helo=pc-ceresoli.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.92)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1iwq78-005NDl-Q1; Wed, 29 Jan 2020 17:22:50 +0100
+        id 1iwq7B-005NDl-1m; Wed, 29 Jan 2020 17:22:53 +0100
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Wolfram Sang <wsa@the-dreams.de>,
         Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 17/28] docs: i2c: smbus-protocol: fix typo
-Date:   Wed, 29 Jan 2020 16:19:42 +0100
-Message-Id: <20200129151953.31582-18-luca@lucaceresoli.net>
+Subject: [PATCH v3 26/28] docs: i2c: rename sections so the overall picture is clearer
+Date:   Wed, 29 Jan 2020 16:19:51 +0100
+Message-Id: <20200129151953.31582-27-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
 References: <20200129151953.31582-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
@@ -54,32 +55,141 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-The subject is plural, fix the verb.
+Some of the section names are not very clear. Reading those names in the
+index.rst page does not help much in grasping what the content is supposed
+to be.
+
+Rename those sections to clarify their content, especially when reading
+the index page.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Acked-by: Peter Rosin <peda@axentia.se>
 Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
 ---
 
-Changes in v2:
- - fix subject line (Jean Delvare)
----
- Documentation/i2c/smbus-protocol.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Note: here checkpatch complains:
 
+  WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+
+Thas's because those files have no license line. I would gladly add a
+proper license line, but what it the correct license here? Should I ask the
+authors? GPLv2-only as the kernel default?
+
+I'd appreciate a guidance here, thanks in advance.
+
+---
+
+Changes in v2:
+ - summary.rst: "Introductions" -> "Introduction" (suggested by Jean Delvare)
+---
+ Documentation/i2c/dev-interface.rst         | 6 +++---
+ Documentation/i2c/i2c-protocol.rst          | 6 +++---
+ Documentation/i2c/i2c-topology.rst          | 6 +++---
+ Documentation/i2c/old-module-parameters.rst | 6 +++---
+ Documentation/i2c/smbus-protocol.rst        | 6 +++---
+ Documentation/i2c/summary.rst               | 6 +++---
+ Documentation/i2c/writing-clients.rst       | 6 +++---
+ 7 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/Documentation/i2c/dev-interface.rst b/Documentation/i2c/dev-interface.rst
+index c3717a87df12..bdb247f2f11a 100644
+--- a/Documentation/i2c/dev-interface.rst
++++ b/Documentation/i2c/dev-interface.rst
+@@ -1,6 +1,6 @@
+-====================
+-I2C Device Interface
+-====================
++============================================
++Implementing I2C device drivers in userspace
++============================================
+ 
+ Usually, I2C devices are controlled by a kernel driver. But it is also
+ possible to access all devices on an adapter from userspace, through
+diff --git a/Documentation/i2c/i2c-protocol.rst b/Documentation/i2c/i2c-protocol.rst
+index 9a4ac944cf9d..6aafc3880bce 100644
+--- a/Documentation/i2c/i2c-protocol.rst
++++ b/Documentation/i2c/i2c-protocol.rst
+@@ -1,6 +1,6 @@
+-============
+-I2C Protocol
+-============
++================
++The I2C Protocol
++================
+ 
+ This document describes the I2C protocol. Or will, when it is finished :-)
+ 
+diff --git a/Documentation/i2c/i2c-topology.rst b/Documentation/i2c/i2c-topology.rst
+index 2a18b53e3508..7cb53819778e 100644
+--- a/Documentation/i2c/i2c-topology.rst
++++ b/Documentation/i2c/i2c-topology.rst
+@@ -1,6 +1,6 @@
+-============
+-I2C topology
+-============
++================================
++I2C muxes and complex topologies
++================================
+ 
+ There are a couple of reasons for building more complex I2C topologies
+ than a straight-forward I2C bus with one adapter and one or more devices.
+diff --git a/Documentation/i2c/old-module-parameters.rst b/Documentation/i2c/old-module-parameters.rst
+index 3b93cb88eebc..38e55829dee8 100644
+--- a/Documentation/i2c/old-module-parameters.rst
++++ b/Documentation/i2c/old-module-parameters.rst
+@@ -1,6 +1,6 @@
+-=================================================
+-I2C device driver binding control from user-space
+-=================================================
++================================================================
++I2C device driver binding control from user-space in old kernels
++================================================================
+ 
+ .. NOTE::
+    Note: this section is only relevant if you are handling some old code
 diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
-index 3c0fb3a2044d..de7285de5e93 100644
+index 0edaf6069ac1..c122ed239f7f 100644
 --- a/Documentation/i2c/smbus-protocol.rst
 +++ b/Documentation/i2c/smbus-protocol.rst
-@@ -145,7 +145,7 @@ SMBus Write Word
- Implemented by i2c_smbus_write_word_data()
+@@ -1,6 +1,6 @@
+-======================
+-SMBus Protocol Summary
+-======================
++==================
++The SMBus Protocol
++==================
  
- This is the opposite of the Read Word operation. 16 bits
--of data is written to a device, to the designated register that is
-+of data are written to a device, to the designated register that is
- specified through the Comm byte.::
+ The following is a summary of the SMBus protocol. It applies to
+ all revisions of the protocol (1.0, 1.1, and 2.0).
+diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
+index 09f73a608e25..ce7230025b33 100644
+--- a/Documentation/i2c/summary.rst
++++ b/Documentation/i2c/summary.rst
+@@ -1,6 +1,6 @@
+-=============
+-I2C and SMBus
+-=============
++=============================
++Introduction to I2C and SMBus
++=============================
  
-   S Addr Wr [A] Comm [A] DataLow [A] DataHigh [A] P
+ I²C (pronounce: I squared C and written I2C in the kernel documentation) is
+ a protocol developed by Philips. It is a slow two-wire protocol (variable
+diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
+index 44d97b2c9a82..82aa33c964d3 100644
+--- a/Documentation/i2c/writing-clients.rst
++++ b/Documentation/i2c/writing-clients.rst
+@@ -1,6 +1,6 @@
+-===================
+-Writing I2C Clients
+-===================
++===============================
++Implementing I2C device drivers
++===============================
+ 
+ This is a small guide for those who want to write kernel drivers for I2C
+ or SMBus devices, using Linux as the protocol host/master (not slave).
 -- 
 2.25.0
 
