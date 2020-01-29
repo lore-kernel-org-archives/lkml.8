@@ -2,144 +2,86 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5091C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7486C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CC62071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A727C20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:02:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oi4ghENt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgA2J6I (ORCPT
+        id S1726177AbgA2KCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:58:08 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2326 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726068AbgA2J6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:58:07 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 6C5DEA6AF853B8C8AC10;
-        Wed, 29 Jan 2020 09:58:05 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 Jan 2020 09:58:05 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 29 Jan
- 2020 09:58:04 +0000
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-To:     Olof Johansson <olof@lixom.net>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "jeremy.linton@arm.com" <jeremy.linton@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
- <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
- <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
- <CAOesGMjrC=b781LLU-Btp1b9uKTiMXj8tF3rjK_Wy6Q4iaR+Rw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <734a01d8-3b50-48ca-1d94-d79d0e6610ff@huawei.com>
-Date:   Wed, 29 Jan 2020 09:58:04 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 29 Jan 2020 05:02:45 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40959 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgA2KCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 05:02:45 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n18so17747559ljo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 02:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NMxi53oQhLqzBIhRfkCNH6OHdDETWpd2dLEfkOHx2Uc=;
+        b=Oi4ghENtW6WcAZoWHyXkSoZL6u7K78YhV9BGUbXfC6h6iBLme0/mQHB5Ff2rNV0E6B
+         On7RkAea/ORZqEDHsxpTTRJ4e8w4Dr/ZSGZ7EuaRWqhlipZW+SzN7agWqJvr30hjw0mr
+         maGoxAwSH46ouE/d+AHJD5+unObzitFq5uiQ5dTuteai1qfGVsL1Gdvd7/eWX0HdFQfY
+         XjtoTXtzE0WnVZ/WjTsHYubHx5SVEI0eHDsG4NvncsMPBujwg7rToS4rRJfF0yOv0Jp/
+         YPoUAOBGsgvdON/p45jmIfTn8+EifTTXAmFTcc8LILl5rDhfg9yLO4+GcHBkGZGHHpVp
+         wZYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NMxi53oQhLqzBIhRfkCNH6OHdDETWpd2dLEfkOHx2Uc=;
+        b=TmeBN6w+GoMLKVSUw3KCKF5mPRaClV1kEFG/Pxc0ByYYrc9rdapJDMVG36IMTrSiV7
+         xHt1VeoV5zu/Me89yT/ALbLm5csmVjklCZVBzepydClJ53VBPqz6Dt0IQiVRGvFrMrW1
+         USP3MKO2QNCDVnt400zYRkg7W5xk6MXnXSDKRl4axNrZgWSWV704xCbHSkX7rozH28nU
+         ITEK7qC//YoUSrXyeb1gRHMILleAh6za7XhcGx0VL6QbH9SKdGN9aZvqt5OFYY28n4bp
+         9LzgUbNiDxaX/CFZ8KaZ3rBeAwfjETrhe9/kU5nXMxLbyyv9PAyFceKPJO1EU3wSl8ri
+         uvyg==
+X-Gm-Message-State: APjAAAXZ68gcO8W3X5vchAk1BR9IOSRtIAXYL6hNjHqLwn6b7DEBkAhG
+        uPQTXkAjm5DzcOTgXKfIAZn2A8FS9VtAqLqCYGHnLQ==
+X-Google-Smtp-Source: APXvYqwETGQUBQ9evnWRAidnF08QHwkw7wCuB5Ih+rKtEwQzqb/TOP2aY3kVf4fXyMdZkgiY/Zpkwkp5E9sI99kmEjg=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr15670925ljg.168.1580292163302;
+ Wed, 29 Jan 2020 02:02:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMjrC=b781LLU-Btp1b9uKTiMXj8tF3rjK_Wy6Q4iaR+Rw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com> <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
+In-Reply-To: <ecb0e9404a3f6256a7ba1fe48b5a1471@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Jan 2020 11:02:32 +0100
+Message-ID: <CACRpkdaQWB6toqVoPZCO=pfnMBFW+hXc027azu92NdOMqR_qNg@mail.gmail.com>
+Subject: Re: [PATCH] gpio/sifive: fix static checker warning
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Wesley W. Terpstra" <wesley@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof,
+On Tue, Jan 28, 2020 at 2:21 PM Marc Zyngier <maz@kernel.org> wrote:
 
->>>
->>> Based on everything I've seen so far, this should go under drivers/acpi instead.
->>
->> soc drivers seem to live in drivers/soc (non-arm32, anyway), so I
->> decided on this location. But drivers/acpi would also seem reasonable now.
-> 
-> We don't want drivers/soc to be too much of a catch-all -- it is meant
-> for some of the glue pieces that don't have good homes elsewhere.
-> Unfortunately, the slope is slippery and we've already gone down it a
-> bit, but I think we can fairly clearly declare that this kind of
-> cross-soc material is likely not the right home for it -- especially
-> when drivers/acpi is a good fit in this case.
+> Linus, do you want me to queue this via the irqchip tree (given that
+> it is where the original bug came from)? Or would you rather take it?
 
-ok
+I can take it, I just need to get my own changes for GPIO in first
+so I'll apply this past v5.6-rc1.
 
-> 
->>>> diff --git a/drivers/soc/acpi_generic.c b/drivers/soc/acpi_generic.c
->>>> new file mode 100644
->>>> index 000000000000..34a1f5f8e063
->>>> --- /dev/null
->>>> +++ b/drivers/soc/acpi_generic.c
->>>> @@ -0,0 +1,102 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright (c) John Garry, john.garry@huawei.com
->>>> + */
->>>> +
->>>> +#define pr_fmt(fmt) "SOC ACPI GENERIC: " fmt
->>>> +
->>>> +#include <linux/acpi.h>
->>>> +#include <linux/sys_soc.h>
->>>> +
-
-[...]
-
->>>
->>> Hmm, this doesn't look like much of a driver to me. This looks like
->>> the export of an attribute to userspace, and should probably be done
->>> by ACPI core instead of creating an empty driver for it.
->>
->> OK, but I'm thinking that having a soc driver can be useful as it is
->> common to DT, and so userspace only has to check a single location. And
->> the soc driver can also cover multiple-chip systems without have to
->> reinvent that code for ACPI core. And it saves adding a new ABI.
-> 
-> While having a single location could be convenient, the actual data
-> read/written would be different (I'm guessing).
-
-Without doubt we would have different data sometimes between ACPI and DT 
-FW..
-
-And it is not ideal that the soc_id sysfs file could have different 
-contents for the same SoC, depending on ACPI or DT.
-
-> 
-> We also already have a supposed standard way of figuring out what SoC
-> we're on (toplevel compatible for the DT). 
-
- From checking some soc drivers, there is a distinction between how 
-soc_id and machine is evaluated: machine comes from DT model, which 
-looks standard; however soc_id seems to have different methods of 
-evaluate, like sometimes reading some system id register (I'm checking 
-exynos-chipid.c there).
-
-We're just looking for soc_id. But, as before, it would probably be 
-different between ACPI and DT, so not ideal.
-
-So no matter what, I think
-> userspace will need to handle two ways of probing this.
-> 
-
-That should not be a big problem.
-
-> 
-
-Thanks,
-John
-
+Yours,
+Linus Walleij
