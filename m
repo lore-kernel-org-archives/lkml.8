@@ -2,103 +2,198 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A817C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2674C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E5A20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C6020732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580282189;
+	bh=uQa01UO/GvDHzOsEd4owIsRB9/MsrxGwlUaDrmo8Btg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=mJxCCnYlvKo62yocxyEhhK8z3RRUvqY98m1WQ4hqVjaj4c7i+Ksb6kWV5q0NABqpF
+	 SVgSz9o6r8O+n7dwgsnh+Ll+vbKguA7vbVr19iQoMRyg+VXB+TAnicYDcBI2gJ+ENi
+	 +N8gRQtco/+TCuzzmdimHLT8Qo0zb9+WeP14EyX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgA2HOt (ORCPT
+        id S1726216AbgA2HQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 02:14:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50476 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgA2HOs (ORCPT
+        Wed, 29 Jan 2020 02:16:29 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36759 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbgA2HQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 02:14:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iwhYR-0003r2-Ta; Wed, 29 Jan 2020 08:14:28 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 66BB8101227; Wed, 29 Jan 2020 08:14:27 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list\:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Subject: Re: [RFC PATCH v4 10/11] lib: vdso: Allow arches to override the ns shift operation
-In-Reply-To: <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
-References: <cover.1579196675.git.christophe.leroy@c-s.fr> <c8ce9baaef0dc7273e4bcc31f353b17b655113d1.1579196675.git.christophe.leroy@c-s.fr> <CALCETrWJcB9=MuSw5yx6arcb_np=E=awTyLRSi=r8BJySf_aXw@mail.gmail.com> <877e1rfa40.fsf@nanos.tec.linutronix.de> <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
-Date:   Wed, 29 Jan 2020 08:14:27 +0100
-Message-ID: <87mua64tv0.fsf@nanos.tec.linutronix.de>
+        Wed, 29 Jan 2020 02:16:28 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so17314000ljg.3;
+        Tue, 28 Jan 2020 23:16:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=WTrvUywgLybex9L6ZKI1z8jPJJzgLHgy5xUyFCFo4v0=;
+        b=FIagldBiZ7DVkWn2XxCrx5Yey7VkwX/s2CcK/kPAzP3gtRMRnI9SRnoc/pN+BZ9jCC
+         2qcOm3AVLHHcPGLzxbdlHGKxdMypgN2n2U30eCGiceV5/M4lFDNiGc2+FqIfls4eXd5K
+         ThmkQAdsZS20AlmP69V0fiEz/xuMAnUys2mKCaVKO7thotGR6cJcQqb82Gfksh37mumj
+         uollaJVujhBCjdKDx2DwGVbUoBW0LDhrHKr4tOlJYSthQb4qSXcomIARiyklcLrLtFM7
+         2aGAcJUu+Vd5TKSJbOxcaR/2nZuPOj0IHeItWJ8kF1b94cueQM9ZWDdD3H8SDOmzDV1Q
+         FOJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=WTrvUywgLybex9L6ZKI1z8jPJJzgLHgy5xUyFCFo4v0=;
+        b=rdYPujy2ToMmei3r4anLBMrYio1LaNDo/d/RUsp1Y+nb1V9QrOTU/Yo5C5R5/ipSh1
+         B1EwHClRF32OIaRuXatEVXzybjeT+jaf8cMjRssbWvNElCr43a/7TSjJYYyQ/4cShLVA
+         04IE+araScYdLt6BTuEJPc0adjF4x/YyReBLpYYg+Jk2dfwAtjlYGIXi1NLAl5+ov4dm
+         w/35DPgSrsBXoLeIXxW/oAJbkrPqoyLP62EXBafg7S7bm9UmQqLS1pn9EYfR2us8LKTU
+         gfWM87coEqR471Fdlb79irpyLRF/Y/Ps9RVO//6MaHLmIHWIS/MoN5lCMwB28rXrw3bv
+         nlbQ==
+X-Gm-Message-State: APjAAAUR/6dgMm0QxRpqjBP6vUrSPUyPt6TT08fZmOkv3yzs22riNtke
+        QNEbcMdZgqYi39LGxuthJpP6hDU9RmQ=
+X-Google-Smtp-Source: APXvYqz8u+5IPK8o1YF9bnGSAiL9ELYLUH+C++B8xEbZgk8kLXm9OMh5ToAT2/3wQqPvW/DeRw3png==
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr15472909ljj.97.1580282184942;
+        Tue, 28 Jan 2020 23:16:24 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id l16sm568440lfh.74.2020.01.28.23.16.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Jan 2020 23:16:23 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Yang Fei <fei.yang@intel.com>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+In-Reply-To: <dfb83e3d-7e78-9568-6bed-f4ee67f90c69@synopsys.com>
+References: <20200127193046.110258-1-john.stultz@linaro.org> <87sgjz90lt.fsf@kernel.org> <dfb83e3d-7e78-9568-6bed-f4ee67f90c69@synopsys.com>
+Date:   Wed, 29 Jan 2020 09:16:19 +0200
+Message-ID: <87pnf291h8.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Jan 16, 2020 at 11:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+
+Hi,
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
+>> John Stultz <john.stultz@linaro.org> writes:
 >>
->> Andy Lutomirski <luto@kernel.org> writes:
->> > On Thu, Jan 16, 2020 at 9:58 AM Christophe Leroy
->> >
->> > Would mul_u64_u64_shr() be a good alternative?  Could we adjust it to
->> > assume the shift is less than 32?  That function exists to benefit
->> > 32-bit arches.
->>
->> We'd want mul_u64_u32_shr() for this. The rules for mult and shift are:
->>
+>>> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>>>
+>>> The current code in dwc3_gadget_ep_reclaim_completed_trb() will
+>>> check for IOC/LST bit in the event->status and returns if
+>>> IOC/LST bit is set. This logic doesn't work if multiple TRBs
+>>> are queued per request and the IOC/LST bit is set on the last
+>>> TRB of that request.
+>>>
+>>> Consider an example where a queued request has multiple queued
+>>> TRBs and IOC/LST bit is set only for the last TRB. In this case,
+>>> the core generates XferComplete/XferInProgress events only for
+>>> the last TRB (since IOC/LST are set only for the last TRB). As
+>>> per the logic in dwc3_gadget_ep_reclaim_completed_trb()
+>>> event->status is checked for IOC/LST bit and returns on the
+>>> first TRB. This leaves the remaining TRBs left unhandled.
+>>>
+>>> Similarly, if the gadget function enqueues an unaligned request
+>>> with sglist already in it, it should fail the same way, since we
+>>> will append another TRB to something that already uses more than
+>>> one TRB.
+>>>
+>>> To aviod this, this patch changes the code to check for IOC/LST
+>>> bits in TRB->ctrl instead.
+>>>
+>>> At a practical level, this patch resolves USB transfer stalls seen
+>>> with adb on dwc3 based HiKey960 after functionfs gadget added
+>>> scatter-gather support around v4.20.
+>>>
+>>> Cc: Felipe Balbi <balbi@kernel.org>
+>>> Cc: Yang Fei <fei.yang@intel.com>
+>>> Cc: Thinh Nguyen <thinhn@synopsys.com>
+>>> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+>>> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>>> Cc: Jack Pham <jackp@codeaurora.org>
+>>> Cc: Todd Kjos <tkjos@google.com>
+>>> Cc: Greg KH <gregkh@linuxfoundation.org>
+>>> Cc: Linux USB List <linux-usb@vger.kernel.org>
+>>> Cc: stable <stable@vger.kernel.org>
+>>> Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
+>>> Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
+>>> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>>> [jstultz: forward ported to mainline, reworded commit log, reworked
+>>>   to only check trb->ctrl as suggested by Felipe]
+>>> Signed-off-by: John Stultz <john.stultz@linaro.org>
+>>> ---
+>>> v2:
+>>> * Rework to only check trb->ctrl as suggested by Felipe
+>>> * Reword the commit message to include more of Felipe's assessment
+>>> ---
+>>>   drivers/usb/dwc3/gadget.c | 3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>>> index 154f3f3e8cff..9a085eee1ae3 100644
+>>> --- a/drivers/usb/dwc3/gadget.c
+>>> +++ b/drivers/usb/dwc3/gadget.c
+>>> @@ -2420,7 +2420,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(s=
+truct dwc3_ep *dep,
+>>>   	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+>>>   		return 1;
+>>>=20=20=20
+>>> -	if (event->status & DEPEVT_STATUS_IOC)
+>>> +	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
+>>> +	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+>> why the LST bit here? It wasn't there before. In fact, we never set LST
+>> in dwc3 anymore :-)
 >
-> That's what I meant to type...
+> Just a note: right now, it may be fine for non-stream endpoints to not=20
+> set the LST bit in the TRBs. For streams, we need to set this bit so the=
+=20
+> controller know to allocate resource for different transfers of=20
+> different streams. It may be fine now if you think that it should be=20
+> added later when more fixes for streams are added, but I think it=20
+> doesn't hurt checking it now either.
 
-Just that it does not work. The math is:
+Indeed. Let's keep this version as is if we will need LST for Streams
+anyway. Sorry for the noise.
 
-     ns = d->nsecs;   // That's the nsec value shifted left by d->shift
+=2D-=20
+balbi
 
-     ns += ((cur - d->last) & d->mask) * mult;
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-     ns >>= d->shift;
+-----BEGIN PGP SIGNATURE-----
 
-So we cannot use mul_u64_u32_shr() because we need the addition there
-before shifting. And no, we can't drop the fractional part of
-d->nsecs. Been there, done that, got sporadic time going backwards
-problems as a reward. Need to look at that again as stuff has changed
-over time.
-
-On x86 we enforce that mask is 64bit, so the & operation is not there,
-but due to the nasties of TSC we have that conditional
-
-    if (cur > last)
-       return (cur - last) * mult;
-    return 0;
-
-Christophe, on PPC the decrementer/RTC clocksource masks are 64bit as
-well, so you can spare that & operation there too.
-
-Thanks,
-
-        tglx
-
-
-
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4xMUMACgkQzL64meEa
+mQbhSRAAzi4QoZAoRbTkaS3NxcozlZU32espqxd1R5TzPgRdpf1y6scYYelnAcEh
+Atw+YNklKaM0zzska86g3NTeV0XEHJ0hZx1Is4j8Ze7Oad1azuNMjjLUAYBYqT1S
+UfwVxTJGcbHGg+TDBDWucop/vzKNLv2gvRLv0f3z9ski0h/QC+/V9aCJt/Ke4N6Y
+U719p3Ob7PcrLPU7lyOaG4LcyXrzYlqiFVx5wAAWC+wdZIqSp/XdsfZY59IHUajs
+000vjcGg+ps+mCYYfUu/1SiFzO6bLqNuJXCeCjWoet1CV1SdSVDNt8NJW/N3df/N
+GGyl0HTjhYB9+4o1cehc5c2PaYKpshavAXWzZeotqtzewFz17ojVHb0/bU55FYi9
+fEqXMgB3ft4lsWY/QYeTZINVwRXN8FYJWj/+BhU1Si5ptjVKhLizuWxH0Pi9Xhwt
+V23qFHAt69kWPnOBii7svXYFEY2vr8ORmeFIjAzOqPUl1WtArR0NvN49H+z7qgyG
+l2s+ixpg+uHmExVPaCwXSJKgbTO4iK4xhTjKxLY+9yZRy6DMoi7CiY1DxjEy3+jW
+7xCTjMYDOfVunOI7+8Awi32B/I10I139f5rO2TVdt9ZQHjErOEMVYPjm5OGXIkbp
+XUvwGONBRPRDVKpzvvT8iF+kQp9FHp1T//JrgqBqvFKCe7egdNo=
+=3kxu
+-----END PGP SIGNATURE-----
+--=-=-=--
