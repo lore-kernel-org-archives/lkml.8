@@ -2,99 +2,76 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D2EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9CCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DE021739
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580258823;
-	bh=HlE3Pgkk7dDEKRsCD3nPkyOTqjP2QeWR8StyZLq5bEU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sAFRP0DB4LdBL9EyIyaBy0CwPBtCrH0I5bxoB3jNVFzgyaETI5CId+WINSZ661cNS
-	 m2Z0pp+lYT/2z0L9lkRUeh7Z8TMshAE3qYR8CyUfws4nMEBYLMUpTJ0F8ki0vAdgWR
-	 wkN6av+F7YtLuOTbvCgwtotzeZjC3AmSbAGBGgOM=
+	by mail.kernel.org (Postfix) with ESMTP id 505A72073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbgA2ArC (ORCPT
+        id S1730452AbgA2AtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:47:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34932 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 19:49:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:19474 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgA2ArB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:47:01 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE5D92073A;
-        Wed, 29 Jan 2020 00:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580258821;
-        bh=HlE3Pgkk7dDEKRsCD3nPkyOTqjP2QeWR8StyZLq5bEU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=ejFuWz0R0R5TUCGRjF1ncZbRCpNQnOzeg4EbChz9OwyAw/MXIMQ0RSbDFvmatWHiN
-         p2yt1ooPKKzdqA08a1zpdEFEkZnsraGQGqnIpixjfh2zWKgVH0MT5+3zncz83HVsYd
-         BHKAm0jnw6VbpsPEdkGqJTfVrhTdl+8+n222325Q=
-Date:   Wed, 29 Jan 2020 01:46:55 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-In-Reply-To: <20200128170254.igb72ib5n7lvn3ds@treble>
-Message-ID: <nycvar.YFH.7.76.2001290141140.31058@cbobk.fhfr.pm>
-References: <20191016074217.GL2328@hirez.programming.kicks-ass.net> <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz> <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz> <20200122214239.ivnebi7hiabi5tbs@treble> <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz> <20200128150014.juaxfgivneiv6lje@treble> <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
- <20200128170254.igb72ib5n7lvn3ds@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726487AbgA2AtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 19:49:00 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 16:48:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,376,1574150400"; 
+   d="scan'208";a="312141985"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2020 16:48:59 -0800
+Date:   Tue, 28 Jan 2020 16:59:22 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Stephane Eranian <eranian@google.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/resctrl: fix redundant task movement
+Message-ID: <20200129005922.GA74965@romley-ivt3.sc.intel.com>
+References: <20200129002222.213154-1-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129002222.213154-1-shakeelb@google.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020, Josh Poimboeuf wrote:
-
-> > Anyway, I think that we might make your life easier with using the 
-> > proposed -Wsuggest-attribute=noreturn.
+On Tue, Jan 28, 2020 at 04:22:22PM -0800, Shakeel Butt wrote:
+> Currently a task can be moved to a rdtgroup multiple times or between
+> resource or monitoring groups. This can cause multiple task works are
+> added, waste memory and degrade performance.
 > 
-> Maybe.  Though if I understand correctly, this doesn't help for any of 
-> the new warnings because they're for static functions, and this only 
-> warns about global functions.
+> To fix the issue, only move the task to a rdtgroup when the task
+> is not in the rdgroup. Don't try to move the task to the rdtgroup
+> again when the task is already in the rdtgroup.
 
-Could you please provide a pointer where those have been 
-reported/analyzed?
+Hi, Shakeel,
 
-For the cases I've seen so far, it has always been gcc deciding under 
-certain circumstances not to propagate __attribute__((__noreturn__)) from 
-callee to caller even in the cases when caller unconditionally called 
-callee.
+Acutally we are working on replacing the callback by a synchronous way
+to update closid and rmid when moving a task to a resource group. The
+reason is the task may use old (even invalid) closid and rmid before
+they are updated.
 
-AFAIU, the behavior is (and always will) be dependent on the state of gcc 
-optimizations, and therefore I don't see any other way than adding 
-__noreturn anotation transitively everywhere in order to silence objtool.
+With the new way to update closid and rmid, the issues related to
+the callbacks will be fixed as well.
 
-So those cases have to be fixed anyway.
+We will release the new patches soon.
 
-What are the other cases please? Either I have completely missed those, or 
-they haven't been mentioned in this thread.
+Thanks.
 
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
+-Fenghua
 
