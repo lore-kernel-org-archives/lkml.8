@@ -2,213 +2,138 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11DCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6400C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2B22070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BCE2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d9whXo4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgA2PE5 (ORCPT
+        id S1726821AbgA2PGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:04:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44686 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgA2PE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:04:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B8A9BAAA6;
-        Wed, 29 Jan 2020 15:04:54 +0000 (UTC)
-Message-ID: <fd8a3cb87b1084e5ab68fdcb60f7af3c6b6265d1.camel@suse.de>
-Subject: Re: [PATCHv2] btrfs: Introduce new BTRFS_IOC_SNAP_DESTROY_V2 ioctl
-From:   Marcos Paulo de Souza <mpdesouza@suse.de>
-To:     dsterba@suse.cz
-Cc:     linux-kernel@vger.kernel.org, dsterba@suse.com,
-        josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-Date:   Wed, 29 Jan 2020 12:07:40 -0300
-In-Reply-To: <20200128172638.GA3929@twin.jikos.cz>
-References: <20200127024817.15587-1-marcos.souza.org@gmail.com>
-         <20200128172638.GA3929@twin.jikos.cz>
+        Wed, 29 Jan 2020 10:06:18 -0500
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:56607 "EHLO
+        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2PGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 10:06:18 -0500
+Received: by mail-wm1-f74.google.com with SMTP id g26so2796571wmk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 07:06:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=uCpdzEHc8A3bUPd0dC/9LcWhiifeT6vJeqIWIxSo4hE=;
+        b=d9whXo4z/rPrHEhtFwgiufARTCatr3EbDq+0gz1Ge/+H8QTU5ZhQqkQlbbE4eE4iOh
+         gAa8I0vaY7KwadF8OajtS5tM0vxSiIRsIHI5HE8OT5xYAoUgAG6UKoalS4ihglgTd3d8
+         ssDJRIgGNv1SwUNDQP2bp7/I6pFiskWBFz46b+Qs0Jrf5CsHvca/sejydLpPuRG54+SP
+         0ZV3+t8b0kGPYyxoPMOuJVI77sR4jRpPITke75Mo4SHZkY272PgFmLc+B2vMpEdAcuI7
+         yvbOJMlBXeR9S8KnzV4pejs88wByZHJOKyWThFFWjphyIyJwlR4+R5/Yagpa30/TWC9L
+         oXDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=uCpdzEHc8A3bUPd0dC/9LcWhiifeT6vJeqIWIxSo4hE=;
+        b=g3w7VizHmLouN2aqpLLJWdTgaWFWgSqIR7SnCadvxwKPDTPyWwZ44lVXaOP7j1K2au
+         wohb+mb5lCqoZF6JRx2TfsL2rhziavUcHHahUasqYUoDPxCcYKNbCU7VuGXOuhbM6EC3
+         7xMIAedshdd0w2WdgA3L0bgPLyZMALDjO1F2HRLhBXTgo2PQlou4fx6VnF4bGQ1NU0SU
+         M/w37HhGdt5W3/nqSjwsdJxo8QYOgqurBjhOR57fSkW4RuZJnbomTfJ4ToyLYmyeH4B6
+         93QEbPi0BSpa3sXHuwmdnZvfqjtxY9utDyoWjkemdIQoOjoXFEikYqXVHgtmxHA0NX/C
+         jaNA==
+X-Gm-Message-State: APjAAAXuuluXboi8zMhCXeHuo1WBi1rjyvLmL+BbIkWmBIkwWlBEoDbG
+        KGtqMhQahc3CpScU7jBviCvhZgeAiswG
+X-Google-Smtp-Source: APXvYqzyXoInm3l0njOq44y5o7xliwDXBgC2/8u5zICqd2UgK2H9m/XHByx5BI0zHDixEzjUd+eJOBcmEMXF
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr35598404wrn.245.1580310375660;
+ Wed, 29 Jan 2020 07:06:15 -0800 (PST)
+Date:   Wed, 29 Jan 2020 15:06:12 +0000
+Message-Id: <20200129150612.19200-1-qperret@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
+From:   Quentin Perret <qperret@google.com>
+To:     masahiroy@kernel.org, nico@fluxnic.net
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com, qperret@google.com
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-28 at 18:26 +0100, David Sterba wrote:
-> wrote:
-> > From: Marcos Paulo de Souza <mpdesouza@suse.com>
+CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
+from ksymtab. This works really well when using in-tree drivers, but
+cannot be used in its current form if some of them are out-of-tree.
 
-...
+Indeed, even if the list of symbols required by out-of-tree drivers is
+known at compile time, the only solution today to guarantee these don't
+get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
+space, but also makes it difficult to control the ABI usable by vendor
+modules in distribution kernels such as Android. Being able to control
+the kernel ABI surface is particularly useful to ship a unique Generic
+Kernel Image (GKI) for all vendors.
 
-> >  	struct dentry *parent = file->f_path.dentry;
-> >  	struct btrfs_fs_info *fs_info = btrfs_sb(parent->d_sb);
-> > @@ -2845,34 +2847,87 @@ static noinline int
-> btrfs_ioctl_snap_destroy(struct file *file,
-> >  	struct inode *inode;
-> >  	struct btrfs_root *root = BTRFS_I(dir)->root;
-> >  	struct btrfs_root *dest = NULL;
-> > -	struct btrfs_ioctl_vol_args *vol_args;
-> > +	struct btrfs_ioctl_vol_args *vol_args = NULL;
-> > +	struct btrfs_ioctl_vol_args_v2 *vol_args2 = NULL;
-> > +	char *name, *name_ptr = NULL;
-> 
-> The naming is confusing, name_ptr refers to the resolved subvolume
-> name,
-> so I suggest to rename it to subvol_name.
+As such, attempt to improve the situation by enabling users to specify a
+symbol 'whitelist' at compile time. Any symbol specified in this
+whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
+even if it has no in-tree user. The whitelist is defined as a simple
+text file, listing symbols, one per line.
 
-Sure, much better.
+Signed-off-by: Quentin Perret <qperret@google.com>
 
-> >  	int namelen;
-> >  	int err = 0;
-> >  
-> > -	if (!S_ISDIR(dir->i_mode))
-> > -		return -ENOTDIR;
-> > +	if (destroy_v2) {
-> > +		vol_args2 = memdup_user(arg, sizeof(*vol_args2));
-> > +		if (IS_ERR(vol_args2))
-> > +			return PTR_ERR(vol_args2);
-> >  
-> > -	vol_args = memdup_user(arg, sizeof(*vol_args));
-> > -	if (IS_ERR(vol_args))
-> > -		return PTR_ERR(vol_args);
-> > +		if (vol_args2->subvolid == 0) {
-> 
-> This should be compared >= BTRFS_FIRST_FREE_OBJECTID
-> as there are no valid subvolumes with lower id. The exception is the
-> toplevel subvolume with id 5 that must not be deletable.
+---
 
-Agreed.
+Not sure if this was relevant for the commit message so I'll put it
+here: more context about the GKI effort in Android can found in these
+talk at LPC2018 [1] and LPC2019 [2].
 
-> 
-> > +			err = -EINVAL;
-> > +			goto out;
-> > +		}
-> >  
-> > -	vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
-> > -	namelen = strlen(vol_args->name);
-> > -	if (strchr(vol_args->name, '/') ||
-> > -	    strncmp(vol_args->name, "..", namelen) == 0) {
-> > -		err = -EINVAL;
-> > -		goto out;
-> > +		if (!(vol_args2->flags & BTRFS_SUBVOL_BY_ID)) {
-> > +			err = -EINVAL;
-> > +			goto out;
-> 
-> The flag validation needs to be factored out of the if. First
-> validate,
-> then do the rest. For backward compatibility, the v1 ioctl must take
-> no
-> flags, so if theres BTRFS_SUBVOL_BY_ID for v1, it needs to fail. For
-> v2
-> the flag is optional.
+[1] https://linuxplumbersconf.org/event/2/contributions/61/
+[2] https://linuxplumbersconf.org/event/4/contributions/401/
+---
+ init/Kconfig                | 12 ++++++++++++
+ scripts/adjust_autoksyms.sh |  1 +
+ 2 files changed, 13 insertions(+)
 
-Only vol_args_v2 has the flags field, so for current
-BTRFS_IOC_SNAP_DESTORY there won't be any flags. If we drop the check
-for BTRFS_SUBVOL_BY_ID in BTRFS_IOC_SNAP_DESTORY_V2, so won't check for
-this flag at all, making it meaningless.
-
-What do you think? Should we drop this flag at all and just rely in the
-ioctl number + subvolid being informed?
-
-> 
-> > +		}
-> > +
-> > +		dentry = btrfs_get_dentry(fs_info->sb,
-> BTRFS_FIRST_FREE_OBJECTID,
-> > +					vol_args2->subvolid, 0, 0);
-> > +		if (IS_ERR(dentry)) {
-> > +			err = PTR_ERR(dentry);
-> > +			goto out;
-> > +		}
-> > +
-> > +		/* 
-> 
-> There's a trailing space on the line, 'git am' does not allow me to
-> apply the patch without removing it manually. Same for the comment
-> below.
-
-Done.
-
-> 
-> > +		 * change the default parent since the subvolume being
-> deleted
-> 
-> Also please uppercase first letter in comments unless it's an
-> identifier. I fix such things but for patches that are going to have
-> another iteration it's better to point it out.
-
-Sure.
-
-> 
-> > +		 * can be outside of the current mount point
-> > +		 */
-> > +		parent = btrfs_get_parent(dentry);
-> > +
-> > +		/* 
-> > +		 * the only use of dentry was to get the parent, so we
-> can
-> > +		 * release it now. Later on the dentry will be queried
-> again to
-> > +		 * make sure the dentry will reside in the dentry cache
-> 
-> Can you please rephrase that? I'm not sure I understand.
-
-What do you think about:
-      /*
-       * At this point dentry->d_name can point to '/' if the
-       * subvolume we want to destroy is outsite of the current mount
-       * point, so we need to released the current dentry and execute
-       * the lookup to return a new one with ->d_name pointing to the
-       * <mount point>/subvol_name.
-       */
-
-
-> > +		if (strchr(vol_args->name, '/') ||
->  +		    strncmp(vol_args->name, "..", namelen) == 0) {
-> > +			err = -EINVAL;
-> > +			goto out;
-> > +		}
-> 
-> This sanity check can be unconditional, ie. also done for the v2 even
-> in
-> the spec-by-id case.
-
-Makes sense.
-
-> 
-> > +		name = vol_args->name;
-> > +	}
-> > +
-> > +	if (!S_ISDIR(dir->i_mode)) {
-> > +		err = -ENOTDIR;
-> > +		goto free_subvol_name;
-> >  	}
-> >  
-> >  	err = mnt_want_write_file(file);
-> 
-> So this is related to separating the validation. Calling
-> mnt_want_write_file must be between flag validation and using the
-> dentries and resolving path etc.
-> 
-> The initial part is ordered like: argument checks, subsystem checks,
-> the
-> implementation.
-
-Done.
-
-Thanks for your review David. Once I have the flag question clarified I
-will sent the v3.
-
-
-Thanks,
-  Marcos
+diff --git a/init/Kconfig b/init/Kconfig
+index a34064a031a5..d9c977ef7de5 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
+ 
+ 	  If unsure, or if you need to build out-of-tree modules, say N.
+ 
++config UNUSED_KSYMS_WHITELIST
++	string "Whitelist of symbols to keep in ksymtab"
++	depends on TRIM_UNUSED_KSYMS
++	help
++	  By default, all unused exported symbols will be trimmed from the
++	  build when TRIM_UNUSED_KSYMS is selected.
++
++	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
++	  exported at all times, even in absence of in-tree users. The value to
++	  set here is the path to a text file containing the list of symbols,
++	  one per line.
++
+ endif # MODULES
+ 
+ config MODULES_TREE_LOOKUP
+diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+index a904bf1f5e67..1a6f7f377230 100755
+--- a/scripts/adjust_autoksyms.sh
++++ b/scripts/adjust_autoksyms.sh
+@@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
+ EOT
+ sed 's/ko$/mod/' modules.order |
+ xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
++cat - $CONFIG_UNUSED_KSYMS_WHITELIST |
+ sort -u |
+ sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
