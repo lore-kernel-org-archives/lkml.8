@@ -2,138 +2,218 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1626AC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B079BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D9220732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813B320732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580324328;
-	bh=+nPOqLj6HHLwx9YcRS5VUlcLyFmgMH1k7G21dwGIt6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YimhQwbcdz8baEM64RtWmzzp6ks6TIdRIQbP/bdbXYmfcE5hJ+Rl77XKMTHPgRSPM
-	 KO2Huxn/4ln2dUCiZeJ7mFPmcrlUc0mZAFwjo+gGkbFgkRD8qHxB1mNDmKARVTXLcu
-	 aYLzN0FJUhCJQBEVpMPpL6Tz+iCJkiGJL39tdA3M=
+	s=default; t=1580324381;
+	bh=qpyzBOI9PxcNjKYNateB76k50kAXk+J6ADkXmUZOGnE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vZqercwyGpG13KgSbUL1O5daMvr3A2j9OP/eN16loTuBfJuObTpIpf1LHF0EbXbd/
+	 TjxpvYE7slilAm7jnP/4JYYH0OCBoRX1J57xAH6+uN7fbdtIb0UpPOXN+HfaiD+mII
+	 4JBLSKVCnx5ltEFY0SdpiZtCHGgmZWR1ieDle/XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgA2S6r (ORCPT
+        id S1727779AbgA2S7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:58:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46487 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727616AbgA2S6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:58:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so677917wrl.13;
-        Wed, 29 Jan 2020 10:58:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GsWVLKic92GtxCUorsUXtFluyqDSQVQyet+6x8x0QOA=;
-        b=klfGcMiLp65ec/40x265vTnh1ucD5Ig+UzH+sDJo7T4Si+zq/Vujccf0JO+cOiKIMk
-         PH6g8G+JXmu3a91+PMecsNvEx+s7lvEw3M3kL+O5UMThwk5DR8PRc0P9Xeg86VN+0IW4
-         c+0ttsZKJJeqeGXlbqnaWtSLCDFQTv9YselqX469wCuRRAmi8VNYUmexOoxSGsjbxA6H
-         3yXVJcjhaWn5DhsigYEMVENvrJ+BHBG7YgAnh7K7OYOqX8zzqfpg9sTRhQeYYd9ZEnfj
-         MPJD/xAnKMviCABpChUAMOl0Ig+65egsG75Wmz4ZyXqdn9vrCLpWpAwD9VVE2JfriJfO
-         7SgA==
-X-Gm-Message-State: APjAAAWAJKHpreXN6WseB4PHV/EQKOrw5KtldfXZlbQeFSemCl4PGuMh
-        gk19IbuVNFnYI4Whl4KDWXX0zSiG
-X-Google-Smtp-Source: APXvYqzo5VG3GcA1V9l4HggoKbcu/wKCAaRVFi+3RNALt3YLKU4l8ohhyy9Lnsy20EWBElBuogjX2Q==
-X-Received: by 2002:a5d:458d:: with SMTP id p13mr265708wrq.314.1580324324634;
-        Wed, 29 Jan 2020 10:58:44 -0800 (PST)
-Received: from localhost (ip-37-188-238-177.eurotel.cz. [37.188.238.177])
-        by smtp.gmail.com with ESMTPSA id d12sm3977076wrp.62.2020.01.29.10.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 10:58:43 -0800 (PST)
-Date:   Wed, 29 Jan 2020 19:58:42 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mtk.manpages@gmail.com, akpm@linux-foundation.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] move_pages.2: Returning positive value is a new error
- case
-Message-ID: <20200129185842.GP24244@dhcp22.suse.cz>
-References: <1580322632-93332-1-git-send-email-yang.shi@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580322632-93332-1-git-send-email-yang.shi@linux.alibaba.com>
+        Wed, 29 Jan 2020 13:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727763AbgA2S7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 13:59:40 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B8C2071E;
+        Wed, 29 Jan 2020 18:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580324379;
+        bh=qpyzBOI9PxcNjKYNateB76k50kAXk+J6ADkXmUZOGnE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nokTUUXcATMmg3k9c7Q10PabNMCLXOrqsOLDwM9cvjzhUt/PPQqxgC47KECiKC9SX
+         ctbi7kqhbZFGJkdlA2UTY/Mpmnj3NRPocLNKfcgCT7aKIWFeUMZ0GwsU8EyCnPO3SZ
+         ogjANNmpf0KU81shBHL5vALtsFMEFwTvbtCzksg0=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [PATCH v4 00/12] tracing: Add support for in-kernel dynamic event API
+Date:   Wed, 29 Jan 2020 12:59:20 -0600
+Message-Id: <cover.1580323897.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 30-01-20 02:30:32, Yang Shi wrote:
-> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
-> the semantic of move_pages() has changed to return the number of
-> non-migrated pages if they were result of a non-fatal reasons (usually a
-> busy page).  This was an unintentional change that hasn't been noticed
-> except for LTP tests which checked for the documented behavior.
-> 
-> There are two ways to go around this change.  We can even get back to the
-> original behavior and return -EAGAIN whenever migrate_pages is not able
-> to migrate pages due to non-fatal reasons.  Another option would be to
-> simply continue with the changed semantic and extend move_pages
-> documentation to clarify that -errno is returned on an invalid input or
-> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
-> number of pages that couldn't have been migrated due to ephemeral
-> reasons (e.g. page is pinned or locked for other reasons).
-> 
-> We decided to keep the second option in kernel because this behavior is in
-> place for some time without anybody complaining and possibly new users
-> depending on it.  Also it allows to have a slightly easier error handling
-> as the caller knows that it is worth to retry when err > 0.
-> 
-> Update man pages to reflect the new semantic.
+Hi,
 
-Thanks a lot! Looks good to me. I would just add a note that it is
-generally recommended to pre-initialize status array by -1 to have a
-reliable way to check which pages have been migrated. The man page says
-"The array contains valid values only if move_pages() did not return an
-error."
+This is v4 of 'tracing: Add support for in-kernel dynamic event API',
+incorporating changes based on suggestions from Masami.
 
-I would just add. "Pre initialization of the array to -1 or similar
-value which cannot represent a real numa node could help to identify
-pages that have been migrated".
+This patchset is the same as the v3 version but add Masami's acks for
+all but '[PATCH 04/12] tracing: Add dynamic event command creation
+interface', which moves the dynevent command interface code to
+trace_dynevent.{c,.h}.
 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Thanks,
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Tom
 
-> ---
->  man2/move_pages.2 | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 1bf1053..c6cf3f8 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -164,9 +164,13 @@ returns zero.
->  .\" do the right thing?
->  On error, it returns \-1, and sets
->  .I errno
-> -to indicate the error.
-> +to indicate the error. Or positive value to report the number of
-> +non-migrated pages.
->  .SH ERRORS
->  .TP
-> +.B Positive value
-> +The number of non-migrated pages if they were result of a non-fatal
-> +reasons since version 4.17.
->  .B E2BIG
->  Too many pages to move.
->  Since Linux 2.6.29,
-> -- 
-> 1.8.3.1
+
+Text from the v3 posting:
+
+This is v3 of 'tracing: Add support for in-kernel dynamic event API',
+incorporating changes based on suggestions from Masami and Steven.
+
+  - Rebased to trace/for-next
+
+  - Regularized the entire API to use synth_event_*, kprobe_event_*,
+    dynevent_*, and added some new macros and functions to make things
+    more consistent
+
+  - Introduced trace_array_find_get() and used it in
+    trace_array_get_file() as suggested
+  
+  - Removed exports from dynevent_cmd functions that didn't need to be
+    exported
+
+  - Switched the param order of __kprobe_event_gen_cmd_start() to fix
+    a problem found building with clang.  Apparently varargs and
+    implicit promotion of types like bool don't mix.  Thanks to Nick
+    Desaulniers for pointing that out.
+
+  - Updated the documentation for all of the above
+
+Text from the v2 posting:
+
+This is v2 of the previous 'tracing: Add support for in-kernel
+synthetic event API', and is largely a rewrite based on suggestions
+from Masami to expand the scope to include other types of dynamic
+events such as kprobe events, in addition to the original sythetic
+event focus.
+
+The functionality of the original API remains available, though it's
+in a slightly different form due to the use of the new dynevent_cmd
+API it's now based on.  The dynevent_cmd API provides a common dynamic
+event command generation capability that both the synthetic event API
+and the kprobe event API are now based on, and there are now test
+modules demonstrating both the synthetic event and kprobes APIs.
+
+A couple of the patches are snippets from Masami's 'tracing:
+bootconfig: Boot-time tracing and Extra boot config' series, and the
+patch implementing the dynevent_cmd API includes some of the
+spnprintf() generating code from that patchset.
+
+Because I used Masami's gen_*_cmd() naming suggestion for generating
+the commands, the previous patchset's generate_*() functions were
+renamed to trace_*() to avoid confusion, and probably is better naming
+anyway.
+
+An overview of the user-visible changes in comparison to v1:
+
+  - create_synth_event() using an array of synth_desc_fields remains
+    unchanged and works the same way as previously
+
+  - gen_synth_cmd() takes a variable-length number of args which
+    represent 'type field;' pairs.  Using this with no field args
+    basically replaces the previous 'create_empty_synth_event()'
+
+  - The 'add_synth_field()' and 'add_synth_fields()' function from v1
+    are essentially the same except that they now take a dynevent_cmd
+    instead of a synth_event pointer
+
+  - The finalize_synth_event() from v1 is replaced by
+    create_dynevent() in the new version.
+  
+  - The new v2 API includes some additional functions to initialize
+    the dynevent_cmd - synth_dynevent_cmd() is used to do that.  While
+    it's an extra step, it makes it easier to do error handling.
+
+  - There's a new trace_synth_event() function that traces a synthetic
+    event using a variable-arg list of values.
+
+  - The original generate_synth_event() using an array of values is
+    now called trace_synth_event_array().
+
+  - For piecewise event tracing, the original
+    generate_synth_event_start() and generate_synth_event_end() have
+    now been renamed to trace_synth_event_end().
+
+  - add_next_synth_val() and add_synth_val() remain the same.
+
+  - A similar API and test module demonstrating the API has been added
+    for kprobe events
+
+  - Both the synthetic events and kprobe events API is based on the
+    dynevent_cmd API, newly added
+
+  - The Documentation for all of the above has been updated
+
+Text from the orginal v1 posting:
+
+I've recently had several requests and suggestions from users to add
+support for the creation and generation of synthetic events from
+kernel code such as modules, and not just from the available command
+line commands.
+
+This patchset adds support for that.  The first three patches add some
+minor preliminary setup, followed by the two main patches that add the
+ability to create and generate synthetic events from the kernel.  The
+next patch adds a test module that demonstrates actual use of the API
+and verifies that it works as intended, followed by Documentation.
+
+Special thanks to Artem Bityutskiy, who worked with me over several
+iterations of the API, and who had many great suggestions on the
+details of the interface, and pointed out several problems with the
+code itself.
+
+The following changes since commit 34f71a4a2de84dde52ccfcb96ce25240ea7981a8:
+
+  tracing: Add new testcases for hist trigger parsing errors (2020-01-28 23:17:31 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-v4
+
+Tom Zanussi (12):
+  tracing: Add trace_array_find/_get() to find instance trace arrays
+  tracing: Add trace_get/put_event_file()
+  tracing: Add synth_event_delete()
+  tracing: Add dynamic event command creation interface
+  tracing: Add synthetic event command generation functions
+  tracing: Change trace_boot to use synth_event interface
+  tracing: Add synth_event_trace() and related functions
+  tracing: Add synth event generation test module
+  tracing: Add kprobe event command generation functions
+  tracing: Change trace_boot to use kprobe_event interface
+  tracing: Add kprobe event command generation test module
+  tracing: Documentation for in-kernel synthetic event API
+
+ Documentation/trace/events.rst       | 515 ++++++++++++++++++++
+ include/linux/trace_events.h         | 124 +++++
+ kernel/trace/Kconfig                 |  25 +
+ kernel/trace/Makefile                |   2 +
+ kernel/trace/kprobe_event_gen_test.c | 225 +++++++++
+ kernel/trace/synth_event_gen_test.c  | 523 ++++++++++++++++++++
+ kernel/trace/trace.c                 |  43 +-
+ kernel/trace/trace.h                 |   2 +
+ kernel/trace/trace_boot.c            |  66 ++-
+ kernel/trace/trace_dynevent.c        | 240 ++++++++++
+ kernel/trace/trace_dynevent.h        |  33 ++
+ kernel/trace/trace_events.c          |  85 ++++
+ kernel/trace/trace_events_hist.c     | 896 ++++++++++++++++++++++++++++++++++-
+ kernel/trace/trace_kprobe.c          | 160 ++++++-
+ 14 files changed, 2867 insertions(+), 72 deletions(-)
+ create mode 100644 kernel/trace/kprobe_event_gen_test.c
+ create mode 100644 kernel/trace/synth_event_gen_test.c
 
 -- 
-Michal Hocko
-SUSE Labs
+2.14.1
+
