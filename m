@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809C0C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAF0C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE9D207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78AE20732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580324384;
-	bh=U1jhZlerZbTXWw8fvpMoFrkgIsIlaOTsaC2JcEKNqzE=;
+	s=default; t=1580324386;
+	bh=3z6XpaKbm0hZoG0KGLBNCYocl3IbSDEZtPeyzpzQiVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=G/LneVX9LNMyLUUySl/EIcoyMlr4cqbxIMvUlOc9kARqQIPx3P4JB9GxR2TItur0R
-	 of0d3StAM7yxOn96Dvsw9eu+eHWNaYk0STxh4n4/P0P3tOzC6of1cZ7wHbqjEuoM1Y
-	 0IeLFphVW94ATe4k1sksoVrRpSDFVwoxB4CPNN0s=
+	b=P3n9If5rj52tavtHU8M3qSDlS/JV7kgvPA3nCdH3VVmcIczVWO1UxyrSDFZJdv6+P
+	 cjkTVqYx46/f3mAnNCkfxly4E84cSY4OR15NPW9RvXdsBALjmcpdlkRLUnyzWUHyCZ
+	 3yZU2zAlEqgqusquehZfIsxYivN32Mc5ysXMUGWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgA2S7n (ORCPT
+        id S1727801AbgA2S7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:59:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 13:59:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbgA2S7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:59:41 -0500
+        id S1727460AbgA2S7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 13:59:42 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CEE820716;
-        Wed, 29 Jan 2020 18:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B1F206D4;
+        Wed, 29 Jan 2020 18:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580324381;
-        bh=U1jhZlerZbTXWw8fvpMoFrkgIsIlaOTsaC2JcEKNqzE=;
+        s=default; t=1580324382;
+        bh=3z6XpaKbm0hZoG0KGLBNCYocl3IbSDEZtPeyzpzQiVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=CZntsNYzj2Rd3qKI5KVucgdDgPrBKkFZAF9wJE7T7TlSKkIwkYj+KFlLEzIXLOGeS
-         rGf08IY5p+UUV+CLliq4DRgl36+5UMzTwNgf5BVDDvUUeCmPeij+KrzU/soWqHSm6F
-         hbVHmD+CSl6tIpA6cGO2lb6dy/UVCgoJUCjfHS2o=
+        b=Z3y01seRN8oyy9nPQzRlZCStUXldvmYLrSzRQkgYWD70VWOUMJuCiPepIjPYiNdMd
+         TEUJkri3ydiTNJfgmvGdtoXL1ZdcyxLDW5tlCGd6xf3DuvIKNnEOX+4MdSXQ58CWEo
+         XGiF054jsKL8cZ2hyQRb2gXgtDj9ufinALqB6NGw=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v4 01/12] tracing: Add trace_array_find/_get() to find instance trace arrays
-Date:   Wed, 29 Jan 2020 12:59:21 -0600
-Message-Id: <cb68528c975eba95bee4561ac67dd1499423b2e5.1580323897.git.zanussi@kernel.org>
+Subject: [PATCH v4 02/12] tracing: Add trace_get/put_event_file()
+Date:   Wed, 29 Jan 2020 12:59:22 -0600
+Message-Id: <bb31ac4bdda168d5ed3c4b5f5a4c8f633e8d9118.1580323897.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1580323897.git.zanussi@kernel.org>
 References: <cover.1580323897.git.zanussi@kernel.org>
@@ -58,101 +58,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new trace_array_find() function that can be used to find a trace
-array given the instance name, and replace existing code that does the
-same thing with it.  Also add trace_array_find_get() which does the
-same but returns the trace array after upping its refcount.
+Add a function to get an event file and prevent it from going away on
+module or instance removal.
 
-Also make both available for use outside of trace.c.
+trace_get_event_file() will find an event file in a given instance (if
+instance is NULL, it assumes the top trace array) and return it,
+pinning the instance's trace array as well as the event's module, if
+applicable, so they won't go away while in use.
+
+trace_put_event_file() does the matching release.
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace.c | 43 +++++++++++++++++++++++++++++++++----------
- kernel/trace/trace.h |  2 ++
- 2 files changed, 35 insertions(+), 10 deletions(-)
+ include/linux/trace_events.h |  5 +++
+ kernel/trace/trace_events.c  | 85 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6a28b1b9bf42..6e415057d373 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8501,6 +8501,34 @@ static void update_tracer_options(struct trace_array *tr)
- 	mutex_unlock(&trace_types_lock);
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 20948ee56f8c..8d621a73c97e 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -349,6 +349,11 @@ enum {
+ 	EVENT_FILE_FL_WAS_ENABLED_BIT,
+ };
+ 
++extern struct trace_event_file *trace_get_event_file(const char *instance,
++						     const char *system,
++						     const char *event);
++extern void trace_put_event_file(struct trace_event_file *file);
++
+ /*
+  * Event file flags:
+  *  ENABLED	  - The event is enabled
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index dfb736a964d6..402426a82cfb 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2536,6 +2536,91 @@ find_event_file(struct trace_array *tr, const char *system, const char *event)
+ 	return file;
  }
  
-+/* Must have trace_types_lock held */
-+struct trace_array *trace_array_find(const char *instance)
++/**
++ * trace_get_event_file - Find and return a trace event file
++ * @instance: The name of the trace instance containing the event
++ * @system: The name of the system containing the event
++ * @event: The name of the event
++ *
++ * Return a trace event file given the trace instance name, trace
++ * system, and trace event name.  If the instance name is NULL, it
++ * refers to the top-level trace array.
++ *
++ * This function will look it up and return it if found, after calling
++ * trace_array_get() to prevent the instance from going away, and
++ * increment the event's module refcount to prevent it from being
++ * removed.
++ *
++ * To release the file, call trace_put_event_file(), which will call
++ * trace_array_put() and decrement the event's module refcount.
++ *
++ * Return: The trace event on success, ERR_PTR otherwise.
++ */
++struct trace_event_file *trace_get_event_file(const char *instance,
++					      const char *system,
++					      const char *event)
 +{
-+	struct trace_array *tr, *found = NULL;
++	struct trace_array *tr = top_trace_array();
++	struct trace_event_file *file = NULL;
++	int ret = -EINVAL;
 +
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		if (tr->name && strcmp(tr->name, instance) == 0) {
-+			found = tr;
-+			break;
-+		}
++	if (instance) {
++		tr = trace_array_find_get(instance);
++		if (!tr)
++			return ERR_PTR(-ENOENT);
++	} else {
++		ret = trace_array_get(tr);
++		if (ret)
++			return ERR_PTR(ret);
 +	}
 +
-+	return found;
-+}
++	mutex_lock(&event_mutex);
 +
-+struct trace_array *trace_array_find_get(const char *instance)
++	file = find_event_file(tr, system, event);
++	if (!file) {
++		trace_array_put(tr);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Don't let event modules unload while in use */
++	ret = try_module_get(file->event_call->mod);
++	if (!ret) {
++		trace_array_put(tr);
++		ret = -EBUSY;
++		goto out;
++	}
++
++	ret = 0;
++ out:
++	mutex_unlock(&event_mutex);
++
++	if (ret)
++		file = ERR_PTR(ret);
++
++	return file;
++}
++EXPORT_SYMBOL_GPL(trace_get_event_file);
++
++/**
++ * trace_put_event_file - Release a file from trace_get_event_file()
++ * @file: The trace event file
++ *
++ * If a file was retrieved using trace_get_event_file(), this should
++ * be called when it's no longer needed.  It will cancel the previous
++ * trace_array_get() called by that function, and decrement the
++ * event's module refcount.
++ */
++void trace_put_event_file(struct trace_event_file *file)
 +{
-+	struct trace_array *tr;
++	trace_array_put(file->tr);
 +
-+	mutex_lock(&trace_types_lock);
-+	tr = trace_array_find(instance);
-+	if (tr)
-+		tr->ref++;
-+	mutex_unlock(&trace_types_lock);
-+
-+	return tr;
++	mutex_lock(&event_mutex);
++	module_put(file->event_call->mod);
++	mutex_unlock(&event_mutex);
 +}
++EXPORT_SYMBOL_GPL(trace_put_event_file);
 +
- static struct trace_array *trace_array_create(const char *name)
- {
- 	struct trace_array *tr;
-@@ -8577,10 +8605,8 @@ static int instance_mkdir(const char *name)
- 	mutex_lock(&trace_types_lock);
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
- 	ret = -EEXIST;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0)
--			goto out_unlock;
--	}
-+	if (trace_array_find(name))
-+		goto out_unlock;
- 
- 	tr = trace_array_create(name);
- 
-@@ -8708,12 +8734,9 @@ static int instance_rmdir(const char *name)
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = -ENODEV;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0) {
--			ret = __remove_instance(tr);
--			break;
--		}
--	}
-+	tr = trace_array_find(name);
-+	if (tr)
-+		ret = __remove_instance(tr);
- 
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 6bb64d89c321..0db5341c113d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -358,6 +358,8 @@ extern struct mutex trace_types_lock;
- 
- extern int trace_array_get(struct trace_array *tr);
- extern int tracing_check_open_get_tr(struct trace_array *tr);
-+extern struct trace_array *trace_array_find(const char *instance);
-+extern struct trace_array *trace_array_find_get(const char *instance);
- 
- extern int tracing_set_time_stamp_abs(struct trace_array *tr, bool abs);
- extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
+ /* Avoid typos */
 -- 
 2.14.1
 
