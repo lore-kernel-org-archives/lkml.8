@@ -2,109 +2,160 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57104C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F666C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2272A206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WEB96WDw"
+	by mail.kernel.org (Postfix) with ESMTP id 2137620702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgA2WC4 (ORCPT
+        id S1726632AbgA2WHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:02:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41362 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgA2WCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:02:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Fop62bTazPLo+WGNB+BfCgO9zchmyRpUfYX/ot3XXHk=; b=WEB96WDwGvjGlZ1G/woW/8P3L
-        7eraE+Yqe8ItWLr3zttniO9D1gPV7Y5hdupA0mtJtuJ6QmjriI9pKK7ogBjzXJkkv8Rll+Kopg8Bk
-        vnudFQN+wGCWsF2ptNGDPdxb2O3BM6RIoTBvvVAtPM36CNz6nnyAf46o3dOI7Y/zw2Y6auq1gFeIC
-        ezIuDIKKUrcxVy3LOWtD3f895LvLYBQblxIT8Txgb+2qnmo9gGCyt1cWtmKRUE4TWrAYW424TIqEL
-        g03kbDKjM/82JSW0ejGd8tXDFqeFN4gALcs6JuZ6DcueQ9hXtZFmAIzNai8SoU9/SBK7LTD+tvzmN
-        rCKDtDEoA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwvQE-0006zY-Ja; Wed, 29 Jan 2020 22:02:55 +0000
-Subject: Re: [PATCH] MAINTAINERS: mptcp@ mailing list is moderated
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        mptcp@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-References: <0d3e4e6f-5437-ae85-f1f5-89971ea3423f@infradead.org>
- <alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4112784b-a70b-8e4a-4110-9898e0626306@infradead.org>
-Date:   Wed, 29 Jan 2020 14:02:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 29 Jan 2020 17:07:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:4266 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgA2WHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:07:13 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 14:07:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
+   d="scan'208";a="218082796"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 29 Jan 2020 14:07:10 -0800
+Date:   Thu, 30 Jan 2020 06:07:23 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+Subject: Re: [Patch v2 4/4] mm/migrate.c: handle same node and add failure in
+ the same way
+Message-ID: <20200129220723.GC20736@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-5-richardw.yang@linux.intel.com>
+ <17796dbb-b9b6-9481-5048-addfa5eec51e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.OSX.2.21.2001290857310.9282@cmossx-mobl1.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17796dbb-b9b6-9481-5048-addfa5eec51e@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/29/20 9:09 AM, Mat Martineau wrote:
-> 
-> On Tue, 28 Jan 2020, Randy Dunlap wrote:
-> 
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Note that mptcp@lists.01.org is moderated, like we note for
->> other mailing lists.
-> 
-> Hi Randy -
-> 
-> The mptcp@lists.01.org list is not moderated, but there's a server-wide default rule that holds messages with 10 or more recipients for any sender (list member or not). I've turned off those server-wide defaults for this list so it shouldn't be a problem in the future.
-
-OK, thanks for the clarification & revert...
-
-> Thank you for your report on the build errors.
-> 
-> 
-> Mat
-> 
-> 
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
->> Cc: Matthieu Baerts <matthieu.baerts@tessares.net>
->> Cc: netdev@vger.kernel.org
->> Cc: mptcp@lists.01.org
+On Wed, Jan 29, 2020 at 11:13:23AM +0100, David Hildenbrand wrote:
+>On 22.01.20 02:16, Wei Yang wrote:
+>> When page is not queued for migration, there are two possible cases:
+>> 
+>>   * page already on the target node
+>>   * failed to add to migration queue
+>> 
+>> Current code handle them differently, this leads to a behavior
+>> inconsistency.
+>> 
+>> Usually for each page's status, we just do store for once. While for the
+>> page already on the target node, we might store the node information for
+>> twice:
+>> 
+>>   * once when we found the page is on the target node
+>>   * second when moving the pages to target node successfully after above
+>>     action
+>> 
+>> The reason is even we don't add the page to pagelist, but store_status()
+>> does store in a range which still contains the page.
+>> 
+>> This patch handles these two cases in the same way to reduce this
+>> inconsistency and also make the code a little easier to read.
+>> 
+>
+>I'd rephrase to
+>
+>"mm/migrate.c: unify "not queued for migration" handling in do_pages_move()
+>
+>It can currently happen that we store the status of a page twice:
+>* Once we detect that it is already on the target node
+>* Once we moved a bunch of pages, and a page that's already on the
+>  target node is contained in the current interval.
+>
+>Let's simplify the code and always call do_move_pages_to_node() in
+>case we did not queue a page for migration. Note that pages that are
+>already on the target node are not added to the pagelist and are,
+>therefore, ignored by do_move_pages_to_node() - there is no functional
+>change.
+>
+>The status of such a page is now only stored once.
+>"
+>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
 >> ---
->> MAINTAINERS |    2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> --- mmotm-2020-0128-2005.orig/MAINTAINERS
->> +++ mmotm-2020-0128-2005/MAINTAINERS
->> @@ -11718,7 +11718,7 @@ NETWORKING [MPTCP]
->> M:    Mat Martineau <mathew.j.martineau@linux.intel.com>
->> M:    Matthieu Baerts <matthieu.baerts@tessares.net>
->> L:    netdev@vger.kernel.org
->> -L:    mptcp@lists.01.org
->> +L:    mptcp@lists.01.org (moderated for non-subscribers)
->> W:    https://github.com/multipath-tcp/mptcp_net-next/wiki
->> B:    https://github.com/multipath-tcp/mptcp_net-next/issues
->> S:    Maintained
+>>  mm/migrate.c | 16 ++++++++--------
+>>  1 file changed, 8 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 80d2bba57265..591f2e5caed6 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1654,18 +1654,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>>  		err = add_page_for_migration(mm, addr, current_node,
+>>  				&pagelist, flags & MPOL_MF_MOVE_ALL);
+>>  
+>> -		if (!err) {
+>> -			/* The page is already on the target node */
+>> -			err = store_status(status, i, current_node, 1);
+>> -			if (err)
+>> -				goto out_flush;
+>> -			continue;
+>> -		} else if (err > 0) {
+>> +		if (err > 0) {
+>>  			/* The page is successfully queued for migration */
+>>  			continue;
+>>  		}
+>>  
+>> -		err = store_status(status, i, err, 1);
+>> +		/*
+>> +		 * Two possible cases for err here:
+>> +		 * == 0: page is already on the target node, then store
+>> +		 *       current_node to status
+>> +		 * <  0: failed to add page to list, then store err to status
+>> +		 */
+>
+>I'd shorten that to
+>
+>/*
+> * If the page is already on the target node (!err), store the node,
+> * otherwise, store the err.
+>*/
+>
+>> +		err = store_status(status, i, err ? : current_node, 1);
+>>  		if (err)
+>>  			goto out_flush;
+>>  
+>> 
+>
+>Thanks!
+>
+>Reviewed-by: David Hildenbrand <david@redhat.com>
+>
 
+Yep, thanks.
+
+I would take this :-)
+
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
 -- 
-~Randy
-
+Wei Yang
+Help you, Help me
