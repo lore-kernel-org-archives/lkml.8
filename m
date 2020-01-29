@@ -2,88 +2,179 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B44C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF114C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C0921739
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97BA72173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Mn3J8Y7F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2ASFXDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgA2AT6 (ORCPT
+        id S1726428AbgA2AWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:19:58 -0500
-Received: from sonic316-12.consmr.mail.bf2.yahoo.com ([74.6.130.122]:43107
-        "EHLO sonic316-12.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbgA2AT6 (ORCPT
+        Tue, 28 Jan 2020 19:22:36 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:51993 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgA2AWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:19:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1580257196; bh=kKKjXJLWl4S6ESVi2xa0NzP19iykFL3zhlmU0HdVCKI=; h=From:To:Cc:Subject:Date:References:From:Subject; b=Mn3J8Y7FjYnJ0ditajK6vsnp15I+s6jRT2HNynP7Kw98ZkI9K9VxVndPybvQcX7uDQUsmi0932jmBadAhZbLV7AIDj538ZskkxvS5s7vPWu3C9S99YM8pRhsuIrDxcZQBCE6schD7jOEJBGBj+71JGIN3wbltNFZad/R7j2Eg5dVwlQAD0XSXJQa03SgeR1tJ6JPDQGTwPnqEhYfQf0D4PbR903AEPWAhWvBW5FMhNbkRO6TCtTgpe6KWtvJgKVA3SAEoXaB8DzZa5fm1sd0DraU76ghIW0BZbCFvxR0bo+PgCzsKKiSuAVwmbQGq/pfzEGuRwPOUzvTLZVWvCmiXw==
-X-YMail-OSG: rqKMGaQVM1mRqiR1okq.M2AK4suIu4hmW2M9mUJoyv9KyRIbej2uM2usBNkBJEl
- irJpmb7TApwAUEk11y5H3TZAQ4hFCsYnG0U_pbrBvYZpj3FTr4Z5FfILQNGfqKFj_kkZSGwioGXr
- 2NNcmLtp.xgGWHZyWS6ROt1.DU5pFt0K2HK9jKYkR57ZD0VfRtsxVrMC6EuyZMNnSReeA56OnUAs
- jBt6fvM87L2Au6R3oSDq_P4zpb1CnaTCOme2c8Rdf.6wYNfxVDHCpXwx3X5XVdpW8r7gxG2l.Yrt
- hAC6ykxnZN_1.Vj8g5ShxztG8tB6Hac7LBMG.xA0SuB10mAVteMl7x2.jjFHFEWKJ4ihA04ufeWg
- xhiy76GtCVjoVt65Txwe_CVZK6I5zXUK1PRo47R2F0vOG4IqQG.50xPG8hhphp0_b2qfHYEgRp4l
- 8aF_3G95LxVBCinvoMb6z.AP8ftup25AM6lyBc3PHdIAc6QsiCl0hEar7hREongdfTW9JCWfbyzO
- q5r_dRMX.AJhnILFmti8TKRWj6_WLWooESrhlm_XyeO6mfFz40iTbM1XqYubOAaAwmuMnzo7.HLx
- 2GT.kQNSzsxo3xTIbbjWHjrjYlKTLrcxxMt1y5bvuxPSdXHqqLD0u0eWPRyOQlg05u3j3GKVbNBw
- _oTPfU4VEOWiX.ckGqN4vOdQ8AQNKY8xrYhOnAr0aaFcIvxX1KlCCbmYzcwUJVsKwmXzJNwPPCGH
- wJdnIX7wyK6pFIQfGhSwbx2anQ8PJMBhHRsjiIUgnCBW8pZE334wTE8NiYV3klHAg2d8R37xmO8G
- CUVn.a99oXTl3f6fGlFWK5AnRctjZsm61lGFFv7Sm9cySRricUnbTnPnrAWGPgZHRP417KU1kPtE
- MetOmGefe_L_cfAfyGvQUrg.cmInmNEexoX12deuRxmNaD2fYtL0xXUTzk916Cy_Z3Xx6S8SHROU
- Mdwihc_jUbNcQ31BrR7BIqvBrk2FO9OJLiBxzqJUNJ40A.mRBrjcFJusRAI_bXpox97qqkJMyfCP
- UAmdAGJtff8s04Iy1l9jtHRWSlkkAakPACRGl2soDs3WM8ym44F2rr8Gf95m00lZAOAQI_j6ThuH
- eD0UV4LN63chRkR2tqro3Hjg8vqJs3MQPZNi7wZ4fKItzEjdnhQgEd9vCwwjx36NiMNI4umP.A9Z
- XibWyh9Ix.01Mtazf7jv98QbFnIFe8AD0OXx8tMnecXZD6L6KKrd4Xbgf9B57QeImr0xNaccPZwP
- smksw.NJM92L_NhmS1VvS37.esHEqsvmedsyeTe8LVnsP7U9.cQkYlU.cC1AiRQI_J3WloXgbhtq
- 2Y2segta0LZHA9bwNv2uJ7K3SGuPxX7yoWNreDiBxsp2FQLdCrp0rLrHstMOvNWLnINWYb6oIJiv
- aSvBrt2p0OPWWqxqJ01gwBi0-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Wed, 29 Jan 2020 00:19:56 +0000
-Received: by smtp432.mail.sg3.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 2c26b9c23f2e63a4e4de6101848509d2;
-          Wed, 29 Jan 2020 00:19:54 +0000 (UTC)
-From:   Simon Fong <simon.fong@aol.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Simon Fong <simon.fongnt@yahoo.com>
-Subject: [PATCH] Staging: vt6655: device_main: cleanup long line
-Date:   Wed, 29 Jan 2020 08:19:50 +0800
-Message-Id: <20200129001950.12031-1-simon.fong@aol.com>
-X-Mailer: git-send-email 2.17.1
-References: <20200129001950.12031-1-simon.fong.ref@aol.com>
+        Tue, 28 Jan 2020 19:22:36 -0500
+Received: by mail-pl1-f201.google.com with SMTP id r2so6498651pls.18
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 16:22:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=TUeAzP1KPLnbgJ4pAq4woW7/EJW98hNHfTCwbLjLh1w=;
+        b=W2ASFXDO0F+nOrHdNuVWJYhAvYy1ezS2ByLMRsPg4tm6WvfFZKFgekpaHVaM+rD0XF
+         kBvE9Fdx9sPOLxXcYzqRL7QlWfUcogecvyvKwrep6sTLdfA2r6tonSwP6t3t5vYLEsqe
+         RjbDyme6veZlvR8zHyp8uH/6JPHnSDQGPO2TwfgVkEZDcP9LL+Q898MFjVQlu2zzK0Lo
+         Sf7TlvRLsXYeRcQpQyrCniV/x9W0x1InAZp+QTutM06PN3GHEbHMOYTHLIicz4lIBiXq
+         WBsIfCP3TDk8OhfQlTHaspGALIcr3rMB2Lnm7+yEkBFujSt34AwONbZzWWKgRnxTH0KE
+         ybyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=TUeAzP1KPLnbgJ4pAq4woW7/EJW98hNHfTCwbLjLh1w=;
+        b=Q3E8oEWpV3os99CfZGyN0JtQgiZLvTfJcNY+NlrR9NSetkHuuOtyRG3etFJ9cITBEy
+         km5zl96RZhyR3MSH/mxiSCKuWbTkxwHZFF74lvl4+qC6KhRVRH4mlCR1fUjlbdJd4+YJ
+         7mrIjgGVNlvEReSEvj3CATTlYzQrU/qgNPaygqlbwQn0MtUgGx+Jrk2wAKTcNdWwQx9H
+         7Q8vfXXmxycV5OWSotH2Y0wwLLLZu52eNGL3kcqlMBhdzZ1HpgRy0mry7Il2wM5BNdFx
+         Lj4/sK/3RICDjxA3mAOKE8wkdYEgsWbtyCSEm2isljroeEOtQJo1nhkfz1nLxXR5uTeL
+         Caiw==
+X-Gm-Message-State: APjAAAUTWBow51bIFSu+jXuXzDAGaePwCl2hkEmdU2Utc6oh77JWW7kS
+        EzPaP5Xa1xwi/0Mrwbbhky8sVXYevO6TOw==
+X-Google-Smtp-Source: APXvYqxUX39srrGDo6zfgNrOlHMpUNc1+pzXn9wA5ccrj4KtHuLFy5rBx6EDwBGrE39T9TaIK8drk4HdgNBpUw==
+X-Received: by 2002:a63:a55e:: with SMTP id r30mr168115pgu.109.1580257355597;
+ Tue, 28 Jan 2020 16:22:35 -0800 (PST)
+Date:   Tue, 28 Jan 2020 16:22:22 -0800
+Message-Id: <20200129002222.213154-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] x86/resctrl: fix redundant task movement
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Stephane Eranian <eranian@google.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Fong <simon.fongnt@yahoo.com>
+Currently a task can be moved to a rdtgroup multiple times or between
+resource or monitoring groups. This can cause multiple task works are
+added, waste memory and degrade performance.
 
-cleanup a long line coding style warning.
+To fix the issue, only move the task to a rdtgroup when the task
+is not in the rdgroup. Don't try to move the task to the rdtgroup
+again when the task is already in the rdtgroup.
 
-Signed-off-by: Simon Fong <simon.fongnt@yahoo.com>
+Also move the setting of tsk->closid and tsk->rmid before task_work_add
+to remove a potential race where the task start executing the registered
+callback before the request set its closid and rmid.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/staging/vt6655/device_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 61 ++++++++++++++++++--------
+ 1 file changed, 43 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
-index f69fc687d4c3..0442f71494b2 100644
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -133,7 +133,8 @@ static int device_init_td1_ring(struct vnt_private *priv);
- static int  device_rx_srv(struct vnt_private *priv, unsigned int idx);
- static int  device_tx_srv(struct vnt_private *priv, unsigned int idx);
- static bool device_alloc_rx_buf(struct vnt_private *, struct vnt_rx_desc *);
--static void device_free_rx_buf(struct vnt_private *priv, struct vnt_rx_desc *rd);
-+static void device_free_rx_buf(struct vnt_private *priv,
-+			       struct vnt_rx_desc *rd);
- static void device_init_registers(struct vnt_private *priv);
- static void device_free_tx_buf(struct vnt_private *, struct vnt_tx_desc *);
- static void device_free_td0_ring(struct vnt_private *priv);
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index dac7209a0708..8ef10c626862 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -543,15 +543,57 @@ static void move_myself(struct callback_head *head)
+ static int __rdtgroup_move_task(struct task_struct *tsk,
+ 				struct rdtgroup *rdtgrp)
+ {
++	struct callback_head *head;
+ 	struct task_move_callback *callback;
+ 	int ret;
+ 
+-	callback = kzalloc(sizeof(*callback), GFP_KERNEL);
++	/* If the task is already in rdtgrp, don't move the task. */
++	if ((rdtgrp->type == RDTCTRL_GROUP && tsk->closid == rdtgrp->closid &&
++	     tsk->rmid == rdtgrp->mon.rmid) ||
++	    (rdtgrp->type == RDTMON_GROUP &&
++	     rdtgrp->mon.parent->closid == tsk->closid &&
++	     tsk->rmid == rdtgrp->mon.rmid)) {
++		rdt_last_cmd_puts("Task is already in the rdgroup\n");
++		return 0;
++	}
++
++	/*
++	 * For monitor groups, we can move the tasks only from their parent
++	 * CTRL group.
++	 */
++	if (rdtgrp->type == RDTMON_GROUP &&
++	    rdtgrp->mon.parent->closid != tsk->closid) {
++		rdt_last_cmd_puts("Can't move task to different control group\n");
++		return -EINVAL;
++	}
++
++	/* Cancel exiting request and reuse the memory. */
++	head = task_work_cancel(tsk, move_myself);
++	if (head) {
++		callback = container_of(head, struct task_move_callback, work);
++		if (atomic_dec_and_test(&callback->rdtgrp->waitcount) &&
++		    (callback->rdtgrp->flags & RDT_DELETED))
++			kfree(callback->rdtgrp);
++	} else
++		callback = kzalloc(sizeof(*callback), GFP_KERNEL);
++
+ 	if (!callback)
+ 		return -ENOMEM;
+ 	callback->work.func = move_myself;
+ 	callback->rdtgrp = rdtgrp;
+ 
++	/*
++	 * For ctrl_mon groups move both closid and rmid.
++	 * For monitor groups, move the tasks only from their parent
++	 * CTRL group.
++	 */
++	if (rdtgrp->type == RDTCTRL_GROUP) {
++		tsk->closid = rdtgrp->closid;
++		tsk->rmid = rdtgrp->mon.rmid;
++	} else if (rdtgrp->type == RDTMON_GROUP &&
++		   rdtgrp->mon.parent->closid == tsk->closid) {
++		tsk->rmid = rdtgrp->mon.rmid;
++	}
+ 	/*
+ 	 * Take a refcount, so rdtgrp cannot be freed before the
+ 	 * callback has been invoked.
+@@ -567,23 +609,6 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
+ 		atomic_dec(&rdtgrp->waitcount);
+ 		kfree(callback);
+ 		rdt_last_cmd_puts("Task exited\n");
+-	} else {
+-		/*
+-		 * For ctrl_mon groups move both closid and rmid.
+-		 * For monitor groups, can move the tasks only from
+-		 * their parent CTRL group.
+-		 */
+-		if (rdtgrp->type == RDTCTRL_GROUP) {
+-			tsk->closid = rdtgrp->closid;
+-			tsk->rmid = rdtgrp->mon.rmid;
+-		} else if (rdtgrp->type == RDTMON_GROUP) {
+-			if (rdtgrp->mon.parent->closid == tsk->closid) {
+-				tsk->rmid = rdtgrp->mon.rmid;
+-			} else {
+-				rdt_last_cmd_puts("Can't move task to different control group\n");
+-				ret = -EINVAL;
+-			}
+-		}
+ 	}
+ 	return ret;
+ }
 -- 
-2.17.1
+2.25.0.341.g760bfbb309-goog
 
