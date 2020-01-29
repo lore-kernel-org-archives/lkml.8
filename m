@@ -2,70 +2,140 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A926C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D9BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AA42465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580258111;
-	bh=DzmX5EuthMgnn/vw++nrliqEikrreBcsDg6sQ2pof0U=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bK0YfFvgHu1PteydklKAu5F59oefRbfIsJayKbVo9Ccmt9DI9VpxfVNRVVQBfCoS9
-	 o1rkGm2LQ5hrE0NGUYOPlEztLYBYQtU1m3yihWYe9/KIZyqGsmzBm3d/veNqnV8THw
-	 1frG80GNmQvwHx/HVgB9mNkJhaWEogo30dg5FTzA=
+	by mail.kernel.org (Postfix) with ESMTP id B99D520732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgA2AfK (ORCPT
+        id S1729469AbgA2AiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:35:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56916 "EHLO mail.kernel.org"
+        Tue, 28 Jan 2020 19:38:02 -0500
+Received: from mga18.intel.com ([134.134.136.126]:40899 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbgA2AfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:35:05 -0500
-Subject: Re: [GIT PULL] Thermal for v5.6-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580258105;
-        bh=DzmX5EuthMgnn/vw++nrliqEikrreBcsDg6sQ2pof0U=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ob0s0l8iVfyMa2LJL1JpgRtF8XSYvuBBCMCGSzZuYA+s9+ZrDINmyvfv1EtBkFeoQ
-         +GFhWfJgy7R7PAyPa33DinnaFSZlZerKBdtUsz/5LdmRkkdbRpu6nvqQWRzE+92ZMH
-         /BEpa/c+x+JBZA3lTjzNpFfU/LsIf6FIQU+A3hLY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
-References: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <288933ba-a1fd-5954-df09-edaa4ea24abc@linaro.org>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
- tags/thermal-v5.6-rc1
-X-PR-Tracked-Commit-Id: 2f23e319b133c7392493e77f515a237c8e1e6dd6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: abb22e44cff3f11d9e087bdd46c04bb32ff57678
-Message-Id: <158025810536.31502.2409530854539231665.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 Jan 2020 00:35:05 +0000
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>
+        id S1729442AbgA2AiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 19:38:02 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Jan 2020 16:38:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,375,1574150400"; 
+   d="scan'208";a="229458192"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga003.jf.intel.com with ESMTP; 28 Jan 2020 16:37:59 -0800
+Date:   Wed, 29 Jan 2020 08:38:12 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+Subject: Re: [Patch v2 2/4] mm/migrate.c: wrap do_move_pages_to_node() and
+ store_status()
+Message-ID: <20200129003812.GC12835@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-3-richardw.yang@linux.intel.com>
+ <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 28 Jan 2020 11:13:51 +0100:
+On Tue, Jan 28, 2020 at 11:14:55AM +0100, David Hildenbrand wrote:
+>On 22.01.20 02:16, Wei Yang wrote:
+>> Usually do_move_pages_to_node() and store_status() is a pair. There are
+>> three places call this pair of functions with almost the same form.
+>
+>I'd suggest
+>
+>"
+>Usually, do_move_pages_to_node() and store_status() are used in
+>combination. We have three similar call sites.
+>
+>Let's provide a wrapper for both function calls -
+>move_pages_and_store_status - to make the calling code easier to
+>maintain and fix (as noted by Yang Shi, the return value handling of
+>do_move_pages_to_node() has a flaw).
+>"
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.6-rc1
+Looks good.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/abb22e44cff3f11d9e087bdd46c04bb32ff57678
+>
+>> 
+>> This patch just wrap it to make it friendly to audience and also
+>> consolidate the move and store action into one place. Also mentioned by
+>> Yang Shi, the handling of do_move_pages_to_node()'s return value is not
+>> proper. Now we can fix it in one place.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> ---
+>>  mm/migrate.c | 30 +++++++++++++++++++-----------
+>>  1 file changed, 19 insertions(+), 11 deletions(-)
+>> 
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 4c2a21856717..a4d3bd6475e1 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1583,6 +1583,19 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>  	return err;
+>>  }
+>>  
+>> +static int move_pages_and_store_status(struct mm_struct *mm, int node,
+>> +		struct list_head *pagelist, int __user *status,
+>> +		int start, int nr)
+>
+>nit: indentation
+>
 
-Thank you!
+You mean indent like this?
+
+static int move_pages_and_store_status(struct mm_struct *mm, int node,
+				       struct list_head *pagelist,
+				       int __user *status,
+
+This would be along list and I am afraid this is not the only valid code
+style?
+
+>> +{
+>> +	int err;
+>> +
+>> +	err = do_move_pages_to_node(mm, pagelist, node);
+>> +	if (err)
+>> +		return err;
+>> +	err = store_status(status, start, node, nr);
+>> +	return err;
+>
+>return store_status(status, start, node, nr);
+>
+>directly
+>
+
+ok
+
+>
+>
+>Apart from that (and some more indentation nits)
+>
+>Reviewed-by: David Hildenbrand <david@redhat.com>
+>
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Wei Yang
+Help you, Help me
