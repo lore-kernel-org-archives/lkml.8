@@ -2,60 +2,120 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46028C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950AE2070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C9820732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgA2OLv (ORCPT
+        id S1726564AbgA2OOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:11:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48656 "EHLO mx2.suse.de"
+        Wed, 29 Jan 2020 09:14:46 -0500
+Received: from mga11.intel.com ([192.55.52.93]:17780 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgA2OLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:11:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4A86FB22E;
-        Wed, 29 Jan 2020 14:11:49 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 15:11:48 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] console: Use for_each_console() helper in
- unregister_console()
-Message-ID: <20200129141148.4zit4yy7t4cl3t4m@pathway.suse.cz>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-3-andriy.shevchenko@linux.intel.com>
+        id S1726177AbgA2OOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 09:14:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 06:14:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
+   d="scan'208";a="223844287"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Jan 2020 06:14:43 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iwo7A-0002xX-Gd; Wed, 29 Jan 2020 16:14:44 +0200
+Date:   Wed, 29 Jan 2020 16:14:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        vipul kumar <vipulk0511@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+Message-ID: <20200129141444.GE32742@smile.fi.intel.com>
+References: <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
+ <20200123144108.GU32742@smile.fi.intel.com>
+ <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
+ <87iml11ccf.fsf@nanos.tec.linutronix.de>
+ <c06260e3-bd19-bf3c-89f7-d36bdb9a5b20@redhat.com>
+ <87ftg5131x.fsf@nanos.tec.linutronix.de>
+ <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
+ <87sgjz434v.fsf@nanos.tec.linutronix.de>
+ <20200129130350.GD32742@smile.fi.intel.com>
+ <0d361322-87aa-af48-492c-e8c4983bb35b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127114719.69114-3-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <0d361322-87aa-af48-492c-e8c4983bb35b@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-01-27 13:47:17, Andy Shevchenko wrote:
-> We have rather open coded single linked list manipulations where we may
-> simple use for_each_console() helper with properly set exit conditions.
+On Wed, Jan 29, 2020 at 02:21:40PM +0100, Hans de Goede wrote:
+> On 29-01-2020 14:03, Andy Shevchenko wrote:
+> > On Tue, Jan 28, 2020 at 11:39:28PM +0100, Thomas Gleixner wrote:
+> > > Hans de Goede <hdegoede@redhat.com> writes:
+
+...
+
+> > > Typical crystal frequencies are 19.2, 24 and 25Mhz.
+> > 
+> > Hans, I think Cherrytrail may be affected by this as the others.
+> > CHT AFAIK uses 19.2MHz xtal.
 > 
-> Replace open coded single-linked list handling with for_each_console()
-> helper in use.
+> Are you sure?
+
+I'm not. I may mixed this with PMC clock.
+
+> The first 5 entries of the CHT MSR_FSB_FREQ documentation exactly
+> match those of the BYT documentation (which has only 5 entries),
+> which suggests to me that CHT is also using a 25 MHz crystal.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> I can also make the other CHT only frequencies when assuming a 25
+> MHz crystal, here is a bit from the patch I'm working on for this:
+> 
+> /*
+>  * Cherry Trail SDM MSR_FSB_FREQ frequencies to PLL settings map:
+>  * 0000:   25 * 20 /  6  =  83.3333 MHz
+>  * 0001:   25 *  4 /  1  = 100.0000 MHz
+>  * 0010:   25 * 16 /  3  = 133.3333 MHz
+>  * 0011:   25 * 28 /  6  = 116.6667 MHz
+>  * 0100:   25 * 16 /  5  =  80.0000 MHz
+>  * 0101:   25 * 56 / 15  =  93.3333 MHz
+>  * 0110:   25 * 18 /  5  =  90.0000 MHz
+>  * 0111:   25 * 32 /  9  =  88.8889 MHz
+>  * 1000:   25 *  7 /  2  =  87.5000 MHz
+>  */
+> 
+> The only one which is possibly suspicious here is this line:
+> 
+>  * 0111:   25 * 32 /  9  =  88.8889 MHz
+> 
+> The SDM says 88.9 MHz for this one.
 
-Nice simplification.
+Anyway it seems need to be fixed as well.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Btw, why we are mentioning 20 / 6 and 28 / 6 when arithmetically
+it's the same as 10 / 3 and 14 / 3?
 
-Best Regards,
-Petr
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
