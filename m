@@ -2,146 +2,284 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144BCC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C86C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D656E2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADCE20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="QgiIWV/7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVRV084t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgA2IGu (ORCPT
+        id S1726258AbgA2IIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:06:50 -0500
-Received: from mail-db8eur05on2108.outbound.protection.outlook.com ([40.107.20.108]:10208
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726068AbgA2IGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:06:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f72Y1REEW9JpKXFak8mX+u9o2CtRpDXoDKrAHy/zSYpY+I9VGj02hgwGOebnCbjEmlFebohMLFjo5cDV6Dz8+1PHUQIyf/NxpaWLEoxGZX55fF4WyJaNOpEvw+J7N5G8s5lYqwq+Q/FKcKjSldEAJC8kX0OkoQHo8WmchJWPQ8DsiwahdYUjgY8OG34wTKsoOOsXLagh6TUPLIsuTd1mJHzMA/BMKs8Qv59CH9vk1F7kvWX7MBp3vHNRidlh6YtGWXkjGba82/Iol6O2f3FIC3xrcp2mmCbPpb9ubzky2wLSdo7pfUGTZRMk4+gCGEgNXTpJ5IKoArgZsuYhNtOtUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YA+IxNNhZXAZarUdhmtadRKZ3bSHnOcids1aLsayQOw=;
- b=H8+8y+gcAO3aF66DtBgkiupf/SSvpsj5ygXyIYTkrbWWCc/ceNAF2+/smGZ4YzO+drC/whH0qAmkYcoUjd+1jqVgyTZ/PRySbcWHjATCkdxAV5NaYsR9BGSLoL0tEPhnivxvpPoRKGohy8jGwiVP9A2Xu9jbQYHZl/CR5V3016vPQDiR/QhvADHryyyFuhCf8AQ2KbBGgKLvQCUJlKNdHE9R1eK3nHus7O8fdS6CsBcnbT8ysxVswfgT+SSbV534+iuTcc6H3QIY5dN5bCByeRbKvyhQZDOwgoRFzy8f8RkMQJasqyXcOAbxxjgBRYOBl5OQAO5tA86UD6AiYu8q9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YA+IxNNhZXAZarUdhmtadRKZ3bSHnOcids1aLsayQOw=;
- b=QgiIWV/7qb003Qs7mwZorr5vizhJreKHOB8RKvV9146/6KLU8FdExsyHaCatOBCUwWMSzATsj3zDI4eqHDkTt0TNzztIJreI9hoPfccAcOFnOBlYAheCz5uXrXUbvGMrmiRy71Yaea9NJlQu/zcc2WcITyhgS6hqJZof1H+AmvU=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3580.eurprd02.prod.outlook.com (52.134.66.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Wed, 29 Jan 2020 08:06:33 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2665.027; Wed, 29 Jan 2020
- 08:06:32 +0000
-Received: from [192.168.13.3] (213.112.137.122) by HE1PR06CA0146.eurprd06.prod.outlook.com (2603:10a6:7:16::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.22 via Frontend Transport; Wed, 29 Jan 2020 08:06:31 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Johan Hovold <johan@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next][V2] i2c: xiic: fix indentation issue
-Thread-Topic: [PATCH][next][V2] i2c: xiic: fix indentation issue
-Thread-Index: AQHV1PvGmbkS3JsMKku+pbwF3sqcKKf+WLcAgAAReoCAAADJgIACM4iAgAAX7YCAAJWdAA==
-Date:   Wed, 29 Jan 2020 08:06:32 +0000
-Message-ID: <f8c236de-4ed6-49dc-e5b7-283ebb859199@axentia.se>
-References: <20200127102303.44133-1-colin.king@canonical.com>
- <2dd84ab2-a7a3-fdd8-6bd6-07f1b3d5cd00@xilinx.com>
- <20200127120535.GC1847@kadam>
- <89661e5e-7662-81a5-ec36-57367825de5e@canonical.com>
- <35ed6501-3b26-36a9-d332-d4ed3366ebd8@axentia.se>
- <3b287fb5-e344-c13a-2803-09c2958b9b0d@canonical.com>
-In-Reply-To: <3b287fb5-e344-c13a-2803-09c2958b9b0d@canonical.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-originating-ip: [213.112.137.122]
-x-clientproxiedby: HE1PR06CA0146.eurprd06.prod.outlook.com
- (2603:10a6:7:16::33) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c39b6653-5cb5-46e2-7048-08d7a4922716
-x-ms-traffictypediagnostic: DB3PR0202MB3580:
-x-microsoft-antispam-prvs: <DB3PR0202MB358052A74A019793FAF31705BC050@DB3PR0202MB3580.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:341;
-x-forefront-prvs: 02973C87BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39830400003)(136003)(366004)(199004)(189003)(31696002)(508600001)(8936002)(2906002)(36756003)(31686004)(81156014)(8676002)(81166006)(66446008)(86362001)(6486002)(66556008)(64756008)(5660300002)(71200400001)(26005)(4326008)(186003)(66476007)(956004)(2616005)(66946007)(53546011)(52116002)(16526019)(316002)(16576012)(54906003)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3580;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: e23Ipoi6H93eYGUEw2lpJM8EFfefqjj+znORdfhIAOSufGHjc2XvjN6+3U2rpl3SAe4XqIilzrYD/MPfXRBIadOEXvE74RT0AJpuGxpBJkQa3Tp5jbai/Cs/g+ojilVgsXfnQR/HedP1i4Qw02DPd+a3RWxagWytdAHtlkrx0/+0rmAwIzkE/SMuthRsnoS0+4YU92DQ8A4zY9/LVyG9VLj9F5OP/ma10dur7TfVvMddctAbuht94ZRDCj50MErT1Zok+qFP59XRLcKjDRH557LBGCtjXRXt4uuL56IWMzBDOSYehS7tbYOkt0iO7srZ+Y5xmLNguUi+5HVBzd4IZ4gJ8AguEz4P8/dfwO+nSb5zD82bb6R+sQKaBtVTLWBQGi/0w7om4UpssP0gLkKu7mFDCxPQrgn1A8NpvMdQ7KQvYCWJSFmELi1ALg+JBFco
-x-ms-exchange-antispam-messagedata: 2F3JeTa5T8wSpN9xEhMoaFslrRnwUXzdLOdnpmlK+vsgPA/qg486orZDCeG+4FKdRC29swqOf0CIB4mVdBTC4h0TTxaHcr+gwKgNZH1KSrhVyrYv0qK0tBEBXKJLJLMMzYtM8YLd+mezcojq/w/TJQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C71D27A5CDBB8849A01AB6970F676569@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 29 Jan 2020 03:08:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43878 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgA2IIO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 03:08:14 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so11203062lfq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 00:08:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
+        b=dVRV084tz91H08y/W1Rz55YPretevnrzU6jwSmA9j90Ssgjd4CkAgldxJ6Py1fjutk
+         Xw3HxmIbEUYx5qg8WgWm9bFXWvnx42unvmMFgr9y549uuZvcoUSrkwbclnXtxxlOM3x3
+         HpByR+smBdAeeItsd9z1zU5gThYR/iprm4QdmkCMOeT5/Hwmto4D+Sk2TwOtc8XVkoKM
+         ghXVCW62zQh6IVJHciCsT1e/oYHPRZSz3bOeuly527ZKQFaR/Z2SwO1YBeY+GuuVF34n
+         zSlzd8NnMapPlwSYfiC/ABlDdWHKYJ80mB7LA0rg+Q98NM83s+Y8HS6u1XCU8Bz0qRwX
+         1Igg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
+        b=J+6wpsc6epYhycgaxUxJM4KRyuGn37TUJukjX9/jNzPzI3uO6/U6Hra9hK1Gl6Bl5G
+         8nflxqj5bilNNQXfCGxCsvokEQARoghfZUuWCaW+I8jcVS00WBy8+IJR+vp45zxBsxb3
+         q/36NmzLnYP8w90xJ8GboT7JqrMZnJPY81g44fhrpoVpPtUmogcjqHVKq16QW7K2SPes
+         OGr9T1Io/fT5T9wdOFcXVSPiHfYe9rLqPN2BblpF9sMSGq2U/U9iEijZMnEcc19Lj0/4
+         f0pe8BBmkrgdXNWoKARf4DcNqyFBJ0pDqYgLXhcKArSeQB6garqJTmeofhU2hbEboW/Z
+         y+pg==
+X-Gm-Message-State: APjAAAX/ZDbknF3ak3WNtm8LDUZxrk0aYdAnb4/+2ts5v9NFI05Hd6og
+        a1eEkUBCMFu4zSksGdGeSULQ0g5wVim+PBa+qeE+fg==
+X-Google-Smtp-Source: APXvYqzIR86t4QWIzXBIDieiwUq/COanEmng+XNaKE9Ear4DeQ+gsxM6/wz45xd6QZueJT54KTxAjPCevfSlK0/QLKI=
+X-Received: by 2002:a19:dc14:: with SMTP id t20mr4855539lfg.47.1580285291932;
+ Wed, 29 Jan 2020 00:08:11 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: c39b6653-5cb5-46e2-7048-08d7a4922716
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2020 08:06:32.7614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vfgtHayPNMFksAn55MMOeUCe6mDhG84NdB7VzKqy2c/QIoehvpmBNmCDMcAh+vR6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3580
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 Jan 2020 09:08:01 +0100
+Message-ID: <CACRpkdYYKS0jMOUu77cudjzOFnHPm3K3aOnmGgUkdVFHz=RSmQ@mail.gmail.com>
+Subject: [GIT PULL] GPIO changes for v5.6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAyMC0wMS0yOSAwMDoxMCwgQ29saW4gSWFuIEtpbmcgd3JvdGU6DQo+IE9uIDI4LzAxLzIw
-MjAgMjE6NDUsIFBldGVyIFJvc2luIHdyb3RlOg0KPj4gT24gMjAyMC0wMS0yNyAxMzowOCwgQ29s
-aW4gSWFuIEtpbmcgd3JvdGU6DQo+Pj4gT24gMjcvMDEvMjAyMCAxMjowNSwgRGFuIENhcnBlbnRl
-ciB3cm90ZToNCj4+Pj4gT24gTW9uLCBKYW4gMjcsIDIwMjAgYXQgMTI6MDM6MDJQTSArMDEwMCwg
-TWljaGFsIFNpbWVrIHdyb3RlOg0KPj4+Pj4gT24gMjcuIDAxLiAyMCAxMToyMywgQ29saW4gS2lu
-ZyB3cm90ZToNCj4+Pj4+PiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
-YWwuY29tPg0KPj4+Pj4+DQo+Pj4+Pj4gVGhlcmUgaXMgYSBzdGF0ZW1lbnQgdGhhdCBpcyBpbmRl
-bnRlZCBvbmUgbGV2ZWwgdG9vIGRlZXBseSwgcmVtb3ZlDQo+Pj4+Pj4gdGhlIGV4dHJhbmVvdXMg
-dGFiLg0KPj4+Pj4+DQo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGlu
-LmtpbmdAY2Fub25pY2FsLmNvbT4NCj4+Pj4+PiAtLS0NCj4+Pj4+PiBWMjogZml4IHR5cGUgaW4g
-Y29tbWl0IG1lc3NhZ2UNCj4+Pj4+PiAtLS0NCj4+Pj4+PiAgZHJpdmVycy9pMmMvYnVzc2VzL2ky
-Yy14aWljLmMgfCAyICstDQo+Pj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
-MSBkZWxldGlvbigtKQ0KPj4+Pj4+DQo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1
-c3Nlcy9pMmMteGlpYy5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy14aWljLmMNCj4+Pj4+PiBp
-bmRleCBiMTdkMzBjOWFiNDAuLjkwYzFjMzYyMzk0ZCAxMDA2NDQNCj4+Pj4+PiAtLS0gYS9kcml2
-ZXJzL2kyYy9idXNzZXMvaTJjLXhpaWMuYw0KPj4+Pj4+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nl
-cy9pMmMteGlpYy5jDQo+Pj4+Pj4gQEAgLTI2MSw3ICsyNjEsNyBAQCBzdGF0aWMgaW50IHhpaWNf
-Y2xlYXJfcnhfZmlmbyhzdHJ1Y3QgeGlpY19pMmMgKmkyYykNCj4+Pj4+PiAgCQl4aWljX2dldHJl
-ZzgoaTJjLCBYSUlDX0RSUl9SRUdfT0ZGU0VUKTsNCj4+Pj4+PiAgCQlpZiAodGltZV9hZnRlcihq
-aWZmaWVzLCB0aW1lb3V0KSkgew0KPj4+Pj4+ICAJCQlkZXZfZXJyKGkyYy0+ZGV2LCAiRmFpbGVk
-IHRvIGNsZWFyIHJ4IGZpZm9cbiIpOw0KPj4+Pj4+IC0JCQkJcmV0dXJuIC1FVElNRURPVVQ7DQo+
-Pj4+Pj4gKwkJCXJldHVybiAtRVRJTUVET1VUOw0KPj4+Pj4+ICAJCX0NCj4+Pj4+PiAgCX0NCj4+
-Pj4+PiAgDQo+Pj4+Pj4NCj4+Pj4+DQo+Pj4+PiBBcyB3YXMgc3VnZ2VzdGVkIGJ5IFBldGVyIHlv
-dSBzaG91bGQgYWxzbyBhZGQgRml4ZXM6IDxzaGExPiAoInBhdGNoDQo+Pj4+PiBzdWJqZWN0IikN
-Cj4+Pj4+DQo+Pj4+DQo+Pj4+IEl0J3Mgbm90IHJlYWxseSBhIGJ1Z2ZpeCwgaXQncyBqdXN0IGEg
-Y2xlYW51cC4NCj4+Pg0KPj4+IEknbSBzdXJwcmlzZWQgaSB3YXNuJ3QgYXNrZWQgZm9yIGEgYnVn
-IG51bWJlciB0b28uDQo+Pg0KPj4gVmVyeSBmdW5ueS4NCj4gDQo+IEFwb2xvZ2llcyBmb3IgYmVp
-bmcgZmxpcHBhbnQuIEkgZGlkbid0IG1lYW4gdG8gb2ZmZW5kLiBNeSBiYWQgIzEuDQoNCkFwb2xv
-Z3kgYWNjZXB0ZWQsIG5vIGhhcmQgZmVlbGluZ3MuIERvbid0IHdvcnJ5IGFib3V0IGl0LCBhbmQg
-c29ycnkgb24gbXkNCnBhcnQgZm9yIGEgcG9zc2libGUgb3ZlcnJlYWN0aW9uIQ0KDQpDaGVlcnMs
-DQpQZXRlcg0K
+Hi Linus,
+
+here is the bulk of the GPIO changes for v5.6.
+This is a pretty calm cycle so far, nothing special going
+on really. Some more changes will come in from the
+irqchip and pin control trees.
+
+I also delete an orphan include file for FMC that was
+dangling since I deleted that subsystem through the
+GPIO tree it comes here again.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+
+  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.6-1
+
+for you to fetch changes up to 0282c72d30d32913d641dc81f3f38607ace98802:
+
+  Merge tag 'gpio-updates-for-v5.6-part2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
+(2020-01-26 01:01:55 +0100)
+
+----------------------------------------------------------------
+This is the bulk of GPIO changes for the v5.6 kernel cycle
+
+Core changes:
+
+- Document the usecases for the kernelspace vs userspace
+  handling of GPIOs.
+
+- Handle MSI (message signalled interrupts) properly in the
+  core hierarchical irqdomain code.
+
+- Fix a rare race condition while initializing the descriptor
+  array.
+
+New drivers:
+
+- Xylon LogiCVC GPIO driver.
+
+- WDC934x GPIO controller driver.
+
+Driver improvements:
+
+- Implemented suspend/resume in the Tegra driver.
+
+- MPC8xx edge detection fixup.
+
+- Properly convert ThunderX to use hierarchical irqdomain
+  with GPIOLIB_IRQCHIP on top of the revert of the previous
+  buggy switchover. This time it works (hopefully).
+
+Misc:
+
+- Drop a FMC remnant file <linux/ipmi-fru.h>
+
+- A slew of fixes.
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      gpio: pca953x: Remove redundant forward declaration
+      gpiolib: Make use of assign_bit() API
+
+Bartosz Golaszewski (8):
+      gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
+      gpiolib: have a single place of calling set_config()
+      gpiolib: convert the type of hwnum to unsigned int in gpiochip_get_desc()
+      gpiolib: use gpiochip_get_desc() in linehandle_create()
+      gpiolib: use gpiochip_get_desc() in lineevent_create()
+      gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+      gpio: mockup: update the license tag
+      gpio: mockup: sort headers alphabetically
+
+Dan Callaghan (1):
+      gpiolib: hold gpio devices lock until ->descs array is initialised
+
+Dmitry Osipenko (3):
+      gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
+      gpio: tegra: Properly handle irq_set_irq_wake() error
+      gpio: tegra: Use NOIRQ phase for suspend/resume
+
+Enrico Weigelt, metux IT consult (2):
+      gpio: remove unneeded MODULE_VERSION() usage
+      gpio: gpiolib: fix confusing indention
+
+Geert Uytterhoeven (2):
+      gpiolib: Add GPIOCHIP_NAME definition
+      dt-bindings: gpio: rcar: Document r8a77961 support
+
+Jia-Ju Bai (2):
+      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
+grgpio_remove()
+      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
+grgpio_irq_map/unmap()
+
+Kevin Hao (6):
+      Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
+      gpiolib: Add support for the irqdomain which doesn't use irq_fwspec as arg
+      gpiolib: Add the support for the msi parent domain
+      gpio: thunderx: Switch to GPIOLIB_IRQCHIP
+      gpio: Fix the no return statement warning
+      gpiolib: Lower verbosity when allocating hierarchy irq
+
+Linus Walleij (6):
+      Merge tag 'gpio-updates-for-v5.6-part1' of
+git://git.kernel.org/.../brgl/linux into devel
+      gpio: Update TODO
+      gpio: Add use guidance documentation
+      Merge tag 'v5.5-rc6' into devel
+      Merge branch 'fixup-thunderx-hierarchy' into devel
+      Merge tag 'gpio-updates-for-v5.6-part2' of
+git://git.kernel.org/.../brgl/linux into devel
+
+Lukas Bulwahn (1):
+      fmc: remove left-over ipmi-fru.h after fmc deletion
+
+Matti Vaittinen (1):
+      docs: driver-model: Add missing managed GPIO array get functions
+
+Maxim Kiselev (1):
+      gpio: mvebu: clear irq in edge cause register before unmask edge irq
+
+Ooi, Joyce (2):
+      gpio: altera: change to platform_get_irq_optional to avoid
+false-positive error
+      MAINTAINERS: Replace Tien Hock Loh as Altera PIO maintainer
+
+Paul Kocialkowski (4):
+      dt-bindings: Add Xylon vendor prefix
+      dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+      dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+      gpio: Add support for the Xylon LogiCVC GPIOs
+
+Peng Fan (2):
+      gpio: mvebu: use platform_irq_count
+      gpio: bcm-kona: use platform_irq_count
+
+Sachin agarwal (2):
+      gpio: vx855: fixed a typo
+      gpio: aspeed-sgpio: fixed typos
+
+Shaokun Zhang (1):
+      gpio: Remove the unused flags
+
+Song Hui (1):
+      gpio: mpc8xxx: ls1088a/ls1028a edge detection mode bug fixs.
+
+Srinivas Kandagatla (2):
+      dt-bindings: gpio: wcd934x: Add bindings for gpio
+      gpio: wcd934x: Add support to wcd934x gpio controller
+
+Stephen Boyd (1):
+      gpiolib: Set lockdep class for hierarchical irq domains
+
+Vignesh Raghavendra (1):
+      gpio: pca953x: Don't hardcode irq trigger type
+
+YueHaibing (2):
+      gpiolib: remove set but not used variable 'config'
+      gpiolib: Remove duplicated function gpio_do_set_config()
+
+ .../bindings/gpio/qcom,wcd934x-gpio.yaml           |  47 ++++++
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   3 +-
+ .../bindings/gpio/xylon,logicvc-gpio.yaml          |  69 ++++++++
+ .../devicetree/bindings/mfd/xylon,logicvc.yaml     |  50 ++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ Documentation/driver-api/driver-model/devres.rst   |   2 +
+ Documentation/driver-api/gpio/drivers-on-gpio.rst  |   8 +-
+ Documentation/driver-api/gpio/index.rst            |   1 +
+ Documentation/driver-api/gpio/using-gpio.rst       |  50 ++++++
+ MAINTAINERS                                        |   2 +-
+ drivers/gpio/Kconfig                               |  13 ++
+ drivers/gpio/Makefile                              |   2 +
+ drivers/gpio/TODO                                  |  46 +++++-
+ drivers/gpio/gpio-altera.c                         |   2 +-
+ drivers/gpio/gpio-aspeed-sgpio.c                   |   2 +-
+ drivers/gpio/gpio-aspeed.c                         |   2 +-
+ drivers/gpio/gpio-bcm-kona.c                       |  12 +-
+ drivers/gpio/gpio-creg-snps.c                      |   4 +-
+ drivers/gpio/gpio-grgpio.c                         |  15 +-
+ drivers/gpio/gpio-logicvc.c                        | 170 +++++++++++++++++++
+ drivers/gpio/gpio-mockup.c                         |  16 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |   1 +
+ drivers/gpio/gpio-mvebu.c                          |   8 +-
+ drivers/gpio/gpio-pca953x.c                        |   5 +-
+ drivers/gpio/gpio-sama5d2-piobu.c                  |   1 -
+ drivers/gpio/gpio-tb10x.c                          |   1 -
+ drivers/gpio/gpio-tegra.c                          |  21 ++-
+ drivers/gpio/gpio-tegra186.c                       |  13 +-
+ drivers/gpio/gpio-thunderx.c                       |  36 +++-
+ drivers/gpio/gpio-vx855.c                          |   2 +-
+ drivers/gpio/gpio-wcd934x.c                        | 121 ++++++++++++++
+ drivers/gpio/gpiolib-sysfs.c                       |   7 +-
+ drivers/gpio/gpiolib.c                             | 182 ++++++++++-----------
+ drivers/gpio/gpiolib.h                             |   5 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |   2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
+ include/linux/gpio/driver.h                        |  26 ++-
+ include/linux/ipmi-fru.h                           | 134 ---------------
+ 38 files changed, 768 insertions(+), 317 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
+ create mode 100644
+Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+ create mode 100644 Documentation/driver-api/gpio/using-gpio.rst
+ create mode 100644 drivers/gpio/gpio-logicvc.c
+ create mode 100644 drivers/gpio/gpio-wcd934x.c
+ delete mode 100644 include/linux/ipmi-fru.h
