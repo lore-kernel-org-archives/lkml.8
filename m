@@ -2,121 +2,103 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3126C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60988C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB93520732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B14206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeb9sR28"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blg8gwsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgA2OjM (ORCPT
+        id S1726622AbgA2Ok4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:39:12 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44046 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgA2OjL (ORCPT
+        Wed, 29 Jan 2020 09:40:56 -0500
+Received: from mail-pl1-f169.google.com ([209.85.214.169]:39168 "EHLO
+        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgA2Ok4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:39:11 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so18668460ljj.11;
-        Wed, 29 Jan 2020 06:39:09 -0800 (PST)
+        Wed, 29 Jan 2020 09:40:56 -0500
+Received: by mail-pl1-f169.google.com with SMTP id g6so17683plp.6;
+        Wed, 29 Jan 2020 06:40:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3K8g2R+qnN1al4PUDNLHepCk8IU3tYNbbOqjAxk66KQ=;
-        b=aeb9sR283mF7M54b/P79A6sMBEAkyfi10bLIvLUYvCk614WErh7D810kPF7B2gk2HV
-         S4gPFlkcDUXvT91O5HRacHkhXAorOxjYHMvl0VDG1KP8IoRlGcfgSjrW4klCXkOjv9EW
-         WH8mNrsua6vUZtA+JbnVbTUSPnabN1s3Db9LGVfCehw2luiWDIvE8ayFzLRwc+7RE1S2
-         ylQtSCGWRnF1vQwL77Vh6bg9gscf7zZMZNZqK+uQaemMIB2pkoTuXn5bGlgL4NTc7RWL
-         DrjqRFY6pb82QfXeeRJRv69KloVzPEeSRGXI9QYndFeBJ1/c/EICIppcieugv9sKvewK
-         tzUQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JvoTSG0VTvs6pJMcpuNeyCO599C87Lk3Oo9v+qxULZI=;
+        b=blg8gwsapzbY2PNjCATaR8gACZe4IAbMvIOPlaVwZBVD+KK+/DRYL5ZRX7kF54mC3a
+         0fudadBagP03wxrtq0bOFzOmazsOj80LePzcicX65cKWQewU1WqfC8hPl4JQgHYn3ZFD
+         lilBxSeLwnsbY/Kn8KQCZEBRzd6zG7K72A9B8nknpGeAwGG3BMr5pr6n0yDJnxJ8K8yd
+         H560zsGnT5Hlh2YKsErc2ue0CV6BbGg5XmqwQ/ZH8wmJ3D4mXX/q0gyEm9bt+ytH++rV
+         zji6ig7TkU6ron1fTOW4QSekxzr9iRzpuV0JGz9IdJ08IJQk8gKk0SzDJi4GCNz4Z11l
+         4v0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3K8g2R+qnN1al4PUDNLHepCk8IU3tYNbbOqjAxk66KQ=;
-        b=BBt+VYWayAAsIdHRDEKIaRBApZrFzX6VloatyiWTnJqLZFGNp0Qcef+/9gcvO7+Ozs
-         1HqMQKmMEHtjlPd+EommIYRRh5CliR1np8ZoPvhRq7HcEJYBF4ap0+aelo49en6M+0rO
-         p8ySmmPGf/zGTfGnECqQbPOpMgwrf5hSCddSK3X8aEa4Ps/fwI1v93j1zIDPnzWU0KJ9
-         oB/Kvwu1kfcaQWX5X8XKz+VM4LxRn6gtsnEPZKJZSGhh65p/SCLmQMDQxN9dokFLpYGi
-         askjx0rczCSDP0MbYZJp3p6A6IAsf2M8X2tLhXAOuCCSHPk4WQJcvrXrhGLeQ2jwBbaf
-         qOng==
-X-Gm-Message-State: APjAAAWusBnFUZb8vEHKBXE5vVn/n4rINImYA936GygP0h1gTi0zyQCb
-        890f2IF8ftrt5f3uKsxZ+xFjJLPp
-X-Google-Smtp-Source: APXvYqzyT/z5WOwovxItfH/OmmixfX0sRMcE3L1GrJv50A2FO0AsNvSXw5MvYtPIoPvla35/zYC5Eg==
-X-Received: by 2002:a2e:9b57:: with SMTP id o23mr17068194ljj.278.1580308748898;
-        Wed, 29 Jan 2020 06:39:08 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p15sm1186393lfo.88.2020.01.29.06.39.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 06:39:08 -0800 (PST)
-Subject: Re: [PATCH v5 05/14] dmaengine: tegra-apb: Prevent race conditions of
- tasklet vs free list
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200123230325.3037-1-digetx@gmail.com>
- <20200123230325.3037-6-digetx@gmail.com>
- <cd1da99a-e52e-e202-257d-17466132d088@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5f867023-d49a-aff5-8d7f-d682a3b32770@gmail.com>
-Date:   Wed, 29 Jan 2020 17:39:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JvoTSG0VTvs6pJMcpuNeyCO599C87Lk3Oo9v+qxULZI=;
+        b=sFptDzZh3clS4WnfB8AwVtAHt3WSy7A2Aa7gue2b2qkM04T9RCwb+/abqLaehOWUCL
+         c/GJcrlIYN9ipBLI+9dApPCwYQGzk4WmBLemWb1G2rM7IzgwMb43t/BLNoyzmMsSDq+Y
+         mNdq6rPBVS4WkFK2MbMpFMcB1lmM7eo88CvJsB/ZIVwlXvj/87Djd0DswazRG0CaUWIx
+         mviHtSc3bQILOoyAIOGUBAOKlvi0e+nbBmAzvbK3+WMKyj8xf22eVjviqqavBsHkwFqW
+         oaEuMS0Cl+8po4i2WDlGmJTwHYYOrrPsxkThzLzc1L0hEGyFD9OEr5IysWIGSteGug/e
+         jqFw==
+X-Gm-Message-State: APjAAAUM3V2wcAaXRJaNX840MTlPdmT34LocllZEj5HtxUahOyQdboHL
+        gyX7HO+iJdFGE3lvGFsDcmQ=
+X-Google-Smtp-Source: APXvYqxYEyfC9oqU0Z47wPGTFSxtroHT+AOWj1ahbryAH1H5ZIJWeQqJn6nq9evPrLs8x+gGJZ38mA==
+X-Received: by 2002:a17:90a:a416:: with SMTP id y22mr11586404pjp.114.1580308855223;
+        Wed, 29 Jan 2020 06:40:55 -0800 (PST)
+Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
+        by smtp.gmail.com with ESMTPSA id x10sm3134798pfi.180.2020.01.29.06.40.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 06:40:54 -0800 (PST)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Wed, 29 Jan 2020 23:40:52 +0900
+To:     anon anon <742991625abc@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Petr Mladek <pmladek@suse.com>, wangkefeng.wang@huawei.com,
+        syzkaller@googlegroups.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
+Message-ID: <20200129143754.GA15445@jagdpanzerIV.localdomain>
+References: <CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com>
+ <CGME20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454@eucas1p1.samsung.com>
+ <20200128124912.chttagasucdpydhk@pathway.suse.cz>
+ <4ab69855-6112-52f4-bee2-3358664d0c20@samsung.com>
+ <20200129141517.GA13721@jagdpanzerIV.localdomain>
+ <20200129141759.GB13721@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <cd1da99a-e52e-e202-257d-17466132d088@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129141759.GB13721@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.01.2020 14:01, Jon Hunter пишет:
-> 
-> On 23/01/2020 23:03, Dmitry Osipenko wrote:
->> The interrupt handler puts a half-completed DMA descriptor on a free list
->> and then schedules tasklet to process bottom half of the descriptor that
->> executes client's callback, this creates possibility to pick up the busy
->> descriptor from the free list. Thus let's disallow descriptor's re-use
->> until it is fully processed.
->>
->> Acked-by: Jon Hunter <jonathanh@nvidia.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index 1b8a11804962..aafad50d075e 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
->>  
->>  	/* Do not allocate if desc are waiting for ack */
->>  	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
->> -		if (async_tx_test_ack(&dma_desc->txd)) {
->> +		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
->>  			list_del(&dma_desc->node);
->>  			spin_unlock_irqrestore(&tdc->lock, flags);
->>  			dma_desc->txd.flags = 0;
->>
-> 
-> I think we should mark this for stable as well. I would make this the
-> 2nd patch in the series as it is related to #1.
+Cc-ing Dmitry and Tetsuo
 
-Okay!
+Original Message-id: CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com
+
+On (20/01/29 23:17), Sergey Senozhatsky wrote:
+> > Hmm. There is something strange about it. I use vga console quite
+> > often, and scrolling happens all the time, yet I can't get the same
+> > out-of-bounds report (nor have I ever seen it in the past), even with
+> > the reproducer. Is it supposed to be executed as it is, or are there
+> > any preconditions? Any chance that something that runs prior to that
+> > reproducer somehow impacts the system? Just asking.
+> 
+> These questions were addressed to anon anon (742991625abc@gmail.com),
+> not to Bartlomiej.
+
+Could this be GCC_PLUGIN related?
+
+	-ss
