@@ -2,104 +2,87 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D87C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DACC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA98D20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E93A20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="tDU0csZ7"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CPsUPWMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgA2MPe (ORCPT
+        id S1726599AbgA2MRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:15:34 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:60663 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbgA2MPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:15:34 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 2d4a5f4a;
-        Wed, 29 Jan 2020 12:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :from:date:message-id:subject:to:content-type; s=mail; bh=bHEDAC
-        llkomB/iUjyWoesygVpj8=; b=tDU0csZ7/+Q8X+BqhpGDOWRM/LU9VawEj5CMAi
-        0PXYjh01kQ90u4h53BC6ThihbYwc5e/2srX8uIVUxEZC1uCp4Xy0YDdteDbD9Kwn
-        fsYNY9IszTlCKWF15lN2N5ARLG9ZNgLqN63xkAdvLW5+5NFmZDTlbvubhTNlFRcY
-        1FGVxb2rn0T6hGP0obgd3s8jRwc191f7yEwFnOR/18Y2xbmX6QhfB4pJTskcYA3x
-        JH+TZdBxnS4YMxrXbACE7x53T85QhXpsHpnhRYwonO5oSPsG9mDkLDfJMSRUILoq
-        g2rhOgoJUa1ifTRwPXJov5Ll2HWyowXtRRc24WVHP3lUDO/g==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f27b5d92 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 29 Jan 2020 12:15:30 +0000 (UTC)
-Received: by mail-ot1-f42.google.com with SMTP id a15so15300601otf.1;
-        Wed, 29 Jan 2020 04:15:31 -0800 (PST)
-X-Gm-Message-State: APjAAAU9LfLcUwgIRHC3e+p/YA6dMZoEo/BGQ2zuRNIB53c3NPE/Adki
-        cjoBmY3JQ++zmDyU8146F/JK6NOhSu6xwysj34I=
-X-Google-Smtp-Source: APXvYqxJypQ1UgGrE8bjJimKMKeAtsELhQjFOTmf0/hm0fKoKjpfT8uV1Ak1niOk5q9jBXlP0X+2ln2EJz4pVUrEQkk=
-X-Received: by 2002:a9d:811:: with SMTP id 17mr20808826oty.369.1580300130876;
- Wed, 29 Jan 2020 04:15:30 -0800 (PST)
-MIME-Version: 1.0
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 29 Jan 2020 13:15:20 +0100
-X-Gmail-Original-Message-ID: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
-Message-ID: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
-Subject: wireguard ci hooked up to quite a few kernel trees
-To:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jan 2020 07:17:42 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:40408 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbgA2MRl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:17:41 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5153840815;
+        Wed, 29 Jan 2020 12:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1580300261; bh=K88LGp8ZZ8Fu0cHBIBDPPK01UKDCYDHLXwJ/DHIVegI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=CPsUPWMzXwUCZ5BpimbxVuDIa5IbLBRG2JCEYZUgrTghqH6NIk3fgOFyAQeHvAPga
+         1vVEu2O6Qawai4ovM36+9tplsguQIdbbiRzVib0YFlERPQxwCUsn7I+AoCF/HlvIUN
+         igmkP7F+cMVLfmkBBlEWj3OngIzpG2j28uIKD+x/40uT1AEaI0UxwoQTGAj7Trw8SB
+         52WhAH52s8rMXza62ZSo36pKArspgHsPoR5zwIer1wSPzQ8661EgmkXWJOdJt4KZ/J
+         +De2rDAe2DAJLFPsKCsaTaPg2AyxTh2N1b+R4sEq2o1X/eX0dmSqdxuXmKs+u0v94b
+         WJ4grjOBWcKdQ==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5DF3AA0074;
+        Wed, 29 Jan 2020 12:17:38 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 447653F039;
+        Wed, 29 Jan 2020 13:17:38 +0100 (CET)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org
+Cc:     Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
+        bbrezillon@kernel.org, gregkh@linuxfoundation.org,
+        wsa@the-dreams.de, arnd@arndb.de, broonie@kernel.org,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [RFC v2 2/4] i3c: master: export i3c_bus_type symbol
+Date:   Wed, 29 Jan 2020 13:17:33 +0100
+Message-Id: <449db711a8174934e078f90b21c31b683d11da8c.1580299067.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1580299067.git.vitor.soares@synopsys.com>
+References: <cover.1580299067.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Export i3c_bus_type symbol so i3cdev can register a notifier chain
+for i3c bus.
 
-With the merging of wireguard, I've hooked the project's CI up to
-quite a few trees. We now have:
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+---
+ drivers/i3c/master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-- net-next
-- net
-- linux-next
-- linux (Linus' tree)
-- wireguard-linux (my tree)
-- wireguard-linux-compat (backports to kernels 3.10 - 5.5)
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 8a0ba34..21c4372 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -321,6 +321,7 @@ struct bus_type i3c_bus_type = {
+ 	.probe = i3c_device_probe,
+ 	.remove = i3c_device_remove,
+ };
++EXPORT_SYMBOL_GPL(i3c_bus_type);
+ 
+ static enum i3c_addr_slot_status
+ i3c_bus_get_addr_slot_status(struct i3c_bus *bus, u16 addr)
+-- 
+2.7.4
 
-When the various pushes and pulls click a few more cranks through the
-machinery, I'll probably add crypto and cryptodev, and eventually
-Greg's stable trees. If anybody has suggestions on other relevant
-trees that might help catch bugs as early as possible, I'm all ears.
-
-Right now builds are kicked off for every single commit made to each
-one of these trees, on x86_64, i686, aarch64, aarch64_be, arm, armeb,
-mips64, mips64el, mips, mipsel, powerpc64le, powerpc, and m68k. For
-each of these, a fresh kernel and miniature userland containing the
-test suite is built from source, and then booted in qemu.
-
-Even though the CI at the moment is focused on the wireguard test
-suite, it has a habit of finding lots of bugs and regressions in other
-weird places. For example, linux-next is failing at the moment on a
-few archs.
-
-I run this locally every day all day while developing kernel things
-too. It's one command to test a full kernel for whatever thing I'm
-working on, and this winds up saving a lot of time in development and
-lets me debug things with printk in the dumbest ways possible while
-still being productive and efficient.
-
-You can view the current build status here:
-https://www.wireguard.com/build-status/
-
-This sort of CI is another take on the kernel CI problem; I know a few
-organizations are doing similar things. I'd be happy to eventually
-expand this into something more general, should there be sufficient
-interest -- probably initially on networking stuff -- or it might turn
-out that this simply inspires something else that is more general and
-robust, which is fine too. Either way, here's my contribution to the
-modicum of kernel CI things happening.
-
-Regards,
-Jason
