@@ -2,146 +2,197 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A035C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C37C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390832067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C1E2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 19:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="k8pZpK4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbgA2TwJ (ORCPT
+        id S1727621AbgA2Txe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 14:52:09 -0500
-Received: from mga06.intel.com ([134.134.136.31]:29817 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbgA2TwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 14:52:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 11:42:13 -0800
-X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="429781595"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 11:42:13 -0800
-Date:   Wed, 29 Jan 2020 11:42:12 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Wed, 29 Jan 2020 14:53:34 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36984 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgA2Txe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 14:53:34 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q127so344516pga.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 11:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=O1J0Skt7EGzo7DImuZD5iQuaAKj6lr5i+y+YnafPYZ0=;
+        b=k8pZpK4F0A7B3N6h1/ZkDVW0I89LsuFvJImxWb5w69Q5IPrIXlwiExFj+bq8vujnhw
+         3k47A+Jml62AqTvAAxkNXAXXGiRVnfCq9jSnRp7bqHNLSnJQ6r2b7MlWNIDE6nYQYig8
+         hKjf4x+jVAkvjsDhZpBdNh4HNJSH9k4gmV+sY4AtqaSqEs2NweamdDCTzE+C/q9qvZAW
+         qevfgTHw+BxoGBILDjt95iA8fu9Vm7vvFljongRdEASSjTqaYr3QR5sDmp4Xc0rUHaS0
+         uR2oJWhRMrGBamwsj63kr8rXQoATKcxT22iSBtyVO43PyF7RBIX8R4pWW+fO6RDV5UdN
+         trFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=O1J0Skt7EGzo7DImuZD5iQuaAKj6lr5i+y+YnafPYZ0=;
+        b=fEarCXQdV30J4ZE2KYaKHyK+B+rSmxvdjkec1yRSEKGP3vrVnanoYyxvhFBFhstwRP
+         QL4PaEyPhwGPVVIijjOwgPCLcBn6nRYYf16I+snvbvLkl9mVb+43WhNKae+0s7G8JTQ1
+         FWsmObDjVO06XMv0WoYo3er59hwPVydVdCYpC7f21vHvCugwOC33yq83NuI6Nb1/QKYy
+         /JBsO5IHPXZH47czj8KP9BYu+MhmvRk9j0m8VDzMXlQkwPn2YXTXbzZ7fuXGupNTTtjf
+         qB/0b8YSL+Ytbu1FT+E4rn8cSmoV9epO4XaThEtZC3NF7/z/f6FkJ0YFi1nF7RHU19lk
+         iB5A==
+X-Gm-Message-State: APjAAAXvQvdNvWE+GphUGZQkAYwZWA6rDIUyAEClKxiDGERGkbkB94Bm
+        FFrWiqd5YRYq/Kapl9+FoloUNwlqBP3Zag==
+X-Google-Smtp-Source: APXvYqxepjSpKWpk0VO8hZOPjHrO0qSgKnELVasdyMAJW8AWB3zKkcsURzWwG6CRQ6gHqlOJbMcyPQ==
+X-Received: by 2002:aa7:9191:: with SMTP id x17mr1304639pfa.38.1580327613276;
+        Wed, 29 Jan 2020 11:53:33 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id y75sm3734450pfb.116.2020.01.29.11.53.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 11:53:32 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <E53F868C-2454-4254-B7F1-52E7D887B996@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_90FCEBAF-35BA-4C05-858C-7FBF4BB27827";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH RFC] ext4: skip concurrent inode updates in lazytime
+ optimization
+Date:   Wed, 29 Jan 2020 12:53:29 -0700
+In-Reply-To: <158031264567.6836.126132376018905207.stgit@buzz>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/asm changes for v5.6
-Message-ID: <20200129194212.GA23479@agluck-desk2.amr.corp.intel.com>
-References: <20200128165906.GA67781@gmail.com>
- <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
- <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
- <20200129132618.GA30979@zn.tnic>
- <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
- <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
- <20200129183404.GB30979@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129183404.GB30979@zn.tnic>
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+References: <158031264567.6836.126132376018905207.stgit@buzz>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 07:34:04PM +0100, Borislav Petkov wrote:
-> > So I'm just hand-waving. Maybe there was some simpler explanation
-> > (like me just picking the wrong instructions when I did the rough
-> > conversion and simply breaking things with some stupid bug).
-> 
-> Looks like it. So I did this:
-> 
 
-That looked plausible enough to risk on my remote machine. See below.
+--Apple-Mail=_90FCEBAF-35BA-4C05-858C-7FBF4BB27827
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
-> index 7ff00ea64e4f..a670d01570df 100644
-> --- a/arch/x86/lib/memmove_64.S
-> +++ b/arch/x86/lib/memmove_64.S
-> @@ -39,23 +39,19 @@ SYM_FUNC_START(__memmove)
->  	cmp %rdi, %r8
->  	jg 2f
->  
-> -	/* FSRM implies ERMS => no length checks, do the copy directly */
-> -.Lmemmove_begin_forward:
-> -	ALTERNATIVE "cmp $0x20, %rdx; jb 1f", "", X86_FEATURE_FSRM
-> -	ALTERNATIVE "", "movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
-> -
->  	/*
-> -	 * movsq instruction have many startup latency
-> -	 * so we handle small size by general register.
-> -	 */
-> -	cmp  $680, %rdx
-> -	jb	3f
-> -	/*
-> -	 * movsq instruction is only good for aligned case.
-> +	 * Three rep-string alternatives:
-> +	 *  - go to "movsq" for large regions where source and dest are
-> +	 *    mutually aligned (same in low 8 bits). "label 4"
-> +	 *  - plain rep-movsb for FSRM
-> +	 *  - rep-movs for > 32 byte for ERMS.
+On Jan 29, 2020, at 8:44 AM, Konstantin Khlebnikov =
+<khlebnikov@yandex-team.ru> wrote:
+>=20
+> Function ext4_update_other_inodes_time() implements optimization which
+> opportunistically updates times for inodes within same inode table =
+block.
+>=20
+> For now	concurrent inode lookup by number does not scale well =
+because
+> inode hash table is protected with single spinlock. It could become =
+very
+> hot at concurrent writes to fast nvme when inode cache has enough =
+inodes.
+>=20
+> Probably someday inode hash will become searchable under RCU.
+> (see linked patchset by David Howells)
+>=20
+> Let's skip concurrent updates instead of wasting cpu time at spinlock.
 
-Maybe list the code paths in the same order that they appear in the
-code below? So ERMS, then FSRM.
+Do you have any benchmark numbers to confirm that this is an =
+improvement?
+The performance results should be included here in the commit message, =
+so
+that the patch reviewers can make a useful decision about the patch, and
+in the future if this patch is shown to be a regression for some other
+workload we can see what workload(s) it originally improved performance =
+on.
 
->  	 */
-> +.Lmemmove_begin_forward:
-> +	ALTERNATIVE_2 \
-> +		"cmp $0x20, %rdx; jb 1f; cmp $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
-> +		"cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS, \
-> +		"movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM
->  
-> -	cmpb %dil, %sil
-> -	je 4f
->  3:
->  	sub $0x20, %rdx
->  	/*
-> 
+Cheers, Andreas
+
+>=20
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Link: =
+https://lore.kernel.org/lkml/155620449631.4720.8762546550728087460.stgit@w=
+arthog.procyon.org.uk/
 > ---
-> 
+> fs/ext4/inode.c |    7 +++++++
+> 1 file changed, 7 insertions(+)
+>=20
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 629a25d999f0..dc3e1b38e3ed 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4849,11 +4849,16 @@ static int other_inode_match(struct inode * =
+inode, unsigned long ino,
+> static void ext4_update_other_inodes_time(struct super_block *sb,
+> 					  unsigned long orig_ino, char =
+*buf)
+> {
+> +	static DEFINE_SPINLOCK(lock);
+> 	struct other_inode oi;
+> 	unsigned long ino;
+> 	int i, inodes_per_block =3D EXT4_SB(sb)->s_inodes_per_block;
+> 	int inode_size =3D EXT4_INODE_SIZE(sb);
+>=20
+> +	/* Don't bother inode_hash_lock with concurrent updates. */
+> +	if (!spin_trylock(&lock))
+> +		return;
+> +
+> 	oi.orig_ino =3D orig_ino;
+> 	/*
+> 	 * Calculate the first inode in the inode table block.  Inode
+> @@ -4867,6 +4872,8 @@ static void ext4_update_other_inodes_time(struct =
+super_block *sb,
+> 		oi.raw_inode =3D (struct ext4_inode *) buf;
+> 		(void) find_inode_nowait(sb, ino, other_inode_match, =
+&oi);
+> 	}
+> +
+> +	spin_unlock(&lock);
+> }
+>=20
+> /*
+>=20
 
-So the kernel booted. I grabbed the address of memmove from
-/proc/kallysyms and used:
 
-   # objdump -d --start-address=0x{blah blah} /proc/kcore
-
-and things look OK in there. It picked the FSRM option to simply
-use "rep movsb". Seems to be padded with various NOPs after the
-retq. Then the unpatched area starts with the "sub $0x20,%rdx".
+Cheers, Andreas
 
 
-ffffffff95946840:       48 89 f8                mov    %rdi,%rax
-ffffffff95946843:       48 39 fe                cmp    %rdi,%rsi
-ffffffff95946846:       7d 0f                   jge    0xffffffff95946857
-ffffffff95946848:       49 89 f0                mov    %rsi,%r8
-ffffffff9594684b:       49 01 d0                add    %rdx,%r8
-ffffffff9594684e:       49 39 f8                cmp    %rdi,%r8
-ffffffff95946851:       0f 8f a9 00 00 00       jg     0xffffffff95946900
-ffffffff95946857:       48 89 d1                mov    %rdx,%rcx
-ffffffff9594685a:       f3 a4                   rep movsb %ds:(%rsi),%es:(%rdi)
-ffffffff9594685c:       c3                      retq
-ffffffff9594685d:       0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
-ffffffff95946864:       00
-ffffffff95946865:       0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
-ffffffff9594686c:       00
-ffffffff9594686d:       66 90                   xchg   %ax,%ax
-ffffffff9594686f:       48 83 ea 20             sub    $0x20,%rdx
 
 
-So:
 
-Tested-by: Tony Luck <tony.luck@intel.com>
 
--Tony
+--Apple-Mail=_90FCEBAF-35BA-4C05-858C-7FBF4BB27827
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl4x4rkACgkQcqXauRfM
+H+AI4xAAtCNCAc8g1SRvfOYA1NkrVzL/spg4AtLaZsJnAoovtkEpFiRbjEKtjd3x
+KHLtA7/pkHudciIn3sAedWE+4qeONez4DxtfN7Y/zJRleOqWFONSiQ5ogjLqauAH
+4Bb2YNz3EGvDCgVJaunWvzDFRvztq+LhFWZiWzDaXsc4AczEjXKldFcYKn8/xU9k
+AOUfxxs+CsV06zXUI+dHSE25m5Rp2qMlvZtbLqtoFW2AoRrpRmiZp0hNnoIM+hYn
+HWJT3VQhcvZZSLjAxIcFBSDNCxtZSYTdQETCbPe1CUY1IpRdQ8SW03kFO/t1aeGO
+34ji63Raw3N1ICn/J00QsVFbny9cFXPk9K5XAbAnVv7qGdMqSRiMQtlbGtrsRqLW
+WuSpcMLxCt6z1zH4rq0lvsubvXInvB3lgoa+//bqTHonFGnEpV7GfQo1uRF93EZ3
++tbj2IIF5CKaqtHu3964FuHCiiIQWwJ9QL1oP67QP4a9DH9gyLg9WGcHmZ5Cwl6U
+NH5IrcPglS1Mpe2Ylr3mo0ZqQTUx/QTWAkcmFeM0XR1XA+HZJ6aZtQlHspOWbWXy
+x9wDXTYXG+1ArZ8msxj8CYqakuurk7ZfJXJICasu5FjE2VUTzstCRc9j68Nec+3a
+nJdwIykLPgAB1MUzVnLMo5l/6mKqmgfjG/1QCeImG4r30waJ+H4=
+=mSDd
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_90FCEBAF-35BA-4C05-858C-7FBF4BB27827--
