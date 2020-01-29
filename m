@@ -2,130 +2,206 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED44C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5BCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8472071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580314428;
-	bh=e1Wn9NnIjMDIS6BdQ81ViUrFBu9BQanXV+r3mteDX/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q70ME2E2YIspLUyxRc3WXdfqqX98FCIFjwjAwKnWsfhJKaJKi6HUjooeDr21QTBwH
-	 Y8jFxGamhMiBJHjOjipReT5VbLMFKuspXpa5ln2sAxDe/eC2vx6z9Dhi6Tz86401ij
-	 V7aXr9DKgO56w1+xNeilVdy0t9H76q35X5Dq7+r8=
+	by mail.kernel.org (Postfix) with ESMTP id E23FB2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgA2QNr (ORCPT
+        id S1727025AbgA2QQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:13:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 11:16:31 -0500
+Received: from ms.lwn.net ([45.79.88.28]:50192 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgA2QNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:13:46 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726829AbgA2QQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:16:31 -0500
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7BB32070E;
-        Wed, 29 Jan 2020 16:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580314426;
-        bh=e1Wn9NnIjMDIS6BdQ81ViUrFBu9BQanXV+r3mteDX/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NDoLZjcmTgTmmUvwERtMDcO6tlEHh3Q96S5jpo96owMURxgnSb9sBIeTNQPAGKcHp
-         cE+e+lfn02eON+YzD4l3aiAm9xF6mEaBfMtZRHuJc8Dcam+do9KbQWv8q8T5EnlvSV
-         qZ8ZLXHEB8aAb5Urm61xCkyDmLnJNpzsG8g8fJLI=
-Date:   Wed, 29 Jan 2020 16:13:41 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Srinivas Ramana <sramana@codeaurora.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>, maz@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm64: Set SSBS for user threads while creation
-Message-ID: <20200129161341.GA32275@willie-the-truck>
-References: <1577106146-8999-1-git-send-email-sramana@codeaurora.org>
- <20200102180145.GE27940@arrakis.emea.arm.com>
- <0c5cd234-5cfb-d093-06e4-a0edb5c68bf8@codeaurora.org>
+        by ms.lwn.net (Postfix) with ESMTPSA id 38032490;
+        Wed, 29 Jan 2020 16:16:30 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 09:16:28 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: [GIT PULL] Documentation for 5.6
+Message-ID: <20200129091628.0204a966@lwn.net>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c5cd234-5cfb-d093-06e4-a0edb5c68bf8@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 05:18:53PM +0530, Srinivas Ramana wrote:
-> On 1/2/2020 11:31 PM, Catalin Marinas wrote:
-> > On Mon, Dec 23, 2019 at 06:32:26PM +0530, Srinivas Ramana wrote:
-> > > Current SSBS implementation takes care of setting the
-> > > SSBS bit in start_thread() for user threads. While this works
-> > > for tasks launched with fork/clone followed by execve, for cases
-> > > where userspace would just call fork (eg, Java applications) this
-> > > leaves the SSBS bit unset. This results in performance
-> > > regression for such tasks.
-> > > 
-> > > It is understood that commit cbdf8a189a66 ("arm64: Force SSBS
-> > > on context switch") masks this issue, but that was done for a
-> > > different reason where heterogeneous CPUs(both SSBS supported
-> > > and unsupported) are present. It is appropriate to take care
-> > > of the SSBS bit for all threads while creation itself.
-> > > 
-> > > Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
-> > > Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
-> > 
-> > I suppose the parent process cleared SSBS explicitly. Isn't the child
-> 
-> Actually we observe that parent(in case of android, zygote that launches the
-> app) does have SSBS bit set. However child doesn't have the bit set.
+The following changes since commit
+d1eef1c619749b2a57e514a3fa67d9a516ffa919:
 
-On which SoC? Your commit message talks about heterogeneous systems (wrt
-SSBS) as though they don't apply in your case. Could you provide us with
-a reproducer?
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
 
-> > after fork() supposed to be nearly identical to the parent? If we did as
-> > you suggest, someone else might complain that SSBS has been set in the
-> > child after fork().
-> 
-> I am also wondering why would a userspace process clear SSBS bit loosing the
-> performance benefit.
+are available in the Git repository at:
 
-I guess it could happen during sigreturn if the signal handler wasn't
-careful about preserving bits in pstate, although it doesn't feel like
-something you'd regularly run into.
+  git://git.lwn.net/linux.git tags/docs-5.6
 
-But hang on a sec -- it looks like the context switch logic in
-cbdf8a189a66 actually does the wrong thing for systems where all of the
-CPUs implement SSBS. I don't think it explains the behaviour you're seeing,
-but I do think it could end up in situations where SSBS is unexpectedly
-*set*.
+for you to fetch changes up to 77ce1a47ebca88bf1eb3018855fc1709c7a1ed86:
 
-Diff below.
+  docs: filesystems: add overlayfs to index.rst (2020-01-28 13:41:57 -0700)
 
-Will
+----------------------------------------------------------------
+It has been a relatively quiet cycle for documentation, but there's still a
+couple of things of note:
 
---->8
+ - Conversion of the NFS documentation to RST
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index bbb0f0c145f6..e38284c9fb7b 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -466,6 +466,13 @@ static void ssbs_thread_switch(struct task_struct *next)
- 	if (unlikely(next->flags & PF_KTHREAD))
- 		return;
- 
-+	/*
-+	 * If all CPUs implement the SSBS instructions, then we just
-+	 * need to context-switch the PSTATE field.
-+	 */
-+	if (cpu_have_feature(cpu_feature(SSBS)))
-+		return;
-+
- 	/* If the mitigation is enabled, then we leave SSBS clear. */
- 	if ((arm64_get_ssbd_state() == ARM64_SSBD_FORCE_ENABLE) ||
- 	    test_tsk_thread_flag(next, TIF_SSBD))
+ - A new document on how to help with documentation (and a maintainer
+   profile entry too)
+
+Plus the usual collection of typo fixes, etc.
+
+----------------------------------------------------------------
+Alex Shi (3):
+      docs/zh_CN: add Chinese version of embargoed hardware issues
+      docs/zh_CN: translate kernel driver statement into Chinese
+      docs/zh_CN: translate kernel enforcement statement
+
+Atish Patra (1):
+      RISC-V: Typo fixes in image header and documentation.
+
+Colin Ian King (1):
+      devices.txt: fix spelling mistake: "shapshot" -> "snapshot"
+
+Daniel W. S. Almeida (11):
+      Documentation: boot.rst: fix warnings
+      Documentation: filesystems: convert vfat.txt to RST
+      Documentation: convert nfs.txt to ReST
+      Documentation: nfsroot.txt: convert to ReST
+      Documentation: nfsroot.rst: COSMETIC: refill a paragraph
+      Documentation: nfs-rdma: convert to ReST
+      Documentation: convert nfsd-admin-interfaces to ReST
+      Documentation: nfs: idmapper: convert to ReST
+      Documentation: nfs: convert pnfs-block-server to ReST
+      Documentation: nfs: pnfs-scsi-server: convert to ReST
+      Documentation: nfs: fault_injection: convert to ReST
+
+Federico Vaga (1):
+      doc:locking: fix locktorture parameter description
+
+Frank A. Cancio Bello (4):
+      docs: ftrace: Specifies when buffers get clear
+      docs: ftrace: Clarify the RAM impact of buffer_size_kb
+      docs: ftrace: Fix typos
+      docs: ftrace: Fix small notation mistake
+
+Geert Uytterhoeven (1):
+      scripts/find-unused-docs: Fix massive false positives
+
+Guoqing Jiang (1):
+      docs: block/biovecs: update the location of bio.c
+
+Jonathan Corbet (4):
+      Merge branch 'nfs' into docs-next
+      docs: Keep up with the location of NoUri
+      Add a document on how to contribute to the documentation
+      Add a maintainer entry profile for documentation
+
+Konstantin Ryabitsev (1):
+      Process: provide hardware-security list details
+
+Lukas Bulwahn (1):
+      docs: nvdimm: use ReST notation for subsection
+
+Madhuparna Bhowmik (2):
+      Documentation: filesystems: automount-support: Change reference to document autofs.txt to autofs.rst
+      Documentation: kernel-hacking: hacking.rst: Change reference to document namespaces.rst to symbol-namespaces.rst
+
+Masanari Iida (2):
+      Doc: x86: Fix a typo in mm.rst
+      docs: w1: Fix a typo in omap-hdq.rst
+
+Mauro Carvalho Chehab (2):
+      docs: usb: remove some broken references
+      docs: filesystems: add overlayfs to index.rst
+
+Randy Dunlap (3):
+      Documentation: x86: fix boot.rst warning and format
+      Documentation: fix Sphinx warning in xilinx_sdfec.rst
+      Documentation: zram: various fixes in zram.rst
+
+SeongJae Park (1):
+      docs/memory-barriers.txt.kokr: Minor wordsmith
+
+Will Deacon (1):
+      Documentation: Call out example SYM_FUNC_* usage as x86-specific
+
+Yue Hu (1):
+      zram: correct documentation about sysfs node of huge page writeback
+
+ Documentation/admin-guide/blockdev/zram.rst        |  63 ++--
+ Documentation/admin-guide/devices.txt              |   2 +-
+ Documentation/admin-guide/index.rst                |   1 +
+ .../nfs/fault_injection.rst}                       |   5 +-
+ Documentation/admin-guide/nfs/index.rst            |  15 +
+ .../nfs/nfs.txt => admin-guide/nfs/nfs-client.rst} |  85 ++---
+ .../nfs/nfs-idmapper.rst}                          |  31 +-
+ Documentation/admin-guide/nfs/nfs-rdma.rst         | 292 ++++++++++++++++
+ .../nfs/nfsd-admin-interfaces.rst}                 |  19 +-
+ .../nfsroot.txt => admin-guide/nfs/nfsroot.rst}    | 151 ++++----
+ .../nfs/pnfs-block-server.rst}                     |  25 +-
+ .../nfs/pnfs-scsi-server.rst}                      |   1 +
+ Documentation/asm-annotations.rst                  |   9 +-
+ Documentation/block/biovecs.rst                    |   2 +-
+ Documentation/doc-guide/contributing.rst           | 294 ++++++++++++++++
+ Documentation/doc-guide/index.rst                  |   2 +
+ Documentation/doc-guide/maintainer-profile.rst     |  44 +++
+ Documentation/filesystems/automount-support.txt    |   2 +-
+ Documentation/filesystems/index.rst                |   2 +
+ Documentation/filesystems/nfs/nfs-rdma.txt         | 274 ---------------
+ Documentation/filesystems/vfat.rst                 | 387 +++++++++++++++++++++
+ Documentation/filesystems/vfat.txt                 | 347 ------------------
+ Documentation/kernel-hacking/hacking.rst           |   4 +-
+ Documentation/locking/locktorture.rst              |   3 +-
+ .../maintainer/maintainer-entry-profile.rst        |   1 +
+ Documentation/misc-devices/xilinx_sdfec.rst        |   1 +
+ Documentation/nvdimm/maintainer-entry-profile.rst  |   3 +-
+ .../process/embargoed-hardware-issues.rst          |  25 +-
+ Documentation/riscv/boot-image-header.rst          |   4 +-
+ Documentation/sphinx/automarkup.py                 |   7 +-
+ Documentation/trace/ftrace.rst                     |  18 +-
+ Documentation/trace/ring-buffer-design.txt         |   2 +-
+ .../translations/ko_KR/memory-barriers.txt         |   4 +-
+ .../zh_CN/process/embargoed-hardware-issues.rst    | 228 ++++++++++++
+ Documentation/translations/zh_CN/process/index.rst |   3 +
+ .../zh_CN/process/kernel-driver-statement.rst      | 199 +++++++++++
+ .../zh_CN/process/kernel-enforcement-statement.rst | 151 ++++++++
+ Documentation/usb/index.rst                        |   2 -
+ Documentation/usb/text_files.rst                   |   6 -
+ Documentation/w1/masters/omap-hdq.rst              |   2 +-
+ Documentation/x86/boot.rst                         |  45 +--
+ Documentation/x86/x86_64/mm.rst                    |   6 +-
+ MAINTAINERS                                        |   2 +-
+ arch/riscv/include/asm/image.h                     |   4 +-
+ scripts/find-unused-docs.sh                        |   2 +-
+ 45 files changed, 1904 insertions(+), 871 deletions(-)
+ rename Documentation/{filesystems/nfs/fault_injection.txt => admin-guide/nfs/fault_injection.rst} (98%)
+ create mode 100644 Documentation/admin-guide/nfs/index.rst
+ rename Documentation/{filesystems/nfs/nfs.txt => admin-guide/nfs/nfs-client.rst} (75%)
+ rename Documentation/{filesystems/nfs/idmapper.txt => admin-guide/nfs/nfs-idmapper.rst} (81%)
+ create mode 100644 Documentation/admin-guide/nfs/nfs-rdma.rst
+ rename Documentation/{filesystems/nfs/nfsd-admin-interfaces.txt => admin-guide/nfs/nfsd-admin-interfaces.rst} (70%)
+ rename Documentation/{filesystems/nfs/nfsroot.txt => admin-guide/nfs/nfsroot.rst} (80%)
+ rename Documentation/{filesystems/nfs/pnfs-block-server.txt => admin-guide/nfs/pnfs-block-server.rst} (80%)
+ rename Documentation/{filesystems/nfs/pnfs-scsi-server.txt => admin-guide/nfs/pnfs-scsi-server.rst} (97%)
+ create mode 100644 Documentation/doc-guide/contributing.rst
+ create mode 100644 Documentation/doc-guide/maintainer-profile.rst
+ delete mode 100644 Documentation/filesystems/nfs/nfs-rdma.txt
+ create mode 100644 Documentation/filesystems/vfat.rst
+ delete mode 100644 Documentation/filesystems/vfat.txt
+ create mode 100644 Documentation/translations/zh_CN/process/embargoed-hardware-issues.rst
+ create mode 100644 Documentation/translations/zh_CN/process/kernel-driver-statement.rst
+ create mode 100644 Documentation/translations/zh_CN/process/kernel-enforcement-statement.rst
