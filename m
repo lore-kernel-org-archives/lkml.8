@@ -2,75 +2,73 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6578DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F55DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B4920702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1877720702
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgA2WPq (ORCPT
+        id S1726742AbgA2WQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:15:46 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55331 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726222AbgA2WPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:15:46 -0500
-Received: from callcc.thunk.org (guestnat-104-133-9-100.corp.google.com [104.133.9.100] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00TMFcLC027980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 17:15:39 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 084F9420324; Wed, 29 Jan 2020 17:15:46 -0500 (EST)
-Date:   Wed, 29 Jan 2020 17:15:46 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH RFC] ext4: skip concurrent inode updates in lazytime
- optimization
-Message-ID: <20200129221546.GB303030@mit.edu>
-References: <158031264567.6836.126132376018905207.stgit@buzz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158031264567.6836.126132376018905207.stgit@buzz>
+        Wed, 29 Jan 2020 17:16:30 -0500
+Received: from mga14.intel.com ([192.55.52.115]:57539 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgA2WQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:16:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 14:16:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
+   d="scan'208";a="222600055"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jan 2020 14:16:26 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com, david@redhat.com,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [Patch v4 0/4]  cleanup on do_pages_move()
+Date:   Thu, 30 Jan 2020 06:16:12 +0800
+Message-Id: <20200129221616.25432-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 06:44:05PM +0300, Konstantin Khlebnikov wrote:
-> Function ext4_update_other_inodes_time() implements optimization which
-> opportunistically updates times for inodes within same inode table block.
-> 
-> For now	concurrent inode lookup by number does not scale well because
-> inode hash table is protected with single spinlock. It could become very
-> hot at concurrent writes to fast nvme when inode cache has enough inodes.
-> 
-> Probably someday inode hash will become searchable under RCU.
-> (see linked patchset by David Howells)
-> 
-> Let's skip concurrent updates instead of wasting cpu time at spinlock.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Link: https://lore.kernel.org/lkml/155620449631.4720.8762546550728087460.stgit@warthog.procyon.org.uk/
+The logic in do_pages_move() is a little mess for audience to read and has
+some potential error on handling the return value. Especially there are
+three calls on do_move_pages_to_node() and store_status() with almost the
+same form.
 
-Hmm.... I wonder what Al thinks of adding a varaint of
-find_inode_nowait() which uses tries to grab the inode_hash_lock()
-using a trylock, and returns ERR_PTR(-EAGAIN) if the attempt to grab
-the lock fails.
+This patch set tries to make the code a little friendly for audience by
+consolidate the calls.
 
-This might be better since it will prevent other conflicts between
-ext4_update_other_inodes_time() and other attempts to lookup inodes
-which can't be skipped if things are busy.
+v4:
+  * rephrase changelog based on suggestion from David Hildenbrand
+  * trivial change on code style and comment
+v3:
+  * rebase on top of Yang Shi's fix "mm: move_pages: report the number of
+    non-attempted pages"
+v2:
+  * remove some unnecessary cleanup
 
-      	       	       	  	     - Ted
+Wei Yang (4):
+  mm/migrate.c: no need to check for i > start in do_pages_move()
+  mm/migrate.c: wrap do_move_pages_to_node() and store_status()
+  mm/migrate.c: check pagelist in move_pages_and_store_status()
+  mm/migrate.c: unify "not queued for migration" handling in
+    do_pages_move()
+
+ mm/migrate.c | 54 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
+
+-- 
+2.17.1
+
