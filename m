@@ -2,104 +2,102 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFF7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8953C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6231720702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88022070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="l3nV9ySF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vl9O8cXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgA2Mej (ORCPT
+        id S1726380AbgA2Mn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:34:39 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:59177 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgA2Mej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:34:39 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4872x84Y4Lz9tx92;
-        Wed, 29 Jan 2020 13:34:36 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=l3nV9ySF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uH-i69bvoEWL; Wed, 29 Jan 2020 13:34:36 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4872x83HG1z9tx91;
-        Wed, 29 Jan 2020 13:34:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580301276; bh=pguVXdOhkyypdIZhHe1n3i7XEXX+yG1raLA7WsBiY2c=;
-        h=From:Subject:To:Cc:Date:From;
-        b=l3nV9ySFTQoaYWheRtSLpxXQWqDGTF+7CTkVzroN17yb2abpx51Sg/dbEkTnsIVbk
-         GtQOxks2plKz5QZekbeokoSW1Bnpd8AO3Xe8erFZ1ECC8pknxQ0FATIm6ekInrAo1a
-         WTX3EkLwQWhOYOha5WxJJc1ramrscA9+ArL7eUBw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCB268B81C;
-        Wed, 29 Jan 2020 13:34:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id buSXGuoXKh3u; Wed, 29 Jan 2020 13:34:37 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6F00F8B815;
-        Wed, 29 Jan 2020 13:34:37 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 05B396523E; Wed, 29 Jan 2020 12:34:36 +0000 (UTC)
-Message-Id: <fc8390a33c2a470105f01abbcbdc7916c30c0a54.1580301269.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32s: Fix kasan_early_hash_table() for
- CONFIG_VMAP_STACK
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 29 Jan 2020 12:34:36 +0000 (UTC)
+        Wed, 29 Jan 2020 07:43:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgA2Mn4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:43:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jevnuIC5gZOp8gmdjzUHYbGt3WgdQxyaTB8XVPmRRP4=; b=Vl9O8cXT21pITlblL5uiZDvZY
+        /S9Bmy7jPCHEK6ajpjhPBx4oDBUnbj9dUMhe1awhrh/uMflr1GVuscoFQ3heunMeuwUsEcTKaGQFx
+        JD7RzlDWzxr3m4PWe/m1CxOq4lAyAefJDXDll0EJgM+RtbVMOsNrJ2QerGO9A273sHtL5AoVhSpW4
+        oyy1v8+HsJeLT3kUfuq6hHy4QiSRUDYDVjcA1faIeZYPZ5ivn23PUFsuOEKQUJFLIGwapsxkX0AOs
+        fO4qRvUsGstcp6Lw0omSpW3zwmgnY/SkMNRHuWnoRkHtviljbLVdA8DiExmyRJ/CvG1KGDg4iGBhk
+        us8fT0X0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwmhG-0000bD-Gi; Wed, 29 Jan 2020 12:43:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 234053035D4;
+        Wed, 29 Jan 2020 13:42:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DFECE2B7159FA; Wed, 29 Jan 2020 13:43:52 +0100 (CET)
+Date:   Wed, 29 Jan 2020 13:43:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] m68k,mm: Extend table allocator for multiple sizes
+Message-ID: <20200129124352.GP14879@hirez.programming.kicks-ass.net>
+References: <20200129103941.304769381@infradead.org>
+ <20200129104345.491163937@infradead.org>
+ <20200129121752.GB31582@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129121752.GB31582@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On book3s/32 CPUs that are handling MMU through a hash table,
-MMU_init_hw() function was adapted for VMAP_STACK in order to
-handle virtual addresses instead of physical addresses in the
-low level hash functions.
+On Wed, Jan 29, 2020 at 12:17:53PM +0000, Will Deacon wrote:
+> On Wed, Jan 29, 2020 at 11:39:45AM +0100, Peter Zijlstra wrote:
 
-When using KASAN, the same adaptations are required for the
-early hash table set up by kasan_early_hash_table() function.
+> > +extern void *get_pointer_table(int type);
+> 
+> Could be prettier/obfuscated with an enum type?
 
-Fixes: cd08f109e262 ("powerpc/32s: Enable CONFIG_VMAP_STACK")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/kasan/kasan_init_32.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Definitely, but then we get to bike-shed on names :-)
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index d3cacd462560..16dd95bd0749 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -185,8 +185,11 @@ u8 __initdata early_hash[256 << 10] __aligned(256 << 10) = {0};
- 
- static void __init kasan_early_hash_table(void)
- {
--	modify_instruction_site(&patch__hash_page_A0, 0xffff, __pa(early_hash) >> 16);
--	modify_instruction_site(&patch__flush_hash_A0, 0xffff, __pa(early_hash) >> 16);
-+	unsigned int hash = IS_ENABLED(CONFIG_VMAP_STACK) ? (unsigned int)early_hash :
-+							    __pa(early_hash);
-+
-+	modify_instruction_site(&patch__hash_page_A0, 0xffff, hash >> 16);
-+	modify_instruction_site(&patch__flush_hash_A0, 0xffff, hash >> 16);
- 
- 	Hash = (struct hash_pte *)early_hash;
- }
--- 
-2.25.0
+enum m68k_table_type {
+	TABLE_BIG = 0,
+	TABLE_SMALL,
+};
 
+Is not exactly _that_ much better, and while TABLE_PTE works,
+TABLE_PGD_PMD is a bit crap.
+
+> > --- a/arch/m68k/mm/memory.c
+> > +++ b/arch/m68k/mm/memory.c
+
+> > -pmd_t *get_pointer_table (void)
+> > +void *get_pointer_table (int type)
+> >  {
+> > -	ptable_desc *dp = ptable_list.next;
+> > -	unsigned char mask = PD_MARKBITS (dp);
+> > -	unsigned char tmp;
+> > -	unsigned int off;
+> > +	ptable_desc *dp = ptable_list[type].next;
+> > +	unsigned int mask, tmp, off;
+> 
+> nit, but if you do:
+> 
+> 	unsigned int mask = list_empty(&ptable_list[type]) ? 0 : PD_MARKBITS(dp);
+> 
+> then you can leave the existing mask logic as-is.
+
+Indeed!
