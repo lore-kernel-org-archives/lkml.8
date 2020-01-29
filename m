@@ -2,126 +2,109 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8EEC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52201C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A268920708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2666F20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lo3mryy3"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0W7H46FM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgA2LVv (ORCPT
+        id S1726347AbgA2LZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:21:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33083 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2LVu (ORCPT
+        Wed, 29 Jan 2020 06:25:06 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36276 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgA2LZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:21:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so18069606lji.0;
-        Wed, 29 Jan 2020 03:21:48 -0800 (PST)
+        Wed, 29 Jan 2020 06:25:06 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so18049917ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 03:25:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=NPCUdLAYmbEspRBF05xZGb8x0Dpqva/T+gPsfhkFeOA=;
-        b=lo3mryy3EPGV3wjla57jjaGExvmgGbLwskoGo2f4aETMXTnZY4n8y3V4MVs5q8uuVn
-         0g33CDZIii/tmXcz40l8nSLVuHtSey5IcN88fgqai2D3Of2cf7pCNbb+thaEFxBB8CQf
-         4ktOVU2JIMVE9X2pEogqYMGScv63jddu2RiRv0hR5iPB7HI8EZY8tXTHHwO+sr8z0e3z
-         lBbv+KwyISNeEuOHs/oRvt3ynNR2+cnw+Yac7MqxruZH5vFi9wXHbLTZRKhYTZ5ai+Dq
-         OWktIQQvL2ywRr9jTZ4WnC2ZT5bwZPPYH2rROmp+ngU219FDIS2873/x4Fu+a+xFQV0r
-         Z0Xw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yuCTClL/pM7fgvSlPLx1qB/TzQ5SdJMl6/MOShIA1DQ=;
+        b=0W7H46FMjIQyieXPqDTdHmsnT+fVvJJD10f3x0BOMctRvL9MkeTdx4VbdbHlRTBEN3
+         b5/NawDAfyQpEhbLgT0rwOvcpevf1CHvRnfPK+nWNiUWSGyImoO0vgtrGmVKW+uZx29r
+         bBsFaVwVuNzEQGuzTVKaB1lufIwzDYjD7ErDm/9BiL+5qbFTXQ+Ady+yLKCnGSNAgMd3
+         W6mnYQvJTpgMGiYduy+scv4eX7iMsBIwYQPsUNpaNK3OyYiGdeXL9USXqvdYpFTTjSlw
+         AraHVZkw1JBmq3Op+CNUrl6EEty11YBA5pwAZqGuiTKUaRJ47uGYaNwZMdUrsfU+3Fw7
+         +BBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version:content-transfer-encoding;
-        bh=NPCUdLAYmbEspRBF05xZGb8x0Dpqva/T+gPsfhkFeOA=;
-        b=N6u64a4aLyKDduxLyCxpMrgK4kjHpQ0uKd+ThXLp3Wh6QVPD2CdfQSevlJeElvfjMu
-         p+MuACZRWVFVH+5lMkuey0zufTVIlbATZKbiZUD74KFUPjeDO1kvluNottLb9/DBy7yz
-         Lk457QDzUSKvdiZVutQpiMUgiGv22iVVjSq9oILpLM6WGX1rGBvPB9Prb+zv88sCju2I
-         T6whYgBCq6BbwNP/rNEN0E6gVR607Eqr1sYybEZ1LDqo9fg9BJhIAM/zzOlTo+QqjOjd
-         4lAajKOyy/QtsW/UGqiO4edD36yL7CGSEjB+KyuV7EhqzhhMBoiUKEVI2zZq4XzvxJW7
-         JmhA==
-X-Gm-Message-State: APjAAAW1Pc2zsK8DTeCUI+gn1VJP4CQZADOAbH4/q45M7UBYF6eo6XfE
-        Gg3sli+FoSYwp9eChbSp/a6jAEwc
-X-Google-Smtp-Source: APXvYqxNVehRNwku/wPhP1/6tlzSibCQ47vVcHhXNMgzbVJn6j32BloCUTvoaCwPYWpa+82n49fcJg==
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr3111213ljh.183.1580296907910;
-        Wed, 29 Jan 2020 03:21:47 -0800 (PST)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id z7sm764137lji.30.2020.01.29.03.21.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 03:21:47 -0800 (PST)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        =?utf-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v3] usb: gadget: serial: fix Tx stall after buffer overflow
-References: <87pnfi8xc2.fsf@osv.gnss.ru>
-Date:   Wed, 29 Jan 2020 14:21:46 +0300
-In-Reply-To: <87pnfi8xc2.fsf@osv.gnss.ru> (Sergey Organov's message of "Fri,
-        17 Jan 2020 08:29:33 +0300")
-Message-ID: <87sgjyzewl.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.4 (gnu/linux)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yuCTClL/pM7fgvSlPLx1qB/TzQ5SdJMl6/MOShIA1DQ=;
+        b=R4zXqLVB0yCskxNdyelUuD0Chyh+KMO0dvLGgonLHAGEfAf+IuGv/aE4g1j/h1v+4s
+         /EYFYsbcZiBZqJhvIsnR5usFOZCSqGHQa4ln+e+I7UXEw/clFn/CtCWcfvYuXyx0TyCM
+         6PV0BujOsfAUBlDTJrWQow/SIsNBO9mjKFav7YWA+NO5/r8ySoJn4dxi0f07MhLDeGcy
+         KRCAOzZopo10+YlQKlnF88kGcfLqZCrcDLFlsW/lmBAYdkjqA1q+6MRGh1dm1apjElz0
+         E2+cGSCLbUpZ5gENpRq7befAgpWz/85m4+PO1YwvSeYCuAXB3Qiylukjd0J29yGqTAYY
+         xzHQ==
+X-Gm-Message-State: APjAAAWKZ6gST28fPhHsAatgADFfW6xJwgmWNa4h8gOcvz9qZ4B2ddvP
+        Yq6sfgIs0En0ASGVeE0rafuwfw==
+X-Google-Smtp-Source: APXvYqwyL72yG90SI0NWAGgcd0insDnp1IMG7ae6YjG0JpIiyNIWobcDnM8YcTAzCUBn1pD6tZdqCQ==
+X-Received: by 2002:a2e:809a:: with SMTP id i26mr16595052ljg.108.1580297103916;
+        Wed, 29 Jan 2020 03:25:03 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d9sm778410lja.73.2020.01.29.03.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 03:25:03 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 04319100AFE; Wed, 29 Jan 2020 14:25:11 +0300 (+03)
+Date:   Wed, 29 Jan 2020 14:25:10 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/8] mm: dump_page: print head page's refcount, for
+ compound pages
+Message-ID: <20200129112510.ulims6u36ofk2qwa@box>
+References: <20200129032417.3085670-1-jhubbard@nvidia.com>
+ <20200129032417.3085670-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129032417.3085670-2-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
-it while either USB cable is not connected, or nobody listens on the
-other side of the cable. If driver circular buffer overflows before
-connection is established, no data will be written to the USB layer
-until/unless /dev/ttyGS0 is closed and re-opened again by the
-application (the latter besides having no means of being notified about
-the event of establishing of the connection.)
+On Tue, Jan 28, 2020 at 07:24:10PM -0800, John Hubbard wrote:
+> When debugging a problem that involves compound pages, it is extremely
+> helpful if dump_page() reports not only the page->_refcount, but also
+> the refcount of the head page of the compound page. That's because the
+> head page collects refcounts for the entire compound page.
+> 
+> Therefore, enhance dump_page() so as to print out the refcount of the
+> head page of a compound page.
+> 
+> This approach (printing information about a struct page that is not the
+> struct page that was passed into dump_page()) has a precedent:
+> compound_mapcount is already being printed.
 
-Fix: on open and/or connect, kick Tx to flush circular buffer data to
-USB layer.
+refcount on a tail must always be 0. I think we should only print it when
+it is non-zero, emphasizing this fact with a standalone message.
 
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-
-Changes in v3:
-
-- Add Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-
-Changes in v2:
-
-- Add comment to document why tty_wakeup() is kept in place
-- Don't add debug print
-- Remove NOTE from description
-
- drivers/usb/gadget/function/u_serial.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index f986e5c..8167d37 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -561,8 +561,10 @@ static int gs_start_io(struct gs_port *port)
- 	port->n_read = 0;
- 	started = gs_start_rx(port);
- 
--	/* unblock any pending writes into our circular buffer */
- 	if (started) {
-+		gs_start_tx(port);
-+		/* Unblock any pending writes into our circular buffer, in case
-+		 * we didn't in gs_start_tx() */
- 		tty_wakeup(port->port.tty);
- 	} else {
- 		gs_free_requests(ep, head, &port->read_allocated);
 -- 
-2.10.0.1.g57b01a3
+ Kirill A. Shutemov
