@@ -2,179 +2,123 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF114C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896AAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BA72173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2ASFXDO"
+	by mail.kernel.org (Postfix) with ESMTP id 5D32922522
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580257376;
+	bh=u6C1MVo9jXhGL921CEjIZKyAAcJehXxHmbS6eFZQhjc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SS6+X1cLDLXT3YWtUIcN9w2mxvFtXC+/md8LjFlMiUFL4GJVoqqUOeLpQDl7YdSNA
+	 HqD0rhABqeWiizw/RYCxoz9mFhnw/osdcqGqXW7QMYZjq6/cNVE5pH1g2YfdFAwErP
+	 xejgfRNKMJWZvjfU/+SIi6v/AxmY7yHsYpKffdV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgA2AWg (ORCPT
+        id S1726466AbgA2AWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:22:36 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:51993 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgA2AWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:22:36 -0500
-Received: by mail-pl1-f201.google.com with SMTP id r2so6498651pls.18
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 16:22:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=TUeAzP1KPLnbgJ4pAq4woW7/EJW98hNHfTCwbLjLh1w=;
-        b=W2ASFXDO0F+nOrHdNuVWJYhAvYy1ezS2ByLMRsPg4tm6WvfFZKFgekpaHVaM+rD0XF
-         kBvE9Fdx9sPOLxXcYzqRL7QlWfUcogecvyvKwrep6sTLdfA2r6tonSwP6t3t5vYLEsqe
-         RjbDyme6veZlvR8zHyp8uH/6JPHnSDQGPO2TwfgVkEZDcP9LL+Q898MFjVQlu2zzK0Lo
-         Sf7TlvRLsXYeRcQpQyrCniV/x9W0x1InAZp+QTutM06PN3GHEbHMOYTHLIicz4lIBiXq
-         WBsIfCP3TDk8OhfQlTHaspGALIcr3rMB2Lnm7+yEkBFujSt34AwONbZzWWKgRnxTH0KE
-         ybyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=TUeAzP1KPLnbgJ4pAq4woW7/EJW98hNHfTCwbLjLh1w=;
-        b=Q3E8oEWpV3os99CfZGyN0JtQgiZLvTfJcNY+NlrR9NSetkHuuOtyRG3etFJ9cITBEy
-         km5zl96RZhyR3MSH/mxiSCKuWbTkxwHZFF74lvl4+qC6KhRVRH4mlCR1fUjlbdJd4+YJ
-         7mrIjgGVNlvEReSEvj3CATTlYzQrU/qgNPaygqlbwQn0MtUgGx+Jrk2wAKTcNdWwQx9H
-         7Q8vfXXmxycV5OWSotH2Y0wwLLLZu52eNGL3kcqlMBhdzZ1HpgRy0mry7Il2wM5BNdFx
-         Lj4/sK/3RICDjxA3mAOKE8wkdYEgsWbtyCSEm2isljroeEOtQJo1nhkfz1nLxXR5uTeL
-         Caiw==
-X-Gm-Message-State: APjAAAUTWBow51bIFSu+jXuXzDAGaePwCl2hkEmdU2Utc6oh77JWW7kS
-        EzPaP5Xa1xwi/0Mrwbbhky8sVXYevO6TOw==
-X-Google-Smtp-Source: APXvYqxUX39srrGDo6zfgNrOlHMpUNc1+pzXn9wA5ccrj4KtHuLFy5rBx6EDwBGrE39T9TaIK8drk4HdgNBpUw==
-X-Received: by 2002:a63:a55e:: with SMTP id r30mr168115pgu.109.1580257355597;
- Tue, 28 Jan 2020 16:22:35 -0800 (PST)
-Date:   Tue, 28 Jan 2020 16:22:22 -0800
-Message-Id: <20200129002222.213154-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] x86/resctrl: fix redundant task movement
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Stephane Eranian <eranian@google.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jan 2020 19:22:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgA2AWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 19:22:55 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A3DB2173E;
+        Wed, 29 Jan 2020 00:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580257374;
+        bh=u6C1MVo9jXhGL921CEjIZKyAAcJehXxHmbS6eFZQhjc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Jtv85/HYFicY6gu9wWS4weM5U4KubO3bs8Ui+oJHlNwIx/Wv/y5B3rjinppTv4EoM
+         kVvSHpsbX7j5VeVQCpDurg6i4hgXRVEKutrNnZSOh5b//MFbjaSYSGen0MO4Ui4dSH
+         hF4CgyDJ4IZXA0mQHeOI2ZTxcYiAeiXXITeOokjw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0084C352273D; Tue, 28 Jan 2020 16:22:53 -0800 (PST)
+Date:   Tue, 28 Jan 2020 16:22:53 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200129002253.GT2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200122165938.GA16974@willie-the-truck>
+ <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com>
+ <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
+ <20200123093905.GU14914@hirez.programming.kicks-ass.net>
+ <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
+ <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+ <20200128165655.GM14914@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128165655.GM14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently a task can be moved to a rdtgroup multiple times or between
-resource or monitoring groups. This can cause multiple task works are
-added, waste memory and degrade performance.
+On Tue, Jan 28, 2020 at 05:56:55PM +0100, Peter Zijlstra wrote:
+> On Tue, Jan 28, 2020 at 12:46:26PM +0100, Marco Elver wrote:
+> 
+> > > Marco, any thought on improving KCSAN for this to reduce the false
+> > > positives?
+> > 
+> > Define 'false positive'.
+> 
+> I'll use it where the code as written is correct while the tool
+> complains about it.
 
-To fix the issue, only move the task to a rdtgroup when the task
-is not in the rdgroup. Don't try to move the task to the rdtgroup
-again when the task is already in the rdtgroup.
+I could be wrong, but I would guess that Marco is looking for something
+a little less subjective and a little more specific.  ;-)
 
-Also move the setting of tsk->closid and tsk->rmid before task_work_add
-to remove a potential race where the task start executing the registered
-callback before the request set its closid and rmid.
+> > From what I can tell, all 'false positives' that have come up are data
+> > races where the consequences on the behaviour of the code is
+> > inconsequential. In other words, all of them would require
+> > understanding of the intended logic of the code, and understanding if
+> > the worst possible outcome of a data race changes the behaviour of the
+> > code in such a way that we may end up with an erroneously behaving
+> > system.
+> > 
+> > As I have said before, KCSAN (or any data race detector) by definition
+> > only works at the language level. Any semantic analysis, beyond simple
+> > rules (such as ignore same-value stores) and annotations, is simply
+> > impossible since the tool can't know about the logic that the
+> > programmer intended.
+> > 
+> > That being said, if there are simple rules (like ignore same-value
+> > stores) or other minimal annotations that can help reduce such 'false
+> > positives', more than happy to add them.
+> 
+> OK, so KCSAN knows about same-value-stores? If so, that ->cpu =
+> smp_processor_id() case really doesn't need annotation, right?
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 61 ++++++++++++++++++--------
- 1 file changed, 43 insertions(+), 18 deletions(-)
+If smp_processor_id() returns the value already stored in ->cpu,
+I believe that the default KCSAN setup refrains from complaining.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index dac7209a0708..8ef10c626862 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -543,15 +543,57 @@ static void move_myself(struct callback_head *head)
- static int __rdtgroup_move_task(struct task_struct *tsk,
- 				struct rdtgroup *rdtgrp)
- {
-+	struct callback_head *head;
- 	struct task_move_callback *callback;
- 	int ret;
- 
--	callback = kzalloc(sizeof(*callback), GFP_KERNEL);
-+	/* If the task is already in rdtgrp, don't move the task. */
-+	if ((rdtgrp->type == RDTCTRL_GROUP && tsk->closid == rdtgrp->closid &&
-+	     tsk->rmid == rdtgrp->mon.rmid) ||
-+	    (rdtgrp->type == RDTMON_GROUP &&
-+	     rdtgrp->mon.parent->closid == tsk->closid &&
-+	     tsk->rmid == rdtgrp->mon.rmid)) {
-+		rdt_last_cmd_puts("Task is already in the rdgroup\n");
-+		return 0;
-+	}
-+
-+	/*
-+	 * For monitor groups, we can move the tasks only from their parent
-+	 * CTRL group.
-+	 */
-+	if (rdtgrp->type == RDTMON_GROUP &&
-+	    rdtgrp->mon.parent->closid != tsk->closid) {
-+		rdt_last_cmd_puts("Can't move task to different control group\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Cancel exiting request and reuse the memory. */
-+	head = task_work_cancel(tsk, move_myself);
-+	if (head) {
-+		callback = container_of(head, struct task_move_callback, work);
-+		if (atomic_dec_and_test(&callback->rdtgrp->waitcount) &&
-+		    (callback->rdtgrp->flags & RDT_DELETED))
-+			kfree(callback->rdtgrp);
-+	} else
-+		callback = kzalloc(sizeof(*callback), GFP_KERNEL);
-+
- 	if (!callback)
- 		return -ENOMEM;
- 	callback->work.func = move_myself;
- 	callback->rdtgrp = rdtgrp;
- 
-+	/*
-+	 * For ctrl_mon groups move both closid and rmid.
-+	 * For monitor groups, move the tasks only from their parent
-+	 * CTRL group.
-+	 */
-+	if (rdtgrp->type == RDTCTRL_GROUP) {
-+		tsk->closid = rdtgrp->closid;
-+		tsk->rmid = rdtgrp->mon.rmid;
-+	} else if (rdtgrp->type == RDTMON_GROUP &&
-+		   rdtgrp->mon.parent->closid == tsk->closid) {
-+		tsk->rmid = rdtgrp->mon.rmid;
-+	}
- 	/*
- 	 * Take a refcount, so rdtgrp cannot be freed before the
- 	 * callback has been invoked.
-@@ -567,23 +609,6 @@ static int __rdtgroup_move_task(struct task_struct *tsk,
- 		atomic_dec(&rdtgrp->waitcount);
- 		kfree(callback);
- 		rdt_last_cmd_puts("Task exited\n");
--	} else {
--		/*
--		 * For ctrl_mon groups move both closid and rmid.
--		 * For monitor groups, can move the tasks only from
--		 * their parent CTRL group.
--		 */
--		if (rdtgrp->type == RDTCTRL_GROUP) {
--			tsk->closid = rdtgrp->closid;
--			tsk->rmid = rdtgrp->mon.rmid;
--		} else if (rdtgrp->type == RDTMON_GROUP) {
--			if (rdtgrp->mon.parent->closid == tsk->closid) {
--				tsk->rmid = rdtgrp->mon.rmid;
--			} else {
--				rdt_last_cmd_puts("Can't move task to different control group\n");
--				ret = -EINVAL;
--			}
--		}
- 	}
- 	return ret;
- }
--- 
-2.25.0.341.g760bfbb309-goog
+Which reminds me, I need to disable this in my RCU runs.  If I create a
+bug that causes me to unknowingly access something that is supposed to
+be CPU-private from the wrong CPU, I want to know about it.
 
+> > What to do about osq_lock here? If people agree that no further
+> > annotations are wanted, and the reasoning above concludes there are no
+> > bugs, we can blacklist the file. That would, however, miss new data
+> > races in future.
+> 
+> I'm still hoping to convince you that the other case is one of those
+> 'simple-rules' too :-)
+
+On this I must defer to Marco.
+
+							Thanx, Paul
