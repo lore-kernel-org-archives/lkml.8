@@ -2,115 +2,196 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3041EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940F4C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0713920716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69925206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SFaUekPr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RkiLlqZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgA2Vfb (ORCPT
+        id S1726677AbgA2VhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:35:31 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40402 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgA2Vfa (ORCPT
+        Wed, 29 Jan 2020 16:37:02 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34038 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgA2VhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 16:35:30 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so378851pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 13:35:30 -0800 (PST)
+        Wed, 29 Jan 2020 16:37:01 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so487983pgi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 13:37:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dvPgIbtVjNT3qNnslTkNlu2F+beG3Bg1A9NE04yXqNg=;
-        b=SFaUekPrqF2WeNsid+UsjmdsePUY0CTkeFMFHuBwYJhWWMLKbZXBPJt4DFRRCeH//W
-         UOQH2ZEwbNvjCIc6PiTW0D13E3FEneTbsFxuhINI+TnBSbpT0v41U2fqFOQw0ml68Rpq
-         L6aXbPPPbCgjuI+ht+3wZo/DpzfYM+yOXzMxE=
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=RDJvmSC05VOf/stL9p8O+7h9hNRl+T3s/8BaANNZGT8=;
+        b=RkiLlqZ8CqT/LpycA1kUYiia5rBR9OZOT0jcy+A9iybkekhQ1h4zWGP0KycA/V///x
+         o986scDQbE3SMWpSSWa4oT1VCVwqKLqNCm4FdIMYZ+5GgMAl4Ze25HMxBh0kLipku5Wh
+         90v4DeoT/E8xaqDSdkjg80x14Q2NWnQD1DhvA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dvPgIbtVjNT3qNnslTkNlu2F+beG3Bg1A9NE04yXqNg=;
-        b=k9bpKWHo5+V/QkN6L80Lwq2MFkkR2DtSLUw4eC5Y6Q3E8T4aiu0KAfrX7QgOlOJedM
-         18bs8c9BSlfUNq3hi2LFVaHgVXmXTgM0TJiVtoogROvm9jzvszAyY0pmh9gZvXWQIdcH
-         yBuzVF9RTLQ+25dOucyeBkIo4lcxwp27yzpp7cwU5D1snPNE3VJI6Wu0ibtlEtwhQyWo
-         gFyROHkg1pPdefXKpaEUuy8QaZW54A4Zkp2asd95734U9gBMbRNdV5Nhils1s3L7EuzN
-         YaKVATToxwa3xd1ki9tcsFcASm7P9dh3hApbIvhYgbJO2igwVErAsGsaE+/GCWrL3khy
-         GRPA==
-X-Gm-Message-State: APjAAAWAdt4VOQ6Swb/JEwHNi4VlKxbT1EoiPpJmW3tSlgPI28Mm3N1S
-        YolrWxXmDpeANlSGSsTpEKdzUA==
-X-Google-Smtp-Source: APXvYqwoQGyL/LSOFNX8EZGmxxQ8vniTsrmWJFxMJDOznZHXb9e/9vV6cchQiqCiPGWKh1cICNmGjQ==
-X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr1437585plz.248.1580333730310;
-        Wed, 29 Jan 2020 13:35:30 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w25sm3620973pfi.106.2020.01.29.13.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 13:35:29 -0800 (PST)
-Date:   Wed, 29 Jan 2020 13:35:28 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 7/8] arm64: dts: qcom: sdm845: Add generic QUSB2 V2
- Phy compatible
-Message-ID: <20200129213528.GJ71044@google.com>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
- <1580305919-30946-8-git-send-email-sanm@codeaurora.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=RDJvmSC05VOf/stL9p8O+7h9hNRl+T3s/8BaANNZGT8=;
+        b=irdiIIUMwB5WDGywzbGJ0WYn1M71ZvcEbs91kkxra5US4NOY/cafK7LhBug3jzpWFi
+         rhEd3bA9swzWT0hgrjXFtG1I/Zr2yycxhRbvEuwuwSTUzrvsICRLS37fU6YLRdKxC5oE
+         Zjjo93SYF3IIMdDsigz6lOYpT8xmYx6V9EBEaGucUPjcFWH7By70PnCShhHIJC3+sRkH
+         dTCd3b1JDuFBc50q9YIyTqICcMbZDqfhzlGFD5qHQgIl6T9bT+KyPxoXcX7CZhGiIZYs
+         Let86Lh6VQuKjX/GcrCGlLdLoLyuOgHYaznZ5f834Hey+DWugXNzotmQp9v+e8fxUMGv
+         0UTg==
+X-Gm-Message-State: APjAAAX8VAuNROUzepvhDwXSGsQ/UmEsND1Yl8GSvFU6A9J1Otnsd3en
+        C5wJlUA3OSu8HyyLVZ3xD3S5gA==
+X-Google-Smtp-Source: APXvYqzyPQqo1V/goi2qe7ia1r8g3MOEaHfi0xGzguk6OJCyAPZBIT9fuT0A/cNPJEI4cdvBXk+F/A==
+X-Received: by 2002:a63:de03:: with SMTP id f3mr1170693pgg.141.1580333820733;
+        Wed, 29 Jan 2020 13:37:00 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b65sm3820195pgc.18.2020.01.29.13.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 13:36:59 -0800 (PST)
+Date:   Wed, 29 Jan 2020 13:36:58 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sami Tolvanen <samitolvanen@google.com>, bpf@vger.kernel.org
+Subject: [PATCH] bpf: Avoid function casting when calculating immediate
+Message-ID: <202001291335.31F425A198@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1580305919-30946-8-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 07:21:58PM +0530, Sandeep Maheswaram wrote:
-> Use generic QUSB2 V2 Phy configuration for sdm845.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index d42302b..317347a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2387,7 +2387,7 @@
->  		};
->  
->  		usb_1_hsphy: phy@88e2000 {
-> -			compatible = "qcom,sdm845-qusb2-phy";
-> +			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
->  			reg = <0 0x088e2000 0 0x400>;
->  			status = "disabled";
->  			#phy-cells = <0>;
-> @@ -2402,7 +2402,7 @@
->  		};
->  
->  		usb_2_hsphy: phy@88e3000 {
-> -			compatible = "qcom,sdm845-qusb2-phy";
-> +			compatible = "qcom,sdm845-qusb2-phy", "qcom,qusb2-v2-phy";
->  			reg = <0 0x088e3000 0 0x400>;
->  			status = "disabled";
->  			#phy-cells = <0>;
+In an effort to enable -Wcast-function-type in the top-level Makefile
+to support Control Flow Integrity builds, rework the BPF instruction
+immediate calculation macros to avoid mismatched function pointers. Since
+these calculations are only ever between function address (these are
+not function calls, just address calculations), they can be cast to u64
+instead, where the result will be assigned to the s32 insn->imm.
 
-FWIW
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/filter.h |  6 +++---
+ kernel/bpf/hashtab.c   |  6 +++---
+ kernel/bpf/verifier.c  | 21 +++++++--------------
+ 3 files changed, 13 insertions(+), 20 deletions(-)
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index f349e2c0884c..b5beee7bf2ea 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -340,8 +340,8 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
+ 
+ /* Function call */
+ 
+-#define BPF_CAST_CALL(x)					\
+-		((u64 (*)(u64, u64, u64, u64, u64))(x))
++#define BPF_FUNC_IMM(FUNC)					\
++		((u64)(FUNC) - (u64)__bpf_call_base)
+ 
+ #define BPF_EMIT_CALL(FUNC)					\
+ 	((struct bpf_insn) {					\
+@@ -349,7 +349,7 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
+ 		.dst_reg = 0,					\
+ 		.src_reg = 0,					\
+ 		.off   = 0,					\
+-		.imm   = ((FUNC) - __bpf_call_base) })
++		.imm   = BPF_FUNC_IMM(FUNC) })
+ 
+ /* Raw code statement block */
+ 
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 2d182c4ee9d9..325656a61708 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -517,7 +517,7 @@ static u32 htab_map_gen_lookup(struct bpf_map *map, struct bpf_insn *insn_buf)
+ 
+ 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
+ 		     (void *(*)(struct bpf_map *map, void *key))NULL));
+-	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
++	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
+ 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 1);
+ 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
+ 				offsetof(struct htab_elem, key) +
+@@ -558,7 +558,7 @@ static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
+ 
+ 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
+ 		     (void *(*)(struct bpf_map *map, void *key))NULL));
+-	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
++	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
+ 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 4);
+ 	*insn++ = BPF_LDX_MEM(BPF_B, ref_reg, ret,
+ 			      offsetof(struct htab_elem, lru_node) +
+@@ -1749,7 +1749,7 @@ static u32 htab_of_map_gen_lookup(struct bpf_map *map,
+ 
+ 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
+ 		     (void *(*)(struct bpf_map *map, void *key))NULL));
+-	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
++	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
+ 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 2);
+ 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
+ 				offsetof(struct htab_elem, key) +
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 1cc945daa9c8..70b4e47c2214 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -9054,8 +9054,7 @@ static int jit_subprogs(struct bpf_verifier_env *env)
+ 			    insn->src_reg != BPF_PSEUDO_CALL)
+ 				continue;
+ 			subprog = insn->off;
+-			insn->imm = BPF_CAST_CALL(func[subprog]->bpf_func) -
+-				    __bpf_call_base;
++			insn->imm = BPF_FUNC_IMM(func[subprog]->bpf_func);
+ 		}
+ 
+ 		/* we use the aux data to keep a list of the start addresses
+@@ -9429,28 +9428,22 @@ static int fixup_bpf_calls(struct bpf_verifier_env *env)
+ 
+ 			switch (insn->imm) {
+ 			case BPF_FUNC_map_lookup_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_lookup_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_lookup_elem);
+ 				continue;
+ 			case BPF_FUNC_map_update_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_update_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_update_elem);
+ 				continue;
+ 			case BPF_FUNC_map_delete_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_delete_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_delete_elem);
+ 				continue;
+ 			case BPF_FUNC_map_push_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_push_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_push_elem);
+ 				continue;
+ 			case BPF_FUNC_map_pop_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_pop_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_pop_elem);
+ 				continue;
+ 			case BPF_FUNC_map_peek_elem:
+-				insn->imm = BPF_CAST_CALL(ops->map_peek_elem) -
+-					    __bpf_call_base;
++				insn->imm = BPF_FUNC_IMM(ops->map_peek_elem);
+ 				continue;
+ 			}
+ 
+-- 
+2.20.1
+
+
+-- 
+Kees Cook
