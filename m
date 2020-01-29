@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2161EC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2FDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFBF20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCAD62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DDpHNdKJ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hzk6S6sS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgA2PhK (ORCPT
+        id S1727099AbgA2PhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:37:10 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:48539 "EHLO
+        Wed, 29 Jan 2020 10:37:13 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29536 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726842AbgA2Pg4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726795AbgA2Pg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 10:36:56 -0500
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TFNBY8019444;
-        Wed, 29 Jan 2020 16:36:37 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TFNArj019435;
+        Wed, 29 Jan 2020 16:36:35 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=AftG5z+N17+/aKK5rA8xT7aJNL2Vyvyl7T7R+UeirkA=;
- b=DDpHNdKJ02FAGVPens/IbVD4G5USzy1RxDXJLEQ55d/zr6gldzhDUX3PizE9xvyUlzJw
- cWDF+fjHZXHq8SDKPlB4jiJ4uhuCebTVzh681T3oun0q+JTqtUPZgaGGErk411egmX1C
- 9pjOE96zV/gX6o1nLLzF+eMh7jvySoqOmADVbChz4I3IxpeqKzaCMwkTYQddjU65cW5E
- BrZp7Qa4BYjDfUgaalLPMp2yv8IBvVuT2hCmOLvDYCw5F1iRNXmMwRj+T9PER5XJoUTq
- FZvav89dlKtRxFpoP3JiWgjcCqP8RJtcLznnwpmf8k3ZrXXXq+3Nhc+68Wx9flQ480Y5 /A== 
+ bh=F7q/g3bH1EGFK9krPt73RxMiWkr9k9tY9L3hNSfOodM=;
+ b=hzk6S6sSp8iIzAWVBlccDrSLCLZQjXJNf92jRCrvb2WS6EoATt8j4e238FnxMxx+kLuf
+ 87TMCx8Q5JRfPKqHen480iQ3iaHQtRwR6C4WIHBIq0KM6OkQkl6tEr8z8gnI4SO10nJ8
+ eKhXhWAbtucW3BJpwT2CSnRZIfTAXj5qhZZbabvC3RzT+FQY4bMvy4OmNgXqPBpwzksp
+ hr7kH5vJc78uQipUkr0C+wgKQ4oIoephewVFGqXH3aJj8kjs1NHzLKqu6qF58KlwlI6j
+ 7SDHy5Lot4WrKXC7vcMhzS1dN+FDSiR/UMHy7cKFyqjeu8UNBykcltCm4askgh0jHXfq aA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrcay3vb4-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xrcay3vb0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 16:36:37 +0100
+        Wed, 29 Jan 2020 16:36:35 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DF04100034;
-        Wed, 29 Jan 2020 16:36:37 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 228DD100038;
+        Wed, 29 Jan 2020 16:36:35 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 10CD72BC7C2;
-        Wed, 29 Jan 2020 16:36:37 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 16:36:36
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 10A732BC7C2;
+        Wed, 29 Jan 2020 16:36:35 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 16:36:34
  +0100
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Vinod Koul <vkoul@kernel.org>,
@@ -59,16 +59,16 @@ CC:     <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@st.com>,
         Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH 4/8] dmaengine: stm32-dma: enable descriptor_reuse
-Date:   Wed, 29 Jan 2020 16:36:24 +0100
-Message-ID: <20200129153628.29329-5-amelie.delaunay@st.com>
+Subject: [PATCH 1/8] dmaengine: stm32-dma: add suspend/resume power management support
+Date:   Wed, 29 Jan 2020 16:36:21 +0100
+Message-ID: <20200129153628.29329-2-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200129153628.29329-1-amelie.delaunay@st.com>
 References: <20200129153628.29329-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
@@ -79,35 +79,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-Enable client to resubmit already processed descriptors
-in order to save descriptor creation time.
+Add suspend/resume power management relying on PM Runtime engine.
 
 Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- drivers/dma/stm32-dma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/stm32-dma.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index c8bbe08b8e32..25f7281932bd 100644
+index 5989b0893521..136deabd1aa3 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
-@@ -554,6 +554,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 	sg_req = &chan->desc->sg_req[chan->next_sg];
- 	reg = &sg_req->chan_reg;
+@@ -1427,7 +1427,39 @@ static int stm32_dma_runtime_resume(struct device *dev)
+ }
+ #endif
  
-+	reg->dma_scr &= ~STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
- 	stm32_dma_write(dmadev, STM32_DMA_SPAR(chan->id), reg->dma_spar);
- 	stm32_dma_write(dmadev, STM32_DMA_SM0AR(chan->id), reg->dma_sm0ar);
-@@ -1343,6 +1344,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
- 	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	dd->max_burst = STM32_DMA_MAX_BURST;
-+	dd->descriptor_reuse = true;
- 	dd->dev = &pdev->dev;
- 	INIT_LIST_HEAD(&dd->channels);
- 
++#ifdef CONFIG_PM_SLEEP
++static int stm32_dma_suspend(struct device *dev)
++{
++	struct stm32_dma_device *dmadev = dev_get_drvdata(dev);
++	int id, ret, scr;
++
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0)
++		return ret;
++
++	for (id = 0; id < STM32_DMA_MAX_CHANNELS; id++) {
++		scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
++		if (scr & STM32_DMA_SCR_EN) {
++			dev_warn(dev, "Suspend is prevented by Chan %i\n", id);
++			return -EBUSY;
++		}
++	}
++
++	pm_runtime_put_sync(dev);
++
++	pm_runtime_force_suspend(dev);
++
++	return 0;
++}
++
++static int stm32_dma_resume(struct device *dev)
++{
++	return pm_runtime_force_resume(dev);
++}
++#endif
++
+ static const struct dev_pm_ops stm32_dma_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(stm32_dma_suspend, stm32_dma_resume)
+ 	SET_RUNTIME_PM_OPS(stm32_dma_runtime_suspend,
+ 			   stm32_dma_runtime_resume, NULL)
+ };
 -- 
 2.17.1
 
