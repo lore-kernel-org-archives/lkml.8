@@ -2,103 +2,170 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C563DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8528FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44B720716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABEE2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:22:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T97g40JJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgA2OV4 (ORCPT
+        id S1726851AbgA2OWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:21:56 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:43054 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgA2OVy (ORCPT
+        Wed, 29 Jan 2020 09:22:02 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45388 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgA2OWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:21:54 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TEDTG3012736;
-        Wed, 29 Jan 2020 09:21:31 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xrkfam73m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 09:21:31 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00TELUfd043131
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 29 Jan 2020 09:21:30 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 29 Jan
- 2020 09:21:23 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 29 Jan 2020 09:21:23 -0500
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00TEKwxj027599;
-        Wed, 29 Jan 2020 09:21:20 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v4 5/5] MAINTAINERS: add entry for hmc425a driver.
-Date:   Wed, 29 Jan 2020 16:23:01 +0200
-Message-ID: <20200129142301.13918-6-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200129142301.13918-1-beniamin.bia@analog.com>
-References: <20200129142301.13918-1-beniamin.bia@analog.com>
+        Wed, 29 Jan 2020 09:22:01 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so11967401lfa.12;
+        Wed, 29 Jan 2020 06:22:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ngpKtKkRqA4bLgz9hqEAUDGl9vfshEKzWUpmN7kSf5I=;
+        b=T97g40JJkCpTxOs4RtOf8TMHdkcMmZpyDUyvKE+M1iCiredbwhZo9f47sRYycRIOaK
+         WyRyhVj0F9rXnlB6WwfXq8UStjlYgLbzIx32++G2z5paGl/dAsz2EtaxCr3Y5ZZK8HSw
+         V6LFhztzhwtgeFU8H5F7qi5OTfhHx56KqIJlwD38+TRWLoR7E3wSvR2b3KBUsTlREpN1
+         y6qnV/iY2W3/UwC4lELDiA8sSWsh81hoVkm/7MgRcBLLKmxtHZS1BMSVzJ3Yz8ECIyS8
+         wrymSuYT9ddaYnMPBkLl/4Dx6SEHyjtfp5oxSN2GbwMxMJ7AMvnd30yLnpJ8oaO3x17Z
+         AGVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ngpKtKkRqA4bLgz9hqEAUDGl9vfshEKzWUpmN7kSf5I=;
+        b=cyxniXOqnvtYQcyXuIwKEFlumgxJLxWHc+WSYA3pRQZEdrwEDvHu7opwzS/k8jhe5J
+         PjgH7vO/LKMl3bt+ErUP1SN3+gUu1H98Rlqgp/73CXgualD5l5Mw8BV8jPhLIYpaCxjG
+         /GCAHa3krPNrumUiSe9DZyaHELEF3KlIhmIWcynUjtYUtiIbPyfkhMuG9PEpDxKCXmZg
+         qfbs0eIOhPp0Coi0eIOD1XFliewLX19chtIaxA3FqNTrKS0+Y8vojHoa/TMigvVvEGH/
+         pXPVeD+7k8DFEG/FBBGcwdy54VcxkAscEV39j21azakfK/keJcMfjA78zB40hirLFzfw
+         b1NA==
+X-Gm-Message-State: APjAAAWkaL2mUGV8xUoQ/yjM4ha+LlYRgESoJu/TPxs+3Qc1Sm8t/mj/
+        Tgu1VEIYx675quTwxpzJx9c=
+X-Google-Smtp-Source: APXvYqzYvUkcSlNuXDwv7XdX0nVLb/c5ZJ/5O8HRyToU75dsf2h82fIfm+1f6ytmKF9sY990bRaQeg==
+X-Received: by 2002:a19:cb95:: with SMTP id b143mr5622613lfg.158.1580307719408;
+        Wed, 29 Jan 2020 06:21:59 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 21sm1055977ljv.19.2020.01.29.06.21.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 06:21:58 -0800 (PST)
+Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
+ move_page_tables()
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
+        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
+ <20200117232254.2792-4-richardw.yang@linux.intel.com>
+ <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+ <20200129094738.GE25745@shell.armlinux.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <2791a187-ec3e-6b78-515f-25e7559a3749@gmail.com>
+Date:   Wed, 29 Jan 2020 17:21:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-29_03:2020-01-28,2020-01-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 mlxlogscore=881 clxscore=1015 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290118
+In-Reply-To: <20200129094738.GE25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
-attenuator.
+29.01.2020 12:47, Russell King - ARM Linux admin пишет:
+> On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
+>> 18.01.2020 02:22, Wei Yang пишет:
+>>> Use the general helper instead of do it by hand.
+>>>
+>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>> ---
+>>>  mm/mremap.c | 7 ++-----
+>>>  1 file changed, 2 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/mm/mremap.c b/mm/mremap.c
+>>> index c2af8ba4ba43..a258914f3ee1 100644
+>>> --- a/mm/mremap.c
+>>> +++ b/mm/mremap.c
+>>> @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>>>  
+>>>  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+>>>  		cond_resched();
+>>> -		next = (old_addr + PMD_SIZE) & PMD_MASK;
+>>> -		/* even if next overflowed, extent below will be ok */
+>>> +		next = pmd_addr_end(old_addr, old_end);
+>>>  		extent = next - old_addr;
+>>> -		if (extent > old_end - old_addr)
+>>> -			extent = old_end - old_addr;
+>>>  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+>>>  		if (!old_pmd)
+>>>  			continue;
+>>> @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>>>  
+>>>  		if (pte_alloc(new_vma->vm_mm, new_pmd))
+>>>  			break;
+>>> -		next = (new_addr + PMD_SIZE) & PMD_MASK;
+>>> +		next = pmd_addr_end(new_addr, new_addr + len);
+>>>  		if (extent > next - new_addr)
+>>>  			extent = next - new_addr;
+>>>  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
+>>>
+>>
+>> Hello Wei,
+>>
+>> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
+>> Tegra (ARM32):
+>>
+>>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
+>>
+>> and eventually kernel hangs.
+>>
+>> Git's bisection points to this patch and reverting it helps. Please fix,
+>> thanks in advance.
+> 
+> The above is definitely wrong - pXX_addr_end() are designed to be used
+> with an address index within the pXX table table and the address index
+> of either the last entry in the same pXX table or the beginning of the
+> _next_ pXX table.  Arbitary end address indicies are not allowed.
+> 
+> When page tables are "rolled up" when levels don't exist, it is common
+> practice for these macros to just return their end address index.
+> Hence, if they are used with arbitary end address indicies, then the
+> iteration will fail.
+> 
+> The only way to do this is:
+> 
+> 	next = pmd_addr_end(old_addr,
+> 			pud_addr_end(old_addr,
+> 				p4d_addr_end(old_addr,
+> 					pgd_addr_end(old_addr, old_end))));
+> 
+> which gives pmd_addr_end() (and each of the intermediate pXX_addr_end())
+> the correct end argument.  However, that's a more complex and verbose,
+> and likely less efficient than the current code.
+> 
+> I'd suggest that there's nothing to "fix" in the v5.5 code wrt this,
+> and trying to "clean it up" will just result in less efficient or
+> broken code.
+> 
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Hello Russell,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e699fe378e71..06c283553e30 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1063,6 +1063,15 @@ F:	drivers/iio/adc/ltc249*
- X:	drivers/iio/*/adjd*
- F:	drivers/staging/iio/*/ad*
- 
-+ANALOG DEVICES INC HMC425A DRIVER
-+M:	Beniamin Bia <beniamin.bia@analog.com>
-+M:	Michael Hennerich <michael.hennerich@analog.com>
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+S:	Supported
-+F:	drivers/iio/amplifiers/hmc425a.c
-+F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-+
- ANALOGBITS PLL LIBRARIES
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- S:	Supported
--- 
-2.17.1
-
+Thank you very much for the extra clarification!
