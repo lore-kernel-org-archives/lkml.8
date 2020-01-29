@@ -2,116 +2,103 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED2BC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A817C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A766220CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E5A20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 07:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgA2HAm (ORCPT
+        id S1726157AbgA2HOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 02:00:42 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:61989 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726020AbgA2HAm (ORCPT
+        Wed, 29 Jan 2020 02:14:49 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50476 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbgA2HOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 02:00:42 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 29 Jan 2020 12:30:39 +0530
-Received: from pillair-linux.qualcomm.com ([10.204.116.193])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 29 Jan 2020 12:30:28 +0530
-Received: by pillair-linux.qualcomm.com (Postfix, from userid 452944)
-        id 892CA3930; Wed, 29 Jan 2020 12:30:27 +0530 (IST)
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v5] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Wed, 29 Jan 2020 12:30:23 +0530
-Message-Id: <1580281223-2759-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Jan 2020 02:14:48 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iwhYR-0003r2-Ta; Wed, 29 Jan 2020 08:14:28 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 66BB8101227; Wed, 29 Jan 2020 08:14:27 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list\:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Subject: Re: [RFC PATCH v4 10/11] lib: vdso: Allow arches to override the ns shift operation
+In-Reply-To: <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
+References: <cover.1579196675.git.christophe.leroy@c-s.fr> <c8ce9baaef0dc7273e4bcc31f353b17b655113d1.1579196675.git.christophe.leroy@c-s.fr> <CALCETrWJcB9=MuSw5yx6arcb_np=E=awTyLRSi=r8BJySf_aXw@mail.gmail.com> <877e1rfa40.fsf@nanos.tec.linutronix.de> <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
+Date:   Wed, 29 Jan 2020 08:14:27 +0100
+Message-ID: <87mua64tv0.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+Andy Lutomirski <luto@kernel.org> writes:
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+> On Thu, Jan 16, 2020 at 11:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Andy Lutomirski <luto@kernel.org> writes:
+>> > On Thu, Jan 16, 2020 at 9:58 AM Christophe Leroy
+>> >
+>> > Would mul_u64_u64_shr() be a good alternative?  Could we adjust it to
+>> > assume the shift is less than 32?  That function exists to benefit
+>> > 32-bit arches.
+>>
+>> We'd want mul_u64_u32_shr() for this. The rules for mult and shift are:
+>>
+>
+> That's what I meant to type...
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 388f50a..167f68ac 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -287,6 +287,11 @@
- 	vdda-pll-supply = <&vreg_l4a_0p8>;
- };
- 
-+&wifi {
-+	status = "okay";
-+	qcom,msa-fixed-perm;
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qspi_clk {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5f..0a00c94 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -75,6 +75,12 @@
- 			reg = <0x0 0x80900000 0x0 0x200000>;
- 			no-map;
- 		};
-+
-+		wlan_fw_mem: memory@93900000 {
-+			compatible = "removed-dma-pool";
-+			no-map;
-+			reg = <0 0x93900000 0 0x200000>;
-+		};
- 	};
- 
- 	cpus {
-@@ -1490,6 +1496,28 @@
- 
- 			#freq-domain-cells = <1>;
- 		};
-+
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xc0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_fw_mem>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	thermal-zones {
--- 
-2.7.4
+Just that it does not work. The math is:
+
+     ns = d->nsecs;   // That's the nsec value shifted left by d->shift
+
+     ns += ((cur - d->last) & d->mask) * mult;
+
+     ns >>= d->shift;
+
+So we cannot use mul_u64_u32_shr() because we need the addition there
+before shifting. And no, we can't drop the fractional part of
+d->nsecs. Been there, done that, got sporadic time going backwards
+problems as a reward. Need to look at that again as stuff has changed
+over time.
+
+On x86 we enforce that mask is 64bit, so the & operation is not there,
+but due to the nasties of TSC we have that conditional
+
+    if (cur > last)
+       return (cur - last) * mult;
+    return 0;
+
+Christophe, on PPC the decrementer/RTC clocksource masks are 64bit as
+well, so you can spare that & operation there too.
+
+Thanks,
+
+        tglx
+
+
 
