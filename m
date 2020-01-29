@@ -2,102 +2,104 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AACC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F3BC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACF22070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF3A2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:31:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="QTDUo0bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgA2K1d (ORCPT
+        id S1726246AbgA2KbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:27:33 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2327 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726067AbgA2K1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:27:33 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 37804B6EB07BAEE4412C;
-        Wed, 29 Jan 2020 10:27:31 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 Jan 2020 10:27:31 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 29 Jan
- 2020 10:27:30 +0000
-Subject: Re: [PATCH RFC 2/2] soc: Add a basic ACPI generic driver
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-3-git-send-email-john.garry@huawei.com>
- <CAOesGMiCVSvL8H+haLoz=xyiX1CxBSRL_pbCgx-DLhN+5xRn9g@mail.gmail.com>
- <4c6462e3-e368-bd9f-260f-e8351c85bcc2@huawei.com>
- <CAJZ5v0jN5ED_U2s06--8Rx-S4g-wuVxw9YPR12_WL3TnV81_Ag@mail.gmail.com>
- <b6cc7edd-fbb9-ed7a-412e-0d75e4c8ec2b@huawei.com>
- <CAJZ5v0jbh_zU8getDO2VdsQ7qzjnwkTXjsNd+j+j=K4PPDO05w@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <651c836a-327c-f91d-fc5d-ab6f59c1b8db@huawei.com>
-Date:   Wed, 29 Jan 2020 10:27:30 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 29 Jan 2020 05:31:00 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45289 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgA2Ka7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 05:30:59 -0500
+Received: by mail-qv1-f68.google.com with SMTP id l14so7731851qvu.12;
+        Wed, 29 Jan 2020 02:30:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CpTiqcxWV5iDQ2s5evCgc1gRRqBLWioobZhV5wSYj6I=;
+        b=QTDUo0bGuTwHNXi3V/KAu6Qa4swRJ0LKNvrq66Tv3MoqyfJp5RakVzJfD1luWeoqOp
+         5EMyPmLBj0MmEEpQaLHxO9JWkzwsSy+O/nOfeUVkr6n22llnYnNjAvdVzbsXBTN4ZoMP
+         MXSWzA2Cl3LUeAUj+OfkPAFiWPv0/JwfD4Wh0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CpTiqcxWV5iDQ2s5evCgc1gRRqBLWioobZhV5wSYj6I=;
+        b=Hmrvg+99wcwcjblrR/rpsDHGFWFUqQpf+HMhiZLk4O32ON7XATVrFmFeYc2JDtmrSt
+         3tSkybHRTet5WvrvuAyk5F8Jiqf6KAS7OEK6I/gs9zrzJ94dOy+IvPaw1idXsjsA9Bfk
+         lzYm2KHCS/50DmW9iErzX3/yc1BZVpFyibXmFgoSCtrbXgGmWrode6rKRu/rcvTgTwKn
+         ImW12lBsYIVL7LpLsfADONmpwFAm72FDKKy5XhEFfRKs//AwvazVFhI0at5YxUKOxef+
+         kguO3fb6xlHaS0CptN1M492VqnCbmzEX3PXTNDKTa2zS2SUZGpE0tgKGlW8PjUQOIspU
+         Y1ZQ==
+X-Gm-Message-State: APjAAAX3il5407Z79dXQBv5WGchw9i6oXFD1jCtGAD5mEbxV6NGM48NN
+        Le2zZpwyiX9jTK901qmUsJ7i7Q5GJqBMr71lJQs=
+X-Google-Smtp-Source: APXvYqxJ2EjFCv1OU1W6Tp44rEEcho24mfLeEG+kKYffhCtzKj4nHNWIEv1geC3rEaEUW9w56IwpnVL2lmxy7/06jD4=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr26593975qvo.20.1580293858276;
+ Wed, 29 Jan 2020 02:30:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jbh_zU8getDO2VdsQ7qzjnwkTXjsNd+j+j=K4PPDO05w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20191107094218.13210-1-joel@jms.id.au>
+In-Reply-To: <20191107094218.13210-1-joel@jms.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 29 Jan 2020 10:30:46 +0000
+Message-ID: <CACPK8Xebf0p07QsHEXxbEB2pQ9_Fe7JhMjZLL7-9HDXBKdCaSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] clocksource: Add ast2600 support to fttmr010
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>
->>> Any reasons for not putting it into drivers/acpi/pptt.c specifically?
->>> .
->>
->> I don't think so.
->>
->> One thing is that the code does a one-time scan of the PPTT to find all
->> processor package nodes with ID structures to register the soc devices -
->> so we would need some new call from from acpi_init() for that.
-> 
+Hi Daniel, Thomas, I noticed that this series never made it into the
+timer tree. Are you able to pick it up?
 
-Hi Rafael,
+https://lore.kernel.org/lkml/20191107094218.13210-1-joel@jms.id.au/
 
- > Or an extra initcall or similar. [Calls from acpi_init() are basically
- > for things that need to be strictly ordered in a specific way for some
- > reason.]>
- > Why would that be a problem?
+Cheers,
 
-I don't see a problem if we want to use a soc driver, but that is 
-starting to look unlikely.
+Joel
 
-Alternatively, if we want to create some folder under 
-/sys/firmware/acpi, any restriction comes from the folder location.
-
-For a folder like /sys/firmware/acpi/pptt, we need to ensure acpi_kobj 
-is initialized; acpi_kobj is set from subsys_init(acpi_init), so 
-module_init() for pptt module would suffice.
-
-However if we wanted to make pptt folder a sub-folder from those created 
-in acpi_sysfs_init() - then we would need to make that parent folder 
-kobj non-static. Again, module_init() would suffice.
-
-Thanks,
-John
-
+On Thu, 7 Nov 2019 at 09:42, Joel Stanley <joel@jms.id.au> wrote:
+>
+> This series adds support for the AST2600 timer.
+>
+> v2 adds r-b tags from Rob, Linus and C=C3=A9dric (who reviewed the patche=
+s on the
+> openbmc mailing list[1]). I made two small naming changes in this
+> version that were suggested in review.
+>
+> [1] https://patchwork.ozlabs.org/project/openbmc/list/?series=3D140990
+>
+> Joel Stanley (4):
+>   clocksource: fttmr010: Parametrise shutdown
+>   clocksource: fttmr010: Set interrupt and shutdown
+>   clocksource: fttmr010: Add support for ast2600
+>   dt-bindings: fttmr010: Add ast2600 compatible
+>
+>  .../bindings/timer/faraday,fttmr010.txt       |  1 +
+>  drivers/clocksource/timer-fttmr010.c          | 68 +++++++++++++++----
+>  2 files changed, 54 insertions(+), 15 deletions(-)
+>
+> --
+> 2.24.0.rc1
+>
