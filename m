@@ -2,157 +2,116 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45AC206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A6320716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgA2V5i (ORCPT
+        id S1726647AbgA2WA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:57:38 -0500
-Received: from mga11.intel.com ([192.55.52.93]:53849 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgA2V5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 16:57:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 13:57:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="402120157"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga005.jf.intel.com with ESMTP; 29 Jan 2020 13:57:32 -0800
-Date:   Thu, 30 Jan 2020 05:57:45 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        aneesh.kumar@linux.ibm.com, kirill@shutemov.name,
-        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-Message-ID: <20200129215745.GA20736@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
- <20200129094738.GE25745@shell.armlinux.org.uk>
+        Wed, 29 Jan 2020 17:00:29 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42381 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726222AbgA2WA2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:00:28 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 5F41F7E7E17;
+        Thu, 30 Jan 2020 09:00:24 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iwvNl-0004zC-W7; Thu, 30 Jan 2020 09:00:22 +1100
+Date:   Thu, 30 Jan 2020 09:00:21 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
+ stack on the same CPU
+Message-ID: <20200129220021.GN18610@dread.disaster.area>
+References: <20200127143608.GX3466@techsingularity.net>
+ <20200127223256.GA18610@dread.disaster.area>
+ <20200128011936.GY3466@techsingularity.net>
+ <20200128091012.GZ3466@techsingularity.net>
+ <20200129173852.GP14914@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200129094738.GE25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200129173852.GP14914@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=9OUhOvZmy8axzo4XzYoA:9 a=2cTGYF7_BJ3EkAcu:21
+        a=c5nVs7L-Gq4kIs1z:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
->On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
->> 18.01.2020 02:22, Wei Yang пишет:
->> > Use the general helper instead of do it by hand.
->> > 
->> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> > ---
->> >  mm/mremap.c | 7 ++-----
->> >  1 file changed, 2 insertions(+), 5 deletions(-)
->> > 
->> > diff --git a/mm/mremap.c b/mm/mremap.c
->> > index c2af8ba4ba43..a258914f3ee1 100644
->> > --- a/mm/mremap.c
->> > +++ b/mm/mremap.c
->> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >  
->> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
->> >  		cond_resched();
->> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
->> > -		/* even if next overflowed, extent below will be ok */
->> > +		next = pmd_addr_end(old_addr, old_end);
->> >  		extent = next - old_addr;
->> > -		if (extent > old_end - old_addr)
->> > -			extent = old_end - old_addr;
->> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
->> >  		if (!old_pmd)
->> >  			continue;
->> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >  
->> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
->> >  			break;
->> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
->> > +		next = pmd_addr_end(new_addr, new_addr + len);
->> >  		if (extent > next - new_addr)
->> >  			extent = next - new_addr;
->> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
->> > 
->> 
->> Hello Wei,
->> 
->> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
->> Tegra (ARM32):
->> 
->>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
->> 
->> and eventually kernel hangs.
->> 
->> Git's bisection points to this patch and reverting it helps. Please fix,
->> thanks in advance.
->
->The above is definitely wrong - pXX_addr_end() are designed to be used
->with an address index within the pXX table table and the address index
->of either the last entry in the same pXX table or the beginning of the
->_next_ pXX table.  Arbitary end address indicies are not allowed.
->
+On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
+> On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
+> > Peter, Ingo and Vincent -- I know the timing is bad due to the merge
+> > window but do you have any thoughts on allowing select_idle_sibling to
+> > stack a wakee task on the same CPU as a waker in this specific case?
+> 
+> I sort of see, but *groan*...
+> 
+> so if the kworker unlocks a contended mutex/rwsem/completion...
+> 
+> I suppose the fact that it limits it to tasks that were running on the
+> same CPU limits the impact if we do get it wrong.
+> 
+> Elsewhere you write:
+> 
+> > I would prefer the wakeup code did not have to signal that it's a
+> > synchronous wakeup. Sync wakeups so exist but callers got it wrong many
+> > times where stacking was allowed and then the waker did not go to sleep.
+> > While the chain of events are related, they are not related in a very
+> > obvious way. I think it's much safer to keep this as a scheduler
+> > heuristic instead of depending on callers to have sufficient knowledge
+> > of the scheduler implementation.
+> 
+> That is true; the existing WF_SYNC has caused many issues for maybe
+> being too strong.
+> 
+> But what if we create a new hint that combines both these ideas? Say
+> WF_COMPLETE and subject that to these same criteria. This way we can
+> eliminate wakeups from locks and such (they won't have this set).
+> 
+> Or am I just making things complicated again?
 
-#define pmd_addr_end(addr, end)						\
-({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
-	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-})
+I suspect this is making it complicated again, because it requires
+the people who maintain the code that is using workqueues to
+understand when they might need to use a special wakeup interface in
+the work function. And that includes code that currently calls
+wake_up_all() because there can be hundreds of independent tasks
+waiting on the IO completion (e.g all the wait queues in the XFS
+journal code can (and do) have multiple threads waiting on them).
 
-If my understanding is correct, the definition here align the addr to next PMD
-boundary or end.
+IOWs, requiring a special flag just to optimise this specific case
+(i.e. single dependent waiter on same CPU as the kworker) when the
+adverse behaviour is both hardware and workload dependent means it
+just won't get used correctly or reliably.
 
-I don't see the possibility to across another PMD. Do I miss something?
+Hence I'd much prefer the kernel detects and dynamically handles
+this situation at runtime, because this pattern of workqueue usage
+is already quite common and will only become more widespread as we
+progress towards async processing of syscalls.
 
->When page tables are "rolled up" when levels don't exist, it is common
->practice for these macros to just return their end address index.
->Hence, if they are used with arbitary end address indicies, then the
->iteration will fail.
->
->The only way to do this is:
->
->	next = pmd_addr_end(old_addr,
->			pud_addr_end(old_addr,
->				p4d_addr_end(old_addr,
->					pgd_addr_end(old_addr, old_end))));
->
->which gives pmd_addr_end() (and each of the intermediate pXX_addr_end())
->the correct end argument.  However, that's a more complex and verbose,
->and likely less efficient than the current code.
->
->I'd suggest that there's nothing to "fix" in the v5.5 code wrt this,
->and trying to "clean it up" will just result in less efficient or
->broken code.
->
->-- 
->RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
->FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
->According to speedtest.net: 11.9Mbps down 500kbps up
+Cheers,
 
+Dave.
 -- 
-Wei Yang
-Help you, Help me
+Dave Chinner
+david@fromorbit.com
