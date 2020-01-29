@@ -2,236 +2,125 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB42EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F4FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788DB20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE62E2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgA2PRi (ORCPT
+        id S1726940AbgA2PUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:17:38 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59102 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgA2PRi (ORCPT
+        Wed, 29 Jan 2020 10:20:05 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:38801 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbgA2PUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:17:38 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2F164293EDE;
-        Wed, 29 Jan 2020 15:17:36 +0000 (GMT)
-Date:   Wed, 29 Jan 2020 16:17:33 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: How to handle write-protect pin of NAND device ?
-Message-ID: <20200129161733.004183ef@collabora.com>
-In-Reply-To: <20200129160045.3dc451d8@xps13>
-References: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
-        <20200127153559.60a83e76@xps13>
-        <20200127164554.34a21177@collabora.com>
-        <20200127164755.29183962@xps13>
-        <20200128075833.129902f6@collabora.com>
-        <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
-        <20200129143639.7f80addb@xps13>
-        <20200129145336.66f840ea@collabora.com>
-        <20200129145950.2a324acf@xps13>
-        <20200129154926.50e955e8@collabora.com>
-        <20200129160045.3dc451d8@xps13>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 29 Jan 2020 10:20:05 -0500
+Received: from [109.168.11.45] (port=33588 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1iwp8L-004sQJ-GQ; Wed, 29 Jan 2020 16:20:01 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/28] docs: i2c: rework I2C documentation, part I
+Date:   Wed, 29 Jan 2020 16:19:25 +0100
+Message-Id: <20200129151953.31582-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:00:45 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> Hi Boris,
-> 
-> Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 29 Jan
-> 2020 15:49:26 +0100:
-> 
-> > On Wed, 29 Jan 2020 14:59:50 +0100
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >   
-> > > Hi Boris,
-> > > 
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 29 Jan
-> > > 2020 14:53:36 +0100:
-> > >     
-> > > > On Wed, 29 Jan 2020 14:36:39 +0100
-> > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > >       
-> > > > > Hello,
-> > > > > 
-> > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Wed, 29 Jan 2020
-> > > > > 19:06:46 +0900:
-> > > > >         
-> > > > > > On Tue, Jan 28, 2020 at 3:58 PM Boris Brezillon
-> > > > > > <boris.brezillon@collabora.com> wrote:          
-> > > > > > >
-> > > > > > > On Mon, 27 Jan 2020 16:47:55 +0100
-> > > > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > > > > >            
-> > > > > > > > Hi Hello,
-> > > > > > > >
-> > > > > > > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Jan
-> > > > > > > > 2020 16:45:54 +0100:
-> > > > > > > >            
-> > > > > > > > > On Mon, 27 Jan 2020 15:35:59 +0100
-> > > > > > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > > > > > > >            
-> > > > > > > > > > Hi Masahiro,
-> > > > > > > > > >
-> > > > > > > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Mon, 27 Jan 2020
-> > > > > > > > > > 21:55:25 +0900:
-> > > > > > > > > >            
-> > > > > > > > > > > Hi.
-> > > > > > > > > > >
-> > > > > > > > > > > I have a question about the
-> > > > > > > > > > > WP_n pin of a NAND chip.
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > As far as I see, the NAND framework does not
-> > > > > > > > > > > handle it.            
-> > > > > > > > > >
-> > > > > > > > > > There is a nand_check_wp() which reads the status of the pin before
-> > > > > > > > > > erasing/writing.
-> > > > > > > > > >            
-> > > > > > > > > > >
-> > > > > > > > > > > Instead, it is handled in a driver level.
-> > > > > > > > > > > I see some DT-bindings that handle the WP_n pin.
-> > > > > > > > > > >
-> > > > > > > > > > > $ git grep wp -- Documentation/devicetree/bindings/mtd/
-> > > > > > > > > > > Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
-> > > > > > > > > > > brcm,nand-has-wp          : Some versions of this IP include a
-> > > > > > > > > > > write-protect            
-> > > > > > > > > >
-> > > > > > > > > > Just checked: brcmnand de-assert WP when writing/erasing and asserts it
-> > > > > > > > > > otherwise. IMHO this switching is useless.
-> > > > > > > > > >            
-> > > > > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
-> > > > > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
-> > > > > > > > > > >          wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-> > > > > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
-> > > > > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
-> > > > > > > > > > >          wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;            
-> > > > > > > > > >
-> > > > > > > > > > In both cases, the WP GPIO is unused in the code, just de-asserted at
-> > > > > > > > > > boot time like what you do in the patch below.
-> > > > > > > > > >            
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > I wrote a patch to avoid read-only issue in some cases:
-> > > > > > > > > > > http://patchwork.ozlabs.org/patch/1229749/
-> > > > > > > > > > >
-> > > > > > > > > > > Generally speaking, we expect NAND devices
-> > > > > > > > > > > are writable in Linux. So, I think my patch is OK.            
-> > > > > > > > > >
-> > > > > > > > > > I think the patch is fine.
-> > > > > > > > > >            
-> > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > However, I asked this myself:
-> > > > > > > > > > > Is there a useful case to assert the write protect
-> > > > > > > > > > > pin in order to make the NAND chip really read-only?
-> > > > > > > > > > > For example, the system recovery image is stored in
-> > > > > > > > > > > a read-only device, and the write-protect pin is
-> > > > > > > > > > > kept asserted to assure nobody accidentally corrupts it.            
-> > > > > > > > > >
-> > > > > > > > > > It is very likely that the same device is used for RO and RW storage so
-> > > > > > > > > > in most cases this is not possible. We already have squashfs which is
-> > > > > > > > > > actually read-only at filesystem level, I'm not sure it is needed to
-> > > > > > > > > > enforce this at a lower level... Anyway if there is actually a pin for
-> > > > > > > > > > that, one might want to handle the pin directly as a GPIO, what do you
-> > > > > > > > > > think?            
-> > > > > > > > >
-> > > > > > > > > FWIW, I've always considered the WP pin as a way to protect against
-> > > > > > > > > spurious destructive command emission, which is most likely to happen
-> > > > > > > > > during transition phases (bootloader -> linux, linux -> kexeced-linux,
-> > > > > > > > > platform reset, ..., or any other transition where the pin state might
-> > > > > > > > > be undefined at some point). This being said, if you're worried about
-> > > > > > > > > other sources of spurious cmds (say your bus is shared between
-> > > > > > > > > different kind of memory devices, and the CS pin is unreliable), you
-> > > > > > > > > might want to leave the NAND in a write-protected state de-asserting WP
-> > > > > > > > > only when explicitly issuing a destructive command (program page, erase
-> > > > > > > > > block).            
-> > > > > > > >
-> > > > > > > > Ok so with this in mind, only the brcmnand driver does a useful use of
-> > > > > > > > the WP output.            
-> > > > > > >
-> > > > > > > Well, I'd just say that brcmnand is more paranoid, which is a good
-> > > > > > > thing I guess, but that doesn't make other solutions useless, just less
-> > > > > > > safe. We could probably flag operations as 'destructive' at the
-> > > > > > > nand_operation level, so drivers can assert/de-assert the pin on a
-> > > > > > > per-operation basis.            
-> > > > > > 
-> > > > > > Sounds a good idea.
-> > > > > > 
-> > > > > > If it is supported in the NAND framework,
-> > > > > > I will be happy to implement in the Denali NAND driver.
-> > > > > >           
-> > > > > 
-> > > > > There is currently no such thing at NAND level but I doubt there is
-> > > > > more than erase and write operation during which it would be needed
-> > > > > to assert/deassert WP. I don't see why having this flag would help
-> > > > > the controller drivers?        
-> > > > 
-> > > > Because ->exec_op() was designed to avoid leaving such decisions to the
-> > > > NAND controller drivers :P. If you now ask drivers to look at the
-> > > > opcode and guess when they should de-assert the WP pin, you're just
-> > > > going back to the ->cmdfunc() mess.      
-> > > 
-> > > I was actually thinking to the ->write_page(_raw)() helpers, but
-> > > yeah, in the case of ->exec_op() it's different. However, for these
-> > > helpers as don't use ->exec_op(), we need another way to flag the
-> > > operation as destructive.    
-> > 
-> > I don't think we really care about ancient (AKA non-exec_op()) drivers.
-> > They seem to work fine as they are now, so let's focus on the modern
-> > ones.  
-> 
-> Not my point: the ->write_page[_raw]() helpers are implemented by
-> everyone, no ->exec_op() is involved and they are destructive as well.
+Hi,
 
-Well, yes. If the driver has custom ->write_page[_raw](), they should
-be patched to handle WP de-assertion/assertion.
+this series is a list of improvements to the I2C documentation.
 
-> 
-> >   
-> > > 
-> > > But actually we could let the driver toggle the pin for any operation.
-> > > If we want to be protected against spurious access, not directly ordered
-> > > by the controller driver itself, then we don't care if the operation is
-> > > actually destructive or not as long as the pin is deasserted during our
-> > > operations and asserted otherwise.    
-> > 
-> > Or we could patch the ->exec_op() path to pass this information (and
-> > maybe provide helpers for the GPIO case). Should be as simple as:  
-> 
-> This approach is fine.
-> 
-> Without the delay penalty in mind, I would say it is useless and the
-> driver can simply deassert WP at the start of ->exec_op() but as there
-> is a small penalty, why not.
+It started as a simple reordering of index.rst from alphabetical order to a
+logical order. Then it grew to a mixture of various improvements to each
+section and some cross-section changes.
 
-Right. 100ns on an operation that takes more than 100us is negligible,
-but if you start de-asserting/asserting WP on shorter operations, like
-READ_STATUS, that might have an impact.
+I wanted to rework all the sections in a unique series, but after covering
+about one third of them the number of patches has already grown pretty long
+so I'm sending it in its current state. I will continue to cover the rest
+of the sections later.
+
+Each patch is quite self-standing, and most are trivial, so have a good
+reading.
+
+v2 and v3 incorporate many improvements suggested by Jean Delvare and Peter
+Rosin. A special thank you to Jean for his very patient and appreciated
+review work of _all_ of the 26 patches. Thanks to his work the patches are
+now 28. :) Patches 27 and 28 are the new ones.
+
+Luca
+
+Luca Ceresoli (28):
+  docs: i2c: sort index logically
+  docs: i2c: summary: extend introduction
+  docs: i2c: summary: rewrite the "terminology" section
+  docs: i2c: call it "I2C" consistently
+  docs: i2c: fix typo
+  docs: i2c: replace "I2C-transfer" -> "I2C transfer" consistently
+  docs: i2c: i2c-protocol: fix kernel-doc function syntax
+  docs: i2c: i2c-protocol: properly name start and stop conditions
+  docs: i2c: i2c-protocol: remove unneeded colons from table
+  docs: i2c: i2c-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus-protocol: fix link syntax
+  docs: i2c: smbus-protocol: properly name start and stop conditions
+  docs: i2c: smbus-protocol: remove unneeded colons from table
+  docs: i2c: smbus-protocol: use proper names for ACK and NACK
+  docs: i2c: smbus-protocol: enable kernel-doc function syntax
+  docs: i2c: smbus-protocol: fix kernel-doc function syntax
+  docs: i2c: smbus-protocol: fix typo
+  docs: i2c: smbus-protocol: fix punctuation
+  docs: i2c: smbus-protocol: improve I2C Block transactions description
+  docs: i2c: instantiating-devices: fix internal hyperlink
+  docs: i2c: instantiating-devices: rearrange static instatiation
+  docs: i2c: instantiating-devices: use monospace for sysfs attributes
+  docs: i2c: old-module-parameters: fix internal hyperlink
+  docs: i2c: old-module-parameters: clarify this is for obsolete kernels
+  docs: i2c: old-module-parameters: use monospace instead of ""
+  docs: i2c: rename sections so the overall picture is clearer
+  docs: i2c: i2c-protocol: use same wording as smbus-protocol
+  docs: i2c: writing-clients: properly name the stop condition
+
+ Documentation/i2c/dev-interface.rst         |   24 +-
+ Documentation/i2c/dma-considerations.rst    |    2 +-
+ Documentation/i2c/i2c-protocol.rst          |   45 +-
+ Documentation/i2c/i2c-topology.rst          |   72 +-
+ Documentation/i2c/i2c.svg                   | 1341 +++++++++++++++++++
+ Documentation/i2c/index.rst                 |   58 +-
+ Documentation/i2c/instantiating-devices.rst |  115 +-
+ Documentation/i2c/old-module-parameters.rst |   31 +-
+ Documentation/i2c/slave-interface.rst       |    4 +-
+ Documentation/i2c/smbus-protocol.rst        |  107 +-
+ Documentation/i2c/summary.rst               |   62 +-
+ Documentation/i2c/writing-clients.rst       |   16 +-
+ 12 files changed, 1653 insertions(+), 224 deletions(-)
+ create mode 100644 Documentation/i2c/i2c.svg
+
+-- 
+2.25.0
+
