@@ -2,536 +2,1530 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A153C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B735C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E703320708
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B80620661
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580323692;
+	bh=y/XaDHoY2VJdz+oYUI4Gaz5XizOUk6lf93qc9BMYI98=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=oey9V0os1+AlcL/n1zKBvauxWJFjOPZlZ2P5A9wUWToSl4TAEG5sh6yk2BoJrpsva
+	 vbKnb6ppDGEMtUOSvjRxPEZt/EKFcZ4OK150KZhoArAk++8VSS79zVNvNAhbgrDooT
+	 gSuDPILrZDLZGKpC8LdO6GCYQ5hlD4uCWzbjxERU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgA2SrK (ORCPT
+        id S1727546AbgA2SsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:47:10 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60976 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgA2SrJ (ORCPT
+        Wed, 29 Jan 2020 13:48:11 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33219 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgA2SsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:47:09 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 638F628E6DD
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver for
- Tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <3cdea635-a9ca-7b9c-3c99-8f489f4d669a@collabora.com>
- <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
- <017ca95e-7dd3-2d04-8d84-9047ac4e548b@nvidia.com>
- <655b9a64-10d7-3fd3-f443-babf33e67b62@collabora.com>
- <7265b661-de5a-b0f0-bcdc-1a1d2c03fe57@nvidia.com>
- <4b443e7c-0866-ceea-938c-8ab71959fc89@collabora.com>
- <b1e7168a-1f6f-c6bf-6320-7a6ee51880be@nvidia.com>
- <01ab1cae-692d-3a31-39e6-a887bbb9b4e0@nvidia.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <b55e9492-4996-6716-f2c1-3b88fa0525ef@collabora.com>
-Date:   Wed, 29 Jan 2020 15:46:56 -0300
+        Wed, 29 Jan 2020 13:48:11 -0500
+Received: by mail-il1-f196.google.com with SMTP id s18so812743iln.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 10:48:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=D0bEJJ1a4++6y4/p7kp90UaO28AhGCLzaUpSiPWEDFI=;
+        b=fzUjojcY2MvsdyZGEKaPXQqWh1L6AEojwytgIHXKf6sAYgnP/A+w73NblRdF5GCrA0
+         6fwp4yBS5k5tYd8HnIqx+AajYuUVrkHkL42sLtjIqhUe/N0J05/a+xk5njWeeGpUM6UF
+         TsESJycAMbapkpED1ZrQvaH6c/O0r35BIJuow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=D0bEJJ1a4++6y4/p7kp90UaO28AhGCLzaUpSiPWEDFI=;
+        b=SIPfuMHnjO6HdlOTk9oASIIbR0j++SNwgTYfS0bvkNUKU8RF+PeaOtUMHDIPVJoCVe
+         /ebF6oxxWoMwg342oGoriG90aQmwz51iUm4ke+jcUY83uwAxTuXlx/Kw8orJmPTGCbde
+         eN3ZQ5lN1TKdUSlClbqmeOUGHov70StsziY7KonWbTOsuh9kvphhN/iLZxKD7LGZtGms
+         Zhari7NSQV8D5mTCXO+MxOybmiyL+DImC61xbuUhsu/pWgHZMI8ABDXbe07U5acLtIKA
+         i6WqNM7K32nykXYzENeqOgvjtJrHoq02561EFZyAjWmdO9WFlt4aAetMUbxutknhtsso
+         9GYg==
+X-Gm-Message-State: APjAAAUZdAZnkfmU4CGloFeem4Sf+cVinqpckk8yWlcPrvpPin4puZsd
+        UdT5u53gp0SELofyB2NApaUtlwJGZxQ=
+X-Google-Smtp-Source: APXvYqwxxX6IETQTvXugr8CExXc3RTocynp+JcUsYfQc1GvOuxvVCzEtcxc4KIUAw4z9neJjc2J93w==
+X-Received: by 2002:a92:c848:: with SMTP id b8mr694447ilq.168.1580323689403;
+        Wed, 29 Jan 2020 10:48:09 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c8sm981412ilh.58.2020.01.29.10.48.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 10:48:08 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Mike Salvatore <mike.salvatore@canonical.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest kunit update for Linux 5.6-rc1
+Message-ID: <5d0a37f1-f857-eadf-5e20-872ca6c7f656@linuxfoundation.org>
+Date:   Wed, 29 Jan 2020 11:48:07 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <01ab1cae-692d-3a31-39e6-a887bbb9b4e0@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/mixed;
+ boundary="------------7408E280292BCD3F101B597F"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------7408E280292BCD3F101B597F
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi Linus,
 
-On 1/29/20 4:15 PM, Sowjanya Komatineni wrote:
-> 
-> On 1/29/20 9:49 AM, Sowjanya Komatineni wrote:
->>
->> On 1/29/20 2:31 AM, Helen Koike wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 1/29/20 12:11 AM, Sowjanya Komatineni wrote:
->>>> On 1/28/20 5:05 PM, Helen Koike wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> On 1/28/20 10:49 PM, Sowjanya Komatineni wrote:
->>>>>> On 1/28/20 2:13 PM, Sowjanya Komatineni wrote:
->>>>>>> On 1/28/20 1:45 PM, Helen Koike wrote:
->>>>>>>> External email: Use caution opening links or attachments
->>>>>>>>
->>>>>>>>
->>>>>>>> Hi Sowjanya,
->>>>>>>>
->>>>>>>> I just took a really quick look, I didn't check the driver in deep, so just some small comments below.
->>>>>>>>
->>>>>>>> On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
->>>>>>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
->>>>>>>>> which can support up to 6 MIPI CSI camera sensors.
->>>>>>>>>
->>>>>>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->>>>>>>>> capture from an external camera sensor connected to CSI or from
->>>>>>>>> built-in test pattern generator.
->>>>>>>>>
->>>>>>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
->>>>>>>>>
->>>>>>>>> This patch adds a V4L2 media controller and capture driver support
->>>>>>>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>> Could you send us the output of media-ctl --print-dot ? So we can view the media topology easily?
->>>>>>> root@tegra-ubuntu:/home/ubuntu# ./media-ctl --print-dot
->>>>>>> digraph board {
->>>>>>>           rankdir=TB
->>>>>>>           n00000001 [label="54080000.vi-output-0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n00000005 [label="54080000.vi-output-1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n00000009 [label="54080000.vi-output-2\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n0000000d [label="54080000.vi-output-3\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n00000011 [label="54080000.vi-output-4\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n00000015 [label="54080000.vi-output-5\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
->>>>>>>           n00000019 [label="{{} | tpg-0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n00000019:port0 -> n00000001
->>>>>>>           n0000001d [label="{{} | tpg-1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n0000001d:port0 -> n00000005
->>>>>>>           n00000021 [label="{{} | tpg-2 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n00000021:port0 -> n00000009
->>>>>>>           n00000025 [label="{{} | tpg-3 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n00000025:port0 -> n0000000d
->>>>>>>           n00000029 [label="{{} | tpg-4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n00000029:port0 -> n00000011
->>>>>>>           n0000002d [label="{{} | tpg-5 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
->>>>>>>           n0000002d:port0 -> n00000015
->>>>>>> }
->>>>>>>
->>>>>>>>> --- diff --git a/drivers/staging/media/tegra/host1x-video.h b/drivers/staging/media/tegra/host1x-video.h
->>>>>>>>> new file mode 100644
->>>>>>>>> index 000000000000..84d28e6f4362
->>>>>>>>> --- /dev/null
->>>>>>>>> +++ b/drivers/staging/media/tegra/host1x-video.h
->>>>>>>>> @@ -0,0 +1,33 @@
->>>>>>>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>>>>>>> +/*
->>>>>>>>> + * Copyright (C) 2020 NVIDIA CORPORATION.  All rights reserved.
->>>>>>>>> + */
->>>>>>>>> +
->>>>>>>>> +#ifndef HOST1X_VIDEO_H
->>>>>>>>> +#define HOST1X_VIDEO_H 1
->>>>>>>>> +
->>>>>>>>> +#include <linux/host1x.h>
->>>>>>>>> +
->>>>>>>>> +#include <media/media-device.h>
->>>>>>>>> +#include <media/media-entity.h>
->>>>>>>>> +#include <media/v4l2-async.h>
->>>>>>>>> +#include <media/v4l2-ctrls.h>
->>>>>>>>> +#include <media/v4l2-device.h>
->>>>>>>>> +#include <media/v4l2-dev.h>
->>>>>>>>> +#include <media/videobuf2-v4l2.h>
->>>>>>>>> +
->>>>>>>>> +#include "tegra-vi.h"
->>>>>>>>> +#include "csi.h"
->>>>>>>>> +
->>>>>>>>> +struct tegra_camera {
->>>>>>>>> +     struct v4l2_device v4l2_dev;
->>>>>>>>> +     struct media_device media_dev;
->>>>>>>>> +     struct device *dev;
->>>>>>>> You can use cam->media_dev.dev instead of having this pointer.
->>>>>>>>
->>>>>> Will fix in v2
->>>>>>>>> +     struct tegra_vi *vi;
->>>>>>>>> +     struct tegra_csi_device *csi;
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +
->>>>>>>>> +#define to_tegra_channel(vdev) \
->>>>>>>>> +     container_of(vdev, struct tegra_channel, video)
->>>>>>>> Why not inline instead of define. Inlines has the advantage of checking types.
->>>>>> Will change in v2
->>>>>>>>> +static int __tegra_channel_try_format(struct tegra_channel *chan,
->>>>>>>>> +                                   struct v4l2_pix_format *pix,
->>>>>>>>> +                                   const struct tegra_video_format **vfmt)
->>>>>>>>> +{
->>>>>>>>> +     const struct tegra_video_format *fmt_info;
->>>>>>>>> +     struct v4l2_subdev *subdev;
->>>>>>>>> +     struct v4l2_subdev_format fmt;
->>>>>>>>> +     struct v4l2_subdev_pad_config *pad_cfg;
->>>>>>>>> +
->>>>>>>>> +     subdev = tegra_channel_get_remote_subdev(chan);
->>>>>>>>> +     pad_cfg = v4l2_subdev_alloc_pad_config(subdev);
->>>>>>>>> +     if (!pad_cfg)
->>>>>>>>> +             return -ENOMEM;
->>>>>>>>> +
->>>>>>>>> +     /*
->>>>>>>>> +      * Retrieve format information and select the default format if the
->>>>>>>>> +      * requested format isn't supported.
->>>>>>>>> +      */
->>>>>>>>> +     fmt_info = tegra_core_get_format_by_fourcc(chan, pix->pixelformat);
->>>>>>>>> +     if (!fmt_info) {
->>>>>>>>> +             pix->pixelformat = chan->format.pixelformat;
->>>>>>>>> +             pix->colorspace = chan->format.colorspace;
->>>>>>>>> +             fmt_info = tegra_core_get_format_by_fourcc(chan,
->>>>>>>>> + pix->pixelformat);
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     /* Change this when start adding interlace format support */
->>>>>>>>> +     pix->field = V4L2_FIELD_NONE;
->>>>>>>>> +     fmt.which = V4L2_SUBDEV_FORMAT_TRY;
->>>>>>>>> +     fmt.pad = 0;
->>>>>>>>> +     v4l2_fill_mbus_format(&fmt.format, pix, fmt_info->code);
->>>>>>>>> +     v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
->>>>>>>> As fas as I understand, entities formats should be independent, it is up to link_validate
->>>>>>>> to check formats between entities.
->>>>>>>> The capture shouldn't change the format of the subdevice.
->>>>>>>>
->>>>>> Tegra Built-in TPG on CSI accepts specific TPG sizes and CSI is source and VI is sink.
->>>>>>
->>>>>> link validation happens only for sink ends of the link.
->>>>> And what is the problem with it being on the sink end?
->>>>> You just need to implement custom link validation in tegra_csi_media_ops that also checks the format
->>>>> between the capture and the subdevice, no? Unless I missunderstood something here (which is quite possible).
->>>>>
->>>>> Examples:
->>>>> drivers/staging/media/rkisp1/rkisp1-capture.c - rkisp1_capture_link_validate()
->>>>> drivers/media/pci/intel/ipu3/ipu3-cio2.c - cio2_video_link_validate()
->>>>> drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c - sun6i_video_link_validate()
->>>>>
->>>>> Regards,
->>>>> Helen
->>>>>
->>>> But if we move subdevice side format/size check into its link_validation, any incorrect image size set thru set-fmt-video will be taken and get-fmt-video will also show same as it doesn't validate formats/sizes supported by CSI subdev during this time. link validation happens during pipeline start. So thought to prevent accepting incorrect format/size during set-fmt-video/get-fmt-video.
->>> This is how media API is designed, formats shouldn't propagate between entities, it is up to userspace to configure pads
->>> correctly. And if formats of the pads don't match, stream fails during pipeline start, and userspace receive -EPIPE error.
->>>
->>> According to the docs: https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/dev-subdev.html
->>>
->>> "Formats are not propagated across links, as that would involve propagating them from one sub-device file handle to another. Applications must then take care to configure both ends of every link explicitly with compatible formats. Identical formats on the two ends of a link are guaranteed to be compatible. Drivers are free to accept different formats matching device requirements as being compatible."
->>>
->>> Perhaps you want to add support of this driver in libcamera.org to make it easier to userspace.
->>>
->>> Regards,
->>> Helen
->>
->> I see in doc, Format Negotiation says drivers can propagate formats inside sub-devices. When try/active format is set on pad, corresponding format on other pads of same subdevice can be modified by the driver as long as formats are propagated from Sink pads to source pads.
->>
->> When application configures front-end sink pad format, driver can propagate the format to front-end source pad.
->>
->> VI is Sink and CSI is source subdev here for TPG.
->>
->> Currently set_fmt/get_fmt from vi channel invokes Source subdevice set_fmt/get_fmt which is CSI in this case of TPG.
->>
-> Also regarding link_validation, it seems like its called for every link in pipeline where both end of links are v4l2 subdevices.
+Please pull the following Kselftest kunit update for Linux 5.6-rc1
 
-This is not correct.
+This kunit update for Linux 5.6-rc1 consists of:
 
-See https://git.linuxtv.org/media_tree.git/tree/drivers/media/mc/mc-entity.c#n474
+-- Support for building kunit as a module from Alan Maguire
+-- AppArmor KUnit tests for policy unpack from Mike Salvatore
 
-The .link_validate() callback is called for all links without making a distinction if it is a subdevice or a video device.
+diff is attached.
 
-> 
-> Driver should take care of format validation between sub-device and video nodes.
+thanks,
+-- Shuah
 
-This is true, in the sense that the default helper v4l2_subdev_link_validate() shouldn't be used, because the default helper
-only validates between subdevices, driver should implement a custom function to plug in the .link_validate() callback inside
-struct media_entity_operations for video nodes.
+----------------------------------------------------------------
+The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
 
-> 
-> This driver TPG is b/w Tegra CSI (subdevice) and VI (video entity).
-> 
-> So I don't think we can use link_validate for format validation/negotiation b/w video entity and subdevice.
+   Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
 
-Yes you can, and the drivers I pointed before do this:
+are available in the Git repository at:
 
-vimc-capture.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/vimc/vimc-capture.c#n325
-rkisp1-capture.c - https://git.linuxtv.org/media_tree.git/tree/drivers/staging/media/rkisp1/rkisp1-capture.c#n1292
-ipu3-cio2.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/pci/intel/ipu3/ipu3-cio2.c#n1544
-sun6i_video.c - https://git.linuxtv.org/media_tree.git/tree/drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c#n592
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.6-rc1-kunit
 
-Those are video nodes who implement custom .link_validate() callbacks, to validate a link between the video node and a subdevice.
+for you to fetch changes up to 35c57fc3f8eac81b38664a0fe160e267b908d8b8:
 
-Regards,
-Helen
+   kunit: building kunit as a module breaks allmodconfig (2020-01-10 
+14:36:37 -0700)
 
-> 
-> Currently driver follows propagating format sink pad (VI) to source pad and on CSI source subdev we update format to default if format size doesn't match one of the TPG format sizes.
-> 
-> Please let me know if I am missing anything to understand your feedback.
-> 
-> 
->>>> Other than this I don't see any issue moving it to link_validation.
->>>>
->>>>
->>>>>> So with CSI subdev set_fmt sets width/height to default incase if width/height is not from one of the supported sizes.
->>>>>>
->>>>>>>>> +
->>>>>>>>> +     v4l2_fill_pix_format(pix, &fmt.format);
->>>>>>>>> +     tegra_channel_fmt_align(chan, &fmt_info->bpp, &pix->width, &pix->height,
->>>>>>>>> + &pix->bytesperline);
->>>>>>>>> +     pix->sizeimage = pix->bytesperline * pix->height;
->>>>>>>>> +
->>>>>>>>> +     if (vfmt)
->>>>>>>>> +             *vfmt = fmt_info;
->>>>>>>>> +
->>>>>>>>> +     v4l2_subdev_free_pad_config(pad_cfg);
->>>>>>>>> +
->>>>>>>>> +     return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int tegra_channel_try_format(struct file *file, void *fh,
->>>>>>>>> +                                 struct v4l2_format *format)
->>>>>>>>> +{
->>>>>>>>> +     struct v4l2_fh *vfh = file->private_data;
->>>>>>>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
->>>>>>>>> +
->>>>>>>>> +     return __tegra_channel_try_format(chan, &format->fmt.pix, NULL);
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int tegra_channel_set_format(struct file *file, void *fh,
->>>>>>>>> +                                 struct v4l2_format *format)
->>>>>>>>> +{
->>>>>>>>> +     struct v4l2_fh *vfh = file->private_data;
->>>>>>>>> +     struct tegra_channel *chan = to_tegra_channel(vfh->vdev);
->>>>>>>>> +     const struct tegra_video_format *info;
->>>>>>>>> +     int ret;
->>>>>>>>> +     struct v4l2_subdev_format fmt;
->>>>>>>>> +     struct v4l2_subdev *subdev;
->>>>>>>>> +     struct v4l2_pix_format *pix = &format->fmt.pix;
->>>>>>>>> +
->>>>>>>>> +     if (vb2_is_busy(&chan->queue))
->>>>>>>>> +             return -EBUSY;
->>>>>>>>> +
->>>>>>>>> +     /* get supported format by try_fmt */
->>>>>>>>> +     ret = __tegra_channel_try_format(chan, pix, &info);
->>>>>>>>> +     if (ret)
->>>>>>>>> +             return ret;
->>>>>>>>> +
->>>>>>>>> +     subdev = tegra_channel_get_remote_subdev(chan);
->>>>>>>>> +
->>>>>>>>> +     fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
->>>>>>>>> +     fmt.pad = 0;
->>>>>>>>> +     v4l2_fill_mbus_format(&fmt.format, pix, info->code);
->>>>>>>>> +     v4l2_subdev_call(subdev, pad, set_fmt, NULL, &fmt);
->>>>>>>> same here.
->>>>>>>>
->>>>>> Calling subdev set_fmt here for the same reason as explained above.
->>>>>>>>> +
->>>>>>>>> +     v4l2_fill_pix_format(pix, &fmt.format);
->>>>>>>>> +     chan->format = *pix;
->>>>>>>>> +     chan->fmtinfo = info;
->>>>>>>>> +     tegra_channel_update_format(chan, pix->width,
->>>>>>>>> +                                 pix->height, info->fourcc,
->>>>>>>>> +                                 &info->bpp,
->>>>>>>>> + pix->bytesperline);
->>>>>>>>> +     *pix = chan->format;
->>>>>>>>> +
->>>>>>>>> +     return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static int tegra_channel_enum_input(struct file *file, void *fh,
->>>>>>>>> +                                 struct v4l2_input *inp)
->>>>>>>>> +{
->>>>>>>>> +     /* Currently driver supports internal TPG only */
->>>>>>>>> +     if (inp->index != 0)
->>>>>>>> just
->>>>>>>> if (inp->index)
->>>>>>>>
->>>>>> Will update in v2
->>>>>>>>> +             return -EINVAL;
->>>>>>>>> +
->>>>>>>>> +     inp->type = V4L2_INPUT_TYPE_CAMERA;
->>>>>>>>> +     strscpy(inp->name, "Tegra TPG", sizeof(inp->name));
->>>>>>>>> +
->>>>>>>>> +     return 0;
->>>>>>>>> +}
->>>>>>>>> +static const struct tegra_video_format tegra_default_format = {
->>>>>>>>> +     /* RAW 10 */
->>>>>>>>> +     TEGRA_VF_RAW10,
->>>>>>>>> +     10,
->>>>>>>>> +     MEDIA_BUS_FMT_SRGGB10_1X10,
->>>>>>>>> +     {2, 1},
->>>>>>>>> +     TEGRA_IMAGE_FORMAT_DEF,
->>>>>>>>> +     TEGRA_IMAGE_DT_RAW10,
->>>>>>>>> +     V4L2_PIX_FMT_SRGGB10,
->>>>>>>>> +     "RGRG.. GBGB..",
->>>>>>>> It would be more readable to do:
->>>>>>>>
->>>>>>>> .code = TEGRA_VF_RAW10,
->>>>>>>> .width = 10,
->>>>>>>> .code = MEDIA_BUS_FMT_SRGGB10_1X10,
->>>>>>>>
->>>>>>>> and so on
->>>>>> Will update in v2
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +/*
->>>>>>>>> + * Helper functions
->>>>>>>>> + */
->>>>>>>>> +
->>>>>>>>> +/**
->>>>>>>>> + * tegra_core_get_default_format - Get default format
->>>>>>>>> + *
->>>>>>>>> + * Return: pointer to the format where the default format needs
->>>>>>>>> + * to be filled in.
->>>>>>>>> + */
->>>>>>>>> +const struct tegra_video_format *tegra_core_get_default_format(void)
->>>>>>>>> +{
->>>>>>>>> +     return &tegra_default_format;
->>>>>>>>> +}
->>>>>>>> This is only used in tegra-channel.c, why not to declare it there as static?
->>>>>>>>
->>>>>> Will move all video format retrieval helper functions to corresponding file as static in v2
->>>>>>>>> + +static struct v4l2_frmsize_discrete tegra_csi_tpg_sizes[] = {
->>>>>>>>> +     {1280, 720},
->>>>>>>>> +     {1920, 1080},
->>>>>>>>> +     {3840, 2160},
->>>>>>>>> +};
->>>>>>>>> +
->>>>>>>>> +/*
->>>>>>>>> + * V4L2 Subdevice Pad Operations
->>>>>>>>> + */
->>>>>>>>> +static int tegra_csi_get_format(struct v4l2_subdev *subdev,
->>>>>>>>> +                             struct v4l2_subdev_pad_config *cfg,
->>>>>>>>> +                             struct v4l2_subdev_format *fmt)
->>>>>>>>> +{
->>>>>>>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->>>>>>>>> +
->>>>>>>>> +     mutex_lock(&csi_chan->format_lock);
->>>>>>>> Do you need this lock? I think there is already a serialization in the ioctls in place (to be confirmed).
->>>>>>>>
->>>>>> This is on CSI v4l2 subdevice side during format updates
->>>>>>>>> +     memcpy(fmt, &csi_chan->ports->format,
->>>>>>>>> +            sizeof(struct v4l2_mbus_framefmt));
->>>>>>>> I would prefer just:
->>>>>>>> *fmt = *csi_chan->ports->format;
->>>>>>>>
->>>>>>>> I think it is easier to read IMHO.
->>>>>>>> same in tegra_csi_set_format().
->>>>>>>>
->>>>>> Will fix in v2
->>>>>>>>> + mutex_unlock(&csi_chan->format_lock);
->>>>>>>>> +
->>>>>>>>> +     return 0;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +static void tegra_csi_try_mbus_fmt(struct v4l2_subdev *subdev,
->>>>>>>>> +                                struct v4l2_mbus_framefmt *mfmt)
->>>>>>>>> +{
->>>>>>>>> +     struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->>>>>>>>> +     struct tegra_csi_device *csi = csi_chan->csi;
->>>>>>>>> +     const struct v4l2_frmsize_discrete *sizes;
->>>>>>>>> +     int i, j;
->>>>>>>> unsigned
->>>>>>>>
->>>>>> Will fix in v2
->>>>>>>>> +
->>>>>>>>> +     for (i = 0; i < ARRAY_SIZE(tegra_csi_tpg_fmts); i++) {
->>>>>>>>> +             struct v4l2_mbus_framefmt *mbus_fmt = &tegra_csi_tpg_fmts[i];
->>>>>>>>> +
->>>>>>>>> +             if (mfmt->code == mbus_fmt->code) {
->>>>>>>>> +                     for (j = 0; j < ARRAY_SIZE(tegra_csi_tpg_sizes); j++) {
->>>>>>>>> +                             sizes = &tegra_csi_tpg_sizes[j];
->>>>>>>>> +                             if (mfmt->width == sizes->width &&
->>>>>>>>> +                                 mfmt->height == sizes->height) {
->>>>>>>>> +                                     return;
->>>>>>>>> +                             }
->>>>>>>>> +                     }
->>>>>>>>> +             }
->>>>>>>>> +
->>>>>>>>> +             dev_info(csi->dev, "using Tegra default RAW10 video format\n");
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     dev_info(csi->dev, "using Tegra default WIDTH X HEIGHT (1920x1080)\n");
->>>>>>>>> +     memcpy(mfmt, tegra_csi_tpg_fmts, sizeof(struct v4l2_mbus_framefmt));
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>> +
+----------------------------------------------------------------
+linux-kselftest-5.6-rc1-kunit
+
+This kunit update for Linux 5.6-rc1 consists of:
+
+-- Support for building kunit as a module from Alan Maguire
+-- AppArmor KUnit tests for policy unpack from Mike Salvatore
+
+----------------------------------------------------------------
+Alan Maguire (7):
+       kunit: move string-stream.h to lib/kunit
+       kunit: hide unexported try-catch interface in try-catch-impl.h
+       kunit: allow kunit tests to be loaded as a module
+       kunit: remove timeout dependence on sysctl_hung_task_timeout_seconds
+       kunit: allow kunit to be loaded as a module
+       kunit: update documentation to describe module-based build
+       kunit: building kunit as a module breaks allmodconfig
+
+Mike Salvatore (1):
+       apparmor: add AppArmor KUnit tests for policy unpack
+
+  Documentation/dev-tools/kunit/faq.rst              |   3 +-
+  Documentation/dev-tools/kunit/index.rst            |   3 +
+  Documentation/dev-tools/kunit/usage.rst            |  16 +
+  drivers/base/Kconfig                               |   2 +-
+  drivers/base/power/qos-test.c                      |   2 +-
+  fs/ext4/Kconfig                                    |   2 +-
+  fs/ext4/Makefile                                   |   3 +-
+  fs/ext4/inode-test.c                               |   4 +-
+  include/kunit/assert.h                             |   3 +-
+  include/kunit/test.h                               |  37 +-
+  include/kunit/try-catch.h                          |  10 -
+  kernel/sysctl-test.c                               |   4 +-
+  lib/Kconfig.debug                                  |   4 +-
+  lib/kunit/Kconfig                                  |   6 +-
+  lib/kunit/Makefile                                 |  14 +-
+  lib/kunit/assert.c                                 |  10 +
+  lib/kunit/{example-test.c => kunit-example-test.c} |   4 +-
+  lib/kunit/{test-test.c => kunit-test.c}            |   7 +-
+  lib/kunit/string-stream-test.c                     |   5 +-
+  lib/kunit/string-stream.c                          |   3 +-
+  {include => lib}/kunit/string-stream.h             |   0
+  lib/kunit/test.c                                   |  25 +-
+  lib/kunit/try-catch-impl.h                         |  27 +
+  lib/kunit/try-catch.c                              |  37 +-
+  lib/list-test.c                                    |   4 +-
+  security/apparmor/Kconfig                          |  16 +
+  security/apparmor/policy_unpack.c                  |   4 +
+  security/apparmor/policy_unpack_test.c             | 607 
++++++++++++++++++++++
+  28 files changed, 788 insertions(+), 74 deletions(-)
+  rename lib/kunit/{example-test.c => kunit-example-test.c} (97%)
+  rename lib/kunit/{test-test.c => kunit-test.c} (98%)
+  rename {include => lib}/kunit/string-stream.h (100%)
+  create mode 100644 lib/kunit/try-catch-impl.h
+  create mode 100644 security/apparmor/policy_unpack_test.c
+
+----------------------------------------------------------------
+
+--------------7408E280292BCD3F101B597F
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.6-rc1-kunit.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.6-rc1-kunit.diff"
+
+diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
+index bf2095112d89..ea55b2467653 100644
+--- a/Documentation/dev-tools/kunit/faq.rst
++++ b/Documentation/dev-tools/kunit/faq.rst
+@@ -29,7 +29,8 @@ Yes, well, mostly.
+ 
+ For the most part, the KUnit core framework (what you use to write the tests)
+ can compile to any architecture; it compiles like just another part of the
+-kernel and runs when the kernel boots. However, there is some infrastructure,
++kernel and runs when the kernel boots, or when built as a module, when the
++module is loaded.  However, there is some infrastructure,
+ like the KUnit Wrapper (``tools/testing/kunit/kunit.py``) that does not support
+ other architectures.
+ 
+diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+index c60d760a0eed..d16a4d2c3a41 100644
+--- a/Documentation/dev-tools/kunit/index.rst
++++ b/Documentation/dev-tools/kunit/index.rst
+@@ -49,6 +49,9 @@ to a standalone program that can be run like any other program directly inside
+ of a host operating system; to be clear, it does not require any virtualization
+ support; it is just a regular program.
+ 
++Alternatively, kunit and kunit tests can be built as modules and tests will
++run when the test module is loaded.
++
+ KUnit is fast. Excluding build time, from invocation to completion KUnit can run
+ several dozen tests in only 10 to 20 seconds; this might not sound like a big
+ deal to some people, but having such fast and easy to run tests fundamentally
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index b9a065ab681e..7cd56a1993b1 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -539,6 +539,22 @@ Interspersed in the kernel logs you might see the following:
+ 
+ Congratulations, you just ran a KUnit test on the x86 architecture!
+ 
++In a similar manner, kunit and kunit tests can also be built as modules,
++so if you wanted to run tests in this way you might add the following config
++options to your ``.config``:
++
++.. code-block:: none
++
++	CONFIG_KUNIT=m
++	CONFIG_KUNIT_EXAMPLE_TEST=m
++
++Once the kernel is built and installed, a simple
++
++.. code-block:: bash
++	modprobe example-test
++
++...will run the tests.
++
+ Writing new tests for other architectures
+ -----------------------------------------
+ 
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index c3b3b5c0b0da..5f0bc74d2409 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -150,7 +150,7 @@ config DEBUG_TEST_DRIVER_REMOVE
+ 
+ config PM_QOS_KUNIT_TEST
+ 	bool "KUnit Test for PM QoS features"
+-	depends on KUNIT
++	depends on KUNIT=y
+ 
+ config HMEM_REPORTING
+ 	bool
+diff --git a/drivers/base/power/qos-test.c b/drivers/base/power/qos-test.c
+index 3115db08d56b..79fc6c4418da 100644
+--- a/drivers/base/power/qos-test.c
++++ b/drivers/base/power/qos-test.c
+@@ -114,4 +114,4 @@ static struct kunit_suite pm_qos_test_module = {
+ 	.name = "qos-kunit-test",
+ 	.test_cases = pm_qos_test_cases,
+ };
+-kunit_test_suite(pm_qos_test_module);
++kunit_test_suites(&pm_qos_test_module);
+diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+index ef42ab040905..435510f83297 100644
+--- a/fs/ext4/Kconfig
++++ b/fs/ext4/Kconfig
+@@ -108,7 +108,7 @@ config EXT4_DEBUG
+ 		echo 1 > /sys/module/ext4/parameters/mballoc_debug
+ 
+ config EXT4_KUNIT_TESTS
+-	bool "KUnit tests for ext4"
++	tristate "KUnit tests for ext4"
+ 	select EXT4_FS
+ 	depends on KUNIT
+ 	help
+diff --git a/fs/ext4/Makefile b/fs/ext4/Makefile
+index 840b91d040f1..4ccb3c9189d8 100644
+--- a/fs/ext4/Makefile
++++ b/fs/ext4/Makefile
+@@ -13,5 +13,6 @@ ext4-y	:= balloc.o bitmap.o block_validity.o dir.o ext4_jbd2.o extents.o \
+ 
+ ext4-$(CONFIG_EXT4_FS_POSIX_ACL)	+= acl.o
+ ext4-$(CONFIG_EXT4_FS_SECURITY)		+= xattr_security.o
+-ext4-$(CONFIG_EXT4_KUNIT_TESTS)		+= inode-test.o
++ext4-inode-test-objs			+= inode-test.o
++obj-$(CONFIG_EXT4_KUNIT_TESTS)		+= ext4-inode-test.o
+ ext4-$(CONFIG_FS_VERITY)		+= verity.o
+diff --git a/fs/ext4/inode-test.c b/fs/ext4/inode-test.c
+index bbce1c328d85..d62d802c9c12 100644
+--- a/fs/ext4/inode-test.c
++++ b/fs/ext4/inode-test.c
+@@ -269,4 +269,6 @@ static struct kunit_suite ext4_inode_test_suite = {
+ 	.test_cases = ext4_inode_test_cases,
+ };
+ 
+-kunit_test_suite(ext4_inode_test_suite);
++kunit_test_suites(&ext4_inode_test_suite);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+index db6a0fca09b4..ad889b539ab3 100644
+--- a/include/kunit/assert.h
++++ b/include/kunit/assert.h
+@@ -9,10 +9,11 @@
+ #ifndef _KUNIT_ASSERT_H
+ #define _KUNIT_ASSERT_H
+ 
+-#include <kunit/string-stream.h>
+ #include <linux/err.h>
++#include <linux/kernel.h>
+ 
+ struct kunit;
++struct string_stream;
+ 
+ /**
+  * enum kunit_assert_type - Type of expectation/assertion.
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index dba48304b3bd..2dfb550c6723 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -12,6 +12,7 @@
+ #include <kunit/assert.h>
+ #include <kunit/try-catch.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+@@ -197,31 +198,47 @@ void kunit_init_test(struct kunit *test, const char *name);
+ int kunit_run_tests(struct kunit_suite *suite);
+ 
+ /**
+- * kunit_test_suite() - used to register a &struct kunit_suite with KUnit.
++ * kunit_test_suites() - used to register one or more &struct kunit_suite
++ *			 with KUnit.
+  *
+- * @suite: a statically allocated &struct kunit_suite.
++ * @suites: a statically allocated list of &struct kunit_suite.
+  *
+- * Registers @suite with the test framework. See &struct kunit_suite for
++ * Registers @suites with the test framework. See &struct kunit_suite for
+  * more information.
+  *
+- * NOTE: Currently KUnit tests are all run as late_initcalls; this means
++ * When builtin,  KUnit tests are all run as late_initcalls; this means
+  * that they cannot test anything where tests must run at a different init
+  * phase. One significant restriction resulting from this is that KUnit
+  * cannot reliably test anything that is initialize in the late_init phase;
+  * another is that KUnit is useless to test things that need to be run in
+  * an earlier init phase.
+  *
++ * An alternative is to build the tests as a module.  Because modules
++ * do not support multiple late_initcall()s, we need to initialize an
++ * array of suites for a module.
++ *
+  * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+  * late_initcalls.  I have some future work planned to dispatch all KUnit
+  * tests from the same place, and at the very least to do so after
+  * everything else is definitely initialized.
+  */
+-#define kunit_test_suite(suite)						       \
+-	static int kunit_suite_init##suite(void)			       \
+-	{								       \
+-		return kunit_run_tests(&suite);				       \
+-	}								       \
+-	late_initcall(kunit_suite_init##suite)
++#define kunit_test_suites(...)						\
++	static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};	\
++	static int kunit_test_suites_init(void)				\
++	{								\
++		unsigned int i;						\
++		for (i = 0; suites[i] != NULL; i++)			\
++			kunit_run_tests(suites[i]);			\
++		return 0;						\
++	}								\
++	late_initcall(kunit_test_suites_init);				\
++	static void __exit kunit_test_suites_exit(void)			\
++	{								\
++		return;							\
++	}								\
++	module_exit(kunit_test_suites_exit)
++
++#define kunit_test_suite(suite)	kunit_test_suites(&suite)
+ 
+ /*
+  * Like kunit_alloc_resource() below, but returns the struct kunit_resource
+diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
+index 404f336cbdc8..c507dd43119d 100644
+--- a/include/kunit/try-catch.h
++++ b/include/kunit/try-catch.h
+@@ -53,11 +53,6 @@ struct kunit_try_catch {
+ 	void *context;
+ };
+ 
+-void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+-			  struct kunit *test,
+-			  kunit_try_catch_func_t try,
+-			  kunit_try_catch_func_t catch);
+-
+ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context);
+ 
+ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch);
+@@ -67,9 +62,4 @@ static inline int kunit_try_catch_get_result(struct kunit_try_catch *try_catch)
+ 	return try_catch->try_result;
+ }
+ 
+-/*
+- * Exposed for testing only.
+- */
+-void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch);
+-
+ #endif /* _KUNIT_TRY_CATCH_H */
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 2a63241a8453..ccb78509f1a8 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -389,4 +389,6 @@ static struct kunit_suite sysctl_test_suite = {
+ 	.test_cases = sysctl_test_cases,
+ };
+ 
+-kunit_test_suite(sysctl_test_suite);
++kunit_test_suites(&sysctl_test_suite);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5ffe144c9794..4ef415fff308 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2025,7 +2025,7 @@ config TEST_SYSCTL
+ 	  If unsure, say N.
+ 
+ config SYSCTL_KUNIT_TEST
+-	bool "KUnit test for sysctl"
++	tristate "KUnit test for sysctl"
+ 	depends on KUNIT
+ 	help
+ 	  This builds the proc sysctl unit test, which runs on boot.
+@@ -2036,7 +2036,7 @@ config SYSCTL_KUNIT_TEST
+ 	  If unsure, say N.
+ 
+ config LIST_KUNIT_TEST
+-	bool "KUnit Test for Kernel Linked-list structures"
++	tristate "KUnit Test for Kernel Linked-list structures"
+ 	depends on KUNIT
+ 	help
+ 	  This builds the linked list KUnit test suite.
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index af37016bfdd4..065aa16f448b 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -3,7 +3,7 @@
+ #
+ 
+ menuconfig KUNIT
+-	bool "KUnit - Enable support for unit tests"
++	tristate "KUnit - Enable support for unit tests"
+ 	help
+ 	  Enables support for kernel unit tests (KUnit), a lightweight unit
+ 	  testing and mocking framework for the Linux kernel. These tests are
+@@ -15,7 +15,7 @@ menuconfig KUNIT
+ if KUNIT
+ 
+ config KUNIT_TEST
+-	bool "KUnit test for KUnit"
++	tristate "KUnit test for KUnit"
+ 	help
+ 	  Enables the unit tests for the KUnit test framework. These tests test
+ 	  the KUnit test framework itself; the tests are both written using
+@@ -24,7 +24,7 @@ config KUNIT_TEST
+ 	  expected.
+ 
+ config KUNIT_EXAMPLE_TEST
+-	bool "Example test for KUnit"
++	tristate "Example test for KUnit"
+ 	help
+ 	  Enables an example unit test that illustrates some of the basic
+ 	  features of KUnit. This test only exists to help new users understand
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 769d9402b5d3..fab55649b69a 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -1,9 +1,15 @@
+-obj-$(CONFIG_KUNIT) +=			test.o \
++obj-$(CONFIG_KUNIT) +=			kunit.o
++
++kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+ 					try-catch.o
+ 
+-obj-$(CONFIG_KUNIT_TEST) +=		test-test.o \
+-					string-stream-test.o
++obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
++
++# string-stream-test compiles built-in only.
++ifeq ($(CONFIG_KUNIT_TEST),y)
++obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
++endif
+ 
+-obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
++obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-test.o
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4cf891..b24bebca052d 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/assert.h>
+ 
++#include "string-stream.h"
++
+ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+ {
+@@ -24,6 +26,7 @@ void kunit_base_assert_format(const struct kunit_assert *assert,
+ 	string_stream_add(stream, "%s FAILED at %s:%d\n",
+ 			 expect_or_assert, assert->file, assert->line);
+ }
++EXPORT_SYMBOL_GPL(kunit_base_assert_format);
+ 
+ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 			    struct string_stream *stream)
+@@ -31,6 +34,7 @@ void kunit_assert_print_msg(const struct kunit_assert *assert,
+ 	if (assert->message.fmt)
+ 		string_stream_add(stream, "\n%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_assert_print_msg);
+ 
+ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 			      struct string_stream *stream)
+@@ -38,6 +42,7 @@ void kunit_fail_assert_format(const struct kunit_assert *assert,
+ 	kunit_base_assert_format(assert, stream);
+ 	string_stream_add(stream, "%pV", &assert->message);
+ }
++EXPORT_SYMBOL_GPL(kunit_fail_assert_format);
+ 
+ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 			       struct string_stream *stream)
+@@ -56,6 +61,7 @@ void kunit_unary_assert_format(const struct kunit_assert *assert,
+ 				 unary_assert->condition);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_unary_assert_format);
+ 
+ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 				     struct string_stream *stream)
+@@ -76,6 +82,7 @@ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
+ 	}
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_ptr_not_err_assert_format);
+ 
+ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 				struct string_stream *stream)
+@@ -97,6 +104,7 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_assert_format);
+ 
+ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -118,6 +126,7 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_ptr_assert_format);
+ 
+ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+@@ -139,3 +148,4 @@ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
++EXPORT_SYMBOL_GPL(kunit_binary_str_assert_format);
+diff --git a/lib/kunit/example-test.c b/lib/kunit/kunit-example-test.c
+similarity index 97%
+rename from lib/kunit/example-test.c
+rename to lib/kunit/kunit-example-test.c
+index f64a829aa441..be1164ecc476 100644
+--- a/lib/kunit/example-test.c
++++ b/lib/kunit/kunit-example-test.c
+@@ -85,4 +85,6 @@ static struct kunit_suite example_test_suite = {
+  * This registers the above test suite telling KUnit that this is a suite of
+  * tests that need to be run.
+  */
+-kunit_test_suite(example_test_suite);
++kunit_test_suites(&example_test_suite);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/lib/kunit/test-test.c b/lib/kunit/kunit-test.c
+similarity index 98%
+rename from lib/kunit/test-test.c
+rename to lib/kunit/kunit-test.c
+index 5ebe059d16e2..ccb8d2e332f7 100644
+--- a/lib/kunit/test-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -7,6 +7,8 @@
+  */
+ #include <kunit/test.h>
+ 
++#include "try-catch-impl.h"
++
+ struct kunit_try_catch_test_context {
+ 	struct kunit_try_catch *try_catch;
+ 	bool function_called;
+@@ -100,7 +102,6 @@ static struct kunit_suite kunit_try_catch_test_suite = {
+ 	.init = kunit_try_catch_test_init,
+ 	.test_cases = kunit_try_catch_test_cases,
+ };
+-kunit_test_suite(kunit_try_catch_test_suite);
+ 
+ /*
+  * Context for testing test managed resources
+@@ -328,4 +329,6 @@ static struct kunit_suite kunit_resource_test_suite = {
+ 	.exit = kunit_resource_test_exit,
+ 	.test_cases = kunit_resource_test_cases,
+ };
+-kunit_test_suite(kunit_resource_test_suite);
++kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
+index 76cc05eb00ed..110f3a993250 100644
+--- a/lib/kunit/string-stream-test.c
++++ b/lib/kunit/string-stream-test.c
+@@ -6,10 +6,11 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ static void string_stream_test_empty_on_creation(struct kunit *test)
+ {
+ 	struct string_stream *stream = alloc_string_stream(test, GFP_KERNEL);
+@@ -49,4 +50,4 @@ static struct kunit_suite string_stream_test_suite = {
+ 	.name = "string-stream-test",
+ 	.test_cases = string_stream_test_cases
+ };
+-kunit_test_suite(string_stream_test_suite);
++kunit_test_suites(&string_stream_test_suite);
+diff --git a/lib/kunit/string-stream.c b/lib/kunit/string-stream.c
+index e6d17aacca30..350392013c14 100644
+--- a/lib/kunit/string-stream.c
++++ b/lib/kunit/string-stream.c
+@@ -6,11 +6,12 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
+ 
+-#include <kunit/string-stream.h>
+ #include <kunit/test.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ 
++#include "string-stream.h"
++
+ struct string_stream_fragment_alloc_context {
+ 	struct kunit *test;
+ 	int len;
+diff --git a/include/kunit/string-stream.h b/lib/kunit/string-stream.h
+similarity index 100%
+rename from include/kunit/string-stream.h
+rename to lib/kunit/string-stream.h
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa59cbd..9242f932896c 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -7,10 +7,12 @@
+  */
+ 
+ #include <kunit/test.h>
+-#include <kunit/try-catch.h>
+ #include <linux/kernel.h>
+ #include <linux/sched/debug.h>
+ 
++#include "string-stream.h"
++#include "try-catch-impl.h"
++
+ static void kunit_set_failure(struct kunit *test)
+ {
+ 	WRITE_ONCE(test->success, false);
+@@ -171,6 +173,7 @@ void kunit_do_assertion(struct kunit *test,
+ 	if (assert->type == KUNIT_ASSERTION)
+ 		kunit_abort(test);
+ }
++EXPORT_SYMBOL_GPL(kunit_do_assertion);
+ 
+ void kunit_init_test(struct kunit *test, const char *name)
+ {
+@@ -179,6 +182,7 @@ void kunit_init_test(struct kunit *test, const char *name)
+ 	test->name = name;
+ 	test->success = true;
+ }
++EXPORT_SYMBOL_GPL(kunit_init_test);
+ 
+ /*
+  * Initializes and runs test case. Does not clean up or do post validations.
+@@ -317,6 +321,7 @@ int kunit_run_tests(struct kunit_suite *suite)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_run_tests);
+ 
+ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 						    kunit_resource_init_t init,
+@@ -342,6 +347,7 @@ struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+ 
+ 	return res;
+ }
++EXPORT_SYMBOL_GPL(kunit_alloc_and_get_resource);
+ 
+ static void kunit_resource_free(struct kunit *test, struct kunit_resource *res)
+ {
+@@ -400,6 +406,7 @@ int kunit_resource_destroy(struct kunit *test,
+ 	kunit_resource_free(test, resource);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(kunit_resource_destroy);
+ 
+ struct kunit_kmalloc_params {
+ 	size_t size;
+@@ -435,6 +442,7 @@ void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
+ 				    gfp,
+ 				    &params);
+ }
++EXPORT_SYMBOL_GPL(kunit_kmalloc);
+ 
+ void kunit_kfree(struct kunit *test, const void *ptr)
+ {
+@@ -447,6 +455,7 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+ 
+ 	WARN_ON(rc);
+ }
++EXPORT_SYMBOL_GPL(kunit_kfree);
+ 
+ void kunit_cleanup(struct kunit *test)
+ {
+@@ -476,3 +485,17 @@ void kunit_cleanup(struct kunit *test)
+ 		kunit_resource_free(test, resource);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(kunit_cleanup);
++
++static int __init kunit_init(void)
++{
++	return 0;
++}
++late_initcall(kunit_init);
++
++static void __exit kunit_exit(void)
++{
++}
++module_exit(kunit_exit);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/lib/kunit/try-catch-impl.h b/lib/kunit/try-catch-impl.h
+new file mode 100644
+index 000000000000..203ba6a5e740
+--- /dev/null
++++ b/lib/kunit/try-catch-impl.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Internal kunit try catch implementation to be shared with tests.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#ifndef _KUNIT_TRY_CATCH_IMPL_H
++#define _KUNIT_TRY_CATCH_IMPL_H
++
++#include <kunit/try-catch.h>
++#include <linux/types.h>
++
++struct kunit;
++
++static inline void kunit_try_catch_init(struct kunit_try_catch *try_catch,
++					struct kunit *test,
++					kunit_try_catch_func_t try,
++					kunit_try_catch_func_t catch)
++{
++	try_catch->test = test;
++	try_catch->try = try;
++	try_catch->catch = catch;
++}
++
++#endif /* _KUNIT_TRY_CATCH_IMPL_H */
+diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
+index 55686839eb61..0dd434e40487 100644
+--- a/lib/kunit/try-catch.c
++++ b/lib/kunit/try-catch.c
+@@ -8,17 +8,18 @@
+  */
+ 
+ #include <kunit/test.h>
+-#include <kunit/try-catch.h>
+ #include <linux/completion.h>
+ #include <linux/kernel.h>
+ #include <linux/kthread.h>
+-#include <linux/sched/sysctl.h>
++
++#include "try-catch-impl.h"
+ 
+ void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
+ {
+ 	try_catch->try_result = -EFAULT;
+ 	complete_and_exit(try_catch->try_completion, -EFAULT);
+ }
++EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
+ 
+ static int kunit_generic_run_threadfn_adapter(void *data)
+ {
+@@ -31,8 +32,6 @@ static int kunit_generic_run_threadfn_adapter(void *data)
+ 
+ static unsigned long kunit_test_timeout(void)
+ {
+-	unsigned long timeout_msecs;
+-
+ 	/*
+ 	 * TODO(brendanhiggins@google.com): We should probably have some type of
+ 	 * variable timeout here. The only question is what that timeout value
+@@ -49,22 +48,11 @@ static unsigned long kunit_test_timeout(void)
+ 	 *
+ 	 * For more background on this topic, see:
+ 	 * https://mike-bland.com/2011/11/01/small-medium-large.html
++	 *
++	 * If tests timeout due to exceeding sysctl_hung_task_timeout_secs,
++	 * the task will be killed and an oops generated.
+ 	 */
+-	if (sysctl_hung_task_timeout_secs) {
+-		/*
+-		 * If sysctl_hung_task is active, just set the timeout to some
+-		 * value less than that.
+-		 *
+-		 * In regards to the above TODO, if we decide on variable
+-		 * timeouts, this logic will likely need to change.
+-		 */
+-		timeout_msecs = (sysctl_hung_task_timeout_secs - 1) *
+-				MSEC_PER_SEC;
+-	} else {
+-		timeout_msecs = 300 * MSEC_PER_SEC; /* 5 min */
+-	}
+-
+-	return timeout_msecs;
++	return 300 * MSEC_PER_SEC; /* 5 min */
+ }
+ 
+ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+@@ -106,13 +94,4 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
+ 
+ 	try_catch->catch(try_catch->context);
+ }
+-
+-void kunit_try_catch_init(struct kunit_try_catch *try_catch,
+-			  struct kunit *test,
+-			  kunit_try_catch_func_t try,
+-			  kunit_try_catch_func_t catch)
+-{
+-	try_catch->test = test;
+-	try_catch->try = try;
+-	try_catch->catch = catch;
+-}
++EXPORT_SYMBOL_GPL(kunit_try_catch_run);
+diff --git a/lib/list-test.c b/lib/list-test.c
+index 363c600491c3..76babb1df889 100644
+--- a/lib/list-test.c
++++ b/lib/list-test.c
+@@ -743,4 +743,6 @@ static struct kunit_suite list_test_module = {
+ 	.test_cases = list_test_cases,
+ };
+ 
+-kunit_test_suite(list_test_module);
++kunit_test_suites(&list_test_module);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
+index a422a349f926..0fe336860773 100644
+--- a/security/apparmor/Kconfig
++++ b/security/apparmor/Kconfig
+@@ -68,3 +68,19 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
+ 	  Set the default value of the apparmor.debug kernel parameter.
+ 	  When enabled, various debug messages will be logged to
+ 	  the kernel message buffer.
++
++config SECURITY_APPARMOR_KUNIT_TEST
++	bool "Build KUnit tests for policy_unpack.c"
++	depends on KUNIT=y && SECURITY_APPARMOR
++	help
++	  This builds the AppArmor KUnit tests.
++
++	  KUnit tests run during boot and output the results to the debug log
++	  in TAP format (http://testanything.org/). Only useful for kernel devs
++	  running KUnit test harness and are not for inclusion into a
++	  production build.
++
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
+diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
+index 80364310fb1e..2d743c004bc4 100644
+--- a/security/apparmor/policy_unpack.c
++++ b/security/apparmor/policy_unpack.c
+@@ -1228,3 +1228,7 @@ int aa_unpack(struct aa_loaddata *udata, struct list_head *lh,
+ 
+ 	return error;
+ }
++
++#ifdef CONFIG_SECURITY_APPARMOR_KUNIT_TEST
++#include "policy_unpack_test.c"
++#endif /* CONFIG_SECURITY_APPARMOR_KUNIT_TEST */
+diff --git a/security/apparmor/policy_unpack_test.c b/security/apparmor/policy_unpack_test.c
+new file mode 100644
+index 000000000000..533137f45361
+--- /dev/null
++++ b/security/apparmor/policy_unpack_test.c
+@@ -0,0 +1,607 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * KUnit tests for AppArmor's policy unpack.
++ */
++
++#include <kunit/test.h>
++
++#include "include/policy.h"
++#include "include/policy_unpack.h"
++
++#define TEST_STRING_NAME "TEST_STRING"
++#define TEST_STRING_DATA "testing"
++#define TEST_STRING_BUF_OFFSET \
++	(3 + strlen(TEST_STRING_NAME) + 1)
++
++#define TEST_U32_NAME "U32_TEST"
++#define TEST_U32_DATA ((u32)0x01020304)
++#define TEST_NAMED_U32_BUF_OFFSET \
++	(TEST_STRING_BUF_OFFSET + 3 + strlen(TEST_STRING_DATA) + 1)
++#define TEST_U32_BUF_OFFSET \
++	(TEST_NAMED_U32_BUF_OFFSET + 3 + strlen(TEST_U32_NAME) + 1)
++
++#define TEST_U16_OFFSET (TEST_U32_BUF_OFFSET + 3)
++#define TEST_U16_DATA ((u16)(TEST_U32_DATA >> 16))
++
++#define TEST_U64_NAME "U64_TEST"
++#define TEST_U64_DATA ((u64)0x0102030405060708)
++#define TEST_NAMED_U64_BUF_OFFSET (TEST_U32_BUF_OFFSET + sizeof(u32) + 1)
++#define TEST_U64_BUF_OFFSET \
++	(TEST_NAMED_U64_BUF_OFFSET + 3 + strlen(TEST_U64_NAME) + 1)
++
++#define TEST_BLOB_NAME "BLOB_TEST"
++#define TEST_BLOB_DATA "\xde\xad\x00\xbe\xef"
++#define TEST_BLOB_DATA_SIZE (ARRAY_SIZE(TEST_BLOB_DATA))
++#define TEST_NAMED_BLOB_BUF_OFFSET (TEST_U64_BUF_OFFSET + sizeof(u64) + 1)
++#define TEST_BLOB_BUF_OFFSET \
++	(TEST_NAMED_BLOB_BUF_OFFSET + 3 + strlen(TEST_BLOB_NAME) + 1)
++
++#define TEST_ARRAY_NAME "ARRAY_TEST"
++#define TEST_ARRAY_SIZE 16
++#define TEST_NAMED_ARRAY_BUF_OFFSET \
++	(TEST_BLOB_BUF_OFFSET + 5 + TEST_BLOB_DATA_SIZE)
++#define TEST_ARRAY_BUF_OFFSET \
++	(TEST_NAMED_ARRAY_BUF_OFFSET + 3 + strlen(TEST_ARRAY_NAME) + 1)
++
++struct policy_unpack_fixture {
++	struct aa_ext *e;
++	size_t e_size;
++};
++
++struct aa_ext *build_aa_ext_struct(struct policy_unpack_fixture *puf,
++				   struct kunit *test, size_t buf_size)
++{
++	char *buf;
++	struct aa_ext *e;
++
++	buf = kunit_kzalloc(test, buf_size, GFP_USER);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, buf);
++
++	e = kunit_kmalloc(test, sizeof(*e), GFP_USER);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, e);
++
++	e->start = buf;
++	e->end = e->start + buf_size;
++	e->pos = e->start;
++
++	*buf = AA_NAME;
++	*(buf + 1) = strlen(TEST_STRING_NAME) + 1;
++	strcpy(buf + 3, TEST_STRING_NAME);
++
++	buf = e->start + TEST_STRING_BUF_OFFSET;
++	*buf = AA_STRING;
++	*(buf + 1) = strlen(TEST_STRING_DATA) + 1;
++	strcpy(buf + 3, TEST_STRING_DATA);
++
++	buf = e->start + TEST_NAMED_U32_BUF_OFFSET;
++	*buf = AA_NAME;
++	*(buf + 1) = strlen(TEST_U32_NAME) + 1;
++	strcpy(buf + 3, TEST_U32_NAME);
++	*(buf + 3 + strlen(TEST_U32_NAME) + 1) = AA_U32;
++	*((u32 *)(buf + 3 + strlen(TEST_U32_NAME) + 2)) = TEST_U32_DATA;
++
++	buf = e->start + TEST_NAMED_U64_BUF_OFFSET;
++	*buf = AA_NAME;
++	*(buf + 1) = strlen(TEST_U64_NAME) + 1;
++	strcpy(buf + 3, TEST_U64_NAME);
++	*(buf + 3 + strlen(TEST_U64_NAME) + 1) = AA_U64;
++	*((u64 *)(buf + 3 + strlen(TEST_U64_NAME) + 2)) = TEST_U64_DATA;
++
++	buf = e->start + TEST_NAMED_BLOB_BUF_OFFSET;
++	*buf = AA_NAME;
++	*(buf + 1) = strlen(TEST_BLOB_NAME) + 1;
++	strcpy(buf + 3, TEST_BLOB_NAME);
++	*(buf + 3 + strlen(TEST_BLOB_NAME) + 1) = AA_BLOB;
++	*(buf + 3 + strlen(TEST_BLOB_NAME) + 2) = TEST_BLOB_DATA_SIZE;
++	memcpy(buf + 3 + strlen(TEST_BLOB_NAME) + 6,
++		TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE);
++
++	buf = e->start + TEST_NAMED_ARRAY_BUF_OFFSET;
++	*buf = AA_NAME;
++	*(buf + 1) = strlen(TEST_ARRAY_NAME) + 1;
++	strcpy(buf + 3, TEST_ARRAY_NAME);
++	*(buf + 3 + strlen(TEST_ARRAY_NAME) + 1) = AA_ARRAY;
++	*((u16 *)(buf + 3 + strlen(TEST_ARRAY_NAME) + 2)) = TEST_ARRAY_SIZE;
++
++	return e;
++}
++
++static int policy_unpack_test_init(struct kunit *test)
++{
++	size_t e_size = TEST_ARRAY_BUF_OFFSET + sizeof(u16) + 1;
++	struct policy_unpack_fixture *puf;
++
++	puf = kunit_kmalloc(test, sizeof(*puf), GFP_USER);
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, puf);
++
++	puf->e_size = e_size;
++	puf->e = build_aa_ext_struct(puf, test, e_size);
++
++	test->priv = puf;
++	return 0;
++}
++
++static void policy_unpack_test_inbounds_when_inbounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++
++	KUNIT_EXPECT_TRUE(test, inbounds(puf->e, 0));
++	KUNIT_EXPECT_TRUE(test, inbounds(puf->e, puf->e_size / 2));
++	KUNIT_EXPECT_TRUE(test, inbounds(puf->e, puf->e_size));
++}
++
++static void policy_unpack_test_inbounds_when_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++
++	KUNIT_EXPECT_FALSE(test, inbounds(puf->e, puf->e_size + 1));
++}
++
++static void policy_unpack_test_unpack_array_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	u16 array_size;
++
++	puf->e->pos += TEST_ARRAY_BUF_OFFSET;
++
++	array_size = unpack_array(puf->e, NULL);
++
++	KUNIT_EXPECT_EQ(test, array_size, (u16)TEST_ARRAY_SIZE);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++		puf->e->start + TEST_ARRAY_BUF_OFFSET + sizeof(u16) + 1);
++}
++
++static void policy_unpack_test_unpack_array_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_ARRAY_NAME;
++	u16 array_size;
++
++	puf->e->pos += TEST_NAMED_ARRAY_BUF_OFFSET;
++
++	array_size = unpack_array(puf->e, name);
++
++	KUNIT_EXPECT_EQ(test, array_size, (u16)TEST_ARRAY_SIZE);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++		puf->e->start + TEST_ARRAY_BUF_OFFSET + sizeof(u16) + 1);
++}
++
++static void policy_unpack_test_unpack_array_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_ARRAY_NAME;
++	u16 array_size;
++
++	puf->e->pos += TEST_NAMED_ARRAY_BUF_OFFSET;
++	puf->e->end = puf->e->start + TEST_ARRAY_BUF_OFFSET + sizeof(u16);
++
++	array_size = unpack_array(puf->e, name);
++
++	KUNIT_EXPECT_EQ(test, array_size, (u16)0);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++		puf->e->start + TEST_NAMED_ARRAY_BUF_OFFSET);
++}
++
++static void policy_unpack_test_unpack_blob_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *blob = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_BLOB_BUF_OFFSET;
++	size = unpack_blob(puf->e, &blob, NULL);
++
++	KUNIT_ASSERT_EQ(test, size, TEST_BLOB_DATA_SIZE);
++	KUNIT_EXPECT_TRUE(test,
++		memcmp(blob, TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE) == 0);
++}
++
++static void policy_unpack_test_unpack_blob_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *blob = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_NAMED_BLOB_BUF_OFFSET;
++	size = unpack_blob(puf->e, &blob, TEST_BLOB_NAME);
++
++	KUNIT_ASSERT_EQ(test, size, TEST_BLOB_DATA_SIZE);
++	KUNIT_EXPECT_TRUE(test,
++		memcmp(blob, TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE) == 0);
++}
++
++static void policy_unpack_test_unpack_blob_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *blob = NULL;
++	void *start;
++	int size;
++
++	puf->e->pos += TEST_NAMED_BLOB_BUF_OFFSET;
++	start = puf->e->pos;
++	puf->e->end = puf->e->start + TEST_BLOB_BUF_OFFSET
++		+ TEST_BLOB_DATA_SIZE - 1;
++
++	size = unpack_blob(puf->e, &blob, TEST_BLOB_NAME);
++
++	KUNIT_EXPECT_EQ(test, size, 0);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, start);
++}
++
++static void policy_unpack_test_unpack_str_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char *string = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_STRING_BUF_OFFSET;
++	size = unpack_str(puf->e, &string, NULL);
++
++	KUNIT_EXPECT_EQ(test, size, strlen(TEST_STRING_DATA) + 1);
++	KUNIT_EXPECT_STREQ(test, string, TEST_STRING_DATA);
++}
++
++static void policy_unpack_test_unpack_str_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char *string = NULL;
++	size_t size;
++
++	size = unpack_str(puf->e, &string, TEST_STRING_NAME);
++
++	KUNIT_EXPECT_EQ(test, size, strlen(TEST_STRING_DATA) + 1);
++	KUNIT_EXPECT_STREQ(test, string, TEST_STRING_DATA);
++}
++
++static void policy_unpack_test_unpack_str_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char *string = NULL;
++	void *start = puf->e->pos;
++	int size;
++
++	puf->e->end = puf->e->pos + TEST_STRING_BUF_OFFSET
++		+ strlen(TEST_STRING_DATA) - 1;
++
++	size = unpack_str(puf->e, &string, TEST_STRING_NAME);
++
++	KUNIT_EXPECT_EQ(test, size, 0);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, start);
++}
++
++static void policy_unpack_test_unpack_strdup_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *string = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_STRING_BUF_OFFSET;
++	size = unpack_strdup(puf->e, &string, NULL);
++
++	KUNIT_EXPECT_EQ(test, size, strlen(TEST_STRING_DATA) + 1);
++	KUNIT_EXPECT_FALSE(test,
++			   ((uintptr_t)puf->e->start <= (uintptr_t)string)
++			   && ((uintptr_t)string <= (uintptr_t)puf->e->end));
++	KUNIT_EXPECT_STREQ(test, string, TEST_STRING_DATA);
++}
++
++static void policy_unpack_test_unpack_strdup_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *string = NULL;
++	size_t size;
++
++	size = unpack_strdup(puf->e, &string, TEST_STRING_NAME);
++
++	KUNIT_EXPECT_EQ(test, size, strlen(TEST_STRING_DATA) + 1);
++	KUNIT_EXPECT_FALSE(test,
++			   ((uintptr_t)puf->e->start <= (uintptr_t)string)
++			   && ((uintptr_t)string <= (uintptr_t)puf->e->end));
++	KUNIT_EXPECT_STREQ(test, string, TEST_STRING_DATA);
++}
++
++static void policy_unpack_test_unpack_strdup_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	void *start = puf->e->pos;
++	char *string = NULL;
++	int size;
++
++	puf->e->end = puf->e->pos + TEST_STRING_BUF_OFFSET
++		+ strlen(TEST_STRING_DATA) - 1;
++
++	size = unpack_strdup(puf->e, &string, TEST_STRING_NAME);
++
++	KUNIT_EXPECT_EQ(test, size, 0);
++	KUNIT_EXPECT_PTR_EQ(test, string, (char *)NULL);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, start);
++}
++
++static void policy_unpack_test_unpack_nameX_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success;
++
++	puf->e->pos += TEST_U32_BUF_OFFSET;
++
++	success = unpack_nameX(puf->e, AA_U32, NULL);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			    puf->e->start + TEST_U32_BUF_OFFSET + 1);
++}
++
++static void policy_unpack_test_unpack_nameX_with_wrong_code(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success;
++
++	puf->e->pos += TEST_U32_BUF_OFFSET;
++
++	success = unpack_nameX(puf->e, AA_BLOB, NULL);
++
++	KUNIT_EXPECT_FALSE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			    puf->e->start + TEST_U32_BUF_OFFSET);
++}
++
++static void policy_unpack_test_unpack_nameX_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_U32_NAME;
++	bool success;
++
++	puf->e->pos += TEST_NAMED_U32_BUF_OFFSET;
++
++	success = unpack_nameX(puf->e, AA_U32, name);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			    puf->e->start + TEST_U32_BUF_OFFSET + 1);
++}
++
++static void policy_unpack_test_unpack_nameX_with_wrong_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	static const char name[] = "12345678";
++	bool success;
++
++	puf->e->pos += TEST_NAMED_U32_BUF_OFFSET;
++
++	success = unpack_nameX(puf->e, AA_U32, name);
++
++	KUNIT_EXPECT_FALSE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			    puf->e->start + TEST_NAMED_U32_BUF_OFFSET);
++}
++
++static void policy_unpack_test_unpack_u16_chunk_basic(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *chunk = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_U16_OFFSET;
++	/*
++	 * WARNING: For unit testing purposes, we're pushing puf->e->end past
++	 * the end of the allocated memory. Doing anything other than comparing
++	 * memory addresses is dangerous.
++	 */
++	puf->e->end += TEST_U16_DATA;
++
++	size = unpack_u16_chunk(puf->e, &chunk);
++
++	KUNIT_EXPECT_PTR_EQ(test, (void *)chunk,
++			    puf->e->start + TEST_U16_OFFSET + 2);
++	KUNIT_EXPECT_EQ(test, size, (size_t)TEST_U16_DATA);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, (void *)(chunk + TEST_U16_DATA));
++}
++
++static void policy_unpack_test_unpack_u16_chunk_out_of_bounds_1(
++		struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *chunk = NULL;
++	size_t size;
++
++	puf->e->pos = puf->e->end - 1;
++
++	size = unpack_u16_chunk(puf->e, &chunk);
++
++	KUNIT_EXPECT_EQ(test, size, (size_t)0);
++	KUNIT_EXPECT_PTR_EQ(test, chunk, (char *)NULL);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, puf->e->end - 1);
++}
++
++static void policy_unpack_test_unpack_u16_chunk_out_of_bounds_2(
++		struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	char *chunk = NULL;
++	size_t size;
++
++	puf->e->pos += TEST_U16_OFFSET;
++	/*
++	 * WARNING: For unit testing purposes, we're pushing puf->e->end past
++	 * the end of the allocated memory. Doing anything other than comparing
++	 * memory addresses is dangerous.
++	 */
++	puf->e->end = puf->e->pos + TEST_U16_DATA - 1;
++
++	size = unpack_u16_chunk(puf->e, &chunk);
++
++	KUNIT_EXPECT_EQ(test, size, (size_t)0);
++	KUNIT_EXPECT_PTR_EQ(test, chunk, (char *)NULL);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos, puf->e->start + TEST_U16_OFFSET);
++}
++
++static void policy_unpack_test_unpack_u32_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success;
++	u32 data;
++
++	puf->e->pos += TEST_U32_BUF_OFFSET;
++
++	success = unpack_u32(puf->e, &data, NULL);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_EQ(test, data, TEST_U32_DATA);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_U32_BUF_OFFSET + sizeof(u32) + 1);
++}
++
++static void policy_unpack_test_unpack_u32_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_U32_NAME;
++	bool success;
++	u32 data;
++
++	puf->e->pos += TEST_NAMED_U32_BUF_OFFSET;
++
++	success = unpack_u32(puf->e, &data, name);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_EQ(test, data, TEST_U32_DATA);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_U32_BUF_OFFSET + sizeof(u32) + 1);
++}
++
++static void policy_unpack_test_unpack_u32_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_U32_NAME;
++	bool success;
++	u32 data;
++
++	puf->e->pos += TEST_NAMED_U32_BUF_OFFSET;
++	puf->e->end = puf->e->start + TEST_U32_BUF_OFFSET + sizeof(u32);
++
++	success = unpack_u32(puf->e, &data, name);
++
++	KUNIT_EXPECT_FALSE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_NAMED_U32_BUF_OFFSET);
++}
++
++static void policy_unpack_test_unpack_u64_with_null_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success;
++	u64 data;
++
++	puf->e->pos += TEST_U64_BUF_OFFSET;
++
++	success = unpack_u64(puf->e, &data, NULL);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_EQ(test, data, TEST_U64_DATA);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_U64_BUF_OFFSET + sizeof(u64) + 1);
++}
++
++static void policy_unpack_test_unpack_u64_with_name(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_U64_NAME;
++	bool success;
++	u64 data;
++
++	puf->e->pos += TEST_NAMED_U64_BUF_OFFSET;
++
++	success = unpack_u64(puf->e, &data, name);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_EQ(test, data, TEST_U64_DATA);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_U64_BUF_OFFSET + sizeof(u64) + 1);
++}
++
++static void policy_unpack_test_unpack_u64_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	const char name[] = TEST_U64_NAME;
++	bool success;
++	u64 data;
++
++	puf->e->pos += TEST_NAMED_U64_BUF_OFFSET;
++	puf->e->end = puf->e->start + TEST_U64_BUF_OFFSET + sizeof(u64);
++
++	success = unpack_u64(puf->e, &data, name);
++
++	KUNIT_EXPECT_FALSE(test, success);
++	KUNIT_EXPECT_PTR_EQ(test, puf->e->pos,
++			puf->e->start + TEST_NAMED_U64_BUF_OFFSET);
++}
++
++static void policy_unpack_test_unpack_X_code_match(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success = unpack_X(puf->e, AA_NAME);
++
++	KUNIT_EXPECT_TRUE(test, success);
++	KUNIT_EXPECT_TRUE(test, puf->e->pos == puf->e->start + 1);
++}
++
++static void policy_unpack_test_unpack_X_code_mismatch(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success = unpack_X(puf->e, AA_STRING);
++
++	KUNIT_EXPECT_FALSE(test, success);
++	KUNIT_EXPECT_TRUE(test, puf->e->pos == puf->e->start);
++}
++
++static void policy_unpack_test_unpack_X_out_of_bounds(struct kunit *test)
++{
++	struct policy_unpack_fixture *puf = test->priv;
++	bool success;
++
++	puf->e->pos = puf->e->end;
++	success = unpack_X(puf->e, AA_NAME);
++
++	KUNIT_EXPECT_FALSE(test, success);
++}
++
++static struct kunit_case apparmor_policy_unpack_test_cases[] = {
++	KUNIT_CASE(policy_unpack_test_inbounds_when_inbounds),
++	KUNIT_CASE(policy_unpack_test_inbounds_when_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_array_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_array_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_array_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_blob_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_blob_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_blob_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_nameX_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_nameX_with_wrong_code),
++	KUNIT_CASE(policy_unpack_test_unpack_nameX_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_nameX_with_wrong_name),
++	KUNIT_CASE(policy_unpack_test_unpack_str_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_str_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_str_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_strdup_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_strdup_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_strdup_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_u16_chunk_basic),
++	KUNIT_CASE(policy_unpack_test_unpack_u16_chunk_out_of_bounds_1),
++	KUNIT_CASE(policy_unpack_test_unpack_u16_chunk_out_of_bounds_2),
++	KUNIT_CASE(policy_unpack_test_unpack_u32_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_u32_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_u32_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_u64_with_null_name),
++	KUNIT_CASE(policy_unpack_test_unpack_u64_with_name),
++	KUNIT_CASE(policy_unpack_test_unpack_u64_out_of_bounds),
++	KUNIT_CASE(policy_unpack_test_unpack_X_code_match),
++	KUNIT_CASE(policy_unpack_test_unpack_X_code_mismatch),
++	KUNIT_CASE(policy_unpack_test_unpack_X_out_of_bounds),
++	{},
++};
++
++static struct kunit_suite apparmor_policy_unpack_test_module = {
++	.name = "apparmor_policy_unpack",
++	.init = policy_unpack_test_init,
++	.test_cases = apparmor_policy_unpack_test_cases,
++};
++
++kunit_test_suite(apparmor_policy_unpack_test_module);
+
+--------------7408E280292BCD3F101B597F--
