@@ -2,112 +2,120 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DE2C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E20C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1910A20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ueJ6r87y"
+	by mail.kernel.org (Postfix) with ESMTP id C4D8E20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgA2QCO (ORCPT
+        id S1726880AbgA2QC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:02:14 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33199 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgA2QCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:02:13 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so9067226pgk.0;
-        Wed, 29 Jan 2020 08:02:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k8mHbmQQsrXwIuxRQsm7SslFnT6vNFl5PlAX5KpkYSQ=;
-        b=ueJ6r87yt1XMC7LlrQYQKxOSAAX09m036BtYkdjlMPVSTIc9L5e/GrpfSdgYh7yz5N
-         dHpTkWQFk445H92oj8dND7X+f8wPxXHtnCdMO8vXgpbBEfQR5QMXPI+sTRNDCWL6K5zJ
-         0dRGGepvfo0htl11QbrfHI72cNfdlqablwjouQsP34mO6kASH9MmI923RLjPDcQY/KtP
-         6KPayDh5Opilunyh8ZF5NLS9mBSH+Uc7Lg/7plRx94f+jZHgNYbY7cAwosX+qX3pR9Ii
-         z4YtQn+zVsq5eTaS87NXNR6U8DV6jAWfw7r6R4T74Gr8nc0WEAZwMGQJ6JTM7RjQQ/0F
-         V1aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k8mHbmQQsrXwIuxRQsm7SslFnT6vNFl5PlAX5KpkYSQ=;
-        b=PUJlKp2HM1ip50aSC/sUpdwbbmtVFHe24ovuxWMqsZOx554DhbfcAkcA6iPIr1TOhn
-         k12jrzNiSpSBHKOavaAoZz0oXN/TOsq1G80CcMDlo+tnPVipaRdZqtSxYFc2sFw4y+Jb
-         gLgakZe+ZVsxdbjrnrQe90NdkQb2zD5LNCl8vHVOmcVKGoF18Fv5CiWK1ByU32iXs+nI
-         vm89Ykn7WJNuIgPlI7dPgIgs85nNRaeC+SyNeG8hZs3c1eEioyb29GXn2/yaxcrp21ci
-         Q4mwQxyRFYR5i3cXfmsnzA3upAOGt5FVUaw+O3qTQL2qMFIKgtEqGxYTLLxtprqM8NZC
-         43nA==
-X-Gm-Message-State: APjAAAX+8yzS7oZiZTjFMAODw1a8UcFlRlAyteTt9Vls+mzxegdrowMs
-        1xnG/5LmC4OQ7IATPPaEfQ==
-X-Google-Smtp-Source: APXvYqzrD+7oSyDpZl9ImkaISh0MgIPrwKGmgL0z/k1vQvBM6d+UcE9172zZWN39NOmWegWjZopjRA==
-X-Received: by 2002:aa7:800e:: with SMTP id j14mr275989pfi.174.1580313733106;
-        Wed, 29 Jan 2020 08:02:13 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e7da:cc5e:c7d9:2a24:390])
-        by smtp.gmail.com with ESMTPSA id z30sm3274298pff.131.2020.01.29.08.02.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 08:02:12 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Wed, 29 Jan 2020 21:32:04 +0530
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     madhuparnabhowmik10@gmail.com, peterz@infradead.org,
-        mingo@kernel.org, christian.brauner@ubuntu.com, paulmck@kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
-Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
-Message-ID: <20200129160204.GA15449@madhuparna-HP-Notebook>
-References: <20200128172008.22665-1-madhuparnabhowmik10@gmail.com>
- <20200129123046.GA1726@redhat.com>
+        Wed, 29 Jan 2020 11:02:56 -0500
+Received: from mga14.intel.com ([192.55.52.115]:27432 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726564AbgA2QC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:02:56 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 08:02:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
+   d="scan'208";a="223084445"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 29 Jan 2020 08:02:52 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iwpnp-0004Lm-M0; Wed, 29 Jan 2020 18:02:53 +0200
+Date:   Wed, 29 Jan 2020 18:02:53 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        vipul kumar <vipulk0511@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+Message-ID: <20200129160253.GK32742@smile.fi.intel.com>
+References: <87ftg5131x.fsf@nanos.tec.linutronix.de>
+ <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
+ <87sgjz434v.fsf@nanos.tec.linutronix.de>
+ <20200129130350.GD32742@smile.fi.intel.com>
+ <0d361322-87aa-af48-492c-e8c4983bb35b@redhat.com>
+ <20200129141444.GE32742@smile.fi.intel.com>
+ <91cdda7a-4194-ebe7-225d-854447b0436e@redhat.com>
+ <87imku2t3w.fsf@nanos.tec.linutronix.de>
+ <20200129155353.GI32742@smile.fi.intel.com>
+ <20200129155910.GJ32742@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129123046.GA1726@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200129155910.GJ32742@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 01:30:47PM +0100, Oleg Nesterov wrote:
-> On 01/28, madhuparnabhowmik10@gmail.com wrote:
-> >
-> > kernel/exit.c:626:40: warning: incorrect type in assignment
+On Wed, Jan 29, 2020 at 05:59:10PM +0200, Andy Shevchenko wrote:
+> On Wed, Jan 29, 2020 at 05:53:53PM +0200, Andy Shevchenko wrote:
+> > On Wed, Jan 29, 2020 at 04:13:39PM +0100, Thomas Gleixner wrote:
+> > > Hans de Goede <hdegoede@redhat.com> writes:
+> > > > On 29-01-2020 15:14, Andy Shevchenko wrote:
+> > > >>> The only one which is possibly suspicious here is this line:
+> > > >>>
+> > > >>>   * 0111:   25 * 32 /  9  =  88.8889 MHz
+> > > >>>
+> > > >>> The SDM says 88.9 MHz for this one.
+> > > 
+> > > I trust math more than the SDM :)
+> > > 
+> > > >> Anyway it seems need to be fixed as well.
+> > > >> 
+> > > >> Btw, why we are mentioning 20 / 6 and 28 / 6 when arithmetically
+> > > >> it's the same as 10 / 3 and 14 / 3?
+> > > >
+> > > > I copied the BYT values from Thomas' email and I guess he did not
+> > > > get around to simplifying them, I'll use the simplified versions
+> > > > for my patch.
+> > > 
+> > > Too tired, too lazy :)
+> > > 
+> > > Andy, can you please make sure that people inside Intel who can look
+> > > into the secrit documentation confirm what we are aiming for?
+> > > 
+> > > Ideally they should provide the X-tal frequency and the mult/div pair
+> > > themself :)
 > > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > ---
-> >  kernel/exit.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/exit.c b/kernel/exit.c
-> > index bcbd59888e67..c5a9d6360440 100644
-> > --- a/kernel/exit.c
-> > +++ b/kernel/exit.c
-> > @@ -623,8 +623,8 @@ static void forget_original_parent(struct task_struct *father,
-> >  	reaper = find_new_reaper(father, reaper);
-> >  	list_for_each_entry(p, &father->children, sibling) {
-> >  		for_each_thread(p, t) {
-> > -			t->real_parent = reaper;
-> > -			BUG_ON((!t->ptrace) != (t->parent == father));
-> > +			rcu_assign_pointer(t->real_parent, reaper);
+> > So, I don't have access to the CPU core documentation (and may be will not be
+> > given), nevertheless I dug a bit to what I have for Cherrytrail. So, the XTAL
+> > is 19.2MHz, which becomes 100MHz and 1600MHz by some root PLL, then, the latter
+> > two frequencies are being used by another PLL to provide a reference clock (*)
+> > to PLL which derives CPU clock.
 > 
-> Another case when RCU_INIT_POINTER() makes more sense (although to me it
-> too looks confusing). We didn't modify the new parent.
->
-Alright, I will resend this patch with RCU_INIT_POINTER().
-
-Thank you,
-Madhuparna
-
-> Oleg.
+> > *) According to colleagues of mine it's a fixed rate source.
 > 
+> One more thing.
+> 
+> Depends on SKU it may be 400MHz, 320MHz, 200MHz or 333MHz.
+
+Aha, found better precision for the last one, 333.33MHz.
+
+> (I guess these values should be kinda references in the table)
+> 
+> > That's all what I have.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
