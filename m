@@ -2,183 +2,174 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402EBC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10542C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F4E2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53692071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y+dsbfs6"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VJ8O0yAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgA2LFD (ORCPT
+        id S1726256AbgA2LKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:05:03 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35038 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbgA2LFC (ORCPT
+        Wed, 29 Jan 2020 06:10:01 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:43334 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgA2LKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:05:02 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so19655813wro.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 03:05:01 -0800 (PST)
+        Wed, 29 Jan 2020 06:10:00 -0500
+Received: by mail-qv1-f68.google.com with SMTP id p2so7786206qvo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 03:09:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+fIcUDqhQmPrRtrPqAz9t4OlfA2GoWn8rh+wgYsdcfc=;
-        b=y+dsbfs6C55QowU2zPOwf06UYRyk9Mw4HjrkFM4WOURGqOTCpm6x3Vci3ETtCrezeg
-         BLoyCSvMAIg2PEkderYCJTuUxGgiVDDWVgMFXj4db1+ljHcZDKDOfzF0tFn3sSHONQoI
-         fxaV91N0aWjWlfQ0Cgst65rFjv9x1SZA1aAmZkRdjdlD160vU/V0Z/kQOjg6rM4zZ5UX
-         e58/H3Qv3M62XuYg3vmsQVuEDeC5pcOgzkivAZ0izF4ffLZzHu6U+Xs7+lcYSGg2REz9
-         kyfZQS3BT+ZKoqDVjXBDXI4NzmwZZpNc2GFO2xGy49o252ekkFvucQw5lhk5C8bGZfmL
-         mRjA==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Rdg0eRE4Rs/tOFVa1nKjmhUlRl2NKOMw55LDI32OSOc=;
+        b=VJ8O0yAWe2cXlzCT1mNhPcxqqFeCKhkmfpyAWfq4oYf0VFJ3BC4CHwckKloSIN0EXg
+         v5DJKr5FfAbivbt4bmiixvzRDbgAX4zdyDY3Z7zJENEidZcJ7qqrRNPRT7y2J7WlkuAW
+         ewW0RwL5VtfuLoAx485pn8lnifxaC15SKUc8607bIEelaurpzyi5k7hkoO7yxuV3yb4d
+         hRnFShBFGIfDCfAPvTiAO0yxsNG/bViMXer6WnGqfUy8ySyDKJC0Q4H5WpZ3O51VPBPp
+         7I+z1htSl8yn6YxMeGxxXZDeFn0jXFFJZ2cfPzD73Zg0RLbASOFkEZ8dO14ZZO1X4gAp
+         ELnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+fIcUDqhQmPrRtrPqAz9t4OlfA2GoWn8rh+wgYsdcfc=;
-        b=beifoXOK8QVZPVBlm/wxTgZzCqSP2/AaPvgbMWEVSQ1Y9sYQWo80XuNXHMVsvsK83r
-         SUTQcnrGT43B+gj7V3vVMhOK1UGlFIv3a/AGtwlchPI6HwKfY7T9NZbqbx0YJWsFMndT
-         GqZ6A8nhEvqw9aeWNQ2GvV+uWLTUW4Rn+9z/FdI6UYP7cKXIQkJe+RJVifWSJnS5MhJl
-         t6P/YgCdmy11MK7kThH+qe2311k5/h67oBd4QogL4xN98yOFZCGKaqZ7YR2k8lF4gDcw
-         SgZHXcqJ8usw1F9AHOLAxBxosUw3lH6PYVhUbND6BoJuDJ2QO5OEAmnvqWI79hV5+zh+
-         if3Q==
-X-Gm-Message-State: APjAAAU176ci2k8R9TTm0FtGioZSdMgSEz7MefLYutNlwHkeisuW2LrH
-        aHGkjV0No+cg2myEjfbB2KX0mQ==
-X-Google-Smtp-Source: APXvYqz6wNr4sKxPLcyrgvgB0KkumRcVckeqkH5+zfNWbI4PSi+PDLJA6DpxP1U8k2GZ00ct3bfQ/w==
-X-Received: by 2002:a5d:4b4e:: with SMTP id w14mr35647123wrs.187.1580295900663;
-        Wed, 29 Jan 2020 03:05:00 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e1e4:cd83:e1c2:8d16? ([2a01:e34:ed2f:f020:e1e4:cd83:e1c2:8d16])
-        by smtp.googlemail.com with ESMTPSA id w22sm1838512wmk.34.2020.01.29.03.04.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 03:05:00 -0800 (PST)
-Subject: Re: [PATCH v2 0/4] clocksource: Add ast2600 support to fttmr010
-To:     Joel Stanley <joel@jms.id.au>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-References: <20191107094218.13210-1-joel@jms.id.au>
- <CACPK8Xebf0p07QsHEXxbEB2pQ9_Fe7JhMjZLL7-9HDXBKdCaSQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <591fed79-c401-8531-945f-aaab4d546403@linaro.org>
-Date:   Wed, 29 Jan 2020 12:04:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CACPK8Xebf0p07QsHEXxbEB2pQ9_Fe7JhMjZLL7-9HDXBKdCaSQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Rdg0eRE4Rs/tOFVa1nKjmhUlRl2NKOMw55LDI32OSOc=;
+        b=fPJleOZ0GFtSIpgL0szV6wj1ovBw2VDLznu/8ze0vFyFDr3XJqMxtU5PxcZEWtPCI/
+         QTItbfVic6HtHpNcUODD+E3EGUzjFHnULKTVxpnU6u6hWqhHLYuSZI/haSSa1lvjurSU
+         +cl1zNYSLbnS1tT8iATb93PJzem34RM4V5FdM3+KpXLOlsibVOXWBek+7HpkWV7FnX+P
+         +3cZuS8bjFD8tqhViLDrNq94UjIkuiv5SZhw4JwxLlp4MgS3E7aXhE+JE856uNBx1cVs
+         wsO2Lzo3cVatK79fDxbZAWjmKakcAc5OndLQsDYZbXdFsOfWVBp1zPh1Ep9V/8BGRBzx
+         a0jQ==
+X-Gm-Message-State: APjAAAWpXXOiLQa32lNdN+ovmFOa+yEQgY6SyYgTJCkpkgf7sQ+pmzYY
+        qdKIVOYLUpxAUFSUDYV4J8PfZg==
+X-Google-Smtp-Source: APXvYqwSo4IdEjgBam29nZ7sdiS8q0FjVa1Z465Vm5JMHa3pbBcFWxe+wcLkVFwcg7WF0RMbdVCuCg==
+X-Received: by 2002:a0c:9d4f:: with SMTP id n15mr22120161qvf.194.1580296199181;
+        Wed, 29 Jan 2020 03:09:59 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v7sm882184qtk.89.2020.01.29.03.09.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 03:09:58 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200129103640.GA668562@arrakis.emea.arm.com>
+Date:   Wed, 29 Jan 2020 06:09:56 -0500
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        sparclinux@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <50B7EFFE-1FF0-4B16-84A1-D851052B18B4@lca.pw>
+References: <20200128174709.GK655507@arrakis.emea.arm.com>
+ <69091BA4-18C4-4425-A5E2-31FBE4654AF9@lca.pw>
+ <20200129103640.GA668562@arrakis.emea.arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/01/2020 11:30, Joel Stanley wrote:
-> Hi Daniel, Thomas, I noticed that this series never made it into the
-> timer tree. Are you able to pick it up?
-
-Oops, missed it.
-
-Incoming comments.
-
-> https://lore.kernel.org/lkml/20191107094218.13210-1-joel@jms.id.au/
-> 
-> Cheers,
-> 
-> Joel
-> 
-> On Thu, 7 Nov 2019 at 09:42, Joel Stanley <joel@jms.id.au> wrote:
->>
->> This series adds support for the AST2600 timer.
->>
->> v2 adds r-b tags from Rob, Linus and Cédric (who reviewed the patches on the
->> openbmc mailing list[1]). I made two small naming changes in this
->> version that were suggested in review.
->>
->> [1] https://patchwork.ozlabs.org/project/openbmc/list/?series=140990
->>
->> Joel Stanley (4):
->>   clocksource: fttmr010: Parametrise shutdown
->>   clocksource: fttmr010: Set interrupt and shutdown
->>   clocksource: fttmr010: Add support for ast2600
->>   dt-bindings: fttmr010: Add ast2600 compatible
->>
->>  .../bindings/timer/faraday,fttmr010.txt       |  1 +
->>  drivers/clocksource/timer-fttmr010.c          | 68 +++++++++++++++----
->>  2 files changed, 54 insertions(+), 15 deletions(-)
->>
->> --
->> 2.24.0.rc1
->>
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> On Jan 29, 2020, at 5:36 AM, Catalin Marinas <catalin.marinas@arm.com> =
+wrote:
+>=20
+> On Tue, Jan 28, 2020 at 02:07:10PM -0500, Qian Cai wrote:
+>> On Jan 28, 2020, at 12:47 PM, Catalin Marinas =
+<catalin.marinas@arm.com> wrote:
+>>> The primary goal here is not finding regressions but having clearly
+>>> defined semantics of the page table accessors across architectures. =
+x86
+>>> and arm64 are a good starting point and other architectures will be
+>>> enabled as they are aligned to the same semantics.
+>>=20
+>> This still does not answer the fundamental question. If this test is
+>> simply inefficient to find bugs,
+>=20
+> Who said this is inefficient (other than you)?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Inefficient of finding bugs. It said only found a bug or two in its =
+lifetime?
+
+>=20
+>> who wants to spend time to use it regularly?=20
+>=20
+> Arch maintainers, mm maintainers introducing new macros or assuming
+> certain new semantics of the existing macros.
+>=20
+>> If this is just one off test that may get running once in a few years
+>> (when introducing a new arch), how does it justify the ongoing cost =
+to
+>> maintain it?
+>=20
+> You are really missing the point. It's not only for a new arch but
+> changes to existing arch code. And if the arch code churn in this area
+> is relatively small, I'd expect a similarly small cost of maintaining
+> this test.
+>=20
+> If you only turn DEBUG_VM on once every few years, don't generalise =
+this
+> to the rest of the kernel developers (as others pointed out, this test
+> is default y if DEBUG_VM).
+
+Quite the opposite, I am running DEBUG_VM almost daily for regression
+workload while I felt strongly this thing does not add any value mixing =
+there.
+
+So, I would suggest to decouple this away from DEBUG_VM, and clearly
+document that this test is not something intended for automated =
+regression
+workloads, so those people don=E2=80=99t need to waste time running =
+this.
+
+>=20
+> Anyway, I think that's a pointless discussion, so not going to reply
+> further (unless you have technical content to add).
+>=20
+> --=20
+> Catalin
 
