@@ -2,146 +2,193 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54904C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EE4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A91820716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608FA20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 09:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h90n3iun"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UA/YEOSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgA2J1d (ORCPT
+        id S1726145AbgA2J3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 04:27:33 -0500
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:37968 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgA2J1d (ORCPT
+        Wed, 29 Jan 2020 04:29:02 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53650 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726010AbgA2J3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 04:27:33 -0500
-Received: by mail-wm1-f43.google.com with SMTP id a9so5597275wmj.3;
-        Wed, 29 Jan 2020 01:27:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oZo/V+gV36C6pLlSdL5oMb9o324Cuj0Yjq9W/IVgMQA=;
-        b=h90n3iunMCL1A9Xcv8WhCfTlfB+2T8q6qVgPETdqrdO42CGLgYv0J2sCLSAfrV85S2
-         hsGfua5uw1rxZ8XoCpT1zHQtJPsM2eqBbqKFJUnPvNlVSNIFf97mo2Fy4YoyNbrPX2Vo
-         bfe616dtJxHFH2vERzeJdnDmnWBKozytqFfwZ0cjh8RHR9e3jY6LiuWFq2jIDEoYQ+XK
-         zkbLNtSNJTV5GFtPjKNhgMI7gIlKfMnSpzz3LFEy4ZPZPBVTbG8QMAtwqL81q8OvT1Up
-         lUVgxbJUdkWBJoZXNtvoZaek/XNfiekKktF6/agZJS+snTKSoin+qVEX/VZCyTBBD8oq
-         oMmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oZo/V+gV36C6pLlSdL5oMb9o324Cuj0Yjq9W/IVgMQA=;
-        b=Hd/iESYMctT1kAlh4dhlTJTrNDINZnbKwAMDPYPxXWGBYDVihQ4A2DZfh3mrP22oqa
-         TnSwBdYMCn3hyXREBdRyso9qA09KXCn5qrbyh3n2f6WnTY9nugRxI1a7Bl6a5eo0bCkz
-         M2PfLm9WTqWocEppIptI6+IOSiCuFNiMg1+v3iqKoDBerTWfWrTiGvBcH5UlQgoYqNsn
-         O/797ih1iu0UZxAPIBJYAAc9gQ+LEWfeSHSI8Ir0SwxP22QYHwVy3r3iUDSfFjRmNeWk
-         1R9UmFID+SNWQJt3n3vjr4mVx4JbfnqigfrA1BJPcBChWkPvQFjMpy4hR1cP6ROvNl7n
-         SPKw==
-X-Gm-Message-State: APjAAAVXD5GgWOi9epygIW/s/L8aOxeL+nj94+GMMBGOQC/UYOsBEBgy
-        gjiCddeN6MMLD8IpmDMnAH0=
-X-Google-Smtp-Source: APXvYqyVtA/WKM8S71ZyV2OT6fbZIlWQNU42S2bVFlhrVDp19ETZw+RMJGq5yBbncaNzuNiN/qyHVQ==
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr11041027wma.177.1580290050708;
-        Wed, 29 Jan 2020 01:27:30 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id z3sm2054801wrs.94.2020.01.29.01.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 01:27:29 -0800 (PST)
-Date:   Wed, 29 Jan 2020 10:27:28 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V3 12/18] usb: gadget: tegra-xudc: support multiple
- device modes
-Message-ID: <20200129092728.GB2479935@ulmo>
-References: <1577704195-2535-1-git-send-email-nkristam@nvidia.com>
- <1577704195-2535-13-git-send-email-nkristam@nvidia.com>
- <20200128181020.GJ2293590@ulmo>
- <7478f53a-c236-5442-8abb-7531edb89b29@nvidia.com>
+        Wed, 29 Jan 2020 04:29:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580290140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=xoyJbUggr9qSgwDMJrtg9UVlD4Nl29wrH7Xnp/GsN0M=;
+        b=UA/YEOSw7fuL3NTxDLnLOJ8sNFfmponh9Gus0YPI7PgDIaadTm11OfSo/jPT8eAyrZmE6X
+        rI+JBkbok+vmcalQUMdFkA4z7eQjgFA+eIEn/3/1krWCwIXoYlhaE4HoE5QpTo+2S7IV6f
+        exCwA3T3k2SGZn8Gb4Q9eNkw/t4avOo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-KLqxqbvPPfqGSzomTUvJYQ-1; Wed, 29 Jan 2020 04:28:57 -0500
+X-MC-Unique: KLqxqbvPPfqGSzomTUvJYQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28D07800D41;
+        Wed, 29 Jan 2020 09:28:56 +0000 (UTC)
+Received: from [10.36.118.36] (unknown [10.36.118.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D0580894;
+        Wed, 29 Jan 2020 09:28:53 +0000 (UTC)
+Subject: Re: [Patch v2 2/4] mm/migrate.c: wrap do_move_pages_to_node() and
+ store_status()
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-3-richardw.yang@linux.intel.com>
+ <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
+ <20200129003812.GC12835@richard>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <68d4f7fb-2f37-2b11-dd0f-2e059415daf2@redhat.com>
+Date:   Wed, 29 Jan 2020 10:28:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
-Content-Disposition: inline
-In-Reply-To: <7478f53a-c236-5442-8abb-7531edb89b29@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200129003812.GC12835@richard>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 29, 2020 at 12:20:09PM +0530, Nagarjuna Kristam wrote:
+On 29.01.20 01:38, Wei Yang wrote:
+> On Tue, Jan 28, 2020 at 11:14:55AM +0100, David Hildenbrand wrote:
+>> On 22.01.20 02:16, Wei Yang wrote:
+>>> Usually do_move_pages_to_node() and store_status() is a pair. There a=
+re
+>>> three places call this pair of functions with almost the same form.
+>>
+>> I'd suggest
+>>
+>> "
+>> Usually, do_move_pages_to_node() and store_status() are used in
+>> combination. We have three similar call sites.
+>>
+>> Let's provide a wrapper for both function calls -
+>> move_pages_and_store_status - to make the calling code easier to
+>> maintain and fix (as noted by Yang Shi, the return value handling of
+>> do_move_pages_to_node() has a flaw).
+>> "
 >=20
+> Looks good.
 >=20
-> On 28-01-2020 23:40, Thierry Reding wrote:
-> > >   	struct tegra_xudc_save_regs saved_regs;
-> > >   	bool suspended;
-> > >   	bool powergated;
-> > > -	struct usb_phy *usbphy;
-> > > +	struct usb_phy **usbphy;
-> > > +	int current_phy_index;
-> > Can be unsigned int. It's also very long. It might be better to choose a
-> > shorter name so that when you use it, the lines don't get excessively
-> > long. Alternatively you could keep this field name and instead declare
-> > local variables to reference the current PHY to make lines shorter.
-> >=20
-> > Actually, looking at this a bit more, I don't see current_phy_index ever
-> > used by itself (other than the assignment and one check to see if a PHY
-> > has been selected). So why not just store a pointer to the current PHY
-> > and avoid all the dereferencing?
-> >=20
-> > Thierry
+>>
+>>>
+>>> This patch just wrap it to make it friendly to audience and also
+>>> consolidate the move and store action into one place. Also mentioned =
+by
+>>> Yang Shi, the handling of do_move_pages_to_node()'s return value is n=
+ot
+>>> proper. Now we can fix it in one place.
+>>>
+>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>> ---
+>>>  mm/migrate.c | 30 +++++++++++++++++++-----------
+>>>  1 file changed, 19 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/mm/migrate.c b/mm/migrate.c
+>>> index 4c2a21856717..a4d3bd6475e1 100644
+>>> --- a/mm/migrate.c
+>>> +++ b/mm/migrate.c
+>>> @@ -1583,6 +1583,19 @@ static int add_page_for_migration(struct mm_st=
+ruct *mm, unsigned long addr,
+>>>  	return err;
+>>>  }
+>>> =20
+>>> +static int move_pages_and_store_status(struct mm_struct *mm, int nod=
+e,
+>>> +		struct list_head *pagelist, int __user *status,
+>>> +		int start, int nr)
+>>
+>> nit: indentation
+>>
 >=20
-> current_phy_index main purpose is to quickly get which index for USB 2 an=
-d 3
-> phy's to be used. This is used at mulitple functions. Based on your comme=
-nt
-> above, I believe its good to use 2 pointers for UTMI and USB 3 phy's, whi=
-ch
-> are points to current phy index. This ensures to keep line length as less=
- as
-> possible.
+> You mean indent like this?
+>=20
+> static int move_pages_and_store_status(struct mm_struct *mm, int node,
+> 				       struct list_head *pagelist,
+> 				       int __user *status,
+>=20
+> This would be along list and I am afraid this is not the only valid cod=
+e
+> style?
 
-Yes, I think in general it's preferable to use the objects directly
-rather than an index into an array to find the objects.
+Yes, that's what I meant. Documentation/process/coding-style.rst doesn't
+mention any specific way, but this is the most commonly used one.
 
-Thierry
+Indentation in this file mostly sticks to something like this as well,
+but yeah, it's often a mess and not consistent.
 
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
+That's why I note it whenever I see it, to make it eventually more
+consistent (and only make it a nit) :)
 
------BEGIN PGP SIGNATURE-----
+--=20
+Thanks,
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4xUAAACgkQ3SOs138+
-s6Hu5g/8C6/Ok0YQVG4K+SUpBeDRFOEhJdFXvbx8GY1l2VGOb2zwbXpyBvoBIlg5
-208voSlRwDaYhJAeIYL8czDUJlPuxe24896v5zmuxBNDauiMzTMJF8wkrjFupf3w
-TobSBAJTsPPhdTxxz2AmOPVUi4AVn9oyymZG1KEQrzxFdoktA3SPm6lqrGh5CxoO
-c3nTfgPGqqiZrhP5xxquYqdVrod0x0KDyrtYwyt9AO+5291H2JxyFb9e9sJvQ4Tx
-qesj5dLAfet2CfgZUYn7bwtDmo8bMEFvKOO6Qh2T+mZpFuK05hPvSSbT2JZTTGmK
-VCXSmauItknL/WUjwUS2ugEMCccGiyzAD3XMX7DhWF+du3iXdeQAyEaL98YLMbXH
-mWEMjNMx8fMWX9Z9nsRfaIEP22ZGsfxPt1IcNWlGI+D0r4VY7EX9rKqSAEmLfCIZ
-RZXv2oqah0T2DJNed0wjStwXDo03uzoFS0NwGkUyf5/erFZSykXkSRMySj1QJvCT
-YG5Eyo92i+XB3ibLCVW0wdK0Fkx2XzbutPtGW2MIA4R3agSi8AWl9axdOlPyQIOu
-wFHUB5bSQr/2h3CdnMfh5DQ6auZUTAmSSr+bY5oi7Zmkezkm17Jp6PxbBv0e1Q//
-gaaDwV1HF2pyFyMlqkYBsyLyTGz0r2xjp7+M+iRd5WYeOB6SdF0=
-=QD3x
------END PGP SIGNATURE-----
+David / dhildenb
 
---6sX45UoQRIJXqkqR--
