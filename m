@@ -6,115 +6,173 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D560C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB17DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF27A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6463207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgA2N0b (ORCPT
+        id S1726645AbgA2N1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:26:31 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53592 "EHLO mx2.suse.de"
+        Wed, 29 Jan 2020 08:27:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54060 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgA2N0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:26:30 -0500
+        id S1726140AbgA2N1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:27:23 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E459DAC46;
-        Wed, 29 Jan 2020 13:26:28 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 14:26:18 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/asm changes for v5.6
-Message-ID: <20200129132618.GA30979@zn.tnic>
-References: <20200128165906.GA67781@gmail.com>
- <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
- <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+        by mx2.suse.de (Postfix) with ESMTP id 9439EAC46;
+        Wed, 29 Jan 2020 13:27:20 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 14:27:19 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] clone3: allow spawning processes into cgroups
+Message-ID: <20200129132719.GD11384@blackbody.suse.cz>
+References: <20200121154844.411-1-christian.brauner@ubuntu.com>
+ <20200121154844.411-6-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+In-Reply-To: <20200121154844.411-6-christian.brauner@ubuntu.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:06:53PM -0800, Linus Torvalds wrote:
-> On Tue, Jan 28, 2020 at 11:51 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> >         ALTERNATIVE_2 \
-> >                 "cmp  $680, %rdx ; jb 3f ; cmpb %dil, %sil; je 4f", \
-> >                 "movq %rdx, %rcx ; rep movsb; retq", X86_FEATURE_FSRM, \
-> >                 "cmp $0x20, %rdx; jb 1f; movq %rdx, %rcx; rep movsb; retq", X86_FEATURE_ERMS
-> 
-> Note the UNTESTED part.
-> 
-> In particular, I didn't check what the priority for the alternatives
-> is. Since FSRM being set always implies ERMS being set too, it may be
-> that the ERMS case is always picked with the above code.
-> 
-> So maybe the FSRM and ERMS lines need to be switched around, and
-> somebody should add a comment to the ALTERNATIVE_2 macro about the
-> priority rules for feature1 vs feature2 when both are set..
-> 
-> IOW, testing most definitely required for that patch suggestion of mine..
+Hello.
 
-So what is there now before your patch is this (I've forced both
-X86_FEATURE_FSRM and X86_FEATURE_ERMS on a BDW guest).
+On Tue, Jan 21, 2020 at 04:48:43PM +0100, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> +static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
+> +	__acquires(&cgroup_mutex) __acquires(&cgroup_threadgroup_rwsem)
+> +{
+> +	int ret;
+> +	struct cgroup *dst_cgrp = NULL;
+> +	struct css_set *cset;
+> +	struct super_block *sb;
+> +	struct file *f;
+> +
+> +	if (kargs->flags & CLONE_INTO_CGROUP)
+> +		mutex_lock(&cgroup_mutex);
+> +
+> +	cgroup_threadgroup_change_begin(current);
+> +
+> +	spin_lock_irq(&css_set_lock);
+> +	cset = task_css_set(current);
+> +	get_css_set(cset);
+> +	spin_unlock_irq(&css_set_lock);
+> +
+> +	if (!(kargs->flags & CLONE_INTO_CGROUP)) {
+> +		kargs->cset = cset;
+Where is this css_set put when CLONE_INTO_CGROUP isn't used?
+(Aha, it's passed to child's tsk->cgroups but see my other note below.)
 
-[    4.238160] apply_alternatives: feat: 18*32+4, old: (__memmove+0x17/0x1a0 (ffffffff817d90d7) len: 10), repl: (ffffffff8251dbbb, len: 0), pad: 0
-[    4.239503] ffffffff817d90d7: old_insn: 48 83 fa 20 0f 82 f5 00 00 00
+> +	dst_cgrp = cgroup_get_from_file(f);
+> +	if (IS_ERR(dst_cgrp)) {
+> +		ret = PTR_ERR(dst_cgrp);
+> +		dst_cgrp = NULL;
+> +		goto err;
+> +	}
+> +
+> +	/*
+> +	 * Verify that we the target cgroup is writable for us. This is
+> +	 * usually done by the vfs layer but since we're not going through
+> +	 * the vfs layer here we need to do it "manually".
+> +	 */
+> +	ret = cgroup_may_write(dst_cgrp, sb);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = cgroup_attach_permissions(cset->dfl_cgrp, dst_cgrp, sb,
+> +					!!(kargs->flags & CLONE_THREAD));
+> +	if (ret)
+> +		goto err;
+> +
+> +	kargs->cset = find_css_set(cset, dst_cgrp);
+> +	if (!kargs->cset) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	if (cgroup_is_dead(dst_cgrp)) {
+> +		ret = -ENODEV;
+> +		goto err;
+> +	}
+I'd move this check right after cgroup_get_from_file. The fork-migration
+path is synchrinized via cgroup_mutex with cgroup_destroy_locked and
+there's no need checking permissions on cgroup that's going away anyway.
 
-That's what in vmlinux:
 
-ffffffff817d90d7:       48 83 fa 20             cmp $0x20,%rdx
-ffffffff817d90db:       0f 82 f5 00 00 00       jb ffffffff817d91d6
+> +static void cgroup_css_set_put_fork(struct kernel_clone_args *kargs)
+> +	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+> +{
+> +	cgroup_threadgroup_change_end(current);
+> +
+> +	if (kargs->flags & CLONE_INTO_CGROUP) {
+> +		struct cgroup *cgrp = kargs->cgrp;
+> +		struct css_set *cset = kargs->cset;
+> +
+> +		mutex_unlock(&cgroup_mutex);
+> +
+> +		if (cset) {
+> +			put_css_set(cset);
+> +			kargs->cset = NULL;
+> +		}
+> +
+> +		if (cgrp) {
+> +			cgroup_put(cgrp);
+> +			kargs->cgrp = NULL;
+> +		}
+> +	}
+I don't see any function problem with this ordering, however, I'd
+prefer symmetry with the "allocation" path (in cgroup_css_set_fork),
+i.e. cgroup_put, put_css_set and lastly mutex_unlock.
 
-which is 10 bytes.
+> +void cgroup_post_fork(struct task_struct *child,
+> +		      struct kernel_clone_args *kargs)
+> +	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+>  {
+>  	struct cgroup_subsys *ss;
+> -	struct css_set *cset;
+> +	struct css_set *cset = kargs->cset;
+>  	int i;
+>  
+>  	spin_lock_irq(&css_set_lock);
+>  
+>  	WARN_ON_ONCE(!list_empty(&child->cg_list));
+> -	cset = task_css_set(current); /* current is @child's parent */
+> -	get_css_set(cset);
+>  	cset->nr_tasks++;
+>  	css_set_move_task(child, NULL, cset, false);
+So, the reference is passed over from kargs->cset to task->cgroups. I
+think it's necessary to zero kargs->cset in order to prevent droping the 
+reference in cgroup_css_set_put_fork.
+Perhaps, a general comment about css_set whereabouts during fork and
+kargs passing would be useful.
 
-It gets replaced to:
+> @@ -6016,6 +6146,17 @@ void cgroup_post_fork(struct task_struct *child)
+>  	} while_each_subsys_mask();
+>  
+>  	cgroup_threadgroup_change_end(current);
+> +
+> +	if (kargs->flags & CLONE_INTO_CGROUP) {
+> +		mutex_unlock(&cgroup_mutex);
+> +
+> +		cgroup_put(kargs->cgrp);
+> +		kargs->cgrp = NULL;
+> +	}
+> +
+> +	/* Make the new cset the root_cset of the new cgroup namespace. */
+> +	if (kargs->flags & CLONE_NEWCGROUP)
+> +		child->nsproxy->cgroup_ns->root_cset = cset;
+root_cset reference (from copy_cgroup_ns) seems leaked here and where is
+the additional reference to new cset obtained?
 
-[    4.240194] ffffffff817d90d7: final_insn: 0f 1f 84 00 00 00 00 00 66 90
-
-ffffffff817d90d7:       0f 1f 84 00 00 00 00    nopl 0x0(%rax,%rax,1)
-ffffffff817d90de:       00
-ffffffff817d90df:       66 90                   xchg %ax,%ax
-
-I.e., NOPed out.
-
-ERMS replaces the bytes *after* these 10 bytes, note the VA:
-
-0xffffffff817d90d7 + 0xa = 0xffffffff817d90e1
-
-[    4.240917] apply_alternatives: feat: 9*32+9, old: (__memmove+0x21/0x1a0 (ffffffff817d90e1) len: 6), repl: (ffffffff8251dbbb, len: 6), pad: 6
-[    4.242209] ffffffff817d90e1: old_insn: 90 90 90 90 90 90
-[    4.242823] ffffffff8251dbbb: rpl_insn: 48 89 d1 f3 a4 c3
-[    4.243503] ffffffff817d90e1: final_insn: 48 89 d1 f3 a4 c3
-
-which turns into
-
-ffffffff817d90e1:       48 89 d1                mov %rdx,%rcx
-ffffffff817d90e4:       f3 a4                   rep movsb %ds:(%rsi),%es:(%rdi)
-ffffffff817d90e6:       c3                      retq
-
-as expected.
-
-And yes, your idea makes sense to use ALTERNATIVE_2 but as it is, it
-triple-faults my guest. I'll debug it more later to find out why, when I
-get a chance.
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+Thanks,
+Michal
