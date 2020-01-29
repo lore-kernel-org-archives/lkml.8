@@ -2,71 +2,104 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C001C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0606C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA3C2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928CC20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgA2VKG (ORCPT
+        id S1727479AbgA2VKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:10:06 -0500
-Received: from mga03.intel.com ([134.134.136.65]:46432 "EHLO mga03.intel.com"
+        Wed, 29 Jan 2020 16:10:08 -0500
+Received: from sauhun.de ([88.99.104.3]:41756 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbgA2VKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727133AbgA2VKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 16:10:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 13:10:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="429805093"
-Received: from cmossx-mobl1.amr.corp.intel.com ([10.251.7.89])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Jan 2020 13:10:04 -0800
-Date:   Wed, 29 Jan 2020 13:10:04 -0800 (PST)
-From:   Mat Martineau <mathew.j.martineau@linux.intel.com>
-X-X-Sender: mjmartin@cmossx-mobl1.amr.corp.intel.com
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mptcp: Fix incorrect IPV6 dependency check
-In-Reply-To: <20200129180117.545-1-geert@linux-m68k.org>
-Message-ID: <alpine.OSX.2.21.2001291308450.9282@cmossx-mobl1.amr.corp.intel.com>
-References: <20200129180117.545-1-geert@linux-m68k.org>
-User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
+Received: from localhost (p5486CF2C.dip0.t-ipconnect.de [84.134.207.44])
+        by pokefinder.org (Postfix) with ESMTPSA id A24962C06AB;
+        Wed, 29 Jan 2020 22:10:03 +0100 (CET)
+Date:   Wed, 29 Jan 2020 22:10:03 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.de>, Peter Rosin <peda@axentia.se>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/28] docs: i2c: rework I2C documentation, part I
+Message-ID: <20200129211003.GF7586@ninjato>
+References: <20200129151953.31582-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="L2Brqb15TUChFOBK"
+Content-Disposition: inline
+In-Reply-To: <20200129151953.31582-1-luca@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020, Geert Uytterhoeven wrote:
 
-> If CONFIG_MPTCP=y, CONFIG_MPTCP_IPV6=n, and CONFIG_IPV6=m:
->
->    net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
->    protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
->
-> Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
-> is done in all other places in the mptcp code.
->
-> Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
+--L2Brqb15TUChFOBK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+On Wed, Jan 29, 2020 at 04:19:25PM +0100, Luca Ceresoli wrote:
+>=20
+> Hi,
+>=20
+> this series is a list of improvements to the I2C documentation.
+>=20
+> It started as a simple reordering of index.rst from alphabetical order to=
+ a
+> logical order. Then it grew to a mixture of various improvements to each
+> section and some cross-section changes.
+>=20
+> I wanted to rework all the sections in a unique series, but after covering
+> about one third of them the number of patches has already grown pretty lo=
+ng
+> so I'm sending it in its current state. I will continue to cover the rest
+> of the sections later.
+>=20
+> Each patch is quite self-standing, and most are trivial, so have a good
+> reading.
+>=20
+> v2 and v3 incorporate many improvements suggested by Jean Delvare and Pet=
+er
+> Rosin. A special thank you to Jean for his very patient and appreciated
+> review work of _all_ of the 26 patches. Thanks to his work the patches are
+> now 28. :) Patches 27 and 28 are the new ones.
+
+I really want this in 5.6, so I applied them all to for-next. Other
+fixes or improvements should be sent on top of this.
+
+Thank you a *lot*, Luca! And Jean and Peter for the review.
+
+Awesome work!
 
 
---
-Mat Martineau
-Intel
+--L2Brqb15TUChFOBK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4x9KsACgkQFA3kzBSg
+KbYbnBAAhprpV7wAA9NqSfMDHHmaqpyaZtwPybgDpYM0XTNRM8CgMudFEsAyC9lX
+MshwajeHlFUWCMKyKnPQynC2AhHxqPWK0H1G6iHz/TZthHeF96lBRT5WPlxE9KHP
+rb2H0/EmQUOOO9Ok00270FOrkz8QIDOvRVnYjKH28++gcX0DqKT2dzSoYHrMPRyY
+H/57UIKpu/qjZqHzGC8H7vnU2R+1zXL+yQ+XT2fXbaSP1z0SByVRGEv2to/zaT4G
+5G9sm/bPeznRGtKfAyreovusw0emENLBPuMQXkJPWyAaeyTGwUO1yydDyQLVpaH4
+N8Y27ZuVof/AujEcrRnn/OW0B9vBJP4FPblxsWFR+iTbl/vMPOyyTUW4xlamZyaP
+lqbRPyTAkdHtshKxcj+NUwe5yPWAh8QuPWJWuMyr/8L+vgclqU57I0LpRNhOKvqQ
+L7xIL+/MKZkmwvINb/m/7nTlvAtrep9jG3gVk4cgtQoy9LHpvdEzubwI+jazioIX
+z5M+vsGWk11UVbiuAp/3hnAzaV4Td7WXSQIquJRP+wdDP9mxM0kyi0i6l9ILjo8W
+Fm+ihydY0Ad2w5+Tpv3rIeqHzUhf8kxTTQrIbMBj6St+70/606WnVYceO6LxUM/X
+coyyaEX5t22GQ0cB2Jm+ALqyF4eWh2xqtUMqkT6/NjWXW+N3DoE=
+=1moL
+-----END PGP SIGNATURE-----
+
+--L2Brqb15TUChFOBK--
