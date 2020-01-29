@@ -2,103 +2,92 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60988C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D90C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B14206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9CB206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blg8gwsa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJvnUVt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgA2Ok4 (ORCPT
+        id S1726591AbgA2Omq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:40:56 -0500
-Received: from mail-pl1-f169.google.com ([209.85.214.169]:39168 "EHLO
-        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgA2Ok4 (ORCPT
+        Wed, 29 Jan 2020 09:42:46 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:41654 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgA2Omq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:40:56 -0500
-Received: by mail-pl1-f169.google.com with SMTP id g6so17683plp.6;
-        Wed, 29 Jan 2020 06:40:55 -0800 (PST)
+        Wed, 29 Jan 2020 09:42:46 -0500
+Received: by mail-yw1-f65.google.com with SMTP id l22so8475655ywc.8;
+        Wed, 29 Jan 2020 06:42:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JvoTSG0VTvs6pJMcpuNeyCO599C87Lk3Oo9v+qxULZI=;
-        b=blg8gwsapzbY2PNjCATaR8gACZe4IAbMvIOPlaVwZBVD+KK+/DRYL5ZRX7kF54mC3a
-         0fudadBagP03wxrtq0bOFzOmazsOj80LePzcicX65cKWQewU1WqfC8hPl4JQgHYn3ZFD
-         lilBxSeLwnsbY/Kn8KQCZEBRzd6zG7K72A9B8nknpGeAwGG3BMr5pr6n0yDJnxJ8K8yd
-         H560zsGnT5Hlh2YKsErc2ue0CV6BbGg5XmqwQ/ZH8wmJ3D4mXX/q0gyEm9bt+ytH++rV
-         zji6ig7TkU6ron1fTOW4QSekxzr9iRzpuV0JGz9IdJ08IJQk8gKk0SzDJi4GCNz4Z11l
-         4v0Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6aMcXGpBcnwaHLGsgGBHtnVysmTOI48xZtfxRV3mRrc=;
+        b=RJvnUVt2ixBbIcI/CU7pVru8iplyQlCITUdKsH3JB54ZQAsPTSJEcYlz2OOc/SOFGh
+         5o7aux1a6AgFIavq0KhB4h35pd8JLaLO5ZpIKu0jiU5k1G+LO/Y9hd8z2GlPM+62um2n
+         hY1hNX9DjCiRpPMuG/3cy8B+pMdtsc1QuKXcFELHpxbo+wakp1Gzo1xJUQP6AExjnKo0
+         E5Xt9PhObdeg3ipWvXsXCFIRKZqAHM0t2nwH6/lXjz5ibnkHqT3vXZGh7tt9EC5wcI+g
+         eHHKNvbwt/YMvAd5cD543+h881D6PckLrr5YDhu3ETJQ19rcra81EZ6rEgkk5hsHTQ1o
+         TT3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JvoTSG0VTvs6pJMcpuNeyCO599C87Lk3Oo9v+qxULZI=;
-        b=sFptDzZh3clS4WnfB8AwVtAHt3WSy7A2Aa7gue2b2qkM04T9RCwb+/abqLaehOWUCL
-         c/GJcrlIYN9ipBLI+9dApPCwYQGzk4WmBLemWb1G2rM7IzgwMb43t/BLNoyzmMsSDq+Y
-         mNdq6rPBVS4WkFK2MbMpFMcB1lmM7eo88CvJsB/ZIVwlXvj/87Djd0DswazRG0CaUWIx
-         mviHtSc3bQILOoyAIOGUBAOKlvi0e+nbBmAzvbK3+WMKyj8xf22eVjviqqavBsHkwFqW
-         oaEuMS0Cl+8po4i2WDlGmJTwHYYOrrPsxkThzLzc1L0hEGyFD9OEr5IysWIGSteGug/e
-         jqFw==
-X-Gm-Message-State: APjAAAUM3V2wcAaXRJaNX840MTlPdmT34LocllZEj5HtxUahOyQdboHL
-        gyX7HO+iJdFGE3lvGFsDcmQ=
-X-Google-Smtp-Source: APXvYqxYEyfC9oqU0Z47wPGTFSxtroHT+AOWj1ahbryAH1H5ZIJWeQqJn6nq9evPrLs8x+gGJZ38mA==
-X-Received: by 2002:a17:90a:a416:: with SMTP id y22mr11586404pjp.114.1580308855223;
-        Wed, 29 Jan 2020 06:40:55 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id x10sm3134798pfi.180.2020.01.29.06.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 06:40:54 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Wed, 29 Jan 2020 23:40:52 +0900
-To:     anon anon <742991625abc@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Petr Mladek <pmladek@suse.com>, wangkefeng.wang@huawei.com,
-        syzkaller@googlegroups.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
-Message-ID: <20200129143754.GA15445@jagdpanzerIV.localdomain>
-References: <CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com>
- <CGME20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454@eucas1p1.samsung.com>
- <20200128124912.chttagasucdpydhk@pathway.suse.cz>
- <4ab69855-6112-52f4-bee2-3358664d0c20@samsung.com>
- <20200129141517.GA13721@jagdpanzerIV.localdomain>
- <20200129141759.GB13721@jagdpanzerIV.localdomain>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6aMcXGpBcnwaHLGsgGBHtnVysmTOI48xZtfxRV3mRrc=;
+        b=CkNIadV05oFRpNqq4dgiRtnhEP51wDrw9xACuPvE6RK5frnCa7bySqRABxq6iFw7lF
+         +069lMwlXqBnyfODHj9kJRFtJiaC68jN/+wBwCJ3ZxXP5PafaGmzkQlweNS/WC9nkOGM
+         FjehaQdKGflPzLwIWcaA41z4kWWuqGURYFX89auuoflGyrwwfOGJRa2t16oEVL1IFn3w
+         oNTQERyEVRnNVvhKzd16HDLGYhSmCPAOwHF+88bnFnoNLEFs3E4QtcQjeais0AHR6+wO
+         fL12Ox+MqRIUGZcTyx+4aXe94s+SfSBjU7duWWqIYu5Q+zOifGi+TEbjRU2iyOeazmCo
+         L86w==
+X-Gm-Message-State: APjAAAUnHvs60akppcepamha/s4MI8Ew1BfpQmT72tV2BH9QWoYh++Ns
+        AZh91u/TxXoxP8Aug6H2jXet+eki
+X-Google-Smtp-Source: APXvYqyCzLblsgdAWAmz9RSckMMEbZPBRQFhRiLkeQI/TCmeIfwItcMnCeQsxlOH+P1BEap5t4YtAQ==
+X-Received: by 2002:a0d:d602:: with SMTP id y2mr19182887ywd.441.1580308965353;
+        Wed, 29 Jan 2020 06:42:45 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j184sm1036124ywa.39.2020.01.29.06.42.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jan 2020 06:42:44 -0800 (PST)
+Date:   Wed, 29 Jan 2020 06:42:40 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/46] 4.14.169-stable review
+Message-ID: <20200129144240.GA23179@roeck-us.net>
+References: <20200128135749.822297911@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129141759.GB13721@jagdpanzerIV.localdomain>
+In-Reply-To: <20200128135749.822297911@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc-ing Dmitry and Tetsuo
-
-Original Message-id: CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com
-
-On (20/01/29 23:17), Sergey Senozhatsky wrote:
-> > Hmm. There is something strange about it. I use vga console quite
-> > often, and scrolling happens all the time, yet I can't get the same
-> > out-of-bounds report (nor have I ever seen it in the past), even with
-> > the reproducer. Is it supposed to be executed as it is, or are there
-> > any preconditions? Any chance that something that runs prior to that
-> > reproducer somehow impacts the system? Just asking.
+On Tue, Jan 28, 2020 at 02:57:34PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.169 release.
+> There are 46 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> These questions were addressed to anon anon (742991625abc@gmail.com),
-> not to Bartlomiej.
+> Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
+> Anything received after that time might be too late.
+> 
 
-Could this be GCC_PLUGIN related?
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 374 pass: 374 fail: 0
 
-	-ss
+Guenter
