@@ -2,115 +2,83 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6472BC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E58C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386CF20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580299926;
-	bh=zniqdCZxaIJn3f/xGVHfAtC3ydz67Kil2D8QuNxdBn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tPOq9jh7rpKM9HPZRZWPXjToTyfgERbjbugYPnCXIO89SKO+J1DD3qabRU5phJZfS
-	 fTlIydx3ANNReUaB5maoSIzDVps4RkKeRhOVfSUb8MmjeWdESypzMSLwt7CIm0anPt
-	 Rt7sBMdeYAcTZvldK9KDiXcPePWH+EDhUKi7gZ/c=
+	by mail.kernel.org (Postfix) with ESMTP id 8ABE92071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgA2MMF (ORCPT
+        id S1726694AbgA2MNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:12:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53778 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 07:13:33 -0500
+Received: from mga18.intel.com ([134.134.136.126]:21973 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgA2MLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:11:54 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74DF520716;
-        Wed, 29 Jan 2020 12:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580299914;
-        bh=zniqdCZxaIJn3f/xGVHfAtC3ydz67Kil2D8QuNxdBn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lDkcL9hdZPJzN/cfFXh6NdRjVCewejSuzjbp8fmzj7BjJjBWktcL4dv9A8v7qXdnH
-         nZSfs7DPwfatIEuvORGPc6XOpsc5JwcMTjDmiDFzwT081PbeLH26gPK8prOSz7xGO+
-         mOEPB+zBwMnqnYoSwvqo/nPWAbTsB/RsRvSvXUlU=
-Date:   Wed, 29 Jan 2020 12:11:50 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] m68k,mm: Use table allocator for pgtables
-Message-ID: <20200129121149.GA31582@willie-the-truck>
-References: <20200129103941.304769381@infradead.org>
- <20200129104345.434705552@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129104345.434705552@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726322AbgA2MNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:13:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 04:13:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,377,1574150400"; 
+   d="scan'208";a="222434773"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 29 Jan 2020 04:13:32 -0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, eric.auger@redhat.com
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        joro@8bytes.org, ashok.raj@intel.com, yi.l.liu@intel.com,
+        jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe.brucker@arm.com, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC v1 1/2] vfio/pci: Expose PCIe PASID capability to guest
+Date:   Wed, 29 Jan 2020 04:18:44 -0800
+Message-Id: <1580300325-86259-2-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580300325-86259-1-git-send-email-yi.l.liu@intel.com>
+References: <1580300325-86259-1-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:39:44AM +0100, Peter Zijlstra wrote:
-> With the new page-table layout, using full (4k) pages for (256 byte)
-> pte-tables is immensely wastefull. Move the pte-tables over to the
-> same allocator already used for the (512 byte) higher level tables
-> (pgd/pmd).
-> 
-> This reduces the pte-table waste from 15x to 2x.
-> 
-> Due to no longer being bound to 16 consecutive tables, this might
-> actually already be more efficient than the old code for sparse
-> tables.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/m68k/include/asm/motorola_pgalloc.h |   54 ++++++-------------------------
->  arch/m68k/include/asm/motorola_pgtable.h |    8 ++++
->  arch/m68k/include/asm/page.h             |    2 -
->  3 files changed, 19 insertions(+), 45 deletions(-)
-> 
-> --- a/arch/m68k/include/asm/motorola_pgalloc.h
-> +++ b/arch/m68k/include/asm/motorola_pgalloc.h
-> @@ -10,60 +10,28 @@ extern int free_pointer_table(pmd_t *);
->  
->  static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
->  {
-> -	pte_t *pte;
-> -
-> -	pte = (pte_t *)__get_free_page(GFP_KERNEL|__GFP_ZERO);
-> -	if (pte) {
-> -		__flush_page_to_ram(pte);
-> -		flush_tlb_kernel_page(pte);
-> -		nocache_page(pte);
-> -	}
-> -
-> -	return pte;
-> +	return (pte_t *)get_pointer_table();
+From: Liu Yi L <yi.l.liu@intel.com>
 
-Weirdly, get_pointer_table() seems to elide the __flush_page_to_ram()
-call, so you're missing that for ptes with this change. I think it's
-probably needed for the higher levels too (and kernel_page_table()
-does it for example) so I'd be inclined to add it unconditionally
-rather than predicate it on the allocation type introduced by your later
-patch.
+This patch exposes PCIe PASID capability to guest. Existing vfio_pci
+driver hides it from guest by setting the capability length as 0 in
+pci_ext_cap_length[].
 
-> --- a/arch/m68k/include/asm/page.h
-> +++ b/arch/m68k/include/asm/page.h
-> @@ -30,7 +30,7 @@ typedef struct { unsigned long pmd; } pm
->  typedef struct { unsigned long pte; } pte_t;
->  typedef struct { unsigned long pgd; } pgd_t;
->  typedef struct { unsigned long pgprot; } pgprot_t;
-> -typedef struct page *pgtable_t;
-> +typedef pte_t *pgtable_t;
+This capability is required for vSVA enabling on pass-through PCIe
+devices.
 
-Urgh, this is a big (cross-arch) mess that we should fix later.
+Cc: Kevin Tian <kevin.tian@intel.com>
+CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+---
+ drivers/vfio/pci/vfio_pci_config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Will
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 90c0b80..4b9af99 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -95,7 +95,7 @@ static const u16 pci_ext_cap_length[PCI_EXT_CAP_ID_MAX + 1] = {
+ 	[PCI_EXT_CAP_ID_LTR]	=	PCI_EXT_CAP_LTR_SIZEOF,
+ 	[PCI_EXT_CAP_ID_SECPCI]	=	0,	/* not yet */
+ 	[PCI_EXT_CAP_ID_PMUX]	=	0,	/* not yet */
+-	[PCI_EXT_CAP_ID_PASID]	=	0,	/* not yet */
++	[PCI_EXT_CAP_ID_PASID]	=	PCI_EXT_CAP_PASID_SIZEOF,
+ };
+ 
+ /*
+-- 
+2.7.4
+
