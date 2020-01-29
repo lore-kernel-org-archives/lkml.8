@@ -2,134 +2,105 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75223C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43171C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456902071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138E920716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4D4bOJE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYTVgM1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgA2KJL (ORCPT
+        id S1726206AbgA2KLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:09:11 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40171 "EHLO
+        Wed, 29 Jan 2020 05:11:10 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50586 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgA2KJL (ORCPT
+        with ESMTP id S1726010AbgA2KLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:09:11 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so5723000wmi.5;
-        Wed, 29 Jan 2020 02:09:09 -0800 (PST)
+        Wed, 29 Jan 2020 05:11:10 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so5556260wmb.0;
+        Wed, 29 Jan 2020 02:11:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IEeMQyZwb5ZvQMBGHiT4bz2uBrE8NmlMrE2gpaLRCN4=;
-        b=M4D4bOJEGj/lY2QG4vLhQrOK5ynkd1BVBNx5/Yo6BPCWrPFZdfLYakeq9NGrvYaPL/
-         4J5qqxeXzjzeYSaqISQqEhUfXc8GV003fn11JNjLF/TdTi37ZUr2jKnNuS/rUvWwI4gX
-         U4jJB7wQbbr30AtxgjkRBTNYMjHHpUR1DGjAOpG4ImUhYOZw+DON/b+4yKCd9/brVemu
-         cQZ2QjQ7nYtudMmswe7BQubJw/lce6/ioGL9j7L1BfRFQeZ76XVA9lfHaSFff5Celerp
-         OGFBS6UKzWlxsIzVh9DgRwAwiOKxiSD8m3Ta4nwDTQrp14yM3lnstuEu4kOxKfKa8k5G
-         hSKg==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/s2Pvc4rtIYnq/pOc+rMYu1hL0CKlGk2c1b/QVFIVn4=;
+        b=GYTVgM1vQnXVg0+jEtvE7gtklxDswWkLuuwHNMr6z3BQV0ttepBWhjqNmwRquO5brZ
+         wPtWlFREh5Vc0JH+3O1M3X2lHstBuW+77J1ZUWxlm+q8sLhYwS58BrlsHDx2eJITqjhg
+         Cf+TN+vVVqFHtl9ln+OpWWuyyO8YshPjfzFI5ekBvNvVtbx/NjpcEqtJnJycINaT/0TT
+         MtodmhdefRK6RPGA3csepwhJESJw+uiurIz2lPWIRqdwkm7BwNMQUQtRrLhVbhSk0yfp
+         JeR/q1pgY0S1YMqfbnKa7JTON9S0MyeoeKbFArB+S4LQkcuXR30dYLTyjfl8/Kqn7INv
+         U2nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IEeMQyZwb5ZvQMBGHiT4bz2uBrE8NmlMrE2gpaLRCN4=;
-        b=HIllKRjLYrhwQvj8BUOSCGaGdCyitHk2DYdeII5s8YonkFZbc7zrPQL00u8EAnIcfG
-         CNGVdMAWaSt3eac9A71uQnxYgMkHZg4eNxseHPzesxmicptubcof0kTnHI4a0H2rgzz9
-         dPW/O2zEnUfL4mNjvo1nGrdmfUjaVheeLnb/iEWXzgAaUvbAYtxrWKFx2B6nzYiRkcHb
-         TnQlF0y9iVcj9/rJJMFTEg20mCYOgV6vxv2WIGv74fxmYZwikP0LvLlKrn53cWkHUS4B
-         19i8Kk+1Wvv9bqZDeV6yZmVbEMVfFZmOjvlfK/2J9iYYax3a2msTTTEo8dXLxorf5FeW
-         5Kyg==
-X-Gm-Message-State: APjAAAXw0iXwI3Wanl60ol6hDJX3wI44TTK7MvGvwDcRQ5MSDxVwCiLb
-        w/yuYijvDbt/ykEquefsBhY=
-X-Google-Smtp-Source: APXvYqw6MtscnzT15RPRdJwQsyNe74nuDh0G95/Tvs0e4b7dGMx4mT3OjYitft5CRAPw8u4gTumfqw==
-X-Received: by 2002:a7b:c416:: with SMTP id k22mr11104279wmi.25.1580292548529;
-        Wed, 29 Jan 2020 02:09:08 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id b137sm1821674wme.26.2020.01.29.02.09.06
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/s2Pvc4rtIYnq/pOc+rMYu1hL0CKlGk2c1b/QVFIVn4=;
+        b=Ddvo/WBjPHeVKsfStrsan7kkKaWfY4tO8O+LRI0BVZlt7Nx9sBN/oyfdAZxrYWj8pm
+         IPFbqq8Tn2QPXugEevT2V3l5d3oci2Zbiji3u/H6lJ/rCeg6qpd5JF91vEJ/rTuugLZI
+         QsdhCgfgHrx9au8zP1PZ7nTvaUIUmm/cloLwDl0ZCSbRSTVvRv2oAiFk6ACVWEoOOhl4
+         ta6gLAfwXZFQ4iF1IBGJYNRSReepb1s74SO27mGLTjjP00dEBNF7BXJ4CcQOACRADYfO
+         /71z/0mJ+rGoxTNUU9thpkseu/4DuvSE2+RBXJIu4wCTwvECe/2dev+qWIZW8X9AS8AB
+         JngA==
+X-Gm-Message-State: APjAAAUnzIQcNc8/Gafy7kvxk/zssBjcN9RLcUybokqb9qGdssi8quyO
+        YiqSktudkgT63gyQk7QP/LY=
+X-Google-Smtp-Source: APXvYqzIno68ySw/HwWTZAocIeDIM+K/daqEQzdiw7u+TzLm3AvoUindlXWfE5FZ8QiUQkImcz0dCQ==
+X-Received: by 2002:a05:600c:217:: with SMTP id 23mr3252001wmi.124.1580292667970;
+        Wed, 29 Jan 2020 02:11:07 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id q14sm2182354wrj.81.2020.01.29.02.11.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 02:09:07 -0800 (PST)
-Date:   Wed, 29 Jan 2020 11:09:06 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Helen Koike <helen.koike@collabora.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, hverkuil@xs4all.nl, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input driver
- for Tegra210
-Message-ID: <20200129100906.GE2479935@ulmo>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <3cdea635-a9ca-7b9c-3c99-8f489f4d669a@collabora.com>
- <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
+        Wed, 29 Jan 2020 02:11:07 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io-wq: use put instead of revert creds
+Date:   Wed, 29 Jan 2020 13:10:23 +0300
+Message-Id: <c79bab7a6bd174f32121c9508390264bff9950ca.1580292613.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
-Content-Disposition: inline
-In-Reply-To: <162488d0-4e74-963a-3366-e4c1f7cf04ca@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no need to publish creds twice in io_wq_switch_creds() (in
+revert_creds() and override_creds()). Just do override_creds() and
+put_creds() if needed.
 
---BZaMRJmqxGScZ8Mx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io-wq.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-On Tue, Jan 28, 2020 at 02:13:17PM -0800, Sowjanya Komatineni wrote:
-> On 1/28/20 1:45 PM, Helen Koike wrote:
-[...]
-> > On 1/28/20 4:23 PM, Sowjanya Komatineni wrote:
-[...]
-> > > +const struct tegra_csi_fops csi2_fops = {
-> > > +     .hw_init = csi2_hw_init,
-> > > +     .csi_start_streaming = csi2_start_streaming,
-> > > +     .csi_err_status = csi2_error_status,
-> > > +};
-> > If I saw correctly, you don't have other instances of struct tegra_csi_fops with different functions.
-> > So why not exposing the functions directly instead of creating a global variable?
-> Currently driver supports Tegra210 only. Later we will add for Tegra186 and
-> Tegra184 support too where we will have separate csi fops.
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 8fbbadf04cc3..f7eb577ccd2d 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -425,11 +425,13 @@ static void io_wq_switch_mm(struct io_worker *worker, struct io_wq_work *work)
+ static void io_wq_switch_creds(struct io_worker *worker,
+ 			       struct io_wq_work *work)
+ {
+-	if (worker->saved_creds)
+-		revert_creds(worker->saved_creds);
++	const struct cred *old_creds = override_creds(work->creds);
+ 
+-	worker->saved_creds = override_creds(work->creds);
+ 	worker->cur_creds = work->creds;
++	if (worker->saved_creds)
++		put_cred(old_creds); /* creds set by previous switch */
++	else
++		worker->saved_creds = old_creds;
+ }
+ 
+ static void io_worker_handle_work(struct io_worker *worker)
+-- 
+2.24.0
 
-Perhaps this structure should be prefixed with a tegra210_ to make that
-more obvious?
-
-> > > +EXPORT_SYMBOL(csi2_fops);
-
-Also, why do we need to export these? These will be built as linked into
-the Tegra VI driver, which is the only one that uses these, right? Would
-it not be enough to just make it global? Why the need to export?
-
-Thierry
-
---BZaMRJmqxGScZ8Mx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4xWb8ACgkQ3SOs138+
-s6F1hA/9GY8167sFUVNO8KAreHJSXbIQSrdcxKTgKjZfBglU/9QzkA+r1/DV8uo+
-uIqzdDwVcEcJCl8muMVSPCUt0oUSy7NZF/OFwZAVod20aFsse59HO0zogDrekJhC
-co8t2A4foXyQiiFV/fxL2tT8jLmojdS8I4wciqiECAw+V5jsyKe8GkoRGVfX6twV
-7MW05Bv1FW20Rt0H4lqP9gMolFHS3y/ZpU9rT29Fx9t1EgdKYPzwbjjCYqPGCEvi
-NAqLxgqlczodpmMM0BgjTOs/6N0Fp5fnEgjU6focsRXSQbi2vkb2XpN2t08i+Vpn
-cvMLJLZhmb4l2sJ71QnhTGmhOpfepPnE5KcHyh5irzLcX4XeDSb+Ldj6DT8pcROd
-wbfBXOXnRAxwmTndCvnd+njWKN8I8MzQ3X8QDL18o6NABhNsFWTNQIJ6FZMzBZZU
-llMRtRn9AlAKbJs/KAYiH+hPHDea0j/pO9gI4R8QWST+DmdEYl0FcZI6g2DrI0D7
-LqcwS4feOIOUHyAAr8wMCHFMWpgK/9Qp9wwXp9u98Xm7j/6FHU8+uDp/AnTdWFD/
-obJsoimu7Pmy82cSH7Bm/NL37aIOuDmnmCSansSo4m5wizC0pFejKmR0QCcTHufJ
-LEzX36NaAED0ZaGyfgQivPdBbvize02W30xhprd+6noVxmnS57Y=
-=cT4U
------END PGP SIGNATURE-----
-
---BZaMRJmqxGScZ8Mx--
