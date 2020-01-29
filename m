@@ -2,551 +2,160 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AA6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E89206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFAD206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HMNe8mc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgA2PYw (ORCPT
+        id S1727074AbgA2P35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:24:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51557 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgA2PYw (ORCPT
+        Wed, 29 Jan 2020 10:29:57 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45840 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbgA2P34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:24:52 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iwpCq-0002Zu-Rz; Wed, 29 Jan 2020 16:24:41 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0ADE71C1C19;
-        Wed, 29 Jan 2020 16:24:40 +0100 (CET)
-Date:   Wed, 29 Jan 2020 15:24:39 -0000
-From:   "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/split_lock: Enable split lock detection by kernel
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
-References: <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+        Wed, 29 Jan 2020 10:29:56 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so31470oic.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 07:29:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V/uFh0yYZSP8uHetzeu1eWpPtJLcY84cq4Xfc1+OZCk=;
+        b=HMNe8mc+qibEUT1dVO1JKR7scvnDZRi9i082jp3Jh+8JuOTDFbDJbcuIxT3NLnHkOr
+         gZvvpP1mUXUH1MM22O9LmWpDwOgR7ClnYCjSIKzgnavSWJpB+aT2NkU7TXdk/vGH6WQ4
+         ROkgns658Uwx4LhGXVznFakZ/8BC7KvR1i8qsNlSqhogJ2wuU8z0dy/oizaoSYRekxyS
+         +CKudWFS1Cx1rLEWTV0uJEcTi/gr7QslU4KFQf4op+g8Mn/fHQuVHNHaUPfEUgwtp/di
+         cljuRyJVRW5vVeVXaMBnOpLsMc09NVhSaN5hQfc8Vh6idnBNBHHv0Vp3nfklt0l2hYTg
+         eNtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/uFh0yYZSP8uHetzeu1eWpPtJLcY84cq4Xfc1+OZCk=;
+        b=Wtd7djUFBhRw+dih3xXOKDJ7N3Z/NJfT/MzX3+BfTAdLMVxpL9bolGsDfB4uk90E/S
+         V0MbdL4bK17Yo6ciIC5GqmU4RbsLcshwAYUQoNeeB/aPyC401Z5T5zYw53aiQ86c1dvP
+         T92lHRQlBRMXM3NAOcApY+svPBoJ8K7gqt3iLIK0rC2F/NLI934huYa/9jOoDbchvPfx
+         QOqmp/Uy68XLSTr/BgLkz0iU94cWhHDkuTeJY4N9hiq7/o0YPYOkzzShuoiCNrPRmR9j
+         QyXxO3ECbufZZB4oQlWTMojtWbkrZAjjRDb7w43MqxVfyiMzrS8SVBJIlb43jNH4d9Xb
+         5IJA==
+X-Gm-Message-State: APjAAAXhMtN/tXI4/bd5ARHppMshSrOm22yYRcWoGaHjyl2gCVhQH5gE
+        Y3E4Qjpn50a311RSsDMC3qDfbgUWdU/dZdLospg0gw==
+X-Google-Smtp-Source: APXvYqxNnQQT3lS4wScoERhD8IHrcaxbj+m+JlpQ2dDP8SiPsnpY6u3QcwqrbiYsZ9qlZW94Fu54FBcJcYsgqQq2m2U=
+X-Received: by 2002:aca:36c1:: with SMTP id d184mr6743720oia.70.1580311795512;
+ Wed, 29 Jan 2020 07:29:55 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158031147976.396.8941798847364718785.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200122165938.GA16974@willie-the-truck> <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
+ <20200122223851.GA45602@google.com> <A90E2B85-77CB-4743-AEC3-90D7836C4D47@lca.pw>
+ <20200123093905.GU14914@hirez.programming.kicks-ass.net> <E722E6E0-26CB-440F-98D7-D182B57D1F43@lca.pw>
+ <CANpmjNNo6yW-y-Af7JgvWi3t==+=02hE4-pFU4OiH8yvbT3Byg@mail.gmail.com>
+ <20200128165655.GM14914@hirez.programming.kicks-ass.net> <20200129002253.GT2935@paulmck-ThinkPad-P72>
+In-Reply-To: <20200129002253.GT2935@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 29 Jan 2020 16:29:43 +0100
+Message-ID: <CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=cozW5cYkm8h-GTBg@mail.gmail.com>
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Wed, 29 Jan 2020 at 01:22, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Tue, Jan 28, 2020 at 05:56:55PM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 28, 2020 at 12:46:26PM +0100, Marco Elver wrote:
+> >
+> > > > Marco, any thought on improving KCSAN for this to reduce the false
+> > > > positives?
+> > >
+> > > Define 'false positive'.
+> >
+> > I'll use it where the code as written is correct while the tool
+> > complains about it.
+>
+> I could be wrong, but I would guess that Marco is looking for something
+> a little less subjective and a little more specific.  ;-)
+>
+> > > From what I can tell, all 'false positives' that have come up are data
+> > > races where the consequences on the behaviour of the code is
+> > > inconsequential. In other words, all of them would require
+> > > understanding of the intended logic of the code, and understanding if
+> > > the worst possible outcome of a data race changes the behaviour of the
+> > > code in such a way that we may end up with an erroneously behaving
+> > > system.
+> > >
+> > > As I have said before, KCSAN (or any data race detector) by definition
+> > > only works at the language level. Any semantic analysis, beyond simple
+> > > rules (such as ignore same-value stores) and annotations, is simply
+> > > impossible since the tool can't know about the logic that the
+> > > programmer intended.
+> > >
+> > > That being said, if there are simple rules (like ignore same-value
+> > > stores) or other minimal annotations that can help reduce such 'false
+> > > positives', more than happy to add them.
+> >
+> > OK, so KCSAN knows about same-value-stores? If so, that ->cpu =
+> > smp_processor_id() case really doesn't need annotation, right?
+>
+> If smp_processor_id() returns the value already stored in ->cpu,
+> I believe that the default KCSAN setup refrains from complaining.
 
-Commit-ID:     fdbfb51ae760d1bba3f89e4fa00da83016ec4dbe
-Gitweb:        https://git.kernel.org/tip/fdbfb51ae760d1bba3f89e4fa00da83016ec4dbe
-Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
-AuthorDate:    Sun, 26 Jan 2020 12:05:35 -08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 29 Jan 2020 13:42:39 +01:00
+Yes it won't report this with KCSAN_REPORT_VALUE_CHANGE_ONLY.  (There
+was one case I missed, and just sent a patch to fix.)
 
-x86/split_lock: Enable split lock detection by kernel
+> Which reminds me, I need to disable this in my RCU runs.  If I create a
+> bug that causes me to unknowingly access something that is supposed to
+> be CPU-private from the wrong CPU, I want to know about it.
+>
+> > > What to do about osq_lock here? If people agree that no further
+> > > annotations are wanted, and the reasoning above concludes there are no
+> > > bugs, we can blacklist the file. That would, however, miss new data
+> > > races in future.
+> >
+> > I'm still hoping to convince you that the other case is one of those
+> > 'simple-rules' too :-)
+>
+> On this I must defer to Marco.
 
-A split-lock occurs when an atomic instruction operates on data that spans
-two cache lines. In order to maintain atomicity the core takes a global bus
-lock.
+On Tue, 28 Jan 2020 at 17:52, Peter Zijlstra <peterz@infradead.org> wrote:
+> I'm claiming that in the first case, the only thing that's ever done
+> with a racy load is comparing against 0, there is no possible bad
+> outcome ever. While obviously if you let the load escape, or do anything
+> other than compare against 0, there is.
 
-This is typically >1000 cycles slower than an atomic operation within a
-cache line. It also disrupts performance on other cores (which must wait
-for the bus lock to be released before their memory operations can
-complete). For real-time systems this may mean missing deadlines. For other
-systems it may just be very annoying.
+It might sound like a simple rule, but implementing this is anything
+but simple: This would require changing the compiler, which we said
+we'd like to avoid as it introduces new problems. This particular rule
+relies on semantic analysis that is beyond what the TSAN
+instrumentation currently supports. Right now we support GCC and
+Clang; changing the compiler probably means we'd end up with only one
+(probably Clang), and many more years before the change has propagated
+to the majority of used compiler versions. It'd be good if we can do
+this purely as a change in the kernel's codebase.
 
-Some CPUs have the capability to raise an #AC trap when a split lock is
-attempted.
+Keeping the bigger picture in mind, how frequent is this case, and
+what are we really trying to accomplish? Is it only to avoid a
+READ_ONCE? Why is the READ_ONCE bad here? If there is a racing access,
+why not be explicit about it?
 
-Provide a command line option to give the user choices on how to handle
-this:
+I can see that maybe this particular file probably doesn't need more
+hints that there is concurrency here (given its osq_lock), but as a
+general rule for the remainder of the kernel it appears to add more
+inconsistencies.
 
-split_lock_detect=
-	off	- not enabled (no traps for split locks)
-	warn	- warn once when an application does a
-		  split lock, but allow it to continue
-		  running.
-	fatal	- Send SIGBUS to applications that cause split lock
-
-On systems that support split lock detection the default is "warn". Note
-that if the kernel hits a split lock in any mode other than "off" it will
-OOPs.
-
-One implementation wrinkle is that the MSR to control the split lock
-detection is per-core, not per thread. This might result in some short
-lived races on HT systems in "warn" mode if Linux tries to enable on one
-thread while disabling on the other. Race analysis by Sean Christopherson:
-
-  - Toggling of split-lock is only done in "warn" mode.  Worst case
-    scenario of a race is that a misbehaving task will generate multiple
-    #AC exceptions on the same instruction.  And this race will only occur
-    if both siblings are running tasks that generate split-lock #ACs, e.g.
-    a race where sibling threads are writing different values will only
-    occur if CPUx is disabling split-lock after an #AC and CPUy is
-    re-enabling split-lock after *its* previous task generated an #AC.
-  - Transitioning between off/warn/fatal modes at runtime isn't supported
-    and disabling is tracked per task, so hardware will always reach a steady
-    state that matches the configured mode.  I.e. split-lock is guaranteed to
-    be enabled in hardware once all _TIF_SLD threads have been scheduled out.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Co-developed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200126200535.GB30377@agluck-desk2.amr.corp.intel.com
-
----
- Documentation/admin-guide/kernel-parameters.txt |  22 ++-
- arch/x86/include/asm/cpu.h                      |  12 +-
- arch/x86/include/asm/cpufeatures.h              |   2 +-
- arch/x86/include/asm/msr-index.h                |   9 +-
- arch/x86/include/asm/thread_info.h              |   4 +-
- arch/x86/kernel/cpu/common.c                    |   2 +-
- arch/x86/kernel/cpu/intel.c                     | 175 +++++++++++++++-
- arch/x86/kernel/process.c                       |   3 +-
- arch/x86/kernel/traps.c                         |  24 +-
- 9 files changed, 250 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ec92120..87176a9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4637,6 +4637,28 @@
- 	spia_pedr=
- 	spia_peddr=
- 
-+	split_lock_detect=
-+			[X86] Enable split lock detection
-+
-+			When enabled (and if hardware support is present), atomic
-+			instructions that access data across cache line
-+			boundaries will result in an alignment check exception.
-+
-+			off	- not enabled
-+
-+			warn	- the kernel will emit rate limited warnings
-+				  about applications triggering the #AC
-+				  exception. This mode is the default on CPUs
-+				  that supports split lock detection.
-+
-+			fatal	- the kernel will send SIGBUS to applications
-+				  that trigger the #AC exception.
-+
-+			If an #AC exception is hit in the kernel or in
-+			firmware (i.e. not while executing in user mode)
-+			the kernel will oops in either "warn" or "fatal"
-+			mode.
-+
- 	srcutree.counter_wrap_check [KNL]
- 			Specifies how frequently to check for
- 			grace-period sequence counter wrap for the
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index adc6cc8..ff6f3ca 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -40,4 +40,16 @@ int mwait_usable(const struct cpuinfo_x86 *);
- unsigned int x86_family(unsigned int sig);
- unsigned int x86_model(unsigned int sig);
- unsigned int x86_stepping(unsigned int sig);
-+#ifdef CONFIG_CPU_SUP_INTEL
-+extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
-+extern void switch_to_sld(unsigned long tifn);
-+extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+#else
-+static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
-+static inline void switch_to_sld(unsigned long tifn) {}
-+static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+{
-+	return false;
-+}
-+#endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f3327cb..cd56ad5 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -285,6 +285,7 @@
- #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
- #define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
- #define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
-+#define X86_FEATURE_SPLIT_LOCK_DETECT	(11*32+ 6) /* #AC for split lock */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
- #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
-@@ -367,6 +368,7 @@
- #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
- #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
-+#define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
- #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
- 
- /*
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ebe1685..8821697 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -41,6 +41,10 @@
- 
- /* Intel MSRs. Some also available on other CPUs */
- 
-+#define MSR_TEST_CTRL				0x00000033
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
- #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
- #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
-@@ -70,6 +74,11 @@
-  */
- #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
- 
-+/* Abbreviated from Intel SDM name IA32_CORE_CAPABILITIES */
-+#define MSR_IA32_CORE_CAPS			  0x000000cf
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
- #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index cf43279..f807930 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -92,6 +92,7 @@ struct thread_info {
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
-+#define TIF_SLD			18	/* Restore split lock detection on context switch */
- #define TIF_NOHZ		19	/* in adaptive nohz mode */
- #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
-@@ -122,6 +123,7 @@ struct thread_info {
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
-+#define _TIF_SLD		(1 << TIF_SLD)
- #define _TIF_NOHZ		(1 << TIF_NOHZ)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
-@@ -145,7 +147,7 @@ struct thread_info {
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW_BASE					\
- 	(_TIF_NOCPUID | _TIF_NOTSC | _TIF_BLOCKSTEP |		\
--	 _TIF_SSBD | _TIF_SPEC_FORCE_UPDATE)
-+	 _TIF_SSBD | _TIF_SPEC_FORCE_UPDATE | _TIF_SLD)
- 
- /*
-  * Avoid calls to __switch_to_xtra() on UP as STIBP is not evaluated.
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 86b8241..adb2f63 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1242,6 +1242,8 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
- 
- 	cpu_set_bug_bits(c);
- 
-+	cpu_set_core_cap_bits(c);
-+
- 	fpu__init_system(c);
- 
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 57473e2..5d92e38 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -19,6 +19,8 @@
- #include <asm/microcode_intel.h>
- #include <asm/hwcap2.h>
- #include <asm/elf.h>
-+#include <asm/cpu_device_id.h>
-+#include <asm/cmdline.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -31,6 +33,19 @@
- #include <asm/apic.h>
- #endif
- 
-+enum split_lock_detect_state {
-+	sld_off = 0,
-+	sld_warn,
-+	sld_fatal,
-+};
-+
-+/*
-+ * Default to sld_off because most systems do not support split lock detection
-+ * split_lock_setup() will switch this to sld_warn on systems that support
-+ * split lock detect, unless there is a command line override.
-+ */
-+static enum split_lock_detect_state sld_state = sld_off;
-+
- /*
-  * Just in case our CPU detection goes bad, or you have a weird system,
-  * allow a way to override the automatic disabling of MPX.
-@@ -606,6 +621,8 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
- 	wrmsrl(MSR_MISC_FEATURES_ENABLES, msr);
- }
- 
-+static void split_lock_init(void);
-+
- static void init_intel(struct cpuinfo_x86 *c)
- {
- 	early_init_intel(c);
-@@ -720,6 +737,8 @@ static void init_intel(struct cpuinfo_x86 *c)
- 		tsx_enable();
- 	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
- 		tsx_disable();
-+
-+	split_lock_init();
- }
- 
- #ifdef CONFIG_X86_32
-@@ -981,3 +1000,159 @@ static const struct cpu_dev intel_cpu_dev = {
- };
- 
- cpu_dev_register(intel_cpu_dev);
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt) "x86/split lock detection: " fmt
-+
-+static const struct {
-+	const char			*option;
-+	enum split_lock_detect_state	state;
-+} sld_options[] __initconst = {
-+	{ "off",	sld_off   },
-+	{ "warn",	sld_warn  },
-+	{ "fatal",	sld_fatal },
-+};
-+
-+static inline bool match_option(const char *arg, int arglen, const char *opt)
-+{
-+	int len = strlen(opt);
-+
-+	return len == arglen && !strncmp(arg, opt, len);
-+}
-+
-+static void __init split_lock_setup(void)
-+{
-+	char arg[20];
-+	int i, ret;
-+
-+	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-+	sld_state = sld_warn;
-+
-+	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
-+				  arg, sizeof(arg));
-+	if (ret >= 0) {
-+		for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
-+			if (match_option(arg, ret, sld_options[i].option)) {
-+				sld_state = sld_options[i].state;
-+				break;
-+			}
-+		}
-+	}
-+
-+	switch (sld_state) {
-+	case sld_off:
-+		pr_info("disabled\n");
-+		break;
-+
-+	case sld_warn:
-+		pr_info("warning about user-space split_locks\n");
-+		break;
-+
-+	case sld_fatal:
-+		pr_info("sending SIGBUS on user-space split_locks\n");
-+		break;
-+	}
-+}
-+
-+/*
-+ * Locking is not required at the moment because only bit 29 of this
-+ * MSR is implemented and locking would not prevent that the operation
-+ * of one thread is immediately undone by the sibling thread.
-+ * Use the "safe" versions of rdmsr/wrmsr here because although code
-+ * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
-+ * exist, there may be glitches in virtualization that leave a guest
-+ * with an incorrect view of real h/w capabilities.
-+ */
-+static bool __sld_msr_set(bool on)
-+{
-+	u64 test_ctrl_val;
-+
-+	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
-+		return false;
-+
-+	if (on)
-+		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	else
-+		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+
-+	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
-+}
-+
-+static void split_lock_init(void)
-+{
-+	if (sld_state == sld_off)
-+		return;
-+
-+	if (__sld_msr_set(true))
-+		return;
-+
-+	/*
-+	 * If this is anything other than the boot-cpu, you've done
-+	 * funny things and you get to keep whatever pieces.
-+	 */
-+	pr_warn("MSR fail -- disabled\n");
-+	sld_state = sld_off;
-+}
-+
-+bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+{
-+	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+		return false;
-+
-+	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-+			    current->comm, current->pid, regs->ip);
-+
-+	/*
-+	 * Disable the split lock detection for this task so it can make
-+	 * progress and set TIF_SLD so the detection is re-enabled via
-+	 * switch_to_sld() when the task is scheduled out.
-+	 */
-+	__sld_msr_set(false);
-+	set_tsk_thread_flag(current, TIF_SLD);
-+	return true;
-+}
-+
-+/*
-+ * This function is called only when switching between tasks with
-+ * different split-lock detection modes. It sets the MSR for the
-+ * mode of the new task. This is right most of the time, but since
-+ * the MSR is shared by hyperthreads on a physical core there can
-+ * be glitches when the two threads need different modes.
-+ */
-+void switch_to_sld(unsigned long tifn)
-+{
-+	__sld_msr_set(!(tifn & _TIF_SLD));
-+}
-+
-+#define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
-+
-+/*
-+ * The following processors have the split lock detection feature. But
-+ * since they don't have the IA32_CORE_CAPABILITIES MSR, the feature cannot
-+ * be enumerated. Enable it by family and model matching on these
-+ * processors.
-+ */
-+static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
-+	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_X),
-+	SPLIT_LOCK_CPU(INTEL_FAM6_ICELAKE_L),
-+	{}
-+};
-+
-+void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
-+{
-+	u64 ia32_core_caps = 0;
-+
-+	if (c->x86_vendor != X86_VENDOR_INTEL)
-+		return;
-+	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
-+		/* Enumerate features reported in IA32_CORE_CAPABILITIES MSR. */
-+		rdmsrl(MSR_IA32_CORE_CAPS, ia32_core_caps);
-+	} else if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-+		/* Enumerate split lock detection by family and model. */
-+		if (x86_match_cpu(split_lock_cpu_ids))
-+			ia32_core_caps |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-+	}
-+
-+	if (ia32_core_caps & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT)
-+		split_lock_setup();
-+}
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 839b524..a43c328 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -650,6 +650,9 @@ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- 		/* Enforce MSR update to ensure consistent state */
- 		__speculation_ctrl_update(~tifn, tifn);
- 	}
-+
-+	if ((tifp ^ tifn) & _TIF_SLD)
-+		switch_to_sld(tifn);
- }
- 
- /*
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9e6f822..9f42f0a 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -46,6 +46,7 @@
- #include <asm/traps.h>
- #include <asm/desc.h>
- #include <asm/fpu/internal.h>
-+#include <asm/cpu.h>
- #include <asm/cpu_entry_area.h>
- #include <asm/mce.h>
- #include <asm/fixmap.h>
-@@ -244,7 +245,6 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
- {
- 	struct task_struct *tsk = current;
- 
--
- 	if (!do_trap_no_signal(tsk, trapnr, str, regs, error_code))
- 		return;
- 
-@@ -290,9 +290,29 @@ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overru
- DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
- DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present", segment_not_present)
- DO_ERROR(X86_TRAP_SS,     SIGBUS,           0, NULL, "stack segment",       stack_segment)
--DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",     alignment_check)
- #undef IP
- 
-+dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
-+{
-+	char *str = "alignment check";
-+
-+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-+
-+	if (notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_AC, SIGBUS) == NOTIFY_STOP)
-+		return;
-+
-+	if (!user_mode(regs))
-+		die("Split lock detected\n", regs, error_code);
-+
-+	local_irq_enable();
-+
-+	if (handle_user_split_lock(regs, error_code))
-+		return;
-+
-+	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
-+		error_code, BUS_ADRALN, NULL);
-+}
-+
- #ifdef CONFIG_VMAP_STACK
- __visible void __noreturn handle_stack_overflow(const char *message,
- 						struct pt_regs *regs,
+Thanks,
+-- Marco
