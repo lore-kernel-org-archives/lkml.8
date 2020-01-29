@@ -2,116 +2,137 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74756C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A6320716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5242C20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgA2WA3 (ORCPT
+        id S1726715AbgA2WAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:00:29 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42381 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgA2WA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:00:28 -0500
-Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 5F41F7E7E17;
-        Thu, 30 Jan 2020 09:00:24 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iwvNl-0004zC-W7; Thu, 30 Jan 2020 09:00:22 +1100
-Date:   Thu, 30 Jan 2020 09:00:21 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200129220021.GN18610@dread.disaster.area>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
- <20200128091012.GZ3466@techsingularity.net>
- <20200129173852.GP14914@hirez.programming.kicks-ass.net>
+        Wed, 29 Jan 2020 17:00:31 -0500
+Received: from mga11.intel.com ([192.55.52.93]:54061 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgA2WAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:00:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 14:00:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
+   d="scan'208";a="218080404"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 29 Jan 2020 14:00:27 -0800
+Date:   Thu, 30 Jan 2020 06:00:40 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+Subject: Re: [Patch v2 2/4] mm/migrate.c: wrap do_move_pages_to_node() and
+ store_status()
+Message-ID: <20200129220040.GB20736@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-3-richardw.yang@linux.intel.com>
+ <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
+ <20200129003812.GC12835@richard>
+ <68d4f7fb-2f37-2b11-dd0f-2e059415daf2@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129173852.GP14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=9OUhOvZmy8axzo4XzYoA:9 a=2cTGYF7_BJ3EkAcu:21
-        a=c5nVs7L-Gq4kIs1z:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <68d4f7fb-2f37-2b11-dd0f-2e059415daf2@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
-> > Peter, Ingo and Vincent -- I know the timing is bad due to the merge
-> > window but do you have any thoughts on allowing select_idle_sibling to
-> > stack a wakee task on the same CPU as a waker in this specific case?
-> 
-> I sort of see, but *groan*...
-> 
-> so if the kworker unlocks a contended mutex/rwsem/completion...
-> 
-> I suppose the fact that it limits it to tasks that were running on the
-> same CPU limits the impact if we do get it wrong.
-> 
-> Elsewhere you write:
-> 
-> > I would prefer the wakeup code did not have to signal that it's a
-> > synchronous wakeup. Sync wakeups so exist but callers got it wrong many
-> > times where stacking was allowed and then the waker did not go to sleep.
-> > While the chain of events are related, they are not related in a very
-> > obvious way. I think it's much safer to keep this as a scheduler
-> > heuristic instead of depending on callers to have sufficient knowledge
-> > of the scheduler implementation.
-> 
-> That is true; the existing WF_SYNC has caused many issues for maybe
-> being too strong.
-> 
-> But what if we create a new hint that combines both these ideas? Say
-> WF_COMPLETE and subject that to these same criteria. This way we can
-> eliminate wakeups from locks and such (they won't have this set).
-> 
-> Or am I just making things complicated again?
+On Wed, Jan 29, 2020 at 10:28:53AM +0100, David Hildenbrand wrote:
+>On 29.01.20 01:38, Wei Yang wrote:
+>> On Tue, Jan 28, 2020 at 11:14:55AM +0100, David Hildenbrand wrote:
+>>> On 22.01.20 02:16, Wei Yang wrote:
+>>>> Usually do_move_pages_to_node() and store_status() is a pair. There are
+>>>> three places call this pair of functions with almost the same form.
+>>>
+>>> I'd suggest
+>>>
+>>> "
+>>> Usually, do_move_pages_to_node() and store_status() are used in
+>>> combination. We have three similar call sites.
+>>>
+>>> Let's provide a wrapper for both function calls -
+>>> move_pages_and_store_status - to make the calling code easier to
+>>> maintain and fix (as noted by Yang Shi, the return value handling of
+>>> do_move_pages_to_node() has a flaw).
+>>> "
+>> 
+>> Looks good.
+>> 
+>>>
+>>>>
+>>>> This patch just wrap it to make it friendly to audience and also
+>>>> consolidate the move and store action into one place. Also mentioned by
+>>>> Yang Shi, the handling of do_move_pages_to_node()'s return value is not
+>>>> proper. Now we can fix it in one place.
+>>>>
+>>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>>> ---
+>>>>  mm/migrate.c | 30 +++++++++++++++++++-----------
+>>>>  1 file changed, 19 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/mm/migrate.c b/mm/migrate.c
+>>>> index 4c2a21856717..a4d3bd6475e1 100644
+>>>> --- a/mm/migrate.c
+>>>> +++ b/mm/migrate.c
+>>>> @@ -1583,6 +1583,19 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>>>>  	return err;
+>>>>  }
+>>>>  
+>>>> +static int move_pages_and_store_status(struct mm_struct *mm, int node,
+>>>> +		struct list_head *pagelist, int __user *status,
+>>>> +		int start, int nr)
+>>>
+>>> nit: indentation
+>>>
+>> 
+>> You mean indent like this?
+>> 
+>> static int move_pages_and_store_status(struct mm_struct *mm, int node,
+>> 				       struct list_head *pagelist,
+>> 				       int __user *status,
+>> 
+>> This would be along list and I am afraid this is not the only valid code
+>> style?
+>
+>Yes, that's what I meant. Documentation/process/coding-style.rst doesn't
+>mention any specific way, but this is the most commonly used one.
+>
+>Indentation in this file mostly sticks to something like this as well,
+>but yeah, it's often a mess and not consistent.
+>
+>That's why I note it whenever I see it, to make it eventually more
+>consistent (and only make it a nit) :)
+>
 
-I suspect this is making it complicated again, because it requires
-the people who maintain the code that is using workqueues to
-understand when they might need to use a special wakeup interface in
-the work function. And that includes code that currently calls
-wake_up_all() because there can be hundreds of independent tasks
-waiting on the IO completion (e.g all the wait queues in the XFS
-journal code can (and do) have multiple threads waiting on them).
+You are right. I would leave as it now, if someone else still have the same
+suggestion to fix it.
 
-IOWs, requiring a special flag just to optimise this specific case
-(i.e. single dependent waiter on same CPU as the kworker) when the
-adverse behaviour is both hardware and workload dependent means it
-just won't get used correctly or reliably.
+Thanks :-)
 
-Hence I'd much prefer the kernel detects and dynamically handles
-this situation at runtime, because this pattern of workqueue usage
-is already quite common and will only become more widespread as we
-progress towards async processing of syscalls.
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Wei Yang
+Help you, Help me
