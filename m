@@ -2,161 +2,144 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5F2C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D8CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F61207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580300280;
-	bh=djniQwpAmOkXiqKoYRepG4IzFpRTfrhyZnnTKzmOSYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ohvHsMIOU0KHSYGBMj0dy9Ki5+uAwn/l8tJhDvnBrxgwRQGJp5KmmCRq7QIia65GS
-	 iT/yVtU30S750psjFyNci0uQLdpB154H/1fEfTlpHf7mOayRnxcrriG3yL4INniWub
-	 YtB+SecAkos3a1cyzEWY73Ngo7pzLCT4slkFR0/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5E537207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgA2MR7 (ORCPT
+        id S1726842AbgA2MSF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:17:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
+        Wed, 29 Jan 2020 07:18:05 -0500
+Received: from mga06.intel.com ([134.134.136.31]:59557 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgA2MR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:17:58 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B2E2071E;
-        Wed, 29 Jan 2020 12:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580300277;
-        bh=djniQwpAmOkXiqKoYRepG4IzFpRTfrhyZnnTKzmOSYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R7DckY2edL+G1YkQB/jXviAq1y7oMqWOu1VCCTYBH8mofjDZikpzgpKYKmKtiko9y
-         1+nQQQPt9ucxk0Zd0K8zMzfhzTzKiNVQMfSS/RZTPfIfS9hzNCL+l5XkkdLQ6vnXqw
-         5yduSf0orhMf4HyNk6SgTvu3MZbVoPkNfI89LLcU=
-Date:   Wed, 29 Jan 2020 12:17:53 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] m68k,mm: Extend table allocator for multiple sizes
-Message-ID: <20200129121752.GB31582@willie-the-truck>
-References: <20200129103941.304769381@infradead.org>
- <20200129104345.491163937@infradead.org>
+        id S1726659AbgA2MSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:18:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 04:18:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,377,1574150400"; 
+   d="scan'208";a="429662333"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Jan 2020 04:18:03 -0800
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Jan 2020 04:18:03 -0800
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 29 Jan 2020 04:18:02 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.202]) with mapi id 14.03.0439.000;
+ Wed, 29 Jan 2020 20:18:01 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH V9 00/10] Nested Shared Virtual Address (SVA) VT-d
+ support
+Thread-Topic: [PATCH V9 00/10] Nested Shared Virtual Address (SVA) VT-d
+ support
+Thread-Index: AQHV1mjm+L2VVYcVTkms4SxIhsuAo6gBjx2g
+Date:   Wed, 29 Jan 2020 12:18:00 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A196172@SHSMSX104.ccr.corp.intel.com>
+References: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmZhZTY2MzItODRlMC00YjBmLWEzZjUtNWQwOTJiYzUyMGY3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoid1V5ZjlycjBxcVFSV2VhaUNqSU1PaE1hRTdvMm0ycTNYbnV4cVNrMFk3cWdWdk14aUJUblhFYVlaS0VIeU1pRSJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129104345.491163937@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:39:45AM +0100, Peter Zijlstra wrote:
-> In addition to the PGD/PMD table size (128*4) add a PTE table size
-> (64*4) to the table allocator. This completely removes the pte-table
-> overhead compared to the old code, even for dense tables.
+> From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> Sent: Wednesday, January 29, 2020 2:02 PM
+> Subject: [PATCH V9 00/10] Nested Shared Virtual Address (SVA) VT-d support
 > 
-> Notes:
+> Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel platforms
+> allow address space sharing between device DMA and applications.
+> SVA can reduce programming complexity and enhance security.
+> This series is intended to enable SVA virtualization, i.e. enable use of SVA within a
+> guest user application.
 > 
->  - the allocator gained __flush_page_to_ram(), since the old
->    page-based allocator had that.
+> This is the remaining portion of the original patchset that is based on Joerg's x86/vt-
+> d branch. The preparatory and cleanup patches are merged here.
+> (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git)
 > 
->  - the allocator gained a list_empty() check to deal with there not
->    being any pages at all.
+> Only IOMMU portion of the changes are included in this series. Additional support is
+> needed in VFIO and QEMU (will be submitted separately) to complete this
+> functionality.
 > 
->  - the free mask is extended to cover more than the 8 bits required
->    for the (512 byte) PGD/PMD tables.
+> To make incremental changes and reduce the size of each patchset. This series does
+> not inlcude support for page request services.
 > 
->  - NR_PAGETABLE accounting is restored.
+> In VT-d implementation, PASID table is per device and maintained in the host.
+> Guest PASID table is shadowed in VMM where virtual IOMMU is emulated.
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/m68k/include/asm/motorola_pgalloc.h |   24 +++++-----
->  arch/m68k/mm/init.c                      |    6 +-
->  arch/m68k/mm/memory.c                    |   70 ++++++++++++++++++++-----------
->  3 files changed, 61 insertions(+), 39 deletions(-)
+>     .-------------.  .---------------------------.
+>     |   vIOMMU    |  | Guest process CR3, FL only|
+>     |             |  '---------------------------'
+>     .----------------/
+>     | PASID Entry |--- PASID cache flush -
+>     '-------------'                       |
+>     |             |                       V
+>     |             |                CR3 in GPA
+>     '-------------'
+> Guest
+> ------| Shadow |--------------------------|--------
+>       v        v                          v
+> Host
+>     .-------------.  .----------------------.
+>     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+>     |             |  '----------------------'
+>     .----------------/  |
+>     | PASID Entry |     V (Nested xlate)
+>     '----------------\.------------------------------.
+>     |             |   |SL for GPA-HPA, default domain|
+>     |             |   '------------------------------'
+>     '-------------'
+> Where:
+>  - FL = First level/stage one page tables
+>  - SL = Second level/stage two page tables
 > 
-> --- a/arch/m68k/include/asm/motorola_pgalloc.h
-> +++ b/arch/m68k/include/asm/motorola_pgalloc.h
-> @@ -5,61 +5,61 @@
->  #include <asm/tlb.h>
->  #include <asm/tlbflush.h>
->  
-> -extern pmd_t *get_pointer_table(void);
-> -extern int free_pointer_table(pmd_t *);
-> +extern void *get_pointer_table(int type);
+> This is the remaining VT-d only portion of V5 since the uAPIs and IOASID common
+> code have been applied to Joerg's IOMMU core branch.
+> (https://lkml.org/lkml/2019/10/2/833)
+> 
+> The complete set with VFIO patches are here:
+> https://github.com/jacobpan/linux.git:siov_sva
 
-Could be prettier/obfuscated with an enum type?
+The complete QEMU set can be found in below link:
+https://github.com/luxis1999/qemu.git: sva_vtd_v9_rfcv3
 
-> --- a/arch/m68k/mm/memory.c
-> +++ b/arch/m68k/mm/memory.c
-> @@ -27,24 +27,34 @@
->     arch/sparc/mm/srmmu.c ... */
->  
->  typedef struct list_head ptable_desc;
-> -static LIST_HEAD(ptable_list);
-> +
-> +static struct list_head ptable_list[2] = {
-> +	LIST_HEAD_INIT(ptable_list[0]),
-> +	LIST_HEAD_INIT(ptable_list[1]),
-> +};
->  
->  #define PD_PTABLE(page) ((ptable_desc *)&(virt_to_page(page)->lru))
->  #define PD_PAGE(ptable) (list_entry(ptable, struct page, lru))
-> -#define PD_MARKBITS(dp) (*(unsigned char *)&PD_PAGE(dp)->index)
-> +#define PD_MARKBITS(dp) (*(unsigned int *)&PD_PAGE(dp)->index)
-> +
-> +static const int ptable_shift[2] = {
-> +	7+2, /* PGD, PMD */
-> +	6+2, /* PTE */
-> +};
->  
-> -#define PTABLE_SIZE (PTRS_PER_PMD * sizeof(pmd_t))
-> +#define ptable_size(type) (1U << ptable_shift[type])
-> +#define ptable_mask(type) ((1U << (PAGE_SIZE / ptable_size(type))) - 1)
->  
-> -void __init init_pointer_table(unsigned long ptable)
-> +void __init init_pointer_table(unsigned long ptable, int type)
->  {
->  	ptable_desc *dp;
->  	unsigned long page = ptable & PAGE_MASK;
-> -	unsigned char mask = 1 << ((ptable - page)/PTABLE_SIZE);
-> +	unsigned int mask = 1U << ((ptable - page)/ptable_size(type));
->  
->  	dp = PD_PTABLE(page);
->  	if (!(PD_MARKBITS(dp) & mask)) {
-> -		PD_MARKBITS(dp) = 0xff;
-> -		list_add(dp, &ptable_list);
-> +		PD_MARKBITS(dp) = ptable_mask(type);
-> +		list_add(dp, &ptable_list[type]);
->  	}
->  
->  	PD_MARKBITS(dp) &= ~mask;
-> @@ -57,12 +67,10 @@ void __init init_pointer_table(unsigned
->  	return;
->  }
->  
-> -pmd_t *get_pointer_table (void)
-> +void *get_pointer_table (int type)
->  {
-> -	ptable_desc *dp = ptable_list.next;
-> -	unsigned char mask = PD_MARKBITS (dp);
-> -	unsigned char tmp;
-> -	unsigned int off;
-> +	ptable_desc *dp = ptable_list[type].next;
-> +	unsigned int mask, tmp, off;
+Complete kernel can be found in:
+https://github.com/luxis1999/linux-vsva: vsva-linux-5.5-rc3
 
-nit, but if you do:
-
-	unsigned int mask = list_empty(&ptable_list[type]) ? 0 : PD_MARKBITS(dp);
-
-then you can leave the existing mask logic as-is.
-
-Will
+Regards,
+Yi Liu
