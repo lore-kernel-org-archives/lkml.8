@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E12AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEC7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6B4206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA74720732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgA2OiN (ORCPT
+        id S1726801AbgA2OiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:38:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:41970 "EHLO foss.arm.com"
+        Wed, 29 Jan 2020 09:38:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:41988 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgA2OiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:38:10 -0500
+        id S1726773AbgA2OiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 09:38:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E9E31B;
-        Wed, 29 Jan 2020 06:38:10 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0269A31B;
+        Wed, 29 Jan 2020 06:38:15 -0800 (PST)
 Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDA743F52E;
-        Wed, 29 Jan 2020 06:38:08 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B52D73F52E;
+        Wed, 29 Jan 2020 06:38:13 -0800 (PST)
 From:   Gilad Ben-Yossef <gilad@benyossef.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        stable@vger.kernel.org, linux-crypto@vger.kernel.org,
+Cc:     Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] crypto: ccree - only try to map auth tag if needed
-Date:   Wed, 29 Jan 2020 16:37:55 +0200
-Message-Id: <20200129143757.680-3-gilad@benyossef.com>
+Subject: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
+Date:   Wed, 29 Jan 2020 16:37:57 +0200
+Message-Id: <20200129143757.680-5-gilad@benyossef.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200129143757.680-1-gilad@benyossef.com>
 References: <20200129143757.680-1-gilad@benyossef.com>
@@ -45,37 +43,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to only add the size of the auth tag to the source mapping
-for encryption if it is an in-place operation. Failing to do this
-previously caused us to try and map auth size len bytes from a NULL
-mapping and crashing if both the cryptlen and assoclen are zero.
+Fix an error causing no block sizes to be reported during
+all AEAD registrations.
 
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/crypto/ccree/cc_aead.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
-index b938ceae7ae7..885347b5b372 100644
---- a/drivers/crypto/ccree/cc_buffer_mgr.c
-+++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -1109,9 +1109,11 @@ int cc_map_aead_request(struct cc_drvdata *drvdata, struct aead_request *req)
- 	}
+diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
+index edab44cbd353..b69cfbebc59a 100644
+--- a/drivers/crypto/ccree/cc_aead.c
++++ b/drivers/crypto/ccree/cc_aead.c
+@@ -2642,6 +2642,7 @@ static struct cc_crypto_alg *cc_create_aead_alg(struct cc_alg_template *tmpl,
  
- 	size_to_map = req->cryptlen + areq_ctx->assoclen;
--	if (areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT)
-+	/* If we do in-place encryption, we also need the auth tag */
-+	if ((areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT) &&
-+	   (req->src == req->dst)) {
- 		size_to_map += authsize;
--
-+	}
- 	if (is_gcm4543)
- 		size_to_map += crypto_aead_ivsize(tfm);
- 	rc = cc_map_sg(dev, req->src, size_to_map, DMA_BIDIRECTIONAL,
+ 	alg->base.cra_ctxsize = sizeof(struct cc_aead_ctx);
+ 	alg->base.cra_flags = CRYPTO_ALG_ASYNC | CRYPTO_ALG_KERN_DRIVER_ONLY;
++	alg->base.cra_blocksize = tmpl->blocksize;
+ 	alg->init = cc_aead_init;
+ 	alg->exit = cc_aead_exit;
+ 
 -- 
 2.25.0
 
