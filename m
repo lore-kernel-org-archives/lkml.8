@@ -2,375 +2,217 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC1AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A84C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A29820716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C27C20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YN7L/gHr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyQnY2lM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgA2KMw (ORCPT
+        id S1726609AbgA2KNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:12:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35476 "EHLO
+        Wed, 29 Jan 2020 05:13:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50899 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726010AbgA2KMt (ORCPT
+        with ESMTP id S1726010AbgA2KNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:12:49 -0500
+        Wed, 29 Jan 2020 05:13:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580292767;
+        s=mimecast20190719; t=1580292811;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mB15bcSS1+9wToP/4V851ez/NpDYolnlJSkxIQhHUfM=;
-        b=YN7L/gHrWW6cLTrQ8L4ygu5KqUA8E6qQ40OPHHrxZeZUK0J6gyHgjlH/8YWIgW2iJIY3gq
-        W5MZbwaLk6oye4m3QAmM5tWBep3cltTxgm6HnucllpXgZ6E9X8tIzAEFie9T98E5YYpMrn
-        r2wZ2/nIGJAYuB0oOndl2MmHiNcZCtk=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-e4VwAI5xMF-f9VeTpZJi1g-1; Wed, 29 Jan 2020 05:12:45 -0500
-X-MC-Unique: e4VwAI5xMF-f9VeTpZJi1g-1
-Received: by mail-qk1-f197.google.com with SMTP id s9so10207536qkg.21
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 02:12:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mB15bcSS1+9wToP/4V851ez/NpDYolnlJSkxIQhHUfM=;
-        b=PlPvfjhrmmq4H5h49fVE2j34WMxZl2BkuJRUqMiPZXQhYTv0Dr5vWTtaVTn7qy0q5k
-         8Hjxzc9nhsLBS+oFV/HDRjgzHSoaSvlFtsgimzlVTWLkPKhFiK2RVog5Vk043kQaYbBT
-         FycD2NLT+oYXalY2MWQIUHATIupuBObhNIx2RrtrvfK8vVFxnDHqR7b+q7WV7sKtIPZJ
-         D9iWPjl8U2JucQFib4q1Apbjt8qpeoMvgyeXGqmNlvFL6lFy3AkI3Hgv0JheTZQg379F
-         touA41PNCXfFAXrxZVZlEAAXt1Dz05SnDIeUx1WpR2uGo87c5XusvSaGeB3JJ1EadDFn
-         NjuA==
-X-Gm-Message-State: APjAAAXqS9nonsuLU1ufKI5Tt55PjIMX3To4IZ1VXm9L++WjaMFaQWrv
-        bPyUniR35RP2OrJfBjHzo9yWg7ilLAlSwV7Oy4F+pTlgsyKpI3sDVLcpw1MfrBAmFoavF3hwWlo
-        eCBgFpdZGSo84O8D/w81IpVaj
-X-Received: by 2002:a37:6292:: with SMTP id w140mr27865111qkb.65.1580292764938;
-        Wed, 29 Jan 2020 02:12:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwwAUx/KsP1PhEUG8vlmwKOKv2NV+8JdzpSrvGpOKuShPyiwUHW4zdi2JXEvQB0tphbgjSQMg==
-X-Received: by 2002:a37:6292:: with SMTP id w140mr27865076qkb.65.1580292764463;
-        Wed, 29 Jan 2020 02:12:44 -0800 (PST)
-Received: from redhat.com (bzq-109-64-11-187.red.bezeqint.net. [109.64.11.187])
-        by smtp.gmail.com with ESMTPSA id i28sm842769qtc.57.2020.01.29.02.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 02:12:43 -0800 (PST)
-Date:   Wed, 29 Jan 2020 05:12:38 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jing Liu <jing2.liu@linux.intel.com>
-Cc:     virtio-dev@lists.oasis-open.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, qemu-devel@nongnu.org,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Liu Jiang <gerry@linux.alibaba.com>,
-        Zha Bin <zhabin@linux.alibaba.com>
-Subject: Re: [virtio-dev] [PATCH v2 4/5] virtio-mmio: Introduce MSI details
-Message-ID: <20200129050656-mutt-send-email-mst@kernel.org>
-References: <1579614873-21907-1-git-send-email-jing2.liu@linux.intel.com>
- <1579614873-21907-5-git-send-email-jing2.liu@linux.intel.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=L+qbZWj1Dq9DCN3UBjsOR3vQdK9aGNYKvjc0qSPat1g=;
+        b=FyQnY2lM+gm2Hz1F9lkfUAFOwFjQpxapJKfW76WEo5sb4K0eMyNmOqgRldZYVUbBwEcm39
+        FxnysfkHc61CW6Q5osaJMZbxrwSwrHD9ultx1/sjjKF4422J+79EDG4O1XUfVDsFdWXacs
+        DwN9N602D9kOfHtF5dgTyV3iUA0y1kM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-i1THwa0_OyqgxQMseuaPCA-1; Wed, 29 Jan 2020 05:13:28 -0500
+X-MC-Unique: i1THwa0_OyqgxQMseuaPCA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C648A1800D41;
+        Wed, 29 Jan 2020 10:13:25 +0000 (UTC)
+Received: from [10.36.118.36] (unknown [10.36.118.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3710960BE0;
+        Wed, 29 Jan 2020 10:13:24 +0000 (UTC)
+Subject: Re: [Patch v2 4/4] mm/migrate.c: handle same node and add failure in
+ the same way
+To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
+        yang.shi@linux.alibaba.com, rientjes@google.com
+References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
+ <20200122011647.13636-5-richardw.yang@linux.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <17796dbb-b9b6-9481-5048-addfa5eec51e@redhat.com>
+Date:   Wed, 29 Jan 2020 11:13:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579614873-21907-5-git-send-email-jing2.liu@linux.intel.com>
+In-Reply-To: <20200122011647.13636-5-richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 09:54:32PM +0800, Jing Liu wrote:
-> With VIRTIO_F_MMIO_MSI feature bit offered, the Message Signal
-> Interrupts (MSI) is supported as first priority. For any reason it
-> fails to use MSI, it need use the single dedicated interrupt as before.
-> 
-> For MSI vectors and events mapping relationship, introduce in next patch.
-> 
-> Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
-> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
-> Co-developed-by: Liu Jiang <gerry@linux.alibaba.com>
-> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
-> Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
-> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+On 22.01.20 02:16, Wei Yang wrote:
+> When page is not queued for migration, there are two possible cases:
+>=20
+>   * page already on the target node
+>   * failed to add to migration queue
+>=20
+> Current code handle them differently, this leads to a behavior
+> inconsistency.
+>=20
+> Usually for each page's status, we just do store for once. While for th=
+e
+> page already on the target node, we might store the node information fo=
+r
+> twice:
+>=20
+>   * once when we found the page is on the target node
+>   * second when moving the pages to target node successfully after abov=
+e
+>     action
+>=20
+> The reason is even we don't add the page to pagelist, but store_status(=
+)
+> does store in a range which still contains the page.
+>=20
+> This patch handles these two cases in the same way to reduce this
+> inconsistency and also make the code a little easier to read.
+>=20
 
+I'd rephrase to
 
-So we have a concept of "MSI vectors" here, which can be
-selected and configured and which in the
-following patch are mapped to VQs either 1:1 or dynamically.
+"mm/migrate.c: unify "not queued for migration" handling in do_pages_move=
+()
 
+It can currently happen that we store the status of a page twice:
+* Once we detect that it is already on the target node
+* Once we moved a bunch of pages, and a page that's already on the
+  target node is contained in the current interval.
 
-My question is, do we need this indirection?
+Let's simplify the code and always call do_move_pages_to_node() in
+case we did not queue a page for migration. Note that pages that are
+already on the target node are not added to the pagelist and are,
+therefore, ignored by do_move_pages_to_node() - there is no functional
+change.
 
-In fact an MSI vector is just an address/data pair.
+The status of such a page is now only stored once.
+"
 
-So it seems that instead, we could just have commands specifying
-MSI address/data pairs for each VQ, and separately for config changes.
-
-It is useful to have hypervisor hint to guest how many different
-pairs should be allocated, and that could be the RO max value.
-
-
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 > ---
->  content.tex | 171 ++++++++++++++++++++++++++++++++++++++++++++++++++++++------
->  msi-state.c |   4 ++
->  2 files changed, 159 insertions(+), 16 deletions(-)
->  create mode 100644 msi-state.c
-> 
-> diff --git a/content.tex b/content.tex
-> index ff151ba..dcf6c71 100644
-> --- a/content.tex
-> +++ b/content.tex
-> @@ -1687,7 +1687,8 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->    \hline 
->    \mmioreg{InterruptStatus}{Interrupt status}{0x60}{R}{%
->      Reading from this register returns a bit mask of events that
-> -    caused the device interrupt to be asserted.
-> +    caused the device interrupt to be asserted. This is only used
-> +    when MSI is not enabled.
->      The following events are possible:
->      \begin{description}
->        \item[Used Buffer Notification] - bit 0 - the interrupt was asserted
-> @@ -1701,7 +1702,7 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->    \mmioreg{InterruptACK}{Interrupt acknowledge}{0x064}{W}{%
->      Writing a value with bits set as defined in \field{InterruptStatus}
->      to this register notifies the device that events causing
-> -    the interrupt have been handled.
-> +    the interrupt have been handled. This is only used when MSI is not enabled.
->    }
->    \hline 
->    \mmioreg{Status}{Device status}{0x070}{RW}{%
-> @@ -1760,6 +1761,47 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->      \field{SHMSel} is unused) results in a base address of
->      0xffffffffffffffff.
->    }
-> +  \hline
-> +  \mmioreg{MsiVecNum}{MSI max vector number}{0x0c0}{R}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, reading
-> +    from this register returns the maximum MSI vector number
-> +    that device supports.
-> +  }
-> +  \hline
-> +  \mmioreg{MsiState}{MSI state}{0x0c4}{R}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, reading
-> +    from this register returns the global MSI enable/disable status.
-> +    \lstinputlisting{msi-state.c}
-> +  }
-> +  \hline
-> +  \mmioreg{MsiCmd}{MSI command}{0x0c8}{W}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, writing
-> +    to this register executes the corresponding command to device.
-> +    Part of this applies to the MSI vector selected by writing to \field{MsiVecSel}.
-> +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Device Initialization / MSI Vector Configuration}
-> +    for using details.
-> +  }
-> +  \hline
-> +  \mmioreg{MsiVecSel}{MSI vector index}{0x0d0}{W}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, writing
-> +    to this register selects the MSI vector index that the following operations
-> +    on \field{MsiAddrLow}, \field{MsiAddrHigh}, \field{MsiData} and part of
-> +    \field{MsiCmd} commands specified in \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Device Initialization / MSI Vector Configuration}
-> +    apply to. The index number of the first vector is zero (0x0).
-> +  }
-> +  \hline
-> +  \mmiodreg{MsiAddrLow}{MsiAddrHigh}{MSI 64 bit address}{0x0d4}{0x0d8}{W}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, writing
-> +    to these two registers (lower 32 bits of the address to \field{MsiAddrLow},
-> +    higher 32 bits to \field{MsiAddrHigh}) notifies the device about the
-> +    MSI address. This applies to the MSI vector selected by writing to \field{MsiVecSel}.
-> +  }
-> +  \hline
-> +  \mmioreg{MsiData}{MSI 32 bit data}{0x0dc}{W}{%
-> +    When VIRTIO_F_MMIO_MSI has been negotiated, writing
-> +    to this register notifies the device about the MSI data.
-> +    This applies to the MSI vector selected by writing to \field{MsiVecSel}.
-> +  }
->    \hline 
->    \mmioreg{ConfigGeneration}{Configuration atomicity value}{0x0fc}{R}{
->      Reading from this register returns a value describing a version of the device-specific configuration space (see \field{Config}).
-> @@ -1783,10 +1825,16 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->  
->  The device MUST return value 0x2 in \field{Version}.
->  
-> -The device MUST present each event by setting the corresponding bit in \field{InterruptStatus} from the
-> +When MSI is disabled, the device MUST present each event by setting the
-> +corresponding bit in \field{InterruptStatus} from the
->  moment it takes place, until the driver acknowledges the interrupt
-> -by writing a corresponding bit mask to the \field{InterruptACK} register.  Bits which
-> -do not represent events which took place MUST be zero.
-> +by writing a corresponding bit mask to the \field{InterruptACK} register.
-> +Bits which do not represent events which took place MUST be zero.
-> +
-> +When MSI is enabled, the device MUST NOT set \field{InterruptStatus} and MUST
-> +ignore \field{InterruptACK}.
-> +
-> +Upon reset, the device MUST clear \field{msi_enabled} bit in \field{MsiState}.
->  
->  Upon reset, the device MUST clear all bits in \field{InterruptStatus} and ready bits in the
->  \field{QueueReady} register for all queues in the device.
-> @@ -1835,7 +1883,12 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->  
->  The driver MUST ignore undefined bits in \field{InterruptStatus}.
->  
-> -The driver MUST write a value with a bit mask describing events it handled into \field{InterruptACK} when
-> +The driver MUST ignore undefined bits in the return value of reading \field{MsiState}.
-> +
-> +When MSI is enabled, the driver MUST NOT access \field{InterruptStatus} and MUST NOT write to \field{InterruptACK}.
-> +
-> +When MSI is disabled, the driver MUST write a value with a bit mask
-> +describing events it handled into \field{InterruptACK} when
->  it finishes handling an interrupt and MUST NOT set any of the undefined bits in the value.
->  
->  \subsection{MMIO-specific Initialization And Device Operation}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation}
-> @@ -1856,6 +1909,63 @@ \subsubsection{Device Initialization}\label{sec:Virtio Transport Options / Virti
->  Further initialization MUST follow the procedure described in
->  \ref{sec:General Initialization And Device Operation / Device Initialization}~\nameref{sec:General Initialization And Device Operation / Device Initialization}.
->  
-> +\paragraph{MSI Vector Configuration}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Device Initialization / MSI Vector Configuration}
-> +The VIRTIO_F_MMIO_MSI feature bit offered by device shows the capability
-> +using MSI vectors for virtqueue and configuration events.
-> +
-> +When VIRTIO_F_MMIO_MSI has been negotiated,
-> +writing \field{MsiCmd} executes a corresponding command to the device:
-> +
-> +VIRTIO_MMIO_MSI_CMD_ENABLE and VIRTIO_MMIO_MSI_CMD_DISABLE commands set global
-> +MSI enable and disable status.
-> +
-> +VIRTIO_MMIO_MSI_CMD_CONFIGURE is used to configure the MSI vector
-> +applying to the one selected by writing to \field{MsiVecSel}.
-> +
-> +VIRTIO_MMIO_MSI_CMD_MASK and VIRTIO_MMIO_MSI_CMD_UNMASK commands are used to
-> +mask and unmask the MSI vector applying to the one selected by writing
-> +to \field{MsiVecSel}.
-> +
-> +\begin{lstlisting}
-> +#define  VIRTIO_MMIO_MSI_CMD_ENABLE           0x1
-> +#define  VIRTIO_MMIO_MSI_CMD_DISABLE          0x2
-> +#define  VIRTIO_MMIO_MSI_CMD_CONFIGURE        0x3
-> +#define  VIRTIO_MMIO_MSI_CMD_MASK             0x4
-> +#define  VIRTIO_MMIO_MSI_CMD_UNMASK           0x5
-> +\end{lstlisting}
-> +
-> +Setting a special NO_VECTOR value means disabling an interrupt for an event type.
-> +
-> +\begin{lstlisting}
-> +/* Vector value used to disable MSI for event */
-> +#define VIRTIO_MMIO_MSI_NO_VECTOR             0xffffffff
-> +\end{lstlisting}
-> +
-> +\drivernormative{\subparagraph}{MSI Vector Configuration}{Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / MSI Vector Configuration}
-> +When VIRTIO_F_MMIO_MSI has been negotiated, driver should try to configure
-> +and enable MSI.
-> +
-> +To configure MSI vector, driver SHOULD firstly specify the MSI vector index by
-> +writing to \field{MsiVecSel}.
-> +Then notify the MSI address and data by writing to \field{MsiAddrLow}, \field{MsiAddrHigh},
-> +and \field{MsiData}, and immediately follow a \field{MsiCmd} write operation
-> +using VIRTIO_MMIO_MSI_CMD_CONFIGURE to device for configuring an event to
-> +this MSI vector.
-> +
-> +After all MSI vectors are configured, driver SHOULD set global MSI enabled
-> +by writing to \field{MsiCmd} using VIRTIO_MMIO_MSI_CMD_ENABLE.
-> +
-> +Driver should use VIRTIO_MMIO_MSI_CMD_DISABLE when disabling MSI.
-> +
-> +Driver should use VIRTIO_MMIO_MSI_CMD_MASK with an MSI index \field{MsiVecSel}
-> +to prohibit the event from the corresponding interrupt source.
-> +
-> +Driver should use VIRTIO_MMIO_MSI_CMD_UNMASK with an MSI index \field{MsiVecSel}
-> +to recover the event from the corresponding interrupt source.
-> +
-> +If driver fails to setup any event with a vector,
-> +it MUST disable MSI by \field{MsiCmd} and use the single dedicated interrupt for device.
-> +
->  \subsubsection{Notification Structure Layout}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Structure Layout}
->  
->  When VIRTIO_F_MMIO_NOTIFICATION has been negotiated, the notification location is calculated
-> @@ -1908,6 +2018,12 @@ \subsubsection{Virtqueue Configuration}\label{sec:Virtio Transport Options / Vir
->     \field{QueueDriverLow}/\field{QueueDriverHigh} and
->     \field{QueueDeviceLow}/\field{QueueDeviceHigh} register pairs.
->  
-> +\item Write MSI address \field{MsiAddrLow}/\field{MsiAddrHigh},
-> +MSI data \field{MsiData} and MSI update command \field{MsiCtrlStat} with corresponding
-> +virtqueue index to update
-> +MSI configuration for device requesting interrupts triggered by
-> +virtqueue events.
-> +
->  \item Write 0x1 to \field{QueueReady}.
->  \end{enumerate}
->  
-> @@ -1932,20 +2048,43 @@ \subsubsection{Available Buffer Notifications}\label{sec:Virtio Transport Option
->  
->  \subsubsection{Notifications From The Device}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notifications From The Device}
->  
-> -The memory mapped virtio device is using a single, dedicated
-> +If MSI is enabled, the memory mapped virtio
-> +device uses appropriate MSI interrupt message
-> +for configuration change notification and used buffer notification which are
-> +configured by \field{MsiAddrLow}, \field{MsoAddrHigh} and \field{MsiData}.
-> +
-> +If MSI is not enabled, the memory mapped virtio device
-> +uses a single, dedicated
->  interrupt signal, which is asserted when at least one of the
->  bits described in the description of \field{InterruptStatus}
-> -is set. This is how the device sends a used buffer notification
-> -or a configuration change notification to the device.
-> +is set.
->  
->  \drivernormative{\paragraph}{Notifications From The Device}{Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notifications From The Device}
-> -After receiving an interrupt, the driver MUST read
-> -\field{InterruptStatus} to check what caused the interrupt (see the
-> -register description).  The used buffer notification bit being set
-> -SHOULD be interpreted as a used buffer notification for each active
-> -virtqueue.  After the interrupt is handled, the driver MUST acknowledge
-> -it by writing a bit mask corresponding to the handled events to the
-> -InterruptACK register.
-> +A driver MUST handle the case where MSI is disabled, which uses the same interrupt indicating both device configuration
-> +space change and one or more virtqueues being used.
-> +
-> +\subsubsection{Driver Handling Interrupts}\label{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Driver Handling Interrupts}
-> +
-> +The driver interrupt handler would typically:
-> +
-> +\begin{itemize}
-> +  \item If MSI is enabled:
-> +    \begin{itemize}
-> +      \item
-> +        Figure out the virtqueue mapped to that MSI vector for the
-> +        device, to see if any progress has been made by the device
-> +        which requires servicing.
-> +      \item
-> +        If the interrupt belongs to configuration space changing signal,
-> +        re-examine the configuration space to see what changed.
-> +    \end{itemize}
-> +  \item If MSI is disabled:
-> +    \begin{itemize}
-> +      \item Read \field{InterruptStatus} to check what caused the interrupt.
-> +      \item Acknowledge the interrupt by writing a bit mask corresponding
-> +            to the handled events to the InterruptACK register.
-> +    \end{itemize}
-> +\end{itemize}
->  
->  \subsection{Legacy interface}\label{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}
->  
-> diff --git a/msi-state.c b/msi-state.c
-> new file mode 100644
-> index 0000000..b1fa0c1
-> --- /dev/null
-> +++ b/msi-state.c
-> @@ -0,0 +1,4 @@
-> +le32 {
-> +    msi_enabled : 1;
-> +    reserved : 31;
-> +};
-> -- 
-> 2.7.4
-> 
-> 
-> ---------------------------------------------------------------------
-> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
-> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>  mm/migrate.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 80d2bba57265..591f2e5caed6 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1654,18 +1654,18 @@ static int do_pages_move(struct mm_struct *mm, =
+nodemask_t task_nodes,
+>  		err =3D add_page_for_migration(mm, addr, current_node,
+>  				&pagelist, flags & MPOL_MF_MOVE_ALL);
+> =20
+> -		if (!err) {
+> -			/* The page is already on the target node */
+> -			err =3D store_status(status, i, current_node, 1);
+> -			if (err)
+> -				goto out_flush;
+> -			continue;
+> -		} else if (err > 0) {
+> +		if (err > 0) {
+>  			/* The page is successfully queued for migration */
+>  			continue;
+>  		}
+> =20
+> -		err =3D store_status(status, i, err, 1);
+> +		/*
+> +		 * Two possible cases for err here:
+> +		 * =3D=3D 0: page is already on the target node, then store
+> +		 *       current_node to status
+> +		 * <  0: failed to add page to list, then store err to status
+> +		 */
+
+I'd shorten that to
+
+/*
+ * If the page is already on the target node (!err), store the node,
+ * otherwise, store the err.
+*/
+
+> +		err =3D store_status(status, i, err ? : current_node, 1);
+>  		if (err)
+>  			goto out_flush;
+> =20
+>=20
+
+Thanks!
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+--=20
+Thanks,
+
+David / dhildenb
 
