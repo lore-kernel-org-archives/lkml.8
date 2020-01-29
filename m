@@ -2,121 +2,159 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6388AC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D612064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3914A2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLloQdRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgA2MWi (ORCPT
+        id S1726683AbgA2MXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:22:38 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:49599 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbgA2MWi (ORCPT
+        Wed, 29 Jan 2020 07:23:15 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35103 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgA2MXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:22:38 -0500
-Received: from [109.168.11.45] (port=53528 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1iwmMd-003SkO-88; Wed, 29 Jan 2020 13:22:35 +0100
-Subject: Re: [PATCH v2 01/28] docs: i2c: sort index logically
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     linux-i2c@vger.kernel.org, linux-doc@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-References: <20200123135103.20540-1-luca@lucaceresoli.net>
- <20200123135103.20540-2-luca@lucaceresoli.net>
- <20200124133548.7f01344a@endymion>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e941cfae-f267-4c0e-b8e2-1dd99fbdb563@lucaceresoli.net>
-Date:   Wed, 29 Jan 2020 13:22:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 29 Jan 2020 07:23:15 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l24so8761338pgk.2;
+        Wed, 29 Jan 2020 04:23:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zw2QOXTYa4DPfoFWBlgmT0QVWsY+VSIRNslcmp73E4U=;
+        b=dLloQdRrHAzD9N+RT3r+t+VeVn1ngk7JOdmn4PXhf9VBwZ5aqozvIWUq0QzaSf+6w2
+         49nN1Nl1bC6myj8/VRFvqtknJXFC9Bw8rZ4pXwBXjGnfRpIzQFHeStnGX84YaP8wOvmm
+         43IkND/A1PK9AndEw8xUfQVnteZ6/CiuAS9Zp3HIfBa0iwSTA2Zcw41EkjM1x1caTvU4
+         gr9y9Rx/QoQmf0wCJBBaklKAwEtYIHWh7+UKTlnASItW7O9w4r/9nCWX/K+P3Bs/1mv5
+         S9YKrAUWrzS4p3Q0DyrxvV2iSdNIGY8XoA67arpfYzNPZabxza5uhPQmzGj85/yl6EvV
+         VOOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Zw2QOXTYa4DPfoFWBlgmT0QVWsY+VSIRNslcmp73E4U=;
+        b=MhYhGi/eSDH4MZ03LoKe1f40cR3hm/AyhyURHTPoTlSiP3hB2VnBjJ66JOlze2HPk9
+         ak/GD0YsfRHmfrngz/SY+eePXYV0WJos9hVG+KucpurXvW4bs21KjV6aqFz+mxFADNCI
+         UAfjQ7M1x0o7n/e+g2w4oa+day7jQADnrWwFSZuvkwoMmjivCZVJp2pgilSHsZ7gqFUM
+         1hqKg6zaV7CTJsFGkWlrnsBGxmOD4vwhT0Eckpzr4dhVEuRSrgDF+CKB4J8MqUDepqzY
+         hCdmHjh5k1I0TSOrF2cFVl8gPLOYO+Lpd5R4YhBDseB9OWzrVZtRd0k2w3I6h5KuN8jk
+         eR9Q==
+X-Gm-Message-State: APjAAAW8hv7xy7yGfFQ1CGzE5JyQs4BzU81N6Eg1iQqiaPAt5xrEEJRO
+        Io2N7eAdSfn/GDzzB1k1Pko=
+X-Google-Smtp-Source: APXvYqxsajtGXiWfJo7puAJC96Gh1QHON9TNgislJuPYpCDA2oHS69K5SxciFe4TldTfyBS2XnF8Mg==
+X-Received: by 2002:a63:f403:: with SMTP id g3mr30619483pgi.62.1580300594266;
+        Wed, 29 Jan 2020 04:23:14 -0800 (PST)
+Received: from Gentoo ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id r145sm2749967pfr.5.2020.01.29.04.23.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 04:23:13 -0800 (PST)
+Date:   Wed, 29 Jan 2020 17:53:01 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: wireguard ci hooked up to quite a few kernel trees
+Message-ID: <20200129122259.GA25949@Gentoo>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200124133548.7f01344a@endymion>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Disposition: inline
+In-Reply-To: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
 
-On 24/01/20 13:35, Jean Delvare wrote:
-> On Thu, 23 Jan 2020 14:50:36 +0100, Luca Ceresoli wrote:
->> The index page currently lists sections in alphabetical file order without
->> caring about their content. Sort sections based on their content logically,
->> according to the following structure:
->>
->>  * Intro to I2C/SMBus and their usage in Linux: summary, i2c-protocol,
->>    smbus-protocol, instantiating-devices, busses/index, i2c-topology,
->>    muxes/i2c-mux-gpio
->>  * Implementing drivers: writing-clients, dev-interface,
->>    dma-considerations, fault-codes, functionality
->>  * Debugging: gpio-fault-injection, i2c-stub
->>  * Slave I2C: slave-interface, slave-eeprom-backend
->>  * Advanced: ten-bit-addresses
->>  * Obsolete info: upgrading-clients, old-module-parameters
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> Reviewed-by: Jean Delvare <jdelvare@suse.de>
->>
->> ---
->>
->> Changes in v2:
->>  - split sections in groups (suggested by Jean Delvare)
->>  - remove consecutive blank lines (reported by Jean Delvare)
->> ---
->>  Documentation/i2c/index.rst | 59 ++++++++++++++++++++++++++++++-------
->>  1 file changed, 48 insertions(+), 11 deletions(-)
->>
->> diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
->> index a0fbaf6d0675..f0f3b9c97abb 100644
->> --- a/Documentation/i2c/index.rst
->> +++ b/Documentation/i2c/index.rst
->> @@ -4,30 +4,67 @@
->>  I2C/SMBus Subsystem
->>  ===================
->>  
->> +Introduction
->> +============
->> +
->> +.. toctree::
->> +   :maxdepth: 1
->> +
->> +   summary
->> +   i2c-protocol
->> +   smbus-protocol
->> +   instantiating-devices
->> +   busses/index
->> +   i2c-topology
->> +   muxes/i2c-mux-gpio
->> +
->> +
-> 
-> You still have a double blank line here, not sure if this is intended?
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-It's not intended. Thanks for double checking!
+Looks bloody good Jason! thanks, man!
 
-I fixed this patch as well as patch 11. v3 on its way.
+~Bhaskar
 
--- 
-Luca
+On 13:15 Wed 29 Jan 2020, Jason A. Donenfeld wrote:
+>Hi all,
+>
+>With the merging of wireguard, I've hooked the project's CI up to
+>quite a few trees. We now have:
+>
+>- net-next
+>- net
+>- linux-next
+>- linux (Linus' tree)
+>- wireguard-linux (my tree)
+>- wireguard-linux-compat (backports to kernels 3.10 - 5.5)
+>
+>When the various pushes and pulls click a few more cranks through the
+>machinery, I'll probably add crypto and cryptodev, and eventually
+>Greg's stable trees. If anybody has suggestions on other relevant
+>trees that might help catch bugs as early as possible, I'm all ears.
+>
+>Right now builds are kicked off for every single commit made to each
+>one of these trees, on x86_64, i686, aarch64, aarch64_be, arm, armeb,
+>mips64, mips64el, mips, mipsel, powerpc64le, powerpc, and m68k. For
+>each of these, a fresh kernel and miniature userland containing the
+>test suite is built from source, and then booted in qemu.
+>
+>Even though the CI at the moment is focused on the wireguard test
+>suite, it has a habit of finding lots of bugs and regressions in other
+>weird places. For example, linux-next is failing at the moment on a
+>few archs.
+>
+>I run this locally every day all day while developing kernel things
+>too. It's one command to test a full kernel for whatever thing I'm
+>working on, and this winds up saving a lot of time in development and
+>lets me debug things with printk in the dumbest ways possible while
+>still being productive and efficient.
+>
+>You can view the current build status here:
+>https://www.wireguard.com/build-status/
+>
+>This sort of CI is another take on the kernel CI problem; I know a few
+>organizations are doing similar things. I'd be happy to eventually
+>expand this into something more general, should there be sufficient
+>interest -- probably initially on networking stuff -- or it might turn
+>out that this simply inspires something else that is more general and
+>robust, which is fine too. Either way, here's my contribution to the
+>modicum of kernel CI things happening.
+>
+>Regards,
+>Jason
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl4xeR8ACgkQsjqdtxFL
+KRX0iQf/TkKseJ2jksqjmC+bnMd9mnIox1pWzGwElpv1csKIwul3m+TnHGRFSCOu
+FBbHlw0MSrrEB0dOyG5NJr2GqtGiEJ1ogoLT6XjUq4qpcaIljJU3gU35c6UKiM12
+ThYstC9ZfdXoPgPI5n5qL3p8rTp71Aj7b947ZRfQ2SEMQiEZ5wEgwAwK+fV0yAsa
+VwqJxZy2jZTiOABqW8Ez65YyhceUDvGfv0G1K6EdZdyWfHsoOHXUH24C4jdtGFWi
+m+I7ZnFM9LFlzz1Fyh62PDwIBMYHegW3rvm6q3XawJo4+8VYodApw5axbRDfjGFK
+tMcQCZyCSD4Rtpv+Vrfg0Toveq4nOw==
+=cnyd
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
