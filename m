@@ -2,247 +2,123 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047CDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F80C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6855206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D20206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 18:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580322033;
+	bh=LvoXdvznlP7G0tgiMLKIf8Qlwe1SWx6uPYbpHMmrbyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K5ZAlZ5jGGHDZkePsbvZ5Pqc73XL9RVNNRfhMfGH8wr2P8fGabLy8AaXY1XlTGo2j
+	 iD4+JuspxmJXZtvp34a/e/QFAXd5pMRWGVKw7IokHUPe5YjdEJY6JhOJdncxPeHMIe
+	 7WSCg22LBbRlmoMpOtiWX9Zz84EMWZiHzdu5vc2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgA2SUO (ORCPT
+        id S1727473AbgA2SUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 13:20:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44276 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgA2SUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 13:20:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 02436B2A7;
-        Wed, 29 Jan 2020 18:20:09 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Gregory Farnum <gfarnum@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH 1/1] ceph: parallelize all copy-from requests in copy_file_range
-Date:   Wed, 29 Jan 2020 18:20:11 +0000
-Message-Id: <20200129182011.5483-2-lhenriques@suse.com>
-In-Reply-To: <20200129182011.5483-1-lhenriques@suse.com>
-References: <20200129182011.5483-1-lhenriques@suse.com>
+        Wed, 29 Jan 2020 13:20:32 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39086 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgA2SUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 13:20:32 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m13so774466edb.6;
+        Wed, 29 Jan 2020 10:20:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yAlt9sUhm5zn3CkiuoYhtDJJhOfJezTwh/rQdwcy2qo=;
+        b=eJRQTd+UmPmkPeVCidfgtok3ECCsOhxDAtf2V1lu1Jm1LFsOLwaQkP+TNA3tAy6Bcf
+         SDn+HWH8CjKEurIHA1eJxmZpUeXTX+qXseSGh20j8FncSonzqK8pprKkKZkzt0DqGGPt
+         UeU+ZeHCK8qfopA9V8wlLgvupSiapbI9caE5HA5OgKqun6qCrxbrjw3VyoF1k3DciLQR
+         WsaZDNHnaBrtVqwsfN9kHr3B9tj0jD/Mxu9epEbKl1wsvI7M3bHUJ/Mn0uQGkITlgFBX
+         R5ixb6lteoMasgLcaUWYZdT6UXstz8VGSazUDeC/Lick12exoeCiPk355CBYdBujDRBt
+         djBQ==
+X-Gm-Message-State: APjAAAXBbnV8jEm2tacxEukq+Tk8Zq9LDLBqf0KAuz16YCsI34mbZG1R
+        N+e9FZ+WSqLv0E3VqbcmGOk=
+X-Google-Smtp-Source: APXvYqyM76d1tXBOIO/kDgSXHenjgUCHVzUXMOBkFUyHNley4ZSGxzdiDbG0DVWYM1y6KBWr7W0ByQ==
+X-Received: by 2002:a05:6402:1764:: with SMTP id da4mr264387edb.24.1580322030093;
+        Wed, 29 Jan 2020 10:20:30 -0800 (PST)
+Received: from kozik-lap ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id e22sm315486edq.75.2020.01.29.10.20.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jan 2020 10:20:29 -0800 (PST)
+Date:   Wed, 29 Jan 2020 19:20:27 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [GIT PULL] USB/Thunderbolt/PHY patches for 5.6-rc1
+Message-ID: <20200129182027.GA13142@kozik-lap>
+References: <20200129101401.GA3858221@kroah.com>
+ <CAHk-=wgwBfz0CtAFZMDy=A_Wz0+=dzrfWWiHESUD9CxnV=Xyjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgwBfz0CtAFZMDy=A_Wz0+=dzrfWWiHESUD9CxnV=Xyjw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
-operations, waiting for each request to complete before sending the next
-one.  This patch modifies copy_file_range so that all the 'copy-from'
-operations are sent in bulk and wait for its completion at the end.  This
-will allow significant speed-ups, specially when sending requests to
-different target OSDs.
+On Wed, Jan 29, 2020 at 10:11:26AM -0800, Linus Torvalds wrote:
+> On Wed, Jan 29, 2020 at 2:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > Here is the big USB and Thunderbolt and PHY driver updates for 5.6-rc1.
+> 
+> Hmm. This actually causes a new warning even before I start building it:
+> 
+>   WARNING: unmet direct dependencies detected for I2C_S3C2410
+>     Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+>     Selected by [m]:
+>     - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST
+> [=y]) && HAS_IOMEM [=y] && OF [=y]
+> 
+> and the cause seems to be
+> 
+>   203b7ee14d3a ("phy: Enable compile testing for some of drivers")
+> 
+> where PHY_EXYNOS5250_SATA now has a
+> 
+>   depends on SOC_EXYNOS5250 || COMPILE_TEST
+>   depends on HAS_IOMEM
+>   depends on OF
+> 
+> and then blindly does a
+> 
+>   select I2C_S3C2410
+> 
+> without having the dependencies that I2C_S3C2410 has.
+> 
+> How did this ever pass any testing in linux-next without being
+> noticed, when I noticed within five seconds of pulling it? It
+> literally warns immediately on "make allmodconfig".
+> 
+> The warnings happen during the build too, as it does the silentconfig.
+> So I'm not sure how this was missed.
+> 
+> Stephen, does linux-next perhaps miss these config-time warnings?
+> 
+> I have partially reverted that commit in my merge (removing the "||
+> COMPILE_TEST" for that PHY_EXYNOS5250_SATA entry) because warnings are
+> not acceptable.
 
-There's also a throttling mechanism so that OSDs aren't flooded with
-requests when a client performs a big file copy.  Currently the throttling
-mechanism simply waits for the requests when the number of in-flight
-requests reaches (wsize / object size) * 4.
+Hi Linus,
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
- fs/ceph/file.c                  | 34 ++++++++++++++++++++--
- include/linux/ceph/osd_client.h |  5 +++-
- net/ceph/osd_client.c           | 50 ++++++++++++++++++++++++---------
- 3 files changed, 72 insertions(+), 17 deletions(-)
+The I2C fix for this is in Wolfram's tree already:
+https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 1e6cdf2dfe90..77a16324dcb4 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1943,12 +1943,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
- 	struct ceph_object_locator src_oloc, dst_oloc;
- 	struct ceph_object_id src_oid, dst_oid;
-+	struct ceph_osd_request *req;
- 	loff_t endoff = 0, size;
- 	ssize_t ret = -EIO;
- 	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
- 	u32 src_objlen, dst_objlen, object_size;
--	int src_got = 0, dst_got = 0, err, dirty;
-+	int src_got = 0, dst_got = 0, err, dirty, ncopies;
- 	bool do_final_copy = false;
-+	LIST_HEAD(osd_reqs);
- 
- 	if (src_inode->i_sb != dst_inode->i_sb) {
- 		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-@@ -2083,6 +2085,12 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			goto out_caps;
- 	}
- 	object_size = src_ci->i_layout.object_size;
-+
-+	/*
-+	 * Throttle the object copies: ncopies holds the number of allowed
-+	 * in-flight 'copy-from' requests before waiting for their completion
-+	 */
-+	ncopies = (src_fsc->mount_options->wsize / object_size) * 4;
- 	while (len >= object_size) {
- 		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
- 					      object_size, &src_objnum,
-@@ -2097,7 +2105,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 		ceph_oid_printf(&dst_oid, "%llx.%08llx",
- 				dst_ci->i_vino.ino, dst_objnum);
- 		/* Do an object remote copy */
--		err = ceph_osdc_copy_from(
-+		req = ceph_osdc_copy_from(
- 			&src_fsc->client->osdc,
- 			src_ci->i_vino.snap, 0,
- 			&src_oid, &src_oloc,
-@@ -2108,7 +2116,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
- 			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
- 			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
--		if (err) {
-+		if (IS_ERR(req)) {
-+			err = PTR_ERR(req);
- 			if (err == -EOPNOTSUPP) {
- 				src_fsc->have_copy_from2 = false;
- 				pr_notice("OSDs don't support 'copy-from2'; "
-@@ -2117,14 +2126,33 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 			dout("ceph_osdc_copy_from returned %d\n", err);
- 			if (!ret)
- 				ret = err;
-+			/* wait for all queued requests */
-+			ceph_osdc_wait_requests(&osd_reqs);
- 			goto out_caps;
- 		}
-+		list_add(&req->r_private_item, &osd_reqs);
- 		len -= object_size;
- 		src_off += object_size;
- 		dst_off += object_size;
- 		ret += object_size;
-+		if (--ncopies == 0) {
-+			err = ceph_osdc_wait_requests(&osd_reqs);
-+			if (err) {
-+				if (!ret)
-+					ret = err;
-+				goto out_caps;
-+			}
-+			ncopies = (src_fsc->mount_options->wsize /
-+				   object_size) * 4;
-+		}
- 	}
- 
-+	err = ceph_osdc_wait_requests(&osd_reqs);
-+	if (err) {
-+		if (!ret)
-+			ret = err;
-+		goto out_caps;
-+	}
- 	if (len)
- 		/* We still need one final local copy */
- 		do_final_copy = true;
-diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
-index 5a62dbd3f4c2..25565dbfd65a 100644
---- a/include/linux/ceph/osd_client.h
-+++ b/include/linux/ceph/osd_client.h
-@@ -526,7 +526,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
- 				struct timespec64 *mtime,
- 				struct page **pages, int nr_pages);
- 
--int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
-+struct ceph_osd_request *ceph_osdc_copy_from(
-+			struct ceph_osd_client *osdc,
- 			u64 src_snapid, u64 src_version,
- 			struct ceph_object_id *src_oid,
- 			struct ceph_object_locator *src_oloc,
-@@ -537,6 +538,8 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
- 			u32 truncate_seq, u64 truncate_size,
- 			u8 copy_from_flags);
- 
-+int ceph_osdc_wait_requests(struct list_head *osd_reqs);
-+
- /* watch/notify */
- struct ceph_osd_linger_request *
- ceph_osdc_watch(struct ceph_osd_client *osdc,
-diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
-index b68b376d8c2f..c123e231eaf4 100644
---- a/net/ceph/osd_client.c
-+++ b/net/ceph/osd_client.c
-@@ -5346,23 +5346,47 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
- 	return 0;
- }
- 
--int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
--			u64 src_snapid, u64 src_version,
--			struct ceph_object_id *src_oid,
--			struct ceph_object_locator *src_oloc,
--			u32 src_fadvise_flags,
--			struct ceph_object_id *dst_oid,
--			struct ceph_object_locator *dst_oloc,
--			u32 dst_fadvise_flags,
--			u32 truncate_seq, u64 truncate_size,
--			u8 copy_from_flags)
-+int ceph_osdc_wait_requests(struct list_head *osd_reqs)
-+{
-+	struct ceph_osd_request *req;
-+	int ret = 0, err;
-+
-+	while (!list_empty(osd_reqs)) {
-+		req = list_first_entry(osd_reqs,
-+				       struct ceph_osd_request,
-+				       r_private_item);
-+		list_del_init(&req->r_private_item);
-+		err = ceph_osdc_wait_request(req->r_osdc, req);
-+		if (err) {
-+			if (!ret)
-+				ret = err;
-+			dout("copy request failed (err=%d)\n", err);
-+		}
-+		ceph_osdc_put_request(req);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(ceph_osdc_wait_requests);
-+
-+struct ceph_osd_request *ceph_osdc_copy_from(
-+		struct ceph_osd_client *osdc,
-+		u64 src_snapid, u64 src_version,
-+		struct ceph_object_id *src_oid,
-+		struct ceph_object_locator *src_oloc,
-+		u32 src_fadvise_flags,
-+		struct ceph_object_id *dst_oid,
-+		struct ceph_object_locator *dst_oloc,
-+		u32 dst_fadvise_flags,
-+		u32 truncate_seq, u64 truncate_size,
-+		u8 copy_from_flags)
- {
- 	struct ceph_osd_request *req;
- 	int ret;
- 
- 	req = ceph_osdc_alloc_request(osdc, NULL, 1, false, GFP_KERNEL);
- 	if (!req)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
- 
- 	req->r_flags = CEPH_OSD_FLAG_WRITE;
- 
-@@ -5381,11 +5405,11 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
- 		goto out;
- 
- 	ceph_osdc_start_request(osdc, req, false);
--	ret = ceph_osdc_wait_request(osdc, req);
-+	return req;
- 
- out:
- 	ceph_osdc_put_request(req);
--	return ret;
-+	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL(ceph_osdc_copy_from);
- 
+Best regards,
+Krzysztof
+
