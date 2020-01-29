@@ -2,73 +2,75 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39BEC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA6E207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4271A20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 10:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="haCEa77l"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MgUrR9fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgA2KpO (ORCPT
+        id S1726723AbgA2KqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 05:45:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59030 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2KpO (ORCPT
+        Wed, 29 Jan 2020 05:46:17 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:10161 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726091AbgA2KqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 05:45:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Subject:Cc:To:From:Date:Message-Id:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=we/4Fl/l94slaz/GSOPIlS4lUUi9W+pKMjbWxf4YQWU=; b=haCEa77lyvI7dbf2bAz/aEnPY
-        RCmjnMorFr5kPIs8k4hbfw7gdVZVgxzGXAtyR1LzWamrOUXE7kSkk8cw9DSPK8yHL8ACbc+iMp3MF
-        oZW+kyABFwzhfVXhSiyzin0d+K8HbpvI9FAFpgf8/FpwClaq6/qIka2uhu3ffgL0QkF3AL4t979RP
-        +WpGq9gjdsL2e9Ai9inaSmxIUNe55IyapYFyA3zheS2Mq7Z0Dt1n5is9sy8T7fQ3HEP4nd3rB/ey2
-        Fki5GyiRcMXRCkAN1qtNKm8N7Q7R9haXVZTHlz8QI9GooAGuBtaMHtHUHj6oZ8zB8NWomJgMHEi/T
-        32tQa3RfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iwkqM-0001DW-Ox; Wed, 29 Jan 2020 10:45:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0BCA300606;
-        Wed, 29 Jan 2020 11:43:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 7CEA62B2E7F2E; Wed, 29 Jan 2020 11:45:07 +0100 (CET)
-Message-Id: <20200129103941.304769381@infradead.org>
-User-Agent: quilt/0.65
-Date:   Wed, 29 Jan 2020 11:39:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 0/5] Rewrite Motorola MMU page-table layout
+        Wed, 29 Jan 2020 05:46:17 -0500
+X-UUID: 00a31ccbf40e4079903ca03398bb6b92-20200129
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Yt581FabJCvS7KYli29oSxtfGgARonQD9rLsBaD4O/A=;
+        b=MgUrR9fbsNx5Yp09f5XqZRx52b1GN/RVEx+Gkg0xBU5BbKgPmk9yYbRBeuL7I7eD9GM/8RK2aTCLFGnxw8Fjm4ODU/5LisLxrp4c+2JXWTA47VWIjFhfrsn6S5zorPDf/EXWYCdeI4bdMlhrShfXd3uzFsPkRCPoi7lt9Wt52NI=;
+X-UUID: 00a31ccbf40e4079903ca03398bb6b92-20200129
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 246872476; Wed, 29 Jan 2020 18:46:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 29 Jan 2020 18:44:50 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 29 Jan 2020 18:46:17 +0800
+Message-ID: <1580294770.15794.1.camel@mtksdccf07>
+Subject: Re: [PATCH v3 3/4] scsi: ufs: fix Auto-Hibern8 error detection
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <stable@vger.kernel.org>
+Date:   Wed, 29 Jan 2020 18:46:10 +0800
+In-Reply-To: <20200129075225.GA3774452@kroah.com>
+References: <20200129073902.5786-1-stanley.chu@mediatek.com>
+         <20200129073902.5786-4-stanley.chu@mediatek.com>
+         <20200129075225.GA3774452@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-In order to faciliate Will's READ_ONCE() patches:
-
-  https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
-
-we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
-are tested using ARAnyM/68040.
-
-It would be very good if someone can either test or tell us what emulator to
-use for 020/030.
-
-Please consider.
+SGkgR3JlZywNCg0KT24gV2VkLCAyMDIwLTAxLTI5IGF0IDA4OjUyICswMTAwLCBHcmVnIEtIIHdy
+b3RlOg0KDQo+ID4gRml4ZXM6IDgyMTc0NDQgKCJzY3NpOiB1ZnM6IEFkZCBlcnJvci1oYW5kbGlu
+ZyBvZiBBdXRvLUhpYmVybmF0ZSIpDQo+IA0KPiBUaGlzIHNob3VsZCBiZToNCj4gRml4ZXM6IDgy
+MTc0NDQwMzkxMyAoInNjc2k6IHVmczogQWRkIGVycm9yLWhhbmRsaW5nIG9mIEF1dG8tSGliZXJu
+YXRlIikNCg0KVGhhbmtzIGZvciByZW1pbmQuIEknbGwgcmVzZW5kIHRoaXMgcGF0Y2ggd2l0aCB1
+cGRhdGVkIHRhZy4NCg0KU3RhbmxleQ0KDQo=
 
