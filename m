@@ -2,159 +2,111 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6388AC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2FDC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3914A2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEEB2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 12:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLloQdRr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ekn/fv77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgA2MXP (ORCPT
+        id S1726666AbgA2MZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 07:23:15 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35103 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2MXP (ORCPT
+        Wed, 29 Jan 2020 07:25:01 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgA2MZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 07:23:15 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so8761338pgk.2;
-        Wed, 29 Jan 2020 04:23:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zw2QOXTYa4DPfoFWBlgmT0QVWsY+VSIRNslcmp73E4U=;
-        b=dLloQdRrHAzD9N+RT3r+t+VeVn1ngk7JOdmn4PXhf9VBwZ5aqozvIWUq0QzaSf+6w2
-         49nN1Nl1bC6myj8/VRFvqtknJXFC9Bw8rZ4pXwBXjGnfRpIzQFHeStnGX84YaP8wOvmm
-         43IkND/A1PK9AndEw8xUfQVnteZ6/CiuAS9Zp3HIfBa0iwSTA2Zcw41EkjM1x1caTvU4
-         gr9y9Rx/QoQmf0wCJBBaklKAwEtYIHWh7+UKTlnASItW7O9w4r/9nCWX/K+P3Bs/1mv5
-         S9YKrAUWrzS4p3Q0DyrxvV2iSdNIGY8XoA67arpfYzNPZabxza5uhPQmzGj85/yl6EvV
-         VOOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Zw2QOXTYa4DPfoFWBlgmT0QVWsY+VSIRNslcmp73E4U=;
-        b=MhYhGi/eSDH4MZ03LoKe1f40cR3hm/AyhyURHTPoTlSiP3hB2VnBjJ66JOlze2HPk9
-         ak/GD0YsfRHmfrngz/SY+eePXYV0WJos9hVG+KucpurXvW4bs21KjV6aqFz+mxFADNCI
-         UAfjQ7M1x0o7n/e+g2w4oa+day7jQADnrWwFSZuvkwoMmjivCZVJp2pgilSHsZ7gqFUM
-         1hqKg6zaV7CTJsFGkWlrnsBGxmOD4vwhT0Eckpzr4dhVEuRSrgDF+CKB4J8MqUDepqzY
-         hCdmHjh5k1I0TSOrF2cFVl8gPLOYO+Lpd5R4YhBDseB9OWzrVZtRd0k2w3I6h5KuN8jk
-         eR9Q==
-X-Gm-Message-State: APjAAAW8hv7xy7yGfFQ1CGzE5JyQs4BzU81N6Eg1iQqiaPAt5xrEEJRO
-        Io2N7eAdSfn/GDzzB1k1Pko=
-X-Google-Smtp-Source: APXvYqxsajtGXiWfJo7puAJC96Gh1QHON9TNgislJuPYpCDA2oHS69K5SxciFe4TldTfyBS2XnF8Mg==
-X-Received: by 2002:a63:f403:: with SMTP id g3mr30619483pgi.62.1580300594266;
-        Wed, 29 Jan 2020 04:23:14 -0800 (PST)
-Received: from Gentoo ([103.231.91.35])
-        by smtp.gmail.com with ESMTPSA id r145sm2749967pfr.5.2020.01.29.04.23.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 04:23:13 -0800 (PST)
-Date:   Wed, 29 Jan 2020 17:53:01 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: wireguard ci hooked up to quite a few kernel trees
-Message-ID: <20200129122259.GA25949@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
+        Wed, 29 Jan 2020 07:25:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2lzi0tHBubjHqViQizllgApISf5JhzsXPp/MEyJKgUs=; b=Ekn/fv77FZ9oYggBLzpCcO+Iw
+        iBh6nfljlN7CDXiRX3fW7XLOFnfWy7Iwu5Je9/P+Qgkf88eortsJlNBnqooWZG2GFTOX57higRi7N
+        UbNG/fgo+ol6SCWDKnHfIB2AbYEE0fQYkdoYPA27eEIecZXLuG8JPMelqfT5eI7amiD3yOTeoYMnk
+        Z3crrAKXM6PADBIb4Z4BPsHYexzMOcp2DRZuCXkWadzqWjOpNmIwzlWMmE+JQ8RWhVhgviep4MPRb
+        dYF8vOb9bylBhHSW0rmiASVlUbVnApR98vN+JP5AJuPyIap1zYaW7dE3Nhoxz9KQyCyot+TMt23IY
+        uL8OI61ww==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwmOx-0003D9-Rd; Wed, 29 Jan 2020 12:25:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D898E30600B;
+        Wed, 29 Jan 2020 13:23:14 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A48F4201F06FA; Wed, 29 Jan 2020 13:24:57 +0100 (CET)
+Date:   Wed, 29 Jan 2020 13:24:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] m68k,mm: Use table allocator for pgtables
+Message-ID: <20200129122457.GN14879@hirez.programming.kicks-ass.net>
+References: <20200129103941.304769381@infradead.org>
+ <20200129104345.434705552@infradead.org>
+ <20200129121149.GA31582@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHmME9rProfVf4VGHGX9no3KTa08nL_oYkK8Nv+eknk4ewVMAw@mail.gmail.com>
+In-Reply-To: <20200129121149.GA31582@willie-the-truck>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 29, 2020 at 12:11:50PM +0000, Will Deacon wrote:
+> On Wed, Jan 29, 2020 at 11:39:44AM +0100, Peter Zijlstra wrote:
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+> > --- a/arch/m68k/include/asm/motorola_pgalloc.h
+> > +++ b/arch/m68k/include/asm/motorola_pgalloc.h
+> > @@ -10,60 +10,28 @@ extern int free_pointer_table(pmd_t *);
+> >  
+> >  static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+> >  {
+> > -	pte_t *pte;
+> > -
+> > -	pte = (pte_t *)__get_free_page(GFP_KERNEL|__GFP_ZERO);
+> > -	if (pte) {
+> > -		__flush_page_to_ram(pte);
+> > -		flush_tlb_kernel_page(pte);
+> > -		nocache_page(pte);
+> > -	}
+> > -
+> > -	return pte;
+> > +	return (pte_t *)get_pointer_table();
+> 
+> Weirdly, get_pointer_table() seems to elide the __flush_page_to_ram()
+> call, so you're missing that for ptes with this change. I think it's
+> probably needed for the higher levels too (and kernel_page_table()
+> does it for example) so I'd be inclined to add it unconditionally
+> rather than predicate it on the allocation type introduced by your later
+> patch.
 
-Looks bloody good Jason! thanks, man!
+The next patch adds that unconditionally to the table allocator. The
+only thing conditional on the type is the PG_PageTable and NR_PAGETABLES
+accounting crud.
 
-~Bhaskar
+> > --- a/arch/m68k/include/asm/page.h
+> > +++ b/arch/m68k/include/asm/page.h
+> > @@ -30,7 +30,7 @@ typedef struct { unsigned long pmd; } pm
+> >  typedef struct { unsigned long pte; } pte_t;
+> >  typedef struct { unsigned long pgd; } pgd_t;
+> >  typedef struct { unsigned long pgprot; } pgprot_t;
+> > -typedef struct page *pgtable_t;
+> > +typedef pte_t *pgtable_t;
+> 
+> Urgh, this is a big (cross-arch) mess that we should fix later.
 
-On 13:15 Wed 29 Jan 2020, Jason A. Donenfeld wrote:
->Hi all,
->
->With the merging of wireguard, I've hooked the project's CI up to
->quite a few trees. We now have:
->
->- net-next
->- net
->- linux-next
->- linux (Linus' tree)
->- wireguard-linux (my tree)
->- wireguard-linux-compat (backports to kernels 3.10 - 5.5)
->
->When the various pushes and pulls click a few more cranks through the
->machinery, I'll probably add crypto and cryptodev, and eventually
->Greg's stable trees. If anybody has suggestions on other relevant
->trees that might help catch bugs as early as possible, I'm all ears.
->
->Right now builds are kicked off for every single commit made to each
->one of these trees, on x86_64, i686, aarch64, aarch64_be, arm, armeb,
->mips64, mips64el, mips, mipsel, powerpc64le, powerpc, and m68k. For
->each of these, a fresh kernel and miniature userland containing the
->test suite is built from source, and then booted in qemu.
->
->Even though the CI at the moment is focused on the wireguard test
->suite, it has a habit of finding lots of bugs and regressions in other
->weird places. For example, linux-next is failing at the moment on a
->few archs.
->
->I run this locally every day all day while developing kernel things
->too. It's one command to test a full kernel for whatever thing I'm
->working on, and this winds up saving a lot of time in development and
->lets me debug things with printk in the dumbest ways possible while
->still being productive and efficient.
->
->You can view the current build status here:
->https://www.wireguard.com/build-status/
->
->This sort of CI is another take on the kernel CI problem; I know a few
->organizations are doing similar things. I'd be happy to eventually
->expand this into something more general, should there be sufficient
->interest -- probably initially on networking stuff -- or it might turn
->out that this simply inspires something else that is more general and
->robust, which is fine too. Either way, here's my contribution to the
->modicum of kernel CI things happening.
->
->Regards,
->Jason
+Yes, I ran into this when I did those MMU-gather fixes as well. For this
+patch I cribbed what s390 already does.
 
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl4xeR8ACgkQsjqdtxFL
-KRX0iQf/TkKseJ2jksqjmC+bnMd9mnIox1pWzGwElpv1csKIwul3m+TnHGRFSCOu
-FBbHlw0MSrrEB0dOyG5NJr2GqtGiEJ1ogoLT6XjUq4qpcaIljJU3gU35c6UKiM12
-ThYstC9ZfdXoPgPI5n5qL3p8rTp71Aj7b947ZRfQ2SEMQiEZ5wEgwAwK+fV0yAsa
-VwqJxZy2jZTiOABqW8Ez65YyhceUDvGfv0G1K6EdZdyWfHsoOHXUH24C4jdtGFWi
-m+I7ZnFM9LFlzz1Fyh62PDwIBMYHegW3rvm6q3XawJo4+8VYodApw5axbRDfjGFK
-tMcQCZyCSD4Rtpv+Vrfg0Toveq4nOw==
-=cnyd
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
