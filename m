@@ -6,50 +6,46 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D63EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D174BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED3A20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B173C20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgA2FRp (ORCPT
+        id S1726743AbgA2FRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 00:17:45 -0500
+        Wed, 29 Jan 2020 00:17:43 -0500
 Received: from bilbo.ozlabs.org ([203.11.71.1]:44445 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgA2FRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 00:17:40 -0500
+        id S1726632AbgA2FRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 00:17:39 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 486sDz1RWgz9sSS; Wed, 29 Jan 2020 16:17:38 +1100 (AEDT)
+        id 486sDx5BY5z9sRl; Wed, 29 Jan 2020 16:17:37 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 173bf44bdfc768af3c07cd0aeeb6ad8d1331b77d
-In-Reply-To: <20200114110012.17351-1-laurentiu.tudor@nxp.com>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-powerpc-patch-commit: e26ad936dd89d79f66c2b567f700e0c2a7103070
+In-Reply-To: <37517da8310f4457f28921a4edb88fb21d27b62a.1578989531.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "timur@kernel.org" <timur@kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "swood@redhat.com" <swood@redhat.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH] MAINTAINERS: Add myself as maintainer of ehv_bytechan tty driver
-Message-Id: <486sDz1RWgz9sSS@ozlabs.org>
-Date:   Wed, 29 Jan 2020 16:17:38 +1100 (AEDT)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/ptdump: fix W+X verification call in mark_rodata_ro()
+Message-Id: <486sDx5BY5z9sRl@ozlabs.org>
+Date:   Wed, 29 Jan 2020 16:17:37 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-14 at 11:00:25 UTC, Laurentiu Tudor wrote:
-> Michael Ellerman made a call for volunteers from NXP to maintain
-> this driver and I offered myself.
+On Tue, 2020-01-14 at 08:13:08 UTC, Christophe Leroy wrote:
+> ptdump_check_wx() also have to be called when pages are mapped
+> by blocks.
 > 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/173bf44bdfc768af3c07cd0aeeb6ad8d1331b77d
+https://git.kernel.org/powerpc/c/e26ad936dd89d79f66c2b567f700e0c2a7103070
 
 cheers
