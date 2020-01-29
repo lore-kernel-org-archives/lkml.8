@@ -2,179 +2,183 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1637C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5365C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA6620678
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A202D20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UUQJmVe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgA2Nxl (ORCPT
+        id S1726787AbgA2Nyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:53:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58340 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgA2Nxl (ORCPT
+        Wed, 29 Jan 2020 08:54:33 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35492 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgA2Nyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:53:41 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A1D4828F74F;
-        Wed, 29 Jan 2020 13:53:38 +0000 (GMT)
-Date:   Wed, 29 Jan 2020 14:53:36 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: How to handle write-protect pin of NAND device ?
-Message-ID: <20200129145336.66f840ea@collabora.com>
-In-Reply-To: <20200129143639.7f80addb@xps13>
-References: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
-        <20200127153559.60a83e76@xps13>
-        <20200127164554.34a21177@collabora.com>
-        <20200127164755.29183962@xps13>
-        <20200128075833.129902f6@collabora.com>
-        <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
-        <20200129143639.7f80addb@xps13>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 29 Jan 2020 08:54:32 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q15so10599823qki.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:54:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rYOGFr9wS3HXrXEfVL8jpzDCtWVLlGedKrOARmVJi80=;
+        b=UUQJmVe3RNHr2pAk/tALeA720imfjRHs47ntw1zXz/kqNcwGoBQC0PW8D06qV2Oidm
+         /3hAlVbIi6jc7HbqeOijLyabl+P6omrNVI4SgR2SXGbNIdgYn0c/nvixNsABMaqxeN89
+         m5GAYxhLMy5VIPizb7/fIzdcW9JxzCEUq2OCLvEFDdIdJKZEDYiSzdiuSdf70G6m3+lw
+         OCRpUjx8T2h2/G5TP2qnwqTl04kx4ceG7lNSbFP36iNl9n4KIgVlA3bvC3DjjagYfBaN
+         /HgiR6xceYivvrVJl9b9e6/vrS5oZuMhvT08M5F2bjiJZz15F3bzgXcW2kEOvSTtYtN4
+         r9vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rYOGFr9wS3HXrXEfVL8jpzDCtWVLlGedKrOARmVJi80=;
+        b=IbkciLihuBIFQ9c0m/dZIXz9AvqrQeQ7TohylVImQBvntxLVvmFWK/cnvVgdrfftQU
+         zZ2ua9sdUl//iBjSaHRqBITrnJF2Ypw46vONViNOX3PknuUFEyZ5EKtj41WhVQzdNzdS
+         6Dvw6cJWcjoNm63Do3S1/ETU0FEj3JQPrkHXko6elalRcAKUtgc3pyBc4gOSAJjfONpV
+         zIRYMlpvkY5q97qMCkZpXNJf81jx6v2kAG1VvhCNbgl2F9ii4KZ4BMQvKz0uUsiUCQCW
+         CUARQ+mKNseSlkkQJjGDCLdr96AQb6tN8PLSisl4x1Ax1+Q1yyghQpBKLUktVlvmN2DB
+         XnMg==
+X-Gm-Message-State: APjAAAWCDIMgfkpZBrZSoC7ZSBq/J3yBbjjAnMRIMrcp/SMl8fnk5xv+
+        Kxeosad7G3etY40dJVE97vrYON221PRJNk/nXBHf4g==
+X-Google-Smtp-Source: APXvYqxBEm4xJ6kv4arA/On09OUECl7DMlqvpUATSIKO8jSWyETC4I0SLTiOGIrDuIdF6CfuHSTxmM2f0fSLvrDBC7A=
+X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr28371679qkl.120.1580306071128;
+ Wed, 29 Jan 2020 05:54:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com> <20200121134157.20396-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <20200121134157.20396-2-sakari.ailus@linux.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 29 Jan 2020 14:54:20 +0100
+Message-ID: <CAMpxmJX8gF3TujMMeEgERAFM4YbpgnNjOmuV+U7uWCndqsyGeA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] i2c: Allow driver to manage the device's power
+ state during probe
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 14:36:39 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+wt., 21 sty 2020 o 14:41 Sakari Ailus <sakari.ailus@linux.intel.com> napisa=
+=C5=82(a):
+>
+> Enable drivers to tell ACPI that there's no need to power on a device for
+> probe. Drivers should still perform this by themselves if there's a need
+> to. In some cases powering on the device during probe is undesirable, and
+> this change enables a driver to choose what fits best for it.
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 15 ++++++++++++---
+>  include/linux/i2c.h         |  3 +++
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 9f8dcd3f83850..7bf1699c9044d 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -303,6 +303,14 @@ static int i2c_smbus_host_notify_to_irq(const struct=
+ i2c_client *client)
+>         return irq > 0 ? irq : -ENXIO;
+>  }
+>
+> +static bool probe_low_power(struct device *dev)
+> +{
+> +       struct i2c_driver *driver =3D to_i2c_driver(dev->driver);
+> +
+> +       return driver->probe_low_power &&
+> +               device_property_present(dev, "probe-low-power");
+> +}
+> +
+>  static int i2c_device_probe(struct device *dev)
+>  {
+>         struct i2c_client       *client =3D i2c_verify_client(dev);
+> @@ -375,7 +383,8 @@ static int i2c_device_probe(struct device *dev)
+>         if (status < 0)
+>                 goto err_clear_wakeup_irq;
+>
+> -       status =3D dev_pm_domain_attach(&client->dev, true);
+> +       status =3D dev_pm_domain_attach(&client->dev,
+> +                                     !probe_low_power(&client->dev));
+>         if (status)
+>                 goto err_clear_wakeup_irq;
+>
+> @@ -397,7 +406,7 @@ static int i2c_device_probe(struct device *dev)
+>         return 0;
+>
+>  err_detach_pm_domain:
+> -       dev_pm_domain_detach(&client->dev, true);
+> +       dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev)=
+);
+>  err_clear_wakeup_irq:
+>         dev_pm_clear_wake_irq(&client->dev);
+>         device_init_wakeup(&client->dev, false);
+> @@ -419,7 +428,7 @@ static int i2c_device_remove(struct device *dev)
+>                 status =3D driver->remove(client);
+>         }
+>
+> -       dev_pm_domain_detach(&client->dev, true);
+> +       dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev)=
+);
+>
+>         dev_pm_clear_wake_irq(&client->dev);
+>         device_init_wakeup(&client->dev, false);
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 582ef05ec07ed..6d0d6af393c56 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -229,6 +229,8 @@ enum i2c_alert_protocol {
+>   * @address_list: The I2C addresses to probe (for detect)
+>   * @clients: List of detected clients we created (for i2c-core use only)
+>   * @disable_i2c_core_irq_mapping: Tell the i2c-core to not do irq-mappin=
+g
+> + * @probe_low_power: Let the driver manage the device's power state
+> + *                  during probe and remove.
+>   *
+>   * The driver.owner field should be set to the module owner of this driv=
+er.
+>   * The driver.name field should be set to the name of this driver.
+> @@ -289,6 +291,7 @@ struct i2c_driver {
+>         struct list_head clients;
+>
+>         bool disable_i2c_core_irq_mapping;
+> +       bool probe_low_power;
 
-> Hello,
-> 
-> Masahiro Yamada <masahiroy@kernel.org> wrote on Wed, 29 Jan 2020
-> 19:06:46 +0900:
-> 
-> > On Tue, Jan 28, 2020 at 3:58 PM Boris Brezillon
-> > <boris.brezillon@collabora.com> wrote:  
-> > >
-> > > On Mon, 27 Jan 2020 16:47:55 +0100
-> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >    
-> > > > Hi Hello,
-> > > >
-> > > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Jan
-> > > > 2020 16:45:54 +0100:
-> > > >    
-> > > > > On Mon, 27 Jan 2020 15:35:59 +0100
-> > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > > >    
-> > > > > > Hi Masahiro,
-> > > > > >
-> > > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Mon, 27 Jan 2020
-> > > > > > 21:55:25 +0900:
-> > > > > >    
-> > > > > > > Hi.
-> > > > > > >
-> > > > > > > I have a question about the
-> > > > > > > WP_n pin of a NAND chip.
-> > > > > > >
-> > > > > > >
-> > > > > > > As far as I see, the NAND framework does not
-> > > > > > > handle it.    
-> > > > > >
-> > > > > > There is a nand_check_wp() which reads the status of the pin before
-> > > > > > erasing/writing.
-> > > > > >    
-> > > > > > >
-> > > > > > > Instead, it is handled in a driver level.
-> > > > > > > I see some DT-bindings that handle the WP_n pin.
-> > > > > > >
-> > > > > > > $ git grep wp -- Documentation/devicetree/bindings/mtd/
-> > > > > > > Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
-> > > > > > > brcm,nand-has-wp          : Some versions of this IP include a
-> > > > > > > write-protect    
-> > > > > >
-> > > > > > Just checked: brcmnand de-assert WP when writing/erasing and asserts it
-> > > > > > otherwise. IMHO this switching is useless.
-> > > > > >    
-> > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
-> > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
-> > > > > > >          wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-> > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
-> > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
-> > > > > > >          wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;    
-> > > > > >
-> > > > > > In both cases, the WP GPIO is unused in the code, just de-asserted at
-> > > > > > boot time like what you do in the patch below.
-> > > > > >    
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > I wrote a patch to avoid read-only issue in some cases:
-> > > > > > > http://patchwork.ozlabs.org/patch/1229749/
-> > > > > > >
-> > > > > > > Generally speaking, we expect NAND devices
-> > > > > > > are writable in Linux. So, I think my patch is OK.    
-> > > > > >
-> > > > > > I think the patch is fine.
-> > > > > >    
-> > > > > > >
-> > > > > > >
-> > > > > > > However, I asked this myself:
-> > > > > > > Is there a useful case to assert the write protect
-> > > > > > > pin in order to make the NAND chip really read-only?
-> > > > > > > For example, the system recovery image is stored in
-> > > > > > > a read-only device, and the write-protect pin is
-> > > > > > > kept asserted to assure nobody accidentally corrupts it.    
-> > > > > >
-> > > > > > It is very likely that the same device is used for RO and RW storage so
-> > > > > > in most cases this is not possible. We already have squashfs which is
-> > > > > > actually read-only at filesystem level, I'm not sure it is needed to
-> > > > > > enforce this at a lower level... Anyway if there is actually a pin for
-> > > > > > that, one might want to handle the pin directly as a GPIO, what do you
-> > > > > > think?    
-> > > > >
-> > > > > FWIW, I've always considered the WP pin as a way to protect against
-> > > > > spurious destructive command emission, which is most likely to happen
-> > > > > during transition phases (bootloader -> linux, linux -> kexeced-linux,
-> > > > > platform reset, ..., or any other transition where the pin state might
-> > > > > be undefined at some point). This being said, if you're worried about
-> > > > > other sources of spurious cmds (say your bus is shared between
-> > > > > different kind of memory devices, and the CS pin is unreliable), you
-> > > > > might want to leave the NAND in a write-protected state de-asserting WP
-> > > > > only when explicitly issuing a destructive command (program page, erase
-> > > > > block).    
-> > > >
-> > > > Ok so with this in mind, only the brcmnand driver does a useful use of
-> > > > the WP output.    
-> > >
-> > > Well, I'd just say that brcmnand is more paranoid, which is a good
-> > > thing I guess, but that doesn't make other solutions useless, just less
-> > > safe. We could probably flag operations as 'destructive' at the
-> > > nand_operation level, so drivers can assert/de-assert the pin on a
-> > > per-operation basis.    
-> > 
-> > Sounds a good idea.
-> > 
-> > If it is supported in the NAND framework,
-> > I will be happy to implement in the Denali NAND driver.
-> >   
-> 
-> There is currently no such thing at NAND level but I doubt there is
-> more than erase and write operation during which it would be needed
-> to assert/deassert WP. I don't see why having this flag would help
-> the controller drivers?
+I don't see any users of disable_i2c_core_irq_mapping in current
+mainline. Maybe instead of adding another 1-byte boolean for every
+such property, let's just use the fact that this struct will have at
+least an alignment of 32-bits anyway and merge the two into an int
+field called 'flags' so that we can extend it in the future if needed?
 
-Because ->exec_op() was designed to avoid leaving such decisions to the
-NAND controller drivers :P. If you now ask drivers to look at the
-opcode and guess when they should de-assert the WP pin, you're just
-going back to the ->cmdfunc() mess.
+The name 'probe_low_power' is misleading to me too. It makes me think
+it's the default state for some reason. It should be something like
+'allow_low_power_probe'.
+
+Bartosz
+
+>  };
+>  #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
+>
+> --
+> 2.20.1
+>
