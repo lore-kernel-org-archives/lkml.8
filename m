@@ -2,143 +2,83 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73780C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFF8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DD72467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 00:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PV5nGiRe"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0B5205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgA2A60 (ORCPT
+        id S1726659AbgA2BDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 19:58:26 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35936 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgA2A60 (ORCPT
+        Tue, 28 Jan 2020 20:03:20 -0500
+Received: from ishtar.tlinx.org ([173.164.175.65]:42064 "EHLO
+        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgA2BDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 19:58:26 -0500
-Received: by mail-io1-f65.google.com with SMTP id d15so16707517iog.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 16:58:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hfPnwCqzCAhNK/qRWkWU3pxM5PERG8Ehj+A9uu9jn7s=;
-        b=PV5nGiReMA0sAjLADHB6cjIFeP0lOuZ2izL3OeGoiIvgFCUiygVFxPpzwLVE5KY48/
-         fNV7VLkyKdLRhdw6lXTdtjxDSp1Kfm98KBAR0mc8RBQRe6pToRC6dObO8PA0tI98u+En
-         ahQO0LZozEg2pDBtBjOaZHpxcaSgzRJcywL2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hfPnwCqzCAhNK/qRWkWU3pxM5PERG8Ehj+A9uu9jn7s=;
-        b=kThPNHC/R77s/m9fLL8fRnA7v87mupk9kFd2VFOtI5QpTu/5C8SddmkoJ04O+Min9Q
-         lQ2zEPRdpuGvC+xaMu0XUmhavGU/PvMq+L0V3EeOIlF8l5L8I//Fr/GaQJd3ddrIX5E6
-         wtwYIDkKmXTaj67P16LxuzNqGrtsG1Q6Yu3kCFvwjg6gTzq0p7IrErKW9W66rHwaUo6u
-         6znERpmQTkvGtPHq8wl8gZw8lH4pEPab53klM2d1zr/W+16SrLV8qcEX8QOqsUk14CUc
-         3B8mYaIZpMudp85Xhs53MQujaBDq90yARG4S2/s3kueGNu3gJCoXCAaeG/0f+l64xCHz
-         bxEQ==
-X-Gm-Message-State: APjAAAVp+IbsvFfxe/MhIxamr489vs9PJqwJDn4pPEehUS0K9jhOtoWO
-        Gk2j6e51XxJRfoz+cQ/amhWErhT4dL+/mNK6KzsSOQ==
-X-Google-Smtp-Source: APXvYqymqB5TqQR1jEIKQdvhU6+g/gQUeuhg7Wx4i4yDpD6JXZCAkkKsc3l6eWETvdrvN+KyCLd1363joP/UoRND9Pw=
-X-Received: by 2002:a05:6602:22cd:: with SMTP id e13mr15272247ioe.251.1580259505025;
- Tue, 28 Jan 2020 16:58:25 -0800 (PST)
+        Tue, 28 Jan 2020 20:03:20 -0500
+X-Greylist: delayed 1519 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jan 2020 20:03:20 EST
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 00T0bwu8058366
+        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 16:38:00 -0800
+Message-ID: <5E30D3E6.6050300@tlinx.org>
+Date:   Tue, 28 Jan 2020 16:37:58 -0800
+From:   L A Walsh <lkml@tlinx.org>
+User-Agent: Thunderbird
 MIME-Version: 1.0
-References: <20200128221457.12467-1-linux@roeck-us.net> <CAD=FV=Wg2MZ56fsCk+TvRSSeZVz5eM4cwugK=HN6imm5wfGgiw@mail.gmail.com>
- <20200129000551.GA17256@roeck-us.net>
-In-Reply-To: <20200129000551.GA17256@roeck-us.net>
-From:   Franky Lin <franky.lin@broadcom.com>
-Date:   Tue, 28 Jan 2020 16:57:59 -0800
-Message-ID: <CA+8PC_f=qCUjihwbjd3vtGaNkG-=R1qm83oS7AmgtLTy6EgjyQ@mail.gmail.com>
-Subject: Re: [PATCH] brcmfmac: abort and release host after error
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Linux-Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] build-sys: fix configure --without-systemd
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 4:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On 2020/01/28 04:07, Karel Zak wrote:
+
+> On Fri, Jan 24, 2020 at 12:29:47PM -0500, Theodore Ts'o wrote:
+>   
+>>  AC_ARG_WITH([systemd],
+>>    AS_HELP_STRING([--without-systemd], [do not build with systemd support]),
+>> -  [], [with_systemd=check]
+>> +  [], [with_systemd=no]
+>>     
 >
-> On Tue, Jan 28, 2020 at 03:14:45PM -0800, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Tue, Jan 28, 2020 at 2:15 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > >
-> > > With commit 216b44000ada ("brcmfmac: Fix use after free in
-> > > brcmf_sdio_readframes()") applied, we see locking timeouts in
-> > > brcmf_sdio_watchdog_thread().
-> > >
-> > > brcmfmac: brcmf_escan_timeout: timer expired
-> > > INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-> > > Not tainted 4.19.94-07984-g24ff99a0f713 #1
-> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > > brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-> > > [<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-> > > [<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-> > > [<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-> > > [<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
-> > >
-> > > In addition to restarting or exiting the loop, it is also necessary to
-> > > abort the command and to release the host.
-> > >
-> > > Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-> > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> > > Cc: Matthias Kaehlcke <mka@chromium.org>
-> > > Cc: Brian Norris <briannorris@chromium.org>
-> > > Cc: Douglas Anderson <dianders@chromium.org>
-> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > > ---
-> > >  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > > index f9df95bc7fa1..2e1c23c7269d 100644
-> > > --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> > > @@ -1938,6 +1938,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
-> > >                         if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
-> > >                                                BRCMF_SDIO_FT_NORMAL)) {
-> > >                                 rd->len = 0;
-> > > +                               brcmf_sdio_rxfail(bus, true, true);
-> > > +                               sdio_release_host(bus->sdiodev->func1);
-> >
-> > I don't know much about this driver so I don't personally know if
-> > "true, true" is the correct thing to pass to brcmf_sdio_rxfail(), but
-> > it seems plausible.  Definitely the fix to call sdio_release_host() is
-> > sane.
-> >
-> > Thus, unless someone knows for sure that brcmf_sdio_rxfail()'s
-> > parameters should be different:
-> >
-> Actually, looking at brcmf_sdio_hdparse() and its other callers,
-> I think it may not be needed at all - other callers don't do it, and
-> there already are some calls to brcmf_sdio_rxfail() in that function.
-> It would be nice though to get a confirmation before I submit v2.
+> The current default is to check for the libraries, if installed than
+> enable systemd support. This is generic way we use for many libs and
+> features. Why do you think that explicit --enable-* will be better?
+>   
+---
 
-I think invoking rxfail with both abort and NACK set to true is the
-right thing to do here so that the pipeline can be properly purged.
+    Perhaps Ted didn't realize that the line he replaced
+was only the default action (1st bracket pair empty => no option).
+Initially, I thought the same until I read further
+down (two lines):
 
-Thanks!
+have_systemd=no
+AS_IF([test "x$with_systemd" != xno], [ ...
+   test for positive case ]
 
-Acked-by: franky.lin@broadcom.com
+If any of the tests fail, then 'have_systemd=no'
+is the option passed along.
+
+I don't _think_ Ted is asking for for the default to be
+changed, as the subject of his note states it is
+to fix the "--without-systemd" case, but a
+fix was added for a bug that wasn't present,
+so I don't think he knowingly did what he
+intended to do.
+
+
+
+
+
+
+
+
+
