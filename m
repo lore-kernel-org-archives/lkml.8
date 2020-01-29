@@ -2,99 +2,117 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C696BC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF18C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942522071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580305397;
-	bh=mPG2NT4cUEbzhyg1YZWahjafjI8KXDXQcAkUMLuZv+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ILKoxn6KEViN0KM9C12Ylg+ExLjPzyPJP3tr+iwiQF5XoxmSmZpT6ZP/I0d9R/859
-	 n96L1Oib1/jUoZHnquCggj+psBIqME0h3bl07QW1WhBvMAfbVGclk1dcO9Ho0z2pqv
-	 nINIJZO0K2AZ4BojMMbuDVB7RZkjrMvsI/HXZ02E=
+	by mail.kernel.org (Postfix) with ESMTP id 028DF20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QPXYdqii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgA2NnQ (ORCPT
+        id S1726683AbgA2Npj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:43:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgA2NnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:43:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 29 Jan 2020 08:45:39 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:31334 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726145AbgA2Npj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:45:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580305539; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ojDBEpX51W6sDTBSjLkh/H0P2Fm3q0j1K0tU3d1S4Bg=;
+ b=QPXYdqiilueYeBZ3Tf/GFnGtYBSrTKnTTPHYgOddXA+KgSYeGk/PJ39rfnu8xsaJ8WengwCj
+ 7dX7OA39IaLM+l71s79hep5ZC2fUrVZjJe04fJhRFT3QP0WEEOt2/9CExl9IuK6hvaWWT3mM
+ fnevT0s3JxCVee/yK+AWRWYjvjw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e318c82.7f5224421068-smtp-out-n02;
+ Wed, 29 Jan 2020 13:45:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1AB02C447A1; Wed, 29 Jan 2020 13:45:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C311520716;
-        Wed, 29 Jan 2020 13:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580305395;
-        bh=mPG2NT4cUEbzhyg1YZWahjafjI8KXDXQcAkUMLuZv+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rkCR60Q0DM8LOsd5T2dxkonCoozN3jfvsANgsd+MG0eZv18mmhU4FOI4hXC+AWeDb
-         izx8PzQT7yXsAuJXcPok1ErOGOEAXt/YGmwLNGzAHkCnrasG2M09fyANDMhmxKiX0A
-         OT4fy98l/5ynGfzNKpRuupLDpv5Pby8tOfmffGys=
-Date:   Wed, 29 Jan 2020 14:43:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/104] 5.4.16-stable review
-Message-ID: <20200129134313.GB21979@kroah.com>
-References: <20200128135817.238524998@linuxfoundation.org>
- <6e27f82c-1804-8041-dd93-7c9e7b5b6c0b@nvidia.com>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49A95C433CB;
+        Wed, 29 Jan 2020 13:45:37 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e27f82c-1804-8041-dd93-7c9e7b5b6c0b@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 19:15:37 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [RFC v3 01/10] arm64: dts: qcom: sdm845: Add SoC compatible to
+ MTP
+In-Reply-To: <20200128204005.GE46072@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-2-sibis@codeaurora.org>
+ <20200128204005.GE46072@google.com>
+Message-ID: <538227707b751f67fd773f6ebfa908d8@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 01:16:44PM +0000, Jon Hunter wrote:
-> 
-> On 28/01/2020 13:59, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.16 release.
-> > There are 104 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 30 Jan 2020 13:57:09 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.16-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.4:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.4.16-rc1-g4acf9f18a8fe
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
+Hey Matthias,
+Thanks for the review!
 
-Thanks for testing all of these and letting me know.
+On 2020-01-29 02:10, Matthias Kaehlcke wrote:
+> Hi Sibi,
+> 
+> On Tue, Jan 28, 2020 at 01:33:41AM +0530, Sibi Sankar wrote:
+>> Add missing SoC compatible to SDM845 MTP board file.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts 
+>> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>> index 09ad37b0dd71d..54087847794aa 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>> @@ -13,7 +13,7 @@
+>> 
+>>  / {
+>>  	model = "Qualcomm Technologies, Inc. SDM845 MTP";
+>> -	compatible = "qcom,sdm845-mtp";
+>> +	compatible = "qcom,sdm845-mtp", "qcom,sdm845";
+> 
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> Since this is v3 already I think you can omit the RFC tag in the next
+> revision of the series.
 
-greg k-h
+Yeah would like to drop the RFC
+but every version seems to have
+a feature which we havn't reached
+a consensus on.
+
+v1: CPUfreq passive governor
+v2: New bandwidth bindings
+v3: Multiple opp tables per device
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
