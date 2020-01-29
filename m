@@ -2,137 +2,228 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74756C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ADCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5242C20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0E1206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580335266;
+	bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mqPRYIKC/b3Yb7Vv73pG5ngaD+bb/b0SDgK3pL31s3oARTb4+NSPHALznsl7xparm
+	 COLh8bxuYq1v84rkKcEhbD5Vldbu1no3nhQorEvUAlpyfB0bg7XxH1mGCj79W8qBLH
+	 ki1HfxDqKCtWF48V1IcMdVk3hjzuf+TuYPtn7CGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgA2WAb (ORCPT
+        id S1726751AbgA2WBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:00:31 -0500
-Received: from mga11.intel.com ([192.55.52.93]:54061 "EHLO mga11.intel.com"
+        Wed, 29 Jan 2020 17:01:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgA2WAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:00:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 14:00:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="218080404"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga007.jf.intel.com with ESMTP; 29 Jan 2020 14:00:27 -0800
-Date:   Thu, 30 Jan 2020 06:00:40 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        yang.shi@linux.alibaba.com, rientjes@google.com
-Subject: Re: [Patch v2 2/4] mm/migrate.c: wrap do_move_pages_to_node() and
- store_status()
-Message-ID: <20200129220040.GB20736@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
- <20200122011647.13636-3-richardw.yang@linux.intel.com>
- <15777c05-2f2c-b818-dacd-3ec31f83be8d@redhat.com>
- <20200129003812.GC12835@richard>
- <68d4f7fb-2f37-2b11-dd0f-2e059415daf2@redhat.com>
+        id S1726222AbgA2WBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:01:05 -0500
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F840206D5;
+        Wed, 29 Jan 2020 22:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580335264;
+        bh=KMqCZfR8OC4MTYilPgyK7YPT+Qf5ChcD5B7b36gZO+Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lLJRKTSsX/A9CVc3vR5U7iGVdFqQrxwzc2R1YVkFg12RKCfPCmWWY+vc2GFQQhmE1
+         I56LmMycL2MQAjXJjFYLroayjXTmVyNtu1TEhnpAO/UunDuRstpV6ltRzm7IVgVTY6
+         5KIvU2dfA2kASn3tW4hmVjNJKl2jqtJFQ9da4+iw=
+Received: by mail-qk1-f179.google.com with SMTP id g195so866694qke.13;
+        Wed, 29 Jan 2020 14:01:04 -0800 (PST)
+X-Gm-Message-State: APjAAAVTWC640kevNcm1vUGZ90kxkDZK+FkdRZ6Vf3m4YxNs/Fm3cx/E
+        R+Mf1aAJZXM2zFqsGDsMOGOkE/wA4Vvsk8B4+w==
+X-Google-Smtp-Source: APXvYqya7/HyzAZ7As4piQq5rd9Qp3/xxmPf0EVs5MW2ZyCiSIU+hACzOqVQcX2Xwp3PGxxJxs0ezV8toTxQNue7DHo=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr2130152qkg.152.1580335263500;
+ Wed, 29 Jan 2020 14:01:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68d4f7fb-2f37-2b11-dd0f-2e059415daf2@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+In-Reply-To: <20200129132313.1.I4452dc951d7556ede422835268742b25a18b356b@changeid>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 29 Jan 2020 16:00:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
+Message-ID: <CAL_JsqJk1NZSDAXgqc-CS9a1UCmNYPhC-LwjPUZaX2oK=EtHzQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clk: qcom: Fix self-validation, split, and
+ clean cruft
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Abhishek Sahu <absahu@codeaurora.org>, sivaprak@codeaurora.org,
+        anusharao@codeaurora.org, Sricharan <sricharan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 10:28:53AM +0100, David Hildenbrand wrote:
->On 29.01.20 01:38, Wei Yang wrote:
->> On Tue, Jan 28, 2020 at 11:14:55AM +0100, David Hildenbrand wrote:
->>> On 22.01.20 02:16, Wei Yang wrote:
->>>> Usually do_move_pages_to_node() and store_status() is a pair. There are
->>>> three places call this pair of functions with almost the same form.
->>>
->>> I'd suggest
->>>
->>> "
->>> Usually, do_move_pages_to_node() and store_status() are used in
->>> combination. We have three similar call sites.
->>>
->>> Let's provide a wrapper for both function calls -
->>> move_pages_and_store_status - to make the calling code easier to
->>> maintain and fix (as noted by Yang Shi, the return value handling of
->>> do_move_pages_to_node() has a flaw).
->>> "
->> 
->> Looks good.
->> 
->>>
->>>>
->>>> This patch just wrap it to make it friendly to audience and also
->>>> consolidate the move and store action into one place. Also mentioned by
->>>> Yang Shi, the handling of do_move_pages_to_node()'s return value is not
->>>> proper. Now we can fix it in one place.
->>>>
->>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>>> Acked-by: Michal Hocko <mhocko@suse.com>
->>>> ---
->>>>  mm/migrate.c | 30 +++++++++++++++++++-----------
->>>>  1 file changed, 19 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/mm/migrate.c b/mm/migrate.c
->>>> index 4c2a21856717..a4d3bd6475e1 100644
->>>> --- a/mm/migrate.c
->>>> +++ b/mm/migrate.c
->>>> @@ -1583,6 +1583,19 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->>>>  	return err;
->>>>  }
->>>>  
->>>> +static int move_pages_and_store_status(struct mm_struct *mm, int node,
->>>> +		struct list_head *pagelist, int __user *status,
->>>> +		int start, int nr)
->>>
->>> nit: indentation
->>>
->> 
->> You mean indent like this?
->> 
->> static int move_pages_and_store_status(struct mm_struct *mm, int node,
->> 				       struct list_head *pagelist,
->> 				       int __user *status,
->> 
->> This would be along list and I am afraid this is not the only valid code
->> style?
+On Wed, Jan 29, 2020 at 3:23 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
->Yes, that's what I meant. Documentation/process/coding-style.rst doesn't
->mention any specific way, but this is the most commonly used one.
+> The 'qcom,gcc.yaml' file failed self-validation (dt_binding_check)
+> because it required a property to be either (3 entries big),
+> (3 entries big), or (7 entries big), but not more than one of those
+> things.  That didn't make a ton of sense.
 >
->Indentation in this file mostly sticks to something like this as well,
->but yeah, it's often a mess and not consistent.
+> This patch splits all of the exceptional device trees (AKA those that
+> would have needed if/then/else rules) from qcom,gcc.yaml.  It also
+> cleans up some cruft found while doing that.
 >
->That's why I note it whenever I see it, to make it eventually more
->consistent (and only make it a nit) :)
->
+> After this lands, this worked for me atop clk-next:
+>   for f in \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml \
+>     Documentation/devicetree/bindings/clock/qcom,gcc.yaml; do \
+>       ARCH=arm64 make dt_binding_check DT_SCHEMA_FILES=$f; \
+>       ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+>   done
 
-You are right. I would leave as it now, if someone else still have the same
-suggestion to fix it.
+Note that using DT_SCHEMA_FILES may hide some errors in examples as
+all other schemas (including the core ones) are not used for
+validation. So just 'make dt_binding_check' needs to pass (ignoring
+any other unrelated errors as it breaks frequently). Supposedly a
+patch is coming explaining this in the documentation.
 
-Thanks :-)
-
->-- 
->Thanks,
+> Arbitrary decisions made (yell if you want changed):
+> - Left all the older devices (where clocks / clock-names weren't
+>   specified) in a single file.
+> - Didn't make clocks "required" for msm8996/msm8998 but left them as
+>   listed.  This seems a little weird but means I didn't need to open a
+>   whole different can of worms.  It matches the old binding for
+>   msm8996 and doesn't match the binding (but matches the dts) for
+>   msm8998.
 >
->David / dhildenb
+> Misc cleanups as part of this patch:
+> - sm8150 was claimed to be same set of clocks as sc7180, but driver
+>   and dts appear to say that "bi_tcxo_ao" doesn't exist.  Fixed.
+> - In "apq8064", "#thermal-sensor-cells" was missing the "#".
+> - Got rid of "|" at the end of top description since spacing doesn't
+>   matter.
+> - Changed indentation to consistently 2 spaces (it was 3 in some
+>   places).
+> - Added period at the end of protected-clocks description.
+> - No space before ":".
+> - Updated sc7180/sm8150 example to use the 'qcom,rpmh.h' include.
+> - Updated sc7180/sm8150 example to use larger address/size cells as
+>   per reality.
+> - Updated sc7180/sm8150 example to point to the sleep_clk rather than
+>   <0>.
+> - Made it so that gcc-ipq8074 didn't require #power-domain-cells since
+>   actual dts didn't have it and I got no hits from:
+>     git grep _GDSC include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> - Made it so that gcc-qcs404 didn't require #power-domain-cells since
+>   actual dts didn't have it and I got no hits from:
+>     git grep _GDSC include/dt-bindings/clock/qcom,gcc-qcs404.h
+>
+> Noticed, but not done in this patch (volunteers needed):
 
--- 
-Wei Yang
-Help you, Help me
+No requirement to fix dts file errors at this point.
+
+> - Add "aud_ref_clk" to sm8150 bindings / dts even though I found a
+>   reference to it in "gcc-sm8150.c".
+> - Fix node name in actual ipq8074 to be "clock-controller" (it's gcc).
+> - Since the example doesn't need phandes to exist, in msm8998 could
+>   just make up places providing some of the clocks currently bogused
+>   out with <0>.
+>
+> Fixes: ab91f72e018a ("clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  .../bindings/clock/qcom,gcc-apq8064.yaml      |  81 +++++++
+>  .../bindings/clock/qcom,gcc-ipq8074.yaml      |  48 ++++
+>  .../bindings/clock/qcom,gcc-msm8996.yaml      |  65 ++++++
+>  .../bindings/clock/qcom,gcc-msm8998.yaml      |  88 ++++++++
+>  .../bindings/clock/qcom,gcc-qcs404.yaml       |  48 ++++
+>  .../bindings/clock/qcom,gcc-sc7180.yaml       |  72 ++++++
+>  .../bindings/clock/qcom,gcc-sm8150.yaml       |  69 ++++++
+>  .../devicetree/bindings/clock/qcom,gcc.yaml   | 212 ++----------------
+>  8 files changed, 489 insertions(+), 194 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-ipq8074.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8996.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-msm8998.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-qcs404.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+> new file mode 100644
+> index 000000000000..c09497881cd2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-apq8064.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gcc-apq8064.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Global Clock & Reset Controller Binding for APQ8064
+> +
+> +maintainers:
+> +  - Stephen Boyd <sboyd@kernel.org>
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description:
+> +  Qualcomm global clock control module which supports the clocks, resets and
+> +  power domains on APQ8064.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,gcc-apq8064
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#reset-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  nvmem-cells:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Qualcomm TSENS (thermal sensor device) on some devices can
+> +      be part of GCC and hence the TSENS properties can also be part
+> +      of the GCC/clock-controller node.
+> +      For more details on the TSENS properties please refer
+> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +
+> +  nvmem-cell-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Names for each nvmem-cells specified.
+
+Isn't that every instance? So drop.
+
+Otherwise, assuming it all works:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
