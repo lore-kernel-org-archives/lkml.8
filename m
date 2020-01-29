@@ -2,110 +2,561 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA5EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B21FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559A8206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZP4xZQA3"
+	by mail.kernel.org (Postfix) with ESMTP id DEBC9206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580312693;
+	bh=nOp7I5b02GBdgj3IfTZ3oHqDucgGe4RXzB4O6FM0fvc=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=0Uki3vcG8W+GUIYeY1mk5P8eaT9qyK+FYdP0YJP6P6DqAR1uSFT9EOWfS1XXGmekw
+	 KR+Efg1ndvg+jKGJaD6wBN7r1+BPXtyUmw30fTBP7vxZyXv+Ep0qngt+IGnfSYoqYx
+	 Wh+7lFc7IqNfGxLyTkMHux3bgIJACnuO7OST8Yv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgA2PoK (ORCPT
+        id S1726847AbgA2Pow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:44:10 -0500
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:43794 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726240AbgA2PoK (ORCPT
+        Wed, 29 Jan 2020 10:44:52 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35998 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgA2Pov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:44:10 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 02E022E14E1;
-        Wed, 29 Jan 2020 18:44:07 +0300 (MSK)
-Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id nn7RLD3EXz-i63W54mO;
-        Wed, 29 Jan 2020 18:44:06 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1580312646; bh=0jW6t+ksq3AyJDbN3e/NgjTwllbzze9cvhKWBhAewXM=;
-        h=Message-ID:Date:To:From:Subject;
-        b=ZP4xZQA3zhPFSasiI9+ba/q+k4mBN4vp9NzjWdDtJa4oFUOF/uoUue9C59LJnKSe7
-         X59e7xTDFBoeTveNmoEyofhNLL1CJo/7ahb83/8uQv3BTRIU2PTW7WpFlpy2r6dAHj
-         2EQ9Y4yAYVkJz3Bo5BhtdNHqgHzVpErU99UnZllI=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
-        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id f3Omvi9QUt-i5VOvHST;
-        Wed, 29 Jan 2020 18:44:05 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC] ext4: skip concurrent inode updates in lazytime
- optimization
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Date:   Wed, 29 Jan 2020 18:44:05 +0300
-Message-ID: <158031264567.6836.126132376018905207.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 29 Jan 2020 10:44:51 -0500
+Received: by mail-io1-f65.google.com with SMTP id d15so214993iog.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 07:44:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=esAnZQBaKwkjiW91r4Jqm8++mRgXYQrcjauxSAefTQs=;
+        b=ExXSgAfz1c5JRtqY0AuFi9QQpEcF2OWoN7JT4napboPCFhLyG70E3ESBe2OQoka19L
+         dgXBlvYdP2IafQXpchsf3uKu+6fU6VqIoKWeZGeCAT8tJoX9G6IA4H9xGDod1fICTubI
+         futa5/RQUlYIACC2Jj7ebXTZH2M/QVKlMfaLI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=esAnZQBaKwkjiW91r4Jqm8++mRgXYQrcjauxSAefTQs=;
+        b=XjIMA212IPP/eqHBltf0rieBl+0F1SCfJrqZmz2lqStbmrwx9aSdlGbDia4U/GucVy
+         baO1VHwkvwtXgReo1rIeeJggyu49rEDJ6v8mx6bgID+8zQcwGlNE6wTICMrI8qklX9Oz
+         6nld8+wn6v/nHoWQrYVcHAuXsUl3+LV2NP+H4uhbW6nIB7MncHl9jDFFVMrJlQfZ9m5P
+         kk3rfrV+HCEJPLNa3RUDV3K+emZmGumqux6Gq+oA9s3CSpHciQ0hcmjJgYtD6yv2G/yQ
+         x3QRQWr9apSYiZcFznseRmWQmfPm/Yrk6le7/gsUjuQavG0XT2wgeZWHc4C58wJJfD8C
+         ST7Q==
+X-Gm-Message-State: APjAAAX3WmgaLU0Di77AzViO4lYP8RO6EnmcMXyluBQcIq4PNYa3rv3y
+        Im4O1Y61BvRsgjuRwToowbpApPVvza8=
+X-Google-Smtp-Source: APXvYqwbq+TmQZypbiQTysxvbSv+XHY6FkRCmJ5dEZjIqRrNF7v5kvtxt3kZTTTkyGQttzzL+0EAlQ==
+X-Received: by 2002:a6b:f913:: with SMTP id j19mr83008iog.124.1580312690025;
+        Wed, 29 Jan 2020 07:44:50 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l8sm618781ioc.42.2020.01.29.07.44.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 07:44:49 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest update for Linux 5.6-rc1
+Message-ID: <7ecbedec-d72c-62cb-3fd4-192910a8043d@linuxfoundation.org>
+Date:   Wed, 29 Jan 2020 08:44:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="------------DFE7F240807E7357421E0404"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ext4_update_other_inodes_time() implements optimization which
-opportunistically updates times for inodes within same inode table block.
+This is a multi-part message in MIME format.
+--------------DFE7F240807E7357421E0404
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For now	concurrent inode lookup by number does not scale well because
-inode hash table is protected with single spinlock. It could become very
-hot at concurrent writes to fast nvme when inode cache has enough inodes.
+Hi Linus,
 
-Probably someday inode hash will become searchable under RCU.
-(see linked patchset by David Howells)
+Please pull the following Kselftest update for Linux 5.6-rc1
 
-Let's skip concurrent updates instead of wasting cpu time at spinlock.
+This Kselftest update for Linux 5.6-rc1 consists of several fixes to
+framework and individual tests. In addition, it enables LKDTM tests
+adding lkdtm target to kselftest Makefile.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/lkml/155620449631.4720.8762546550728087460.stgit@warthog.procyon.org.uk/
----
- fs/ext4/inode.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+diff is attached.
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 629a25d999f0..dc3e1b38e3ed 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4849,11 +4849,16 @@ static int other_inode_match(struct inode * inode, unsigned long ino,
- static void ext4_update_other_inodes_time(struct super_block *sb,
- 					  unsigned long orig_ino, char *buf)
- {
-+	static DEFINE_SPINLOCK(lock);
- 	struct other_inode oi;
- 	unsigned long ino;
- 	int i, inodes_per_block = EXT4_SB(sb)->s_inodes_per_block;
- 	int inode_size = EXT4_INODE_SIZE(sb);
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+
+   Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.6-rc1
+
+for you to fetch changes up to af4ddd607dff7aabd466a4a878e01b9f592a75ab:
+
+   selftests/ftrace: fix glob selftest (2020-01-28 13:36:48 -0700)
+
+----------------------------------------------------------------
+linux-kselftest-5.6-rc1
+
+This Kselftest update for Linux 5.6-rc1 consists of several fixes to
+framework and individual tests. In addition, it enables LKDTM tests
+adding lkdtm target to kselftest Makefile.
+
+----------------------------------------------------------------
+Cristian Marussi (1):
+       selftests: fix build behaviour on targets' failures
+
+Dan Carpenter (1):
+       selftests: Uninitialized variable in test_cgcore_proc_migration()
+
+Kees Cook (1):
+       selftests/lkdtm: Add tests for LKDTM targets
+
+Matthieu Baerts (1):
+       selftests: settings: tests can be in subsubdirs
+
+Miroslav Benes (2):
+       selftests/livepatch: Replace set_dynamic_debug() with 
+setup_config() in README
+       selftests/livepatch: Remove unused local variable in 
+set_ftrace_enabled()
+
+Siddhesh Poyarekar (1):
+       kselftest: Minimise dependency of get_size on C library interfaces
+
+Sven Schnelle (1):
+       selftests/ftrace: fix glob selftest
+
+  MAINTAINERS                                        |  1 +
+  tools/testing/selftests/Makefile                   | 19 +++--
+  tools/testing/selftests/cgroup/test_core.c         |  2 +-
+  .../ftrace/test.d/ftrace/func-filter-glob.tc       |  2 +-
+  tools/testing/selftests/kselftest/runner.sh        |  2 +-
+  tools/testing/selftests/livepatch/README           |  2 +-
+  tools/testing/selftests/livepatch/functions.sh     |  1 -
+  tools/testing/selftests/lkdtm/Makefile             | 12 +++
+  tools/testing/selftests/lkdtm/config               |  1 +
+  tools/testing/selftests/lkdtm/run.sh               | 92 
+++++++++++++++++++++++
+  tools/testing/selftests/lkdtm/tests.txt            | 71 +++++++++++++++++
+  tools/testing/selftests/size/get_size.c            | 24 ++++--
+  12 files changed, 211 insertions(+), 18 deletions(-)
+  create mode 100644 tools/testing/selftests/lkdtm/Makefile
+  create mode 100644 tools/testing/selftests/lkdtm/config
+  create mode 100755 tools/testing/selftests/lkdtm/run.sh
+  create mode 100644 tools/testing/selftests/lkdtm/tests.txt
+----------------------------------------------------------------
+
+--------------DFE7F240807E7357421E0404
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.6-rc1.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.6-rc1.diff"
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8982c6e013b3..0587fcc197c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9581,6 +9581,7 @@ LINUX KERNEL DUMP TEST MODULE (LKDTM)
+ M:	Kees Cook <keescook@chromium.org>
+ S:	Maintained
+ F:	drivers/misc/lkdtm/*
++F:	tools/testing/selftests/lkdtm/*
  
-+	/* Don't bother inode_hash_lock with concurrent updates. */
-+	if (!spin_trylock(&lock))
-+		return;
-+
- 	oi.orig_ino = orig_ino;
- 	/*
- 	 * Calculate the first inode in the inode table block.  Inode
-@@ -4867,6 +4872,8 @@ static void ext4_update_other_inodes_time(struct super_block *sb,
- 		oi.raw_inode = (struct ext4_inode *) buf;
- 		(void) find_inode_nowait(sb, ino, other_inode_match, &oi);
- 	}
-+
-+	spin_unlock(&lock);
+ LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
+ M:	Alan Stern <stern@rowland.harvard.edu>
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index b001c602414b..5182d6078cbc 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -26,6 +26,7 @@ TARGETS += kexec
+ TARGETS += kvm
+ TARGETS += lib
+ TARGETS += livepatch
++TARGETS += lkdtm
+ TARGETS += membarrier
+ TARGETS += memfd
+ TARGETS += memory-hotplug
+@@ -143,11 +144,13 @@ else
+ endif
+ 
+ all: khdr
+-	@for TARGET in $(TARGETS); do		\
+-		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		mkdir $$BUILD_TARGET  -p;	\
+-		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;\
+-	done;
++	@ret=1;							\
++	for TARGET in $(TARGETS); do				\
++		BUILD_TARGET=$$BUILD/$$TARGET;			\
++		mkdir $$BUILD_TARGET  -p;			\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;	\
++		ret=$$((ret * $$?));				\
++	done; exit $$ret;
+ 
+ run_tests: all
+ 	@for TARGET in $(TARGETS); do \
+@@ -196,10 +199,12 @@ ifdef INSTALL_PATH
+ 	install -m 744 kselftest/module.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/runner.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/prefix.pl $(INSTALL_PATH)/kselftest/
+-	@for TARGET in $(TARGETS); do \
++	@ret=1;	\
++	for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+ 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET INSTALL_PATH=$(INSTALL_PATH)/$$TARGET install; \
+-	done;
++		ret=$$((ret * $$?));		\
++	done; exit $$ret;
+ 
+ 	@# Ask all targets to emit their test scripts
+ 	echo "#!/bin/sh" > $(ALL_SCRIPT)
+diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
+index c5ca669feb2b..e19ce940cd6a 100644
+--- a/tools/testing/selftests/cgroup/test_core.c
++++ b/tools/testing/selftests/cgroup/test_core.c
+@@ -369,7 +369,7 @@ static void *dummy_thread_fn(void *arg)
+ static int test_cgcore_proc_migration(const char *root)
+ {
+ 	int ret = KSFT_FAIL;
+-	int t, c_threads, n_threads = 13;
++	int t, c_threads = 0, n_threads = 13;
+ 	char *src = NULL, *dst = NULL;
+ 	pthread_t threads[n_threads];
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+index 27a54a17da65..f4e92afab14b 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc
+@@ -30,7 +30,7 @@ ftrace_filter_check '*schedule*' '^.*schedule.*$'
+ ftrace_filter_check 'schedule*' '^schedule.*$'
+ 
+ # filter by *mid*end
+-ftrace_filter_check '*aw*lock' '.*aw.*lock$'
++ftrace_filter_check '*pin*lock' '.*pin.*lock$'
+ 
+ # filter by start*mid*
+ ftrace_filter_check 'mutex*try*' '^mutex.*try.*'
+diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+index a8d20cbb711c..e84d901f8567 100644
+--- a/tools/testing/selftests/kselftest/runner.sh
++++ b/tools/testing/selftests/kselftest/runner.sh
+@@ -91,7 +91,7 @@ run_one()
+ run_many()
+ {
+ 	echo "TAP version 13"
+-	DIR=$(basename "$PWD")
++	DIR="${PWD#${BASE_DIR}/}"
+ 	test_num=0
+ 	total=$(echo "$@" | wc -w)
+ 	echo "1..$total"
+diff --git a/tools/testing/selftests/livepatch/README b/tools/testing/selftests/livepatch/README
+index b73cd0e2dd51..621d325425c2 100644
+--- a/tools/testing/selftests/livepatch/README
++++ b/tools/testing/selftests/livepatch/README
+@@ -35,7 +35,7 @@ Adding tests
+ ------------
+ 
+ See the common functions.sh file for the existing collection of utility
+-functions, most importantly set_dynamic_debug() and check_result().  The
++functions, most importantly setup_config() and check_result().  The
+ latter function greps the kernel's ring buffer for "livepatch:" and
+ "test_klp" strings, so tests be sure to include one of those strings for
+ result comparison.  Other utility functions include general module
+diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+index a6e3d5517a6f..2aab9791791d 100644
+--- a/tools/testing/selftests/livepatch/functions.sh
++++ b/tools/testing/selftests/livepatch/functions.sh
+@@ -64,7 +64,6 @@ function set_dynamic_debug() {
  }
  
- /*
+ function set_ftrace_enabled() {
+-	local sysctl="$1"
+ 	result=$(sysctl kernel.ftrace_enabled="$1" 2>&1 | paste --serial --delimiters=' ')
+ 	echo "livepatch: $result" > /dev/kmsg
+ }
+diff --git a/tools/testing/selftests/lkdtm/Makefile b/tools/testing/selftests/lkdtm/Makefile
+new file mode 100644
+index 000000000000..1bcc9ee990eb
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/Makefile
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: GPL-2.0
++# Makefile for LKDTM regression tests
++
++include ../lib.mk
++
++# NOTE: $(OUTPUT) won't get default value if used before lib.mk
++TEST_FILES := tests.txt
++TEST_GEN_PROGS = $(patsubst %,$(OUTPUT)/%.sh,$(shell awk '{print $$1}' tests.txt | sed -e 's/\#//'))
++all: $(TEST_GEN_PROGS)
++
++$(OUTPUT)/%: run.sh tests.txt
++	install -m 0744 run.sh $@
+diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
+new file mode 100644
+index 000000000000..d874990e442b
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/config
+@@ -0,0 +1 @@
++CONFIG_LKDTM=y
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+new file mode 100755
+index 000000000000..dadf819148a4
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -0,0 +1,92 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# This reads tests.txt for the list of LKDTM tests to invoke. Any marked
++# with a leading "#" are skipped. The rest of the line after the
++# test name is either the text to look for in dmesg for a "success",
++# or the rationale for why a test is marked to be skipped.
++#
++set -e
++TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
++KSELFTEST_SKIP_TEST=4
++
++# Verify we have LKDTM available in the kernel.
++if [ ! -r $TRIGGER ] ; then
++	/sbin/modprobe -q lkdtm || true
++	if [ ! -r $TRIGGER ] ; then
++		echo "Cannot find $TRIGGER (missing CONFIG_LKDTM?)"
++	else
++		echo "Cannot write $TRIGGER (need to run as root?)"
++	fi
++	# Skip this test
++	exit $KSELFTEST_SKIP_TEST
++fi
++
++# Figure out which test to run from our script name.
++test=$(basename $0 .sh)
++# Look up details about the test from master list of LKDTM tests.
++line=$(egrep '^#?'"$test"'\b' tests.txt)
++if [ -z "$line" ]; then
++	echo "Skipped: missing test '$test' in tests.txt"
++	exit $KSELFTEST_SKIP_TEST
++fi
++# Check that the test is known to LKDTM.
++if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
++	echo "Skipped: test '$test' missing in $TRIGGER!"
++	exit $KSELFTEST_SKIP_TEST
++fi
++
++# Extract notes/expected output from test list.
++test=$(echo "$line" | cut -d" " -f1)
++if echo "$line" | grep -q ' ' ; then
++	expect=$(echo "$line" | cut -d" " -f2-)
++else
++	expect=""
++fi
++
++# If the test is commented out, report a skip
++if echo "$test" | grep -q '^#' ; then
++	test=$(echo "$test" | cut -c2-)
++	if [ -z "$expect" ]; then
++		expect="crashes entire system"
++	fi
++	echo "Skipping $test: $expect"
++	exit $KSELFTEST_SKIP_TEST
++fi
++
++# If no expected output given, assume an Oops with back trace is success.
++if [ -z "$expect" ]; then
++	expect="call trace:"
++fi
++
++# Clear out dmesg for output reporting
++dmesg -c >/dev/null
++
++# Prepare log for report checking
++LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
++cleanup() {
++	rm -f "$LOG"
++}
++trap cleanup EXIT
++
++# Most shells yell about signals and we're expecting the "cat" process
++# to usually be killed by the kernel. So we have to run it in a sub-shell
++# and silence errors.
++($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
++
++# Record and dump the results
++dmesg -c >"$LOG"
++cat "$LOG"
++# Check for expected output
++if egrep -qi "$expect" "$LOG" ; then
++	echo "$test: saw '$expect': ok"
++	exit 0
++else
++	if egrep -qi XFAIL: "$LOG" ; then
++		echo "$test: saw 'XFAIL': [SKIP]"
++		exit $KSELFTEST_SKIP_TEST
++	else
++		echo "$test: missing '$expect': [FAIL]"
++		exit 1
++	fi
++fi
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+new file mode 100644
+index 000000000000..92ca32143ae5
+--- /dev/null
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -0,0 +1,71 @@
++#PANIC
++BUG kernel BUG at
++WARNING WARNING:
++WARNING_MESSAGE message trigger
++EXCEPTION
++#LOOP Hangs the system
++#EXHAUST_STACK Corrupts memory on failure
++#CORRUPT_STACK Crashes entire system on success
++#CORRUPT_STACK_STRONG Crashes entire system on success
++CORRUPT_LIST_ADD list_add corruption
++CORRUPT_LIST_DEL list_del corruption
++CORRUPT_USER_DS Invalid address limit on user-mode return
++STACK_GUARD_PAGE_LEADING
++STACK_GUARD_PAGE_TRAILING
++UNSET_SMEP CR4 bits went missing
++DOUBLE_FAULT
++UNALIGNED_LOAD_STORE_WRITE
++#OVERWRITE_ALLOCATION Corrupts memory on failure
++#WRITE_AFTER_FREE Corrupts memory on failure
++READ_AFTER_FREE
++#WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
++READ_BUDDY_AFTER_FREE
++SLAB_FREE_DOUBLE
++SLAB_FREE_CROSS
++SLAB_FREE_PAGE
++#SOFTLOCKUP Hangs the system
++#HARDLOCKUP Hangs the system
++#SPINLOCKUP Hangs the system
++#HUNG_TASK Hangs the system
++EXEC_DATA
++EXEC_STACK
++EXEC_KMALLOC
++EXEC_VMALLOC
++EXEC_RODATA
++EXEC_USERSPACE
++EXEC_NULL
++ACCESS_USERSPACE
++ACCESS_NULL
++WRITE_RO
++WRITE_RO_AFTER_INIT
++WRITE_KERN
++REFCOUNT_INC_OVERFLOW
++REFCOUNT_ADD_OVERFLOW
++REFCOUNT_INC_NOT_ZERO_OVERFLOW
++REFCOUNT_ADD_NOT_ZERO_OVERFLOW
++REFCOUNT_DEC_ZERO
++REFCOUNT_DEC_NEGATIVE Negative detected: saturated
++REFCOUNT_DEC_AND_TEST_NEGATIVE Negative detected: saturated
++REFCOUNT_SUB_AND_TEST_NEGATIVE Negative detected: saturated
++REFCOUNT_INC_ZERO
++REFCOUNT_ADD_ZERO
++REFCOUNT_INC_SATURATED Saturation detected: still saturated
++REFCOUNT_DEC_SATURATED Saturation detected: still saturated
++REFCOUNT_ADD_SATURATED Saturation detected: still saturated
++REFCOUNT_INC_NOT_ZERO_SATURATED
++REFCOUNT_ADD_NOT_ZERO_SATURATED
++REFCOUNT_DEC_AND_TEST_SATURATED Saturation detected: still saturated
++REFCOUNT_SUB_AND_TEST_SATURATED Saturation detected: still saturated
++#REFCOUNT_TIMING timing only
++#ATOMIC_TIMING timing only
++USERCOPY_HEAP_SIZE_TO
++USERCOPY_HEAP_SIZE_FROM
++USERCOPY_HEAP_WHITELIST_TO
++USERCOPY_HEAP_WHITELIST_FROM
++USERCOPY_STACK_FRAME_TO
++USERCOPY_STACK_FRAME_FROM
++USERCOPY_STACK_BEYOND
++USERCOPY_KERNEL
++USERCOPY_KERNEL_DS
++STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
++CFI_FORWARD_PROTO
+diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
+index 2ad45b944355..2980b1a63366 100644
+--- a/tools/testing/selftests/size/get_size.c
++++ b/tools/testing/selftests/size/get_size.c
+@@ -11,23 +11,35 @@
+  * own execution.  It also attempts to have as few dependencies
+  * on kernel features as possible.
+  *
+- * It should be statically linked, with startup libs avoided.
+- * It uses no library calls, and only the following 3 syscalls:
++ * It should be statically linked, with startup libs avoided.  It uses
++ * no library calls except the syscall() function for the following 3
++ * syscalls:
+  *   sysinfo(), write(), and _exit()
+  *
+  * For output, it avoids printf (which in some C libraries
+  * has large external dependencies) by  implementing it's own
+  * number output and print routines, and using __builtin_strlen()
++ *
++ * The test may crash if any of the above syscalls fails because in some
++ * libc implementations (e.g. the GNU C Library) errno is saved in
++ * thread-local storage, which does not get initialized due to avoiding
++ * startup libs.
+  */
+ 
+ #include <sys/sysinfo.h>
+ #include <unistd.h>
++#include <sys/syscall.h>
+ 
+ #define STDOUT_FILENO 1
+ 
+ static int print(const char *s)
+ {
+-	return write(STDOUT_FILENO, s, __builtin_strlen(s));
++	size_t len = 0;
++
++	while (s[len] != '\0')
++		len++;
++
++	return syscall(SYS_write, STDOUT_FILENO, s, len);
+ }
+ 
+ static inline char *num_to_str(unsigned long num, char *buf, int len)
+@@ -79,12 +91,12 @@ void _start(void)
+ 	print("TAP version 13\n");
+ 	print("# Testing system size.\n");
+ 
+-	ccode = sysinfo(&info);
++	ccode = syscall(SYS_sysinfo, &info);
+ 	if (ccode < 0) {
+ 		print("not ok 1");
+ 		print(test_name);
+ 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
+-		_exit(ccode);
++		syscall(SYS_exit, ccode);
+ 	}
+ 	print("ok 1");
+ 	print(test_name);
+@@ -100,5 +112,5 @@ void _start(void)
+ 	print(" ...\n");
+ 	print("1..1\n");
+ 
+-	_exit(0);
++	syscall(SYS_exit, 0);
+ }
 
+--------------DFE7F240807E7357421E0404--
