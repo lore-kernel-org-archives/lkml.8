@@ -2,94 +2,102 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4857C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBD7C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883602071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876D12070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgA2QUl (ORCPT
+        id S1727112AbgA2QUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:20:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53096 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgA2QUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:20:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ADD1CAEE9;
-        Wed, 29 Jan 2020 16:20:35 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id DD1531E0D4F; Wed, 29 Jan 2020 17:20:34 +0100 (CET)
-Date:   Wed, 29 Jan 2020 17:20:34 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Liu Song <fishland@aliyun.com>
-Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liu.song11@zte.com.cn
-Subject: Re: [RFC PATCH] jbd2: no need to repeat in
- jbd2_journal_add_journal_head
-Message-ID: <20200129162034.GB8591@quack2.suse.cz>
-References: <20200129095700.3043-1-fishland@aliyun.com>
+        Wed, 29 Jan 2020 11:20:49 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52933 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgA2QUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:20:48 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 074393C0579;
+        Wed, 29 Jan 2020 17:20:46 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Azz6qmwHLR9N; Wed, 29 Jan 2020 17:20:40 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 12EE53C009E;
+        Wed, 29 Jan 2020 17:20:40 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 29 Jan
+ 2020 17:20:39 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        <linux-serial@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>
+CC:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
+        Yasushi Asano <yasano@jp.adit-jv.com>,
+        <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
+        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH] serial: sh-sci: Support custom speed setting
+Date:   Wed, 29 Jan 2020 17:19:55 +0100
+Message-ID: <20200129161955.30562-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129095700.3043-1-fishland@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-01-20 17:57:00, Liu Song wrote:
-> From: Liu Song <liu.song11@zte.com.cn>
-> 
-> In "journal_alloc_journal_head" use "GFP_NOFS | __GFP_NOFAIL"
-> as the alloc flag, so it will retry until memory allocation
-> is successful. Then we do not need to do extra repeat.
-> 
-> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
+From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
 
-Thanks for the patch. It looks good. You can add:
+This patch is necessary to use BT module and XM module with DENSO TEN
+development board.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
+custom speed setting with setserial(1).
 
-								Honza
+The custom speed is calculated from uartclk and custom_divisor.
+If custom_divisor is zero, custom speed setting is invalid.
 
-> ---
->  fs/jbd2/journal.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 5e408ee24a1a..1a9aaf07cecd 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -2503,7 +2503,6 @@ struct journal_head *jbd2_journal_add_journal_head(struct buffer_head *bh)
->  	struct journal_head *jh;
->  	struct journal_head *new_jh = NULL;
->  
-> -repeat:
->  	if (!buffer_jbd(bh))
->  		new_jh = journal_alloc_journal_head();
->  
-> @@ -2515,11 +2514,6 @@ struct journal_head *jbd2_journal_add_journal_head(struct buffer_head *bh)
->  			(atomic_read(&bh->b_count) > 0) ||
->  			(bh->b_page && bh->b_page->mapping));
->  
-> -		if (!new_jh) {
-> -			jbd_unlock_bh_journal_head(bh);
-> -			goto repeat;
-> -		}
-> -
->  		jh = new_jh;
->  		new_jh = NULL;		/* We consumed it */
->  		set_buffer_jbd(bh);
-> -- 
-> 2.20.1
-> 
+Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
+[erosca: rebase against v5.5]
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ drivers/tty/serial/sh-sci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 87ca6294de0e..dd468909b2c4 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -2405,6 +2405,10 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	if (!baud)
+ 		goto done;
+ 
++	if (baud == 38400 && (port->flags & UPF_SPD_MASK) == UPF_SPD_CUST &&
++	    port->custom_divisor)
++		baud = port->uartclk / port->custom_divisor;
++
+ 	/*
+ 	 * There can be multiple sources for the sampling clock.  Find the one
+ 	 * that gives us the smallest deviation from the desired baud rate.
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.0
+
