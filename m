@@ -2,197 +2,151 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42501C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABE0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16492206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709C3206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:05:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QhyJlO9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgA2N7y convert rfc822-to-8bit (ORCPT
+        id S1726795AbgA2OF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:59:54 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56287 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgA2N7y (ORCPT
+        Wed, 29 Jan 2020 09:05:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17018 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726177AbgA2OF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:59:54 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 197D2FF80F;
-        Wed, 29 Jan 2020 13:59:51 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 14:59:50 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: How to handle write-protect pin of NAND device ?
-Message-ID: <20200129145950.2a324acf@xps13>
-In-Reply-To: <20200129145336.66f840ea@collabora.com>
-References: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
-        <20200127153559.60a83e76@xps13>
-        <20200127164554.34a21177@collabora.com>
-        <20200127164755.29183962@xps13>
-        <20200128075833.129902f6@collabora.com>
-        <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
-        <20200129143639.7f80addb@xps13>
-        <20200129145336.66f840ea@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 Jan 2020 09:05:28 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580306727; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=OYXu3ND/s2/4ySCf9M0xA490SGByupUTGY02AD+jy9Y=;
+ b=QhyJlO9Zaw4gRAvu+1vaF7U/bCR7mGHaqL6Simc4gxCg3Eq3GAUZNMgLW1NPiUBwI5CQ724P
+ ARKtoffqHrEvnLsyaNvNYi1jHrAVPqswh/MELQjND2l9vrpJAPR3ILceIbzsuFCJITa2cLVt
+ FMjMQ8K6MQLNvbp5BWEeGAgu5jA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e319124.7fede9397650-smtp-out-n02;
+ Wed, 29 Jan 2020 14:05:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 20A7AC447A4; Wed, 29 Jan 2020 14:05:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44569C433CB;
+        Wed, 29 Jan 2020 14:05:21 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 29 Jan 2020 19:35:21 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 09/10] arm64: dts: qcom: sdm845: Add cpu OPP tables
+In-Reply-To: <20200129012411.GI46072@google.com>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-10-sibis@codeaurora.org>
+ <20200129012411.GI46072@google.com>
+Message-ID: <4f2b98a1dae3bc737a43a1e46255657b@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+Hey Matthias,
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 29 Jan
-2020 14:53:36 +0100:
+Thanks for the review!
 
-> On Wed, 29 Jan 2020 14:36:39 +0100
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On 2020-01-29 06:54, Matthias Kaehlcke wrote:
+> Hi Sibi,
 > 
-> > Hello,
-> > 
-> > Masahiro Yamada <masahiroy@kernel.org> wrote on Wed, 29 Jan 2020
-> > 19:06:46 +0900:
-> >   
-> > > On Tue, Jan 28, 2020 at 3:58 PM Boris Brezillon
-> > > <boris.brezillon@collabora.com> wrote:    
-> > > >
-> > > > On Mon, 27 Jan 2020 16:47:55 +0100
-> > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > >      
-> > > > > Hi Hello,
-> > > > >
-> > > > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Jan
-> > > > > 2020 16:45:54 +0100:
-> > > > >      
-> > > > > > On Mon, 27 Jan 2020 15:35:59 +0100
-> > > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > > > >      
-> > > > > > > Hi Masahiro,
-> > > > > > >
-> > > > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Mon, 27 Jan 2020
-> > > > > > > 21:55:25 +0900:
-> > > > > > >      
-> > > > > > > > Hi.
-> > > > > > > >
-> > > > > > > > I have a question about the
-> > > > > > > > WP_n pin of a NAND chip.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > As far as I see, the NAND framework does not
-> > > > > > > > handle it.      
-> > > > > > >
-> > > > > > > There is a nand_check_wp() which reads the status of the pin before
-> > > > > > > erasing/writing.
-> > > > > > >      
-> > > > > > > >
-> > > > > > > > Instead, it is handled in a driver level.
-> > > > > > > > I see some DT-bindings that handle the WP_n pin.
-> > > > > > > >
-> > > > > > > > $ git grep wp -- Documentation/devicetree/bindings/mtd/
-> > > > > > > > Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
-> > > > > > > > brcm,nand-has-wp          : Some versions of this IP include a
-> > > > > > > > write-protect      
-> > > > > > >
-> > > > > > > Just checked: brcmnand de-assert WP when writing/erasing and asserts it
-> > > > > > > otherwise. IMHO this switching is useless.
-> > > > > > >      
-> > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
-> > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
-> > > > > > > >          wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-> > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
-> > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
-> > > > > > > >          wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;      
-> > > > > > >
-> > > > > > > In both cases, the WP GPIO is unused in the code, just de-asserted at
-> > > > > > > boot time like what you do in the patch below.
-> > > > > > >      
-> > > > > > > >
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > I wrote a patch to avoid read-only issue in some cases:
-> > > > > > > > http://patchwork.ozlabs.org/patch/1229749/
-> > > > > > > >
-> > > > > > > > Generally speaking, we expect NAND devices
-> > > > > > > > are writable in Linux. So, I think my patch is OK.      
-> > > > > > >
-> > > > > > > I think the patch is fine.
-> > > > > > >      
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > However, I asked this myself:
-> > > > > > > > Is there a useful case to assert the write protect
-> > > > > > > > pin in order to make the NAND chip really read-only?
-> > > > > > > > For example, the system recovery image is stored in
-> > > > > > > > a read-only device, and the write-protect pin is
-> > > > > > > > kept asserted to assure nobody accidentally corrupts it.      
-> > > > > > >
-> > > > > > > It is very likely that the same device is used for RO and RW storage so
-> > > > > > > in most cases this is not possible. We already have squashfs which is
-> > > > > > > actually read-only at filesystem level, I'm not sure it is needed to
-> > > > > > > enforce this at a lower level... Anyway if there is actually a pin for
-> > > > > > > that, one might want to handle the pin directly as a GPIO, what do you
-> > > > > > > think?      
-> > > > > >
-> > > > > > FWIW, I've always considered the WP pin as a way to protect against
-> > > > > > spurious destructive command emission, which is most likely to happen
-> > > > > > during transition phases (bootloader -> linux, linux -> kexeced-linux,
-> > > > > > platform reset, ..., or any other transition where the pin state might
-> > > > > > be undefined at some point). This being said, if you're worried about
-> > > > > > other sources of spurious cmds (say your bus is shared between
-> > > > > > different kind of memory devices, and the CS pin is unreliable), you
-> > > > > > might want to leave the NAND in a write-protected state de-asserting WP
-> > > > > > only when explicitly issuing a destructive command (program page, erase
-> > > > > > block).      
-> > > > >
-> > > > > Ok so with this in mind, only the brcmnand driver does a useful use of
-> > > > > the WP output.      
-> > > >
-> > > > Well, I'd just say that brcmnand is more paranoid, which is a good
-> > > > thing I guess, but that doesn't make other solutions useless, just less
-> > > > safe. We could probably flag operations as 'destructive' at the
-> > > > nand_operation level, so drivers can assert/de-assert the pin on a
-> > > > per-operation basis.      
-> > > 
-> > > Sounds a good idea.
-> > > 
-> > > If it is supported in the NAND framework,
-> > > I will be happy to implement in the Denali NAND driver.
-> > >     
-> > 
-> > There is currently no such thing at NAND level but I doubt there is
-> > more than erase and write operation during which it would be needed
-> > to assert/deassert WP. I don't see why having this flag would help
-> > the controller drivers?  
+> On Tue, Jan 28, 2020 at 01:33:49AM +0530, Sibi Sankar wrote:
+>> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 
+>> SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 453 
+>> +++++++++++++++++++++++++++
+>>  1 file changed, 453 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index c036bab49fc03..8cb976118407b 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -199,6 +199,12 @@
+>>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>>  			#cooling-cells = <2>;
+>>  			next-level-cache = <&L2_0>;
+>> +			operating-points-v2 = <&cpu0_opp_table>,
+>> +					      <&cpu0_ddr_bw_opp_table>,
+>> +					      <&cpu0_l3_bw_opp_table>;
+>> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+>> SLAVE_EBI1>,
+>> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
 > 
-> Because ->exec_op() was designed to avoid leaving such decisions to the
-> NAND controller drivers :P. If you now ask drivers to look at the
-> opcode and guess when they should de-assert the WP pin, you're just
-> going back to the ->cmdfunc() mess.
+> This apparently depends on the 'Split SDM845 interconnect nodes and
+> consolidate RPMh support' series
+> (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=226281),
+> which isn't mentioned in the cover letter.
+> 
+> I also couldn't find a patch on the lists that adds the 'osm_l3'
+> interconnect node for SDM845. The same is true for SC7180 (next
+> patch of this series). These patches may be available in custom trees,
+> but that isn't really helpful for upstream review.
 
-I was actually thinking to the ->write_page(_raw)() helpers, but
-yeah, in the case of ->exec_op() it's different. However, for these
-helpers as don't use ->exec_op(), we need another way to flag the
-operation as destructive.
+yeah I missed adding the interconnect
+refactor dependency and the nodes.
 
-But actually we could let the driver toggle the pin for any operation.
-If we want to be protected against spurious access, not directly ordered
-by the controller driver itself, then we don't care if the operation is
-actually destructive or not as long as the pin is deasserted during our
-operations and asserted otherwise.
+> 
+> I would suggest to focus on landing the dependencies of this series,
+> before proceding with it (or at least most of them), there are plenty
+> and without the dependencies this series isn't going to land, it also
+> makes it hard for testers and reviewers to get all the pieces
 
-Miquèl
+yes I understand but wanted the series
+out asap because since there are a few
+points where we still havn't reached
+a consensus on.
+
+> together. In particular the last post of the series 'Add
+> required-opps support to devfreq passive gov'
+> (https://patchwork.kernel.org/cover/11055499/) is from July 2019 ...
+
+https://lore.kernel.org/lkml/CAGTfZH37ALwUHd8SpRRrBzZ6x1-++YtzS60_yRQvN-TN6rOzaA@mail.gmail.com/
+
+The pending patch for lazy linking
+was posted a while back. Now that
+it has a tested-by, majority of the
+series should go in since the devfreq
+maintainers wanted the series pulled
+in.
+
+> 
+> Thanks
+> 
+> Matthias
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
