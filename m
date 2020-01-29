@@ -2,119 +2,106 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BA8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59EAC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE98220716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6A02070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ub6sLpww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgA2QGP (ORCPT
+        id S1726977AbgA2QIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:06:15 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:50897 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgA2QGP (ORCPT
+        Wed, 29 Jan 2020 11:08:01 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40050 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgA2QIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:06:15 -0500
-Received: by mail-il1-f198.google.com with SMTP id z12so152518ilh.17
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 08:06:15 -0800 (PST)
+        Wed, 29 Jan 2020 11:08:00 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so8640693pfh.7;
+        Wed, 29 Jan 2020 08:08:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=8JqRhiDOHvgPoZeVnB2/bI1P2RUwGdHALzeY09zc6AU=;
+        b=ub6sLpwwTWJc0DJT5UDWjzIwiugnQZno6L7yV/YzPZ8PqzySLQXrh33ibMBqECPhJD
+         i9qOjKCFkLgTXci2siKMJV8UPCXQp64Lyq1A1WUISGnU8/VjWj/5CSaxVIoRiykTHk1p
+         JPKxjK2SB0vZgMmpC4PEnEqnqzkH1P0ggO2vuTFS+ycnVNAXDMjdpH2IcFE9er0hsq2n
+         1f/zNiMjsiyUqIDoHgijiNx8MFfRWO6nS6mwZ7mfh/xk0B22tJ4KUfJ8+19iGNKxOV68
+         NFdruNQIX4Qj4BMlPk4Rwuf/xEYyeCne9qEkSUEnt8UGY1tYI1t/6sQAeJKSE8jU0w4Y
+         j04w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=fEUlUjM8SEojeOk6pwtcSTQDu8D7nALBWF21TUkUjFQ=;
-        b=aqwDoLWOubj20N9ArKCx1vy9aOBnGCE2Sunm93HukkPNcU8+3JGGOp+dlcbfFFKM0A
-         TgVrSlVLvonk1UZEWkSVjjZuCs2EE06A1ydeSemC5qe1UGfJLQaR8/NJ8AB3O1rPokv9
-         9d4q+acTLHhUR2189uFbgGorvQuN5XtXP6Np6WuyYoiTF9GivSRDVBFnR7ks/clb7HB2
-         LfDg83L57sqbOnIi9q3nTDyzmg5ZLT8WEqW0MALD9NhyOGhOqiO2WfDw3n6q6VSZU5LA
-         BfeckS9RGYYZz04yeJMzQ+adt4uamdjAqTUJNKh4WZYpv/qUxvlBXsoDED9noQm+W226
-         Jr7Q==
-X-Gm-Message-State: APjAAAWMMzWJMmUAzQvq9fVmGwGa5MpT10nfrTWfXwJBJLLUZ8D7JMgC
-        zPRtCQV+n+j+1Keo57G9ifx3uL3R/9k5/uoX94V5m5Ze0xAd
-X-Google-Smtp-Source: APXvYqxRd2se19n9AMGBF0tsd+V/QMOOXynWF3G0Gosz8cItmjCbMWlTR4gOeDt0e9z2keIjwUnyAv5NoJ294QR5X7nnb81NTilm
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8JqRhiDOHvgPoZeVnB2/bI1P2RUwGdHALzeY09zc6AU=;
+        b=kXZEuvF514Mo6cAPdfLbLhFxU/lJNY1W+Pa890LFlcuoHWmLR5FNfC5lQECGmYGo17
+         fLvscdfRaq+zBatRYxo74ec3w3IbwFFn8hOXu9ED+UIk1nBf93Ae4a7ANtmDCR2CB1RT
+         R4BN+7xTV7jPzzElxLryBVTB4FaATiGAlG7uuH+t47tRPGCAUB8CHD8YSTtxLwmigVHR
+         zZMSQ+1fE4h4LnLs3LdIavPNUZ2ePRiaxOJ5HXZPSp+LFTftyHy2qKh+dD/jjxlVorTG
+         egRAUU57ERWIu+7WoApM8S2J92GBfzeql8Dn0z28ScbP+OXFWgMTBIXCZzOpU9fN6BMo
+         d14Q==
+X-Gm-Message-State: APjAAAVP5cYLJWiwVNmWnUXFep/jQD2uyGhl5FpgnGOqQxcuFqz8mM9n
+        tJOBWmb8vdLyVHlXZchFuQ==
+X-Google-Smtp-Source: APXvYqxfZP/dEAKdniyQQ5yUDQhVGpJiIk1VxKKDOMBaGSKoI02Ozrv7wvSI+HYbEIFUY+8k8SvIFA==
+X-Received: by 2002:a63:c747:: with SMTP id v7mr21375207pgg.291.1580314080050;
+        Wed, 29 Jan 2020 08:08:00 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee5:e7da:d421:7a49:b2e4:2bd6])
+        by smtp.gmail.com with ESMTPSA id u3sm3129608pjv.32.2020.01.29.08.07.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 Jan 2020 08:07:59 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Wed, 29 Jan 2020 21:37:52 +0530
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     madhuparnabhowmik10@gmail.com, tj@kernel.org, lizefan@huawei.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, rcu@vger.kernel.org, frextrite@gmail.com
+Subject: Re: [PATCH] cgroup.c: Use built-in RCU list checking
+Message-ID: <20200129160752.GA15913@madhuparna-HP-Notebook>
+References: <20200118031051.28776-1-madhuparnabhowmik10@gmail.com>
+ <20200129142255.GE11384@blackbody.suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a92:914a:: with SMTP id t71mr26674745ild.293.1580313974646;
- Wed, 29 Jan 2020 08:06:14 -0800 (PST)
-Date:   Wed, 29 Jan 2020 08:06:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000017ad0d059d498531@google.com>
-Subject: memory leak in snd_pcm_hw_params
-From:   syzbot <syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, perex@perex.cz,
-        sumit.semwal@linaro.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200129142255.GE11384@blackbody.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jan 29, 2020 at 03:22:55PM +0100, Michal Koutný wrote:
+> Hello.
+> 
+> On Sat, Jan 18, 2020 at 08:40:51AM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > list_for_each_entry_rcu has built-in RCU and lock checking.
+> > Pass cond argument to list_for_each_entry_rcu() to silence
+> > false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
+> > by default.
+> I assume if you've seen the RCU warning, you haven't seen the warning
+> from cgroup_assert_mutex_or_rcu_locked() above. 
+>
+No, I haven't seen any warning from cgroup_assert_mutex_or_rcu_locked(),
+I am just doing the conversions to prevent any false lockdep warnings
+because of CONFIG_PROVE_RCU_LIST in the future.
 
-syzbot found the following crash on:
+> The patch makes sense to me from the consistency POV.
+> 
+Thank you,
+Madhuparna
 
-HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1351cf66e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e97a1bc78afb77f
-dashboard link: https://syzkaller.appspot.com/bug?extid=30edd0f34bfcdc548ac4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e97735e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13cd9bc9e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff888108fdefc0 (size 64):
-  comm "syz-executor222", pid 7310, jiffies 4294946025 (age 13.660s)
-  hex dump (first 32 bytes):
-    07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 10 33 02 00 c9 ff ff 00 00 00 00 00 00 00 00  ..3.............
-  backtrace:
-    [<00000000c59c6b0c>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000c59c6b0c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000c59c6b0c>] slab_alloc mm/slab.c:3320 [inline]
-    [<00000000c59c6b0c>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<00000000478172ce>] kmalloc include/linux/slab.h:556 [inline]
-    [<00000000478172ce>] kzalloc include/linux/slab.h:670 [inline]
-    [<00000000478172ce>] snd_pcm_lib_malloc_pages+0x12b/0x200 sound/core/pcm_memory.c:404
-    [<0000000091532e16>] snd_pcm_hw_params+0x720/0x830 sound/core/pcm_native.c:691
-    [<000000002070a986>] snd_pcm_kernel_ioctl+0xb5/0x170 sound/core/pcm_native.c:3238
-    [<00000000394e99f4>] snd_pcm_oss_change_params_locked+0x745/0x1140 sound/core/oss/pcm_oss.c:944
-    [<00000000c81f42ac>] snd_pcm_oss_change_params+0x43/0x80 sound/core/oss/pcm_oss.c:1087
-    [<000000007710a1c0>] snd_pcm_oss_make_ready+0x55/0xc0 sound/core/oss/pcm_oss.c:1146
-    [<0000000069305204>] snd_pcm_oss_sync.isra.0+0xb8/0x310 sound/core/oss/pcm_oss.c:1707
-    [<00000000692460c8>] snd_pcm_oss_release+0xef/0x100 sound/core/oss/pcm_oss.c:2545
-    [<0000000013ba02c9>] __fput+0xed/0x300 fs/file_table.c:280
-    [<0000000080810f18>] ____fput+0x16/0x20 fs/file_table.c:313
-    [<00000000e6bb3aa6>] task_work_run+0x9d/0xc0 kernel/task_work.c:113
-    [<00000000b6ce71eb>] exit_task_work include/linux/task_work.h:22 [inline]
-    [<00000000b6ce71eb>] do_exit+0x3fa/0xe20 kernel/exit.c:801
-    [<0000000045ce7ad3>] do_group_exit+0x4b/0xe0 kernel/exit.c:899
-    [<00000000aeb85903>] __do_sys_exit_group kernel/exit.c:910 [inline]
-    [<00000000aeb85903>] __se_sys_exit_group kernel/exit.c:908 [inline]
-    [<00000000aeb85903>] __x64_sys_exit_group+0x1c/0x20 kernel/exit.c:908
-    [<000000008b12db16>] do_syscall_64+0x73/0x220 arch/x86/entry/common.c:294
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> Acked-by: Michal Koutný <mkoutny@suse.com>
+> 
+> Michal
