@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52853C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C22FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D773206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E854206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgA2Xrv (ORCPT
+        id S1727430AbgA2Xr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:47:51 -0500
+        Wed, 29 Jan 2020 18:47:59 -0500
 Received: from mga06.intel.com ([134.134.136.31]:46690 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbgA2Xqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727161AbgA2Xqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 18:46:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551740"
+   d="scan'208";a="309551730"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:44 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 16/26] KVM: x86: Add Kconfig-controlled auditing of reverse CPUID lookups
-Date:   Wed, 29 Jan 2020 15:46:30 -0800
-Message-Id: <20200129234640.8147-17-sean.j.christopherson@intel.com>
+Subject: [PATCH 13/26] KVM: x86: Use u32 for holding CPUID register value in helpers
+Date:   Wed, 29 Jan 2020 15:46:27 -0800
+Message-Id: <20200129234640.8147-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,57 +49,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add WARNs in the low level __cpuid_entry_get_reg() to assert that the
-function and index of the CPUID entry and reverse CPUID entry match.
-Wrap the WARNs in a new Kconfig, KVM_CPUID_AUDIT, as the checks add
-almost no value in a production environment, i.e. will only detect
-blatant KVM bugs and fatal hardware errors.  Add a Kconfig instead of
-simply wrapping the WARNs with an off-by-default #ifdef so that syzbot
-and other automated testing can enable the auditing.
+Change the intermediate CPUID output register values from "int" to "u32"
+to match both hardware and the storage type in struct cpuid_reg.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/Kconfig | 10 ++++++++++
- arch/x86/kvm/cpuid.h |  5 +++++
- 2 files changed, 15 insertions(+)
+ arch/x86/kvm/cpuid.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 840e12583b85..bbbc3258358e 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -96,6 +96,16 @@ config KVM_MMU_AUDIT
- 	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
- 	 auditing of KVM MMU events at runtime.
- 
-+config KVM_CPUID_AUDIT
-+	bool "Audit KVM reverse CPUID lookups"
-+	depends on KVM
-+	help
-+	 This option enables runtime checking of reverse CPUID lookups in KVM
-+	 to verify the function and index of the referenced X86_FEATURE_* match
-+	 the function and index of the CPUID entry being accessed.
-+
-+	 If unsure, say N.
-+
- # OK, it's a little counter-intuitive to do this, but it puts it neatly under
- # the virtualization menu.
- source "drivers/vhost/Kconfig"
 diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 51f19eade5a0..41ff94a7d3e0 100644
+index c1ac0995843d..72a79bdfed6b 100644
 --- a/arch/x86/kvm/cpuid.h
 +++ b/arch/x86/kvm/cpuid.h
-@@ -98,6 +98,11 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
- static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
- 						  const struct cpuid_reg *cpuid)
+@@ -95,7 +95,7 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+ 	return reverse_cpuid[x86_leaf];
+ }
+ 
+-static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
++static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
  {
-+#ifdef CONFIG_KVM_CPUID_AUDIT
-+	WARN_ON_ONCE(entry->function != cpuid->function);
-+	WARN_ON_ONCE(entry->index != cpuid->index);
-+#endif
-+
- 	switch (cpuid->reg) {
- 	case CPUID_EAX:
- 		return &entry->eax;
+ 	struct kvm_cpuid_entry2 *entry;
+ 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+@@ -121,7 +121,7 @@ static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+ 
+ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
+ {
+-	int *reg;
++	u32 *reg;
+ 
+ 	reg = guest_cpuid_get_register(vcpu, x86_feature);
+ 	if (!reg)
+@@ -132,7 +132,7 @@ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_
+ 
+ static __always_inline void guest_cpuid_clear(struct kvm_vcpu *vcpu, unsigned x86_feature)
+ {
+-	int *reg;
++	u32 *reg;
+ 
+ 	reg = guest_cpuid_get_register(vcpu, x86_feature);
+ 	if (reg)
 -- 
 2.24.1
 
