@@ -2,172 +2,86 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C37C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C817C33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28F520716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3509B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 13:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MNWayklz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgA2Ngm convert rfc822-to-8bit (ORCPT
+        id S1726385AbgA2NjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 08:36:42 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50835 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgA2Ngm (ORCPT
+        Wed, 29 Jan 2020 08:39:19 -0500
+Received: from mail-pj1-f42.google.com ([209.85.216.42]:37416 "EHLO
+        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgA2NjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:36:42 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 04BF160002;
-        Wed, 29 Jan 2020 13:36:39 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 14:36:39 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: How to handle write-protect pin of NAND device ?
-Message-ID: <20200129143639.7f80addb@xps13>
-In-Reply-To: <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
-References: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
-        <20200127153559.60a83e76@xps13>
-        <20200127164554.34a21177@collabora.com>
-        <20200127164755.29183962@xps13>
-        <20200128075833.129902f6@collabora.com>
-        <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 Jan 2020 08:39:19 -0500
+Received: by mail-pj1-f42.google.com with SMTP id m13so2664353pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 05:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=jRw4gHj3o+0fDg3wZL+MId/7a4nIQ2wDAMiYdbQUCIE=;
+        b=MNWayklz5DOaPLQuHOF6vvFj3L/UpWZ8cJxmLJMaJ2B3hV7J4/9PyCQIcZCUniepHJ
+         BC0JgUyyh2JTo+rYIfijyJo2csqrMSk1NgZBZKNj4JoFSTpCCSnmwXp9hTjd+enGGYYu
+         dqkx50Nhvd9ugjHLtwOvHFXIyfMxuo4IIZXDTX3odQaI4VhjtqQ0KDXjmpOIgQI0s3hr
+         xAA2Ua3U6sFfwiAYFP5TCXJaRWNEfK66QIqkG5sJ8mWFZaC+q0zLWJ9jTDKzIu6P2dQd
+         3iqpEuVIMD13B9AWJ3jDbkj6Jl8DUhBR49cpjtsK2RCtSD+xdC3tcuaZn6yy6Rmb6xzQ
+         ExQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jRw4gHj3o+0fDg3wZL+MId/7a4nIQ2wDAMiYdbQUCIE=;
+        b=Z+3MQL30YsagA9rIOVtsE8qPY4X3Er6rjj4GPD8ihbwrP89U8hpa7XMwf3tPcBIcTe
+         87hOBdrk8gil0fgp16DPoyY6Ha+dw+4QxzdoOPpECeCJJebzEqPRj3jDRrahZjJlt3ki
+         Jd0VsCsyrdkRTB8Jxg4QSvIMuVeGCP74jv+XG3YObQWenYH8jNNnAp2lrfbz7duQXyL0
+         5I5+Se7GZzxuQ6/2vMUUnSSm4Im+F1afCiRZDA9DvbvmEQonzbpH+nKmn5Gi5MZ/2O8w
+         73UIdaQ+HOJe1f+3L2TZY5Y85P0Nai3PDQQ089LI9M2CsuS8954md/Rm6B6MGKMzo4MZ
+         bKTA==
+X-Gm-Message-State: APjAAAU2+2Gd7h4aOsLcSKoSf9ZYMzg8Kbr5JS+xc2bHNFUtyG7O6Okk
+        bbnjRqlBbHOzP/pY8lIQXdGriU5Ewv4=
+X-Google-Smtp-Source: APXvYqyPhfTyC7VNpA0L1MnRS7VkitmsDY5CbseGZBhvbp+Wxs1WEbNLbRh9ExN3O88DCJIhHovfdQ==
+X-Received: by 2002:a17:90a:c708:: with SMTP id o8mr11397427pjt.104.1580305157936;
+        Wed, 29 Jan 2020 05:39:17 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id i68sm2972265pfe.173.2020.01.29.05.39.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 05:39:17 -0800 (PST)
+Subject: Re: [PATCH] io-wq: use put instead of revert creds
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <c79bab7a6bd174f32121c9508390264bff9950ca.1580292613.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <044f452e-76ab-c555-9dce-3c7a711d3c5e@kernel.dk>
+Date:   Wed, 29 Jan 2020 06:39:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <c79bab7a6bd174f32121c9508390264bff9950ca.1580292613.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 1/29/20 3:10 AM, Pavel Begunkov wrote:
+> There is no need to publish creds twice in io_wq_switch_creds() (in
+> revert_creds() and override_creds()). Just do override_creds() and
+> put_creds() if needed.
 
-Masahiro Yamada <masahiroy@kernel.org> wrote on Wed, 29 Jan 2020
-19:06:46 +0900:
+Thanks, looks good. Applied.
 
-> On Tue, Jan 28, 2020 at 3:58 PM Boris Brezillon
-> <boris.brezillon@collabora.com> wrote:
-> >
-> > On Mon, 27 Jan 2020 16:47:55 +0100
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >  
-> > > Hi Hello,
-> > >
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Jan
-> > > 2020 16:45:54 +0100:
-> > >  
-> > > > On Mon, 27 Jan 2020 15:35:59 +0100
-> > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > >  
-> > > > > Hi Masahiro,
-> > > > >
-> > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Mon, 27 Jan 2020
-> > > > > 21:55:25 +0900:
-> > > > >  
-> > > > > > Hi.
-> > > > > >
-> > > > > > I have a question about the
-> > > > > > WP_n pin of a NAND chip.
-> > > > > >
-> > > > > >
-> > > > > > As far as I see, the NAND framework does not
-> > > > > > handle it.  
-> > > > >
-> > > > > There is a nand_check_wp() which reads the status of the pin before
-> > > > > erasing/writing.
-> > > > >  
-> > > > > >
-> > > > > > Instead, it is handled in a driver level.
-> > > > > > I see some DT-bindings that handle the WP_n pin.
-> > > > > >
-> > > > > > $ git grep wp -- Documentation/devicetree/bindings/mtd/
-> > > > > > Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
-> > > > > > brcm,nand-has-wp          : Some versions of this IP include a
-> > > > > > write-protect  
-> > > > >
-> > > > > Just checked: brcmnand de-assert WP when writing/erasing and asserts it
-> > > > > otherwise. IMHO this switching is useless.
-> > > > >  
-> > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
-> > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
-> > > > > >          wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-> > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
-> > > > > > wp-gpios: GPIO specifier for the write protect pin.
-> > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
-> > > > > >          wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;  
-> > > > >
-> > > > > In both cases, the WP GPIO is unused in the code, just de-asserted at
-> > > > > boot time like what you do in the patch below.
-> > > > >  
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > I wrote a patch to avoid read-only issue in some cases:
-> > > > > > http://patchwork.ozlabs.org/patch/1229749/
-> > > > > >
-> > > > > > Generally speaking, we expect NAND devices
-> > > > > > are writable in Linux. So, I think my patch is OK.  
-> > > > >
-> > > > > I think the patch is fine.
-> > > > >  
-> > > > > >
-> > > > > >
-> > > > > > However, I asked this myself:
-> > > > > > Is there a useful case to assert the write protect
-> > > > > > pin in order to make the NAND chip really read-only?
-> > > > > > For example, the system recovery image is stored in
-> > > > > > a read-only device, and the write-protect pin is
-> > > > > > kept asserted to assure nobody accidentally corrupts it.  
-> > > > >
-> > > > > It is very likely that the same device is used for RO and RW storage so
-> > > > > in most cases this is not possible. We already have squashfs which is
-> > > > > actually read-only at filesystem level, I'm not sure it is needed to
-> > > > > enforce this at a lower level... Anyway if there is actually a pin for
-> > > > > that, one might want to handle the pin directly as a GPIO, what do you
-> > > > > think?  
-> > > >
-> > > > FWIW, I've always considered the WP pin as a way to protect against
-> > > > spurious destructive command emission, which is most likely to happen
-> > > > during transition phases (bootloader -> linux, linux -> kexeced-linux,
-> > > > platform reset, ..., or any other transition where the pin state might
-> > > > be undefined at some point). This being said, if you're worried about
-> > > > other sources of spurious cmds (say your bus is shared between
-> > > > different kind of memory devices, and the CS pin is unreliable), you
-> > > > might want to leave the NAND in a write-protected state de-asserting WP
-> > > > only when explicitly issuing a destructive command (program page, erase
-> > > > block).  
-> > >
-> > > Ok so with this in mind, only the brcmnand driver does a useful use of
-> > > the WP output.  
-> >
-> > Well, I'd just say that brcmnand is more paranoid, which is a good
-> > thing I guess, but that doesn't make other solutions useless, just less
-> > safe. We could probably flag operations as 'destructive' at the
-> > nand_operation level, so drivers can assert/de-assert the pin on a
-> > per-operation basis.  
-> 
-> Sounds a good idea.
-> 
-> If it is supported in the NAND framework,
-> I will be happy to implement in the Denali NAND driver.
-> 
+-- 
+Jens Axboe
 
-There is currently no such thing at NAND level but I doubt there is
-more than erase and write operation during which it would be needed
-to assert/deassert WP. I don't see why having this flag would help
-the controller drivers?
-
-Thanks,
-Miquèl
