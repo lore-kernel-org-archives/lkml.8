@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB018C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AFA206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C386206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgA2Xsc (ORCPT
+        id S1727476AbgA2Xse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:48:32 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46690 "EHLO mga06.intel.com"
+        Wed, 29 Jan 2020 18:48:34 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46688 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbgA2Xqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727078AbgA2Xqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 Jan 2020 18:46:46 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551700"
+   d="scan'208";a="309551695"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:43 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/26] KVM: x86: Snapshot MSR index in a local variable when processing lists
-Date:   Wed, 29 Jan 2020 15:46:17 -0800
-Message-Id: <20200129234640.8147-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 01/26] KVM: x86: Remove superfluous brackets from case statement
+Date:   Wed, 29 Jan 2020 15:46:15 -0800
+Message-Id: <20200129234640.8147-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,90 +49,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Snapshot the MSR index when processing the virtualized and emulated MSR
-lists in kvm_init_msr_list() to improve code readability, particularly
-in the RTIT and PerfMon MSR checks.
-
-No functional change intended.
+Remove unnecessary brackets from a case statement that unintentionally
+encapsulates unrelated case statements in the same switch statement.
+While technically legal and functionally correct syntax, the brackets
+are visually confusing and potentially dangerous, e.g. the last of the
+encapsulated case statements has an undocumented fall-through that isn't
+flagged by compilers due the encapsulation.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ arch/x86/kvm/x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 24597526b5de..3d4a5326d84e 100644
+index 7e3f1d937224..24597526b5de 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5214,7 +5214,7 @@ long kvm_arch_vm_ioctl(struct file *filp,
- static void kvm_init_msr_list(void)
- {
- 	struct x86_pmu_capability x86_pmu;
--	u32 dummy[2];
-+	u32 dummy[2], msr_index;
- 	unsigned i;
- 
- 	BUILD_BUG_ON_MSG(INTEL_PMC_MAX_FIXED != 4,
-@@ -5227,14 +5227,16 @@ static void kvm_init_msr_list(void)
- 	num_msr_based_features = 0;
- 
- 	for (i = 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
--		if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
-+		msr_index = msrs_to_save_all[i];
-+
-+		if (rdmsr_safe(msr_index, &dummy[0], &dummy[1]) < 0)
- 			continue;
- 
- 		/*
- 		 * Even MSRs that are valid in the host may not be exposed
- 		 * to the guests in some cases.
- 		 */
--		switch (msrs_to_save_all[i]) {
-+		switch (msr_index) {
- 		case MSR_IA32_BNDCFGS:
- 			if (!kvm_mpx_supported())
+@@ -5260,7 +5260,7 @@ static void kvm_init_msr_list(void)
+ 				 !intel_pt_validate_hw_cap(PT_CAP_single_range_output)))
  				continue;
-@@ -5262,17 +5264,17 @@ static void kvm_init_msr_list(void)
  			break;
- 		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
+-		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
++		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
  			if (!kvm_x86_ops->pt_supported() ||
--				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
-+				msr_index - MSR_IA32_RTIT_ADDR0_A >=
+ 				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
  				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
- 				continue;
- 			break;
- 		case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
--			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
-+			if (msr_index - MSR_ARCH_PERFMON_PERFCTR0 >=
+@@ -5275,7 +5275,7 @@ static void kvm_init_msr_list(void)
+ 			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
  				continue;
- 			break;
- 		case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 17:
--			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
-+			if (msr_index - MSR_ARCH_PERFMON_EVENTSEL0 >=
- 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
- 				continue;
- 			break;
-@@ -5280,14 +5282,16 @@ static void kvm_init_msr_list(void)
+-		}
++			break;
+ 		default:
  			break;
  		}
- 
--		msrs_to_save[num_msrs_to_save++] = msrs_to_save_all[i];
-+		msrs_to_save[num_msrs_to_save++] = msr_index;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(emulated_msrs_all); i++) {
--		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs_all[i]))
-+		msr_index = emulated_msrs_all[i];
-+
-+		if (!kvm_x86_ops->has_emulated_msr(msr_index))
- 			continue;
- 
--		emulated_msrs[num_emulated_msrs++] = emulated_msrs_all[i];
-+		emulated_msrs[num_emulated_msrs++] = msr_index;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(msr_based_features_all); i++) {
 -- 
 2.24.1
 
