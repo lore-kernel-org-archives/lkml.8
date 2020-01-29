@@ -2,115 +2,124 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B995CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F2AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C57C21739
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580262173;
-	bh=Dm5O1JcZZZn4Fmmh8ZEVuwwpAngNiF+PCJfRS/Xf9zw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UtT6AN9rjsTTRfS2fk2tLV/Gy7E4AKYS+vQjPCOQE/hoBq2mCIVaXif9BWTacfEIu
-	 tIEYLgrC4T5dscGncocgqdJH1/Rl9+dVinzrYDWEaKp7Yr3WXHGn6nqpGUTNZcqiMq
-	 PLqy1Z92qdl3cmcr73ywzalCDQWTSh+kA3YRae+Q=
+	by mail.kernel.org (Postfix) with ESMTP id F2D42207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 02:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="e1EroSJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgA2Bmw (ORCPT
+        id S1726514AbgA2CFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 20:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgA2Bmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 20:42:52 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1914B2051A;
-        Wed, 29 Jan 2020 01:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580262171;
-        bh=Dm5O1JcZZZn4Fmmh8ZEVuwwpAngNiF+PCJfRS/Xf9zw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IuNPIsR0oGrUykv480vwdj6CsOazTln5Bw1n/BEKw1a/AsxXikVYbWTsDoZHVn1NH
-         t/EI5lRCJXpmAa1YAwlsAfg3SXA/vfAdzvcPXlErBoR7v2HI9/sbLaWbGUKdyFKt2C
-         ZB09jVEnfNltBzwVSCZDK1MGtariwNUd7/U93c4E=
-Date:   Tue, 28 Jan 2020 17:42:48 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        qiaochong <qiaochong@loongson.cn>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        James Hogan <jhogan@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Tue, 28 Jan 2020 21:05:05 -0500
+Received: from sonic314-21.consmr.mail.gq1.yahoo.com ([98.137.69.84]:39781
+        "EHLO sonic314-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbgA2CFF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 Jan 2020 21:05:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1580263504; bh=sYL6ZHN2CvlM1IdDrBrWu/a7XoJkY3p5D/tO15+rwAo=; h=Date:From:To:Cc:Subject:References:From:Subject; b=e1EroSJNRWZ8kxm+7PYZN7MwF6xvzHbiExOvrRQrWrwIOHzvo/8NV++nFeMrsVWL75sX+rc9kKDgSQY5nWuo0+NllKiJOMT5q2jVkF+/kkrtEhG/BVDkEzqdT05JtGHRHI/KcTKT0sVXxuGguvQGQxsdGstjWLXIkBjwJaWDYGcm5r8E0gkpfZaQR8+wbKGGqaL2UgVKvaASY2mVYtzTwVk5f+afOYK863IJqSMErli3sf9Jp0GLOaKmU1NCenQkqefsBMlvOk9CyJuve6ycsXrj6rkn31O06EdWCp0li9Clx+Rk7hQ5ROnn9heGh3AMIFPKhgr2kzSQ0TvCOaPmfA==
+X-YMail-OSG: MM0T8YoVM1laGNf25r0JB4NT_.Aq6PW3p_8D72naMKanE7VJjo2F4bDapMtaB0w
+ DG4AhySfhDU3NKJKdTwGfODEfRvYenP7jf375iURiUADoKksLnOwr4PCPNWK0k3Lu1LkhsPSKfv1
+ 9a4vlU5zDKp259k3NfPUF0uP0qNffutuH1Kc.RTH401M1BmnwVWBIaDmW52JLQBqHmMSEVR6tt5j
+ oAzWwbMyFKyS_a6Kg4qmBPy9lCUtvEdrB8JcvNwgfnO1NL7N9B_m3dSDfmFHx3OsJbln0sey4WF_
+ Jfhj1P6dsdxV5V4srX.v3quSBPOi12Dx7U3isi3PRVgSennZp7DfaoC7Pqu3QYJlFQR2PkZh6A20
+ oa8gxDmpo6fNgayJFIbm8X7V1I5zVGIKY0cNkC1OumYyGSxzyCoT1fsQMNLyDwSjVMltPJyzJLev
+ kpZw_eTra2F_UjIi1lMB8CUMiQVIxwXgk8zqT6fxqa0qEzAr1TY9QqmcIMxRSrAYDVTq3pHPyX6V
+ 60nfKFkxtKg0NH7q5xvgfGX6FCpQo5Ou0fpmxZRFo9PHZvlM69msTx1WrSKlbgKbDW75XGeprl94
+ 76_8eUH9p.2_exo93nivcTc1h6qg947OcGXYrpGMLmlgmSVatKv.aA5KHTS00cEGDb8H8vEiG1jA
+ s4qH6eQE6yRlxGZ.kuxmXWnS6xMBKKX0MjEXjK4Es_GI0yvDhjvqQ6G_x.GmTMLNKGICYE8rSOPA
+ IXKULkM7fOkmvIbM.QYSdQxwORCkYuXZ9JUcPwE6nx7mcTsWpsZJm3OczfbvfVb93h0MtVqt71.l
+ mvonbabrBA3LScYMMb1CnZnBXKaDP7d5j67Dk3qNbmcKM0wOScn6etzg36lgFLMpZs5pTUm4CIHg
+ 3WfjBTU3QA4DBh_L3JV1ViFX0aiMOPXPGTYJl3tXkshopzm7347T1c0slT.izy_X0Ix9uVuA1loK
+ SOfFVNEJK6q1RTkpxiAFehzWZAZjvJVrR2qvmtveIyhwSMLo52SCsfaonVSMQpEFnTIKW586zSkU
+ ugak9p20ubEbdFJPtw5CEAC9rImfhZ_LOgdPvxCR5eotpTIOwxnq.yfPqxOmIPhfdM5aHW_wjX2R
+ bVsgTOqmCBKwKfT1MZi2jx0_lXUgZ9dz.2CarxZal3rJQKJKOpt6bUyuvXyzuPfoMu1a7e3VMTDE
+ VY5Tpf5s9s2FKSFbOqM15xjp.pq5kKxy.7y2zuWTUlz0lAwA0zUwJqvtAmhkPBF5UPivtjC5imbo
+ UARbgWFiezK0MTHDVcnaQiHH5gRvEpehGyAOw2fIHVP9VcurKregm7yV5GbwUa8IGWdUc5X.Ge0h
+ 739Zx69mg27w8_9fYOc6nFQUrqNEXvPoYrCdUq58gARMjqS_VGPGcTis2UYx7eMoItMixPo_Mi3x
+ vgyVy3QI.tuditxPLPlh8DR3JxPwFfwjjkwF4Lrgj
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.gq1.yahoo.com with HTTP; Wed, 29 Jan 2020 02:05:04 +0000
+Received: by smtp430.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 43729e285804c5913db09e10a57cdd94;
+          Wed, 29 Jan 2020 02:05:00 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 10:04:54 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 0/5] kdb: Don't implicitly change tasks; plus misc
- fixups
-Message-Id: <20200128174248.756f18d713e759be2b4273db@linux-foundation.org>
-In-Reply-To: <CAD=FV=WcjHMzRE0yHm4uRFYj=Zoxz_v1FgiZETOwjzMtkjJcfQ@mail.gmail.com>
-References: <20191109191644.191766-1-dianders@chromium.org>
-        <CAD=FV=WcjHMzRE0yHm4uRFYj=Zoxz_v1FgiZETOwjzMtkjJcfQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-erofs@lists.ozlabs.org
+Subject: [GIT PULL] erofs updates for 5.6-rc1
+Message-ID: <20200129020451.GA5348@hsiangkao-HP-ZHAN-66-Pro-G1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200129020451.GA5348.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Mailer: WebService/1.1.15116 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Jan 2020 08:59:01 -0800 Doug Anderson <dianders@chromium.org> wrote:
+Hi Linus,
 
-> Hi
-> 
-> On Sat, Nov 9, 2019 at 11:17 AM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > This started out as just a follow-up to Daniel's post [1].  I wanted
-> > to stop implicitly changing the current task in kdb.  ...but, of
-> > course, everywhere you look in kdb there are things to cleanup, so
-> > this gets a few misc cleanups I found along the way.  Enjoy.
-> >
-> > [1] https://lore.kernel.org/r/20191010150735.dhrj3pbjgmjrdpwr@holly.lan
-> >
-> >
-> > Douglas Anderson (5):
-> >   MIPS: kdb: Remove old workaround for backtracing on other CPUs
-> >   kdb: kdb_current_regs should be private
-> >   kdb: kdb_current_task shouldn't be exported
-> >   kdb: Gid rid of implicit setting of the current task / regs
-> >   kdb: Get rid of confusing diag msg from "rd" if current task has no
-> >     regs
-> >
-> >  arch/mips/kernel/traps.c       |  5 -----
-> >  include/linux/kdb.h            |  2 --
-> >  kernel/debug/kdb/kdb_bt.c      |  8 +-------
-> >  kernel/debug/kdb/kdb_main.c    | 31 ++++++++++++++-----------------
-> >  kernel/debug/kdb/kdb_private.h |  2 +-
-> >  5 files changed, 16 insertions(+), 32 deletions(-)
-> 
-> I noticed that this series doesn't seem to be in linux-next, but I
-> think it was supposed to target v5.6?  Do you know if there is
-> anything outstanding or if it'll be queued up sometime soon?
-> 
+Could you consider this pull request for 5.6-rc1?
 
-I grabbed them.
+A regression fix, several cleanups and (maybe) plus an upcoming
+new mount api convert patch as a part of vfs update are considered
+available for this cycle.
 
-Are there any updates on the testing status, particularly on MIPS?
+All commits have been in linux-next and tested with no smoke out.
+
+Thanks,
+Gao Xiang
+
+The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+
+  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.6-rc1
+
+for you to fetch changes up to 1e4a295567949ee8e6896a7db70afd1b6246966e:
+
+  erofs: clean up z_erofs_submit_queue() (2020-01-21 16:46:23 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - fix an out-of-bound read access introduced in v5.3,
+   which could rarely cause data corruption;
+
+ - various cleanup patches.
+
+----------------------------------------------------------------
+Gao Xiang (3):
+      erofs: fix out-of-bound read for shifted uncompressed block
+      erofs: fold in postsubmit_is_all_bypassed()
+      erofs: clean up z_erofs_submit_queue()
+
+Vladimir Zapolskiy (4):
+      erofs: correct indentation of an assigned structure inside a function
+      erofs: remove unused tag argument while finding a workgroup
+      erofs: remove unused tag argument while registering a workgroup
+      erofs: remove void tagging/untagging of workgroup pointers
+
+ fs/erofs/decompressor.c |  22 ++++-----
+ fs/erofs/internal.h     |   4 +-
+ fs/erofs/utils.c        |  15 ++----
+ fs/erofs/xattr.h        |  17 +++----
+ fs/erofs/zdata.c        | 123 +++++++++++++++++++-----------------------------
+ 5 files changed, 74 insertions(+), 107 deletions(-)
+
+
