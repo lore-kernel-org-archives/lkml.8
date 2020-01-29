@@ -2,330 +2,290 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7528DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81246C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B65F207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lOf/zYPR"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1A0207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 11:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgA2LMf (ORCPT
+        id S1726590AbgA2LMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 06:12:35 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:63374 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgA2LMb (ORCPT
+        Wed, 29 Jan 2020 06:12:38 -0500
+Received: from mx06.melco.co.jp ([192.218.140.146]:51620 "EHLO
+        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgA2LMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 06:12:31 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200129111229epoutp01d6202da2bf211cf37f788e4060b6f7b9~uVygcrT2d1611016110epoutp01B
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 11:12:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200129111229epoutp01d6202da2bf211cf37f788e4060b6f7b9~uVygcrT2d1611016110epoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580296349;
-        bh=FOqPzoYfYORigK00AWcJ1jApU66hHrUT+pBzUwH0zsU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=lOf/zYPRZxHwDdM/P6yOQfMuHW2jD5jueBp9E6ecr/YElQhJj9106rdlRqNKVXt9X
-         o0/BmJDmUiIycjETwDMPrQxSXCJhbJhJ1Vr1PfiKs7Nr9OV0SLXlfgduzDB1TxMJG7
-         3GO70zVL2FtH98Vep/frcG2bX59AEy2/XNK7JgUc=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200129111228epcas1p4e319dd77fdbbacbb6dc1aebc5bcd5b28~uVyftArZn0294002940epcas1p4F;
-        Wed, 29 Jan 2020 11:12:28 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48716K6cXfzMqYkZ; Wed, 29 Jan
-        2020 11:12:25 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E4.E2.48019.998613E5; Wed, 29 Jan 2020 20:12:25 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200129111225epcas1p3f9b495ee2565858d19bce43fb6e86ac1~uVydC1-Kk1412914129epcas1p3e;
-        Wed, 29 Jan 2020 11:12:25 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200129111225epsmtrp2e290f00fc9ba497d1aceecac6518ad4c~uVydCO_7s1038910389epsmtrp2R;
-        Wed, 29 Jan 2020 11:12:25 +0000 (GMT)
-X-AuditID: b6c32a38-257ff7000001bb93-70-5e316899051b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        03.EF.10238.998613E5; Wed, 29 Jan 2020 20:12:25 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200129111225epsmtip1555f61b8d808bab8f96c8e7a59543126~uVyc4SdkN2784527845epsmtip1P;
-        Wed, 29 Jan 2020 11:12:25 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Subject: [PATCH 1/2] PM / devfreq: Remove unneeded extern keyword
-Date:   Wed, 29 Jan 2020 20:20:01 +0900
-Message-Id: <20200129112002.6998-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7bCmge7MDMM4g6+TzSwm3rjCYnH9y3NW
-        i7NNb9gtLu+aw2bxufcIo8XtxhVsDmwem1Z1snn0bVnF6PF5k1wAc1S2TUZqYkpqkUJqXnJ+
-        SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QXiWFssScUqBQQGJxsZK+nU1R
-        fmlJqkJGfnGJrVJqQUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsb6C0EFC+0rjvacYGtg
-        bDDpYuTkkBAwkdhw8jlLFyMXh5DADkaJN/sfs0M4nxglFrXfZINwvjFKPNp9k7mLkQOs5e9c
-        foj4XkaJU43TWSGcL4wSV198YwKZyyagJbH/xQ02EFtEwEri9P8OZhCbWSBFov/3GRaQQcIC
-        jhJdS8RAwiwCqhJ/f58HK+EVsJR4OuE/I8R58hKrNxxgBpkvIfCWVWLau41QCReJxh2TWSBs
-        YYlXx7ewQ9hSEp/f7WWDsKslVp48wgbR3MEosWX/BVaIhLHE/qWTmUCOYBbQlFi/Sx8irCix
-        8/dcRog7+STefe1hhXiYV6KjTQiiRFni8oO7TBC2pMTi9k6oVR4Svz5OBztBSCBWYuukLywT
-        GGVnISxYwMi4ilEstaA4Nz212LDABDmONjGCU5KWxQ7GPed8DjEKcDAq8fDOUDGIE2JNLCuu
-        zD3EKMHBrCTCK+pqGCfEm5JYWZValB9fVJqTWnyI0RQYehOZpUST84HpMq8k3tDUyNjY2MLE
-        0MzU0FBJnPdhpGackEB6YklqdmpqQWoRTB8TB6dUA2N7dZL4g/AXC8yyfjIdTJuUkjtbs2iL
-        TCdH3fRctz+nA9bO1d7z2C5Eqd1YzMZ2u6nkfBv12iqxr39n6Z5dmNykrs3q934eMCX+6P3v
-        utiDb4r27n9Wv8RjpVv4jBQ2HtiiWCB+c2Xw70zNRRNWCR/dvmdBZU1GUnDIzuVL9lrHSXbe
-        nb7ggBJLcUaioRZzUXEiAKVlPndfAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBJMWRmVeSWpSXmKPExsWy7bCSnO7MDMM4g+uHhC0m3rjCYnH9y3NW
-        i7NNb9gtLu+aw2bxufcIo8XtxhVsDmwem1Z1snn0bVnF6PF5k1wAcxSXTUpqTmZZapG+XQJX
-        xvoLQQUL7SuO9pxga2BsMOli5OCQEDCR+DuXv4uRi0NIYDejxIdj3UxdjJxAcUmJaRePMkPU
-        CEscPlwMUfOJUeLn2S+MIDVsAloS+1/cYAOxRQRsJO4uvsYCUs8skCHxf7kSiCks4CjRtUQM
-        pIJFQFXi7+/zzCA2r4ClxNMJ/xkhNslLrN5wgHkCI88CRoZVjJKpBcW56bnFhgWGeanlesWJ
-        ucWleel6yfm5mxjB4aGluYPx8pL4Q4wCHIxKPLwzVAzihFgTy4orcw8xSnAwK4nwiroaxgnx
-        piRWVqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2xJDU7NbUgtQgmy8TBKdXAGPTrtf2/3fGW
-        ruVJkyK/twTPVlOq4Y4vm3mRSXbjszPrVmlFb/752dLoUHjWKzfT1iMn/Sr55ujdyl19QMZW
-        K/Ath/9dmcPLv4lHfz76/Hxxy/3VfOeit+RGeIdufv5yV83NnNSbhoVTSpO92N9Fbfw5U3/V
-        /cneOdKPvAuCTOMmrLLZy7DioxJLcUaioRZzUXEiACPwOVULAgAA
-X-CMS-MailID: 20200129111225epcas1p3f9b495ee2565858d19bce43fb6e86ac1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200129111225epcas1p3f9b495ee2565858d19bce43fb6e86ac1
-References: <CGME20200129111225epcas1p3f9b495ee2565858d19bce43fb6e86ac1@epcas1p3.samsung.com>
+        Wed, 29 Jan 2020 06:12:37 -0500
+Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
+        by mx06.melco.co.jp (Postfix) with ESMTP id 16C903A2B21;
+        Wed, 29 Jan 2020 20:12:35 +0900 (JST)
+Received: from mr06.melco.co.jp (unknown [127.0.0.1])
+        by mr06.imss (Postfix) with ESMTP id 48716W0F82zRjyk;
+        Wed, 29 Jan 2020 20:12:35 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr06.melco.co.jp (Postfix) with ESMTP id 48716V72Y4zRjlG;
+        Wed, 29 Jan 2020 20:12:34 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48716V70K5zRk32;
+        Wed, 29 Jan 2020 20:12:34 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48716V6Td0zRjgf;
+        Wed, 29 Jan 2020 20:12:34 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 00TBCYk6031544;
+        Wed, 29 Jan 2020 20:12:34 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id AB7B717E075;
+        Wed, 29 Jan 2020 20:12:34 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 917B217E073;
+        Wed, 29 Jan 2020 20:12:34 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 00TBCYPb030054;
+        Wed, 29 Jan 2020 20:12:34 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: [PATCH] staging: exfat: remove 'vol_type' variable.
+Date:   Wed, 29 Jan 2020 20:12:32 +0900
+Message-Id: <20200129111232.78539-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded extern keyword from devfreq-related header file
-and adjust the indentation of function parameter to keep the
-consistency in header file
+remove 'vol_type' variable.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+The following issues are described in exfat's TODO.
+> clean up the remaining vol_type checks, which are of two types:
+> some are ?: operators with magic numbers, and the rest are places
+> where we're doing stuff with '.' and '..'.
+
+The vol_type variable is always set to 'EXFAT'.
+The variable checks are unnessesary, so remove unused code.
+
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Reviewed-by: Mori Takahiro <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
 ---
- drivers/devfreq/governor.h |  17 +++----
- include/linux/devfreq.h    | 100 ++++++++++++++++++-------------------
- 2 files changed, 57 insertions(+), 60 deletions(-)
+ drivers/staging/exfat/exfat.h       |  1 -
+ drivers/staging/exfat/exfat_core.c  | 26 ++++++-------------------
+ drivers/staging/exfat/exfat_super.c | 30 +++++++----------------------
+ 3 files changed, 13 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
-index dc7533ccc3db..5ba3e051b1d0 100644
---- a/drivers/devfreq/governor.h
-+++ b/drivers/devfreq/governor.h
-@@ -57,17 +57,16 @@ struct devfreq_governor {
- 				unsigned int event, void *data);
- };
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 4d87360fab35..28d245b10e82 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -518,7 +518,6 @@ struct buf_cache_t {
  
--extern void devfreq_monitor_start(struct devfreq *devfreq);
--extern void devfreq_monitor_stop(struct devfreq *devfreq);
--extern void devfreq_monitor_suspend(struct devfreq *devfreq);
--extern void devfreq_monitor_resume(struct devfreq *devfreq);
--extern void devfreq_interval_update(struct devfreq *devfreq,
--					unsigned int *delay);
-+void devfreq_monitor_start(struct devfreq *devfreq);
-+void devfreq_monitor_stop(struct devfreq *devfreq);
-+void devfreq_monitor_suspend(struct devfreq *devfreq);
-+void devfreq_monitor_resume(struct devfreq *devfreq);
-+void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay);
+ struct fs_info_t {
+ 	u32      drv;                    /* drive ID */
+-	u32      vol_type;               /* volume FAT type */
+ 	u32      vol_id;                 /* volume serial number */
  
--extern int devfreq_add_governor(struct devfreq_governor *governor);
--extern int devfreq_remove_governor(struct devfreq_governor *governor);
-+int devfreq_add_governor(struct devfreq_governor *governor);
-+int devfreq_remove_governor(struct devfreq_governor *governor);
+ 	u64      num_sectors;            /* num of sectors in volume */
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 07b460d01334..5a686289a1db 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -1560,11 +1560,7 @@ static s32 search_deleted_or_unused_entry(struct super_block *sb,
+ 			if (num_empty >= num_entries) {
+ 				p_fs->hint_uentry.dir = CLUSTER_32(~0);
+ 				p_fs->hint_uentry.entry = -1;
+-
+-				if (p_fs->vol_type == EXFAT)
+-					return dentry - (num_entries - 1);
+-				else
+-					return dentry;
++				return dentry - (num_entries - 1);
+ 			}
+ 		}
  
--extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
-+int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+@@ -1914,7 +1910,7 @@ s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
  
- static inline int devfreq_update_stats(struct devfreq *df)
+ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
  {
-diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-index c6f82d4bec9f..82630fafacde 100644
---- a/include/linux/devfreq.h
-+++ b/include/linux/devfreq.h
-@@ -201,24 +201,23 @@ struct devfreq_freqs {
- };
+-	int i, count = 0;
++	int i;
+ 	s32 dentries_per_clu;
+ 	u32 type;
+ 	struct chain_t clu;
+@@ -1943,15 +1939,7 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
  
- #if defined(CONFIG_PM_DEVFREQ)
--extern struct devfreq *devfreq_add_device(struct device *dev,
--				  struct devfreq_dev_profile *profile,
--				  const char *governor_name,
--				  void *data);
--extern int devfreq_remove_device(struct devfreq *devfreq);
--extern struct devfreq *devm_devfreq_add_device(struct device *dev,
--				  struct devfreq_dev_profile *profile,
--				  const char *governor_name,
--				  void *data);
--extern void devm_devfreq_remove_device(struct device *dev,
--				  struct devfreq *devfreq);
-+struct devfreq *devfreq_add_device(struct device *dev,
-+				struct devfreq_dev_profile *profile,
-+				const char *governor_name,
-+				void *data);
-+int devfreq_remove_device(struct devfreq *devfreq);
-+struct devfreq *devm_devfreq_add_device(struct device *dev,
-+				struct devfreq_dev_profile *profile,
-+				const char *governor_name,
-+				void *data);
-+void devm_devfreq_remove_device(struct device *dev, struct devfreq *devfreq);
+ 			if (type == TYPE_UNUSED)
+ 				return true;
+-			if ((type != TYPE_FILE) && (type != TYPE_DIR))
+-				continue;
+-
+-			if (p_dir->dir == CLUSTER_32(0)) /* FAT16 root_dir */
+-				return false;
+-
+-			if (p_fs->vol_type == EXFAT)
+-				return false;
+-			if ((p_dir->dir == p_fs->root_dir) || ((++count) > 2))
++			if ((type == TYPE_FILE) || (type == TYPE_DIR))
+ 				return false;
+ 		}
  
- /* Supposed to be called by PM callbacks */
--extern int devfreq_suspend_device(struct devfreq *devfreq);
--extern int devfreq_resume_device(struct devfreq *devfreq);
-+int devfreq_suspend_device(struct devfreq *devfreq);
-+int devfreq_resume_device(struct devfreq *devfreq);
+@@ -2128,7 +2116,6 @@ s32 exfat_mount(struct super_block *sb, struct pbr_sector_t *p_pbr)
+ 	p_fs->num_clusters = GET32(p_bpb->clu_count) + 2;
+ 	/* because the cluster index starts with 2 */
  
--extern void devfreq_suspend(void);
--extern void devfreq_resume(void);
-+void devfreq_suspend(void);
-+void devfreq_resume(void);
+-	p_fs->vol_type = EXFAT;
+ 	p_fs->vol_id = GET32(p_bpb->vol_serial);
  
- /**
-  * update_devfreq() - Reevaluate the device and configure frequency
-@@ -226,35 +225,34 @@ extern void devfreq_resume(void);
-  *
-  * Note: devfreq->lock must be held
-  */
--extern int update_devfreq(struct devfreq *devfreq);
-+int update_devfreq(struct devfreq *devfreq);
+ 	p_fs->root_dir = GET32(p_bpb->root_cluster);
+@@ -2165,7 +2152,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
  
- /* Helper functions for devfreq user device driver with OPP. */
--extern struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
--					   unsigned long *freq, u32 flags);
--extern int devfreq_register_opp_notifier(struct device *dev,
--					 struct devfreq *devfreq);
--extern int devfreq_unregister_opp_notifier(struct device *dev,
--					   struct devfreq *devfreq);
--extern int devm_devfreq_register_opp_notifier(struct device *dev,
--					      struct devfreq *devfreq);
--extern void devm_devfreq_unregister_opp_notifier(struct device *dev,
--						struct devfreq *devfreq);
--extern int devfreq_register_notifier(struct devfreq *devfreq,
--					struct notifier_block *nb,
--					unsigned int list);
--extern int devfreq_unregister_notifier(struct devfreq *devfreq,
--					struct notifier_block *nb,
--					unsigned int list);
--extern int devm_devfreq_register_notifier(struct device *dev,
-+struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
-+				unsigned long *freq, u32 flags);
-+int devfreq_register_opp_notifier(struct device *dev,
-+				struct devfreq *devfreq);
-+int devfreq_unregister_opp_notifier(struct device *dev,
-+				struct devfreq *devfreq);
-+int devm_devfreq_register_opp_notifier(struct device *dev,
-+				struct devfreq *devfreq);
-+void devm_devfreq_unregister_opp_notifier(struct device *dev,
-+				struct devfreq *devfreq);
-+int devfreq_register_notifier(struct devfreq *devfreq,
-+				struct notifier_block *nb,
-+				unsigned int list);
-+int devfreq_unregister_notifier(struct devfreq *devfreq,
-+				struct notifier_block *nb,
-+				unsigned int list);
-+int devm_devfreq_register_notifier(struct device *dev,
- 				struct devfreq *devfreq,
- 				struct notifier_block *nb,
- 				unsigned int list);
--extern void devm_devfreq_unregister_notifier(struct device *dev,
-+void devm_devfreq_unregister_notifier(struct device *dev,
- 				struct devfreq *devfreq,
- 				struct notifier_block *nb,
- 				unsigned int list);
--extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
--						int index);
-+struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index);
+ 	clu.dir = CLUSTER_32(~0);
+ 	clu.size = 0;
+-	clu.flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	clu.flags = 0x03;
  
- #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
- /**
-@@ -311,9 +309,9 @@ struct devfreq_passive_data {
+ 	/* (1) allocate a cluster */
+ 	ret = exfat_alloc_cluster(sb, 1, &clu);
+@@ -2198,7 +2185,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
+ 	fid->entry = dentry;
  
- #else /* !CONFIG_PM_DEVFREQ */
- static inline struct devfreq *devfreq_add_device(struct device *dev,
--					  struct devfreq_dev_profile *profile,
--					  const char *governor_name,
--					  void *data)
-+					struct devfreq_dev_profile *profile,
-+					const char *governor_name,
-+					void *data)
+ 	fid->attr = ATTR_SUBDIR;
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 	fid->size = size;
+ 	fid->start_clu = clu.dir;
+ 
+@@ -2215,7 +2202,6 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+ 	s32 ret, dentry, num_entries;
+ 	struct dos_name_t dos_name;
+ 	struct super_block *sb = inode->i_sb;
+-	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname, &num_entries,
+ 					   &dos_name);
+@@ -2247,7 +2233,7 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+ 	fid->entry = dentry;
+ 
+ 	fid->attr = ATTR_ARCHIVE | mode;
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index b81d2a87b82e..7759207986f9 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -494,7 +494,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 	if (p_fs->used_clusters == UINT_MAX)
+ 		p_fs->used_clusters = exfat_count_used_clusters(sb);
+ 
+-	info->FatType = p_fs->vol_type;
++	info->FatType = EXFAT;
+ 	info->ClusterSize = p_fs->cluster_size;
+ 	info->NumClusters = p_fs->num_clusters - 2; /* clu 0 & 1 */
+ 	info->UsedClusters = p_fs->used_clusters;
+@@ -602,7 +602,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 
+ 		fid->size = exfat_get_entry_size(ep2);
+ 		if ((fid->type == TYPE_FILE) && (fid->size == 0)) {
+-			fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++			fid->flags = 0x03;
+ 			fid->start_clu = CLUSTER_32(~0);
+ 		} else {
+ 			fid->flags = exfat_get_entry_flag(ep2);
+@@ -1095,7 +1095,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 	fid->size = new_size;
+ 	fid->attr |= ATTR_ARCHIVE;
+ 	if (new_size == 0) {
+-		fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++		fid->flags = 0x03;
+ 		fid->start_clu = CLUSTER_32(~0);
+ 	}
+ 
+@@ -1203,14 +1203,6 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 
+ 	dentry = fid->entry;
+ 
+-	/* check if the old file is "." or ".." */
+-	if (p_fs->vol_type != EXFAT) {
+-		if ((olddir.dir != p_fs->root_dir) && (dentry < 2)) {
+-			ret = -EPERM;
+-			goto out2;
+-		}
+-	}
+-
+ 	ep = get_entry_in_dir(sb, &olddir, dentry, NULL);
+ 	if (!ep) {
+ 		ret = -ENOENT;
+@@ -1342,7 +1334,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 
+ #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+ 	fs_sync(sb, true);
+@@ -2020,12 +2012,6 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ 	dentry = fid->entry;
+ 
+-	/* check if the file is "." or ".." */
+-	if (p_fs->vol_type != EXFAT) {
+-		if ((dir.dir != p_fs->root_dir) && (dentry < 2))
+-			return -EPERM;
+-	}
+-
+ 	/* acquire the lock for file system critical section */
+ 	mutex_lock(&p_fs->v_mutex);
+ 
+@@ -2048,7 +2034,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 
+ #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+ 	fs_sync(sb, true);
+@@ -2073,8 +2059,6 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
  {
- 	return ERR_PTR(-ENOSYS);
- }
-@@ -350,31 +348,31 @@ static inline void devfreq_suspend(void) {}
- static inline void devfreq_resume(void) {}
+ 	struct inode *inode = file_inode(filp);
+ 	struct super_block *sb = inode->i_sb;
+-	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	struct fs_info_t *p_fs = &sbi->fs_info;
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 	struct dir_entry_t de;
+ 	unsigned long inum;
+@@ -2085,7 +2069,7 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
  
- static inline struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
--					   unsigned long *freq, u32 flags)
-+					unsigned long *freq, u32 flags)
- {
- 	return ERR_PTR(-EINVAL);
- }
+ 	cpos = ctx->pos;
+ 	/* Fake . and .. for the root directory. */
+-	if ((p_fs->vol_type == EXFAT) || (inode->i_ino == EXFAT_ROOT_INO)) {
++	if (inode->i_ino == EXFAT_ROOT_INO) {
+ 		while (cpos < 2) {
+ 			if (inode->i_ino == EXFAT_ROOT_INO)
+ 				inum = EXFAT_ROOT_INO;
+@@ -3345,7 +3329,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 			return -EIO;
  
- static inline int devfreq_register_opp_notifier(struct device *dev,
--					 struct devfreq *devfreq)
-+					struct devfreq *devfreq)
- {
- 	return -EINVAL;
- }
- 
- static inline int devfreq_unregister_opp_notifier(struct device *dev,
--					   struct devfreq *devfreq)
-+					struct devfreq *devfreq)
- {
- 	return -EINVAL;
- }
- 
- static inline int devm_devfreq_register_opp_notifier(struct device *dev,
--						     struct devfreq *devfreq)
-+					struct devfreq *devfreq)
- {
- 	return -EINVAL;
- }
- 
- static inline void devm_devfreq_unregister_opp_notifier(struct device *dev,
--							struct devfreq *devfreq)
-+					struct devfreq *devfreq)
- {
- }
- 
-@@ -393,22 +391,22 @@ static inline int devfreq_unregister_notifier(struct devfreq *devfreq,
- }
- 
- static inline int devm_devfreq_register_notifier(struct device *dev,
--				struct devfreq *devfreq,
--				struct notifier_block *nb,
--				unsigned int list)
-+					struct devfreq *devfreq,
-+					struct notifier_block *nb,
-+					unsigned int list)
- {
- 	return 0;
- }
- 
- static inline void devm_devfreq_unregister_notifier(struct device *dev,
--				struct devfreq *devfreq,
--				struct notifier_block *nb,
--				unsigned int list)
-+					struct devfreq *devfreq,
-+					struct notifier_block *nb,
-+					unsigned int list)
- {
- }
- 
- static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
--							int index)
-+					int index)
- {
- 	return ERR_PTR(-ENODEV);
- }
+ 	} else {
+-		info.FatType = p_fs->vol_type;
++		info.FatType = EXFAT;
+ 		info.ClusterSize = p_fs->cluster_size;
+ 		info.NumClusters = p_fs->num_clusters - 2;
+ 		info.UsedClusters = p_fs->used_clusters;
 -- 
-2.17.1
+2.25.0
 
