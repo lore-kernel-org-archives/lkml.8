@@ -2,123 +2,187 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8F3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF621C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F330420702
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40852071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZVXY/r+S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AyhOwH5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgA2WTl (ORCPT
+        id S1726841AbgA2WUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:19:41 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38936 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgA2WTk (ORCPT
+        Wed, 29 Jan 2020 17:20:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26283 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726528AbgA2WUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:19:40 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 84so376759pfy.6
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 14:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O3TiciWiwwK058w7XwXNGwARhLlgPQ6fF5uUmz3hDNg=;
-        b=ZVXY/r+ShX4Zivq4Z3I92ZVcd9Q7yKQCKt5uLMSe1JV6beO0vhHafVP6G8W7GVtlj7
-         U3yclnWmQQtKtgAPvzOkPgwlFTllAuYDCWVVSps74/ea10Rwiiihy3lQGy+MloFQptD7
-         4xlu5FXqZ+G3ITsL8ifb2SZWTgFScovf/OT2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O3TiciWiwwK058w7XwXNGwARhLlgPQ6fF5uUmz3hDNg=;
-        b=Ui2NeuN+j6S1OOCdBcm6VLINRJzqn6G9Byb02YUCTwmCXxWMSkJYaRlXyQ64FTOX4D
-         tafClGj2/qNutd3UsJ67p4JumVpKawBaEafTOOjqqt83qpe2YN70MoB89PKy3fkPPkAe
-         IznpveZvSlDU6Xe0wGqo6fEEZza7wUKCqGJEsvlm9JJBQyQ+LwlFl3FYReudCo+1hD3C
-         u0DBf80Rl63jJ4z4Zst77L6LV7VL2k7VZ4Xtzs8EbNppkd48zzuyRVcqdvMfN9kiAAgb
-         NfBm8CqY0V58iUiUYGCDqLQMfIdiSWK68tlIYUEBEO1mrQNP1UNo0LEEkoMqqFHg9Dox
-         GbWw==
-X-Gm-Message-State: APjAAAXTHEKDIYkPxCeLuHRY5WgeeZOKSGZaNOctIXdSt6v4QK601Dxz
-        H8atTAHkDbv8zqRM96bJ2DvV6w==
-X-Google-Smtp-Source: APXvYqwMu5y/wTdfADHxCBrK+vWTaIAyop18k8T0NxA/phdbf6TsWaAzC3FXZ2QAR/E8I9/J547EFA==
-X-Received: by 2002:a65:4c82:: with SMTP id m2mr1278832pgt.432.1580336380030;
-        Wed, 29 Jan 2020 14:19:40 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h11sm3660407pgv.38.2020.01.29.14.19.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 14:19:39 -0800 (PST)
-Date:   Wed, 29 Jan 2020 17:19:38 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 1/2] events: callchain: Annotate RCU pointer with __rcu
-Message-ID: <20200129221938.GA71381@google.com>
-References: <20200129160813.14263-1-frextrite@gmail.com>
+        Wed, 29 Jan 2020 17:20:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580336401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lIYvl0tmkYl2W5NbGeqoNG1EfMAv05GtPw+8Aej3suc=;
+        b=AyhOwH5dHJEVibnWQ0gAaqoMetdSXMD3M87ZgoWpFR9giHMSJkrGHrWGA6Uybj2foCflxK
+        Ct0E5fzeeuMhT0uFJXUL/EQCZjCTfMMstDnmKmDr9t1y+4VOCa++pHdMLuxe/DPOIKEQA8
+        SXivHsI79F1xVu5WpnB1ah5PvL9FXnc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-kai5HUF3NEyuTLZxALeVFA-1; Wed, 29 Jan 2020 17:19:58 -0500
+X-MC-Unique: kai5HUF3NEyuTLZxALeVFA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 932BF8010DB;
+        Wed, 29 Jan 2020 22:19:56 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 165FE84BB8;
+        Wed, 29 Jan 2020 22:19:52 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 15:19:51 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 3/3] iommu/uapi: Add helper function for size lookup
+Message-ID: <20200129151951.2e354e37@w520.home>
+In-Reply-To: <20200129144046.3f91e4c1@w520.home>
+References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200129144046.3f91e4c1@w520.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129160813.14263-1-frextrite@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 09:38:12PM +0530, Amol Grover wrote:
-> Fixes following instances of sparse error
-> error: incompatible types in comparison expression
-> (different address spaces)
-> kernel/events/callchain.c:66:9: error: incompatible types in comparison
-> kernel/events/callchain.c:96:9: error: incompatible types in comparison
-> kernel/events/callchain.c:161:19: error: incompatible types in comparison
+On Wed, 29 Jan 2020 14:40:46 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> On Tue, 28 Jan 2020 22:02:04 -0800
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 > 
-> This introduces the following warning
-> kernel/events/callchain.c:65:17: warning: incorrect type in assignment
+> > IOMMU UAPI can be extended in the future by adding new
+> > fields at the end of each user data structure. Since we use
+> > a unified UAPI version for compatibility checking, a lookup
+> > function is needed to find the correct user data size to copy
+> > from user.
+> > 
+> > This patch adds a helper function based on a 2D lookup with
+> > version and type as input arguments.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/iommu.c | 22 ++++++++++++++++++++++
+> >  include/linux/iommu.h |  6 ++++++
+> >  2 files changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > index 7dd51c5d2ba1..9e5de9abebdf 100644
+> > --- a/drivers/iommu/iommu.c
+> > +++ b/drivers/iommu/iommu.c
+> > @@ -1696,6 +1696,28 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+> >  
+> > +
+> > +/**
+> > + * Maintain a UAPI version to user data structure size lookup for each
+> > + * API function types we support. e.g. bind guest pasid, cache invalidation.
+> > + * As data structures being extended with new members, the offsetofend()
+> > + * will identify the new sizes.
+> > + */
+> > +const static int iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = {
+> > +	/* IOMMU_UAPI_BIND_GPASID */
+> > +	{offsetofend(struct iommu_gpasid_bind_data, vtd)},
+> > +	/* IOMMU_UAPI_CACHE_INVAL */
+> > +	{offsetofend(struct iommu_cache_invalidate_info, addr_info)},
 
-Would have been nice if you mentioned the warning is fixed in your second
-patch. But I think its ok.
+This seems prone to errors in future revisions.  Both of the above
+reference the end of fields within an anonymous union.  When a new
+field is added, it's not necessarily the newest field that needs to be
+listed here, but the largest at the time.  So should the current
+version always use sizeof instead (or name the union so we can
+reference it)?  I'm not sure of an error proof way to make sure we keep
+the N-1 version consistent when we add a new version though.  More
+comments?
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Also, is the 12-bytes of padding in struct iommu_gpasid_bind_data
+excessive with this new versioning scheme?  Per rule #2 I'm not sure if
+we're allowed to repurpose those padding bytes, but if we add fields to
+the end of the structure as the scheme suggests, we're stuck with not
+being able to expand the union for new fields.
 
-thanks,
+Thanks,
+Alex
 
- - Joel
-
+> > +	/* IOMMU_UAPI_PAGE_RESP */
+> > +	{offsetofend(struct iommu_page_response, code)},
+> > +};
+> > +
+> > +int iommu_uapi_get_data_size(int type, int version)
+> > +{  
 > 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  kernel/events/callchain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Seems like this is asking for a bounds check,
 > 
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index c2b41a263166..f91e1f41d25d 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -32,7 +32,7 @@ static inline size_t perf_callchain_entry__sizeof(void)
->  static DEFINE_PER_CPU(int, callchain_recursion[PERF_NR_CONTEXTS]);
->  static atomic_t nr_callchain_events;
->  static DEFINE_MUTEX(callchain_mutex);
-> -static struct callchain_cpus_entries *callchain_cpus_entries;
-> +static struct callchain_cpus_entries __rcu *callchain_cpus_entries;
->  
->  
->  __weak void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> -- 
-> 2.24.1
+>   if (type >= NR_IOMMU_UAPI_TYPE || version > IOMMU_UAPI_VERSION)
+>   	return -EINVAL;
 > 
+> If we add new types in future versions, I assume we'd back fill the
+> table with -EINVAL as well (rather than zero).  Thanks,
+> 
+> Alex
+> 
+> > +	return iommu_uapi_data_size[type][version - 1];
+> > +}
+> > +EXPORT_SYMBOL_GPL(iommu_uapi_get_data_size);
+> > +
+> >  static void __iommu_detach_device(struct iommu_domain *domain,
+> >  				  struct device *dev)
+> >  {
+> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> > index 9718c109ea0a..416fe02160ba 100644
+> > --- a/include/linux/iommu.h
+> > +++ b/include/linux/iommu.h
+> > @@ -500,6 +500,7 @@ extern int iommu_report_device_fault(struct device *dev,
+> >  				     struct iommu_fault_event *evt);
+> >  extern int iommu_page_response(struct device *dev,
+> >  			       struct iommu_page_response *msg);
+> > +extern int iommu_uapi_get_data_size(int type, int version);
+> >  
+> >  extern int iommu_group_id(struct iommu_group *group);
+> >  extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
+> > @@ -885,6 +886,11 @@ static inline int iommu_page_response(struct device *dev,
+> >  	return -ENODEV;
+> >  }
+> >  
+> > +static int iommu_uapi_get_data_size(int type, int version)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +
+> >  static inline int iommu_group_id(struct iommu_group *group)
+> >  {
+> >  	return -ENODEV;  
+> 
+
