@@ -2,110 +2,236 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C5DC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB42EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C2920716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788DB20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgA2PR0 (ORCPT
+        id S1726962AbgA2PRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:17:26 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38804 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgA2PR0 (ORCPT
+        Wed, 29 Jan 2020 10:17:38 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59102 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgA2PRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:17:26 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z9so15839648oth.5;
-        Wed, 29 Jan 2020 07:17:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qr5rcclDXek9xalM67OQ7srzBCrWHdD63OQGXZ5BcrY=;
-        b=o4UgN0G4W4dc1DdK2yQ9dT554SqiFFVd/fytSoSIn5kTXmEGw05N3GvsB7cp7lNXI0
-         wynZ834cWK2ZnqYq5OZfO9H4YlFwgFurLKJ13NDevTEKXU01idDOzPs6OxW4yvJczgdl
-         NsZvxd9SRajgi6t9YdPSA8Xy8TRACTqZ3VUGp+Y9EP5qonCWxTKPKQLlQ2Qq4B6HBqh9
-         ByNDEQdHYB+KGUHQigXQ4T5Ju5+7ScPBWeFsexyXA2KAAHYoPcWbearv302AJ0GXvcur
-         yVzo1uagFyFX1+M1HUZha43yHmSUs4jYyYzCLS6dtU5v5TO99uPuTnS8oK1q9zdoLVnS
-         YEmw==
-X-Gm-Message-State: APjAAAXJ31MCvfhoN9L+tdTk/r8IDPTk2kEVwr6UoyYLcy54XQ28fepy
-        V29sI9Au748wUDADmZfl6M1LDgStVEyG+6UGzIQ=
-X-Google-Smtp-Source: APXvYqzm0sKN9DWqMLy+3f/Lwgz6cQ0TJe/wpu+/NBaXdpgHp4RGzgfYQzMfphPtX8TSUpHasP5yEarmUFW3n2yBao0=
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr19648679otf.107.1580311045293;
- Wed, 29 Jan 2020 07:17:25 -0800 (PST)
+        Wed, 29 Jan 2020 10:17:38 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2F164293EDE;
+        Wed, 29 Jan 2020 15:17:36 +0000 (GMT)
+Date:   Wed, 29 Jan 2020 16:17:33 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: How to handle write-protect pin of NAND device ?
+Message-ID: <20200129161733.004183ef@collabora.com>
+In-Reply-To: <20200129160045.3dc451d8@xps13>
+References: <CAK7LNAR0FemABUg5uN5fhy5LRsOm7n5GhmFVVHE8T57knDM9Ug@mail.gmail.com>
+        <20200127153559.60a83e76@xps13>
+        <20200127164554.34a21177@collabora.com>
+        <20200127164755.29183962@xps13>
+        <20200128075833.129902f6@collabora.com>
+        <CAK7LNAQyK+jy4pm5M5z58uD5Zdv95Day6C6D3Gwvpv2C4Vh53Q@mail.gmail.com>
+        <20200129143639.7f80addb@xps13>
+        <20200129145336.66f840ea@collabora.com>
+        <20200129145950.2a324acf@xps13>
+        <20200129154926.50e955e8@collabora.com>
+        <20200129160045.3dc451d8@xps13>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200129143757.680-1-gilad@benyossef.com> <20200129143757.680-5-gilad@benyossef.com>
-In-Reply-To: <20200129143757.680-5-gilad@benyossef.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 29 Jan 2020 16:17:14 +0100
-Message-ID: <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gilad,
+On Wed, 29 Jan 2020 16:00:45 +0100
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-On Wed, Jan 29, 2020 at 3:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> Fix an error causing no block sizes to be reported during
-> all AEAD registrations.
->
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Hi Boris,
+> 
+> Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 29 Jan
+> 2020 15:49:26 +0100:
+> 
+> > On Wed, 29 Jan 2020 14:59:50 +0100
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >   
+> > > Hi Boris,
+> > > 
+> > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Wed, 29 Jan
+> > > 2020 14:53:36 +0100:
+> > >     
+> > > > On Wed, 29 Jan 2020 14:36:39 +0100
+> > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > > >       
+> > > > > Hello,
+> > > > > 
+> > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Wed, 29 Jan 2020
+> > > > > 19:06:46 +0900:
+> > > > >         
+> > > > > > On Tue, Jan 28, 2020 at 3:58 PM Boris Brezillon
+> > > > > > <boris.brezillon@collabora.com> wrote:          
+> > > > > > >
+> > > > > > > On Mon, 27 Jan 2020 16:47:55 +0100
+> > > > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > > > > > >            
+> > > > > > > > Hi Hello,
+> > > > > > > >
+> > > > > > > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 27 Jan
+> > > > > > > > 2020 16:45:54 +0100:
+> > > > > > > >            
+> > > > > > > > > On Mon, 27 Jan 2020 15:35:59 +0100
+> > > > > > > > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > > > > > > > >            
+> > > > > > > > > > Hi Masahiro,
+> > > > > > > > > >
+> > > > > > > > > > Masahiro Yamada <masahiroy@kernel.org> wrote on Mon, 27 Jan 2020
+> > > > > > > > > > 21:55:25 +0900:
+> > > > > > > > > >            
+> > > > > > > > > > > Hi.
+> > > > > > > > > > >
+> > > > > > > > > > > I have a question about the
+> > > > > > > > > > > WP_n pin of a NAND chip.
+> > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > As far as I see, the NAND framework does not
+> > > > > > > > > > > handle it.            
+> > > > > > > > > >
+> > > > > > > > > > There is a nand_check_wp() which reads the status of the pin before
+> > > > > > > > > > erasing/writing.
+> > > > > > > > > >            
+> > > > > > > > > > >
+> > > > > > > > > > > Instead, it is handled in a driver level.
+> > > > > > > > > > > I see some DT-bindings that handle the WP_n pin.
+> > > > > > > > > > >
+> > > > > > > > > > > $ git grep wp -- Documentation/devicetree/bindings/mtd/
+> > > > > > > > > > > Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt:-
+> > > > > > > > > > > brcm,nand-has-wp          : Some versions of this IP include a
+> > > > > > > > > > > write-protect            
+> > > > > > > > > >
+> > > > > > > > > > Just checked: brcmnand de-assert WP when writing/erasing and asserts it
+> > > > > > > > > > otherwise. IMHO this switching is useless.
+> > > > > > > > > >            
+> > > > > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:-
+> > > > > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
+> > > > > > > > > > > Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt:
+> > > > > > > > > > >          wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+> > > > > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:-
+> > > > > > > > > > > wp-gpios: GPIO specifier for the write protect pin.
+> > > > > > > > > > > Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt:
+> > > > > > > > > > >          wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;            
+> > > > > > > > > >
+> > > > > > > > > > In both cases, the WP GPIO is unused in the code, just de-asserted at
+> > > > > > > > > > boot time like what you do in the patch below.
+> > > > > > > > > >            
+> > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > I wrote a patch to avoid read-only issue in some cases:
+> > > > > > > > > > > http://patchwork.ozlabs.org/patch/1229749/
+> > > > > > > > > > >
+> > > > > > > > > > > Generally speaking, we expect NAND devices
+> > > > > > > > > > > are writable in Linux. So, I think my patch is OK.            
+> > > > > > > > > >
+> > > > > > > > > > I think the patch is fine.
+> > > > > > > > > >            
+> > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > However, I asked this myself:
+> > > > > > > > > > > Is there a useful case to assert the write protect
+> > > > > > > > > > > pin in order to make the NAND chip really read-only?
+> > > > > > > > > > > For example, the system recovery image is stored in
+> > > > > > > > > > > a read-only device, and the write-protect pin is
+> > > > > > > > > > > kept asserted to assure nobody accidentally corrupts it.            
+> > > > > > > > > >
+> > > > > > > > > > It is very likely that the same device is used for RO and RW storage so
+> > > > > > > > > > in most cases this is not possible. We already have squashfs which is
+> > > > > > > > > > actually read-only at filesystem level, I'm not sure it is needed to
+> > > > > > > > > > enforce this at a lower level... Anyway if there is actually a pin for
+> > > > > > > > > > that, one might want to handle the pin directly as a GPIO, what do you
+> > > > > > > > > > think?            
+> > > > > > > > >
+> > > > > > > > > FWIW, I've always considered the WP pin as a way to protect against
+> > > > > > > > > spurious destructive command emission, which is most likely to happen
+> > > > > > > > > during transition phases (bootloader -> linux, linux -> kexeced-linux,
+> > > > > > > > > platform reset, ..., or any other transition where the pin state might
+> > > > > > > > > be undefined at some point). This being said, if you're worried about
+> > > > > > > > > other sources of spurious cmds (say your bus is shared between
+> > > > > > > > > different kind of memory devices, and the CS pin is unreliable), you
+> > > > > > > > > might want to leave the NAND in a write-protected state de-asserting WP
+> > > > > > > > > only when explicitly issuing a destructive command (program page, erase
+> > > > > > > > > block).            
+> > > > > > > >
+> > > > > > > > Ok so with this in mind, only the brcmnand driver does a useful use of
+> > > > > > > > the WP output.            
+> > > > > > >
+> > > > > > > Well, I'd just say that brcmnand is more paranoid, which is a good
+> > > > > > > thing I guess, but that doesn't make other solutions useless, just less
+> > > > > > > safe. We could probably flag operations as 'destructive' at the
+> > > > > > > nand_operation level, so drivers can assert/de-assert the pin on a
+> > > > > > > per-operation basis.            
+> > > > > > 
+> > > > > > Sounds a good idea.
+> > > > > > 
+> > > > > > If it is supported in the NAND framework,
+> > > > > > I will be happy to implement in the Denali NAND driver.
+> > > > > >           
+> > > > > 
+> > > > > There is currently no such thing at NAND level but I doubt there is
+> > > > > more than erase and write operation during which it would be needed
+> > > > > to assert/deassert WP. I don't see why having this flag would help
+> > > > > the controller drivers?        
+> > > > 
+> > > > Because ->exec_op() was designed to avoid leaving such decisions to the
+> > > > NAND controller drivers :P. If you now ask drivers to look at the
+> > > > opcode and guess when they should de-assert the WP pin, you're just
+> > > > going back to the ->cmdfunc() mess.      
+> > > 
+> > > I was actually thinking to the ->write_page(_raw)() helpers, but
+> > > yeah, in the case of ->exec_op() it's different. However, for these
+> > > helpers as don't use ->exec_op(), we need another way to flag the
+> > > operation as destructive.    
+> > 
+> > I don't think we really care about ancient (AKA non-exec_op()) drivers.
+> > They seem to work fine as they are now, so let's focus on the modern
+> > ones.  
+> 
+> Not my point: the ->write_page[_raw]() helpers are implemented by
+> everyone, no ->exec_op() is involved and they are destructive as well.
 
-Thanks, this fixes:
+Well, yes. If the driver has custom ->write_page[_raw](), they should
+be patched to handle WP de-assertion/assertion.
 
-    alg: aead: blocksize for authenc-hmac-sha1-cbc-aes-ccree (0)
-doesn't match generic impl (16)
-    alg: aead: blocksize for authenc-hmac-sha256-cbc-aes-ccree (0)
-doesn't match generic impl (16)
+> 
+> >   
+> > > 
+> > > But actually we could let the driver toggle the pin for any operation.
+> > > If we want to be protected against spurious access, not directly ordered
+> > > by the controller driver itself, then we don't care if the operation is
+> > > actually destructive or not as long as the pin is deasserted during our
+> > > operations and asserted otherwise.    
+> > 
+> > Or we could patch the ->exec_op() path to pass this information (and
+> > maybe provide helpers for the GPIO case). Should be as simple as:  
+> 
+> This approach is fine.
+> 
+> Without the delay penalty in mind, I would say it is useless and the
+> driver can simply deassert WP at the start of ->exec_op() but as there
+> is a small penalty, why not.
 
-which you may want to mention in the commit description, so
-people who search for the error message will find the fix.
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Note that even after applying this series, the kernel still crashes with
-
-kernel BUG at kernel/dma/swiotlb.c:497!
-....
-Call trace:
- swiotlb_tbl_map_single+0x30c/0x380
- swiotlb_map+0xb0/0x300
- dma_direct_map_page+0xb8/0x140
- dma_direct_map_sg+0x78/0xe0
- cc_map_sg+0xa0/0xd0
- cc_aead_chain_data.constprop.25+0x17c/0x6a0
- cc_map_aead_request+0x61c/0x990
- cc_proc_aead+0x140/0xeb0
- cc_aead_decrypt+0x48/0x68
- crypto_aead_decrypt+0x30/0x48
- test_aead_vec_cfg+0x5a0/0x8d0
-
-but you may be aware of that.
-
-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Right. 100ns on an operation that takes more than 100us is negligible,
+but if you start de-asserting/asserting WP on shorter operations, like
+READ_STATUS, that might have an impact.
