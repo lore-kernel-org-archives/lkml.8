@@ -2,139 +2,109 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F075C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00A7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1082420716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g1bnharH"
+	by mail.kernel.org (Postfix) with ESMTP id AB25A20716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgA2OYh (ORCPT
+        id S1726723AbgA2OZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:24:37 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37322 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgA2OYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:24:36 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580307876; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=VX3kmbdYfef45mzPcZSRglrDaIuEGLiG+F/CL1OGSpc=; b=g1bnharH3K5gazzDni0aeKZhY0l4NqSr9UJwozvc/5De8MRC/LKRUUFGUwns4fj+YSVx2kYf
- G4JwTvUJlaYf50Z3u2yWG3bfObGSudWYNzx82Q38VO/TJmpbD4JVJWVqpvnYmkCit+h82ADM
- g/Kagq6Gq+NlHOTcGrs9Rl8wbI0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e31959c.7f717f937d50-smtp-out-n03;
- Wed, 29 Jan 2020 14:24:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E9771C4479F; Wed, 29 Jan 2020 14:24:27 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 095A5C433CB;
-        Wed, 29 Jan 2020 14:24:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 095A5C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Wireless <linux-wireless@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandru-Mihai Maftei <amaftei@solarflare.com>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the net-next tree
-References: <20200109161202.1b0909d9@canb.auug.org.au>
-        <20200128095449.5688fddc@canb.auug.org.au>
-        <20200129081628.750f5e05@canb.auug.org.au>
-Date:   Wed, 29 Jan 2020 16:24:22 +0200
-In-Reply-To: <20200129081628.750f5e05@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 29 Jan 2020 08:16:28 +1100")
-Message-ID: <87blqm8hnt.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 29 Jan 2020 09:25:59 -0500
+Received: from mga02.intel.com ([134.134.136.20]:34184 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgA2OZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 09:25:58 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 06:25:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
+   d="scan'208";a="232457423"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 29 Jan 2020 06:25:56 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iwoI2-00034u-7w; Wed, 29 Jan 2020 16:25:58 +0200
+Date:   Wed, 29 Jan 2020 16:25:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] console: Introduce ->exit() callback
+Message-ID: <20200129142558.GF32742@smile.fi.intel.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-5-andriy.shevchenko@linux.intel.com>
+ <20200128051711.GB115889@google.com>
+ <20200128094418.GY32742@smile.fi.intel.com>
+ <20200129134141.GA537@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129134141.GA537@jagdpanzerIV.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+On Wed, Jan 29, 2020 at 10:41:41PM +0900, Sergey Senozhatsky wrote:
+> On (20/01/28 11:44), Andy Shevchenko wrote:
+> > > If the console was not registered (hence not enabled) is it still required
+> > > to call ->exit()? Is there a requirement that ->exit() should handle such
+> > > cases?
+> > 
+> > This is a good point. The ->exit() purpose is to keep balance for whatever
+> > happened at ->setup().
+> > 
+> > But ->setup() is being called either when we have has_preferred == false or
+> > when we got no matching we call it for all such consoles, till it returns an
+> > error (can you elaborate the logic behind it?).
+> 
+> ->match() does alias matching and ->setup(). If alias matching failed,
+> exact name match takes place. We don't call ->setup() for all consoles,
+> but only for those that have exact name match:
+> 
+> 	if (strcmp(c->name, newcon->name) != 0)
+> 		continue;
+> 
+> As to why we don't stop sooner in that loop - I need to to do some
+> archaeology. We need to have CON_CONSDEV at proper place, which is
+> IIRC the last matching console.
+> 
+> Pretty much every time we tried to change the logic we ended up
+> reverting the changes.
 
-> Hi all,
->
-> On Tue, 28 Jan 2020 09:54:49 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> On Thu, 9 Jan 2020 16:12:02 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->> > 
->> > Today's linux-next merge of the generic-ioremap tree got a conflict in:
->> > 
->> >   drivers/net/ethernet/sfc/efx.c
->> > 
->> > between commit:
->> > 
->> >   f1826756b499 ("sfc: move struct init and fini code")
->> > 
->> > from the net-next tree and commit:
->> > 
->> >   4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
->> > 
->> > from the generic-ioremap tree.
->> > 
->> > I fixed it up (the latter moved the code, so I applied the following
->> > merge fix patch) and can carry the fix as necessary. This is now fixed
->> > as far as linux-next is concerned, but any non trivial conflicts should
->> > be mentioned to your upstream maintainer when your tree is submitted
->> > for merging.  You may also want to consider cooperating with the
->> > maintainer of the conflicting tree to minimise any particularly complex
->> > conflicts.
->> > 
->> > From: Stephen Rothwell <sfr@canb.auug.org.au>
->> > Date: Thu, 9 Jan 2020 16:08:52 +1100
->> > Subject: [PATCH] fix up for "sfc: move struct init and fini code"
->> > 
->> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
->> > ---
->> >  drivers/net/ethernet/sfc/efx_common.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > 
->> > diff --git a/drivers/net/ethernet/sfc/efx_common.c b/drivers/net/ethernet/sfc/efx_common.c
->> > index fe74c66c8ec6..bf0126633c25 100644
->> > --- a/drivers/net/ethernet/sfc/efx_common.c
->> > +++ b/drivers/net/ethernet/sfc/efx_common.c
->> > @@ -954,7 +954,7 @@ int efx_init_io(struct efx_nic *efx, int bar, dma_addr_t dma_mask,
->> >  		goto fail3;
->> >  	}
->> >  
->> > -	efx->membase = ioremap_nocache(efx->membase_phys, mem_map_size);
->> > +	efx->membase = ioremap(efx->membase_phys, mem_map_size);
->> >  	if (!efx->membase) {
->> >  		netif_err(efx, probe, efx->net_dev,
->> >  			  "could not map memory BAR at %llx+%x\n",
->> > -- 
->> > 2.24.0  
->> 
->> This is now a conflict between the net-next tree and Linus' tree.
->
-> It actually turns out that this is a conflict between the
-> wireless-drivers tree and Linus' tree since the wireless-drivers tree
-> has merged most of the net-next tree.
+I understand. Seems the ->setup() has to be idempotent. We can tell the same
+for ->exit() in some comment.
 
-Yeah, I fast forwarded wireless-drivers to top of net-next so that I can
-easily apply fixes and send them to Dave later this week. But as I don't
-touch drivers/net/ethernet I don't think there's nothing I can do to fix
-this conflict.
+Can you describe, btw, struct console in kernel doc format?
+It will be very helpful!
+
+> > In both cases we will get the console to have CON_ENABLED flag set.
+> 
+> And there are sneaky consoles that have CON_ENABLED before we even
+> register them.
+
+So, taking into consideration my comment to the previous patch, what would be
+suggested guard here?
+
+For a starter something like this?
+
+  if ((console->flags & CON_ENABLED) && console->exit)
+	console->exit(console);
+
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+With Best Regards,
+Andy Shevchenko
+
+
