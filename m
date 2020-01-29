@@ -2,86 +2,130 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154DCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED44C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60B22071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8472071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580314428;
+	bh=e1Wn9NnIjMDIS6BdQ81ViUrFBu9BQanXV+r3mteDX/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q70ME2E2YIspLUyxRc3WXdfqqX98FCIFjwjAwKnWsfhJKaJKi6HUjooeDr21QTBwH
+	 Y8jFxGamhMiBJHjOjipReT5VbLMFKuspXpa5ln2sAxDe/eC2vx6z9Dhi6Tz86401ij
+	 V7aXr9DKgO56w1+xNeilVdy0t9H76q35X5Dq7+r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgA2QMh (ORCPT
+        id S1727024AbgA2QNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:12:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50088 "EHLO mx2.suse.de"
+        Wed, 29 Jan 2020 11:13:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgA2QMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:12:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C8699ADB3;
-        Wed, 29 Jan 2020 16:12:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 21DFDDA730; Wed, 29 Jan 2020 17:12:14 +0100 (CET)
-Date:   Wed, 29 Jan 2020 17:12:14 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Marcos Paulo de Souza <mpdesouza@suse.de>
-Cc:     dsterba@suse.cz, linux-kernel@vger.kernel.org, dsterba@suse.com,
-        josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-Subject: Re: [PATCHv2] btrfs: Introduce new BTRFS_IOC_SNAP_DESTROY_V2 ioctl
-Message-ID: <20200129161214.GJ3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        Marcos Paulo de Souza <mpdesouza@suse.de>,
-        linux-kernel@vger.kernel.org, dsterba@suse.com,
-        josef@toxicpanda.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>
-References: <20200127024817.15587-1-marcos.souza.org@gmail.com>
- <20200128172638.GA3929@twin.jikos.cz>
- <fd8a3cb87b1084e5ab68fdcb60f7af3c6b6265d1.camel@suse.de>
+        id S1726679AbgA2QNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:13:46 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7BB32070E;
+        Wed, 29 Jan 2020 16:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580314426;
+        bh=e1Wn9NnIjMDIS6BdQ81ViUrFBu9BQanXV+r3mteDX/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NDoLZjcmTgTmmUvwERtMDcO6tlEHh3Q96S5jpo96owMURxgnSb9sBIeTNQPAGKcHp
+         cE+e+lfn02eON+YzD4l3aiAm9xF6mEaBfMtZRHuJc8Dcam+do9KbQWv8q8T5EnlvSV
+         qZ8ZLXHEB8aAb5Urm61xCkyDmLnJNpzsG8g8fJLI=
+Date:   Wed, 29 Jan 2020 16:13:41 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Srinivas Ramana <sramana@codeaurora.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, maz@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Set SSBS for user threads while creation
+Message-ID: <20200129161341.GA32275@willie-the-truck>
+References: <1577106146-8999-1-git-send-email-sramana@codeaurora.org>
+ <20200102180145.GE27940@arrakis.emea.arm.com>
+ <0c5cd234-5cfb-d093-06e4-a0edb5c68bf8@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fd8a3cb87b1084e5ab68fdcb60f7af3c6b6265d1.camel@suse.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <0c5cd234-5cfb-d093-06e4-a0edb5c68bf8@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 12:07:40PM -0300, Marcos Paulo de Souza wrote:
-> > > -	vol_args->name[BTRFS_PATH_NAME_MAX] = '\0';
-> > > -	namelen = strlen(vol_args->name);
-> > > -	if (strchr(vol_args->name, '/') ||
-> > > -	    strncmp(vol_args->name, "..", namelen) == 0) {
-> > > -		err = -EINVAL;
-> > > -		goto out;
-> > > +		if (!(vol_args2->flags & BTRFS_SUBVOL_BY_ID)) {
-> > > +			err = -EINVAL;
-> > > +			goto out;
+On Wed, Jan 29, 2020 at 05:18:53PM +0530, Srinivas Ramana wrote:
+> On 1/2/2020 11:31 PM, Catalin Marinas wrote:
+> > On Mon, Dec 23, 2019 at 06:32:26PM +0530, Srinivas Ramana wrote:
+> > > Current SSBS implementation takes care of setting the
+> > > SSBS bit in start_thread() for user threads. While this works
+> > > for tasks launched with fork/clone followed by execve, for cases
+> > > where userspace would just call fork (eg, Java applications) this
+> > > leaves the SSBS bit unset. This results in performance
+> > > regression for such tasks.
+> > > 
+> > > It is understood that commit cbdf8a189a66 ("arm64: Force SSBS
+> > > on context switch") masks this issue, but that was done for a
+> > > different reason where heterogeneous CPUs(both SSBS supported
+> > > and unsupported) are present. It is appropriate to take care
+> > > of the SSBS bit for all threads while creation itself.
+> > > 
+> > > Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
+> > > Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
 > > 
-> > The flag validation needs to be factored out of the if. First
-> > validate,
-> > then do the rest. For backward compatibility, the v1 ioctl must take
-> > no
-> > flags, so if theres BTRFS_SUBVOL_BY_ID for v1, it needs to fail. For
-> > v2
-> > the flag is optional.
+> > I suppose the parent process cleared SSBS explicitly. Isn't the child
 > 
-> Only vol_args_v2 has the flags field, so for current
-> BTRFS_IOC_SNAP_DESTORY there won't be any flags. If we drop the check
-> for BTRFS_SUBVOL_BY_ID in BTRFS_IOC_SNAP_DESTORY_V2, so won't check for
-> this flag at all, making it meaningless.
+> Actually we observe that parent(in case of android, zygote that launches the
+> app) does have SSBS bit set. However child doesn't have the bit set.
 
-Oh right, so the validation applies only to v2 and in that case it's
-fine to keep it in the place you have it.
+On which SoC? Your commit message talks about heterogeneous systems (wrt
+SSBS) as though they don't apply in your case. Could you provide us with
+a reproducer?
 
-> What do you think? Should we drop this flag at all and just rely in the
-> ioctl number + subvolid being informed?
+> > after fork() supposed to be nearly identical to the parent? If we did as
+> > you suggest, someone else might complain that SSBS has been set in the
+> > child after fork().
+> 
+> I am also wondering why would a userspace process clear SSBS bit loosing the
+> performance benefit.
 
-No, v2 should work for both deletion by name and by id. It's going to
-supersede v1 that has to stay for backward compatibility, but must
-provide complete functionality of v1 to keep the usability sane.
+I guess it could happen during sigreturn if the signal handler wasn't
+careful about preserving bits in pstate, although it doesn't feel like
+something you'd regularly run into.
+
+But hang on a sec -- it looks like the context switch logic in
+cbdf8a189a66 actually does the wrong thing for systems where all of the
+CPUs implement SSBS. I don't think it explains the behaviour you're seeing,
+but I do think it could end up in situations where SSBS is unexpectedly
+*set*.
+
+Diff below.
+
+Will
+
+--->8
+
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index bbb0f0c145f6..e38284c9fb7b 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -466,6 +466,13 @@ static void ssbs_thread_switch(struct task_struct *next)
+ 	if (unlikely(next->flags & PF_KTHREAD))
+ 		return;
+ 
++	/*
++	 * If all CPUs implement the SSBS instructions, then we just
++	 * need to context-switch the PSTATE field.
++	 */
++	if (cpu_have_feature(cpu_feature(SSBS)))
++		return;
++
+ 	/* If the mitigation is enabled, then we leave SSBS clear. */
+ 	if ((arm64_get_ssbd_state() == ARM64_SSBD_FORCE_ENABLE) ||
+ 	    test_tsk_thread_flag(next, TIF_SSBD))
