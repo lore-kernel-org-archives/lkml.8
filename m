@@ -2,120 +2,101 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E20C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68869C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D8E20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4D420716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:03:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZdO1rpUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgA2QC4 (ORCPT
+        id S1726939AbgA2QDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:02:56 -0500
-Received: from mga14.intel.com ([192.55.52.115]:27432 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgA2QC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:02:56 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 08:02:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,378,1574150400"; 
-   d="scan'208";a="223084445"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Jan 2020 08:02:52 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iwpnp-0004Lm-M0; Wed, 29 Jan 2020 18:02:53 +0200
-Date:   Wed, 29 Jan 2020 18:02:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        vipul kumar <vipulk0511@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        x86@kernel.org, Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
- Intel Bay Trail SoC
-Message-ID: <20200129160253.GK32742@smile.fi.intel.com>
-References: <87ftg5131x.fsf@nanos.tec.linutronix.de>
- <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
- <87sgjz434v.fsf@nanos.tec.linutronix.de>
- <20200129130350.GD32742@smile.fi.intel.com>
- <0d361322-87aa-af48-492c-e8c4983bb35b@redhat.com>
- <20200129141444.GE32742@smile.fi.intel.com>
- <91cdda7a-4194-ebe7-225d-854447b0436e@redhat.com>
- <87imku2t3w.fsf@nanos.tec.linutronix.de>
- <20200129155353.GI32742@smile.fi.intel.com>
- <20200129155910.GJ32742@smile.fi.intel.com>
+        Wed, 29 Jan 2020 11:03:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgA2QDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:03:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=up63fpfGYOvkp3SBYBCK24upbKtaXQK6d7PtLy0cev8=; b=ZdO1rpUQOR0SM6EoYPZcn4JDT
+        rNZ3sHm8mZrDvYiY5E3OQPXSNDtuzvvyYWMTEfJJZm7ouV0Pfkxt0A5w5clE3nTH9HCbHEx86BBtp
+        6juLb2UL5QT61MbPuGdmvcU/tcfri/3PyajzJEp4x/xWLGljUIFmn8Nbh9jSYIgvZPMeSteD03SRw
+        XYVnL8Ln47CE0D+Gws6DTVw/6tlYFzTf2p7maGQN02vRE6V+Yvb02p2UIYDlWoPVTPRMbx//gBNSU
+        kcgzWSPUmFGN/EOY7lygHL3FaH5qWjL6DuOx//Gd9S2BC8EuEpH9DWXQ/4igwg3lKKFEeFt3kDOEM
+        1D+RgIX9g==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iwpnv-0007TM-3C; Wed, 29 Jan 2020 16:02:59 +0000
+Subject: Re: mmotm 2020-01-28-20-05 uploaded (security/security.c)
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+References: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
+ <56177bc4-441d-36f4-fe73-4e86edf02899@infradead.org>
+ <CAHC9VhRW68ccE_8HJnv4anFdSgkY2Yk3612LPCT5o4+vXQGqQA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <30511826-765f-6b10-7bad-b950b3941295@infradead.org>
+Date:   Wed, 29 Jan 2020 08:02:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129155910.GJ32742@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHC9VhRW68ccE_8HJnv4anFdSgkY2Yk3612LPCT5o4+vXQGqQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 05:59:10PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 29, 2020 at 05:53:53PM +0200, Andy Shevchenko wrote:
-> > On Wed, Jan 29, 2020 at 04:13:39PM +0100, Thomas Gleixner wrote:
-> > > Hans de Goede <hdegoede@redhat.com> writes:
-> > > > On 29-01-2020 15:14, Andy Shevchenko wrote:
-> > > >>> The only one which is possibly suspicious here is this line:
-> > > >>>
-> > > >>>   * 0111:   25 * 32 /  9  =  88.8889 MHz
-> > > >>>
-> > > >>> The SDM says 88.9 MHz for this one.
-> > > 
-> > > I trust math more than the SDM :)
-> > > 
-> > > >> Anyway it seems need to be fixed as well.
-> > > >> 
-> > > >> Btw, why we are mentioning 20 / 6 and 28 / 6 when arithmetically
-> > > >> it's the same as 10 / 3 and 14 / 3?
-> > > >
-> > > > I copied the BYT values from Thomas' email and I guess he did not
-> > > > get around to simplifying them, I'll use the simplified versions
-> > > > for my patch.
-> > > 
-> > > Too tired, too lazy :)
-> > > 
-> > > Andy, can you please make sure that people inside Intel who can look
-> > > into the secrit documentation confirm what we are aiming for?
-> > > 
-> > > Ideally they should provide the X-tal frequency and the mult/div pair
-> > > themself :)
-> > 
-> > So, I don't have access to the CPU core documentation (and may be will not be
-> > given), nevertheless I dug a bit to what I have for Cherrytrail. So, the XTAL
-> > is 19.2MHz, which becomes 100MHz and 1600MHz by some root PLL, then, the latter
-> > two frequencies are being used by another PLL to provide a reference clock (*)
-> > to PLL which derives CPU clock.
+On 1/29/20 5:51 AM, Paul Moore wrote:
+> On Tue, Jan 28, 2020 at 11:52 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>> On 1/28/20 8:06 PM, akpm@linux-foundation.org wrote:
+>>> The mm-of-the-moment snapshot 2020-01-28-20-05 has been uploaded to
+>>>
+>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> mmotm-readme.txt says
+>>>
+>>> README for mm-of-the-moment:
+>>>
+>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>> more than once a week.
+>>>
+>>
+>> security/security.c contains duplicate lines for <lockdown_reasons> array:
 > 
-> > *) According to colleagues of mine it's a fixed rate source.
+> Hmmm.  Commit 59438b46471a ("security,lockdown,selinux: implement
+> SELinux lockdown"), which was merged into Linus' tree during the
+> current merge window, moved the lockdown_reasons array from
+> security/lockdown/lockdown.c to security/security.c; is there another
+> tree in linux-next which is moving lockdown_reasons into
+> security/security.c?
 > 
-> One more thing.
-> 
-> Depends on SKU it may be 400MHz, 320MHz, 200MHz or 333MHz.
 
-Aha, found better precision for the last one, 333.33MHz.
+Somehow in mmotm those lines of code were merged 2x:
+once from origin.patch and once from linux-next.patch.
 
-> (I guess these values should be kinda references in the table)
-> 
-> > That's all what I have.
+Looks more like a mmotm merge issue, not a security/ issue.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+~Randy
 
