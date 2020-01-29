@@ -2,133 +2,88 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3260BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E812AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A0820720
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="VthOtP0D";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qqytq1Yf"
+	by mail.kernel.org (Postfix) with ESMTP id BFDF720732
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgA2Qn0 (ORCPT
+        id S1727192AbgA2Qnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:43:26 -0500
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:40511 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbgA2Qn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:43:26 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id E8A8073A;
-        Wed, 29 Jan 2020 11:43:24 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 29 Jan 2020 11:43:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=wVzq7A1mRlnA44nVMIvtmOwiqIc
-        +jpFRZC1MsfkyksU=; b=VthOtP0DvyThBwtvX6HaFcbEMTcSArV4Azqiv8KpPlD
-        50QKi/8mlb2CCFnvsKBl1sLQYzejzFwOzg53M+fo3tndBhFTG58xStEyKTu5FCQH
-        mrP+vFew0q+304HhwRf0hZaS9IXsnKVsMnEkg+eslmhGPeaVvL7wqq97VYtBHXmI
-        KIfDEuglk2ZvNRcNnwynNy/NqfNgnheN5TnuZpOM87ZUvQqZo1irT+suVx/d+t0i
-        N+FxgG7oOmHW4cwAFub2wg+GNxf/2gzKrOGPvcaLzT1X7Iq41LimQJeYz8m6ab2S
-        iQBARgG9hJUbfIgdstm7Z06X+CxVGUbSafW4dHCgVdA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=wVzq7A
-        1mRlnA44nVMIvtmOwiqIc+jpFRZC1MsfkyksU=; b=qqytq1Yf31pUWzGdkKoti4
-        Ov3jOUxIbpFlDCoJapv/9+GsHth0RMKmc34TB1zE7RjKgDm/7LU4puM630p0rC+R
-        fZqoXn+0hZvktfbhzDeYJUx3Pm4NdiBkXzQjI7UVQZEgzbytALwfyseOxZ4+zRkz
-        5PwdhI56hqtwD/qh9kXtSCjJTc8vr9L1a3BEgKltoKa6THTNijP2kPDV9uMIe5NQ
-        rJUt6RwxGeamRrJZaKDfPZDY8pwZ2S34YUoeGhLJgqddlcuAfhDUglC2CjMtymRZ
-        WmQXUOjbUiSBtSBwcv+HqxyQ0KW9AYf/32c+fcCe4gv+286by/b9XkcmLzn6KXoQ
-        ==
-X-ME-Sender: <xms:K7YxXpQ7Fze2-w6LiBtLU5-rg0hFUh_yVGdqBeHSCuUHfvTHxe5ItQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeeigdeltdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:K7YxXu0G2pW7Q-Z_7L5EJQ3Q_0-F2HSRt6rp7LaCQhz4QDAXlnBWzw>
-    <xmx:K7YxXqLW-PGmXsZzP9x85jXy1zifo0OFbY9yelJS6McPDnZfkm_B9g>
-    <xmx:K7YxXv9LjfUa8O82HPWK5BxXQzDbVlBIdpO3RSUDz2xJ1mv6XzZyrQ>
-    <xmx:LLYxXtRhIUP1D-BmKu7jflKrRsEL2xZ8SJ-oVgX_bjJt6KBChsgFJg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7C10B3060B27;
-        Wed, 29 Jan 2020 11:43:23 -0500 (EST)
-Date:   Wed, 29 Jan 2020 17:43:21 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 1/1] drm: sun4i: hdmi: Add support for sun4i HDMI
- encoder audio
-Message-ID: <20200129164321.34mornbi3xvx5dys@gilmour.lan>
-References: <20200128140642.8404-1-stefan@olimex.com>
- <20200128140642.8404-2-stefan@olimex.com>
+        Wed, 29 Jan 2020 11:43:32 -0500
+Received: from gentwo.org ([3.19.106.255]:40906 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbgA2Qnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:43:31 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 275353FFFA; Wed, 29 Jan 2020 16:43:30 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 254433F070;
+        Wed, 29 Jan 2020 16:43:30 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 16:43:30 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Kees Cook <keescook@chromium.org>
+cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
+ as usercopy caches
+In-Reply-To: <202001281457.FA11CC313A@keescook>
+Message-ID: <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
+References: <1515636190-24061-1-git-send-email-keescook@chromium.org> <1515636190-24061-10-git-send-email-keescook@chromium.org> <9519edb7-456a-a2fa-659e-3e5a1ff89466@suse.cz> <201911121313.1097D6EE@keescook> <201911141327.4DE6510@keescook>
+ <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz> <202001271519.AA6ADEACF0@keescook> <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com> <202001281457.FA11CC313A@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128140642.8404-2-stefan@olimex.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 28 Jan 2020, Kees Cook wrote:
 
-On Tue, Jan 28, 2020 at 04:06:42PM +0200, Stefan Mavrodiev wrote:
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> index 68d4644ac2dc..4cd35c97c503 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> @@ -23,6 +23,8 @@
->  #include <drm/drm_print.h>
->  #include <drm/drm_probe_helper.h>
+> > On the other hand not marking the DMA caches still seems questionable.
 >
-> +#include <sound/soc.h>
-> +
->  #include "sun4i_backend.h"
->  #include "sun4i_crtc.h"
->  #include "sun4i_drv.h"
-> @@ -87,6 +89,10 @@ static void sun4i_hdmi_disable(struct drm_encoder *encoder)
->
->  	DRM_DEBUG_DRIVER("Disabling the HDMI Output\n");
->
-> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
-> +	sun4i_hdmi_audio_destroy(hdmi);
-> +#endif
-> +
->  	val = readl(hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
->  	val &= ~SUN4I_HDMI_VID_CTRL_ENABLE;
->  	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
-> @@ -114,6 +120,11 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
->  		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
->
->  	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
-> +
-> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
-> +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
-> +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
-> +#endif
+> My understanding is that exposing DMA memory to userspace copies can
+> lead to unexpected results, especially for misbehaving hardware, so I'm
+> not convinced this is a generically bad hardening choice.
 
-I really don't think we should be creating / removing the audio card
-at enable / disable time.
+"DMA" memory (and thus DMA caches) have nothing to do with DMA. Its a
+legacy term. "DMA Memory" is memory limited to a certain
+physical address boundary (old restrictions on certain devices only
+supporting a limited number of address bits).
 
-To fix the drvdata pointer, you just need to use the card pointer in
-the unbind, and that's it.
+DMA can be done to NORMAL memory as well.
 
-Maxime
