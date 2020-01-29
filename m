@@ -2,161 +2,115 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B47C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4430C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB262070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D662070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 14:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gFolVnVB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGM2xrbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgA2OPZ (ORCPT
+        id S1726622AbgA2OSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 09:15:25 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42203 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgA2OPZ (ORCPT
+        Wed, 29 Jan 2020 09:18:04 -0500
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:33547 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgA2OSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:15:25 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so15628017otd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 06:15:23 -0800 (PST)
+        Wed, 29 Jan 2020 09:18:03 -0500
+Received: by mail-pg1-f174.google.com with SMTP id 6so8924515pgk.0;
+        Wed, 29 Jan 2020 06:18:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gaK0UAbJtL0uxpjJEmYb9zSSzbq8Eo54UUTLP0zD1Ao=;
-        b=gFolVnVBt04bVd0dl76dVied0P9GBbsNVT7S2sVu2lTG9L713zC+RV2GMjdWUbTqlz
-         gqO7eoPLnCn0pIQFlY7S/XeXrbyuj4F96cWsgSxLf3yXTSJWn+abHFCkX5NC7prQv0p3
-         RyxkPsssvpXaKdjBDFIZ4XqyOa5u3mM+tRN1Q/zdMBFDyZC7FX82+iZWQK8eOgF/6d6p
-         sLo0bKPxljgKZdsKE2NBRKfCuB3smjELvJ/UheJ8SHGeBqkiLcHI0XBYDyE/SyhdE820
-         x2xM5grYaS0bPsIMeE/z+qtQ8GikqhRFRoIi187G6DqTAhpkfh+K5mBs0ZOK+N84QwNo
-         TOFA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ieZZcAiwddRgO1I0z1VjIfd2VtBIxW540IZSnXnxT2s=;
+        b=dGM2xrbtbMK7IXKjwz05uLZHREq4IRPRGMaBC8INdXdt9Tw7kwtLHQlJYlP6xqAoNX
+         JLSilAmj3EKtOzaFzv3Az/YH00YXiKVeYgZ42ei9ECmOZc0m0Cpftp4BkVdi7qgb7OI7
+         wmyeCo2dDJXfZJiY9tz34m1yuSnYLr7fK/GQqBRDOamoF0sctR2FyIx2QQwMDQKMhayT
+         UTCd9T056YQAIxEZVLy9/Dev7774pOgpsVK08Vuc5q/CsvB+3UQPJwZn9s9fgJo1ngLB
+         seUbANkaefwcgdrJczgTL628chAhCuG71t7N/L+OmOuc7hung7VC5cgZtA+r1cuEIDP3
+         ZUUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gaK0UAbJtL0uxpjJEmYb9zSSzbq8Eo54UUTLP0zD1Ao=;
-        b=TXBajMyoepdt2o9JZmPMqzSb5DqzrSzHOB6YquGZHuWvHXlQ4g4KpV+1SjDNEIKv4Z
-         7cP26QmEd4N7bdqrBSwgQbkKvMn7fOC6WzCT+xAKIyFIoqhwtvU4ZUUz2fMvfaVX3589
-         VfS3eNgK6NlELxDM0R//zVk0TTlh4n13NsR7MJSMJeF4Ga8q1QMhhfSQOuNxc3oOGpw1
-         F9vJ/nMMyzWXBXEXhrK0IQvlyjLEEx7QWW1fB2dODKojiRkamVUTA7Fx3mk+yI20cTrl
-         NZGtJLUw56OfRR/bHzaFnCPiMN7iqngVuunWQ0Mr2dMgUbIS3RWy2S2b7iSZt/eHSl/M
-         oQ5A==
-X-Gm-Message-State: APjAAAWlm51yjS6v5t3WNJvhud5xrRnyLO/Uoc2VmcW66SC5O1wCjQGl
-        1Nmc7HodwSg3z8Oo8hzviO/qyLCgNd++W/Q/gpUBxw==
-X-Google-Smtp-Source: APXvYqytFER0ez+KO+YLGNjnwB2XdBzkqyPzOp42lBOeEaY5qyOiE4r2GoLd8mXSXXbq7qL/jvrpfhLgYAXm4YfZYM4=
-X-Received: by 2002:a9d:4f11:: with SMTP id d17mr19556346otl.228.1580307323086;
- Wed, 29 Jan 2020 06:15:23 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ieZZcAiwddRgO1I0z1VjIfd2VtBIxW540IZSnXnxT2s=;
+        b=ip3A1Awqvq2CFv9Y+pr+rtAxkjyUjmOFiy7k3eVdR7kKRiKQa0Mma4xNa6uCTZ7era
+         9zmASo7UWj0FKaROkMtOgAjjaNfi8YGMgnLm6PLwVjNpohMrZWElAjhhW8uvcljosogL
+         1GjqGJEQM1EhssL2+H+5l0Tcait3m6GTMTxTWjb17bJVZ4ElQIKYOZ6DXRLi0RNnrOJJ
+         Xmj7nuNwyhB+4UdCsUoh6LnswPJra38O6uX+kaBuh+JXYT53BI3wVCLlTjLv0Epo3MRR
+         gs5hBAULu0GqLsoiYEjPvynJkh1KAMx9z1xDK41y0p+Am0FcFw/C/yUF3T5EzYeQ/CR2
+         Qxyg==
+X-Gm-Message-State: APjAAAWu7xVYXRL8OikoiK3JqhmJ7w/q4bWD1Cq2lXPLgoUiggH8i1D1
+        /9ohRjIns5nyOfXEIb6zSZk=
+X-Google-Smtp-Source: APXvYqwCfc4jCxY5BtbthWGX6JJXox9KjSvlQXxmyhs527/tGzSYKdnmWlvaER7eAOW6/YyczwXQZQ==
+X-Received: by 2002:a65:4685:: with SMTP id h5mr23680746pgr.203.1580307482770;
+        Wed, 29 Jan 2020 06:18:02 -0800 (PST)
+Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
+        by smtp.gmail.com with ESMTPSA id b12sm2917846pfi.157.2020.01.29.06.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 06:18:01 -0800 (PST)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Wed, 29 Jan 2020 23:17:59 +0900
+To:     anon anon <742991625abc@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Petr Mladek <pmladek@suse.com>,
+        anon anon <742991625abc@gmail.com>, wangkefeng.wang@huawei.com,
+        syzkaller@googlegroups.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
+Message-ID: <20200129141759.GB13721@jagdpanzerIV.localdomain>
+References: <CAA=061EoW8AmjUrBLsJy5nTDz-1jeArLeB+z6HJuyZud0zZXug@mail.gmail.com>
+ <CGME20200128124918eucas1p1f0ce2b2b7b33a5d63d33f876ef30f454@eucas1p1.samsung.com>
+ <20200128124912.chttagasucdpydhk@pathway.suse.cz>
+ <4ab69855-6112-52f4-bee2-3358664d0c20@samsung.com>
+ <20200129141517.GA13721@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-References: <20200128072740.21272-1-frextrite@gmail.com> <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
- <20200128170426.GA10277@workstation-portable> <CAG48ez3bLC3dzXn7Ep0YmBENg7wp6TMrocGa6q2RLtYoOdUSxg@mail.gmail.com>
- <20200129065738.GA17486@workstation-portable>
-In-Reply-To: <20200129065738.GA17486@workstation-portable>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 29 Jan 2020 15:14:56 +0100
-Message-ID: <CAG48ez2Yc-J1gV4=sTMizySmeFkiZGU+j1NTnZaqyPPo1mYQ=Q@mail.gmail.com>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129141517.GA13721@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 7:57 AM Amol Grover <frextrite@gmail.com> wrote:
-> On Tue, Jan 28, 2020 at 08:09:17PM +0100, Jann Horn wrote:
-> > On Tue, Jan 28, 2020 at 6:04 PM Amol Grover <frextrite@gmail.com> wrote:
-> > > On Tue, Jan 28, 2020 at 10:30:19AM +0100, Jann Horn wrote:
-> > > > On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
-> > > > > task_struct.cred and task_struct.real_cred are annotated by __rcu,
-> > > >
-> > > > task_struct.cred doesn't actually have RCU semantics though, see
-> > > > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
-> > > > it would probably be more correct to remove the __rcu annotation?
-> > >
-> > > Hi Jann,
-> > >
-> > > I went through the commit you mentioned. If I understand it correctly,
-> > > ->cred was not being accessed concurrently (via RCU), hence, a non_rcu
-> > > flag was introduced, which determined if the clean-up should wait for
-> > > RCU grace-periods or not. And since, the changes were 'thread local'
-> > > there was no need to wait for an entire RCU GP to elapse.
-> >
-> > Yeah.
-> >
-> > > The commit too, as you said, mentions the removal of __rcu annotation.
-> > > However, simply removing the annotation won't work, as there are quite a
-> > > few instances where RCU primitives are used. Even get_current_cred()
-> > > uses RCU APIs to get a reference to ->cred.
-> >
-> > Luckily, there aren't too many places that directly access ->cred,
-> > since luckily there are helper functions like get_current_cred() that
-> > will do it for you. Grepping through the kernel, I see:
-[...]
-> > So actually, the number of places that already don't use RCU accessors
-> > is much higher than the number of places that use them.
-> >
-> > > So, currently, maybe we
-> > > should continue to use RCU APIs and leave the __rcu annotation in?
-> > > (Until someone who takes it on himself to remove __rcu annotation and
-> > > fix all the instances). Does that sound good? Or do you want me to
-> > > remove __rcu annotation and get the process started?
-> >
-> > I don't think it's a good idea to add more uses of RCU APIs for
-> > ->cred; you shouldn't "fix" warnings by making the code more wrong.
-> >
-> > If you want to fix this, I think it would be relatively easy to fix
-> > this properly - as far as I can tell, there are only seven places that
-> > you'll have to change, although you may have to split it up into three
-> > patches.
->
-> Thank you for the detailed analysis. I'll try my best and send you a
-> patch.
+On (20/01/29 23:15), Sergey Senozhatsky wrote:
+> Date: Wed, 29 Jan 2020 23:15:17 +0900
+> From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Petr Mladek <pmladek@suse.com>, anon anon <742991625abc@gmail.com>,
+>  wangkefeng.wang@huawei.com, sergey.senozhatsky@gmail.com,
+>  syzkaller@googlegroups.com, linux-kernel@vger.kernel.org,
+>  dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+> Subject: Re: KASAN: slab-out-of-bounds Write in vgacon_scroll
+> Message-ID: <20200129141517.GA13721@jagdpanzerIV.localdomain>
+> 
+> On (20/01/28 15:58), Bartlomiej Zolnierkiewicz wrote:
+> [..]
+> > 
+> > Help is welcomed as I'm not going to look at it in the foreseeable future
+> > (I'm busy enough with other things).
+> > 
+> > > (dri-devel@lists.freedesktop.org or linux-fbdev@vger.kernel.org) into CC?
+> > 
+> > Added to Cc:, thanks.
+> 
+> Hmm. There is something strange about it. I use vga console quite
+> often, and scrolling happens all the time, yet I can't get the same
+> out-of-bounds report (nor have I ever seen it in the past), even with
+> the reproducer. Is it supposed to be executed as it is, or are there
+> any preconditions? Any chance that something that runs prior to that
+> reproducer somehow impacts the system? Just asking.
 
-While you can CC me on that, I'm not a kernel maintainer; you should
-send patches to the people who maintain the areas of kernel code that
-you're modifying. (kernel/cred.c has no specific maintainer; for that
-file, I'd probably try sending patches to Andrew Morton, Oleg
-Nesterov, David Howells and Eric Biederman, as well as the
-linux-kernel@ mailinglist.)
+These questions were addressed to anon anon (742991625abc@gmail.com),
+not to Bartlomiej.
 
-> But before I start I want to make sure one thing. The changes
-> done by the commit you mentioned (which introduced non_rcu flag), should
-> be now reverted, right?
-
-No.
-
-> Since, prior to the commit RCU semantics were
-> there and RCU was being used (which was unnecessary) and the fix merely,
-> removed these (unnecessary) RCU usages (with checks to either use them
-> or not, but now we actually don't use RCU for subjective credentials).
->
-> So, now what's left is the unused RCU code (which needs to be removed)
-> and the changes done in the temporary fix (which would be reverted since
-> we don't want to use RCU).
-
-No. Instances of `struct cred` *can* still have an RCU-protected
-lifetime; but only certain references to it have RCU semantics.
-{task}->cred doesn't have RCU semantics, but {task}->real_cred does
-have RCU semantics, and those two can point to the same object.
-
-__rcu annotations mark that a *reference* has RCU semantics. Lack of
-__rcu annotation means that the *reference* does not have RCU
-semantics, but the object it points to can still have a RCU-protected
-lifetime.
+	-ss
