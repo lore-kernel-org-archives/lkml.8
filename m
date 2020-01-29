@@ -6,46 +6,54 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6576AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B6BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 483CF214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533E220CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 05:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgA2FSJ (ORCPT
+        id S1726401AbgA2FRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 00:18:09 -0500
-Received: from ozlabs.org ([203.11.71.1]:54909 "EHLO ozlabs.org"
+        Wed, 29 Jan 2020 00:17:35 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40783 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbgA2FRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 00:17:39 -0500
+        id S1725966AbgA2FRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 00:17:31 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 486sDy1V07z9sRk; Wed, 29 Jan 2020 16:17:37 +1100 (AEDT)
+        id 486sDp3hCcz9sSG; Wed, 29 Jan 2020 16:17:30 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: f509247b08f2dcf7754d9ed85ad69a7972aa132b
-In-Reply-To: <922d4939c735c6b52b4137838bcc066fffd4fc33.1578989545.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: bfbe37f0ce994e7a9945653d7624fadc5c500a9f
+In-Reply-To: <1577900990-8588-6-git-send-email-Julia.Lawall@inria.fr>
+To:     Julia Lawall <Julia.Lawall@inria.fr>, Scott Wood <oss@buserror.net>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/ptdump: only enable PPC_CHECK_WX with STRICT_KERNEL_RWX
-Message-Id: <486sDy1V07z9sRk@ozlabs.org>
-Date:   Wed, 29 Jan 2020 16:17:37 +1100 (AEDT)
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 05/10] powerpc/83xx: use resource_size
+Message-Id: <486sDp3hCcz9sSG@ozlabs.org>
+Date:   Wed, 29 Jan 2020 16:17:30 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-14 at 08:13:10 UTC, Christophe Leroy wrote:
-> ptdump_check_wx() is called from mark_rodata_ro() which only exists
-> when CONFIG_STRICT_KERNEL_RWX is selected.
+On Wed, 2020-01-01 at 17:49:45 UTC, Julia Lawall wrote:
+> Use resource_size rather than a verbose computation on
+> the end and start fields.
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
+> The semantic patch that makes this change is as follows:
+> (http://coccinelle.lip6.fr/)
+> 
+> <smpl>
+> @@ struct resource ptr; @@
+> - (ptr.end - ptr.start + 1)
+> + resource_size(&ptr)
+> </smpl>
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/f509247b08f2dcf7754d9ed85ad69a7972aa132b
+https://git.kernel.org/powerpc/c/bfbe37f0ce994e7a9945653d7624fadc5c500a9f
 
 cheers
