@@ -2,133 +2,141 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BDFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14622C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B4D20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBE7207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 16:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgA2QkX (ORCPT
+        id S1727167AbgA2Qmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 11:40:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:43474 "EHLO foss.arm.com"
+        Wed, 29 Jan 2020 11:42:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:43508 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgA2QkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:40:22 -0500
+        id S1726671AbgA2Qmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 11:42:45 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B84B2328;
-        Wed, 29 Jan 2020 08:40:21 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B87F43F52E;
-        Wed, 29 Jan 2020 08:40:20 -0800 (PST)
-Date:   Wed, 29 Jan 2020 16:40:18 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Etienne Carriere <etienne.carriere@linaro.org>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        etienne carriere <etienne.carriere@st.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20200129164018.GE36496@bogus>
-References: <CAN5uoS_YyPXiqZnNfM32cxeAsK+xuPX9QRK94-DJ6oMQFrZPXQ@mail.gmail.com>
- <CAN5uoS-9yUfAT4=a9ys4d_2wxh9nW_RgXd_-3T-zF2r-k-PtOw@mail.gmail.com>
- <AM0PR04MB448137850D19BADD11F75B18880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAN5uoS-cHxrFD-H245iHMU_zzk6wAL=YJvKFAY6rr2EMgd0L3w@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A1D1328;
+        Wed, 29 Jan 2020 08:42:44 -0800 (PST)
+Received: from localhost (unknown [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD8723F52E;
+        Wed, 29 Jan 2020 08:42:43 -0800 (PST)
+Date:   Wed, 29 Jan 2020 16:42:42 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
+        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] arm64: add support for the AMU extension v1
+Message-ID: <20200129164242.GA5251@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-2-ionela.voinescu@arm.com>
+ <2b62c575-3396-3332-2e39-1c3cce2c4bf0@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN5uoS-cHxrFD-H245iHMU_zzk6wAL=YJvKFAY6rr2EMgd0L3w@mail.gmail.com>
+In-Reply-To: <2b62c575-3396-3332-2e39-1c3cce2c4bf0@arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 04:01:07PM +0100, Etienne Carriere wrote:
-> Hello Peng,
->
-> On Mon, 27 Jan 2020 at 13:58, Peng Fan <peng.fan@nxp.com> wrote:
-> >
-> > > Subject: Re: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
-> > >
-> > > Hello Peng and all,
-> > >
-> > >
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > This mailbox driver implements a mailbox which signals transmitted
-> > > > data via an ARM smc (secure monitor call) instruction. The mailbox
-> > > > receiver is implemented in firmware and can synchronously return data
-> > > > when it returns execution to the non-secure world again.
-> > > > An asynchronous receive path is not implemented.
-> > > > This allows the usage of a mailbox to trigger firmware actions on SoCs
-> > > > which either don't have a separate management processor or on which
-> > > > such a core is not available. A user of this mailbox could be the SCP
-> > > > interface.
-> > > >
-> > > > Modified from Andre Przywara's v2 patch
-> > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
-> > > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
-> > > Cpeng.fa
-> > > >
-> > > n%40nxp.com%7C735cc6cd00404082bf8c08d79f67b93a%7C686ea1d3bc2b4
-> > > c6fa92cd
-> > > >
-> > > 99c5c301635%7C0%7C0%7C637153140140878278&amp;sdata=m0lcAEIr0ZP
-> > > tyPHorSW
-> > > > NYgjfI5p0genJLlhqHMIHBg0%3D&amp;reserved=0
-> > > >
-> > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > > Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > I've successfully tested your change on my board. It is a stm32mp1 with TZ
-> > > secure hardening and I run an OP-TEE firmware (possibly a TF-A
-> > > sp_min) with a SCMI server for clock and reset. Upstream in progress.
-> > > The platform uses 2 instances of your SMC based mailbox device driver
-> > > (2 mailboxes). Works nice with your change.
-> > >
-> > > You can add my T-b tag: Tested-by: Etienne Carriere
-> > > <etienne.carriere@linaro.org>
-> >
-> > Thanks, but this patch has been dropped.
-> >
-> > Per Sudeep, we all use smc transport, not smc mailbox ,
-> > I'll post patch in a few days based on the transport split patch.
->
-> Ok, i am syncing.
->
-> > >
-> > > FYI, I'll (hopefully soon) post a change proposal in U-Boot ML for an equvalent
-> > > 'SMC based mailbox' driver and SCMI agent protocol/device drivers for clock
-> > > and reset controllers.
-> >
-> > Great to know you did scmi agent code in U-Boot. Do you have some public repo
-> > for access?
->
-> I've created a P-R on my github repo to share until I submit to u-boot:
->  https://github.com/etienne-lms/u-boot/pull/3
->
-> I guess I will change my u-boot proposal and get a SMC SCMI transport
-> outside of the mailbox framework.
+Hi Suzuki,
+
+On Tuesday 28 Jan 2020 at 16:34:24 (+0000), Suzuki Kuruppassery Poulose wrote:
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -156,6 +156,7 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
+> >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV3_SHIFT, 4, 0),
+> >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV2_SHIFT, 4, 0),
+> >   	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_DIT_SHIFT, 4, 0),
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_AMU_SHIFT, 4, 0),
+> >   	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
+> >   				   FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_SVE_SHIFT, 4, 0),
+> >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_RAS_SHIFT, 4, 0),
+> > @@ -314,10 +315,11 @@ static const struct arm64_ftr_bits ftr_id_mmfr4[] = {
+> >   };
+> >   static const struct arm64_ftr_bits ftr_id_pfr0[] = {
+> > -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
+> > -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
+> > -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
+> > -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 0, 4, 0),		/* State0 */
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_AMU_SHIFT, 4, 0),
+> 
+> Why is this STRICT while the aa64pfr0 field is NON_STRICT ? On the other
+> hand, do we need this entry ? Do we plan to support 32bit guests using
+> AMU counters ? If we do, we may need to cap this field for the guests.
 >
 
-Unless U-boot has mailbox framework or you are importing it, it's better
-to keep U-boot implementation simple as SMC transport which I think you
-already do. I had a look at the implementation[1], it shouldn't change
-much other than if you prefer not to use "mailbox" terminology. I don't
-understand the reason for even using the mailbox term there in the first
-place.
+No, we do not need this entry at all. This is an artifact left from
+testing which I'll remove. The ID register is already modified to hide
+the presence of AMU for both 32bit and 64bit guests (patch 3/6), and
+this was supposed to be here just to validate that the capping of this
+field for the guest does its job.
 
---
-Regards,
-Sudeep
+> Also, fyi, please note that there may be conflicts with another series from
+> Anshuman which cleans up the tables and "naming" the shifts. [1].
+> [1] purposefully hides the AMU from ID_PFR0 due to the above reasoning.
+> 
 
-[1] https://github.com/etienne-lms/u-boot/pull/3/commits/34812c9175436f6a082f77347c5384393757c233
+Thanks, that's fine.
+
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE3_SHIFT, 4, 0),
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE2_SHIFT, 4, 0),
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE1_SHIFT, 4, 0),
+> > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_STATE0_SHIFT, 4, 0),
+> >   	ARM64_FTR_END,
+> >   };
+> > @@ -1150,6 +1152,59 @@ static bool has_hw_dbm(const struct arm64_cpu_capabilities *cap,
+> >   #endif
+> > +#ifdef CONFIG_ARM64_AMU_EXTN
+> > +
+> > +/*
+> > + * This per cpu variable only signals that the CPU implementation supports
+> > + * the Activity Monitors Unit (AMU) but does not provide information
+> > + * regarding all the events that it supports.
+> > + * When this amu_feat per CPU variable is true, the user of this feature
+> > + * can only rely on the presence of the 4 fixed counters. But this does
+> > + * not guarantee that the counters are enabled or access to these counters
+> > + * is provided by code executed at higher exception levels.
+> > + *
+> > + * Also, to ensure the safe use of this per_cpu variable, the following
+> > + * accessor is defined to allow a read of amu_feat for the current cpu only
+> > + * from the current cpu.
+> > + *  - cpu_has_amu_feat()
+> > + */
+> > +static DEFINE_PER_CPU_READ_MOSTLY(u8, amu_feat);
+> > +
+> > +inline bool cpu_has_amu_feat(void)
+> > +{
+> > +	return !!this_cpu_read(amu_feat);
+> > +}
+> > +
+> 
+> minor nit: Or you may use a cpumask_t set of CPUs where AMU is
+> available. But if you plan to extend this for the future AMU version
+> tracking the mask may not be sufficient.
+> 
+
+To be honest, I would like not to have to use information about AMU
+version for future support, but yes, it would be good to have the
+possibility, just in case.
+
+
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2020-January/708287.html
+> 
+> 
+> The rest looks fine to me.
+> 
+> Suzuki
+
+Thank you very much for the review,
+Ionela.
+
