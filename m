@@ -2,157 +2,145 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85FEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D1FC35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5DB22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C4920CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 04:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tBAYxoa0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0eBBXdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgA2EUa (ORCPT
+        id S1726617AbgA2EY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 23:20:30 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43192 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgA2EUa (ORCPT
+        Tue, 28 Jan 2020 23:24:57 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46369 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgA2EY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 23:20:30 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d18so12246232qtj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 Jan 2020 20:20:29 -0800 (PST)
+        Tue, 28 Jan 2020 23:24:56 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e25so12228451qtr.13;
+        Tue, 28 Jan 2020 20:24:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YM4OJsNfZ+Cg/1QyXpcZd//8p772lihOuiLpGLKYKgo=;
-        b=tBAYxoa0LP9S6BVo0xwNO6RFKmWwFseh0I4ad83I/ovAIpLNwY3jGjSbvb8/EE11jA
-         322Jc3BAu4ampLF0Kl0KZdrvmplWNQ+pwXTMicz0kgsot56ugzrbCVtzGj8NA72lopiF
-         IXNVRujAb/kjdeh3Wjnw3iylsl2vKXQv9YpJsJNECeT2Xsh3nZfOIx8OLTL0QRSymD9o
-         s4R79a+qgLO7MTiQ7Zwo9BsRq/+siFKiMK1W+Zt7aTRzKW1JWLmLHo4ZWdX9rzLaTRLf
-         192X3yGqDaGtIqNcgVLoBFpvyCobAD4pFybkMYtPChUyGuhI0xW6Qai35x1YL8aR0mOc
-         6IfQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eakBGQ1EfxNPQBSaXqT9vlsaKAmpZ5+kMa3s4kT1JN8=;
+        b=K0eBBXdiKRQKb2Um1UxPIn+uPENTwBO73Ct4S7khM/WqZxfdTcHnuNaxp53t1tMVBo
+         l9d3d7PL0LO9ZjFmSgfo3XDYniGhORhLXPrTildO5+2rqDwAWILhln/UqIRSkQdIHgS6
+         RFERqWwekSHDpn6YcYxkPLeqfXLrfSFMKTbb14n94rOk/DKkDXyqH6sXX/GIiOeK8Bee
+         y7ZoOGVarjuJnAOVKQOr8Wu1rR9ZN759TG+xWJ0OpkZN0fiN1P/gAOqp0sajV1klhTCK
+         2SUTfP2c8RI4aVoMDN6KnBHnLgfxjgP7I8e0urSZ0UsF8pDDnSlFUjo8JTeFIBx3bJ7k
+         sW3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=YM4OJsNfZ+Cg/1QyXpcZd//8p772lihOuiLpGLKYKgo=;
-        b=swqjp9a+ifdzPCiwFRcVXk4oHgsAYbK5lwUOF6cBYpsmmNpW47eCSrP9/1l2JUT2Ev
-         zQ/DOrNgjGNsHTOSunGZaPY6Q+ykvOMgx1vLI/KT0Ue5y+2FofrH9ZHPMbRmJyfj4ZfE
-         fB4KzAK3w3oC3NNYhGJ64Jb/CKbjKgtUMRdx0MnhKR+V/RWS/gFOMNGl0er4HuNTdG91
-         E3PnQIAB+U9lQswdZta8vIyUTGSxN1cqz+EMCZfM1VNx+XorcZV1PO2i3pFz3zJte3Qm
-         BcGoRAanX1jSFkMtn5by5svvwezgM5HQMY4ZPjbj12E/PhygjRG9aMAr/usx0Pd7TU+d
-         yhWA==
-X-Gm-Message-State: APjAAAVcUyKNnOe2bMrKoApx/go4eqKE+cA8xAyJUhjmBChoTtteqEoB
-        yAl5GKoeQwXPSGXTw+7jMCOkTADODE4JzQ==
-X-Google-Smtp-Source: APXvYqxNOUDfMDbEmpgP46ytX31I8ri4xVc/Mgt9EiYdhovVnqIvbJLp4JcBOFq+G4DAiJFilo9jug==
-X-Received: by 2002:ac8:6f5b:: with SMTP id n27mr14407953qtv.96.1580271628969;
-        Tue, 28 Jan 2020 20:20:28 -0800 (PST)
-Received: from ovpn-120-127.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i28sm487275qtc.57.2020.01.28.20.20.27
+        bh=eakBGQ1EfxNPQBSaXqT9vlsaKAmpZ5+kMa3s4kT1JN8=;
+        b=lSIiJzWKTZwdiot5la8f8on9X8szk3VtWuhRkTfD70MQBgtSglyQ/sbSe0LWwoMDro
+         MQIypy5Ifr7YTrRilMoyNZBuBfBEq0QqRQ2y8VLe/Xk8Ih1OgxnPtSPhSawt/gzWuhl2
+         K5oKlLE91UAxT80Eb1LXUdVEgMIVjNc0TzdNJaJ6hCuEv3Xe3ZdOIiAgwux27C1bF5j+
+         KsS4yrQHrGPvoweEfH/QRk1C7EPIM2y+6Kx3VoHBX6rvWoCA0wjtw6H0SiOnrPNBW0tr
+         Hlbhsl/OeSu1rH1+DDJhBMQX9XBcmv7Jk0hg79wnflGvjaOaBZMkntQIAmvgSbK9NzJR
+         49ig==
+X-Gm-Message-State: APjAAAVVCupBiROmzddKrjchBTzOHVdA2C/6x/OZEPf7QQE9ONWRsJzO
+        rB5gsFgu5WZFVvysizS3AQM=
+X-Google-Smtp-Source: APXvYqznV+gAHKK6MsOz+wnZrl/QqDx4om8+h40F66lxU7UeeC31wlbnLgo/pifdnYfPWmWnjBdfHQ==
+X-Received: by 2002:ac8:6f27:: with SMTP id i7mr5201797qtv.253.1580271895195;
+        Tue, 28 Jan 2020 20:24:55 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id o187sm405516qkf.26.2020.01.28.20.24.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jan 2020 20:20:28 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     hannes@cmpxchg.org, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/page_counter: mark intentional data races
-Date:   Tue, 28 Jan 2020 23:20:19 -0500
-Message-Id: <20200129042019.3632-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Tue, 28 Jan 2020 20:24:54 -0800 (PST)
+Subject: Re: [RFC v1 0/6] kunit: create a centralized executor to dispatch all
+ KUnit tests
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191216220555.245089-1-brendanhiggins@google.com>
+ <20200106224022.GX11244@42.do-not-panic.com>
+ <CAFd5g456c2Zs7rCvRPgio83G=SrtPGi25zbqAUyTBHspHwtu4w@mail.gmail.com>
+ <594b7815-0611-34ea-beb5-0642114b5d82@gmail.com>
+ <CAFd5g469TWzrLKmQNR2i0HACJ3FEu-=4-Rk005g9szB5UsZAcw@mail.gmail.com>
+ <e801e4ac-b7c2-3d0a-71e7-f8153a3dfbc8@gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF982C9840@USCULXMSG17.am.sony.com>
+ <CAFd5g46Ut9Suptmp_bBspkp=KKt2GP+=1C5zLu0FXJY9dGJbFQ@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <dcf2d008-c044-f2d4-63b9-47151157eeb4@gmail.com>
+Date:   Tue, 28 Jan 2020 22:24:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFd5g46Ut9Suptmp_bBspkp=KKt2GP+=1C5zLu0FXJY9dGJbFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
-had memcg->memsw->failcnt and ->watermark could be accessed concurrently
-as reported by KCSAN,
+On 1/28/20 1:53 PM, Brendan Higgins wrote:
+> On Tue, Jan 28, 2020 at 11:35 AM <Tim.Bird@sony.com> wrote:
+>>
+>>> -----Original Message-----
+>>> From:  Frank Rowand on January 28, 2020 11:37 AM
+>>>
+>>> On 1/28/20 1:19 AM, Brendan Higgins wrote:
+>>>> On Mon, Jan 27, 2020 at 9:40 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>> ...
+>>>> we could add Kconfigs to control this, but the compiler nevertheless
+>>>> complains because it doesn't know what phase KUnit runs in.
+>>>>
+>>>> Is there any way to tell the compiler that it is okay for non __init
+>>>> code to call __init code? I would prefer not to have a duplicate
+>>>> version of all the KUnit libraries with all the symbols marked __init.
+>>>
+>>> I'm not sure.  The build messages have always been useful and valid in
+>>> my context, so I never thought to consider that possibility.
+>>>
+>>>> Thoughts?
+>>
+>> I'm not sure there's a restriction on non __init code calling __init
+>> code.  In init/main.c arch_call_reset_init() is in __init, and it calls
+>> rest_init which is non __init, without any special handling.
+>>
+>> Is the compiler complaint mentioned above related to  calling
+>> into __init code, or with some other issue?
+> 
+> I distinctly remember having the compiler complain at me when I was
+> messing around with the device tree unit tests because of KUnit
+> calling code marked as __init. Maybe it's time to start converting
+> those to KUnit to force the issue? Frank, does that work for you?
 
- Reported by Kernel Concurrency Sanitizer on:
- BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
+I have agreed to try converting the devicetree unittest to KUnit.
 
- read to 0xffff8fb18c4cd190 of 8 bytes by task 1081 on cpu 59:
-  page_counter_try_charge+0x4d/0x150 mm/page_counter.c:138
-  try_charge+0x131/0xd50
-  __memcg_kmem_charge_memcg+0x58/0x140
-  __memcg_kmem_charge+0xcc/0x280
-  __alloc_pages_nodemask+0x1e1/0x450
-  alloc_pages_current+0xa6/0x120
-  pte_alloc_one+0x17/0xd0
-  __pte_alloc+0x3a/0x1f0
-  copy_p4d_range+0xc36/0x1990
-  copy_page_range+0x21d/0x360
-  dup_mmap+0x5f5/0x7a0
-  dup_mm+0xa2/0x240
-  copy_process+0x1b3f/0x3460
-  _do_fork+0xaa/0xa20
-  __x64_sys_clone+0x13b/0x170
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Now that KUnit is in 5.5, I think there is a solid foundation for
+me to proceed.
 
- write to 0xffff8fb18c4cd190 of 8 bytes by task 1153 on cpu 120:
-  page_counter_try_charge+0x5b/0x150 mm/page_counter.c:139
-  try_charge+0x131/0xd50
-  mem_cgroup_try_charge+0x159/0x460
-  mem_cgroup_try_charge_delay+0x3d/0xa0
-  wp_page_copy+0x14d/0x930
-  do_wp_page+0x107/0x7b0
-  __handle_mm_fault+0xce6/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
-Since the failcnt and watermark are tolerant of some inaccuracy, a data
-race will not be harmful, thus mark them as intentional data races with
-the data_race() macro.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/page_counter.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index de31470655f6..13934636eafd 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -82,8 +82,8 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
- 		 * This is indeed racy, but we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (data_race(new > c->watermark))
-+			data_race(c->watermark = new);
- 	}
- }
- 
-@@ -126,7 +126,7 @@ bool page_counter_try_charge(struct page_counter *counter,
- 			 * This is racy, but we can live with some
- 			 * inaccuracy in the failcnt.
- 			 */
--			c->failcnt++;
-+			data_race(c->failcnt++);
- 			*fail = c;
- 			goto failed;
- 		}
-@@ -135,8 +135,8 @@ bool page_counter_try_charge(struct page_counter *counter,
- 		 * Just like with failcnt, we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (data_race(new > c->watermark))
-+			data_race(c->watermark = new);
- 	}
- 	return true;
- 
--- 
-2.21.0 (Apple Git-122.2)
-
+-Frank
