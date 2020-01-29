@@ -1,101 +1,152 @@
 Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDCCC35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21574C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A877E207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ex3FCk1X"
+	by mail.kernel.org (Postfix) with ESMTP id F32392082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 22:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgA2WdE (ORCPT
+        id S1726754AbgA2Wfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 17:33:04 -0500
-Received: from ozlabs.org ([203.11.71.1]:39457 "EHLO ozlabs.org"
+        Wed, 29 Jan 2020 17:35:41 -0500
+Received: from er-systems.de ([148.251.68.21]:53170 "EHLO er-systems.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgA2WdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 17:33:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726222AbgA2Wfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 17:35:41 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        by er-systems.de (Postfix) with ESMTP id 35E6ED6006D;
+        Wed, 29 Jan 2020 23:35:38 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 487JCb1szQz9s29;
-        Thu, 30 Jan 2020 09:32:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580337180;
-        bh=kNacujBNtky+MXS90bf53so+l7F4oZQu+AtY0NhlJNQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ex3FCk1X/t/U9hHBF2sRLvLfDOEKSrMvujvDnzfhanC0NRvt3DsN24J6O2vyUAMCL
-         zd5wiTlkznS2Qu75ufZ1OmIFrswaqkqp05j3+j6LMqUrpfGqmYe1e76wMt3YBrbgQf
-         QtfvrLVl3YQiAo2dkQLIfIX6m+/43xgK9V5xcy1P7DxsGzUKB4FeH95m/Pdjy7zuB6
-         rePlTin9IP1is3iKQ0qzdOBPp8shvDhtv4oQ90JEN/PgfX5rP/iu/WoApUjxCPBdUa
-         QGVzYQ2EjMHc2l60+oIVwpfchVBbb8SI+M5J1/QfirVBRT1RLaORPWLLuL7cw36A0Z
-         W0Ynqk7uxFNSA==
-Date:   Thu, 30 Jan 2020 09:32:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: mmotm 2020-01-28-20-05 uploaded (security/security.c)
-Message-ID: <20200130093251.16e35ed3@canb.auug.org.au>
-In-Reply-To: <56177bc4-441d-36f4-fe73-4e86edf02899@infradead.org>
-References: <20200129040640.6PNuz0vcp%akpm@linux-foundation.org>
-        <56177bc4-441d-36f4-fe73-4e86edf02899@infradead.org>
+        by er-systems.de (Postfix) with ESMTPS id 14F3ED6006C;
+        Wed, 29 Jan 2020 23:35:38 +0100 (CET)
+Date:   Wed, 29 Jan 2020 23:35:35 +0100 (CET)
+From:   Thomas Voegtle <tv@lio96.de>
+X-X-Sender: thomas@er-systems.de
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+cc:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Voegtle <tv@lio96.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, ronnie sahlberg <ronniesahlberg@gmail.com>,
+        =?ISO-8859-15?Q?Christoph_B=F6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>,
+        Steve French <smfrench@gmail.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH 4.9 183/271] signal: Allow cifs and drbd to receive their
+ terminating signals
+In-Reply-To: <87o8um0xnp.fsf@x220.int.ebiederm.org>
+Message-ID: <alpine.LSU.2.21.2001292333180.22716@er-systems.de>
+References: <20200128135852.449088278@linuxfoundation.org> <20200128135906.176803329@linuxfoundation.org> <alpine.LSU.2.21.2001291201030.14408@er-systems.de> <20200129113643.GB5277@kroah.com> <20200129191203.GA2896@sasha-vm>
+ <87o8um0xnp.fsf@x220.int.ebiederm.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hT0psqc8acn.2nhNMeCMlga";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/mixed; boundary="-74181308-926108817-1580337338=:22716"
+X-Virus-Status: No
+X-Virus-Checker-Version: clamassassin 1.2.4 with clamdscan / ClamAV 0.102.1/25710/Wed Jan 29 12:38:38 2020 signatures .
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hT0psqc8acn.2nhNMeCMlga
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi Randy,
+---74181308-926108817-1580337338=:22716
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-On Tue, 28 Jan 2020 20:52:28 -0800 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
+On Wed, 29 Jan 2020, Eric W. Biederman wrote:
+
+> Sasha Levin <sashal@kernel.org> writes:
 >
-> security/security.c contains duplicate lines for <lockdown_reasons> array:
->=20
-> Stephen, you might delete half of those for linux-next....
+>> On Wed, Jan 29, 2020 at 12:36:43PM +0100, Greg Kroah-Hartman wrote:
+>>> On Wed, Jan 29, 2020 at 12:10:47PM +0100, Thomas Voegtle wrote:
+>>>> On Tue, 28 Jan 2020, Greg Kroah-Hartman wrote:
+>>>>
+>>>>> From: Eric W. Biederman <ebiederm@xmission.com>
+>>>>>
+>>>>> [ Upstream commit 33da8e7c814f77310250bb54a9db36a44c5de784 ]
+>>>>>
+>>>>> My recent to change to only use force_sig for a synchronous events
+>>>>> wound up breaking signal reception cifs and drbd.  I had overlooked
+>>>>> the fact that by default kthreads start out with all signals set to
+>>>>> SIG_IGN.  So a change I thought was safe turned out to have made it
+>>>>> impossible for those kernel thread to catch their signals.
+>>>>>
+>>>>> Reverting the work on force_sig is a bad idea because what the code
+>>>>> was doing was very much a misuse of force_sig.  As the way force_sig
+>>>>> ultimately allowed the signal to happen was to change the signal
+>>>>> handler to SIG_DFL.  Which after the first signal will allow userspace
+>>>>> to send signals to these kernel threads.  At least for
+>>>>> wake_ack_receiver in drbd that does not appear actively wrong.
+>>>>>
+>>>>> So correct this problem by adding allow_kernel_signal that will allow
+>>>>> signals whose siginfo reports they were sent by the kernel through,
+>>>>> but will not allow userspace generated signals, and update cifs and
+>>>>> drbd to call allow_kernel_signal in an appropriate place so that their
+>>>>> thread can receive this signal.
+>>>>>
+>>>>> Fixing things this way ensures that userspace won't be able to send
+>>>>> signals and cause problems, that it is clear which signals the
+>>>>> threads are expecting to receive, and it guarantees that nothing
+>>>>> else in the system will be affected.
+>>>>>
+>>>>> This change was partly inspired by similar cifs and drbd patches that
+>>>>> added allow_signal.
+>>>>>
+>>>>> Reported-by: ronnie sahlberg <ronniesahlberg@gmail.com>
+>>>>> Reported-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+>>>>> Tested-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+>>>>> Cc: Steve French <smfrench@gmail.com>
+>>>>> Cc: Philipp Reisner <philipp.reisner@linbit.com>
+>>>>> Cc: David Laight <David.Laight@ACULAB.COM>
+>>>>> Fixes: 247bc9470b1e ("cifs: fix rmmod regression in cifs.ko caused by force_sig changes")
+>>>>> Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+>>>>
+>>>> These two commits come with that release, but...
+>>>>
+>>>>> Fixes: fee109901f39 ("signal/drbd: Use send_sig not force_sig")
+>>>>> Fixes: 3cf5d076fb4d ("signal: Remove task parameter from force_sig")
+>>>>
+>>>> ...these two commits not and were never added to 4.9.y.
+>>>>
+>>>> Are these both really not needed?
+>>>
+>>> I don't think so, do you feel otherwise?
+>>
+>> Both of those commits read as a cleanup to me. I've actually slightly
+>> modified to patch to not need those commits (they were less than trivial
+>> to backport as is).
+>
+> All of these changes were cleanup.  Which is why I didn't tag any of
+> them for stable.
+>
+> Not to say that there weren't real problems using force_sig instead
+> of send_sig.  force_sig does nothing to ensure the task it is sending
+> signals to won't, and hasn't gone away.  Which is why it is a bad
+> idea to use force_sig on anything but current.  As I recall drbd used
+> force_sig on a kernel_thread which didn't go away.
+>
+> When fixing the force_sig vs send_sig confusion I didn't realize that
+> some places were using force_sig because they had not enabled receiving
+> the signals they depended on.  Which is where allow_kernel_signal comes
+> from.  But while using force_sig allow_kernel_signal is not necessary.
+>
+> Eric
 
-I did not get that in my import of mmotm today.  But I actually git
-merge the appropriate part of linux-next rather than applying the
-linux-next.patch from mmotm - so that may have taken care of it.
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks for clarification.
 
---Sig_/hT0psqc8acn.2nhNMeCMlga
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+       Thomas
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4yCBMACgkQAVBC80lX
-0GxZwAf/ax84ntnjUlSEUbrRhOtzhkbCC0qfQRNOTKs4fDx067hyyDhauWtomiRK
-MZQYkycawPmOiDwBhuaDpt7sYfa0/SculyJff5znss4VzIFrGjiHKRRfvsczKsqK
-9y7yDCbR4PI2iIfId4iRp5qtj1Sx8NhUclS41DfgKFSsLicXrjWEcEVCqfjzKTjX
-t9sUKS02kqpqY9YFN1+H87rvw/MTqYl5vKc2lbWQzE9DXxUqSwW972sTt2p2PEqT
-tGkBV0tpmYvzP6E8Fbn8yQY5i8xen44TpVoMFRRdbutat74drdvKDUpVHxWUZsu3
-3otwkaIwi2M98a6uRHAgMyJ/h0pMuA==
-=FooJ
------END PGP SIGNATURE-----
+---74181308-926108817-1580337338=:22716--
 
---Sig_/hT0psqc8acn.2nhNMeCMlga--
