@@ -2,98 +2,104 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197B3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCF8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F5B20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1B420716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 15:16:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WIYmU0En"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgA2POM convert rfc822-to-8bit (ORCPT
+        id S1726921AbgA2PQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 10:14:12 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:33245 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726795AbgA2POM (ORCPT
+        Wed, 29 Jan 2020 10:16:02 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46526 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgA2PQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 10:14:12 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-88-Q3tD76DDPH-PeBm5aDekKg-1; Wed, 29 Jan 2020 15:14:06 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 29 Jan 2020 15:14:05 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 29 Jan 2020 15:14:05 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Hans de Goede' <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        vipul kumar <vipulk0511@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        "Srikanth Krishnakar" <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        "x86@kernel.org" <x86@kernel.org>, Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: RE: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
- Intel Bay Trail SoC
-Thread-Topic: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
- Intel Bay Trail SoC
-Thread-Index: AQHV1rBGPy/8IrcoPUazhYLIIVdqQagBv6/g
-Date:   Wed, 29 Jan 2020 15:14:05 +0000
-Message-ID: <bfaf3336a54b4f70bb4e12f1936c20c9@AcuMS.aculab.com>
-References: <CADdC98TE4oNWZyEsqXzr+zJtfdTTOyeeuHqu1u04X_ktLHo-Hg@mail.gmail.com>
- <20200123144108.GU32742@smile.fi.intel.com>
- <df04f43d-8c6d-7602-cb50-535b85cf2aaa@redhat.com>
- <87iml11ccf.fsf@nanos.tec.linutronix.de>
- <c06260e3-bd19-bf3c-89f7-d36bdb9a5b20@redhat.com>
- <87ftg5131x.fsf@nanos.tec.linutronix.de>
- <30d49be8-67ad-6f32-37a8-0cdd26f0852e@redhat.com>
- <87sgjz434v.fsf@nanos.tec.linutronix.de>
- <20200129130350.GD32742@smile.fi.intel.com>
- <0d361322-87aa-af48-492c-e8c4983bb35b@redhat.com>
- <20200129141444.GE32742@smile.fi.intel.com>
- <91cdda7a-4194-ebe7-225d-854447b0436e@redhat.com>
-In-Reply-To: <91cdda7a-4194-ebe7-225d-854447b0436e@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 29 Jan 2020 10:16:02 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00TFDJXg152160;
+        Wed, 29 Jan 2020 15:15:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=AUHscgmUga0TtBYeVkbnnpKK+M7Sw+pMq45avp9+6iU=;
+ b=WIYmU0EnZ2PDeYYj/uBUPVnBElQB0hzKUlvOMu60sBK3tlsORcfKny7Z7f5oV614/8MZ
+ e/LQyT7RdaQBcWnGUo2Nf4CytynPC1hzyU5p/bleGOxG1fiFtKmyIvev5znKZbZALiji
+ yBzAK6XPiJl9BuZFv7ZnwY/t0L+vGWt7nTw13zaNcKt12hZq2olNunmCcNwQMZKL4UZE
+ 5WNJDWF/LLC8u/ba5MwxQzsrykCrHxsXXvpgiLX93/hJ98/FX6TdH2kM/kG3XiTZAoaH
+ YyphCBYAEA34Zz28Oc62aIPEjhdAl2j+FyrhUAv5QJEvPpt3cp0eb50m8HcQejw3mSYY nw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xrdmqp4a0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 15:15:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00TFDoeo062067;
+        Wed, 29 Jan 2020 15:15:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xth5kdyy4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jan 2020 15:15:54 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00TFFnYA028842;
+        Wed, 29 Jan 2020 15:15:51 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jan 2020 07:15:48 -0800
+Date:   Wed, 29 Jan 2020 18:15:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: Re: [PATCH] staging: exfat: remove 'vol_type' variable.
+Message-ID: <20200129151541.GB1778@kadam>
+References: <20200129111232.78539-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
-X-MC-Unique: Q3tD76DDPH-PeBm5aDekKg-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129111232.78539-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001290128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9514 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001290128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede
-> Sent: 29 January 2020 14:28
-...
-> > Btw, why we are mentioning 20 / 6 and 28 / 6 when arithmetically
-> > it's the same as 10 / 3 and 14 / 3?
-> 
-> I copied the BYT values from Thomas' email and I guess he did not
-> get around to simplifying them, I'll use the simplified versions
-> for my patch.
+On Wed, Jan 29, 2020 at 08:12:32PM +0900, Tetsuhiro Kohada wrote:
+> @@ -2085,7 +2069,7 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
+>  
+>  	cpos = ctx->pos;
+>  	/* Fake . and .. for the root directory. */
+> -	if ((p_fs->vol_type == EXFAT) || (inode->i_ino == EXFAT_ROOT_INO)) {
+> +	if (inode->i_ino == EXFAT_ROOT_INO) {
 
-If those multiplier/divider values came from either official docs or
-hardware registers I'd not simplify them.
+This isn't right.  The first condition is always true so in the original
+code we never bothered to check the second condition.
 
-	David
+>  		while (cpos < 2) {
+>  			if (inode->i_ino == EXFAT_ROOT_INO)
+>  				inum = EXFAT_ROOT_INO;
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+regards,
+dan carpenter
 
