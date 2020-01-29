@@ -2,111 +2,134 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60934C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2D2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378CF2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:32:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAqfA2Q2"
+	by mail.kernel.org (Postfix) with ESMTP id 39E6D2051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 01:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgA2BcV (ORCPT
+        id S1726482AbgA2Bio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 Jan 2020 20:32:21 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40567 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgA2BcU (ORCPT
+        Tue, 28 Jan 2020 20:38:44 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33395 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbgA2Bio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 Jan 2020 20:32:20 -0500
-Received: by mail-io1-f67.google.com with SMTP id x1so16730938iop.7;
-        Tue, 28 Jan 2020 17:32:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OINYauu/FMq3XOWWth+EZlBMMQYby1FB2lj9pkceckU=;
-        b=DAqfA2Q2IZOL2p+2+8mDc/eHucTMeIe195YcmRbXqZPEQ1BUrWJYhTKOc45wFCj9ws
-         qbFljs2PdS4QccbtjDeRr/7+YuC89DjKx7uQZF1J2oq7VpqynyNalFg6ZtDfK+7RuS3R
-         md1a3GGnY9KMsn7gylymfHEXOE1Ny6CEuhGalSwdeX1bajGEraP7Kl15ewD3IypqbYpA
-         epvg5KOjAvhjqPuPbopUTfxjXQCHv6uc2O84Bu3Sh5nxujCgLg21xyUkSJoEjgbWMNLE
-         IHTLPOOU7viAze8jUrPhhh6niIsEKPJB8qwKXsqEyqIgAiUdtV70gykK/66fJQVHHmJA
-         Yx6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OINYauu/FMq3XOWWth+EZlBMMQYby1FB2lj9pkceckU=;
-        b=VhPVF/ePIVbfwYR8PzLEXomGgBIqHttNQ0Xk5qjDn2oVxIH9l25rgZH0jDh7taW9P2
-         EXzU9OFEn3XJ0EwrkBdNhjbEVEyxTgfzdaRlUdPcp9LPP4WMkSyhIDl/ah1vCwpTF7SW
-         BPTKVN0fiiO2Bw0YCKShF/zqVaW24s8rnfvGuGn6oDrFUroNBhQqjj/m0iCy1W77Kuos
-         mEf2+40qgXgqL7O3o7jmnzInMbNtRTr1DBEZbpSRg7Re5l9dDDLu2CP9kK6qvhyYZzJd
-         u6SSio9Nj/trrWQTFdTVMj1YjH9bvKZAiICcjrExzdZcADY0YiRBtc0t35E9GLbUtkWf
-         HMkQ==
-X-Gm-Message-State: APjAAAW8dJK5xzpq9WevC3rOty6tvdK4FdI4QRnd0ezWAAx5HK1zJuqN
-        jEoNohoIP13CCI+yJCb8c8h4EiJvI8dAJnntFy8=
-X-Google-Smtp-Source: APXvYqyjDYSrA853V/qdJsqhISgAYNfOdiEApwa11SxBrKEwiNeyKkuwVJIZChAAe9De33mzBsnHuRnoewo1Vkt9BBY=
-X-Received: by 2002:a02:3508:: with SMTP id k8mr15363989jaa.114.1580261539263;
- Tue, 28 Jan 2020 17:32:19 -0800 (PST)
+        Tue, 28 Jan 2020 20:38:44 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 423E27EA451;
+        Wed, 29 Jan 2020 12:38:40 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iwcJT-0006Af-LC; Wed, 29 Jan 2020 12:38:39 +1100
+Date:   Wed, 29 Jan 2020 12:38:39 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 12/12] iomap: Convert from readpages to readahead
+Message-ID: <20200129013839.GL18610@dread.disaster.area>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-13-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200124144248.11719-1-yu.c.chen@intel.com> <20200124193142.GA33298@google.com>
-In-Reply-To: <20200124193142.GA33298@google.com>
-From:   Dan Williams <dan.j.williams.korg@gmail.com>
-Date:   Tue, 28 Jan 2020 17:32:07 -0800
-Message-ID: <CANTgghm_ZC29PF3m-7u74RWU0LiKOcodf-CqhSzsQPdu05qrJg@mail.gmail.com>
-Subject: Re: [PATCH][RFC] PCI: Add "pci=blacklist_dev=" parameter to blacklist
- specific devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Chen Yu <yu.c.chen@intel.com>, linux-pci@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200125013553.24899-13-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=rbi3LzHp19PN_Qk40xAA:9
+        a=PRpOWFZumF8D-HGV:21 a=3BwcHNtil7AkR3Nb:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 1:01 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jan 24, 2020 at 10:42:48PM +0800, Chen Yu wrote:
-> > It was found that on some platforms the bogus pci device might bring
-> > troubles to the system. For example, on a MacBookPro the system could
-> > not be power off or suspended due to internal pci resource confliction
-> > between bogus pci device and [io 0x1804]. Another case is that, once
-> > resumed from hibernation on a VM, the pci config space of a pci device
-> > is corrupt.
-> >
-> > To narrow down and benefit future debugging for such kind of issues,
-> > introduce the command line blacklist_dev=<vendor:device_id>> to blacklist
-> > such pci devices thus they will not be scanned thus not visible after
-> > bootup. For example,
-> >
-> >  pci.blacklist_dev=8086:293e
-> >
-> > forbid the audio device to be exposed to the OS.
->
-> I'm not really a fan of this.  I'd rather see some details about what
-> the problem is so we can actually fix it.
->
-> Ignoring the device doesn't mean the device is removed or even
-> inactive.  It may still be consuming address space that we need to
-> avoid.
->
-> Can you point us to bug reports about the issues you mentioned?
+On Fri, Jan 24, 2020 at 05:35:53PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Use the new readahead operation in XFS and iomap.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: linux-xfs@vger.kernel.org
 
-I'm not sure which issues Chen Yu is referring to, but a proposal like
-has come up before [1], and didn't go anywhere.
+....
+> +unsigned
+> +iomap_readahead(struct address_space *mapping, pgoff_t start,
+>  		unsigned nr_pages, const struct iomap_ops *ops)
+>  {
+>  	struct iomap_readpage_ctx ctx = {
+> -		.pages		= pages,
+>  		.is_readahead	= true,
+>  	};
+> -	loff_t pos = page_offset(list_entry(pages->prev, struct page, lru));
+> -	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+> -	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+> +	loff_t pos = start * PAGE_SIZE;
+> +	loff_t length = nr_pages * PAGE_SIZE;
+>  
+> -	trace_iomap_readpages(mapping->host, nr_pages);
+> +	trace_iomap_readahead(mapping->host, nr_pages);
+>  
+>  	while (length > 0) {
+> -		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+> -				&ctx, iomap_readpages_actor);
+> +		loff_t ret = iomap_apply(mapping->host, pos, length, 0, ops,
+> +				&ctx, iomap_readahead_actor);
+>  		if (ret <= 0) {
+>  			WARN_ON_ONCE(ret == 0);
+> -			goto done;
+> +			break;
+>  		}
+>  		pos += ret;
+>  		length -= ret;
+>  	}
+> -	ret = 0;
+> -done:
+> +
+>  	if (ctx.bio)
+>  		submit_bio(ctx.bio);
+> -	if (ctx.cur_page) {
+> -		if (!ctx.cur_page_in_bio)
+> -			unlock_page(ctx.cur_page);
+> +	if (ctx.cur_page && ctx.cur_page_in_bio)
+>  		put_page(ctx.cur_page);
+> -	}
+>  
+> -	/*
+> -	 * Check that we didn't lose a page due to the arcance calling
+> -	 * conventions..
+> -	 */
+> -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+> -	return ret;
+> +	return length / PAGE_SIZE;
 
-I think this is useful to people doing new / pre-release hardware
-bring up, but it's unlikely that such hardware makes it into a
-production to make this feature useful upstream. Hardware bring-up
-efforts can just use local hacks to workaround problems, if broken
-hardware actually makes it into production it needs precise quirks to
-be developed/applied.
+Took me quite some time to get my head around whether this was
+correct or not.
 
-[1]: http://lore.kernel.org/r/1506544822-2632-2-git-send-email-jonathan.derrick@intel.com
+I'm still not certain in the cases where block size != page size and
+we've got an extent boundary in the middle of the page and had a
+read error on the second extent in the page. In this case,
+ctx.cur_page_in_bio is true so we drop the readahead reference to
+the page. Also, length is not a multiple of page size, and so the
+nr_pages value returned includes the partial page that we have IO
+underway on.
+
+That, I think, leads to both a double unlock and a double put_page()
+of the partial page in question.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
