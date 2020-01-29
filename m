@@ -2,284 +2,133 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C86C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595AEC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADCE20716
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVRV084t"
+	by mail.kernel.org (Postfix) with ESMTP id 2CA1120720
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 08:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgA2IIP (ORCPT
+        id S1726184AbgA2IQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 03:08:15 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43878 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgA2IIO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 03:08:14 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 9so11203062lfq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 00:08:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
-        b=dVRV084tz91H08y/W1Rz55YPretevnrzU6jwSmA9j90Ssgjd4CkAgldxJ6Py1fjutk
-         Xw3HxmIbEUYx5qg8WgWm9bFXWvnx42unvmMFgr9y549uuZvcoUSrkwbclnXtxxlOM3x3
-         HpByR+smBdAeeItsd9z1zU5gThYR/iprm4QdmkCMOeT5/Hwmto4D+Sk2TwOtc8XVkoKM
-         ghXVCW62zQh6IVJHciCsT1e/oYHPRZSz3bOeuly527ZKQFaR/Z2SwO1YBeY+GuuVF34n
-         zSlzd8NnMapPlwSYfiC/ABlDdWHKYJ80mB7LA0rg+Q98NM83s+Y8HS6u1XCU8Bz0qRwX
-         1Igg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
-        b=J+6wpsc6epYhycgaxUxJM4KRyuGn37TUJukjX9/jNzPzI3uO6/U6Hra9hK1Gl6Bl5G
-         8nflxqj5bilNNQXfCGxCsvokEQARoghfZUuWCaW+I8jcVS00WBy8+IJR+vp45zxBsxb3
-         q/36NmzLnYP8w90xJ8GboT7JqrMZnJPY81g44fhrpoVpPtUmogcjqHVKq16QW7K2SPes
-         OGr9T1Io/fT5T9wdOFcXVSPiHfYe9rLqPN2BblpF9sMSGq2U/U9iEijZMnEcc19Lj0/4
-         f0pe8BBmkrgdXNWoKARf4DcNqyFBJ0pDqYgLXhcKArSeQB6garqJTmeofhU2hbEboW/Z
-         y+pg==
-X-Gm-Message-State: APjAAAX/ZDbknF3ak3WNtm8LDUZxrk0aYdAnb4/+2ts5v9NFI05Hd6og
-        a1eEkUBCMFu4zSksGdGeSULQ0g5wVim+PBa+qeE+fg==
-X-Google-Smtp-Source: APXvYqzIR86t4QWIzXBIDieiwUq/COanEmng+XNaKE9Ear4DeQ+gsxM6/wz45xd6QZueJT54KTxAjPCevfSlK0/QLKI=
-X-Received: by 2002:a19:dc14:: with SMTP id t20mr4855539lfg.47.1580285291932;
- Wed, 29 Jan 2020 00:08:11 -0800 (PST)
+        Wed, 29 Jan 2020 03:16:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:37986 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbgA2IQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 03:16:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3264F328;
+        Wed, 29 Jan 2020 00:16:40 -0800 (PST)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC113F52E;
+        Wed, 29 Jan 2020 00:20:16 -0800 (PST)
+Date:   Wed, 29 Jan 2020 08:16:36 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com, adharmap@codeaurora.org
+Subject: Re: [PATCH v3 1/3] sched/fair: Add asymmetric CPU capacity wakeup
+ scan
+Message-ID: <20200129081633.3ezb7ucq5kkojkhg@e107158-lin>
+References: <20200126200934.18712-1-valentin.schneider@arm.com>
+ <20200126200934.18712-2-valentin.schneider@arm.com>
+ <20200128062245.GA27398@codeaurora.org>
+ <1ed322d6-0325-ecac-cc68-326a14b8c1dd@arm.com>
+ <20200129035258.GB27398@codeaurora.org>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Jan 2020 09:08:01 +0100
-Message-ID: <CACRpkdYYKS0jMOUu77cudjzOFnHPm3K3aOnmGgUkdVFHz=RSmQ@mail.gmail.com>
-Subject: [GIT PULL] GPIO changes for v5.6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200129035258.GB27398@codeaurora.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 01/29/20 09:22, Pavan Kondeti wrote:
+> On Tue, Jan 28, 2020 at 11:30:26AM +0000, Valentin Schneider wrote:
+> > Hi Pavan,
+> > 
+> > On 28/01/2020 06:22, Pavan Kondeti wrote:
+> > > Hi Valentin,
+> > > 
+> > > On Sun, Jan 26, 2020 at 08:09:32PM +0000, Valentin Schneider wrote:
+> > >>  
+> > >> +static inline int check_cpu_capacity(struct rq *rq, struct sched_domain *sd);
+> > >> +
+> > >> +/*
+> > >> + * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
+> > >> + * the task fits. If no CPU is big enough, but there are idle ones, try to
+> > >> + * maximize capacity.
+> > >> + */
+> > >> +static int select_idle_capacity(struct task_struct *p, int target)
+> > >> +{
+> > >> +	unsigned long best_cap = 0;
+> > >> +	struct sched_domain *sd;
+> > >> +	struct cpumask *cpus;
+> > >> +	int best_cpu = -1;
+> > >> +	struct rq *rq;
+> > >> +	int cpu;
+> > >> +
+> > >> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
+> > >> +		return -1;
+> > >> +
+> > >> +	sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
+> > >> +	if (!sd)
+> > >> +		return -1;
+> > >> +
+> > >> +	sync_entity_load_avg(&p->se);
+> > >> +
+> > >> +	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+> > >> +	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+> > >> +
+> > >> +	for_each_cpu_wrap(cpu, cpus, target) {
+> > >> +		rq = cpu_rq(cpu);
+> > >> +
+> > >> +		if (!available_idle_cpu(cpu))
+> > >> +			continue;
+> > >> +		if (task_fits_capacity(p, rq->cpu_capacity))
+> > >> +			return cpu;
+> > > 
+> > > I have couple of questions.
+> > > 
+> > > (1) Any particular reason for not checking sched_idle_cpu() as a backup
+> > > for the case where all eligible CPUs are busy? select_idle_cpu() does
+> > > that.
+> > > 
+> > 
+> > No particular reason other than we didn't consider it, I think. I don't see
+> > any harm in folding it in, I'll do that for v4. I am curious however; are
+> > you folks making use of SCHED_IDLE? AFAIA Android isn't making use of it
+> > yet, though Viresh paved the way for that to happen.
+> > 
+> 
+> We are not using SCHED_IDLE in product setups. I am told Android may use it
+> for background tasks in future. I am not completely sure though. I asked it
+> because select_idle_cpu() is using it.
 
-here is the bulk of the GPIO changes for v5.6.
-This is a pretty calm cycle so far, nothing special going
-on really. Some more changes will come in from the
-irqchip and pin control trees.
+I believe Viresh intention when he pushed for the support was allowing this use
+case.
 
-I also delete an orphan include file for FMC that was
-dangling since I deleted that subsystem through the
-GPIO tree it comes here again.
+FWIW, I had a patch locally to implement this but waiting on latency_nice
+attribute to go in [1] before I attempt to upstream it.
 
-Please pull it in!
+The design goals I had in mind:
 
-Yours,
-Linus Walleij
+	1. If there are multiple energy efficient CPUs we can select, select
+	   the idle one.
+	2. If latency nice is set and the most energy efficient CPU is not
+	   idle, then fallback to the most energy efficient idle CPU.
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+Android use case needs EAS path support before it can be useful to it.
 
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+[1] https://lore.kernel.org/lkml/20190919144259.vpuv7hvtqon4qgrv@e107158-lin.cambridge.arm.com/
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.6-1
-
-for you to fetch changes up to 0282c72d30d32913d641dc81f3f38607ace98802:
-
-  Merge tag 'gpio-updates-for-v5.6-part2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
-(2020-01-26 01:01:55 +0100)
-
-----------------------------------------------------------------
-This is the bulk of GPIO changes for the v5.6 kernel cycle
-
-Core changes:
-
-- Document the usecases for the kernelspace vs userspace
-  handling of GPIOs.
-
-- Handle MSI (message signalled interrupts) properly in the
-  core hierarchical irqdomain code.
-
-- Fix a rare race condition while initializing the descriptor
-  array.
-
-New drivers:
-
-- Xylon LogiCVC GPIO driver.
-
-- WDC934x GPIO controller driver.
-
-Driver improvements:
-
-- Implemented suspend/resume in the Tegra driver.
-
-- MPC8xx edge detection fixup.
-
-- Properly convert ThunderX to use hierarchical irqdomain
-  with GPIOLIB_IRQCHIP on top of the revert of the previous
-  buggy switchover. This time it works (hopefully).
-
-Misc:
-
-- Drop a FMC remnant file <linux/ipmi-fru.h>
-
-- A slew of fixes.
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      gpio: pca953x: Remove redundant forward declaration
-      gpiolib: Make use of assign_bit() API
-
-Bartosz Golaszewski (8):
-      gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
-      gpiolib: have a single place of calling set_config()
-      gpiolib: convert the type of hwnum to unsigned int in gpiochip_get_desc()
-      gpiolib: use gpiochip_get_desc() in linehandle_create()
-      gpiolib: use gpiochip_get_desc() in lineevent_create()
-      gpiolib: use gpiochip_get_desc() in gpio_ioctl()
-      gpio: mockup: update the license tag
-      gpio: mockup: sort headers alphabetically
-
-Dan Callaghan (1):
-      gpiolib: hold gpio devices lock until ->descs array is initialised
-
-Dmitry Osipenko (3):
-      gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
-      gpio: tegra: Properly handle irq_set_irq_wake() error
-      gpio: tegra: Use NOIRQ phase for suspend/resume
-
-Enrico Weigelt, metux IT consult (2):
-      gpio: remove unneeded MODULE_VERSION() usage
-      gpio: gpiolib: fix confusing indention
-
-Geert Uytterhoeven (2):
-      gpiolib: Add GPIOCHIP_NAME definition
-      dt-bindings: gpio: rcar: Document r8a77961 support
-
-Jia-Ju Bai (2):
-      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
-grgpio_remove()
-      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
-grgpio_irq_map/unmap()
-
-Kevin Hao (6):
-      Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
-      gpiolib: Add support for the irqdomain which doesn't use irq_fwspec as arg
-      gpiolib: Add the support for the msi parent domain
-      gpio: thunderx: Switch to GPIOLIB_IRQCHIP
-      gpio: Fix the no return statement warning
-      gpiolib: Lower verbosity when allocating hierarchy irq
-
-Linus Walleij (6):
-      Merge tag 'gpio-updates-for-v5.6-part1' of
-git://git.kernel.org/.../brgl/linux into devel
-      gpio: Update TODO
-      gpio: Add use guidance documentation
-      Merge tag 'v5.5-rc6' into devel
-      Merge branch 'fixup-thunderx-hierarchy' into devel
-      Merge tag 'gpio-updates-for-v5.6-part2' of
-git://git.kernel.org/.../brgl/linux into devel
-
-Lukas Bulwahn (1):
-      fmc: remove left-over ipmi-fru.h after fmc deletion
-
-Matti Vaittinen (1):
-      docs: driver-model: Add missing managed GPIO array get functions
-
-Maxim Kiselev (1):
-      gpio: mvebu: clear irq in edge cause register before unmask edge irq
-
-Ooi, Joyce (2):
-      gpio: altera: change to platform_get_irq_optional to avoid
-false-positive error
-      MAINTAINERS: Replace Tien Hock Loh as Altera PIO maintainer
-
-Paul Kocialkowski (4):
-      dt-bindings: Add Xylon vendor prefix
-      dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-      dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
-      gpio: Add support for the Xylon LogiCVC GPIOs
-
-Peng Fan (2):
-      gpio: mvebu: use platform_irq_count
-      gpio: bcm-kona: use platform_irq_count
-
-Sachin agarwal (2):
-      gpio: vx855: fixed a typo
-      gpio: aspeed-sgpio: fixed typos
-
-Shaokun Zhang (1):
-      gpio: Remove the unused flags
-
-Song Hui (1):
-      gpio: mpc8xxx: ls1088a/ls1028a edge detection mode bug fixs.
-
-Srinivas Kandagatla (2):
-      dt-bindings: gpio: wcd934x: Add bindings for gpio
-      gpio: wcd934x: Add support to wcd934x gpio controller
-
-Stephen Boyd (1):
-      gpiolib: Set lockdep class for hierarchical irq domains
-
-Vignesh Raghavendra (1):
-      gpio: pca953x: Don't hardcode irq trigger type
-
-YueHaibing (2):
-      gpiolib: remove set but not used variable 'config'
-      gpiolib: Remove duplicated function gpio_do_set_config()
-
- .../bindings/gpio/qcom,wcd934x-gpio.yaml           |  47 ++++++
- .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   3 +-
- .../bindings/gpio/xylon,logicvc-gpio.yaml          |  69 ++++++++
- .../devicetree/bindings/mfd/xylon,logicvc.yaml     |  50 ++++++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- Documentation/driver-api/driver-model/devres.rst   |   2 +
- Documentation/driver-api/gpio/drivers-on-gpio.rst  |   8 +-
- Documentation/driver-api/gpio/index.rst            |   1 +
- Documentation/driver-api/gpio/using-gpio.rst       |  50 ++++++
- MAINTAINERS                                        |   2 +-
- drivers/gpio/Kconfig                               |  13 ++
- drivers/gpio/Makefile                              |   2 +
- drivers/gpio/TODO                                  |  46 +++++-
- drivers/gpio/gpio-altera.c                         |   2 +-
- drivers/gpio/gpio-aspeed-sgpio.c                   |   2 +-
- drivers/gpio/gpio-aspeed.c                         |   2 +-
- drivers/gpio/gpio-bcm-kona.c                       |  12 +-
- drivers/gpio/gpio-creg-snps.c                      |   4 +-
- drivers/gpio/gpio-grgpio.c                         |  15 +-
- drivers/gpio/gpio-logicvc.c                        | 170 +++++++++++++++++++
- drivers/gpio/gpio-mockup.c                         |  16 +-
- drivers/gpio/gpio-mpc8xxx.c                        |   1 +
- drivers/gpio/gpio-mvebu.c                          |   8 +-
- drivers/gpio/gpio-pca953x.c                        |   5 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |   1 -
- drivers/gpio/gpio-tb10x.c                          |   1 -
- drivers/gpio/gpio-tegra.c                          |  21 ++-
- drivers/gpio/gpio-tegra186.c                       |  13 +-
- drivers/gpio/gpio-thunderx.c                       |  36 +++-
- drivers/gpio/gpio-vx855.c                          |   2 +-
- drivers/gpio/gpio-wcd934x.c                        | 121 ++++++++++++++
- drivers/gpio/gpiolib-sysfs.c                       |   7 +-
- drivers/gpio/gpiolib.c                             | 182 ++++++++++-----------
- drivers/gpio/gpiolib.h                             |   5 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |   2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
- include/linux/gpio/driver.h                        |  26 ++-
- include/linux/ipmi-fru.h                           | 134 ---------------
- 38 files changed, 768 insertions(+), 317 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
- create mode 100644
-Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
- create mode 100644 Documentation/driver-api/gpio/using-gpio.rst
- create mode 100644 drivers/gpio/gpio-logicvc.c
- create mode 100644 drivers/gpio/gpio-wcd934x.c
- delete mode 100644 include/linux/ipmi-fru.h
+--
+Qais Yousef
