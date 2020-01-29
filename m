@@ -2,162 +2,114 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59641C33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3869AC33CB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2482E207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580328111;
-	bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=h0kycsH1Ip50FpellthQwssJ56gB+giIxLVBFMi6gG6fjd5pI3hfy8H+WM1j1Plh0
-	 LrfSosJfI2alpZtOTFDl09S063EyXNv5cYHgZtUIaBgVCawqHa+VRpOk8l+mFVacDW
-	 AJis+88Ymg0gWfdYyZhObJaha0r3E5pLgJM6DYl4=
+	by mail.kernel.org (Postfix) with ESMTP id 1147120716
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 20:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ippYGBsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgA2UBu (ORCPT
+        id S1727612AbgA2UBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 15:01:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgA2UBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 15:01:50 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B276F2067C;
-        Wed, 29 Jan 2020 20:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580328109;
-        bh=eUqnYUa8xJcvz8vjf0xZN38k+FZQvoRAsBz21Xm6sZU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rjv5RFPqGSLFBb+bMIdmwauMlY6BQgrgduh+b+BbCWLmSNE5sAYkGdk3gjtU5l0cm
-         yM1Mevx+pg8NIM1pZfvo4qhbpqD3PvHGA8bqty+FHme7kVyyJLyOe0Au3HwLzHqd3c
-         2zZHeagcFw2DxanCXC2NByH9ip34n2nnY56U3X64=
-Date:   Wed, 29 Jan 2020 20:01:43 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, joel@jms.id.au, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v1 2/2] iio: adc: modify NPCM reset support
-Message-ID: <20200129200143.08bf4a91@archlinux>
-In-Reply-To: <20200119110032.124745-2-tmaimon77@gmail.com>
-References: <20200119110032.124745-1-tmaimon77@gmail.com>
-        <20200119110032.124745-2-tmaimon77@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 Jan 2020 15:01:53 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6546 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgA2UBv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 15:01:51 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e31e4980000>; Wed, 29 Jan 2020 12:01:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 12:01:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 Jan 2020 12:01:48 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 Jan
+ 2020 20:01:48 +0000
+Subject: Re: [PATCH 0/3] mm/gup: track FOLL_PIN pages (follow on from v12)
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200125021115.731629-1-jhubbard@nvidia.com>
+ <20200125162339.GA41770@unreal> <20200129054756.GB3326@unreal>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <7a15be06-d136-ff30-da91-413f0a6c8751@nvidia.com>
+Date:   Wed, 29 Jan 2020 12:01:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200129054756.GB3326@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580328088; bh=gkreWAfR1M+wLvQaa+HnNfcLQr5xiP6TxB2x+oFum4o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ippYGBsVdG9T4zX85tpivCTQKJit87UpTnxeUNDUsBjvxw+Z3Hx3W6lQzgZet3Xp9
+         EM1+O2NRB9ZxGvEoO7itzfQUnAPIo9aOKxD07WpYwKDIDyQFZRHLADxdSfn8rG8ycN
+         +Pn30KypxWRy19foPRQ6Nre4HHcjLtg2k0xYwI+EjXfIpKml7mA+1nZAh+gNpCFMBT
+         dANWHhA7drtMu5P6H3QMnuWie3RZRYFb0Q2TyXxMG4P0rvlRtL6NtJqHHl/Qilz3vz
+         UEznaHLnmYby2Lot0SMwG0KjACmYTn5Gba5q2JV1w5SpQGyqrL+ozBxsJfiDoI5Nyp
+         0jjKX0dYdcq3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jan 2020 13:00:32 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
-
-> Modify NPCM ADC reset support from
-> direct register access to reset controller support.
+On 1/28/20 9:47 PM, Leon Romanovsky wrote:
+> On Sat, Jan 25, 2020 at 06:23:39PM +0200, Leon Romanovsky wrote:
+>> On Fri, Jan 24, 2020 at 06:11:12PM -0800, John Hubbard wrote:
+>>> Leon Romanovsky:
+>>>
+>>> If you get a chance, I'd love to have this short series (or even just
+>>> the first patch; the others are just selftests) run through your test
+>>> suite that was previously choking on my earlier v11 patchset. The huge
+>>> page pincount limitations are removed, so I'm expecting a perfect test
+>>> run this time!
+>>>
+>>
+>> I added those patches to our regression and I will post the in the
+>> couple of days.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-
-Hmm.  This presumably breaks all old DT. 
-
-If that's not a problem please say why.
-
-Jonathan
-
-> ---
->  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
->  1 file changed, 9 insertions(+), 21 deletions(-)
+> Hi John,
 > 
-> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-> index a6170a37ebe8..83bad2d5575d 100644
-> --- a/drivers/iio/adc/npcm_adc.c
-> +++ b/drivers/iio/adc/npcm_adc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/spinlock.h>
->  #include <linux/uaccess.h>
-> +#include <linux/reset.h>
->  
->  struct npcm_adc {
->  	bool int_status;
-> @@ -23,13 +24,9 @@ struct npcm_adc {
->  	struct clk *adc_clk;
->  	wait_queue_head_t wq;
->  	struct regulator *vref;
-> -	struct regmap *rst_regmap;
-> +	struct reset_control *reset;
->  };
->  
-> -/* NPCM7xx reset module */
-> -#define NPCM7XX_IPSRST1_OFFSET		0x020
-> -#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
-> -
->  /* ADC registers */
->  #define NPCM_ADCCON	 0x00
->  #define NPCM_ADCDATA	 0x04
-> @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
->  					       msecs_to_jiffies(10));
->  	if (ret == 0) {
->  		regtemp = ioread32(info->regs + NPCM_ADCCON);
-> -		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-> +		if (regtemp & NPCM_ADCCON_ADC_CONV) {
->  			/* if conversion failed - reset ADC module */
-> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-> -				     NPCM7XX_IPSRST1_ADC_RST);
-> +			reset_control_assert(info->reset);
->  			msleep(100);
-> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-> -				     0x0);
-> +			reset_control_deassert(info->reset);
->  			msleep(100);
->  
->  			/* Enable ADC and start conversion module */
-> @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	struct npcm_adc *info;
->  	struct iio_dev *indio_dev;
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *np = pdev->dev.of_node;
->  
->  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
->  	if (!indio_dev)
-> @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	if (IS_ERR(info->regs))
->  		return PTR_ERR(info->regs);
->  
-> +	info->reset = devm_reset_control_get(&pdev->dev, NULL);
-> +	if (IS_ERR(info->reset))
-> +		return PTR_ERR(info->reset);
-> +
->  	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(info->adc_clk)) {
->  		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
-> @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
->  	div = div >> NPCM_ADCCON_DIV_SHIFT;
->  	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
->  
-> -	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
-> -		info->rst_regmap = syscon_regmap_lookup_by_compatible
-> -			("nuvoton,npcm750-rst");
-> -		if (IS_ERR(info->rst_regmap)) {
-> -			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
-> -			ret = PTR_ERR(info->rst_regmap);
-> -			goto err_disable_clk;
-> -		}
-> -	}
-> -
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq <= 0) {
->  		ret = -EINVAL;
+> The patches survived our RDMA verification night runs.
+> 
 
+Great! Thanks very much for running those. That's a pretty solid 
+confirmation that the earlier patch *did* allow a huge page refcount
+overflow, and that this approach avoids it. 
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
