@@ -5,193 +5,160 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940F4C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704B7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69925206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEB9206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 21:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RkiLlqZ8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQmNA8ZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgA2VhC (ORCPT
+        id S1726620AbgA2Vk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 16:37:02 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34038 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgA2VhB (ORCPT
+        Wed, 29 Jan 2020 16:40:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28256 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726222AbgA2Vk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 16:37:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j4so487983pgi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 13:37:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=RDJvmSC05VOf/stL9p8O+7h9hNRl+T3s/8BaANNZGT8=;
-        b=RkiLlqZ8CqT/LpycA1kUYiia5rBR9OZOT0jcy+A9iybkekhQ1h4zWGP0KycA/V///x
-         o986scDQbE3SMWpSSWa4oT1VCVwqKLqNCm4FdIMYZ+5GgMAl4Ze25HMxBh0kLipku5Wh
-         90v4DeoT/E8xaqDSdkjg80x14Q2NWnQD1DhvA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=RDJvmSC05VOf/stL9p8O+7h9hNRl+T3s/8BaANNZGT8=;
-        b=irdiIIUMwB5WDGywzbGJ0WYn1M71ZvcEbs91kkxra5US4NOY/cafK7LhBug3jzpWFi
-         rhEd3bA9swzWT0hgrjXFtG1I/Zr2yycxhRbvEuwuwSTUzrvsICRLS37fU6YLRdKxC5oE
-         Zjjo93SYF3IIMdDsigz6lOYpT8xmYx6V9EBEaGucUPjcFWH7By70PnCShhHIJC3+sRkH
-         dTCd3b1JDuFBc50q9YIyTqICcMbZDqfhzlGFD5qHQgIl6T9bT+KyPxoXcX7CZhGiIZYs
-         Let86Lh6VQuKjX/GcrCGlLdLoLyuOgHYaznZ5f834Hey+DWugXNzotmQp9v+e8fxUMGv
-         0UTg==
-X-Gm-Message-State: APjAAAX8VAuNROUzepvhDwXSGsQ/UmEsND1Yl8GSvFU6A9J1Otnsd3en
-        C5wJlUA3OSu8HyyLVZ3xD3S5gA==
-X-Google-Smtp-Source: APXvYqzyPQqo1V/goi2qe7ia1r8g3MOEaHfi0xGzguk6OJCyAPZBIT9fuT0A/cNPJEI4cdvBXk+F/A==
-X-Received: by 2002:a63:de03:: with SMTP id f3mr1170693pgg.141.1580333820733;
-        Wed, 29 Jan 2020 13:37:00 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b65sm3820195pgc.18.2020.01.29.13.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 13:36:59 -0800 (PST)
-Date:   Wed, 29 Jan 2020 13:36:58 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sami Tolvanen <samitolvanen@google.com>, bpf@vger.kernel.org
-Subject: [PATCH] bpf: Avoid function casting when calculating immediate
-Message-ID: <202001291335.31F425A198@keescook>
+        Wed, 29 Jan 2020 16:40:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580334055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8pjsr+8GgeZRx08ogbJ32q6tJdvfyOSXMDX5qngbmsc=;
+        b=DQmNA8ZEhs7sdGr0Bzf29Ar8KJ/RnSYZwakAkdsbBW4NHJDznSIOGtH+NpYx5uB4jUlcXu
+        sXyCmjAfljWqI1upTaf6OA1SXCbqJ0YcDCfhLwOgrO9hnn95Qu++9eVMXWzP2zYbNtdnwM
+        vXVoAheN5Kx+PVznQ0ktO7V/dzNLYNk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-BKFe_yzwM1CxZrLAq07h-g-1; Wed, 29 Jan 2020 16:40:53 -0500
+X-MC-Unique: BKFe_yzwM1CxZrLAq07h-g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2ECCA18A6EC1;
+        Wed, 29 Jan 2020 21:40:51 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE8F687B07;
+        Wed, 29 Jan 2020 21:40:47 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 14:40:46 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 3/3] iommu/uapi: Add helper function for size lookup
+Message-ID: <20200129144046.3f91e4c1@w520.home>
+In-Reply-To: <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an effort to enable -Wcast-function-type in the top-level Makefile
-to support Control Flow Integrity builds, rework the BPF instruction
-immediate calculation macros to avoid mismatched function pointers. Since
-these calculations are only ever between function address (these are
-not function calls, just address calculations), they can be cast to u64
-instead, where the result will be assigned to the s32 insn->imm.
+On Tue, 28 Jan 2020 22:02:04 -0800
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/filter.h |  6 +++---
- kernel/bpf/hashtab.c   |  6 +++---
- kernel/bpf/verifier.c  | 21 +++++++--------------
- 3 files changed, 13 insertions(+), 20 deletions(-)
+> IOMMU UAPI can be extended in the future by adding new
+> fields at the end of each user data structure. Since we use
+> a unified UAPI version for compatibility checking, a lookup
+> function is needed to find the correct user data size to copy
+> from user.
+> 
+> This patch adds a helper function based on a 2D lookup with
+> version and type as input arguments.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/iommu.c | 22 ++++++++++++++++++++++
+>  include/linux/iommu.h |  6 ++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 7dd51c5d2ba1..9e5de9abebdf 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1696,6 +1696,28 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+>  
+> +
+> +/**
+> + * Maintain a UAPI version to user data structure size lookup for each
+> + * API function types we support. e.g. bind guest pasid, cache invalidation.
+> + * As data structures being extended with new members, the offsetofend()
+> + * will identify the new sizes.
+> + */
+> +const static int iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = {
+> +	/* IOMMU_UAPI_BIND_GPASID */
+> +	{offsetofend(struct iommu_gpasid_bind_data, vtd)},
+> +	/* IOMMU_UAPI_CACHE_INVAL */
+> +	{offsetofend(struct iommu_cache_invalidate_info, addr_info)},
+> +	/* IOMMU_UAPI_PAGE_RESP */
+> +	{offsetofend(struct iommu_page_response, code)},
+> +};
+> +
+> +int iommu_uapi_get_data_size(int type, int version)
+> +{
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index f349e2c0884c..b5beee7bf2ea 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -340,8 +340,8 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 
- /* Function call */
- 
--#define BPF_CAST_CALL(x)					\
--		((u64 (*)(u64, u64, u64, u64, u64))(x))
-+#define BPF_FUNC_IMM(FUNC)					\
-+		((u64)(FUNC) - (u64)__bpf_call_base)
- 
- #define BPF_EMIT_CALL(FUNC)					\
- 	((struct bpf_insn) {					\
-@@ -349,7 +349,7 @@ static inline bool insn_is_zext(const struct bpf_insn *insn)
- 		.dst_reg = 0,					\
- 		.src_reg = 0,					\
- 		.off   = 0,					\
--		.imm   = ((FUNC) - __bpf_call_base) })
-+		.imm   = BPF_FUNC_IMM(FUNC) })
- 
- /* Raw code statement block */
- 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 2d182c4ee9d9..325656a61708 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -517,7 +517,7 @@ static u32 htab_map_gen_lookup(struct bpf_map *map, struct bpf_insn *insn_buf)
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 1);
- 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
- 				offsetof(struct htab_elem, key) +
-@@ -558,7 +558,7 @@ static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 4);
- 	*insn++ = BPF_LDX_MEM(BPF_B, ref_reg, ret,
- 			      offsetof(struct htab_elem, lru_node) +
-@@ -1749,7 +1749,7 @@ static u32 htab_of_map_gen_lookup(struct bpf_map *map,
- 
- 	BUILD_BUG_ON(!__same_type(&__htab_map_lookup_elem,
- 		     (void *(*)(struct bpf_map *map, void *key))NULL));
--	*insn++ = BPF_EMIT_CALL(BPF_CAST_CALL(__htab_map_lookup_elem));
-+	*insn++ = BPF_EMIT_CALL(__htab_map_lookup_elem);
- 	*insn++ = BPF_JMP_IMM(BPF_JEQ, ret, 0, 2);
- 	*insn++ = BPF_ALU64_IMM(BPF_ADD, ret,
- 				offsetof(struct htab_elem, key) +
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 1cc945daa9c8..70b4e47c2214 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9054,8 +9054,7 @@ static int jit_subprogs(struct bpf_verifier_env *env)
- 			    insn->src_reg != BPF_PSEUDO_CALL)
- 				continue;
- 			subprog = insn->off;
--			insn->imm = BPF_CAST_CALL(func[subprog]->bpf_func) -
--				    __bpf_call_base;
-+			insn->imm = BPF_FUNC_IMM(func[subprog]->bpf_func);
- 		}
- 
- 		/* we use the aux data to keep a list of the start addresses
-@@ -9429,28 +9428,22 @@ static int fixup_bpf_calls(struct bpf_verifier_env *env)
- 
- 			switch (insn->imm) {
- 			case BPF_FUNC_map_lookup_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_lookup_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_lookup_elem);
- 				continue;
- 			case BPF_FUNC_map_update_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_update_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_update_elem);
- 				continue;
- 			case BPF_FUNC_map_delete_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_delete_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_delete_elem);
- 				continue;
- 			case BPF_FUNC_map_push_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_push_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_push_elem);
- 				continue;
- 			case BPF_FUNC_map_pop_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_pop_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_pop_elem);
- 				continue;
- 			case BPF_FUNC_map_peek_elem:
--				insn->imm = BPF_CAST_CALL(ops->map_peek_elem) -
--					    __bpf_call_base;
-+				insn->imm = BPF_FUNC_IMM(ops->map_peek_elem);
- 				continue;
- 			}
- 
--- 
-2.20.1
+Seems like this is asking for a bounds check,
 
+  if (type >= NR_IOMMU_UAPI_TYPE || version > IOMMU_UAPI_VERSION)
+  	return -EINVAL;
 
--- 
-Kees Cook
+If we add new types in future versions, I assume we'd back fill the
+table with -EINVAL as well (rather than zero).  Thanks,
+
+Alex
+
+> +	return iommu_uapi_data_size[type][version - 1];
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_uapi_get_data_size);
+> +
+>  static void __iommu_detach_device(struct iommu_domain *domain,
+>  				  struct device *dev)
+>  {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 9718c109ea0a..416fe02160ba 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -500,6 +500,7 @@ extern int iommu_report_device_fault(struct device *dev,
+>  				     struct iommu_fault_event *evt);
+>  extern int iommu_page_response(struct device *dev,
+>  			       struct iommu_page_response *msg);
+> +extern int iommu_uapi_get_data_size(int type, int version);
+>  
+>  extern int iommu_group_id(struct iommu_group *group);
+>  extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
+> @@ -885,6 +886,11 @@ static inline int iommu_page_response(struct device *dev,
+>  	return -ENODEV;
+>  }
+>  
+> +static int iommu_uapi_get_data_size(int type, int version)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>  static inline int iommu_group_id(struct iommu_group *group)
+>  {
+>  	return -ENODEV;
+
