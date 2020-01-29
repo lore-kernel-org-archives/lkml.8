@@ -2,87 +2,155 @@ Return-Path: <SRS0=xNW4=3S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E762C35240
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D161C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242DA205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6BB20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BusKtRyq"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZO7aULeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgA2Xzo (ORCPT
+        id S1727170AbgA2Xzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:55:44 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57089 "EHLO ozlabs.org"
+        Wed, 29 Jan 2020 18:55:53 -0500
+Received: from mout.gmx.net ([212.227.15.19]:58939 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgA2Xzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:55:44 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 487L305zq0z9s29;
-        Thu, 30 Jan 2020 10:55:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580342142;
-        bh=tgC0XCu5sJjdp7keIzOjDIZLm8jl3OfcV5uW9ev8uR0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BusKtRyqT/RhUD6liA9jHULVhJpMDSqDRNJa8izS95+sXWZG3FWKz02MOmniw396T
-         OeJc6SvxKouBEBZ5SzoTTgjJLqaQbZMgWPkxG+QZhb2mbGiM12gotglbj+TFzcX3UN
-         Mfvo+LqefxTea5Ks9513xPnRQAGA+qND9o4KRhTuEyUujpFpHBFGXhf6Zp0ipZKMOm
-         a11tkOyX2aa9Lch7qbJ19bCa9gEljRS2ZxR1b57k1M3L7EgoQfFZCHUyK4ASBtJGBi
-         szXeqSRsGqYOq7cTgx5BF9tIMvK3YHYlqIOn96iK+RgGbPE14qXzN8JQti//vgAdPs
-         VdK/g9SbwSThA==
-Date:   Thu, 30 Jan 2020 10:55:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Samuel Ortiz <sameo@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: linux-next: the nfc-next tree seems to be old
-Message-ID: <20200130105538.7b07b150@canb.auug.org.au>
+        id S1726648AbgA2Xzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:55:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1580342141;
+        bh=XITtJExlSdMJlvvk3SPPpbztWnmlDrNbkZn5CRoQBMk=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
+        b=ZO7aULeul8WVQQRCr/e/jyU/9rHzFbYMMaS5ktSTrJT9BEryz1EVg+TGy4RQkzcNX
+         CD7LRuD/gxi+E1w6AQ/kRcjrvBPgoKfXDhsTj5wPxeSyTWfqTWWcADl9AV3UZH8PUG
+         kGiL7Ye46BPFdfOb+aCcHiVUmKdIll7Y8ObwN9Hg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MeU4s-1jXOSe2Nsa-00aTMb; Thu, 30
+ Jan 2020 00:55:41 +0100
+Subject: Re: [PATCH] btrfs: optimize barrier usage for Rmw atomics
+To:     Davidlohr Bueso <dave@stgolabs.net>, dsterba@suse.cz,
+        dsterba@suse.com, nborisov@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+References: <20200129180324.24099-1-dave@stgolabs.net>
+ <20200129191439.GN3929@twin.jikos.cz>
+ <20200129192550.nnfkkgde445nrbko@linux-p48b>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
+ PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
+ 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
+ D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
+ efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
+ ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
+ BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
+ 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
+ 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
+ EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
+ 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
+ ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
+ oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
+ fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
+ 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
+ ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
+ oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
+Message-ID: <f49aaafa-9144-5644-adae-d5bc13b6ca41@gmx.com>
+Date:   Thu, 30 Jan 2020 07:55:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rT9R.nc+iQmvEO+FTdpSqU.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200129192550.nnfkkgde445nrbko@linux-p48b>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vKbIn1BgJMkSZlYsDHNNloPVS6CzOJ6Jbe8+Vbhx6l5avVBfbu6
+ djLKitQzzavm8h09+MQdjnCFrSPKUm+4svxVi62aQ9rLGVfUrTTFYIYNlwqKI8Mw+AgLcyb
+ 1l/8QM8bwXS4KasZwmif45KD2XDVKs3kn1LRAJ4zDSF3l+df/lARUgmS4ofQ2MyeCqkGj9J
+ Fb5BF7Wk/QhzBNCMGOIqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rkod/PACeIY=:NafSwqzKI40NSpj7xmTXkY
+ AMyUO6OSmE4Ec+YjheoIN9BYc979Gu587jlGdYjUoiNiY0GbHbuLxGqK4yc2/YyL4ovl2U490
+ LRQOOaEysPTsaTS1WooOxO7iqrANkK6u9mDW5XTH8aa0/GUSUJTdqN6BlA6nyZVRtdBIg/pPk
+ FR8Q5TVHmkJ0vNWm22nIR0g8i80Xv8/6fj/H+Qm4XAxFHgAZJVweEd1Gobv4KhNmBeyghP5GU
+ dgZ9en+G4SJJ9Z6BQdiiiy5V7ep7ayH+JHkGS6bnjtPxiaRC0erwf9sEUVKZX85hnmlZ7oElG
+ gTKVdTHsZE8nwosDmQxvAvMhDoULzIUThjrnLURKUoSM7iX2UgFS/B6x5411Gil8RfA6u+8dW
+ rCLwHDBwioBNwGO7Onw7hqYpikapnCwaqqLsEKntOGwgdZeGm33qoicCZJDDw5HsoMGR6oI9J
+ tiRtFswwQw9VCneiyKWjqaCTzxG/2o7Kf0DOdTZSGl6HsvR8gkNlxvUvu4Fr13TAQ2TVlkqhz
+ XUkMQAT3zXSG/oeVwj2Afcvmwj9DwRP5CCuOfNexUfzSTN+DguR2QzpLG8LdZ/zdw9e3CABpF
+ uGA+U4bMtCj9jgPXwnk6HKVh9LgUahEcxmnHVRhmsS+k+VxTBDUb3pBgL01EdClu5JuObykLn
+ 8Y3zS6EshOdZKHzI2mOAeGALpHlTP9P9kNVZ+akiBynZxP5GkmOGHBrQ+s+NC07ScGVlwZods
+ 7WpX/UnpUEE5uc7UNJWXInojLyC0YKIo7Yg6usPLbuUFuj31NxTBtPEgDbhXUoGywQ+DZG2VN
+ GZSnYNHXVCaQiqfGoV/DIHeJrnuIZkdg7iMKKqtDF29kTBrpIeZQ64Cc7NYn5CDV5Y4wGmT5N
+ mb8aE5Ms1mDMrh544wdPMjZGw5ZBTRnPiQifNmNDZ9z2qogOzwBk42l+adS/+IVRTT7huy72R
+ PghUz+P1FvvvqTVUgBCY+P9n2oa/loA/fa+RDGmXZ5Uw6U+jgODfg/J7sfNFSW2RoLClOh8QQ
+ cVajxkSe6U5WtzO1smbBLl9fGpwCcMMEjR7/cnk3xf5eUqukOI+/58SyouD+iqeBsjU13S47O
+ RgniZ7YKv5gEGZzk1/UtODQYCpF9wuXm0BvIOe6AL2aZu9yAxuCS5/I2NqPpXIJig0Qh6kHpy
+ LIekZQEnWZY9ZNuZuC6K6CJOgC8dFGLyyTkVQmVUoc0tkBlBRDp4rO/o6VWXMSCKoqUTiWefR
+ N0Ui8xHuX+b46pRUJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rT9R.nc+iQmvEO+FTdpSqU.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Samuel,
 
-I noticed that the nfc-next tree has not changed since June 2018 and
-has been orphaned in May 2019, so am wondering if the commits in it are
-still relevant or should I just remove the tree from linux-next.
+On 2020/1/30 =E4=B8=8A=E5=8D=883:25, Davidlohr Bueso wrote:
+> On Wed, 29 Jan 2020, David Sterba wrote:
+>
+>> On Wed, Jan 29, 2020 at 10:03:24AM -0800, Davidlohr Bueso wrote:
+>>> Use smp_mb__after_atomic() instead of smp_mb() and avoid the
+>>> unnecessary barrier for non LL/SC architectures, such as x86.
+>>
+>> So that's a conflicting advice from what we got when discussing wich
+>> barriers to use in 6282675e6708ec78518cc0e9ad1f1f73d7c5c53d and the
+>> memory is still fresh. My first idea was to take the
+>> smp_mb__after_atomic and __before_atomic variants and after discussion
+>> with various people the plain smp_wmb/smp_rmb were suggested and used i=
+n
+>> the end.
+>
+> So the patch you mention deals with test_bit(), which is out of the scop=
+e
+> of smp_mb__{before,after}_atomic() as it's not a RMW operation.
+> atomic_inc()
+> and set_bit() are, however, meant to use these barriers.
 
---=20
-Cheers,
-Stephen Rothwell
+Exactly!
+I'm still not convinced to use full barrier for test_bit() and I see no
+reason to use any barrier for test_bit().
+All mb should only be needed between two or more memory access, thus mb
+should sit between set/clear_bit() and other operations, not around
+test_bit().
 
---Sig_/rT9R.nc+iQmvEO+FTdpSqU.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>
+>>
+>> I can dig the email threads and excerpts from irc conversations, maybe
+>> Nik has them at hand too. We do want to get rid of all unnecessary and
+>> uncommented barriers in btrfs code, so I appreciate your patch.
+>
+> Yeah, I struggled with the amount of undocumented barriers, and decided
+> not to go down that rabbit hole. This patch is only an equivalent of
+> what is currently there. When possible, getting rid of barriers is of
+> course better.
 
------BEGIN PGP SIGNATURE-----
+BTW, is there any convincing method to do proper mb examination?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4yG3sACgkQAVBC80lX
-0GxP1gf/QLVqOstMt03A5P3vqBe+E7KT8eKT4gKwAz4HyPMrnG3eNpOELmBD1hUi
-aZCY7Fqt2oKoDgIF1GFO9mxs8RuLmqQZiN9r1uKzGGOZdDoQwxncEZrKVCJjI0go
-GL3f+zizKgaTo2nZr7yjrpvfGAaq9bAKlMT0EcQVghCxSE1Ob9lztw/qD6puFNwo
-nrJMogkld3aYucyJDxSaC57xSfLNtUj7zv2B9VwUp06ku6LjbYvWD1ixWi1NW0SY
-0bYDz1IpN4u/KMeCH6Gk5BaT2XsSpvjx5KOIZJwNo6QPDOhEFiN45HJ0Bp5tYk5j
-f0RMVwvuRt98RMASPvi+skJgy4YJjQ==
-=KaQf
------END PGP SIGNATURE-----
+I really found it hard to convince others or even myself when mb is
+involved.
 
---Sig_/rT9R.nc+iQmvEO+FTdpSqU.--
+Thanks,
+Qu
+
+>
+> Thanks,
+> Davidlohr
