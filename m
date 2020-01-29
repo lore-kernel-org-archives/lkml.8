@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFF4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC079C35240
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C386206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92E2206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 Jan 2020 23:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgA2Xse (ORCPT
+        id S1727090AbgA2Xqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 18:48:34 -0500
+        Wed, 29 Jan 2020 18:46:46 -0500
 Received: from mga06.intel.com ([134.134.136.31]:46688 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727078AbgA2Xqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 18:46:46 -0500
+        id S1726617AbgA2Xqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 18:46:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 15:46:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,379,1574150400"; 
-   d="scan'208";a="309551695"
+   d="scan'208";a="309551703"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga001.jf.intel.com with ESMTP; 29 Jan 2020 15:46:43 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/26] KVM: x86: Remove superfluous brackets from case statement
-Date:   Wed, 29 Jan 2020 15:46:15 -0800
-Message-Id: <20200129234640.8147-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/26] KVM: x86: Add a kvm_x86_ops hook to query virtualized MSR support
+Date:   Wed, 29 Jan 2020 15:46:18 -0800
+Message-Id: <20200129234640.8147-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200129234640.8147-1-sean.j.christopherson@intel.com>
 References: <20200129234640.8147-1-sean.j.christopherson@intel.com>
@@ -49,40 +50,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary brackets from a case statement that unintentionally
-encapsulates unrelated case statements in the same switch statement.
-While technically legal and functionally correct syntax, the brackets
-are visually confusing and potentially dangerous, e.g. the last of the
-encapsulated case statements has an undocumented fall-through that isn't
-flagged by compilers due the encapsulation.
+Add a hook, ->has_virtualized_msr(), to allow moving vendor specific
+checks into SVM/VMX and ultimately facilitate the removal of the
+piecemeal ->*_supported() hooks.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/svm.c              | 6 ++++++
+ arch/x86/kvm/vmx/vmx.c          | 6 ++++++
+ arch/x86/kvm/x86.c              | 2 ++
+ 4 files changed, 15 insertions(+)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 5c2ad3fa0980..8fb32c27fa44 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1050,6 +1050,7 @@ struct kvm_x86_ops {
+ 	int (*hardware_setup)(void);               /* __init */
+ 	void (*hardware_unsetup)(void);            /* __exit */
+ 	bool (*cpu_has_accelerated_tpr)(void);
++	bool (*has_virtualized_msr)(u32 index);
+ 	bool (*has_emulated_msr)(u32 index);
+ 	void (*cpuid_update)(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index a7b944a3a0e2..1f9323fbad81 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5985,6 +5985,11 @@ static bool svm_cpu_has_accelerated_tpr(void)
+ 	return false;
+ }
+ 
++static bool svm_has_virtualized_msr(u32 index)
++{
++	return true;
++}
++
+ static bool svm_has_emulated_msr(u32 index)
+ {
+ 	switch (index) {
+@@ -7379,6 +7384,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.hardware_enable = svm_hardware_enable,
+ 	.hardware_disable = svm_hardware_disable,
+ 	.cpu_has_accelerated_tpr = svm_cpu_has_accelerated_tpr,
++	.has_virtualized_msr = svm_has_virtualized_msr,
+ 	.has_emulated_msr = svm_has_emulated_msr,
+ 
+ 	.vcpu_create = svm_create_vcpu,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f5bb1ad2e9fa..3f2c094434e8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6274,6 +6274,11 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+ 		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+ }
+ 
++static bool vmx_has_virtualized_msr(u32 index)
++{
++	return true;
++}
++
+ static bool vmx_has_emulated_msr(u32 index)
+ {
+ 	switch (index) {
+@@ -7754,6 +7759,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.hardware_enable = hardware_enable,
+ 	.hardware_disable = hardware_disable,
+ 	.cpu_has_accelerated_tpr = report_flexpriority,
++	.has_virtualized_msr = vmx_has_virtualized_msr,
+ 	.has_emulated_msr = vmx_has_emulated_msr,
+ 
+ 	.vm_init = vmx_vm_init,
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7e3f1d937224..24597526b5de 100644
+index 3d4a5326d84e..94f90fe1c0de 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -5260,7 +5260,7 @@ static void kvm_init_msr_list(void)
- 				 !intel_pt_validate_hw_cap(PT_CAP_single_range_output)))
+@@ -5279,6 +5279,8 @@ static void kvm_init_msr_list(void)
  				continue;
  			break;
--		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
-+		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
- 			if (!kvm_x86_ops->pt_supported() ||
- 				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
- 				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
-@@ -5275,7 +5275,7 @@ static void kvm_init_msr_list(void)
- 			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
- 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
- 				continue;
--		}
-+			break;
  		default:
++			if (!kvm_x86_ops->has_virtualized_msr(msr_index))
++				continue;
  			break;
  		}
+ 
 -- 
 2.24.1
 
