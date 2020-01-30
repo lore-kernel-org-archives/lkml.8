@@ -2,123 +2,92 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1E3C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CABC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8CF214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91BE20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgA3QM4 (ORCPT
+        id S1727478AbgA3QNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:12:56 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44692 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3QMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:12:55 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BD536294F23;
-        Thu, 30 Jan 2020 16:12:52 +0000 (GMT)
-Date:   Thu, 30 Jan 2020 17:12:49 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 5/6] media: rkvdec: Add the rkvdec driver
-Message-ID: <20200130171249.3ae0444a@collabora.com>
-In-Reply-To: <20200129195501.8317-6-ezequiel@collabora.com>
-References: <20200129195501.8317-1-ezequiel@collabora.com>
-        <20200129195501.8317-6-ezequiel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 30 Jan 2020 11:13:05 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41423 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbgA3QNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 11:13:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 08:13:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="229982599"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003.jf.intel.com with ESMTP; 30 Jan 2020 08:13:03 -0800
+Subject: Re: [PATCH] dmaengine: idxd: fix boolconv.cocci warnings
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org
+References: <alpine.DEB.2.21.2001301543150.7476@hadrien>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <4dd86f3a-6a83-061b-b1b8-2c745cb15e1d@intel.com>
+Date:   Thu, 30 Jan 2020 09:13:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <alpine.DEB.2.21.2001301543150.7476@hadrien>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:55:00 -0300
-Ezequiel Garcia <ezequiel@collabora.com> wrote:
 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
+
+On 1/30/20 7:44 AM, Julia Lawall wrote:
+> From: kbuild test robot <lkp@intel.com>
 > 
-> The rockchip vdec block is a stateless decoder that's able to decode
-> H264, HEVC and VP9 content. This commit adds the core infrastructure
-> and the H264 backend. Support for VP9 and HEVS will be added later on.
+> Remove unneeded conversion to bool
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> Generated by: scripts/coccinelle/misc/boolconv.cocci
+> 
+> CC: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
-> v4:
-> * Make poc tables const, as suggested by Hans
-> * Move buffer extra space calculation TRY_FMT, as done on Hantro.
-> * Get rid of vb2_request_get_buf and open-code
->   following Cedrus. We can move it to a helper as a follow-up patch.
-
-Well, we know what that means in practice :-).
-
-> new file mode 100644
-> index 000000000000..1293b3621364
-> --- /dev/null
-> +++ b/drivers/staging/media/rkvdec/rkvdec-regs.h
-> @@ -0,0 +1,239 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Rockchip VPU codec driver
-> + *
-> + * Copyright (C) 2015 Rockchip Electronics Co., Ltd.
-> + *	Jung Zhao <jung.zhao@rock-chips.com>
-> + *	Alpha Lin <alpha.lin@rock-chips.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-
-Oops, looks like I forgot to remove the license text here. Also not
-entirely sure the copyrights are correct (might be a copy from the
-hantro driver instead of the rkvdec one).
-
-
-> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-> new file mode 100644
-> index 000000000000..529ef86510d3
-> --- /dev/null
-> +++ b/drivers/staging/media/rkvdec/rkvdec.h
-> @@ -0,0 +1,124 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Hantro VPU codec driver
-> + *
-> + * Copyright 2018 Google LLC.
-> + *	Tomasz Figa <tfiga@chromium.org>
-> + *
-> + * Based on s5p-mfc driver by Samsung Electronics Co., Ltd.
-> + * Copyright (C) 2011 Samsung Electronics Co., Ltd.
-> + */
-
-This header has been copied from the hantro driver, so it's most likely
-wrong.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+> commit: 42d279f9137ab7d5503836baec2739284b278d8f dmaengine: idxd: add char driver to expose submission portal to userland
+> :::::: branch date: 11 hours ago
+> :::::: commit date: 6 days ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>   sysfs.c |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -66,7 +66,7 @@ static inline bool is_idxd_wq_dmaengine(
+> 
+>   static inline bool is_idxd_wq_cdev(struct idxd_wq *wq)
+>   {
+> -	return wq->type == IDXD_WQT_USER ? true : false;
+> +	return wq->type == IDXD_WQT_USER;
+>   }
+> 
+>   static int idxd_config_bus_match(struct device *dev,
+> 
