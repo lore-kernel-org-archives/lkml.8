@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52338C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDC9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238562173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2568A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409725;
-	bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
+	s=default; t=1580409728;
+	bh=1M0YF0+4pADEq3v0NcUXt1p5XFbnlgw9zdlVcdV/OZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+GIAJ92HPYxgVIkcKP7dibHQ7vyNvYUdWk/cL/TA5Vfasp43i1L49OwUrOzS5nSw
-	 4sphMrguKtq0T/AjWG6iJVIQrJOdx/DECjyeQ2MvJ2PPhG1+z78CmAiafOzAbbdNKY
-	 G8F0RCe26EleD+heLxFRcyV2zirObMIWkLt51Hsk=
+	b=X8a4uMgGjXwDLpGSABuU4CoK5e+AN/M2tU6vZEjuAloTCTXo++GiUr9BW5gkqCYcE
+	 14Bad5JgxINA4/FVaxO86oqgcg6L5xx8Dm8KvOeVoJtRupPzOdUmzgl5DOhEEqO11v
+	 1g2+h/QJSIDMhlmdZiExKyXM8LEUUHPt0zB8c2HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgA3SmE (ORCPT
+        id S1730318AbgA3SmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgA3SmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:00 -0500
+        id S1730303AbgA3SmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8EDC2083E;
-        Thu, 30 Jan 2020 18:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A25120CC7;
+        Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409720;
-        bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
+        s=default; t=1580409722;
+        bh=1M0YF0+4pADEq3v0NcUXt1p5XFbnlgw9zdlVcdV/OZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxvQjUfnd+w2PvYH++mtQ4gwZ37RCbPF8wrQDqQCFu4zZOkELWCMniEUrhlJnLyz+
-         sB8hISz1j31hAF5JuNJYDuArF3er/ap7bJzKUsl21MAQT8Hsmgs2tDoCbd+XrZbW3+
-         g+t9SGnwAGOLtM8jQU8nGp59pniacGIgeh/s2Wf8=
+        b=E0k2XNu2wki/cbh6MsSs4vBD91AOW+1hxySFrgtY1eAU3o+lf9e1e2AScnXfWRkas
+         7JisrN1B3qJlvTBSF+SomH/iSQ3AOffqDx36Cta9PLjUQ/rZCKt1shrYP/30wkahNB
+         xRJjs19GDB0IfiFtKYNYOL0fJntzQJa++fPsEgJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 42/56] udp: segment looped gso packets correctly
-Date:   Thu, 30 Jan 2020 19:38:59 +0100
-Message-Id: <20200130183616.721326806@linuxfoundation.org>
+        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 33/56] brcmfmac: fix interface sanity check
+Date:   Thu, 30 Jan 2020 19:38:50 +0100
+Message-Id: <20200130183615.067958605@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,43 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 6cd021a58c18a1731f7e47f83e172c0c302d65e5 ]
+commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
 
-Multicast and broadcast packets can be looped from egress to ingress
-pre segmentation with dev_loopback_xmit. That function unconditionally
-sets ip_summed to CHECKSUM_UNNECESSARY.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-udp_rcv_segment segments gso packets in the udp rx path. Segmentation
-usually executes on egress, and does not expect packets of this type.
-__udp_gso_segment interprets !CHECKSUM_PARTIAL as CHECKSUM_NONE. But
-the offsets are not correct for gso_make_checksum.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-UDP GSO packets are of type CHECKSUM_PARTIAL, with their uh->check set
-to the correct pseudo header checksum. Reset ip_summed to this type.
-(CHECKSUM_PARTIAL is allowed on ingress, see comments in skbuff.h)
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Fixes: cf329aa42b66 ("udp: cope with UDP GRO packet misdirection")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Cc: Arend van Spriel <arend@broadcom.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/udp.h |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/include/net/udp.h
-+++ b/include/net/udp.h
-@@ -476,6 +476,9 @@ static inline struct sk_buff *udp_rcv_se
- 	if (!inet_get_convert_csum(sk))
- 		features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -1348,7 +1348,7 @@ brcmf_usb_probe(struct usb_interface *in
+ 		goto fail;
+ 	}
  
-+	if (skb->pkt_type == PACKET_LOOPBACK)
-+		skb->ip_summed = CHECKSUM_PARTIAL;
-+
- 	/* the GSO CB lays after the UDP one, no need to save and restore any
- 	 * CB fragment
- 	 */
+-	desc = &intf->altsetting[0].desc;
++	desc = &intf->cur_altsetting->desc;
+ 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
+ 	    (desc->bInterfaceSubClass != 2) ||
+ 	    (desc->bInterfaceProtocol != 0xff)) {
+@@ -1361,7 +1361,7 @@ brcmf_usb_probe(struct usb_interface *in
+ 
+ 	num_of_eps = desc->bNumEndpoints;
+ 	for (ep = 0; ep < num_of_eps; ep++) {
+-		endpoint = &intf->altsetting[0].endpoint[ep].desc;
++		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
+ 		endpoint_num = usb_endpoint_num(endpoint);
+ 		if (!usb_endpoint_xfer_bulk(endpoint))
+ 			continue;
 
 
