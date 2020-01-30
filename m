@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB6EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B45205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C9B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409788;
-	bh=tanSl7zZw6ER89CgvTLunSlXW80ePu4bovf+hRiok1E=;
+	s=default; t=1580409794;
+	bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oU+YhF4RGnVM3Md7XbsYovrxw51y2PETjLu2IwwUmfrw6z1bjbSkpIbl94oHIdU0H
-	 7cMituS6tpiSFq3L3pqMHmUOafiqXSMPcP7HbtMazx3Aclziznu2eSzwssBW7BgCA1
-	 dRJ7xOmv469542Y+fmkG/XHMcnWFF5eys363/s78=
+	b=2S8qpJyaHYEPnV6l7bNWliA372CGHKkuACy4UHoga8blLLFl58AZDORuyiVFLwfl2
+	 T8OIh/MhX7JVJCAcxDhkifyMhpvbBaCuZWs95qXoa8L/B+/HgG9wRcgHx0lbIba2fX
+	 dWINlvKoA6XRoNJDkxQsjzgHIZ/8n5YmX+ZtSOA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgA3SnG (ORCPT
+        id S1730562AbgA3SnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbgA3SnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:00 -0500
+        id S1730524AbgA3SnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE5F20CC7;
-        Thu, 30 Jan 2020 18:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D60205F4;
+        Thu, 30 Jan 2020 18:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409779;
-        bh=tanSl7zZw6ER89CgvTLunSlXW80ePu4bovf+hRiok1E=;
+        s=default; t=1580409784;
+        bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwaJfMJbU/MmQP/OO8FHavfEANSKqcarxrfBKStNzvi/Gvn29pCPuL2rYdRm+QrhW
-         vMuPH5Fo0ZavJZLuSderqJweA2OBlofvEHcq/yZV7EU7Hg5PN7gWHbnjRUG2kRMcj6
-         t2NXhxToSbbdMtoLyLl/LWV+NR3eDw3DBTS1hDQY=
+        b=M7iiql+I2MR6HhmE2hVXfBp3sDIJPiyW+vgkV1piUZKuxNRZdkOA6Xp7i+vRXagJU
+         57aXosqqVJMfu8UNuzmunTeG6xBK239ebskNUVraTRDM4zkAcCPzyWPl4EkgYnCXjB
+         ya+YTCQT00FwhvEmPYHRSTq5fdNxWi/3JnyQMkGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.4 029/110] cifs: set correct max-buffer-size for smb2_ioctl_init()
-Date:   Thu, 30 Jan 2020 19:38:05 +0100
-Message-Id: <20200130183618.763906701@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 031/110] ath9k: fix storage endpoint lookup
+Date:   Thu, 30 Jan 2020 19:38:07 +0100
+Message-Id: <20200130183619.070047346@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,47 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 731b82bb1750a906c1e7f070aedf5505995ebea7 upstream.
+commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
 
-Fix two places where we need to adjust down the max response size for
-ioctl when it is used together with compounding.
+Make sure to use the current alternate setting when verifying the
+storage interface descriptors to avoid submitting an URB to an invalid
+endpoint.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+Cc: stable <stable@vger.kernel.org>     # 2.6.39
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1461,7 +1461,9 @@ smb2_ioctl_query_info(const unsigned int
- 					     COMPOUND_FID, COMPOUND_FID,
- 					     qi.info_type, true, buffer,
- 					     qi.output_buffer_length,
--					     CIFSMaxBufSize);
-+					     CIFSMaxBufSize -
-+					     MAX_SMB2_CREATE_RESPONSE_SIZE -
-+					     MAX_SMB2_CLOSE_RESPONSE_SIZE);
- 		}
- 	} else if (qi.flags == PASSTHRU_SET_INFO) {
- 		/* Can eventually relax perm check since server enforces too */
-@@ -2634,7 +2636,10 @@ smb2_query_symlink(const unsigned int xi
- 
- 	rc = SMB2_ioctl_init(tcon, &rqst[1], fid.persistent_fid,
- 			     fid.volatile_fid, FSCTL_GET_REPARSE_POINT,
--			     true /* is_fctl */, NULL, 0, CIFSMaxBufSize);
-+			     true /* is_fctl */, NULL, 0,
-+			     CIFSMaxBufSize -
-+			     MAX_SMB2_CREATE_RESPONSE_SIZE -
-+			     MAX_SMB2_CLOSE_RESPONSE_SIZE);
- 	if (rc)
- 		goto querty_exit;
- 
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -1216,7 +1216,7 @@ err_fw:
+ static int send_eject_command(struct usb_interface *interface)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct usb_host_interface *iface_desc = &interface->altsetting[0];
++	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	unsigned char *cmd;
+ 	u8 bulk_out_ep;
 
 
