@@ -2,101 +2,258 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4194C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E598C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858012082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:41:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R2tx+EnM"
+	by mail.kernel.org (Postfix) with ESMTP id 61DC620674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgA3PlQ (ORCPT
+        id S1727309AbgA3Pmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:41:16 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38705 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgA3PlQ (ORCPT
+        Thu, 30 Jan 2020 10:42:51 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37461 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgA3Pmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:41:16 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a9so4775735wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:41:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=IzeuyLNwcHGeqDrPxY0hfInJ/Fb4wBiuy591zoPKvm4=;
-        b=R2tx+EnM5ZzTjItg0Tg5V2axHD+nEJ5NjMp2Ev7oVIqipAnp4Y0ybqeCE1+HZKApwi
-         KtfNJ/pVQcuWLA5f3+oquh9bNNGdnUfvrm003U/iJwPSY9OKPQdesACoQ0vyzqmOI+ss
-         ZXLtlAc0d/YLG538qIKqO9yhW3N6aTx7Cu038skXnDed81IvwIGxRMTjffMdjkcmQPzt
-         riTl3yrRfqJkrWLNGsPkQrm4osqzs5qR2VNSzceFYPZxoqGgBZEOjkz5aWhlUQJBeQHZ
-         FeoJcDzrcMt4Q6hVAFCAKTe53mHYD54QPk/GdByiOm2dFhH6YpuxiTBjOiOkqncMOYfw
-         lMKQ==
+        Thu, 30 Jan 2020 10:42:51 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q84so3932573oic.4;
+        Thu, 30 Jan 2020 07:42:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=IzeuyLNwcHGeqDrPxY0hfInJ/Fb4wBiuy591zoPKvm4=;
-        b=W2ThonSdLvILBS3RuBPTjlLf/+SBr8HDT1MUhXWHOgCC5lb2Ug96FASyWL9k1q+iwx
-         GYQErRouWm14BYVmANbE+uQOmlcZtqH38rRNJTUV62bTpp//4YiJWnf2EcHNaEaS2boe
-         IuSji0DRbGNUXIJiiwBlWzhAwGsx0Pgd0pVFXA3yYwqHPK86Gywl3I6D9mKAv/9rxhVF
-         hf2cV7glBdupGFeTqJDnunn04KZGV4KDKPjbMKXQbctnHloPyOWyJB2BEiA2+puqd6V0
-         YvotiopnbeIUTc2ZCFoRl1G3V9OrZlTnoFyZp1aht2xGA3HFrY2s1jrJcSU53oumGNNr
-         XBcA==
-X-Gm-Message-State: APjAAAX7WZHJFT+y9FT+Q10XvL6mCswWpmqlgAK9muAb3NCur27HBmPE
-        pap230/hf0VLGVmRhlA932xFHA==
-X-Google-Smtp-Source: APXvYqyqINQ1Dub9uL0itvcPYMPK8EFOKgs62EfLhNvh8oAS/swT1ioulL8RsQiM/8PP3tVGifFHNg==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr6326916wmi.0.1580398872454;
-        Thu, 30 Jan 2020 07:41:12 -0800 (PST)
-Received: from localhost ([2a00:79e0:d:11:1da2:3fd4:a302:4fff])
-        by smtp.gmail.com with ESMTPSA id w22sm6652544wmk.34.2020.01.30.07.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 07:41:11 -0800 (PST)
-Date:   Thu, 30 Jan 2020 07:41:11 -0800 (PST)
-X-Google-Original-Date: Thu, 30 Jan 2020 15:24:25 GMT (+0000)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v2 4/4] RISC-V: Select Goldfish RTC driver for QEMU virt machine
-CC:     Anup Patel <Anup.Patel@wdc.com>, aou@eecs.berkeley.edu,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, anup@brainfault.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.2001221147260.248939@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.2001221147260.248939@viisi.sifive.com>
-  <20191203034909.37385-1-anup.patel@wdc.com> <20191203034909.37385-5-anup.patel@wdc.com>
-Message-ID: <mhng-c7d78b33-d53f-41c5-955a-604eec4478c6@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VQ8iVu+taBZqUnlwkUuWIwHzeZjbyY5g3urtyV2lV9o=;
+        b=ecy/oJLW+Zd0I+6JIFQ2mG9N4MjNJUBGTCsaznVStlApUW98qBbTxfbdImQzBLMkak
+         QCAA7GtVRAV37lpSBRMWgl53QArWJMB71G65cQ68V0qEQT4fPVwnzZGPD975wuDcENVM
+         0Vk3dEk5wf2Y86mz5TCbuohqH8QMsK+LZywCx4XDvXh5QuCOJxyu0WJIBo83BQStdW6e
+         jm1DclR9J0ENDUgkgIOyJQf7ptOKYt1zX++hiS4jqk6NtPOD/mp7eqmKuUhUmqlCInG0
+         hcbfccxZvhaSuX44SJG8cLxTdT7l+vcCOtCW+OOSPFMDZc8bcLGw1PqVs8H1wNnSGlQw
+         BEsg==
+X-Gm-Message-State: APjAAAWDwTWXffLXq3HT+fTLtE+fBTaxEgsmMZCUUIbZ3vZuAqATUCr+
+        UYd6f2vJ+9V/wQFqSOix0v4QUkCeR8EHVdSXlxiaVrMg
+X-Google-Smtp-Source: APXvYqz+AjRlTqbZxdQzzYVwfMC93c4iiDPEfuB9aBGRKmcFwlxG6osM58zpgW8n5u7569wb0pdomN1MG5J8hhkK87Y=
+X-Received: by 2002:a54:4707:: with SMTP id k7mr3103799oik.153.1580398969932;
+ Thu, 30 Jan 2020 07:42:49 -0800 (PST)
+MIME-Version: 1.0
+References: <20200130114220.23538-1-peter.ujfalusi@ti.com> <20200130114220.23538-3-peter.ujfalusi@ti.com>
+In-Reply-To: <20200130114220.23538-3-peter.ujfalusi@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Jan 2020 16:42:38 +0100
+Message-ID: <CAMuHMdWXuoWX=AgB=RY=5At_yw6nZJGBOK_8TXjwgYQN27JcQQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dmaengine: Add basic debugfs support
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 19:49:54 GMT (+0000), Paul Walmsley wrote:
-> On Tue, 3 Dec 2019, Anup Patel wrote:
->
->> We select Goldfish RTC driver using QEMU virt machine kconfig option
->> to access RTC device on QEMU virt machine.
->>
->> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->> Reviewed-by: Atish Patra <atish.patra@wdc.com>
->> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
->
-> I just grepped for Goldfish through the QEMU git tree, and it didn't come
-> up with anything.  Per our discussion last year: as a general matter of
-> policy, until QEMU merges support for a simulated hardware device into
-> their master branch, we shouldn't speculatively enable support for it.
-> So, NAK from me on this one until that happens.
+Hi Peter,
 
-Thanks, I thought they were going in through a hw/rtc tree and forgot about
-them.  I've queued them up for QEMU via the RISC-V tree, there's still some
-other patches I'd like to batch up but I'll send them up soon.  I don't see any
-reason why the Linux patches can't go in via an early-ish RC, so we shoul be
-fine.
+On Thu, Jan 30, 2020 at 12:41 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Via the /sys/kernel/debug/dmaengine users can get information about the
+> DMA devices and the used channels.
+>
+> Example output on am654-evm with audio using two channels and after running
+> dmatest on 6 channels:
+>
+>  # cat /sys/kernel/debug/dmaengine
+> dma0 (285c0000.dma-controller): number of channels: 96
+>
+> dma1 (31150000.dma-controller): number of channels: 267
+>  dma1chan0:             2b00000.mcasp:tx
+>  dma1chan1:             2b00000.mcasp:rx
+>  dma1chan2:             in-use
+>  dma1chan3:             in-use
+>  dma1chan4:             in-use
+>  dma1chan5:             in-use
+>  dma1chan6:             in-use
+>  dma1chan7:             in-use
+>
+> For slave channels we can show the device and the channel name a given
+> channel is requested.
+> For non slave devices the only information we know is that the channel is
+> in use.
+>
+> DMA drivers can implement the optional dbg_show callback to provide
+> controller specific information instead of the generic one.
+>
+> It is easy to extend the generic dmaengine_dbg_show() to print additional
+> information about the used channels.
+>
+> I have taken the idea from gpiolib.
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Thanks for your patch!
+
+On Salvator-XS with R-Car H3 ES2.0:
+
+    dma0 (ec700000.dma-controller): number of channels: 15
+
+    dma1 (ec720000.dma-controller): number of channels: 15
+
+    dma2 (e65a0000.dma-controller): number of channels: 2
+     dma2chan0: e6590000.usb:ch0
+     dma2chan1: e6590000.usb:ch1
+
+    dma3 (e65b0000.dma-controller): number of channels: 2
+     dma3chan0: e6590000.usb:ch2
+     dma3chan1: e6590000.usb:ch3
+
+    dma4 (e6460000.dma-controller): number of channels: 2
+     dma4chan0: e659c000.usb:ch0
+     dma4chan1: e659c000.usb:ch1
+
+    dma5 (e6470000.dma-controller): number of channels: 2
+     dma5chan0: e659c000.usb:ch2
+     dma5chan1: e659c000.usb:ch3
+
+    dma6 (e6700000.dma-controller): number of channels: 15
+
+    dma7 (e7300000.dma-controller): number of channels: 15
+     dma7chan0: e6510000.i2c:tx
+
+    dma8 (e7310000.dma-controller): number of channels: 15
+     dma8chan0: e6550000.serial:tx
+     dma8chan1: e6550000.serial:rx
+
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -760,6 +761,13 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>                 return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>
+>  found:
+> +#ifdef CONFIG_DEBUG_FS
+> +       chan->slave_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev), name);
+> +       if (!chan->slave_name)
+> +               dev_warn(dev,
+> +                        "Cannot allocate memory for slave name (debugfs)\n");
+
+No need to print a message, as the memory allocation core already takes
+care of that.
+
+But, do you really need chan->slave_name?
+You already have chan->slave and chan->name.
+
+> +#endif
+> +
+>         chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+>         if (!chan->name) {
+>                 dev_warn(dev,
+
+> @@ -1562,3 +1577,108 @@ static int __init dma_bus_init(void)
+>         return class_register(&dma_devclass);
+>  }
+>  arch_initcall(dma_bus_init);
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +static void *dmaengine_seq_start(struct seq_file *s, loff_t *pos)
+> +{
+> +       struct dma_device *dma_dev = NULL;
+> +       loff_t index = *pos;
+> +
+> +       s->private = "";
+> +
+> +       mutex_lock(&dma_list_mutex);
+> +       list_for_each_entry(dma_dev, &dma_device_list, global_node)
+> +               if (index-- == 0) {
+> +                       mutex_unlock(&dma_list_mutex);
+> +                       return dma_dev;
+
+Can the dma_device go away after unlocking the list?
+Unlike dma_request_chan(), this doesn't increase a refcnt.
+
+> +               }
+> +       mutex_unlock(&dma_list_mutex);
+> +
+> +       return NULL;
+> +}
+> +
+> +static void *dmaengine_seq_next(struct seq_file *s, void *v, loff_t *pos)
+> +{
+> +       struct dma_device *dma_dev = v;
+> +       void *ret = NULL;
+> +
+> +       mutex_lock(&dma_list_mutex);
+> +       if (list_is_last(&dma_dev->global_node, &dma_device_list))
+> +               ret = NULL;
+> +       else
+> +               ret = list_entry(dma_dev->global_node.next,
+> +                                struct dma_device, global_node);
+> +       mutex_unlock(&dma_list_mutex);
+
+Likewise.
+
+> +
+> +       s->private = "\n";
+> +       ++*pos;
+> +
+> +       return ret;
+> +}
+> +
+> +static void dmaengine_seq_stop(struct seq_file *s, void *v)
+> +{
+> +}
+> +
+> +static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
+> +{
+> +       struct dma_chan *chan;
+> +
+> +       list_for_each_entry(chan, &dma_dev->channels, device_node) {
+> +               if (chan->client_count) {
+> +                       seq_printf(s, " dma%dchan%d:", dma_dev->dev_id,
+> +                                  chan->chan_id);
+> +                       if (chan->slave_name)
+> +                               seq_printf(s, "\t\t%s\n", chan->slave_name);
+> +                       else
+> +                               seq_printf(s, "\t\t%s\n", "in-use");
+
+The truncated ternary operator might help here:
+
+        seq_printf(s, "\t\t%s\n", chan->slave_name ?: "in-use");
+
+However, you might as well just use dev_name(chan->slave) and chan->name
+instead of chan->slave_name.
+
+> +               }
+> +       }
+> +}
+> +
+> +static int dmaengine_seq_show(struct seq_file *s, void *v)
+> +{
+> +       struct dma_device *dma_dev = v;
+> +
+> +       seq_printf(s, "%sdma%d (%s): number of channels: %u\n",
+> +                  (char *)s->private, dma_dev->dev_id, dev_name(dma_dev->dev),
+> +                  dma_dev->chancnt);
+> +
+> +       if (dma_dev->dbg_show)
+> +               dma_dev->dbg_show(s, dma_dev);
+
+So providing a custom .dbg_show() means replacing the standard info, not
+augmenting it?
+
+> +       else
+> +               dmaengine_dbg_show(s, dma_dev);
+> +
+> +       return 0;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
