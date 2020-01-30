@@ -2,103 +2,118 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493DDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B0AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF88206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7Ivzmp3"
+	by mail.kernel.org (Postfix) with ESMTP id 22BA92173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580379135;
+	bh=P9h3/Bn/eSdl3ZWgp0VveGQkiQrefKB9XBTyKjeDoOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fp/l2Y9M9mnSEh9K7essoG3NiYKQQLlRaA0/gMCQ1k0/DDa+qKN0KrO/v1VAjW2E8
+	 J9A1+BpeTG2RGGNTjiaJtFLn8kbk5CpjZjWd2Ez66WEnyZh+G5Rxvmu2dtMZY6ASSJ
+	 kZxjTL8Ph8TDleDxMdyL0a4S1G5SD5MIoxOFIGwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgA3KLx (ORCPT
+        id S1727164AbgA3KMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:11:53 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54524 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3KLw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:11:52 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so1115783pjb.4;
-        Thu, 30 Jan 2020 02:11:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X6B408HVKqVgRddttBmZ/lvRWns0/HwPdIVXoXJfH4E=;
-        b=c7Ivzmp3oKr9rXKl5OoQ+47r/bqWcTqeLMbGis525KSXrrwn5BJAXMMnvQO+EazbD3
-         X5N2jpP6TPpE8o8Pt4eegtqRL8G+8OGJc2+VcTE/9JGHzn/CiJ0unLnKfyYp7MCG5FY8
-         rwUNbQtWuxAeXcDjZSQKQqBdFGC49jLIYcBVf08jjdq8nQRuVBMtZaCGyu51ylbvZW4m
-         QMQ3RAjCRwWUnI0KJtypR16+rL6mwc0xlHgSnTdTcYOHIBplOXXgWcDoGNNparelJ8Ez
-         8Tek53F5EtaApt7IpJ3IXru3ktvF/2n3MduFNH38D3wpg+h5QMlvHvjTvUQWhdPxSgG1
-         KY7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=X6B408HVKqVgRddttBmZ/lvRWns0/HwPdIVXoXJfH4E=;
-        b=UGKm1x3Cgi9pYe3sQ0bvIpIrEfFHKOxq0vgKnWUoCtbAb0VhHsrBqry5kFiQQo0e2N
-         yWg+W9/5DxwlEl3uQCy2SLQxWs/6IOMW3nxiBcjjR2bq49lZT51sMVPrGzJvViTCrpiV
-         Dsena/UQwR5tijhG3rRGmXSfBGP699UN7ipn4rOpXvIq9XXCP39hJVoDg1Qm2RnZtldU
-         FuRNgkrwK8F1mJBp/Fr7m3rnT6/1r7kwcU6aHbsRypGcA2BzL/xVxpPF/g/1XzozyvbO
-         Hzl6gXznBCwUobXp8JZSaX9/OrOuZTFWk5hU/3r6hRzxGoRRTMHxYzF9J4UVmUSdK332
-         KyGQ==
-X-Gm-Message-State: APjAAAVbFJkJ1zikYx8VylrzZX9ZAwGEwp+25q5/25dsJkTaBt9xGuEG
-        0X9qvaZgD11Yx71xv9rwq+Q=
-X-Google-Smtp-Source: APXvYqyKkr61j+ElMfljiMs2BCzPRuQOnrAi43XYT2V9n8VWhg2yQWg72wstJF6J7ByCuUJYQ/ALuw==
-X-Received: by 2002:a17:902:8a89:: with SMTP id p9mr3924542plo.286.1580379112493;
-        Thu, 30 Jan 2020 02:11:52 -0800 (PST)
-Received: from localhost.localdomain ([2405:204:848d:d4b5:49ce:a9e3:28b5:cf94])
-        by smtp.gmail.com with ESMTPSA id k21sm6239683pfa.63.2020.01.30.02.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 02:11:51 -0800 (PST)
-From:   Pragat Pandya <pragat.pandya@gmail.com>
-To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org,
-        Pragat Pandya <pragat.pandya@gmail.com>
-Subject: [PATCH 2/2] staging: exfat: Remove unused struct 'dev_info_t'
-Date:   Thu, 30 Jan 2020 15:41:18 +0530
-Message-Id: <20200130101118.15936-3-pragat.pandya@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200130101118.15936-1-pragat.pandya@gmail.com>
-References: <20200130101118.15936-1-pragat.pandya@gmail.com>
+        Thu, 30 Jan 2020 05:12:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgA3KMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 05:12:14 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B091B206D5;
+        Thu, 30 Jan 2020 10:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580379133;
+        bh=P9h3/Bn/eSdl3ZWgp0VveGQkiQrefKB9XBTyKjeDoOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UGpunH0fs3194+uliHqPn4YZ2qcxfggN5Fnih63Cr4LzINmDuXU5FKyXBHbI2h58v
+         XKQqlp5J9a2fMtK23kis7NWl7LHYOrVRsZG8MDuDaQAxM1CdiUR7H2sVdsEK2VtnYM
+         jTIWHwaFeUXyLoM2qZHNgBruUVDtYHwedNjFfpSo=
+Date:   Thu, 30 Jan 2020 10:12:07 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH v3] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200130101207.GB1532@willie-the-truck>
+References: <20200123014627.71720-1-bgeffon@google.com>
+ <20200127053056.213679-1-bgeffon@google.com>
+ <20200128152641.GA29776@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200128152641.GA29776@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove global declaration of unused struct "dev_info_t".
-Structure "dev_info_t" is defined in exfat.h and not referenced in any
-other file.
+On Tue, Jan 28, 2020 at 03:26:41PM +0000, Will Deacon wrote:
+> On Sun, Jan 26, 2020 at 09:30:56PM -0800, Brian Geffon wrote:
+> > When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> > set, the source mapping will not be removed. Instead it will be
+> > cleared as if a brand new anonymous, private mapping had been created
+> > atomically as part of the mremap() call.  If a userfaultfd was watching
+> > the source, it will continue to watch the new mapping.  For a mapping
+> > that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+> > mremap() call to fail. MREMAP_DONTUNMAP requires that MREMAP_FIXED is
+> > also used. The final result is two equally sized VMAs where the
+> > destination contains the PTEs of the source.
+> >    
+> > We hope to use this in Chrome OS where with userfaultfd we could write
+> > an anonymous mapping to disk without having to STOP the process or worry
+> > about VMA permission changes.
+> >    
+> > This feature also has a use case in Android, Lokesh Gidra has said
+> > that "As part of using userfaultfd for GC, We'll have to move the physical
+> > pages of the java heap to a separate location. For this purpose mremap
+> > will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> > heap, its virtual mapping will be removed as well. Therefore, we'll
+> > require performing mmap immediately after. This is not only time consuming
+> > but also opens a time window where a native thread may call mmap and
+> > reserve the java heap's address range for its own usage. This flag
+> > solves the problem."
+> 
+> Hmm, this sounds like you're dealing with a multi-threaded environment,
+> yet your change only supports private mappings. How does that work?
 
-Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
----
- drivers/staging/exfat/exfat.h | 5 -----
- 1 file changed, 5 deletions(-)
+Sorry, this was badly worded. I was trying to understand how the GC is
+implememented, and whether everything was part of the same process or if
+things like memfds or something else were being used to share memory. Having
+spoken to Brian off-list, it's all one process...
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index b29e2f5154ee..1ae4ae4b3441 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -231,11 +231,6 @@ struct date_time_t {
- 	u16      MilliSecond;
- };
- 
--struct dev_info_t {
--	u32      SecSize;    /* sector size in bytes */
--	u32      DevSize;    /* block device size in sectors */
--};
--
- struct vol_info_t {
- 	u32      FatType;
- 	u32      ClusterSize;
--- 
-2.17.1
+> It's also worrying because, with two private mappings of the same anonymous
+> memory live simultaneously, you run the risk of hitting D-cache aliasing
+> issues on some architectures and losing coherency between them as a result
+> (even in a single-threaded scenario). Is userspace just supposed to deal
+> with this, or should we be enforcing SHMLBA alignment?
 
+... and this was me completely misreading the patch. The old mapping is
+still torn down, but then replaced with a new private mapping rather than
+being unmapped.
+
+However, looks like there are some issues handling shared mappings with
+this patch (and possibly mlock()?), so I'll wait for a new spin.
+
+Will
