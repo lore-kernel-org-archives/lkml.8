@@ -2,52 +2,53 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94180C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04A5214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE11214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410196;
-	bh=qwX7KzfDO8n1SQ9JfC+x1esOcYl8z/Z/tv967FPO1jA=;
+	s=default; t=1580410199;
+	bh=jVxsJgPWE3lwIUElOdauuh6S25hKs4MOUOwnIQNQnqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwBNBWIN/kaaLho4TUKV2xr37NN3u1F70pcPrTwuEN+sDa+VqJNVvqanVlvqC5YXO
-	 hIzhDjynngRAw67D/bEg9jO/oCmHZVlI4tzvvW5kLslD21FC4q7BnlSGWk3/djajDU
-	 DT4RxaP2vfNIpQN+J7m7uQWon7gmbsatC4Gae60I=
+	b=Zyw9rgwcOgWfsM7E2Zcunzc9LmgbSMhoXeBFt24RV9HUZ9kL1yX+lGxbQ6fYknmiu
+	 BGDsPT8C4SkTouY/ti/uCBZ+e7AlPzwLPAxyisWLBY6o+ms0b88pq9UOUBTTsd2/rd
+	 znwMHr4PTv35cJ7Euv5PrPYdIyt7f/I0Ppdm3K6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgA3Sro (ORCPT
+        id S1731395AbgA3Srg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730976AbgA3Srl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:41 -0500
+        id S1731380AbgA3Sr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34CB324687;
-        Thu, 30 Jan 2020 18:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A48220674;
+        Thu, 30 Jan 2020 18:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410059;
-        bh=qwX7KzfDO8n1SQ9JfC+x1esOcYl8z/Z/tv967FPO1jA=;
+        s=default; t=1580410047;
+        bh=jVxsJgPWE3lwIUElOdauuh6S25hKs4MOUOwnIQNQnqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s9U5RL5hXNltH1ZMST36Qqpnxg9PYE8qCwPno5TJ8sfQBqFcbRVZMlI1N6t4PTb00
-         MmjXG7zAp/DPsI2OmY3vav23OdLUnrrrglXb2t/UZIyHfv7kmPWXlqmsGx3EEKVWux
-         eR+zBECqw+IFctLwRrw+9BNRq4JKDj+Houpn6Ycw=
+        b=aNI9XE8H5D3iT7cYOZtQ6ji03o/hWeL/sEDyv9kQiVW+9E4JkBRMPsJSKaQ8JhiZp
+         HCuXzMIo9i6brPQsf1Hr87gIOAP64SBQ7GcWEL9/xLm+LSkDc9Uq2VNJRgB55eUTEo
+         WQHgjh/BgpMOIJCfEanGxradUHG0obi+CommTMwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Zhang <zhangpan26@huawei.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/55] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
-Date:   Thu, 30 Jan 2020 19:39:11 +0100
-Message-Id: <20200130183614.135099635@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Ofer Levi <oferle@mellanox.com>,
+        linux-snps-arc@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 26/55] arc: eznps: fix allmodconfig kconfig warning
+Date:   Thu, 30 Jan 2020 19:39:07 +0100
+Message-Id: <20200130183613.523751546@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -60,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Zhang <zhangpan26@huawei.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 306d5acbfc66e7cccb4d8f91fc857206b8df80d1 ]
+[ Upstream commit 1928b36cfa4df1aeedf5f2644d0c33f3a1fcfd7b ]
 
-1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
-1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
-1004
-1005         if (input_mt_is_active(i_slot) &&
-1006             input_mt_is_used(mt, i_slot))
-1007             return -EAGAIN;
-1008     }
+Fix kconfig warning for arch/arc/plat-eznps/Kconfig allmodconfig:
 
-We previously assumed 'mt' could be null (see line 1002).
+WARNING: unmet direct dependencies detected for CLKSRC_NPS
+  Depends on [n]: GENERIC_CLOCKEVENTS [=y] && !PHYS_ADDR_T_64BIT [=y]
+  Selected by [y]:
+  - ARC_PLAT_EZNPS [=y]
 
-The following situation is similar, so add a judgement.
-
-Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Ofer Levi <oferle@mellanox.com>
+Cc: linux-snps-arc@lists.infradead.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-multitouch.c | 2 +-
+ arch/arc/plat-eznps/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 8403251992abb..19dfd8acd0dab 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1007,7 +1007,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
- 		tool = MT_TOOL_DIAL;
- 	else if (unlikely(!confidence_state)) {
- 		tool = MT_TOOL_PALM;
--		if (!active &&
-+		if (!active && mt &&
- 		    input_mt_is_active(&mt->slots[slotnum])) {
- 			/*
- 			 * The non-confidence was reported for
+diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
+index 8eff057efcaeb..ce908e2c52824 100644
+--- a/arch/arc/plat-eznps/Kconfig
++++ b/arch/arc/plat-eznps/Kconfig
+@@ -7,7 +7,7 @@
+ menuconfig ARC_PLAT_EZNPS
+ 	bool "\"EZchip\" ARC dev platform"
+ 	select CPU_BIG_ENDIAN
+-	select CLKSRC_NPS
++	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+ 	select EZNPS_GIC
+ 	select EZCHIP_NPS_MANAGEMENT_ENET if ETHERNET
+ 	help
 -- 
 2.20.1
 
