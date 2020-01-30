@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B20C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B6B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207A2214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aNiL5acF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvlLQg25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgA3VNm (ORCPT
+        id S1727820AbgA3VMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:13:42 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38506 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbgA3VMz (ORCPT
+        Thu, 30 Jan 2020 16:12:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42016 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727741AbgA3VMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:12:55 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t6so1823920plj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:12:55 -0800 (PST)
+        Thu, 30 Jan 2020 16:12:51 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p9so1814853plk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:12:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kusoJ9Oev7Pj23ZWUrs+11xOFwvMD53pguR4hXEdEGM=;
-        b=aNiL5acFWisbjjTjfzgrXPr9wjxck7dAlmTjQgrZCCM/2Ww2pKszK96bQNvTdaoXDI
-         rKdLZiEFhEZzTrTKNTNdx8pQB8H+18Xjd1eJdZMHso7yRyUwtBMOR68F8rEnWfjW9fQt
-         RfxldIPLgtVNSZVw1EEsSFvXkOroxIXPKQFZw=
+        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
+        b=mvlLQg25kRWGKBllUT9LNWpMct+Ba9NKWhZdoJX9+F9VAred9+dS/mDDCVnUjMykB6
+         JGnUnzTVq3MReXN52FJHvEOjso6Eo4DYGGCKemrWLVfzm13MY7EJwthSidsm5ZTA2WNN
+         CbsWG08fig8R1vdNkLtPz/Qr8aV/mkk5CBygY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kusoJ9Oev7Pj23ZWUrs+11xOFwvMD53pguR4hXEdEGM=;
-        b=BWdbbfXCXhKlGjYR0Z1x4GH3pTpLVLepQ91JnTBNgt5Xn++o96onB2lYxXe5s0hG9H
-         t3efS4j1UlzAt2uWSuz1XcMDKmQNH26wtTTRd2TwHdiLsE7GiqdPNmu1ID0pyDfTvllr
-         zFJWSOMVdi0XJ5guxRFgBm3/oGJ7enppg9mv9fW2mkE3qMLo62WYxALqrP/AFr+/QhZJ
-         pQ6+PyF6Mc2t+bc5egC/7PX/fpKWQjdLzjBXxI9AAhxo0bZBHJT5TMA1aF62dmuIqMJV
-         i738ONCvnwF68LSH2tUgE5rSgPwVVGki6uKKqlBvyMRtDZDk01eCVPYn8kkb6FddS9u9
-         V3GA==
-X-Gm-Message-State: APjAAAVZU7K021XQTZU3xYtwiOn47d6KYG0zi3HjGzXE+QwoaeoVDAfk
-        0ARh9c9OjpgQNjf5qFeVxR1Atw==
-X-Google-Smtp-Source: APXvYqwe0qRkaWDidOrdKnE8oUdTw6jxlBtUuBHq5uav5aVOIgtlL/9m1Dd9HvFykYt2bddO1/EEYA==
-X-Received: by 2002:a17:902:b587:: with SMTP id a7mr6703883pls.82.1580418774669;
-        Thu, 30 Jan 2020 13:12:54 -0800 (PST)
+        bh=TLRLFIcc4LIDPB9YigEhydFs/8ZzkV4XRdQLFB2ep6Q=;
+        b=rYX/Kq6p682rb7HccPWEfXza2GQND6U2qyGK5vcHeP6TaOTE+dsYKhH0B7/uENNdlB
+         5RvN/3h+zpG8GvFjCN5S+JqkK5iAdbGbS1P8DwMxAgHtk18uBxeAVYo8qjRN2/eeyFcN
+         DCN28gCq/iizCGzfSG2SB1cF4zNDJQjH5JGIKgwR6klD8LtksNQotAXIj0KsPAQpt6AK
+         OaXEucShgq1uq04686i+4q6X3vr0iyo6aBRV3esWJnmJhFoRRlfFt3RmxYFqHCGlyNqT
+         FY+5moLRi+VLqbZktTLLIJNd0Dsz4Cx2JX4yD26k5ORdaMEapXHNvKj6G6W++FI3tJtV
+         IwXQ==
+X-Gm-Message-State: APjAAAWE92NiHV2+ZMn49AbjT/aWEr6DOzQJk8PFT8OyEf31kfT2WzSR
+        B5FVNew6+Iu7xrbcSXqA+oebVA==
+X-Google-Smtp-Source: APXvYqynqQ+EaQq3PdE2MU+3FgfT6u0H42mDI9WEvEDzLZl9MDS9Vjmi62wBJhNJvvoukgiX+YZr8A==
+X-Received: by 2002:a17:90a:db0b:: with SMTP id g11mr7870236pjv.140.1580418770963;
+        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.53
+        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 13:12:54 -0800 (PST)
+        Thu, 30 Jan 2020 13:12:50 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -64,12 +64,11 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/15] clk: qcom: Get rid of the test clock for dispcc-sc7180
-Date:   Thu, 30 Jan 2020 13:12:21 -0800
-Message-Id: <20200130131220.v3.5.I28ac8f801456f1b950f7da10ed0f74a1344d4a35@changeid>
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 02/15] dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
+Date:   Thu, 30 Jan 2020 13:12:18 -0800
+Message-Id: <20200130131220.v3.2.I0c4bbb0f75a0880cd4bd90d8b267271e2375e0d0@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200130211231.224656-1-dianders@chromium.org>
 References: <20200130211231.224656-1-dianders@chromium.org>
@@ -80,194 +79,318 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test clock isn't in the bindings and apparently it's not used by
-anyone upstream.  Remove it.
+The qcom,dispcc bindings had a few problems with them:
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
+1. They didn't specify all the clocks that dispcc is a client of.
+   Specifically on sc7180 there are two clocks from the DSI PHY and
+   two from the DP PHY.  On sdm845 there are actually two DSI PHYs
+   (each of which has two clocks) and an extra clock from the gcc.
+   These all need to be specified.
+
+2. The sdm845.dtsi has existed for quite some time without specifying
+   the clocks.  The Linux driver was relying on global names to match
+   things up.  While we should transition things, it should be noted
+   in the bindings.
+
+3. The names used the bindings for "xo" and "gpll0" didn't match the
+   names that QC used for these clocks internally and this was causing
+   confusion / difficulty with their code generation tools.  Switched
+   to the internal names to simplify everyone's lives.  It's not quite
+   as clean in a purist sense but it should avoid headaches.  This
+   officially changes the binding, but that seems OK in this case.
+
+Also note that I updated the example.
+
+Fixes: 5d28e44ba630 ("dt-bindings: clock: Add YAML schemas for the QCOM DISPCC clock bindings")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- Patch ("clk: qcom: Get rid of the test...dispcc-sc7180") split out for v3.
+- Added include file to description.
+- Discovered / added new gcc input clock on sdm845.
+- Split sc7180 and sdm845 into two files.
+- Switched names to internal QC names rather than logical ones.
+- Updated commit description.
 
-Changes in v2: None
+Changes in v2:
+- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
 
- drivers/clk/qcom/dispcc-sc7180.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ .../bindings/clock/qcom,dispcc.yaml           | 67 -------------
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+ 3 files changed, 183 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
 
-diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-index a820e1558677..397f5d9dafc8 100644
---- a/drivers/clk/qcom/dispcc-sc7180.c
-+++ b/drivers/clk/qcom/dispcc-sc7180.c
-@@ -76,38 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
- 
- static const struct parent_map disp_cc_parent_map_0[] = {
- 	{ P_BI_TCXO, 0 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_0[] = {
- 	{ .fw_name = "bi_tcxo" },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_1[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_DP_PHY_PLL_LINK_CLK, 1 },
- 	{ P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_1[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .fw_name = "dp_phy_pll_link_clk" },
- 	{ .fw_name = "dp_phy_pll_vco_div_clk" },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_2[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_DSI0_PHY_PLL_OUT_BYTECLK, 1 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_2[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .fw_name = "dsi0_phy_pll_out_byteclk" },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_3[] = {
-@@ -115,7 +109,6 @@ static const struct parent_map disp_cc_parent_map_3[] = {
- 	{ P_DISP_CC_PLL0_OUT_MAIN, 1 },
- 	{ P_GPLL0_OUT_MAIN, 4 },
- 	{ P_DISP_CC_PLL0_OUT_EVEN, 5 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_3[] = {
-@@ -123,31 +116,26 @@ static const struct clk_parent_data disp_cc_parent_data_3[] = {
- 	{ .hw = &disp_cc_pll0.clkr.hw },
- 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
- 	{ .hw = &disp_cc_pll0_out_even.clkr.hw },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_4[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_GPLL0_OUT_MAIN, 4 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_4[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_5[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_DSI0_PHY_PLL_OUT_DSICLK, 1 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data disp_cc_parent_data_5[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .fw_name = "dsi0_phy_pll_out_dsiclk" },
--	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
-@@ -166,7 +154,7 @@ static struct clk_rcg2 disp_cc_mdss_ahb_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_ahb_clk_src",
- 		.parent_data = disp_cc_parent_data_4,
--		.num_parents = 3,
-+		.num_parents = 2,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_rcg2_shared_ops,
- 	},
-@@ -180,7 +168,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_byte0_clk_src",
- 		.parent_data = disp_cc_parent_data_2,
--		.num_parents = 3,
-+		.num_parents = 2,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_byte2_ops,
- 	},
-@@ -213,7 +201,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_dp_crypto_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
--		.num_parents = 4,
-+		.num_parents = 3,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_byte2_ops,
- 	},
-@@ -227,7 +215,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_dp_link_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
--		.num_parents = 4,
-+		.num_parents = 3,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_byte2_ops,
- 	},
-@@ -241,7 +229,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_dp_pixel_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
--		.num_parents = 4,
-+		.num_parents = 3,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_dp_ops,
- 	},
-@@ -256,7 +244,7 @@ static struct clk_rcg2 disp_cc_mdss_esc0_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_esc0_clk_src",
- 		.parent_data = disp_cc_parent_data_2,
--		.num_parents = 3,
-+		.num_parents = 2,
- 		.ops = &clk_rcg2_ops,
- 	},
- };
-@@ -279,7 +267,7 @@ static struct clk_rcg2 disp_cc_mdss_mdp_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_mdp_clk_src",
- 		.parent_data = disp_cc_parent_data_3,
--		.num_parents = 5,
-+		.num_parents = 4,
- 		.ops = &clk_rcg2_shared_ops,
- 	},
- };
-@@ -292,7 +280,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_pclk0_clk_src",
- 		.parent_data = disp_cc_parent_data_5,
--		.num_parents = 3,
-+		.num_parents = 2,
- 		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_pixel_ops,
- 	},
-@@ -307,7 +295,7 @@ static struct clk_rcg2 disp_cc_mdss_rot_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_rot_clk_src",
- 		.parent_data = disp_cc_parent_data_3,
--		.num_parents = 5,
-+		.num_parents = 4,
- 		.ops = &clk_rcg2_shared_ops,
- 	},
- };
-@@ -321,7 +309,7 @@ static struct clk_rcg2 disp_cc_mdss_vsync_clk_src = {
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "disp_cc_mdss_vsync_clk_src",
- 		.parent_data = disp_cc_parent_data_0,
--		.num_parents = 2,
-+		.num_parents = 1,
- 		.ops = &clk_rcg2_shared_ops,
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+deleted file mode 100644
+index 9c58e02a1de1..000000000000
+--- a/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
++++ /dev/null
+@@ -1,67 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/bindings/clock/qcom,dispcc.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Qualcomm Display Clock & Reset Controller Binding
+-
+-maintainers:
+-  - Taniya Das <tdas@codeaurora.org>
+-
+-description: |
+-  Qualcomm display clock control module which supports the clocks, resets and
+-  power domains.
+-
+-properties:
+-  compatible:
+-    enum:
+-      - qcom,sc7180-dispcc
+-      - qcom,sdm845-dispcc
+-
+-  clocks:
+-    minItems: 1
+-    maxItems: 2
+-    items:
+-      - description: Board XO source
+-      - description: GPLL0 source from GCC
+-
+-  clock-names:
+-    items:
+-      - const: xo
+-      - const: gpll0
+-
+-  '#clock-cells':
+-    const: 1
+-
+-  '#reset-cells':
+-    const: 1
+-
+-  '#power-domain-cells':
+-    const: 1
+-
+-  reg:
+-    maxItems: 1
+-
+-required:
+-  - compatible
+-  - reg
+-  - clocks
+-  - clock-names
+-  - '#clock-cells'
+-  - '#reset-cells'
+-  - '#power-domain-cells'
+-
+-examples:
+-  # Example of DISPCC with clock node properties for SDM845:
+-  - |
+-    clock-controller@af00000 {
+-      compatible = "qcom,sdm845-dispcc";
+-      reg = <0xaf00000 0x10000>;
+-      clocks = <&rpmhcc 0>, <&gcc 24>;
+-      clock-names = "xo", "gpll0";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-     };
+-...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+new file mode 100644
+index 000000000000..35315011fc37
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller Binding for SC7180
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm display clock control module which supports the clocks, resets and
++  power domains on SC7180.
++
++  See also dt-bindings/clock/qcom,dispcc-sc7180.h.
++
++properties:
++  compatible:
++    const: qcom,sc7180-dispcc
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: GPLL0 source from GCC
++      - description: Byte clock from DSI PHY
++      - description: Pixel clock from DSI PHY
++      - description: Link clock from DP PHY
++      - description: VCO DIV clock from DP PHY
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: gcc_disp_gpll0_clk_src
++      - const: dsi0_phy_pll_out_byteclk
++      - const: dsi0_phy_pll_out_dsiclk
++      - const: dp_phy_pll_link_clk
++      - const: dp_phy_pll_vco_div_clk
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@af00000 {
++      compatible = "qcom,sc7180-dispcc";
++      reg = <0 0x0af00000 0 0x200000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
++               <&dsi_phy 0>,
++               <&dsi_phy 1>,
++               <&dp_phy 0>,
++               <&dp_phy 1>;
++      clock-names = "bi_tcxo",
++                    "gcc_disp_gpll0_clk_src",
++                    "dsi0_phy_pll_out_byteclk",
++                    "dsi0_phy_pll_out_dsiclk",
++                    "dp_phy_pll_link_clk",
++                    "dp_phy_pll_vco_div_clk";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+new file mode 100644
+index 000000000000..aed2387dc4a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/qcom,sdm845-dispcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Display Clock & Reset Controller Binding for SDM845
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm display clock control module which supports the clocks, resets and
++  power domains on SDM845.
++
++  See also dt-bindings/clock/qcom,dispcc-sdm845.h.
++
++properties:
++  compatible:
++    const: qcom,sdm845-dispcc
++
++  # NOTE: sdm845.dtsi existed for quite some time and specified no clocks.
++  # The code had to use hardcoded mechanisms to find the input clocks.
++  # New dts files should have these clocks.
++  clocks:
++    items:
++      - description: Board XO source
++      - description: GPLL0 source from GCC
++      - description: GPLL0 div source from GCC
++      - description: Byte clock from DSI PHY0
++      - description: Pixel clock from DSI PHY0
++      - description: Byte clock from DSI PHY1
++      - description: Pixel clock from DSI PHY1
++      - description: Link clock from DP PHY
++      - description: VCO DIV clock from DP PHY
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: gcc_disp_gpll0_clk_src
++      - const: gcc_disp_gpll0_div_clk_src
++      - const: dsi0_phy_pll_out_byteclk
++      - const: dsi0_phy_pll_out_dsiclk
++      - const: dsi1_phy_pll_out_byteclk
++      - const: dsi1_phy_pll_out_dsiclk
++      - const: dp_link_clk_divsel_ten
++      - const: dp_vco_divided_clk_src_mux
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@af00000 {
++      compatible = "qcom,sdm845-dispcc";
++      reg = <0 0x0af00000 0 0x10000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
++               <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
++               <&dsi0_phy 0>,
++               <&dsi0_phy 1>,
++               <&dsi1_phy 0>,
++               <&dsi1_phy 1>,
++               <&dp_phy 0>,
++               <&dp_phy 1>;
++      clock-names = "bi_tcxo",
++                    "gcc_disp_gpll0_clk_src",
++                    "gcc_disp_gpll0_div_clk_src",
++                    "dsi0_phy_pll_out_byteclk",
++                    "dsi0_phy_pll_out_dsiclk",
++                    "dsi1_phy_pll_out_byteclk",
++                    "dsi1_phy_pll_out_dsiclk",
++                    "dp_link_clk_divsel_ten",
++                    "dp_vco_divided_clk_src_mux";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
 -- 
 2.25.0.341.g760bfbb309-goog
 
