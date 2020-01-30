@@ -2,128 +2,130 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C1AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA6BC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5CA20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f+KBjjef"
+	by mail.kernel.org (Postfix) with ESMTP id 1F9D120707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbgA3RCZ (ORCPT
+        id S1727405AbgA3RFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:02:25 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13959 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3RCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:02:24 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e330c0b0000>; Thu, 30 Jan 2020 09:02:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 09:02:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 09:02:23 -0800
-Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 17:02:23 +0000
-Subject: Re: Re: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input
- driver for Tegra210
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <20200129111340.GF2479935@ulmo>
- <070f9a4c-1919-f3f6-fef3-ed0a84cf5776@nvidia.com>
- <20200130122055.GA2584455@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5a45782a-d88f-099a-f3b6-3c0255131f6b@nvidia.com>
-Date:   Thu, 30 Jan 2020 09:02:21 -0800
+        Thu, 30 Jan 2020 12:05:35 -0500
+Received: from mga09.intel.com ([134.134.136.24]:16487 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727158AbgA3RFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 12:05:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 09:05:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="309759519"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 30 Jan 2020 09:05:13 -0800
+Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
+To:     Vinod Koul <vkoul@kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20200113084005.849071-1-vkoul@kernel.org>
+ <20200121064608.GA2841@vkoul-mobl>
+ <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
+ <5878067.luYmtVZgP3@debian64> <20200125053237.GG2841@vkoul-mobl>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
+Date:   Thu, 30 Jan 2020 19:07:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200130122055.GA2584455@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200125053237.GG2841@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580403723; bh=A9RuPB5fbixK5sm9wKeq5QfAS+EZrvYRY7JYNhFDIxM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=f+KBjjefTnGF+7UwoAa9RNl2MGpafpuIMkycNlYO3mvZKyGb+pnAb7SfZtnWE9Qiq
-         pXfRB7v8J2Kbfb0ONZ+7H0yt/iEibISeh9AWrAjNpBFg4c3Mb5V0Nf3NWa7tp75GT7
-         OAAXITy2uqWyrz5UtCH6UcbZ+jMRie1i9EzYlhMhlKYGxfS6ld28TpFFU+5reXQOmy
-         +Chrfc/+ecGwiCVNveR2ge83D+ZY+2k4lQdT3bSgwpc4UNb/t+k5Q20OJexu3t+TlB
-         ShQsGCdA2nuVSXex8Xj/09EMUrnPjuIUiSWCntiL2nhyDA+N5fpR4jF8AB850rRdBq
-         6O16IKT8ainJA==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25.1.2020 7.32, Vinod Koul wrote:
+>>>>>>
+>>>>>> On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
+>>>>>>>
+>>>>>>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
+>>>>>>> These require firmware to be loaded and in case devices have ROM those can
+>>>>>>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+>>>>>>>
+>>>>>>> This includes two patches from Christian which supported these controllers
+>>>>>>> w/o ROM and later my patches for ROM support and multiple firmware versions,
+>>>>>>> debugfs hook for rom erase and export of xhci-pci functions.
+>>>>>>>
+...
+> 
+> Mathias, any comments on this series..?
+> 
 
-On 1/30/20 4:20 AM, Thierry Reding wrote:
-> On Wed, Jan 29, 2020 at 09:23:38AM -0800, Sowjanya Komatineni wrote:
->> On 1/29/20 3:13 AM, Thierry Reding wrote:
->>> On Tue, Jan 28, 2020 at 10:23:20AM -0800, Sowjanya Komatineni wrote:
-> [...]
->>>> diff --git a/drivers/staging/media/tegra/host1x-video.c b/drivers/staging/media/tegra/host1x-video.c
-> [...]
->>>> +	media_device_init(&cam->media_dev);
->>>> +	ret = media_device_register(&cam->media_dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(cam->dev, "failed to register media device: %d\n", ret);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	cam->v4l2_dev.mdev = &cam->media_dev;
->>>> +	ret = v4l2_device_register(cam->dev, &cam->v4l2_dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(cam->dev, "V4L2 device registration failed: %d\n", ret);
->>>> +		goto register_error;
->>>> +	}
->>>> +
->>>> +	dev_set_drvdata(&dev->dev, cam);
->>>> +
->>>> +	ret = host1x_device_init(dev);
->>>> +	if (ret < 0)
->>>> +		goto dev_exit;
->>>> +
->>>> +	return 0;
->>>> +
->>>> +dev_exit:
->>>> +	host1x_device_exit(dev);
->>> There should be no need to call host1x_device_exit() when
->>> host1x_device_init() failed because the latter already takes care of
->>> undoing whatever it did already.
->>>
->> host1x_device_init can fail if any of its client ops init fails.
->>
->> So, calling host1x_device_exit here to undo the things done in other
->> successful client init ops.
-> host1x_device_init() already takes care of undoing what it did on
-> failure. Also, it makes sure to only undo what had already been done,
-> rather than tear down every client, even if it hadn't been initialized
-> yet when the failure happened. The latter is what would happen if you
-> called host1x_device_exit() to cleanup at this point.
->
-> Thierry
+Hi Vinod
 
-Sorry, yes I see host1x_device_init calls exit ops on failures .
+Sorry about the delay.
 
-Will remove it. Thanks Thierry.
+Maybe a firmware loading driver like this that wraps the xhci pci driver could
+work.
 
+One benefit is that we could skip searching for the right firmware name based
+on PCI ID. Each of these Renesas controllers now have their own pci_device_id
+entry in the pci_ids[] table, and could have the supported firmware name(s)
+in .driver_data. This way we wouldn't need to add the renesas_fw_table[] or
+maybe even the renesas_needs_fw_dl() function in this series.
+
+I realize this can't be easily changed because usb_hcd_pci_probe() takes the
+pci_device_id pointer as an argument, and expects id.driver_data to be a
+HC driver pointer.
+
+So this turns out to be a question for Greg and Alan:
+
+Would it make sense to change usb_hcd_pci_probe() to take a HC driver pointer
+as an argument instead of a pointer to pci_device_id?
+pci_device_id pointer is only used to extract the HC driver handle.
+This way the driver_data could be used for, well, driver data.
+
+Heikki actually suggested this some time ago to me, back then the idea was to
+improve xhci quirks code by using driver_data for quirk flags instead of
+finding and setting them later.
+
+There are a few other opens regarding this series. Mostly because I'm not (yet)
+familiar with all the details, so I'll just just list them here.
+
+- Is it really enough to add the Renesas driver to Makefile before xhci-pci
+   driver to make sure it gets matched and probed based on vendor/device id
+   before xhci-pci driver is matched and probed based on pci class?
+   What if the Renesas driver is a module and xhci-pci compiled in?
+
+- Previously probe didn't return before hcd's were added and everything set up.
+   Now with request_firmware_nowait() probe returns early successfully, and the
+   old xhci_pci_probe() which sets up everything is called later by the request
+   firmware callback. So there could be whole new set of races possible.
+   For example pci remove can be called mid firmware loading, or when the old
+   xhci_pci_probe is still setting up things.
+
+   I understood that a synchronous request_firmware() in probe has its own
+   issues, not sure if there is a good solution for this.
+
+- Before the firmware is written to the controller the firmware version is
+   compared against a hardcoded number in the drivers renesas_fw_table[].
+   This means new firmware versions can't be supported without patching the driver.
+   Is this intentional?
+
+- Mathias
