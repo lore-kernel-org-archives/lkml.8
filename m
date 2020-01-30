@@ -2,69 +2,304 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9EEC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4460DC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4052083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C71206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iYEDvFcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgA3LkN (ORCPT
+        id S1727193AbgA3Llp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:40:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:51404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgA3LkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:40:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DF96328;
-        Thu, 30 Jan 2020 03:40:12 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 734143F67D;
-        Thu, 30 Jan 2020 03:40:09 -0800 (PST)
-Date:   Thu, 30 Jan 2020 11:40:04 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC v3 02/10] cpufreq: blacklist SDM845 in cpufreq-dt-platdev
-Message-ID: <20200130114004.GA56122@bogus>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-3-sibis@codeaurora.org>
- <20200128204423.GF46072@google.com>
+        Thu, 30 Jan 2020 06:41:45 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37446 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgA3Llo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 06:41:44 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfc5p039522;
+        Thu, 30 Jan 2020 05:41:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580384498;
+        bh=nOaK30hKcU0nHopMIcNcNAI7Bta7pqRO8AZ6vId2DZU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=iYEDvFcQ1/K+Xei33XXarqTk2bXsPv6Meu3Q+Fq4bt1TwJJwidwjI6nwQgYz2AS6t
+         nCMmEbdIpnVJzX5i+etGWlch5N0I+txNPEYv5xyRZ6L2LFXXfRWYU8Mh84fHAMTOwy
+         UPT/w4MdxQ/YFcnz4vezisOhneFcjnsLlTWGMvDo=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfcUf008738;
+        Thu, 30 Jan 2020 05:41:38 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 05:41:37 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 05:41:38 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfW7Y104655;
+        Thu, 30 Jan 2020 05:41:36 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
+Subject: [PATCH 2/2] dmaengine: Add basic debugfs support
+Date:   Thu, 30 Jan 2020 13:42:20 +0200
+Message-ID: <20200130114220.23538-3-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200130114220.23538-1-peter.ujfalusi@ti.com>
+References: <20200130114220.23538-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128204423.GF46072@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:44:23PM -0800, Matthias Kaehlcke wrote:
-> On Tue, Jan 28, 2020 at 01:33:42AM +0530, Sibi Sankar wrote:
-> > Add SDM845 to cpufreq-dt-platdev blacklist.
->
-> nit: you could mention that cpufreq is handled by the
-> 'qcom-cpufreq-hw' driver.
->
+Via the /sys/kernel/debug/dmaengine users can get information about the
+DMA devices and the used channels.
 
-IIUC, these platforms get the OPP table from the firmware and there shouldn't
-be OPP entries in the DT. If not, why not fix that to avoid more confusion.
-Can we make cpu0_node_has_opp_v2_prop return false in short.
+Example output on am654-evm with audio using two channels and after running
+dmatest on 6 channels:
 
---
-Regards,
-Sudeep
+ # cat /sys/kernel/debug/dmaengine
+dma0 (285c0000.dma-controller): number of channels: 96
+
+dma1 (31150000.dma-controller): number of channels: 267
+ dma1chan0:             2b00000.mcasp:tx
+ dma1chan1:             2b00000.mcasp:rx
+ dma1chan2:             in-use
+ dma1chan3:             in-use
+ dma1chan4:             in-use
+ dma1chan5:             in-use
+ dma1chan6:             in-use
+ dma1chan7:             in-use
+
+For slave channels we can show the device and the channel name a given
+channel is requested.
+For non slave devices the only information we know is that the channel is
+in use.
+
+DMA drivers can implement the optional dbg_show callback to provide
+controller specific information instead of the generic one.
+
+It is easy to extend the generic dmaengine_dbg_show() to print additional
+information about the used channels.
+
+I have taken the idea from gpiolib.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/dma/dmaengine.c   | 120 ++++++++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |  12 +++-
+ 2 files changed, 131 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 75516f9fbab4..7573a4d0f9d7 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -32,6 +32,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/platform_device.h>
++#include <linux/debugfs.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -760,6 +761,13 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+ 		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+ 
+ found:
++#ifdef CONFIG_DEBUG_FS
++	chan->slave_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev), name);
++	if (!chan->slave_name)
++		dev_warn(dev,
++			 "Cannot allocate memory for slave name (debugfs)\n");
++#endif
++
+ 	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+ 	if (!chan->name) {
+ 		dev_warn(dev,
+@@ -840,6 +848,13 @@ void dma_release_channel(struct dma_chan *chan)
+ 		chan->name = NULL;
+ 		chan->slave = NULL;
+ 	}
++
++#ifdef CONFIG_DEBUG_FS
++	if (chan->slave_name) {
++		kfree(chan->slave_name);
++		chan->slave_name = NULL;
++	}
++#endif
+ 	mutex_unlock(&dma_list_mutex);
+ }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
+@@ -1562,3 +1577,108 @@ static int __init dma_bus_init(void)
+ 	return class_register(&dma_devclass);
+ }
+ arch_initcall(dma_bus_init);
++
++#ifdef CONFIG_DEBUG_FS
++static void *dmaengine_seq_start(struct seq_file *s, loff_t *pos)
++{
++	struct dma_device *dma_dev = NULL;
++	loff_t index = *pos;
++
++	s->private = "";
++
++	mutex_lock(&dma_list_mutex);
++	list_for_each_entry(dma_dev, &dma_device_list, global_node)
++		if (index-- == 0) {
++			mutex_unlock(&dma_list_mutex);
++			return dma_dev;
++		}
++	mutex_unlock(&dma_list_mutex);
++
++	return NULL;
++}
++
++static void *dmaengine_seq_next(struct seq_file *s, void *v, loff_t *pos)
++{
++	struct dma_device *dma_dev = v;
++	void *ret = NULL;
++
++	mutex_lock(&dma_list_mutex);
++	if (list_is_last(&dma_dev->global_node, &dma_device_list))
++		ret = NULL;
++	else
++		ret = list_entry(dma_dev->global_node.next,
++				 struct dma_device, global_node);
++	mutex_unlock(&dma_list_mutex);
++
++	s->private = "\n";
++	++*pos;
++
++	return ret;
++}
++
++static void dmaengine_seq_stop(struct seq_file *s, void *v)
++{
++}
++
++static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
++{
++	struct dma_chan *chan;
++
++	list_for_each_entry(chan, &dma_dev->channels, device_node) {
++		if (chan->client_count) {
++			seq_printf(s, " dma%dchan%d:", dma_dev->dev_id,
++				   chan->chan_id);
++			if (chan->slave_name)
++				seq_printf(s, "\t\t%s\n", chan->slave_name);
++			else
++				seq_printf(s, "\t\t%s\n", "in-use");
++		}
++	}
++}
++
++static int dmaengine_seq_show(struct seq_file *s, void *v)
++{
++	struct dma_device *dma_dev = v;
++
++	seq_printf(s, "%sdma%d (%s): number of channels: %u\n",
++		   (char *)s->private, dma_dev->dev_id, dev_name(dma_dev->dev),
++		   dma_dev->chancnt);
++
++	if (dma_dev->dbg_show)
++		dma_dev->dbg_show(s, dma_dev);
++	else
++		dmaengine_dbg_show(s, dma_dev);
++
++	return 0;
++}
++
++static const struct seq_operations dmaengine_seq_ops = {
++	.start = dmaengine_seq_start,
++	.next = dmaengine_seq_next,
++	.stop = dmaengine_seq_stop,
++	.show = dmaengine_seq_show,
++};
++
++static int dmaengine_open(struct inode *inode, struct file *file)
++{
++	return seq_open(file, &dmaengine_seq_ops);
++}
++
++static const struct file_operations dmaengine_operations = {
++	.owner		= THIS_MODULE,
++	.open		= dmaengine_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= seq_release,
++};
++
++static int __init dmaengine_debugfs_init(void)
++{
++	/* /sys/kernel/debug/dmaengine */
++	debugfs_create_file("dmaengine", S_IFREG | 0444, NULL, NULL,
++			    &dmaengine_operations);
++	return 0;
++}
++subsys_initcall(dmaengine_debugfs_init);
++
++#endif	/* DEBUG_FS */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 64461fc64e1b..5b9d6b1aa6e9 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -300,6 +300,8 @@ struct dma_router {
+  * @chan_id: channel ID for sysfs
+  * @dev: class device for sysfs
+  * @name: backlink name for sysfs
++ * @slave_name: slave name for debugfs in format:
++ *	dev_name(requester's dev):channel name, for example: "2b00000.mcasp:tx"
+  * @device_node: used to add this to the device chan list
+  * @local: per-cpu pointer to a struct dma_chan_percpu
+  * @client_count: how many clients are using this channel
+@@ -318,6 +320,9 @@ struct dma_chan {
+ 	int chan_id;
+ 	struct dma_chan_dev *dev;
+ 	const char *name;
++#ifdef CONFIG_DEBUG_FS
++	char *slave_name;
++#endif
+ 
+ 	struct list_head device_node;
+ 	struct dma_chan_percpu __percpu *local;
+@@ -805,7 +810,9 @@ struct dma_filter {
+  *     called and there are no further references to this structure. This
+  *     must be implemented to free resources however many existing drivers
+  *     do not and are therefore not safe to unbind while in use.
+- *
++ * @dbg_show: optional routine to show contents in debugfs; default code
++ *     will be used when this is omitted, but custom code can show extra,
++ *     controller specific information.
+  */
+ struct dma_device {
+ 	struct kref ref;
+@@ -891,6 +898,9 @@ struct dma_device {
+ 					    struct dma_tx_state *txstate);
+ 	void (*device_issue_pending)(struct dma_chan *chan);
+ 	void (*device_release)(struct dma_device *dev);
++#ifdef CONFIG_DEBUG_FS
++	void (*dbg_show)(struct seq_file *s, struct dma_device *dev);
++#endif
+ };
+ 
+ static inline int dmaengine_slave_config(struct dma_chan *chan,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
