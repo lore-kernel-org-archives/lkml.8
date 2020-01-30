@@ -2,245 +2,218 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86109C35246
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAB1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527B120708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2D620708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkmfaAwj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiDoJLVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgA3UEp (ORCPT
+        id S1727614AbgA3UFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:04:45 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38169 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgA3UEp (ORCPT
+        Thu, 30 Jan 2020 15:05:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40742 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgA3UFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:04:45 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so3168198lfm.5;
-        Thu, 30 Jan 2020 12:04:42 -0800 (PST)
+        Thu, 30 Jan 2020 15:05:31 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a142so4888968oii.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rFCe8vloPLNWzxA538JrWua6vDo091Ev6JlOviqKEP8=;
-        b=hkmfaAwjCxiyS3TEjul6A1H41o01HJLzovlUi76uHlvEOLOljPWTPv5u1R9ZDfktkI
-         601diKCi7LzNYWk6MHxykXbHQjf4Kw05FUFKQhVh1c1m2Wm/i+LgGWK8p6AYnFjnYrW6
-         EJCnjWGlVZvR/7NPqrHpPV51UJ2blzzvXKefUiWdIjK16OKQdeJNETv0+Z37XZsALl/4
-         hxN0Ug5pArgLbUSDR7JQ8F4yCFP2oiCuq3r2kuJi0aSgGjRY1rqVhyqTkuNtjG4aG/nx
-         0wSx1FnQ0MOYqcnDRaxm7bGXjgFpeSqu0FyaRTBykQDonBKLh2rqBomDWoEbjy48GgKG
-         4dAw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=94xgiZ2GumdGMWJPAkQ3lyvxruP/ROGgeixLfGHw8Ow=;
+        b=EiDoJLViz5lUKkMfgtBo8x5JnS7D+OdkBhGRwWBdINZjG2IGt2XkWeAnHNpgBuUi5e
+         +qAfzqN8IdhbxK/50JNcYwaSo+9mJ9BVi9jw+XsV0hjKstwSsTSSF2Xjv7Jyci+kp6DJ
+         LpVxgaDXdnf5qntrp9/i2qcKJc2bAn2oLFD4zHdnzQmvOHlzbqAVY0ilMBHpoxPCvUxs
+         hl30zg1wsxT8yKMOr5CZvPT7b4mKV3MjARh6A1cq3eh6kEG+W9CSZcNdwgoygeMP0usu
+         iNbtD52IJSZ2KxFtmH7gTnYd3+m0vizDKMHpV2WYwmcYyitgswhnvKza5hwsKCg1XRAC
+         RrTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rFCe8vloPLNWzxA538JrWua6vDo091Ev6JlOviqKEP8=;
-        b=frCRxEZf2JF3KrOKfButzkvMcEsbYPNhpKXgL1FwlX1tm7y225qAqKXGoEzerPBkFi
-         Py+8+OWst24kUtPt0bjfziRgXw3MziGBCpImGORQ8Ox2I4dij1PjwDNwC3nlTzNAkLR7
-         hjnfT6wKv5IEgjpNwI+fBLPS0m2LmXlXGMdM4vIrZ8++FMRQGHkENt0oOX8QLvFz6vW6
-         RZz3IhXv0fccyrP6MAiRdmot7kW9ObAOb2vb/o9z6xJnb2625gAgDNJe3Gf1wLhUo95+
-         X7944zEPW+go1xi8JcYvi/pnAgnXB4o7gam0XX383DwVNf3/iQCO1PPyVpa2nBvHFgqt
-         ZNIg==
-X-Gm-Message-State: APjAAAW47f2QtZCoCOKy47kUhZaZ+tAqkVWprU73yj2x4dQ1YBWvPewE
-        8nHaqPlCquU7KAtNQ2V+5U77c96A
-X-Google-Smtp-Source: APXvYqxSvFuYAVMVkR/q9WgOJ+MVbiERLV9W4owm/YZJFHbRSZjE01CZQrltoVaf4oP1fLp0byRugQ==
-X-Received: by 2002:ac2:44bc:: with SMTP id c28mr3367481lfm.72.1580414681280;
-        Thu, 30 Jan 2020 12:04:41 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a22sm3462498ljp.96.2020.01.30.12.04.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 12:04:40 -0800 (PST)
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
- <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
-Date:   Thu, 30 Jan 2020 23:04:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=94xgiZ2GumdGMWJPAkQ3lyvxruP/ROGgeixLfGHw8Ow=;
+        b=qDiad1V3gO87tcItaGpinS9+GFGHhluqLdEt2EIWWv1SyzXV9iOQIV4mEDny3OuqoS
+         X1cuqTjI7axitSgT243ZSVDinXcgwtAuY/9P7l5AEtzfO8aHA3DBKc9fEWmXmXkWOnr5
+         CZKLvEYg3KStWM2JnJioTitnT/LrF/drG5WDTJDh2c5WKjtW7T2FGsVXC4aFbEtEaNeB
+         KDfMNZ6+8tqyEo14nyH0sFLO1FVIiXQHI80eO4v4bQMtcKrAsC9A0MpVQR6I5KQg2G6b
+         tp1WQDBlsI70qs3FNQcUZOctzdV2VLn2F4t+RcCNb8i31I57B1NqzD7BjvK96td/x8WX
+         83aw==
+X-Gm-Message-State: APjAAAUxGRpSQKzPWa9YibLGmGmrzWkZNkgntioDD7Xqi1mO16vM66cG
+        Ig4E6hGbyApe0XrrGWGcG6viGmm07XzpnxgM2AM=
+X-Google-Smtp-Source: APXvYqyVj9Wrj/4DIMLggqhfTwjlBIv98W9yE4P5oojXinLflpKsa/LIPbMLXErln3G4483H+MEy18jv5ttZh3OTQ94=
+X-Received: by 2002:aca:1b17:: with SMTP id b23mr2344068oib.95.1580414730517;
+ Thu, 30 Jan 2020 12:05:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200124181819.4840-1-hjl.tools@gmail.com> <20200124181819.4840-3-hjl.tools@gmail.com>
+ <202001271531.B9ACE2A@keescook> <CAMe9rOrVyzvaTyURc4RJJTHUXGG6uAC9KyQomxQFzWzrAN4nrg@mail.gmail.com>
+ <202001301143.288B55DCC1@keescook>
+In-Reply-To: <202001301143.288B55DCC1@keescook>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Thu, 30 Jan 2020 12:04:54 -0800
+Message-ID: <CAMe9rOocT960KsofP9o_y49FdgY9NGix=GcYnpKLvp7RhieZNA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.01.2020 21:45, Jon Hunter пишет:
-> 
-> On 30/01/2020 16:11, Dmitry Osipenko wrote:
->> 30.01.2020 17:09, Jon Hunter пишет:
->>>
->>> On 30/01/2020 04:37, Dmitry Osipenko wrote:
->>>> It's a bit impractical to enable hardware's clock at the time of DMA
->>>> channel's allocation because most of DMA client drivers allocate DMA
->>>> channel at the time of the driver's probing, and thus, DMA clock is kept
->>>> always-enabled in practice, defeating the whole purpose of runtime PM.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
->>>>  1 file changed, 32 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>> index 22b88ccff05d..0ee28d8e3c96 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
->>>>  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
->>>>  	}
->>>>  	tdc->busy = false;
->>>> +
->>>> +	pm_runtime_put(tdc->tdma->dev);
->>>>  }
->>>>  
->>>>  static void tegra_dma_start(struct tegra_dma_channel *tdc,
->>>> @@ -500,18 +502,25 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->>>>  	tegra_dma_resume(tdc);
->>>>  }
->>>>  
->>>> -static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->>>> +static bool tdc_start_head_req(struct tegra_dma_channel *tdc)
->>>>  {
->>>>  	struct tegra_dma_sg_req *sg_req;
->>>> +	int err;
->>>>  
->>>>  	if (list_empty(&tdc->pending_sg_req))
->>>> -		return;
->>>> +		return false;
->>>> +
->>>> +	err = pm_runtime_get_sync(tdc->tdma->dev);
->>>> +	if (WARN_ON_ONCE(err < 0))
->>>> +		return false;
->>>>  
->>>>  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
->>>>  	tegra_dma_start(tdc, sg_req);
->>>>  	sg_req->configured = true;
->>>>  	sg_req->words_xferred = 0;
->>>>  	tdc->busy = true;
->>>> +
->>>> +	return true;
->>>>  }
->>>>  
->>>>  static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
->>>> @@ -615,6 +624,8 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
->>>>  	}
->>>>  	list_add_tail(&sgreq->node, &tdc->free_sg_req);
->>>>  
->>>> +	pm_runtime_put(tdc->tdma->dev);
->>>> +
->>>>  	/* Do not start DMA if it is going to be terminate */
->>>>  	if (to_terminate || list_empty(&tdc->pending_sg_req))
->>>>  		return;
->>>> @@ -730,9 +741,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
->>>>  		dev_err(tdc2dev(tdc), "No DMA request\n");
->>>>  		goto end;
->>>>  	}
->>>> -	if (!tdc->busy) {
->>>> -		tdc_start_head_req(tdc);
->>>> -
->>>> +	if (!tdc->busy && tdc_start_head_req(tdc)) {
->>>>  		/* Continuous single mode: Configure next req */
->>>>  		if (tdc->cyclic) {
->>>>  			/*
->>>> @@ -775,6 +784,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>  	else
->>>>  		wcount = status;
->>>>  
->>>> +	/*
->>>> +	 * tegra_dma_stop() will drop the RPM's usage refcount, but
->>>> +	 * tegra_dma_resume() touches hardware and thus we should keep
->>>> +	 * the DMA clock active while it's needed.
->>>> +	 */
->>>> +	pm_runtime_get(tdc->tdma->dev);
->>>> +
->>>
->>> Would it work and make it simpler to just enable in the issue_pending
->>> and disable in the handle_once_dma_done or terminate_all?
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>> index 3a45079d11ec..86bbb45da93d 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -616,9 +616,14 @@ static void handle_once_dma_done(struct
->>> tegra_dma_channel *tdc,
->>>         list_add_tail(&sgreq->node, &tdc->free_sg_req);
->>>
->>>         /* Do not start DMA if it is going to be terminate */
->>> -       if (to_terminate || list_empty(&tdc->pending_sg_req))
->>> +       if (to_terminate)
->>>                 return;
->>>
->>> +       if (list_empty(&tdc->pending_sg_req)) {
->>> +               pm_runtime_put(tdc->tdma->dev);
->>> +               return;
->>> +       }
->>> +
->>>         tdc_start_head_req(tdc);
->>>  }
->>>
->>> @@ -729,6 +734,11 @@ static void tegra_dma_issue_pending(struct dma_chan
->>> *dc)
->>>                 goto end;
->>>         }
->>>         if (!tdc->busy) {
->>> +               if (pm_runtime_get_sync(tdc->tdma->dev) < 0) {
->>> +                       dev_err(tdc2dev(tdc), "Failed to enable DMA!\n");
->>> +                       goto end;
->>> +               }
->>> +
->>>                 tdc_start_head_req(tdc);
->>>
->>>                 /* Continuous single mode: Configure next req */
->>> @@ -788,6 +798,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>                                 get_current_xferred_count(tdc, sgreq,
->>> wcount);
->>>         }
->>>         tegra_dma_resume(tdc);
->>> +       pm_runtime_put(tdc->tdma->dev);
->>>
->>>  skip_dma_stop:
->>>         tegra_dma_abort_all(tdc);
->>>
->>
->> The tegra_dma_stop() should put RPM anyways, which is missed in yours
->> sample. Please see handle_continuous_head_request().
-> 
-> Yes and that is deliberate. The cyclic transfers the transfers *should*
-> not stop until terminate_all is called. The tegra_dma_stop in
-> handle_continuous_head_request() is an error condition and so I am not
-> sure it is actually necessary to call pm_runtime_put() here.
+On Thu, Jan 30, 2020 at 11:51 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Jan 30, 2020 at 09:51:38AM -0800, H.J. Lu wrote:
+> > On Mon, Jan 27, 2020 at 3:34 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Fri, Jan 24, 2020 at 10:18:19AM -0800, H.J. Lu wrote:
+> > > > With the command-line option, -mx86-used-note=yes, the x86 assembler
+> > > > in binutils 2.32 and above generates a program property note in a note
+> > > > section, .note.gnu.property, to encode used x86 ISAs and features.
+> > > > But x86 kernel linker script only contains a signle NOTE segment:
+> > > >
+> > > > PHDRS {
+> > > >  text PT_LOAD FLAGS(5);
+> > > >  data PT_LOAD FLAGS(6);
+> > > >  percpu PT_LOAD FLAGS(6);
+> > > >  init PT_LOAD FLAGS(7);
+> > > >  note PT_NOTE FLAGS(0);
+> > > > }
+> > > > SECTIONS
+> > > > {
+> > > > ...
+> > > >  .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+> > > > e.*)) __stop_notes = .; } :text :note
+> > > > ...
+> > > > }
+> > > >
+> > > > which may not be incompatible with note.gnu.property sections.  Since
+>
+> I don't understand this. "may not be incompatible"? Is there an error
+> generated? If so, what does it look like?
 
-But then tegra_dma_stop() shouldn't unset the "busy" mark.
+When -mx86-used-note=yes is passed to assembler, with my patch, I got
 
->> I'm also finding the explicit get/put a bit easier to follow in the
->> code, don't you think so?
-> 
-> I can see that, but I was thinking that in the case of cyclic transfers,
-> it should only really be necessary to call the get/put at the beginning
-> and end. So in my mind there should only be two exit points which are
-> the ISR handler for SG and terminate_all for SG and cyclic.
+[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
 
-Alright, I'll update this patch.
+Displaying notes found in: .notes
+  Owner                Data size Description
+  Xen                  0x00000006 Unknown note type: (0x00000006)
+   description data: 6c 69 6e 75 78 00
+  Xen                  0x00000004 Unknown note type: (0x00000007)
+   description data: 32 2e 36 00
+  Xen                  0x00000008 Unknown note type: (0x00000005)
+   description data: 78 65 6e 2d 33 2e 30 00
+  Xen                  0x00000008 Unknown note type: (0x00000003)
+   description data: 00 00 00 80 ff ff ff ff
+  Xen                  0x00000008 Unknown note type: (0x0000000f)
+   description data: 00 00 00 00 80 00 00 00
+  Xen                  0x00000008 NT_VERSION (version)
+   description data: 80 a1 ba 82 ff ff ff ff
+  Xen                  0x00000008 NT_ARCH (architecture)
+   description data: 00 10 00 81 ff ff ff ff
+  Xen                  0x00000029 Unknown note type: (0x0000000a)
+   description data: 21 77 72 69 74 61 62 6c 65 5f 70 61 67 65 5f 74
+61 62 6c 65 73 7c 70 61 65 5f 70 67 64 69 72 5f 61 62 6f 76 65 5f 34
+67 62
+  Xen                  0x00000004 Unknown note type: (0x00000011)
+   description data: 01 88 00 00
+  Xen                  0x00000004 Unknown note type: (0x00000009)
+   description data: 79 65 73 00
+  Xen                  0x00000008 Unknown note type: (0x00000008)
+   description data: 67 65 6e 65 72 69 63 00
+  Xen                  0x00000010 Unknown note type: (0x0000000d)
+   description data: 01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00
+  Xen                  0x00000004 Unknown note type: (0x0000000e)
+   description data: 01 00 00 00
+  Xen                  0x00000004 Unknown note type: (0x00000010)
+   description data: 01 00 00 00
+  Xen                  0x00000008 Unknown note type: (0x0000000c)
+   description data: 00 00 00 00 00 80 ff ff
+  Xen                  0x00000008 Unknown note type: (0x00000004)
+   description data: 00 00 00 00 00 00 00 00
+  GNU                  0x00000014 NT_GNU_BUILD_ID (unique build ID bitstring)
+    Build ID: 11c73de2922f593e1b35b92ab3c70eaa1a80fa83
+  Linux                0x00000018 OPEN
+   description data: 35 2e 33 2e 39 2d 32 30 30 2e 30 2e 66 63 33 30
+2e 78 38 36 5f 36 34 00
+  Xen                  0x00000008 Unknown note type: (0x00000012)
+   description data: 70 04 00 01 00 00 00 00
+[hjl@gnu-skx-1 linux]$
+
+Without my patch,
+
+[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+
+Displaying notes found in: .notes
+  Owner                Data size Description
+  Xen                  0x00000006 Unknown note type: (0x00000006)
+   description data: 6c 69 6e 75 78 00
+  Xen                  0x00000004 Unknown note type: (0x00000007)
+   description data: 32 2e 36 00
+  xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+   description data: 08 00 00 00 03
+readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+0x80000000, alignment: 8
+[hjl@gnu-skx-1 linux]$
+
+> > > > note.gnu.property section in kernel image is unused, this patch discards
+> > > > .note.gnu.property sections in kernel linker script by adding
+> > > >
+> > > >  /DISCARD/ : {
+> > > >   *(.note.gnu.property)
+> > > >  }
+> > >
+> > > I think this is happening in the wrong place? Shouldn't this be in the
+> > > DISCARDS macro in include/asm-generic/vmlinux.lds.h instead?
+> >
+> > Please read my commit message closely.   We can't discard .note.gnu.property
+> > sections by adding .note.gnu.property to default discarded sections
+> > since default
+> > discarded sections are placed AFTER .notes sections in x86 kernel
+> > linker scripts.
+>
+> I see what you mean now, /DISCARD/ happens after the NOTES macro (now in
+> the RO_DATA macro). To this end, I think this should be in
+> include/asm-generic/vmlinux.lds.h in the NOTES macro? It's x86-specific
+> right now, but why not make this future-proof?
+
+I am trying to avoid touching generic parts.  I will give it a try.
+
+> I'd like to avoid as much arch-specific linker stuff as we can. I spent
+> a lot of time trying to clean up NOTES specifically. :)
+>
+> > +     /* .note.gnu.property sections should be discarded */
+>
+> This comment should say _why_ -- the script already shows _what_ is
+> happening...
+
+I will update comments.
+
+> > +     /DISCARD/ : {
+> > +             *(.note.gnu.property)
+> > +     }
+>
+
+Thanks.
+
+-- 
+H.J.
