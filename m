@@ -2,326 +2,124 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD76C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1F32083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F6120707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:43:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P3a8OvLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgA3Nmq (ORCPT
+        id S1727442AbgA3NnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:42:46 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:53282 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbgA3Nmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:42:43 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id D0903FB04;
-        Thu, 30 Jan 2020 14:42:40 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Wiy-UHbJajGY; Thu, 30 Jan 2020 14:42:38 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id C274440917; Thu, 30 Jan 2020 14:42:36 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
+        Thu, 30 Jan 2020 08:43:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35408 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbgA3NnV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:43:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jYhjR/5YILbh7BPbn/+YKb6pgodhq2Z9d9eAv2TzBqc=; b=P3a8OvLVUUircv8bnSBppFjpQ
+        a8c4IxcERcbLTTlHkArLvJskXT04pJJpMDIr2L7nTysDctV2/PwAo44psvYD6lGC3yW7evZwITk08
+        LYRntxIVdzFugqn2Diz7v2LR7eo2eRPVE51NdAmxaCAEMJ0W4uX9v0vmfmNqSDstGcPZbic02Ibfe
+        7W+5qZqMP4mFYF8LYQweQboAdi5AkLBkEpiquQonWBKhXgHb1GbtOt+Em5dQyGET8I97fWAHly5IX
+        Wh2drjCzYeO3rWJu4O8fOEj7bI2Mmqo+/yaNTqL1xwdVjGVlY8YphSGs1AaEuqpfiBst5qCKhPiWX
+        mDRKoQG2Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixA6C-0007qd-6p; Thu, 30 Jan 2020 13:43:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03366300E0C;
+        Thu, 30 Jan 2020 14:41:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 418DA2B6563BA; Thu, 30 Jan 2020 14:43:10 +0100 (CET)
+Date:   Thu, 30 Jan 2020 14:43:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] iio: vncl4000: Enable runtime pm for vcnl4200/4040
-Date:   Thu, 30 Jan 2020 14:42:36 +0100
-Message-Id: <237488ddf8f2707e905164c0ec81a7979f1fa9a9.1580391472.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1580391472.git.agx@sigxcpu.org>
-References: <cover.1580391472.git.agx@sigxcpu.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Message-ID: <20200130134310.GX14914@hirez.programming.kicks-ass.net>
+References: <20200130115255.20840-1-hdegoede@redhat.com>
+ <20200130115255.20840-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130115255.20840-3-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0
-we don't do anything since they use on demand measurement.
+On Thu, Jan 30, 2020 at 12:52:55PM +0100, Hans de Goede wrote:
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/iio/light/vcnl4000.c | 135 ++++++++++++++++++++++++++++++++---
- 1 file changed, 124 insertions(+), 11 deletions(-)
+> This does not matter though, we can model the chain of PLLs as a single
+> PLL with a quotient equal to the quotients of all PLLs in the chain
+> multiplied.
+> 
+> So we can create a simplified model of the CPU clock setup using a
+> reference clock of 100 MHz plus a quotient which gets us as close to the
+> frequency from the DSM as possible.
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 8f198383626b..1395875d9553 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -22,6 +22,7 @@
- #include <linux/i2c.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/pm_runtime.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -57,6 +58,8 @@
- #define VCNL4000_AL_OD		BIT(4) /* start on-demand ALS measurement */
- #define VCNL4000_PS_OD		BIT(3) /* start on-demand proximity measurement */
- 
-+#define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspend */
-+
- enum vcnl4000_device_ids {
- 	VCNL4000,
- 	VCNL4010,
-@@ -87,6 +90,7 @@ struct vcnl4000_chip_spec {
- 	int (*init)(struct vcnl4000_data *data);
- 	int (*measure_light)(struct vcnl4000_data *data, int *val);
- 	int (*measure_proximity)(struct vcnl4000_data *data, int *val);
-+	int (*set_power_state)(struct vcnl4000_data *data, bool on);
- };
- 
- static const struct i2c_device_id vcnl4000_id[] = {
-@@ -99,6 +103,12 @@ static const struct i2c_device_id vcnl4000_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, vcnl4000_id);
- 
-+static int vcnl4000_set_power_state(struct vcnl4000_data *data, bool on)
-+{
-+	/* no suspend op */
-+	return 0;
-+}
-+
- static int vcnl4000_init(struct vcnl4000_data *data)
- {
- 	int ret, prod_id;
-@@ -127,9 +137,31 @@ static int vcnl4000_init(struct vcnl4000_data *data)
- 	data->al_scale = 250000;
- 	mutex_init(&data->vcnl4000_lock);
- 
-+	ret = data->chip_spec->set_power_state(data, true);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- };
- 
-+static int vcnl4200_set_power_state(struct vcnl4000_data *data, bool on)
-+{
-+	u16 val = on ? 0 /* power on */ : 1 /* shut down */;
-+	int ret;
-+
-+	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Wait at least one integration cycle before fetching data */
-+	data->vcnl4200_al.last_measurement = ktime_get();
-+	data->vcnl4200_ps.last_measurement = ktime_get();
-+}
-+
- static int vcnl4200_init(struct vcnl4000_data *data)
- {
- 	int ret, id;
-@@ -155,14 +187,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 
- 	data->rev = (ret >> 8) & 0xf;
- 
--	/* Set defaults and enable both channels */
--	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
--	if (ret < 0)
--		return ret;
--	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
--	if (ret < 0)
--		return ret;
--
- 	data->vcnl4200_al.reg = VCNL4200_AL_DATA;
- 	data->vcnl4200_ps.reg = VCNL4200_PS_DATA;
- 	switch (id) {
-@@ -180,11 +204,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 		data->al_scale = 120000;
- 		break;
- 	}
--	data->vcnl4200_al.last_measurement = ktime_set(0, 0);
--	data->vcnl4200_ps.last_measurement = ktime_set(0, 0);
- 	mutex_init(&data->vcnl4200_al.lock);
- 	mutex_init(&data->vcnl4200_ps.lock);
- 
-+	ret = data->chip_spec->set_power_state(data, true);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- };
- 
-@@ -291,24 +317,28 @@ static const struct vcnl4000_chip_spec vcnl4000_chip_spec_cfg[] = {
- 		.init = vcnl4000_init,
- 		.measure_light = vcnl4000_measure_light,
- 		.measure_proximity = vcnl4000_measure_proximity,
-+		.set_power_state = vcnl4000_set_power_state,
- 	},
- 	[VCNL4010] = {
- 		.prod = "VCNL4010/4020",
- 		.init = vcnl4000_init,
- 		.measure_light = vcnl4000_measure_light,
- 		.measure_proximity = vcnl4000_measure_proximity,
-+		.set_power_state = vcnl4000_set_power_state,
- 	},
- 	[VCNL4040] = {
- 		.prod = "VCNL4040",
- 		.init = vcnl4200_init,
- 		.measure_light = vcnl4200_measure_light,
- 		.measure_proximity = vcnl4200_measure_proximity,
-+		.set_power_state = vcnl4200_set_power_state,
- 	},
- 	[VCNL4200] = {
- 		.prod = "VCNL4200",
- 		.init = vcnl4200_init,
- 		.measure_light = vcnl4200_measure_light,
- 		.measure_proximity = vcnl4200_measure_proximity,
-+		.set_power_state = vcnl4200_set_power_state,
- 	},
- };
- 
-@@ -323,6 +353,23 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
- 	}
- };
- 
-+static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, bool on)
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	if (on) {
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret < 0)
-+			pm_runtime_put_noidle(dev);
-+	} else {
-+		pm_runtime_mark_last_busy(dev);
-+		ret = pm_runtime_put_autosuspend(dev);
-+	}
-+
-+	return ret;
-+}
-+
- static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 				struct iio_chan_spec const *chan,
- 				int *val, int *val2, long mask)
-@@ -332,6 +379,10 @@ static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-+		ret = vcnl4000_set_pm_runtime_state(data, true);
-+		if  (ret < 0)
-+			return ret;
-+
- 		switch (chan->type) {
- 		case IIO_LIGHT:
- 			ret = data->chip_spec->measure_light(data, val);
-@@ -346,6 +397,7 @@ static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 		default:
- 			ret = -EINVAL;
- 		}
-+		vcnl4000_set_pm_runtime_state(data, false);
- 		return ret;
- 	case IIO_CHAN_INFO_SCALE:
- 		if (chan->type != IIO_LIGHT)
-@@ -394,7 +446,22 @@ static int vcnl4000_probe(struct i2c_client *client,
- 	indio_dev->name = VCNL4000_DRV_NAME;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	return devm_iio_device_register(&client->dev, indio_dev);
-+	ret = pm_runtime_set_active(&client->dev);
-+	if (ret < 0)
-+		goto fail_poweroff;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0)
-+		goto fail_poweroff;
-+
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4000_SLEEP_DELAY_MS);
-+	pm_runtime_use_autosuspend(&client->dev);
-+
-+	return 0;
-+fail_poweroff:
-+	data->chip_spec->set_power_state(data, false);
-+	return ret;
- }
- 
- static const struct of_device_id vcnl_4000_of_match[] = {
-@@ -422,13 +489,59 @@ static const struct of_device_id vcnl_4000_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, vcnl_4000_of_match);
- 
-+static int vcnl4000_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	pm_runtime_dont_use_autosuspend(&client->dev);
-+	pm_runtime_disable(&client->dev);
-+	iio_device_unregister(indio_dev);
-+	pm_runtime_set_suspended(&client->dev);
-+
-+	return data->chip_spec->set_power_state(data, false);
-+}
-+
-+static int __maybe_unused vcnl4000_runtime_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = data->chip_spec->set_power_state(data, false);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused vcnl4000_runtime_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = data->chip_spec->set_power_state(data, true);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops vcnl4000_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(vcnl4000_runtime_suspend,
-+			   vcnl4000_runtime_resume, NULL)
-+};
-+
- static struct i2c_driver vcnl4000_driver = {
- 	.driver = {
- 		.name   = VCNL4000_DRV_NAME,
-+		.pm	= &vcnl4000_pm_ops,
- 		.of_match_table = vcnl_4000_of_match,
- 	},
- 	.probe  = vcnl4000_probe,
- 	.id_table = vcnl4000_id,
-+	.remove	= vcnl4000_remove,
- };
- 
- module_i2c_driver(vcnl4000_driver);
--- 
-2.23.0
+s/DSM/SDM/ ?
 
+> For the 83.3 MHz example from above this would give us 100 MHz * 5 / 6 =
+> 83 and 1/3 MHz, which matches exactly what has been measured on actual hw.
+> 
+> This commit makes the tsc_msr.c code use a simplified PLL model with a
+> reference clock of 100 MHz for all Bay and Cherry Trail models.
+
+
+> + * Bay Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> + *  000:   100 *  5 /  6  =  83.3333 MHz
+> + *  001:   100 *  1 /  1  = 100.0000 MHz
+> + *  010:   100 *  4 /  3  = 133.3333 MHz
+> + *  011:   100 *  7 /  6  = 116.6667 MHz
+> + *  100:   100 *  4 /  5  =  80.0000 MHz
+
+> + * Cherry Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> + * 0000:   100 *  5 /  6  =  83.3333 MHz
+> + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> + * 0010:   100 *  4 /  3  = 133.3333 MHz
+> + * 0011:   100 *  7 /  6  = 116.6667 MHz
+> + * 0100:   100 *  4 /  5  =  80.0000 MHz
+> + * 0101:   100 * 14 / 15  =  93.3333 MHz
+> + * 0110:   100 *  9 / 10  =  90.0000 MHz
+> + * 0111:   100 *  8 /  9  =  88.8889 MHz
+> + * 1000:   100 *  7 /  8  =  87.5000 MHz
+
+> + * Merriefield (BYT MID) SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> + * 0010:   100 *  4 /  3  = 133.3333 MHz
+
+> + * Moorefield (CHT MID) SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> + * 0000:   100 *  5 /  6  =  83.3333 MHz
+> + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> + * 0010:   100 *  4 /  3  = 133.3333 MHz
+> + * 0011:   100 *  1 /  1  = 100.0000 MHz
+
+Unless I'm going cross-eyed, that's 4 times the exact same table.
+
+Do we want to use the Cherry Trail table (for being the most complete)
+for all of them?
