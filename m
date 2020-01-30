@@ -2,439 +2,159 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1346C35246
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358CCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B2220702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R9f5NRns"
+	by mail.kernel.org (Postfix) with ESMTP id 0E868206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgA3JNR (ORCPT
+        id S1726932AbgA3JXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:13:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:17143 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726882AbgA3JNR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:13:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580375595; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=OV+rJWAmEQGco859SXAi+h7Dm++pVop0UNENTmmd7ks=; b=R9f5NRnsydrg8UZA6Kc5xGBSWwAKcNYV6FaAC8yNMnv2+jNuZjUTBD4Z06yLL/w35G57nHgE
- w1Jumv3m7JSt2yp+dnVegv/EWqDn0S1KFczflOnLProRdWlQ7zSmrgIcqwKCt9PVzVt6dlQp
- bHZrSLSAV26QL7IqKVvvnbPuvaA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e329e26.7f0132f49a40-smtp-out-n03;
- Thu, 30 Jan 2020 09:13:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1BB3FC447A6; Thu, 30 Jan 2020 09:13:10 +0000 (UTC)
-Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1890C43383;
-        Thu, 30 Jan 2020 09:13:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1890C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2] dt-bindings: geni-se: Convert QUP geni-se bindings to
- YAML
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mgautam@codeaurora.org, swboyd@chromium.org
-References: <1576576279-29927-1-git-send-email-akashast@codeaurora.org>
- <20191220232046.GA408@bogus>
- <7b14fd2b-3aee-7255-ddbf-e1166340eb09@codeaurora.org>
-Message-ID: <5dc66df5-293a-0429-b972-0e80fc078814@codeaurora.org>
-Date:   Thu, 30 Jan 2020 14:43:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 04:23:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42128 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgA3JXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:23:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 672E0AFF0;
+        Thu, 30 Jan 2020 09:04:29 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 10:04:29 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
+ unregister_console()
+Message-ID: <20200130090428.f5lrkxclnmuegqxw@pathway.suse.cz>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <7b14fd2b-3aee-7255-ddbf-e1166340eb09@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 1/28/2020 5:17 PM, Akash Asthana wrote:
+On Mon 2020-01-27 13:47:18, Andy Shevchenko wrote:
+> There are two callers which use the returned code from unregister_console().
+> In some cases, i.e. successfully unregistered Braille console or when console
+> has not been enabled the return code is 1. This code is ambiguous and also
+> prevents callers to distinguish successful operation.
 >
+> Replace this logic to return only negative error codes or 0 when console,
+> either enabled, disabled or Braille has been successfully unregistered.
+
+I am quite confused by the above message. It is probably because
+the patched code is so confusing ;-)
+
+I would start with something like:
+
+<begin>
+There are only two callers that use the returned code from
+unregister_console():
+
+  + unregister_early_console() in arch/m68k/kernel/early_printk.c
+  + kgdb_unregister_nmi_console() in drivers/tty/serial/kgdb_nmi.c
+
+They both expect to get "0" on success and a non-zero value on error.
+</end>
+
+The above is more or less clear. Now, the question is what behavior
+is considered as success and what is failure.
+
+I started thinking about this in a paranoid mode. The console
+registration code is so tricky and it is easy to create
+regression.
+
+But I think that it is actually not much important. There are only
+two callers that handle the return code:
+
+   + The 1st one m68k is a late init call and the error code of
+     init calls is ignored.
+
+   + The 2nd one in kdb code is not much important. I wonder if anyone
+     is actually using kdb. If I remember correctly then Linus
+     prosed to remove it completely during the discussion about
+     lockless printk at Plumbers 2019 and nobody was against.
+
+     In fact, the kdb code is probably wrong. tty_register_driver()
+     is called before register_console() in
+     kgdb_register_nmi_console() =>
+
+     kgdb_unregister_nmi_console() should probably call
+     tty_unregister_driver() even when unregister_console() fails.
+
+unregister_console() is exported symbol but I doubt that the are
+more users of the error code.
+
+So, I think that we do not need to care about regressions.
+But it is worth to define some resonable behavior, see
+below.
+
+
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index d40a316908da..da6a9bdf76b6 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2817,10 +2817,12 @@ int unregister_console(struct console *console)
+>  		console->name, console->index);
+>  
+>  	res = _braille_unregister_console(console);
+> -	if (res)
+> +	if (res < 0)
+>  		return res;
+> +	if (res > 0)
+> +		return 0;
+
+Sigh, I wish that _braille_unregister_console() did not returned 1
+on success but ...
+
+I would describe this as a bugfix. unregister_console() should return
+success (0) when _braille_unregister_console() succeeds.
+
 >
-Thanks Rob for reviewing.
->
-> On 12/21/2019 4:50 AM, Rob Herring wrote:
->> On Tue, Dec 17, 2019 at 03:21:19PM +0530, Akash Asthana wrote:
->>> Convert QUP geni-se bindings to DT schema format using json-schema.
->>>
->>> Signed-off-by: Akash Asthana<akashast@codeaurora.org>
->>> ---
->>> Changes in V2:
->>>   - As per Stephen's comment corrected defintion of interrupts for UART node.
->>>     Any valid UART node must contain atleast 1 interrupts.
->>>
->>>   .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ----------
->>>   .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 197 +++++++++++++++++++++
->>>   2 files changed, 197 insertions(+), 94 deletions(-)
->>>   delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->>> deleted file mode 100644
->>> index dab7ca9..0000000
->>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->>> +++ /dev/null
->>> @@ -1,94 +0,0 @@
->>> -Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
->>> -
->>> -Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
->>> -is a programmable module for supporting a wide range of serial interfaces
->>> -like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
->>> -Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
->>> -Wrapper controller is modeled as a node with zero or more child nodes each
->>> -representing a serial engine.
->>> -
->>> -Required properties:
->>> -- compatible:		Must be "qcom,geni-se-qup".
->>> -- reg:			Must contain QUP register address and length.
->>> -- clock-names:		Must contain "m-ahb" and "s-ahb".
->>> -- clocks:		AHB clocks needed by the device.
->>> -
->>> -Required properties if child node exists:
->>> -- #address-cells: 	Must be <1> for Serial Engine Address
->>> -- #size-cells: 		Must be <1> for Serial Engine Address Size
->>> -- ranges: 		Must be present
->>> -
->>> -Properties for children:
->>> -
->>> -A GENI based QUP wrapper controller node can contain 0 or more child nodes
->>> -representing serial devices.  These serial devices can be a QCOM UART, I2C
->>> -controller, SPI controller, or some combination of aforementioned devices.
->>> -Please refer below the child node definitions for the supported serial
->>> -interface protocols.
->>> -
->>> -Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
->>> -
->>> -Required properties:
->>> -- compatible:		Must be "qcom,geni-i2c".
->>> -- reg: 			Must contain QUP register address and length.
->>> -- interrupts: 		Must contain I2C interrupt.
->>> -- clock-names: 		Must contain "se".
->>> -- clocks: 		Serial engine core clock needed by the device.
->>> -- #address-cells:	Must be <1> for I2C device address.
->>> -- #size-cells:		Must be <0> as I2C addresses have no size component.
->>> -
->>> -Optional property:
->>> -- clock-frequency:	Desired I2C bus clock frequency in Hz.
->>> -			When missing default to 100000Hz.
->>> -
->>> -Child nodes should conform to I2C bus binding as described in i2c.txt.
->>> -
->>> -Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
->>> -
->>> -Required properties:
->>> -- compatible:		Must be "qcom,geni-debug-uart" or "qcom,geni-uart".
->>> -- reg: 			Must contain UART register location and length.
->>> -- interrupts: 		Must contain UART core interrupts.
->>> -- clock-names:		Must contain "se".
->>> -- clocks:		Serial engine core clock needed by the device.
->>> -
->>> -Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
->>> -node binding is described in
->>> -Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
->>> -
->>> -Example:
->>> -	geniqup@8c0000 {
->>> -		compatible = "qcom,geni-se-qup";
->>> -		reg = <0x8c0000 0x6000>;
->>> -		clock-names = "m-ahb", "s-ahb";
->>> -		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
->>> -			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
->>> -		#address-cells = <1>;
->>> -		#size-cells = <1>;
->>> -		ranges;
->>> -
->>> -		i2c0: i2c@a94000 {
->>> -			compatible = "qcom,geni-i2c";
->>> -			reg = <0xa94000 0x4000>;
->>> -			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
->>> -			clock-names = "se";
->>> -			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
->>> -			pinctrl-names = "default", "sleep";
->>> -			pinctrl-0 = <&qup_1_i2c_5_active>;
->>> -			pinctrl-1 = <&qup_1_i2c_5_sleep>;
->>> -			#address-cells = <1>;
->>> -			#size-cells = <0>;
->>> -		};
->>> -
->>> -		uart0: serial@a88000 {
->>> -			compatible = "qcom,geni-debug-uart";
->>> -			reg = <0xa88000 0x7000>;
->>> -			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
->>> -			clock-names = "se";
->>> -			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
->>> -			pinctrl-names = "default", "sleep";
->>> -			pinctrl-0 = <&qup_1_uart_3_active>;
->>> -			pinctrl-1 = <&qup_1_uart_3_sleep>;
->>> -		};
->>> -
->>> -	}
->>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->>> new file mode 100644
->>> index 0000000..5ba0e0e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->>> @@ -0,0 +1,197 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +
->>> +%YAML 1.2
->>> +---
->>> +$id:"http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#"
->>> +$schema:"http://devicetree.org/meta-schemas/core.yaml#"
->>> +
->>> +title: GENI Serial Engine QUP Wrapper Controller
->>> +
->>> +maintainers:
->>> + - Mukesh Savaliya<msavaliy@codeaurora.org>
->>> + - Akash Asthana<akashast@codeaurora.org>
->>> +
->>> +description: |
->>> + Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
->>> + is a programmable module for supporting a wide range of serial interfaces
->>> + like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
->>> + Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
->>> + Wrapper controller is modeled as a node with zero or more child nodes each
->>> + representing a serial engine.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - qcom,geni-se-qup
->>> +
->>> +  reg:
->>> +    description: QUP wrapper common register address and length.
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: m-ahb
->>> +      - const: s-ahb
->>> +
->>> +  clocks:
->>> +    minItems: 2
->>> +    maxItems: 2
->>> +    items:
->>> +      - description: Master AHB Clock
->>> +      - description: Slave AHB Clock
->>> +
->>> +  "#address-cells":
->>> +     const: 2
->>> +
->>> +  "#size-cells":
->>> +     const: 2
->>> +
->>> +  ranges: true
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - clocks
->>> +  - clock-names
->>> +  - "#address-cells"
->>> +  - "#size-cells"
->>> +  - ranges
->>> +
->>> +patternProperties:
->>> +  "[i2c|spi]@[0-9]+$":
->> You'll need to split this so you can a add $ref to SPI and I2C
->> controller schemas.
->>
->> For example:
->>
->> allOf:
->>    - $ref: /spi/spi-controller.yaml#
->>
->>
->> Though you could have 1 pattern that matches everything common and then
->> ones for I2C, SPI, etc.
->>
-> Okay.
->>> +    type: object
->>> +    description: GENI Serial Engine based I2C and SPI Controller.
->>> +                 SPI in master mode supports up to 50MHz, up to four chip
->>> +                 selects, programmable data path from 4 bits to 32 bits and
->>> +                 numerous protocol variants.
->>> +
->>> +    properties:
->>> +      compatible:
->>> +        enum:
->>> +          - qcom,geni-i2c
->>> +          - qcom,geni-spi
->>> +
->>> +      reg:
->>> +        description: GENI Serial Engine register address and length.
->> Number of reg entries? Needs a 'maxItems: 1' or a list of the entries.
-I will update in next patch
->>
->>> +
->>> +      interrupts:
->>> +        maxItems: 1
->>> +
->>> +      clock-names:
->>> +        const: se
->>> +
->>> +      clocks:
->>> +        description: Serial engine core clock needed by the device.
->>> +        maxItems: 1
->>> +
->>> +      "#address-cells":
->>> +         const: 1
->>> +
->>> +      "#size-cells":
->>> +         const: 0
->>> +
->>> +      clock-frequency:
->>> +        description: Desired I2C bus clock frequency in Hz.
->>> +        default: 100000
->>> +
->>> +    required:
->>> +      - compatible
->>> +      - reg
->>> +      - interrupts
->>> +      - clock-names
->>> +      - clocks
->>> +      - "#address-cells"
->>> +      - "#size-cells"
->>> +
->>> +  "serial@[0-9]+$":
->> unit-address is hex.
-I will correct in next patch.
->>
->>> +    type: object
->>> +    description: GENI Serial Engine based UART Controller.
->>> +
->>> +    properties:
->>> +      compatible:
->>> +        enum:
->>> +          - qcom,geni-uart
->>> +          - qcom,geni-debug-uart
->>> +
->>> +      reg:
->>> +        description: GENI Serial Engine register address and length.
->> Number of reg entries?
-I will correct in next patch.
->>
->>> +
->>> +      interrupts:
->>> +        minItems: 1
->>> +        maxItems: 2
->>> +        items:
->>> +          - description: UART core irq
->>> +          - description: Wakeup irq (RX GPIO)
->>> +
->>> +      clock-names:
->>> +        const: se
->>> +
->>> +      clocks:
->>> +        description: Serial engine core clock needed by the device.
->>> +        maxItems: 1
->>> +
->>> +    required:
->>> +      - compatible
->>> +      - reg
->>> +      - interrupts
->>> +      - clock-names
->>> +      - clocks
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +    soc: soc@0 {
->>> +        #address-cells = <2>;
->>> +        #size-cells = <2>;
->>> +
->>> +        qupv3_id_0: geniqup@8c0000 {
->>> +            compatible = "qcom,geni-se-qup";
->>> +            reg = <0 0x008c0000 0 0x6000>;
->>> +            clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
->>> +                <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
->>> +            #address-cells = <2>;
->>> +            #size-cells = <2>;
->>> +            ranges;
->>> +            status = "disabled";
->> Don't show status in examples.
->>
->> Why is the example changed? I don't really want to review it again.
-Ok, I will use original example.
->>
->>> +
->>> +            i2c0: i2c@880000 {
->>> +                compatible = "qcom,geni-i2c";
->>> +                reg = <0 0x00880000 0 0x4000>;
->>> +                clock-names = "se";
->>> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
->>> +                pinctrl-names = "default";
->>> +                pinctrl-0 = <&qup_i2c0_default>;
->>> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
->>> +                #address-cells = <1>;
->>> +                #size-cells = <0>;
->>> +                status = "disabled";
->>> +            };
->>> +
->>> +            spi0: spi@880000 {
->> Overlapping addresses are a problem unless these are all enable only 1
->> at a time. The original example didn't have this issue.
+> -	res = 1;
+> +	res = -ENODEV;
 
-Yes, these all will be enabled only 1 at a time.  I will fall back to 
-original example.
+I would describe this as using a regular "meaningful" error code.
 
-If example needs to be change, I will post seperate patch for it.
+>  	console_lock();
+>  	if (console_drivers == console) {
+>  		console_drivers=console->next;
+> @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
+>  	if (!res && (console->flags & CON_EXTENDED))
+>  		nr_ext_console_drivers--;
+>  
+> +	if (res && !(console->flags & CON_ENABLED))
+> +		res = 0;
 
->>> +                compatible = "qcom,geni-spi";
->>> +                reg = <0 0x00880000 0 0x4000>;
->>> +                clock-names = "se";
->>> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
->>> +                pinctrl-names = "default";
->>> +                pinctrl-0 = <&qup_spi0_default>;
->>> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
->>> +                #address-cells = <1>;
->>> +                #size-cells = <0>;
->>> +                status = "disabled";
->>> +            };
->>> +
->>> +            uart0: serial@880000 {
->>> +                compatible = "qcom,geni-uart";
->>> +                reg = <0 0x00880000 0 0x4000>;
->>> +                clock-names = "se";
->>> +                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
->>> +                pinctrl-names = "default";
->>> +                pinctrl-0 = <&qup_uart0_default>;
->>> +                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
->>> +                status = "disabled";
->>> +            };
->>> +        };
->>> +    };
->>> +
->>> +...
->>> -- 
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
->>>
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+I personally think that success or failure of unregister_console()
+should not depend on the state of CON_ENABLED flag:
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+  + As it was discussed in the other thread. There are few consoles
+    that have set CON_ENABLED by default. unregister_console()
+    should not succeed when register_console() was not called
+    before.
+
+  + This check would open a question if we should return error
+    when the console was in the list but CON_ENABLED was not set.
+    But consoles might be temporary disabled, see console_stop().
+    unregister_console() should succeed even when the console
+    was temporary stopped.
+
+But I think that this is only theoretical discussion. IMHO, nobody
+really depends on the return code in reality. Alternative solution
+would be to make it symetric with register_console() and do not
+return the error code at all.
+
+Best Regards,
+Petr
