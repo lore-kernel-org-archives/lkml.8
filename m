@@ -2,122 +2,267 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B913EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1ACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F3720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED37320707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cOBH5rPi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K94PvBPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgA3RBs (ORCPT
+        id S1727460AbgA3RCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:01:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45582 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgA3RBs (ORCPT
+        Thu, 30 Jan 2020 12:02:22 -0500
+Received: from mail-yw1-f45.google.com ([209.85.161.45]:42104 "EHLO
+        mail-yw1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgA3RCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:01:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a6so4938483wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:01:47 -0800 (PST)
+        Thu, 30 Jan 2020 12:02:21 -0500
+Received: by mail-yw1-f45.google.com with SMTP id b81so2307411ywe.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:02:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=guwyI7qgekZu8i8afObSu1LIGKaCue9jEjiigz8FV7o=;
-        b=cOBH5rPimr2xIplZwH+uFIcSC3HVf/IyQsPBV/6E57BiZZ3lI1PG5HktyBYxWDy74W
-         PAxijbtRNyBHzMdIhIApwVSzMmiQCGe44O6xqX2W9nj1D6PzilB8/yrWquPweD0i+aeq
-         LEcPJCWmpYryMGqp11YAka6QJQ7iqb09HVMkWuDbyX5IW5edZo2zzlb5dsVtzFj0I+UI
-         ZkGeptyaqGyB3a6rZ0Ik1vjthMsJXVcQx6km3eYFiGWMxK4Qoz1IlXolqQ8zST8mxMuG
-         7BzIyn/kvUEOZmv6q5KR9pYJFfeqigwfn+7i5aZvM+wEQrwMa1CsQWiSqMIBa3k57haQ
-         2Q5Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GWyw2294XdMAvsthTlcx13XjSW4J/Y/cJveTRnfDmRs=;
+        b=K94PvBPMaoFOmbLn+LR29NEndRELbCTzCdiuSGcC3rB0u0GiPIs+BZtubd6awuEI38
+         H4ed5a0tCrr2QKR5WhL/mxXv2gR03TUMWiaMt23D5j6XeuVXoqACNGvCPh49Y1P2jfdM
+         CtCwy4TrPvSonNdA0bFihQpIPBVNJ/WtfzphGNeHTVO5IFfOSNpZsqq2RF9KUb7VXNwQ
+         GNzy8+xNksndYdW0sRruQQlLmeGbmXl64n0vR69XH4K+LkmL56xZNzOwjUvvMs3ZsTVK
+         pTCOHho5QwrhDrVnwi4RE6KAc+eU5l3/1ZmPiA+Wwontvc3Ft0YHNzHzMzvS7QUdaf5Z
+         MtCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=guwyI7qgekZu8i8afObSu1LIGKaCue9jEjiigz8FV7o=;
-        b=QqiiSkAG41Exuh0qlrnyr/zoMZtId68EWRpXdDvXFJAFJHw9UO+KYOlCX644R6LRvv
-         9zAUonSeKyYkIJU2nMDZfMl9KXczFyYk1Vvg+u5TW6IfnvF8V5ErxU1hK4rBGzfIfgaf
-         eL1lmi6dRXTaFlRNhK0sQzS+ifU+lBxPCPMd+i/7TNB9bLUZFad0rzmj4jt6y82kWduK
-         JnJBxXdiDw/JvjujR6PQyvE+O+C4jZXjRjWHpfn4Fhn3s+y6ymMyrTwJx9AtduKve4QZ
-         gVIpSjUq1biLcqJVvvX4t/rbDalCCI7591JjmRXW+br+VeOzKMtplrqXjzO1vb2DPzEQ
-         TClQ==
-X-Gm-Message-State: APjAAAUixFkXC2NnUtxCIPhy8klPo8Kx1XnWbU61TZ5x3G+lca/78K5K
-        pmhGfCAGYkpp7awsYmJb6WhPtw==
-X-Google-Smtp-Source: APXvYqzWhCWkLPvBVQPtHwccNZiiWYwXr8Q2E99gdO5pqrj0Rft27YWkPuhhXR1trWLNGnB9nNGgYw==
-X-Received: by 2002:adf:fac8:: with SMTP id a8mr7069699wrs.81.1580403705987;
-        Thu, 30 Jan 2020 09:01:45 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id s16sm8308922wrn.78.2020.01.30.09.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 09:01:44 -0800 (PST)
-Date:   Thu, 30 Jan 2020 17:01:41 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     masahiroy@kernel.org, nico@fluxnic.net,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com
-Subject: Re: [PATCH] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
-Message-ID: <20200130170141.GA136787@google.com>
-References: <20200129150612.19200-1-qperret@google.com>
- <20200130154530.GA7452@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GWyw2294XdMAvsthTlcx13XjSW4J/Y/cJveTRnfDmRs=;
+        b=F2OWLKM3dL8Fi243M78qyyeWB8cuLWn3MRHUA3XXCk/KgqdnqAxyg//bZ7i4EcPlTK
+         8FPl9sibWhAMRDaPukFIdyAY1VAvT5/iqgGtcDcZp2titL1bU8QYZ4+ORNrHCAZ1/GCL
+         +9w44iN2G2SpiW4y8xHbtMft3jKUmugpgLgjG7kSXWjg5ifzAI+TPmK9/xBACP7z1CeL
+         sgx03G3LZLS/lZZChVJf7e3UM6o6JNCGJICPjd5Ipb5XQFnsi61npqIZ9kq00YYOn5IC
+         xbaxGnk38VNbJPx4rHTOvOU9SuOd//dp3xFYDeEmJGsRKqh6lWYkq3SbTP8UhO2lqwbr
+         qQgw==
+X-Gm-Message-State: APjAAAXWhTpi80EMmShMEzIITyTcJxDkTQYgzsCOqyhajhDev1MZAo8v
+        ocWhgJ/jOU5IOofG3jLtayfcdDRn3YDrvwH/DPCCWg==
+X-Google-Smtp-Source: APXvYqyTjdHogLaV/3tWd/Kd2UXYv0Awbm0eMTiU1lyEzQFA73rkgoTS511rXtpynkwnHbysBe+KZRyxowbmk8x9Jno=
+X-Received: by 2002:a81:3a06:: with SMTP id h6mr4135966ywa.170.1580403740040;
+ Thu, 30 Jan 2020 09:02:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130154530.GA7452@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CANn89iJOK9UMQspgikPWb-NA6vmo+wQPB5q7hnWpHDSxYrUSnA@mail.gmail.com>
+ <20200130124121.24587-1-sjpark@amazon.com>
+In-Reply-To: <20200130124121.24587-1-sjpark@amazon.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 30 Jan 2020 09:02:08 -0800
+Message-ID: <CANn89iKDn2XhrnLo2rLf7HGXanEuokprqJ_mb0iPqXEnARc9tw@mail.gmail.com>
+Subject: Re: Re: Latency spikes occurs from frequent socket connections
+To:     sjpark@amazon.com
+Cc:     David Miller <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        andriin@fb.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        aams@amazon.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        dola@amazon.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 30 Jan 2020 at 07:45:30 (-0800), Christoph Hellwig wrote:
-> On Wed, Jan 29, 2020 at 03:06:12PM +0000, Quentin Perret wrote:
-> > CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
-> > from ksymtab. This works really well when using in-tree drivers, but
-> > cannot be used in its current form if some of them are out-of-tree.
-> 
-> NAK.  The state policy is that we don't care for out of tree modules,
-> and this is useful for nothing but.
+On Thu, Jan 30, 2020 at 4:41 AM <sjpark@amazon.com> wrote:
+>
+> On Wed, 29 Jan 2020 09:52:43 -0800 Eric Dumazet <edumazet@google.com> wrote:
+>
+> > On Wed, Jan 29, 2020 at 9:14 AM <sjpark@amazon.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > >
+> > > We found races in the kernel code that incur latency spikes.  We thus would
+> > > like to share our investigations and hear your opinions.
+> > >
+> > >
+> > > Problem Reproduce
+> > > =================
+> > >
+> > > You can reproduce the problem by compiling and running source code of
+> > > 'server.c' and 'client.c', which I pasted at the end of this mail, as below:
+> > >
+> > >     $ gcc -o client client.c
+> > >     $ gcc -o server server.c
+> > >     $ ./server &
+> > >     $ ./client
+> > >     ...
+> > >     port: 45150, lat: 1005320, avg: 229, nr: 1070811
+> > >     ...
+> > >
+> >
+> > Thanks for the repro !
+>
+> My pleasure :)
+>
+> >
+> [...]
+> > > Experimental Fix
+> > > ----------------
+> > >
+> > > We confirmed this is the case by logging and some experiments.  Further,
+> > > because the process of RST/ACK packet would stuck in front of the critical
+> > > section while the ACK is being processed inside the critical section in most
+> > > case, we add one more check of the RST/ACK inside the critical section.  In
+> > > detail, it's as below:
+> > >
+> > >     --- a/net/ipv4/tcp_ipv4.c
+> > >     +++ b/net/ipv4/tcp_ipv4.c
+> > >     @@ -1912,6 +1912,29 @@ int tcp_v4_rcv(struct sk_buff *skb)
+> > >             tcp_segs_in(tcp_sk(sk), skb);
+> > >             ret = 0;
+> > >             if (!sock_owned_by_user(sk)) {
+> > >     +               // While waiting for the socket lock, the sk may have
+> > >     +               // transitioned to FIN_WAIT2/TIME_WAIT so lookup the
+> > >     +               // twsk and if one is found reprocess the skb
+> > >     +               if (unlikely(sk->sk_state == TCP_CLOSE && !th->syn
+> > >     +                       && (th->fin || th->rst))) {
+> > >     +                       struct sock *sk2 = __inet_lookup_established(
+> > >     +                               net, &tcp_hashinfo,
+> > >     +                               iph->saddr, th->source,
+> > >     +                               iph->daddr, ntohs(th->dest),
+> > >     +                               inet_iif(skb), sdif);
+> > >     +                       if (sk2) {
+> > >     +                               if (sk2 == sk) {
+> > >     +                                       sock_put(sk2);
+> > >     +                               } else {
+> > >     +                                       bh_unlock_sock(sk);
+> > >     +                                       tcp_v4_restore_cb(skb);
+> > >     +                                       if (refcounted) sock_put(sk);
+> > >     +                                       sk = sk2;
+> > >     +                                       refcounted = true;
+> > >     +                                       goto process;
+> > >     +                               }
+> > >     +                       }
+> > >     +               }
+> >
+> >
+> > Here are my comments
+> >
+> >
+> > 1) This fixes IPv4 side only, so it can not be a proper fix.
+> >
+> > 2) TCP is best effort. You can retry the lookup in ehash tables as
+> > many times you want, a race can always happen after your last lookup.
+> >
+> >   Normal TCP flows going through a real NIC wont hit this race, since
+> > all packets for a given 4-tuple are handled by one cpu (RSS affinity)
+> >
+> > Basically, the race here is that 2 packets for the same flow are
+> > handled by two cpus.
+> > Who wins the race is random, we can not enforce a particular order.
+>
+> Thank you for the comments!  I personally agree with your opinions.
+>
+> >
+> > I would rather try to fix the issue more generically, without adding
+> > extra lookups as you did, since they might appear
+> > to reduce the race, but not completely fix it.
+> >
+> > For example, the fact that the client side ignores the RST and
+> > retransmits a SYN after one second might be something that should be
+> > fixed.
+>
+> I also agree with this direction.  It seems detecting this situation and
+> adjusting the return value of tcp_timeout_init() to a value much lower than the
+> one second would be a straightforward solution.  For a test, I modified the
+> function to return 1 (4ms for CONFIG_HZ=250) and confirmed the reproducer be
+> silent.  My following question is, how we can detect this situation in kernel?
+> However, I'm unsure how we can distinguish this specific case from other cases,
+> as everything is working as normal according to the TCP protocol.
+>
+> Also, it seems the value is made to be adjustable from the user space using the
+> bpf callback, BPF_SOCK_OPS_TIMEOUT_INIT:
+>
+>     BPF_SOCK_OPS_TIMEOUT_INIT,  /* Should return SYN-RTO value to use or
+>                                  * -1 if default value should be used
+>                                  */
+>
+> Thus, it sounds like you are suggesting to do the detection and adjustment from
+> user space.  Am I understanding your point?  If not, please let me know.
+>
 
-That is correct. Now, I clearly failed to explain this patch properly,
-but the long term goal here _is_ to get vendors to contribute more code
-upstream, and have a lot less code downstream / out-of-tree. And I hope
-we can agree this would be a good thing. So let me try again, and sorry
-if I missed the mark the first time.
+No, I was suggesting to implement a mitigation in the kernel :
 
-As you probably know, the current norm on Android and many other systems
-is for vendors to introduce significant changes to their downstream
-kernels, and to contribute very little (if any) code back upstream.
+When in SYN_SENT state, receiving an suspicious ACK should not
+simply trigger a RST.
 
-One of the goals of the Generic Kernel Image (GKI) project together with
-updatability and such is to close the gap between vendor-specific
-downstream kernels and upstream. Having one unique kernel for all android
-devices of the same architecture regardless of the vendor will
-mechanically force all interested parties to agree on a common solution.
-And we _are_ pushing for all this to reach upstream and be available to
-use by the wider community.
+There are multiple ways maybe to address the issue.
 
-The kernel-to-drivers ABI on Android devices varies significantly from
-one vendor kernel to another today (because of changes to exported
-symbols, dependencies on vendor symbols, and surely other things). The
-first step for GKI is to try and put some order into this by agreeing on
-one version of the ABI that works for everybody.
+1) Abort the SYN_SENT state and let user space receive an error to its
+connect() immediately.
 
-For practical reasons, we need to reduce the ABI surface to a subset of
-the exported symbols, simply to make the problem realistically solvable.
-Hence this patch.
+2) Instead of a RST, allow the first SYN retransmit to happen immediately
+(This is kind of a challenge SYN. Kernel already implements challenge acks)
 
-I understand your point of view, and quite frankly agree with the
-message. But I think this patch pushes in the right direction. As I see
-it, things like GKI really are significant improvements, so preventing
-them from happening by refusing trivial patches such as this one will,
-in the long term, do more harm than good to the cause.
+3) After RST is sent (to hopefully clear the state of the remote),
+schedule a SYN rtx in a few ms,
+instead of ~ one second.
 
-Thank you for your time,
-Quentin
+
+> >
+> >
+> >
+> > 11:57:14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
+> > 2560603644, win 65495, options [mss 65495,sackOK,TS val 953760623 ecr
+> > 0,nop,wscale 7], length 0
+> > 11:57:14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5,
+> > win 512, options [nop,nop,TS val 953760623 ecr 953759375], length 0
+> > 11:57:14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq
+> > 2541101298, win 0, length 0
+> > 11:57:15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
+> > 2560603644, win 65495, options [mss 65495,sackOK,TS val 953761652 ecr
+> > 0,nop,wscale 7], length 0
+> >
+> >
+> >
+> >                     skb_to_free = sk->sk_rx_skb_cache;
+> > >                     sk->sk_rx_skb_cache = NULL;
+> > >                     ret = tcp_v4_do_rcv(sk, skb);
+> > >
+> > > We applied this change to the kernel and confirmed that the latency spikes
+> > > disappeared with the reproduce program.
+> > >
+> > >
+> > > More Races
+> > > ----------
+> > >
+> > > Further, the man who found the code path and made the fix found another race
+> > > resulted from the commit ec94c2696f0b ("tcp/dccp: avoid one atomic operation
+> > > for timewait hashdance").  He believes the 'refcount_set()' should be done
+> > > before the 'spin_lock()', as it allows others to see the packet in the list but
+> > > ignore as the reference count is zero.  This race seems much rare than the
+> > > above one and thus we have no reproducible test for this, yet.
+> >
+> > Again, TCP is best effort, seeing the refcount being 0 or not is
+> > absolutely fine.
+> >
+> > The cpu reading the refcnt can always be faster than the cpu setting
+> > the refcount to non zero value, no matter how hard you try.
+> >
+> > The rules are more like : we need to ensure all fields have
+> > stable/updated values before allowing other cpus to get the object.
+> > Therefore, writing a non zero refcount should happen last.
+>
+> I personally agree on this, either.
+>
+>
+> Thanks,
+> SeongJae Park
+>
+> >
+> > Thanks.
+> [...]
