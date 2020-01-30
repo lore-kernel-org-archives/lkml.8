@@ -2,53 +2,51 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3923C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E17C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97E120702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3745020702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410341;
-	bh=W24dS0pfWAmHHYBQWMMyxi9u/NC671FoXCiRWllbgOg=;
+	s=default; t=1580410343;
+	bh=zuEUBKlZdyeN4POlgMWZuq1e8qLu6fLRLaFLDyY2sQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yobu5k8r+0o5SosGWI9QREP6GSsdR+PfHO6cs745vWYZYPU5M2Y6ixS2uI1tvXLbe
-	 UymhId03dKXzTKihkRX94TWpPTsKMtvSvHweGIxEoP5TLkxiL+1mK83/gmmzMO2ere
-	 P3Ds9AxW+XyEJKmEJRLgeavJO+vSJSAdDMcAewyc=
+	b=KVHk1Cr7Fw8hS6qx4cDReOHDRFMioNMXDDg3L5aoZtdGJXoRE+9RWbjNYbbJjnFJ3
+	 28t5+1TQ9xixK8gPUlAqRLkdmsJG99+bY+JTlILqeTZc3yi//xqN8Txsz8dadAYMVC
+	 De+/QmRB28S1Z+DrraGjG8DBoPE0SAhNkUjAo8L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgA3Snj (ORCPT
+        id S1731755AbgA3SwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:52:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbgA3Snf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:35 -0500
+        id S1728062AbgA3Snk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EFD20CC7;
-        Thu, 30 Jan 2020 18:43:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E153B20CC7;
+        Thu, 30 Jan 2020 18:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409814;
-        bh=W24dS0pfWAmHHYBQWMMyxi9u/NC671FoXCiRWllbgOg=;
+        s=default; t=1580409819;
+        bh=zuEUBKlZdyeN4POlgMWZuq1e8qLu6fLRLaFLDyY2sQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFo8evlljVrWW4nTnM74r6NlBO1zQtWGReRhQD3npvAPoPL3m0vUa+R/fYz6gcp5p
-         i/CEvY5GJ8iFHQMtFmfcviK9OG6pmrk7yaKLuGX+/oqFvkJ8T0eealZWRuUejCk2oJ
-         tygpSMxPGC+zVEkUgjYrfaWQBXjPY79xf/UdlcsQ=
+        b=zQro36d0HUNnN/x5tXLrbjEVCZgFsS1aT2ko3fDgRLwjqICJ/4UzKtE8REDAiOlCw
+         QNbNc8aKKSX7gGNgBX2Km0awrd8S8GJeubEgC9OkFcFNzKQKLXlAiiArJa91ecPvIx
+         WEJiXH3r9MJ4wQX5t6eYU3PWkG35hi90sooViItg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephen Worley <sworley@cumulusnetworks.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 042/110] net: include struct nhmsg size in nh nlmsg size
-Date:   Thu, 30 Jan 2020 19:38:18 +0100
-Message-Id: <20200130183620.308307146@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 044/110] HID: multitouch: Add LG MELF0410 I2C touchscreen support
+Date:   Thu, 30 Jan 2020 19:38:20 +0100
+Message-Id: <20200130183620.526273375@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,103 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Worley <sworley@cumulusnetworks.com>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-[ Upstream commit f9e95555757915fc194288862d2978e370fe316b ]
+[ Upstream commit 348b80b273fbf4ce2a307f9e38eadecf37828cad ]
 
-Include the size of struct nhmsg size when calculating
-how much of a payload to allocate in a new netlink nexthop
-notification message.
+Add multitouch support for LG MELF I2C touchscreen.
+Apply the same workaround as LG USB touchscreen.
 
-Without this, we will fail to fill the skbuff at certain nexthop
-group sizes.
-
-You can reproduce the failure with the following iproute2 commands:
-
-ip link add dummy1 type dummy
-ip link add dummy2 type dummy
-ip link add dummy3 type dummy
-ip link add dummy4 type dummy
-ip link add dummy5 type dummy
-ip link add dummy6 type dummy
-ip link add dummy7 type dummy
-ip link add dummy8 type dummy
-ip link add dummy9 type dummy
-ip link add dummy10 type dummy
-ip link add dummy11 type dummy
-ip link add dummy12 type dummy
-ip link add dummy13 type dummy
-ip link add dummy14 type dummy
-ip link add dummy15 type dummy
-ip link add dummy16 type dummy
-ip link add dummy17 type dummy
-ip link add dummy18 type dummy
-ip link add dummy19 type dummy
-
-ip ro add 1.1.1.1/32 dev dummy1
-ip ro add 1.1.1.2/32 dev dummy2
-ip ro add 1.1.1.3/32 dev dummy3
-ip ro add 1.1.1.4/32 dev dummy4
-ip ro add 1.1.1.5/32 dev dummy5
-ip ro add 1.1.1.6/32 dev dummy6
-ip ro add 1.1.1.7/32 dev dummy7
-ip ro add 1.1.1.8/32 dev dummy8
-ip ro add 1.1.1.9/32 dev dummy9
-ip ro add 1.1.1.10/32 dev dummy10
-ip ro add 1.1.1.11/32 dev dummy11
-ip ro add 1.1.1.12/32 dev dummy12
-ip ro add 1.1.1.13/32 dev dummy13
-ip ro add 1.1.1.14/32 dev dummy14
-ip ro add 1.1.1.15/32 dev dummy15
-ip ro add 1.1.1.16/32 dev dummy16
-ip ro add 1.1.1.17/32 dev dummy17
-ip ro add 1.1.1.18/32 dev dummy18
-ip ro add 1.1.1.19/32 dev dummy19
-
-ip next add id 1 via 1.1.1.1 dev dummy1
-ip next add id 2 via 1.1.1.2 dev dummy2
-ip next add id 3 via 1.1.1.3 dev dummy3
-ip next add id 4 via 1.1.1.4 dev dummy4
-ip next add id 5 via 1.1.1.5 dev dummy5
-ip next add id 6 via 1.1.1.6 dev dummy6
-ip next add id 7 via 1.1.1.7 dev dummy7
-ip next add id 8 via 1.1.1.8 dev dummy8
-ip next add id 9 via 1.1.1.9 dev dummy9
-ip next add id 10 via 1.1.1.10 dev dummy10
-ip next add id 11 via 1.1.1.11 dev dummy11
-ip next add id 12 via 1.1.1.12 dev dummy12
-ip next add id 13 via 1.1.1.13 dev dummy13
-ip next add id 14 via 1.1.1.14 dev dummy14
-ip next add id 15 via 1.1.1.15 dev dummy15
-ip next add id 16 via 1.1.1.16 dev dummy16
-ip next add id 17 via 1.1.1.17 dev dummy17
-ip next add id 18 via 1.1.1.18 dev dummy18
-ip next add id 19 via 1.1.1.19 dev dummy19
-
-ip next add id 1111 group 1/2/3/4/5/6/7/8/9/10/11/12/13/14/15/16/17/18/19
-ip next del id 1111
-
-Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
-Signed-off-by: Stephen Worley <sworley@cumulusnetworks.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/nexthop.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -322,7 +322,9 @@ static size_t nh_nlmsg_size_single(struc
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 6273e7178e785..2888817261999 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -730,6 +730,7 @@
+ #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
+ #define USB_DEVICE_ID_LG_MELFAS_MT	0x6007
+ #define I2C_DEVICE_ID_LG_8001		0x8001
++#define I2C_DEVICE_ID_LG_7010		0x7010
  
- static size_t nh_nlmsg_size(struct nexthop *nh)
- {
--	size_t sz = nla_total_size(4);    /* NHA_ID */
-+	size_t sz = NLMSG_ALIGN(sizeof(struct nhmsg));
-+
-+	sz += nla_total_size(4); /* NHA_ID */
+ #define USB_VENDOR_ID_LOGITECH		0x046d
+ #define USB_DEVICE_ID_LOGITECH_AUDIOHUB 0x0a0e
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 3cfeb1629f79f..f0d4172d51319 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1985,6 +1985,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_LG,
+ 		HID_USB_DEVICE(USB_VENDOR_ID_LG,
+ 			USB_DEVICE_ID_LG_MELFAS_MT) },
++	{ .driver_data = MT_CLS_LG,
++		HID_DEVICE(BUS_I2C, HID_GROUP_GENERIC,
++			USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_7010) },
  
- 	if (nh->is_group)
- 		sz += nh_nlmsg_size_grp(nh);
+ 	/* MosArt panels */
+ 	{ .driver_data = MT_CLS_CONFIDENCE_MINUS_ONE,
+-- 
+2.20.1
+
 
 
