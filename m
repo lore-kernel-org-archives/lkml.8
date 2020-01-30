@@ -2,109 +2,115 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AD2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB995C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1632083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A875A206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbgA3QaC (ORCPT
+        id S1727369AbgA3Qb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:30:02 -0500
-Received: from mga12.intel.com ([192.55.52.136]:18032 "EHLO mga12.intel.com"
+        Thu, 30 Jan 2020 11:31:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36108 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727191AbgA3QaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:30:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 08:30:01 -0800
-X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
-   d="scan'208";a="222842003"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.169]) ([10.249.168.169])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 30 Jan 2020 08:29:58 -0800
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200130121939.22383-3-xiaoyao.li@intel.com>
- <4A8E14B3-1914-4D0C-A43A-234717179408@amacapital.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <cf79eeeb-e107-bdff-13a8-c52288d0d123@intel.com>
-Date:   Fri, 31 Jan 2020 00:29:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727191AbgA3Qb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 11:31:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70098AFDF;
+        Thu, 30 Jan 2020 16:31:25 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 16:31:01 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] ceph: parallelize all copy-from requests in
+ copy_file_range
+Message-ID: <20200130163101.GA22679@suse.com>
+References: <20200129182011.5483-1-lhenriques@suse.com>
+ <20200129182011.5483-2-lhenriques@suse.com>
+ <CAOi1vP92rXoNU7ne-XrOiGH=WzVmMO9h8XnbReeEDO=xAcXHEg@mail.gmail.com>
+ <20200130153711.GA20170@suse.com>
+ <CAOi1vP9+MkjrsH662zpkNLu2=RJA91dKuPo+ra7rXxFcEqxWLA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4A8E14B3-1914-4D0C-A43A-234717179408@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOi1vP9+MkjrsH662zpkNLu2=RJA91dKuPo+ra7rXxFcEqxWLA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/2020 11:18 PM, Andy Lutomirski wrote:
+On Thu, Jan 30, 2020 at 04:59:59PM +0100, Ilya Dryomov wrote:
+...
+> > > > @@ -2117,14 +2126,33 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >                         dout("ceph_osdc_copy_from returned %d\n", err);
+> > > >                         if (!ret)
+> > > >                                 ret = err;
+> > > > +                       /* wait for all queued requests */
+> > > > +                       ceph_osdc_wait_requests(&osd_reqs);
+> > > >                         goto out_caps;
+> > > >                 }
+> > > > +               list_add(&req->r_private_item, &osd_reqs);
+> > > >                 len -= object_size;
+> > > >                 src_off += object_size;
+> > > >                 dst_off += object_size;
+> > > >                 ret += object_size;
+> > >
+> > > So ret is incremented here, but you have numerious tests where ret is
+> > > assigned an error only if ret is 0.  Unless I'm missing something, this
+> > > interferes with returning errors from __ceph_copy_file_range().
+> >
+> > Well, the problem is that an error may occur *after* we have already done
+> > some copies.  In that case we need to return the number of bytes that have
+> > been successfully copied instead of an error; eventually, subsequent calls
+> > to complete the copy_file_range will then return the error.  At least this
+> > is how I understood the man page (i.e. similar to the write(2) syscall).
 > 
+> AFAICS ret is incremented before you know that *any* of the copies were
+> successful.  If the first copy fails, how do you report that error?
+
+Ah, got it.  So, a solution would be to have the ceph_osdc_wait_requests
+interface changed so that we can get the number of successful requests.
+
+/me takes a deep breath and goes look at the *whole* thing to prevent
+these mistakes.  Thanks a lot for your review, Ilya.
+
 > 
->> On Jan 30, 2020, at 4:24 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>
->> ﻿There are two types of #AC can be generated in Intel CPUs:
->> 1. legacy alignment check #AC;
->> 2. split lock #AC;
->>
->> Legacy alignment check #AC can be injected to guest if guest has enabled
->> alignemnet check.
->>
->> When host enables split lock detection, i.e., split_lock_detect!=off,
->> guest will receive an unexpected #AC when there is a split_lock happens in
->> guest since KVM doesn't virtualize this feature to guest.
->>
->> Since the old guests lack split_lock #AC handler and may have split lock
->> buges. To make guest survive from split lock, applying the similar policy
->> as host's split lock detect configuration:
->> - host split lock detect is sld_warn:
->>    warning the split lock happened in guest, and disabling split lock
->>    detect around VM-enter;
->> - host split lock detect is sld_fatal:
->>    forwarding #AC to userspace. (Usually userspace dump the #AC
->>    exception and kill the guest).
+> >
+> > > > +               if (--ncopies == 0) {
+> > > > +                       err = ceph_osdc_wait_requests(&osd_reqs);
+> > > > +                       if (err) {
+> > > > +                               if (!ret)
+> > > > +                                       ret = err;
+> > > > +                               goto out_caps;
+> > > > +                       }
+> > > > +                       ncopies = (src_fsc->mount_options->wsize /
+> > > > +                                  object_size) * 4;
+> > >
+> > > The object size is constant within a file, so ncopies should be too.
+> > > Perhaps introduce a counter instead of recalculating ncopies here?
+> >
+> > Not sure I understood your comment.  You would rather have:
+> >
+> >  * ncopies initialized only once outside the loop
+> >  * have a counter counting the number of objects copied
+> >  * call ceph_osdc_wait_requests() when this counter is a multiple of
+> >    ncopies
 > 
-> A correct userspace implementation should, with a modern guest kernel, forward the exception. Otherwise you’re introducing a DoS into the guest if the guest kernel is fine but guest userspace is buggy.
+> I was thinking of a counter that is initialized to ncopies and reset to
+> ncopies any time it reaches 0.  This is just a nit though.
 
-To prevent DoS in guest, the better solution is virtualizing and 
-advertising this feature to guest, so guest can explicitly enable it by 
-setting split_lock_detect=fatal, if it's a latest linux guest.
+Sure, no problem.
 
-However, it's another topic, I'll send out the patches later.
-
-> What’s the intended behavior here?
-> 
-It's for old guests. Below I quote what Paolo said in
-https://lore.kernel.org/kvm/57f40083-9063-5d41-f06d-fa1ae4c78ec6@redhat.com/
-
-"So for an old guest, as soon as the guest kernel happens to do a split 
-lock, it gets an unexpected #AC and crashes and burns.  And then, after 
-much googling and gnashing of teeth, people proceed to disable split 
-lock detection.
-
-(Old guests are the common case: you're a cloud provider and your
-customers run old stuff; it's a workstation and you want to play that
-game that requires an old version of Windows; etc.).
-
-To save them the googling and gnashing of teeth, I guess we can do a
-pr_warn_ratelimited on the first split lock encountered by a guest.  (It
-has to be ratelimited because userspace could create an arbitrary amount
-of guests to spam the kernel logs).  But the end result is the same,
-split lock detection is disabled by the user."
-
-
-
+Cheers,
+--
+Lu�s
