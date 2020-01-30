@@ -2,115 +2,226 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D894AC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3D12051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0pSnybU"
+	by mail.kernel.org (Postfix) with ESMTP id B358E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580394005;
+	bh=OuzcS9U3Z7Q2MSalfgVge9XFhH403dKCk6Lo1zpZlBI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GgHvk6rFQ9DdeIjd1/GEu+qbqrM/yuOBFSnu8lQNPPs61ghcXiLOr8Z2Bko9b2/DY
+	 9QIb62FsgZ7pTy9tSCGwlnuaKNsZcOwNpZDvOLQBmbbkPkIN+n4+//2psmatDJNHSn
+	 H48ArE6W1j8uXEg2wJQKUMKr1ES5Vsu3K7LwXFNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgA3ORv (ORCPT
+        id S1727457AbgA3OUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:17:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36585 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727001AbgA3ORu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:17:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580393869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SQLCEiwjxFUhrMsORDFo4u4SoI+4SqDuOptNlKVezG8=;
-        b=D0pSnybUNZCn/Wdr7JZ4AO4Mh4h/4Ci7TNgbh/HvCsC0zShQw8Q/Q+NYbHl7ws8pz8pG/j
-        L4UOXPpRbHeMFCUkqE6vm7Efoa4ZA04ZLS7PoZhr1KwaDa251dzWo+9ULzDNn5gN05Wsuh
-        JGFYksLPCYMZYI5Y5fuY6DD2d3Lws7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-MywjOwE5PnGrr_6RyZCF3Q-1; Thu, 30 Jan 2020 09:17:47 -0500
-X-MC-Unique: MywjOwE5PnGrr_6RyZCF3Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 30 Jan 2020 09:20:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbgA3OUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 09:20:04 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 806A31005F73;
-        Thu, 30 Jan 2020 14:17:44 +0000 (UTC)
-Received: from treble (ovpn-120-83.rdu2.redhat.com [10.10.120.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 98BDD60BE1;
-        Thu, 30 Jan 2020 14:17:36 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 08:17:33 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>, nstange@suse.de
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200130141733.krfdmirathscgkkp@treble>
-References: <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
- <20200128150014.juaxfgivneiv6lje@treble>
- <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
- <20200128170254.igb72ib5n7lvn3ds@treble>
- <alpine.LSU.2.21.2001291249430.28615@pobox.suse.cz>
- <20200129155951.qvf3tjsv2qvswciw@treble>
- <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5652051A;
+        Thu, 30 Jan 2020 14:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580394003;
+        bh=OuzcS9U3Z7Q2MSalfgVge9XFhH403dKCk6Lo1zpZlBI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KuIP/zKTYdnBOjV9tPf1iwhfezP365etl1v7+FGGLduMcQdce7EioGyMoOxYy05fT
+         1IFC41yoCUs8zOMAHOl0FxY6dofB2fcyUdHbWvQepqG3qSPcXf+xYfYWDSmwzpLzPx
+         +g3lfca5o76Fncnrj7zJcOMRphYggLpaSHu4nUvo=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing: fix test for blockdev inode in wb error handling tracepoints
+Date:   Thu, 30 Jan 2020 09:20:02 -0500
+Message-Id: <20200130142002.894960-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200130124825.476361-1-jlayton@kernel.org>
+References: <20200130124825.476361-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 10:53:46AM +0100, Petr Mladek wrote:
-> On Wed 2020-01-29 09:59:51, Josh Poimboeuf wrote:
-> > In retrospect, the prerequisites for merging it should have been:
-> 
-> OK, let me do one more move in this game.
-> 
-> 
-> > 1) Document how source-based patches can be safely generated;
-> 
-> I agree that the information are really scattered over many files
-> in Documentation/livepatch/.
+Al pointed out that the test for whether a mapping refers to a blockdev
+inode in these tracepoints is garbage, as the superblock is always
+non-NULL.
 
-Once again you're blithely ignoring my point and pretending I'm saying
-something else.  And you did that again further down in the email, but
-what's the point of arguing if you're not going to listen.
+Add a new mapping_to_dev helper function that determines this the
+correct way, and change the tracepoints to use it. Also, fix up the
+indentation in this file.
 
-This has nothing to do with the organization of the existing
-documentation.  When did I say that?
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ include/linux/fs.h             | 16 ++++++
+ include/trace/events/filemap.h | 99 +++++++++++++++-------------------
+ 2 files changed, 60 insertions(+), 55 deletions(-)
 
-Adding the -flive-patching flag doesn't remove *all*
-function-ABI-breaking optimizations.  It's only a partial solution.  The
-rest of the solution involves tooling and processes which need to be
-documented.  But you already know that.
+Al, sorry.
 
-If we weren't co-maintainers I would have reverted the patch days ago.
-I've tried to give you all the benefit of the doubt.  But you seem to be
-playing company politics.
+I had based the original on an older tree. This one should merge more
+cleanly, and also just adds a single, non-conditionally compiled helper.
 
-I would ask that you please put on your upstream hats and stop playing
-politics.  If the patch creation process is a secret, then by all means,
-keep it secret.  But then keep your GCC flag to yourself.
-
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 40be2ccb87f3..264ac7d602a6 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2616,6 +2616,22 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
+ 	return false;
+ }
+ #endif
++
++/*
++ * Return the device associated with this mapping.
++ *
++ * For normal inodes, return the sb of the backing filesystem, for blockdev
++ * inodes, return the block device number associated with the inode.
++ */
++static inline dev_t mapping_to_dev(struct address_space *mapping)
++{
++	struct inode *inode = mapping->host;
++
++	if (sb_is_blkdev_sb(inode->i_sb))
++		return inode->i_rdev;
++	return inode->i_sb->s_dev;
++}
++
+ extern int sync_filesystem(struct super_block *);
+ extern const struct file_operations def_blk_fops;
+ extern const struct file_operations def_chr_fops;
+diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
+index 796053e162d2..bddcc7d0bdfd 100644
+--- a/include/trace/events/filemap.h
++++ b/include/trace/events/filemap.h
+@@ -30,10 +30,7 @@ DECLARE_EVENT_CLASS(mm_filemap_op_page_cache,
+ 		__entry->pfn = page_to_pfn(page);
+ 		__entry->i_ino = page->mapping->host->i_ino;
+ 		__entry->index = page->index;
+-		if (page->mapping->host->i_sb)
+-			__entry->s_dev = page->mapping->host->i_sb->s_dev;
+-		else
+-			__entry->s_dev = page->mapping->host->i_rdev;
++		__entry->s_dev = mapping_to_dev(page->mapping);
+ 	),
+ 
+ 	TP_printk("dev %d:%d ino %lx page=%p pfn=%lu ofs=%lu",
+@@ -55,60 +52,52 @@ DEFINE_EVENT(mm_filemap_op_page_cache, mm_filemap_add_to_page_cache,
+ 	);
+ 
+ TRACE_EVENT(filemap_set_wb_err,
+-		TP_PROTO(struct address_space *mapping, errseq_t eseq),
+-
+-		TP_ARGS(mapping, eseq),
+-
+-		TP_STRUCT__entry(
+-			__field(unsigned long, i_ino)
+-			__field(dev_t, s_dev)
+-			__field(errseq_t, errseq)
+-		),
+-
+-		TP_fast_assign(
+-			__entry->i_ino = mapping->host->i_ino;
+-			__entry->errseq = eseq;
+-			if (mapping->host->i_sb)
+-				__entry->s_dev = mapping->host->i_sb->s_dev;
+-			else
+-				__entry->s_dev = mapping->host->i_rdev;
+-		),
+-
+-		TP_printk("dev=%d:%d ino=0x%lx errseq=0x%x",
+-			MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
+-			__entry->i_ino, __entry->errseq)
++	TP_PROTO(struct address_space *mapping, errseq_t eseq),
++
++	TP_ARGS(mapping, eseq),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, i_ino)
++		__field(dev_t, s_dev)
++		__field(errseq_t, errseq)
++	),
++
++	TP_fast_assign(
++		__entry->i_ino = mapping->host->i_ino;
++		__entry->errseq = eseq;
++		__entry->s_dev = mapping_to_dev(mapping);
++	),
++
++	TP_printk("dev=%d:%d ino=0x%lx errseq=0x%x",
++		MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
++		__entry->i_ino, __entry->errseq)
+ );
+ 
+ TRACE_EVENT(file_check_and_advance_wb_err,
+-		TP_PROTO(struct file *file, errseq_t old),
+-
+-		TP_ARGS(file, old),
+-
+-		TP_STRUCT__entry(
+-			__field(struct file *, file)
+-			__field(unsigned long, i_ino)
+-			__field(dev_t, s_dev)
+-			__field(errseq_t, old)
+-			__field(errseq_t, new)
+-		),
+-
+-		TP_fast_assign(
+-			__entry->file = file;
+-			__entry->i_ino = file->f_mapping->host->i_ino;
+-			if (file->f_mapping->host->i_sb)
+-				__entry->s_dev =
+-					file->f_mapping->host->i_sb->s_dev;
+-			else
+-				__entry->s_dev =
+-					file->f_mapping->host->i_rdev;
+-			__entry->old = old;
+-			__entry->new = file->f_wb_err;
+-		),
+-
+-		TP_printk("file=%p dev=%d:%d ino=0x%lx old=0x%x new=0x%x",
+-			__entry->file, MAJOR(__entry->s_dev),
+-			MINOR(__entry->s_dev), __entry->i_ino, __entry->old,
+-			__entry->new)
++	TP_PROTO(struct file *file, errseq_t old),
++
++	TP_ARGS(file, old),
++
++	TP_STRUCT__entry(
++		__field(struct file *, file)
++		__field(unsigned long, i_ino)
++		__field(dev_t, s_dev)
++		__field(errseq_t, old)
++		__field(errseq_t, new)
++	),
++
++	TP_fast_assign(
++		__entry->file = file;
++		__entry->i_ino = file->f_mapping->host->i_ino;
++		__entry->s_dev = mapping_to_dev(file->f_mapping);
++		__entry->old = old;
++		__entry->new = file->f_wb_err;
++	),
++
++	TP_printk("file=%p dev=%d:%d ino=0x%lx old=0x%x new=0x%x",
++		__entry->file, MAJOR(__entry->s_dev),
++		MINOR(__entry->s_dev), __entry->i_ino, __entry->old,
++		__entry->new)
+ );
+ #endif /* _TRACE_FILEMAP_H */
+ 
 -- 
-Josh
+2.24.1
 
