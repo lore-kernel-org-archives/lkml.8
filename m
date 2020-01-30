@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314BF2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04A5214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410194;
-	bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
+	s=default; t=1580410196;
+	bh=qwX7KzfDO8n1SQ9JfC+x1esOcYl8z/Z/tv967FPO1jA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h00VeTWCc7PYHIQh3iwS9275k/DRiCzm5J9oaLz5/BP6gYJaq1rWttlGAAYgLISlI
-	 fwz11j4MJsLIrSLZxb5zSzUUwQKgUvYdhXylHtuB4PoMF0SK9c/rvUhVVdrtNp5xnE
-	 jMOHJWttnTXT6gseGw6OnjZ//0NGwNpo9Os+fIVo=
+	b=kwBNBWIN/kaaLho4TUKV2xr37NN3u1F70pcPrTwuEN+sDa+VqJNVvqanVlvqC5YXO
+	 hIzhDjynngRAw67D/bEg9jO/oCmHZVlI4tzvvW5kLslD21FC4q7BnlSGWk3/djajDU
+	 DT4RxaP2vfNIpQN+J7m7uQWon7gmbsatC4Gae60I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbgA3Sru (ORCPT
+        id S1731420AbgA3Sro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbgA3Srq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:46 -0500
+        id S1730976AbgA3Srl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E8F2205F4;
-        Thu, 30 Jan 2020 18:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34CB324687;
+        Thu, 30 Jan 2020 18:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410064;
-        bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
+        s=default; t=1580410059;
+        bh=qwX7KzfDO8n1SQ9JfC+x1esOcYl8z/Z/tv967FPO1jA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0gSChXRtguDA6a1ugbq9I8WBW5ejasrp2sItSEdU3qMjqtyO4bh6T6syRjcrHnct
-         3+NUyZ1XRXw4Wxom+3HvH0kCc5i/cKlUetMoQtrBniBdNWvxvebe1KJlyNU96rwN9r
-         LfqPw6vHejxFS1JA8bTkvCGiDSsZABiqoDuvngqo=
+        b=s9U5RL5hXNltH1ZMST36Qqpnxg9PYE8qCwPno5TJ8sfQBqFcbRVZMlI1N6t4PTb00
+         MmjXG7zAp/DPsI2OmY3vav23OdLUnrrrglXb2t/UZIyHfv7kmPWXlqmsGx3EEKVWux
+         eR+zBECqw+IFctLwRrw+9BNRq4JKDj+Houpn6Ycw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Pan Zhang <zhangpan26@huawei.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/55] phy: cpcap-usb: Prevent USB line glitches from waking up modem
-Date:   Thu, 30 Jan 2020 19:39:13 +0100
-Message-Id: <20200130183614.470977612@linuxfoundation.org>
+Subject: [PATCH 4.19 30/55] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+Date:   Thu, 30 Jan 2020 19:39:11 +0100
+Message-Id: <20200130183614.135099635@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -63,92 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Pan Zhang <zhangpan26@huawei.com>
 
-[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
+[ Upstream commit 306d5acbfc66e7cccb4d8f91fc857206b8df80d1 ]
 
-The micro-USB connector on Motorola Mapphone devices can be muxed between
-the SoC and the mdm6600 modem. But even when used for the SoC, configuring
-the PHY with ID pin grounded will wake up the modem from idle state. Looks
-like the issue is probably caused by line glitches.
+1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
+1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
+1004
+1005         if (input_mt_is_active(i_slot) &&
+1006             input_mt_is_used(mt, i_slot))
+1007             return -EAGAIN;
+1008     }
 
-We can prevent the glitches by using a previously unknown mode of the
-GPIO mux to prevent the USB lines from being connected to the moden while
-configuring the USB PHY, and enable the USB lines after configuring the
-PHY.
+We previously assumed 'mt' could be null (see line 1002).
 
-Note that this only prevents waking up mdm6600 as regular USB A-host mode,
-and does not help when connected to a lapdock. The lapdock specific issue
-still needs to be debugged separately.
+The following situation is similar, so add a judgement.
 
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/hid/hid-multitouch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
-index 4ba3634009afc..593c77dbde2eb 100644
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
- enum cpcap_gpio_mode {
- 	CPCAP_DM_DP,
- 	CPCAP_MDM_RX_TX,
--	CPCAP_UNKNOWN,
-+	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
- 	CPCAP_OTG_DM_DP,
- };
- 
-@@ -379,7 +379,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
- 
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		goto out_err;
- 
-@@ -406,6 +407,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable UART mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	if (error)
-+		goto out_err;
-+
- 	return 0;
- 
- out_err:
-@@ -418,7 +424,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
- 
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		return error;
- 
-@@ -458,6 +465,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable USB mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	if (error)
-+		goto out_err;
-+
- 	return 0;
- 
- out_err:
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 8403251992abb..19dfd8acd0dab 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1007,7 +1007,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+ 		tool = MT_TOOL_DIAL;
+ 	else if (unlikely(!confidence_state)) {
+ 		tool = MT_TOOL_PALM;
+-		if (!active &&
++		if (!active && mt &&
+ 		    input_mt_is_active(&mt->slots[slotnum])) {
+ 			/*
+ 			 * The non-confidence was reported for
 -- 
 2.20.1
 
