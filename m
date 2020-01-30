@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E86C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B52C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF3D24682
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0072A2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409925;
-	bh=eyQmVqZVHK7x4qjnteBvRUWKTk8fc86tqTK0aEqOcsE=;
+	s=default; t=1580409928;
+	bh=z0Eloz/7uH30N/JaCMyrHQ6PHSsN/zgQzEJaOUFKGCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fqv6mb5vqNC2ogJAEdUP78zbtKcJeYTGpEDLJ47ZIaturgGrnG6xJa0qM1T7IOPzu
-	 sq68VK5kQYem5ojR9OYwRt5iZLZBLXk3DamehcJacQ4sq41wnaxu1k7QMqkw7K5b1u
-	 tOWxVU3lz+f4shxa6zLzLpmWwPAW5mVVLb7CkD1w=
+	b=zWED545O+AtJCCci7U//MutdwmGWGAWdBVi94NHvT+Id+kJqIHtWKvPOTbIUmbUC6
+	 gyS9CIPNSfVFgo2cxX7CCuM3B8uhQPUQBNwy5JSN8N26G/MyGimRSUC7hto+739mcc
+	 uxWg896l74Y+iMp5AZvHiq9iBrXUFThqUpjmvTgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgA3SpZ (ORCPT
+        id S1730763AbgA3Sp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbgA3SpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:21 -0500
+        id S1731016AbgA3SpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9702082E;
-        Thu, 30 Jan 2020 18:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735972082E;
+        Thu, 30 Jan 2020 18:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409920;
-        bh=eyQmVqZVHK7x4qjnteBvRUWKTk8fc86tqTK0aEqOcsE=;
+        s=default; t=1580409922;
+        bh=z0Eloz/7uH30N/JaCMyrHQ6PHSsN/zgQzEJaOUFKGCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxQd+0wfkKAHyKlkQr/vTGyUh/Dg8ARiwWBQIsgNOGfLSKKw8x9J4BnIRKxC3GOY+
-         qVf0okFNzFpDzfQRoJMoXEejVANCPgZ9Gc9YCjTn0DoW+7S37pWrlJbAeuLIYlueQ0
-         G2TM0xcJRJVrB90460tgk6pJJXa7woJbPicGwgx8=
+        b=QP2iy013wLE5fS+XCoj9QVpZ/6y3JOn4RQMOR5usAASl6aQ4dsZHmOKQTzCB0tXw8
+         c6gPCVDRo+UTUp4ZT8OEssFFS41Av1nsGnoxnkixuPhBs4+XtTf3B/mxAoOTi27McN
+         DVdLX1m34Xtk6jOmPvRanSA5a3BNR/LLLnbagtB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/110] bus: ti-sysc: Use swsup quirks also for am335x musb
-Date:   Thu, 30 Jan 2020 19:39:00 +0100
-Message-Id: <20200130183624.081826624@linuxfoundation.org>
+Subject: [PATCH 5.4 085/110] spi: pxa2xx: Add support for Intel Comet Lake-H
+Date:   Thu, 30 Jan 2020 19:39:01 +0100
+Message-Id: <20200130183624.185123304@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,31 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-[ Upstream commit 1819ef2e2d12d5b1a6ee54ac1c2afe35cffc677c ]
+[ Upstream commit f0cf17ed76cffa365001d263ced1f130ec794917 ]
 
-Also on am335x we need the swsup quirks for musb.
+Add Intel Comet Lake-H LPSS SPI PCI IDs.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Link: https://lore.kernel.org/r/20191029115802.6779-1-jarkko.nikula@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-pxa2xx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 44d4f4864ac2a..0e5cfd752410d 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1265,6 +1265,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_MODULE_QUIRK_SGX),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
- 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
-+	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
-+		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_WDT),
- 	/* Watchdog on am3 and am4 */
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 9f92165fe09f8..2fd843b18297d 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1461,6 +1461,10 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x02aa), LPSS_CNL_SSP },
+ 	{ PCI_VDEVICE(INTEL, 0x02ab), LPSS_CNL_SSP },
+ 	{ PCI_VDEVICE(INTEL, 0x02fb), LPSS_CNL_SSP },
++	/* CML-H */
++	{ PCI_VDEVICE(INTEL, 0x06aa), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0x06ab), LPSS_CNL_SSP },
++	{ PCI_VDEVICE(INTEL, 0x06fb), LPSS_CNL_SSP },
+ 	/* TGL-LP */
+ 	{ PCI_VDEVICE(INTEL, 0xa0aa), LPSS_CNL_SSP },
+ 	{ PCI_VDEVICE(INTEL, 0xa0ab), LPSS_CNL_SSP },
 -- 
 2.20.1
 
