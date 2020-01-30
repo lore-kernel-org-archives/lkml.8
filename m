@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1563C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB59AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70ED42083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B24621734
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409860;
-	bh=l/54tbrLAeoXmLygfmCUMy7nlKmDi4RKwGSnm2fHF3s=;
+	s=default; t=1580409863;
+	bh=qsORcU52zr2Vq4Oqy+qSQle/OTS7u/Pcf1nBx+OzJBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QoHOPfCkZU31iyV0TeVes4ookmxt/oFuYsO5VP0clhvpUJW6qdHi3V8yjyNpQGxkt
-	 sVTbwZvqggy/NAbSXNsHG/kboD9Gmqvcu2Sq6SUrbGTun4/DbecpnGcMhrnxHrA9JI
-	 6WefKLbzUA0oZbVJRUClVa+Njp/4qT+WUnpUshAc=
+	b=oeo+hLY2qCjz0jKekdgQM0iJ+PS8cf25LvzVpnBKvQTYYAgZ4qxpJaRtdv74xwinv
+	 I3UuBVFEK9TPghrGwtWvC44ggPoaPiXWVMQS2kmXkSphiEeysKKaa/lmdlWhUZ7Y7V
+	 JlHzSghW2EmpoYkw3RDff49ul+2B0iEn4HozugZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbgA3SoT (ORCPT
+        id S1730818AbgA3SoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730801AbgA3SoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:17 -0500
+        id S1730811AbgA3SoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F5A205F4;
-        Thu, 30 Jan 2020 18:44:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15432082E;
+        Thu, 30 Jan 2020 18:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409856;
-        bh=l/54tbrLAeoXmLygfmCUMy7nlKmDi4RKwGSnm2fHF3s=;
+        s=default; t=1580409859;
+        bh=qsORcU52zr2Vq4Oqy+qSQle/OTS7u/Pcf1nBx+OzJBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OD+FJ/vvtqvsoQx16cw7Hz4wEdbxOkr6QoKBSjwoLuXgq7sZhnwhJIIGfPNLtbVTZ
-         i1Nh9NKHX8IqHftHaQ7Zj2U9Li8aPGSO2ZZI6tVtrkQHvbebLrS7Vd3tXZlZMEENHs
-         gxHOPbithv6EtbbUGTPf2Z26D+ytZbM1P/bf7TQg=
+        b=UQ9kApeRIXc8bC52KGCGBPez5wX2A3Vn67X2cvEP1L8qbOcqv/Cn7xAZuz3Vtazs8
+         Hg2QIv+CaswrQNQzR+xagQCAI3o1NLspic5i/yqcoag5v+xQJuonEQQCcrhQ7TS428
+         bMVqzFUKiYuouxJ5xVRQr5UcbaduuBYCUqGOKdkQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/110] watchdog: rn5t618_wdt: fix module aliases
-Date:   Thu, 30 Jan 2020 19:38:37 +0100
-Message-Id: <20200130183622.170030070@linuxfoundation.org>
+Subject: [PATCH 5.4 062/110] watchdog: orion: fix platform_get_irq() complaints
+Date:   Thu, 30 Jan 2020 19:38:38 +0100
+Message-Id: <20200130183622.243888264@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,35 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit a76dfb859cd42df6e3d1910659128ffcd2fb6ba2 ]
+[ Upstream commit dcbce5fbcc69bf2553f650004aad44bf390eca73 ]
 
-Platform device aliases were missing so module autoloading
-did not work.
+Fix:
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+orion_wdt f1020300.watchdog: IRQ index 1 not found
+
+which is caused by platform_get_irq() now complaining when optional
+IRQs are not found.  Neither interrupt for orion is required, so
+make them both optional.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191213214802.22268-1-andreas@kemnade.info
+Link: https://lore.kernel.org/r/E1iahcN-0000AT-Co@rmk-PC.armlinux.org.uk
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/rn5t618_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/orion_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-index 2348760474317..6e524c8e26a8f 100644
---- a/drivers/watchdog/rn5t618_wdt.c
-+++ b/drivers/watchdog/rn5t618_wdt.c
-@@ -188,6 +188,7 @@ static struct platform_driver rn5t618_wdt_driver = {
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index 1cccf8eb1c5d4..8e6dfe76f9c9d 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -602,7 +602,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 		set_bit(WDOG_HW_RUNNING, &dev->wdt.status);
  
- module_platform_driver(rn5t618_wdt_driver);
+ 	/* Request the IRQ only after the watchdog is disabled */
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0) {
+ 		/*
+ 		 * Not all supported platforms specify an interrupt for the
+@@ -617,7 +617,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 	}
  
-+MODULE_ALIAS("platform:rn5t618-wdt");
- MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
- MODULE_DESCRIPTION("RN5T618 watchdog driver");
- MODULE_LICENSE("GPL v2");
+ 	/* Optional 2nd interrupt for pretimeout */
+-	irq = platform_get_irq(pdev, 1);
++	irq = platform_get_irq_optional(pdev, 1);
+ 	if (irq > 0) {
+ 		orion_wdt_info.options |= WDIOF_PRETIMEOUT;
+ 		ret = devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
 -- 
 2.20.1
 
