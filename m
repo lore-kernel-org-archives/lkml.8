@@ -2,81 +2,91 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E99C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EA9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348F4206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A47206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:19:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0WwOnHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbgA3MT1 (ORCPT
+        id S1727208AbgA3MT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:19:27 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56500 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3MT1 (ORCPT
+        Thu, 30 Jan 2020 07:19:58 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39974 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726873AbgA3MT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:19:27 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1A7F41C2604; Thu, 30 Jan 2020 13:19:26 +0100 (CET)
-Date:   Thu, 30 Jan 2020 13:19:26 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jonas Meurer <jonas@freesources.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Tim Dittler <tim.dittler@systemli.org>,
-        Yannik Sembritzki <yannik@sembritzki.me>
-Subject: Re: [PATCH v3] PM: suspend: Add sysfs attribute to control the "sync
- on suspend" behavior
-Message-ID: <20200130121926.cdz7dtrcbeuodqca@ucw.cz>
-References: <d05a1c0c-1212-17f4-3772-042e2ff76a40@freesources.org>
- <CAJZ5v0gXMkL8Z_=jUvNGoVjDr4s5osO8RNekJ1yg-b+=zi7GSw@mail.gmail.com>
+        Thu, 30 Jan 2020 07:19:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580386797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6Xqdu8J6TOj9He6qQ+BqrK7qHeGQ1dIibFBQ/FqCh1s=;
+        b=D0WwOnHP24mRjhrfcRwZYM+JuqHTBH2t/xypTKgVP3o030xg1EGGmN39SeW9n8VZs41+O9
+        +SVxUvhqbEPPAheL58Xwx2LORq17Cyd8oPxZaP6bHgISL7lVXbk71LCIIsvsRl2nsgCOoP
+        LPC675ERSwQ3tmADIwyScp/fvCorzIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-n6jIJxsQONivvhbjyMM1Ng-1; Thu, 30 Jan 2020 07:19:51 -0500
+X-MC-Unique: n6jIJxsQONivvhbjyMM1Ng-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94C6D8010EE;
+        Thu, 30 Jan 2020 12:19:49 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-29.ams2.redhat.com [10.36.116.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 967175DA75;
+        Thu, 30 Jan 2020 12:19:41 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
+References: <20200123014627.71720-1-bgeffon@google.com>
+        <20200124190625.257659-1-bgeffon@google.com>
+        <87imkxxl5d.fsf@oldenburg2.str.redhat.com>
+        <CADyq12xCpTzLpYC16FjnM60tHhCfnccNfg6JJuqcBd_6ACDGcQ@mail.gmail.com>
+Date:   Thu, 30 Jan 2020 13:19:39 +0100
+In-Reply-To: <CADyq12xCpTzLpYC16FjnM60tHhCfnccNfg6JJuqcBd_6ACDGcQ@mail.gmail.com>
+        (Brian Geffon's message of "Mon, 27 Jan 2020 14:33:44 -0800")
+Message-ID: <87eevh3zms.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gXMkL8Z_=jUvNGoVjDr4s5osO8RNekJ1yg-b+=zi7GSw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+* Brian Geffon:
 
-> > The sysfs attribute `/sys/power/sync_on_suspend` controls, whether or not
-> > filesystems are synced by the kernel before system suspend.
-> >
-> > Congruously, the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC
-> > is slightly changed: It now defines the run-tim default for the new sysfs
-> > attribute `/sys/power/sync_on_suspend`.
-> >
-> > The run-time attribute is added because the existing corresponding
-> > build-time Kconfig flag for (`CONFIG_SUSPEND_SKIP_SYNC`) is not flexible
-> > enough. E.g. Linux distributions that provide pre-compiled kernels
-> > usually want to stick with the default (sync filesystems before suspend)
-> > but under special conditions this needs to be changed.
-> >
-> > One example for such a special condition is user-space handling of
-> > suspending block devices (e.g. using `cryptsetup luksSuspend` or `dmsetup
-> > suspend`) before system suspend. The Kernel trying to sync filesystems
-> > after the underlying block device already got suspended obviously leads
-> > to dead-locks. Be aware that you have to take care of the filesystem sync
-> > yourself before suspending the system in those scenarios.
-> >
-> > Signed-off-by: Jonas Meurer <jonas@freesources.org>
-> 
-> Applied as 5.6 material with minor changes in the ABI document, thanks!
+> Hi Florian,
+> copy_vma will make a copy of the existing VMA leaving the old VMA
+> unchanged, so the source keeps its existing protections, this is what
+> makes it very useful along with userfaultfd.
 
-For the record, I still believe this is bad idea.
+I see.  On the other hand, it's impossible to get the PROT_NONE behavior
+by a subsequent mprotect call because the mremap has to fail in some
+cases in vm.overcommit_memory=2 mode.  But maybe that other behavior can
+be provided with a different flag if it turns out to be useful in the
+future.
 
-User should not have to tweak variables in /sys for system not to
-deadlock with cryptsetup.. and we are stuck with this pretty much
-forever.
+Thanks,
+Florian
 
-									Pavel
