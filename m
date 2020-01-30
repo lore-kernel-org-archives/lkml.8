@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833F2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBEAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587D6214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0BE2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409891;
-	bh=vVe2J0NLPpOZp8vR8ECvcA8eLEA7SgBwdYsD8uicAmg=;
+	s=default; t=1580409893;
+	bh=saXXOSjiRFcl+smuaMC7M+4L6SdqpELGKqVjGPcAly4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3FzASA4fV31U07Ilm0M9z2CS9L1XT+Ru/torzoy9bDsxbza1yQwSzkRf8w+mmf6X
-	 k85GfmttMvB4ATOtmrEhbCHexuLygwMefDn0+/LhX/Hcvzw6m8JjwIRFL3Npykr833
-	 za9iruhFfd8YN6WOeYTS89k43hTqCczC/3mp7fdo=
+	b=I3Y7CiLUnpqufWS7FR98H+GzSWa3QsYg5audhy8PuFhA4MhZIAwAmz3H2HNgmMOBp
+	 Xl4ajmApGS9zA4lIuyxvRfKt5E9OT9JWkGEBKzm7drxOXjOFdJDMtBqyvE5g0fWIca
+	 JEsdp/WrR5EEEYgCsO3J1QQbdG6G+vV40TNmSEbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbgA3Sou (ORCPT
+        id S1730908AbgA3Sow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54090 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730880AbgA3Sos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:48 -0500
+        id S1730898AbgA3Sou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1047E205F4;
-        Thu, 30 Jan 2020 18:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993092082E;
+        Thu, 30 Jan 2020 18:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409887;
-        bh=vVe2J0NLPpOZp8vR8ECvcA8eLEA7SgBwdYsD8uicAmg=;
+        s=default; t=1580409890;
+        bh=saXXOSjiRFcl+smuaMC7M+4L6SdqpELGKqVjGPcAly4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/9ed2iJOMl0Wf9LWzZsTx1Z/kj7ThvNcH94gztW6qEIvMXOHBmnrDCMIHfcb74kL
-         ytK8CoHxsjZGgaxnx3opC2KBmpHQwPyK2YhTe9HejVPi7wmTdyCe/kWFir2CfgMJx1
-         wb+gHKQtMBUZBA2iRZF8CGxTVCYgkVM3toDZJvso=
+        b=BE72rARjiA5Vm5AYvEZuEMi+o1em0RDEzCoGQeDgayJ1lsL6aDHyQ83etQWE6I8I9
+         X889iI7KoIWls/TeKdTdqYifXpZktUvHVHZmEvxRwYV88HDBtz7BUkxmTLlYVXy+E3
+         jgKAokmxJC+ZhJFLsaQ1+44IXS2trCUEhFi2lKvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiping Ma <jiping.ma2@windriver.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/110] stmmac: debugfs entry name is not be changed when udev rename device name.
-Date:   Thu, 30 Jan 2020 19:38:48 +0100
-Message-Id: <20200130183622.973401988@linuxfoundation.org>
+Subject: [PATCH 5.4 073/110] atm: eni: fix uninitialized variable warning
+Date:   Thu, 30 Jan 2020 19:38:49 +0100
+Message-Id: <20200130183623.066069730@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,83 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 481a7d154cbbd5ca355cc01cc8969876b240eded ]
+[ Upstream commit 30780d086a83332adcd9362281201cee7c3d9d19 ]
 
-Add one notifier for udev changes net device name.
-Fixes: b6601323ef9e ("net: stmmac: debugfs entry name is not be changed when udev rename")
+With -O3, gcc has found an actual unintialized variable stored
+into an mmio register in two instances:
 
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+drivers/atm/eni.c: In function 'discard':
+drivers/atm/eni.c:465:13: error: 'dma[1]' is used uninitialized in this function [-Werror=uninitialized]
+   writel(dma[i*2+1],eni_dev->rx_dma+dma_wr*8+4);
+             ^
+drivers/atm/eni.c:465:13: error: 'dma[3]' is used uninitialized in this function [-Werror=uninitialized]
+
+Change the code to always write zeroes instead.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/atm/eni.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 1b3520d0e59ef..06dd65c419c49 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -105,6 +105,7 @@ MODULE_PARM_DESC(chain_mode, "To use chain instead of ring mode");
- static irqreturn_t stmmac_interrupt(int irq, void *dev_id);
- 
- #ifdef CONFIG_DEBUG_FS
-+static const struct net_device_ops stmmac_netdev_ops;
- static void stmmac_init_fs(struct net_device *dev);
- static void stmmac_exit_fs(struct net_device *dev);
- #endif
-@@ -4175,6 +4176,34 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
- }
- DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
- 
-+/* Use network device events to rename debugfs file entries.
-+ */
-+static int stmmac_device_event(struct notifier_block *unused,
-+			       unsigned long event, void *ptr)
-+{
-+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	if (dev->netdev_ops != &stmmac_netdev_ops)
-+		goto done;
-+
-+	switch (event) {
-+	case NETDEV_CHANGENAME:
-+		if (priv->dbgfs_dir)
-+			priv->dbgfs_dir = debugfs_rename(stmmac_fs_dir,
-+							 priv->dbgfs_dir,
-+							 stmmac_fs_dir,
-+							 dev->name);
-+		break;
-+	}
-+done:
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block stmmac_notifier = {
-+	.notifier_call = stmmac_device_event,
-+};
-+
- static void stmmac_init_fs(struct net_device *dev)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
-@@ -4189,12 +4218,15 @@ static void stmmac_init_fs(struct net_device *dev)
- 	/* Entry to report the DMA HW features */
- 	debugfs_create_file("dma_cap", 0444, priv->dbgfs_dir, dev,
- 			    &stmmac_dma_cap_fops);
-+
-+	register_netdevice_notifier(&stmmac_notifier);
- }
- 
- static void stmmac_exit_fs(struct net_device *dev)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 
-+	unregister_netdevice_notifier(&stmmac_notifier);
- 	debugfs_remove_recursive(priv->dbgfs_dir);
- }
- #endif /* CONFIG_DEBUG_FS */
+diff --git a/drivers/atm/eni.c b/drivers/atm/eni.c
+index b23d1e4bad33b..9d0d65efcd94e 100644
+--- a/drivers/atm/eni.c
++++ b/drivers/atm/eni.c
+@@ -374,7 +374,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
+ 		here = (eni_vcc->descr+skip) & (eni_vcc->words-1);
+ 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) | (vcc->vci
+ 		    << MID_DMA_VCI_SHIFT) | MID_DT_JK;
+-		j++;
++		dma[j++] = 0;
+ 	}
+ 	here = (eni_vcc->descr+size+skip) & (eni_vcc->words-1);
+ 	if (!eff) size += skip;
+@@ -447,7 +447,7 @@ static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
+ 	if (size != eff) {
+ 		dma[j++] = (here << MID_DMA_COUNT_SHIFT) |
+ 		    (vcc->vci << MID_DMA_VCI_SHIFT) | MID_DT_JK;
+-		j++;
++		dma[j++] = 0;
+ 	}
+ 	if (!j || j > 2*RX_DMA_BUF) {
+ 		printk(KERN_CRIT DEV_LABEL "!j or j too big!!!\n");
 -- 
 2.20.1
 
