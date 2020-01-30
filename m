@@ -2,51 +2,50 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4B2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1851C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6FB20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C433B205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410202;
-	bh=QEJHaPr01/ZhIn6sMg9jH836SZl7p9PXfvQE+moXujA=;
+	s=default; t=1580410205;
+	bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpjwbpyJ5a1pfcEQn3q6nV5TLI9i9z3Tl4yV8bcCd3k2A87mKFOVp/DOCUDql55tu
-	 3n0+Xrc5HQ5Oo7WChYlrWNRmihFbCyQTnLoiD8Hc/lpppRTp5H1NX0qzJPuwJ0Ldnj
-	 7xcUbUMj8HW0EWq5mzwGbUUy5DQ5QcwTTs9VxADs=
+	b=mwBHC1AZcekJmz+dJOGVGyb9U3DICMAFNumTt33NnDtKq4tgcSqwsPxR93rH8PAk5
+	 9P/flBIp5JEkFDr/yEa/vw9uyy5RqjSDasKRxOEKRytg29mWS6OTIAR4tKYSQuaNj2
+	 OGUy4LLwxlDhQAGs1HLKvo7kQzl+Eceq7BQDPueg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbgA3SuC (ORCPT
+        id S1731694AbgA3SuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:50:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58272 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:50:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgA3Srf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:35 -0500
+        id S1730141AbgA3Srd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507C6205F4;
-        Thu, 30 Jan 2020 18:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E924420674;
+        Thu, 30 Jan 2020 18:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410054;
-        bh=QEJHaPr01/ZhIn6sMg9jH836SZl7p9PXfvQE+moXujA=;
+        s=default; t=1580410052;
+        bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hueXotFYfoRhEDO5MCAq/TKYbsIP5F+0WjhjYE+sohe0uvSlRl1L+ydA75HXBy7ax
-         orczrwnGaqjJc8pCXFTfNs8c6zZuLy9EvhJlOpSUFprTRckkUUS7NHvvQ50mP/k8z5
-         ONmLo3Mj5khMzL2sRROo2dyw2c2PhgXjazabSkHU=
+        b=GESOKA0KLqgLICKY0MWH13Wr+U52VvYfxRlVG49dd0zeMWDwZvhAd4PqrynRXA04j
+         XK0jB3WIA3bHEtIrT+2Y/xY0N2eU1Ckyd6/r4QUeyyMMItuMfa23BJXNCiXxiSBCuF
+         0QeH+ATbYV6DvzKGuw4QulMCsGWC02l9grgoiu/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/55] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
-Date:   Thu, 30 Jan 2020 19:39:09 +0100
-Message-Id: <20200130183613.818173837@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.19 10/55] staging: vt6656: correct packet types for CTS protect, mode.
+Date:   Thu, 30 Jan 2020 19:38:51 +0100
+Message-Id: <20200130183610.637745300@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -59,56 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
+commit d971fdd3412f8342747778fb59b8803720ed82b1 upstream.
 
-The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
-which is connected to an ITE 8595 USB keyboard controller chip.
+It appears that the driver still transmits in CTS protect mode even
+though it is not enabled in mac80211.
 
-This keyboard has the same quirk for its rfkill / airplane mode hotkey as
-other keyboards with the ITE 8595 chip, it only sends a single release
-event when pressed and released, it never sends a press event.
+That is both packet types PK_TYPE_11GA and PK_TYPE_11GB both use CTS protect.
+The only difference between them GA does not use B rates.
 
-This commit adds this keyboards USB id to the hid-ite id-table, fixing
-the rfkill key not working on this keyboard.
+Find if only B rate in GB or GA in protect mode otherwise transmit packets
+as PK_TYPE_11A.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/9c1323ff-dbb3-0eaa-43e1-9453f7390dc0@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-ids.h | 1 +
- drivers/hid/hid-ite.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/staging/vt6656/device.h |    2 ++
+ drivers/staging/vt6656/rxtx.c   |   12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index ee243bf8cc3df..03d65b6910673 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1075,6 +1075,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -52,6 +52,8 @@
+ #define RATE_AUTO	12
  
- #define USB_VENDOR_ID_TEXAS_INSTRUMENTS	0x2047
-diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
-index 98b059d79bc89..2ce1eb0c92125 100644
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -43,6 +43,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
- static const struct hid_device_id ite_devices[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
-+	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
-+			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(hid, ite_devices);
--- 
-2.20.1
-
+ #define MAX_RATE			12
++#define VNT_B_RATES	(BIT(RATE_1M) | BIT(RATE_2M) |\
++			BIT(RATE_5M) | BIT(RATE_11M))
+ 
+ /*
+  * device specific
+--- a/drivers/staging/vt6656/rxtx.c
++++ b/drivers/staging/vt6656/rxtx.c
+@@ -815,10 +815,14 @@ int vnt_tx_packet(struct vnt_private *pr
+ 		if (info->band == NL80211_BAND_5GHZ) {
+ 			pkt_type = PK_TYPE_11A;
+ 		} else {
+-			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT)
+-				pkt_type = PK_TYPE_11GB;
+-			else
+-				pkt_type = PK_TYPE_11GA;
++			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT) {
++				if (priv->basic_rates & VNT_B_RATES)
++					pkt_type = PK_TYPE_11GB;
++				else
++					pkt_type = PK_TYPE_11GA;
++			} else {
++				pkt_type = PK_TYPE_11A;
++			}
+ 		}
+ 	} else {
+ 		pkt_type = PK_TYPE_11B;
 
 
