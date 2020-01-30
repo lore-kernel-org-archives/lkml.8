@@ -1,136 +1,130 @@
 Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B078C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FBCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADE4206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A7E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp1c8UWq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="rGR2Z3rZ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="wkxvYvpb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgA3HbU (ORCPT
+        id S1726760AbgA3HbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 02:31:20 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36984 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgA3HbT (ORCPT
+        Thu, 30 Jan 2020 02:31:25 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55202 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725847AbgA3HbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 02:31:19 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q127so1196539pga.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 23:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=ADHXjKY+wZDM9guKVG7zd0Mm0y/rFvUhm90KVH/W/To=;
-        b=Fp1c8UWqKSduatMedNJg0JXB/cDi6eI2Wrbfrp6MJ5KJRNA0LWiRIaqH76kSGfRNXA
-         jmHuaJCmIhoo2Ke+TactuJKRkD5y0q1dMAC1GAx17HOz7T1HFXlFTBeH88btIzU1UZ8B
-         Xy7mH3LMmlaNF+2H8DfVx4Tj3WSs99RPke1B/lyDIW1JSQ/SrKlvBDN38QWmUFU2Ece9
-         Gm0x0tIjIMRFQXPI3kJwgdYnoyTnpRh7O3HiQExPmOLecfwBBSy1sTPJb8NCkH/XwSsT
-         XRSXFYdLPZ+nVEc43gAJQx58khG781NfrLBfs0rq0fxDNzK0ZJsGRMnhGpFwg3aH9Qls
-         AA0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=ADHXjKY+wZDM9guKVG7zd0Mm0y/rFvUhm90KVH/W/To=;
-        b=I8xJEXaBJ02WER+3XkNPsHyMIjjZOS9fcOH+W974Li+y/IBo6XD/JKuIGflwLMBrJJ
-         EZZjrA9T179DySsj4n12ldfWoZ8wZcuj/pO6hnxPvDew8YZA+k2wj3g+GkVXeFUJjLs9
-         RwNrGRRsP48mjxYVbWYlJaGtCPqdTL7xUdPqKrfamMb1Dc5E6oF+vFZHwa6512a3jlbh
-         T8nDmS7DCKGMg6diPPPzhLB5nWWprPjVwrxVaHRJtL1tO64URtPZvTMV2mMtVmwgybFJ
-         ZvG/qWqYiYCLDopxXoC13/08i1K0ev7um4qvo64RRe7q/FAsCtvF1ADm5zzX+aTSkZR7
-         QBkw==
-X-Gm-Message-State: APjAAAX0xhItLcvc3wLETx/EOgKj3VhiHRMi81Tvo/3o1OZRq25n7Ivi
-        euHKh5BI7D2yjLTGLMAK7KM=
-X-Google-Smtp-Source: APXvYqxjoJ9Bt62qy3k/p7zxSkSmzSaWakYmKUL1JcNAS98p04iHIga/jET0K3QPiSkPdlsLy/6VaA==
-X-Received: by 2002:a63:30c:: with SMTP id 12mr3264019pgd.276.1580369479261;
-        Wed, 29 Jan 2020 23:31:19 -0800 (PST)
-Received: from [192.168.1.101] (122-58-182-19-adsl.sparkbb.co.nz. [122.58.182.19])
-        by smtp.gmail.com with ESMTPSA id v7sm5102910pfn.61.2020.01.29.23.31.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 23:31:18 -0800 (PST)
-Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
-To:     Peter Zijlstra <peterz@infradead.org>
-References: <20200129103941.304769381@infradead.org>
- <bbdb9596-583e-5d26-ac1c-4775440059b9@physik.fu-berlin.de>
- <20200129115412.GN14914@hirez.programming.kicks-ass.net>
- <CAOmrzkJ8dsuSnomcE7uhyY9ip6T9ADLT7LhjydvY-hizpikBiA@mail.gmail.com>
- <20200129193109.GS14914@hirez.programming.kicks-ass.net>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux/m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Development <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <b72358cc-ddd2-52d6-7eed-c88bab46e6f1@gmail.com>
-Date:   Thu, 30 Jan 2020 20:31:13 +1300
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200129193109.GS14914@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Thu, 30 Jan 2020 02:31:25 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 035A68EE15F;
+        Wed, 29 Jan 2020 23:31:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1580369485;
+        bh=OFFq1n/xZIO0HDGayTN8AekIUkZsrlhOyuq6k/TQCFE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=rGR2Z3rZ+ul0vF0fbPAbZos5sSLCAy++j/Bc79xF8b5AY1F/fwQ/8mB3UomuQpUPM
+         4UcN+SWL3jBSQUvYmcYumEBVsLrLaTGTzA37TeS78LS4aztiHBFCGX41GMvX++LKlz
+         e51HcvM23UPuchEd5cHjbA4fgagc8umjWnRBwRM4=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a4p759NrPwda; Wed, 29 Jan 2020 23:31:24 -0800 (PST)
+Received: from [10.22.222.128] (unknown [77.241.229.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9191C8EE0D4;
+        Wed, 29 Jan 2020 23:31:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1580369484;
+        bh=OFFq1n/xZIO0HDGayTN8AekIUkZsrlhOyuq6k/TQCFE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=wkxvYvpbTT7evfC4t2MMCdjGb4CffzHV7zvPSoNSL8VUj+p5k04yIMOj6z6ffvRRW
+         s4RLH4hnErBP6HuOT5j2WUlCoVXyHaMlz8ArBqOpzp44/SUwlPyEprVnWAcRU6oan/
+         o/rRrdATvSbSIR51pEkEWqWFOza7LFvX4Cs3yqIg=
+Message-ID: <1580369477.3688.8.camel@HansenPartnership.com>
+Subject: Re: [PATCH 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Thu, 30 Jan 2020 08:31:17 +0100
+In-Reply-To: <1580340007.4790.31.camel@linux.ibm.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <1580140919-6127-2-git-send-email-zohar@linux.ibm.com>
+         <465015d0c9ca4e278ed32f78eb3eb4a4@huawei.com>
+         <1580226042.5088.90.camel@linux.ibm.com>
+         <1580340007.4790.31.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
+On Wed, 2020-01-29 at 18:20 -0500, Mimi Zohar wrote:
+> On Tue, 2020-01-28 at 10:40 -0500, Mimi Zohar wrote:
+> > > This code assumes that the algorithm used to calculate
+> > > boot_aggregate and the algorithm of the PCR bank can be
+> > > different. I don't know if it is possible to communicate to the
+> > > verifier which bank has been selected (it depends on the local
+> > > configuration).
+> > 
+> > Agreed, but defaulting to the first bank would only happen if the
+> > IMA default hash algorithm is not a configured TPM algorithm.
+> > 
+> > > 
+> > > In my opinion the safest approach would be to use the same
+> > > algorithm for the digest and the PCR bank. If you agree to this,
+> > > then the code above must be moved to ima_calc_boot_aggregate() so
+> > > that the algorithm of the selected PCR bank can be passed to
+> > > ima_alloc_tfm().
+> > 
+> > Using the same hash algorithm, preferably the IMA hash default
+> > algorithm, for reading the TPM PCR bank and calculating the
+> > boot_aggregate makes sense.
+> > 
+> > > 
+> > > The selected PCR bank might be not the first, if the algorithm is
+> > > unknown to the crypto subsystem.
+> > 
+> > It sounds like you're suggesting finding a common configured hash
+> > algorithm between the TPM and the kernel. 
+> 
+> I'd like to clarify the logic for the case when a common algorithm
+> does not exist.
 
-Am 30.01.2020 um 08:31 schrieb Peter Zijlstra:
-> On Thu, Jan 30, 2020 at 07:52:11AM +1300, Michael Schmitz wrote:
->> Peter,
->>
->> On Thu, Jan 30, 2020 at 12:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>> On Wed, Jan 29, 2020 at 11:49:13AM +0100, John Paul Adrian Glaubitz wrote:
->>>
->>>>> [1] https://wiki.debian.org/M68k/QemuSystemM68k
->>>
->>> Now, if only debian would actually ship that :/
->>>
->>> AFAICT that emulates a q800 which is another 68040 and should thus not
->>> differ from ARAnyM.
->>>
->>> I'm fairly confident in the 040 bits, it's the 020/030 things that need
->>> coverage.
->>
->> I'll take a look - unless this eats up way more kernel memory for page
->> tables, it should still boot on my Falcon.
->
-> It should actually be better in most cases I think, since we no longer
-> require all 16 pte-tables to map consecutive (virtual) memory.
+I'm not sure we need to twist ourselves in knots over this.  The TCG
+client platform for 2.0 mandates sha256, so we should be able to count
+on it being present.  I'd be happy to treat the failure to find sha256
+on TPM 2.0 as a fatal error, and the same for the failure to find sha1
+on TPM 1.2.
 
-Not much difference:
+>   None of the TPM allocated banks are known by the kernel.  If the
+> hash algorithm of the boot_aggregate represents not only that of the
+> digest included in the measurement list, but also of the TPM PCR bank
+> read, what should happen?  Should the boot aggregate be 0's, like in
+> the case when there isn't a TPM?
 
-              total       used       free     shared    buffers     cached
-Mem:         10712      10120        592          0       1860       2276
--/+ buffers/cache:       5984       4728
-Swap:      2097144       1552    2095592
+For TPM 1.2 sha1 is required and for TPM2 sha256 is.  I'd just force
+search for those, based on the TPM version, and fail to use the TPM if
+they're not found.  There should be a boot time and config option for
+weird hashes which might be the only ones on BRIC embedded devices,
+like Streebog or ZM2, but the clear default should be the TCG mandates
+and it should be up to anything weird to cope with their own induced
+problems and not make it part of the standard setup.
 
-
-vs. vanilla 5.5rc5:
-              total       used       free     shared    buffers     cached
-Mem:         10716      10104        612          0       1588       2544
--/+ buffers/cache:       5972       4744
-Swap:      2097144       1296    2095848
-
-By sheer coincidence, the boot with your patch series happened to run a 
-full filesystem check on the root filesystem, so I'd say it got a good 
-workout re: paging and swapping (even though it's just a paltry 4 GB).
-
-Haven't tried any VM stress testing yet (not sure what to do for that; 
-it's been years since I tried that sort of stuff).
-
-Cheers,
-
-	Michael
-
+James
 
