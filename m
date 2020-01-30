@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF910C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B8EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C31D20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC07E2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409598;
-	bh=3OppFeTIC5EGVmWme2JxnhZ9O/cxokC45JreOYg3EiA=;
+	s=default; t=1580409602;
+	bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=If4GQbcjOeABec8bOXezsxLkqIpQ0rPVgXenqRoyBUwf6OpIXH4FtVSF+ThYZz07B
-	 DTXMndHwKvz7c7EB1QSW9qFYJUAax8gttwq33oAWjUFuiyF/j381dOidCZukrlu0In
-	 w/TbU8R4srxfWCQDkZamBodN07K1X8J2y4ZyEkFc=
+	b=G9ltga4YWpWWzaU3vfxohKRAjEQWG7IwRT9fNl5dPeU8EHZrLl77iBLfjYp9ijIcn
+	 Cw1Wws7s14w+ylCGyF8aRL98+gsFdJc+zVJTFRSAFEHvk9qDna13c8JxAcbL0Ri78+
+	 CdQyuPHkMIxv8PjJpLdRCfZVzB17idSMNcyl41I0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbgA3Sj6 (ORCPT
+        id S1727987AbgA3SkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:39:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbgA3Sjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:39:52 -0500
+        id S1727954AbgA3Sj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:39:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E1A2083E;
-        Thu, 30 Jan 2020 18:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBBE214D8;
+        Thu, 30 Jan 2020 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409592;
-        bh=3OppFeTIC5EGVmWme2JxnhZ9O/cxokC45JreOYg3EiA=;
+        s=default; t=1580409597;
+        bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gj+8l0urHI1d2IzT5NZpU3iJhF1bG1UfNTXgQsJ2vECMjzmu7LO1IkQLdTLVA1RKa
-         i2A7gWczLCrNwyjOPOUbP8C5+j6ustWXnIYycDdKeVWv9P0i4tIg4+QtwgOCnm74WX
-         mScmiHm8zhOEXb06WYL7ZTWdErh/dstzn1SKMLjU=
+        b=bDUvCcCkLkRbdPluGqYI/q1EJZ6muIZhvZlQFIqWxUEI99UybSPxgb+8JO8ij9WQq
+         vjJtOIQpdyOA4p0fE1dg9tpqiFvyvcL/vNVC8EvYO0gmUO/3m+FttMdpL1JZG+AwiO
+         5XWjDowSQndlwZUUm6QHf0Fh7+3CqP5Rgv1nfUrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Shvetsov <andrey.shvetsov@k2l.de>
-Subject: [PATCH 5.5 12/56] staging: most: net: fix buffer overflow
-Date:   Thu, 30 Jan 2020 19:38:29 +0100
-Message-Id: <20200130183611.429347579@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.5 14/56] staging: vt6656: correct packet types for CTS protect, mode.
+Date:   Thu, 30 Jan 2020 19:38:31 +0100
+Message-Id: <20200130183611.888987584@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -58,58 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Shvetsov <andrey.shvetsov@k2l.de>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 4d1356ac12f4d5180d0df345d85ff0ee42b89c72 upstream.
+commit d971fdd3412f8342747778fb59b8803720ed82b1 upstream.
 
-If the length of the socket buffer is 0xFFFFFFFF (max size for an
-unsigned int), then payload_len becomes 0xFFFFFFF1 after subtracting 14
-(ETH_HLEN).  Then, mdp_len is set to payload_len + 16 (MDP_HDR_LEN)
-which overflows and results in a value of 2.  These values for
-payload_len and mdp_len will pass current buffer size checks.
+It appears that the driver still transmits in CTS protect mode even
+though it is not enabled in mac80211.
 
-This patch checks if derived from skb->len sum may overflow.
+That is both packet types PK_TYPE_11GA and PK_TYPE_11GB both use CTS protect.
+The only difference between them GA does not use B rates.
 
-The check is based on the following idea:
+Find if only B rate in GB or GA in protect mode otherwise transmit packets
+as PK_TYPE_11A.
 
-For any `unsigned V1, V2` and derived `unsigned SUM = V1 + V2`,
-`V1 + V2` overflows iif `SUM < V1`.
-
-Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andrey Shvetsov <andrey.shvetsov@k2l.de>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200116172238.6046-1-andrey.shvetsov@microchip.com
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/9c1323ff-dbb3-0eaa-43e1-9453f7390dc0@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/most/net/net.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/staging/vt6656/device.h |    2 ++
+ drivers/staging/vt6656/rxtx.c   |   12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/most/net/net.c
-+++ b/drivers/staging/most/net/net.c
-@@ -81,6 +81,11 @@ static int skb_to_mamac(const struct sk_
- 	unsigned int payload_len = skb->len - ETH_HLEN;
- 	unsigned int mdp_len = payload_len + MDP_HDR_LEN;
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -52,6 +52,8 @@
+ #define RATE_AUTO	12
  
-+	if (mdp_len < skb->len) {
-+		pr_err("drop: too large packet! (%u)\n", skb->len);
-+		return -EINVAL;
-+	}
-+
- 	if (mbo->buffer_length < mdp_len) {
- 		pr_err("drop: too small buffer! (%d for %d)\n",
- 		       mbo->buffer_length, mdp_len);
-@@ -128,6 +133,11 @@ static int skb_to_mep(const struct sk_bu
- 	u8 *buff = mbo->virt_address;
- 	unsigned int mep_len = skb->len + MEP_HDR_LEN;
+ #define MAX_RATE			12
++#define VNT_B_RATES	(BIT(RATE_1M) | BIT(RATE_2M) |\
++			BIT(RATE_5M) | BIT(RATE_11M))
  
-+	if (mep_len < skb->len) {
-+		pr_err("drop: too large packet! (%u)\n", skb->len);
-+		return -EINVAL;
-+	}
-+
- 	if (mbo->buffer_length < mep_len) {
- 		pr_err("drop: too small buffer! (%d for %d)\n",
- 		       mbo->buffer_length, mep_len);
+ /*
+  * device specific
+--- a/drivers/staging/vt6656/rxtx.c
++++ b/drivers/staging/vt6656/rxtx.c
+@@ -815,10 +815,14 @@ int vnt_tx_packet(struct vnt_private *pr
+ 		if (info->band == NL80211_BAND_5GHZ) {
+ 			pkt_type = PK_TYPE_11A;
+ 		} else {
+-			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT)
+-				pkt_type = PK_TYPE_11GB;
+-			else
+-				pkt_type = PK_TYPE_11GA;
++			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT) {
++				if (priv->basic_rates & VNT_B_RATES)
++					pkt_type = PK_TYPE_11GB;
++				else
++					pkt_type = PK_TYPE_11GA;
++			} else {
++				pkt_type = PK_TYPE_11A;
++			}
+ 		}
+ 	} else {
+ 		pkt_type = PK_TYPE_11B;
 
 
