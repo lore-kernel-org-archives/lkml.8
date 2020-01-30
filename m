@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D839EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4835EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDC720CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140DE2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409800;
-	bh=HmDDopOrwhUHL1wldJ0BrLZPmR8N2AVoVwZoXxGPi00=;
+	s=default; t=1580409804;
+	bh=jFhBivrGTpphe334jiWq/4dCd5DrUqPSGqxcA63EX4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDoEIw8VWMr/MwnbTAknZ2KW6pgaHqdY9saJdELZkPHlEg6+K8UeXtwVxb2jn1tL4
-	 6+CiYwbQQ8jMKb2v7H5WrLv2bHpQMsnTo6bHxcXlZBfNoRESeSHrL1P7GjDvIE+FVG
-	 lNqGYiH8PyNHLwCRckGDJ6Hmx3x46UNg/g82Z4Xo=
+	b=j0NaYlnKSVrFdUXhbXNcDo7IOARF2ObTEUhM2EIrbBhtX92cx2IEDhCaI67nHAU3W
+	 ENj14/qnlA1wsEnEXiFBiCiWRMSK2z7yW5tusFCu6qzVL3GBqe+lLfTOdle4bvSGzA
+	 SKmsuKOZ6kMmtcL5V1YdHpbB+Z0HobWIhKURapdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgA3SnU (ORCPT
+        id S1730604AbgA3SnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730553AbgA3SnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:12 -0500
+        id S1730569AbgA3SnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2F42083E;
-        Thu, 30 Jan 2020 18:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 334432082E;
+        Thu, 30 Jan 2020 18:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409791;
-        bh=HmDDopOrwhUHL1wldJ0BrLZPmR8N2AVoVwZoXxGPi00=;
+        s=default; t=1580409796;
+        bh=jFhBivrGTpphe334jiWq/4dCd5DrUqPSGqxcA63EX4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nx6M1pyU6VJhQVoCubmJ2RpXesHnSCpdvoPQ7lkxVqqFad+b55c3rb7Ei9jz9trGA
-         osqf7XQUhmFCTlHdQZuSU21DDMLp1DRCESZB23xXtBoZDGzpg6k9ff4desuKuZtPqo
-         FdCOltmzEf5uvznNfb3ZwXZKRrLY5ZXmNDDd7XPI=
+        b=kGUUohmZAyUcaL8m/h6lIDellqrBTW9Jgn3eSgdKulKaYfL4zRZTPUVI3ix3mvH3C
+         6ymPjEEz1RwB2jSlKII6ZW6iPn2FSGJigHlNixkJdLmL1e9ZK6G45mZiuGimJQLQI4
+         exnlVSIdy50dBCRo6oB9BAp9vqBqzXkLu5vnTOlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 034/110] zd1211rw: fix storage endpoint lookup
-Date:   Thu, 30 Jan 2020 19:38:10 +0100
-Message-Id: <20200130183619.396586701@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 009/110] usb: dwc3: turn off VBUS when leaving host mode
+Date:   Thu, 30 Jan 2020 19:37:45 +0100
+Message-Id: <20200130183615.310954609@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,37 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Bin Liu <b-liu@ti.com>
 
-commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
+commit 09ed259fac621634d51cd986aa8d65f035662658 upstream.
 
-Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+VBUS should be turned off when leaving the host mode.
+Set GCTL_PRTCAP to device mode in teardown to de-assert DRVVBUS pin to
+turn off VBUS power.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 5f94adfeed97 ("usb: dwc3: core: refactor mode initialization to its own function")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1263,7 +1263,7 @@ static void print_id(struct usb_device *
- static int eject_installer(struct usb_interface *intf)
- {
- 	struct usb_device *udev = interface_to_usbdev(intf);
--	struct usb_host_interface *iface_desc = &intf->altsetting[0];
-+	struct usb_host_interface *iface_desc = intf->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1209,6 +1209,9 @@ static void dwc3_core_exit_mode(struct d
+ 		/* do nothing */
+ 		break;
+ 	}
++
++	/* de-assert DRVVBUS for HOST and OTG mode */
++	dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+ }
+ 
+ static void dwc3_get_properties(struct dwc3 *dwc)
 
 
