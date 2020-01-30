@@ -2,159 +2,150 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358CCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C824C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E868206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5B320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CcTTTcK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgA3JXt (ORCPT
+        id S1726963AbgA3J0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:23:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42128 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgA3JXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:23:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 672E0AFF0;
-        Thu, 30 Jan 2020 09:04:29 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 10:04:29 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
- unregister_console()
-Message-ID: <20200130090428.f5lrkxclnmuegqxw@pathway.suse.cz>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+        Thu, 30 Jan 2020 04:26:12 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44174 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3J0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:26:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so2497242ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 01:26:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=8SGJClgv7vCpuUbrzWc3aiRmA3e15IEmlFx71D1Eo48=;
+        b=CcTTTcK4WM9iSIoTMMhBw2ukMSFMCQ26I0i+oKdes0NeyR6saKuPQsGnoSssOA3Mmt
+         JuVykFIA7x13xH8CgmHvx8xR9VglEK9H4qluV1ocPIJFNbJ6e8pK9xSrPvODCVe622sJ
+         gWs9NHwQoB5PDTLv9NPffntaB5kJgBFiSu+2WMrem8h+739aiw9B8PXS/Xz3RtWfz51f
+         J+wqEVEg/pnMeYx2ROKrvmHi0osg0pM2R3Fp3SiYEzWXbLr6XomMkwK7uHSZj4hpp9Ug
+         OsgF/UIIypR+RtQdA0RFdYv9uV/IjpBclRrxBx0KsvdEtrm2d0SNToTfUsW+Gw/dLAOm
+         2X4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=8SGJClgv7vCpuUbrzWc3aiRmA3e15IEmlFx71D1Eo48=;
+        b=pgqPKk8oYLiPTpq986xaujbj5Ptc7QKHIgoO27FZSb5EJjLAIbtUy9O5PPiexuRi8k
+         M0Tk6Fs6vajolSDlhNRj/0/cubcxtJULGf7YS1s67IV0o5s7nI5AgNRBRDZzzkNbzNYM
+         PKCdaZZCZwLCv4Ph5YEGZ1rg5OmbedVNyMHns7Ga4Hl4aKZEIedYZftbW0SMrgMMaEv5
+         oYsDDt0nbmSdPsSiq0whHNLgHqj9SOgWAe9wMmx6DqvDjqFKgMpX40uK7PD5WpKhnex1
+         OD2MtCZpJVK5qCENhi9KcgXc0PQsC4xIltRgQJC0VWCCVCPAGDKKhd7kB0DEsk/N5w00
+         Ey9Q==
+X-Gm-Message-State: APjAAAUWLpkY1iBbKct555a9dVaIJvlSTzHwGazOMvxmfQ1kfsgXVTs8
+        IkQiAn7d/4bjhbLIB1+quSsEfaTeI8kuTVJwDCDOoyt4HCKwpw==
+X-Google-Smtp-Source: APXvYqxiGYPmMj0hEMVR/h1w0r7wIG+bJLEBgwKh8ESZeU2QJV7QXJIwEEgZe7CNbWh6Cx2CebVtFmVU2WRKLrLr9Ts=
+X-Received: by 2002:a2e:9143:: with SMTP id q3mr2094270ljg.199.1580376369658;
+ Thu, 30 Jan 2020 01:26:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Thu, 30 Jan 2020 10:25:58 +0100
+Message-ID: <CAN5uoS_A9TYU2aWf3WVq3KGna6oVswfut+hC7sJWvhfYggMwTA@mail.gmail.com>
+Subject: Re: [PATCH V5] firmware: arm_scmi: Make scmi core independent of the
+ transport type
+To:     viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-01-27 13:47:18, Andy Shevchenko wrote:
-> There are two callers which use the returned code from unregister_console().
-> In some cases, i.e. successfully unregistered Braille console or when console
-> has not been enabled the return code is 1. This code is ambiguous and also
-> prevents callers to distinguish successful operation.
+Hello Viresh,
+
+On Tue, Jan 28, 2020 at 04:24:19PM +0530, Viresh Kumar wrote:
+> The SCMI specification is fairly independent of the transport protocol,
+> which can be a simple mailbox (already implemented) or anything else.
+> The current Linux implementation however is very much dependent on the
+> mailbox transport layer.
 >
-> Replace this logic to return only negative error codes or 0 when console,
-> either enabled, disabled or Braille has been successfully unregistered.
-
-I am quite confused by the above message. It is probably because
-the patched code is so confusing ;-)
-
-I would start with something like:
-
-<begin>
-There are only two callers that use the returned code from
-unregister_console():
-
-  + unregister_early_console() in arch/m68k/kernel/early_printk.c
-  + kgdb_unregister_nmi_console() in drivers/tty/serial/kgdb_nmi.c
-
-They both expect to get "0" on success and a non-zero value on error.
-</end>
-
-The above is more or less clear. Now, the question is what behavior
-is considered as success and what is failure.
-
-I started thinking about this in a paranoid mode. The console
-registration code is so tricky and it is easy to create
-regression.
-
-But I think that it is actually not much important. There are only
-two callers that handle the return code:
-
-   + The 1st one m68k is a late init call and the error code of
-     init calls is ignored.
-
-   + The 2nd one in kdb code is not much important. I wonder if anyone
-     is actually using kdb. If I remember correctly then Linus
-     prosed to remove it completely during the discussion about
-     lockless printk at Plumbers 2019 and nobody was against.
-
-     In fact, the kdb code is probably wrong. tty_register_driver()
-     is called before register_console() in
-     kgdb_register_nmi_console() =>
-
-     kgdb_unregister_nmi_console() should probably call
-     tty_unregister_driver() even when unregister_console() fails.
-
-unregister_console() is exported symbol but I doubt that the are
-more users of the error code.
-
-So, I think that we do not need to care about regressions.
-But it is worth to define some resonable behavior, see
-below.
-
-
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index d40a316908da..da6a9bdf76b6 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2817,10 +2817,12 @@ int unregister_console(struct console *console)
->  		console->name, console->index);
->  
->  	res = _braille_unregister_console(console);
-> -	if (res)
-> +	if (res < 0)
->  		return res;
-> +	if (res > 0)
-> +		return 0;
-
-Sigh, I wish that _braille_unregister_console() did not returned 1
-on success but ...
-
-I would describe this as a bugfix. unregister_console() should return
-success (0) when _braille_unregister_console() succeeds.
-
+> This patch makes the SCMI core code (driver.c) independent of the
+> mailbox transport layer and moves all mailbox related code to a new
+> file: mailbox.c.
 >
-> -	res = 1;
-> +	res = -ENODEV;
+> We can now implement more transport protocols to transport SCMI
+> messages.
+>
+> The transport protocols just need to provide struct scmi_transport_ops,
+> with its version of the callbacks to enable exchange of SCMI messages.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> @Sudeep: Please help getting this tested as well :)
+>
+> V4->V5:
+> - struct scmi_shared_mem is moved to mailbox.c and it is completely
+>   handled by transport layer now.
+> - And so lots of ops change due to this.
+> - Fixed a bug from previous version where wrong dev structure was
+>   getting passed to devm_kzalloc().
+>
 
-I would describe this as using a regular "meaningful" error code.
+Hello Viresh, Sudeep,
+I've made a first port (draft) for adding new transport channels, next
+to existing mailbox channel, on top of your change.
+You can find it here: https://github.com/etienne-lms/linux/pull/1.
 
->  	console_lock();
->  	if (console_drivers == console) {
->  		console_drivers=console->next;
-> @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
->  	if (!res && (console->flags & CON_EXTENDED))
->  		nr_ext_console_drivers--;
->  
-> +	if (res && !(console->flags & CON_ENABLED))
-> +		res = 0;
+I don't have specific comments on your change but the one below.
+I think SMT header should move out of mailbox.c, but that may be a bit
+out of the scope of your change.
 
-I personally think that success or failure of unregister_console()
-should not depend on the state of CON_ENABLED flag:
 
-  + As it was discussed in the other thread. There are few consoles
-    that have set CON_ENABLED by default. unregister_console()
-    should not succeed when register_console() was not called
-    before.
+> (...)
+>
+> @@ -470,13 +310,7 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+>  if (!ret && xfer->hdr.status)
+>   ret = scmi_to_linux_errno(xfer->hdr.status);
+>
+> - /*
+> - * NOTE: we might prefer not to need the mailbox ticker to manage the
+> - * transfer queueing since the protocol layer queues things by itself.
+> - * Unfortunately, we have to kick the mailbox framework after we have
+> - * received our message.
+> - */
+> - mbox_client_txdone(cinfo->chan, ret);
+> + info->desc->ops->mark_txdone(cinfo, ret);
+>
+>  return ret;
+> }
 
-  + This check would open a question if we should return error
-    when the console was in the list but CON_ENABLED was not set.
-    But consoles might be temporary disabled, see console_stop().
-    unregister_console() should succeed even when the console
-    was temporary stopped.
+I would prefer an optional mak_txdone callback:
 
-But I think that this is only theoretical discussion. IMHO, nobody
-really depends on the return code in reality. Alternative solution
-would be to make it symetric with register_console() and do not
-return the error code at all.
+    if (info->desc->ops->mark_txdone)
+       info->desc->ops->mark_txdone(cinfo, ret);
 
-Best Regards,
-Petr
+
+> @@ -713,29 +547,18 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+>   return 0;
+>  }
+>
+> -static int scmi_mailbox_check(struct device_node *np, int idx)
+> -{
+> - return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
+> -   idx, NULL);
+> -}
+> -
+> -static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+> - int prot_id, bool tx)
+> +static int scmi_chan_setup(struct scmi_info *info, struct device *dev,
+> +    int prot_id, bool tx)
+>
+> (...)
+
+
+Regards,
+Etienne
