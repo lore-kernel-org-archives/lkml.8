@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29627C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783C8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CFB214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B9C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409747;
-	bh=UNYeffwflkB4nlDCvZj9SMgwFmgILprKumpSGTZkwe4=;
+	s=default; t=1580409749;
+	bh=raZIuq08Y4veqZwuoIeXYqAmRzvHguhjRbatfveDZFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTByy5UZ0n+d4D2EBC+l1RqJ5WoZEEuxaJHkPenFKPS++TZ36+uJeNwFivRMVptmb
-	 yvpMvM0kko/q9liEQ3sWIKJPJqEmxOZf5T2vM9eFbji+nI9kEGovebjb6jQPedfqPw
-	 0VdkxuKKYyl167L9xE4nG0sQ3q7P/DofUloJ6bRw=
+	b=rzJm2sJYhbkzmF2McXTQjOwUhYVcVuIJXnZO6iNpr2yo7EoKmtRI7VY9z1k58yOgd
+	 5eifEnttuD0UHsWTC/tAxLJzvTuaEMq825ouxY++/5FNabk65iU+qqfD3d/rd9xVMn
+	 qrf/1ELt4ga57etfsDl4XgYyWBCnGX6qHb5hBEBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgA3Sm0 (ORCPT
+        id S1730395AbgA3Sm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50576 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgA3SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:22 -0500
+        id S1730373AbgA3SmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB1F20702;
-        Thu, 30 Jan 2020 18:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF7C8214DB;
+        Thu, 30 Jan 2020 18:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409740;
-        bh=UNYeffwflkB4nlDCvZj9SMgwFmgILprKumpSGTZkwe4=;
+        s=default; t=1580409743;
+        bh=raZIuq08Y4veqZwuoIeXYqAmRzvHguhjRbatfveDZFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HA3IROycZ/53/dc3Ma6CSa1RHJfLp/bhUP5qku8J6GOnQ0S3x3bj32iJAGbLu9/iz
-         gI4e5Rv7rWxupMHGdYUacQMi97B7hV5nxrlbIPLGo16WTIXhoORm2pXoU2if/Gn5lG
-         FbKALHHzR72Yp+Q5XmxFqauH4tfnSUFIywvCbXVg=
+        b=N74lMZQNxcXLevl3TWP1YpYSngFdos6cOjgjcTvUXaiYqkAdOsRvkP4UUJUKEdBKb
+         Q3b85SeOgoaKS/sgcdFb5JlAXDtEuEVepZ7w+P5aBQBXtXQ9EZSO+PI2pcScC7l1/i
+         V6DCuFLqCX2NKUo63kHclypq4Uf2iUkuH7NaSCEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 007/110] USB: serial: ir-usb: fix link-speed handling
-Date:   Thu, 30 Jan 2020 19:37:43 +0100
-Message-Id: <20200130183615.018296729@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.4 016/110] staging: vt6656: Fix false Tx excessive retries reporting.
+Date:   Thu, 30 Jan 2020 19:37:52 +0100
+Message-Id: <20200130183616.605839419@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,102 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
+commit 9dd631fa99dc0a0dfbd191173bf355ba30ea786a upstream.
 
-Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
-IrDA header with common defines, but mistakingly switched to using the
-class-descriptor baud-rate bitmask values for the outbound header.
+The driver reporting  IEEE80211_TX_STAT_ACK is not being handled
+correctly. The driver should only report on TSR_TMO flag is not
+set indicating no transmission errors and when not IEEE80211_TX_CTL_NO_ACK
+is being requested.
 
-This broke link-speed handling for rates above 9600 baud, but a device
-would also be able to operate at the default 9600 baud until a
-link-speed request was issued (e.g. using the TCGETS ioctl).
-
-Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
-Cc: stable <stable@vger.kernel.org>     # 2.6.27
-Cc: Felipe Balbi <balbi@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/340f1f7f-c310-dca5-476f-abc059b9cd97@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ir-usb.c |   20 ++++++++++----------
- include/linux/usb/irda.h    |   13 ++++++++++++-
- 2 files changed, 22 insertions(+), 11 deletions(-)
+ drivers/staging/vt6656/int.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/ir-usb.c
-+++ b/drivers/usb/serial/ir-usb.c
-@@ -335,34 +335,34 @@ static void ir_set_termios(struct tty_st
+--- a/drivers/staging/vt6656/int.c
++++ b/drivers/staging/vt6656/int.c
+@@ -99,9 +99,11 @@ static int vnt_int_report_rate(struct vn
  
- 	switch (baud) {
- 	case 2400:
--		ir_baud = USB_IRDA_BR_2400;
-+		ir_baud = USB_IRDA_LS_2400;
- 		break;
- 	case 9600:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		break;
- 	case 19200:
--		ir_baud = USB_IRDA_BR_19200;
-+		ir_baud = USB_IRDA_LS_19200;
- 		break;
- 	case 38400:
--		ir_baud = USB_IRDA_BR_38400;
-+		ir_baud = USB_IRDA_LS_38400;
- 		break;
- 	case 57600:
--		ir_baud = USB_IRDA_BR_57600;
-+		ir_baud = USB_IRDA_LS_57600;
- 		break;
- 	case 115200:
--		ir_baud = USB_IRDA_BR_115200;
-+		ir_baud = USB_IRDA_LS_115200;
- 		break;
- 	case 576000:
--		ir_baud = USB_IRDA_BR_576000;
-+		ir_baud = USB_IRDA_LS_576000;
- 		break;
- 	case 1152000:
--		ir_baud = USB_IRDA_BR_1152000;
-+		ir_baud = USB_IRDA_LS_1152000;
- 		break;
- 	case 4000000:
--		ir_baud = USB_IRDA_BR_4000000;
-+		ir_baud = USB_IRDA_LS_4000000;
- 		break;
- 	default:
--		ir_baud = USB_IRDA_BR_9600;
-+		ir_baud = USB_IRDA_LS_9600;
- 		baud = 9600;
+ 	info->status.rates[0].count = tx_retry;
+ 
+-	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
++	if (!(tsr & TSR_TMO)) {
+ 		info->status.rates[0].idx = idx;
+-		info->flags |= IEEE80211_TX_STAT_ACK;
++
++		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
++			info->flags |= IEEE80211_TX_STAT_ACK;
  	}
  
---- a/include/linux/usb/irda.h
-+++ b/include/linux/usb/irda.h
-@@ -119,11 +119,22 @@ struct usb_irda_cs_descriptor {
-  * 6 - 115200 bps
-  * 7 - 576000 bps
-  * 8 - 1.152 Mbps
-- * 9 - 5 mbps
-+ * 9 - 4 Mbps
-  * 10..15 - Reserved
-  */
- #define USB_IRDA_STATUS_LINK_SPEED	0x0f
- 
-+#define USB_IRDA_LS_NO_CHANGE		0
-+#define USB_IRDA_LS_2400		1
-+#define USB_IRDA_LS_9600		2
-+#define USB_IRDA_LS_19200		3
-+#define USB_IRDA_LS_38400		4
-+#define USB_IRDA_LS_57600		5
-+#define USB_IRDA_LS_115200		6
-+#define USB_IRDA_LS_576000		7
-+#define USB_IRDA_LS_1152000		8
-+#define USB_IRDA_LS_4000000		9
-+
- /* The following is a 4-bit value used only for
-  * outbound header:
-  *
+ 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);
 
 
