@@ -2,84 +2,86 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0960C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497CC20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C6D21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgA3Ihb (ORCPT
+        id S1726986AbgA3IiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:37:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46437 "EHLO mga12.intel.com"
+        Thu, 30 Jan 2020 03:38:12 -0500
+Received: from sauhun.de ([88.99.104.3]:46586 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgA3Ihb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:37:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 00:37:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,381,1574150400"; 
-   d="scan'208";a="232837098"
-Received: from kvehmane-mobl.ger.corp.intel.com (HELO jsakkine-mobl1) ([10.237.50.119])
-  by orsmga006.jf.intel.com with ESMTP; 30 Jan 2020 00:37:26 -0800
-Message-ID: <a3720028f46885e806f201b6fa6ea6f8ef6b0d44.camel@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] tpm: tis: add support for MMIO TPM on SynQuacer
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter =?ISO-8859-1?Q?H=FCwe?= <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Thu, 30 Jan 2020 10:37:25 +0200
-In-Reply-To: <CAKv+Gu-9KvzLEcNQnRfsOkU=5oc1otY_NS15fR5Oi4Z4UVvurw@mail.gmail.com>
-References: <20200114141647.109347-1-ardb@kernel.org>
-         <20200114141647.109347-3-ardb@kernel.org>
-         <ada03416b1b362fa255feb45257414655d8ab023.camel@linux.intel.com>
-         <CAKv+Gu-9KvzLEcNQnRfsOkU=5oc1otY_NS15fR5Oi4Z4UVvurw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        id S1726757AbgA3IiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:38:12 -0500
+Received: from localhost (p54B33261.dip0.t-ipconnect.de [84.179.50.97])
+        by pokefinder.org (Postfix) with ESMTPSA id 0929F2C0697;
+        Thu, 30 Jan 2020 09:38:11 +0100 (CET)
+Date:   Thu, 30 Jan 2020 09:38:10 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 4/6] i2c: i2c-stm32f7: add PM_SLEEP suspend/resume support
+Message-ID: <20200130083810.GG2208@ninjato>
+References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
+ <1578317314-17197-5-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oOB74oR0WcNeq9Zb"
+Content-Disposition: inline
+In-Reply-To: <1578317314-17197-5-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-23 at 13:29 +0100, Ard Biesheuvel wrote:
-> On Thu, 23 Jan 2020 at 13:27, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > On Tue, 2020-01-14 at 15:16 +0100, Ard Biesheuvel wrote:
-> > > When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-> > > window that is backed by the SPI command sequencer in the SPI bus
-> > > controller. This arrangement has the limitation that only byte size
-> > > accesses are supported, and so we'll need to provide a separate set
-> > > of read and write accessors that take this into account.
-> > 
-> > What is SynQuacer platform?
-> > 
-> 
-> It is an arm64 SoC manufactured by Socionext.
-> 
-> > I'm also missing a resolution why tpm_tis.c is extended to handle both
-> > and not add tpm_tis_something.c instead. It does not follow the pattern
-> > we have in place (e.g. look up tpm_tis_spi.c).
-> > 
-> 
-> We could easily do that instead, if preferred. It's just that it would
-> duplicate a bit of code.
 
-I'm fine with that. Overally I think it is cleaner flow.
+--oOB74oR0WcNeq9Zb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+On Mon, Jan 06, 2020 at 02:28:32PM +0100, Alain Volmat wrote:
+> Backup/restore I2C registers as part of the suspend/resume
+> handlers. The device is marked as suspended to ensure that
+> transfers are rejected during the suspended period.
+>=20
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
+Applied to for-next, thanks!
+
+
+--oOB74oR0WcNeq9Zb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4yle4ACgkQFA3kzBSg
+KbY32g/+MsJU/Mz6bHmAAS9cTmzSotAvgy/o+WUUunotmJ7EHIyl25iZjMCFrs2z
+Xi3Gk59qbPt4oMVu1wQNhT7NDbvjyyfltJPFyRjevxMfBKwcMGdd6lI4W+jsogCk
+JtzOEIkiDrSXFqrC58/zjxbTV6vxpR0gtvbhnvVUvhtcAaVEWtrKm+f3NE7XoDt3
+E4IhMehFrxlHxaBtzJUzlEyUrv0rRav4knChHnpAgtCHIh5wOVdj2PAMTibteAJ2
+56Mt6MvU+W+vs6enYkDcFCtEu9sgOZF1RM3ozUurkI98Efqn/21M2fP7WtxZMDih
+Ai/bVREnuAeJWI8LA65h9diLll6Wfi+QKlgh8Lq1XQmIfsPtv9kZGD3jCLZ9AEcJ
+Gv//iQpUstLg728O+atN0pTYLyQ0Tuync+LxYnqyFHclpqFb4nwe37zF2gzVMkY8
+H5Xaz+I7jqzG+I42img+kcLYIYbmT7Wjq/LJdivpAA8EzETeLzxX0QVroIDXzcOs
+vGrk26aCR8xAfST/6KAb7AC8G5HSIDYFzsfbGhYMYm6jVvXw2pZYBXGsxtxTOXJ8
+S8GsbiiY+3sND5foLLbEAtqpNgDNnJsPxS3R8MwES/2MiuPp+yEk1oinnS8cY6li
+lom0Vqb3JaX8OQjZDu6uYyPAvhm2ED4jCCSMSvdMJNZtojtASKo=
+=yyQ3
+-----END PGP SIGNATURE-----
+
+--oOB74oR0WcNeq9Zb--
