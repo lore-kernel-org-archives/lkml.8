@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D1C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4065DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54D82082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138A6214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410187;
-	bh=Xx6NspAId0wP+mlZ4mJIqcrWJ7K8o+uHRjuJ9rUmNos=;
+	s=default; t=1580410192;
+	bh=8eSTXQzbNLEND/FwSWrHgTCgpCk3Ge/9IIfbWOlgP9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VoAk7caOoAK2DGrg1SbSyRgSyYHH1kIqxuqNZqHje8Q1eviR2+/1JZn2fhL5Yjy6V
-	 pY2fonRcLO3t2Pa4YJ8813MrhcBPHSLb7M6ssw8SF3fOLQdubH/QmcTY/CPjrHIrGK
-	 Onl1UsRHoUmlQTZTas+5NbxCxJDvVgcFTQDboMeM=
+	b=yf0rUpqEyRDFlKdexKejI0kitCL/ITcmojwk+DZVV0FcAz4yw5gVnTCIktW0foXux
+	 hs4I8Q0G9yN7iPUlm9P0aefJ6wyP11xqVsmIGU3Hg1EFMujg4yUfmxogR49iXT0Bkq
+	 e+IsT7hnu0iEeWrQwVssjgoTOAFE67x2mUhcu5EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbgA3Sr4 (ORCPT
+        id S1731544AbgA3Stv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:49:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731431AbgA3Sru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:50 -0500
+        id S1731442AbgA3Srx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D6B20674;
-        Thu, 30 Jan 2020 18:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01355205F4;
+        Thu, 30 Jan 2020 18:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410069;
-        bh=Xx6NspAId0wP+mlZ4mJIqcrWJ7K8o+uHRjuJ9rUmNos=;
+        s=default; t=1580410072;
+        bh=8eSTXQzbNLEND/FwSWrHgTCgpCk3Ge/9IIfbWOlgP9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fBkBYGmzeDrZQX3y/MQZgWGXoHYQnn84OaCZHZo0ePJG7lxyra2EOCpc4UH6jVIm
-         e9qLYGIETMSI9kkaK4UT1gailbZ8AKRRsmUrAxEAnu262nzalFExrqclAiJKF3H012
-         Cbts43a7lcFsOxRkbBKDgG51z0lKrGejnsz0WFF4=
+        b=bxNbcUhKx5H49+1OPQMths2Dpjw8YGFUzbR9tVgM9eoNI0FyoQO/O0bz5On5KvIny
+         IDP4Z0Y2P/dswVbdZ1I+ylkUfWm08kLuuybjzskD5TCkka+0v+WKLBV08DQeZEhn5a
+         yQJiB3WdoiYri5wWdM4BeRcqro4a5+UPATHhkfCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, "wuxu.wu" <wuxu.wu@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/55] watchdog: rn5t618_wdt: fix module aliases
-Date:   Thu, 30 Jan 2020 19:39:15 +0100
-Message-Id: <20200130183614.794969088@linuxfoundation.org>
+Subject: [PATCH 4.19 35/55] spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
+Date:   Thu, 30 Jan 2020 19:39:16 +0100
+Message-Id: <20200130183614.962218432@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -61,35 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: wuxu.wu <wuxu.wu@huawei.com>
 
-[ Upstream commit a76dfb859cd42df6e3d1910659128ffcd2fb6ba2 ]
+[ Upstream commit 19b61392c5a852b4e8a0bf35aecb969983c5932d ]
 
-Platform device aliases were missing so module autoloading
-did not work.
+dw_spi_irq() and dw_spi_transfer_one concurrent calls.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191213214802.22268-1-andreas@kemnade.info
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+I find a panic in dw_writer(): txw = *(u8 *)(dws->tx), when dw->tx==null,
+dw->len==4, and dw->tx_end==1.
+
+When tpm driver's message overtime dw_spi_irq() and dw_spi_transfer_one
+may concurrent visit dw_spi, so I think dw_spi structure lack of protection.
+
+Otherwise dw_spi_transfer_one set dw rx/tx buffer and then open irq,
+store dw rx/tx instructions and other cores handle irq load dw rx/tx
+instructions may out of order.
+
+	[ 1025.321302] Call trace:
+	...
+	[ 1025.321319]  __crash_kexec+0x98/0x148
+	[ 1025.321323]  panic+0x17c/0x314
+	[ 1025.321329]  die+0x29c/0x2e8
+	[ 1025.321334]  die_kernel_fault+0x68/0x78
+	[ 1025.321337]  __do_kernel_fault+0x90/0xb0
+	[ 1025.321346]  do_page_fault+0x88/0x500
+	[ 1025.321347]  do_translation_fault+0xa8/0xb8
+	[ 1025.321349]  do_mem_abort+0x68/0x118
+	[ 1025.321351]  el1_da+0x20/0x8c
+	[ 1025.321362]  dw_writer+0xc8/0xd0
+	[ 1025.321364]  interrupt_transfer+0x60/0x110
+	[ 1025.321365]  dw_spi_irq+0x48/0x70
+	...
+
+Signed-off-by: wuxu.wu <wuxu.wu@huawei.com>
+Link: https://lore.kernel.org/r/1577849981-31489-1-git-send-email-wuxu.wu@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/rn5t618_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-dw.c | 15 ++++++++++++---
+ drivers/spi/spi-dw.h |  1 +
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-index e60f55702ab79..d2e79cf70e774 100644
---- a/drivers/watchdog/rn5t618_wdt.c
-+++ b/drivers/watchdog/rn5t618_wdt.c
-@@ -193,6 +193,7 @@ static struct platform_driver rn5t618_wdt_driver = {
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index ac2eb89ef7a5a..5a47e28e38c16 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -179,9 +179,11 @@ static inline u32 rx_max(struct dw_spi *dws)
  
- module_platform_driver(rn5t618_wdt_driver);
+ static void dw_writer(struct dw_spi *dws)
+ {
+-	u32 max = tx_max(dws);
++	u32 max;
+ 	u16 txw = 0;
  
-+MODULE_ALIAS("platform:rn5t618-wdt");
- MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
- MODULE_DESCRIPTION("RN5T618 watchdog driver");
- MODULE_LICENSE("GPL v2");
++	spin_lock(&dws->buf_lock);
++	max = tx_max(dws);
+ 	while (max--) {
+ 		/* Set the tx word if the transfer's original "tx" is not null */
+ 		if (dws->tx_end - dws->len) {
+@@ -193,13 +195,16 @@ static void dw_writer(struct dw_spi *dws)
+ 		dw_write_io_reg(dws, DW_SPI_DR, txw);
+ 		dws->tx += dws->n_bytes;
+ 	}
++	spin_unlock(&dws->buf_lock);
+ }
+ 
+ static void dw_reader(struct dw_spi *dws)
+ {
+-	u32 max = rx_max(dws);
++	u32 max;
+ 	u16 rxw;
+ 
++	spin_lock(&dws->buf_lock);
++	max = rx_max(dws);
+ 	while (max--) {
+ 		rxw = dw_read_io_reg(dws, DW_SPI_DR);
+ 		/* Care rx only if the transfer's original "rx" is not null */
+@@ -211,6 +216,7 @@ static void dw_reader(struct dw_spi *dws)
+ 		}
+ 		dws->rx += dws->n_bytes;
+ 	}
++	spin_unlock(&dws->buf_lock);
+ }
+ 
+ static void int_error_stop(struct dw_spi *dws, const char *msg)
+@@ -283,18 +289,20 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(master);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
++	unsigned long flags;
+ 	u8 imask = 0;
+ 	u16 txlevel = 0;
+ 	u32 cr0;
+ 	int ret;
+ 
+ 	dws->dma_mapped = 0;
+-
++	spin_lock_irqsave(&dws->buf_lock, flags);
+ 	dws->tx = (void *)transfer->tx_buf;
+ 	dws->tx_end = dws->tx + transfer->len;
+ 	dws->rx = transfer->rx_buf;
+ 	dws->rx_end = dws->rx + transfer->len;
+ 	dws->len = transfer->len;
++	spin_unlock_irqrestore(&dws->buf_lock, flags);
+ 
+ 	spi_enable_chip(dws, 0);
+ 
+@@ -485,6 +493,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	dws->type = SSI_MOTO_SPI;
+ 	dws->dma_inited = 0;
+ 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
++	spin_lock_init(&dws->buf_lock);
+ 
+ 	spi_controller_set_devdata(master, dws);
+ 
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index 0168b08364d5d..20a09fe79ae7d 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -118,6 +118,7 @@ struct dw_spi {
+ 	size_t			len;
+ 	void			*tx;
+ 	void			*tx_end;
++	spinlock_t		buf_lock;
+ 	void			*rx;
+ 	void			*rx_end;
+ 	int			dma_mapped;
 -- 
 2.20.1
 
