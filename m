@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA8BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA338C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BD920CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702AB20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409914;
-	bh=we9Q9vZM3fRN0P7XpVa4W3a77BMdSXDk9LtUjGvXW74=;
+	s=default; t=1580409917;
+	bh=8SpjqQJ6XefrrOUtpsnLYmKICQ97bfsQ1FpvcQPhArE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voc+e8moX6Y8b7KjpEskBBhfgddZDlX61RgGb9MjdkViQs4TDFFAwZgKFNBAhVm3y
-	 ljPbZr7unP5Oy9uNyvck/Rcurd0oa2HmAbpUjHdPjyAErIKD3Ej2Ydjga4cSz9ohf4
-	 IumPl2gqK3BuE8+daq3BdHxBfmpMQPcnyo/fKyFk=
+	b=TUxDyyq+V4QZC9kRuPv18Xmp2usF53l5KVmTO/rHcLFiLTJyu4Ay+t6OuxtRoeIpC
+	 CaD/yvPd95fn1wwRtkNaiBub+xUJEHhSaMrGLY6k7SHHBY484+eKOUu7ASHayai+G8
+	 Rz88Y0uuatBe3nRxu/qgweN4TGg9sq8ClGHgsWYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbgA3SpN (ORCPT
+        id S1730998AbgA3SpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54714 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbgA3SpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:11 -0500
+        id S1730981AbgA3SpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115BA205F4;
-        Thu, 30 Jan 2020 18:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73DB32082E;
+        Thu, 30 Jan 2020 18:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409910;
-        bh=we9Q9vZM3fRN0P7XpVa4W3a77BMdSXDk9LtUjGvXW74=;
+        s=default; t=1580409912;
+        bh=8SpjqQJ6XefrrOUtpsnLYmKICQ97bfsQ1FpvcQPhArE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pF/V70vV7Z8xfL5jGCMGsXRJhzlyzAWLlAwZCRwZp47nXiCvE1RSg/02iq25YiPAH
-         ZMBiUHT+3HwTxHaxKI5uNKePESpY72Sc/woJGiKTYz8f/9UbQy96PJpGnxaoTIB6xV
-         WqTHRNfJoCk9bcCvFHWTp3ML/eh73qmh/QHTlVyM=
+        b=yXmdeo5ZVAork8Hx6BDZYxGJ5FPRpnijTxgb5YwRTq+aM/ksd6R/NISFK15eLV4I3
+         dGkuVUc/WxHmQGpt71j58AIIKzB4+3org+7B8d7X5m8mpe0gAFhYyzp9xsDXPYN5yZ
+         4XLtVqH+YLKYUvKAJ1CdoxRglpcra5FKvwOMa964=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Slawomir Pawlowski <slawomir.pawlowski@intel.com>,
+        Przemek Kitszel <przemyslawx.kitszel@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/110] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
-Date:   Thu, 30 Jan 2020 19:38:56 +0100
-Message-Id: <20200130183623.712199808@linuxfoundation.org>
+Subject: [PATCH 5.4 081/110] PCI: Add DMA alias quirk for Intel VCA NTB
+Date:   Thu, 30 Jan 2020 19:38:57 +0100
+Message-Id: <20200130183623.811457664@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -63,86 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
 
-[ Upstream commit 10b65e2915b2fcc606d173e98a972850101fb4c4 ]
+[ Upstream commit 56b4cd4b7da9ee95778eb5c8abea49f641ebfd91 ]
 
-This patch adds a quirk disabling keyboard backlight support for the
-Dell Inspiron 1012 and 1018.
+Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
+exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
 
-Those models wrongly report supporting keyboard backlight control
-features (through SMBIOS tokens) even though they're not equipped with
-a backlit keyboard. This led to broken controls being exposed
-through sysfs by this driver which froze the system when used.
+Similarly to MIC x200, we need to add DMA aliases to allow buffer access
+when IOMMU is enabled.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
-Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add aliases to allow computational unit access to host memory.  These
+aliases mark the whole VCA device as one IOMMU group.
+
+All possible slot numbers (0x20) are used, since we are unable to tell what
+slot is used on other side.  This quirk is intended for both host and
+computational unit sides.  The VCA devices have up to five functions: four
+for DMA channels and one additional.
+
+Link: https://lore.kernel.org/r/5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com
+Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index d27be2836bc21..74e988f839e85 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -33,6 +33,7 @@
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 1593b8494ebbc..2f88b1ff7ada4 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4080,6 +4080,40 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
  
- struct quirk_entry {
- 	bool touchpad_led;
-+	bool kbd_led_not_present;
- 	bool kbd_led_levels_off_1;
- 	bool kbd_missing_ac_tag;
- 
-@@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
- 	.kbd_led_levels_off_1 = true,
- };
- 
-+static struct quirk_entry quirk_dell_inspiron_1012 = {
-+	.kbd_led_not_present = true,
-+};
++/*
++ * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
++ * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
++ *
++ * Similarly to MIC x200, we need to add DMA aliases to allow buffer access
++ * when IOMMU is enabled.  These aliases allow computational unit access to
++ * host memory.  These aliases mark the whole VCA device as one IOMMU
++ * group.
++ *
++ * All possible slot numbers (0x20) are used, since we are unable to tell
++ * what slot is used on other side.  This quirk is intended for both host
++ * and computational unit sides.  The VCA devices have up to five functions
++ * (four for DMA channels and one additional).
++ */
++static void quirk_pex_vca_alias(struct pci_dev *pdev)
++{
++	const unsigned int num_pci_slots = 0x20;
++	unsigned int slot;
 +
- static struct platform_driver platform_driver = {
- 	.driver = {
- 		.name = "dell-laptop",
-@@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_dell_latitude_e6410,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1012",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1018",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
- 	{ }
- };
- 
-@@ -1493,6 +1516,9 @@ static void kbd_init(void)
- {
- 	int ret;
- 
-+	if (quirks && quirks->kbd_led_not_present)
-+		return;
++	for (slot = 0; slot < num_pci_slots; slot++) {
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
 +
- 	ret = kbd_init_info();
- 	kbd_init_tokens();
- 
+ /*
+  * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
+  * associated not at the root bus, but at a bridge below. This quirk avoids
 -- 
 2.20.1
 
