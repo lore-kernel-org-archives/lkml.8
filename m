@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82265C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51212C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8A82082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F2A20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410036;
-	bh=6GzoNV0zyINcGNLAPy2ZdbfQ+iqqU24+bbg51LWIlX4=;
+	s=default; t=1580410039;
+	bh=5GLCGFPWXSPgb+QCYBQDMq3UO+YPO/33Vq6/9JRtKNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gs27kS5m3hhS1ja0kxPdzvrV2YAA+QbVjBSies/DfVTkDAcSm/bwPD04ev+oRQoxt
-	 tX9/nqnAP7pErsgbOBhTTADEo0p8BCGJSp6ZOFn0jMMTEQwUuYwB6Sd2MEblX1LDbI
-	 A95hV4dPjp0oJYHhV9jeTqtXwXpe1zoyhn3gn2so=
+	b=UrihpWoIlFx+odCz4KFnWi8/JdqH9ppflEng1UtWZk8Qtw6nEaajby3iA/2kY4+GY
+	 fhj/VUm1iJ+SQFJpoUGE0uEYgMC00qDE0IC6A0xrhD2nBwXxFhldd1vdlYzjr2IV0R
+	 9hVLe0XxXVi3GsuTIl/r8zauaxhROSyP0oG+9w0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731345AbgA3SrP (ORCPT
+        id S1731354AbgA3SrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731318AbgA3SrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:08 -0500
+        id S1731334AbgA3SrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5205220674;
-        Thu, 30 Jan 2020 18:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E1B520674;
+        Thu, 30 Jan 2020 18:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410027;
-        bh=6GzoNV0zyINcGNLAPy2ZdbfQ+iqqU24+bbg51LWIlX4=;
+        s=default; t=1580410032;
+        bh=5GLCGFPWXSPgb+QCYBQDMq3UO+YPO/33Vq6/9JRtKNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mr+5iNRQfOuSxFqNbNAZPs0hznMMoVWcjXvvnoWXzt7jK2PrjeZCETWjHKO4F6waF
-         sKbj3W7+qOUQjXh92LLrwHNreWuppMb2ENEB3UMj0dYBsr7im0/uC7vppgJJZCqmTf
-         qzU/YrUaJxzS7qEqquixoTPANPuUvOMwgTBYR7i4=
+        b=E6h0ZK3JaHdI0BQYrHyBwJHDqFOu2z3qWXZ2hN1m1FxYE7dF2advDetQpjN6b9ySI
+         teXsHvta/9Iee4QsG/Bzm1DNgsfmoMAPG59Zlf/OvI/zAtLnBgqQ/0YjdNquQpfwY/
+         9nqdfBS2/1Gqw3rieXiOlDqzgp5RRz0ng2kxazEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.19 18/55] cifs: Fix memory allocation in __smb2_handle_cancelled_cmd()
-Date:   Thu, 30 Jan 2020 19:38:59 +0100
-Message-Id: <20200130183612.174750191@linuxfoundation.org>
+        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 20/55] brcmfmac: fix interface sanity check
+Date:   Thu, 30 Jan 2020 19:39:01 +0100
+Message-Id: <20200130183612.476659754@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -60,62 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paulo Alcantara (SUSE) <pc@cjr.nz>
+From: Johan Hovold <johan@kernel.org>
 
-commit 0a5a98863c9debc02387b3d23c46d187756f5e2b upstream.
+commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
 
-__smb2_handle_cancelled_cmd() is called under a spin lock held in
-cifs_mid_q_entry_release(), so make its memory allocation GFP_ATOMIC.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-This issue was observed when running xfstests generic/028:
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-[ 1722.589204] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72064 cmd: 5
-[ 1722.590687] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72065 cmd: 17
-[ 1722.593529] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72066 cmd: 6
-[ 1723.039014] BUG: sleeping function called from invalid context at mm/slab.h:565
-[ 1723.040710] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 30877, name: cifsd
-[ 1723.045098] CPU: 3 PID: 30877 Comm: cifsd Not tainted 5.5.0-rc4+ #313
-[ 1723.046256] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-[ 1723.048221] Call Trace:
-[ 1723.048689]  dump_stack+0x97/0xe0
-[ 1723.049268]  ___might_sleep.cold+0xd1/0xe1
-[ 1723.050069]  kmem_cache_alloc_trace+0x204/0x2b0
-[ 1723.051051]  __smb2_handle_cancelled_cmd+0x40/0x140 [cifs]
-[ 1723.052137]  smb2_handle_cancelled_mid+0xf6/0x120 [cifs]
-[ 1723.053247]  cifs_mid_q_entry_release+0x44d/0x630 [cifs]
-[ 1723.054351]  ? cifs_reconnect+0x26a/0x1620 [cifs]
-[ 1723.055325]  cifs_demultiplex_thread+0xad4/0x14a0 [cifs]
-[ 1723.056458]  ? cifs_handle_standard+0x2c0/0x2c0 [cifs]
-[ 1723.057365]  ? kvm_sched_clock_read+0x14/0x30
-[ 1723.058197]  ? sched_clock+0x5/0x10
-[ 1723.058838]  ? sched_clock_cpu+0x18/0x110
-[ 1723.059629]  ? lockdep_hardirqs_on+0x17d/0x250
-[ 1723.060456]  kthread+0x1ab/0x200
-[ 1723.061149]  ? cifs_handle_standard+0x2c0/0x2c0 [cifs]
-[ 1723.062078]  ? kthread_create_on_node+0xd0/0xd0
-[ 1723.062897]  ret_from_fork+0x3a/0x50
-
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
-Fixes: 9150c3adbf24 ("CIFS: Close open handle after interrupted close")
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Cc: Arend van Spriel <arend@broadcom.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -750,7 +750,7 @@ __smb2_handle_cancelled_close(struct cif
- {
- 	struct close_cancelled_open *cancelled;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -1357,7 +1357,7 @@ brcmf_usb_probe(struct usb_interface *in
+ 		goto fail;
+ 	}
  
--	cancelled = kzalloc(sizeof(*cancelled), GFP_KERNEL);
-+	cancelled = kzalloc(sizeof(*cancelled), GFP_ATOMIC);
- 	if (!cancelled)
- 		return -ENOMEM;
+-	desc = &intf->altsetting[0].desc;
++	desc = &intf->cur_altsetting->desc;
+ 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
+ 	    (desc->bInterfaceSubClass != 2) ||
+ 	    (desc->bInterfaceProtocol != 0xff)) {
+@@ -1370,7 +1370,7 @@ brcmf_usb_probe(struct usb_interface *in
  
+ 	num_of_eps = desc->bNumEndpoints;
+ 	for (ep = 0; ep < num_of_eps; ep++) {
+-		endpoint = &intf->altsetting[0].endpoint[ep].desc;
++		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
+ 		endpoint_num = usb_endpoint_num(endpoint);
+ 		if (!usb_endpoint_xfer_bulk(endpoint))
+ 			continue;
 
 
