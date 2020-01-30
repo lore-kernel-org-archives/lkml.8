@@ -2,281 +2,175 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740BEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1DC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B62E206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4A6206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgA3JFy (ORCPT
+        id S1727161AbgA3JGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:05:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:8166 "EHLO mga03.intel.com"
+        Thu, 30 Jan 2020 04:06:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34858 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgA3JEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:04:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 01:04:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,381,1574150400"; 
-   d="scan'208";a="376993607"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jan 2020 01:04:16 -0800
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        robh@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 2/2] dt-bindings: clk: intel: Add bindings document & header file for CGU
-Date:   Thu, 30 Jan 2020 17:04:03 +0800
-Message-Id: <24933f5f1c48a891f9c05c7292117108fc880932.1580374761.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1580374761.git.rahul.tanwar@linux.intel.com>
-References: <cover.1580374761.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1580374761.git.rahul.tanwar@linux.intel.com>
-References: <cover.1580374761.git.rahul.tanwar@linux.intel.com>
+        id S1726945AbgA3JGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:06:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A5216AD94;
+        Thu, 30 Jan 2020 09:06:29 +0000 (UTC)
+Subject: Re: [v2 PATCH] move_pages.2: Returning positive value is a new error
+ case
+To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org
+Cc:     linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1580334531-80354-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f276d8ec-b1be-4f8e-792b-5c3ca2de4714@suse.cz>
+Date:   Thu, 30 Jan 2020 10:06:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1580334531-80354-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-controller driver of LGM.
+On 1/29/20 10:48 PM, Yang Shi wrote:
+> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
+> the semantic of move_pages() has changed to return the number of
+> non-migrated pages if they were result of a non-fatal reasons (usually a
+> busy page).  This was an unintentional change that hasn't been noticed
+> except for LTP tests which checked for the documented behavior.
+> 
+> There are two ways to go around this change.  We can even get back to the
+> original behavior and return -EAGAIN whenever migrate_pages is not able
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  40 +++++
- include/dt-bindings/clock/intel,lgm-clk.h          | 165 +++++++++++++++++++++
- 2 files changed, 205 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
- create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
+The manpage says EBUSY, not EAGAIN? And should its description be
+updated too? I.e. that it's no longer returned since 4.17?
 
-diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-new file mode 100644
-index 000000000000..e9649fe75435
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/intel,cgu-lgm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Lightning Mountain SoC's Clock Controller(CGU) Binding
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-+
-+description: |
-+  Lightning Mountain(LGM) SoC's Clock Generation Unit(CGU) driver provides
-+  all means to access the CGU hardware module in order to generate a series
-+  of clocks for the whole system and individual peripherals.
-+
-+properties:
-+  compatible:
-+    const: intel,cgu-lgm
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    cgu: clock-controller@e0200000 {
-+        compatible = "intel,cgu-lgm";
-+        reg = <0xe0200000 0x33c>;
-+        #clock-cells = <1>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/clock/intel,lgm-clk.h b/include/dt-bindings/clock/intel,lgm-clk.h
-new file mode 100644
-index 000000000000..d6797521d36a
---- /dev/null
-+++ b/include/dt-bindings/clock/intel,lgm-clk.h
-@@ -0,0 +1,165 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (C) 2018 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ * Zhu Yixin <Yixin.zhu@intel.com>
-+ */
-+#ifndef __INTEL_LGM_CLK_H
-+#define __INTEL_LGM_CLK_H
-+
-+/* PLL clocks */
-+#define LGM_CLK_OSC		1
-+#define LGM_CLK_PLLPP		2
-+#define LGM_CLK_PLL2		3
-+#define LGM_CLK_PLL0CZ		4
-+#define LGM_CLK_PLL0B		5
-+#define LGM_CLK_PLL1		6
-+#define LGM_CLK_LJPLL3		7
-+#define LGM_CLK_LJPLL4		8
-+#define LGM_CLK_PLL0CM0		9
-+#define LGM_CLK_PLL0CM1		10
-+
-+/* clocks from PLLs */
-+
-+/* ROPLL clocks */
-+#define LGM_CLK_PP_HW		15
-+#define LGM_CLK_PP_UC		16
-+#define LGM_CLK_PP_FXD		17
-+#define LGM_CLK_PP_TBM		18
-+
-+/* PLL2 clocks */
-+#define LGM_CLK_DDR		20
-+
-+/* PLL0CZ */
-+#define LGM_CLK_CM		25
-+#define LGM_CLK_IC		26
-+#define LGM_CLK_SDXC3		27
-+
-+/* PLL0B */
-+#define LGM_CLK_NGI		30
-+#define LGM_CLK_NOC4		31
-+#define LGM_CLK_SW		32
-+#define LGM_CLK_QSPI		33
-+#define LGM_CLK_CQEM		LGM_CLK_SW
-+#define LGM_CLK_EMMC5		LGM_CLK_NOC4
-+
-+/* PLL1 */
-+#define LGM_CLK_CT		35
-+#define LGM_CLK_DSP		36
-+#define LGM_CLK_VIF		37
-+
-+/* LJPLL3 */
-+#define LGM_CLK_CML		40
-+#define LGM_CLK_SERDES		41
-+#define LGM_CLK_POOL		42
-+#define LGM_CLK_PTP		43
-+
-+/* LJPLL4 */
-+#define LGM_CLK_PCIE		45
-+#define LGM_CLK_SATA		LGM_CLK_PCIE
-+
-+/* PLL0CM0 */
-+#define LGM_CLK_CPU0		50
-+
-+/* PLL0CM1 */
-+#define LGM_CLK_CPU1		55
-+
-+/* Miscellaneous clocks */
-+#define LGM_CLK_EMMC4		60
-+#define LGM_CLK_SDXC2		61
-+#define LGM_CLK_EMMC		62
-+#define LGM_CLK_SDXC		63
-+#define LGM_CLK_SLIC		64
-+#define LGM_CLK_DCL		65
-+#define LGM_CLK_DOCSIS		66
-+#define LGM_CLK_PCM		67
-+#define LGM_CLK_DDR_PHY		68
-+#define LGM_CLK_PONDEF		69
-+#define LGM_CLK_PL25M		70
-+#define LGM_CLK_PL10M		71
-+#define LGM_CLK_PL1544K		72
-+#define LGM_CLK_PL2048K		73
-+#define LGM_CLK_PL8K		74
-+#define LGM_CLK_PON_NTR		75
-+#define LGM_CLK_SYNC0		76
-+#define LGM_CLK_SYNC1		77
-+#define LGM_CLK_PROGDIV		78
-+#define LGM_CLK_OD0		79
-+#define LGM_CLK_OD1		80
-+#define LGM_CLK_CBPHY0		81
-+#define LGM_CLK_CBPHY1		82
-+#define LGM_CLK_CBPHY2		83
-+#define LGM_CLK_CBPHY3		84
-+
-+/* Gate clocks */
-+/* Gate CLK0 */
-+#define LGM_GCLK_C55		100
-+#define LGM_GCLK_QSPI		101
-+#define LGM_GCLK_EIP197		102
-+#define LGM_GCLK_VAULT		103
-+#define LGM_GCLK_TOE		104
-+#define LGM_GCLK_SDXC		105
-+#define LGM_GCLK_EMMC		106
-+#define LGM_GCLK_SPI_DBG	107
-+#define LGM_GCLK_DMA3		108
-+
-+/* Gate CLK1 */
-+#define LGM_GCLK_DMA0		120
-+#define LGM_GCLK_LEDC0		121
-+#define LGM_GCLK_LEDC1		122
-+#define LGM_GCLK_I2S0		123
-+#define LGM_GCLK_I2S1		124
-+#define LGM_GCLK_EBU		125
-+#define LGM_GCLK_PWM		126
-+#define LGM_GCLK_I2C0		127
-+#define LGM_GCLK_I2C1		128
-+#define LGM_GCLK_I2C2		129
-+#define LGM_GCLK_I2C3		130
-+#define LGM_GCLK_SSC0		131
-+#define LGM_GCLK_SSC1		132
-+#define LGM_GCLK_SSC2		133
-+#define LGM_GCLK_SSC3		134
-+#define LGM_GCLK_GPTC0		135
-+#define LGM_GCLK_GPTC1		136
-+#define LGM_GCLK_GPTC2		137
-+#define LGM_GCLK_GPTC3		138
-+#define LGM_GCLK_ASC0		139
-+#define LGM_GCLK_ASC1		140
-+#define LGM_GCLK_ASC2		141
-+#define LGM_GCLK_ASC3		142
-+#define LGM_GCLK_PCM0		143
-+#define LGM_GCLK_PCM1		144
-+#define LGM_GCLK_PCM2		145
-+
-+/* Gate CLK2 */
-+#define LGM_GCLK_PCIE10		150
-+#define LGM_GCLK_PCIE11		151
-+#define LGM_GCLK_PCIE30		152
-+#define LGM_GCLK_PCIE31		153
-+#define LGM_GCLK_PCIE20		154
-+#define LGM_GCLK_PCIE21		155
-+#define LGM_GCLK_PCIE40		156
-+#define LGM_GCLK_PCIE41		157
-+#define LGM_GCLK_XPCS0		158
-+#define LGM_GCLK_XPCS1		159
-+#define LGM_GCLK_XPCS2		160
-+#define LGM_GCLK_XPCS3		161
-+#define LGM_GCLK_SATA0		162
-+#define LGM_GCLK_SATA1		163
-+#define LGM_GCLK_SATA2		164
-+#define LGM_GCLK_SATA3		165
-+
-+/* Gate CLK3 */
-+#define LGM_GCLK_ARCEM4		170
-+#define LGM_GCLK_IDMAR1		171
-+#define LGM_GCLK_IDMAT0		172
-+#define LGM_GCLK_IDMAT1		173
-+#define LGM_GCLK_IDMAT2		174
-+#define LGM_GCLK_PPV4		175
-+#define LGM_GCLK_GSWIPO		176
-+#define LGM_GCLK_CQEM		177
-+#define LGM_GCLK_XPCS5		178
-+#define LGM_GCLK_USB1		179
-+#define LGM_GCLK_USB2		180
-+
-+#endif /* __INTEL_LGM_CLK_H */
--- 
-2.11.0
+> to migrate pages due to non-fatal reasons.  Another option would be to
+> simply continue with the changed semantic and extend move_pages
+> documentation to clarify that -errno is returned on an invalid input or
+> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
+> number of pages that couldn't have been migrated due to ephemeral
+> reasons (e.g. page is pinned or locked for other reasons).
+> 
+> We decided to keep the second option in kernel because this behavior is in
+> place for some time without anybody complaining and possibly new users
+> depending on it.  Also it allows to have a slightly easier error handling
+> as the caller knows that it is worth to retry when err > 0.
+> 
+> Update man pages to reflect the new semantic.
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v2: * Added notes about status array per Michal.
+>     * Added Michal's Acked-by.
+> 
+>  man2/move_pages.2 | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/man2/move_pages.2 b/man2/move_pages.2
+> index 1bf1053..83d5c81 100644
+> --- a/man2/move_pages.2
+> +++ b/man2/move_pages.2
+> @@ -104,7 +104,9 @@ pages that need to be moved.
+>  is an array of integers that return the status of each page.
+>  The array contains valid values only if
+>  .BR move_pages ()
+> -did not return an error.
+> +did not return an error.  Pre-initialization of the array to -1 or
+> +similar value which cannot represent a real numa node could help to
+> +identify pages that have been migrated
+>  .PP
+>  .I flags
+>  specify what types of pages to move.
+> @@ -164,9 +166,13 @@ returns zero.
+>  .\" do the right thing?
+>  On error, it returns \-1, and sets
+>  .I errno
+> -to indicate the error.
+> +to indicate the error. Or positive value to report the number of
+> +non-migrated pages.
+>  .SH ERRORS
+>  .TP
+> +.B Positive value
+> +The number of non-migrated pages if they were result of a non-fatal
+> +reasons since version 4.17.
+>  .B E2BIG
+>  Too many pages to move.
+>  Since Linux 2.6.29,
+> 
 
