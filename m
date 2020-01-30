@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF52C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A964AC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02939205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781512082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409985;
-	bh=O6+CZwV5/GKO30XluKSVwYLUjTq2JGzDCBB2SFqBBys=;
+	s=default; t=1580409988;
+	bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FetaMbRoj8ytQK7BQSDBvVB8BsdV9UuDbFhTBCbnXcchyqwHY3gRdFobRI/HqIZ6y
-	 rdv7SOFtQdtTG2RNKer/xJmj/vquJB6LiKqvbwAU2qSAQpi9R64wHj27ULCOjRZszS
-	 OlZA3O1iVFcaHx6jFtaszVZ+fpN762Qu2uETj/Do=
+	b=lwWiBlVUTtWEJb6xDtsG39oiQzui1SsNGJIhk0P0Vg5JJ5JxwB2BgzzI/Js6RN92I
+	 uSLnocJTSzFi+od4i9nwcYfeSBgvXaSPrRUgfmYE1TTdnWo8byJAhsqfO2gQlvcVji
+	 oBbTGVtJpsY43OVUxBN/8aZ1yc9aTtZspEk58/tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgA3SqY (ORCPT
+        id S1731202AbgA3Sq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56158 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgA3SqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:14 -0500
+        id S1730878AbgA3SqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24BB42083E;
-        Thu, 30 Jan 2020 18:46:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7029A217BA;
+        Thu, 30 Jan 2020 18:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409973;
-        bh=O6+CZwV5/GKO30XluKSVwYLUjTq2JGzDCBB2SFqBBys=;
+        s=default; t=1580409980;
+        bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pO7pRbgBKvw9YdxKvtgLBuOV1yMFrPU5z7Kr7rN4zU3azYmJVxr/bM8gyK3aG8pV6
-         8NqiWfScaaUSzpZcM46k2PmkzNasqFIhz2LpEahZfMXjQjyI3zZmPSM7KT9LVYbUNn
-         oFDtoyjWCSfHP1KHGIld6SJ2Y+RdnfOhGSsmz0bQ=
+        b=k//I/OdIoJjeTpZLvhovMTJxoQGiARLGDUKsfpn3f6tBNGP/0dAegjF/R/JmTLke5
+         svG5J3puTU38j1AINhGCJxHOjVxamM2rwlnar4+lNH07l3OtTT91IilcNXreTg6hRV
+         I69n1jq2bIDGAGsluBMwI1JO52gZ9602LsBNdw30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 107/110] crypto: pcrypt - Fix user-after-free on module unload
-Date:   Thu, 30 Jan 2020 19:39:23 +0100
-Message-Id: <20200130183626.075084354@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.4 110/110] power/supply: ingenic-battery: Dont change scale if theres only one
+Date:   Thu, 30 Jan 2020 19:39:26 +0100
+Message-Id: <20200130183626.282928977@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -58,39 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 07bfd9bdf568a38d9440c607b72342036011f727 upstream.
+commit 86b9182df8bb12610d4d6feac45a69f3ed57bfd2 upstream.
 
-On module unload of pcrypt we must unregister the crypto algorithms
-first and then tear down the padata structure.  As otherwise the
-crypto algorithms are still alive and can be used while the padata
-structure is being freed.
+The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
+range, or in low-precision mode with a 7.5V range. The code in place in
+this driver will select the proper scale according to the maximum
+voltage of the battery.
 
-Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The JZ4770 however only has one mode, with a 6.6V range. If only one
+scale is available, there's no need to change it (and nothing to change
+it to), and trying to do so will fail with -EINVAL.
+
+Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Artur Rojek <contact@artur-rojek.eu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/pcrypt.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/power/supply/ingenic-battery.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -362,11 +362,12 @@ err:
+--- a/drivers/power/supply/ingenic-battery.c
++++ b/drivers/power/supply/ingenic-battery.c
+@@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(str
+ 		return -EINVAL;
+ 	}
  
- static void __exit pcrypt_exit(void)
- {
-+	crypto_unregister_template(&pcrypt_tmpl);
+-	return iio_write_channel_attribute(bat->channel,
+-					   scale_raw[best_idx],
+-					   scale_raw[best_idx + 1],
+-					   IIO_CHAN_INFO_SCALE);
++	/* Only set scale if there is more than one (fractional) entry */
++	if (scale_len > 2) {
++		ret = iio_write_channel_attribute(bat->channel,
++						  scale_raw[best_idx],
++						  scale_raw[best_idx + 1],
++						  IIO_CHAN_INFO_SCALE);
++		if (ret)
++			return ret;
++	}
 +
- 	pcrypt_fini_padata(pencrypt);
- 	pcrypt_fini_padata(pdecrypt);
- 
- 	kset_unregister(pcrypt_kset);
--	crypto_unregister_template(&pcrypt_tmpl);
++	return 0;
  }
  
- subsys_initcall(pcrypt_init);
+ static enum power_supply_property ingenic_battery_properties[] = {
 
 
