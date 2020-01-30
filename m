@@ -6,126 +6,110 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F67C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF48C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDA2206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452DD206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgA3PU1 (ORCPT
+        id S1727319AbgA3PUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:20:27 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36825 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgA3PU1 (ORCPT
+        Thu, 30 Jan 2020 10:20:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33392 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbgA3PUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:20:27 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so3854605oic.3;
-        Thu, 30 Jan 2020 07:20:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WNCJ3fFv9afjpgEKz2nnXpr6o0yqcMYAfDjKIFMFbPk=;
-        b=UZAcda68ZlhBz0gYSrdXvd7vCkRcvYA4Smhf1ZeBglpNiEmtH1raqW3yN+4VQEc8HK
-         VSQlbuXpvPOCFQbzPNgUy3pkaLKDf/51+HUW++88v+4RIIqy4TCwWHMv29JoR17mPRN9
-         1glnehhfBG0b/reFhnCuz/Hp5uNBvEbaBUckjFYbpGkhkLsugYt9/Cn1V+JkjdFyl+rY
-         vkO6s4znuLZXvHfKbFYQv7zJjCPEeA3MuyXzuYebTPQW0vh9KKnmZ6tOT48i5e1x5e1J
-         YvX18rq97IMF2avJg9enTwEJBUIBIpiDrY70d6a0vwEyXR6yN4dhCUmlO48hxk9xhjVZ
-         s3xw==
-X-Gm-Message-State: APjAAAWJgpZjrwVUBMCDyVIsgkOjkEoQgsf4wN322/3JSvt7lz22Kd/U
-        aHWNrS9q1gjEABl2rLLiaUttSVAC140tkLIkqCEYpw==
-X-Google-Smtp-Source: APXvYqzflHsnCYgt2AkRBdP//1sUvjzQS+np1ftDhBuTxCldM9jiXd3IEqtcMaVn2eBdR5zrXJ8b1XAluhqMR5mSnXY=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr3096312oia.148.1580397626036;
- Thu, 30 Jan 2020 07:20:26 -0800 (PST)
+        Thu, 30 Jan 2020 10:20:51 -0500
+Received: from [109.134.33.162] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ixBca-0004pl-BA; Thu, 30 Jan 2020 15:20:44 +0000
+Date:   Thu, 30 Jan 2020 16:20:43 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     madhuparnabhowmik10@gmail.com, peterz@infradead.org,
+        mingo@kernel.org, paulmck@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
+Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
+Message-ID: <20200130152043.kgcf5s6h6qaalpbl@wittgenstein>
+References: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
+ <20200130103158.azxldyfnugwvv6vy@wittgenstein>
+ <20200130113339.GA25426@redhat.com>
+ <32DE6B3E-ADC3-49EB-888C-CABCF82330FE@ubuntu.com>
 MIME-Version: 1.0
-References: <20200130114220.23538-1-peter.ujfalusi@ti.com> <20200130114220.23538-2-peter.ujfalusi@ti.com>
-In-Reply-To: <20200130114220.23538-2-peter.ujfalusi@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 16:20:14 +0100
-Message-ID: <CAMuHMdUdhqRU8NmHrcgKQpiVDsuFosWUykZs47HdF9RRCDv-KA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dmaengine: Cleanups for the slave <-> channel symlink support
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <32DE6B3E-ADC3-49EB-888C-CABCF82330FE@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Thu, Jan 30, 2020 at 12:45:26PM +0100, Christian Brauner wrote:
+> On January 30, 2020 12:33:41 PM GMT+01:00, Oleg Nesterov <oleg@redhat.com> wrote:
+> >On 01/30, Christian Brauner wrote:
+> >>
+> >> On Thu, Jan 30, 2020 at 11:50:28AM +0530,
+> >madhuparnabhowmik10@gmail.com wrote:
+> >> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >> >
+> >> > This patch fixes the following sparse error:
+> >> > kernel/exit.c:627:25: error: incompatible types in comparison
+> >expression
+> >> >
+> >> > And the following warning:
+> >> > kernel/exit.c:626:40: warning: incorrect type in assignment
+> >> >
+> >> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >>
+> >> I think the previous version was already fine but hopefully
+> >> RCU_INIT_POINTER() really saves some overhead. In any case:
+> >
+> >It is not about overhead, RCU_INIT_POINTER() documents the fact that we
+> >didn't make any changes to the new parent, we only need to change the
+> >pointer.
+> 
+> Right, I wasn't complaining.  RCU_INIT_POINTER() claims that it has less overhead than rcu_assign_pointer().
+> So that is an additional argument for it.
+> 
+> >
+> >And btw, I don't really understand the __rcu annotations. Say,
+> >according
+> >to sparse this code is wrong:
+> >
+> >	int __rcu *P;
+> >
+> >	void func(int *p)
+> >	{
+> >		P = p;
+> >	}
+> >
+> >OK, although quite possibly it is fine.
+> >
+> >However, this code
+> >
+> >	int __rcu *P;
+> >
+> >	void func(int __rcu *p)
+> >	{
+> >		*p = 10;
+> >	       	P = p;
+> >	}
+> >
+> >is almost certainly wrong but sparse is happy, asn is the same.
+> 
+> That's more an argument to fix sparse I guess?
+> The annotations themselves are rather useful I think.
+> They at least help me when reading the code.
+> It's not that rcu lifetimes are trivial and anything that helps remind me that an object wants rcu semantics I'm happy to take it. :)
+> 
+> >
+> >
+> >> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> >
+> >Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-On Thu, Jan 30, 2020 at 12:41 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> No need to use goto to jump over the
-> return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> We can just revert the check and return right there.
->
-> Do not fail the channel request if the chan->name allocation fails, but
-> print a warning about it.
->
-> Change the dev_err to dev_warn if sysfs_create_link() fails as it is not
-> fatal.
->
-> Only attempt to remove the DMA_SLAVE_NAME symlink if it is created - or it
-> was attempted to be created.
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-Thanks for your patch!
-
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -756,22 +756,24 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->         }
->         mutex_unlock(&dma_list_mutex);
->
-> -       if (!IS_ERR_OR_NULL(chan))
-> -               goto found;
-> -
-> -       return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> +       if (IS_ERR_OR_NULL(chan))
-> +               return chan ? chan : ERR_PTR(-EPROBE_DEFER);
->
->  found:
-> -       chan->slave = dev;
->         chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
-> -       if (!chan->name)
-> -               return ERR_PTR(-ENOMEM);
-> +       if (!chan->name) {
-> +               dev_warn(dev,
-> +                        "Cannot allocate memory for slave symlink name\n");
-
-No need to print a message, as the memory allocator core will have
-screamed already.
-
-> +               return chan;
-> +       }
-> +       chan->slave = dev;
->
->         if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
->                               DMA_SLAVE_NAME))
-> -               dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
-> +               dev_warn(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
->         if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
-> -               dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
-> +               dev_warn(dev, "Cannot create DMA %s symlink\n", chan->name);
-> +
->         return chan;
->  }
->  EXPORT_SYMBOL_GPL(dma_request_chan);
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks, applied for post -rc1.
+Christian
