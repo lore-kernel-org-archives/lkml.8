@@ -2,230 +2,125 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F59C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20B3C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CA4206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580388509;
-	bh=BxJ96OtF4dnmzfuXxGYKmE5kwUrS9HWYRpMi3sDuqvA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FyuetO2V/LSQLqu5heR+/zH/MreaSOe3SfWJ5DYRqdNs1af/1AYchOgNyNmO1fKqF
-	 Dm7f6NALef6ehiM2lS84NzCQF/5lt6Q4FvXL/SkkWmhXnk5rpQyknMqI8QU/gYyjH+
-	 XpLog8K7ZdM/dYx6/yltZQBxH8Bb+Biz+r6+zz3E=
+	by mail.kernel.org (Postfix) with ESMTP id 87D10206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:50:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQ6sBgIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgA3Ms2 (ORCPT
+        id S1727235AbgA3MuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:48:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbgA3Ms2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:48:28 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB46206D3;
-        Thu, 30 Jan 2020 12:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580388506;
-        bh=BxJ96OtF4dnmzfuXxGYKmE5kwUrS9HWYRpMi3sDuqvA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ToeIIEKt0eBN/m48orlxPP8jlIHUMm13142HWTW4ngmG7kPuMxx1jE3jhacMPCvaN
-         84FytMJM6yO2LOXQLbgpGKtMlAGbwvOgUYPUu+w411FtaK8cbzckiD/4z8s7SIjMqc
-         gIpvgetQrhjNYUANGT8VNsWnE8HqvOlazUouCY7w=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fix test for blockdev inode in wb error handling tracepoints
-Date:   Thu, 30 Jan 2020 07:48:25 -0500
-Message-Id: <20200130124825.476361-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Thu, 30 Jan 2020 07:50:06 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39041 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3MuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:50:05 -0500
+Received: by mail-ua1-f68.google.com with SMTP id 73so1098422uac.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 04:50:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cnMkth7hV/dDIq+IhUJB/NKhjbFoKZU6UHmqdZyzOvk=;
+        b=iQ6sBgIOXFS+YVl144eNLc5JpHouW0m9Ee9ZuD1cG7XWSQpQUoXytyz8oSzkhZCStz
+         RZTGG/UeztBrkUBjBdU05mofzifuN+nig9XaIVD2qP13ClQ5vzEm8mV0oGvgEyJ8eYhX
+         /R9MYyfdejs+BAuK4dUK30jQUu74dDMfXqdAEp8GqbsFavOT/fcqJUZjdg3rJ8H7uw1G
+         OrSnyslcxopXLgogDTR1IOuPbWj5/+AkuPooBC+mX2YegTo7ytERWHloqLQz77bLGvR/
+         NeytO+8XzWfdENLpEts8kMEcNEHT/deUH8fwgQT339wOF7PF+oQBJr8l+TeJna6WzcGB
+         15Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cnMkth7hV/dDIq+IhUJB/NKhjbFoKZU6UHmqdZyzOvk=;
+        b=tz4fI8xUbnhRRfHYp/SI6597vbw0EsQ2AYVWF8/3ITMbXDepMf4IuZETvfpAAG/7J+
+         4JymChRVbtNp4phWlpaZqa7MxXDPo2x7VlNlVnRPPb/2POO7TDtLLGaT9bxORsGSAZF0
+         8TEqYf/KHPe6o1xAb1h58oemSGy7vL9OfHdWR3grI/viGQRjrDpN4qPufHzkBrUcDOpe
+         nUUfV6PBFipefV+JXyA1p+hfDbk8EXJSkZhZ17AleGtxSr+WeiumASUpyzJxPry8HXPL
+         3RBEfuqN36sOroLc6Drf98JjkF6WWbzjkDjxMG49FMkHw1OldM86YMPgLM50wg2Vj1Jj
+         XkUA==
+X-Gm-Message-State: APjAAAUoQLnOI/+1ib1CjXVHzF1//X8oQxupXIvcHIuuhjNEWiTrijwa
+        D0sVN6y9XhL2fjmdiAiMynpHFd6+27wop8lc0m+Ulg==
+X-Google-Smtp-Source: APXvYqzLFBjElA1AVzS3KAO1ZGYE8/2SstCFpuQS0BXBp8tlomfa/2p+73irPnPNVb+1+IYb+1jx8pAZxBMw4U6rzlY=
+X-Received: by 2002:ab0:b94:: with SMTP id c20mr2456278uak.67.1580388603038;
+ Thu, 30 Jan 2020 04:50:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1577976221.git.amit.kucheria@linaro.org>
+ <0a969ecd48910dac4da81581eff45b5e579b2bfc.1577976221.git.amit.kucheria@linaro.org>
+ <20200102192925.GC988120@minitux>
+In-Reply-To: <20200102192925.GC988120@minitux>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 30 Jan 2020 18:19:52 +0530
+Message-ID: <CAHLCerM-zB=7P4Si88Hhyt8J7ojPGa6J9SmwTm8d8Jh3syiMtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] drivers: thermal: tsens: Release device in success path
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al pointed out that the test for whether a mapping refers to a blockdev
-inode in these tracepoints is garbage, as the superblock is always
-non-NULL.
+On Fri, Jan 3, 2020 at 12:59 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 02 Jan 06:54 PST 2020, Amit Kucheria wrote:
+>
+> > We don't currently call put_device in case of successfully initialising
+> > the device.
+> >
+> > Allow control to fall through so we can use same code for success and
+> > error paths to put_device.
+> >
+>
+> Given the relationship between priv->dev and op I think this wouldn't be
+> a problem in practice, but there's two devm_ioremap_resource() done on
+> op->dev in this function. So you're depending on op->dev to stick
+> around, but with this patch you're no longer expressing that dependency.
+>
+> That said, it looks iffy to do devm_ioremap_resource() on op->dev and
+> then create a regmap on priv->dev using that resource. So I think it
+> would be better to do platform_get_source() on op, and then
+> devm_ioremap_resource() on priv->dev, in which case the regmap backing
+> memory will be related to the same struct device as the regmap and it
+> makes perfect sense to put_device() the op->dev when you're done
+> inspecting it's resources.
+>
 
-Add a new mapping_to_dev helper function that determines this the
-correct way, and change the tracepoints to use it. Also, fix up the
-indentation in this file.
+Indeed, thanks for reviewing.
 
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- include/linux/fs.h             | 20 +++++++
- include/trace/events/filemap.h | 99 +++++++++++++++-------------------
- 2 files changed, 64 insertions(+), 55 deletions(-)
+Will fix.
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 98e0349adb52..a0e50fcc3cab 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2590,6 +2590,21 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
- {
- 	return sb == blockdev_superblock;
- }
-+
-+/*
-+ * Return the device associated with this mapping.
-+ *
-+ * For normal inodes, return the sb of the backing filesystem, for blockdev
-+ * inodes, return the block device number associated with the inode.
-+ */
-+static inline dev_t mapping_to_dev(struct address_space *mapping)
-+{
-+	struct inode *inode = mapping->host;
-+
-+	if (sb_is_blkdev_sb(inode->i_sb))
-+		return inode->i_rdev;
-+	return inode->i_sb->s_dev;
-+}
- #else
- static inline void bd_forget(struct inode *inode) {}
- static inline int sync_blockdev(struct block_device *bdev) { return 0; }
-@@ -2619,6 +2634,11 @@ static inline bool sb_is_blkdev_sb(struct super_block *sb)
- {
- 	return false;
- }
-+
-+static inline dev_t mapping_to_dev(struct address_space *mapping)
-+{
-+	return mapping->host->i_sb->s_dev;
-+}
- #endif
- extern int sync_filesystem(struct super_block *);
- extern const struct file_operations def_blk_fops;
-diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
-index ee05db7ee8d2..27d1af469a50 100644
---- a/include/trace/events/filemap.h
-+++ b/include/trace/events/filemap.h
-@@ -30,10 +30,7 @@ DECLARE_EVENT_CLASS(mm_filemap_op_page_cache,
- 		__entry->pfn = page_to_pfn(page);
- 		__entry->i_ino = page->mapping->host->i_ino;
- 		__entry->index = page->index;
--		if (page->mapping->host->i_sb)
--			__entry->s_dev = page->mapping->host->i_sb->s_dev;
--		else
--			__entry->s_dev = page->mapping->host->i_rdev;
-+		__entry->s_dev = mapping_to_dev(page->mapping);
- 	),
- 
- 	TP_printk("dev %d:%d ino %lx page=%p pfn=%lu ofs=%lu",
-@@ -55,60 +52,52 @@ DEFINE_EVENT(mm_filemap_op_page_cache, mm_filemap_add_to_page_cache,
- 	);
- 
- TRACE_EVENT(filemap_set_wb_err,
--		TP_PROTO(struct address_space *mapping, errseq_t eseq),
--
--		TP_ARGS(mapping, eseq),
--
--		TP_STRUCT__entry(
--			__field(unsigned long, i_ino)
--			__field(dev_t, s_dev)
--			__field(errseq_t, errseq)
--		),
--
--		TP_fast_assign(
--			__entry->i_ino = mapping->host->i_ino;
--			__entry->errseq = eseq;
--			if (mapping->host->i_sb)
--				__entry->s_dev = mapping->host->i_sb->s_dev;
--			else
--				__entry->s_dev = mapping->host->i_rdev;
--		),
--
--		TP_printk("dev=%d:%d ino=0x%lx errseq=0x%x",
--			MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
--			__entry->i_ino, __entry->errseq)
-+	TP_PROTO(struct address_space *mapping, errseq_t eseq),
-+
-+	TP_ARGS(mapping, eseq),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(errseq_t, errseq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->i_ino = mapping->host->i_ino;
-+		__entry->errseq = eseq;
-+		__entry->s_dev = mapping_to_dev(mapping);
-+	),
-+
-+	TP_printk("dev=%d:%d ino=0x%lx errseq=0x%x",
-+		MAJOR(__entry->s_dev), MINOR(__entry->s_dev),
-+		__entry->i_ino, __entry->errseq)
- );
- 
- TRACE_EVENT(file_check_and_advance_wb_err,
--		TP_PROTO(struct file *file, errseq_t old),
--
--		TP_ARGS(file, old),
--
--		TP_STRUCT__entry(
--			__field(struct file *, file);
--			__field(unsigned long, i_ino)
--			__field(dev_t, s_dev)
--			__field(errseq_t, old)
--			__field(errseq_t, new)
--		),
--
--		TP_fast_assign(
--			__entry->file = file;
--			__entry->i_ino = file->f_mapping->host->i_ino;
--			if (file->f_mapping->host->i_sb)
--				__entry->s_dev =
--					file->f_mapping->host->i_sb->s_dev;
--			else
--				__entry->s_dev =
--					file->f_mapping->host->i_rdev;
--			__entry->old = old;
--			__entry->new = file->f_wb_err;
--		),
--
--		TP_printk("file=%p dev=%d:%d ino=0x%lx old=0x%x new=0x%x",
--			__entry->file, MAJOR(__entry->s_dev),
--			MINOR(__entry->s_dev), __entry->i_ino, __entry->old,
--			__entry->new)
-+	TP_PROTO(struct file *file, errseq_t old),
-+
-+	TP_ARGS(file, old),
-+
-+	TP_STRUCT__entry(
-+		__field(struct file *, file);
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(errseq_t, old)
-+		__field(errseq_t, new)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->file = file;
-+		__entry->i_ino = file->f_mapping->host->i_ino;
-+		__entry->s_dev = mapping_to_dev(file->f_mapping);
-+		__entry->old = old;
-+		__entry->new = file->f_wb_err;
-+	),
-+
-+	TP_printk("file=%p dev=%d:%d ino=0x%lx old=0x%x new=0x%x",
-+		__entry->file, MAJOR(__entry->s_dev),
-+		MINOR(__entry->s_dev), __entry->i_ino, __entry->old,
-+		__entry->new)
- );
- #endif /* _TRACE_FILEMAP_H */
- 
--- 
-2.24.1
-
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  drivers/thermal/qcom/tsens-common.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> > index 1cbc5a6e5b4f..e84e94a6f1a7 100644
+> > --- a/drivers/thermal/qcom/tsens-common.c
+> > +++ b/drivers/thermal/qcom/tsens-common.c
+> > @@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
+> >       tsens_enable_irq(priv);
+> >       tsens_debug_init(op);
+> >
+> > -     return 0;
+> > -
+> >  err_put_device:
+> >       put_device(&op->dev);
+> >       return ret;
+> > --
+> > 2.20.1
+> >
