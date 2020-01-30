@@ -2,146 +2,153 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326FCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBDC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32872082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:03:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZvKodAa6"
+	by mail.kernel.org (Postfix) with ESMTP id 9C5FC214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580418442;
+	bh=4P4sREC3cYV+vUNSvGXYnC5xTKG+r+SiT9QXQomCSNA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=louXZE7Ud6Yl+z7d3CFS/mcN67ayFZjBvO3+7vJpaz37bfC9rW4cAvuQdDoOAE8K4
+	 xNd1iyPBghfqmvXyURDRDOdtxTuZ//4ik4n+GAlceH51QtdO57j2kn2AHN6LJgvEfF
+	 WCXiuYUs7Ro0uKEW0B5K7x4VfijybsvjWUdIA9mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgA3VDH (ORCPT
+        id S1727628AbgA3VHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:03:07 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42766 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3VDH (ORCPT
+        Thu, 30 Jan 2020 16:07:21 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33306 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3VHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:03:07 -0500
-Received: by mail-il1-f194.google.com with SMTP id x2so4289809ila.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:03:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sAMdh1b8NESkD+VXMD9Cy1k3kQ4bBkxFJ6eHKFRQAzo=;
-        b=ZvKodAa6XfO/GxKVRlhTWY1MXqXlmaSRa25RLrAv905fQ8ce+SsrCEQr1PKhL/zy9s
-         5hKWCmZeOHBTyn6+8Io+niptiTF9M4z7SmVzp+S1kN/ooGPrQqiQCwnKjm+5u/toBe1m
-         gIAbasAWsQS2Xb0o3YVSj1O9XHCWY4nU9KpHKQDVCP4mt/T+U3YK4MXVJRt7Wy2shohC
-         3WN2+O6t4IFSjIZlY+TnjgiYDstaqK03rnA3YVNs0SdAFei86ievLI6XGIoxDHVNmskJ
-         cgvdSqZcaff16YqqMbfFRhDbe1GTdjZ8GYeojSnucRh4/HUZTYoe+QhXcnZCL1RUhY67
-         zsjQ==
+        Thu, 30 Jan 2020 16:07:21 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q81so5135034oig.0;
+        Thu, 30 Jan 2020 13:07:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sAMdh1b8NESkD+VXMD9Cy1k3kQ4bBkxFJ6eHKFRQAzo=;
-        b=D+iuSAYFjuLPOlVS/Z0vdiNnNt/6YQ1wVuGsRqe+/c6a09+QzH7J57Hz4VBtbKz0Oa
-         2eEa8R9yQp12P91Uf2wv7cT3ph7wtY1Ec7aAKC162Hx0EhySGcb8n3MWoAY/CEND6bLE
-         hmJa0yNWk9Kjkm7mhnHBxw2HaCGS47Xw5y7vbxCqX03HErTptAY9ARpPuiVJmw6NMxmM
-         5BYGrGWL593A/p/UGPsmZn6AuY/mb6aVMEzf/4nzZvmwAfI2+B0LEqUK22xIuBP0qB4t
-         0t8sCufxQ32U/JaT4N/O8RkrgBU9ugvf26heKoYlEpJ3IlawSUiljmZx+vOuhXFV3Jhl
-         CrtA==
-X-Gm-Message-State: APjAAAUrQbzXHqA58TULh5T28qW40T/hHLusIT/QwIbokKYcbYEK1lH8
-        VS+FJRkAvuy3MHDAU/Mwq3FKoPFWojXy5rhZACgGTA==
-X-Google-Smtp-Source: APXvYqxAGTmMcBJRevv6WsO98ReDaHMPPG2/6AsN9texoUaaiFE9aNHh0UWNLucoYDknZMz7cjLrqL20aT5I/0akT50=
-X-Received: by 2002:a92:9184:: with SMTP id e4mr6501313ill.70.1580418186010;
- Thu, 30 Jan 2020 13:03:06 -0800 (PST)
+        bh=+KhBsaQhYAtg/9op0ggWgTDIHD8rbgQILFtHm4y6ZFo=;
+        b=Hg92ugbkSXmLWCBJuOJK+7+OY/1o6//yBw15l6cqYBJXEexpN6B620zzvVqZDHrHe4
+         4cAo40MtEgPbkePpidXVDf2hyydSUT6q6SEjazmuJoRZGXy30agu0ADmo5A2Pih567bw
+         0WcoL8N24yE7JHAmtnzV7WuK9keTurqVGBogNj2FybFNVtqWOFM/gO4+SYscYlldYC2k
+         +5CC/GAPUoqVPfJYYtONxNXQPJp7I7+vlw8MIymy0YrNX/RF9afre8W0759NoNKaQkj4
+         jv8UvHibgAPuFy3Ei9cj1TlQQNuFKTR6zIt7gAww5p10E6FQuC1K9S3DFn2eISS0G4WP
+         s+9Q==
+X-Gm-Message-State: APjAAAVWpNLwewGboBwN4Hd2NZJycnNXhBgA8LzE/EK2ajDQPZ/3d3WG
+        6cLYO2dQMjiDSR24WPq4tCs7PtBXLwiBFWK0zgE=
+X-Google-Smtp-Source: APXvYqyl510fC9XqZsVw4DYiTbSHXnTxOvhV5KaMTO1VWv/L/jyTAjwQPata1SThgOjatlzBGwd4Q2asPWdLs4/wV/o=
+X-Received: by 2002:aca:d6c8:: with SMTP id n191mr4359734oig.103.1580418440279;
+ Thu, 30 Jan 2020 13:07:20 -0800 (PST)
 MIME-Version: 1.0
-References: <CAKUOC8WM3XU5y9QKHrO8VBdC4Dghexqy+o9OGM1qUs4kGQxZdQ@mail.gmail.com>
- <55c0fe61-a091-b351-11b4-fa7f668e49d7@acm.org>
-In-Reply-To: <55c0fe61-a091-b351-11b4-fa7f668e49d7@acm.org>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Thu, 30 Jan 2020 13:02:54 -0800
-Message-ID: <CAKUOC8U03G27b6E7Z6mBo6RB=D7bKS_MQPwexEZiA7SOt_Lyvw@mail.gmail.com>
-Subject: Re: Hung tasks with multiple partitions
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
+References: <20200111022145.GA166025@localhost>
+In-Reply-To: <20200111022145.GA166025@localhost>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Jan 2020 22:07:09 +0100
+Message-ID: <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
+Subject: Re: [PATCH] acpi: button: Provide option for power button to directly
+ signal init
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:49 PM Bart Van Assche <bvanassche@acm.org> wrote:
+On Sat, Jan 11, 2020 at 3:21 AM Josh Triplett <josh@joshtriplett.org> wrote:
 >
-> On 1/30/20 11:34 AM, Salman Qazi wrote:
-> > I am writing on behalf of the Chromium OS team at Google.  We found
-> > the root cause for some hung tasks we were experiencing and we would
-> > like to get your opinion on potential solutions.  The bugs were
-> > encountered on 4.19 kernel.
-> > However my reading of the code suggests that the relevant portions of the
-> > code have not changed since then.
-> >
-> > We have an eMMC flash drive that has been carved into partitions on an
-> > 8 CPU system.  The repro case that we came up with, is to use 8
-> > threaded fio write-mostly workload against one partition, let the
-> > system use the other partition as the read-write filesystem (i.e. just
-> > background activity) and then run the following loop:
-> >
-> > while true; do sync; sleep 1 ; done
-> >
-> > The hung task stack traces look like the following:
-> >
-> > [  128.994891] jbd2/dm-1-8     D    0   367      2 0x00000028
-> > last_sleep: 96340206998.  last_runnable: 96340140151
-> > [  128.994898] Call trace:
-> > [  128.994903]  __switch_to+0x120/0x13c
-> > [  128.994909]  __schedule+0x60c/0x7dc
-> > [  128.994914]  schedule+0x74/0x94
-> > [  128.994919]  io_schedule+0x1c/0x40
-> > [  128.994925]  bit_wait_io+0x18/0x58
-> > [  128.994930]  __wait_on_bit+0x78/0xdc
-> > [  128.994935]  out_of_line_wait_on_bit+0xa0/0xcc
-> > [  128.994943]  __wait_on_buffer+0x48/0x54
-> > [  128.994948]  jbd2_journal_commit_transaction+0x1198/0x1a4c
-> > [  128.994956]  kjournald2+0x19c/0x268
-> > [  128.994961]  kthread+0x120/0x130
-> > [  128.994967]  ret_from_fork+0x10/0x18
-> >
-> > I added some more information to trace points to understand what was
-> > going on.  It turns out that blk_mq_sched_dispatch_requests had
-> > checked hctx->dispatch, found it empty, and then began consuming
-> > requests from the io scheduler (in blk_mq_do_dispatch_sched).
-> > Unfortunately, the deluge from the I/O scheduler (BFQ in our case)
-> > doesn't stop for 30 seconds and there is no mechanism present in
-> > blk_mq_do_dispatch_sched to terminate early or reconsider
-> > hctx->dispatch contents.  In the meantime, a flush command arrives in
-> > hctx->dispatch (via insertion in  blk_mq_sched_bypass_insert) and
-> > languishes there.  Eventually the thread waiting on the flush triggers
-> > the hung task watchdog.
-> >
-> > The solution that comes to mind is to periodically check
-> > hctx->dispatch in blk_mq_do_dispatch_sched and exit early if it is
-> > non-empty.  However, not being an expert in this subsystem, I am not
-> > sure if there would be other consequences.
+> Virtual machines and containers often use an ACPI power button event to
+> tell the machine to shut down gracefully.
 >
-> The call stack shown in your e-mail usually means that an I/O request
-> got stuck. How about determining first whether this is caused by the BFQ
-> scheduler or by the eMMC driver? I think the developers of these
-> software components need that information anyway before they can step in.
+> Provide an optional, extremely lightweight way to handle this event by
+> signaling init directly, rather than running a separate daemon (such as
+> acpid or systemd-logind) that adds to startup time and VM image
+> complexity.
 
-As I mentioned in my previous email, I did use trace points to arrive
-at my conclusion.  I added trace points in
-blk_mq_sched_dispatch_requests to
-detect both the start and the end of that function, as well as where
-the dispatched commands were picked from.  I also traced
-blk_mq_sched_bypass_insert and saw a flush enter hctx->dispatch after
-blk_mq_sched_dispatch_requests had started but before it
-finished.  After reaching my conclusion, I also tried a simple fix by
-introducing an exit path in blk_mq_do_dispatch_sched, if
-we detect that hctx->dispatch has become non-empty.   This made the
-problem go away.
+Well, I'm not convinced.
 
+Even though the patch looks straightforward, the approach really is
+quite not so conceptually and honestly it looks like a band-aid.
+
+Also I'm not quite sure why the ACPI button driver is the target of
+this and not the input layer, for instance.
+
+> By default, the power button will continue to notify userspace through
+> the input layer. With the button.power_signal parameter set, the
+> power button will instead send the configured signal to init. (For
+> instance, sending SIGINT will make the power button simulate
+> ctrl-alt-del.)
 >
-> The attached script may help to identify which requests got stuck.
+> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
+>  drivers/acpi/button.c                           | 11 +++++++++++
+>  2 files changed, 17 insertions(+)
 >
-> Bart.
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ade4e6ec23e0..bbb598e148f4 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -450,6 +450,12 @@
+>                         firmware feature for flushing multiple hpte entries
+>                         at a time.
+>
+> +       button.power_signal=
+> +                       [ACPI] When the power button is pressed, send this
+> +                       signal number to the init process. If set to 0
+> +                       (default), do not send a signal.
+> +                       Format: integer
+> +
+>         c101=           [NET] Moxa C101 synchronous serial card
+>
+>         cachesize=      [BUGS=X86-32] Override level 2 CPU cache size detection.
+> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+> index b758b45737f5..923259f132d6 100644
+> --- a/drivers/acpi/button.c
+> +++ b/drivers/acpi/button.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/init.h>
+>  #include <linux/types.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/sched/signal.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/input.h>
+>  #include <linux/slab.h>
+> @@ -167,6 +168,10 @@ static unsigned long lid_report_interval __read_mostly = 500;
+>  module_param(lid_report_interval, ulong, 0644);
+>  MODULE_PARM_DESC(lid_report_interval, "Interval (ms) between lid key events");
+>
+> +static int power_signal __read_mostly = 0;
+> +module_param(power_signal, int, 0644);
+> +MODULE_PARM_DESC(power_signal, "Power button sends this signal to init");
+> +
+>  /* --------------------------------------------------------------------------
+>                                FS Interface (/proc)
+>     -------------------------------------------------------------------------- */
+> @@ -426,6 +431,12 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+>                         if (button->suspended)
+>                                 break;
+>
+> +                       if (power_signal
+> +                           && button->type == ACPI_BUTTON_TYPE_POWER) {
+> +                               kill_cad_pid(power_signal, 1);
+> +                               break;
+> +                       }
+> +
+>                         keycode = test_bit(KEY_SLEEP, input->keybit) ?
+>                                                 KEY_SLEEP : KEY_POWER;
+>                         input_report_key(input, keycode, 1);
+> --
+> 2.25.0.rc2
+>
