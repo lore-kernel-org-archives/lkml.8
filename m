@@ -2,310 +2,204 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771F7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAF5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9F920708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rl7HK/8d"
+	by mail.kernel.org (Postfix) with ESMTP id 614C720708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgA3V5G (ORCPT
+        id S1726225AbgA3V5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:57:06 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33182 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgA3V5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:57:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00ULv4Ax024561;
-        Thu, 30 Jan 2020 15:57:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580421424;
-        bh=wopntjLYbSqyriTCbkUiZVdQVg/KaDP5aWELPb14k3Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rl7HK/8dukAI7yyqpeFntRLMzNX0k2sVenSaWWC/vUbbmIq8iV096GBEJIjWEXFka
-         Y4M1ewb5xkB70d0/GpkoWdZKFsawzJ9wiNNrn3MASkHgOhg9X5X/vkNo/iQkhc1Jyx
-         wSZgjTpVS2aaxBQ1UCKMzq9SSsw+XeUsCxbRnEeI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00ULv4km013187
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 15:57:04 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 15:57:04 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 15:57:04 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00ULv4EP077401;
-        Thu, 30 Jan 2020 15:57:04 -0600
-Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-To:     "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-7-t-kristo@ti.com>
- <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
- <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
- <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
- <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
- <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
- <7aed7a9f-3546-f622-37ac-34d33ddb4298@ti.com>
- <50c69e97-034b-3160-e95e-97aec2e75cc6@ti.com>
- <cf6fff1c-fde9-67b0-3173-7e019ce587cb@ti.com>
- <127eff13-cc16-2b59-d8ce-06e61bb910bc@ti.com>
- <39b3e536-26a9-e7da-a39a-db2853e0fe04@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <a92ab534-1525-f7d6-d29b-361809e0cae1@ti.com>
-Date:   Thu, 30 Jan 2020 15:57:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 Jan 2020 16:57:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:18902 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgA3V5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 16:57:16 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 13:57:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="233109286"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga006.jf.intel.com with ESMTP; 30 Jan 2020 13:57:12 -0800
+Date:   Fri, 31 Jan 2020 05:57:27 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
+        kirill@shutemov.name, yang.shi@linux.alibaba.com,
+        thellstrom@vmware.com, Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
+ move_page_tables()
+Message-ID: <20200130215727.GA11373@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
+ <20200117232254.2792-4-richardw.yang@linux.intel.com>
+ <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+ <20200129094738.GE25745@shell.armlinux.org.uk>
+ <20200129215745.GA20736@richard>
+ <20200129232441.GI25745@shell.armlinux.org.uk>
+ <20200130013000.GA5137@richard>
+ <20200130141505.GK25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <39b3e536-26a9-e7da-a39a-db2853e0fe04@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200130141505.GK25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 3:50 PM, Andrew F. Davis wrote:
-> On 1/30/20 4:39 PM, Suman Anna wrote:
->> On 1/30/20 3:19 PM, Andrew F. Davis wrote:
->>> On 1/30/20 3:39 PM, Suman Anna wrote:
->>>> On 1/30/20 2:22 PM, Andrew F. Davis wrote:
->>>>> On 1/30/20 2:55 PM, Suman Anna wrote:
->>>>>> On 1/30/20 1:42 PM, Tero Kristo wrote:
->>>>>>> On 30/01/2020 21:20, Andrew F. Davis wrote:
->>>>>>>> On 1/30/20 2:18 PM, Tero Kristo wrote:
->>>>>>>>> On 30/01/2020 20:11, Andrew F. Davis wrote:
->>>>>>>>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
->>>>>>>>>>> From: Suman Anna <s-anna@ti.com>
->>>>>>>>>>>
->>>>>>>>>>> The reserved memory nodes are not assigned to platform devices by
->>>>>>>>>>> default in the driver core to avoid the lookup for every platform
->>>>>>>>>>> device and incur a penalty as the real users are expected to be
->>>>>>>>>>> only a few devices.
->>>>>>>>>>>
->>>>>>>>>>> OMAP remoteproc devices fall into the above category and the OMAP
->>>>>>>>>>> remoteproc driver _requires_ specific CMA pools to be assigned
->>>>>>>>>>> for each device at the moment to align on the location of the
->>>>>>>>>>> vrings and vring buffers in the RTOS-side firmware images. So,
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Same comment as before, this is a firmware issue for only some
->>>>>>>>>> firmwares
->>>>>>>>>> that do not handle being assigned vring locations correctly and instead
->>>>>>>>>> hard-code them.
->>>>>>
->>>>>> As for this statement, this can do with some updating. Post 4.20,
->>>>>> because of the lazy allocation scheme used for carveouts including the
->>>>>> vrings, the resource tables now have to use FW_RSC_ADDR_ANY and will
->>>>>> have to wait for the vdev synchronization to happen.
->>>>>>
->>>>>>>>>
->>>>>>>>> I believe we discussed this topic in length in previous version but
->>>>>>>>> there was no conclusion on it.
->>>>>>>>>
->>>>>>>>> The commit desc might be a bit misleading, we are not actually forced to
->>>>>>>>> use specific CMA buffers, as we use IOMMU to map these to device
->>>>>>>>> addresses. For example IPU1/IPU2 use internally exact same memory
->>>>>>>>> addresses, iommu is used to map these to specific CMA buffer.
->>>>>>>>>
->>>>>>>>> CMA buffers are mostly used so that we get aligned large chunk of memory
->>>>>>>>> which can be mapped properly with the limited IOMMU OMAP family of chips
->>>>>>>>> have. Not sure if there is any sane way to get this done in any other
->>>>>>>>> manner.
->>>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> Why not use the default CMA area?
->>>>>>>
->>>>>>> I think using default CMA area getting the actual memory block is not
->>>>>>> guaranteed and might fail. There are other users for the memory, and it
->>>>>>> might get fragmented at the very late phase we are grabbing the memory
->>>>>>> (omap remoteproc driver probe time.) Some chunks we need are pretty large.
->>>>>>>
->>>>>>> I believe I could experiment with this a bit though and see, or Suman
->>>>>>> could maybe provide feedback why this was designed initially like this
->>>>>>> and why this would not be a good idea.
->>>>>>
->>>>>> I have given some explanation on this on v4 as well, but if it is not
->>>>>> clear, there are restrictions with using default CMA. Default CMA has
->>>>>> switched to be assigned from the top of the memory (higher addresses,
->>>>>> since 3.18 IIRC), and the MMUs on IPUs and DSPs can only address
->>>>>> 32-bits. So, we cannot blindly use the default CMA pool, and this will
->>>>>> definitely not work on boards > 2 GB RAM. And, if you want to add in any
->>>>>> firewall capability, then specific physical addresses becomes mandatory.
->>>>>>
->>>>>
->>>>>
->>>>> If you need 32bit range allocations then
->>>>> dma_set_mask(dev, DMA_BIT_MASK(32));
->>>>>
->>>>> I'm not saying don't have support for carveouts, just make them
->>>>> optional, keystone_remoteproc.c does this:
->>>>>
->>>>> if (of_reserved_mem_device_init(dev))
->>>>> 	dev_warn(dev, "device does not have specific CMA pool\n");
->>>>>
->>>>> There doesn't even needs to be a warning but that is up to you.
->>>>
->>>> It is not exactly an apples to apples comparison. K2s do not have MMUs,
->>>> and most of our firmware images on K2 are actually running out of the
->>>> DSP internal memory.
->>>>
->>>
->>>
->>> So again we circle back to it being a firmware issue, if K2 can get away
->>> without needing carveouts and it doesn't even have an MMU then certainly
->>> OMAP/DRA7x class devices can handle it even better given they *do* have
->>> an IOMMU. Unless someone is hard-coding the IOMMU configuration.. In
->>> which case we are still just hacking around the problem here with
->>> mandatory specific address memory carveouts.
->>
->> Optional carveouts on OMAP remoteprocs can be an enhancement in the
->> future, but at the moment, we won't be able to run use-cases without
->> this. And I have already given some of the reasons for the same here and
->> on v4.
->>
-> 
-> 
-> No reason to be dismissive, my questions are valid.
-> 
-> What "use-cases" are we talking about, I have firmware that doesn't need
-> specific carved-out addresses. 
+On Thu, Jan 30, 2020 at 02:15:05PM +0000, Russell King - ARM Linux admin wrote:
+>On Thu, Jan 30, 2020 at 09:30:00AM +0800, Wei Yang wrote:
+>> On Wed, Jan 29, 2020 at 11:24:41PM +0000, Russell King - ARM Linux admin wrote:
+>> >On Thu, Jan 30, 2020 at 05:57:45AM +0800, Wei Yang wrote:
+>> >> On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
+>> >> >On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
+>> >> >> 18.01.2020 02:22, Wei Yang пишет:
+>> >> >> > Use the general helper instead of do it by hand.
+>> >> >> > 
+>> >> >> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> >> >> > ---
+>> >> >> >  mm/mremap.c | 7 ++-----
+>> >> >> >  1 file changed, 2 insertions(+), 5 deletions(-)
+>> >> >> > 
+>> >> >> > diff --git a/mm/mremap.c b/mm/mremap.c
+>> >> >> > index c2af8ba4ba43..a258914f3ee1 100644
+>> >> >> > --- a/mm/mremap.c
+>> >> >> > +++ b/mm/mremap.c
+>> >> >> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>> >> >> >  
+>> >> >> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+>> >> >> >  		cond_resched();
+>> >> >> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
+>> >> >> > -		/* even if next overflowed, extent below will be ok */
+>> >> >> > +		next = pmd_addr_end(old_addr, old_end);
+>> >> >> >  		extent = next - old_addr;
+>> >> >> > -		if (extent > old_end - old_addr)
+>> >> >> > -			extent = old_end - old_addr;
+>> >> >> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+>> >> >> >  		if (!old_pmd)
+>> >> >> >  			continue;
+>> >> >> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>> >> >> >  
+>> >> >> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
+>> >> >> >  			break;
+>> >> >> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
+>> >> >> > +		next = pmd_addr_end(new_addr, new_addr + len);
+>> >> >> >  		if (extent > next - new_addr)
+>> >> >> >  			extent = next - new_addr;
+>> >> >> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
+>> >> >> > 
+>> >> >> 
+>> >> >> Hello Wei,
+>> >> >> 
+>> >> >> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
+>> >> >> Tegra (ARM32):
+>> >> >> 
+>> >> >>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
+>> >> >> 
+>> >> >> and eventually kernel hangs.
+>> >> >> 
+>> >> >> Git's bisection points to this patch and reverting it helps. Please fix,
+>> >> >> thanks in advance.
+>> >> >
+>> >> >The above is definitely wrong - pXX_addr_end() are designed to be used
+>> >> >with an address index within the pXX table table and the address index
+>> >> >of either the last entry in the same pXX table or the beginning of the
+>> >> >_next_ pXX table.  Arbitary end address indicies are not allowed.
+>> >> >
+>> >> 
+>> >> #define pmd_addr_end(addr, end)						\
+>> >> ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
+>> >> 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+>> >> })
+>> >> 
+>> >> If my understanding is correct, the definition here align the addr to next PMD
+>> >> boundary or end.
+>> >> 
+>> >> I don't see the possibility to across another PMD. Do I miss something?
+>> >
+>> >Look at the definition of p*_addr_end() that are used when page tables
+>> >are rolled up.
+>> >
+>> 
+>> Sorry, I don't get your point.
+>> 
+>> What's the meaning of "roll up" here?
+>> 
+>> Would you mind giving me an example? I see pmd_addr_end() is not used in many
+>> places in core kernel. By glancing those usages, all the places use it like
+>> pmd_addr_end(addr, end). Seems no specially handing on the end address.
+>> 
+>> Or you mean the case when pmd_addr_end() is defined to return "end" directly? 
+>
+>Not all hardware has five levels of page tables.  When hardware does not
+>have five levels, it is common to "roll up" some of the page tables into
+>others.
+>
+>There are generic ways to implement this, which include using:
+>
+>include/asm-generic/pgtable-nop4d.h
+>include/asm-generic/pgtable-nopud.h
+>include/asm-generic/pgtable-nopmd.h
+>
+>and then there's architecture ways to implement this.  32-bit ARM takes
+>its implementation for PMD not from the generic version, which
+>post-dates 32-bit ARM, but from how page table roll-up was implemented
+>back at the time when the current ARM scheme was devised.  The generic
+>scheme is unsuitable for 32-bit ARM since we do more than just roll-up
+>page tables, but this is irrelevent for this discussion.
+>
+>All three of the generic implementations, and 32-bit ARM, define the
+>pXX_addr_end() macros thusly:
+>
+>include/asm-generic/pgtable-nop4d.h:#define p4d_addr_end(addr, end) (end)
+>include/asm-generic/pgtable-nopmd.h:#define pmd_addr_end(addr, end) (end)
+>include/asm-generic/pgtable-nopud.h:#define pud_addr_end(addr, end) (end)
+>arch/arm/include/asm/pgtable-2level.h:#define pmd_addr_end(addr,end) (end)
+>
+>since, as I stated, pXX_addr_end() expects its "end" argument to be
+>the address index of the next entry in the immediately upper page
+>table level, or the address index of the last entry we wish to
+>process, which ever is smaller.
+>
+>If it's larger than the address index of the next entry in the
+>immediately upper page table level, then the effect of all these
+>macros will be to walk off the end of the current level of page
+>table.
+>
+>To see how they _should_ be used, see the loops in free_pgd_range()
+>and the free_pXX_range() functions called from there and below.
+>
+>In all cases when the pXX_addr_end() macro was introduced, what I state
+>above holds true - and I believe still holds true today, until this
+>patch that has reportedly caused issues.
+>
 
-I think you are well aware of all the usecases we provide with the TI
-SDKs with IPUs and DSPs. And what is the firmware that you have and what
-do you use it for?
+Thanks for your patience in explaining this for me.
 
-If you have misbehaving firmware that
-> needs statically carved out memory addresses then you can have carveouts
-> if you want, but it should be optional. 
-If I don't want to pollute my
-> system's memory space with a bunch of carveout holes then I shouldn't
-> have to just because your specific firmware needs them.
+I got your point. This is my fault in understanding the code.
 
-Further follow-up series like early-boot and late-attach will mandate
-fixed carveouts actually. You cannot just run out of any random memory.
+>-- 
+>RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+>FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+>According to speedtest.net: 11.9Mbps down 500kbps up
 
-regards
-Suman
-
-> 
-> Andrew
-> 
-> 
->> regards
->> Suman
->>
->>>
->>> Andrew
->>>
->>>
->>>> regards
->>>> Suman
->>>>
->>>>>
->>>>> Andrew
->>>>>
->>>>>
->>>>>> regards
->>>>>> Suman
->>>>>>
->>>>>>>
->>>>>>> -Tero
->>>>>>>
->>>>>>>>
->>>>>>>> Andrew
->>>>>>>>
->>>>>>>>
->>>>>>>>> -Tero
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> This is not a requirement of the remote processor itself and so it
->>>>>>>>>> should not fail to probe if a specific memory carveout isn't given.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> use the of_reserved_mem_device_init/release() API appropriately
->>>>>>>>>>> to assign the corresponding reserved memory region to the OMAP
->>>>>>>>>>> remoteproc device. Note that only one region per device is
->>>>>>>>>>> allowed by the framework.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>>>>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>>>>>>>>> ---
->>>>>>>>>>> v5: no changes
->>>>>>>>>>>
->>>>>>>>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->>>>>>>>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>> b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>> index 0846839b2c97..194303b860b2 100644
->>>>>>>>>>> --- a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>> @@ -17,6 +17,7 @@
->>>>>>>>>>>    #include <linux/module.h>
->>>>>>>>>>>    #include <linux/err.h>
->>>>>>>>>>>    #include <linux/of_device.h>
->>>>>>>>>>> +#include <linux/of_reserved_mem.h>
->>>>>>>>>>>    #include <linux/platform_device.h>
->>>>>>>>>>>    #include <linux/dma-mapping.h>
->>>>>>>>>>>    #include <linux/remoteproc.h>
->>>>>>>>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
->>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>        if (ret)
->>>>>>>>>>>            goto free_rproc;
->>>>>>>>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
->>>>>>>>>>> +    if (ret) {
->>>>>>>>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
->>>>>>>>>>> pool\n");
->>>>>>>>>>> +        goto free_rproc;
->>>>>>>>>>> +    }
->>>>>>>>>>> +
->>>>>>>>>>>        platform_set_drvdata(pdev, rproc);
->>>>>>>>>>>          ret = rproc_add(rproc);
->>>>>>>>>>>        if (ret)
->>>>>>>>>>> -        goto free_rproc;
->>>>>>>>>>> +        goto release_mem;
->>>>>>>>>>>          return 0;
->>>>>>>>>>>    +release_mem:
->>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>    free_rproc:
->>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>>        return ret;
->>>>>>>>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
->>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>          rproc_del(rproc);
->>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>          return 0;
->>>>>>>>>>>    }
->>>>>>>>>>>
->>>>>>>>>
->>>>>>>>> -- 
->>>>>>>
->>>>>>> -- 
->>>>>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>>>>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>>>>
->>>>
->>
-
+-- 
+Wei Yang
+Help you, Help me
