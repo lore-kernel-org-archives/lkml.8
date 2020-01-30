@@ -2,158 +2,194 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEC2C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9639C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA15206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NjFFBuHQ"
+	by mail.kernel.org (Postfix) with ESMTP id C90D2206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgA3NS1 (ORCPT
+        id S1727296AbgA3NTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:18:27 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58398 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbgA3NS0 (ORCPT
+        Thu, 30 Jan 2020 08:19:50 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40946 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbgA3NTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:18:26 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UDIMfD014767;
-        Thu, 30 Jan 2020 07:18:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580390302;
-        bh=YnPpRPOJrB54TzCkERn6g/npDkn6RNuSyqEisfLG/PQ=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=NjFFBuHQJKynAWsmbgOnUSKHq+khfmsy7P2YloBOh0fEjFT5zUpFH5ALlLOOm37WX
-         xTYd/4FE7MKYpP66cjIBKNATY5lVxfJWK/9mqtpNCfoYY88YI+2dIA9UkYtSofVUON
-         t3zmAnvThDcuYO+TXacEglIev/tSwx8wRHo03gmA=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UDIMbV051928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 07:18:22 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 07:18:22 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 07:18:21 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UDIKiZ049941;
-        Thu, 30 Jan 2020 07:18:20 -0600
-Subject: Re: [PATCH for-next 0/4] dmaengine: ti: k3-udma: Updates for next
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
-        <vigneshr@ti.com>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
- <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
- <20200128115006.GT2841@vkoul-mobl>
- <fbe5a971-650d-de58-cee2-0a80eca5c1cd@ti.com>
-Message-ID: <5d25f5f1-f6a1-0f5a-b715-0e3e0031bb99@ti.com>
-Date:   Thu, 30 Jan 2020 15:19:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 30 Jan 2020 08:19:49 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so3429310oii.7;
+        Thu, 30 Jan 2020 05:19:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rlmgmcdJs51yvRlMadmtWD4wMTDT049oFy7CE6s07as=;
+        b=RL5XxQboaEwPbBVF9g7mFHJKij8eHRLh4Kk6PZ9r9ePM9tA8SgiHGMwiG1xfI9PhCq
+         fy1+sLaJk+TL7E2CXTjpShwecSRq9Hxuq/aCDBD4F71tEFYe8k70S4ZwM8AOfpXVotYT
+         W/7LbPX4z7vdz6+xo2S7YcqXMwdwWSdAI3m9v9lKs9mjBvkDL7clDCuuHbbx4dUFdzdl
+         j+m9fftGPIr8B6qoYQn72pdGuaj4ilCUGljVB51laa/8100+LnlLUhL0pXPcU02pXQRx
+         TMSdl0ucyD2vrQLv7OB/taWeX8QHkiG/NyBry+zlxP6YIRwhNYrFS3qKgjxVpjEq434u
+         kGlQ==
+X-Gm-Message-State: APjAAAXcIvtepqOLHcSLL1KZF4SbEUOJCvZf5erGgxFdOTDAF8STvQog
+        5TaswVHxK+/Z3+KWFdHhzi5DPA0Y5bLwRaIqVd0=
+X-Google-Smtp-Source: APXvYqwmPHal/1zELCYionjQ8J4zvZmXaJuskwPE4xb4L0RxdK4fNDQE/yG8pjewoTv8S4OfG5wjm04cPesM6HXhEqg=
+X-Received: by 2002:aca:5905:: with SMTP id n5mr2881985oib.54.1580390388518;
+ Thu, 30 Jan 2020 05:19:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <fbe5a971-650d-de58-cee2-0a80eca5c1cd@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200129143757.680-1-gilad@benyossef.com> <20200129143757.680-5-gilad@benyossef.com>
+ <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com> <CAOtvUMdUBMkmZ6nzGVxi1W_Y4yFvcd6rfvz6BA63h4eq2QFUdA@mail.gmail.com>
+In-Reply-To: <CAOtvUMdUBMkmZ6nzGVxi1W_Y4yFvcd6rfvz6BA63h4eq2QFUdA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Jan 2020 14:19:37 +0100
+Message-ID: <CAMuHMdXecd0KAN6B4GWKMp-DsmZVTJqOJfm5CymwwPMwDqG0qA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+Hi Gilad,
 
-On 28/01/2020 14.37, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 28/01/2020 13.50, Vinod Koul wrote:
->> On 28-01-20, 12:15, Peter Ujfalusi wrote:
->>> Vinod,
->>>
->>> On 27/01/2020 15.21, Peter Ujfalusi wrote:
->>>> Hi Vinod,
->>>>
->>>> Based on customer reports we have identified two issues with the UDMA driver:
->>>>
->>>> TX completion (1st patch):
->>>> The scheduled work based workaround for checking for completion worked well for
->>>> UART, but it had significant impact on SPI performance.
->>>> The underlying issue is coming from the fact that we have split data movement
->>>> architecture.
->>>> In order to know that the transfer is really done we need to check the remote
->>>> end's (PDMA) byte counter.
->>>>
->>>> RX channel teardown with stale data in PDMA (2nd patch):
->>>> If we try to stop the RX DMA channel (teardown) then PDMA is trying to flush the
->>>> data is might received from a peripheral, but if UDMA does not have a packet to
->>>> use for this draining than it is going to push back on the PDMA and the flush
->>>> will never completes.
->>>> The workaround is to use a dummy descriptor for flush purposes when the channel
->>>> is terminated and we did not have active transfer (no descriptor for UDMA).
->>>> This allows UDMA to drain the data and the teardown can complete.
->>>>
->>>> The last two patch is to use common code to set up the TR parameters for
->>>> slave_sg, cyclic and memcpy. The setup code is the same as we used for memcpy
->>>> with the change we can handle 4.2GB sg elements and periods in case of cyclic.
->>>> It is also nice that we have single function to do the configuration.
->>>
->>> I have marked these patches as for-next as 5.5 was not released yet.
->>> Would it be possible to have these as fixes for 5.6?
->>
->> Sure but are they really fixes, why cant they go for next release :)
->>
->> They seem to improve things for sure, but do we want to call them as
->> fixes..?
-> 
-> I would say that the first two patch is a fix:
-> TX completion check is fixing the performance hit by the early TX
-> completion workaround which used jiffies+work.
-> 
-> The second patch is fixing a case when we have stale data during RX and
-> no active transfer. For example when UART reads 1000 bytes, but the
-> other end is 'streaming' the data and after the 1000 bytes the UART+PDMA
-> receives data.
-> Recovering from this state is not easy and it might not even succeed in
-> HW level.
-> 
-> The last two is I agree, it is not fixing much, it does corrects the
-> slave_sg TR setup (and improves the cyclic as well).
-> With that I could send the ASoC platform wrapper for UDMA with
-> period_bytes_max = 4.2GB ;)
-> I have SZ_512K in there atm, with the old calculation SZ_64K is the
-> maximum, not a big issue.
+On Thu, Jan 30, 2020 at 12:33 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> On Wed, Jan 29, 2020 at 5:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Jan 29, 2020 at 3:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> > > Fix an error causing no block sizes to be reported during
+> > > all AEAD registrations.
+> > >
+> > > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> >
+> > Thanks, this fixes:
+> >
+> >     alg: aead: blocksize for authenc-hmac-sha1-cbc-aes-ccree (0)
+> > doesn't match generic impl (16)
+> >     alg: aead: blocksize for authenc-hmac-sha256-cbc-aes-ccree (0)
+> > doesn't match generic impl (16)
+> >
+> > which you may want to mention in the commit description, so
+> > people who search for the error message will find the fix.
+> >
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Note that even after applying this series, the kernel still crashes with
+> >
+> > kernel BUG at kernel/dma/swiotlb.c:497!
+> > ....
+> > Call trace:
+> >  swiotlb_tbl_map_single+0x30c/0x380
+> >  swiotlb_map+0xb0/0x300
+> >  dma_direct_map_page+0xb8/0x140
+> >  dma_direct_map_sg+0x78/0xe0
+> >  cc_map_sg+0xa0/0xd0
+> >  cc_aead_chain_data.constprop.25+0x17c/0x6a0
+> >  cc_map_aead_request+0x61c/0x990
+> >  cc_proc_aead+0x140/0xeb0
+> >  cc_aead_decrypt+0x48/0x68
+> >  crypto_aead_decrypt+0x30/0x48
+> >  test_aead_vec_cfg+0x5a0/0x8d0
+> >
+> > but you may be aware of that.
+> >
+> > CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n
+> > CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+>
+> OK, this is a new one yet - we are now crashing in out-of-place decryption.
+> And again, I am not seeing this in the different test board, even with
+> DMA debug turned on.
 
-Actually this also fixes a real bug in the driver for the slave_sg_tr case:
-if the sg_dma_len(sgent) is not multiple of (burst * dev_width) then we
-end up with missing bits as the counters are not set up correctly.
-The client driver which we tested the slave_sg_tr was always giving
-sg_len == 1 and the buffer was aligned, but when I tuned the client to
-pass a list, things got broken.
+I'm using a tree based on renesas-drivers[*], with renesas_defconfig
+(also from [*]), and the two config changes above.
 
-> 
-> I think the first two patch is a fix candidate as they fix regression
-> (albeit regression between the series's) and a real world channel lockup
-> discovered too late for the initial driver.
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+> Can you help me out and print the cryptlen and assoclen (I'm guessing
+> both are zero), authlen and which AEAD/mode this is?
 
-- Péter
+The crashing test is "ccm(aes)" from alg_test_descs[].
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+With DEBUG=y, and a few extra debug prints, the last few lines
+leading to the crash were:
+
+ccree e6601000.crypto: Copy-to-sram: mlli_dma=00000260, mlli_size=40
+ccree e6601000.crypto: ASSOC buffer type MLLI
+ccree e6601000.crypto: CIPHER: SRC/DST buffer type MLLI
+ccree e6601000.crypto: Setting key in context @00000000ceb78614 for
+ccm(aes). key=00000000ae78472c keylen=32
+ccree e6601000.crypto: enc_keylen=32  authkeylen=0
+ccree e6601000.crypto: authlen=16
+cc_aead_decrypt:2086: assoclen = 32 cryptlen = 48
+cc_aead_decrypt:2087: iv = ffff80000a5d3980 src = ffff0006f8a28040 dst
+= ffff0006f8a28040
+ccree e6601000.crypto: Dec context=00000000ceb78614
+req=0000000057b9c395 iv=00000000784a9e35 src=00000000b9e80940
+src_ofs=24 dst=00000000b9e80940 dst_ofs=24 cryptolen=48
+ccree e6601000.crypto: Copy-to-sram: mlli_dma=00000260, mlli_size=16
+ccree e6601000.crypto: ASSOC buffer type MLLI
+ccree e6601000.crypto: CIPHER: SRC/DST buffer type DLLI
+ccree e6601000.crypto: Setting key in context @00000000ceb78614 for
+ccm(aes). key=00000000ae78472c keylen=32
+ccree e6601000.crypto: enc_keylen=32  authkeylen=0
+ccree e6601000.crypto: authlen=16
+cc_aead_decrypt:2086: assoclen = 32 cryptlen = 48
+cc_aead_decrypt:2087: iv = ffff80000a5d39b1 src = ffff0006f8a28040 dst
+= ffff0006f8a28290
+ccree e6601000.crypto: Dec context=00000000ceb78614
+req=0000000057b9c395 iv=00000000e16df7d7 src=00000000b07b5b54
+src_ofs=23 dst=00000000b3abbd9e dst_ofs=23 cryptolen=48
+ccree e6601000.crypto: Copy-to-sram: mlli_dma=00000260, mlli_size=16
+ccree e6601000.crypto: ASSOC buffer type MLLI
+ccree e6601000.crypto: CIPHER: SRC/DST buffer type DLLI
+ccree e6601000.crypto: Setting key in context @00000000ceb78614 for
+ccm(aes). key=0000000061847879 keylen=32
+ccree e6601000.crypto: enc_keylen=32  authkeylen=0
+ccree e6601000.crypto: authlen=16
+cc_aead_decrypt:2086: assoclen = 32 cryptlen = 48
+cc_aead_decrypt:2087: iv = ffff80000a5d3980 src = ffff0006f8a28040 dst
+= ffff0006f8a28040
+ccree e6601000.crypto: Dec context=00000000ceb78614
+req=0000000057b9c395 iv=00000000784a9e35 src=0000000026c45683
+src_ofs=8 dst=0000000026c45683 dst_ofs=8 cryptolen=48
+ccree e6601000.crypto: Copy-to-sram: mlli_dma=00000260, mlli_size=16
+ccree e6601000.crypto: ASSOC buffer type MLLI
+ccree e6601000.crypto: CIPHER: SRC/DST buffer type DLLI
+ccree e6601000.crypto: Setting key in context @00000000ceb78614 for
+ccm(aes). key=000000002490788f keylen=16
+ccree e6601000.crypto: enc_keylen=16  authkeylen=0
+ccree e6601000.crypto: authlen=8
+cc_aead_decrypt:2086: assoclen = 0 cryptlen = 8
+cc_aead_decrypt:2087: iv = ffff80000a5d3980 src = ffff0006f8a28040 dst
+= ffff0006f8a28040
+ccree e6601000.crypto: Dec context=00000000ceb78614
+req=0000000057b9c395 iv=00000000784a9e35 src=000000006ab00be2
+src_ofs=0 dst=000000006ab00be2 dst_ofs=0 cryptolen=8
+ccree e6601000.crypto: Payload authentication failure, (auth-size=8, cipher=8)
+ccree e6601000.crypto: Setting key in context @00000000ceb78614 for
+ccm(aes). key=000000002490788f keylen=16
+ccree e6601000.crypto: enc_keylen=16  authkeylen=0
+ccree e6601000.crypto: authlen=8
+cc_aead_decrypt:2086: assoclen = 0 cryptlen = 8
+cc_aead_decrypt:2087: iv = ffff80000a5d3980 src = ffff0006f8a28040 dst
+= ffff0006f8a28290
+ccree e6601000.crypto: Dec context=00000000ceb78614
+req=0000000057b9c395 iv=00000000784a9e35 src=000000006ab00be2
+src_ofs=0 dst=00000000c4bfb383 dst_ofs=0 cryptolen=8
+
+[*] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tag/?h=renesas-drivers-2020-01-28-v5.5
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
