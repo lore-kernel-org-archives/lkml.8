@@ -1,140 +1,136 @@
 Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64632C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B078C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442F4206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADE4206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp1c8UWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgA3H2C (ORCPT
+        id S1726401AbgA3HbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 02:28:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726659AbgA3H2B (ORCPT
+        Thu, 30 Jan 2020 02:31:20 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36984 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgA3HbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 02:28:01 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00U7OtX4085904
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 02:28:00 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xtpmtwtt1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 02:28:00 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 30 Jan 2020 07:27:57 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 Jan 2020 07:27:47 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00U7Rk2i44564690
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 07:27:47 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD406AE051;
-        Thu, 30 Jan 2020 07:27:46 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C847AE04D;
-        Thu, 30 Jan 2020 07:27:43 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.154])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Jan 2020 07:27:43 +0000 (GMT)
-Date:   Thu, 30 Jan 2020 09:27:41 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
- <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
- <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
- <20200129232044.2d133d98@thinkpad>
+        Thu, 30 Jan 2020 02:31:19 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so1196539pga.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 23:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=ADHXjKY+wZDM9guKVG7zd0Mm0y/rFvUhm90KVH/W/To=;
+        b=Fp1c8UWqKSduatMedNJg0JXB/cDi6eI2Wrbfrp6MJ5KJRNA0LWiRIaqH76kSGfRNXA
+         jmHuaJCmIhoo2Ke+TactuJKRkD5y0q1dMAC1GAx17HOz7T1HFXlFTBeH88btIzU1UZ8B
+         Xy7mH3LMmlaNF+2H8DfVx4Tj3WSs99RPke1B/lyDIW1JSQ/SrKlvBDN38QWmUFU2Ece9
+         Gm0x0tIjIMRFQXPI3kJwgdYnoyTnpRh7O3HiQExPmOLecfwBBSy1sTPJb8NCkH/XwSsT
+         XRSXFYdLPZ+nVEc43gAJQx58khG781NfrLBfs0rq0fxDNzK0ZJsGRMnhGpFwg3aH9Qls
+         AA0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=ADHXjKY+wZDM9guKVG7zd0Mm0y/rFvUhm90KVH/W/To=;
+        b=I8xJEXaBJ02WER+3XkNPsHyMIjjZOS9fcOH+W974Li+y/IBo6XD/JKuIGflwLMBrJJ
+         EZZjrA9T179DySsj4n12ldfWoZ8wZcuj/pO6hnxPvDew8YZA+k2wj3g+GkVXeFUJjLs9
+         RwNrGRRsP48mjxYVbWYlJaGtCPqdTL7xUdPqKrfamMb1Dc5E6oF+vFZHwa6512a3jlbh
+         T8nDmS7DCKGMg6diPPPzhLB5nWWprPjVwrxVaHRJtL1tO64URtPZvTMV2mMtVmwgybFJ
+         ZvG/qWqYiYCLDopxXoC13/08i1K0ev7um4qvo64RRe7q/FAsCtvF1ADm5zzX+aTSkZR7
+         QBkw==
+X-Gm-Message-State: APjAAAX0xhItLcvc3wLETx/EOgKj3VhiHRMi81Tvo/3o1OZRq25n7Ivi
+        euHKh5BI7D2yjLTGLMAK7KM=
+X-Google-Smtp-Source: APXvYqxjoJ9Bt62qy3k/p7zxSkSmzSaWakYmKUL1JcNAS98p04iHIga/jET0K3QPiSkPdlsLy/6VaA==
+X-Received: by 2002:a63:30c:: with SMTP id 12mr3264019pgd.276.1580369479261;
+        Wed, 29 Jan 2020 23:31:19 -0800 (PST)
+Received: from [192.168.1.101] (122-58-182-19-adsl.sparkbb.co.nz. [122.58.182.19])
+        by smtp.gmail.com with ESMTPSA id v7sm5102910pfn.61.2020.01.29.23.31.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jan 2020 23:31:18 -0800 (PST)
+Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
+To:     Peter Zijlstra <peterz@infradead.org>
+References: <20200129103941.304769381@infradead.org>
+ <bbdb9596-583e-5d26-ac1c-4775440059b9@physik.fu-berlin.de>
+ <20200129115412.GN14914@hirez.programming.kicks-ass.net>
+ <CAOmrzkJ8dsuSnomcE7uhyY9ip6T9ADLT7LhjydvY-hizpikBiA@mail.gmail.com>
+ <20200129193109.GS14914@hirez.programming.kicks-ass.net>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux/m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Development <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <b72358cc-ddd2-52d6-7eed-c88bab46e6f1@gmail.com>
+Date:   Thu, 30 Jan 2020 20:31:13 +1300
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129232044.2d133d98@thinkpad>
-X-TM-AS-GCONF: 00
-x-cbid: 20013007-0008-0000-0000-0000034DFF2E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013007-0009-0000-0000-00004A6E7E76
-Message-Id: <20200130072741.GA23707@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_01:2020-01-28,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 spamscore=0
- suspectscore=56 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300050
+In-Reply-To: <20200129193109.GS14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:20:44PM +0100, Gerald Schaefer wrote:
-> On Mon, 27 Jan 2020 22:33:08 -0500
-> 
-> For example, who would have thought that pXd_bad() is supposed to
-> report large entries as bad? It's not really documented anywhere,
+Peter,
 
-A bit off-topic,
+Am 30.01.2020 um 08:31 schrieb Peter Zijlstra:
+> On Thu, Jan 30, 2020 at 07:52:11AM +1300, Michael Schmitz wrote:
+>> Peter,
+>>
+>> On Thu, Jan 30, 2020 at 12:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>
+>>> On Wed, Jan 29, 2020 at 11:49:13AM +0100, John Paul Adrian Glaubitz wrote:
+>>>
+>>>>> [1] https://wiki.debian.org/M68k/QemuSystemM68k
+>>>
+>>> Now, if only debian would actually ship that :/
+>>>
+>>> AFAICT that emulates a q800 which is another 68040 and should thus not
+>>> differ from ARAnyM.
+>>>
+>>> I'm fairly confident in the 040 bits, it's the 020/030 things that need
+>>> coverage.
+>>
+>> I'll take a look - unless this eats up way more kernel memory for page
+>> tables, it should still boot on my Falcon.
+>
+> It should actually be better in most cases I think, since we no longer
+> require all 16 pte-tables to map consecutive (virtual) memory.
 
-@Anshuman, maybe you could start a Documentation/ patch that describes at
-least some of the pXd_whaterver()?
-Or that would be too much to ask? ;-)
+Not much difference:
 
-> so we just checked them for sanity like normal entries, which
-> apparently worked fine so far, but for how long?
+              total       used       free     shared    buffers     cached
+Mem:         10712      10120        592          0       1860       2276
+-/+ buffers/cache:       5984       4728
+Swap:      2097144       1552    2095592
 
--- 
-Sincerely yours,
-Mike.
+
+vs. vanilla 5.5rc5:
+              total       used       free     shared    buffers     cached
+Mem:         10716      10104        612          0       1588       2544
+-/+ buffers/cache:       5972       4744
+Swap:      2097144       1296    2095848
+
+By sheer coincidence, the boot with your patch series happened to run a 
+full filesystem check on the root filesystem, so I'd say it got a good 
+workout re: paging and swapping (even though it's just a paltry 4 GB).
+
+Haven't tried any VM stress testing yet (not sure what to do for that; 
+it's been years since I tried that sort of stuff).
+
+Cheers,
+
+	Michael
+
 
