@@ -2,166 +2,80 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00945C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E36214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6D920CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:14:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByIPweAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgA3UIR (ORCPT
+        id S1727558AbgA3UOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:08:17 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48449 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgA3UIR (ORCPT
+        Thu, 30 Jan 2020 15:14:19 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55344 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727089AbgA3UOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:08:17 -0500
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id EC913E0008;
-        Thu, 30 Jan 2020 20:08:10 +0000 (UTC)
-Subject: Re: [PATCH v2] powerpc: Do not consider weak unresolved symbol
- relocations as bad
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-References: <20200118170335.21440-1-alex@ghiti.fr>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
-Date:   Thu, 30 Jan 2020 15:07:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 30 Jan 2020 15:14:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580415258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=It49j9LVTEdfoN2GEBrycA6NOResxAai2wxDK0RMpj4=;
+        b=ByIPweATlBxfk4QLbk999ojVIqLOZkkkwvsAeupEgunDiQW+Csz7NohEklpsokmW+OJdc7
+        Gx4+QWUlYOVm8t3eRG8S9uT0FE8xTaygBZH+/JFMs94viqNOxP/HwLmrOW7aYq2LWH4T5S
+        inIIzKdmji+Fo4A7I9xYfX2VRB5cKpg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-wmRWdobNOZq_4MnUvh1Upw-1; Thu, 30 Jan 2020 15:14:16 -0500
+X-MC-Unique: wmRWdobNOZq_4MnUvh1Upw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 665E3107B26F;
+        Thu, 30 Jan 2020 20:14:14 +0000 (UTC)
+Received: from localhost (unused-10-15-17-6.yyz.redhat.com [10.15.17.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A09BB5DA7B;
+        Thu, 30 Jan 2020 20:14:11 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 15:14:11 -0500
+From:   Eduardo Habkost <ehabkost@redhat.com>
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ak@linux.intel.com, peterz@infradead.org, pbonzini@redhat.com,
+        kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
+        like.xu@intel.com, jannh@google.com, arei.gonglei@huawei.com,
+        jmattson@google.com,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v8 00/14] Guest LBR Enabling
+Message-ID: <20200130201411.GF25446@habkost.net>
+References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200118170335.21440-1-alex@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/18/20 12:03 PM, Alexandre Ghiti wrote:
-> Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
-> symbols that may be unresolved at link time which result in an absolute
-> relocation to 0. relocs_check.sh emits the following warning:
->
-> "WARNING: 2 bad relocations
-> c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-> c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
->
-> whereas those relocations are legitimate even for a relocatable kernel
-> compiled with -pie option.
->
-> relocs_check.sh already excluded some weak unresolved symbols explicitly:
-> remove those hardcoded symbols and add some logic that parses the symbols
-> using nm, retrieves all the weak unresolved symbols and excludes those from
-> the list of the potential bad relocations.
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->
-> Changes in v2:
-> - Follow Stephen advice of using grep -F instead of looping over weak symbols
->    using read, patch is way smaller and cleaner.
-> - Add missing nm in comment
->
->   arch/powerpc/Makefile.postlink     |  4 ++--
->   arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
->   2 files changed, 14 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
-> index 134f12f89b92..2268396ff4bb 100644
-> --- a/arch/powerpc/Makefile.postlink
-> +++ b/arch/powerpc/Makefile.postlink
-> @@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
->   quiet_cmd_relocs_check = CHKREL  $@
->   ifdef CONFIG_PPC_BOOK3S_64
->         cmd_relocs_check =						\
-> -	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
-> +	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
->   	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
->   else
->         cmd_relocs_check =						\
-> -	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
-> +	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
->   endif
->   
->   # `@true` prevents complaint when there is nothing to be done
-> diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
-> index 7b9fe0a567cf..014e00e74d2b 100755
-> --- a/arch/powerpc/tools/relocs_check.sh
-> +++ b/arch/powerpc/tools/relocs_check.sh
-> @@ -10,14 +10,21 @@
->   # based on relocs_check.pl
->   # Copyright © 2009 IBM Corporation
->   
-> -if [ $# -lt 2 ]; then
-> -	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
-> +if [ $# -lt 3 ]; then
-> +	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
->   	exit 1
->   fi
->   
-> -# Have Kbuild supply the path to objdump so we handle cross compilation.
-> +# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
->   objdump="$1"
-> -vmlinux="$2"
-> +nm="$2"
-> +vmlinux="$3"
-> +
-> +# Remove from the bad relocations those that match an undefined weak symbol
-> +# which will result in an absolute relocation to 0.
-> +# Weak unresolved symbols are of that form in nm output:
-> +# "                  w _binary__btf_vmlinux_bin_end"
-> +undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
->   
->   bad_relocs=$(
->   $objdump -R "$vmlinux" |
-> @@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
->   	# These relocations are okay
->   	# On PPC64:
->   	#	R_PPC64_RELATIVE, R_PPC64_NONE
-> -	#	R_PPC64_ADDR64 mach_<name>
-> -	#	R_PPC64_ADDR64 __crc_<name>
->   	# On PPC:
->   	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
->   	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
-> @@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
->   R_PPC_ADDR16_HA
->   R_PPC_RELATIVE
->   R_PPC_NONE' |
-> -	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
-> -	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
-> +	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
->   )
->   
->   if [ -z "$bad_relocs" ]; then
+On Tue, Aug 06, 2019 at 03:16:00PM +0800, Wei Wang wrote:
+> Last Branch Recording (LBR) is a performance monitor unit (PMU) feature
+> on Intel CPUs that captures branch related info. This patch series enables
+> this feature to KVM guests.
+> 
+> Each guest can be configured to expose this LBR feature to the guest via
+> userspace setting the enabling param in KVM_CAP_X86_GUEST_LBR (patch 3).
 
+Are QEMU patches for enabling KVM_CAP_X86_GUEST_LBR being planned?
 
-Hi guys,
-
-
-Any thought about that ?
-
-I do think this patch makes the whole check about absolute relocations 
-clearer.
-And in the future, it will avoid anyone to spend some time on those 
-"bad" relocations
-which actually aren't.
-
-Thanks,
-
-Alex
+-- 
+Eduardo
 
