@@ -2,204 +2,238 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAF5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D89DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614C720708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5352420708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bztHI+0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgA3V5Q (ORCPT
+        id S1726387AbgA3V6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:57:16 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18902 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgA3V5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:57:16 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 13:57:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
-   d="scan'208";a="233109286"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 30 Jan 2020 13:57:12 -0800
-Date:   Fri, 31 Jan 2020 05:57:27 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
-        kirill@shutemov.name, yang.shi@linux.alibaba.com,
-        thellstrom@vmware.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-Message-ID: <20200130215727.GA11373@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
- <20200129094738.GE25745@shell.armlinux.org.uk>
- <20200129215745.GA20736@richard>
- <20200129232441.GI25745@shell.armlinux.org.uk>
- <20200130013000.GA5137@richard>
- <20200130141505.GK25745@shell.armlinux.org.uk>
+        Thu, 30 Jan 2020 16:58:02 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33180 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgA3V6C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 16:58:02 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b6so6134914wrq.0;
+        Thu, 30 Jan 2020 13:57:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TukmWqsk9R6dO+KcxPNaBRE6eKHwPPO5WOeUwWb/kAY=;
+        b=bztHI+0MBAUd+TUkYlkdEwKeF6tcNz5TxUUUi8WJxdYRiHDtWJmdqKjeHdn3RuUTFh
+         Lw1mqsSTnrQB+OPqntFGRx2o8ZqUzaYU+4bHoy6AGOzJw7BmCkC6t1lY5dX48QDkfH1z
+         HrFLHPFYBbYwVRiC5DrqbBnNZdXPvnqV6rPJ6/hBp/NrNq8wWxRqVx69LORRmM6XuNDn
+         8cIuhOBGcOgMV+viyrFLtZtGDnL7hupEdW/Qd7JFwAWjD4/XZpOwP+gk8lCnTjlkAsCO
+         zt4GqLHiGrWFm6HQHxtfqUU7W/kX3KpnytIVH2Uz+yWd4iQZKXVaFnHIEx3uiTuuWPAS
+         ycQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TukmWqsk9R6dO+KcxPNaBRE6eKHwPPO5WOeUwWb/kAY=;
+        b=UZnwivQRvYCzGzQQklK6cxjnw12rZUDAifnVRnfHxqDLSyKzvfma+cBLgQ6gQqb+pS
+         AcYmcqQiFEQr/bD9AMGSVDo76dgvFy9suxtNvROtWOCNkLa9/RSjnOawUJo17P6/esUm
+         zis/OJWFzpkvliOT6vaGODakgy9zTyBnAqnjJTY5R91YzgYTQhEKgBczbXyFmrYcCxIi
+         5mqOLOx3or3Z9pcQZLzRwOt6514P2iGm+FrwQvFVtaw3aLx0FSWxODdf4G3xpJCJM9vd
+         gUvQZ8iB7or68tnzZWNWErBp7KkU7prF2hKS51h12HFvLYnV4Jo3OY4vaibIcQHW9SPx
+         iedA==
+X-Gm-Message-State: APjAAAXgRbRnGHn2gc+csR6+5FQPYYGk58n4kskfxrOuUZNQZyztTvCl
+        QW+X7Uo5cEKLW6FspE6Ht2s=
+X-Google-Smtp-Source: APXvYqyEQpNRNK3ze5aPcEEgDfJlsLNQ2qYRAkTfJz2hiqqCtCfgswJKF91mRyAIS21se2+4IV4Bfg==
+X-Received: by 2002:adf:df0e:: with SMTP id y14mr7445601wrl.377.1580421478675;
+        Thu, 30 Jan 2020 13:57:58 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:4039:5a2f:e01:48bf? (p200300EA8F29600040395A2F0E0148BF.dip0.t-ipconnect.de. [2003:ea:8f29:6000:4039:5a2f:e01:48bf])
+        by smtp.googlemail.com with ESMTPSA id z8sm8926566wrq.22.2020.01.30.13.57.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 13:57:58 -0800 (PST)
+Subject: Re: [PATCH net v2] net: thunderx: workaround BGX TX Underflow issue
+To:     Robert Jones <rjones@gateworks.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
+References: <20200130213252.17005-1-rjones@gateworks.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <1eee7f7d-fae7-13d7-e635-e7fc8a393fc4@gmail.com>
+Date:   Thu, 30 Jan 2020 22:57:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <20200130213252.17005-1-rjones@gateworks.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200130141505.GK25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 02:15:05PM +0000, Russell King - ARM Linux admin wrote:
->On Thu, Jan 30, 2020 at 09:30:00AM +0800, Wei Yang wrote:
->> On Wed, Jan 29, 2020 at 11:24:41PM +0000, Russell King - ARM Linux admin wrote:
->> >On Thu, Jan 30, 2020 at 05:57:45AM +0800, Wei Yang wrote:
->> >> On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
->> >> >On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
->> >> >> 18.01.2020 02:22, Wei Yang пишет:
->> >> >> > Use the general helper instead of do it by hand.
->> >> >> > 
->> >> >> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> >> >> > ---
->> >> >> >  mm/mremap.c | 7 ++-----
->> >> >> >  1 file changed, 2 insertions(+), 5 deletions(-)
->> >> >> > 
->> >> >> > diff --git a/mm/mremap.c b/mm/mremap.c
->> >> >> > index c2af8ba4ba43..a258914f3ee1 100644
->> >> >> > --- a/mm/mremap.c
->> >> >> > +++ b/mm/mremap.c
->> >> >> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >> >> >  
->> >> >> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
->> >> >> >  		cond_resched();
->> >> >> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
->> >> >> > -		/* even if next overflowed, extent below will be ok */
->> >> >> > +		next = pmd_addr_end(old_addr, old_end);
->> >> >> >  		extent = next - old_addr;
->> >> >> > -		if (extent > old_end - old_addr)
->> >> >> > -			extent = old_end - old_addr;
->> >> >> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
->> >> >> >  		if (!old_pmd)
->> >> >> >  			continue;
->> >> >> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >> >> >  
->> >> >> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
->> >> >> >  			break;
->> >> >> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
->> >> >> > +		next = pmd_addr_end(new_addr, new_addr + len);
->> >> >> >  		if (extent > next - new_addr)
->> >> >> >  			extent = next - new_addr;
->> >> >> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
->> >> >> > 
->> >> >> 
->> >> >> Hello Wei,
->> >> >> 
->> >> >> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
->> >> >> Tegra (ARM32):
->> >> >> 
->> >> >>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
->> >> >> 
->> >> >> and eventually kernel hangs.
->> >> >> 
->> >> >> Git's bisection points to this patch and reverting it helps. Please fix,
->> >> >> thanks in advance.
->> >> >
->> >> >The above is definitely wrong - pXX_addr_end() are designed to be used
->> >> >with an address index within the pXX table table and the address index
->> >> >of either the last entry in the same pXX table or the beginning of the
->> >> >_next_ pXX table.  Arbitary end address indicies are not allowed.
->> >> >
->> >> 
->> >> #define pmd_addr_end(addr, end)						\
->> >> ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
->> >> 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
->> >> })
->> >> 
->> >> If my understanding is correct, the definition here align the addr to next PMD
->> >> boundary or end.
->> >> 
->> >> I don't see the possibility to across another PMD. Do I miss something?
->> >
->> >Look at the definition of p*_addr_end() that are used when page tables
->> >are rolled up.
->> >
->> 
->> Sorry, I don't get your point.
->> 
->> What's the meaning of "roll up" here?
->> 
->> Would you mind giving me an example? I see pmd_addr_end() is not used in many
->> places in core kernel. By glancing those usages, all the places use it like
->> pmd_addr_end(addr, end). Seems no specially handing on the end address.
->> 
->> Or you mean the case when pmd_addr_end() is defined to return "end" directly? 
->
->Not all hardware has five levels of page tables.  When hardware does not
->have five levels, it is common to "roll up" some of the page tables into
->others.
->
->There are generic ways to implement this, which include using:
->
->include/asm-generic/pgtable-nop4d.h
->include/asm-generic/pgtable-nopud.h
->include/asm-generic/pgtable-nopmd.h
->
->and then there's architecture ways to implement this.  32-bit ARM takes
->its implementation for PMD not from the generic version, which
->post-dates 32-bit ARM, but from how page table roll-up was implemented
->back at the time when the current ARM scheme was devised.  The generic
->scheme is unsuitable for 32-bit ARM since we do more than just roll-up
->page tables, but this is irrelevent for this discussion.
->
->All three of the generic implementations, and 32-bit ARM, define the
->pXX_addr_end() macros thusly:
->
->include/asm-generic/pgtable-nop4d.h:#define p4d_addr_end(addr, end) (end)
->include/asm-generic/pgtable-nopmd.h:#define pmd_addr_end(addr, end) (end)
->include/asm-generic/pgtable-nopud.h:#define pud_addr_end(addr, end) (end)
->arch/arm/include/asm/pgtable-2level.h:#define pmd_addr_end(addr,end) (end)
->
->since, as I stated, pXX_addr_end() expects its "end" argument to be
->the address index of the next entry in the immediately upper page
->table level, or the address index of the last entry we wish to
->process, which ever is smaller.
->
->If it's larger than the address index of the next entry in the
->immediately upper page table level, then the effect of all these
->macros will be to walk off the end of the current level of page
->table.
->
->To see how they _should_ be used, see the loops in free_pgd_range()
->and the free_pXX_range() functions called from there and below.
->
->In all cases when the pXX_addr_end() macro was introduced, what I state
->above holds true - and I believe still holds true today, until this
->patch that has reportedly caused issues.
->
+On 30.01.2020 22:32, Robert Jones wrote:
+> From: Tim Harvey <tharvey@gateworks.com>
+> 
+> While it is not yet understood why a TX underflow can easily occur
+> for SGMII interfaces resulting in a TX wedge. It has been found that
+> disabling/re-enabling the LMAC resolves the issue.
+> 
 
-Thanks for your patience in explaining this for me.
+I replied to your v1 and added some comments. Please see there.
 
-I got your point. This is my fault in understanding the code.
 
->-- 
->RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
->FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
->According to speedtest.net: 11.9Mbps down 500kbps up
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> Reviewed-by: Robert Jones <rjones@gateworks.com>
+> ---
+> Changes in v2:
+>  - Changed bgx_register_intr() to a void return
+>  - Added pci_free_irq_vectors() calls to free irq if named/allocated
+>  - Use snprintf instead of sprintf for irq names
+> 
+>  drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 59 +++++++++++++++++++++++
+>  drivers/net/ethernet/cavium/thunder/thunder_bgx.h |  9 ++++
+>  2 files changed, 68 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+> index c4f6ec0..cbf8596 100644
+> --- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+> +++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+> @@ -74,6 +74,7 @@ struct bgx {
+>  	struct pci_dev		*pdev;
+>  	bool                    is_dlm;
+>  	bool                    is_rgx;
+> +	char			irq_name[7];
+>  };
+>  
+>  static struct bgx *bgx_vnic[MAX_BGX_THUNDER];
+> @@ -1535,6 +1536,53 @@ static int bgx_init_phy(struct bgx *bgx)
+>  	return bgx_init_of_phy(bgx);
+>  }
+>  
+> +static irqreturn_t bgx_intr_handler(int irq, void *data)
+> +{
+> +	struct bgx *bgx = (struct bgx *)data;
+> +	struct device *dev = &bgx->pdev->dev;
+> +	u64 status, val;
+> +	int lmac;
+> +
+> +	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+> +		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
+> +		if (status & GMI_TXX_INT_UNDFLW) {
+> +			dev_err(dev, "BGX%d lmac%d UNDFLW\n", bgx->bgx_id,
+> +				lmac);
+> +			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
+> +			val &= ~CMR_EN;
+> +			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
+> +			val |= CMR_EN;
+> +			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
+> +		}
+> +		/* clear interrupts */
+> +		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void bgx_register_intr(struct pci_dev *pdev)
+> +{
+> +	struct bgx *bgx = pci_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	int num_vec, ret;
+> +
+> +	/* Enable MSI-X */
+> +	num_vec = pci_msix_vec_count(pdev);
+> +	ret = pci_alloc_irq_vectors(pdev, num_vec, num_vec, PCI_IRQ_MSIX);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Req for #%d msix vectors failed\n", num_vec);
+> +		return;
+> +	}
+> +	snprintf(bgx->irq_name, sizeof(bgx->irqname), "BGX%d", bgx->bgx_id);
+> +	ret = request_irq(pci_irq_vector(pdev, GMPX_GMI_TX_INT),
+> +			  bgx_intr_handler, 0, bgx->irq_name, bgx);
+> +	if (ret) {
+> +		if (bgx->irq_name[0])
+> +			pci_free_irq_vectors(pdev);
+> +	}
+> +}
+> +
+>  static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  {
+>  	int err;
+> @@ -1604,6 +1652,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  
+>  	bgx_init_hw(bgx);
+>  
+> +	bgx_register_intr(pdev);
+> +
+>  	/* Enable all LMACs */
+>  	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+>  		err = bgx_lmac_enable(bgx, lmac);
+> @@ -1614,12 +1664,18 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  				bgx_lmac_disable(bgx, --lmac);
+>  			goto err_enable;
+>  		}
+> +
+> +		/* enable TX FIFO Underflow interrupt */
+> +		bgx_reg_modify(bgx, lmac, BGX_GMP_GMI_TXX_INT_ENA_W1S,
+> +			       GMI_TXX_INT_UNDFLW);
+>  	}
+>  
+>  	return 0;
+>  
+>  err_enable:
+>  	bgx_vnic[bgx->bgx_id] = NULL;
+> +	if (bgx->irq_name[0])
+> +		pci_free_irq_vectors(pdev);
+>  err_release_regions:
+>  	pci_release_regions(pdev);
+>  err_disable_device:
+> @@ -1637,6 +1693,9 @@ static void bgx_remove(struct pci_dev *pdev)
+>  	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
+>  		bgx_lmac_disable(bgx, lmac);
+>  
+> +	if (bgx->irq_name[0])
+> +		pci_free_irq_vectors(pdev);
+> +
 
--- 
-Wei Yang
-Help you, Help me
+You free the vectors, however you should free the interrupt before.
+And you could avoid having to free the vectors manually by switching
+from pci_enable_device() to the managed version pcim_enable_device().
+
+>  	bgx_vnic[bgx->bgx_id] = NULL;
+>  	pci_release_regions(pdev);
+>  	pci_disable_device(pdev);
+> diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+> index 2588870..cdea493 100644
+> --- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+> +++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+> @@ -180,6 +180,15 @@
+>  #define BGX_GMP_GMI_TXX_BURST		0x38228
+>  #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
+>  #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
+> +#define BGX_GMP_GMI_TXX_INT		0x38500
+> +#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
+> +#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
+> +#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
+> +#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
+> +#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
+> +#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
+> +#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
+> +#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+>  
+>  #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
+>  #define BGX_MSIX_VEC_0_29_CTL		0x400008
+> 
+
