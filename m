@@ -2,109 +2,127 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D8EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D65C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254FB214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79566214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580413874;
+	bh=AtsqIu4lBfzodyuXWhO1suFfqe/2gWu7r72L1pzOtMM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IZdEsatjqCTbCZjTQDV/MwNbovKYEqvVjeoVPDeVgVpRYnRRu+TUcRoM91sqSqb/y
+	 XNCmUOkoCdEGb+F95D9AsVPJ4gBrDB/4gpr2bmFVWbgS2u7Kf+2MWndzgHoKFftnyF
+	 z9E+5z6/5i4emElPpjO7rS660rmjesBC0AhWS484=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgA3Tuj convert rfc822-to-8bit (ORCPT
+        id S1727506AbgA3TvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:50:39 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:39023 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgA3Tuj (ORCPT
+        Thu, 30 Jan 2020 14:51:13 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37797 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgA3TvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:50:39 -0500
-Received: from xps13 (10.196.23.93.rev.sfr.net [93.23.196.10])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4F4EC100004;
-        Thu, 30 Jan 2020 19:50:34 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 20:50:30 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Piotr Sroka <piotrs@cadence.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v1 2/7] mtd: rawnand: add unspecified HAS_IOMEM
- dependency
-Message-ID: <20200130205030.0f58cb02@xps13>
-In-Reply-To: <20200125162803.5a2375d7@xps13>
-References: <20191211192742.95699-1-brendanhiggins@google.com>
-        <20191211192742.95699-3-brendanhiggins@google.com>
-        <20200109162303.35f4f0a3@xps13>
-        <CAFd5g47VLB6zOJsSySAYrJie8hj-OkvOC89-z2b9xMBZ2bxvYA@mail.gmail.com>
-        <20200125162803.5a2375d7@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 30 Jan 2020 14:51:13 -0500
+Received: by mail-ed1-f67.google.com with SMTP id cy15so5170514edb.4;
+        Thu, 30 Jan 2020 11:51:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ny5vawm1ZMouKeDxshhMVR293h8qWKnN6FtNQJsILb4=;
+        b=kZh+JLzy/+gBQVYNkpm2FjZqnjXx8dRvdTABtg1SncnapFb8xPn27HutUBSRbExDOh
+         vbcunYNEji9Jcd3znLmWlGYEuk2Cx98pfj5tzdWFqLh7V8xxU+eCI5uhtngUEVzGfYGb
+         xluHhSTpUsZ5omVTOYEwVUs0n+Qn8PBs0u7yo6Von2nDpgwcQYI6LKtxM9usAdZjz6c6
+         f6K4+LW7bmDTJzFb8trXFkng10UInb03Yrkc6+9qDTFiX1ef6+Y7SGnB4tqVgGorxNha
+         A/RdL0Rf4MXVaBlYvyOtFQe6YLih+7n8jCURRYWZIkZGapHJ7kgyZhdyPNEi6qNPNKvP
+         6j5g==
+X-Gm-Message-State: APjAAAWWbHzgeDqerDk+pShM3GQs3iHXJSs/NDgqNap300BUMvcaumtn
+        6Wrlk20RIUjWGGBzgBwJiUQj8BGcOvKzKYceWvg=
+X-Google-Smtp-Source: APXvYqwmdihuWIfIpMtcEl+yOF+MTPbo1EVHcr/7fsjX37sNt7zRBu4Tctxr45lo3mz6klL27jRiosvKJ76XPOF2Vgs=
+X-Received: by 2002:aa7:d505:: with SMTP id y5mr5551266edq.370.1580413869586;
+ Thu, 30 Jan 2020 11:51:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20191227174055.4923-1-sashal@kernel.org> <20191227174055.4923-16-sashal@kernel.org>
+In-Reply-To: <20191227174055.4923-16-sashal@kernel.org>
+From:   Len Brown <lenb@kernel.org>
+Date:   Thu, 30 Jan 2020 14:50:58 -0500
+Message-ID: <CAJvTdKkV4GgnE80PKuUFogR=Q+77-z5YHLhCaCSW=rjaV1owzQ@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.4 016/187] x86/intel: Disable HPET on Intel Ice
+ Lake platforms
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, feng.tang@intel.com,
+        harry.pan@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Can somebody point to an ICL system that is running production-level
+firmware that exhibits this issue?
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sat, 25 Jan 2020
-16:28:03 +0100:
+The hardware people are telling me that zero such systems should exist.
 
-> Hi Brendan,
-> 
-> Brendan Higgins <brendanhiggins@google.com> wrote on Fri, 24 Jan 2020
-> 18:12:12 -0800:
-> 
-> > On Thu, Jan 9, 2020 at 7:23 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:  
-> > >
-> > > Hi Brendan,
-> > >
-> > > Brendan Higgins <brendanhiggins@google.com> wrote on Wed, 11 Dec 2019
-> > > 11:27:37 -0800:
-> > >    
-> > > > Currently CONFIG_MTD_NAND_CADENCE implicitly depends on
-> > > > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> > > > the following build error:
-> > > >
-> > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.o: in function `cadence_nand_dt_probe.cold.31':
-> > > > drivers/mtd/nand/raw/cadence-nand-controller.c:2969: undefined reference to `devm_platform_ioremap_resource'
-> > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.c:2977: undefined reference to `devm_ioremap_resource'
-> > > >
-> > > > Fix the build error by adding the unspecified dependency.
-> > > >
-> > > > Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > ---    
-> > >
-> > > Sorry for the delay.
-> > >
-> > > Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>    
-> > 
-> > It looks like my change has not been applied to nand/next; is this the
-> > branch it should be applied to? I have also verified that this patch
-> > isn't in linux-next as of Jan 24th.
-> > 
-> > Is mtd/linux the correct tree for this? Or do I need to reach out to
-> > someone else?  
-> 
-> When I sent my Acked-by I supposed someone else would pick the patch,
-> but there is actually no dependency with all the other patches so I
-> don't know why I did it... Sorry about that. I'll take it anyway in my
-> PR for 5.6.
+(The reported symptom that I've seen is that the TSC vs HPET
+comparison fails, and Linux keeps the (bad) HPET and disables the
+(good) TSC)
 
-It is applied on top of mtd/next since a few days, it will be part of
-the 5.6 PR.
+thanks,
+-Len
 
-Sorry for the delay.
+On Fri, Dec 27, 2019 at 12:41 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>
+> [ Upstream commit e0748539e3d594dd26f0d27a270f14720b22a406 ]
+>
+> Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
+> So let's disable HPET on ICL.
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: bp@alien8.de
+> Cc: feng.tang@intel.com
+> Cc: harry.pan@intel.com
+> Cc: hpa@zytor.com
+> Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/x86/kernel/early-quirks.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index 606711f5ebf8..2f9ec14be3b1 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
+>                 PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+>         { PCI_VENDOR_ID_INTEL, 0x3ec4,
+>                 PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+> +       { PCI_VENDOR_ID_INTEL, 0x8a12,
+> +               PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+>         { PCI_VENDOR_ID_BROADCOM, 0x4331,
+>           PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+>         {}
+> --
+> 2.20.1
+>
 
-Thanks,
-Miquèl
+
+-- 
+Len Brown, Intel Open Source Technology Center
