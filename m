@@ -2,258 +2,157 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2812AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4328EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9424206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D5F206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gLiVZ377"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H0kmFT5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgA3C3C (ORCPT
+        id S1726893AbgA3Ci4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 21:29:02 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38399 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgA3C3C (ORCPT
+        Wed, 29 Jan 2020 21:38:56 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:44756 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgA3Ciz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 21:29:02 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so675743pfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:29:00 -0800 (PST)
+        Wed, 29 Jan 2020 21:38:55 -0500
+Received: by mail-qv1-f68.google.com with SMTP id n8so760445qvg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:38:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=5uJB6AV6+z+5PTsRkoHDP27EiriIwQeYXgr7GpoWKYE=;
-        b=gLiVZ377lS3oVKslf6SuFmrRfxvZCONYC4p1gVvGRllrOiihDbILYTsm/3SrDT+0yq
-         baNksJ0/gnB5LJ8Tot76vkh+nSucA3VmGeLoIoGYwvuvBu2K0Txz/fI8MJqa+V4lQczw
-         0K0cYUZhRvX5C/H+Dzrmd2/pMRineOriK3eSvwx/uw7a2gYRRjWdPFKm5NtFv8G0ml69
-         jefn0+LCTtbautsfPAQl5xGcdDfFGZ5Q0zWsmTDX24q2mQwF5vrq2v0IqPuh9YARVoYS
-         iO9XLXQPRwdhQYaf+TMDUFMpU4CslJ1+T2rXPQg+/tTyYjECi36j9ugkV4kyRRsy+I1T
-         T7Mw==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eVR1nsUvA+s0Il5EaHeRxaRkecDegUphjHSyTVxP/SQ=;
+        b=H0kmFT5wg6xK0knevGdhZq6KEPxr2CvGgazjfGO6/mFR7kxYaxBFiGJI6NEy01/31a
+         S0P0IllTSTp2hxVHo4e3KX7MG3j4pV9hJ7Ma7Jojj4WJIsUskFSzqQLoaGXzh3sSVGQ9
+         XKRCOXSm3aEu3n9qYv9afIQ489fVF2AbW/cT8KRhCIjhSKjhE47SozKBkhE2dTMlqsQb
+         RU96+KWo7qr84eTowLvwgovR4iH9TqNSZU1lTIoWk69pM+VMLPTtr0+5n5fHCGBTiGFE
+         1gszZ0YgxRO+GJmiUWfRXzV++JiUN5kFZN6+nHyds1TPSn7dPALxo6wARUEtpqA6+TX+
+         Cl1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=5uJB6AV6+z+5PTsRkoHDP27EiriIwQeYXgr7GpoWKYE=;
-        b=YjwufOmL2ang1ENoiyIFjgn6ajuzsq4YKZryk1WoX7NzYTsRQdvTVTcmturNv+0TD8
-         NsT3vaOAI/glJCPJ9CQzvUI5d1sYG+w6o+AGG/DfZLuwH0gCw8HDuHa8OQQ7vuVEJvkR
-         pmrusPJ653gKCbYfQrhw1E/1Ipm+VkXGukhv01bX29TvqYY6+dDeNC0t2VYTOKzByFUh
-         Vm2AnGiXx7omVife9RlauCLT9j8LptWqr1eRJN+BpY9t3OA3LL/STgolA+xFUdV4fSKT
-         Fqt67Boi5bn2zlfRtQahDX1cFsK79vecNy+URD3bnZg+8ZVSf94cRldEUIIVzSa+ruoX
-         a9zA==
-X-Gm-Message-State: APjAAAXO8518VmZzC6Gl+7ajwxc0zBaj+ke08XCG8tRlFk5fRhK3SmWf
-        dq1km/znc6rzd1eqkhQl5td5tUrssqw=
-X-Google-Smtp-Source: APXvYqyxJh/K94+dGJ9Dt3F06gYMATw56SFFy8qAIq5HDN5T9BaBaFMsKgwmW0ymm0rDZg+rRUiMnw==
-X-Received: by 2002:a63:ce55:: with SMTP id r21mr2218869pgi.156.1580351339805;
-        Wed, 29 Jan 2020 18:28:59 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id b3sm3971577pft.73.2020.01.29.18.28.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 18:28:59 -0800 (PST)
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL v2] io_uring changes for 5.6-rc
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <aec14346-02cf-2c10-2fde-0c4d1edf5669@kernel.dk>
-Date:   Wed, 29 Jan 2020 19:28:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eVR1nsUvA+s0Il5EaHeRxaRkecDegUphjHSyTVxP/SQ=;
+        b=VgJ852G06p1E2SvZGNNvSR6r7sP35Uioqt+os1YEJBgX/HrsCsdSKTRm0Is49N5Gs1
+         6PlXQsH4Xp++iLPDu9YzPAAbEV9ixaCbRteBGTgN96bzDhmIZoyx7wtbu2WZ6twYa2DK
+         g2qC+fJH4PneImQcBEGWaLGtjohG3CQgaJkEMs5E1fS510/qHTrpykFIyVUfHwzMDnAY
+         lDsUybprBgMkv3BTNXvkUJfl/NRFp8KplDQCsH5loJ/6dTM+MfVW+QIfVFKf+Y9mDm9J
+         rshHKNw/DLIh/FOW/3nsEOdPogekQPBMqOaT+C6YUPn1YvwMmNHWpFTUkT1EcKwzNW6r
+         sYaQ==
+X-Gm-Message-State: APjAAAWeOxczEoiBPZ1rTqouw/ceppF4ms6aIbvpPsFM/94C05Y/xdhu
+        9K+EEHj70uT3Cm/96iQFixxOkGudgdGmmZxC9AP6UQ==
+X-Google-Smtp-Source: APXvYqwvNrCWRxI0SRrw2gl1XFrxAN3MN3gTMWJ/iumpdrLBGck/yfYyoHwGK3oxng6zWVpYQPZZbjvfgF+TK5fgXAI=
+X-Received: by 2002:ad4:424e:: with SMTP id l14mr2525732qvq.118.1580351934494;
+ Wed, 29 Jan 2020 18:38:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------4A1EE48111BE6E0FEC3C79E5"
-Content-Language: en-US
+References: <20200109031740.29717-1-greentime.hu@sifive.com> <mhng-f4b42a19-22f3-43f3-9750-58b994e23246@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-f4b42a19-22f3-43f3-9750-58b994e23246@palmerdabbelt-glaptop1>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Thu, 30 Jan 2020 10:38:43 +0800
+Message-ID: <CAHCEeh+4a0O7tpp4dRXKudc6bmdJct=-H0SrPt=HbOs00T3-Hg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: set pmp configuration if kernel is running in M-mode
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Gt <green.hu@gmail.com>, greentime@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------4A1EE48111BE6E0FEC3C79E5
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On Thu, Jan 30, 2020 at 3:23 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
+>
+> On Thu, 09 Jan 2020 03:17:40 GMT (+0000), greentime.hu@sifive.com wrote:
+> > When the kernel is running in S-mode, the expectation is that the
+> > bootloader or SBI layer will configure the PMP to allow the kernel to
+> > access physical memory.  But, when the kernel is running in M-mode and is
+> > started with the ELF "loader", there's probably no bootloader or SBI layer
+> > involved to configure the PMP.  Thus, we need to configure the PMP
+> > ourselves to enable the kernel to access all regions.
+> >
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > ---
+> >  arch/riscv/include/asm/csr.h | 12 ++++++++++++
+> >  arch/riscv/kernel/head.S     |  6 ++++++
+> >  2 files changed, 18 insertions(+)
+> >
+> > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> > index 0a62d2d68455..0f25e6c4e45c 100644
+> > --- a/arch/riscv/include/asm/csr.h
+> > +++ b/arch/riscv/include/asm/csr.h
+> > @@ -72,6 +72,16 @@
+> >  #define EXC_LOAD_PAGE_FAULT  13
+> >  #define EXC_STORE_PAGE_FAULT 15
+> >
+> > +/* PMP configuration */
+> > +#define PMP_R                        0x01
+> > +#define PMP_W                        0x02
+> > +#define PMP_X                        0x04
+> > +#define PMP_A                        0x18
+> > +#define PMP_A_TOR            0x08
+> > +#define PMP_A_NA4            0x10
+> > +#define PMP_A_NAPOT          0x18
+> > +#define PMP_L                        0x80
+> > +
+> >  /* symbolic CSR names: */
+> >  #define CSR_CYCLE            0xc00
+> >  #define CSR_TIME             0xc01
+> > @@ -100,6 +110,8 @@
+> >  #define CSR_MCAUSE           0x342
+> >  #define CSR_MTVAL            0x343
+> >  #define CSR_MIP                      0x344
+> > +#define CSR_PMPCFG0          0x3a0
+> > +#define CSR_PMPADDR0         0x3b0
+> >  #define CSR_MHARTID          0xf14
+> >
+> >  #ifdef CONFIG_RISCV_M_MODE
+> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> > index 5c8b24bf4e4e..f8f996916c5b 100644
+> > --- a/arch/riscv/kernel/head.S
+> > +++ b/arch/riscv/kernel/head.S
+> > @@ -60,6 +60,12 @@ _start_kernel:
+> >       /* Reset all registers except ra, a0, a1 */
+> >       call reset_regs
+> >
+> > +     /* Setup a PMP to permit access to all of memory. */
+> > +     li a0, -1
+> > +     csrw CSR_PMPADDR0, a0
+> > +     li a0, (PMP_A_NAPOT | PMP_R | PMP_W | PMP_X)
+> > +     csrw CSR_PMPCFG0, a0
+>
+> These should be guarded by some sort of #ifdef CONFIG_M_MODE, as they're not
+> part of S mode.
 
-Hi Linus,
+Hi Palmer,
 
-Here are the io_uring changes for 5.6, once more, since Al's branch
-has been merged. The delay ended up working out well on the io_uring
-side, as we had a few mon/tue shuffles and a last minute fix, and I
-forgot about the epoll separate branch that I hadn't pulled in yet.
+This code segment is guarded by CONFIG_RISCV_M_MODE
 
-So here's the pull request for this merge window. This pull request
-contains:
+#ifdef CONFIG_RISCV_M_MODE
+        /* flush the instruction cache */
+        fence.i
 
-- Support for various new opcodes (fallocate, openat, close, statx,
-  fadvise, madvise, openat2, non-vectored read/write, send/recv, and
-  epoll_ctl)
+        /* Reset all registers except ra, a0, a1 */
+        call reset_regs
 
-- Faster ring quiesce for fileset updates
+        /* Setup a PMP to permit access to all of memory. */
+        li a0, -1
+        csrw CSR_PMPADDR0, a0
+        li a0, (PMP_A_NAPOT | PMP_R | PMP_W | PMP_X)
+        csrw CSR_PMPCFG0, a0
 
-- Optimizations for overflow condition checking
-
-- Support for max-sized clamping
-
-- Support for probing what opcodes are supported
-
-- Support for io-wq backend sharing between "sibling" rings
-
-- Support for registering personalities
-
-- Lots of little fixes and improvements
-
-The pull will throw a small merge conflict, due to the last minute
-revert we had before 5.5. Trivial to resolve, attaching my resolution
-just for reference.
-
-Please pull!
-
-
-  git://git.kernel.dk/linux-block.git tags/for-5.6/io_uring-vfs-2020-01-29
-
-
-----------------------------------------------------------------
-Jens Axboe (45):
-      Merge branch 'work.openat2' of git://git.kernel.org/.../viro/vfs into for-5.6/io_uring-vfs
-      Merge branch 'io_uring-5.5' into for-5.6/io_uring-vfs
-      io_uring: add support for fallocate()
-      fs: make build_open_flags() available internally
-      io_uring: add support for IORING_OP_OPENAT
-      fs: move filp_close() outside of __close_fd_get_file()
-      io-wq: add support for uncancellable work
-      io_uring: add support for IORING_OP_CLOSE
-      io_uring: avoid ring quiesce for fixed file set unregister and update
-      fs: make two stat prep helpers available
-      io_uring: add support for IORING_OP_STATX
-      io-wq: support concurrent non-blocking work
-      io_uring: add IOSQE_ASYNC
-      io_uring: remove two unnecessary function declarations
-      io_uring: add lookup table for various opcode needs
-      io_uring: split overflow state into SQ and CQ side
-      io_uring: improve poll completion performance
-      io_uring: add non-vectored read/write commands
-      io_uring: allow use of offset == -1 to mean file position
-      io_uring: add IORING_OP_FADVISE
-      mm: make do_madvise() available internally
-      io_uring: add IORING_OP_MADVISE
-      io_uring: wrap multi-req freeing in struct req_batch
-      io_uring: extend batch freeing to cover more cases
-      io_uring: add support for IORING_SETUP_CLAMP
-      io_uring: add support for send(2) and recv(2)
-      io_uring: file set registration should use interruptible waits
-      io_uring: change io_ring_ctx bool fields into bit fields
-      io_uring: enable option to only trigger eventfd for async completions
-      io_uring: add 'struct open_how' to the openat request context
-      io_uring: remove 'fname' from io_open structure
-      io_uring: add support for IORING_OP_OPENAT2
-      io_uring: add opcode to issue trace event
-      io_uring: account fixed file references correctly in batch
-      io_uring: add support for probing opcodes
-      io_uring: file switch work needs to get flushed on exit
-      io_uring: don't attempt to copy iovec for READ/WRITE
-      io-wq: make the io_wq ref counted
-      io_uring/io-wq: don't use static creds/mm assignments
-      io_uring: allow registering credentials
-      io_uring: support using a registered personality for commands
-      io_uring: fix linked command file table usage
-      eventpoll: abstract out epoll_ctl() handler
-      eventpoll: support non-blocking do_epoll_ctl() calls
-      io_uring: add support for epoll_ctl(2)
-
-Pavel Begunkov (20):
-      io_uring: rename prev to head
-      io_uring: move *queue_link_head() from common path
-      pcpu_ref: add percpu_ref_tryget_many()
-      io_uring: batch getting pcpu references
-      io_uring: clamp to_submit in io_submit_sqes()
-      io_uring: optimise head checks in io_get_sqring()
-      io_uring: optimise commit_sqring() for common case
-      io_uring: remove extra io_wq_current_is_worker()
-      io_uring: optimise use of ctx->drain_next
-      io_uring: remove extra check in __io_commit_cqring
-      io_uring: hide uring_fd in ctx
-      io_uring: remove REQ_F_IO_DRAINED
-      io_uring: optimise sqe-to-req flags translation
-      io_uring: use labeled array init in io_op_defs
-      io_uring: prep req when do IOSQE_ASYNC
-      io_uring: honor IOSQE_ASYNC for linked reqs
-      io_uring: add comment for drain_next
-      io_uring: fix refcounting with batched allocations at OOM
-      io-wq: allow grabbing existing io-wq
-      io_uring: add io-wq workqueue sharing
-
-YueHaibing (1):
-      io_uring: Remove unnecessary null check
-
- drivers/android/binder.c        |    6 +-
- fs/eventpoll.c                  |   87 +-
- fs/file.c                       |    6 +-
- fs/internal.h                   |    8 +
- fs/io-wq.c                      |  103 +-
- fs/io-wq.h                      |   11 +-
- fs/io_uring.c                   | 2412 +++++++++++++++++++++++++++++++--------
- fs/open.c                       |    5 +-
- fs/stat.c                       |   34 +-
- include/linux/eventpoll.h       |    9 +
- include/linux/mm.h              |    1 +
- include/linux/percpu-refcount.h |   26 +-
- include/trace/events/io_uring.h |   13 +-
- include/uapi/linux/io_uring.h   |   73 +-
- mm/madvise.c                    |    7 +-
- 15 files changed, 2218 insertions(+), 583 deletions(-)
-
--- 
-Jens Axboe
-
-
-
-
-
---------------4A1EE48111BE6E0FEC3C79E5
-Content-Type: text/plain; charset=UTF-8;
- name="merge-fixup"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="merge-fixup"
-
-Y29tbWl0IDlkOGJkNmZjZjBlYmZjY2YzOWU2YWM0NGRmM2M0MTE1NTQ4MTAzMGUKTWVyZ2U6
-IGMwMDA3YzRmMzZhNyA2MWNkODNkM2FkZTYKQXV0aG9yOiBKZW5zIEF4Ym9lIDxheGJvZUBr
-ZXJuZWwuZGs+CkRhdGU6ICAgTW9uIEphbiAyNyAxMjo1MDoyMCAyMDIwIC0wNzAwCgogICAg
-TWVyZ2UgYnJhbmNoICdmb3ItNS42L2lvX3VyaW5nLXZmcycgaW50byBsbAogICAgCiAgICAq
-IGZvci01LjYvaW9fdXJpbmctdmZzOiAoNTggY29tbWl0cykKICAgICAgaW9fdXJpbmc6IGZp
-eCByZWZjb3VudGluZyB3aXRoIGJhdGNoZWQgYWxsb2NhdGlvbnMgYXQgT09NCiAgICAgIGlv
-X3VyaW5nOiBhZGQgY29tbWVudCBmb3IgZHJhaW5fbmV4dAogICAgICBpb191cmluZzogZG9u
-J3QgYXR0ZW1wdCB0byBjb3B5IGlvdmVjIGZvciBSRUFEL1dSSVRFCiAgICAgIGlvX3VyaW5n
-OiBhZGQgc3VwcG9ydCBmb3Igc2hhcmluZyBrZXJuZWwgaW8td3Egd29ya3F1ZXVlCiAgICAg
-IGlvLXdxOiBhbGxvdyBsb29rdXAgb2YgZXhpc3RpbmcgaW9fd3Egd2l0aCBnaXZlbiBpZAog
-ICAgICBpby13cTogYWRkICdpZCcgdG8gaW9fd3EKICAgICAgaW8td3E6IG1ha2UgdGhlIGlv
-X3dxIHJlZiBjb3VudGVkCiAgICAgIGlvX3VyaW5nOiBob25vciBJT1NRRV9BU1lOQyBmb3Ig
-bGlua2VkIHJlcXMKICAgICAgaW9fdXJpbmc6IHByZXAgcmVxIHdoZW4gZG8gSU9TUUVfQVNZ
-TkMKICAgICAgaW9fdXJpbmc6IHVzZSBsYWJlbGVkIGFycmF5IGluaXQgaW4gaW9fb3BfZGVm
-cwogICAgICBpb191cmluZzogb3B0aW1pc2Ugc3FlLXRvLXJlcSBmbGFncyB0cmFuc2xhdGlv
-bgogICAgICBpb191cmluZzogcmVtb3ZlIFJFUV9GX0lPX0RSQUlORUQKICAgICAgaW9fdXJp
-bmc6IGZpbGUgc3dpdGNoIHdvcmsgbmVlZHMgdG8gZ2V0IGZsdXNoZWQgb24gZXhpdAogICAg
-ICBpb191cmluZzogaGlkZSB1cmluZ19mZCBpbiBjdHgKICAgICAgaW9fdXJpbmc6IHJlbW92
-ZSBleHRyYSBjaGVjayBpbiBfX2lvX2NvbW1pdF9jcXJpbmcKICAgICAgaW9fdXJpbmc6IG9w
-dGltaXNlIHVzZSBvZiBjdHgtPmRyYWluX25leHQKICAgICAgaW9fdXJpbmc6IGFkZCBzdXBw
-b3J0IGZvciBwcm9iaW5nIG9wY29kZXMKICAgICAgaW9fdXJpbmc6IGFjY291bnQgZml4ZWQg
-ZmlsZSByZWZlcmVuY2VzIGNvcnJlY3RseSBpbiBiYXRjaAogICAgICBpb191cmluZzogYWRk
-IG9wY29kZSB0byBpc3N1ZSB0cmFjZSBldmVudAogICAgICBpb191cmluZzogYWRkIHN1cHBv
-cnQgZm9yIElPUklOR19PUF9PUEVOQVQyCiAgICAgIC4uLgogICAgCiAgICBTaWduZWQtb2Zm
-LWJ5OiBKZW5zIEF4Ym9lIDxheGJvZUBrZXJuZWwuZGs+CgpkaWZmIC0tY2MgZnMvaW9fdXJp
-bmcuYwppbmRleCBlNTQ1NTZiMGZjYzYsNjVmZTE2YTc5NWMxLi5lZWFhZmJkNzQyNTkKLS0t
-IGEvZnMvaW9fdXJpbmcuYworKysgYi9mcy9pb191cmluZy5jCkBAQCAtNTE1Nyw3IC02MzEy
-LDEyICs2MzA4LDYgQEBAIFNZU0NBTExfREVGSU5FNihpb191cmluZ19lbnRlciwgdW5zaWdu
-ZQogIAl9IGVsc2UgaWYgKHRvX3N1Ym1pdCkgewogIAkJc3RydWN0IG1tX3N0cnVjdCAqY3Vy
-X21tOwogIAotIAkJdG9fc3VibWl0ID0gbWluKHRvX3N1Ym1pdCwgY3R4LT5zcV9lbnRyaWVz
-KTsKIC0JCWlmIChjdXJyZW50LT5tbSAhPSBjdHgtPnNxb19tbSB8fAogLQkJICAgIGN1cnJl
-bnRfY3JlZCgpICE9IGN0eC0+Y3JlZHMpIHsKIC0JCQlyZXQgPSAtRVBFUk07CiAtCQkJZ290
-byBvdXQ7CiAtCQl9CiAtCiAgCQltdXRleF9sb2NrKCZjdHgtPnVyaW5nX2xvY2spOwogIAkJ
-LyogYWxyZWFkeSBoYXZlIG1tLCBzbyBpb19zdWJtaXRfc3FlcygpIHdvbid0IHRyeSB0byBn
-cmFiIGl0ICovCiAgCQljdXJfbW0gPSBjdHgtPnNxb19tbTsK
---------------4A1EE48111BE6E0FEC3C79E5--
+        /*
+         * The hartid in a0 is expected later on, and we have no firmware
+         * to hand it to us.
+         */
+        csrr a0, CSR_MHARTID
+#endif /* CONFIG_RISCV_M_MODE */
