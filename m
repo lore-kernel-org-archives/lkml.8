@@ -2,103 +2,61 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EF6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD3FC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8270206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3BPjaGW"
+	by mail.kernel.org (Postfix) with ESMTP id 1AADF20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgA3QZH (ORCPT
+        id S1727357AbgA3Q0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:25:07 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46007 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgA3QZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:25:06 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 203so2657566lfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 08:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3tJQxQn36anxbwALkCaLbBJq4eUAmsOs9pq3YyQsRhk=;
-        b=B3BPjaGWPoAABc9xnyRAFTWgCw9wrB1ZeT2myJ4j3qNZfjdLGQbtA6ppzfO89/TBay
-         ttvDuo9U7iCYnbMNOzUfe+B57ZqaO72i2wXXLcvITDPrdYX21Z3GMK0GscSqPhB96zjn
-         iwMR8iz22LA7x1mU+AKtUlodr9TxWhoVUWP2jAV5Ej3ICcabhMyoMktRvb3ijfcIU47D
-         vpPtwqeJAbEt69pvag9vYsry1ggY1srP0u4R/I9XmMy3jwvhumtpJvGN5uyEiBcnkWsY
-         Ui+JAv/BVlEkHI2seHJqjJtqtIz+OLFYZw3BB4kTFzlLgNqV66SfpQ3w28AuUgQs8vzt
-         wD5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3tJQxQn36anxbwALkCaLbBJq4eUAmsOs9pq3YyQsRhk=;
-        b=Xki/q7oZa7Ph+xMn6yzghC0nUYG/TZQLDua55Cd6FpmgnVKjdHRwvir+90TqzoWPd8
-         IsOk1fvXbAxQ4EtwUl7MOFRjjC12IO5MFEmSnFYjquKlfFRIDsUhr/vqKXaejHB+T4ZD
-         Bc6mqGaPaYdMWVzOamQYm/u/eAqFJCkiZZTIQzOH84mSMACGniP43JUWWITt94QJaHUn
-         5lQJKNPjlHjCm+KmQ2irN2Scr0mpWuT2Usuh4NQNWNEXgvR+4zG8ZWMr4HYUvDAcGZLH
-         TgXTmeHlqhbqKafPOIF5KqjU4xcW7qDx3wnrlcNC7aOmtTtRBLa2Hdpy2/ny3B4/6mtH
-         6k7w==
-X-Gm-Message-State: APjAAAU2R36N71VWzzcL370cWAbd6eLCvWBCyafrH14c+FZPGNXBwtwb
-        cjr6s6Lmn5loG+kKRydry6s3kD2cNsBlQM0tkTh7zYOpRs9igw==
-X-Google-Smtp-Source: APXvYqydvKInvstXGIHTwegzHLQJT5RJWEFSHufspFXlOKO38V4tozDLJgTX+szwedAKTTDxyaiFV51NI9c674cbgWI=
-X-Received: by 2002:ac2:5e29:: with SMTP id o9mr2996848lfg.81.1580401502991;
- Thu, 30 Jan 2020 08:25:02 -0800 (PST)
+        Thu, 30 Jan 2020 11:26:11 -0500
+Received: from verein.lst.de ([213.95.11.211]:40905 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727241AbgA3Q0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 11:26:11 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 07E0468B20; Thu, 30 Jan 2020 17:26:07 +0100 (CET)
+Date:   Thu, 30 Jan 2020 17:26:06 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jan Vesely <jano.vesely@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link
+ bandwidth notification"
+Message-ID: <20200130162606.GB6377@lst.de>
+References: <20200115221008.GA191037@google.com> <20200120023326.GA149019@google.com>
 MIME-Version: 1.0
-References: <CAN5uoS_A9TYU2aWf3WVq3KGna6oVswfut+hC7sJWvhfYggMwTA@mail.gmail.com>
- <20200130094103.mrz7ween6ukfa4fk@vireshk-i7>
-In-Reply-To: <20200130094103.mrz7ween6ukfa4fk@vireshk-i7>
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-Date:   Thu, 30 Jan 2020 17:24:51 +0100
-Message-ID: <CAN5uoS8o96sZfgx2qU0Mw-3Phud4kjOcVvxz8HXpqo6-WnUK=A@mail.gmail.com>
-Subject: Re: [PATCH V5] firmware: arm_scmi: Make scmi core independent of the
- transport type
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120023326.GA149019@google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 at 10:41, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-01-20, 10:25, Etienne Carriere wrote:
-> > I've made a first port (draft) for adding new transport channels, next
-> > to existing mailbox channel, on top of your change.
-> > You can find it here: https://github.com/etienne-lms/linux/pull/1.
-> >
-> > I don't have specific comments on your change but the one below.
-> > I think SMT header should move out of mailbox.c, but that may be a bit
-> > out of the scope of your change.
->
-> If it is guaranteed that someone will end up using those routines
-> apart from mailbox.c, then surely it can be done.
->
-> > I would prefer an optional mak_txdone callback:
-> >
-> >     if (info->desc->ops->mark_txdone)
-> >        info->desc->ops->mark_txdone(cinfo, ret);
->
-> So you are sure that mark_txdone won't be required in your case? I can
-> make it optional then.
+On Sun, Jan 19, 2020 at 08:33:26PM -0600, Bjorn Helgaas wrote:
+> NVMe, GPU folks, do your drivers or devices change PCIe link
+> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+> the PCI core interprets changes like that as problems that need to be
+> reported.
 
-I think there is nothing to be done from mark_txdone() in my setup.
-Making it optional is more flexible. But transport can also register
-an empty function if needed.
-
-
-etienne
-
->
-> --
-> viresh
+The NVMe driver doesn't.  For devices I don't know of any, but Ican't
+find anything in the spec that would forbid it.
