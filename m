@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16D3C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18D7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC8020CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2B82082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410141;
-	bh=GxV6/wY7RDwG93sqU4ChZ6H7RM0RrA9IBv0IyeHT6/M=;
+	s=default; t=1580410144;
+	bh=s2rmcFHlg0bundURMOPl/pYu5ppo6GpvVpIgo6Gqktk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTD6JxAB+zJwwIqPpP4wCOT9QANqX99KgMS/VeARgKTbGg3tIWaVq2DKVJjUdRNd+
-	 GKAo5wXMlw5oplC+8/rNrCkZCp1M8dGTPWQ4QB9mc1JwMg4jNJm/O5cJg05g2pEhPY
-	 72cg4kOmtBwxqNeIOED1LIWdtxu13kok/jLVvTLo=
+	b=Z4XD9OLJZ2pzl8EKVYB2SLaz28XsjmVCz2BfgDjcZK9TgIyBhwZP/63aRBmZ20ihk
+	 5dT//HEiJJWoFJomxzona+IQRdZz/z8/EOVPg46EOkdLrrCtXeqtladJhAxTxUbVDf
+	 iSeKBDO/kI6mHgV6UTqtNlOXETrff1yrCbep6aAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbgA3StA (ORCPT
+        id S1731656AbgA3StD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:49:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60070 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:49:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731603AbgA3Ssw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:52 -0500
+        id S1731649AbgA3Ss7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2F6205F4;
-        Thu, 30 Jan 2020 18:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB7F2082E;
+        Thu, 30 Jan 2020 18:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410131;
-        bh=GxV6/wY7RDwG93sqU4ChZ6H7RM0RrA9IBv0IyeHT6/M=;
+        s=default; t=1580410139;
+        bh=s2rmcFHlg0bundURMOPl/pYu5ppo6GpvVpIgo6Gqktk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oN8USJhT8bds5aXcgzsaG+0NylYfWDInLy0sNnU7Hr+K7SyH0hf2673zW6T2c8GDb
-         Iw+mGuM+bzh0wlvkF3NKMKfl0FqciYaiZyImAGKwzUijVoVA8kWQE+koPlN3Dh4WzG
-         E9jG5Ki/CsFglKquB9UM389IG6ivOhThBK4raY5M=
+        b=uz044B4Av4Sv8nvgZDoJ6ucaMPBqGC6j519l3rVKjkkQ5gg7TyOBWT1mZg0JSZPyW
+         WZUmV4HKxRUuo4H9i3RXDzUxOOEH6X0QAuaaJ6eZzm1D6Vq5Gjbo3Wh5ZzR8daZ7DD
+         0c1J66fRp0fYph4B0lKbA2Zp9Pd7AP6CRGsYIAtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmed Darwish <darwish.07@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Noah Meyerhans <noahm@debian.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 52/55] random: try to actively add entropy rather than passively wait for it
-Date:   Thu, 30 Jan 2020 19:39:33 +0100
-Message-Id: <20200130183617.871941331@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 55/55] KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
+Date:   Thu, 30 Jan 2020 19:39:36 +0100
+Message-Id: <20200130183618.321089628@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -67,146 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Andrew Murray <andrew.murray@arm.com>
 
-commit 50ee7529ec4500c88f8664560770a7a1b65db72b upstream.
+commit 4942dc6638b07b5326b6d2faa142635c559e7cd5 upstream.
 
-For 5.3 we had to revert a nice ext4 IO pattern improvement, because it
-caused a bootup regression due to lack of entropy at bootup together
-with arguably broken user space that was asking for secure random
-numbers when it really didn't need to.
+On VHE systems arch.mdcr_el2 is written to mdcr_el2 at vcpu_load time to
+set options for self-hosted debug and the performance monitors
+extension.
 
-See commit 72dbcf721566 (Revert "ext4: make __ext4_get_inode_loc plug").
+Unfortunately the value of arch.mdcr_el2 is not calculated until
+kvm_arm_setup_debug() in the run loop after the vcpu has been loaded.
+This means that the initial brief iterations of the run loop use a zero
+value of mdcr_el2 - until the vcpu is preempted. This also results in a
+delay between changes to vcpu->guest_debug taking effect.
 
-This aims to solve the issue by actively generating entropy noise using
-the CPU cycle counter when waiting for the random number generator to
-initialize.  This only works when you have a high-frequency time stamp
-counter available, but that's the case on all modern x86 CPU's, and on
-most other modern CPU's too.
+Fix this by writing to mdcr_el2 in kvm_arm_setup_debug() on VHE systems
+when a change to arch.mdcr_el2 has been detected.
 
-What we do is to generate jitter entropy from the CPU cycle counter
-under a somewhat complex load: calling the scheduler while also
-guaranteeing a certain amount of timing noise by also triggering a
-timer.
-
-I'm sure we can tweak this, and that people will want to look at other
-alternatives, but there's been a number of papers written on jitter
-entropy, and this should really be fairly conservative by crediting one
-bit of entropy for every timer-induced jump in the cycle counter.  Not
-because the timer itself would be all that unpredictable, but because
-the interaction between the timer and the loop is going to be.
-
-Even if (and perhaps particularly if) the timer actually happens on
-another CPU, the cacheline interaction between the loop that reads the
-cycle counter and the timer itself firing is going to add perturbations
-to the cycle counter values that get mixed into the entropy pool.
-
-As Thomas pointed out, with a modern out-of-order CPU, even quite simple
-loops show a fair amount of hard-to-predict timing variability even in
-the absense of external interrupts.  But this tries to take that further
-by actually having a fairly complex interaction.
-
-This is not going to solve the entropy issue for architectures that have
-no CPU cycle counter, but it's not clear how (and if) that is solvable,
-and the hardware in question is largely starting to be irrelevant.  And
-by doing this we can at least avoid some of the even more contentious
-approaches (like making the entropy waiting time out in order to avoid
-the possibly unbounded waiting).
-
-Cc: Ahmed Darwish <darwish.07@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Theodore Ts'o <tytso@mit.edu>
-Cc: Nicholas Mc Guire <hofrat@opentech.at>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Willy Tarreau <w@1wt.eu>
-Cc: Alexander E. Patrakov <patrakov@gmail.com>
-Cc: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Noah Meyerhans <noahm@debian.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: d5a21bcc2995 ("KVM: arm64: Move common VHE/non-VHE trap config in separate functions")
+Cc: <stable@vger.kernel.org> # 4.17.x-
+Suggested-by: James Morse <james.morse@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/random.c |   62 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+ arch/arm64/kvm/debug.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1653,6 +1653,56 @@ void get_random_bytes(void *buf, int nby
- }
- EXPORT_SYMBOL(get_random_bytes);
- 
-+
-+/*
-+ * Each time the timer fires, we expect that we got an unpredictable
-+ * jump in the cycle counter. Even if the timer is running on another
-+ * CPU, the timer activity will be touching the stack of the CPU that is
-+ * generating entropy..
-+ *
-+ * Note that we don't re-arm the timer in the timer itself - we are
-+ * happy to be scheduled away, since that just makes the load more
-+ * complex, but we do not want the timer to keep ticking unless the
-+ * entropy loop is running.
-+ *
-+ * So the re-arming always happens in the entropy loop itself.
-+ */
-+static void entropy_timer(struct timer_list *t)
-+{
-+	credit_entropy_bits(&input_pool, 1);
-+}
-+
-+/*
-+ * If we have an actual cycle counter, see if we can
-+ * generate enough entropy with timing noise
-+ */
-+static void try_to_generate_entropy(void)
-+{
-+	struct {
-+		unsigned long now;
-+		struct timer_list timer;
-+	} stack;
-+
-+	stack.now = random_get_entropy();
-+
-+	/* Slow counter - or none. Don't even bother */
-+	if (stack.now == random_get_entropy())
-+		return;
-+
-+	timer_setup_on_stack(&stack.timer, entropy_timer, 0);
-+	while (!crng_ready()) {
-+		if (!timer_pending(&stack.timer))
-+			mod_timer(&stack.timer, jiffies+1);
-+		mix_pool_bytes(&input_pool, &stack.now, sizeof(stack.now));
-+		schedule();
-+		stack.now = random_get_entropy();
-+	}
-+
-+	del_timer_sync(&stack.timer);
-+	destroy_timer_on_stack(&stack.timer);
-+	mix_pool_bytes(&input_pool, &stack.now, sizeof(stack.now));
-+}
-+
- /*
-  * Wait for the urandom pool to be seeded and thus guaranteed to supply
-  * cryptographically secure random numbers. This applies to: the /dev/urandom
-@@ -1667,7 +1717,17 @@ int wait_for_random_bytes(void)
+--- a/arch/arm64/kvm/debug.c
++++ b/arch/arm64/kvm/debug.c
+@@ -112,7 +112,7 @@ void kvm_arm_reset_debug_ptr(struct kvm_
+ void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
  {
- 	if (likely(crng_ready()))
- 		return 0;
--	return wait_event_interruptible(crng_init_wait, crng_ready());
-+
-+	do {
-+		int ret;
-+		ret = wait_event_interruptible_timeout(crng_init_wait, crng_ready(), HZ);
-+		if (ret)
-+			return ret > 0 ? 0 : ret;
-+
-+		try_to_generate_entropy();
-+	} while (!crng_ready());
-+
-+	return 0;
- }
- EXPORT_SYMBOL(wait_for_random_bytes);
+ 	bool trap_debug = !(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY);
+-	unsigned long mdscr;
++	unsigned long mdscr, orig_mdcr_el2 = vcpu->arch.mdcr_el2;
  
+ 	trace_kvm_arm_setup_debug(vcpu, vcpu->guest_debug);
+ 
+@@ -208,6 +208,10 @@ void kvm_arm_setup_debug(struct kvm_vcpu
+ 	if (vcpu_read_sys_reg(vcpu, MDSCR_EL1) & (DBG_MDSCR_KDE | DBG_MDSCR_MDE))
+ 		vcpu->arch.flags |= KVM_ARM64_DEBUG_DIRTY;
+ 
++	/* Write mdcr_el2 changes since vcpu_load on VHE systems */
++	if (has_vhe() && orig_mdcr_el2 != vcpu->arch.mdcr_el2)
++		write_sysreg(vcpu->arch.mdcr_el2, mdcr_el2);
++
+ 	trace_kvm_arm_set_dreg32("MDCR_EL2", vcpu->arch.mdcr_el2);
+ 	trace_kvm_arm_set_dreg32("MDSCR_EL1", vcpu_read_sys_reg(vcpu, MDSCR_EL1));
+ }
 
 
