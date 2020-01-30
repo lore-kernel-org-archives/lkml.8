@@ -2,361 +2,125 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E21C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DA2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABD020CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4E92063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kvkrCDdp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bLf97hh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgA3XE6 (ORCPT
+        id S1727709AbgA3XFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 18:04:58 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39470 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgA3XE4 (ORCPT
+        Thu, 30 Jan 2020 18:05:03 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45111 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgA3XFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 18:04:56 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UN4sk3040121;
-        Thu, 30 Jan 2020 17:04:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580425494;
-        bh=U2mGBMnKhzM79yhhvv3PubaRm5qfZ0ZzRhb5W4wVtyU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kvkrCDdpBcGQqkftU2sD8PIuCtMts4lwbfSYlfy61MiDjvI/TSM9gu5TOsW4gVWhP
-         DOIIR49y+5C1r/jUe7aCdnrU1BeEKM2un0dzpPAmplh5cSFUdEuyc2rDTolovfsHkd
-         Bg2wtG8pOikPF6V/lU3cAVxWXvixx5rMOcKPP2G4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UN4s0h075223
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 17:04:54 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 17:04:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 17:04:54 -0600
-Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UN4rB3062947;
-        Thu, 30 Jan 2020 17:04:53 -0600
-Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-To:     Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-7-t-kristo@ti.com>
- <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
- <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
- <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
- <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
- <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
- <7aed7a9f-3546-f622-37ac-34d33ddb4298@ti.com>
- <50c69e97-034b-3160-e95e-97aec2e75cc6@ti.com>
- <cf6fff1c-fde9-67b0-3173-7e019ce587cb@ti.com>
- <127eff13-cc16-2b59-d8ce-06e61bb910bc@ti.com>
- <39b3e536-26a9-e7da-a39a-db2853e0fe04@ti.com>
- <a92ab534-1525-f7d6-d29b-361809e0cae1@ti.com>
- <279b6f35-a316-94dd-af62-2891815cf453@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <2d7eeb94-ecb8-1e88-412b-215125c594fc@ti.com>
-Date:   Thu, 30 Jan 2020 18:04:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 18:05:01 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so2405815pgk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 15:05:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZVCoy0c6zBh/23HJ8qV14vEXBoPTNgRjwz7/2GTwHIc=;
+        b=bLf97hh1JmbfTKxaOIa/hfizEnh8PioMn1Y9TI7CEopKUPmgeQBicnEdwrFatxlt9U
+         /dF+mwGLbsQW7KmPTy8I6XvXreO4N48lEX+Ehw6v+hoPAgu86vKzIbhOK4gM6oTf8mzR
+         cUmaOPLKTOy/zPKtP/xK5WHSM7BjdC+E9H/qWV2SFU1exl9sfnhtxf2MfNs0DfBmIsih
+         drKywXHDy84lMq4TuYIprVFUFSLN67kw0IUzFFhKIkCU/UHmgiJqlOOqaSS+2J072x0h
+         J3RdIyqQ5IBv58TAQv0tMiutT2U2bysgST7jCLtDi7nTZT3kvU1poPBXQgw1qd6KjzT/
+         afJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZVCoy0c6zBh/23HJ8qV14vEXBoPTNgRjwz7/2GTwHIc=;
+        b=JqGHqyGSWbBF27FVJSw8H24nBIVzKuzfw2kuGZOkgWEHRwz9d6CvW8k0QvWH9NZrSc
+         K6zFYUZ6p/o70XYE3BZ8VLhFXnhYfNbu+NiQUk2HTc9X+Ag0iKVJ4LGs5JaZ8xSswMq/
+         2ae3LRZJekzzOzKThQ7VPH6tBgEeLuwJHRiuW5PEd+0coA5KC1ErnCQvkLx1QJKOqUF5
+         +b/iZPQ9IyJiMlR3Qvu+Gr9hjoTRrM+gTtb3QNdtFtZUiPvx3HKWg40CcwOHxhaMqdVG
+         u88ewvZ73tSCm/dRyMR9B+8483PkFlDMup9MGsmQWx0PaxwZN5O97d8IxLzhjlBXR7vb
+         yKTQ==
+X-Gm-Message-State: APjAAAXMYlyW6o6XQAQ0/ZFLI/oKLWfZvP74PzZ84M2K2XKZ8mNHO1e+
+        mniSt+O6IuesglxgzV6rsaenjzzLzaV0LMRx/+L9pA==
+X-Google-Smtp-Source: APXvYqzpy57/EHOzTXSLzSf3keMtVmLBKsmU0rRVRaSHQpEvmWIO/hSL5ezfKU+X1bWMMEn/DiuqtJfLEN9g3PJzcvQ=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr6926030pga.201.1580425499190;
+ Thu, 30 Jan 2020 15:04:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <279b6f35-a316-94dd-af62-2891815cf453@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200128072002.79250-1-brendanhiggins@google.com>
+ <20200128072002.79250-8-brendanhiggins@google.com> <20200129062709.5B2A22067C@mail.kernel.org>
+In-Reply-To: <20200129062709.5B2A22067C@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 30 Jan 2020 15:04:47 -0800
+Message-ID: <CAFd5g47cha8DJdS9x=Qjj-vLXjGOugQK38Ln85eznfuN11cLrQ@mail.gmail.com>
+Subject: Re: [PATCH v1 7/7] Documentation: Add kunit_shutdown to kernel-parameters.txt
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>, David Gow <davidgow@google.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>, rppt@linux.ibm.com,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 5:06 PM, Suman Anna wrote:
-> On 1/30/20 3:57 PM, Suman Anna wrote:
->> On 1/30/20 3:50 PM, Andrew F. Davis wrote:
->>> On 1/30/20 4:39 PM, Suman Anna wrote:
->>>> On 1/30/20 3:19 PM, Andrew F. Davis wrote:
->>>>> On 1/30/20 3:39 PM, Suman Anna wrote:
->>>>>> On 1/30/20 2:22 PM, Andrew F. Davis wrote:
->>>>>>> On 1/30/20 2:55 PM, Suman Anna wrote:
->>>>>>>> On 1/30/20 1:42 PM, Tero Kristo wrote:
->>>>>>>>> On 30/01/2020 21:20, Andrew F. Davis wrote:
->>>>>>>>>> On 1/30/20 2:18 PM, Tero Kristo wrote:
->>>>>>>>>>> On 30/01/2020 20:11, Andrew F. Davis wrote:
->>>>>>>>>>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
->>>>>>>>>>>>> From: Suman Anna <s-anna@ti.com>
->>>>>>>>>>>>>
->>>>>>>>>>>>> The reserved memory nodes are not assigned to platform devices by
->>>>>>>>>>>>> default in the driver core to avoid the lookup for every platform
->>>>>>>>>>>>> device and incur a penalty as the real users are expected to be
->>>>>>>>>>>>> only a few devices.
->>>>>>>>>>>>>
->>>>>>>>>>>>> OMAP remoteproc devices fall into the above category and the OMAP
->>>>>>>>>>>>> remoteproc driver _requires_ specific CMA pools to be assigned
->>>>>>>>>>>>> for each device at the moment to align on the location of the
->>>>>>>>>>>>> vrings and vring buffers in the RTOS-side firmware images. So,
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Same comment as before, this is a firmware issue for only some
->>>>>>>>>>>> firmwares
->>>>>>>>>>>> that do not handle being assigned vring locations correctly and instead
->>>>>>>>>>>> hard-code them.
->>>>>>>>
->>>>>>>> As for this statement, this can do with some updating. Post 4.20,
->>>>>>>> because of the lazy allocation scheme used for carveouts including the
->>>>>>>> vrings, the resource tables now have to use FW_RSC_ADDR_ANY and will
->>>>>>>> have to wait for the vdev synchronization to happen.
->>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> I believe we discussed this topic in length in previous version but
->>>>>>>>>>> there was no conclusion on it.
->>>>>>>>>>>
->>>>>>>>>>> The commit desc might be a bit misleading, we are not actually forced to
->>>>>>>>>>> use specific CMA buffers, as we use IOMMU to map these to device
->>>>>>>>>>> addresses. For example IPU1/IPU2 use internally exact same memory
->>>>>>>>>>> addresses, iommu is used to map these to specific CMA buffer.
->>>>>>>>>>>
->>>>>>>>>>> CMA buffers are mostly used so that we get aligned large chunk of memory
->>>>>>>>>>> which can be mapped properly with the limited IOMMU OMAP family of chips
->>>>>>>>>>> have. Not sure if there is any sane way to get this done in any other
->>>>>>>>>>> manner.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Why not use the default CMA area?
->>>>>>>>>
->>>>>>>>> I think using default CMA area getting the actual memory block is not
->>>>>>>>> guaranteed and might fail. There are other users for the memory, and it
->>>>>>>>> might get fragmented at the very late phase we are grabbing the memory
->>>>>>>>> (omap remoteproc driver probe time.) Some chunks we need are pretty large.
->>>>>>>>>
->>>>>>>>> I believe I could experiment with this a bit though and see, or Suman
->>>>>>>>> could maybe provide feedback why this was designed initially like this
->>>>>>>>> and why this would not be a good idea.
->>>>>>>>
->>>>>>>> I have given some explanation on this on v4 as well, but if it is not
->>>>>>>> clear, there are restrictions with using default CMA. Default CMA has
->>>>>>>> switched to be assigned from the top of the memory (higher addresses,
->>>>>>>> since 3.18 IIRC), and the MMUs on IPUs and DSPs can only address
->>>>>>>> 32-bits. So, we cannot blindly use the default CMA pool, and this will
->>>>>>>> definitely not work on boards > 2 GB RAM. And, if you want to add in any
->>>>>>>> firewall capability, then specific physical addresses becomes mandatory.
->>>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> If you need 32bit range allocations then
->>>>>>> dma_set_mask(dev, DMA_BIT_MASK(32));
->>>>>>>
->>>>>>> I'm not saying don't have support for carveouts, just make them
->>>>>>> optional, keystone_remoteproc.c does this:
->>>>>>>
->>>>>>> if (of_reserved_mem_device_init(dev))
->>>>>>> 	dev_warn(dev, "device does not have specific CMA pool\n");
->>>>>>>
->>>>>>> There doesn't even needs to be a warning but that is up to you.
->>>>>>
->>>>>> It is not exactly an apples to apples comparison. K2s do not have MMUs,
->>>>>> and most of our firmware images on K2 are actually running out of the
->>>>>> DSP internal memory.
->>>>>>
->>>>>
->>>>>
->>>>> So again we circle back to it being a firmware issue, if K2 can get away
->>>>> without needing carveouts and it doesn't even have an MMU then certainly
->>>>> OMAP/DRA7x class devices can handle it even better given they *do* have
->>>>> an IOMMU. Unless someone is hard-coding the IOMMU configuration.. In
->>>>> which case we are still just hacking around the problem here with
->>>>> mandatory specific address memory carveouts.
->>>>
->>>> Optional carveouts on OMAP remoteprocs can be an enhancement in the
->>>> future, but at the moment, we won't be able to run use-cases without
->>>> this. And I have already given some of the reasons for the same here and
->>>> on v4.
->>>>
->>>
->>>
->>> No reason to be dismissive, my questions are valid.
->>>
->>> What "use-cases" are we talking about, I have firmware that doesn't need
->>> specific carved-out addresses. 
->>
->> I think you are well aware of all the usecases we provide with the TI
->> SDKs with IPUs and DSPs. And what is the firmware that you have and what
->> do you use it for?
->>
+On Tue, Jan 28, 2020 at 10:27 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2020-01-27 23:20:02)
+> > Add kunit_shutdown, an option to specify that the kernel shutsdown after
+> > running KUnit tests, to the kernel-parameters.txt documentation.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index ade4e6ec23e03..0472b02ce16bb 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -2054,6 +2054,13 @@
+> >                         0: force disabled
+> >                         1: force enabled
+> >
+> > +       kunit_shutdown  [KERNEL UNIT TESTING FRAMEWORK] Shutdown kernel after
+> > +                       running tests.
+> > +                       Default:        (flag not present) don't shutdown
+> > +                       poweroff:       poweroff the kernel after running tests.
+> > +                       halt:           halt the kernel after running tests.
+> > +                       reboot:         reboot the kernel after running tests.
+>
+> Maybe drop the full stops on the short descriptions.
 
+Will fix.
 
-Yes I know exactly the pieces of TI firmware we are talking about and
-why it they still need carveouts. That's not the point, our firmware may
-have issues and hard-coding, but we need to allow for correctly built
-firmware that doesn't need carveouts also. This driver should not fail
-if a carveout is not provided. The remoteproc can run fine without a
-carveout, only some firmwares cannot, so it should be optional and not
-forced in DT on everyone using our DSP/IPU.
+> Otherwise,
+>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>
 
-
->> If you have misbehaving firmware that
->>> needs statically carved out memory addresses then you can have carveouts
->>> if you want, but it should be optional. 
->> If I don't want to pollute my
->>> system's memory space with a bunch of carveout holes then I shouldn't
->>> have to just because your specific firmware needs them.
->>
->> Further follow-up series like early-boot and late-attach will mandate
->> fixed carveouts actually. You cannot just run out of any random memory.
-> 
-
-
-Those are different, the location of the loaded firmware in memory will
-need to be carved out if it is in use by a remote core before Linux
-boots. This carveout is for Linux to allocate from to load the Vrings
-and other memory it may need. When late-attach shows up then we can
-think about how to handle those.
-
-
-> Also, these are CMA pools ("reusable"), so they are not actual carveout
-> holes ("no-map"). This is the preferred method in remoteproc mode so
-> that the memory is available for kernel when remoteprocs are not in use.
-> Customers can always choose to make these carveouts so that they do not
-> run into memory allocation issues when changing firmwares and under
-> stress conditions. These will have to be carveouts for early-boot usecases.
-> 
-
-
-Even "reusable" carveouts can only be used by re-locateable memory
-(caches and such) so still not a good thing to have your memory space
-full of them.
-
-> Customers can always choose to make these carveouts
-
-That is exactly what I am saying, they can choose, but it should be
-optional, the current binding and driver make them mandatory or the
-driver will not probe.
-
-Andrew
-
-
-> regards
-> Suman
-> 
->>
->> regards
->> Suman
->>
->>>
->>> Andrew
->>>
->>>
->>>> regards
->>>> Suman
->>>>
->>>>>
->>>>> Andrew
->>>>>
->>>>>
->>>>>> regards
->>>>>> Suman
->>>>>>
->>>>>>>
->>>>>>> Andrew
->>>>>>>
->>>>>>>
->>>>>>>> regards
->>>>>>>> Suman
->>>>>>>>
->>>>>>>>>
->>>>>>>>> -Tero
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Andrew
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>> -Tero
->>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> This is not a requirement of the remote processor itself and so it
->>>>>>>>>>>> should not fail to probe if a specific memory carveout isn't given.
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>> use the of_reserved_mem_device_init/release() API appropriately
->>>>>>>>>>>>> to assign the corresponding reserved memory region to the OMAP
->>>>>>>>>>>>> remoteproc device. Note that only one region per device is
->>>>>>>>>>>>> allowed by the framework.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>>>>>>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>>>>>>>>>>> ---
->>>>>>>>>>>>> v5: no changes
->>>>>>>>>>>>>
->>>>>>>>>>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->>>>>>>>>>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
->>>>>>>>>>>>>
->>>>>>>>>>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>>> b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>>> index 0846839b2c97..194303b860b2 100644
->>>>>>>>>>>>> --- a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>>> @@ -17,6 +17,7 @@
->>>>>>>>>>>>>    #include <linux/module.h>
->>>>>>>>>>>>>    #include <linux/err.h>
->>>>>>>>>>>>>    #include <linux/of_device.h>
->>>>>>>>>>>>> +#include <linux/of_reserved_mem.h>
->>>>>>>>>>>>>    #include <linux/platform_device.h>
->>>>>>>>>>>>>    #include <linux/dma-mapping.h>
->>>>>>>>>>>>>    #include <linux/remoteproc.h>
->>>>>>>>>>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
->>>>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>>>        if (ret)
->>>>>>>>>>>>>            goto free_rproc;
->>>>>>>>>>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
->>>>>>>>>>>>> +    if (ret) {
->>>>>>>>>>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
->>>>>>>>>>>>> pool\n");
->>>>>>>>>>>>> +        goto free_rproc;
->>>>>>>>>>>>> +    }
->>>>>>>>>>>>> +
->>>>>>>>>>>>>        platform_set_drvdata(pdev, rproc);
->>>>>>>>>>>>>          ret = rproc_add(rproc);
->>>>>>>>>>>>>        if (ret)
->>>>>>>>>>>>> -        goto free_rproc;
->>>>>>>>>>>>> +        goto release_mem;
->>>>>>>>>>>>>          return 0;
->>>>>>>>>>>>>    +release_mem:
->>>>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>>>    free_rproc:
->>>>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>>>>        return ret;
->>>>>>>>>>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
->>>>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>>>          rproc_del(rproc);
->>>>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>>>          return 0;
->>>>>>>>>>>>>    }
->>>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> -- 
->>>>>>>>>
->>>>>>>>> -- 
->>>>>>>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>>>>>>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>>>>>>
->>>>>>
->>>>
->>
-> 
+Thanks!
