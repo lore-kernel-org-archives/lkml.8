@@ -2,76 +2,179 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B284C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D212EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693DE20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4Cqgja+"
+	by mail.kernel.org (Postfix) with ESMTP id A9ADE20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgA3Rcy (ORCPT
+        id S1727482AbgA3RdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:32:54 -0500
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:45621 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3Rcy (ORCPT
+        Thu, 30 Jan 2020 12:33:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43240 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727158AbgA3RdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:32:54 -0500
-Received: by mail-lj1-f179.google.com with SMTP id f25so4221989ljg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:32:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=00IpZxvPCntcVeZvqkk315DeDtL6HDUdprm0PjdbAhw=;
-        b=i4Cqgja+2FJtUnJzk2iS+qd97wdl35fVMM6sHgpu9yjlk4+iaxKJWoCg44OWSUlL9A
-         ag6izgn9fAQPwdsDoesq93XsoKBeR4VGRU1m200xnPf/HFKVKozSs1308zvKcMOEXDK9
-         xTyi+YJQ2PQOEtoagtRMAh9/FdA6n5Qqj8BhOdDehbn1ubMNeZH3ds/wXt/xhFD3cBxv
-         PWUzInz2ApgmVzBW5B/eMTbQ7tM2ugM9nB3+ZOSJV4Wx2eT1Syiqr9K7W6h0yGocNLFj
-         swGeAEvrZGzQybt040mFmL3Sjk8YRyvBlTIaDmvrc0PsT0pcY4RSQeFBszhcpnr0A+6b
-         29kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=00IpZxvPCntcVeZvqkk315DeDtL6HDUdprm0PjdbAhw=;
-        b=pRFcu23QSo8SqLtUM6LLZ6X5Q9otKjreKQsai0/Q2siICHSH8C8Bkc3bYG1Onpc1Nz
-         kNiNwOlMjV5mrRIJM12fb4JI5+Df6FmVf9sFkSvKbjsTCKo7V7FwA00A/SXrduYzSZuO
-         f6WGcv5fTlKk/8oACYnhOTnuw1vxGqNutNHJeiPpaBqeEf/XDNNdvgEleplm1VLf4Gis
-         6clFNG8xbHBzzp9j1UANgreT2glnhmBoZbQmbdeF5jNX7KFa9x5x73KKN05uw4i4J6kH
-         BoD1JmKVf38yqKqmvH4TFFUoAWwWkyz1xFOB6LHknuN4Re8/y3r+Bf1kqkHnIeFhqCdz
-         +fQA==
-X-Gm-Message-State: APjAAAWIRZnp22ELwvBjuGB6qGDJ0HD/S2XshHUGL3YVwV2RC4kICz6+
-        vgy4Dt/6QtmD0H0CvPGOqWNp2GMYpBUiyLBelsliQTQ=
-X-Google-Smtp-Source: APXvYqxMQCkU3qfJB08ACOKKCLqP5cQWGNosD6m0Yd1+9u0kwcfAM0lOnNmLP2tIAn0u1IBkSPeEe+qEQxewOn0oTRI=
-X-Received: by 2002:a2e:7818:: with SMTP id t24mr3397650ljc.195.1580405571632;
- Thu, 30 Jan 2020 09:32:51 -0800 (PST)
-MIME-Version: 1.0
-From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-Date:   Thu, 30 Jan 2020 18:32:40 +0100
-Message-ID: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
-Subject: 5.6-### doesn't boot
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Thu, 30 Jan 2020 12:33:05 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UHWvDJ091767
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:33:03 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrvwa7xh1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:33:02 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 30 Jan 2020 17:32:49 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 Jan 2020 17:32:47 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UHVs6333292588
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 17:31:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3250842047;
+        Thu, 30 Jan 2020 17:32:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43FDB4203F;
+        Thu, 30 Jan 2020 17:32:45 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.199.205])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jan 2020 17:32:45 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] ima: support calculating the boot_aggregate
+ based on different TPM banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Date:   Thu, 30 Jan 2020 12:32:44 -0500
+In-Reply-To: <1065c502840c4f66baed9a771f3f2409@huawei.com>
+References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
+         <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+         <1065c502840c4f66baed9a771f3f2409@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013017-0020-0000-0000-000003A592C0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013017-0021-0000-0000-000021FD494D
+Message-Id: <1580405564.5228.6.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_05:2020-01-28,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-my notebook doesn't boot with current kernel. Booting stops right after
-displaying "loading initial ramdisk..". No further displays.
-Also nothing is wriiten to the logs.
+On Thu, 2020-01-30 at 16:54 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Thursday, January 30, 2020 5:23 PM
+> > To: linux-integrity@vger.kernel.org
+> > Cc: Jerry Snitselaar <jsnitsel@redhat.com>; James Bottomley
+> > <James.Bottomley@HansenPartnership.com>; linux-
+> > kernel@vger.kernel.org; Mimi Zohar <zohar@linux.ibm.com>
+> > Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+> > on different TPM banks
+> > 
+> > Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
+> > assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
+> > could support multiple TPM PCR banks, allowing firmware to configure and
+> > enable different banks.
+> > 
+> > Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
+> > the boot-aggregate, use the same hash algorithm for reading the TPM PCRs
+> > as
+> > for calculating the boot aggregate digest.  Preference is given to the
+> > configured IMA default hash algorithm.
+> > 
+> > For TPM 1.2 SHA1 is the only supported hash algorithm.
+> > 
+> > Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >  security/integrity/ima/ima_crypto.c | 45
+> > ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_crypto.c
+> > b/security/integrity/ima/ima_crypto.c
+> > index 7967a6904851..a020aaefdea8 100644
+> > --- a/security/integrity/ima/ima_crypto.c
+> > +++ b/security/integrity/ima/ima_crypto.c
+> > @@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct
+> > tpm_digest *d)
+> >  		pr_err("Error Communicating to TPM chip\n");
+> >  }
+> > 
+> > +static enum hash_algo get_hash_algo(const char *algname)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < HASH_ALGO__LAST; i++) {
+> > +		if (strcmp(algname, hash_algo_name[i]) == 0)
+> > +			break;
+> > +	}
+> > +
+> > +	return i;
+> > +}
+> > +
+> >  /*
+> > - * Calculate the boot aggregate hash
+> > + * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
+> > + * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but
+> > with
+> > + * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
+> > + * allowing firmware to configure and enable different banks.
+> > + *
+> > + * Knowing which TPM bank is read to calculate the boot_aggregate digest
+> > + * needs to be conveyed to a verifier.  For this reason, use the same
+> > + * hash algorithm for reading the TPM PCRs as for calculating the boot
+> > + * aggregate digest as stored in the measurement list.
+> >   */
+> >  static int __init ima_calc_boot_aggregate_tfm(char *digest,
+> >  					      struct crypto_shash *tfm)
+> >  {
+> >  	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
+> > +	enum hash_algo crypto_id;
+> >  	int rc;
+> >  	u32 i;
+> >  	SHASH_DESC_ON_STACK(shash, tfm);
+> > @@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char
+> > *digest,
+> >  	if (rc != 0)
+> >  		return rc;
+> > 
+> > +	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
+> 
+> Wouldn't be better to determine the index of ima_tpm_chip->allocated_banks
+> in patch 1/2 and pass that index here, to avoid another search?
 
-last known good kernel is : vmlinuz-5.5.0-00849-gb0be0eff1a5a
-first known bad kernel is : vmlinuz-5.5.0-01154-gc677124e631d
+Both your suggestion and Lakshmi's suggestion change the parameters to
+ima_calc_boot_aggregate_tfm(), which I was trying to avoid for now.  I
+want it to be as easy as possible to backport.
 
-Thanks, J=C3=B6rg
+Going forward, you might be correct.
+
+Mimi
+
