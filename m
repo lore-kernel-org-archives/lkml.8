@@ -2,89 +2,84 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EFCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ED420702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE826206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgA3IDN (ORCPT
+        id S1726930AbgA3IGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:03:13 -0500
-Received: from sauhun.de ([88.99.104.3]:46338 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgA3IDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:03:13 -0500
-Received: from localhost (p54B33261.dip0.t-ipconnect.de [84.179.50.97])
-        by pokefinder.org (Postfix) with ESMTPSA id 6EABE2C0697;
-        Thu, 30 Jan 2020 09:03:11 +0100 (CET)
-Date:   Thu, 30 Jan 2020 09:03:07 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     alex.williams@ettus.com
-Cc:     mical.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alex Williams <alex.williams@ni.com>
-Subject: Re: [PATCH] i2c: cadence: Handle transfer_size rollover
-Message-ID: <20200130080307.GA2208@ninjato>
-References: <20190131213957.11568-1-alex.williams@ettus.com>
+        Thu, 30 Jan 2020 03:06:37 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46128 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726397AbgA3IGh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:06:37 -0500
+Received: from [109.168.11.45] (port=36612 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ix4qP-00BysD-BP; Thu, 30 Jan 2020 09:06:33 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-wireless@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iwlwifi: fix config variable name in comment
+Date:   Thu, 30 Jan 2020 09:06:22 +0100
+Message-Id: <20200130080622.1927-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20190131213957.11568-1-alex.williams@ettus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The correct variable name was replaced here by mistake.
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: ab27926d9e4a ("iwlwifi: fix devices with PCI Device ID 0x34F0 and 11ac RF modules")
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-On Thu, Jan 31, 2019 at 01:39:57PM -0800, alex.williams@ettus.com wrote:
-> From: Alex Williams <alex.williams@ni.com>
->=20
-> Under certain conditions, Cadence's I2C controller's transfer_size
-> register will roll over and generate invalid read transactions. Before
-> this change, the ISR relied solely on the RXDV bit to determine when to
-> write more data to the user's buffer. The invalid read data would cause
-> overruns, smashing stacks and worse.
->=20
-> This change stops the buffer writes to the requested boundary and
-> reports the error. The controller will be reset so normal transactions
-> may resume.
->=20
-> Signed-off-by: Alex Williams <alex.williams@ni.com>
+---
 
-Applied to for-next with another Rev-by from Michal given in another
-thread, thanks!
+Changes in v2:
+ - rebased on current master fixing conflicts
+---
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+index be6a2bf9ce74..df2d3257cce2 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+@@ -600,6 +600,6 @@ extern const struct iwl_cfg iwlax211_2ax_cfg_so_gf_a0;
+ extern const struct iwl_cfg iwlax210_2ax_cfg_ty_gf_a0;
+ extern const struct iwl_cfg iwlax411_2ax_cfg_so_gf4_a0;
+ extern const struct iwl_cfg iwlax411_2ax_cfg_sosnj_gf4_a0;
+-#endif /* CPTCFG_IWLMVM || CPTCFG_IWLFMAC */
++#endif /* CONFIG_IWLMVM */
+ 
+ #endif /* __IWL_CONFIG_H__ */
+-- 
+2.25.0
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4yjbcACgkQFA3kzBSg
-Kbb8RxAAiCoAtge6yROLbqYc4Ruq1gKWnE76UU2AbpwSK1GEFdyKat70l9hN0Edb
-7ISc+b+z9X8gYfm8Sx8CjKoqC+B4ldxyZM+hNCOzkMfzbIGUNTllajhZIAb5MEhI
-E405O36pd94ogiFGcTALsgtLgfaC2HDzVTqm5xOyJqJRte+W0palPx4UL6+33PbR
-QYmMkPhA+6AUlnCXsrtDjM13eg3u6gRn/IG/ZfztOPufyzsE3sHaMgyqLhE1puI/
-5N3kjDQQAfespuTspjLm8S7J4cqSxEYpieog6II6NGCRFQTsfiYv6iHCzyywJ5Xk
-t5CgEaqnqZBzr8WFWmpgngz33RrYBTEOPbM5WScvVKaMfm3bKAP20Q23yEaDwZAC
-SfI0SQJAyJ9EZi/z2NuDRi8QgED5hoqchWN0MT9VYhGsSEfZA4q4LiECkHL8Zg85
-VxZMCZcfQHzER3epg0P3imvP5slj6L4LhSzg2mu9JdHUSqcsjIA16E+Di9kZ/eCF
-rJkh8Sb4tK1ClVlnTW4/YtmfC7Ru0XrN5ZFeugZxUurByG5Q3NtezkJHAzrVJGFz
-L3AbX0Fl7lA3/nX/astrsUgG4sXoOG7bWW/7FiA0jWPrX+WglbEbXZQ64I6MXN5E
-TOjyGoxiXCU2zyrlqeiHwf7XDRmzMpxAOLYZjmKgibcX1OcjLBw=
-=WTaX
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
