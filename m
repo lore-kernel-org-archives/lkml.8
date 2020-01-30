@@ -2,122 +2,129 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B2BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4600F214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EC32083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4GDqsD+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPyBUjHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgA3ViP (ORCPT
+        id S1727590AbgA3Vip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:38:15 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35355 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgA3ViP (ORCPT
+        Thu, 30 Jan 2020 16:38:45 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38117 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbgA3Vip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:38:15 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so1853346plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:38:15 -0800 (PST)
+        Thu, 30 Jan 2020 16:38:45 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so2162112pfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:38:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=EwmsKAAR9EZeJAmAlDaaBhS2SFQYknZY+oQh1g/QCAE=;
-        b=P4GDqsD+SXwiCy9JUOoM9+wWOVmgS78wb+4/C1tpIyPq02GJCeJnxqEEgOF3HbYOlI
-         BYIwnDL/eJZrdTMcTFAD2q8tKn8VMgc3cJuZ7114rYY2Q4jvFczsJKWtGD8/t3cEmejm
-         KdnUWk62kKdW/GP9ZbtOEViVs9kyEz+QAaIfs=
+        bh=6QfJ9HBGO9DTorqtZWTK9u+KK3d3e9wCrmBq521y58Q=;
+        b=EPyBUjHO+0MADFf3JZfdbf7bm5oiDhS6YiZE3gQdN4PQF3asAYW3Dx9ybew4QSCZ1+
+         iuxrwyTedod0MtpIz+qbSWXUikGrEJEEoUctYtLvEmhjk1DrtTeHlV8m5r1986P1mQU+
+         csU1Fj26m26RcbkfIG3DJNk/dKvO+7N++qCTLuNpOwvRRGd69mpREupGxpLzP82IBIsh
+         WuIdeMP1ogcKcOB3RfkTACsZuiEkdDQ1QhNYPV9OUzs0I9vI3XnIu4a+lc6PpnuqLpEz
+         zMw31VbkA5lD0VXvCy+bMNnm2F1GcBwE21roMKAkS28Jg/h7uDQnOdd/621Q4LOIsVT4
+         VHRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EwmsKAAR9EZeJAmAlDaaBhS2SFQYknZY+oQh1g/QCAE=;
-        b=NyYd9ATlI+XV3NCiK9XmUifMU67MMPn/lsOywuo+Cl9rQ5xqUqJTho8D1IvdOS0/R+
-         Q71+8jjCdRYodZuxzY8sf+LE359Chn0nVHHTGtUBgWPwe1PYWmgrqwVryTlL5M9JUfHR
-         pbEvdXaI9fXDEKt4+rttPxyyuBDJ2LlooBeR2YeCkp1ufOlAeBUrTeFi+vnR+OPocahz
-         RUEGsOdPK/58OLpP5z+HYhNEdU1KHBYY5Xhhac4+yeN66vwu1Nli43Ya5x01J2zsGKNB
-         BZy3E582SFoDCUGOe+ijw+a2MJ+rrObGaq4BGiJ+MD/ut/fGyLbm9NbrHN4WqTwpIqvS
-         vexQ==
-X-Gm-Message-State: APjAAAUypDvuVqUAbHTGgREIJ/W6AIugu0cs9g6nHcP2duvI6uYXrFju
-        3nJM3QgBeP/PZw4A1qWRH5IkBQ==
-X-Google-Smtp-Source: APXvYqxnGY0DZfQrEhOfeE54gwV7TiIH7kOdxAYEFz+gCUTbzfGMuGMB3HDD6dI8E1dq8Lsjv2ux8Q==
-X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr8265577pjp.119.1580420294561;
-        Thu, 30 Jan 2020 13:38:14 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w8sm7883326pfj.20.2020.01.30.13.38.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 13:38:13 -0800 (PST)
-Date:   Thu, 30 Jan 2020 13:38:12 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     adrian.hunter@intel.com, georgi.djakov@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, sboyd@kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [RFC-v2 0/2] Add Support for SDHC bus bandwidth voting
-Message-ID: <20200130213812.GK71044@google.com>
-References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
+        bh=6QfJ9HBGO9DTorqtZWTK9u+KK3d3e9wCrmBq521y58Q=;
+        b=pB2lIWQtTDhgSxh3OYhnrH7CAQovBbl8yvLLC/kaCVDbGCOvfeV4uDZOv+B8XCl3tT
+         eU8Q0CyLrMQ0nbJdngLlyJHEVn2BRLcWLj3/BOKmsj0XLiIJ/vPXdYu/1hMTYJ21CZGv
+         Cz56DbQ+nX/eyZN+BQBxNaRUXvmwIBTRO9Uw7PdTiA1GO98Qly9MyCjCFSxLKOpOiRLh
+         P2H2waPalef5def1Pg2u5YeILTOLF+QDo11NWk8ZbXf8lLQCE2tbxYGG/jNuomxsE38+
+         zpF4FLOe3VqDm7pTGdEYEejUMoHO1XtnDgOtjeA4acNDK8jJxggYcsijsgBIDYtjBui0
+         W/eg==
+X-Gm-Message-State: APjAAAUwIMtenoJ5lpkK7lz/QmNhQAsAyK0tICUixX7uEb3DzrMvAD1a
+        PZID/LPEE5DkR9ZBQBSUnjw=
+X-Google-Smtp-Source: APXvYqyimoegvKT+KGccepH86/EUUGcZ71ZyKb0o/5V1Hw8ZGiezNG8fAAvzCNWZfHS0VOWLg0R65Q==
+X-Received: by 2002:a63:f202:: with SMTP id v2mr6668424pgh.420.1580420322684;
+        Thu, 30 Jan 2020 13:38:42 -0800 (PST)
+Received: from localhost (g52.222-224-164.ppp.wakwak.ne.jp. [222.224.164.52])
+        by smtp.gmail.com with ESMTPSA id 100sm8067781pjo.17.2020.01.30.13.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 13:38:41 -0800 (PST)
+Date:   Fri, 31 Jan 2020 06:38:39 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        openrisc@lists.librecores.org, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH] openrisc: configs: Cleanup CONFIG_CROSS_COMPILE
+Message-ID: <20200130213839.GW24874@lianli.shorne-pla.net>
+References: <20200130191938.2444-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200130191938.2444-1-krzk@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pradeep,
++cc: Masahiro,
 
-what is the status of this series, do you plan to send v3 soon or
-is it abandonded?
+On Thu, Jan 30, 2020 at 08:19:38PM +0100, Krzysztof Kozlowski wrote:
+> CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+> CONFIG_CROSS_COMPILE support").
 
-Thanks
+I see this patch is already in, but does it break 0-day test tools that depend
+on this CONFIG_CROSS_COMPILE setup?  I guess its been in since 2018, so there
+should be no problem.
 
-Matthias
+Can you also help to update "Documentation/openrisc/openrisc_port.rst"?  It
+mentions the build steps are:
 
-On Fri, Nov 08, 2019 at 07:08:37PM +0530, Pradeep P V K wrote:
-> Vote for the MSM bus bandwidth required by SDHC driver
-> based on the clock speed and bus width of the card.
-> Otherwise, the system clocks may run at minimum clock
-> speed and thus affecting the performance.
-> 
-> Adapt to the new ICB framework for bus bandwidth voting.
-> 
-> This requires the source/destination port ids.
-> Also this requires a tuple of values.
-> 
-> The tuple is for two different paths - from SDHC master
-> to BIMC slave. The other is from CPU master to SDHC slave.
-> This tuple consists of the average and peak bandwidth.
-> 
-> This change is based on Georgi Djakov [RFC]
-> (https://lkml.org/lkml/2018/10/11/499)
-> 
+    Build the Linux kernel as usual::                                               
+                                                                                
+        make ARCH=openrisc defconfig                                            
+        make ARCH=openrisc
+
+This now changes, I used to use `make ARCH=openrisc CROSS_COMPILE=or1k-linux-`
+is this still going to work?
+
+-Stafford
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
-> changed since v1:
-> * Addressed all the Review comments.
-> * Minor code rebasing.
+>  arch/openrisc/configs/or1ksim_defconfig    | 1 -
+>  arch/openrisc/configs/simple_smp_defconfig | 1 -
+>  2 files changed, 2 deletions(-)
 > 
-> Pradeep P V K (2):
->   dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported strings
->   mmc: sdhci-msm: Add support for bus bandwidth voting
-> 
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |  32 ++
->  drivers/mmc/host/sdhci-msm.c                       | 366 ++++++++++++++++++++-
->  2 files changed, 395 insertions(+), 3 deletions(-)
-> 
+> diff --git a/arch/openrisc/configs/or1ksim_defconfig b/arch/openrisc/configs/or1ksim_defconfig
+> index d8ff4f8ffb88..75f2da324d0e 100644
+> --- a/arch/openrisc/configs/or1ksim_defconfig
+> +++ b/arch/openrisc/configs/or1ksim_defconfig
+> @@ -1,4 +1,3 @@
+> -CONFIG_CROSS_COMPILE="or1k-linux-"
+>  CONFIG_NO_HZ=y
+>  CONFIG_LOG_BUF_SHIFT=14
+>  CONFIG_BLK_DEV_INITRD=y
+> diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
+> index 64278992df9c..ff49d868e040 100644
+> --- a/arch/openrisc/configs/simple_smp_defconfig
+> +++ b/arch/openrisc/configs/simple_smp_defconfig
+> @@ -1,4 +1,3 @@
+> -CONFIG_CROSS_COMPILE="or1k-linux-"
+>  CONFIG_LOCALVERSION="-simple-smp"
+>  CONFIG_NO_HZ=y
+>  CONFIG_LOG_BUF_SHIFT=14
 > -- 
-> 1.9.1
+> 2.17.1
 > 
