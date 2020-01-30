@@ -2,135 +2,117 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5EBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8249F20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A95420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KcoCttbx"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="1yf6UXye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgA3RpN (ORCPT
+        id S1727513AbgA3Rpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:45:13 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:43775 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbgA3RpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:45:12 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 75C55230E1;
-        Thu, 30 Jan 2020 18:45:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1580406309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LF6qNmNw/trUkTft0hx/w7E1xf7S5EAwQ+Y50HCvyGI=;
-        b=KcoCttbxXt8G4cunF+qBmWPmt7n0qVvZamvfTuRZlB4R9tNLzZ9hxfuISRIEWHifG1zbIg
-        /UkkuuBBSnlX/V10G4MSUMONah4PdscSzaFBEv9QKV5OwypQpQykieHKqAu+BBjz7tzuPz
-        sGjDI5K09Jf4f0DDGYmEpp8wk9wOKps=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next 2/2] net: mii_timestamper: fix static allocation by PHY driver
-Date:   Thu, 30 Jan 2020 18:44:51 +0100
-Message-Id: <20200130174451.17951-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200130174451.17951-1-michael@walle.cc>
-References: <20200130174451.17951-1-michael@walle.cc>
+        Thu, 30 Jan 2020 12:45:50 -0500
+Received: from mail-dm6nam10on2074.outbound.protection.outlook.com ([40.107.93.74]:6098
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727338AbgA3Rpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 12:45:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTfTz4Wf/Me47SGJ5Ocy5MMeTonahR8GCX1/vnF/hBecMrXDCRP9TMISSTcWNsqIs0VWMrJa4IeyS8xaa/Ai89G8BKGkRqWfpHZMlLkBEgeIygc5xlB/CzV76dcTJDTm0j1Y1nGZ22ZrPCAz/4VPOagMDjzlGzXk8mJoLAUYiCvhZQn3N9gDzZxvpOyZ7/L19H6fyn5cwNkwWONnTiTRBsOY6lnpFXalCkARiJkmtAHANLlEmxcxXIxbg8/wOQQV9D538FPXlUIMwQQ/6J6BswFXnLEe9mfU30L+ZcSJykSc+QnFAiFpNpOL5bGxsqO6QmB57rsOcLHa2xzvB8SaWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8/JnzXaOOoCJiiMGaih0Wb8tuXqF3Ptj5bX8IwG3mDI=;
+ b=Xf8/c9L+Y9sTqVC/BQuq+ac9T0LIByR835eC12YG5WvfifFJllyNGjmkw9zWMyLVNd/kwELWtHTP0MV0Vqe4moH9uEqzDWXpkeLp0DMax/GThu6thzj/kNNmgjLAJBEyeqAbAWB4zeUMVZVHVSUvg75XpjmgSvOjPwz+tx0odMb0JPHRCHv5TKle0CkSMC/Tky6q2JsuJq3mgbAp6Mswd54JdNIgUTwEhN+xsolOFSJx9XnnOzsf5aLHQHx5Rzv7+23gktFqf1WyQowy9NRiv43SqshMZrH5jZ6VC8Upq8bvrrK9gI16/qZ+7AatWSG8B5QIQjwSqe/mutux9J7bcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8/JnzXaOOoCJiiMGaih0Wb8tuXqF3Ptj5bX8IwG3mDI=;
+ b=1yf6UXyeVnEDqGcxxRbRI98qEipPp8DJufjae1mhfZPW0N/Nqusv8I0nZ4nCtCNXdHmFxHu/cDUQCrmm0NoWm/UKnyK8NppUz91zGY+7B2TUXM67GZKmzpVkbuZlcEfmKWiaFhzrFRdE3ELlJZcOLsWnvF2eOHFfi7yEQFMO2V8=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB4468.namprd08.prod.outlook.com (52.133.222.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.27; Thu, 30 Jan 2020 17:45:43 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2686.025; Thu, 30 Jan 2020
+ 17:45:43 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [EXT] [PATCH RESEND v3 1/4] scsi: ufs-mediatek: ensure UniPro is
+ not powered down before linkup
+Thread-Topic: [EXT] [PATCH RESEND v3 1/4] scsi: ufs-mediatek: ensure UniPro is
+ not powered down before linkup
+Thread-Index: AQHV1pJHfu2kpVWabEi+eWXlrU2PdqgDfLbA
+Date:   Thu, 30 Jan 2020 17:45:43 +0000
+Message-ID: <BN7PR08MB56845828CE1FEAD6A5CB4E61DB040@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200129105251.12466-1-stanley.chu@mediatek.com>
+ <20200129105251.12466-2-stanley.chu@mediatek.com>
+In-Reply-To: <20200129105251.12466-2-stanley.chu@mediatek.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.80.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70aee559-bbbc-4e77-a6f7-08d7a5ac3ae9
+x-ms-traffictypediagnostic: BN7PR08MB4468:|BN7PR08MB4468:|BN7PR08MB4468:
+x-microsoft-antispam-prvs: <BN7PR08MB4468BC2C8AEE22FDF405101BDB040@BN7PR08MB4468.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:400;
+x-forefront-prvs: 02981BE340
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(55236004)(6506007)(8676002)(5660300002)(76116006)(26005)(9686003)(81156014)(81166006)(52536014)(66946007)(66476007)(66556008)(64756008)(66446008)(71200400001)(7416002)(8936002)(186003)(7696005)(55016002)(86362001)(316002)(2906002)(33656002)(558084003)(110136005)(4326008)(54906003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4468;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: X9utKxbvMKmAEFPz5gIfMbt2ouNJjrpEdtHc+VNC0llvECerTrFnMa66r3aJJ7o6ijLLENnynQdn6NqMMnn/9bc/JVBdvzMB8WdQEaw/X5Oxpf+f67CmE1ZrFGpVxlCZ6eoU5Bb5qfPOk5Jdiy/ixtw1GQCMoiyfWFWZekPsCqEYDtP0Xg70mJ80KVhhUgOhE8/YPZvKca9rLKKN8B0ERdyYtlMMXofUah3O5A51IdetTjpf9/jMTndWb+5L5WtEUP6cIBqBDcEmtYAeF1YHIwHil6IAlUf5Gj54lRaWcK/I9Fw5FRC1pX/Fk/pL32yj8dbd2MsSAyZU8s8QFKcE10qUJOFl+yaBWhq8Qtiu2lQZEe5qUGkw2Tp1V/EgQmHGkJfKRCAQ7aNYf6WwbPvcBUywz5hFwlf4s8k455iJXyUImOhdRttxx5FGHXL03XZN
+x-ms-exchange-antispam-messagedata: 9/9k4avfESXSpqfopRcl2Fq2n1OLX7Pk7sWWQNOgVTTkytontykB7aV6gFCGW7LDKZ19fGnIwIr6CpH9enbO7OPyBMFjsFXZjiZbyYNq6qmgvPZhd5KLsrnJVTIoDrlBijqPlVn7YB7/OEvUYABl0g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 75C55230E1
-X-Spamd-Result: default: False [6.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[gmail.com,armlinux.org.uk,lunn.ch,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70aee559-bbbc-4e77-a6f7-08d7a5ac3ae9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2020 17:45:43.6251
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +lcqulMvbDhiLT9n2SQbjAMO2WyPhwBiOE6ZaBaLVOongPzjZMUeAaNOyJ5krOtcNDZtfq6Ee+RcjTMkTZjR0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4468
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If phydev->mii_ts is set by the PHY driver, it will always be
-overwritten in of_mdiobus_register_phy(). Fix it. Also make sure, that
-the unregister() doesn't do anything if the mii_timestamper was provided by
-the PHY driver.
-
-Fixes: 1dca22b18421 ("net: mdio: of: Register discovered MII time stampers.")
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/phy/mii_timestamper.c | 7 +++++++
- drivers/of/of_mdio.c              | 8 +++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/mii_timestamper.c b/drivers/net/phy/mii_timestamper.c
-index 2f12c5d901df..b71b7456462d 100644
---- a/drivers/net/phy/mii_timestamper.c
-+++ b/drivers/net/phy/mii_timestamper.c
-@@ -111,6 +111,13 @@ void unregister_mii_timestamper(struct mii_timestamper *mii_ts)
- 	struct mii_timestamping_desc *desc;
- 	struct list_head *this;
- 
-+	/* mii_timestamper statically registered by the PHY driver won't use the
-+	 * register_mii_timestamper() and thus don't have ->device set. Don't
-+	 * try to unregister these.
-+	 */
-+	if (!mii_ts->device)
-+		return;
-+
- 	mutex_lock(&tstamping_devices_lock);
- 	list_for_each(this, &mii_timestamping_devices) {
- 		desc = list_entry(this, struct mii_timestamping_desc, list);
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index db0ed5879803..8270bbf505fb 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -124,7 +124,13 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 		of_node_put(child);
- 		return rc;
- 	}
--	phy->mii_ts = mii_ts;
-+
-+	/* phy->mii_ts may already be defined by the PHY driver. A
-+	 * mii_timestamper probed via the device tree will still have
-+	 * precedence.
-+	 */
-+	if (mii_ts)
-+		phy->mii_ts = mii_ts;
- 
- 	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
- 		child, addr);
--- 
-2.20.1
-
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
