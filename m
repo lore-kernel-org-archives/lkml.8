@@ -2,104 +2,157 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B41C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9E8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E89B205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580412168;
-	bh=/ADDyZGeUBrFy1yM/2Cjxlczx2El2xTo64aBpM00OOA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pT/vo6JsK+CWK8uA39/woVD9/WKmKnLE3O7TuQj/DdUwSGoWnQo2r4GJrgJCYCK+1
-	 DVTzCktZIy+Riq+ZTJJha528dcjWZmingGedQxLQPeHPfWYPzi+Jh+WeqCvXkoSUE2
-	 T2lcrcC1xRVDp1OOgsZ6Klo7MHkG1aD9sAfUXrdo=
+	by mail.kernel.org (Postfix) with ESMTP id 7D6BB206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jqYeVsah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgA3TWr (ORCPT
+        id S1727566AbgA3TXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727402AbgA3TWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:22:47 -0500
-Received: from localhost.localdomain (unknown [194.230.155.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C9A3205F4;
-        Thu, 30 Jan 2020 19:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580412166;
-        bh=/ADDyZGeUBrFy1yM/2Cjxlczx2El2xTo64aBpM00OOA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mBMeleaLkrp1L5YIelNo1iiPfVr7glrgDlnpHKaAkSpQH0cBL/Y6ukaEvybMHE41r
-         hGJubOrIAWir23oxOPSQNgNm80FIkkabQ1YLqD3SRvGgmr8PFamLByTz3gRrFDjQgO
-         xwWHNilCLN1EVG4W7LVP40vRCKD42/Wv2omGPQ8s=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] csky: Cleanup old Kconfig options
-Date:   Thu, 30 Jan 2020 20:22:40 +0100
-Message-Id: <20200130192240.2881-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jan 2020 14:23:42 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53994 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727438AbgA3TXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:23:41 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so1760761pjc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:23:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=STfgILZYJSeHL29PKr26PXRGNaaOXbLTCRy3jhx8noU=;
+        b=jqYeVsahhF99yBrSGAvuHdMSc2W97p/s3hZt9gt9YFSuOjK3g3byaqJC2nQE+QDIfI
+         Z8NqxNikaMbSwQW2aQmx4Z02ThbSexr8D1XYxdrnXThBpe0rcHGSppH4YG+Li4+wqP63
+         2itQvwz4W2zBZh2IImAm5jdwB75aiWKl25l50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=STfgILZYJSeHL29PKr26PXRGNaaOXbLTCRy3jhx8noU=;
+        b=Hr54Ox1ZPJbRGp+1glA5oSSlyGZMI6yBWigfDlFiyaiTLlAJg4JSzGC83HkLIZCgQk
+         lq4I8XpaI0SdHXBXvpHSc03ib44WbDDJL8WYgSD3tZ8A3GLrOe9Lm9zwIt1v8VqLHXd1
+         UY0ICL3GunatMnikqlEE+hhxFdrMlv+/wdvNVR/wGuL64EcIplxPkxZh7KrIz0RxpZJs
+         C2FLJYk0CCwTpByScmDTKwDVnrweQCV0OsjRadj1hUQW0kaRUst2hBoh9AdsMq7tz2m+
+         zVBpTGxNNgC5nXemuWNgkebFJLo5vqfYHg3fGjqTNQIKPAHZx0rI1f+Dfnu5py0Lnrcd
+         O8OQ==
+X-Gm-Message-State: APjAAAWBvs9H5+ScpPmeINMePXOZb+fB3b3nAN4OAcPTg08giypuruzP
+        hjegSGVIRk2iG2CxyviTT7yL5w==
+X-Google-Smtp-Source: APXvYqw7tzrE450ZfccVZjN7IiTuW4qM2cwf555Gxth2MtTA6Fx8D7q2y+CnyzGujglJaRni3OFJmQ==
+X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr7802031pjk.134.1580412220763;
+        Thu, 30 Jan 2020 11:23:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b185sm7608776pfa.102.2020.01.30.11.23.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 11:23:39 -0800 (PST)
+Date:   Thu, 30 Jan 2020 11:23:38 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Kubecek <mkubecek@suse.cz>
+Subject: Re: [kernel-hardening] [PATCH 09/38] usercopy: Mark kmalloc caches
+ as usercopy caches
+Message-ID: <202001300945.7D465B5F5@keescook>
+References: <201911121313.1097D6EE@keescook>
+ <201911141327.4DE6510@keescook>
+ <bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz>
+ <202001271519.AA6ADEACF0@keescook>
+ <5861936c-1fe1-4c44-d012-26efa0c8b6e7@de.ibm.com>
+ <202001281457.FA11CC313A@keescook>
+ <alpine.DEB.2.21.2001291640350.1546@www.lameter.com>
+ <6844ea47-8e0e-4fb7-d86f-68046995a749@de.ibm.com>
+ <20200129170939.GA4277@infradead.org>
+ <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <771c5511-c5ab-3dd1-d938-5dbc40396daa@de.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_CLKSRC_OF is gone since commit bb0eb050a577
-("clocksource/drivers: Rename CLKSRC_OF to TIMER_OF").  The platform
-already selects TIMER_OF.
+On Wed, Jan 29, 2020 at 06:19:56PM +0100, Christian Borntraeger wrote:
+> On 29.01.20 18:09, Christoph Hellwig wrote:
+> > On Wed, Jan 29, 2020 at 06:07:14PM +0100, Christian Borntraeger wrote:
+> >>> DMA can be done to NORMAL memory as well.
+> >>
+> >> Exactly. 
+> >> I think iucv uses GFP_DMA because z/VM needs those buffers to reside below 2GB (which is ZONA_DMA for s390).
+> > 
+> > The normal way to allocate memory with addressing limits would be to
+> > use dma_alloc_coherent and friends.  Any chance to switch iucv over to
+> > that?  Or is there no device associated with it?
+> 
+> There is not necessarily a device for that. It is a hypervisor interface (an
+> instruction that is interpreted by z/VM). We do have the netiucv driver that
+> creates a virtual nic, but there is also AF_IUCV which works without a device.
+> 
+> But back to the original question: If we mark kmalloc caches as usercopy caches,
+> we should do the same for DMA kmalloc caches. As outlined by Christoph, this has
+> nothing to do with device DMA.
 
-CONFIG_HAVE_DMA_API_DEBUG is gone since commit 6e88628d03dd ("dma-debug:
-remove CONFIG_HAVE_DMA_API_DEBUG").
+Hm, looks like it's allocated from the low 16MB. Seems like poor naming!
+:) There seems to be a LOT of stuff using GFP_DMA, and it seems unlikely
+those are all expecting low addresses?
 
-CONFIG_DEFAULT_DEADLINE is gone since commit f382fb0bcef4 ("block:
-remove legacy IO schedulers").
+Since this has only been a problem on s390, should just s390 gain the
+weakening of the usercopy restriction?  Something like:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/csky/Kconfig           | 2 --
- arch/csky/configs/defconfig | 1 -
- 2 files changed, 3 deletions(-)
 
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 4acef4088de7..0d6a6af7751d 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -9,7 +9,6 @@ config CSKY
- 	select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
- 	select COMMON_CLK
- 	select CLKSRC_MMIO
--	select CLKSRC_OF
- 	select CSKY_MPINTC if CPU_CK860
- 	select CSKY_MP_TIMER if CPU_CK860
- 	select CSKY_APB_INTC
-@@ -47,7 +46,6 @@ config CSKY
- 	select HAVE_PERF_EVENTS
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
--	select HAVE_DMA_API_DEBUG
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
-diff --git a/arch/csky/configs/defconfig b/arch/csky/configs/defconfig
-index 7ef42895dfb0..3b540539dbe6 100644
---- a/arch/csky/configs/defconfig
-+++ b/arch/csky/configs/defconfig
-@@ -10,7 +10,6 @@ CONFIG_BSD_PROCESS_ACCT=y
- CONFIG_BSD_PROCESS_ACCT_V3=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
--CONFIG_DEFAULT_DEADLINE=y
- CONFIG_CPU_CK807=y
- CONFIG_CPU_HAS_FPU=y
- CONFIG_NET=y
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 1907cb2903c7..c5bbc141f20b 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1303,7 +1303,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
+ 				kmalloc_info[i].name[KMALLOC_DMA],
+ 				kmalloc_info[i].size,
+-				SLAB_CACHE_DMA | flags, 0, 0);
++				SLAB_CACHE_DMA | flags, 0,
++				IS_ENABLED(CONFIG_S390) ?
++					kmalloc_info[i].size : 0);
+ 		}
+ 	}
+ #endif
+
+
+
 -- 
-2.17.1
-
+Kees Cook
