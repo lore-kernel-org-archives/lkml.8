@@ -2,87 +2,304 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1E5C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6807B20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34094214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ScHGOJlg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fv6gi4y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgA3URm (ORCPT
+        id S1727719AbgA3USX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:17:42 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56153 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgA3URl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:17:41 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 487s8w6YGRz9s1x;
-        Fri, 31 Jan 2020 07:17:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580415458;
-        bh=83JhuBz9F3cfqx6bDq/W4iA71Lq90LSjI0cH7aloKA4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ScHGOJlgvLAT82YJpBH2RpkE4ZSgZ4Kn6ksKJ0Xb4pEHZco4L6w/E4xd2RdVOHjVV
-         4HMnJ/QP7k7OskzhinDwVZfXUS+uctznh/LFbIZW7bdcq5/2hBt5cOx9m9CNNfnTmy
-         odZsOJabjOcB7+qTXLTYzcrzwRv5a7GymjA0Mx7t0Nbgs9PiemQTdfmfQsAEwCG6Yw
-         nHY8E6n9FHZeNj+MQZwiae1dtYiZoGlpd5NF296C78bLMnBsiOQgpnYEMT7KTxF0oM
-         aF4lgZ7FUHtJc1BDWC8z/H/Q9u8W/bFmycNOWofnN38N3bAuz7emKqJttaDs0MpNNT
-         KIfhlt+bbY1DA==
-Date:   Fri, 31 Jan 2020 07:17:18 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guo Ren <guoren@linux.alibaba.com>
-Subject: linux-next: Signed-off-by missing for commit in the risc-v tree
-Message-ID: <20200131071718.248da483@canb.auug.org.au>
+        Thu, 30 Jan 2020 15:18:23 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14954 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3USX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 15:18:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3339d80000>; Thu, 30 Jan 2020 12:17:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 12:18:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 12:18:20 -0800
+Received: from [10.110.103.70] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 20:18:20 +0000
+Subject: Re: [RFC PATCH v1 5/5] arm64: tegra: Add Tegra VI CSI suppport in
+ device tree
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
+ <20200129094624.GD2479935@ulmo>
+ <bd18711d-ce23-cbee-7824-37a8c78908e6@nvidia.com>
+ <20200130123607.GB2584455@ulmo>
+ <c5fd4eb3-0026-95a5-5162-e1cf5302698e@nvidia.com>
+ <20200130175820.GA3155155@ulmo>
+ <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+Message-ID: <ba57fcf2-a7bf-8154-96c9-aba401327af7@nvidia.com>
+Date:   Thu, 30 Jan 2020 12:18:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_ZodzN52BC0tg_nT93OvKJq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580415449; bh=ca6fwawVS1LllpxDMOUrHSchE4I2p7wXuXiAS1BaG4Y=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=Fv6gi4y19QD9RNCb7ovCu73XWStA/oTMANNlrCFgKacSHb6i3A8uOjSDIym++ZtK/
+         8IITmTfl9nOe404yFXERRUnEKRpsqSzK0ydGvQA2gc01fNFiJoXtPvsUwOoi4IWWdD
+         V8HTVwC2RsYEooCKAAP3bLC6xb8NxK7Q9pwJV8wgE3ZqlPCkawRwtTLwWl+sOzdteA
+         6Jn5X7xL95mAxnh+Oxq4996Pi+Q7KujIw25y2Byg7+Vgue4DU3uMJhzaR6QdTvhcC6
+         BC3hLf5bd8TabDZtGS+b/VpGdVPL3LaohC2I2NljORqVEfcL9vRj6ez4KoyS4fmThr
+         qIe6YmDexg58Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_ZodzN52BC0tg_nT93OvKJq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-Commit
-
-  4d99abce8ce8 ("riscv: Use flush_icache_mm for flush_icache_user_range")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_ZodzN52BC0tg_nT93OvKJq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4zOc8ACgkQAVBC80lX
-0GzJgAf7BXge93R4baEL0VVRBd8xZM5T7i/3pRPXM3peeSjTS6M8lcaNrJV5/ZpN
-oCupml+gsiNuf4KEA4LZOlRS2C096dAnam23tSZlZ5BRNgPUX7Mj2X0TZ/bG/MKe
-JwoeExoJ76iO84pj62ipvTtnGXD28WCRfADFIqIhsp+gzmOMh59cEVU18YkkFUnc
-Xx7tVWd/bVfidEb/jIWmmQy5jxMj3GKmHI/ik9zYubEU1sJBQTnxBzDeAYnXO1dY
-kFaN2EkJZkmAG7SEQm5mkgWJV0HxWp/V+1+6ErRJ7WbkiwjbEx+TcXWMiWl6bXPe
-0Lta6XTuRjmSIElaIDOhf1eo1HKxhA==
-=WB+5
------END PGP SIGNATURE-----
-
---Sig_/_ZodzN52BC0tg_nT93OvKJq--
+On 1/30/20 10:58 AM, Sowjanya Komatineni wrote:
+>
+> On 1/30/20 9:58 AM, Thierry Reding wrote:
+>> On Thu, Jan 30, 2020 at 09:18:50AM -0800, Sowjanya Komatineni wrote:
+>>> On 1/30/20 4:36 AM, Thierry Reding wrote:
+>>>> On Wed, Jan 29, 2020 at 08:22:48AM -0800, Sowjanya Komatineni wrote:
+>>>>> On 1/29/20 1:46 AM, Thierry Reding wrote:
+>>>>>> On Tue, Jan 28, 2020 at 10:23:21AM -0800, Sowjanya Komatineni wrote:
+>>>>>>> Tegra210 contains VI controller for video input capture from MIPI
+>>>>>>> CSI camera sensors and also supports built-in test pattern=20
+>>>>>>> generator.
+>>>>>>>
+>>>>>>> CSI ports can be one-to-one mapped to VI channels for capturing=20
+>>>>>>> from
+>>>>>>> an external sensor or from built-in test pattern generator.
+>>>>>>>
+>>>>>>> This patch adds support for VI and CSI and enables them in Tegra210
+>>>>>>> device tree.
+>>>>>>>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 8 ++++++=
++
+>>>>>>> =A0=A0=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=A0=A0=A0=A0=A0=
+=A0 | 31=20
+>>>>>>> +++++++++++++++++++++++++-
+>>>>>>> =A0=A0=A0 2 files changed, 38 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi=20
+>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> index b0095072bc28..ec1b3033fa03 100644
+>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>>> @@ -10,6 +10,14 @@
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sor@54580000 {
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "okay";
+>>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi=20
+>>>>>>> b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> index 48c63256ba7f..c6107ec03ad1 100644
+>>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>>> @@ -136,9 +136,38 @@
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 vi@54080000 {
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvidi=
+a,tegra210-vi";
+>>>>>>> -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x00=
+040000>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080000 0x0 0x80=
+8>;
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <GIC_S=
+PI 69 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled"=
+;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car =
+TEGRA210_CLK_VI>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&teg=
+ra_car=20
+>>>>>>> TEGRA210_CLK_PLL_C4_OUT0>;
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210_=
+CLK_VI>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "vi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 resets =3D <&tegra_car 20>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reset-names =3D "vi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0 csi@0x54080838 {
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "nvidia,tegra210-=
+csi";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x0 0x54080838 0x0 0x20=
+00>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 status =3D "disabled";
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clocks =3D <&tegra_car =
+TEGRA210_CLK_CILAB>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&=
+tegra_car TEGRA210_CLK_CILCD>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&=
+tegra_car TEGRA210_CLK_CILE>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-parents =3D <&teg=
+ra_car=20
+>>>>>>> TEGRA210_CLK_PLL_P>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0 <&tegra_car TEGRA210_CLK_PLL_P>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 assigned-clock-rates =3D <102000=
+000>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 <102000000>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0 <102000000>;
+>>>>>>> +
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clocks =3D <&tegra_car TEGRA210_=
+CLK_CSI>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILAB>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILCD>,
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&tegra_car TEGRA=
+210_CLK_CILE>;
+>>>>>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 clock-names =3D "csi", "cilab", =
+"cilcd", "cile";
+>>>>>>> +
+>>>>>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+>>>>>> Can this be a child of the vi node? Looking at the register=20
+>>>>>> ranges it
+>>>>>> seems like these are actually a single IP block. If they have=20
+>>>>>> separate
+>>>>>> blocks with clearly separate functionality, then it makes sense=20
+>>>>>> to have
+>>>>>> CSI be a child node of VI, though it may also be okay to merge=20
+>>>>>> both and
+>>>>>> have a single node with the driver doing all of the differentiation
+>>>>>> between what's VI and what's CSI.
+>>>>>>
+>>>>>> Looking at later chips, the split between VI and CSI is more=20
+>>>>>> explicit,
+>>>>>> so having the split in DT for Tegra210 may make sense for=20
+>>>>>> consistency.
+>>>>>>
+>>>>>> I know we've discussed this before, but for some reason I keep=20
+>>>>>> coming
+>>>>>> back to this. I'll go through the other patches to see if I can=20
+>>>>>> get a
+>>>>>> clearer picture of how this could all work together.
+>>>>>>
+>>>>>> Thierry
+>>>>> We can keep it separate as we discussed.
+>>>>>
+>>>>> But as Tegra186 onwards, CSI is separate device to be all=20
+>>>>> cosistent I kept
+>>>>> CSI as separate node for Tegra210 as well.
+>>>> =A0 From our discussion, my understanding was that CSI would be a=20
+>>>> separate
+>>>> device, but it would still be a subdevice of VI. The address offset of
+>>>> the CSI registers not being aligned to a power of two is a strong
+>>>> indication that this is really all part of the same block.
+>>> Yes our earlier discussion is to have CSI as subdevice.
+>>>
+>>> Later looking into T186 and later NVCSI is totally separate so it=20
+>>> will be
+>>> separate device and to have driver common moved Tegra210 CSI also as
+>>> separate device instead of having it as subdevice of VI.
+>>>
+>>> Earlier when we discussed at that time I am using TPG also from device
+>>> graphs but not moved to hard media links inside driver for TPG.
+>>>
+>>> For this we need CSI to be available prior to VI.
+>> Why is that? Does creating the hard media links need access to a struct
+>> device? What if we created that device in the VI driver without any
+>> reliance on DT? Shouldn't that also work? I have a hard time imagining
+>> that there aren't other devices like this where we don't necessarily
+>> have separate devices for these links.
+> Yes we need CSI structure for hard link TPG also as all csi channel=20
+> list is part of CSI device.
+>
+> We can create CSI channel subdevices within VI without using CSI=20
+> device from a separate CSI driver probe for Tegra210 and make all=20
+> subdev related ops implementations as global so they can be used from=20
+> VI driver for Tegra210 and can also be used for Tegra186 and later in=20
+> separate CSI driver.
+>
+> During creating media links in VI driver for TPG, for T210 we can use=20
+> local CSI device structure and for T186+ we can use CSI device=20
+> structure created during CSI probe.
+>
+> Sorry, I didn't understood what you meant by separate devices for=20
+> these link.
+>
+> We only have Tegra CSI linked to Tegra VI for TPG/Real sensor.
+>
+>>> If we add CSI as subdevice to VI, CSI will not be available by the time
+>>> VI init happens.
+>> The CSI subdevice should be registered as part of the VI driver's probe,
+>> right? That's typically where you'd call of_platform_populate(). Could
+>> we not set up the hard media links in the ->init() callbacks for the
+>> host1x clients? Those are called after all of the devices have been
+>> probed, so the CSI device should be available at that time.
+>>
+yes, will update to have CSI as child node to VI
+>>> Currently host1x subdevices listed has CSI before VI and CSI init=20
+>>> happens
+>>> earlier so by the time VI init happens CSI is available to do media=20
+>>> links
+>>> b/w VI video entity and CSI subdevice entity.
+>> Okay, I understand how this would be a convenient solution. However, the
+>> device tree is a hardware description, so we need to ignore what we know
+>> about the operating system infrastructure that we want to use when
+>> writing the device tree bindings (and the device tree content) in order
+>> to make sure the same binding will work on a different operating system
+>> which may have a completely different infrastructure (or none at all).
+>>
+>>> Also having CSI as separate subdevice (not as subdevice to VI) for=20
+>>> T210 will
+>>> be consistent with T186 and later.
+>> Again, I see how that's convenient. But the main difference between
+>> Tegra210 and Tegra186 is that on the former, the CSI is merged with VI,
+>> whereas on the latter the CSI is a completely separate hardware block.
+>>
+>> Since device tree describes the hardware, that difference should be
+>> apparent in the device tree. I initially thought as well that it would
+>> be advantageous if both had the same representation, but I do realize
+>> now that this has a significant impact on the device tree, and it
+>> violates the basic principles we base device tree binding design on.
+>>
+>> Thierry
+>
+> I just thought of driver implementation being common b/w T210 and=20
+> T186+ by having CSI as separate device node rather than as child node=20
+> to VI to avoid CSI structure handling within VI for T210 only.
+>
+> Will update DT and driver to have CSI as child node of VI for T210.
+>
+>
