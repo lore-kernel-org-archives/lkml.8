@@ -6,32 +6,35 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF17C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1963C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312B82083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8538520707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgA3RMI (ORCPT
+        id S1727484AbgA3RNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:12:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46332 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 12:13:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgA3RMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:12:08 -0500
+        id S1726514AbgA3RNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 12:13:54 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF21206F0;
-        Thu, 30 Jan 2020 17:12:07 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 12:12:05 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E540206F0;
+        Thu, 30 Jan 2020 17:13:53 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 12:13:52 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Shuah Khan <shuahkhan@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH] selftests/ftrace: Have pid filter test use instance flag
-Message-ID: <20200130121205.40cbb903@gandalf.local.home>
+Subject: Re: [PATCH] selftests/ftrace: Have pid filter test use instance
+ flag
+Message-ID: <20200130121352.466e3300@gandalf.local.home>
+In-Reply-To: <20200130121205.40cbb903@gandalf.local.home>
+References: <20200130121205.40cbb903@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,52 +45,62 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Shuah,
 
-While running the ftracetests, the pid filter test failed because the
-instance "foo" existed, and it was using it to rerun the test under a
-instance named foo. The collision caused the test to fail as the mkdir
-failed as the name already existed.
+Can you take this through your tree?
 
-As of commit b5b77be812de7 ("selftests: ftrace: Allow some tests to be run
-in a tracing instance") all a selftest needs to do to be tested in an
-instance is to set the "instance" flag. There's no reason a selftest needs
-to create an instance to run its test in an instance directly.
+Thanks!
 
-Remove the open coded testing in an instance for the pid filter test and
-have it set the "instance" flag instead.
+-- Steve
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- .../selftests/ftrace/test.d/ftrace/func-filter-pid.tc     | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-index 64cfcc75e3c1..f2ee1e889e13 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-@@ -1,6 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: ftrace - function pid filters
-+# flags: instance
- 
- # Make sure that function pid matching filter works.
- # Also test it on an instance directory
-@@ -96,13 +97,6 @@ do_test() {
- }
- 
- do_test
--
--mkdir instances/foo
--cd instances/foo
--do_test
--cd ../../
--rmdir instances/foo
--
- do_reset
- 
- exit 0
--- 
-2.20.1
+On Thu, 30 Jan 2020 12:12:05 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> While running the ftracetests, the pid filter test failed because the
+> instance "foo" existed, and it was using it to rerun the test under a
+> instance named foo. The collision caused the test to fail as the mkdir
+> failed as the name already existed.
+> 
+> As of commit b5b77be812de7 ("selftests: ftrace: Allow some tests to be run
+> in a tracing instance") all a selftest needs to do to be tested in an
+> instance is to set the "instance" flag. There's no reason a selftest needs
+> to create an instance to run its test in an instance directly.
+> 
+> Remove the open coded testing in an instance for the pid filter test and
+> have it set the "instance" flag instead.
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  .../selftests/ftrace/test.d/ftrace/func-filter-pid.tc     | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> index 64cfcc75e3c1..f2ee1e889e13 100644
+> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> @@ -1,6 +1,7 @@
+>  #!/bin/sh
+>  # SPDX-License-Identifier: GPL-2.0
+>  # description: ftrace - function pid filters
+> +# flags: instance
+>  
+>  # Make sure that function pid matching filter works.
+>  # Also test it on an instance directory
+> @@ -96,13 +97,6 @@ do_test() {
+>  }
+>  
+>  do_test
+> -
+> -mkdir instances/foo
+> -cd instances/foo
+> -do_test
+> -cd ../../
+> -rmdir instances/foo
+> -
+>  do_reset
+>  
+>  exit 0
 
