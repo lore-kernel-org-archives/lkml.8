@@ -2,192 +2,158 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D32C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEC2C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B802082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA15206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NjFFBuHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgA3NQi (ORCPT
+        id S1727328AbgA3NS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:16:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49944 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbgA3NQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:16:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 20EC1AC24;
-        Thu, 30 Jan 2020 13:16:35 +0000 (UTC)
-Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
-To:     Christopher Lameter <cl@linux.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-References: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
- <20191204173224.GN25242@dhcp22.suse.cz>
- <20200106115733.GH12699@dhcp22.suse.cz>
- <alpine.DEB.2.21.2001061550270.23163@www.lameter.com>
- <20200109145236.GS4951@dhcp22.suse.cz>
- <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org>
- <20200117171331.GA17179@blackbody.suse.cz>
- <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
- <20200127173336.GB17425@blackbody.suse.cz>
- <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
- <20200128085107.GF17425@blackbody.suse.cz>
- <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <57b0f41f-cb8c-c295-a0a0-5607d30ccf1f@suse.cz>
-Date:   Thu, 30 Jan 2020 14:16:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 08:18:27 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58398 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbgA3NS0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:18:26 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UDIMfD014767;
+        Thu, 30 Jan 2020 07:18:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580390302;
+        bh=YnPpRPOJrB54TzCkERn6g/npDkn6RNuSyqEisfLG/PQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=NjFFBuHQJKynAWsmbgOnUSKHq+khfmsy7P2YloBOh0fEjFT5zUpFH5ALlLOOm37WX
+         xTYd/4FE7MKYpP66cjIBKNATY5lVxfJWK/9mqtpNCfoYY88YI+2dIA9UkYtSofVUON
+         t3zmAnvThDcuYO+TXacEglIev/tSwx8wRHo03gmA=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UDIMbV051928
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 07:18:22 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 07:18:22 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 07:18:21 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UDIKiZ049941;
+        Thu, 30 Jan 2020 07:18:20 -0600
+Subject: Re: [PATCH for-next 0/4] dmaengine: ti: k3-udma: Updates for next
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
+        <vigneshr@ti.com>
+References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+ <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
+ <20200128115006.GT2841@vkoul-mobl>
+ <fbe5a971-650d-de58-cee2-0a80eca5c1cd@ti.com>
+Message-ID: <5d25f5f1-f6a1-0f5a-b715-0e3e0031bb99@ti.com>
+Date:   Thu, 30 Jan 2020 15:19:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
-Content-Type: text/plain; charset=iso-8859-15
+In-Reply-To: <fbe5a971-650d-de58-cee2-0a80eca5c1cd@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/28/20 7:13 PM, Christopher Lameter wrote:
-> On Tue, 28 Jan 2020, Michal Koutn� wrote:
-> 
->> On Mon, Jan 27, 2020 at 11:04:53PM +0000, Christopher Lameter <cl@linux.com> wrote:
->>> The patch exposes details of cgroup caches? Which patch are we talking
->>> about?
->> Sorry, that's misunderstanding. I mean the current state (sending
->> uevents) exposes the internals (creation of caches per cgroup). The
->> patch [1] removing uevent notifications is rectifying it.
-> 
-> 
-> From: Christoph Lameter <cl@linux.com>
-> Subject: slub: Remove userspace notifier for cache add/remove
-> 
-> Kmem caches are internal kernel structures so it is strange that
-> userspace notifiers would be needed. And I am not aware of any use
-> of these notifiers. These notifiers may just exist because in the
-> initial slub release the sysfs code was copied from another
-> subsystem.
-> 
-> Signed-off-by: Christoph Lameter <cl@linux.com>
+Hi Vinod,
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+On 28/01/2020 14.37, Peter Ujfalusi wrote:
+> Hi Vinod,
+> 
+> On 28/01/2020 13.50, Vinod Koul wrote:
+>> On 28-01-20, 12:15, Peter Ujfalusi wrote:
+>>> Vinod,
+>>>
+>>> On 27/01/2020 15.21, Peter Ujfalusi wrote:
+>>>> Hi Vinod,
+>>>>
+>>>> Based on customer reports we have identified two issues with the UDMA driver:
+>>>>
+>>>> TX completion (1st patch):
+>>>> The scheduled work based workaround for checking for completion worked well for
+>>>> UART, but it had significant impact on SPI performance.
+>>>> The underlying issue is coming from the fact that we have split data movement
+>>>> architecture.
+>>>> In order to know that the transfer is really done we need to check the remote
+>>>> end's (PDMA) byte counter.
+>>>>
+>>>> RX channel teardown with stale data in PDMA (2nd patch):
+>>>> If we try to stop the RX DMA channel (teardown) then PDMA is trying to flush the
+>>>> data is might received from a peripheral, but if UDMA does not have a packet to
+>>>> use for this draining than it is going to push back on the PDMA and the flush
+>>>> will never completes.
+>>>> The workaround is to use a dummy descriptor for flush purposes when the channel
+>>>> is terminated and we did not have active transfer (no descriptor for UDMA).
+>>>> This allows UDMA to drain the data and the teardown can complete.
+>>>>
+>>>> The last two patch is to use common code to set up the TR parameters for
+>>>> slave_sg, cyclic and memcpy. The setup code is the same as we used for memcpy
+>>>> with the change we can handle 4.2GB sg elements and periods in case of cyclic.
+>>>> It is also nice that we have single function to do the configuration.
+>>>
+>>> I have marked these patches as for-next as 5.5 was not released yet.
+>>> Would it be possible to have these as fixes for 5.6?
+>>
+>> Sure but are they really fixes, why cant they go for next release :)
+>>
+>> They seem to improve things for sure, but do we want to call them as
+>> fixes..?
+> 
+> I would say that the first two patch is a fix:
+> TX completion check is fixing the performance hit by the early TX
+> completion workaround which used jiffies+work.
+> 
+> The second patch is fixing a case when we have stale data during RX and
+> no active transfer. For example when UART reads 1000 bytes, but the
+> other end is 'streaming' the data and after the 1000 bytes the UART+PDMA
+> receives data.
+> Recovering from this state is not easy and it might not even succeed in
+> HW level.
+> 
+> The last two is I agree, it is not fixing much, it does corrects the
+> slave_sg TR setup (and improves the cyclic as well).
+> With that I could send the ASoC platform wrapper for UDMA with
+> period_bytes_max = 4.2GB ;)
+> I have SZ_512K in there atm, with the old calculation SZ_64K is the
+> maximum, not a big issue.
 
-> Index: linux/mm/slub.c
-> ===================================================================
-> --- linux.orig/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
-> +++ linux/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
-> @@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
->  	.release = kmem_cache_release,
->  };
+Actually this also fixes a real bug in the driver for the slave_sg_tr case:
+if the sg_dma_len(sgent) is not multiple of (burst * dev_width) then we
+end up with missing bits as the counters are not set up correctly.
+The client driver which we tested the slave_sg_tr was always giving
+sg_len == 1 and the buffer was aligned, but when I tuned the client to
+pass a list, things got broken.
+
 > 
-> -static int uevent_filter(struct kset *kset, struct kobject *kobj)
-> -{
-> -	struct kobj_type *ktype = get_ktype(kobj);
-> -
-> -	if (ktype == &slab_ktype)
-> -		return 1;
-> -	return 0;
-> -}
-> -
-> -static const struct kset_uevent_ops slab_uevent_ops = {
-> -	.filter = uevent_filter,
-> -};
-> -
->  static struct kset *slab_kset;
+> I think the first two patch is a fix candidate as they fix regression
+> (albeit regression between the series's) and a real world channel lockup
+> discovered too late for the initial driver.
 > 
->  static inline struct kset *cache_kset(struct kmem_cache *s)
-> @@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
->  #ifdef CONFIG_MEMCG
->  	kset_unregister(s->memcg_kset);
->  #endif
-> -	kobject_uevent(&s->kobj, KOBJ_REMOVE);
->  out:
->  	kobject_put(&s->kobj);
->  }
-> @@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
->  	}
->  #endif
+> - Péter
 > 
-> -	kobject_uevent(&s->kobj, KOBJ_ADD);
->  	if (!unmergeable) {
->  		/* Setup first alias */
->  		sysfs_slab_alias(s, s->name);
-> @@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
-> 
->  	mutex_lock(&slab_mutex);
-> 
-> -	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
-> +	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
->  	if (!slab_kset) {
->  		mutex_unlock(&slab_mutex);
->  		pr_err("Cannot register slab subsystem.\n");
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 > 
 
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
