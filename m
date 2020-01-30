@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D34CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB50C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B57205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A532F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409700;
-	bh=HmDDopOrwhUHL1wldJ0BrLZPmR8N2AVoVwZoXxGPi00=;
+	s=default; t=1580409704;
+	bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNpkcBsP6JGKSrEL14UGyr6IXm4Pxv86dNaVVtihgWt2rTQzQuelocCfCXTCtLydv
-	 /2YHBYM1FYZt2ssFG6yKVwC2gsz6d1x5dP0ErMrCX+q4+p28dZAI3FSCANVbiiXQwU
-	 D0wf+dLD46G+Mb3qyQlC66TxKc5X9I9bkka5IgFE=
+	b=NUN3d0OawQk+dZSzVQO+OGtA8EeLWMEZBnMPqqYnSMco69cl3erPy27stbHfacwFu
+	 A/h5bVpv5NpuIY2hpb6IOP2PiTbSJ7L4j7iOgHLmcDQJSy+8vPNMhQqL+5F+f5FO8d
+	 5FpdDqPPxVA9KoZ9xSSkGXxqhUu0l6qPLsBiCU8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgA3Sli (ORCPT
+        id S1730234AbgA3Sln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:41:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49532 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:41:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgA3Sld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:33 -0500
+        id S1730211AbgA3Sli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50B08205F4;
-        Thu, 30 Jan 2020 18:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99491205F4;
+        Thu, 30 Jan 2020 18:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409692;
-        bh=HmDDopOrwhUHL1wldJ0BrLZPmR8N2AVoVwZoXxGPi00=;
+        s=default; t=1580409698;
+        bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqZrhVZHVp34VTpKekJCF5yB+JJ3tfK3DBwcO6V5XcmVMf1PTvJPX8eGQFwmnennU
-         GgClaEos2k/9t/2D9Ee2cwFEMNLCvY9sUB2eAIHB8PhYVErM++xMJvr/UOPJuT/XEj
-         PtTLVZy2lvT/h32qQsI0ivuLZG3qnj7omsGmkZf0=
+        b=0Dp2MA5j9xVf4gneBfhxn1jKm9j45X2cpCs9EfmMbE9QVZ3Qxn+y8ML5x+a1vXqNU
+         8iON2yMOlHcs2mk8vS85HMsKvRXqQlQlAIckc/j7weyStgt/TQnM+uy9G8f1FlpFpb
+         QOTgPS46yscCyQavBH7dbSefyK4Co1RqYOzIT4EI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 35/56] zd1211rw: fix storage endpoint lookup
-Date:   Thu, 30 Jan 2020 19:38:52 +0100
-Message-Id: <20200130183615.383356152@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.5 54/56] KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
+Date:   Thu, 30 Jan 2020 19:39:11 +0100
+Message-Id: <20200130183618.519896222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -59,37 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Andrew Murray <andrew.murray@arm.com>
 
-commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
+commit 4942dc6638b07b5326b6d2faa142635c559e7cd5 upstream.
 
-Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+On VHE systems arch.mdcr_el2 is written to mdcr_el2 at vcpu_load time to
+set options for self-hosted debug and the performance monitors
+extension.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Unfortunately the value of arch.mdcr_el2 is not calculated until
+kvm_arm_setup_debug() in the run loop after the vcpu has been loaded.
+This means that the initial brief iterations of the run loop use a zero
+value of mdcr_el2 - until the vcpu is preempted. This also results in a
+delay between changes to vcpu->guest_debug taking effect.
 
-Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
-Cc: stable <stable@vger.kernel.org>     # 2.6.19
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fix this by writing to mdcr_el2 in kvm_arm_setup_debug() on VHE systems
+when a change to arch.mdcr_el2 has been detected.
+
+Fixes: d5a21bcc2995 ("KVM: arm64: Move common VHE/non-VHE trap config in separate functions")
+Cc: <stable@vger.kernel.org> # 4.17.x-
+Suggested-by: James Morse <james.morse@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kvm/debug.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1263,7 +1263,7 @@ static void print_id(struct usb_device *
- static int eject_installer(struct usb_interface *intf)
+--- a/arch/arm64/kvm/debug.c
++++ b/arch/arm64/kvm/debug.c
+@@ -101,7 +101,7 @@ void kvm_arm_reset_debug_ptr(struct kvm_
+ void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
  {
- 	struct usb_device *udev = interface_to_usbdev(intf);
--	struct usb_host_interface *iface_desc = &intf->altsetting[0];
-+	struct usb_host_interface *iface_desc = intf->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+ 	bool trap_debug = !(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY);
+-	unsigned long mdscr;
++	unsigned long mdscr, orig_mdcr_el2 = vcpu->arch.mdcr_el2;
+ 
+ 	trace_kvm_arm_setup_debug(vcpu, vcpu->guest_debug);
+ 
+@@ -197,6 +197,10 @@ void kvm_arm_setup_debug(struct kvm_vcpu
+ 	if (vcpu_read_sys_reg(vcpu, MDSCR_EL1) & (DBG_MDSCR_KDE | DBG_MDSCR_MDE))
+ 		vcpu->arch.flags |= KVM_ARM64_DEBUG_DIRTY;
+ 
++	/* Write mdcr_el2 changes since vcpu_load on VHE systems */
++	if (has_vhe() && orig_mdcr_el2 != vcpu->arch.mdcr_el2)
++		write_sysreg(vcpu->arch.mdcr_el2, mdcr_el2);
++
+ 	trace_kvm_arm_set_dreg32("MDCR_EL2", vcpu->arch.mdcr_el2);
+ 	trace_kvm_arm_set_dreg32("MDSCR_EL1", vcpu_read_sys_reg(vcpu, MDSCR_EL1));
+ }
 
 
