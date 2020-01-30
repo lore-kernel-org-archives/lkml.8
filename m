@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C709C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC78AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68632082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED15206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUULSmds"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7t3Sa0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbgA3Ell (ORCPT
+        id S1727455AbgA3Eln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 23:41:41 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37420 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbgA3Ela (ORCPT
+        Wed, 29 Jan 2020 23:41:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52902 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgA3Eld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 23:41:30 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so2342951wru.4;
-        Wed, 29 Jan 2020 20:41:29 -0800 (PST)
+        Wed, 29 Jan 2020 23:41:33 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so2242455wmc.2;
+        Wed, 29 Jan 2020 20:41:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FNAQ91XilBKtgAieSWbzITQUhnG+T3TSX8YX8IekYAY=;
-        b=dUULSmdsC2EIx3rzK5K1RQQyYSZZOJc5xA/PS1f/t+VytmLHV45MYlGy1PXX98eDQp
-         qze720x0DC3DqRSaiiRGqSrzjv/zO89sgpIDXD1Qk+wVmT87LiU5+Ghwgw/Ri9FTpz09
-         swl50XutcVJBPbl/fofipSGfXbM7t9L/wKIMt1FH4W79s7eOT+Uy/kdgy/1X66J0ygol
-         BhoWe3GIBRz5FQTayinPV/wjLoLQOBQyFm+feHH714+7H6vsqQV6LKOVPV/+uf24lWW9
-         ogfE/w4tMT2JhlX287HMd8zX4zsIPnCXf36DsFDOkL3faMMqTMfQ5PpWM9whzSy2Cg1Q
-         v5uQ==
+        bh=5EBoa/11BC9T7X5//l8eeEjFWiZ834E6/s6B9Dz4ejw=;
+        b=T7t3Sa0+D/j2xCXwhefagh+pCBoeRqBP6Mallm4E/gnjg7Y5K4iscb1lQyGQYiFeOw
+         RM4ncvQlFbhlZWuRtQs+bZzyapPBNOPEjTQsTWXoLBkFf28BhN/jNsivWXJ6HW0LhPUg
+         fO0oWy9uLHplTLVc6SAU+ZUUSgG7UDcGi2QEYLU/kHnxRBc1k+3mhS9WndOOulqHNCoh
+         CTCxmJRsSxCsku9JXCYDmJhJaB92dkDYlubgCow3l+iNJCVlCr0i4FQFzXY3WXA84s7v
+         ySPjTkJ3Lr/AzyECsrTJ+Z7VbEsNKLEhr1Mh4u+NgIgoy4RiXcu2uZ+1vSOnK2MVc586
+         tg4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FNAQ91XilBKtgAieSWbzITQUhnG+T3TSX8YX8IekYAY=;
-        b=SHfpInUr7Y8RwHuol68Y0GtRIoInax7IIJDUS3sX+X1QDnzxJ705pb341GaQbJGxDo
-         khb4okA19cdUFNVAik1ryC8UI+/sygLChuzFdnbQIT/M3zGHiGxBsPlqddW8Wst0POOu
-         OshUTMrtyc61k49vti/NJGUrUXJdOSpjBtLTA8yngt6e7Sra0iwJLaKkL1eHTo9ZmUWb
-         x9KEYVxcLvCCsyeVJGj/gZrG+vFhy0JPSdfm7KnolVFbsT+84GwUHM3E/UtoHjbxZr0I
-         uFT8pEfzP/Cu225aJjsFlS+3H1Q2tJOyXX3Nw+UnIXosu4I/VhswrWmrQ86W5PD/x5iN
-         82iw==
-X-Gm-Message-State: APjAAAUYSyQ59NgDOFt+5Gyv7fePdkXavTaiHmFbx4zbtQzPX+83qceP
-        4Mc28kZusMa/ACRLpBqNJXw=
-X-Google-Smtp-Source: APXvYqxJuJrPVi+A6d0bJykaHhgmYett+01HWJrEWYang3scGfcH6Aei+J6a8PBnXu/bEouzyG8gjw==
-X-Received: by 2002:adf:a41c:: with SMTP id d28mr2917555wra.410.1580359289165;
-        Wed, 29 Jan 2020 20:41:29 -0800 (PST)
+        bh=5EBoa/11BC9T7X5//l8eeEjFWiZ834E6/s6B9Dz4ejw=;
+        b=aRIn1b1E2mtIEgV7dSFlTv+ytKuaGc63hQkMHN20st5p7zWiKWytsQ7N5wWQCN+qud
+         BclPtmQIHAVVUl6RpjepI4HrtBaNsJpT4ICcYV+2DuJK0eiJnF7vP6ALzbjtTdUmtOQR
+         zqbrNhfJUZcsnuZUPU9Kw5Jaol9GsKATSliGDgXiEmYJN0XhCPMRPhdAFnhbkW0KupXe
+         IIB7m2TFOtwJKMvn8e1WqD22CGYuk78cQJz1GcXlI4rh8btGwFgB+a+1Wl1roOrHd6PS
+         hpiFzbvoqpjKp4c+Ss4Zowv8Jx/+h4f+uCC9Lj7hgjWyPfOqGe/gAfXlMteKR23MOJha
+         Dfqg==
+X-Gm-Message-State: APjAAAXgg8t59uFpCRrLeZGIUh+bRzqw3UYnmhxiPGvnmxTlA394+Mgi
+        o+Q+9dW9gibacgb5d2CgJZc=
+X-Google-Smtp-Source: APXvYqzWGrOP/XZbWMYROui9UuHCoc7MMRJdWy1NKRHioIGJ/mYfvcIN2TPMSNlIYDk/K2aXfabiPw==
+X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr468223wmu.149.1580359290393;
+        Wed, 29 Jan 2020 20:41:30 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g128sm4494672wme.47.2020.01.29.20.41.28
+        by smtp.gmail.com with ESMTPSA id g128sm4494672wme.47.2020.01.29.20.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 20:41:28 -0800 (PST)
+        Wed, 29 Jan 2020 20:41:30 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 15/16] dmaengine: tegra-apb: Remove MODULE_ALIAS
-Date:   Thu, 30 Jan 2020 07:38:03 +0300
-Message-Id: <20200130043804.32243-16-digetx@gmail.com>
+Subject: [PATCH v6 16/16] dmaengine: tegra-apb: Support COMPILE_TEST
+Date:   Thu, 30 Jan 2020 07:38:04 +0300
+Message-Id: <20200130043804.32243-17-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200130043804.32243-1-digetx@gmail.com>
 References: <20200130043804.32243-1-digetx@gmail.com>
@@ -79,28 +79,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra APB DMA driver is an Open Firmware driver, so it uses OF alias
-naming scheme which overrides MODULE_ALIAS, meaning that MODULE_ALIAS
-does nothing and could be removed safely.
+There is nothing arch-specific in the driver's code, so let's enable
+compile-testing for the driver.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 8f4281ab6296..756a5dbef118 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1684,7 +1684,6 @@ static struct platform_driver tegra_dmac_driver = {
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 98daf3aafdcc..7fc725d928b2 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -617,7 +617,7 @@ config TXX9_DMAC
  
- module_platform_driver(tegra_dmac_driver);
- 
--MODULE_ALIAS("platform:tegra20-apbdma");
- MODULE_DESCRIPTION("NVIDIA Tegra APB DMA Controller driver");
- MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
- MODULE_LICENSE("GPL v2");
+ config TEGRA20_APB_DMA
+ 	tristate "NVIDIA Tegra20 APB DMA support"
+-	depends on ARCH_TEGRA
++	depends on ARCH_TEGRA || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	help
+ 	  Support for the NVIDIA Tegra20 APB DMA controller driver. The
 -- 
 2.24.0
 
