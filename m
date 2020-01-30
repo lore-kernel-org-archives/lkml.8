@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEBAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D622CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BE720702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9955205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409648;
-	bh=rkr4v3w3gcxDIUGXLSQY/xRcj719qPpxS+Rw5Z/tExw=;
+	s=default; t=1580409650;
+	bh=moH1Dju2hdUQ4ndOGrn3StVqZIQretD0BJ/mudOpM9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PraM0Zu/BamfWZsTgyTbk7hURbz0Vb9RNXU5BTemSuTuWuMUHO7PqvQXODWSYa9dV
-	 DiNQWAJyEfDmsS7fdKEr0aa1Eg+1Y/f/x6ke53Gdp9aKotcOWDzoj5IpkmfaOF7jMo
-	 N6HHYbs2nypXWwhHpC48Hxyn6xR6nKb8I+9yPNn4=
+	b=nrYgdZAIyToBK5Y2GVS63rbfMO5PaAHg7GQJZDZqe646QxSpGuPAhb7nDG6YBHc9K
+	 D39gVenpj3T+scZ6mvlcdn+sXJYs08xgoWyUhUg1RD+iicFC5JNqEdYO3ywPc5hiSn
+	 PI1V6flIazIqhHyjBF3g1UHBN6hKICabg1RyLxXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgA3Skn (ORCPT
+        id S1730039AbgA3Sku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729998AbgA3Skj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:39 -0500
+        id S1730020AbgA3Sko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A056214AF;
-        Thu, 30 Jan 2020 18:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A17B214DB;
+        Thu, 30 Jan 2020 18:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409638;
-        bh=rkr4v3w3gcxDIUGXLSQY/xRcj719qPpxS+Rw5Z/tExw=;
+        s=default; t=1580409643;
+        bh=moH1Dju2hdUQ4ndOGrn3StVqZIQretD0BJ/mudOpM9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfURQWrCKR6Htx+ErE1vnOjewcuENDSoOYgDCKT4SpatI6Cp3gKDfKLZLdXp+F1HI
-         ccabYkVbTHggmSYRP6PYVTa8oYSqikHUnRHqU/P2PPHpVbJw6YG0Sht8b+0RhCTUg+
-         XOmgQEAIkSmYJtW1FhDS9CEYcIH8I2bgO/XFKTxg=
+        b=cFQitvYiA4gbMiKgKj+vUP9rCv+fVD257PvSk1GNS7U0JMSXbGtSsIdZ06cIFUFis
+         XRW1nwoBmksOWIHqPc0BnJDqxwbJey1o9LttHScttYoAzTMz2YxIpQo48S20QT2DTS
+         p+27tYAABxCjO/XNmFSR5ReR4p6swmO3v3SKWsyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fariya Fatima <fariyaf@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 03/56] rsi_91x_usb: fix interface sanity check
-Date:   Thu, 30 Jan 2020 19:38:20 +0100
-Message-Id: <20200130183609.620360187@linuxfoundation.org>
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.5 31/56] cifs: Fix memory allocation in __smb2_handle_cancelled_cmd()
+Date:   Thu, 30 Jan 2020 19:38:48 +0100
+Message-Id: <20200130183614.727685599@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,37 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-commit 3139b180906af43bc09bd3373fc2338a8271d9d9 upstream.
+commit 0a5a98863c9debc02387b3d23c46d187756f5e2b upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+__smb2_handle_cancelled_cmd() is called under a spin lock held in
+cifs_mid_q_entry_release(), so make its memory allocation GFP_ATOMIC.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+This issue was observed when running xfstests generic/028:
 
-Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
-Cc: stable <stable@vger.kernel.org>     # 3.15
-Cc: Fariya Fatima <fariyaf@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[ 1722.589204] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72064 cmd: 5
+[ 1722.590687] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72065 cmd: 17
+[ 1722.593529] CIFS VFS: \\192.168.30.26 Cancelling wait for mid 72066 cmd: 6
+[ 1723.039014] BUG: sleeping function called from invalid context at mm/slab.h:565
+[ 1723.040710] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 30877, name: cifsd
+[ 1723.045098] CPU: 3 PID: 30877 Comm: cifsd Not tainted 5.5.0-rc4+ #313
+[ 1723.046256] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+[ 1723.048221] Call Trace:
+[ 1723.048689]  dump_stack+0x97/0xe0
+[ 1723.049268]  ___might_sleep.cold+0xd1/0xe1
+[ 1723.050069]  kmem_cache_alloc_trace+0x204/0x2b0
+[ 1723.051051]  __smb2_handle_cancelled_cmd+0x40/0x140 [cifs]
+[ 1723.052137]  smb2_handle_cancelled_mid+0xf6/0x120 [cifs]
+[ 1723.053247]  cifs_mid_q_entry_release+0x44d/0x630 [cifs]
+[ 1723.054351]  ? cifs_reconnect+0x26a/0x1620 [cifs]
+[ 1723.055325]  cifs_demultiplex_thread+0xad4/0x14a0 [cifs]
+[ 1723.056458]  ? cifs_handle_standard+0x2c0/0x2c0 [cifs]
+[ 1723.057365]  ? kvm_sched_clock_read+0x14/0x30
+[ 1723.058197]  ? sched_clock+0x5/0x10
+[ 1723.058838]  ? sched_clock_cpu+0x18/0x110
+[ 1723.059629]  ? lockdep_hardirqs_on+0x17d/0x250
+[ 1723.060456]  kthread+0x1ab/0x200
+[ 1723.061149]  ? cifs_handle_standard+0x2c0/0x2c0 [cifs]
+[ 1723.062078]  ? kthread_create_on_node+0xd0/0xd0
+[ 1723.062897]  ret_from_fork+0x3a/0x50
+
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Fixes: 9150c3adbf24 ("CIFS: Close open handle after interrupted close")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
+ fs/cifs/smb2misc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -117,7 +117,7 @@ static int rsi_find_bulk_in_and_out_endp
- 	__le16 buffer_size;
- 	int ii, bin_found = 0, bout_found = 0;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -743,7 +743,7 @@ __smb2_handle_cancelled_cmd(struct cifs_
+ {
+ 	struct close_cancelled_open *cancelled;
  
--	iface_desc = &(interface->altsetting[0]);
-+	iface_desc = interface->cur_altsetting;
+-	cancelled = kzalloc(sizeof(*cancelled), GFP_KERNEL);
++	cancelled = kzalloc(sizeof(*cancelled), GFP_ATOMIC);
+ 	if (!cancelled)
+ 		return -ENOMEM;
  
- 	for (ii = 0; ii < iface_desc->desc.bNumEndpoints; ++ii) {
- 		endpoint = &(iface_desc->endpoint[ii].desc);
 
 
