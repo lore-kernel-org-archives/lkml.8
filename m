@@ -2,288 +2,345 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8020C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859F720702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sRuKYI+L"
+	by mail.kernel.org (Postfix) with ESMTP id 3C66E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580388902;
+	bh=ZSyHk2gQWsgvdW1jKlYdrTbxG/nfMLtS5Ild90/BOdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gonlY8y4JyriJdXQcVY9NO90bJB7+hreg/955Ga6fzW3a9YtjdGTRRIJ6Y+Ahw+YI
+	 Z3w7uzllTmx4e6/8Gh4l8HDY0cVjDpoXTz+kjCMrmjJswhv5MPQPSxy6FHLkYA51dY
+	 +zF3hOqMF5lX/wyN/S+e2bIwKH5FxqZdyQ8ddRNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgA3Myt (ORCPT
+        id S1727321AbgA3MzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:54:49 -0500
-Received: from mail-mw2nam10on2086.outbound.protection.outlook.com ([40.107.94.86]:6225
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726902AbgA3Myr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:54:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NvtZl8pUxhd08dejzkKP/16fS50KWWMsW/nRT790bU9Mf1pOtnUAoZ4w+m1YyBdGLVRn96rcZM7Jh+7MiXhz5u012hxsANWDx01XTeVcbokQYK430U5BPuNBXzillcZ2/4DCJgAAs51mGHwp7F84aKoWluO0qKs93Rc045o1YY4CJrQPORModBQOeFWTbWfMEyrmijhRXdqevZG4TplvTwgc8fSG/zH7AouzoG/2J5CUS5Oun6P3/SiqBKhfNEqZ5w/Cvw+Mx0HHtdcDczmFQnjQKOu4PDNeoTil4sf7HjkLb/tQTqMhPbqtH1Qzjtvld567zwAIegBKD3m39Da27g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hhLXgiGuszIBfcG1G61tvdtivkjgjvIFmr71xbLJH7A=;
- b=gPGNHapsoYnSCfkW3ZL6XHfUJpnU8XWlDWf8HI8na+q7xifUpv7ZfYaYabDH9osP/UfF4eUbf4N8Rgl+ILXi8IYvy31UnsiSbfgVr5C+arzh8AWuU6xgP5j9v+3LvIxBYdTDXzt7AUCOsUPCHIG+zsyTUNqNpnkNS26TvhbJPb72nTRYG804YvojnVVCz+3bWEipyPTl48pytKp2oWaiZBe5kZw1md7vpY7N4c8JbL1FVKcInXQvFfxsd/gzgCIaoRCXsEv7Np11QRVT8wBt99H5NGNB1RtLevoPwW6FlNSGVWZob2T/sqPZNWi2apUiNm2LnAuaX0fJHUBhetuHGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=xhdpunnaia40.localdomain; dmarc=none action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hhLXgiGuszIBfcG1G61tvdtivkjgjvIFmr71xbLJH7A=;
- b=sRuKYI+LIl+BeiJlqiU8o+ntTcEwF91RNJTJnuwAcnHOST9WVBptwMUZ9Wr2xcA1YUPZu9H9OW6xkhJ07eiivS23peiU+o6y/MWMnivoiP/jmIapFo1CGM4f1/jDxB76tggh2NMYAHBE4FuTXaZz7xA9hSGB2ZKx4jKelyHtghY=
-Received: from SN4PR0201CA0024.namprd02.prod.outlook.com
- (2603:10b6:803:2b::34) by BL0PR02MB4818.namprd02.prod.outlook.com
- (2603:10b6:208:28::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27; Thu, 30 Jan
- 2020 12:54:41 +0000
-Received: from CY1NAM02FT028.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::202) by SN4PR0201CA0024.outlook.office365.com
- (2603:10b6:803:2b::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.20 via Frontend
- Transport; Thu, 30 Jan 2020 12:54:41 +0000
-Authentication-Results: spf=none (sender IP is 149.199.60.83)
- smtp.mailfrom=xhdpunnaia40.localdomain; vger.kernel.org; dkim=none (message
- not signed) header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=xilinx.com;
-Received-SPF: None (protection.outlook.com: xhdpunnaia40.localdomain does not
- designate permitted sender hosts)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT028.mail.protection.outlook.com (10.152.75.132) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
- via Frontend Transport; Thu, 30 Jan 2020 12:54:41 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ix9LD-0004Li-7F; Thu, 30 Jan 2020 04:54:39 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ix9L7-0000iS-Eh; Thu, 30 Jan 2020 04:54:33 -0800
-Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00UCsWEj005669;
-        Thu, 30 Jan 2020 04:54:32 -0800
-Received: from [10.140.184.180] (helo=xhdpunnaia40.localdomain)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ix9L5-0000hh-Tk; Thu, 30 Jan 2020 04:54:32 -0800
-Received: by xhdpunnaia40.localdomain (Postfix, from userid 13245)
-        id 21482FF8AA; Thu, 30 Jan 2020 18:24:31 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        michal.simek@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 2/2] dmaengine: xilinx_dma: In dma channel probe fix node order dependency
-Date:   Thu, 30 Jan 2020 18:24:25 +0530
-Message-Id: <1580388865-9960-3-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580388865-9960-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1580388865-9960-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--5.880-7.0-31-1
-X-imss-scan-details: No--5.880-7.0-31-1;No--5.880-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(428003)(249900001)(199004)(189003)(498600001)(36756003)(5660300002)(8936002)(107886003)(42882007)(26005)(6266002)(450100002)(4326008)(70206006)(2616005)(42186006)(316002)(356004)(6666004)(81166006)(81156014)(2906002)(70586007)(8676002)(82310400001)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4818;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;A:0;MX:0;
+        Thu, 30 Jan 2020 07:55:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43618 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3MzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:55:00 -0500
+Received: by mail-wr1-f68.google.com with SMTP id d16so3868076wre.10;
+        Thu, 30 Jan 2020 04:54:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oYvcmUjSmLBUQ9U5VYc0aSLEVqma0gKOwWNxEUmmA20=;
+        b=sPQ6x09r3kyPDssq7UTetnRy82leK1vvtJ6BBfUr5xZcB1bfuEgCdCLuwWofUcmehw
+         H5cte50SpobEJD8jmBqEAsZfiXMRKbG+DTDPmZNJ8j/cseMcACtOZvF9siPQBr5x239A
+         0HqvRELihi1qLrVCvV8SNBm8FAiXWpdj58hSze/CwEDhH5P8HbN3itSj88/f0xGESC61
+         SmQ0O2V/WhPylXSs70M9jqnn2wMD0XaGHzQfVkwjZM9gWv562jdhj1LHgJwzOzA1/hgP
+         qYLf6DltuV/pdEEKVL5VLqmKeogxb1gAaDs29eUFhRJSxX8Ueovb+mUBmcktSDT73HKd
+         kyfA==
+X-Gm-Message-State: APjAAAVnvyT19dTcrZmzWJyM6lmiR0+uNncsRWct/Mhdf/xRNcn2W/v/
+        E66jR4UYe6hyYQzlR8L/fvM=
+X-Google-Smtp-Source: APXvYqzFIK6la+Pc01qIm05eJVN1m6wNbazLvMGwS3c2BqV2o00UIYhJL+QJQYg3qkxz/6TyUVfwog==
+X-Received: by 2002:adf:e906:: with SMTP id f6mr586169wrm.258.1580388897911;
+        Thu, 30 Jan 2020 04:54:57 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id g7sm7189301wrq.21.2020.01.30.04.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 04:54:56 -0800 (PST)
+Date:   Thu, 30 Jan 2020 13:54:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
+ low/min calculations
+Message-ID: <20200130125455.GV24244@dhcp22.suse.cz>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-3-hannes@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3a26fdec-0929-4702-c434-08d7a5839270
-X-MS-TrafficTypeDiagnostic: BL0PR02MB4818:
-X-Microsoft-Antispam-PRVS: <BL0PR02MB481830C3E81645B769EFF817D5040@BL0PR02MB4818.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 02981BE340
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eYW+7YqwuMA0J9hmqT80eyRbwntWOxnBme3MCITE6Eld9ZVDhqIcVb++SPZxuF3zdOyiH3oRZ11scRiQOi/pOpBsJvTKiCRbNZ7nHuKj9poiBsI5eny9H0JlMAY45jt7lG0be7kAHWprDSZTigpszLGUKJ42VZbs1zmh5KGWWORgB6Oi84PEiZ4xwcn0u+qg9kL+ukiwqZe8lVYik2NdmgbG2BeO6aU/czVRrS0Ar9DCELeDBSqJ/jh+KkW3jwdzRs0W/jd12ahKwaTAki48C5x3jeZOWKpdhEYZ39JFvl3qTwGofNDS9b5iTlfqpjx+lXzxAh3Jxp+1sBmjcOvvJpxz0HKV8S0X+FGaxE2+PrlT70EpgADaLexXciuRwfzBo9M79celZjm1GTAhW7K2OpmCn8l/8yQKSDaMrCXRJRULJUDIdt1NI69YwHEPHeq7
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2020 12:54:41.1426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a26fdec-0929-4702-c434-08d7a5839270
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4818
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219200718.15696-3-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In overlay application we noticed that dma channel node probe order is
-inverted i.e s2mm channel is probed first followed by mm2s channel. The
-reason for this inversion is fdtoverlay utility which uses a function
-called fdt_add_subnode(*). It stores the subnodes after the properties,
-this has the effect of inserting the new subnode before any others and
-the end result is a reversal.
+On Thu 19-12-19 15:07:17, Johannes Weiner wrote:
+> The effective protection of any given cgroup is a somewhat complicated
+> construct that depends on the ancestor's configuration, siblings'
+> configurations, as well as current memory utilization in all these
+> groups. It's done this way to satisfy hierarchical delegation
+> requirements while also making the configuration semantics flexible
+> and expressive in complex real life scenarios.
+> 
+> Unfortunately, all the rules and requirements are sparsely documented,
+> and the code is a little too clever in merging different scenarios
+> into a single min() expression. This makes it hard to reason about the
+> implementation and avoid breaking semantics when making changes to it.
+> 
+> This patch documents each semantic rule individually and splits out
+> the handling of the overcommit case from the regular case.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Because of this inverted channel probe order, the node probed first is
-assigned a '0' index instead of Channel ID should be '0' for tx and '1'
-for rx and dmatest client using the DT convention fails in dma transfer
-as channel are swapped.
+It took me a while to double check that the new code is indeed
+equivalent but the result is easier to grasp indeed.
 
-To fix above behavior and make channel assignment index independent
-of probe order, always assign mm2s channel at '0' index and the s2mm
-channel at IP specific fixed offset derived from the max_channels
-count.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 39 +++++++++++++++++----------------------
- 1 file changed, 17 insertions(+), 22 deletions(-)
+> ---
+>  mm/memcontrol.c | 190 ++++++++++++++++++++++++++----------------------
+>  1 file changed, 104 insertions(+), 86 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 874a0b00f89b..9c771c4d6339 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6204,65 +6204,55 @@ struct cgroup_subsys memory_cgrp_subsys = {
+>  	.early_init = 0,
+>  };
+>  
+> -/**
+> - * mem_cgroup_protected - check if memory consumption is in the normal range
+> - * @root: the top ancestor of the sub-tree being checked
+> - * @memcg: the memory cgroup to check
+> - *
+> - * WARNING: This function is not stateless! It can only be used as part
+> - *          of a top-down tree iteration, not for isolated queries.
+> - *
+> - * Returns one of the following:
+> - *   MEMCG_PROT_NONE: cgroup memory is not protected
+> - *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
+> - *     an unprotected supply of reclaimable memory from other cgroups.
+> - *   MEMCG_PROT_MIN: cgroup memory is protected
+> - *
+> - * @root is exclusive; it is never protected when looked at directly
+> +/*
+> + * This function calculates an individual cgroup's effective
+> + * protection which is derived from its own memory.min/low, its
+> + * parent's and siblings' settings, as well as the actual memory
+> + * distribution in the tree.
+>   *
+> - * To provide a proper hierarchical behavior, effective memory.min/low values
+> - * are used. Below is the description of how effective memory.low is calculated.
+> - * Effective memory.min values is calculated in the same way.
+> + * The following rules apply to the effective protection values:
+>   *
+> - * Effective memory.low is always equal or less than the original memory.low.
+> - * If there is no memory.low overcommittment (which is always true for
+> - * top-level memory cgroups), these two values are equal.
+> - * Otherwise, it's a part of parent's effective memory.low,
+> - * calculated as a cgroup's memory.low usage divided by sum of sibling's
+> - * memory.low usages, where memory.low usage is the size of actually
+> - * protected memory.
+> + * 1. At the first level of reclaim, effective protection is equal to
+> + *    the declared protection in memory.min and memory.low.
+>   *
+> - *                                             low_usage
+> - * elow = min( memory.low, parent->elow * ------------------ ),
+> - *                                        siblings_low_usage
+> + * 2. To enable safe delegation of the protection configuration, at
+> + *    subsequent levels the effective protection is capped to the
+> + *    parent's effective protection.
+>   *
+> - * low_usage = min(memory.low, memory.current)
+> + * 3. To make complex and dynamic subtrees easier to configure, the
+> + *    user is allowed to overcommit the declared protection at a given
+> + *    level. If that is the case, the parent's effective protection is
+> + *    distributed to the children in proportion to how much protection
+> + *    they have declared and how much of it they are utilizing.
+>   *
+> + *    This makes distribution proportional, but also work-conserving:
+> + *    if one cgroup claims much more protection than it uses memory,
+> + *    the unused remainder is available to its siblings.
+>   *
+> - * Such definition of the effective memory.low provides the expected
+> - * hierarchical behavior: parent's memory.low value is limiting
+> - * children, unprotected memory is reclaimed first and cgroups,
+> - * which are not using their guarantee do not affect actual memory
+> - * distribution.
+> + *    Consider the following example tree:
+>   *
+> - * For example, if there are memcgs A, A/B, A/C, A/D and A/E:
+> + *        A      A/memory.low = 2G, A/memory.current = 6G
+> + *       //\\
+> + *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
+> + *               C/memory.low = 1G  C/memory.current = 2G
+> + *               D/memory.low = 0   D/memory.current = 2G
+> + *               E/memory.low = 10G E/memory.current = 0
+>   *
+> - *     A      A/memory.low = 2G, A/memory.current = 6G
+> - *    //\\
+> - *   BC  DE   B/memory.low = 3G  B/memory.current = 2G
+> - *            C/memory.low = 1G  C/memory.current = 2G
+> - *            D/memory.low = 0   D/memory.current = 2G
+> - *            E/memory.low = 10G E/memory.current = 0
+> + *    and memory pressure is applied, the following memory
+> + *    distribution is expected (approximately*):
+>   *
+> - * and the memory pressure is applied, the following memory distribution
+> - * is expected (approximately):
+> + *      A/memory.current = 2G
+> + *      B/memory.current = 1.3G
+> + *      C/memory.current = 0.6G
+> + *      D/memory.current = 0
+> + *      E/memory.current = 0
+>   *
+> - *     A/memory.current = 2G
+> + *    *assuming equal allocation rate and reclaimability
+>   *
+> - *     B/memory.current = 1.3G
+> - *     C/memory.current = 0.6G
+> - *     D/memory.current = 0
+> - *     E/memory.current = 0
+> + * 4. Conversely, when the declared protection is undercommitted at a
+> + *    given level, the distribution of the larger parental protection
+> + *    budget is NOT proportional. A cgroup's protection from a sibling
+> + *    is capped to its own memory.min/low setting.
+>   *
+>   * These calculations require constant tracking of the actual low usages
+>   * (see propagate_protected_usage()), as well as recursive calculation of
+> @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
+>   * for next usage. This part is intentionally racy, but it's ok,
+>   * as memory.low is a best-effort mechanism.
+>   */
+> +static unsigned long effective_protection(unsigned long usage,
+> +					  unsigned long setting,
+> +					  unsigned long parent_effective,
+> +					  unsigned long siblings_protected)
+> +{
+> +	unsigned long protected;
+> +
+> +	protected = min(usage, setting);
+> +	/*
+> +	 * If all cgroups at this level combined claim and use more
+> +	 * protection then what the parent affords them, distribute
+> +	 * shares in proportion to utilization.
+> +	 *
+> +	 * We are using actual utilization rather than the statically
+> +	 * claimed protection in order to be work-conserving: claimed
+> +	 * but unused protection is available to siblings that would
+> +	 * otherwise get a smaller chunk than what they claimed.
+> +	 */
+> +	if (siblings_protected > parent_effective)
+> +		return protected * parent_effective / siblings_protected;
+> +
+> +	/*
+> +	 * Ok, utilized protection of all children is within what the
+> +	 * parent affords them, so we know whatever this child claims
+> +	 * and utilizes is effectively protected.
+> +	 *
+> +	 * If there is unprotected usage beyond this value, reclaim
+> +	 * will apply pressure in proportion to that amount.
+> +	 *
+> +	 * If there is unutilized protection, the cgroup will be fully
+> +	 * shielded from reclaim, but we do return a smaller value for
+> +	 * protection than what the group could enjoy in theory. This
+> +	 * is okay. With the overcommit distribution above, effective
+> +	 * protection is always dependent on how memory is actually
+> +	 * consumed among the siblings anyway.
+> +	 */
+> +	return protected;
+> +}
+> +
+> +/**
+> + * mem_cgroup_protected - check if memory consumption is in the normal range
+> + * @root: the top ancestor of the sub-tree being checked
+> + * @memcg: the memory cgroup to check
+> + *
+> + * WARNING: This function is not stateless! It can only be used as part
+> + *          of a top-down tree iteration, not for isolated queries.
+> + *
+> + * Returns one of the following:
+> + *   MEMCG_PROT_NONE: cgroup memory is not protected
+> + *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
+> + *     an unprotected supply of reclaimable memory from other cgroups.
+> + *   MEMCG_PROT_MIN: cgroup memory is protected
+> + */
+>  enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  						struct mem_cgroup *memcg)
+>  {
+>  	struct mem_cgroup *parent;
+> -	unsigned long emin, parent_emin;
+> -	unsigned long elow, parent_elow;
+>  	unsigned long usage;
+>  
+>  	if (mem_cgroup_disabled())
+> @@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  	if (!usage)
+>  		return MEMCG_PROT_NONE;
+>  
+> -	emin = memcg->memory.min;
+> -	elow = memcg->memory.low;
+> -
+>  	parent = parent_mem_cgroup(memcg);
+>  	/* No parent means a non-hierarchical mode on v1 memcg */
+>  	if (!parent)
+>  		return MEMCG_PROT_NONE;
+>  
+> -	if (parent == root)
+> -		goto exit;
+> -
+> -	parent_emin = READ_ONCE(parent->memory.emin);
+> -	emin = min(emin, parent_emin);
+> -	if (emin && parent_emin) {
+> -		unsigned long min_usage, siblings_min_usage;
+> -
+> -		min_usage = min(usage, memcg->memory.min);
+> -		siblings_min_usage = atomic_long_read(
+> -			&parent->memory.children_min_usage);
+> -
+> -		if (min_usage && siblings_min_usage)
+> -			emin = min(emin, parent_emin * min_usage /
+> -				   siblings_min_usage);
+> +	if (parent == root) {
+> +		memcg->memory.emin = memcg->memory.min;
+> +		memcg->memory.elow = memcg->memory.low;
+> +		goto out;
+>  	}
+>  
+> -	parent_elow = READ_ONCE(parent->memory.elow);
+> -	elow = min(elow, parent_elow);
+> -	if (elow && parent_elow) {
+> -		unsigned long low_usage, siblings_low_usage;
+> -
+> -		low_usage = min(usage, memcg->memory.low);
+> -		siblings_low_usage = atomic_long_read(
+> -			&parent->memory.children_low_usage);
+> +	memcg->memory.emin = effective_protection(usage,
+> +			memcg->memory.min, READ_ONCE(parent->memory.emin),
+> +			atomic_long_read(&parent->memory.children_min_usage));
+>  
+> -		if (low_usage && siblings_low_usage)
+> -			elow = min(elow, parent_elow * low_usage /
+> -				   siblings_low_usage);
+> -	}
+> -
+> -exit:
+> -	memcg->memory.emin = emin;
+> -	memcg->memory.elow = elow;
+> +	memcg->memory.elow = effective_protection(usage,
+> +			memcg->memory.low, READ_ONCE(parent->memory.elow),
+> +			atomic_long_read(&parent->memory.children_low_usage));
+>  
+> -	if (usage <= emin)
+> +out:
+> +	if (usage <= memcg->memory.emin)
+>  		return MEMCG_PROT_MIN;
+> -	else if (usage <= elow)
+> +	else if (usage <= memcg->memory.elow)
+>  		return MEMCG_PROT_LOW;
+>  	else
+>  		return MEMCG_PROT_NONE;
+> -- 
+> 2.24.1
+> 
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 2281af3..aecd5a3 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -488,16 +488,15 @@ struct xilinx_dma_config {
-  * @txs_clk: DMA mm2s stream clock
-  * @rx_clk: DMA s2mm clock
-  * @rxs_clk: DMA s2mm stream clock
-- * @nr_channels: Number of channels DMA device supports
-- * @chan_id: DMA channel identifier
-+ * @s2mm_chan_id: DMA s2mm channel identifier
-+ * @mm2s_chan_id: DMA mm2s channel identifier
-  * @max_buffer_len: Max buffer length
-- * @s2mm_index: S2MM channel index
-  */
- struct xilinx_dma_device {
- 	void __iomem *regs;
- 	struct device *dev;
- 	struct dma_device common;
--	struct xilinx_dma_chan *chan[XILINX_DMA_MAX_CHANS_PER_DEVICE];
-+	struct xilinx_dma_chan *chan[XILINX_MCDMA_MAX_CHANS_PER_DEVICE];
- 	u32 flush_on_fsync;
- 	bool ext_addr;
- 	struct platform_device  *pdev;
-@@ -507,10 +506,9 @@ struct xilinx_dma_device {
- 	struct clk *txs_clk;
- 	struct clk *rx_clk;
- 	struct clk *rxs_clk;
--	u32 nr_channels;
--	u32 chan_id;
-+	u32 s2mm_chan_id;
-+	u32 mm2s_chan_id;
- 	u32 max_buffer_len;
--	u32 s2mm_index;
- };
- 
- /* Macros */
-@@ -1748,7 +1746,7 @@ static irqreturn_t xilinx_mcdma_irq_handler(int irq, void *data)
- 		return IRQ_NONE;
- 
- 	if (chan->direction == DMA_DEV_TO_MEM)
--		chan_offset = chan->xdev->s2mm_index;
-+		chan_offset = chan->xdev->dma_config->max_channels / 2;
- 
- 	chan_offset = chan_offset + (chan_id - 1);
- 	chan = chan->xdev->chan[chan_offset];
-@@ -2734,12 +2732,11 @@ static void xdma_disable_allclks(struct xilinx_dma_device *xdev)
-  *
-  * @xdev: Driver specific device structure
-  * @node: Device node
-- * @chan_id: DMA Channel id
-  *
-  * Return: '0' on success and failure value on error
-  */
- static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
--				  struct device_node *node, int chan_id)
-+				  struct device_node *node)
- {
- 	struct xilinx_dma_chan *chan;
- 	bool has_dre = false;
-@@ -2791,8 +2788,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 	    of_device_is_compatible(node, "xlnx,axi-dma-mm2s-channel") ||
- 	    of_device_is_compatible(node, "xlnx,axi-cdma-channel")) {
- 		chan->direction = DMA_MEM_TO_DEV;
--		chan->id = chan_id;
--		chan->tdest = chan_id;
-+		chan->id = xdev->mm2s_chan_id++;
-+		chan->tdest = chan->id;
- 
- 		chan->ctrl_offset = XILINX_DMA_MM2S_CTRL_OFFSET;
- 		if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
-@@ -2808,9 +2805,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 		   of_device_is_compatible(node,
- 					   "xlnx,axi-dma-s2mm-channel")) {
- 		chan->direction = DMA_DEV_TO_MEM;
--		chan->id = chan_id;
--		xdev->s2mm_index = xdev->nr_channels;
--		chan->tdest = chan_id - xdev->nr_channels;
-+		chan->id = xdev->s2mm_chan_id++;
-+		chan->tdest = chan->id - xdev->dma_config->max_channels / 2;
- 		chan->has_vflip = of_property_read_bool(node,
- 					"xlnx,enable-vert-flip");
- 		if (chan->has_vflip) {
-@@ -2912,9 +2908,7 @@ static int xilinx_dma_child_probe(struct xilinx_dma_device *xdev,
- 		dev_warn(xdev->dev, "missing dma-channels property\n");
- 
- 	for (i = 0; i < nr_channels; i++)
--		xilinx_dma_chan_probe(xdev, node, xdev->chan_id++);
--
--	xdev->nr_channels += nr_channels;
-+		xilinx_dma_chan_probe(xdev, node);
- 
- 	return 0;
- }
-@@ -2932,7 +2926,7 @@ static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
- 	struct xilinx_dma_device *xdev = ofdma->of_dma_data;
- 	int chan_id = dma_spec->args[0];
- 
--	if (chan_id >= xdev->nr_channels || !xdev->chan[chan_id])
-+	if (chan_id >= xdev->dma_config->max_channels || !xdev->chan[chan_id])
- 		return NULL;
- 
- 	return dma_get_slave_channel(&xdev->chan[chan_id]->common);
-@@ -3019,6 +3013,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 
- 	/* Retrieve the DMA engine properties from the device tree */
- 	xdev->max_buffer_len = GENMASK(XILINX_DMA_MAX_TRANS_LEN_MAX - 1, 0);
-+	xdev->s2mm_chan_id = xdev->dma_config->max_channels / 2;
- 
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA ||
- 	    xdev->dma_config->dmatype == XDMA_TYPE_AXIMCDMA) {
-@@ -3112,7 +3107,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	}
- 
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
--		for (i = 0; i < xdev->nr_channels; i++)
-+		for (i = 0; i < xdev->dma_config->max_channels; i++)
- 			if (xdev->chan[i])
- 				xdev->chan[i]->num_frms = num_frames;
- 	}
-@@ -3142,7 +3137,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- disable_clks:
- 	xdma_disable_allclks(xdev);
- error:
--	for (i = 0; i < xdev->nr_channels; i++)
-+	for (i = 0; i < xdev->dma_config->max_channels; i++)
- 		if (xdev->chan[i])
- 			xilinx_dma_chan_remove(xdev->chan[i]);
- 
-@@ -3164,7 +3159,7 @@ static int xilinx_dma_remove(struct platform_device *pdev)
- 
- 	dma_async_device_unregister(&xdev->common);
- 
--	for (i = 0; i < xdev->nr_channels; i++)
-+	for (i = 0; i < xdev->dma_config->max_channels; i++)
- 		if (xdev->chan[i])
- 			xilinx_dma_chan_remove(xdev->chan[i]);
- 
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
