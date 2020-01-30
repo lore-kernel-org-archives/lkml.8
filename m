@@ -2,100 +2,197 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ACAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8428C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E382063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kV/vA7M3"
+	by mail.kernel.org (Postfix) with ESMTP id 83E602082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgA3NdH (ORCPT
+        id S1727297AbgA3NjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:33:07 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:57062 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgA3NdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:33:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0IrD+2Cqd6pTqVBOmkUhWueH8hwhXeAEBdAFin7xf14=; b=kV/vA7M3cXkS/0OU/mQ8HtZpi
-        meJlra5xXbFWq7LLPR6gkFU3F1gLSsHUANg6Ond0+b4QhQZyxqEGAFXMYWbejI6JQfzyeUCLzwY6N
-        99qPtTN+NR1TSyhiC98uJjMuvYiSS/p05+qA4ju6GlwJKh6Z/UGCoKxckKsDT5aOBZhVF6gBzNEs7
-        RDLFxWd5cb/8HgQyqxKFZp5JGlUMRlywsSyfR4ea9MVWZCzVd/04RilXmqQrhrJQz9swz97vBrwex
-        JLrJJQis46zdRMswFFqS/579Mb3n0ajDoJQCZTCuw4M9G152kSzeF34yd82z8yk2PVfzDASwf8jM0
-        2eJcxn16Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ix9wC-0003qO-2x; Thu, 30 Jan 2020 13:32:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 627343053FB;
-        Thu, 30 Jan 2020 14:31:05 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9F4102B2800FE; Thu, 30 Jan 2020 14:32:48 +0100 (CET)
-Date:   Thu, 30 Jan 2020 14:32:48 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 2/2] events: callchain: Use RCU API to access RCU pointer
-Message-ID: <20200130133248.GW14914@hirez.programming.kicks-ass.net>
-References: <20200129160813.14263-1-frextrite@gmail.com>
- <20200129160813.14263-2-frextrite@gmail.com>
- <20200129221909.GA74354@google.com>
- <20200130082321.GX14879@hirez.programming.kicks-ass.net>
- <20200130101451.GA11015@workstation-portable>
+        Thu, 30 Jan 2020 08:39:18 -0500
+Received: from mga01.intel.com ([192.55.52.88]:28312 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbgA3NjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:39:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 05:39:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="428366122"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2020 05:39:16 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ixA2Q-00075x-9E; Thu, 30 Jan 2020 15:39:18 +0200
+Date:   Thu, 30 Jan 2020 15:39:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] console: Introduce ->exit() callback
+Message-ID: <20200130133918.GA32742@smile.fi.intel.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-5-andriy.shevchenko@linux.intel.com>
+ <20200128051711.GB115889@google.com>
+ <20200128094418.GY32742@smile.fi.intel.com>
+ <20200129134141.GA537@jagdpanzerIV.localdomain>
+ <20200129142558.GF32742@smile.fi.intel.com>
+ <20200130132246.qesf6bupt4m3jnue@pathway.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130101451.GA11015@workstation-portable>
+In-Reply-To: <20200130132246.qesf6bupt4m3jnue@pathway.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 03:44:51PM +0530, Amol Grover wrote:
-> > > > diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> > > > index f91e1f41d25d..a672d02a1b3a 100644
-> > > > --- a/kernel/events/callchain.c
-> > > > +++ b/kernel/events/callchain.c
-> > > > @@ -62,7 +62,8 @@ static void release_callchain_buffers(void)
-> > > >  {
-> > > >  	struct callchain_cpus_entries *entries;
-> > > >  
-> > > > -	entries = callchain_cpus_entries;
-> > > > +	entries = rcu_dereference_protected(callchain_cpus_entries,
-> > > > +					    lockdep_is_held(&callchain_mutex));
-> > > 
-> > > 
-> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > Do we really need that smp_read_barrier_depends() here? Then again, I
-> > don't suppose this is a fast path.
-> > 
-> 
-> rcu_dereference_protected is actually a lightweight API and IIRC it
-> omits the READ_ONCE() and hence the memory barriers.
+On Thu, Jan 30, 2020 at 02:22:46PM +0100, Petr Mladek wrote:
+> On Wed 2020-01-29 16:25:58, Andy Shevchenko wrote:
+> > On Wed, Jan 29, 2020 at 10:41:41PM +0900, Sergey Senozhatsky wrote:
+> > > On (20/01/28 11:44), Andy Shevchenko wrote:
 
-Oh argh, indeed. I suppose I should've had more tea this morning.
+...
+
+> > > > > If the console was not registered (hence not enabled) is it still required
+> > > > > to call ->exit()? Is there a requirement that ->exit() should handle such
+> > > > > cases?
+> > > > 
+> > > > This is a good point. The ->exit() purpose is to keep balance for whatever
+> > > > happened at ->setup().
+> > > > 
+> > > > But ->setup() is being called either when we have has_preferred == false or
+> > > > when we got no matching we call it for all such consoles, till it returns an
+> > > > error (can you elaborate the logic behind it?).
+> > > 
+> > > ->match() does alias matching and ->setup(). If alias matching failed,
+> > > exact name match takes place. We don't call ->setup() for all consoles,
+> > > but only for those that have exact name match:
+> > > 
+> > > 	if (strcmp(c->name, newcon->name) != 0)
+> > > 		continue;
+> > > 
+> > > As to why we don't stop sooner in that loop - I need to to do some
+> > > archaeology. We need to have CON_CONSDEV at proper place, which is
+> > > IIRC the last matching console.
+> > > 
+> > > Pretty much every time we tried to change the logic we ended up
+> > > reverting the changes.
+> > 
+> > I understand. Seems the ->setup() has to be idempotent. We can tell the same
+> > for ->exit() in some comment.
+> 
+> I believe that ->setup() can succeesfully be called only once.
+> It is tricky like hell:
+
+Indeed. I think this code is highly starving for comments.
+
+> 1st piece:
+> 
+> 	if (!has_preferred || bcon || !console_drivers)
+> 		has_preferred = preferred_console >= 0;
+> 
+>   note:
+> 
+>      + "has_preferred" is updated here only when it was not "true" before.
+>      + "has_preferred" is set to "true" here only when "preferred_console"
+>        is set in __add_preferred_console()
+> 
+> 2nd piece:
+> 
+>   + __add_preferred_console() is called for console defined on
+>     the command line. "preferred_console" points to the console
+>     defined by the last "console=" parameter.
+> 
+> 3rd piece:
+> 
+>   + "has_preferred" is set to "true" later in register_console() when
+>     a console with tty binding gets enabled.
+> 
+> 4th piece:
+> 
+>   + The code:
+> 
+> 	/*
+> 	 *	See if we want to use this console driver. If we
+> 	 *	didn't select a console we take the first one
+> 	 *	that registers here.
+> 	 */
+> 	if (!has_preferred)
+> 		... try to enable the given console
+> 
+>    The comment is a bit unclear. The code is used as a fallback
+>    when no console was defined on the command line.
+> 
+>    Note that "has_preferred" is always true when "preferred_console"
+>    was defined via command line, see 2nd piece above.
+> 
+> 
+> By other words:
+> 
+>   + The fallback code (4th piece) is called only when
+>     "preferred_console" was not defined on the command line.
+> 
+>   + The cycle below matches the given console only when
+>     it was defined on the command line.
+> 
+> 
+> As a result, I believe that ->setup() could never be called
+> in both paths for the same console. Especially I think that
+> fallback code should not be used when the console was defined on
+> the command line.
+> 
+> I am not 100% sure but I am ready to risk this. Anyway, I think
+> that many ->setup() callbacks are not ready to be successfully
+> called twice.
+> 
+> (Sigh, I have started to clean up this code two years ago.
+> But I have never found time to finish the patchset. It is
+> such a huge mess.)
+
+Thanks for the elaboration in such details!
+
+> > Can you describe, btw, struct console in kernel doc format?
+> > It will be very helpful!
+> > 
+> > > > In both cases we will get the console to have CON_ENABLED flag set.
+> > > 
+> > > And there are sneaky consoles that have CON_ENABLED before we even
+> > > register them.
+> > 
+> > So, taking into consideration my comment to the previous patch, what would be
+> > suggested guard here?
+> > 
+> > For a starter something like this?
+> > 
+> >   if ((console->flags & CON_ENABLED) && console->exit)
+> > 	console->exit(console);
+> 
+> I would do:
+> 
+> 	if (!res && console->exit)
+> 		console->exit(console);
+> 
+> I mean. I would call ->exit() only when console->setup() succeeded in
+> register_console(). In this case, the console was later added to
+> the console_drivers list.
+
+Yes, that is exactly what I meant in previous mails to you.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
