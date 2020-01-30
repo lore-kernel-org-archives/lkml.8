@@ -2,147 +2,122 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3BFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B913EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CD620707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580403627;
-	bh=l8KdHsmh0H6oLbwdjCvlLqb8ftLepOMxYAbevEMLaKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QLHJ/4E+3jnEljlzlvC2vpWyF5NXDr65M6xgBg3hBdpd+Atg9ryuzhlD01z6IVvy3
-	 dm/mN9Xys3hOQg7avrnsFhUW7rv24OVD909LWXWcyVaXsMMUjHwmVhD4kMlkUnIXL6
-	 aJ9PvuTz2kGpnuN+mDAo5FczY2SuGp6pEj61ZslE=
+	by mail.kernel.org (Postfix) with ESMTP id 85F3720661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cOBH5rPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbgA3RA1 (ORCPT
+        id S1727413AbgA3RBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:00:27 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56207 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgA3RA0 (ORCPT
+        Thu, 30 Jan 2020 12:01:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45582 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgA3RBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:00:26 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so4551462wmj.5;
-        Thu, 30 Jan 2020 09:00:23 -0800 (PST)
+        Thu, 30 Jan 2020 12:01:48 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a6so4938483wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:01:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=guwyI7qgekZu8i8afObSu1LIGKaCue9jEjiigz8FV7o=;
+        b=cOBH5rPimr2xIplZwH+uFIcSC3HVf/IyQsPBV/6E57BiZZ3lI1PG5HktyBYxWDy74W
+         PAxijbtRNyBHzMdIhIApwVSzMmiQCGe44O6xqX2W9nj1D6PzilB8/yrWquPweD0i+aeq
+         LEcPJCWmpYryMGqp11YAka6QJQ7iqb09HVMkWuDbyX5IW5edZo2zzlb5dsVtzFj0I+UI
+         ZkGeptyaqGyB3a6rZ0Ik1vjthMsJXVcQx6km3eYFiGWMxK4Qoz1IlXolqQ8zST8mxMuG
+         7BzIyn/kvUEOZmv6q5KR9pYJFfeqigwfn+7i5aZvM+wEQrwMa1CsQWiSqMIBa3k57haQ
+         2Q5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O19S44JgA364hfEmw1UsxeYnxuzE72hVX9NKFWCFSOg=;
-        b=UfIn2y0W/9FLSRJaKMRvNvv32po7nWAFneISeoojqjfigZSHwKdN8qBEY+0720rMb5
-         tXO+cRYc2R/QlSxThudfT6Xn1acmvRtswL1oWXXjNpv07y0v99DGEupTjSc2mSU0va4O
-         hE5efrmyJuWL3uvrgxnzZcSohq2PMBIf28Mcngv8BWaLdZL4ryoTWWUYjsRHRrD4QnX/
-         Ql0888nEha9fV0ESxcmceaddcaKx46pMZqFB06kf5unlfvk0H7gJd3y9vwsnH1oHvbxo
-         rw3OjgISf7o4t+mEnJOmGQg2bwBHGqw2znfjO67i4TavMJy2QOO5Vf0zveAMfxjwRMZ7
-         zTeA==
-X-Gm-Message-State: APjAAAWy9jJ0DyFoi3YvjezzEKKAm+KLQ0fS2vdcWkHOuH+t+tCn+8k8
-        AsVFI6FAvDL7CUksGDTG4w4=
-X-Google-Smtp-Source: APXvYqwdX+hj8xuZWB1fIH0IInh2RVER3tbrowqd6kOiJs0+YGQp+XaPDGyatOBTpouCtewwfAsb6g==
-X-Received: by 2002:a1c:8156:: with SMTP id c83mr6470112wmd.164.1580403622689;
-        Thu, 30 Jan 2020 09:00:22 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id d14sm8428287wru.9.2020.01.30.09.00.20
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=guwyI7qgekZu8i8afObSu1LIGKaCue9jEjiigz8FV7o=;
+        b=QqiiSkAG41Exuh0qlrnyr/zoMZtId68EWRpXdDvXFJAFJHw9UO+KYOlCX644R6LRvv
+         9zAUonSeKyYkIJU2nMDZfMl9KXczFyYk1Vvg+u5TW6IfnvF8V5ErxU1hK4rBGzfIfgaf
+         eL1lmi6dRXTaFlRNhK0sQzS+ifU+lBxPCPMd+i/7TNB9bLUZFad0rzmj4jt6y82kWduK
+         JnJBxXdiDw/JvjujR6PQyvE+O+C4jZXjRjWHpfn4Fhn3s+y6ymMyrTwJx9AtduKve4QZ
+         gVIpSjUq1biLcqJVvvX4t/rbDalCCI7591JjmRXW+br+VeOzKMtplrqXjzO1vb2DPzEQ
+         TClQ==
+X-Gm-Message-State: APjAAAUixFkXC2NnUtxCIPhy8klPo8Kx1XnWbU61TZ5x3G+lca/78K5K
+        pmhGfCAGYkpp7awsYmJb6WhPtw==
+X-Google-Smtp-Source: APXvYqzWhCWkLPvBVQPtHwccNZiiWYwXr8Q2E99gdO5pqrj0Rft27YWkPuhhXR1trWLNGnB9nNGgYw==
+X-Received: by 2002:adf:fac8:: with SMTP id a8mr7069699wrs.81.1580403705987;
+        Thu, 30 Jan 2020 09:01:45 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id s16sm8308922wrn.78.2020.01.30.09.01.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 09:00:21 -0800 (PST)
-Date:   Thu, 30 Jan 2020 18:00:20 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200130170020.GZ24244@dhcp22.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
+        Thu, 30 Jan 2020 09:01:44 -0800 (PST)
+Date:   Thu, 30 Jan 2020 17:01:41 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        maennich@google.com, kernel-team@android.com
+Subject: Re: [PATCH] kbuild: allow symbol whitelisting with TRIM_UNUSED_KSYMS
+Message-ID: <20200130170141.GA136787@google.com>
+References: <20200129150612.19200-1-qperret@google.com>
+ <20200130154530.GA7452@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219200718.15696-4-hannes@cmpxchg.org>
+In-Reply-To: <20200130154530.GA7452@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-12-19 15:07:18, Johannes Weiner wrote:
-> Right now, the effective protection of any given cgroup is capped by
-> its own explicit memory.low setting, regardless of what the parent
-> says. The reasons for this are mostly historical and ease of
-> implementation: to make delegation of memory.low safe, effective
-> protection is the min() of all memory.low up the tree.
+On Thursday 30 Jan 2020 at 07:45:30 (-0800), Christoph Hellwig wrote:
+> On Wed, Jan 29, 2020 at 03:06:12PM +0000, Quentin Perret wrote:
+> > CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
+> > from ksymtab. This works really well when using in-tree drivers, but
+> > cannot be used in its current form if some of them are out-of-tree.
 > 
-> Unfortunately, this limitation makes it impossible to protect an
-> entire subtree from another without forcing the user to make explicit
-> protection allocations all the way to the leaf cgroups - something
-> that is highly undesirable in real life scenarios.
-> 
-> Consider memory in a data center host. At the cgroup top level, we
-> have a distinction between system management software and the actual
-> workload the system is executing. Both branches are further subdivided
-> into individual services, job components etc.
-> 
-> We want to protect the workload as a whole from the system management
-> software, but that doesn't mean we want to protect and prioritize
-> individual workload wrt each other. Their memory demand can vary over
-> time, and we'd want the VM to simply cache the hottest data within the
-> workload subtree. Yet, the current memory.low limitations force us to
-> allocate a fixed amount of protection to each workload component in
-> order to get protection from system management software in
-> general. This results in very inefficient resource distribution.
+> NAK.  The state policy is that we don't care for out of tree modules,
+> and this is useful for nothing but.
 
-I do agree that configuring the reclaim protection is not an easy task.
-Especially in a deeper reclaim hierarchy. systemd tends to create a deep
-and commonly shared subtrees. So having a protected workload really
-requires to be put directly into a new first level cgroup in practice
-AFAICT. That is a simpler example though. Just imagine you want to
-protect a certain user slice.
+That is correct. Now, I clearly failed to explain this patch properly,
+but the long term goal here _is_ to get vendors to contribute more code
+upstream, and have a lot less code downstream / out-of-tree. And I hope
+we can agree this would be a good thing. So let me try again, and sorry
+if I missed the mark the first time.
 
-You seem to be facing a different problem though IIUC. You know how much
-memory you want to protect and you do not have to care about the cgroup
-hierarchy up but you do not know/care how to distribute that protection
-among workloads running under that protection. I agree that this is a
-reasonable usecase.
+As you probably know, the current norm on Android and many other systems
+is for vendors to introduce significant changes to their downstream
+kernels, and to contribute very little (if any) code back upstream.
 
-Those both problems however show that we have a more general
-configurability problem for both leaf and intermediate nodes. They are
-both a result of strong requirements imposed by delegation as you have
-noted above. I am thinking didn't we just go too rigid here?
+One of the goals of the Generic Kernel Image (GKI) project together with
+updatability and such is to close the gap between vendor-specific
+downstream kernels and upstream. Having one unique kernel for all android
+devices of the same architecture regardless of the vendor will
+mechanically force all interested parties to agree on a common solution.
+And we _are_ pushing for all this to reach upstream and be available to
+use by the wider community.
 
-Delegation points are certainly a security boundary and they should
-be treated like that but do we really need a strong containment when
-the reclaim protection is under admin full control? Does the admin
-really have to reconfigure a large part of the hierarchy to protect a
-particular subtree?
+The kernel-to-drivers ABI on Android devices varies significantly from
+one vendor kernel to another today (because of changes to exported
+symbols, dependencies on vendor symbols, and surely other things). The
+first step for GKI is to try and put some order into this by agreeing on
+one version of the ABI that works for everybody.
 
-I do not have a great answer on how to implement this unfortunately. The
-best I could come up with was to add a "$inherited_protection" magic
-value to distinguish from an explicit >=0 protection. What's the
-difference? $inherited_protection would be a default and it would always
-refer to the closest explicit protection up the hierarchy (with 0 as a
-default if there is none defined).
-        A
-       / \
-      B   C (low=10G)
-         / \
-        D   E (low = 5G)
+For practical reasons, we need to reduce the ABI surface to a subset of
+the exported symbols, simply to make the problem realistically solvable.
+Hence this patch.
 
-A, B don't get any protection (low=0). C gets protection (10G) and
-distributes the pressure to D, E when in excess. D inherits (low=10G)
-and E overrides the protection to 5G.
+I understand your point of view, and quite frankly agree with the
+message. But I think this patch pushes in the right direction. As I see
+it, things like GKI really are significant improvements, so preventing
+them from happening by refusing trivial patches such as this one will,
+in the long term, do more harm than good to the cause.
 
-That would help both usecases AFAICS while the delegation should be
-still possible (configure the delegation point with an explicit
-value). I have very likely not thought that through completely.  Does
-that sound like a completely insane idea?
-
-Or do you think that the two usecases are simply impossible to handle
-at the same time?
-[...]
--- 
-Michal Hocko
-SUSE Labs
+Thank you for your time,
+Quentin
