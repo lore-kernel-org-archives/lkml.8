@@ -2,98 +2,95 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0ADC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A3DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA192467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I6x2xfaw"
+	by mail.kernel.org (Postfix) with ESMTP id A61F820674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgA3QCf (ORCPT
+        id S1727317AbgA3QCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 30 Jan 2020 11:02:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53555 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727107AbgA3QCf (ORCPT
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:38179 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726948AbgA3QCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jan 2020 11:02:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580400154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2h2hq7aU9+X9eHNNsNlRzeknf9MFrD4dJBNBLwX04Tw=;
-        b=I6x2xfawWQjq+AvJoE3Nsw22CDyq1GV1axglaY7ObFcwGxo7vSvsbPbe+r3dP7eP+CGRNK
-        iVXYE5atrL1y7Vjr4N8uSsJ80lUCk82lrsZop+jENAHwJ0bTrxd2+E4Ze8YncGueOaEz1P
-        P31N8/2L9ZfqVA/WCYSktJuftzm92Js=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-taTMYylWMsGDtBpDOXGRBg-1; Thu, 30 Jan 2020 11:02:29 -0500
-X-MC-Unique: taTMYylWMsGDtBpDOXGRBg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48F15DB25;
-        Thu, 30 Jan 2020 16:02:27 +0000 (UTC)
-Received: from krava (ovpn-206-54.brq.redhat.com [10.40.206.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D124D10018FF;
-        Thu, 30 Jan 2020 16:02:24 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 17:02:21 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v5 0/4] perf: Refactor the block info implementation
-Message-ID: <20200130160221.GB1323504@krava>
-References: <20200128125556.25498-1-yao.jin@linux.intel.com>
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-107-IaITlwqSNMiNq9NHtqF3bw-1; Thu, 30 Jan 2020 16:02:31 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 16:02:30 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 Jan 2020 16:02:30 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Hans de Goede' <hdegoede@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Topic: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Index: AQHV14WrJf366MsxW0K0cA6JkRCOwKgDXckw
+Date:   Thu, 30 Jan 2020 16:02:30 +0000
+Message-ID: <01feee20ee5d4b83ab218c14fc35accb@AcuMS.aculab.com>
+References: <20200130115255.20840-1-hdegoede@redhat.com>
+ <20200130115255.20840-3-hdegoede@redhat.com>
+ <20200130134310.GX14914@hirez.programming.kicks-ass.net>
+ <b77be8c0-7107-bece-5947-a625e556e129@redhat.com>
+In-Reply-To: <b77be8c0-7107-bece-5947-a625e556e129@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128125556.25498-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: IaITlwqSNMiNq9NHtqF3bw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 08:55:52PM +0800, Jin Yao wrote:
-> This patch series refactors the block info functionalities to let them
-> be used by other builtins and allow setting the output fmts flexibly.
-> 
-> It also supports the 'Sampled Cycles%' and 'Avg Cycles%' printed in
-> colors.
-> 
->  v5:
->  ---
->  Only change the patch "perf util: Flexible to set block info output formats".
->  Other patches are not changed.
-> 
-> Jin Yao (4):
->   perf util: Move block_pair_cmp to block-info
->   perf util: Validate map/dso/sym before comparing blocks
->   perf util: Flexible to set block info output formats
->   perf util: Support color ops to print block percents in color
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
-> 
->  tools/perf/builtin-diff.c    | 17 -------
->  tools/perf/builtin-report.c  | 21 ++++++--
->  tools/perf/util/block-info.c | 99 ++++++++++++++++++++++++++----------
->  tools/perf/util/block-info.h |  9 +++-
->  4 files changed, 99 insertions(+), 47 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+RnJvbTogSGFucyBkZSBHb2VkZQ0KPiBTZW50OiAzMCBKYW51YXJ5IDIwMjAgMTU6NTUNCi4uLg0K
+PiA+PiArICogTW9vcmVmaWVsZCAoQ0hUIE1JRCkgU0RNIE1TUl9GU0JfRlJFUSBmcmVxdWVuY2ll
+cyBzaW1wbGlmaWVkIFBMTCBtb2RlbDoNCj4gPj4gKyAqIDAwMDA6ICAgMTAwICogIDUgLyAgNiAg
+PSAgODMuMzMzMyBNSHoNCj4gPj4gKyAqIDAwMDE6ICAgMTAwICogIDEgLyAgMSAgPSAxMDAuMDAw
+MCBNSHoNCj4gPj4gKyAqIDAwMTA6ICAgMTAwICogIDQgLyAgMyAgPSAxMzMuMzMzMyBNSHoNCj4g
+Pj4gKyAqIDAwMTE6ICAgMTAwICogIDEgLyAgMSAgPSAxMDAuMDAwMCBNSHoNCj4gPg0KPiA+IFVu
+bGVzcyBJJ20gZ29pbmcgY3Jvc3MtZXllZCwgdGhhdCdzIDQgdGltZXMgdGhlIGV4YWN0IHNhbWUg
+dGFibGUuDQo+IA0KPiBDb3JyZWN0LCBleGNlcHQgdGhhdCB0aGUgbm90IGxpc3RlZCB2YWx1ZXMg
+b24gdGhlIG5vbmUgQ2hlcnJ5IFRyYWlsDQo+IHRhYmxlIGFyZSB1bmRlZmluZWQgaW4gdGhlIFNE
+TSwgc28gd2Ugc2hvdWxkIHByb2JhYmx5IGRlbnkgdGhlbQ0KPiAob3IgYXMgdGhlIG9sZCBjb2Rl
+IHdhcyBkb2luZyBzaW1wbHkgcmV0dXJuIDApLg0KPiANCj4gQW5kIGF0IGxlYXN0IHRoZSBNb29y
+ZWZpZWxkIChDSFQgTUlEKSB0YWJsZSBpcyBkaWZmZXJlbnQgZm9yIDAwMTEsIHRoYXQNCj4gaXMg
+YWdhaW4gMTAwIE1IeiBsaWtlIDAwMDEgaW5zdGVhZCBvZiAxMTYuNjY2NyBhcyBpdCBpcyBmb3Ig
+QllUIGFuZCBDSFQuDQo+IA0KPiBOb3RlIHRoYXQgdGhlIE1lcnJpZWZpZWxkIChCWVQgTUlEKSBh
+bmQgTW9vcmVmaWVsZCAoQ0hUIE1JRCkgdmFsdWVzIGFyZQ0KPiBiYXNlZCBvbiB0aGUgb2xkIGNv
+ZGUgSSd2ZSBub3Qgc2VlbiB0aG9zZSB2YWx1ZXMgaW4gdGhlIGN1cnJlbnQgbGF0ZXN0DQo+IHZl
+cnNpb24gb2YgdGhlIFNETS4NCg0KSSB3b25kZXIgaWYgTW9vcmVmaWVsZDoxMSBpcyBhbiBvbGQg
+dHlwbz8NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
+eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
+aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
