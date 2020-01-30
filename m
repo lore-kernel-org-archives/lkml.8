@@ -2,149 +2,157 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939F1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4217C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F8820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XucHTUJG"
+	by mail.kernel.org (Postfix) with ESMTP id A30DD20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580419790;
+	bh=TDxDDVlOqoczMz4L2v8NNvn2thK4NM3+vAX1UWj903o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XFvyfhH1BWXL2uO7TFoP4bwM51K1zwyVVmP4z8nw6d0krfPnMQQCf36LvjTcU9XS2
+	 q6t5z2bRiFSlAeOssB2aB80kZcGM6V8ZzYnUey6QBnMLkf3ISU1VYk92cELqQjEu3q
+	 K7QYZipCOmi5EVgpUJ2H/RLR4e6lSuC4ZZ3chAzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgA3V0w (ORCPT
+        id S1727503AbgA3V3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:26:52 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39364 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727263AbgA3V0w (ORCPT
+        Thu, 30 Jan 2020 16:29:49 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37416 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgA3V3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:26:52 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 84so2144739pfy.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:26:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tKb9L35tQcyRyNMGKuAJ6Ea5QSPI1QLK9JjZ13bjSck=;
-        b=XucHTUJGVqo+dvrOVctD99spVTAWc6/H5Ie5rc4c68sI8IZEdOO3i5dcSPJG7jTxwY
-         yYLYXQG/Yetkj67ZkEKuFz/saEg5P6jcccVihpjXHkMTowW/qlFnfCP9iRao5tWTSGR6
-         76NU6QGK2oEpbP+jc2q8UeV0uStilfnAYz9Fs=
+        Thu, 30 Jan 2020 16:29:49 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q84so5162627oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:29:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tKb9L35tQcyRyNMGKuAJ6Ea5QSPI1QLK9JjZ13bjSck=;
-        b=gj5HFze7aoasIrfi57pdahVfbrVbPXM0zpNsKKdVfqb6okzIK4237kv6w1XHyPSEvG
-         DEY/RoC40b7/SF6qzZyMihRUtWh4ogq3Tg9aGEtpIgC4+8IxPDoXZnIApjpaFhTqVEVs
-         pv2kHbZCOOds56v5LnkUN8ghs5WFJl4dykA9g1qHskooXEiau94vDyVwT2Tl8yEqH2Ta
-         97Rq9Expikmhq0vJmq/Z70moJxU0z9HwSn66E7mwVhcHZUZknyhOUNg8qIQWjEcBw/Qj
-         46zoyJE5FXWFoTlZPbBzYYbF2v8IaUFttQ3AarUpnQ7CTJrlfoBDNGBuRMVodQDQdVPf
-         rwVg==
-X-Gm-Message-State: APjAAAUzWBr3iHIKPaJWUCyfOgP9wga6ewN8sAIsF/pvYDdnoXODHk2r
-        Kyq3kIgM8qkCTZw5gGRFAJhrJaaT2Xs=
-X-Google-Smtp-Source: APXvYqwCPFtA4XbLL5Xs+/nzbHTmkOC4EGS+kZuDiG34/MqMVaU8YEvv9MrjcNSnITYPZCNOCNTvaw==
-X-Received: by 2002:a05:6a00:2a3:: with SMTP id q3mr6716522pfs.230.1580419611564;
-        Thu, 30 Jan 2020 13:26:51 -0800 (PST)
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com. [209.85.216.48])
-        by smtp.gmail.com with ESMTPSA id o73sm7950807pje.7.2020.01.30.13.26.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 13:26:51 -0800 (PST)
-Received: by mail-pj1-f48.google.com with SMTP id gv17so1899558pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:26:51 -0800 (PST)
-X-Received: by 2002:a67:fa1a:: with SMTP id i26mr4644896vsq.169.1580419157458;
- Thu, 30 Jan 2020 13:19:17 -0800 (PST)
+        bh=soBhgt6ejO4/2ekR+e8tGWX3kM/LmDzHreUHc+EeF3w=;
+        b=UmA6OAApu+akBNpGLj811nB/xI4YpTmmiAlK8p4fpq0gu2jkanyjSbcOfxkW6Efe7X
+         ceef7+Yof8hoCgGDSDPps+pTfnFiM5dxaVigpic6Ta2HuMlY5xj6m3gcCEQ4nfTkm8l6
+         b2gX9hY+S44619efqx+zCzXXOZ7irt0LA8gh+iGt/BzKWopiG/KFIgwvR0Sl8IBS+sXg
+         Z0MzlepV2gPbg/IBATIsG4h8SY9JTnZwxHaojIErTGj7GA2+KBMH0aijEOLwG+1lLy7X
+         RO4MbUWFLSRcW033ethZu2O5G76F7Sw+1Zrdbx1wEHzmsVVZ+w2TQ8nSky0Ff/hGAWy3
+         Cs9w==
+X-Gm-Message-State: APjAAAXuL7dlB//JXYaUr22dQFzeX/cgk3K6/euK6gZJ5ICaqMDxcJVp
+        eJ0WhmBsvMN7epQqY1wqx5IKpcyReOHXyjd6jNQ=
+X-Google-Smtp-Source: APXvYqzmrxwT5kg4qHFYISAvEGZKVv/ulcjCjrlzB51QlPN+V0/LTyu6B2NTj5sCi1ymxut6dzXFAgD5rAs4g4Pnv0o=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr4402249oiy.110.1580419788640;
+ Thu, 30 Jan 2020 13:29:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20200124224225.22547-1-dianders@chromium.org> <20200124144154.v2.5.If590c468722d2985cea63adf60c0d2b3098f37d9@changeid>
- <20200129005152.2A3ED205F4@mail.kernel.org>
-In-Reply-To: <20200129005152.2A3ED205F4@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 30 Jan 2020 13:19:05 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WKDC-58Muq4-TWLZ3V20eQURm7cELMik1FfjcKBnpr7w@mail.gmail.com>
-Message-ID: <CAD=FV=WKDC-58Muq4-TWLZ3V20eQURm7cELMik1FfjcKBnpr7w@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] clk: qcom: Fix sc7180 dispcc parent data
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>, kalyan_t@codeaurora.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
+ <20200106125352.GB9198@dhcp22.suse.cz> <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
+ <20200108114952.GR32178@dhcp22.suse.cz> <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
+ <20200127141637.GL1183@dhcp22.suse.cz> <CAA25o9QuA_9EoivWo-DuJsWoHCdBm2wio3G8JYxuTfQErT42kg@mail.gmail.com>
+ <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
+ <CAA25o9RHKerPJNW6h5d6W48q1qA3wYJAmhOBU3XiBHwMcEChhA@mail.gmail.com>
+ <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com> <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
+In-Reply-To: <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Jan 2020 22:29:37 +0100
+Message-ID: <CAJZ5v0i=v_+n1yVdmO7L1FYpe=3WQHM03NQqHNfTCTKG5MVtNQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
+To:     Luigi Semenzato <semenzato@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Jan 28, 2020 at 4:51 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Thu, Jan 30, 2020 at 10:11 PM Luigi Semenzato <semenzato@google.com> wrote:
 >
-> Quoting Douglas Anderson (2020-01-24 14:42:20)
+> On Thu, Jan 30, 2020 at 12:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 > >
-> > diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-> > index 30c1e25d3edb..380eca3f847d 100644
-> > --- a/drivers/clk/qcom/dispcc-sc7180.c
-> > +++ b/drivers/clk/qcom/dispcc-sc7180.c
-> > @@ -76,40 +76,32 @@ static struct clk_alpha_pll_postdiv disp_cc_pll0_out_even = {
+> > On Mon, Jan 27, 2020 at 6:21 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > >
+> > > On Mon, Jan 27, 2020 at 8:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Mon, Jan 27, 2020 at 5:13 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > > >
+> > > > > On Mon, Jan 27, 2020 at 6:16 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > >
+> > > > > > On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
+> > > > > > [...]
+> > > > > > > The purpose of my documentation patch was to make it clearer that
+> > > > > > > hibernation may fail in situations in which suspend-to-RAM works; for
+> > > > > > > instance, when there is no swap, and anonymous pages are over 50% of
+> > > > > > > total RAM.  I will send a new version of the patch which hopefully
+> > > > > > > makes this clearer.
+> > > > > >
+> > > > > > I was under impression that s2disk is pretty much impossible without any
+> > > > > > swap.
+> > > > >
+> > > > > I am not sure what you mean by "swap" here.  S2disk needs a swap
+> > > > > partition for storing the image, but that partition is not used for
+> > > > > regular swap.
+> > > >
+> > > > That's not correct.
+> > > >
+> > > > The swap partition (or file) used by s2disk needs to be made active
+> > > > before it can use it and the mm subsystem is also able to use it for
+> > > > regular swap then.
+> > >
+> > > OK---I had this wrong, thanks.
+> > >
+> > > > >  If there is no swap, but more than 50% of RAM is free
+> > > > > or reclaimable, s2disk works fine.  If anonymous is more than 50%,
+> > > > > hibernation can still work, but swap needs to be set up (in addition
+> > > > > to the space for the hibernation image).  The setup is not obvious and
+> > > > > I don't think that the documentation is clear on this.
+> > > >
+> > > > Well, the entire contents of RAM must be preserved, this way or
+> > > > another, during hibernation.  That should be totally obvious to anyone
+> > > > using it really.
+> > >
+> > > Yes, that's obvious.
+> > >
+> > > > Some of the RAM contents is copies of data already there in the
+> > > > filesystems on persistent storage and that does not need to be saved
+> > > > again.  Everything else must be saved and s2disk (and Linux
+> > > > hibernation in general) uses active swap space to save these things.
+> > > > This implies that in order to hibernate the system, you generally need
+> > > > the amount of swap space equal to the size of RAM minus the size of
+> > > > files mapped into memory.
+> > > >
+> > > > So, to be on the safe side, the total amount of swap space to be used
+> > > > for hibernation needs to match the size of RAM (even though
+> > > > realistically it may be smaller than that in the majority of cases).
+> > >
+> > > This all makes sense, but we do this:
+> > >
+> > > -- add resume=/dev/sdc to the command line
+> > > -- attach a disk (/dev/sdc) with size equal to RAM
+> > > -- mkswap /dev/sdc
+> > > -- swapon /dev/sdc
+> > > -- echo disk > /sys/power/state
+> > >
+> > > and the last operation fails with ENOMEM.  Are we doing something
+> > > wrong?  Are we hitting some other mm bug?
 > >
-> >  static const struct parent_map disp_cc_parent_map_0[] = {
-> >         { P_BI_TCXO, 0 },
-> > -       { P_CORE_BI_PLL_TEST_SE, 7 },
-> >  };
+> > I would expect this to work, so the fact that it doesn't work for you
+> > indicates a bug somewhere or at least an assumption that doesn't hold.
 > >
-> >  static const struct clk_parent_data disp_cc_parent_data_0[] = {
-> > -       { .fw_name = "bi_tcxo" },
-> > -       { .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-> > +       { .fw_name = "xo" },
+> > Can you please remind me what you do to trigger the unexpected behavior?
 >
-> If we can make the binding match the code here and keep saying "bi_tcxo"
-> then that is preferred. That way we don't have to see bi_tcxo changing
-> and qcom folks are happy to keep the weird name. The name in the binding
-> is really up to the binding writer.
-
-v3 is now out and it still says "bi_tcxo" and generally uses the
-"internal" name.  The big exception is msm8998's gpucc.  It seems like
-a whole bunch of work has been done to move that over to more "purist"
-(AKA logical) names and I didn't want to undo that work.  If we should
-move msm8998 to match everyone else then hopefully someone can do it
-as a followup patch?
-
-
-> >  };
-> >
-> >  static const struct parent_map disp_cc_parent_map_1[] = {
-> >         { P_BI_TCXO, 0 },
-> >         { P_DP_PHY_PLL_LINK_CLK, 1 },
-> >         { P_DP_PHY_PLL_VCO_DIV_CLK, 2 },
-> > -       { P_CORE_BI_PLL_TEST_SE, 7 },
-> >  };
-> [...]
-> > @@ -203,7 +188,7 @@ static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src = {
-> >         .clkr.hw.init = &(struct clk_init_data){
-> >                 .name = "disp_cc_mdss_dp_aux_clk_src",
-> >                 .parent_data = disp_cc_parent_data_0,
-> > -               .num_parents = 2,
-> > +               .num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
+> Yes, I create processes that use a large amount of anon memory, more
+> than 50% of RAM, like this:
 >
-> Can you split this ARRAY_SIZE() stuff to another patch? That will keep
-> focus on what's relevant here without distracting from the patch
-> contents. I know that parent array size is changing, but I don't want it
-> to be changing this line too.
+> dd if=/dev/zero bs=1G count=1 | sleep infinity
+>
+> I think dd has a 2 GB limit, or around that number, so you'll need a
+> few of those.
 
-It has been done.
-
--Doug
+And then you get -ENOMEM from hibernate_preallocate_memory(), or from
+somewhere else?
