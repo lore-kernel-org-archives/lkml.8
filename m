@@ -2,53 +2,56 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018F0C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F188C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52E320674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A351214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410105;
-	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+	s=default; t=1580410110;
+	bh=h3Dozgxivx3v/d8eOB2GQGgOpiynf7UVr6c+2jL5SgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPmsrro+gzWBtx9xaoWZ+tQIw7dKWRGaUMGc4A0x3gpepKHIFM1d0CVhhCvPevgSf
-	 dPuYMwguHoM5OlDDk5nJayQGmBvU3EXRecoHeE+KdThGrKD0jY5khTaVhYVwPjwlyq
-	 eJ9frC/nrW3kLz4gBWbaLL8ji1hv1rjYgu+SceCI=
+	b=fpKum+LTKs854RUJ3pfQvq5CXezovzMEZz+K1D8jOXttKLkuR++W3V4HHjOO232rU
+	 vji27END7EJbBNK5DC4pCIAqd22UaxK1xmwVX3Ji/oOiziWAp/sC4extIUHd5x3uaf
+	 OeO43lfNVycEUBw6QVt4rLDWFZLiDXi57lmphtF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgA3SsX (ORCPT
+        id S1731564AbgA3Ss3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731535AbgA3SsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:20 -0500
+        id S1731545AbgA3SsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF8A214AF;
-        Thu, 30 Jan 2020 18:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0718214AF;
+        Thu, 30 Jan 2020 18:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410099;
-        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+        s=default; t=1580410102;
+        bh=h3Dozgxivx3v/d8eOB2GQGgOpiynf7UVr6c+2jL5SgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+bp+omCD/y8+9g7FEGfYefSz5/N1EqCc6YhbhjIEghglR2PO+palJzX31E+k/xyZ
-         bk6JcLB9fDm5dW3GkaJOSiSVP7MWLyPntU15KyYRl7Fawuaosh9LApWMmwJf4RrCeI
-         nZV73U60hw7bb6cif2fgE7bdQvos7tDERrr3i8XE=
+        b=OK37YtpMDZQZuU4HcLNiHB7Fg1+j4nArYDa3vUm2A0hiehzbt2D2pjMndYREkFV9A
+         cl4ORv3wTOcJf/cKK7sOyW2SIOMKmDvZaiGYLm1fmWdBe7m3AsAHxk3czEOQEu8ucK
+         9ltA51DlhovqpmvhpHW7BxndMoIKWAd1OPT7wHgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
-        Pacho Ramos <pachoramos@gmail.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/55] usb-storage: Disable UAS on JMicron SATA enclosure
-Date:   Thu, 30 Jan 2020 19:39:26 +0100
-Message-Id: <20200130183616.725138931@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Janne Huttunen <janne.huttunen@nokia.com>
+Subject: [PATCH 4.19 46/55] sched/fair: Add tmp_alone_branch assertion
+Date:   Thu, 30 Jan 2020 19:39:27 +0100
+Message-Id: <20200130183616.925160986@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -61,47 +64,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@fedoraproject.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
+commit 5d299eabea5a251fbf66e8277704b874bbba92dc upstream.
 
-Steve Ellis reported incorrect block sizes and alignement
-offsets with a SATA enclosure. Adding a quirk to disable
-UAS fixes the problems.
+The magic in list_add_leaf_cfs_rq() requires that at the end of
+enqueue_task_fair():
 
-Reported-by: Steven Ellis <sellis@redhat.com>
-Cc: Pacho Ramos <pachoramos@gmail.com>
-Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
+  rq->tmp_alone_branch == &rq->lead_cfs_rq_list
+
+If this is violated, list integrity is compromised for list entries
+and the tmp_alone_branch pointer might dangle.
+
+Also, reflow list_add_leaf_cfs_rq() while there. This looses one
+indentation level and generates a form that's convenient for the next
+patch.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Janne Huttunen <janne.huttunen@nokia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/usb/storage/unusual_uas.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c |  126 +++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 71 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index d0bdebd87ce3a..1b23741036ee8 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_IGNORE_UAS),
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -284,64 +284,69 @@ static inline struct cfs_rq *group_cfs_r
  
--/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
-+/*
-+ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
-+ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
-+ */
- UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
- 		"JMicron",
- 		"JMS566",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
--		US_FL_NO_REPORT_OPCODES),
-+		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ static inline void list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+ {
+-	if (!cfs_rq->on_list) {
+-		struct rq *rq = rq_of(cfs_rq);
+-		int cpu = cpu_of(rq);
++	struct rq *rq = rq_of(cfs_rq);
++	int cpu = cpu_of(rq);
++
++	if (cfs_rq->on_list)
++		return;
++
++	cfs_rq->on_list = 1;
++
++	/*
++	 * Ensure we either appear before our parent (if already
++	 * enqueued) or force our parent to appear after us when it is
++	 * enqueued. The fact that we always enqueue bottom-up
++	 * reduces this to two cases and a special case for the root
++	 * cfs_rq. Furthermore, it also means that we will always reset
++	 * tmp_alone_branch either when the branch is connected
++	 * to a tree or when we reach the top of the tree
++	 */
++	if (cfs_rq->tg->parent &&
++	    cfs_rq->tg->parent->cfs_rq[cpu]->on_list) {
+ 		/*
+-		 * Ensure we either appear before our parent (if already
+-		 * enqueued) or force our parent to appear after us when it is
+-		 * enqueued. The fact that we always enqueue bottom-up
+-		 * reduces this to two cases and a special case for the root
+-		 * cfs_rq. Furthermore, it also means that we will always reset
+-		 * tmp_alone_branch either when the branch is connected
+-		 * to a tree or when we reach the beg of the tree
++		 * If parent is already on the list, we add the child
++		 * just before. Thanks to circular linked property of
++		 * the list, this means to put the child at the tail
++		 * of the list that starts by parent.
+ 		 */
+-		if (cfs_rq->tg->parent &&
+-		    cfs_rq->tg->parent->cfs_rq[cpu]->on_list) {
+-			/*
+-			 * If parent is already on the list, we add the child
+-			 * just before. Thanks to circular linked property of
+-			 * the list, this means to put the child at the tail
+-			 * of the list that starts by parent.
+-			 */
+-			list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
+-				&(cfs_rq->tg->parent->cfs_rq[cpu]->leaf_cfs_rq_list));
+-			/*
+-			 * The branch is now connected to its tree so we can
+-			 * reset tmp_alone_branch to the beginning of the
+-			 * list.
+-			 */
+-			rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
+-		} else if (!cfs_rq->tg->parent) {
+-			/*
+-			 * cfs rq without parent should be put
+-			 * at the tail of the list.
+-			 */
+-			list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
+-				&rq->leaf_cfs_rq_list);
+-			/*
+-			 * We have reach the beg of a tree so we can reset
+-			 * tmp_alone_branch to the beginning of the list.
+-			 */
+-			rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
+-		} else {
+-			/*
+-			 * The parent has not already been added so we want to
+-			 * make sure that it will be put after us.
+-			 * tmp_alone_branch points to the beg of the branch
+-			 * where we will add parent.
+-			 */
+-			list_add_rcu(&cfs_rq->leaf_cfs_rq_list,
+-				rq->tmp_alone_branch);
+-			/*
+-			 * update tmp_alone_branch to points to the new beg
+-			 * of the branch
+-			 */
+-			rq->tmp_alone_branch = &cfs_rq->leaf_cfs_rq_list;
+-		}
++		list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
++			&(cfs_rq->tg->parent->cfs_rq[cpu]->leaf_cfs_rq_list));
++		/*
++		 * The branch is now connected to its tree so we can
++		 * reset tmp_alone_branch to the beginning of the
++		 * list.
++		 */
++		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
++		return;
++	}
  
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
--- 
-2.20.1
-
+-		cfs_rq->on_list = 1;
++	if (!cfs_rq->tg->parent) {
++		/*
++		 * cfs rq without parent should be put
++		 * at the tail of the list.
++		 */
++		list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
++			&rq->leaf_cfs_rq_list);
++		/*
++		 * We have reach the top of a tree so we can reset
++		 * tmp_alone_branch to the beginning of the list.
++		 */
++		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
++		return;
+ 	}
++
++	/*
++	 * The parent has not already been added so we want to
++	 * make sure that it will be put after us.
++	 * tmp_alone_branch points to the begin of the branch
++	 * where we will add parent.
++	 */
++	list_add_rcu(&cfs_rq->leaf_cfs_rq_list, rq->tmp_alone_branch);
++	/*
++	 * update tmp_alone_branch to points to the new begin
++	 * of the branch
++	 */
++	rq->tmp_alone_branch = &cfs_rq->leaf_cfs_rq_list;
+ }
+ 
+ static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+@@ -352,7 +357,12 @@ static inline void list_del_leaf_cfs_rq(
+ 	}
+ }
+ 
+-/* Iterate through all leaf cfs_rq's on a runqueue: */
++static inline void assert_list_leaf_cfs_rq(struct rq *rq)
++{
++	SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
++}
++
++/* Iterate through all cfs_rq's on a runqueue in bottom-up order */
+ #define for_each_leaf_cfs_rq(rq, cfs_rq) \
+ 	list_for_each_entry_rcu(cfs_rq, &rq->leaf_cfs_rq_list, leaf_cfs_rq_list)
+ 
+@@ -446,6 +456,10 @@ static inline void list_del_leaf_cfs_rq(
+ {
+ }
+ 
++static inline void assert_list_leaf_cfs_rq(struct rq *rq)
++{
++}
++
+ #define for_each_leaf_cfs_rq(rq, cfs_rq)	\
+ 		for (cfs_rq = &rq->cfs; cfs_rq; cfs_rq = NULL)
+ 
+@@ -5160,6 +5174,8 @@ enqueue_task_fair(struct rq *rq, struct
+ 	if (!se)
+ 		add_nr_running(rq, 1);
+ 
++	assert_list_leaf_cfs_rq(rq);
++
+ 	hrtick_update(rq);
+ }
+ 
 
 
