@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B45C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6755AC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B38205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A29205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410272;
-	bh=yr0wdufzFhlPQ0gsJL1aqhP0QumkI5k5iXv5R4fQngg=;
+	s=default; t=1580410280;
+	bh=Zq4F/Ve3Iyslt78uHqrrDIEnnHV8eM3FeTzoQFH0KQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MhiOMgk5PS5FHwgIZT+s5mJeR/Wndxy2uy8LvI9PbVeYsZ16Ic052+ThkS5HeoTgX
-	 w4TEATGc68vdMU2vVmV91b5+muOhMKiwNYBm4928kCMx18yT8zlLalHRKEPNOZ45cY
-	 PsOMry6TDLZdMmgOTmjvYHjfuJInr7tfID4V5ro8=
+	b=11VVnTjD2QDcgDUQwW1qnbjhM0ZfaQ2bMo3mQjCt3b6QfZACTwS6HDOdatcrnpy9t
+	 f7YtIsXlvCLJv3LqvLzA6ltXR53eDxDoUOzF7e6RqT2CCjZYGa9aT0vSRKe0KThMCc
+	 0TqoHy5pTwXZpn1Smg0IBVvrO23gwJBgEvl8Z1LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731729AbgA3SvL (ORCPT
+        id S1731627AbgA3SvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55848 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:51:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730670AbgA3SqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:02 -0500
+        id S1731016AbgA3Sp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6629B2083E;
-        Thu, 30 Jan 2020 18:46:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67551215A4;
+        Thu, 30 Jan 2020 18:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409960;
-        bh=yr0wdufzFhlPQ0gsJL1aqhP0QumkI5k5iXv5R4fQngg=;
+        s=default; t=1580409927;
+        bh=Zq4F/Ve3Iyslt78uHqrrDIEnnHV8eM3FeTzoQFH0KQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F2s6p/OfHpsjVXwadoLQGboQkA7SzCJfU+WMN0WLUgvHEWSGYx2+GqeMf/eeVdK6X
-         KBytbJv2MZQH+q9T88fXD0MOgYJu6VnKfwz2ICVJgewj5QsTUYtMchbPQ5CmTpxBaO
-         b0uX/P8dZi4Q9innHXtipM6qTv/HGvSW8tGt6+YQ=
+        b=gDdozfyQtRtua5OPO4XKjn4mS5hWLrffkuka60SbcW3CpQOsAJVUPoBlKjJPi2fnT
+         zh5PE/gzDtCQDyOL8gGGXocY4X+ZJziCB1+BdGbEnwdOx8vXWhXEjHpaTFvUdTy7yK
+         V2Mb9FSyzd/mLmD2Ez4/SS5nXuO+nbMcVyH0Tg08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/110] bus: ti-sysc: Add module enable quirk for audio AESS
-Date:   Thu, 30 Jan 2020 19:39:10 +0100
-Message-Id: <20200130183625.136301986@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/110] iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
+Date:   Thu, 30 Jan 2020 19:39:03 +0100
+Message-Id: <20200130183624.526829149@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,81 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 020003f763e24e4ed0bb3d8909f3940891536d5d ]
+[ Upstream commit 3c124435e8dd516df4b2fc983f4415386fd6edae ]
 
-We must set the autogating bit on enable for AESS (Audio Engine SubSystem)
-when probed with ti-sysc interconnect target module driver. Otherwise it
-won't idle properly.
+Non-Transparent Bridge (NTB) devices (among others) may have many DMA
+aliases seeing the hardware will send requests with different device ids
+depending on their origin across the bridged hardware.
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+See commit ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec
+NTB") for more information on this.
+
+The AMD IOMMU IRQ remapping functionality ignores all PCI aliases for
+IRQs so if devices send an interrupt from one of their aliases they
+will be blocked on AMD hardware with the IOMMU enabled.
+
+To fix this, ensure IRQ remapping is enabled for all aliases with
+MSI interrupts.
+
+This is analogous to the functionality added to the Intel IRQ remapping
+code in commit 3f0c625c6ae7 ("iommu/vt-d: Allow interrupts from the entire
+bus for aliased devices")
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c                 | 14 +++++++++++++-
- include/linux/platform_data/ti-sysc.h |  1 +
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 0e5cfd752410d..ea16a2d4fb532 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1248,6 +1248,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_QUIRK_SWSUP_SIDLE),
- 
- 	/* Quirks that need to be set based on detected module */
-+	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
-+		   SYSC_MODULE_QUIRK_AESS),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_HDQ1W),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
-@@ -1276,7 +1278,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- #ifdef DEBUG
- 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
- 	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
--	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff, 0),
- 	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
- 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
-@@ -1408,6 +1409,14 @@ static void sysc_clk_enable_quirk_hdq1w(struct sysc *ddata)
- 	sysc_write(ddata, offset, val);
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 16e0e3af2de0e..454695b372c8c 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3741,7 +3741,20 @@ static void set_remap_table_entry(struct amd_iommu *iommu, u16 devid,
+ 	iommu_flush_dte(iommu, devid);
  }
  
-+/* AESS (Audio Engine SubSystem) needs autogating set after enable */
-+static void sysc_module_enable_quirk_aess(struct sysc *ddata)
+-static struct irq_remap_table *alloc_irq_table(u16 devid)
++static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
++				       void *data)
 +{
-+	int offset = 0x7c;	/* AESS_AUTO_GATING_ENABLE */
++	struct irq_remap_table *table = data;
 +
-+	sysc_write(ddata, offset, 1);
++	irq_lookup_table[alias] = table;
++	set_dte_irq_entry(alias, table);
++
++	iommu_flush_dte(amd_iommu_rlookup_table[alias], alias);
++
++	return 0;
 +}
 +
- /* I2C needs extra enable bit toggling for reset */
- static void sysc_clk_quirk_i2c(struct sysc *ddata, bool enable)
++static struct irq_remap_table *alloc_irq_table(u16 devid, struct pci_dev *pdev)
  {
-@@ -1490,6 +1499,9 @@ static void sysc_init_module_quirks(struct sysc *ddata)
- 		return;
- 	}
+ 	struct irq_remap_table *table = NULL;
+ 	struct irq_remap_table *new_table = NULL;
+@@ -3787,7 +3800,12 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
+ 	table = new_table;
+ 	new_table = NULL;
  
-+	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
-+		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
+-	set_remap_table_entry(iommu, devid, table);
++	if (pdev)
++		pci_for_each_dma_alias(pdev, set_remap_table_entry_alias,
++				       table);
++	else
++		set_remap_table_entry(iommu, devid, table);
 +
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
- 		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
+ 	if (devid != alias)
+ 		set_remap_table_entry(iommu, alias, table);
  
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
-index b5b7a3423ca81..0b93804751444 100644
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
+@@ -3804,7 +3822,8 @@ out_unlock:
+ 	return table;
+ }
  
-+#define SYSC_MODULE_QUIRK_AESS		BIT(19)
- #define SYSC_MODULE_QUIRK_SGX		BIT(18)
- #define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
- #define SYSC_MODULE_QUIRK_I2C		BIT(16)
+-static int alloc_irq_index(u16 devid, int count, bool align)
++static int alloc_irq_index(u16 devid, int count, bool align,
++			   struct pci_dev *pdev)
+ {
+ 	struct irq_remap_table *table;
+ 	int index, c, alignment = 1;
+@@ -3814,7 +3833,7 @@ static int alloc_irq_index(u16 devid, int count, bool align)
+ 	if (!iommu)
+ 		return -ENODEV;
+ 
+-	table = alloc_irq_table(devid);
++	table = alloc_irq_table(devid, pdev);
+ 	if (!table)
+ 		return -ENODEV;
+ 
+@@ -4247,7 +4266,7 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		struct irq_remap_table *table;
+ 		struct amd_iommu *iommu;
+ 
+-		table = alloc_irq_table(devid);
++		table = alloc_irq_table(devid, NULL);
+ 		if (table) {
+ 			if (!table->min_index) {
+ 				/*
+@@ -4264,11 +4283,15 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		} else {
+ 			index = -ENOMEM;
+ 		}
+-	} else {
++	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
++		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
+ 		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
+ 
+-		index = alloc_irq_index(devid, nr_irqs, align);
++		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
++	} else {
++		index = alloc_irq_index(devid, nr_irqs, false, NULL);
+ 	}
++
+ 	if (index < 0) {
+ 		pr_warn("Failed to allocate IRTE\n");
+ 		ret = index;
 -- 
 2.20.1
 
