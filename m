@@ -2,119 +2,114 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6071C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9618BC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C672082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCFA2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2xzrJoi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZDwMV4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgA3WRF (ORCPT
+        id S1726320AbgA3WSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:17:05 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36414 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgA3WRF (ORCPT
+        Thu, 30 Jan 2020 17:18:06 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53400 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgA3WSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:17:05 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so5288492oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:17:03 -0800 (PST)
+        Thu, 30 Jan 2020 17:18:06 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s10so5601284wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:18:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o2uSlVLV9EbkO/HgivpguZY4Kg4CkB9MRxWN1lA/tSo=;
-        b=g2xzrJoiSyHK3RD1gjqQgclQjUD5x/CkTeGTcObgoSVH46AFK6QpO4L2P1m93arDHZ
-         FsYylJpQG7lsjfmCm+9NP5oS04RiBhPL88J17dU3Wtr4ZgF2lgPJcPqW8dvLYXwKqNGc
-         0eFSnAsaowjYWGXFfyVJYKj2YLpd7+df/H5fIRaRypwM7+zV/WgROF4TJZbpfxWZatf+
-         V2R02x8W/qMw63GtIt08m/6CQS0HwpPZp3+hUIDWe+U4lWvrfXLbNgXu+nFBzHdvPCfv
-         IBu7RZGWsWoqxwBEZzkofjuYUg6qRrmOMd6RVZLvQ8rYtWVjl0ZdTX5QXxiMJDqGCzBl
-         21Ng==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GL8YlOuK+lPzvntmToerBw7cag+fxZ5AswnfHKR/VLk=;
+        b=qZDwMV4crOkitMmF78zyNFVYRJb9e5CEAC4FCpSUWyji9TxxJJgsUSjQudQUxFKjDe
+         OnWpEQMl0la0WRTBE71vLNCTqZ0FYROPkKOith/+dgUtPhzurU8FSu7MZT9BHX5pKJsg
+         Odnw+zIk7XQEqj69zFrjvFnedoTatx8SnUj/qphLqeOX3aUAs9gi9YogmZLEQ0orZMYU
+         BLBhKyWM8Ea3XP+ewS0doz/fBpU9LVhRAnEEs9DKAav5GgWUmOP903EdO9Crdn3c4ag/
+         kCObtj/qfwF4ndTi6VhjJ56L85HTLk6oryAENEQ7g4+78P1CH5lkHv2JOaOKVsWfptSt
+         rhYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=o2uSlVLV9EbkO/HgivpguZY4Kg4CkB9MRxWN1lA/tSo=;
-        b=QAcRX6ZU11nv74AJdaw7H69CosixcRth+YDBmQL0CNXjw8Fngs1i3l8YROZCKt8/Nf
-         EdVawqACy8nrexp/RZ+FKuxqga1GrIGf+Eb6d4U8uwZwRd+Dj8PAckW7bnOHIyPxVfSu
-         /EsMbZjLWEPoI4TfGUEepnR/sGPzN7dajDfdjdpeyqr5uXWJ+gEbX7+Fu0Y7Ias3bZzH
-         mTkISGw8QH/DTVpgZEbQw/BfdjU8br7J3+k36tw3Mc9vmQBg041U6tby8AxmHQnWQ+FP
-         pTxcpN8VbvMmVLax8B+53uNFvVmzAcMnAczamRz6HAlW1U3C4tBYHhvwuh/VBf8IUTob
-         DB5Q==
-X-Gm-Message-State: APjAAAUvlMsoIYPK/IGy1/63U0bQkLrCbIkwF5SuAnRNe3puRi8nuIGL
-        tc9IdzYYrfJj0y5cFu+CuYk=
-X-Google-Smtp-Source: APXvYqwxny4qGVIVs/8QP5N1gLK6yQfp5csX1BKsnf5xKAC1tLv2sib+WbZeZCDhVVx/ww0aMP+JeA==
-X-Received: by 2002:aca:cf12:: with SMTP id f18mr4392210oig.81.1580422623045;
-        Thu, 30 Jan 2020 14:17:03 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n7sm2063157oij.14.2020.01.30.14.17.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 14:17:02 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] printk: Convert a use of sprintf to snprintf in console_unlock
-Date:   Thu, 30 Jan 2020 15:16:44 -0700
-Message-Id: <20200130221644.2273-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        bh=GL8YlOuK+lPzvntmToerBw7cag+fxZ5AswnfHKR/VLk=;
+        b=BK+YyN8KLhFJ3AWIdHo9W1709pvyKOIFMCkqSW+TEq8G0G0oc/R0EKWXHy0rTjqqcK
+         H5ofyxDyNyUPE3JPdVmir/VCLitrzYekQ6vgpUcS5Bm8ZSYDrlk/GcKvuPMYT2EbGjZY
+         qXt1z9YlsB2O0nejW8gJh1fuRYjxeZmsmkZsOPZjU7vT1A9DOnumYCDgi5bQfIoXDJIB
+         4oWjcoxpiu+8ea1erVO1Vr7UwprReeggu4beY0bwNTsZc+nei9jYE5K2qgdWKByQeFVD
+         5ldcMvpEOTEsPsY6IQwQ/EASrUHGqmAlu4pxeLpZFYD2J6KAotKaeuzgtMl/WjhEq/ed
+         mPkA==
+X-Gm-Message-State: APjAAAX/EqTlwqWwsRnu6o33C6s8spJCX4trXfLQ/CPoyK6LZ4vdmwJH
+        ZonB9KvE2xxhd4kBt8+P16Y=
+X-Google-Smtp-Source: APXvYqzXvgPJ14PpKCOak++6YdVlnp+Bo55KVfK80pKxm/zXXmnUS0dnTImjZ9kxihgjtrdnQMUchQ==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr8017311wmg.151.1580422683872;
+        Thu, 30 Jan 2020 14:18:03 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y10sm8959076wrw.68.2020.01.30.14.18.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 14:18:03 -0800 (PST)
+Subject: Re: [Patch v2 0/4] mm/mremap: cleanup move_page_tables() a little
+To:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        kirill@shutemov.name, dan.j.williams@intel.com,
+        yang.shi@linux.alibaba.com, thellstrom@vmware.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200129002642.13508-1-richardw.yang@linux.intel.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <50f408bd-502e-bd02-53d4-719300736ce2@gmail.com>
+Date:   Fri, 31 Jan 2020 01:18:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+In-Reply-To: <20200129002642.13508-1-richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_PRINTK is disabled (e.g. when building allnoconfig), clang
-warns:
+29.01.2020 03:26, Wei Yang пишет:
+> move_page_tables() tries to move page table by PMD or PTE.
+> 
+> The root reason is if it tries to move PMD, both old and new range should
+> be PMD aligned. But current code calculate old range and new range
+> separately.  This leads to some redundant check and calculation.
+> 
+> This cleanup tries to consolidate the range check in one place to reduce
+> some extra range handling.
+> 
+> v2:
+>   * remove 3rd patch which doesn't work on ARM platform. Thanks report from
+>     Dmitry Osipenko
+> 
+> Wei Yang (4):
+>   mm/mremap: format the check in move_normal_pmd() same as
+>     move_huge_pmd()
+>   mm/mremap: it is sure to have enough space when extent meets
+>     requirement
+>   mm/mremap: calculate extent in one place
+>   mm/mremap: start addresses are properly aligned
+> 
+>  include/linux/huge_mm.h |  2 +-
+>  mm/huge_memory.c        |  8 +-------
+>  mm/mremap.c             | 17 ++++++-----------
+>  3 files changed, 8 insertions(+), 19 deletions(-)
+> 
 
-../kernel/printk/printk.c:2416:10: warning: 'sprintf' will always
-overflow; destination buffer has size 0, but format string expands to at
-least 33 [-Wfortify-source]
-                        len = sprintf(text,
-                              ^
-1 warning generated.
+Hello Wei,
 
-It is not wrong; text has a zero size when CONFIG_PRINTK is disabled
-because LOG_LINE_MAX and PREFIX_MAX are both zero. Change to snprintf so
-that this case is explicitly handled without any risk of overflow.
+I haven't noticed any problems using the v2. Thank you very much for
+addressing the problem!
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/846
-Link: https://github.com/llvm/llvm-project/commit/6d485ff455ea2b37fef9e06e426dae6c1241b231
-Link: https://lore.kernel.org/lkml/20200130051711.GF115889@google.com/
-Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- kernel/printk/printk.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index fada22dc4ab6..a44094727a5c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2413,9 +2413,9 @@ void console_unlock(void)
- 		printk_safe_enter_irqsave(flags);
- 		raw_spin_lock(&logbuf_lock);
- 		if (console_seq < log_first_seq) {
--			len = sprintf(text,
--				      "** %llu printk messages dropped **\n",
--				      log_first_seq - console_seq);
-+			len = snprintf(text, sizeof(text),
-+				       "** %llu printk messages dropped **\n",
-+				       log_first_seq - console_seq);
- 
- 			/* messages are gone, move to first one */
- 			console_seq = log_first_seq;
--- 
-2.25.0
-
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
