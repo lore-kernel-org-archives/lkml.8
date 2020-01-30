@@ -2,212 +2,96 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E1BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942EA20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f4pKrMQl"
+	by mail.kernel.org (Postfix) with ESMTP id 854A5206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgA3Gd7 (ORCPT
+        id S1726770AbgA3Gkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 01:33:59 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19859 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgA3Gd6 (ORCPT
+        Thu, 30 Jan 2020 01:40:42 -0500
+Received: from smtprelay0157.hostedemail.com ([216.40.44.157]:42661 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgA3Gkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 01:33:58 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3278c70000>; Wed, 29 Jan 2020 22:33:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 29 Jan 2020 22:33:57 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 29 Jan 2020 22:33:57 -0800
-Received: from [10.2.165.69] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 06:33:57 +0000
-Subject: Re: [PATCH v2 1/8] mm: dump_page: print head page's refcount, for
- compound pages
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200129032417.3085670-1-jhubbard@nvidia.com>
- <20200129032417.3085670-2-jhubbard@nvidia.com>
- <20200129112510.ulims6u36ofk2qwa@box>
- <b74e8aa9-fcfd-0340-594c-61f185a0ae65@nvidia.com>
- <20200129225957.GH6615@bombadil.infradead.org>
- <a0d66400-96a2-f94e-311d-a94f75e72d65@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <c9aea9a3-53b1-83f0-9f69-c294647e0925@nvidia.com>
-Date:   Wed, 29 Jan 2020 22:30:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 01:40:42 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 187D6182CED2A;
+        Thu, 30 Jan 2020 06:40:41 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: chalk31_40013548c1333
+X-Filterd-Recvd-Size: 2693
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 30 Jan 2020 06:40:39 +0000 (UTC)
+Message-ID: <f099965dc5de82fc5fb60ba10371cd9f1aed2d94.camel@perches.com>
+Subject: Re: -Wfortify-source in kernel/printk/printk.c
+From:   Joe Perches <joe@perches.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Date:   Wed, 29 Jan 2020 22:39:32 -0800
+In-Reply-To: <20200130051711.GF115889@google.com>
+References: <20200130021648.GA32309@ubuntu-x2-xlarge-x86>
+         <20200130051711.GF115889@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <a0d66400-96a2-f94e-311d-a94f75e72d65@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580366023; bh=iZY1/g2/MCQ3KPYqu+CkoD4OYyNxEEjqeo4JNbOECuM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=f4pKrMQlnQ5lVGDlW7PYL/KTudIQAYyxHJ7kADvSvQcMo7xwDlpmNiw7jRHH02XRu
-         LUbhtnmhoFfoViXeCzyURJZ5ZT2tFv9w7Gk9BnbjxiHqqR68cmGGsL8OQpAUrTKwh+
-         R+Oe2oriRiuX2tYa5Q/Y6J9XiamJIsg3qsDjvCKVjyu1CTO3AmyUYsyMOqgYJGoiKo
-         sesGH5ZgSCJZQl6twIoECnFRiCw9hq7fox55hgonciXWj/8hqlGsB2QlJUJEzVCVGm
-         qVSi0u7Haqg8rNwptdG7Ds19fKzYYVrSXNV3FYLO8hwx3z1RyYmwXoib0tTh2UpcP+
-         0MLpWfq4Ga0vw==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/29/20 10:23 PM, John Hubbard wrote:
-> On 1/29/20 2:59 PM, Matthew Wilcox wrote:
-> ...
->> I have a hunk in my current tree which looks like this:
->>
->> @@ -77,6 +77,11 @@ void __dump_page(struct page *page, const char *reaso=
-n)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("page:%px refcount:%d mapcount:%d mapping:=
-%px index:%#lx
->> \n",
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
-ge, page_ref_count(page), mapcount,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
-ge->mapping, page_to_pgoff(page));
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PageTail(page)) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 struct page *head =3D compound_head(page);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 pr_warn("head:%px mapping:%px index:%#lx\n",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 head, head-=
->mapping, page_to_pgoff(head));
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PageKsm(page))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &p=
-age->flags);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (PageAnon(page)=
-)
->>
->> I wonder if we can combine these two patches in some more useful way?
->>
->> I also think we probably want a sanity check that 'head' and 'page'
->> are within a sane range of each other (ie head < page and head +
->> MAX_ORDER_NR_PAGES > page) to protect against a struct page that contain=
-s
->> complete garbage.
->>
->=20
-> OK, here's a go at combining those. I like the observation, implicit in y=
-our
-> diffs, that PageTail rather than PageCompound is the key differentiator i=
-n
-> deciding what to print. How's this look:
->=20
-> diff --git a/mm/debug.c b/mm/debug.c
-> index a90da5337c14..944652843e7b 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -75,12 +75,31 @@ void __dump_page(struct page *page, const char *reaso=
-n)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->  =C2=A0=C2=A0=C2=A0=C2=A0 mapcount =3D PageSlab(page) ? 0 : page_mapcount=
-(page);
->=20
-> -=C2=A0=C2=A0=C2=A0 if (PageCompound(page))
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("page:%px refcount:%d=
- mapcount:%d mapping:%px "
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "inde=
-x:%#lx compound_mapcount: %d\n",
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page,=
- page_ref_count(page), mapcount,
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page-=
->mapping, page_to_pgoff(page),
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compo=
-und_mapcount(page));
-> +=C2=A0=C2=A0=C2=A0 if (PageTail(page)) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct page *head =3D compoun=
-d_head(page);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((page < head) || (page >=
-=3D head + MAX_ORDER_NR_PAGES)) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * Page is hopelessly corrupted, so limit any reporting
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * to information about the page itself. Do not attempt
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- * to look at the head page.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_wa=
-rn("page:%px refcount:%d mapcount:%d mapping:%px "
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 "index:%#lx (corrupted tail page case)\n",
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 page, page_ref_count(page), mapcount,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 page->mapping, page_to_pgoff(page));
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_wa=
-rn("page:%px compound refcount:%d mapcount:%d "
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 "mapping:%px index:%#lx compound_mapcount:%d\n",
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 page, page_ref_count(head),
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 mapcount, head->mapping, page_to_pgoff(head),
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 compound_mapcount(page));
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (p=
-age_ref_count(page) !=3D 0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pr_warn("page:%px PROBLEM: non-zero refcount (=3D=3D%d) =
-on "
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "this tail page\n", page, page_r=
-ef_count(page));
+On Thu, 2020-01-30 at 14:17 +0900, Sergey Senozhatsky wrote:
+> On (20/01/29 19:16), Nathan Chancellor wrote:
+> > Hi all,
+> > 
+> > After commit 6d485ff455e ("Improve static checks for sprintf and
+> > __builtin___sprintf_chk") in clang [1], the following warning appears
+> > when CONFIG_PRINTK is disabled (e.g. allnoconfig):
+> > 
+> > ../kernel/printk/printk.c:2416:10: warning: 'sprintf' will always
+> > overflow; destination buffer has size 0, but format string expands
+> > to at least 33 [-Wfortify-source]
+> >                         len = sprintf(text,
+> >                               ^
+> > 1 warning generated.
+> > 
+> > Specifically referring to
+> > https://elixir.bootlin.com/linux/v5.5/source/kernel/printk/printk.c#L2416.
+> 
+> Good catch.
+> 
+> > It isn't wrong, given that when CONFIG_PRINTK is disabled, text's length
+> > is 0 (LOG_LINE_MAX and PREFIX_MAX are both zero). How should this
+> > warning be dealt this? I am not familiar enough with the printk code to
+> > say myself.
+> 
+> It's not wrong.
+> 
+> Unless I'm missing something completely obvious: with disabled printk()
+> we don't have any functions that can append messages to the logbuf, hence
+> we can't overflow it. So the error in question should never trigger.
+> 
+> - Normal printk() is void, so kernel cannot append messages;
+> - dev_printk() is void, so drivers cannot append messages and dicts;
+> - devkmsg_write() is void, so user space cannot write to logbuf.
+> 
+> So I think we should never trigger that overflow (assuming that I
+> didn't miss something) message.
+> 
+> In any case feel free to submit a patch - switch it to snprintf().
 
-...ahem, I sorta botched the above statement, because that should
-be outside (just below) the "else" statement--it can be done whether or
-not the page fails the safety/bounds check. :)
+and/or make the code depend on CONFIG_PRINTK
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+
