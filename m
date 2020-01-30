@@ -7,172 +7,74 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E918C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CB8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73624205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDAA205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580412327;
-	bh=5fNT68kPy8RNwnjQLwz5EOoO7buIik390o24nm066/0=;
+	s=default; t=1580412364;
+	bh=ZbDvsitZKVug680HMuCfi9QdtU8FJqA1UEwifLGeEwI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CW4ICB+Q05A3gzv95ATa6+zAN16TjSWeH1jSXCDh/RtS6tJSpQMe8kBO5iyKPQJ9L
-	 wNOLJvWq3t+DNrk1bQs0u5FYoQXQzcdXoxR1MC9bF2lEY55VnM/zfHrUEH1aCDZrVl
-	 9YZHT4z5mtxxUiqpKfCya6di7Cuo+8oc1tIv5LIQ=
+	b=2OWK3NBXj2vwqOAQZ2IJ9K/0b2y3MqFfZnvJdEHLEnB0jffoRPdqbE5mu+CdK/X0a
+	 a4/vIF9t/61KQwMZ33Xy7EvvNt530V4qcUC78GtHQkEEK+T/RFHPIQRZ4zEIvL5C6G
+	 JYoVjRXtvPEUt7TYbqqerXjZ9Ekri23cyxOTW9Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgA3TZ0 (ORCPT
+        id S1727606AbgA3T0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:25:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47806 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 14:26:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbgA3TZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:25:26 -0500
+        id S1727503AbgA3T0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:26:03 -0500
 Received: from localhost.localdomain (unknown [194.230.155.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA2F206D3;
-        Thu, 30 Jan 2020 19:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0474205F4;
+        Thu, 30 Jan 2020 19:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580412325;
-        bh=5fNT68kPy8RNwnjQLwz5EOoO7buIik390o24nm066/0=;
+        s=default; t=1580412363;
+        bh=ZbDvsitZKVug680HMuCfi9QdtU8FJqA1UEwifLGeEwI=;
         h=From:To:Cc:Subject:Date:From;
-        b=QQ+/36ZMxzLyi4WPwTlbwS3NoGe14JcjXcXOHTa4iukPqTaFm++fNoO1VZthUYnp7
-         zPgyU/qvFoAk/0fKvZ7bOIqbpiOoRzGc4OokpE5UJO+O4WC5Y7xVruiZkHplqiXe9D
-         7nbUvaIDweb1vae60rRsva2Ky0fo7j+tVss97IJM=
+        b=eEmJYIlpPJgeK5JxTW6UoEVdYNz3V4+HxAQEOz6BPt1abdVJJx4+6zFnXVA8Q9ynO
+         B3Yb1GoP5Io4XPu0NwJ6jRnSmrn/hCG9xewvU48BbK1qJOSW+QEWGAgUYj592E29tr
+         24H3dNfH/piGmGM/uGY4AhfFax+4x5AbCr6Z4DoA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] m68k: configs: Cleanup old Kconfig IO scheduler options
-Date:   Thu, 30 Jan 2020 20:25:20 +0100
-Message-Id: <20200130192520.3202-1-krzk@kernel.org>
+Subject: [PATCH] s390: Cleanup removed IOSCHED_DEADLINE
+Date:   Thu, 30 Jan 2020 20:25:57 +0100
+Message-Id: <20200130192557.3320-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
-commit f382fb0bcef4 ("block: remove legacy IO schedulers").
-
-The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-now enabled by default (along with MQ_IOSCHED_KYBER).
+CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
+remove legacy IO schedulers").
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/m68k/configs/amcore_defconfig   | 1 -
- arch/m68k/configs/m5208evb_defconfig | 2 --
- arch/m68k/configs/m5249evb_defconfig | 2 --
- arch/m68k/configs/m5272c3_defconfig  | 2 --
- arch/m68k/configs/m5275evb_defconfig | 2 --
- arch/m68k/configs/m5307c3_defconfig  | 2 --
- arch/m68k/configs/m5407c3_defconfig  | 2 --
- arch/m68k/configs/m5475evb_defconfig | 2 --
- 8 files changed, 15 deletions(-)
+ drivers/s390/block/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/configs/amcore_defconfig b/arch/m68k/configs/amcore_defconfig
-index d5e683dd885d..3a84f24d41c8 100644
---- a/arch/m68k/configs/amcore_defconfig
-+++ b/arch/m68k/configs/amcore_defconfig
-@@ -13,7 +13,6 @@ CONFIG_EMBEDDED=y
- # CONFIG_SLUB_DEBUG is not set
- # CONFIG_COMPAT_BRK is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5307=y
- CONFIG_AMCORE=y
-diff --git a/arch/m68k/configs/m5208evb_defconfig b/arch/m68k/configs/m5208evb_defconfig
-index a3102ff7e5ed..0ee3079f6ca9 100644
---- a/arch/m68k/configs/m5208evb_defconfig
-+++ b/arch/m68k/configs/m5208evb_defconfig
-@@ -10,8 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_COMPAT_BRK is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- # CONFIG_4KSTACKS is not set
- CONFIG_RAMBASE=0x40000000
-diff --git a/arch/m68k/configs/m5249evb_defconfig b/arch/m68k/configs/m5249evb_defconfig
-index f7bb9ed3efa8..f84f68c04065 100644
---- a/arch/m68k/configs/m5249evb_defconfig
-+++ b/arch/m68k/configs/m5249evb_defconfig
-@@ -10,8 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_SLUB_DEBUG is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5249=y
- CONFIG_M5249C3=y
-diff --git a/arch/m68k/configs/m5272c3_defconfig b/arch/m68k/configs/m5272c3_defconfig
-index 1e679f6a400f..eca65020aae3 100644
---- a/arch/m68k/configs/m5272c3_defconfig
-+++ b/arch/m68k/configs/m5272c3_defconfig
-@@ -10,8 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_SLUB_DEBUG is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5272=y
- CONFIG_M5272C3=y
-diff --git a/arch/m68k/configs/m5275evb_defconfig b/arch/m68k/configs/m5275evb_defconfig
-index d2987b40423e..9402c7a3e9c7 100644
---- a/arch/m68k/configs/m5275evb_defconfig
-+++ b/arch/m68k/configs/m5275evb_defconfig
-@@ -10,8 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_SLUB_DEBUG is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5275=y
- # CONFIG_4KSTACKS is not set
-diff --git a/arch/m68k/configs/m5307c3_defconfig b/arch/m68k/configs/m5307c3_defconfig
-index 97a78c99eeee..bb8b0eb4bdfc 100644
---- a/arch/m68k/configs/m5307c3_defconfig
-+++ b/arch/m68k/configs/m5307c3_defconfig
-@@ -10,8 +10,6 @@ CONFIG_EXPERT=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- # CONFIG_SLUB_DEBUG is not set
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5307=y
- CONFIG_M5307C3=y
-diff --git a/arch/m68k/configs/m5407c3_defconfig b/arch/m68k/configs/m5407c3_defconfig
-index 766a97f39a3a..ce9ccf13c7c0 100644
---- a/arch/m68k/configs/m5407c3_defconfig
-+++ b/arch/m68k/configs/m5407c3_defconfig
-@@ -11,8 +11,6 @@ CONFIG_EXPERT=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_MMU is not set
- CONFIG_M5407=y
- CONFIG_M5407C3=y
-diff --git a/arch/m68k/configs/m5475evb_defconfig b/arch/m68k/configs/m5475evb_defconfig
-index 579fd98afed6..93f7c7a07553 100644
---- a/arch/m68k/configs/m5475evb_defconfig
-+++ b/arch/m68k/configs/m5475evb_defconfig
-@@ -11,8 +11,6 @@ CONFIG_LOG_BUF_SHIFT=14
- CONFIG_EMBEDDED=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_COLDFIRE=y
- # CONFIG_4KSTACKS is not set
- CONFIG_RAMBASE=0x0
+diff --git a/drivers/s390/block/Kconfig b/drivers/s390/block/Kconfig
+index a8682f69effc..1f06b19cb290 100644
+--- a/drivers/s390/block/Kconfig
++++ b/drivers/s390/block/Kconfig
+@@ -26,7 +26,7 @@ config DASD
+ 	def_tristate y
+ 	prompt "Support for DASD devices"
+ 	depends on CCW && BLOCK
+-	select IOSCHED_DEADLINE
++	select MQ_IOSCHED_DEADLINE
+ 	help
+ 	  Enable this option if you want to access DASDs directly utilizing
+ 	  S/390s channel subsystem commands. This is necessary for running
 -- 
 2.17.1
 
