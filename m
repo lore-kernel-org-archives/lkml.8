@@ -2,98 +2,114 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612C6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA97C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335C820CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D104214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mliCvyk7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fJHuLhhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgA3JlH (ORCPT
+        id S1727148AbgA3JmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:41:07 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51453 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgA3JlG (ORCPT
+        Thu, 30 Jan 2020 04:42:06 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34032 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgA3JmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:41:06 -0500
-Received: by mail-pj1-f65.google.com with SMTP id fa20so1089036pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 01:41:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k7VhYF3e/sARPLan/V1Yqu6nJSGsIRzlv9MbK2wkhnE=;
-        b=mliCvyk7YzNEVOZjQ9FCwlwTBNDQRI0mN7HCXieXUcJ+csRPgurtulsFjuqoxh+jjo
-         LNiROltQVQJRNpSXlrAneBT4RMiH2ygpXcQ1Uxyt2f9bEQhm2BhKdVq5N2PxVgNgfCnu
-         m6217MhQCX/pems2fxt6fi0PxDqz+H/ZEubdfaUklcduWX1eUKNh6jtEccLSZiZD0dAm
-         9Ivpjtr5eXBeA2ufA8Fr/JrabtmJZQu00j+NuBRSJ3WvzVydHR55fXGdIudHgylt8Amr
-         4R/T7IWVtensNLMUltwCKhyPltXGnGe1ZZAhLuOozBMlaqiylpzWh/qiG/lWKWefY5qD
-         moSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k7VhYF3e/sARPLan/V1Yqu6nJSGsIRzlv9MbK2wkhnE=;
-        b=jU45e1zEmb7sUzkHoTHM50RWUEYZOi7/h3sI+yt0zL+0L7Sr6Zb1oEBbJdGBzd7BY/
-         JL6mcxRCDY16PwKhkCuBUEG1BO2XdeNhPW0gK3EaO6BU0gl9eurFBk8fKgvjx6heHZ0P
-         Zwdphj9Ntzi0pdNwVAtrkfC12qTD1LHx4DLeqd1QZR7Fe3dWq1v4vwAjvyrxD6XMqyNN
-         fV6gmBJ0TRSvxLoKSBPyyKoRAmzEuCZPZYgH388N1lwWtEdza7zv6ZSm0vkvdtHKoJ2l
-         vTRzH5KxQ0o8WqAjLWsKSSkOLGE+CIuHwk/OGx/hQ174YwBuaCFXk6tNkBJWki0w1nvU
-         5YRw==
-X-Gm-Message-State: APjAAAU1eMPwGv5MeN2VSTEegFfFvTsb9mb16EpRXL+sJOi6ak8ITjSn
-        GC9iDlxsIVYP9lvOPhkquZAcRg==
-X-Google-Smtp-Source: APXvYqy9bHlTd3eyG9EWGtdzjvaCC1P9Ti1DatOjR/A72jF8DmoTBv7/g4fpCjE1zZasFI6yOR/W/w==
-X-Received: by 2002:a17:90a:2223:: with SMTP id c32mr5167336pje.15.1580377266051;
-        Thu, 30 Jan 2020 01:41:06 -0800 (PST)
-Received: from localhost ([122.172.141.204])
-        by smtp.gmail.com with ESMTPSA id o16sm5685937pgl.58.2020.01.30.01.41.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2020 01:41:05 -0800 (PST)
-Date:   Thu, 30 Jan 2020 15:11:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Etienne Carriere <etienne.carriere@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V5] firmware: arm_scmi: Make scmi core independent of the
- transport type
-Message-ID: <20200130094103.mrz7ween6ukfa4fk@vireshk-i7>
-References: <CAN5uoS_A9TYU2aWf3WVq3KGna6oVswfut+hC7sJWvhfYggMwTA@mail.gmail.com>
+        Thu, 30 Jan 2020 04:42:05 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00U9cBCP038371;
+        Thu, 30 Jan 2020 09:42:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=0og+jrYQCRlDYW/CzD3/8NfXAB9kciV4BQAj0SPLmyE=;
+ b=fJHuLhhhBycwkIdNvXPucQQ+4rV5a6sXyoxMX/WhNDvRFDd037vSWRZz/zVIDQ75WV2O
+ 4dAhNTfVC8BBCKIjcYLgrUj0kL4gKQrXzwylSKLsAmE2E2MygWS3Cf38WkGZuW6IbMag
+ POCzoEzwLtWU02STufIsFJG0lInDDeNtpUD4Bg+DB6tlRJbITjr752kCZNg1f3UCvB+Q
+ 93DMh63MTCrjuWP77LXHJFW/3GJilUiueT+OvZyXddze/dm4Dqj1o8vrWo/Y2QoGMPe1
+ s1+MciY1sVDIzpj9yhkdyOxlzRYeuQBMFFpqk7+5Aly1oqPUFe6KZCyJ4XAB93WIX5ZE mA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xrearjpn1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 09:42:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00U9dBqu105945;
+        Thu, 30 Jan 2020 09:42:00 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xu8e8aec3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 09:41:59 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00U9fqMW014053;
+        Thu, 30 Jan 2020 09:41:52 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Jan 2020 01:41:51 -0800
+Date:   Thu, 30 Jan 2020 12:41:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: Re: [PATCH v2] staging: exfat: remove 'vol_type' variable.
+Message-ID: <20200130094142.GC1778@kadam>
+References: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN5uoS_A9TYU2aWf3WVq3KGna6oVswfut+hC7sJWvhfYggMwTA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9515 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001300068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9515 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001300068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-01-20, 10:25, Etienne Carriere wrote:
-> I've made a first port (draft) for adding new transport channels, next
-> to existing mailbox channel, on top of your change.
-> You can find it here: https://github.com/etienne-lms/linux/pull/1.
+On Thu, Jan 30, 2020 at 04:06:13PM +0900, Tetsuhiro Kohada wrote:
+> remove 'vol_type' variable.
 > 
-> I don't have specific comments on your change but the one below.
-> I think SMT header should move out of mailbox.c, but that may be a bit
-> out of the scope of your change.
-
-If it is guaranteed that someone will end up using those routines
-apart from mailbox.c, then surely it can be done.
- 
-> I would prefer an optional mak_txdone callback:
+> The following issues are described in exfat's TODO.
+> > clean up the remaining vol_type checks, which are of two types:
+> > some are ?: operators with magic numbers, and the rest are places
+> > where we're doing stuff with '.' and '..'.
 > 
->     if (info->desc->ops->mark_txdone)
->        info->desc->ops->mark_txdone(cinfo, ret);
+> The vol_type variable is always set to 'EXFAT'.
+> The variable checks are unnessesary, so remove unused code.
+> 
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+> Reviewed-by: Mori Takahiro <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> Changes in v2:
+> - Remove wrong check in exfat_readdir(), as suggested by Dan Carpenter.
 
-So you are sure that mark_txdone won't be required in your case? I can
-make it optional then.
+We wouldn't normally give a Suggested-by tag for this, but no one counts
+Suggested-by tags anyway so it doesn't matter.
 
--- 
-viresh
+Looks good.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
+
