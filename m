@@ -2,52 +2,51 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D590C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D249AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C422082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB49A214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409833;
-	bh=IVVM1hgl08D2fgpzsJMgLZQwDiwjlJhV9sFa2kUzlz8=;
+	s=default; t=1580409835;
+	bh=QrIRFR5BDeHKxUKPoxxijJvarHNmzFxXj5fuaJhHN+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YmnM2ltjd5w77BeFhpPkPM2fUwjSsJS1ENeS4MkDe5Q8lirHHdvAlnfMBe6NKp48J
-	 ypxK2Cxc/dgkIcJZ1wXyLz9OYuVeaZLVGynfew9oYFqPZgmQ58Clof9qV/fmO3euZM
-	 XrL+jMkHw/ULBVbRQWLqamp/rzZuVPoUwSCQTlis=
+	b=iZ7DgRjnw8hj1UCZTEFO++G9db9HsFE8rPlPFByZKT9BVJ0Lzwsn+mq+i2ysMbAQu
+	 gPihz19q3ce5aPbxBNA/2YKqxwKsCFac6Y2GITBrO9NetwILbmpICYohAF7cseXwJM
+	 Igj3T67jlIGEOxTo0AidkM97G5ysobXSTq8khxXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbgA3Snv (ORCPT
+        id S1730716AbgA3Snx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbgA3Snp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:45 -0500
+        id S1727670AbgA3Snt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81ED20CC7;
-        Thu, 30 Jan 2020 18:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA7D2205F4;
+        Thu, 30 Jan 2020 18:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409824;
-        bh=IVVM1hgl08D2fgpzsJMgLZQwDiwjlJhV9sFa2kUzlz8=;
+        s=default; t=1580409829;
+        bh=QrIRFR5BDeHKxUKPoxxijJvarHNmzFxXj5fuaJhHN+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyAqLoMUcNgVJc1yI05hdkqgEa3RvRPmxh2BmPEbRNsBaQAVb/EoooaHdKEZFmOtB
-         mF4c4m4R1uSMWQjQDvPa8UEb7csnPe7/ON4y1YhJqq/QklPttYAG2esXx/bWCbdwbT
-         d9NA9t9pxISdt43PoeBk4cZZAtV5AoUAQ9relErI=
+        b=SuvvnjNKIgdrHltzPxlMMUW+peFeCzqmF8g7SNABa3rgDJmlRZhmOHiY6rVKHlDqw
+         4tmTEXpbuxS6OFYfBcYbaLARIjoPn7qsIkVtVeWaLV9VGD3SKwix7nQH48fEmPCuqw
+         NccDKv62mqEAt5p/765antW3eyGGT/PNk6pfmkYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 010/110] usb: typec: wcove: fix "op-sink-microwatt" default that was in mW
-Date:   Thu, 30 Jan 2020 19:37:46 +0100
-Message-Id: <20200130183615.465301147@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 047/110] HID: ite: Add USB id match for Acer SW5-012 keyboard dock
+Date:   Thu, 30 Jan 2020 19:38:23 +0100
+Message-Id: <20200130183620.823078535@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,36 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 0e64350bf4668d0fbbfec66fd8e637b971b4e976 upstream.
+[ Upstream commit 8f18eca9ebc57d6b150237033f6439242907e0ba ]
 
-commit 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
-didn't convert this value from mW to uW when migrating to a new
-specification format like it should have.
+The Acer SW5-012 2-in-1 keyboard dock uses a Synaptics S91028 touchpad
+which is connected to an ITE 8595 USB keyboard controller chip.
 
-Fixes: 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/d8be32512efd31995ad7d65b27df9d443131b07c.1579529334.git.tommyhebb@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This keyboard has the same quirk for its rfkill / airplane mode hotkey as
+other keyboards with the ITE 8595 chip, it only sends a single release
+event when pressed and released, it never sends a press event.
 
+This commit adds this keyboards USB id to the hid-ite id-table, fixing
+the rfkill key not working on this keyboard.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm/wcove.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h | 1 +
+ drivers/hid/hid-ite.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/usb/typec/tcpm/wcove.c
-+++ b/drivers/usb/typec/tcpm/wcove.c
-@@ -597,7 +597,7 @@ static const struct property_entry wcove
- 	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
- 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
- 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
--	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000),
-+	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000000),
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 2888817261999..27795eac93e35 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1099,6 +1099,7 @@
+ #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
+ #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
+ #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
++#define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
+ #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
+ 
+diff --git a/drivers/hid/hid-ite.c b/drivers/hid/hid-ite.c
+index a45f2352618d3..c436e12feb233 100644
+--- a/drivers/hid/hid-ite.c
++++ b/drivers/hid/hid-ite.c
+@@ -40,6 +40,9 @@ static int ite_event(struct hid_device *hdev, struct hid_field *field,
+ static const struct hid_device_id ite_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
++	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
++			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
  	{ }
  };
- 
+ MODULE_DEVICE_TABLE(hid, ite_devices);
+-- 
+2.20.1
+
 
 
