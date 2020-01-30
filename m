@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29064C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1898FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F396A205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E243E20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410261;
-	bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
+	s=default; t=1580410264;
+	bh=iKjqdQ3xF9xmP29Ev2BGUdYr1kdrt+juC44ZexWRT4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16A7ZpfRhAdXgcaJ5243nQKHDQ4Z5lop31ti0/zge1KdWhGaCRu5nm1tLHNQJMtEB
-	 r9XGoLy9hCJR0Gikmh2zt0gmUY5fF+RaWRxE+KVp8SZ3j78GZnXixNf/+YWj5VPT4w
-	 /PoXDj/C7m5WvMosgq2TzYbV3y+YFvN4Ha1LMdKk=
+	b=a2BJK0rcbs4Kxte4Y95Ohx57TcqvDYMkz8vWwcF5hhn1FIcmIxVOE213Kwb9UH3l/
+	 c58ZPVz/4DhQu+cPjubOrvuD1S6kWJwbx7lzgWBaC94BCsC4K+y9mNx9v6Fs+nnd2Q
+	 nPmYWCxF97huss+o+o12lavZtfMHF7RPk+7ScQCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbgA3Su7 (ORCPT
+        id S1731721AbgA3SvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:51:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbgA3SqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:16 -0500
+        id S1731151AbgA3SqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E93220674;
-        Thu, 30 Jan 2020 18:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A932B20CC7;
+        Thu, 30 Jan 2020 18:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409976;
-        bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
+        s=default; t=1580409971;
+        bh=iKjqdQ3xF9xmP29Ev2BGUdYr1kdrt+juC44ZexWRT4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yg0TCDrnLALwLQcdq/cPkT2T48qU9ROHcE1sJXBazWB7nmWmxD1oKxn1umZOibcXF
-         W9EoSJ3yTiQeVQTKb7DcntWpjkrZf8pK2nMsaEuGJFSm/wQLAYmVaHC6yqakBW5g1N
-         Vw79CEmMQmCt+u3N8sZg/ABfUv2MsyS/RckBcW50=
+        b=k21A9rmnCrpXn4YilQ7XVhgscnhLNgid5jCRCZoT7LTxjRzkryXceCswfdu6rz9Os
+         EjfeghR37YnKZQtwGa2YGAjzNbwmbd1WiGMe1ScBvYCXiQAx/dlrBvdJS2z2EUMa32
+         KwT+bzunG+9lzVtMlbAPKo2CxAEFh0genIf7DEe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 108/110] KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
-Date:   Thu, 30 Jan 2020 19:39:24 +0100
-Message-Id: <20200130183626.144364351@linuxfoundation.org>
+        stable@vger.kernel.org, Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 106/110] crypto: caam - do not reset pointer size from MCFGR register
+Date:   Thu, 30 Jan 2020 19:39:22 +0100
+Message-Id: <20200130183626.004894950@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,57 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-commit 4942dc6638b07b5326b6d2faa142635c559e7cd5 upstream.
+commit 7278fa25aa0ebcc0e62c39b12071069df13f7e77 upstream.
 
-On VHE systems arch.mdcr_el2 is written to mdcr_el2 at vcpu_load time to
-set options for self-hosted debug and the performance monitors
-extension.
+In commit 'a1cf573ee95 ("crypto: caam - select DMA address size at runtime")'
+CAAM pointer size (caam_ptr_size) is changed from
+sizeof(dma_addr_t) to runtime value computed from MCFGR register.
+Therefore, do not reset MCFGR[PS].
 
-Unfortunately the value of arch.mdcr_el2 is not calculated until
-kvm_arm_setup_debug() in the run loop after the vcpu has been loaded.
-This means that the initial brief iterations of the run loop use a zero
-value of mdcr_el2 - until the vcpu is preempted. This also results in a
-delay between changes to vcpu->guest_debug taking effect.
-
-Fix this by writing to mdcr_el2 in kvm_arm_setup_debug() on VHE systems
-when a change to arch.mdcr_el2 has been detected.
-
-Fixes: d5a21bcc2995 ("KVM: arm64: Move common VHE/non-VHE trap config in separate functions")
-Cc: <stable@vger.kernel.org> # 4.17.x-
-Suggested-by: James Morse <james.morse@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc: <stable@vger.kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Alison Wang <alison.wang@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kvm/debug.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/crypto/caam/ctrl.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/kvm/debug.c
-+++ b/arch/arm64/kvm/debug.c
-@@ -101,7 +101,7 @@ void kvm_arm_reset_debug_ptr(struct kvm_
- void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
- {
- 	bool trap_debug = !(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY);
--	unsigned long mdscr;
-+	unsigned long mdscr, orig_mdcr_el2 = vcpu->arch.mdcr_el2;
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -685,11 +685,9 @@ static int caam_probe(struct platform_de
+ 	of_node_put(np);
  
- 	trace_kvm_arm_setup_debug(vcpu, vcpu->guest_debug);
+ 	if (!ctrlpriv->mc_en)
+-		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK | MCFGR_LONG_PTR,
++		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK,
+ 			      MCFGR_AWCACHE_CACH | MCFGR_AWCACHE_BUFF |
+-			      MCFGR_WDENABLE | MCFGR_LARGE_BURST |
+-			      (sizeof(dma_addr_t) == sizeof(u64) ?
+-			       MCFGR_LONG_PTR : 0));
++			      MCFGR_WDENABLE | MCFGR_LARGE_BURST);
  
-@@ -197,6 +197,10 @@ void kvm_arm_setup_debug(struct kvm_vcpu
- 	if (vcpu_read_sys_reg(vcpu, MDSCR_EL1) & (DBG_MDSCR_KDE | DBG_MDSCR_MDE))
- 		vcpu->arch.flags |= KVM_ARM64_DEBUG_DIRTY;
+ 	handle_imx6_err005766(&ctrl->mcr);
  
-+	/* Write mdcr_el2 changes since vcpu_load on VHE systems */
-+	if (has_vhe() && orig_mdcr_el2 != vcpu->arch.mdcr_el2)
-+		write_sysreg(vcpu->arch.mdcr_el2, mdcr_el2);
-+
- 	trace_kvm_arm_set_dreg32("MDCR_EL2", vcpu->arch.mdcr_el2);
- 	trace_kvm_arm_set_dreg32("MDSCR_EL1", vcpu_read_sys_reg(vcpu, MDSCR_EL1));
- }
 
 
