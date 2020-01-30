@@ -2,56 +2,50 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F188C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B39C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A351214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124DE2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410110;
-	bh=h3Dozgxivx3v/d8eOB2GQGgOpiynf7UVr6c+2jL5SgE=;
+	s=default; t=1580410113;
+	bh=99BtX/pBn3r/H1nNWbh9nCTgSnUF/ehvAdurJE7FIyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpKum+LTKs854RUJ3pfQvq5CXezovzMEZz+K1D8jOXttKLkuR++W3V4HHjOO232rU
-	 vji27END7EJbBNK5DC4pCIAqd22UaxK1xmwVX3Ji/oOiziWAp/sC4extIUHd5x3uaf
-	 OeO43lfNVycEUBw6QVt4rLDWFZLiDXi57lmphtF0=
+	b=GciBlQMR2phHvWbxT77lfkwwVZ94ZJkD8O1EWZ7ZXqngxrw3tuaE+h3y2ynL1tfzG
+	 SVsFsMa6tl9WK2RByhJ0RtginCsqz9ztV1Va4EqiXTZ1NWpXTd6pHgTZH7GRBfx81C
+	 5QHAIfrWkxEKGeUXrAcS2ET4sfj/m8wJQ7g1RmXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbgA3Ss3 (ORCPT
+        id S1731119AbgA3Ssc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731545AbgA3SsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:23 -0500
+        id S1731553AbgA3Ss1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0718214AF;
-        Thu, 30 Jan 2020 18:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72DFF2082E;
+        Thu, 30 Jan 2020 18:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410102;
-        bh=h3Dozgxivx3v/d8eOB2GQGgOpiynf7UVr6c+2jL5SgE=;
+        s=default; t=1580410106;
+        bh=99BtX/pBn3r/H1nNWbh9nCTgSnUF/ehvAdurJE7FIyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OK37YtpMDZQZuU4HcLNiHB7Fg1+j4nArYDa3vUm2A0hiehzbt2D2pjMndYREkFV9A
-         cl4ORv3wTOcJf/cKK7sOyW2SIOMKmDvZaiGYLm1fmWdBe7m3AsAHxk3czEOQEu8ucK
-         9ltA51DlhovqpmvhpHW7BxndMoIKWAd1OPT7wHgs=
+        b=bkj7JTn52yWQbBt90+yPnsUO+LZPbwnXwxJ+tAo7gIRC8p/Utsg3eCip+8ZSAnjYZ
+         GSKM4FV5bpy2nRiMA3ZsfBPQHCEml84M+DPx9r/GEvKEFAriLyMlt80G0EduLCf+Qq
+         lRHzyc0WEeaLXi0A7QmfHPTavKn52XopD2rf1/XA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Janne Huttunen <janne.huttunen@nokia.com>
-Subject: [PATCH 4.19 46/55] sched/fair: Add tmp_alone_branch assertion
-Date:   Thu, 30 Jan 2020 19:39:27 +0100
-Message-Id: <20200130183616.925160986@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.19 12/55] staging: vt6656: Fix false Tx excessive retries reporting.
+Date:   Thu, 30 Jan 2020 19:38:53 +0100
+Message-Id: <20200130183611.067371290@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -64,194 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 5d299eabea5a251fbf66e8277704b874bbba92dc upstream.
+commit 9dd631fa99dc0a0dfbd191173bf355ba30ea786a upstream.
 
-The magic in list_add_leaf_cfs_rq() requires that at the end of
-enqueue_task_fair():
+The driver reporting  IEEE80211_TX_STAT_ACK is not being handled
+correctly. The driver should only report on TSR_TMO flag is not
+set indicating no transmission errors and when not IEEE80211_TX_CTL_NO_ACK
+is being requested.
 
-  rq->tmp_alone_branch == &rq->lead_cfs_rq_list
-
-If this is violated, list integrity is compromised for list entries
-and the tmp_alone_branch pointer might dangle.
-
-Also, reflow list_add_leaf_cfs_rq() while there. This looses one
-indentation level and generates a form that's convenient for the next
-patch.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Janne Huttunen <janne.huttunen@nokia.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/340f1f7f-c310-dca5-476f-abc059b9cd97@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |  126 +++++++++++++++++++++++++++++-----------------------
- 1 file changed, 71 insertions(+), 55 deletions(-)
+ drivers/staging/vt6656/int.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -284,64 +284,69 @@ static inline struct cfs_rq *group_cfs_r
+--- a/drivers/staging/vt6656/int.c
++++ b/drivers/staging/vt6656/int.c
+@@ -97,9 +97,11 @@ static int vnt_int_report_rate(struct vn
  
- static inline void list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- {
--	if (!cfs_rq->on_list) {
--		struct rq *rq = rq_of(cfs_rq);
--		int cpu = cpu_of(rq);
-+	struct rq *rq = rq_of(cfs_rq);
-+	int cpu = cpu_of(rq);
-+
-+	if (cfs_rq->on_list)
-+		return;
-+
-+	cfs_rq->on_list = 1;
-+
-+	/*
-+	 * Ensure we either appear before our parent (if already
-+	 * enqueued) or force our parent to appear after us when it is
-+	 * enqueued. The fact that we always enqueue bottom-up
-+	 * reduces this to two cases and a special case for the root
-+	 * cfs_rq. Furthermore, it also means that we will always reset
-+	 * tmp_alone_branch either when the branch is connected
-+	 * to a tree or when we reach the top of the tree
-+	 */
-+	if (cfs_rq->tg->parent &&
-+	    cfs_rq->tg->parent->cfs_rq[cpu]->on_list) {
- 		/*
--		 * Ensure we either appear before our parent (if already
--		 * enqueued) or force our parent to appear after us when it is
--		 * enqueued. The fact that we always enqueue bottom-up
--		 * reduces this to two cases and a special case for the root
--		 * cfs_rq. Furthermore, it also means that we will always reset
--		 * tmp_alone_branch either when the branch is connected
--		 * to a tree or when we reach the beg of the tree
-+		 * If parent is already on the list, we add the child
-+		 * just before. Thanks to circular linked property of
-+		 * the list, this means to put the child at the tail
-+		 * of the list that starts by parent.
- 		 */
--		if (cfs_rq->tg->parent &&
--		    cfs_rq->tg->parent->cfs_rq[cpu]->on_list) {
--			/*
--			 * If parent is already on the list, we add the child
--			 * just before. Thanks to circular linked property of
--			 * the list, this means to put the child at the tail
--			 * of the list that starts by parent.
--			 */
--			list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
--				&(cfs_rq->tg->parent->cfs_rq[cpu]->leaf_cfs_rq_list));
--			/*
--			 * The branch is now connected to its tree so we can
--			 * reset tmp_alone_branch to the beginning of the
--			 * list.
--			 */
--			rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
--		} else if (!cfs_rq->tg->parent) {
--			/*
--			 * cfs rq without parent should be put
--			 * at the tail of the list.
--			 */
--			list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
--				&rq->leaf_cfs_rq_list);
--			/*
--			 * We have reach the beg of a tree so we can reset
--			 * tmp_alone_branch to the beginning of the list.
--			 */
--			rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
--		} else {
--			/*
--			 * The parent has not already been added so we want to
--			 * make sure that it will be put after us.
--			 * tmp_alone_branch points to the beg of the branch
--			 * where we will add parent.
--			 */
--			list_add_rcu(&cfs_rq->leaf_cfs_rq_list,
--				rq->tmp_alone_branch);
--			/*
--			 * update tmp_alone_branch to points to the new beg
--			 * of the branch
--			 */
--			rq->tmp_alone_branch = &cfs_rq->leaf_cfs_rq_list;
--		}
-+		list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
-+			&(cfs_rq->tg->parent->cfs_rq[cpu]->leaf_cfs_rq_list));
-+		/*
-+		 * The branch is now connected to its tree so we can
-+		 * reset tmp_alone_branch to the beginning of the
-+		 * list.
-+		 */
-+		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
-+		return;
-+	}
+ 	info->status.rates[0].count = tx_retry;
  
--		cfs_rq->on_list = 1;
-+	if (!cfs_rq->tg->parent) {
-+		/*
-+		 * cfs rq without parent should be put
-+		 * at the tail of the list.
-+		 */
-+		list_add_tail_rcu(&cfs_rq->leaf_cfs_rq_list,
-+			&rq->leaf_cfs_rq_list);
-+		/*
-+		 * We have reach the top of a tree so we can reset
-+		 * tmp_alone_branch to the beginning of the list.
-+		 */
-+		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
-+		return;
+-	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
++	if (!(tsr & TSR_TMO)) {
+ 		info->status.rates[0].idx = idx;
+-		info->flags |= IEEE80211_TX_STAT_ACK;
++
++		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
++			info->flags |= IEEE80211_TX_STAT_ACK;
  	}
-+
-+	/*
-+	 * The parent has not already been added so we want to
-+	 * make sure that it will be put after us.
-+	 * tmp_alone_branch points to the begin of the branch
-+	 * where we will add parent.
-+	 */
-+	list_add_rcu(&cfs_rq->leaf_cfs_rq_list, rq->tmp_alone_branch);
-+	/*
-+	 * update tmp_alone_branch to points to the new begin
-+	 * of the branch
-+	 */
-+	rq->tmp_alone_branch = &cfs_rq->leaf_cfs_rq_list;
- }
  
- static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
-@@ -352,7 +357,12 @@ static inline void list_del_leaf_cfs_rq(
- 	}
- }
- 
--/* Iterate through all leaf cfs_rq's on a runqueue: */
-+static inline void assert_list_leaf_cfs_rq(struct rq *rq)
-+{
-+	SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
-+}
-+
-+/* Iterate through all cfs_rq's on a runqueue in bottom-up order */
- #define for_each_leaf_cfs_rq(rq, cfs_rq) \
- 	list_for_each_entry_rcu(cfs_rq, &rq->leaf_cfs_rq_list, leaf_cfs_rq_list)
- 
-@@ -446,6 +456,10 @@ static inline void list_del_leaf_cfs_rq(
- {
- }
- 
-+static inline void assert_list_leaf_cfs_rq(struct rq *rq)
-+{
-+}
-+
- #define for_each_leaf_cfs_rq(rq, cfs_rq)	\
- 		for (cfs_rq = &rq->cfs; cfs_rq; cfs_rq = NULL)
- 
-@@ -5160,6 +5174,8 @@ enqueue_task_fair(struct rq *rq, struct
- 	if (!se)
- 		add_nr_running(rq, 1);
- 
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	hrtick_update(rq);
- }
- 
+ 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);
 
 
