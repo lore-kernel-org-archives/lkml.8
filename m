@@ -2,177 +2,241 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86643C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C6BC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8C206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA522206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuhmeGX4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GL877Q/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgA3RwQ (ORCPT
+        id S1727490AbgA3RyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:52:16 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42476 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727263AbgA3RwQ (ORCPT
+        Thu, 30 Jan 2020 12:54:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56417 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727263AbgA3RyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:52:16 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so3947419otd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:52:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yhyu6UknstC0YzrN3vkBmYQYQFYPV18Wwp32gXQbglA=;
-        b=IuhmeGX4PDbSyTaf32nBmDhLU8f+7sPFGeVemiy41TxG1USq/JyHtgg9g2uDWNU3+O
-         JkXDOoJYFhRGnAJXpB7TC9ARtNC8S6yX0bCbCMAnZqoR7H9Bjin2DhIHFYfl3Hc9PhmP
-         UUO2UJpXJ/lLuRSjyR3GsWS0CsdAs2ynN0Dyd4d+tKSn9hQAJcWO6r9qDSOuZWzESgBu
-         cGSRXWD09Oma221hdNg7QW9Q21bQhfBt9zZnpQofDn4Vo7imXXTwSL00aM0tJeIjTd43
-         U0lt3Rvasb/MeQKOVpIsilI4ji+kA/I6jMkQhvxx4GxGEO/RxQDg23b29Yqjp3S47w8g
-         xV5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yhyu6UknstC0YzrN3vkBmYQYQFYPV18Wwp32gXQbglA=;
-        b=hOY5ecqeQ2nJJfBdz30MIrgGCNcCyYEJgbNicFGXoBGOPo3k3I6cOyxN+Y1yp3z/vN
-         uMcDQ/BGOp5qGFXN0jx9Jo2r4KZUm5QLnXFDZCF2YNLgHTAxCmsOz2ctNh621Ovb/U/3
-         IJhRpLG43Put5xdSaj4SPIzswSSvExtR1XuwhEpXLbS3Z4VwFumi1bsUHOu8Kwn5RhN/
-         srKpJ4e9G4ZDIhaNqatNvnhLSTCokmnikS7hLgrVl31S8snk9gBhDcbLDLVOlHfPZ5/u
-         K4mWKq8BRtFz5BvPDq2HEFj1EDt967qOJ5REPbwKKR36j9E5CHMHPY/hJkAo3ziZvlEn
-         6+JA==
-X-Gm-Message-State: APjAAAWmYtHtFgGbsbjhNxxO6AiPOXPmr9zRlREbqhiyvExWy78qtafF
-        y86vZ3e0RXMD6HUdayogOBxA6mDHoQ6uRqe8FJ4=
-X-Google-Smtp-Source: APXvYqwEJn/pwd2NEK7XRcvE4I+r4sPVg37UM4L55KDwT516tJSHh5mRquO/NYijHBiRfhCZVj9gLHIU2nDf9xJfuSI=
-X-Received: by 2002:a9d:6510:: with SMTP id i16mr4283509otl.142.1580406734641;
- Thu, 30 Jan 2020 09:52:14 -0800 (PST)
+        Thu, 30 Jan 2020 12:54:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580406847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mrGHfSuCn/1HZGIkAY3brhdYxU0Wlxx8zZuo7ggIi2g=;
+        b=GL877Q/NMSULFli1rywZUCXVQVmP1FvVugWMW9i0quSLgW99UZ1t9l3DB74PcRvigxLNuw
+        PpCCZbB9A5eEArej0pXTS2of3I4ip6tX5ylpDm1K0eUCMx0InIJicSs3j9t5fCobz20VZ2
+        14Mjio0aV9swkIUijh2G/lpyMEb6JWM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-Z9Ru1kz5Np68iCziGKnAGg-1; Thu, 30 Jan 2020 12:54:02 -0500
+X-MC-Unique: Z9Ru1kz5Np68iCziGKnAGg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34C8613E7;
+        Thu, 30 Jan 2020 17:54:00 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AE0B5C1B2;
+        Thu, 30 Jan 2020 17:53:48 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 12:53:46 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V8 02/16] audit: add container id
+Message-ID: <20200130175346.4ds4dursrarwv4x6@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <70ad50e69185c50843d5e14462f1c4f03655d503.1577736799.git.rgb@redhat.com>
+ <CAHC9VhTKE_3bOXs+UcpKDQhatKH92uY3Hy=JA4sXXVGOC0ek8A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200124181819.4840-1-hjl.tools@gmail.com> <20200124181819.4840-3-hjl.tools@gmail.com>
- <202001271531.B9ACE2A@keescook>
-In-Reply-To: <202001271531.B9ACE2A@keescook>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Thu, 30 Jan 2020 09:51:38 -0800
-Message-ID: <CAMe9rOrVyzvaTyURc4RJJTHUXGG6uAC9KyQomxQFzWzrAN4nrg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Type: multipart/mixed; boundary="0000000000000516c0059d5f1e60"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTKE_3bOXs+UcpKDQhatKH92uY3Hy=JA4sXXVGOC0ek8A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000516c0059d5f1e60
-Content-Type: text/plain; charset="UTF-8"
-
-On Mon, Jan 27, 2020 at 3:34 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Jan 24, 2020 at 10:18:19AM -0800, H.J. Lu wrote:
-> > With the command-line option, -mx86-used-note=yes, the x86 assembler
-> > in binutils 2.32 and above generates a program property note in a note
-> > section, .note.gnu.property, to encode used x86 ISAs and features.
-> > But x86 kernel linker script only contains a signle NOTE segment:
+On 2020-01-22 16:28, Paul Moore wrote:
+> On Tue, Dec 31, 2019 at 2:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 > >
-> > PHDRS {
-> >  text PT_LOAD FLAGS(5);
-> >  data PT_LOAD FLAGS(6);
-> >  percpu PT_LOAD FLAGS(6);
-> >  init PT_LOAD FLAGS(7);
-> >  note PT_NOTE FLAGS(0);
-> > }
-> > SECTIONS
-> > {
-> > ...
-> >  .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
-> > e.*)) __stop_notes = .; } :text :note
-> > ...
-> > }
+> > Implement the proc fs write to set the audit container identifier of a
+> > process, emitting an AUDIT_CONTAINER_OP record to document the event.
 > >
-> > which may not be incompatible with note.gnu.property sections.  Since
-> > note.gnu.property section in kernel image is unused, this patch discards
-> > .note.gnu.property sections in kernel linker script by adding
+> > This is a write from the container orchestrator task to a proc entry of
+> > the form /proc/PID/audit_containerid where PID is the process ID of the
+> > newly created task that is to become the first task in a container, or
+> > an additional task added to a container.
 > >
-> >  /DISCARD/ : {
-> >   *(.note.gnu.property)
+> > The write expects up to a u64 value (unset: 18446744073709551615).
+> >
+> > The writer must have capability CAP_AUDIT_CONTROL.
+> >
+> > This will produce a record such as this:
+> >   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 contid=123456 old-contid=18446744073709551615
+> >
+> > The "op" field indicates an initial set.  The "opid" field is the
+> > object's PID, the process being "contained".  New and old audit
+> > container identifier values are given in the "contid" fields.
+> >
+> > It is not permitted to unset the audit container identifier.
+> > A child inherits its parent's audit container identifier.
+> >
+> > Please see the github audit kernel issue for the main feature:
+> >   https://github.com/linux-audit/audit-kernel/issues/90
+> > Please see the github audit userspace issue for supporting additions:
+> >   https://github.com/linux-audit/audit-userspace/issues/51
+> > Please see the github audit testsuiite issue for the test case:
+> >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > Please see the github audit wiki for the feature overview:
+> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > Acked-by: Steve Grubb <sgrubb@redhat.com>
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  fs/proc/base.c             | 36 ++++++++++++++++++++++++++++
+> >  include/linux/audit.h      | 25 ++++++++++++++++++++
+> >  include/uapi/linux/audit.h |  2 ++
+> >  kernel/audit.c             | 58 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  kernel/audit.h             |  1 +
+> >  kernel/auditsc.c           |  4 ++++
+> >  6 files changed, 126 insertions(+)
+> 
+> ...
+> 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 397f8fb4836a..2d7707426b7d 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -2356,6 +2358,62 @@ int audit_signal_info(int sig, struct task_struct *t)
+> >         return audit_signal_info_syscall(t);
 > >  }
->
-> I think this is happening in the wrong place? Shouldn't this be in the
-> DISCARDS macro in include/asm-generic/vmlinux.lds.h instead?
+> >
+> > +/*
+> > + * audit_set_contid - set current task's audit contid
+> > + * @task: target task
+> > + * @contid: contid value
+> > + *
+> > + * Returns 0 on success, -EPERM on permission failure.
+> > + *
+> > + * Called (set) from fs/proc/base.c::proc_contid_write().
+> > + */
+> > +int audit_set_contid(struct task_struct *task, u64 contid)
+> > +{
+> > +       u64 oldcontid;
+> > +       int rc = 0;
+> > +       struct audit_buffer *ab;
+> > +
+> > +       task_lock(task);
+> > +       /* Can't set if audit disabled */
+> > +       if (!task->audit) {
+> > +               task_unlock(task);
+> > +               return -ENOPROTOOPT;
+> > +       }
+> > +       oldcontid = audit_get_contid(task);
+> > +       read_lock(&tasklist_lock);
+> > +       /* Don't allow the audit containerid to be unset */
+> > +       if (!audit_contid_valid(contid))
+> > +               rc = -EINVAL;
+> > +       /* if we don't have caps, reject */
+> > +       else if (!capable(CAP_AUDIT_CONTROL))
+> > +               rc = -EPERM;
+> > +       /* if task has children or is not single-threaded, deny */
+> > +       else if (!list_empty(&task->children))
+> > +               rc = -EBUSY;
+> > +       else if (!(thread_group_leader(task) && thread_group_empty(task)))
+> > +               rc = -EALREADY;
+> 
+> [NOTE: there is a bigger issue below which I think is going to require
+> a respin/fixup of this patch so I'm going to take the opportunity to
+> do a bit more bikeshedding ;)]
+> 
+> It seems like we could combine both the thread/children checks under a
+> single -EBUSY return value.  In both cases the caller should be able
+> to determine if the target process is multi-threaded for has spawned
+> children, yes?  FWIW, my motivation for this question is that
+> -EALREADY seems like a poor choice here.
 
-Please read my commit message closely.   We can't discard .note.gnu.property
-sections by adding .note.gnu.property to default discarded sections
-since default
-discarded sections are placed AFTER .notes sections in x86 kernel
-linker scripts.
+Fair enough.
 
-> > before .notes sections.  Since .exit.text and .exit.data sections are
-> > discarded at runtime, it undefines EXIT_TEXT and EXIT_DATA to exclude
-> > .exit.text and .exit.data sections from default discarded sections.
->
-> This looks like a separate issue (though maybe related to DISCARDS)?
+> > +       /* if contid is already set, deny */
+> > +       else if (audit_contid_set(task))
+> > +               rc = -ECHILD;
+> 
+> Does -EEXIST make more sense here?
 
-Here is the updated patch without  EXIT_TEXT and EXIT_DATA change.
-I will submit a separate patch for it.
+Perhaps.  I don't feel strongly about it, but none of these error codes
+were intended for this use and should not overlap with other errors from
+writing to /proc.
 
-Thanks.
+> > +       read_unlock(&tasklist_lock);
+> > +       if (!rc)
+> > +               task->audit->contid = contid;
+> > +       task_unlock(task);
+> > +
+> > +       if (!audit_enabled)
+> > +               return rc;
+> > +
+> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
+> > +       if (!ab)
+> > +               return rc;
+> > +
+> > +       audit_log_format(ab,
+> > +                        "op=set opid=%d contid=%llu old-contid=%llu",
+> > +                        task_tgid_nr(task), contid, oldcontid);
+> > +       audit_log_end(ab);
+> 
+> Assuming audit is enabled we always emit the record above, even if we
+> were not actually able to set the Audit Container ID (ACID); this
+> seems wrong to me.  I think the proper behavior would be to either add
+> a "res=" field to indicate success/failure or only emit the record
+> when we actually change a task's ACID.  Considering the impact that
+> the ACID value will potentially have on the audit stream, it seems
+> like always logging the record and including a "res=" field may be the
+> safer choice.
 
--- 
-H.J.
+This record should be accompanied by a syscall record (and eventually
+possibly a CONTAINER_ID record of the orchestrator, if it is already in
+a container).  The syscall record has a res= field that already gives
+this result.
 
---0000000000000516c0059d5f1e60
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0002-x86-Discard-.note.gnu.property-sections-in-vmlinux.patch"
-Content-Disposition: attachment; 
-	filename="0002-x86-Discard-.note.gnu.property-sections-in-vmlinux.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k611ak450>
-X-Attachment-Id: f_k611ak450
+> > +       return rc;
+> > +}
+> > +
+> >  /**
+> >   * audit_log_end - end one audit record
+> >   * @ab: the audit_buffer
+> 
+> --
+> paul moore
+> www.paul-moore.com
+> 
 
-RnJvbSA2Mzk3MDA4YzJjMjk1Y2Q1OGEwNTJhY2Y5ZmM2NDExYTNkNjhlNDZkIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiAiSC5KLiBMdSIgPGhqbC50b29sc0BnbWFpbC5jb20+CkRhdGU6
-IFRodSwgMzAgSmFuIDIwMjAgMDk6MjU6NTQgLTA4MDAKU3ViamVjdDogW1BBVENIIDIvMl0geDg2
-OiBEaXNjYXJkIC5ub3RlLmdudS5wcm9wZXJ0eSBzZWN0aW9ucyBpbiB2bWxpbnV4CgpXaXRoIHRo
-ZSBjb21tYW5kLWxpbmUgb3B0aW9uLCAtbXg4Ni11c2VkLW5vdGU9eWVzLCB0aGUgeDg2IGFzc2Vt
-YmxlcgppbiBiaW51dGlscyAyLjMyIGFuZCBhYm92ZSBnZW5lcmF0ZXMgYSBwcm9ncmFtIHByb3Bl
-cnR5IG5vdGUgaW4gYSBub3RlCnNlY3Rpb24sIC5ub3RlLmdudS5wcm9wZXJ0eSwgdG8gZW5jb2Rl
-IHVzZWQgeDg2IElTQXMgYW5kIGZlYXR1cmVzLgpCdXQgeDg2IGtlcm5lbCBsaW5rZXIgc2NyaXB0
-IG9ubHkgY29udGFpbnMgYSBzaWdubGUgTk9URSBzZWdtZW50OgoKUEhEUlMgewogdGV4dCBQVF9M
-T0FEIEZMQUdTKDUpOwogZGF0YSBQVF9MT0FEIEZMQUdTKDYpOwogcGVyY3B1IFBUX0xPQUQgRkxB
-R1MoNik7CiBpbml0IFBUX0xPQUQgRkxBR1MoNyk7CiBub3RlIFBUX05PVEUgRkxBR1MoMCk7Cn0K
-U0VDVElPTlMKewouLi4KIC5ub3RlcyA6IEFUKEFERFIoLm5vdGVzKSAtIDB4ZmZmZmZmZmY4MDAw
-MDAwMCkgeyBfX3N0YXJ0X25vdGVzID0gLjsgS0VFUCgqKC5ub3QKZS4qKSkgX19zdG9wX25vdGVz
-ID0gLjsgfSA6dGV4dCA6bm90ZQouLi4KfQoKd2hpY2ggbWF5IG5vdCBiZSBpbmNvbXBhdGlibGUg
-d2l0aCBub3RlLmdudS5wcm9wZXJ0eSBzZWN0aW9ucy4gIFNpbmNlCm5vdGUuZ251LnByb3BlcnR5
-IHNlY3Rpb24gaW4ga2VybmVsIGltYWdlIGlzIG5ldmVyIHVzZWQsIHRoaXMgcGF0Y2gKZGlzY2Fy
-ZHMgLm5vdGUuZ251LnByb3BlcnR5IHNlY3Rpb25zIGluIGtlcm5lbCBsaW5rZXIgc2NyaXB0IGJ5
-IGFkZGluZwoKL0RJU0NBUkQvIDogewogICooLm5vdGUuZ251LnByb3BlcnR5KQp9CgpiZWZvcmUg
-Lm5vdGVzIHNlY3Rpb25zLiAgTkI6IFdlIGNhbid0IGRpc2NhcmQgLm5vdGUuZ251LnByb3BlcnR5
-IHNlY3Rpb25zCmJ5IGFkZGluZyAubm90ZS5nbnUucHJvcGVydHkgdG8gZGVmYXVsdCBkaXNjYXJk
-ZWQgc2VjdGlvbnMgc2luY2UgZGVmYXVsdApkaXNjYXJkZWQgc2VjdGlvbnMgYXJlIHBsYWNlZCBB
-RlRFUiAubm90ZXMgc2VjdGlvbnMgaW4geDg2IGtlcm5lbCBsaW5rZXIKc2NyaXB0cy4KClNpZ25l
-ZC1vZmYtYnk6IEguSi4gTHUgPGhqbC50b29sc0BnbWFpbC5jb20+Ci0tLQogYXJjaC94ODYva2Vy
-bmVsL3ZtbGludXgubGRzLlMgfCA1ICsrKysrCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25z
-KCspCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3ZtbGludXgubGRzLlMgYi9hcmNoL3g4
-Ni9rZXJuZWwvdm1saW51eC5sZHMuUwppbmRleCBlMzI5NmFhMDI4ZmUuLmQxYjk0MjM2NWQyNyAx
-MDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL3ZtbGludXgubGRzLlMKKysrIGIvYXJjaC94ODYv
-a2VybmVsL3ZtbGludXgubGRzLlMKQEAgLTE1MCw2ICsxNTAsMTEgQEAgU0VDVElPTlMKIAlfZXRl
-eHQgPSAuOwogCS4gPSBBTElHTihQQUdFX1NJWkUpOwogCisJLyogLm5vdGUuZ251LnByb3BlcnR5
-IHNlY3Rpb25zIHNob3VsZCBiZSBkaXNjYXJkZWQgKi8KKwkvRElTQ0FSRC8gOiB7CisJCSooLm5v
-dGUuZ251LnByb3BlcnR5KQorCX0KKwogCVg4Nl9BTElHTl9ST0RBVEFfQkVHSU4KIAlST19EQVRB
-KFBBR0VfU0laRSkKIAlYODZfQUxJR05fUk9EQVRBX0VORAotLSAKMi4yNC4xCgo=
---0000000000000516c0059d5f1e60--
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
