@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE67C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D63C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C742E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4459214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409955;
-	bh=mjJrS8A36FDuKb9fONPOUFh7RpbbhF9DWKvJqd6eeek=;
+	s=default; t=1580409962;
+	bh=AJU6CtPh0acVabB7XyOq/MYQTgmrFRKeMffxV6gDCu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyEBNwYkflGeWDWnc+YcG6bj9YPa90ChGyk/JDk6Yi+Ewdem8Mr64ps8lHZ8Zo06G
-	 Jz2810FvWBlgGf+KMLAFF14RCrfFRoq+PqTRHjmKEb0xzJVxIburq/ZcnpaGs8TqVQ
-	 Ck6n/6OeGfJx4B5HUmlbsvacZ8maBHicvUEMyPxI=
+	b=qs/9Q6A/5bO/LsIfRX92czyHsNkyLLynjSZ6LZcipRePaypBBEP57s6OSO8zjFZu1
+	 jSjn3yZDkV3G8hZ529zBP7v493cfUrnhNQ4eZrDebFj6mCVkt+dbTA2o/Y721MjADk
+	 Kyo9rikdE04dXpjuQ2Ii2+FJUrdldMMQA8xCGTu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbgA3Spy (ORCPT
+        id S1731118AbgA3Sp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbgA3Spp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:45 -0500
+        id S1728089AbgA3Spt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C91B21734;
-        Thu, 30 Jan 2020 18:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55FD4205F4;
+        Thu, 30 Jan 2020 18:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409943;
-        bh=mjJrS8A36FDuKb9fONPOUFh7RpbbhF9DWKvJqd6eeek=;
+        s=default; t=1580409948;
+        bh=AJU6CtPh0acVabB7XyOq/MYQTgmrFRKeMffxV6gDCu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEpH8Qh1CcCxq0iIynqjX/6f+3ZRCA7ZNhy6iXyNui4G82bHTFkEBR/4syR2gG14m
-         GtMdWnWNCK5jIgljLDrJZzftyTbQ+sB9b/0HDUgZWHqOtL1YCBj/jwt1LqMPwKFPX/
-         m/aC4QrdmGtqWfiBeCs3OocYhgU5GJZSxN/OrU1g=
+        b=RstR3Y8XA5WSMMm2dvl2xPUmMeXnZDjV5o8nNO94/XQBjC9uJkyk/fpCHKxk8Irq6
+         vguFGmCC/HReSLXb4rF334VMDD8EGyLf1QQDSWa5+z05wXRZuEnk+YDlGcoD7wqY8L
+         oYmcVTG176YmyITCzdx8RZ9xMbGfVVAsqVruJ7WI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/110] mmc: sdhci-pci: Quirk for AMD SDHC Device 0x7906
-Date:   Thu, 30 Jan 2020 19:39:08 +0100
-Message-Id: <20200130183624.964768848@linuxfoundation.org>
+Subject: [PATCH 5.4 056/110] ASoC: fsl_audmix: add missed pm_runtime_disable
+Date:   Thu, 30 Jan 2020 19:38:32 +0100
+Message-Id: <20200130183621.760869222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,99 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 7a869f00bb15bcefb8804d798a49b086267b03e6 ]
+[ Upstream commit 77fffa742285f2b587648d6c72b5c705633f146f ]
 
-AMD SDHC 0x7906 requires a hard reset to clear all internal state.
-Otherwise it can get into a bad state where the DATA lines are always
-read as zeros.
+The driver forgets to call pm_runtime_disable in probe failure
+and remove.
+Add the missed calls to fix it.
 
-This change requires firmware that can transition the device into
-D3Cold for it to work correctly. If the firmware does not support
-transitioning to D3Cold then the power state transitions are a no-op.
-
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/20191203111303.12933-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-core.c | 51 ++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_audmix.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 642a9667db4dd..96a163f36a395 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -21,6 +21,7 @@
- #include <linux/mmc/mmc.h>
- #include <linux/scatterlist.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/mmc/slot-gpio.h>
-@@ -1598,11 +1599,59 @@ static int amd_probe(struct sdhci_pci_chip *chip)
- 	return 0;
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index a1db1bce330fa..5faecbeb54970 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -505,15 +505,20 @@ static int fsl_audmix_probe(struct platform_device *pdev)
+ 					      ARRAY_SIZE(fsl_audmix_dai));
+ 	if (ret) {
+ 		dev_err(dev, "failed to register ASoC DAI\n");
+-		return ret;
++		goto err_disable_pm;
+ 	}
+ 
+ 	priv->pdev = platform_device_register_data(dev, mdrv, 0, NULL, 0);
+ 	if (IS_ERR(priv->pdev)) {
+ 		ret = PTR_ERR(priv->pdev);
+ 		dev_err(dev, "failed to register platform %s: %d\n", mdrv, ret);
++		goto err_disable_pm;
+ 	}
+ 
++	return 0;
++
++err_disable_pm:
++	pm_runtime_disable(dev);
+ 	return ret;
  }
  
-+static u32 sdhci_read_present_state(struct sdhci_host *host)
-+{
-+	return sdhci_readl(host, SDHCI_PRESENT_STATE);
-+}
+@@ -521,6 +526,8 @@ static int fsl_audmix_remove(struct platform_device *pdev)
+ {
+ 	struct fsl_audmix *priv = dev_get_drvdata(&pdev->dev);
+ 
++	pm_runtime_disable(&pdev->dev);
 +
-+void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
-+{
-+	struct sdhci_pci_slot *slot = sdhci_priv(host);
-+	struct pci_dev *pdev = slot->chip->pdev;
-+	u32 present_state;
-+
-+	/*
-+	 * SDHC 0x7906 requires a hard reset to clear all internal state.
-+	 * Otherwise it can get into a bad state where the DATA lines are always
-+	 * read as zeros.
-+	 */
-+	if (pdev->device == 0x7906 && (mask & SDHCI_RESET_ALL)) {
-+		pci_clear_master(pdev);
-+
-+		pci_save_state(pdev);
-+
-+		pci_set_power_state(pdev, PCI_D3cold);
-+		pr_debug("%s: power_state=%u\n", mmc_hostname(host->mmc),
-+			pdev->current_state);
-+		pci_set_power_state(pdev, PCI_D0);
-+
-+		pci_restore_state(pdev);
-+
-+		/*
-+		 * SDHCI_RESET_ALL says the card detect logic should not be
-+		 * reset, but since we need to reset the entire controller
-+		 * we should wait until the card detect logic has stabilized.
-+		 *
-+		 * This normally takes about 40ms.
-+		 */
-+		readx_poll_timeout(
-+			sdhci_read_present_state,
-+			host,
-+			present_state,
-+			present_state & SDHCI_CD_STABLE,
-+			10000,
-+			100000
-+		);
-+	}
-+
-+	return sdhci_reset(host, mask);
-+}
-+
- static const struct sdhci_ops amd_sdhci_pci_ops = {
- 	.set_clock			= sdhci_set_clock,
- 	.enable_dma			= sdhci_pci_enable_dma,
- 	.set_bus_width			= sdhci_set_bus_width,
--	.reset				= sdhci_reset,
-+	.reset				= amd_sdhci_reset,
- 	.set_uhs_signaling		= sdhci_set_uhs_signaling,
- };
+ 	if (priv->pdev)
+ 		platform_device_unregister(priv->pdev);
  
 -- 
 2.20.1
