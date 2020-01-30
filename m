@@ -2,178 +2,186 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78630C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDC3C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEF32070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987D12070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dD6BX5Xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgA3A6Q (ORCPT
+        id S1727296AbgA3BCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 19:58:16 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47048 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726760AbgA3A6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 19:58:16 -0500
-Received: from callcc.thunk.org (guestnat-104-133-9-100.corp.google.com [104.133.9.100] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00U0w7fD007678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 19:58:08 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 260E6420324; Wed, 29 Jan 2020 19:58:17 -0500 (EST)
-Date:   Wed, 29 Jan 2020 19:58:17 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
-Subject: [GIT PULL] ext4 changes for 5.6
-Message-ID: <20200130005817.GA331314@mit.edu>
+        Wed, 29 Jan 2020 20:02:19 -0500
+Received: from mail-eopbgr1320123.outbound.protection.outlook.com ([40.107.132.123]:16224
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726671AbgA3BCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 20:02:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j8H7lKQNeG1t2AG2SjgDj8QHf0lRJ2c/31ft6W8YgZmXl5VVxw9ZMmPachbxrqChMw+1dWsZeDI/il0UohIFpHmXj+osQRQHeBhVJVFSOsBApdAKpgcT3JHjsIPLixmETavyyKcUorhCGAFtxiQZw6hc0EUDxFkdb4sDpjHd/srNuCBoGDLxWyGRYlhLCNY6jDqyXBq82Vfb6J4GfpxTd4bDIpXn2HhdL2hAMg4k9NVkmpLEmsAWDxNzktCZFZZodo8GFTYl82sC2ESYCQuxPqCwxOV6Zds6GGpCw441UYNuqV7hGrrosTNzG7nJ4UCPwSnazjJhQOgOSnO9kgkvpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bx0If3Uk2eEktwdcZj/qm4O6VnhF2p5Fjdsq7fIogSM=;
+ b=LJSsLl/PFWdLmE/cGs5bSKaUJYLSiZc6E0WPLEeExL/NWJJLMs/vJJxmihzLJWkcfQ7mtCDE8gCWk+7xt5HWHMcAJoDYlfTFWIHM9NLh4xtqY74ZVpPqLvZUFU7fEJmWpIw18J+0MEAbzXk8EyHMe629xYjJYH0O9G69BtzZUONv42eWWOSIT3LlhMJ5hEnN9dWu+ZXH6vsZkDK2F/dlEPK6CcNAElviOx8e5rbuPYl/XyFH4v2W38SThO1HDHr1zNMqjhemJmbC6Gx76TR0cAMPowWMTYI+M++hRWXXbSAPNs/WUpwR4RwB4NrFyNyyUIxGmWfGnZ1W3NSdQfrMZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bx0If3Uk2eEktwdcZj/qm4O6VnhF2p5Fjdsq7fIogSM=;
+ b=dD6BX5XgDLhUV9BnqTfh/MJYSwBESrJWOIgvr4EHIwOKiNKPD/k/Y0RZp34l4wvIpJIn0yVSN8P0HfWKz3Ba5GT7ZEi43w6whaR1JakPFRcE+R6wgrThVkOvFZytBOP7ldMx33eHNhau9QOPGTAQXRwd/gDToTB30fe6hMSLFEA=
+Received: from PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) by
+ PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.0; Thu, 30 Jan 2020 01:02:07 +0000
+Received: from PU1P153MB0155.APCP153.PROD.OUTLOOK.COM
+ ([fe80::49a0:b051:e5f0:4c3a]) by PU1P153MB0155.APCP153.PROD.OUTLOOK.COM
+ ([fe80::49a0:b051:e5f0:4c3a%7]) with mapi id 15.20.2707.008; Thu, 30 Jan 2020
+ 01:02:06 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall page
+ for hibernation
+Thread-Topic: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall page
+ for hibernation
+Thread-Index: AQHVxOKfKplvVmki0EiTTmOHhKt+Nqf6tz7wgAfBDgCAAAs2AA==
+Date:   Thu, 30 Jan 2020 01:02:06 +0000
+Message-ID: <PU1P153MB01552D8E75E152C3F3FB9C65BF040@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
+References: <1578350559-130275-1-git-send-email-decui@microsoft.com>
+ <HK0P153MB0148ED41CE96B637019DF26ABF090@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+ <20200130000552.GD2896@sasha-vm>
+In-Reply-To: <20200130000552.GD2896@sasha-vm>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-30T01:02:02.8003111Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ed8647ab-f4f5-4b45-9f41-e85affc11ce5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:1191:cedf:8423:18ae]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b87e4584-6100-49e5-cd4f-08d7a52006d3
+x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:|PU1P153MB0153:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0153575FC65661A5E3055BC1BF040@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02981BE340
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(346002)(39860400002)(136003)(366004)(189003)(199004)(7696005)(966005)(316002)(54906003)(9686003)(110136005)(10290500003)(4326008)(66446008)(8676002)(86362001)(478600001)(52536014)(15650500001)(53546011)(33656002)(71200400001)(186003)(55016002)(8936002)(76116006)(8990500004)(2906002)(6506007)(66946007)(66476007)(66556008)(64756008)(81156014)(5660300002)(7416002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0155.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oevTPKhK7hXbPpry0TxxmzGtfrezacO82KsCb5LESBPAGFlxj9T71QlpSeqTNuHok51MIocpXD1cKmLwlWg/lhLSOyjmsubyLtPqeGdAojgNvtRQ4vnKeXIxJpjNBrpPun6bmAedZ0pYw0j0kOBh/nFJgPRWYnRBdBu4fo13mokLKf6KgvzLLqrXRKZwMAFaegi0n7OleS4bLmSrp9bIPG/IzUKJhB7R734o0Wo9oVqhy6uRjoelVdi6WAmLZvtGwGWGE2mUZVzhLz+/wZlh2fXaI2TL+QHUgdlMRp8YQ4IElTF1mSHGF0ICXV9hWJ4hzh+HSozncgtUGF+Kmw12hJGxkoKdMo48JCWPP7jt0ElHTn8NXGLceWEelhOPfR+qZJU6zCqS29zncWs1A0O6N+a6yPewWu00n0wgdd4BGSP0391VJEVdFl79sfi70vbraRcdWCcpmGcSp2nEjNNMhAsdsTAqJjePAy8QzDP+ehGdvac1aLCY//npk9NR8hv0n/029sqJnFyOXMsUNoz5JQ==
+x-ms-exchange-antispam-messagedata: C31PZxC9OgOpvi0Q0zvTra0O8Sv/v752czqtgzivE92IEULvobank+MolSBOPI4EL0ZnobyyXEiR5rI9vEMSGSDfTmBCrQH0EZJ0xEl4/x+Ot39g64mFrrrhuYnS29M4nQ24VPlC2hIMZY4iI38ocErYCqdNabMt9uYTbkpYETRsj4S3ueNWDwpSQHRhmDwZcEC8REQsnr9yAJbuJhA46Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b87e4584-6100-49e5-cd4f-08d7a52006d3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2020 01:02:06.4487
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8F++C3wtlXlP4BCUsWT603ZqpMs2qK6GAAqQrvhJnBYPyuRyn+cEWAmbE9DbgVAAVwL+ROBSV3MvIY6Za6IxxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Sasha Levin
+> Sent: Wednesday, January 29, 2020 4:06 PM
+> To: Dexuan Cui <decui@microsoft.com>
+> Cc: arnd@arndb.de; bp@alien8.de; daniel.lezcano@linaro.org; Haiyang Zhang
+> <haiyangz@microsoft.com>; hpa@zytor.com; KY Srinivasan
+> <kys@microsoft.com>; linux-hyperv@vger.kernel.org;
+> linux-kernel@vger.kernel.org; mingo@redhat.com; Stephen Hemminger
+> <sthemmin@microsoft.com>; tglx@linutronix.de; x86@kernel.org; Michael
+> Kelley <mikelley@microsoft.com>; Sasha Levin
+> <Alexander.Levin@microsoft.com>; vkuznets <vkuznets@redhat.com>;
+> linux-arch@vger.kernel.org
+> Subject: Re: [PATCH v6][RESEND] x86/hyperv: Suspend/resume the hypercall
+> page for hibernation
+>=20
+> On Sat, Jan 25, 2020 at 01:44:31AM +0000, Dexuan Cui wrote:
+> >> From: Dexuan Cui <decui@microsoft.com>
+> >> Sent: Monday, January 6, 2020 2:43 PM
+> >>
+> >> This is needed for hibernation, e.g. when we resume the old kernel, we
+> need
+> >> to disable the "current" kernel's hypercall page and then resume the o=
+ld
+> >> kernel's.
+> >>
+> >> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> >> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> >> ---
+> >>
+> >> This is a RESEND of https://lkml.org/lkml/2019/11/20/68
+> >>
+> >> Please review.
+> >>
+> >> If it looks good, can you please pick it up through the tip.git tree?
+> >>
+> >>  arch/x86/hyperv/hv_init.c | 48
+> >> +++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 48 insertions(+)
+> >
+> >Hi, Vitaly and x86 maintainers,
+> >Can you please take a look at this patch?
+>=20
+> Ping?
+>=20
+> This patch has been floating around in it's current form for the past 2
+> months. I'll happily take Hyper-V patches under arch/x86/hyperv/ via the
+> Hyper-V tree rather than tip if the x86 folks don't want to deal with
+> them.
+>=20
+> --
+> Thanks,
+> Sasha
 
-  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
+This straightforward patch is the only pending patch for v5.6 for the
+hibernation functionality of Linux VM on Hyper-V. It would be really great
+if we could merge it for v5.6-rc1. The patch is safe in that it only runs w=
+hen=20
+the VM hibernates, and the hibernation functionality of Linux VM on
+Hyper-V never worked before. I'm pretty sure the patch can not cause any
+merge conflict since nobody else tries to modify the file recently.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
-
-for you to fetch changes up to 7f6225e446cc8dfa4c3c7959a4de3dd03ec277bf:
-
-  jbd2: clean __jbd2_journal_abort_hard() and __journal_abort_soft() (2020-01-25 03:01:56 -0500)
-
-----------------------------------------------------------------
-This merge window, we've added some performance improvements in how we
-handle inode locking in the read/write paths, and improving the
-performance of Direct I/O overwrites.  We also now record the error
-code which caused the first and most recent ext4_error() report in the
-superblock, to make it easier to root cause problems in production
-systems.  There are also many of the usual cleanups and miscellaneous
-bug fixes.
-
-----------------------------------------------------------------
-Chengguang Xu (2):
-      ext4: remove unnecessary assignment in ext4_htree_store_dirent()
-      ext4: choose hardlimit when softlimit is larger than hardlimit in ext4_statfs_project()
-
-Dmitry Monakhov (3):
-      ext4: fix extent_status fragmentation for plain files
-      ext4: fix symbolic enum printing in trace output
-      ext4: fix extent_status trace points
-
-Eric Biggers (20):
-      ext4: remove unnecessary ifdefs in htree_dirblock_to_tree()
-      ext4: uninline ext4_inode_journal_mode()
-      ext4: remove unnecessary selections from EXT3_FS
-      docs: ext4.rst: add encryption and verity to features list
-      ext4: handle decryption error in __ext4_block_zero_page_range()
-      ext4: allow ZERO_RANGE on encrypted files
-      ext4: only use fscrypt_zeroout_range() on regular files
-      ext4: re-enable extent zeroout optimization on encrypted files
-      ext4: fix deadlock allocating crypto bounce page from mempool
-      ext4: fix deadlock allocating bio_post_read_ctx from mempool
-      ext4: remove unneeded check for error allocating bio_post_read_ctx
-      ext4: remove ext4_{ind,ext}_calc_metadata_amount()
-      ext4: clean up len and offset checks in ext4_fallocate()
-      ext4: remove redundant S_ISREG() checks from ext4_fallocate()
-      ext4: make some functions static in extents.c
-      ext4: fix documentation for ext4_ext_try_to_merge()
-      ext4: remove obsolete comment from ext4_can_extents_be_merged()
-      ext4: fix some nonstandard indentation in extents.c
-      ext4: add missing braces in ext4_ext_drop_refs()
-      ext4: fix race conditions in ->d_compare() and ->d_hash()
-
-Jan Kara (1):
-      ext4: Optimize ext4 DIO overwrites
-
-Kai Li (1):
-      jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-
-Martijn Coenen (1):
-      ext4: Add EXT4_IOC_FSGETXATTR/EXT4_IOC_FSSETXATTR to compat_ioctl
-
-Naoto Kobayashi (1):
-      ext4: Delete ext4_kvzvalloc()
-
-Ritesh Harjani (4):
-      ext4: fix ext4_dax_read/write inode locking sequence for IOCB_NOWAIT
-      ext4: Start with shared i_rwsem in case of DIO instead of exclusive
-      ext4: Move to shared i_rwsem even without dioread_nolock mount opt
-      ext4: remove unused macro MPAGE_DA_EXTENT_TAIL
-
-Shijie Luo (2):
-      ext4,jbd2: fix comment and code style
-      jbd2: remove pointless assertion in __journal_remove_journal_head
-
-Theodore Ts'o (8):
-      ext4: treat buffers contining write errors as valid in ext4_sb_bread()
-      Merge branch 'rk/inode_lock' into dev
-      ext4: save the error code which triggered an ext4_error() in the superblock
-      ext4: simulate various I/O and checksum errors when reading metadata
-      ext4: export information about first/last errors via /sys/fs/ext4/<dev>
-      ext4: avoid fetching btime in ext4_getattr() unless requested
-      ext4: drop ext4_kvmalloc()
-      ext4: make dioread_nolock the default
-
-Vasily Averin (1):
-      jbd2_seq_info_next should increase position index
-
-wangyan (1):
-      jbd2: delete the duplicated words in the comments
-
-zhangyi (F) (4):
-      jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-      ext4, jbd2: ensure panic when aborting with zero errno
-      jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
-      jbd2: clean __jbd2_journal_abort_hard() and __journal_abort_soft()
-
-zhengbin (1):
-      ext4: use true,false for bool variable
-
- Documentation/admin-guide/ext4.rst    |   2 +
- Documentation/filesystems/fscrypt.rst |   6 +--
- fs/ext4/Kconfig                       |   6 ---
- fs/ext4/balloc.c                      |   5 +-
- fs/ext4/dir.c                         |  10 ++--
- fs/ext4/ext4.h                        |  81 +++++++++++++++++++++++++------
- fs/ext4/ext4_extents.h                |   5 --
- fs/ext4/ext4_jbd2.c                   |  25 ++++++++++
- fs/ext4/ext4_jbd2.h                   |  22 +--------
- fs/ext4/extents.c                     | 205 +++++++++++++++++++++++++++++-------------------------------------------------
- fs/ext4/extents_status.h              |   6 +++
- fs/ext4/file.c                        | 203 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------
- fs/ext4/ialloc.c                      |   6 ++-
- fs/ext4/indirect.c                    |  26 ----------
- fs/ext4/inline.c                      |   4 +-
- fs/ext4/inode.c                       |  53 +++++++++++++++-----
- fs/ext4/ioctl.c                       |   2 +
- fs/ext4/mballoc.c                     |   4 ++
- fs/ext4/mmp.c                         |   6 ++-
- fs/ext4/namei.c                       |  20 +++++---
- fs/ext4/page-io.c                     |  19 ++++++--
- fs/ext4/readpage.c                    |  42 ++++++++--------
- fs/ext4/resize.c                      |  10 ++--
- fs/ext4/super.c                       | 122 +++++++++++++++++++++++++++++++++-------------
- fs/ext4/sysfs.c                       |  88 +++++++++++++++++++++++++++++++++-
- fs/ext4/xattr.c                       |   6 ++-
- fs/jbd2/checkpoint.c                  |   2 +-
- fs/jbd2/commit.c                      |   4 +-
- fs/jbd2/journal.c                     | 119 +++++++++++++++++++--------------------------
- fs/jbd2/transaction.c                 |   4 +-
- include/linux/jbd2.h                  |   1 -
- include/trace/events/ext4.h           |  27 +++++++++--
- 32 files changed, 709 insertions(+), 432 deletions(-)
-
+Thanks,
+-- Dexuan
