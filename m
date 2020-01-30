@@ -2,95 +2,73 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC4C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE76C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20F92083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E34320708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iq8U0whK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bU3OkX/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgA3Uby (ORCPT
+        id S1727686AbgA3UcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:31:54 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55260 "EHLO
+        Thu, 30 Jan 2020 15:32:25 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38067 "EHLO
         mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbgA3Ubx (ORCPT
+        with ESMTP id S1727513AbgA3UcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:31:53 -0500
-Received: by mail-pj1-f66.google.com with SMTP id dw13so1831244pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:31:51 -0800 (PST)
+        Thu, 30 Jan 2020 15:32:25 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j17so1838667pjz.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:32:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P+0rKLDNQs9w1hNYJYZaKwLvj6vZBP5mJnYXqFucuhM=;
-        b=iq8U0whKUir6BtwA+hkEPrARPnboBH0L4GdBB8V5rfVP4JY5aMnYgRrZmiShSuPqvX
-         BHaonQ7Zj54ppZIG+cuxcjKa9ODjO6MWeiX4jm9xrda4Qvl33AM7moaTllpENFnGWuzV
-         GGY+6lpgCAlmgbbvHnGLrBVN/7YWMNLNTKE2Q=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FtaX6Xi6b29v8c3hFnfNeJynlPhMvPp4kwKKUlNr6FY=;
+        b=bU3OkX/GZ8FgQO/qrUMVpk8hUwdH915nU108xMvX0gxuX3Fpi1zsTIrtFni2q/0otW
+         ULjL806iRDKIUkKFEEFH9XXp0IZdk/dEV7r0tzFW1F7HaWyFqscA8JXBQkAIIoth5Qhd
+         1Osot+LO750iHubwtMcoOfHeRCsBEmBCsEWWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P+0rKLDNQs9w1hNYJYZaKwLvj6vZBP5mJnYXqFucuhM=;
-        b=sV/Y32EsPPvSIKFCKt6Rj4SyAN9/CkEeEzx2ebTI9K4tPOnGgc2388Eb0OOGBOv8/C
-         me0gJrKqhZkoSduzPIYFm7cWwvLa7smzRJRHAJdByIl9o7jrJKn+4mIxf+KYHjdQIk/X
-         9FIumqUaqWR7ZABm6IPFEMiQfX6eP275kg2ZTa69UIsF7sAZe8RH7He12eDfdMX/QYGW
-         TF8UgphVQIZRAWb99InfFZ25CtGpo2/Xas9dS9JxYg+VTWAz/VqsJex1E4bKWDyHsI5s
-         ZmjoeGiKDDGN9lVgraDHCoPNX9YRGuvd8p2VFj00G802S9RQg2fyecXjO74iHEw5RZ9A
-         mUag==
-X-Gm-Message-State: APjAAAX3Bv/haVelWHjs3i5WrXBP+F/2ZAsu8p2GoMFl6becSjAGOuRD
-        iblx43T7cdmN7XN+3oXE5B+OizfvAmScyA==
-X-Google-Smtp-Source: APXvYqywzkMhkKxlKfSDU6MFr6XCU75z4SAPc7PY0WLGJOKTg2UN9bOXzElPAjE3XEpsIBbIRtv9zg==
-X-Received: by 2002:a17:902:6508:: with SMTP id b8mr6423357plk.201.1580416310690;
-        Thu, 30 Jan 2020 12:31:50 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FtaX6Xi6b29v8c3hFnfNeJynlPhMvPp4kwKKUlNr6FY=;
+        b=CyEK0SW0bnBRGSPyhbQXx91ErTIMdQhdnMHQ0g9JUJqC8nM7NQhWoTAsSQ8pbNu5dg
+         0UckoEmKnJnVhIr6bUewxcFKI3Q0PgUNAJ+wnUk+pMGdMkI4JVN9aGU+HiHYZMYP/DeE
+         kcVFi71dYRFLsjIODioNdwsHq4/d3zT6D1q0djJZvsG3bpnE5uS2mCpwf8h9446Lx06o
+         riZAtXnEbMOhEsvNRL89zAuRzfXKDRiYiZb1PDsHgxIie+rZ8F6PAhdMt2jYobxP0huO
+         lisjLwRxb2cEIpeNBSbBMgIZMRE0nZPN0ceYLpjaMNwv6JP396m8kVv0z79V08qz/D6K
+         JbHg==
+X-Gm-Message-State: APjAAAWLLsB/UvBSQUe81rw7fmbb+4hegEO5jjUsv1NqqsilMXeqVrLT
+        kuninIffvL9vFEzi/A3zFEfFeIuUuRQPfw==
+X-Google-Smtp-Source: APXvYqxtwkvlrfQ3ZA85U0NkLD1pZIMXRR0SDz0oy3y3XmxMHkDho8sAMdJwdXslIdYOrZ4nCa4NcQ==
+X-Received: by 2002:a17:902:9a8e:: with SMTP id w14mr6385660plp.315.1580416342663;
+        Thu, 30 Jan 2020 12:32:22 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.31.48
+        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.32.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 12:31:49 -0800 (PST)
+        Thu, 30 Jan 2020 12:32:22 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...),
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Evan Green <evgreen@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
         Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
         Lee Jones <lee.jones@linaro.org>,
-        linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        linux-input@vger.kernel.org (open list:HID CORE LAYER),
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)),
-        linux-pm@vger.kernel.org (open list:POWER SUPPLY CLASS/SUBSYSTEM and
-        DRIVERS), linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Raul E Rangel <rrangel@chromium.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 00/17] platform/chrome: Replace cros_ec_cmd_xfer_status
-Date:   Thu, 30 Jan 2020 12:30:31 -0800
-Message-Id: <20200130203106.201894-1-pmalani@chromium.org>
+        Gwendal Grignou <gwendal@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Evan Green <evgreen@chromium.org>
+Subject: [PATCH 01/17] platform/chrome: Add EC command msg wrapper
+Date:   Thu, 30 Jan 2020 12:30:33 -0800
+Message-Id: <20200130203106.201894-2-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200130203106.201894-1-pmalani@chromium.org>
+References: <20200130203106.201894-1-pmalani@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -98,53 +76,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many callers of cros_ec_cmd_xfer_status() use similar setup and cleanup
-code, including setting up the cros_ec_command message struct and
-copying the received buffer.
+Many callers of cros_ec_cmd_xfer_status() use a similar set up of
+allocating and filling a message buffer and then copying any received
+data to a target buffer.
 
-This series introduces a replacement function cros_ec_send_cmd_msg() that
-performs this setup and teardown, and then updates all call sites that
-used xfer_status() to use the new function instead.
+Create a utility function cros_ec_send_cmd_msg() that performs this
+setup so that callers can use this function instead. Subsequent patches
+will convert callers of cros_ec_cmd_xfer_status() to the new function
+instead.
 
-The final patch in the series drops cros_ec_cmd_xfer_status() altogether.
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
+ drivers/platform/chrome/cros_ec_proto.c     | 57 +++++++++++++++++++++
+ include/linux/platform_data/cros_ec_proto.h |  5 ++
+ 2 files changed, 62 insertions(+)
 
-Prashant Malani (17):
-  platform/chrome: Add EC command msg wrapper
-  platform/chrome: chardev: Use send_cmd_msg()
-  platform/chrome: proto: Use send_cmd_msg
-  platform/chrome: usbpd_logger: Use cmd_send_msg()
-  platform/chrome: sensorhub: Use send_cmd_msg()
-  platform/chrome: debugfs: Use send_cmd_msg()
-  platform/chrome: sysfs: Use send_cmd_msg()
-  extcon: cros_ec: Use cros_ec_send_cmd_msg()
-  hid: google-hammer: Use cros_ec_send_cmd_msg()
-  iio: cros_ec: Use cros_ec_send_cmd_msg()
-  ASoC: cros_ec_codec: Use cros_ec_send_cmd_msg()
-  power: supply: cros: Use cros_ec_send_cmd_msg()
-  pwm: cros-ec: Remove cros_ec_cmd_xfer_status()
-  rtc: cros-ec: Use cros_ec_send_cmd_msg()
-  media: cros-ec-cec: Use cros_ec_send_cmd_msg()
-  i2c: cros-ec-tunnel: Use cros_ec_send_cmd_msg()
-  platform/chrome: Drop cros_ec_cmd_xfer_status()
-
- drivers/extcon/extcon-usbc-cros-ec.c          |  62 ++------
- drivers/hid/hid-google-hammer.c               |  23 +--
- drivers/i2c/busses/i2c-cros-ec-tunnel.c       |  23 ++-
- .../cros_ec_sensors/cros_ec_sensors_core.c    |  43 +++---
- .../media/platform/cros-ec-cec/cros-ec-cec.c  |  39 ++---
- drivers/platform/chrome/cros_ec_chardev.c     |  18 +--
- drivers/platform/chrome/cros_ec_debugfs.c     | 135 ++++++------------
- drivers/platform/chrome/cros_ec_proto.c       |  75 ++++++----
- drivers/platform/chrome/cros_ec_sensorhub.c   |  29 ++--
- drivers/platform/chrome/cros_ec_sysfs.c       | 106 ++++++--------
- drivers/platform/chrome/cros_usbpd_logger.c   |  13 +-
- drivers/power/supply/cros_usbpd-charger.c     |  63 ++------
- drivers/pwm/pwm-cros-ec.c                     |  27 ++--
- drivers/rtc/rtc-cros-ec.c                     |  27 ++--
- include/linux/platform_data/cros_ec_proto.h   |   6 +-
- sound/soc/codecs/cros_ec_codec.c              |  71 +++------
- 16 files changed, 276 insertions(+), 484 deletions(-)
-
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index da1b1c45043333..53f3bfac71d90e 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/mfd/cros_ec.h>
+ #include <linux/module.h>
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
+@@ -570,6 +571,62 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+ }
+ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+ 
++/**
++ * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
++ * @ec: EC device struct.
++ * @version: Command version number (often 0).
++ * @command: Command ID including offset.
++ * @outdata: Data to be sent to the EC.
++ * @outsize: Size of the &outdata buffer.
++ * @indata: Data to be received from the EC.
++ * @insize: Size of the &indata buffer.
++ *
++ * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
++ * some of the common work involved with sending a command to the EC. This
++ * includes allocating and filling up a &struct cros_ec_command message buffer,
++ * and copying the received data to another buffer.
++ *
++ * Return: The number of bytes transferred on success or negative error code.
++ */
++int cros_ec_send_cmd_msg(struct cros_ec_device *ec, unsigned int version,
++			 unsigned int command, void *outdata,
++			 unsigned int outsize, void *indata,
++			 unsigned int insize)
++{
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	msg->version = version;
++	msg->command = command;
++	msg->outsize = outsize;
++	msg->insize = insize;
++
++	if (outdata && outsize > 0)
++		memcpy(msg->data, outdata, outsize);
++
++	ret = cros_ec_cmd_xfer(ec, msg);
++	if (ret < 0) {
++		dev_err(ec->dev, "Command xfer error (err:%d)\n", ret);
++		goto cleanup;
++	} else if (msg->result != EC_RES_SUCCESS) {
++		dev_dbg(ec->dev, "Command result (err: %d)\n", msg->result);
++		ret = -EPROTO;
++		goto cleanup;
++	}
++
++	if (insize)
++		memcpy(indata, msg->data, insize);
++
++cleanup:
++	kfree(msg);
++	return ret;
++}
++EXPORT_SYMBOL(cros_ec_send_cmd_msg);
++
+ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+ 			       struct cros_ec_command *msg,
+ 			       struct ec_response_get_next_event_v1 *event,
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index 30098a5515231d..166ce26bdd79eb 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -201,6 +201,11 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+ 			    struct cros_ec_command *msg);
+ 
++int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
++			 unsigned int command, void *outdata,
++			 unsigned int outsize, void *indata,
++			 unsigned int insize);
++
+ int cros_ec_register(struct cros_ec_device *ec_dev);
+ 
+ int cros_ec_unregister(struct cros_ec_device *ec_dev);
 -- 
 2.25.0.341.g760bfbb309-goog
 
