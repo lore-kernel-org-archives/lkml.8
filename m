@@ -2,246 +2,167 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4984EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BD7C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBF9205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SHkpSFkR"
+	by mail.kernel.org (Postfix) with ESMTP id 19EF420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580410300;
+	bh=uoiKXNIuubbeNw3qBmSN+cRwAkJofhSu4WMXkX5YgXA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T+i2kCglXO+UFfDeC6U4+UdzGTFvrDHABUxIpzx6mCkdoyult9oh9LzW0AtRlummX
+	 o98Y+FhV4GMM3hE/E2nHycu3Nxly1CYlIcGRJdyuCx9ga1uOb0RPT0wN2fBOaxja1+
+	 coe0ED9Q2jCpscn0T6FNYPiaEbXVCISxpQfGhJ0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgA3Sv3 (ORCPT
+        id S1730888AbgA3Sos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:29 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10195 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730952AbgA3SpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:11 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3324010000>; Thu, 30 Jan 2020 10:44:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 10:45:09 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 10:45:09 -0800
-Received: from [10.26.11.91] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 18:45:06 +0000
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
-Date:   Thu, 30 Jan 2020 18:45:03 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 13:44:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730876AbgA3Sop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688912082E;
+        Thu, 30 Jan 2020 18:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580409884;
+        bh=uoiKXNIuubbeNw3qBmSN+cRwAkJofhSu4WMXkX5YgXA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O3j2KeTs+5CIaWhFelGAW+hmkgGd8soS1f9QZJsEg2dMWvyFKpaTR6LRP4dAVdDbC
+         lrK8wjVskABAbG0B0Su7cKN/DXMWyI10LGlsCOhOSNtAAMS7QHdm8MwFbEoXbIiCxh
+         b8YaaPiQIry6KjRrEuYnmVjVS+ow27L/nzWoFVp0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Thomas Anderson <thomasanderson@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 071/110] drm/amd/display: Reduce HDMI pixel encoding if max clock is exceeded
+Date:   Thu, 30 Jan 2020 19:38:47 +0100
+Message-Id: <20200130183622.883885909@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
+References: <20200130183613.810054545@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580409857; bh=NTNk64HjtDFZrHfyhVZ3O6MmE7stxmOe9qj355qyAZs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SHkpSFkR6sv74qAeAywct2+4iC/uJlc9jxd/uwdaVcFSwkneaceYqIQWLYPexSzKx
-         JnobA1Sdoh3R5lCydTZxXy5seCOXooSLmABO+Tm0wRLvgCTlrh4rptoGvR/16hUFXT
-         9EiVQNL9DlYJDgLqoJtLDTwCbTOzIEOTaLbPukJBgdP1mdNG4/xypo+2gAY1ZOyyje
-         KBxpldFddenf7rQlUMBnw2vGE0nRzgkF6XQm+FRc6GqC8+BeimCDsiN0Di54iQwzcg
-         Gj1/l/nM5jDGN43NGdVFgiX0Wk92CILUpx3KZ6QD3xyviWtQdn+Nohj6Yeuo1/jNb1
-         Kttu3uywAZjZQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thomas Anderson <thomasanderson@google.com>
 
-On 30/01/2020 16:11, Dmitry Osipenko wrote:
-> 30.01.2020 17:09, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 30/01/2020 04:37, Dmitry Osipenko wrote:
->>> It's a bit impractical to enable hardware's clock at the time of DMA
->>> channel's allocation because most of DMA client drivers allocate DMA
->>> channel at the time of the driver's probing, and thus, DMA clock is kep=
-t
->>> always-enabled in practice, defeating the whole purpose of runtime PM.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
->>>  1 file changed, 32 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
-a.c
->>> index 22b88ccff05d..0ee28d8e3c96 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel=
- *tdc)
->>>  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
->>>  	}
->>>  	tdc->busy =3D false;
->>> +
->>> +	pm_runtime_put(tdc->tdma->dev);
->>>  }
->>> =20
->>>  static void tegra_dma_start(struct tegra_dma_channel *tdc,
->>> @@ -500,18 +502,25 @@ static void tegra_dma_configure_for_next(struct t=
-egra_dma_channel *tdc,
->>>  	tegra_dma_resume(tdc);
->>>  }
->>> =20
->>> -static void tdc_start_head_req(struct tegra_dma_channel *tdc)
->>> +static bool tdc_start_head_req(struct tegra_dma_channel *tdc)
->>>  {
->>>  	struct tegra_dma_sg_req *sg_req;
->>> +	int err;
->>> =20
->>>  	if (list_empty(&tdc->pending_sg_req))
->>> -		return;
->>> +		return false;
->>> +
->>> +	err =3D pm_runtime_get_sync(tdc->tdma->dev);
->>> +	if (WARN_ON_ONCE(err < 0))
->>> +		return false;
->>> =20
->>>  	sg_req =3D list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), no=
-de);
->>>  	tegra_dma_start(tdc, sg_req);
->>>  	sg_req->configured =3D true;
->>>  	sg_req->words_xferred =3D 0;
->>>  	tdc->busy =3D true;
->>> +
->>> +	return true;
->>>  }
->>> =20
->>>  static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc=
-)
->>> @@ -615,6 +624,8 @@ static void handle_once_dma_done(struct tegra_dma_c=
-hannel *tdc,
->>>  	}
->>>  	list_add_tail(&sgreq->node, &tdc->free_sg_req);
->>> =20
->>> +	pm_runtime_put(tdc->tdma->dev);
->>> +
->>>  	/* Do not start DMA if it is going to be terminate */
->>>  	if (to_terminate || list_empty(&tdc->pending_sg_req))
->>>  		return;
->>> @@ -730,9 +741,7 @@ static void tegra_dma_issue_pending(struct dma_chan=
- *dc)
->>>  		dev_err(tdc2dev(tdc), "No DMA request\n");
->>>  		goto end;
->>>  	}
->>> -	if (!tdc->busy) {
->>> -		tdc_start_head_req(tdc);
->>> -
->>> +	if (!tdc->busy && tdc_start_head_req(tdc)) {
->>>  		/* Continuous single mode: Configure next req */
->>>  		if (tdc->cyclic) {
->>>  			/*
->>> @@ -775,6 +784,13 @@ static int tegra_dma_terminate_all(struct dma_chan=
- *dc)
->>>  	else
->>>  		wcount =3D status;
->>> =20
->>> +	/*
->>> +	 * tegra_dma_stop() will drop the RPM's usage refcount, but
->>> +	 * tegra_dma_resume() touches hardware and thus we should keep
->>> +	 * the DMA clock active while it's needed.
->>> +	 */
->>> +	pm_runtime_get(tdc->tdma->dev);
->>> +
->>
->> Would it work and make it simpler to just enable in the issue_pending
->> and disable in the handle_once_dma_done or terminate_all?
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma=
-.c
->> index 3a45079d11ec..86bbb45da93d 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -616,9 +616,14 @@ static void handle_once_dma_done(struct
->> tegra_dma_channel *tdc,
->>         list_add_tail(&sgreq->node, &tdc->free_sg_req);
->>
->>         /* Do not start DMA if it is going to be terminate */
->> -       if (to_terminate || list_empty(&tdc->pending_sg_req))
->> +       if (to_terminate)
->>                 return;
->>
->> +       if (list_empty(&tdc->pending_sg_req)) {
->> +               pm_runtime_put(tdc->tdma->dev);
->> +               return;
->> +       }
->> +
->>         tdc_start_head_req(tdc);
->>  }
->>
->> @@ -729,6 +734,11 @@ static void tegra_dma_issue_pending(struct dma_chan
->> *dc)
->>                 goto end;
->>         }
->>         if (!tdc->busy) {
->> +               if (pm_runtime_get_sync(tdc->tdma->dev) < 0) {
->> +                       dev_err(tdc2dev(tdc), "Failed to enable DMA!\n")=
-;
->> +                       goto end;
->> +               }
->> +
->>                 tdc_start_head_req(tdc);
->>
->>                 /* Continuous single mode: Configure next req */
->> @@ -788,6 +798,7 @@ static int tegra_dma_terminate_all(struct dma_chan *=
-dc)
->>                                 get_current_xferred_count(tdc, sgreq,
->> wcount);
->>         }
->>         tegra_dma_resume(tdc);
->> +       pm_runtime_put(tdc->tdma->dev);
->>
->>  skip_dma_stop:
->>         tegra_dma_abort_all(tdc);
->>
->=20
-> The tegra_dma_stop() should put RPM anyways, which is missed in yours
-> sample. Please see handle_continuous_head_request().
+[ Upstream commit 840c90fce6c78bc6b2c4cb9e836d70985ed32066 ]
 
-Yes and that is deliberate. The cyclic transfers the transfers *should*
-not stop until terminate_all is called. The tegra_dma_stop in
-handle_continuous_head_request() is an error condition and so I am not
-sure it is actually necessary to call pm_runtime_put() here.
+For high-res (8K) or HFR (4K120) displays, using uncompressed pixel
+formats like YCbCr444 would exceed the bandwidth of HDMI 2.0, so the
+"interesting" modes would be disabled, leaving only low-res or low
+framerate modes.
 
-> I'm also finding the explicit get/put a bit easier to follow in the
-> code, don't you think so?
+This change lowers the pixel encoding to 4:2:2 or 4:2:0 if the max TMDS
+clock is exceeded. Verified that 8K30 and 4K120 are now available and
+working with a Samsung Q900R over an HDMI 2.0b link from a Radeon 5700.
 
-I can see that, but I was thinking that in the case of cyclic transfers,
-it should only really be necessary to call the get/put at the beginning
-and end. So in my mind there should only be two exit points which are
-the ISR handler for SG and terminate_all for SG and cyclic.
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 45 ++++++++++---------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-Jon
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 4e9c15c409bac..360c87ba45956 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -3266,27 +3266,21 @@ get_output_color_space(const struct dc_crtc_timing *dc_crtc_timing)
+ 	return color_space;
+ }
+ 
+-static void reduce_mode_colour_depth(struct dc_crtc_timing *timing_out)
+-{
+-	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
+-		return;
+-
+-	timing_out->display_color_depth--;
+-}
+-
+-static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_out,
+-						const struct drm_display_info *info)
++static bool adjust_colour_depth_from_display_info(
++	struct dc_crtc_timing *timing_out,
++	const struct drm_display_info *info)
+ {
++	enum dc_color_depth depth = timing_out->display_color_depth;
+ 	int normalized_clk;
+-	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
+-		return;
+ 	do {
+ 		normalized_clk = timing_out->pix_clk_100hz / 10;
+ 		/* YCbCr 4:2:0 requires additional adjustment of 1/2 */
+ 		if (timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420)
+ 			normalized_clk /= 2;
+ 		/* Adjusting pix clock following on HDMI spec based on colour depth */
+-		switch (timing_out->display_color_depth) {
++		switch (depth) {
++		case COLOR_DEPTH_888:
++			break;
+ 		case COLOR_DEPTH_101010:
+ 			normalized_clk = (normalized_clk * 30) / 24;
+ 			break;
+@@ -3297,14 +3291,15 @@ static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_
+ 			normalized_clk = (normalized_clk * 48) / 24;
+ 			break;
+ 		default:
+-			return;
++			/* The above depths are the only ones valid for HDMI. */
++			return false;
+ 		}
+-		if (normalized_clk <= info->max_tmds_clock)
+-			return;
+-		reduce_mode_colour_depth(timing_out);
+-
+-	} while (timing_out->display_color_depth > COLOR_DEPTH_888);
+-
++		if (normalized_clk <= info->max_tmds_clock) {
++			timing_out->display_color_depth = depth;
++			return true;
++		}
++	} while (--depth > COLOR_DEPTH_666);
++	return false;
+ }
+ 
+ static void fill_stream_properties_from_drm_display_mode(
+@@ -3370,8 +3365,14 @@ static void fill_stream_properties_from_drm_display_mode(
+ 
+ 	stream->out_transfer_func->type = TF_TYPE_PREDEFINED;
+ 	stream->out_transfer_func->tf = TRANSFER_FUNCTION_SRGB;
+-	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
+-		adjust_colour_depth_from_display_info(timing_out, info);
++	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
++		if (!adjust_colour_depth_from_display_info(timing_out, info) &&
++		    drm_mode_is_420_also(info, mode_in) &&
++		    timing_out->pixel_encoding != PIXEL_ENCODING_YCBCR420) {
++			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
++			adjust_colour_depth_from_display_info(timing_out, info);
++		}
++	}
+ }
+ 
+ static void fill_audio_info(struct audio_info *audio_info,
+-- 
+2.20.1
 
---=20
-nvpublic
+
+
