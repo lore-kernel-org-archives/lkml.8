@@ -2,104 +2,130 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C54C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3A7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FA220707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580398071;
-	bh=n6HwRjDP3VCe5wjs8wEvgrTbWhzz9GyW+XTqLhafQxg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fYcuYAyJBdRTWYNVO98dzUu165KkSzXOWb6ckWF7cI+8my6LeKzfCJFouTuro/mNE
-	 NU6VkE5f5tpT/xroWQUNxaOgEzEKS6L9oZbnvVs23P3n/paW7Pwf2CQndbtEBWoOHk
-	 rsF1MrU4Q20nfabpqKIWiTW9QTuqg6Z6+G8lvhg8=
+	by mail.kernel.org (Postfix) with ESMTP id 80C7D20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbgA3P1u (ORCPT
+        id S1727267AbgA3PcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:27:50 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34643 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgA3P1u (ORCPT
+        Thu, 30 Jan 2020 10:32:21 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10678 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727186AbgA3PcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:27:50 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x7so3831204ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:27:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RIdIBH6X8LWl4t/9rSOLUTnHaD3MeTKBV/I/ltFZNME=;
-        b=L8pXy3ZloQYZUId/kbDCDyZfbopAwPQ4xydN+TZuDjcwYCnezY4GEed2xl2w5YNxir
-         WF3nDSLOCTxZIJ5KMI6sxAhtUVcx0cYA7RZKg6O/f0ReXbDbyfsK8k7n0sE0cvpPRVUi
-         aTHxC3U/lV2yylCXPvfszJxX/kDV9duz2PW/g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RIdIBH6X8LWl4t/9rSOLUTnHaD3MeTKBV/I/ltFZNME=;
-        b=kjuYDOiGtMQNOeRyxmAiccnXmJmI31szSTBpUXxlTdY2G3uI8yvjxzhXUULa8kanWz
-         FGs+eqzHol/IZ7vKux0/5phyix+7uTvvKCj8T4KWtI7em9bhuDgJwOKgwGmACDGcOA0A
-         lkxTuL/kraNEu5D6gZ1QwcM/mKTQeClXT1ug8CdZitQyhIY6fJmX/rvv0QIUGH1z+QbE
-         vaXLkSarNrUTKBNcjAhBDPOR8bj2oUCEfrw+2RJPWVSQx3OA5iFX3UC1irrxciGNitgn
-         JId/BuXd01HIFSKNq6nqVzMnRAUYwiHX+JspPdvkWv7qI71lu91rQd5OMHsc22TRh1PM
-         y4nw==
-X-Gm-Message-State: APjAAAVeuojpZZRDQW9prjir0tufFXcizTlkWn/rHvl9NMgix059HPQh
-        OPkReHotXT2n8+oqiBHPPKReuSb8SKw=
-X-Google-Smtp-Source: APXvYqz1DGzla0nvh36CjiF3PB+v6WHmmbNSOoWrSdQ+H3ITXF3NBjagJZcmd/m3RFyze5szEw53Qg==
-X-Received: by 2002:a2e:b5ce:: with SMTP id g14mr2986390ljn.264.1580398066929;
-        Thu, 30 Jan 2020 07:27:46 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id i20sm2978104lfl.79.2020.01.30.07.27.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 07:27:45 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id r19so3814808ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:27:45 -0800 (PST)
-X-Received: by 2002:a2e:9d92:: with SMTP id c18mr3307956ljj.265.1580398065073;
- Thu, 30 Jan 2020 07:27:45 -0800 (PST)
+        Thu, 30 Jan 2020 10:32:21 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UFSulN110948;
+        Thu, 30 Jan 2020 10:32:16 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrvwa4fd3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jan 2020 10:32:14 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00UFVZLv006647;
+        Thu, 30 Jan 2020 15:32:09 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01dal.us.ibm.com with ESMTP id 2xrda7g6sq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jan 2020 15:32:09 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UFW7NK36766184
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 15:32:07 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC97713604F;
+        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C8D5136055;
+        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
+Received: from [9.163.57.149] (unknown [9.163.57.149])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
+Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au, andrew@aj.id.au
+References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
+ <20200130144609.GD6682@sirena.org.uk>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <3eaf74eb-1817-a04d-1fc9-146c188584d0@linux.ibm.com>
+Date:   Thu, 30 Jan 2020 09:32:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200128165906.GA67781@gmail.com> <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
- <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
- <20200129132618.GA30979@zn.tnic> <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
- <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
- <20200129183404.GB30979@zn.tnic> <CAHk-=wh62anGKKEeey8ubD+-+3qSv059z7zSWZ4J=CoaOo4j_A@mail.gmail.com>
- <20200130085134.GB6684@zn.tnic>
-In-Reply-To: <20200130085134.GB6684@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 30 Jan 2020 07:27:28 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wje_k92K6j0-=HH4F5Jmr8Fv7vB-ANObqbQeGS_RsikWA@mail.gmail.com>
-Message-ID: <CAHk-=wje_k92K6j0-=HH4F5Jmr8Fv7vB-ANObqbQeGS_RsikWA@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/asm changes for v5.6
-To:     Borislav Petkov <bp@suse.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200130144609.GD6682@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=952 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:51 AM Borislav Petkov <bp@suse.de> wrote:
+
+On 1/30/20 8:46 AM, Mark Brown wrote:
+> On Wed, Jan 29, 2020 at 02:08:24PM -0600, Eddie James wrote:
 >
-> However, this new version has hit another shortcoming of the
-> alternatives - check this out:
+> Overall this looks good, some comments below but they're all fairly
+> minor.
 
-[ Branches not getting fixed up ]
 
-Fair enough. Let's not complicate things just to avoid a few nops.
+Thanks for the quick review! I'll fix what you've suggested below.
 
-That does make me wonder about RIP-relative addressing in alternatives
-too. Particularly anything where we let gcc pick addressing modes. I
-guess we don't have any, but maybe this branch issue and possible RIP
-addressing is something that objtool could be taught to warn about?
+Thanks,
 
-                  Linus
+Eddie
+
+
+>
+>> +++ b/drivers/spi/spi-fsi.c
+>> @@ -0,0 +1,547 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * Copyright (C) IBM Corporation 2020
+>> + */
+> Please make the entire comment a C++ one so things look more
+> intentional.
+>
+>> +
+>> +static int fsi_spi_data_in(u64 in, u8 *rx, int len)
+>> +{
+>> +	int i;
+>> +	int num_bytes = len > 8 ? 8 : len;
+> Please write normal conditional statements to improve legibility, the
+> ternery operator isn't really needed here.
+>
+>> +static int fsi_spi_reset(struct fsi_spi *ctx)
+>> +{
+>> +	int rc;
+>> +
+>> +	dev_info(ctx->dev, "Resetting SPI controller.\n");
+> This should be lowered to dev_dbg() at most, it's not really adding
+> anything otherwise.
+>
+>> +static int fsi_spi_remove(struct device *dev)
+>> +{
+>> +	return 0;
+>> +}
+> Remove empty functions, if they can safely be empty then it should be
+> possible to omit them.
+>
+>> +static const struct fsi_device_id fsi_spi_ids[] = {
+>> +	{ FSI_ENGID_SPI, FSI_VERSION_ANY },
+>> +	{ }
+>> +};
+> This needs a MODULE_DEVICE_TABLE annotation.
