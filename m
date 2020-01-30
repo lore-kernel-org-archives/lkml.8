@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ED2C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF17C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C474C20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B32E20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410443;
-	bh=Uyts+bCz/NHWkyUpy2uc0xejtrqIFr1mu7HfUw+1riM=;
+	s=default; t=1580410446;
+	bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MB2bJH0hsAylGhY21P+xD2sTHgF59BH4FUKacLfkUE8uwjVBTlfz1D4PXztQaiSIP
-	 HADT73SM1ErFIeRURxIqHNzTThnlCqSTPCb2wMcZkpJ7b9RLvtbj5FuQRf5bvtdkiJ
-	 vyeNspSATmfdc6i0S3Hu2cDs2TJ7RlOhRYi6DB0c=
+	b=KpfdmIOD0Z+3CydaIno16NTwEH7H4GYorMar2b1KL6gQW49Hzp4jShdMiFJtsXpuu
+	 qySmyRxTw0f4OyJ/bvqEhtKIIDfb2E1atNW2MD0igYA/6YcQEKfaa8BWYanUOu9MY9
+	 megplPxgVi4i8NypGGg1prI+xIBPCDJE2t4T/QcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgA3Sky (ORCPT
+        id S1731795AbgA3SyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:54:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730033AbgA3Skt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:49 -0500
+        id S1730008AbgA3Skq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4640D205F4;
-        Thu, 30 Jan 2020 18:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5B16214AF;
+        Thu, 30 Jan 2020 18:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409648;
-        bh=Uyts+bCz/NHWkyUpy2uc0xejtrqIFr1mu7HfUw+1riM=;
+        s=default; t=1580409646;
+        bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxYa0I+KoCyaz8JQkHeLjNrgxb9lnhKQ+Y+Fn2rFDe2Yll6cKMxWPPamcm3IB88O4
-         ssofvB6SOEhhct6vpAFI1RS0cKFFUARMhKw2zXRN6iL5pUDYiy6Mihk797QA0624CV
-         1nf2lW2w2f9VYh0zfKpcsmACEsme0SCuYkvOlA1A=
+        b=h/vVAEWADN5gAAzF5mvVlkW8j9UIyo8lK3lqdO8hSuzLIPcyl+0uTnvM5Rdd5sePC
+         gqHAqCP1NdCkoqj1Owr9Aq//mbJjTz0HrhMK7+9QItB4OtzvLKLYS97zA4O7RfBBGa
+         +6MmKCqCzpwhr/9O2GkA2TRFHB6Jh3jGfu04QlcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 5.5 04/56] usb: dwc3: pci: add ID for the Intel Comet Lake -V variant
-Date:   Thu, 30 Jan 2020 19:38:21 +0100
-Message-Id: <20200130183609.826754441@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 32/56] ath9k: fix storage endpoint lookup
+Date:   Thu, 30 Jan 2020 19:38:49 +0100
+Message-Id: <20200130183614.877209750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -59,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit f5ae8869095552e3396ee3e404f9586cc6a828f0 upstream.
+commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
 
-There is one more Comet Lake PCH variant, CML-V, that has
-its own PCI ID.
+Make sure to use the current alternate setting when verifying the
+storage interface descriptors to avoid submitting an URB to an invalid
+endpoint.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200117093033.48616-1-heikki.krogerus@linux.intel.com
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+Cc: stable <stable@vger.kernel.org>     # 2.6.39
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/dwc3-pci.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -34,6 +34,7 @@
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-+#define PCI_DEVICE_ID_INTEL_CNPV		0xa3b0
- #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
- #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
- #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
-@@ -342,6 +343,9 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPH),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
- 
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPV),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ICLLP),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
- 
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -1216,7 +1216,7 @@ err_fw:
+ static int send_eject_command(struct usb_interface *interface)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct usb_host_interface *iface_desc = &interface->altsetting[0];
++	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	unsigned char *cmd;
+ 	u8 bulk_out_ep;
 
 
