@@ -2,173 +2,141 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E32BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1B1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0124F217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97E020708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jMU9zGKg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="is7/Ki7q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgA3VNs (ORCPT
+        id S1727460AbgA3VRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:13:48 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39083 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgA3VMy (ORCPT
+        Thu, 30 Jan 2020 16:17:00 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38690 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgA3VQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:12:54 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so1822345plp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:12:53 -0800 (PST)
+        Thu, 30 Jan 2020 16:16:59 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t6so1827847plj.5;
+        Thu, 30 Jan 2020 13:16:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K0XoSuGyqNEgB75IwM+XmimRDu75qzQuIcV/EwSuAJM=;
-        b=jMU9zGKgBOBNllW9XZIw0g9AOLLZ5Vj2JIaOdChfocVUyNqDD4m6qBdopC/RE6PUJH
-         fCVpq66hw6aTVQJxY86HFMSzfd/b+TUu0i75shdttFKG2Ys0VeOEacgB4bTrDt82h8kD
-         D0cS2v0Z7/RPVbl2wz8j2u3Cg5FmGNCuxDMzc=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9z1ji1XI9x2ElU3JVLNHC7IHbODO5Yx8KS5lA50OWDQ=;
+        b=is7/Ki7qeNGRZqe0Km8A5jUlEAXkI1wDK/+YG7VPYiPEk29SbSYxW0Dv1mbuXSIyR6
+         vuS9PsvapTy8ncL1Gzh8ldUrB39x5FSMakIuk6zDLk55zGp2aaA6JY5+Mt4XDQI9H7/J
+         FSb9d1E/P50QonRK+QNen2zUVG/HObb5VrlpSc2B9+X7djx3nzepyisCOBGhBDVEwHwz
+         dRXPaKYC+lLj080/rwtbf9/xG39DgqGJg36GC/6sCiSAkAE5D7l1x9mpWA9PIvvGYLcU
+         Tp7Vt6YClp0RBuEWX53UEP98SWkIibYB09KVhJz3oCSIIPaoGapq24rlMO3wj8+XssRp
+         NqEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K0XoSuGyqNEgB75IwM+XmimRDu75qzQuIcV/EwSuAJM=;
-        b=rLWeYuFYGXNyDv8Id2YUVkCvkcQRQSriiBrpV6dNck9JFuNUnJRzh2xht5mTXMjL8V
-         8q6IaoUoyeYAPOgXBMCjc5oHXQbUItRWSFT8MreiLnpI7V0J2H/ZJhRhtDks6h1zjG6A
-         k/3oiYuVXl/m9eiQJIWjqCVVoSCs54p5FWX90cJVYvXZz/9fM5UK47LC6IsUhbmpuZxh
-         FhLcOwMgCkmYAnt0oVqLI+Fipw7UZoi+ZKilCPySNg0jezNEeoT8PN8s3UqoS/Y/+lZT
-         gl/HvqOjNFg/Y7sVLqDvgksU3VDf2B8+zX2Ht5eQvS2LBRp+U0qO11nWl1Vx7Ka/JIix
-         PNYw==
-X-Gm-Message-State: APjAAAX/y9zLZfZ9ZLyhiXOMhjmeBx65hKa/I6VS0x1ZhJemsFetDk5d
-        SQIQpW+vMDCt7LgRZtKtdFU8zQ==
-X-Google-Smtp-Source: APXvYqynCN6w21P8hmWBFQ1aqUqYCVjtZhBJEtINjT7jo1jag3FXsGA/Luh9zWpaQq2LkwWTRW6QOg==
-X-Received: by 2002:a17:902:9342:: with SMTP id g2mr6378449plp.339.1580418773549;
-        Thu, 30 Jan 2020 13:12:53 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 13:12:53 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
-        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
-        devicetree@vger.kernel.org, mka@chromium.org,
-        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/15] clk: qcom: Get rid of fallback global names for dispcc-sc7180
-Date:   Thu, 30 Jan 2020 13:12:20 -0800
-Message-Id: <20200130131220.v3.4.Ia3706a5d5add72e88dbff60fd13ec06bf7a2fd48@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200130211231.224656-1-dianders@chromium.org>
-References: <20200130211231.224656-1-dianders@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9z1ji1XI9x2ElU3JVLNHC7IHbODO5Yx8KS5lA50OWDQ=;
+        b=TAsLT1Pvg0vSDND2ppLyHSIUZH17/FmNewMOpv1jAbxVF45aWGQHDjwzBJn1jzSCXH
+         vrtrmB8OWNRFXoOMW1SDvi84sSl2PD+W0Oq9NSUGiwNdNbQanW1DwCpTgKFRRfnDLYLg
+         2g2nTX4+rfW/kNHXY+GR2x/SBTp4LyCIk6vtllvzDaAGginDI+bv9G2JRFd81bmhRN+f
+         GwfHuueV31EPNbg2/1gZ0BwtDP+o4ikZ/YO1M0qcjv68Zk56RpnQ8bXIqWBm0xIDFh5Q
+         s6alBGB3OrlA7XJrVTVy1K6ptw5Z2LSmhe1t67dOsarjzJHD90p4zmWcsFkysz60/F0r
+         AEpQ==
+X-Gm-Message-State: APjAAAU5jwYASvHowXY4jHPdomJrmXT8ATCexUlywBZoNTPTAZ7V0+bT
+        ypFunqqjmTY+MUo2yvRbzCzM2ydF
+X-Google-Smtp-Source: APXvYqyAxiLT8RkiPIpI9BPPOn+XovBZeBsYegjSLOJM+l5K7R3lODPuNbxMhuukJ+NxGREahe2nsQ==
+X-Received: by 2002:a17:902:7b92:: with SMTP id w18mr6584659pll.72.1580419019050;
+        Thu, 30 Jan 2020 13:16:59 -0800 (PST)
+Received: from [192.168.0.16] ([75.167.220.149])
+        by smtp.gmail.com with ESMTPSA id e6sm7694489pfh.32.2020.01.30.13.16.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 13:16:58 -0800 (PST)
+Subject: Re: [REGRESSION][BISECTED] 5.5-rc suspend/resume failure caused by
+ patch a4f55d8b8c14 ("usb: hub: Check device descriptor before resusciation")
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Heinzelmann <heinzelmann.david@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <Pine.LNX.4.44L0.2001231035250.1518-100000@iolanthe.rowland.org>
+From:   Paul Zimmerman <pauldzim@gmail.com>
+Message-ID: <482da576-e945-b804-3d36-65aee142e645@gmail.com>
+Date:   Thu, 30 Jan 2020 14:16:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.2001231035250.1518-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the new world input clocks should be matched by ".fw_name".  sc7180
-is new enough that no backward compatibility use of global names
-should be needed.  Remove it.
+Hi Alan,
 
-With a proper device tree and downstream display patches I have
-verified booting a sc7180 up and seeing the display after this patch.
+On 1/23/20 8:50 AM, Alan Stern wrote:
+> On Wed, 22 Jan 2020, Paul Zimmerman wrote:
+> 
+>>> Still, since there was no real connection change at the port, there's
+>>> no reason to call hub_port_connect_change() here.  Let's see if the
+>>> patch below fixes your problem.
+>>>
+>>> Alan Stern
+>>>
+>>>
+>>>
+>>> Index: usb-devel/drivers/usb/core/hub.c
+>>> ===================================================================
+>>> --- usb-devel.orig/drivers/usb/core/hub.c
+>>> +++ usb-devel/drivers/usb/core/hub.c
+>>> @@ -1216,11 +1216,6 @@ static void hub_activate(struct usb_hub
+>>>   #ifdef CONFIG_PM
+>>>   			udev->reset_resume = 1;
+>>>   #endif
+>>> -			/* Don't set the change_bits when the device
+>>> -			 * was powered off.
+>>> -			 */
+>>> -			if (test_bit(port1, hub->power_bits))
+>>> -				set_bit(port1, hub->change_bits);
+>>>   
+>>>   		} else {
+>>>   			/* The power session is gone; tell hub_wq */
+>>>
+>>
+>> I can confirm this fixes the issue for me, I did a couple dozen
+>> suspend/resume cycles without seeing a failure.
+>>
+>> I see the code you removed was added by Lan Tianyu in commit
+>> ad493e5e5805 ("usb: add usb port auto power off mechanism"). I
+> 
+> No, not really.  The set_bit() call was added by me in a much earlier
+> commit (8808f00c7adf, merged in 2008).  Lan Tianyu merely added the
+> "if" test, so that set_bit() doesn't always get called.  Now with this
+> change, set_bit() never gets called.
+> 
+>> wonder if your patch would break that? I don't know what that is
+>> or how to test it.
+> 
+> While some code review by people who are familiar with this material
+> wouldn't hurt, I don't think you need to worry about any additional
+> testing.
+> 
+>> In any case:
+>> Tested-by: Paul Zimmerman <pauldzim@gmail.com>
+> 
+> Thank you.  I'll submit the patch soon.
+> 
+> Alan Stern
 
-Fixes: dd3d06622138 ("clk: qcom: Add display clock controller driver for SC7180")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Ping? Unfortunately 5.5 was released with this regression, do you plan
+to submit this patch soon?
 
-Changes in v3:
-- Patch ("clk: qcom: Get rid of fallback...dispcc-sc7180") split out for v3.
-- Unlike in v2, use internal name instead of purist name.
-
-Changes in v2: None
-
- drivers/clk/qcom/dispcc-sc7180.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-index 30c1e25d3edb..a820e1558677 100644
---- a/drivers/clk/qcom/dispcc-sc7180.c
-+++ b/drivers/clk/qcom/dispcc-sc7180.c
-@@ -81,7 +81,7 @@ static const struct parent_map disp_cc_parent_map_0[] = {
- 
- static const struct clk_parent_data disp_cc_parent_data_0[] = {
- 	{ .fw_name = "bi_tcxo" },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_1[] = {
-@@ -93,10 +93,9 @@ static const struct parent_map disp_cc_parent_map_1[] = {
- 
- static const struct clk_parent_data disp_cc_parent_data_1[] = {
- 	{ .fw_name = "bi_tcxo" },
--	{ .fw_name = "dp_phy_pll_link_clk", .name = "dp_phy_pll_link_clk" },
--	{ .fw_name = "dp_phy_pll_vco_div_clk",
--				.name = "dp_phy_pll_vco_div_clk"},
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "dp_phy_pll_link_clk" },
-+	{ .fw_name = "dp_phy_pll_vco_div_clk" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_2[] = {
-@@ -107,9 +106,8 @@ static const struct parent_map disp_cc_parent_map_2[] = {
- 
- static const struct clk_parent_data disp_cc_parent_data_2[] = {
- 	{ .fw_name = "bi_tcxo" },
--	{ .fw_name = "dsi0_phy_pll_out_byteclk",
--				.name = "dsi0_phy_pll_out_byteclk" },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "dsi0_phy_pll_out_byteclk" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_3[] = {
-@@ -125,7 +123,7 @@ static const struct clk_parent_data disp_cc_parent_data_3[] = {
- 	{ .hw = &disp_cc_pll0.clkr.hw },
- 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
- 	{ .hw = &disp_cc_pll0_out_even.clkr.hw },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_4[] = {
-@@ -137,7 +135,7 @@ static const struct parent_map disp_cc_parent_map_4[] = {
- static const struct clk_parent_data disp_cc_parent_data_4[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .fw_name = "gcc_disp_gpll0_clk_src" },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct parent_map disp_cc_parent_map_5[] = {
-@@ -148,9 +146,8 @@ static const struct parent_map disp_cc_parent_map_5[] = {
- 
- static const struct clk_parent_data disp_cc_parent_data_5[] = {
- 	{ .fw_name = "bi_tcxo" },
--	{ .fw_name = "dsi0_phy_pll_out_dsiclk",
--				.name = "dsi0_phy_pll_out_dsiclk" },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
-+	{ .fw_name = "dsi0_phy_pll_out_dsiclk" },
-+	{ .fw_name = "core_bi_pll_test_se" },
- };
- 
- static const struct freq_tbl ftbl_disp_cc_mdss_ahb_clk_src[] = {
 -- 
-2.25.0.341.g760bfbb309-goog
-
+Paul
