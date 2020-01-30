@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4065DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138A6214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314BF2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410192;
-	bh=8eSTXQzbNLEND/FwSWrHgTCgpCk3Ge/9IIfbWOlgP9M=;
+	s=default; t=1580410194;
+	bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yf0rUpqEyRDFlKdexKejI0kitCL/ITcmojwk+DZVV0FcAz4yw5gVnTCIktW0foXux
-	 hs4I8Q0G9yN7iPUlm9P0aefJ6wyP11xqVsmIGU3Hg1EFMujg4yUfmxogR49iXT0Bkq
-	 e+IsT7hnu0iEeWrQwVssjgoTOAFE67x2mUhcu5EA=
+	b=h00VeTWCc7PYHIQh3iwS9275k/DRiCzm5J9oaLz5/BP6gYJaq1rWttlGAAYgLISlI
+	 fwz11j4MJsLIrSLZxb5zSzUUwQKgUvYdhXylHtuB4PoMF0SK9c/rvUhVVdrtNp5xnE
+	 jMOHJWttnTXT6gseGw6OnjZ//0NGwNpo9Os+fIVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbgA3Stv (ORCPT
+        id S1731437AbgA3Sru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:49:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58664 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731442AbgA3Srx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:53 -0500
+        id S1731428AbgA3Srq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01355205F4;
-        Thu, 30 Jan 2020 18:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E8F2205F4;
+        Thu, 30 Jan 2020 18:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410072;
-        bh=8eSTXQzbNLEND/FwSWrHgTCgpCk3Ge/9IIfbWOlgP9M=;
+        s=default; t=1580410064;
+        bh=Icfs7dzmGLlT+hgorSORj+xu364BUM8vtKrQpAU/dAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bxNbcUhKx5H49+1OPQMths2Dpjw8YGFUzbR9tVgM9eoNI0FyoQO/O0bz5On5KvIny
-         IDP4Z0Y2P/dswVbdZ1I+ylkUfWm08kLuuybjzskD5TCkka+0v+WKLBV08DQeZEhn5a
-         yQJiB3WdoiYri5wWdM4BeRcqro4a5+UPATHhkfCo=
+        b=n0gSChXRtguDA6a1ugbq9I8WBW5ejasrp2sItSEdU3qMjqtyO4bh6T6syRjcrHnct
+         3+NUyZ1XRXw4Wxom+3HvH0kCc5i/cKlUetMoQtrBniBdNWvxvebe1KJlyNU96rwN9r
+         LfqPw6vHejxFS1JA8bTkvCGiDSsZABiqoDuvngqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "wuxu.wu" <wuxu.wu@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/55] spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
-Date:   Thu, 30 Jan 2020 19:39:16 +0100
-Message-Id: <20200130183614.962218432@linuxfoundation.org>
+Subject: [PATCH 4.19 32/55] phy: cpcap-usb: Prevent USB line glitches from waking up modem
+Date:   Thu, 30 Jan 2020 19:39:13 +0100
+Message-Id: <20200130183614.470977612@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -60,132 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wuxu.wu <wuxu.wu@huawei.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 19b61392c5a852b4e8a0bf35aecb969983c5932d ]
+[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
 
-dw_spi_irq() and dw_spi_transfer_one concurrent calls.
+The micro-USB connector on Motorola Mapphone devices can be muxed between
+the SoC and the mdm6600 modem. But even when used for the SoC, configuring
+the PHY with ID pin grounded will wake up the modem from idle state. Looks
+like the issue is probably caused by line glitches.
 
-I find a panic in dw_writer(): txw = *(u8 *)(dws->tx), when dw->tx==null,
-dw->len==4, and dw->tx_end==1.
+We can prevent the glitches by using a previously unknown mode of the
+GPIO mux to prevent the USB lines from being connected to the moden while
+configuring the USB PHY, and enable the USB lines after configuring the
+PHY.
 
-When tpm driver's message overtime dw_spi_irq() and dw_spi_transfer_one
-may concurrent visit dw_spi, so I think dw_spi structure lack of protection.
+Note that this only prevents waking up mdm6600 as regular USB A-host mode,
+and does not help when connected to a lapdock. The lapdock specific issue
+still needs to be debugged separately.
 
-Otherwise dw_spi_transfer_one set dw rx/tx buffer and then open irq,
-store dw rx/tx instructions and other cores handle irq load dw rx/tx
-instructions may out of order.
-
-	[ 1025.321302] Call trace:
-	...
-	[ 1025.321319]  __crash_kexec+0x98/0x148
-	[ 1025.321323]  panic+0x17c/0x314
-	[ 1025.321329]  die+0x29c/0x2e8
-	[ 1025.321334]  die_kernel_fault+0x68/0x78
-	[ 1025.321337]  __do_kernel_fault+0x90/0xb0
-	[ 1025.321346]  do_page_fault+0x88/0x500
-	[ 1025.321347]  do_translation_fault+0xa8/0xb8
-	[ 1025.321349]  do_mem_abort+0x68/0x118
-	[ 1025.321351]  el1_da+0x20/0x8c
-	[ 1025.321362]  dw_writer+0xc8/0xd0
-	[ 1025.321364]  interrupt_transfer+0x60/0x110
-	[ 1025.321365]  dw_spi_irq+0x48/0x70
-	...
-
-Signed-off-by: wuxu.wu <wuxu.wu@huawei.com>
-Link: https://lore.kernel.org/r/1577849981-31489-1-git-send-email-wuxu.wu@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 15 ++++++++++++---
- drivers/spi/spi-dw.h |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index ac2eb89ef7a5a..5a47e28e38c16 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -179,9 +179,11 @@ static inline u32 rx_max(struct dw_spi *dws)
+diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
+index 4ba3634009afc..593c77dbde2eb 100644
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
+ enum cpcap_gpio_mode {
+ 	CPCAP_DM_DP,
+ 	CPCAP_MDM_RX_TX,
+-	CPCAP_UNKNOWN,
++	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
+ 	CPCAP_OTG_DM_DP,
+ };
  
- static void dw_writer(struct dw_spi *dws)
+@@ -379,7 +379,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
  {
--	u32 max = tx_max(dws);
-+	u32 max;
- 	u16 txw = 0;
+ 	int error;
  
-+	spin_lock(&dws->buf_lock);
-+	max = tx_max(dws);
- 	while (max--) {
- 		/* Set the tx word if the transfer's original "tx" is not null */
- 		if (dws->tx_end - dws->len) {
-@@ -193,13 +195,16 @@ static void dw_writer(struct dw_spi *dws)
- 		dw_write_io_reg(dws, DW_SPI_DR, txw);
- 		dws->tx += dws->n_bytes;
- 	}
-+	spin_unlock(&dws->buf_lock);
- }
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		goto out_err;
  
- static void dw_reader(struct dw_spi *dws)
+@@ -406,6 +407,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
+ 
++	/* Enable UART mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	if (error)
++		goto out_err;
++
+ 	return 0;
+ 
+ out_err:
+@@ -418,7 +424,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
  {
--	u32 max = rx_max(dws);
-+	u32 max;
- 	u16 rxw;
+ 	int error;
  
-+	spin_lock(&dws->buf_lock);
-+	max = rx_max(dws);
- 	while (max--) {
- 		rxw = dw_read_io_reg(dws, DW_SPI_DR);
- 		/* Care rx only if the transfer's original "rx" is not null */
-@@ -211,6 +216,7 @@ static void dw_reader(struct dw_spi *dws)
- 		}
- 		dws->rx += dws->n_bytes;
- 	}
-+	spin_unlock(&dws->buf_lock);
- }
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		return error;
  
- static void int_error_stop(struct dw_spi *dws, const char *msg)
-@@ -283,18 +289,20 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- {
- 	struct dw_spi *dws = spi_controller_get_devdata(master);
- 	struct chip_data *chip = spi_get_ctldata(spi);
-+	unsigned long flags;
- 	u8 imask = 0;
- 	u16 txlevel = 0;
- 	u32 cr0;
- 	int ret;
+@@ -458,6 +465,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
  
- 	dws->dma_mapped = 0;
--
-+	spin_lock_irqsave(&dws->buf_lock, flags);
- 	dws->tx = (void *)transfer->tx_buf;
- 	dws->tx_end = dws->tx + transfer->len;
- 	dws->rx = transfer->rx_buf;
- 	dws->rx_end = dws->rx + transfer->len;
- 	dws->len = transfer->len;
-+	spin_unlock_irqrestore(&dws->buf_lock, flags);
++	/* Enable USB mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	if (error)
++		goto out_err;
++
+ 	return 0;
  
- 	spi_enable_chip(dws, 0);
- 
-@@ -485,6 +493,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 	dws->type = SSI_MOTO_SPI;
- 	dws->dma_inited = 0;
- 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
-+	spin_lock_init(&dws->buf_lock);
- 
- 	spi_controller_set_devdata(master, dws);
- 
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 0168b08364d5d..20a09fe79ae7d 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -118,6 +118,7 @@ struct dw_spi {
- 	size_t			len;
- 	void			*tx;
- 	void			*tx_end;
-+	spinlock_t		buf_lock;
- 	void			*rx;
- 	void			*rx_end;
- 	int			dma_mapped;
+ out_err:
 -- 
 2.20.1
 
