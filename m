@@ -2,74 +2,156 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6211AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9680EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D17206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580407758;
-	bh=b+Yfsr+qnQpqIYAQkQeI7TidveJ/L9BP9YvFsxRIRcQ=;
-	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
-	b=RjNqUcevHe57lRWaNf+s561beYenVN3M5r7puP4wRk5D9NZUy/x8qWgPLf+2cd2dv
-	 4RyTP9D9aO2PoHfJ/3fe2plJZaiIo0Z8VRIiYSKf/YHLIibFiINIZ7n9J53YyTun37
-	 MnX+QTUuxWIZfwGzVKST1/Dwzjta18OwEWHS3Yj0=
+	by mail.kernel.org (Postfix) with ESMTP id 6D8202082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:11:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VB4nECyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgA3SJR (ORCPT
+        id S1728378AbgA3SLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:09:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgA3SJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:09:16 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E025D20CC7;
-        Thu, 30 Jan 2020 18:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580407756;
-        bh=b+Yfsr+qnQpqIYAQkQeI7TidveJ/L9BP9YvFsxRIRcQ=;
-        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
-        b=W25G7wX/24cDyJrSjCvtu/r8bNDUnFXI9VHKVxQ/gwANDkWCbNWVov0p8QN0lw1f/
-         MqSCIDF1o6vgH5pHASjjbJMfBipcAJslUoiLwCk70Dx9pp4hvwHh4bIvGKtsIo575X
-         5M6MQyUfnPXGCubZFmu9DtTPWIZB6TL0zAQQMrQo=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 Jan 2020 13:11:44 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40990 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbgA3SLo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:11:44 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UIBhI8005214;
+        Thu, 30 Jan 2020 12:11:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580407903;
+        bh=h+G3LYU16aiLuWdXeyIlXaOLzpHdez77njrJFeFbZgc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VB4nECyOLcYrKZ2Lwg0Fj+3Ce9RxR92ut+kqcss4ZGQole0jHQD4F83kbFT3VsQ6e
+         Sl6M5vgI7GTndGQmKueITUkH87KvfPbkxq3Yia2UmyDKelAwLP3vAd8ONUdLp5F2fY
+         M6sxxx7TfHtNKY9M3WIz+MbuVAq7shX/5O2ABcwk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UIBhX6046863
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 12:11:43 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 12:11:42 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 12:11:43 -0600
+Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UIBfRd064578;
+        Thu, 30 Jan 2020 12:11:42 -0600
+Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
+ memory node
+To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <s-anna@ti.com>, <linux-omap@vger.kernel.org>
+References: <20200116135332.7819-1-t-kristo@ti.com>
+ <20200116135332.7819-7-t-kristo@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
+Date:   Thu, 30 Jan 2020 13:11:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580357923-19783-3-git-send-email-tdas@codeaurora.org>
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org> <1580357923-19783-3-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: clock: Introduce QCOM Modem clock bindings
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 30 Jan 2020 10:09:15 -0800
-Message-Id: <20200130180915.E025D20CC7@mail.kernel.org>
+In-Reply-To: <20200116135332.7819-7-t-kristo@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-01-29 20:18:42)
-> Add device tree bindings for modem clock controller for
-> Qualcomm Technology Inc's SC7180 SoCs.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+On 1/16/20 8:53 AM, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The reserved memory nodes are not assigned to platform devices by
+> default in the driver core to avoid the lookup for every platform
+> device and incur a penalty as the real users are expected to be
+> only a few devices.
+> 
+> OMAP remoteproc devices fall into the above category and the OMAP
+> remoteproc driver _requires_ specific CMA pools to be assigned
+> for each device at the moment to align on the location of the
+> vrings and vring buffers in the RTOS-side firmware images. So,
+
+
+Same comment as before, this is a firmware issue for only some firmwares
+that do not handle being assigned vring locations correctly and instead
+hard-code them.
+
+This is not a requirement of the remote processor itself and so it
+should not fail to probe if a specific memory carveout isn't given.
+
+Andrew
+
+
+> use the of_reserved_mem_device_init/release() API appropriately
+> to assign the corresponding reserved memory region to the OMAP
+> remoteproc device. Note that only one region per device is
+> allowed by the framework.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  include/dt-bindings/clock/qcom,gcc-sc7180.h |  5 +++++
->  include/dt-bindings/clock/qcom,mss-sc7180.h | 12 ++++++++++++
-
-Split this into two as well.
-
+> v5: no changes
+> 
+>  drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 0846839b2c97..194303b860b2 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/err.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_reserved_mem.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/remoteproc.h>
+> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto free_rproc;
+>  
+> +	ret = of_reserved_mem_device_init(&pdev->dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
+> +		goto free_rproc;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, rproc);
+>  
+>  	ret = rproc_add(rproc);
+>  	if (ret)
+> -		goto free_rproc;
+> +		goto release_mem;
+>  
+>  	return 0;
+>  
+> +release_mem:
+> +	of_reserved_mem_device_release(&pdev->dev);
+>  free_rproc:
+>  	rproc_free(rproc);
+>  	return ret;
+> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
+>  
+>  	rproc_del(rproc);
+>  	rproc_free(rproc);
+> +	of_reserved_mem_device_release(&pdev->dev);
+>  
+>  	return 0;
+>  }
+> 
