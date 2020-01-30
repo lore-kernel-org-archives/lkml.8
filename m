@@ -2,178 +2,239 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D546C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0842C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2C92083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A27D20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:22:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n9oU19Tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbgA3UWM (ORCPT
+        id S1727749AbgA3UWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:22:12 -0500
-Received: from mga14.intel.com ([192.55.52.115]:31032 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgA3UWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:22:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 12:22:11 -0800
-X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
-   d="scan'208";a="320000739"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 12:22:11 -0800
-Subject: [PATCH 2/5] mm/memremap_pages: Introduce memremap_compat_align()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        vishal.l.verma@intel.com, hch@lst.de, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 30 Jan 2020 12:06:07 -0800
-Message-ID: <158041476763.3889308.13149849631980018039.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158041475480.3889308.655103391935006598.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158041475480.3889308.655103391935006598.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Thu, 30 Jan 2020 15:22:17 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51694 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3UWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 15:22:17 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UKMFjb001348;
+        Thu, 30 Jan 2020 14:22:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580415735;
+        bh=f9rMzOOvLA+U/oerycRaC6siozRFk+uiXMS8sNGl5zY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n9oU19TkgejKF3xlc/5M1CBWX9DLgXFi0ClmqJcMW6HFtk3PJGVZtO6QlLXiGPrBN
+         QP9zo5i19sbg+g9B2oRp0e6vF2KKdhMKrs92XOUX9pSKedN4CDXtAMiipwWCEDHz+C
+         rYiWrfydaUzIU6no9ylqwbcM7vXlYSPeei0R1LIA=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UKMFRD083354;
+        Thu, 30 Jan 2020 14:22:15 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 14:22:15 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 14:22:15 -0600
+Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UKMElr076026;
+        Thu, 30 Jan 2020 14:22:14 -0600
+Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
+ memory node
+To:     Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200116135332.7819-1-t-kristo@ti.com>
+ <20200116135332.7819-7-t-kristo@ti.com>
+ <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
+ <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
+ <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
+ <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
+ <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <7aed7a9f-3546-f622-37ac-34d33ddb4298@ti.com>
+Date:   Thu, 30 Jan 2020 15:22:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "sub-section memory hotplug" facility allows memremap_pages() users
-like libnvdimm to compensate for hardware platforms like x86 that have a
-section size larger than their hardware memory mapping granularity.  The
-compensation that sub-section support affords is being tolerant of
-physical memory resources shifting by units smaller (64MiB on x86) than
-the memory-hotplug section size (128 MiB). Where the platform
-physical-memory mapping granularity is limited by the number and
-capability of address-decode-registers in the memory controller.
+On 1/30/20 2:55 PM, Suman Anna wrote:
+> On 1/30/20 1:42 PM, Tero Kristo wrote:
+>> On 30/01/2020 21:20, Andrew F. Davis wrote:
+>>> On 1/30/20 2:18 PM, Tero Kristo wrote:
+>>>> On 30/01/2020 20:11, Andrew F. Davis wrote:
+>>>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
+>>>>>> From: Suman Anna <s-anna@ti.com>
+>>>>>>
+>>>>>> The reserved memory nodes are not assigned to platform devices by
+>>>>>> default in the driver core to avoid the lookup for every platform
+>>>>>> device and incur a penalty as the real users are expected to be
+>>>>>> only a few devices.
+>>>>>>
+>>>>>> OMAP remoteproc devices fall into the above category and the OMAP
+>>>>>> remoteproc driver _requires_ specific CMA pools to be assigned
+>>>>>> for each device at the moment to align on the location of the
+>>>>>> vrings and vring buffers in the RTOS-side firmware images. So,
+>>>>>
+>>>>>
+>>>>> Same comment as before, this is a firmware issue for only some
+>>>>> firmwares
+>>>>> that do not handle being assigned vring locations correctly and instead
+>>>>> hard-code them.
+> 
+> As for this statement, this can do with some updating. Post 4.20,
+> because of the lazy allocation scheme used for carveouts including the
+> vrings, the resource tables now have to use FW_RSC_ADDR_ANY and will
+> have to wait for the vdev synchronization to happen.
+> 
+>>>>
+>>>> I believe we discussed this topic in length in previous version but
+>>>> there was no conclusion on it.
+>>>>
+>>>> The commit desc might be a bit misleading, we are not actually forced to
+>>>> use specific CMA buffers, as we use IOMMU to map these to device
+>>>> addresses. For example IPU1/IPU2 use internally exact same memory
+>>>> addresses, iommu is used to map these to specific CMA buffer.
+>>>>
+>>>> CMA buffers are mostly used so that we get aligned large chunk of memory
+>>>> which can be mapped properly with the limited IOMMU OMAP family of chips
+>>>> have. Not sure if there is any sane way to get this done in any other
+>>>> manner.
+>>>>
+>>>
+>>>
+>>> Why not use the default CMA area?
+>>
+>> I think using default CMA area getting the actual memory block is not
+>> guaranteed and might fail. There are other users for the memory, and it
+>> might get fragmented at the very late phase we are grabbing the memory
+>> (omap remoteproc driver probe time.) Some chunks we need are pretty large.
+>>
+>> I believe I could experiment with this a bit though and see, or Suman
+>> could maybe provide feedback why this was designed initially like this
+>> and why this would not be a good idea.
+> 
+> I have given some explanation on this on v4 as well, but if it is not
+> clear, there are restrictions with using default CMA. Default CMA has
+> switched to be assigned from the top of the memory (higher addresses,
+> since 3.18 IIRC), and the MMUs on IPUs and DSPs can only address
+> 32-bits. So, we cannot blindly use the default CMA pool, and this will
+> definitely not work on boards > 2 GB RAM. And, if you want to add in any
+> firewall capability, then specific physical addresses becomes mandatory.
+> 
 
-While the sub-section support allows memremap_pages() to operate on
-sub-section (2MiB) granularity, the Power architecture may still
-require 16MiB alignment on "!radix_enabled()" platforms.
 
-In order for libnvdimm to be able to detect and manage this per-arch
-limitation, introduce memremap_compat_align() as a common minimum
-alignment across all driver-facing memory-mapping interfaces, and let
-Power override it to 16MiB in the "!radix_enabled()" case.
+If you need 32bit range allocations then
+dma_set_mask(dev, DMA_BIT_MASK(32));
 
-The assumption / requirement for 16MiB to be a viable
-memremap_compat_align() value is that Power does not have platforms
-where its equivalent of address-decode-registers never hardware remaps a
-persistent memory resource on smaller than 16MiB boundaries.
+I'm not saying don't have support for carveouts, just make them
+optional, keystone_remoteproc.c does this:
 
-Based on an initial patch by Aneesh.
+if (of_reserved_mem_device_init(dev))
+	dev_warn(dev, "device does not have specific CMA pool\n");
 
-Link: http://lore.kernel.org/r/CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reported-by: Jeff Moyer <jmoyer@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/powerpc/include/asm/io.h |   10 ++++++++++
- drivers/nvdimm/pfn_devs.c     |    2 +-
- include/linux/io.h            |   23 +++++++++++++++++++++++
- include/linux/mmzone.h        |    1 +
- 4 files changed, 35 insertions(+), 1 deletion(-)
+There doesn't even needs to be a warning but that is up to you.
 
-diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
-index a63ec938636d..0fa2dc483008 100644
---- a/arch/powerpc/include/asm/io.h
-+++ b/arch/powerpc/include/asm/io.h
-@@ -734,6 +734,16 @@ extern void __iomem * __ioremap_at(phys_addr_t pa, void *ea,
- 				   unsigned long size, pgprot_t prot);
- extern void __iounmap_at(void *ea, unsigned long size);
- 
-+#ifdef CONFIG_SPARSEMEM
-+static inline unsigned long memremap_compat_align(void)
-+{
-+	if (radix_enabled())
-+		return SUBSECTION_SIZE;
-+	return (1UL << mmu_psize_defs[mmu_linear_psize].shift);
-+}
-+#define memremap_compat_align memremap_compat_align
-+#endif
-+
- /*
-  * When CONFIG_PPC_INDIRECT_PIO is set, we use the generic iomap implementation
-  * which needs some additional definitions here. They basically allow PIO
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index b94f7a7e94b8..a5c25cb87116 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -750,7 +750,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	start = nsio->res.start;
- 	size = resource_size(&nsio->res);
- 	npfns = PHYS_PFN(size - SZ_8K);
--	align = max(nd_pfn->align, (1UL << SUBSECTION_SHIFT));
-+	align = max(nd_pfn->align, SUBSECTION_SIZE);
- 	end_trunc = start + size - ALIGN_DOWN(start + size, align);
- 	if (nd_pfn->mode == PFN_MODE_PMEM) {
- 		/*
-diff --git a/include/linux/io.h b/include/linux/io.h
-index 35e8d84935e0..ccd34519fad3 100644
---- a/include/linux/io.h
-+++ b/include/linux/io.h
-@@ -6,6 +6,7 @@
- #ifndef _LINUX_IO_H
- #define _LINUX_IO_H
- 
-+#include <linux/mmzone.h>
- #include <linux/types.h>
- #include <linux/init.h>
- #include <linux/bug.h>
-@@ -79,6 +80,28 @@ void *devm_memremap(struct device *dev, resource_size_t offset,
- 		size_t size, unsigned long flags);
- void devm_memunmap(struct device *dev, void *addr);
- 
-+#ifndef memremap_compat_align
-+#ifdef CONFIG_SPARSEMEM
-+/*
-+ * Minimum compatible alignment of the resource (start, end) across
-+ * memremap interfaces (i.e. memremap + memremap_pages)
-+ */
-+static inline unsigned long memremap_compat_align(void)
-+{
-+	return SUBSECTION_SIZE;
-+}
-+#else /* CONFIG_SPARSEMEM */
-+/*
-+ * No ZONE_DEVICE / memremap_pages() support so the minimum mapping
-+ * granularity is a single page.
-+ */
-+static inline unsigned long memremap_compat_align(void)
-+{
-+	return PAGE_SIZE;
-+}
-+#endif /* CONFIG_SPARSEMEM */
-+#endif /* memremap_compat_align */
-+
- #ifdef CONFIG_PCI
- /*
-  * The PCI specifications (Rev 3.0, 3.2.5 "Transaction Ordering and
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 89d8ff06c9ce..b0de83620cd7 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1171,6 +1171,7 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
- #define SECTION_ALIGN_DOWN(pfn)	((pfn) & PAGE_SECTION_MASK)
- 
- #define SUBSECTION_SHIFT 21
-+#define SUBSECTION_SIZE (1UL << SUBSECTION_SHIFT)
- 
- #define PFN_SUBSECTION_SHIFT (SUBSECTION_SHIFT - PAGE_SHIFT)
- #define PAGES_PER_SUBSECTION (1UL << PFN_SUBSECTION_SHIFT)
+Andrew
 
+
+> regards
+> Suman
+> 
+>>
+>> -Tero
+>>
+>>>
+>>> Andrew
+>>>
+>>>
+>>>> -Tero
+>>>>
+>>>>>
+>>>>> This is not a requirement of the remote processor itself and so it
+>>>>> should not fail to probe if a specific memory carveout isn't given.
+>>>>>
+>>>>>
+>>>>>> use the of_reserved_mem_device_init/release() API appropriately
+>>>>>> to assign the corresponding reserved memory region to the OMAP
+>>>>>> remoteproc device. Note that only one region per device is
+>>>>>> allowed by the framework.
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>>> ---
+>>>>>> v5: no changes
+>>>>>>
+>>>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+>>>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
+>>>>>> b/drivers/remoteproc/omap_remoteproc.c
+>>>>>> index 0846839b2c97..194303b860b2 100644
+>>>>>> --- a/drivers/remoteproc/omap_remoteproc.c
+>>>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>>>>>> @@ -17,6 +17,7 @@
+>>>>>>    #include <linux/module.h>
+>>>>>>    #include <linux/err.h>
+>>>>>>    #include <linux/of_device.h>
+>>>>>> +#include <linux/of_reserved_mem.h>
+>>>>>>    #include <linux/platform_device.h>
+>>>>>>    #include <linux/dma-mapping.h>
+>>>>>>    #include <linux/remoteproc.h>
+>>>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
+>>>>>> platform_device *pdev)
+>>>>>>        if (ret)
+>>>>>>            goto free_rproc;
+>>>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
+>>>>>> +    if (ret) {
+>>>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
+>>>>>> pool\n");
+>>>>>> +        goto free_rproc;
+>>>>>> +    }
+>>>>>> +
+>>>>>>        platform_set_drvdata(pdev, rproc);
+>>>>>>          ret = rproc_add(rproc);
+>>>>>>        if (ret)
+>>>>>> -        goto free_rproc;
+>>>>>> +        goto release_mem;
+>>>>>>          return 0;
+>>>>>>    +release_mem:
+>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>>>    free_rproc:
+>>>>>>        rproc_free(rproc);
+>>>>>>        return ret;
+>>>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
+>>>>>> platform_device *pdev)
+>>>>>>          rproc_del(rproc);
+>>>>>>        rproc_free(rproc);
+>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>>>          return 0;
+>>>>>>    }
+>>>>>>
+>>>>
+>>>> -- 
+>>
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
