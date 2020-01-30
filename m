@@ -2,85 +2,88 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A6FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5965BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E43E20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B8E20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LvZByeUm"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X5WxJNIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgA3DoG (ORCPT
+        id S1726916AbgA3DtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 22:44:06 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:23159 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726811AbgA3DoG (ORCPT
+        Wed, 29 Jan 2020 22:49:22 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35417 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgA3DtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 22:44:06 -0500
-X-UUID: b27cc1cbc00d4125a60e144d1168b3d8-20200130
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3bvai5RkNO6CsB90bdkSQOYb8Boyue9WmpvdjPAjYrE=;
-        b=LvZByeUmLm02Ok2hWnLatHg7/qO01kS4WAdxpbZX63pcSnhfwymAwFzLGT9fxb5xyVUWZ4P+FekUugDq1QYEJxMNhQK9+smkTFdAJAbXV6uZLC+sNYE0UV+qLNVGzL6vmKwtDmD3kuQlNaJk+Daj9UxQ8LrSUZRmdzpLbzl436c=;
-X-UUID: b27cc1cbc00d4125a60e144d1168b3d8-20200130
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1456654747; Thu, 30 Jan 2020 11:43:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 30 Jan 2020 11:43:15 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 Jan 2020 11:44:02 +0800
-Message-ID: <1580355838.11126.5.camel@mtksdccf07>
-Subject: Re: [PATCH v4 2/2] kasan: add test for invalid size in memmove
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Thu, 30 Jan 2020 11:43:58 +0800
-In-Reply-To: <619b898f-f9c2-1185-5ea7-b9bf21924942@virtuozzo.com>
-References: <20191112065313.7060-1-walter-zh.wu@mediatek.com>
-         <619b898f-f9c2-1185-5ea7-b9bf21924942@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 29 Jan 2020 22:49:21 -0500
+Received: by mail-pj1-f66.google.com with SMTP id q39so754418pjc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 19:49:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Mx3OfgZqXsctX/7U2mChFWk0zCA5WCpqANSbySekotA=;
+        b=X5WxJNIxpSC+SU8kzTSE8BPBlHNsC3v2pics92oUneEjfoADck4fpsPjTXSusetKXQ
+         nK4PNWKk8uh9KjelGQEwiMfCiL2qdr/3svDDzNCH1oucd5jhkAmhMYCvh8mfASipTnkF
+         T8RqVUCZ2o/Yl43yiwZblg7Af00qVPSSrPOIm6qsS20UKHhNyWmmiBokPS8vKgB1igQI
+         D9epvWXGqfWMkQ816eZmvCaj1QTDg2k/q5U81u3VC4XQUSY7UyBneATwfsNj688+XnRE
+         CgfuPIeZor4SgKB1iYnw0XDY1J09DhXLO6f2o+e9Jb2atWT5wL6ENBW1GrgUtlD9VdHT
+         wSKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Mx3OfgZqXsctX/7U2mChFWk0zCA5WCpqANSbySekotA=;
+        b=BCynu6HyDvB5opRXWtuiZWCAySKfZ40o6aaAH+anjOB5Nn82XSLXZ7pfVsp/+pDUUs
+         77pgo7IoP8xL/kogXuJm5KVTVstTwr/R262svE2s/HDkXtR4jMIfLlSr5HPL7dRnfZWU
+         jn0O0mzjCVNS/V5pBc7z6rzgHRQ4n/JQCRVxVP+GAA6E+yh67kHFd2dI6kQwUacFlpIG
+         Hep2i8dxFr1ii8Y7tIJ8d2F3foUA4xJ+yq7Tx1p1H5KCcl8Bw7HkPJHfy6b4wCDv21m3
+         2D4qiPX7aHNNJeqgm/mEvLx+pgn4HItOdNpTVttOER4GFyw8Rq3Yn0a+hVbJzMEMySZe
+         YyhQ==
+X-Gm-Message-State: APjAAAX0rYddosJCBD8AWO+uhw5fMY/oEntoq4f8SA9J5UAfuiKc/A4H
+        Ci1DZHdPEseNUrqnzZW+5FLUYA==
+X-Google-Smtp-Source: APXvYqzLfb+nyZJcIxNwxOwzMRDzIIFuTpHf+Jcuu9CPDAACZJjS4KoRWngbSUk7D98OohGdNUOGRA==
+X-Received: by 2002:a17:902:82c3:: with SMTP id u3mr2615891plz.73.1580356160930;
+        Wed, 29 Jan 2020 19:49:20 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id t23sm4413520pfq.6.2020.01.29.19.49.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 19:49:20 -0800 (PST)
+Subject: Re: [PATCH] MAINTAINERS: Add Revanth Rajashekar as a SED-Opal
+ maintainer
+To:     Jon Derrick <jonathan.derrick@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Scott Bauer <sbauer@plzdonthack.me>,
+        Revanth Rajashekar <revanth.rajashekar@intel.com>
+References: <20200110215646.15930-1-jonathan.derrick@intel.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a9d2ecfd-c6b9-ac0f-ac93-30329d9982b2@kernel.dk>
+Date:   Wed, 29 Jan 2020 20:49:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200110215646.15930-1-jonathan.derrick@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTExLTIyIGF0IDA2OjIxICswODAwLCBBbmRyZXkgUnlhYmluaW4gd3JvdGU6
-DQo+IA0KPiBPbiAxMS8xMi8xOSA5OjUzIEFNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+ID4gVGVzdCBu
-ZWdhdGl2ZSBzaXplIGluIG1lbW1vdmUgaW4gb3JkZXIgdG8gdmVyaWZ5IHdoZXRoZXIgaXQgY29y
-cmVjdGx5DQo+ID4gZ2V0IEtBU0FOIHJlcG9ydC4NCj4gPiANCj4gPiBDYXN0aW5nIG5lZ2F0aXZl
-IG51bWJlcnMgdG8gc2l6ZV90IHdvdWxkIGluZGVlZCB0dXJuIHVwIGFzIGEgbGFyZ2UNCj4gPiBz
-aXplX3QsIHNvIGl0IHdpbGwgaGF2ZSBvdXQtb2YtYm91bmRzIGJ1ZyBhbmQgYmUgZGV0ZWN0ZWQg
-YnkgS0FTQU4uDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1IDx3YWx0ZXItemgu
-d3VAbWVkaWF0ZWsuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBEbWl0cnkgVnl1a292IDxkdnl1a292
-QGdvb2dsZS5jb20+DQo+IA0KPiBSZXZpZXdlZC1ieTogQW5kcmV5IFJ5YWJpbmluIDxhcnlhYmlu
-aW5AdmlydHVvenpvLmNvbT4NCg0KSGkgQW5kcmV5LCBEbWl0cnksIEFuZHJldywNCg0KV291bGQg
-eW91IHRlbGwgbWUgd2h5IHRoaXMgcGF0Y2gtc2V0cyBkb24ndCBtZXJnZSBpbnRvIGxpbnV4LW5l
-eHQgdHJlZT8NCldlIGxvc3Qgc29tZXRoaW5nPw0KDQpUaGFua3MgZm9yIHlvdXIgaGVscC4NCg0K
-V2FsdGVyDQoNCg==
+On 1/10/20 2:56 PM, Jon Derrick wrote:
+> Scott hasn't worked for Intel for some time and has already given us his
+> blessing.
+
+Applied, thanks.
+
+-- 
+Jens Axboe
 
