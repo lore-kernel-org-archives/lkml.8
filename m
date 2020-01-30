@@ -2,187 +2,82 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697A3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49ADC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3626B20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBAEJadw"
+	by mail.kernel.org (Postfix) with ESMTP id 9864A206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgA3MEL (ORCPT
+        id S1727193AbgA3MG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:04:11 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39724 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgA3MEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:04:11 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so3718980wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 04:04:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z8G2nDx9WHWYROzn/JgZ7wxgI6aKyyxtEyWYfcNEyQU=;
-        b=lBAEJadw9ZYvQXQKdOzKpPzGlzoNVuJ5v8r8CqV5/4dLEX7pFlppZxDhGBnNKS8zJg
-         1IJwI77FK7BfCt9DDChKiDlwctdHUiVGETSyISB3XQQJBNGEDuxVYjn9LtrQiWYzxSNH
-         zUdyFclHkqpFZRR+FU7uX+I3wwLNkMZcXpc4xrfNB5p3DBKq3NweyhsZsb3QlVj10odu
-         hORYJTmrEE9gI7xsMKDJIo9QTM6UDA5sxrjuJngvotZQUW3/YGh0Szgt1S/P7xw9lUi0
-         oPi+6NGbist1gFAXJY4BfF7OAyI7oaItgjviiYZUuWG/eCOFpeZPNJxgfkyNQpJRyTXp
-         eDwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z8G2nDx9WHWYROzn/JgZ7wxgI6aKyyxtEyWYfcNEyQU=;
-        b=ZcOTDEa7F0DS9DzOdH3IIyplIc/otK+aTZlK83w7uyHOHkW5ggKlBvCLnHKDKT+xXr
-         5Db821hFS5GkyxE33BCGfffiu/18kHIXXdPiHcL4bzYuIzb6JqbpxFbaL5yqWauSglxW
-         k8+CNDTCea2F2Nli28mp/5gi7h40HgaNRH9/V4/z4pnq5cJre3ROVaeBtwuWHmgazWu3
-         kTq447Q5ofG2ppklzrwghxzpj3tiUilctgoM5+t0MNCJPAXy7IhcMRIP/eBCEW/vQYFw
-         CGbP1IxtqyOubGI5VNwYCo3q+Bx4buG3s8L2v1QNIoO6V058CLPADAHUpBk/0JJ1Qvcn
-         qqbQ==
-X-Gm-Message-State: APjAAAVL7NmnjgWAwF/lLAsMZasdhZMARthRfTPXwNMcYDVCE+ZZI5bI
-        UTwAK4U6/hTcSPMWjYx7GLo+wyuGsGyC6NZJH8Af0Q==
-X-Google-Smtp-Source: APXvYqwzASac9mf2NAyJJfGelmUOl6rbaq8jYO/hT2mN6eGFmrIjyX5UL8P3rGADCUKdS4lGkDRtA6WFVE3c6ViZLoo=
-X-Received: by 2002:a5d:550f:: with SMTP id b15mr2806269wrv.196.1580385849232;
- Thu, 30 Jan 2020 04:04:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20200130064430.17198-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200130064430.17198-1-walter-zh.wu@mediatek.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 30 Jan 2020 13:03:58 +0100
-Message-ID: <CAG_fn=X_jSUJXD932z9oN5hBa--n3Qct4zrjzGaPtb2MwJye7A@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/stackdepot: Fix global out-of-bounds in stackdepot
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thu, 30 Jan 2020 07:06:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60580 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbgA3MG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:06:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B3383B053;
+        Thu, 30 Jan 2020 12:06:24 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 13:06:17 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Damian Tometzki <damian.tometzki@familie-tometzki.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+Message-ID: <20200130120617.GH6684@zn.tnic>
+References: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+ <20200129132618.GA30979@zn.tnic>
+ <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+ <20200129183404.GB30979@zn.tnic>
+ <c08616b8-d209-ff08-1b74-645a49a486d2@familie-tometzki.de>
+ <20200130075549.GA6684@zn.tnic>
+ <20200130111057.GA21459@linux.ibm.com>
+ <20200130115326.GG6684@zn.tnic>
+ <20200130115959.GA24611@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130115959.GA24611@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 7:44 AM Walter Wu <walter-zh.wu@mediatek.com> wrote=
-:
+On Thu, Jan 30, 2020 at 01:59:59PM +0200, Mike Rapoport wrote:
+> I've seen similar crash with my qemu/kvm and bisected it to that commit.
+> 
+> The hpet allocation is off-by-one and as a result hpet corrupts the memory
+> somewhere in the slab
 
-Hi Walter,
+Oh wow, wonderful. Good that we have bisection in such cases - there's
+no way in hell I'll debug it to that. ;-\
 
-> If the depot_index =3D STACK_ALLOC_MAX_SLABS - 2 and next_slab_inited =3D=
- 0,
-> then it will cause array out-of-bounds access, so that we should modify
-> the detection to avoid this array out-of-bounds bug.
->
-> Assume depot_index =3D STACK_ALLOC_MAX_SLABS - 3
-> Consider following call flow sequence:
->
-> stack_depot_save()
->    depot_alloc_stack()
->       if (unlikely(depot_index + 1 >=3D STACK_ALLOC_MAX_SLABS)) //pass
->       depot_index++  //depot_index =3D STACK_ALLOC_MAX_SLABS - 2
->       if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) //enter
->          smp_store_release(&next_slab_inited, 0); //next_slab_inited =3D =
-0
->       init_stack_slab()
->          if (stack_slabs[depot_index] =3D=3D NULL) //enter and exit
->
-> stack_depot_save()
->    depot_alloc_stack()
->       if (unlikely(depot_index + 1 >=3D STACK_ALLOC_MAX_SLABS)) //pass
->       depot_index++  //depot_index =3D STACK_ALLOC_MAX_SLABS - 1
->       init_stack_slab(&prealloc)
->          stack_slabs[depot_index + 1]  //here get global out-of-bounds
->
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> ---
-> changes in v2:
-> modify call flow sequence and preconditon
->
-> changes in v3:
-> add some reviewers
-> ---
->  lib/stackdepot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> index ed717dd08ff3..7e8a15e41600 100644
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -106,7 +106,7 @@ static struct stack_record *depot_alloc_stack(unsigne=
-d long *entries, int size,
->         required_size =3D ALIGN(required_size, 1 << STACK_ALLOC_ALIGN);
->
->         if (unlikely(depot_offset + required_size > STACK_ALLOC_SIZE)) {
-> -               if (unlikely(depot_index + 1 >=3D STACK_ALLOC_MAX_SLABS))=
- {
-> +               if (unlikely(depot_index + 2 >=3D STACK_ALLOC_MAX_SLABS))=
- {
+Thanks for saving me a bunch of time.
 
-I don't think this is the right way to fix the problem.
-You're basically throwing away the last element of stack_slabs[], as
-we won't allocate anything from it.
+Damian, can you test the patch at the bottom of that mail:
 
-How about we set |next_slab_inited| to 1 here:
+https://lore.kernel.org/lkml/202001300450.00U4ocvS083098@www262.sakura.ne.jp/
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 2e7d2232ed3c..943a51eb746d 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -105,6 +105,8 @@ static bool init_stack_slab(void **prealloc)
-                return true;
-        if (stack_slabs[depot_index] =3D=3D NULL) {
-                stack_slabs[depot_index] =3D *prealloc;
-+               if (depot_index + 1 =3D=3D STACK_ALLOC_MAX_SLABS)
-+                       smp_store_release(&next_slab_inited, 1);
-        } else {
-                stack_slabs[depot_index + 1] =3D *prealloc;
-                /*
+?
 
-This will ensure we won't be preallocating pages once |depot_index|
-reaches the last element, and we won't attempt to write those pages
-anywhere either.
+Thx.
 
-Could you please check if this fixes the problem for you?
+-- 
+Regards/Gruss,
+    Boris.
 
->                         WARN_ONCE(1, "Stack depot reached limit capacity"=
-);
->                         return NULL;
->                 }
-> --
-> 2.18.0
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
