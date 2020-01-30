@@ -2,92 +2,93 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D48C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11004C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EC220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BF020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k277C6/H"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="pOO9Itn2";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="JYlXYzUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgA3TAr (ORCPT
+        id S1727653AbgA3TIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:00:47 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3453 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgA3TAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:00:46 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3327c90001>; Thu, 30 Jan 2020 11:00:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 11:00:45 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 Jan 2020 11:00:45 -0800
-Received: from [10.26.11.91] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 19:00:40 +0000
-Subject: Re: [PATCH v6 12/16] dmaengine: tegra-apb: Clean up suspend-resume
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-13-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <3507dcb9-4a92-8145-1953-e40960604661@nvidia.com>
-Date:   Thu, 30 Jan 2020 19:00:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 14:08:24 -0500
+Received: from node.akkea.ca ([192.155.83.177]:59260 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727541AbgA3TIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:08:23 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 375164E204D;
+        Thu, 30 Jan 2020 19:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1580411303; bh=QCWqH3i6d7d//U54D23iF2Hbhl80FK9JvAL3ILoF+mE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=pOO9Itn2isE39rKwYWjLZuG0PjnqpBRrjBatfdhXx1gXo5/x7qBUtyTjWR1JIFOEg
+         VoOCQ2Ou3A75wCcZntUteAjd34cbEReRk+efA4XTL7SDRwGRKIFQbNfaYr2R/VRvQ1
+         xJny9RnrFPk3orRjH35Pnpwh346cr6nXbAv+IrdA=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e0iH27lz8nbj; Thu, 30 Jan 2020 19:08:22 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id AE0BA4E200C;
+        Thu, 30 Jan 2020 19:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1580411302; bh=QCWqH3i6d7d//U54D23iF2Hbhl80FK9JvAL3ILoF+mE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=JYlXYzUu+ZVgG563aVfsaQ99S9y/WvTjFPlAI8N3r4iMe/smi2lGQMlZri0yfiwVY
+         BFoP5No+HHdspJjFgD9I8P/hFjtVLeNX3KYlmsM8jECpvU3GMFLYa9p3XLqWztFa9K
+         XA0CaUykfYrziL+9kXgSRCifzJGKiGdy/nrw0TyQ=
 MIME-Version: 1.0
-In-Reply-To: <20200130043804.32243-13-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580410825; bh=HvbTM3jfPnqdOoL/RKMU1UXf18+E1vc/sKF7YsOBlrg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k277C6/HK3imWn6CinhGpwcNsA6KLB6lPtlKEbQbFJ4CB4krWu2ik+G9Shsu6b1V6
-         vPMuFvNlKYrKmaTq1SGMvQU6GudR4qJry+ABdamn1Oi8zfH13ujpqe7he+0a60mk4I
-         ZbLOrD1nguYwFAR92/XvwMyjyLLV4A4fba3xjOFASMfivG7cFKwqUDqsqnyivpktUE
-         w1MQtUTMMZOD9ummePeKIPRYGXe7s2g2OAgioVnwTUoeUF8Mq1GL7l/37fmlpQT6Jh
-         70O4ixhpCv7pPFLEza2Epbwei1x+lacjUTj3H/is7iF81qpfXo5W4KWu/CF48nneYF
-         TfU1WtM120LCQ==
+Date:   Thu, 30 Jan 2020 11:08:22 -0800
+From:   Angus Ainslie <angus@akkea.ca>
+To:     Dan Williams <dcbw@redhat.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Redpine RS9116 M.2 module with NetworkManager
+In-Reply-To: <dec7cce5138d4cfeb5596d63048db7ec19a18c3c.camel@redhat.com>
+References: <59789f30ee686338c7bcffe3c6cbc453@akkea.ca>
+ <dec7cce5138d4cfeb5596d63048db7ec19a18c3c.camel@redhat.com>
+Message-ID: <47d5e080faa1edbf17d2bdeccee5ded9@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dan,
 
-On 30/01/2020 04:38, Dmitry Osipenko wrote:
-> It is enough to check whether hardware is busy on suspend and to reset
-> it across of suspend-resume because channel's configuration is fully
-> re-programmed on each DMA transaction anyways and because save-restore
-> of an active channel won't end up well without pausing transfer prior to
-> saving of the state (note that all channels shall be idling at the time of
-> suspend, so save-restore is not needed at all).
+On 2020-01-30 10:39, Dan Williams wrote:
+> On Thu, 2020-01-30 at 10:18 -0800, Angus Ainslie wrote:
+>> 
+>> I suspect this is a driver bug rather than a NM bug as I saw similar
+>> issues with an earlier Redpine proprietary driver that was fixed by
+>> updating that driver. What rsi_dbg zone will help debug this ?
+> 
+> NM just uses wpa_supplicant underneath, so if you can get supplicant
+> debug logs showing the failure, that would help. But perhaps the driver
+> has a problem with scan MAC randomization that NM can be configured to
+> do by default; that's been an issue with proprietary and out-of-tree
+> drivers in the past. Just a thought.
+> 
+> https://blog.muench-johannes.de/networkmanager-disable-mac-randomization-314
+> 
 
-Maybe just update the commit message to state that the pause callback is
-not implemented and channel pause is not supported prior to T114. And
-then ...
+Thanks that was the fix.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Angus
 
-Cheers
-Jon
+> Dan
