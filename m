@@ -2,131 +2,158 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F529C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC413C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B91206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54DF2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gPH3wrPi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bv0Vc4HY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgA3O5H (ORCPT
+        id S1727303AbgA3PB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:57:07 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37518 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbgA3O5G (ORCPT
+        Thu, 30 Jan 2020 10:01:58 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46836 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgA3PB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:57:06 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w47so2671431qtk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 06:57:06 -0800 (PST)
+        Thu, 30 Jan 2020 10:01:57 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so1765338pgb.13;
+        Thu, 30 Jan 2020 07:01:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZNin1fkHvBE9eW3g8NlOf6UaO9vwNWq4JoMAU8rk968=;
-        b=gPH3wrPiBhJ1X1dzwiOUlqSDcnz9fUG8KhH5CL2Tov+tnlNFQiCFr0vsZvf4DrD4ql
-         5vMSK2C6bUevX0L/2uJd3Papwp/y4DNkymkscVJl+1U0dxB/2YsCgl5m9DdhYvTtPAFz
-         LzAKkp0XTgLvew6SAzlQluIq6qj4PcN4wLMTKqArt7aZzH34dxWJ2Xta8ZD2eG32AMNM
-         9Spr3lPTnBQiwNMBFpAuCioOJBR6YcHPH9tcc1CFvtOpQelhp39EOH1xYelfF8aKhRa4
-         z80vCrL2qaqu2zfxF8o3EyPvBEbaxRihHPFlOfp/TwNcX8tKcxk+wuxNpdFCZOvq+6eg
-         137w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=taXx+ntK4GyiVfQ3GXRjKHqsGEpKX33UOGmexQOYw6g=;
+        b=Bv0Vc4HY0jMs32vYmT5Wkh5RlSLywxFvOyqwUAax7QzIm9W3o7HvGJRBu5/9OdK1Ja
+         XoKsoQPPrBoZXLOcF9gWbqYygavumFBdYqZMlfOBN68cSOU4Vzem3DZH3sjZFZKaRvU0
+         fy1gUGNFH9OxDax3GYrdBzKbU81EQVfLJP2NsbRyWG0SHnLtcbUhyd+rMqiZT7D0s7rd
+         OmJh85q/oughbIgHyazE7WvZx4YzJWmVmDGG+ZHh+QaY2IkiPGmndb2+E5kx7X0iHxBe
+         /+YIIAuoQQEMb8LpxQID1FkTIbW4fY47e6jvkpHMtJXOmda+1esmnEqE9YxssZ4Xgi8Y
+         xnHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZNin1fkHvBE9eW3g8NlOf6UaO9vwNWq4JoMAU8rk968=;
-        b=SPT9x1pqY/0fD1ktV/Yc38T2mEIKcgRJumyC8wM318qolP5ZWdNljkGbqbDmsZpFKu
-         paRaJbeW0uWwiy1ksHel5NIwzZnoWhHbnQpXLxVKFU64anlZVnSHRKenCjuRNuAppaNd
-         Yy9fbIzheNE1C5F/AvEsv+EHfa04weesMANMLuYt5N2wKfGjK4XPIhciF0DLXFpMgrrM
-         XpxtzxiFK1ZOnp87oylhc/LvnmGK1AXgDIAPzam7VbzJ1w0Xf3w+K1hGQ06H2mpVgqeC
-         7KMYpWLEcSlM37y7QgySqcBVrO0EQuoeYlCRRd54SB8Rvz8qsedzThuvakJL5B3SKzGa
-         SuXQ==
-X-Gm-Message-State: APjAAAVas+WIvtFpxXejGltuBMGaZeWJLTHUs25LkfKaPEjzQ4rGgbH8
-        sSXEj2UlxTkzqL1c8DHGt61lAw==
-X-Google-Smtp-Source: APXvYqx8U57433kel8PKdYA6yz39yF4h49woso5+R7mtiD7se9+X7qmo36Zm/yFzJAHbhcO2yc93/w==
-X-Received: by 2002:ac8:4419:: with SMTP id j25mr5229623qtn.378.1580396225480;
-        Thu, 30 Jan 2020 06:57:05 -0800 (PST)
-Received: from ovpn-120-129.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id y27sm3219559qta.50.2020.01.30.06.57.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2020 06:57:04 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     dennis@kernel.org, tj@kernel.org, cl@linux.com, elver@google.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/util: annotate an intentional data race
-Date:   Thu, 30 Jan 2020 09:56:49 -0500
-Message-Id: <20200130145649.1240-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=taXx+ntK4GyiVfQ3GXRjKHqsGEpKX33UOGmexQOYw6g=;
+        b=YtzH80Rn2XvZ1zxSsQ/ghk5uf4CuwGI7ptoSdTbUGTsqbIjQi/joMeNJN6+PGsuzxB
+         Yoo5RuowBgBHQnNjfbSXxyX1jxx8skcZeobnNi5AkQmAEFytFrPC6chESJw78OGbYakK
+         ltO1dyhQHM+O7YXWLpz9xfvSJQDuBzPenXJuldveqJWg0pSxfYWexD42atED/g8oT17m
+         cVpCFmtif4+NY/iuYyqvBwh/En5rd6asW3/Ej+x6XxF3ZA5ms1C/1I88WGJu6+7gR2P8
+         jvDoB22UK2RxeiCLFNUP239gmHod5QX4ZGPrLJFseWaqnnIUm+40gIffxRqXlWEOZJcv
+         dgUw==
+X-Gm-Message-State: APjAAAU2oxZPE5S7hQsvoZagSozDPY7CZDYz24r3ZnTdrDsb1CFmez6C
+        3/ADzt3EtpHalno3/FuXXFg=
+X-Google-Smtp-Source: APXvYqzPA/x6bG2eMMow7olzd0KpNzfQERCi5MAiCXV1A6uYdNrOnsiOgrBC96e/CeW/r3XPRDvwtg==
+X-Received: by 2002:a65:4242:: with SMTP id d2mr5196624pgq.166.1580396516645;
+        Thu, 30 Jan 2020 07:01:56 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id ep2sm6743362pjb.31.2020.01.30.07.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 07:01:55 -0800 (PST)
+Date:   Thu, 30 Jan 2020 07:01:53 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     min.li.xe@renesas.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ptp: Add a ptp clock driver for IDT 82P33 SMU.
+Message-ID: <20200130150153.GB1477@localhost>
+References: <1580326638-5455-1-git-send-email-min.li.xe@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580326638-5455-1-git-send-email-min.li.xe@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"vm_committed_as.count" could be accessed concurrently as reported by
-KCSAN,
 
- read to 0xffffffff923164f8 of 8 bytes by task 1268 on cpu 38:
-  __vm_enough_memory+0x43/0x280 mm/util.c:801
-  mmap_region+0x1b2/0xb90 mm/mmap.c:1726
-  do_mmap+0x45c/0x700
-  vm_mmap_pgoff+0xc0/0x130
-  vm_mmap+0x71/0x90
-  elf_map+0xa1/0x1b0
-  load_elf_binary+0x9de/0x2180
-  search_binary_handler+0xd8/0x2b0
-  __do_execve_file+0xb61/0x1080
-  __x64_sys_execve+0x5f/0x70
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The net-next tree is closed for new submissions until after the
+mainline merge window closes.  So you will have to re-submit this
+patch then.
 
- write to 0xffffffff923164f8 of 8 bytes by task 1265 on cpu 41:
-  percpu_counter_add_batch+0x83/0xd0 lib/percpu_counter.c:91
-  exit_mmap+0x178/0x220 include/linux/mman.h:68
-  mmput+0x10e/0x270
-  flush_old_exec+0x572/0xfe0
-  load_elf_binary+0x467/0x2180
-  search_binary_handler+0xd8/0x2b0
-  __do_execve_file+0xb61/0x1080
-  __x64_sys_execve+0x5f/0x70
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This patch and the first one should have [net-next] in the subject
+line.  Please address both messages (1/2 and 2/2) to the netdev list,
+with the others on CC.
 
-The warning is almost impossible to trigger according to the commit
-82f71ae4a2b8 ("mm: catch memory commitment underflow") but leave it for
-now to catch any possible unbalanced vm_unacct_memory() in the future.
-Since only the read is operating as lockless, mark it as an intentional
-data race using the data_race() macro.
+But for, here are a few coding style issues...
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, Jan 29, 2020 at 02:37:18PM -0500, min.li.xe@renesas.com wrote:
+> @@ -12,4 +12,5 @@ obj-$(CONFIG_PTP_1588_CLOCK_KVM)	+= ptp_kvm.o
+>  obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp-qoriq.o
+>  ptp-qoriq-y				+= ptp_qoriq.o
+>  ptp-qoriq-$(CONFIG_DEBUG_FS)		+= ptp_qoriq_debugfs.o
+> -obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_clockmatrix.o
+> \ No newline at end of file
 
-diff --git a/mm/util.c b/mm/util.c
-index 988d11e6c17c..528d2c710771 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -798,8 +798,8 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- {
- 	long allowed;
- 
--	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
--			-(s64)vm_committed_as_batch * num_online_cpus(),
-+	VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as) <
-+			-(s64)vm_committed_as_batch * num_online_cpus()),
- 			"memory commitment underflow");
- 
- 	vm_acct_memory(pages);
--- 
-2.21.0 (Apple Git-122.2)
+Please fix white space here
 
+> +obj-$(CONFIG_PTP_1588_CLOCK_IDTCM)	+= ptp_clockmatrix.o
+> +obj-$(CONFIG_PTP_1588_CLOCK_IDT82P33)	+= ptp_idt82p33.o
+> \ No newline at end of file
+
+and here.
+
+> +static void _idt82p33_caps_init(struct ptp_clock_info	*caps)
+> +{
+
+No need for leading _ on private methods.
+
+> +	(caps)->owner = THIS_MODULE;
+> +	(caps)->max_adj = 92000;
+> +	(caps)->adjfreq = idt82p33_adjfreq;
+> +	(caps)->adjtime = idt82p33_adjtime;
+> +	(caps)->gettime64 = idt82p33_gettime;
+> +	(caps)->settime64 = idt82p33_settime;
+> +	(caps)->enable = idt82p33_enable;
+> +}
+> +
+> +static int _mask_bit_count(int mask)
+> +{
+
+There is a GCC built in for this.
+
+> +	int ret = 0;
+> +
+> +	while (mask != 0) {
+> +		mask &= (mask-1);
+> +		ret++;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void _byte_array_to_timespec(struct timespec64 *ts,
+> +				u8 buf[TOD_BYTE_COUNT])
+> +{
+
+Prefix all your functions with idt82p33_ please.
+
+> +	u8 i;
+> +	s32 nsec;
+> +	time64_t sec;
+> +
+> +	nsec = buf[3];
+> +	for (i = 0; i < 3; i++) {
+> +		nsec <<= 8;
+> +		nsec |= buf[2 - i];
+> +	}
+> +
+> +	sec = buf[9];
+> +	for (i = 0; i < 5; i++) {
+> +		sec <<= 8;
+> +		sec |= buf[8 - i];
+> +	}
+> +
+> +	ts->tv_sec = sec;
+> +	ts->tv_nsec = nsec;
+> +}
+
+Thanks,
+Richard
