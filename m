@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEBAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7E522522
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BE720702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409646;
-	bh=JkVwYf0IXv2ijGwm1KGIIPEiPDUR4873p/dAQ6BicAU=;
+	s=default; t=1580409648;
+	bh=rkr4v3w3gcxDIUGXLSQY/xRcj719qPpxS+Rw5Z/tExw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTxDWHu4jDJduOSkNdqprcmRBWGkmgGnXJ/I5//p5hqw0MFqCa3FkQnV/+OOaMve7
-	 QRbTlQH5fHisiVTRuT/EuHgrshCpFsp318F3uinq30LEt+pOd71CCB+4GemEhA/aNq
-	 rBXL7GlNVlUqDDiAkxss0obE+Ozxyb9jnk3Ih16s=
+	b=PraM0Zu/BamfWZsTgyTbk7hURbz0Vb9RNXU5BTemSuTuWuMUHO7PqvQXODWSYa9dV
+	 DiNQWAJyEfDmsS7fdKEr0aa1Eg+1Y/f/x6ke53Gdp9aKotcOWDzoj5IpkmfaOF7jMo
+	 N6HHYbs2nypXWwhHpC48Hxyn6xR6nKb8I+9yPNn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgA3Skp (ORCPT
+        id S1730018AbgA3Skn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48348 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgA3Skl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:41 -0500
+        id S1729998AbgA3Skj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA73214AF;
-        Thu, 30 Jan 2020 18:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A056214AF;
+        Thu, 30 Jan 2020 18:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409641;
-        bh=JkVwYf0IXv2ijGwm1KGIIPEiPDUR4873p/dAQ6BicAU=;
+        s=default; t=1580409638;
+        bh=rkr4v3w3gcxDIUGXLSQY/xRcj719qPpxS+Rw5Z/tExw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnqJIbtDfbQFISeEDiqG0nvFThrXIXUE+x+QV0cLi4vlKrUPzvOT1FXDplxlmpQAg
-         HnNqd3k7z7y5ysgp1h3DZsngWEwAcFN8eBD1/KSQFyv731eMS+hF6KrObgxJBR5Q2j
-         psOQOSgx0NmdX5HXGlQMFJqg9fX5VZFGC7aERFqE=
+        b=OfURQWrCKR6Htx+ErE1vnOjewcuENDSoOYgDCKT4SpatI6Cp3gKDfKLZLdXp+F1HI
+         ccabYkVbTHggmSYRP6PYVTa8oYSqikHUnRHqU/P2PPHpVbJw6YG0Sht8b+0RhCTUg+
+         XOmgQEAIkSmYJtW1FhDS9CEYcIH8I2bgO/XFKTxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.5 30/56] cifs: set correct max-buffer-size for smb2_ioctl_init()
-Date:   Thu, 30 Jan 2020 19:38:47 +0100
-Message-Id: <20200130183614.551929041@linuxfoundation.org>
+        stable@vger.kernel.org, Fariya Fatima <fariyaf@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 03/56] rsi_91x_usb: fix interface sanity check
+Date:   Thu, 30 Jan 2020 19:38:20 +0100
+Message-Id: <20200130183609.620360187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 731b82bb1750a906c1e7f070aedf5505995ebea7 upstream.
+commit 3139b180906af43bc09bd3373fc2338a8271d9d9 upstream.
 
-Fix two places where we need to adjust down the max response size for
-ioctl when it is used together with compounding.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Fariya Fatima <fariyaf@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1523,7 +1523,9 @@ smb2_ioctl_query_info(const unsigned int
- 					     COMPOUND_FID, COMPOUND_FID,
- 					     qi.info_type, true, buffer,
- 					     qi.output_buffer_length,
--					     CIFSMaxBufSize);
-+					     CIFSMaxBufSize -
-+					     MAX_SMB2_CREATE_RESPONSE_SIZE -
-+					     MAX_SMB2_CLOSE_RESPONSE_SIZE);
- 		}
- 	} else if (qi.flags == PASSTHRU_SET_INFO) {
- 		/* Can eventually relax perm check since server enforces too */
-@@ -2697,7 +2699,10 @@ smb2_query_symlink(const unsigned int xi
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -117,7 +117,7 @@ static int rsi_find_bulk_in_and_out_endp
+ 	__le16 buffer_size;
+ 	int ii, bin_found = 0, bout_found = 0;
  
- 	rc = SMB2_ioctl_init(tcon, &rqst[1], fid.persistent_fid,
- 			     fid.volatile_fid, FSCTL_GET_REPARSE_POINT,
--			     true /* is_fctl */, NULL, 0, CIFSMaxBufSize);
-+			     true /* is_fctl */, NULL, 0,
-+			     CIFSMaxBufSize -
-+			     MAX_SMB2_CREATE_RESPONSE_SIZE -
-+			     MAX_SMB2_CLOSE_RESPONSE_SIZE);
- 	if (rc)
- 		goto querty_exit;
+-	iface_desc = &(interface->altsetting[0]);
++	iface_desc = interface->cur_altsetting;
  
+ 	for (ii = 0; ii < iface_desc->desc.bNumEndpoints; ++ii) {
+ 		endpoint = &(iface_desc->endpoint[ii].desc);
 
 
