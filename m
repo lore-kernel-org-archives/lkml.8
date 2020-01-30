@@ -2,192 +2,109 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D56C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85A6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEB1206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884BE2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgA3NMM (ORCPT
+        id S1727317AbgA3NNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:12:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:52512 "EHLO foss.arm.com"
+        Thu, 30 Jan 2020 08:13:31 -0500
+Received: from mga05.intel.com ([192.55.52.43]:5950 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbgA3NMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:12:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 087D6328;
-        Thu, 30 Jan 2020 05:12:11 -0800 (PST)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAD5D3F68E;
-        Thu, 30 Jan 2020 05:11:57 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <20200129232028.5a27e656@thinkpad>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <5baed7e2-fc83-6223-8bb4-dcd771f9a4ea@arm.com>
-Date:   Thu, 30 Jan 2020 18:41:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726980AbgA3NNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:13:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 05:13:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="430017974"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Jan 2020 05:13:28 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ix9dS-0006mR-1Q; Thu, 30 Jan 2020 15:13:30 +0200
+Date:   Thu, 30 Jan 2020 15:13:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
+ unregister_console()
+Message-ID: <20200130131330.GY32742@smile.fi.intel.com>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+ <20200130090428.f5lrkxclnmuegqxw@pathway.suse.cz>
+ <20200130095807.GQ32742@smile.fi.intel.com>
+ <20200130122226.u4qsa53a3cbwdcpt@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200129232028.5a27e656@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130122226.u4qsa53a3cbwdcpt@pathway.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 30, 2020 at 01:22:26PM +0100, Petr Mladek wrote:
+> On Thu 2020-01-30 11:58:07, Andy Shevchenko wrote:
+> > On Thu, Jan 30, 2020 at 10:04:29AM +0100, Petr Mladek wrote:
+
+...
+
+> > Okay, I understand that for time being it's matter of how eloquent
+> > the commit message will be. (And maybe some comments in the code?)
+> > Is it correct?
+> 
+> Good question.
+> 
+> Please, remove the last hunk if Sergey is not against it.
+> I think that the success/error should not depend on the state
+> of CON_ENABLED flag.
+
+If I understood his last message correctly, he is exactly in favour of not
+using it (and thus changing conditional for ->exit() callback to rely only
+on res value).
+
+> The other two changes might stay in the same patch. We just need
+> to make the commit message easier to understand. I would write
+> something like:
+
+Thanks! Will do this way.
+
+> <begin>
+> There are only two callers that use the returned code from
+> unregister_console():
+> 
+>   + unregister_early_console() in arch/m68k/kernel/early_printk.c
+>   + kgdb_unregister_nmi_console() in drivers/tty/serial/kgdb_nmi.c
+> 
+> They both expect to get "0" on success and a non-zero value on error.
+> But the current behavior is confusing and buggy:
+> 
+>   + _braille_unregister_console() returns "1" on success
+>   + unregister_console() returns "1" on error
+> 
+> Fix and clean up the behavior:
+> 
+>   + Return success when _braille_unregister_console() succeeded.
+>   + Return a meaningful error code when the console was not
+>     registered before.
+> </end>
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 01/30/2020 03:50 AM, Gerald Schaefer wrote:
-> On Tue, 28 Jan 2020 06:57:53 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
->>
->> This test covers basic page table entry transformations including but not
->> limited to old, young, dirty, clean, write, write protect etc at various
->> level along with populating intermediate entries with next page table page
->> and validating them.
->>
->> Test page table pages are allocated from system memory with required size
->> and alignments. The mapped pfns at page table levels are derived from a
->> real pfn representing a valid kernel text symbol. This test gets called
->> right after page_alloc_init_late().
->>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
->>
->> Folks interested in making sure that a given platform's page table helpers
->> conform to expected generic MM semantics should enable the above config
->> which will just trigger this test during boot. Any non conformity here will
->> be reported as an warning which would need to be fixed. This test will help
->> catch any changes to the agreed upon semantics expected from generic MM and
->> enable platforms to accommodate it thereafter.
->>
-> 
-> [...]
-> 
->>
->> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
-> 
-> Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
-
-Thanks for testing.
-
-> 
-> Thanks again for this effort, and for keeping up the spirit against
-> all odds and even after 12 iterations :-)
-> 
->>
->> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
->> new file mode 100644
->> index 000000000000..f3f8111edbe3
->> --- /dev/null
->> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
->> @@ -0,0 +1,35 @@
->> +#
->> +# Feature name:          debug-vm-pgtable
->> +#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
->> +#         description:   arch supports pgtable tests for semantics compliance
->> +#
->> +    -----------------------
->> +    |         arch |status|
->> +    -----------------------
->> +    |       alpha: | TODO |
->> +    |         arc: |  ok  |
->> +    |         arm: | TODO |
->> +    |       arm64: |  ok  |
->> +    |         c6x: | TODO |
->> +    |        csky: | TODO |
->> +    |       h8300: | TODO |
->> +    |     hexagon: | TODO |
->> +    |        ia64: | TODO |
->> +    |        m68k: | TODO |
->> +    |  microblaze: | TODO |
->> +    |        mips: | TODO |
->> +    |       nds32: | TODO |
->> +    |       nios2: | TODO |
->> +    |    openrisc: | TODO |
->> +    |      parisc: | TODO |
->> +    |  powerpc/32: |  ok  |
->> +    |  powerpc/64: | TODO |
->> +    |       riscv: | TODO |
->> +    |        s390: | TODO |
-> 
-> s390 is ok now, with my patches included in v5.5-rc1. So you can now add
-> 
-> --- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> @@ -25,7 +25,7 @@
->      |  powerpc/32: |  ok  |
->      |  powerpc/64: | TODO |
->      |       riscv: | TODO |
-> -    |        s390: | TODO |
-> +    |        s390: |  ok  |
->      |          sh: | TODO |
->      |       sparc: | TODO |
->      |          um: | TODO |
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -59,6 +59,7 @@ config KASAN_SHADOW_OFFSET
->  config S390
->  	def_bool y
->  	select ARCH_BINFMT_ELF_STATE
-> +	select ARCH_HAS_DEBUG_VM_PGTABLE
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
->  	select ARCH_HAS_ELF_RANDOMIZE
->  	select ARCH_HAS_FORTIFY_SOURCE
-
-Sure, will add this up.
