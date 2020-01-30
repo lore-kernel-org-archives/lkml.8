@@ -2,157 +2,250 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4328EC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B64C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D5F206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H0kmFT5w"
+	by mail.kernel.org (Postfix) with ESMTP id D466F20716
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580352034;
+	bh=1kRFdhkVs1pnRQaGP9CAxOS7QE/HNXSDdU8d+YI+C4c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wNI8T6xEWGYvHut1YovH6bXB9DN9X8G+ZAUV97Wsjp73Hwex1t7Ei6au3TXZEdSOa
+	 Q9112aARk5iaIVm4rH2kLAE9mVD8f3vCnVjKlGdpeHY5DrH03Jafwfr4hfuqKnkRVf
+	 y7ugsJxW0MIrc/2drnaIUPCTqNOtUTfNm3pTJ9Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgA3Ci4 (ORCPT
+        id S1726916AbgA3Cke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 21:38:56 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44756 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgA3Ciz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 21:38:55 -0500
-Received: by mail-qv1-f68.google.com with SMTP id n8so760445qvg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eVR1nsUvA+s0Il5EaHeRxaRkecDegUphjHSyTVxP/SQ=;
-        b=H0kmFT5wg6xK0knevGdhZq6KEPxr2CvGgazjfGO6/mFR7kxYaxBFiGJI6NEy01/31a
-         S0P0IllTSTp2hxVHo4e3KX7MG3j4pV9hJ7Ma7Jojj4WJIsUskFSzqQLoaGXzh3sSVGQ9
-         XKRCOXSm3aEu3n9qYv9afIQ489fVF2AbW/cT8KRhCIjhSKjhE47SozKBkhE2dTMlqsQb
-         RU96+KWo7qr84eTowLvwgovR4iH9TqNSZU1lTIoWk69pM+VMLPTtr0+5n5fHCGBTiGFE
-         1gszZ0YgxRO+GJmiUWfRXzV++JiUN5kFZN6+nHyds1TPSn7dPALxo6wARUEtpqA6+TX+
-         Cl1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eVR1nsUvA+s0Il5EaHeRxaRkecDegUphjHSyTVxP/SQ=;
-        b=VgJ852G06p1E2SvZGNNvSR6r7sP35Uioqt+os1YEJBgX/HrsCsdSKTRm0Is49N5Gs1
-         6PlXQsH4Xp++iLPDu9YzPAAbEV9ixaCbRteBGTgN96bzDhmIZoyx7wtbu2WZ6twYa2DK
-         g2qC+fJH4PneImQcBEGWaLGtjohG3CQgaJkEMs5E1fS510/qHTrpykFIyVUfHwzMDnAY
-         lDsUybprBgMkv3BTNXvkUJfl/NRFp8KplDQCsH5loJ/6dTM+MfVW+QIfVFKf+Y9mDm9J
-         rshHKNw/DLIh/FOW/3nsEOdPogekQPBMqOaT+C6YUPn1YvwMmNHWpFTUkT1EcKwzNW6r
-         sYaQ==
-X-Gm-Message-State: APjAAAWeOxczEoiBPZ1rTqouw/ceppF4ms6aIbvpPsFM/94C05Y/xdhu
-        9K+EEHj70uT3Cm/96iQFixxOkGudgdGmmZxC9AP6UQ==
-X-Google-Smtp-Source: APXvYqwvNrCWRxI0SRrw2gl1XFrxAN3MN3gTMWJ/iumpdrLBGck/yfYyoHwGK3oxng6zWVpYQPZZbjvfgF+TK5fgXAI=
-X-Received: by 2002:ad4:424e:: with SMTP id l14mr2525732qvq.118.1580351934494;
- Wed, 29 Jan 2020 18:38:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20200109031740.29717-1-greentime.hu@sifive.com> <mhng-f4b42a19-22f3-43f3-9750-58b994e23246@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-f4b42a19-22f3-43f3-9750-58b994e23246@palmerdabbelt-glaptop1>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Thu, 30 Jan 2020 10:38:43 +0800
-Message-ID: <CAHCEeh+4a0O7tpp4dRXKudc6bmdJct=-H0SrPt=HbOs00T3-Hg@mail.gmail.com>
-Subject: Re: [PATCH] riscv: set pmp configuration if kernel is running in M-mode
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Gt <green.hu@gmail.com>, greentime@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 Jan 2020 21:40:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbgA3Ckd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 21:40:33 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E432F206D5;
+        Thu, 30 Jan 2020 02:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580352032;
+        bh=1kRFdhkVs1pnRQaGP9CAxOS7QE/HNXSDdU8d+YI+C4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Dxez+VKFAw1RUBWt+cFqzGD4z/WESnQtkxOWX1ObZgxVJF101/4DhBCFsuTPNnd8m
+         DMDxA07HUAHYe7rCutAqYeImTR02UDq7ulfbLoiY6GWtAvL7V235Aa/7SPtwq7MPaq
+         KD/z2KznrI0sHphjMLPYlVLAdCWALvAuKpb+SWJQ=
+Date:   Thu, 30 Jan 2020 11:40:28 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v4 04/12] tracing: Add dynamic event command creation
+ interface
+Message-Id: <20200130114028.0c20b193cc3825363369794a@kernel.org>
+In-Reply-To: <1f65fa44390b6f238f6036777c3784ced1dcc6a0.1580323897.git.zanussi@kernel.org>
+References: <cover.1580323897.git.zanussi@kernel.org>
+        <1f65fa44390b6f238f6036777c3784ced1dcc6a0.1580323897.git.zanussi@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 3:23 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
->
-> On Thu, 09 Jan 2020 03:17:40 GMT (+0000), greentime.hu@sifive.com wrote:
-> > When the kernel is running in S-mode, the expectation is that the
-> > bootloader or SBI layer will configure the PMP to allow the kernel to
-> > access physical memory.  But, when the kernel is running in M-mode and is
-> > started with the ELF "loader", there's probably no bootloader or SBI layer
-> > involved to configure the PMP.  Thus, we need to configure the PMP
-> > ourselves to enable the kernel to access all regions.
-> >
-> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> > ---
-> >  arch/riscv/include/asm/csr.h | 12 ++++++++++++
-> >  arch/riscv/kernel/head.S     |  6 ++++++
-> >  2 files changed, 18 insertions(+)
-> >
-> > diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> > index 0a62d2d68455..0f25e6c4e45c 100644
-> > --- a/arch/riscv/include/asm/csr.h
-> > +++ b/arch/riscv/include/asm/csr.h
-> > @@ -72,6 +72,16 @@
-> >  #define EXC_LOAD_PAGE_FAULT  13
-> >  #define EXC_STORE_PAGE_FAULT 15
-> >
-> > +/* PMP configuration */
-> > +#define PMP_R                        0x01
-> > +#define PMP_W                        0x02
-> > +#define PMP_X                        0x04
-> > +#define PMP_A                        0x18
-> > +#define PMP_A_TOR            0x08
-> > +#define PMP_A_NA4            0x10
-> > +#define PMP_A_NAPOT          0x18
-> > +#define PMP_L                        0x80
-> > +
-> >  /* symbolic CSR names: */
-> >  #define CSR_CYCLE            0xc00
-> >  #define CSR_TIME             0xc01
-> > @@ -100,6 +110,8 @@
-> >  #define CSR_MCAUSE           0x342
-> >  #define CSR_MTVAL            0x343
-> >  #define CSR_MIP                      0x344
-> > +#define CSR_PMPCFG0          0x3a0
-> > +#define CSR_PMPADDR0         0x3b0
-> >  #define CSR_MHARTID          0xf14
-> >
-> >  #ifdef CONFIG_RISCV_M_MODE
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index 5c8b24bf4e4e..f8f996916c5b 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -60,6 +60,12 @@ _start_kernel:
-> >       /* Reset all registers except ra, a0, a1 */
-> >       call reset_regs
-> >
-> > +     /* Setup a PMP to permit access to all of memory. */
-> > +     li a0, -1
-> > +     csrw CSR_PMPADDR0, a0
-> > +     li a0, (PMP_A_NAPOT | PMP_R | PMP_W | PMP_X)
-> > +     csrw CSR_PMPCFG0, a0
->
-> These should be guarded by some sort of #ifdef CONFIG_M_MODE, as they're not
-> part of S mode.
+Hi Tom
 
-Hi Palmer,
+On Wed, 29 Jan 2020 12:59:24 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-This code segment is guarded by CONFIG_RISCV_M_MODE
+> Add an interface used to build up dynamic event creation commands,
+> such as synthetic and kprobe events.  Interfaces specific to those
+> particular types of events and others can be built on top of this
+> interface.
+> 
+> Command creation is started by first using the dynevent_cmd_init()
+> function to initialize the dynevent_cmd object.  Following that, args
+> are appended and optionally checked by the dynevent_arg_add() and
+> dynevent_arg_pair_add() functions, which use objects representing
+> arguments and pairs of arguments, initialized respectively by
+> dynevent_arg_init() and dynevent_arg_pair_init().  Finally, once all
+> args have been successfully added, the command is finalized and
+> actually created using dynevent_create().
+> 
+> The code here for actually printing into the dyn_event->cmd buffer
+> using snprintf() etc was adapted from v4 of Masami's 'tracing/boot:
+> Add synthetic event support' patch.
+> 
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  include/linux/trace_events.h  |  23 ++++
+>  kernel/trace/trace_dynevent.c | 240 ++++++++++++++++++++++++++++++++++++++++++
+>  kernel/trace/trace_dynevent.h |  33 ++++++
+>  3 files changed, 296 insertions(+)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 25fe743bcbaf..651b03d5e272 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -354,6 +354,29 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
+>  						     const char *event);
+>  extern void trace_put_event_file(struct trace_event_file *file);
+>  
+> +#define MAX_DYNEVENT_CMD_LEN	(2048)
+> +
+> +enum dynevent_type {
+> +	DYNEVENT_TYPE_NONE,
+> +};
+> +
+> +struct dynevent_cmd;
+> +
+> +typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
+> +
+> +struct dynevent_cmd {
+> +	char			*buf;
+> +	const char		*event_name;
+> +	int			maxlen;
+> +	int			remaining;
+> +	unsigned int		n_fields;
+> +	enum dynevent_type	type;
+> +	dynevent_create_fn_t	run_command;
+> +	void			*private_data;
+> +};
+> +
+> +extern int dynevent_create(struct dynevent_cmd *cmd);
+> +
+>  extern int synth_event_delete(const char *name);
+>  
+>  /*
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index 89779eb84a07..6ffdbc4fda53 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -223,3 +223,243 @@ static __init int init_dynamic_event(void)
+>  	return 0;
+>  }
+>  fs_initcall(init_dynamic_event);
+> +
+> +/**
+> + * dynevent_arg_add - Add an arg to a dynevent_cmd
+> + * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
+> + * @arg: The argument to append to the current cmd
+> + *
+> + * Append an argument to a dynevent_cmd.  The argument string will be
+> + * appended to the current cmd string, followed by a separator, if
+> + * applicable.  Before the argument is added, the check_arg()
+> + * function, if defined, is called.
+> + *
+> + * The cmd string, separator, and check_arg() function should be set
+> + * using the dynevent_arg_init() before any arguments are added using
+> + * this function.
+> + *
+> + * Return: 0 if successful, error otherwise.
+> + */
+> +int dynevent_arg_add(struct dynevent_cmd *cmd,
+> +		     struct dynevent_arg *arg)
+> +{
+> +	int ret = 0;
+> +	int delta;
+> +	char *q;
+> +
+> +	if (arg->check_arg) {
+> +		ret = arg->check_arg(arg);
 
-#ifdef CONFIG_RISCV_M_MODE
-        /* flush the instruction cache */
-        fence.i
+Hmm, this seems a bit odd. The check_arg() arg object member check
+the validity of the object itself. What about moving those checker
+into dynevent_cmd instead of dynevent_arg?
+(Or, just pass the appropriate checker as the 3rd parameter of
+ this function)
 
-        /* Reset all registers except ra, a0, a1 */
-        call reset_regs
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	q = cmd->buf + (cmd->maxlen - cmd->remaining);
+> +
+> +	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
+> +	if (delta >= cmd->remaining) {
+> +		pr_err("String is too long: %s\n", arg->str);
+> +		return -E2BIG;
+> +	}
+> +	cmd->remaining -= delta;
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
+> + * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
+> + * @arg_pair: The argument pair to append to the current cmd
+> + *
+> + * Append an argument pair to a dynevent_cmd.  An argument pair
+> + * consists of a left-hand-side argument and a right-hand-side
+> + * argument separated by an operator, which can be whitespace, all
+> + * followed by a separator, if applicable.  This can be used to add
+> + * arguments of the form 'type variable_name;' or 'x+y'.
+> + *
+> + * The lhs argument string will be appended to the current cmd string,
+> + * followed by an operator, if applicable, followd by the rhs string,
+> + * followed finally by a separator, if applicable.  Before anything is
+> + * added, the check_arg() function, if defined, is called.
+> + *
+> + * The cmd strings, operator, separator, and check_arg() function
+> + * should be set using the dynevent_arg_pair_init() before any arguments
+> + * are added using this function.
+> + *
+> + * Return: 0 if successful, error otherwise.
+> + */
+> +int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+> +			  struct dynevent_arg_pair *arg_pair)
+> +{
+> +	int ret = 0;
+> +	int delta;
+> +	char *q;
+> +
+> +	if (arg_pair->check_arg) {
+> +		ret = arg_pair->check_arg(arg_pair);
 
-        /* Setup a PMP to permit access to all of memory. */
-        li a0, -1
-        csrw CSR_PMPADDR0, a0
-        li a0, (PMP_A_NAPOT | PMP_R | PMP_W | PMP_X)
-        csrw CSR_PMPCFG0, a0
+Ditto.
 
-        /*
-         * The hartid in a0 is expected later on, and we have no firmware
-         * to hand it to us.
-         */
-        csrr a0, CSR_MHARTID
-#endif /* CONFIG_RISCV_M_MODE */
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	q = cmd->buf + (cmd->maxlen - cmd->remaining);
+> +
+> +	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
+> +			 arg_pair->operator);
+> +	if (delta >= cmd->remaining) {
+> +		pr_err("field string is too long: %s\n", arg_pair->lhs);
+> +		return -E2BIG;
+> +	}
+> +	cmd->remaining -= delta; q += delta;
+> +
+> +	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
+> +			 arg_pair->separator);
+> +	if (delta >= cmd->remaining) {
+> +		pr_err("field string is too long: %s\n", arg_pair->rhs);
+> +		return -E2BIG;
+> +	}
+> +	cmd->remaining -= delta; q += delta;
+
+Here, q += delta is redundant, because q is not used anymore.
+
+> +
+> +	return ret;
+> +}
+> +
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
