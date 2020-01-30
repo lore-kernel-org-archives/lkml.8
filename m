@@ -2,125 +2,109 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20B3C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE72C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D10206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BED21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQ6sBgIO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twe8H9y+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgA3MuG (ORCPT
+        id S1727219AbgA3MwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:50:06 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:39041 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3MuF (ORCPT
+        Thu, 30 Jan 2020 07:52:23 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40027 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3MwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:50:05 -0500
-Received: by mail-ua1-f68.google.com with SMTP id 73so1098422uac.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 04:50:03 -0800 (PST)
+        Thu, 30 Jan 2020 07:52:22 -0500
+Received: by mail-io1-f66.google.com with SMTP id x1so3831308iop.7;
+        Thu, 30 Jan 2020 04:52:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cnMkth7hV/dDIq+IhUJB/NKhjbFoKZU6UHmqdZyzOvk=;
-        b=iQ6sBgIOXFS+YVl144eNLc5JpHouW0m9Ee9ZuD1cG7XWSQpQUoXytyz8oSzkhZCStz
-         RZTGG/UeztBrkUBjBdU05mofzifuN+nig9XaIVD2qP13ClQ5vzEm8mV0oGvgEyJ8eYhX
-         /R9MYyfdejs+BAuK4dUK30jQUu74dDMfXqdAEp8GqbsFavOT/fcqJUZjdg3rJ8H7uw1G
-         OrSnyslcxopXLgogDTR1IOuPbWj5/+AkuPooBC+mX2YegTo7ytERWHloqLQz77bLGvR/
-         NeytO+8XzWfdENLpEts8kMEcNEHT/deUH8fwgQT339wOF7PF+oQBJr8l+TeJna6WzcGB
-         15Bg==
+        bh=WWWqqdl6/zFK7VCcqGs7VSKzeXfwiFPT65eOA+JJXKk=;
+        b=twe8H9y+mCOg6TGOfiQIftqYD39FkUN+YYK91PDxtj17ajF94Z3zgVLNpUHMzeh68r
+         o3vq1prap/dQZg/9D1cNFSRFvTZudwh3u8x0bpCsrswZbhjnVxk5GsflWiQ0LGMhhm27
+         3gvOMGq2hdLp2XoFs9VcLX0LBECMYnSM+3tT1Oc3IWsl95uCWUqJ4Rd3PuXhc02QwCgQ
+         zqJPfmmZQSMXGND86753npb18I2EgTD7f/RGp2ZSRUOpZjdwQQ4mKShWBA9OwvJm6O+A
+         EVybu0s2fbr8KqjM94fvKXC06DNkYB+LJmun8aJI0JAn41KfTHcPFDrfX4ICkyRZW037
+         bvMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cnMkth7hV/dDIq+IhUJB/NKhjbFoKZU6UHmqdZyzOvk=;
-        b=tz4fI8xUbnhRRfHYp/SI6597vbw0EsQ2AYVWF8/3ITMbXDepMf4IuZETvfpAAG/7J+
-         4JymChRVbtNp4phWlpaZqa7MxXDPo2x7VlNlVnRPPb/2POO7TDtLLGaT9bxORsGSAZF0
-         8TEqYf/KHPe6o1xAb1h58oemSGy7vL9OfHdWR3grI/viGQRjrDpN4qPufHzkBrUcDOpe
-         nUUfV6PBFipefV+JXyA1p+hfDbk8EXJSkZhZ17AleGtxSr+WeiumASUpyzJxPry8HXPL
-         3RBEfuqN36sOroLc6Drf98JjkF6WWbzjkDjxMG49FMkHw1OldM86YMPgLM50wg2Vj1Jj
-         XkUA==
-X-Gm-Message-State: APjAAAUoQLnOI/+1ib1CjXVHzF1//X8oQxupXIvcHIuuhjNEWiTrijwa
-        D0sVN6y9XhL2fjmdiAiMynpHFd6+27wop8lc0m+Ulg==
-X-Google-Smtp-Source: APXvYqzLFBjElA1AVzS3KAO1ZGYE8/2SstCFpuQS0BXBp8tlomfa/2p+73irPnPNVb+1+IYb+1jx8pAZxBMw4U6rzlY=
-X-Received: by 2002:ab0:b94:: with SMTP id c20mr2456278uak.67.1580388603038;
- Thu, 30 Jan 2020 04:50:03 -0800 (PST)
+        bh=WWWqqdl6/zFK7VCcqGs7VSKzeXfwiFPT65eOA+JJXKk=;
+        b=GB8rryzJ7Yau848v1WXVfsvzeHYbfCI8OiArPti/gnlPi/sk/TMHwayy8H4DRMXONT
+         pOPuC07Zrk526nKzxHSAq7quEXLKwDXeuIFHePl2cYBTuUydYSxbcVcWMn94J7AA1KI+
+         cO81bYIQMeafxNC5181BK6YrnoUxPE+HfezXE5Jc8450TEOeE42Qruqvv5912a2nq7y5
+         CtDijfFAA2aGWALghkTdJZhX0BIEIOdsLYdFS9Q6Gat8HHV8YLz7osnw9QuaecUM965G
+         +abksj22ezavYb6wH16Db2ci6mreebtBlT6apq/9uAwNNbCtLCdsEfb3bnzUuyQTezVr
+         8APQ==
+X-Gm-Message-State: APjAAAVtocwuh3nQsh55Se9SroLfHKv9uY4mM1M84enErwIWwPlOIcvf
+        404J+F+cA9BWDcVhL7I3NNF16aRLEYXZ0OXX52c=
+X-Google-Smtp-Source: APXvYqwLWvk3owCDvlr+AA1Dl8UWosu0KT7f6EU+23kap2Gjhu+X7y/CbfG9Wir0asR8yty0iCS+9l4/Rw3M22bp2V0=
+X-Received: by 2002:a5d:9707:: with SMTP id h7mr4159275iol.112.1580388742224;
+ Thu, 30 Jan 2020 04:52:22 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1577976221.git.amit.kucheria@linaro.org>
- <0a969ecd48910dac4da81581eff45b5e579b2bfc.1577976221.git.amit.kucheria@linaro.org>
- <20200102192925.GC988120@minitux>
-In-Reply-To: <20200102192925.GC988120@minitux>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 30 Jan 2020 18:19:52 +0530
-Message-ID: <CAHLCerM-zB=7P4Si88Hhyt8J7ojPGa6J9SmwTm8d8Jh3syiMtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] drivers: thermal: tsens: Release device in success path
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+References: <20200129181253.24999-1-dave@stgolabs.net>
+In-Reply-To: <20200129181253.24999-1-dave@stgolabs.net>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Thu, 30 Jan 2020 13:52:32 +0100
+Message-ID: <CAOi1vP-75uoBBsnX262WoVL_jNreiSgnGmtytDKcsUE==ny2Jw@mail.gmail.com>
+Subject: Re: [PATCH] rbd: optimize barrier usage for Rmw atomic bitops
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 12:59 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Wed, Jan 29, 2020 at 7:23 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
 >
-> On Thu 02 Jan 06:54 PST 2020, Amit Kucheria wrote:
+> For both set and clear_bit, we can avoid the unnecessary barrier
+> on non LL/SC architectures, such as x86. Instead, use the
+> smp_mb__{before,after}_atomic() calls.
 >
-> > We don't currently call put_device in case of successfully initialising
-> > the device.
-> >
-> > Allow control to fall through so we can use same code for success and
-> > error paths to put_device.
-> >
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  drivers/block/rbd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> Given the relationship between priv->dev and op I think this wouldn't be
-> a problem in practice, but there's two devm_ioremap_resource() done on
-> op->dev in this function. So you're depending on op->dev to stick
-> around, but with this patch you're no longer expressing that dependency.
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index 2b184563cd32..7bc79b2b8f65 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -1371,13 +1371,13 @@ static void rbd_osd_submit(struct ceph_osd_request *osd_req)
+>  static void img_request_layered_set(struct rbd_img_request *img_request)
+>  {
+>         set_bit(IMG_REQ_LAYERED, &img_request->flags);
+> -       smp_mb();
+> +       smp_mb__after_atomic();
+>  }
 >
-> That said, it looks iffy to do devm_ioremap_resource() on op->dev and
-> then create a regmap on priv->dev using that resource. So I think it
-> would be better to do platform_get_source() on op, and then
-> devm_ioremap_resource() on priv->dev, in which case the regmap backing
-> memory will be related to the same struct device as the regmap and it
-> makes perfect sense to put_device() the op->dev when you're done
-> inspecting it's resources.
+>  static void img_request_layered_clear(struct rbd_img_request *img_request)
+>  {
+>         clear_bit(IMG_REQ_LAYERED, &img_request->flags);
+> -       smp_mb();
+> +       smp_mb__after_atomic();
+>  }
 >
+>  static bool img_request_layered_test(struct rbd_img_request *img_request)
 
-Indeed, thanks for reviewing.
+Hi Davidlohr,
 
-Will fix.
+I don't think these barriers are needed at all.  I'll remove them.
 
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  drivers/thermal/qcom/tsens-common.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> > index 1cbc5a6e5b4f..e84e94a6f1a7 100644
-> > --- a/drivers/thermal/qcom/tsens-common.c
-> > +++ b/drivers/thermal/qcom/tsens-common.c
-> > @@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
-> >       tsens_enable_irq(priv);
-> >       tsens_debug_init(op);
-> >
-> > -     return 0;
-> > -
-> >  err_put_device:
-> >       put_device(&op->dev);
-> >       return ret;
-> > --
-> > 2.20.1
-> >
+Thanks,
+
+                Ilya
