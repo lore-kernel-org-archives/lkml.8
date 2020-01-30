@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51212C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF177C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F2A20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE99D205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410039;
-	bh=5GLCGFPWXSPgb+QCYBQDMq3UO+YPO/33Vq6/9JRtKNE=;
+	s=default; t=1580410041;
+	bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrihpWoIlFx+odCz4KFnWi8/JdqH9ppflEng1UtWZk8Qtw6nEaajby3iA/2kY4+GY
-	 fhj/VUm1iJ+SQFJpoUGE0uEYgMC00qDE0IC6A0xrhD2nBwXxFhldd1vdlYzjr2IV0R
-	 9hVLe0XxXVi3GsuTIl/r8zauaxhROSyP0oG+9w0k=
+	b=TCo7ZlWzLfX+aC0/Qn2mXzIlWrEZeQreYHSHeBbST22+4L4hJ98qcdRn+phg01OdG
+	 jMn51totZdqF/VRcIlW24ZpfXI+GyQVJnh24X+c4h8OQFKaNLkZeT30TzFB85vRyNY
+	 LGenyOSz2yUrEN71QtBXeD8FqkS8LPCufFP7izCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbgA3SrS (ORCPT
+        id S1731362AbgA3SrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57686 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731334AbgA3SrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:13 -0500
+        id S1731348AbgA3SrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1B520674;
-        Thu, 30 Jan 2020 18:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4C5D214AF;
+        Thu, 30 Jan 2020 18:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410032;
-        bh=5GLCGFPWXSPgb+QCYBQDMq3UO+YPO/33Vq6/9JRtKNE=;
+        s=default; t=1580410035;
+        bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6h0ZK3JaHdI0BQYrHyBwJHDqFOu2z3qWXZ2hN1m1FxYE7dF2advDetQpjN6b9ySI
-         teXsHvta/9Iee4QsG/Bzm1DNgsfmoMAPG59Zlf/OvI/zAtLnBgqQ/0YjdNquQpfwY/
-         9nqdfBS2/1Gqw3rieXiOlDqzgp5RRz0ng2kxazEM=
+        b=vN9ou3+wqMRnyy3nMbATDUfJKV1MpxIu0ybt3AlRoWCOCEYtveNTzdDA/bC7dVtuK
+         4EYtMD9isuc2pnHldraD6rYfa+jt/nqiVPnIIJaqYzchCfgwxBF/aDGz00UPVEIhyK
+         HtI1xeh/VfRfCkUhUWuiT3sQD6nvoOc5nqezws0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
+        stable@vger.kernel.org, Jes Sorensen <Jes.Sorensen@redhat.com>,
         Johan Hovold <johan@kernel.org>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 20/55] brcmfmac: fix interface sanity check
-Date:   Thu, 30 Jan 2020 19:39:01 +0100
-Message-Id: <20200130183612.476659754@linuxfoundation.org>
+Subject: [PATCH 4.19 21/55] rtl8xxxu: fix interface sanity check
+Date:   Thu, 30 Jan 2020 19:39:02 +0100
+Message-Id: <20200130183612.657914937@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
+commit 39a4281c312f2d226c710bc656ce380c621a2b16 upstream.
 
 Make sure to use the current alternate setting when verifying the
 interface descriptors to avoid binding to an invalid interface.
@@ -70,36 +70,27 @@ interface descriptors to avoid binding to an invalid interface.
 Failing to do so could cause the driver to misbehave or trigger a WARN()
 in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: stable <stable@vger.kernel.org>     # 3.4
-Cc: Arend van Spriel <arend@broadcom.com>
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Cc: stable <stable@vger.kernel.org>     # 4.4
+Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -1357,7 +1357,7 @@ brcmf_usb_probe(struct usb_interface *in
- 		goto fail;
- 	}
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5921,7 +5921,7 @@ static int rtl8xxxu_parse_usb(struct rtl
+ 	u8 dir, xtype, num;
+ 	int ret = 0;
  
--	desc = &intf->altsetting[0].desc;
-+	desc = &intf->cur_altsetting->desc;
- 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
- 	    (desc->bInterfaceSubClass != 2) ||
- 	    (desc->bInterfaceProtocol != 0xff)) {
-@@ -1370,7 +1370,7 @@ brcmf_usb_probe(struct usb_interface *in
+-	host_interface = &interface->altsetting[0];
++	host_interface = interface->cur_altsetting;
+ 	interface_desc = &host_interface->desc;
+ 	endpoints = interface_desc->bNumEndpoints;
  
- 	num_of_eps = desc->bNumEndpoints;
- 	for (ep = 0; ep < num_of_eps; ep++) {
--		endpoint = &intf->altsetting[0].endpoint[ep].desc;
-+		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
- 		endpoint_num = usb_endpoint_num(endpoint);
- 		if (!usb_endpoint_xfer_bulk(endpoint))
- 			continue;
 
 
