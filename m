@@ -2,193 +2,108 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B120C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59145206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8AC206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgA3KHO (ORCPT
+        id S1727135AbgA3KHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:07:14 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:32904 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgA3KHO (ORCPT
+        Thu, 30 Jan 2020 05:07:17 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52648 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgA3KHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:07:14 -0500
-Received: by mail-il1-f197.google.com with SMTP id s9so2246365ilk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 02:07:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UVL0VwcBqbuTLrIJtBXJtI8vXsa7snj6rEZ475PYU8Y=;
-        b=cfTDyHO5+GaUW7wEaZNivbj7XZSPabKje5wt71mzHfmuFWmsEryuqxuaQ9ZGxM2biG
-         F9ZghgMZ5MXlOoPZYZvMHsjn0SKxWLZRLQWbWmWGDyjwnaC1IbtswwFUA9fs54UEoNNN
-         iqH2xMvReS25bgBjwulGfujp7zJ1kBdXCiHVmSBUCSvAhq6mvsajQuWHN1apgtywbwmq
-         1wKFTlggaDiL/PQfde6HfZ5NeSbrzn/TaVCJAzScOx8Knlmm6AnNL8dSu37Vnl1PQ6+j
-         eSD/SjZsd11UKiH6B0hk7gJ4VVZ6TwCXndOUEXIbMYVq0KbPwHRePHsDbWdAMZGINhzK
-         vl6w==
-X-Gm-Message-State: APjAAAVcdP+HevcyqxmUvsHjAzvFdHzwLrFTXrFyWo/Gz6n9ulBlyXfE
-        ZSlCR0kr5sEjruJ2r87+KcIv6zMSNS3FKb7OIIcgkJ5Me5vs
-X-Google-Smtp-Source: APXvYqzW3Kcag+S8CnAN7A9/7B6BstjSJsCUjtojrrsvr0rquOHjfPfZeeZMs05zFC0/ZTI5C8JhpmGHEo61p9b+gIBFj+if7/rn
-MIME-Version: 1.0
-X-Received: by 2002:a6b:6018:: with SMTP id r24mr3058653iog.284.1580378831969;
- Thu, 30 Jan 2020 02:07:11 -0800 (PST)
-Date:   Thu, 30 Jan 2020 02:07:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e3e280059d589ef4@google.com>
-Subject: upstream boot error: KASAN: slab-out-of-bounds Write in hpet_alloc
-From:   syzbot <syzbot+2b149e3a2468e54d2178@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, clemens@ladisch.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jan 2020 05:07:16 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3136315AB16A5;
+        Thu, 30 Jan 2020 02:07:15 -0800 (PST)
+Date:   Thu, 30 Jan 2020 11:07:13 +0100 (CET)
+Message-Id: <20200130.110713.2121058244629085751.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] IDE
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 02:07:16 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+1) Fix mem region name in tx4949ide driver, from Christophe JAILLET.
 
-HEAD commit:    39bed42d Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1569d9a5e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2646535f8818ae25
-dashboard link: https://syzkaller.appspot.com/bug?extid=2b149e3a2468e54d2178
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+2) Make drive->dn read only, it should not be changeable by users.
+   From Dan Carpenter.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+3) Several cast fixups from Krzysztof Kozlowski.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2b149e3a2468e54d2178@syzkaller.appspotmail.com
+There is also going to be a removal of a now unused IDE driver, but
+that will come via the MIPS tree.
 
-pci 0000:00:1f.3: reg 0x20: [io  0x0700-0x073f]
-ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKE] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKF] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKG] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKH] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [GSIA] (IRQs *16)
-ACPI: PCI Interrupt Link [GSIB] (IRQs *17)
-ACPI: PCI Interrupt Link [GSIC] (IRQs *18)
-ACPI: PCI Interrupt Link [GSID] (IRQs *19)
-ACPI: PCI Interrupt Link [GSIE] (IRQs *20)
-ACPI: PCI Interrupt Link [GSIF] (IRQs *21)
-ACPI: PCI Interrupt Link [GSIG] (IRQs *22)
-ACPI: PCI Interrupt Link [GSIH] (IRQs *23)
-iommu: Default domain type: Translated 
-pci 0000:00:01.0: vgaarb: setting as boot VGA device
-pci 0000:00:01.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
-pci 0000:00:01.0: vgaarb: bridge control possible
-vgaarb: loaded
-SCSI subsystem initialized
-ACPI: bus type USB registered
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver hub
-usbcore: registered new device driver usb
-mc: Linux media interface: v0.10
-videodev: Linux video capture interface: v2.00
-pps_core: LinuxPPS API ver. 1 registered
-pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
-PTP clock support registered
-EDAC MC: Ver: 3.0.0
-Advanced Linux Sound Architecture Driver Initialized.
-PCI: Using ACPI for IRQ routing
-Bluetooth: Core ver 2.22
-NET: Registered protocol family 31
-Bluetooth: HCI device and connection manager initialized
-Bluetooth: HCI socket layer initialized
-Bluetooth: L2CAP socket layer initialized
-Bluetooth: SCO socket layer initialized
-NET: Registered protocol family 8
-NET: Registered protocol family 20
-NetLabel: Initializing
-NetLabel:  domain hash size = 128
-NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
-NetLabel:  unlabeled traffic allowed by default
-nfc: nfc_init: NFC Core ver 0.1
-NET: Registered protocol family 39
-==================================================================
-BUG: KASAN: slab-out-of-bounds in hpet_alloc+0x442/0x490 drivers/char/hpet.c:871
-Write of size 4 at addr ffff88807882e5d8 by task swapper/0/1
+Please pull, thanks a lot!
 
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.5.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_store4_noabort+0x17/0x20 mm/kasan/generic_report.c:139
- hpet_alloc+0x442/0x490 drivers/char/hpet.c:871
- hpet_reserve_platform_timers+0x1fc/0x245 arch/x86/kernel/hpet.c:222
- hpet_late_init+0x2f4/0x38b arch/x86/kernel/hpet.c:954
- do_one_initcall+0x120/0x820 init/main.c:939
- do_initcall_level init/main.c:1007 [inline]
- do_initcalls init/main.c:1015 [inline]
- do_basic_setup init/main.c:1032 [inline]
- kernel_init_freeable+0x4ca/0x570 init/main.c:1203
- kernel_init+0x12/0x1bf init/main.c:1110
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+The following changes since commit 7b5cf701ea9c395c792e2a7e3b7caf4c68b87721:
 
-Allocated by task 1:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x163/0x770 mm/slab.c:3665
- kmalloc include/linux/slab.h:561 [inline]
- kzalloc include/linux/slab.h:670 [inline]
- hpet_alloc+0x12b/0x490 drivers/char/hpet.c:858
- hpet_reserve_platform_timers+0x1fc/0x245 arch/x86/kernel/hpet.c:222
- hpet_late_init+0x2f4/0x38b arch/x86/kernel/hpet.c:954
- do_one_initcall+0x120/0x820 init/main.c:939
- do_initcall_level init/main.c:1007 [inline]
- do_initcalls init/main.c:1015 [inline]
- do_basic_setup init/main.c:1032 [inline]
- kernel_init_freeable+0x4ca/0x570 init/main.c:1203
- kernel_init+0x12/0x1bf init/main.c:1110
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  Merge branch 'sched-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2019-07-22 09:30:34 -0700)
 
-Freed by task 0:
-(stack is not available)
+are available in the Git repository at:
 
-The buggy address belongs to the object at ffff88807882e400
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 472 bytes inside of
- 512-byte region [ffff88807882e400, ffff88807882e600)
-The buggy address belongs to the page:
-page:ffffea0001e20b80 refcount:1 mapcount:0 mapping:ffff88802cc00a80 index:0xffff88807882ec00
-raw: 04fffe0000000200 ffff88807a800738 ffff88807a800738 ffff88802cc00a80
-raw: ffff88807882ec00 ffff88807882e000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/ide.git 
 
-Memory state around the buggy address:
- ffff88807882e480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88807882e500: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
->ffff88807882e580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                                    ^
- ffff88807882e600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88807882e680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+for you to fetch changes up to 2fd3c5c617937cde5aafa48db4f4056e1f705987:
 
+  ide: make drive->dn read only (2020-01-30 11:03:24 +0100)
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      ide: tx4939ide: Fix the name used in a 'devm_request_mem_region()' call
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Chuhong Yuan (1):
+      ide: Use dev_get_drvdata where possible
+
+Dan Carpenter (3):
+      cmd64x: potential buffer overflow in cmd64x_program_timings()
+      ide: serverworks: potential overflow in svwks_set_pio_mode()
+      ide: make drive->dn read only
+
+Guoqing Jiang (1):
+      ide: remove unnecessary touch_softlockup_watchdog
+
+Krzysztof Kozlowski (2):
+      ide: ht6560b: Fix cast to pointer from integer of different size
+      ide: qd65xx: Fix cast to pointer from integer of different size
+
+Masahiro Yamada (1):
+      ide: remove unneeded header include path to drivers/ide
+
+Wang Hai (1):
+      ide: remove set but not used variable 'hwif'
+
+ drivers/ide/Makefile      | 2 --
+ drivers/ide/cmd64x.c      | 3 +++
+ drivers/ide/ht6560b.c     | 2 +-
+ drivers/ide/ide-iops.c    | 1 -
+ drivers/ide/ide-proc.c    | 2 +-
+ drivers/ide/pmac.c        | 3 +--
+ drivers/ide/qd65xx.c      | 2 +-
+ drivers/ide/serverworks.c | 6 ++++++
+ drivers/ide/siimage.c     | 3 +--
+ drivers/ide/tx4939ide.c   | 2 +-
+ drivers/ide/via82cxxx.c   | 3 +--
+ include/linux/ide.h       | 4 ++++
+ 12 files changed, 20 insertions(+), 13 deletions(-)
