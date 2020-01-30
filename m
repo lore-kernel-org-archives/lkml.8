@@ -2,49 +2,103 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E91C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FACC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A5A20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64A7206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="HVKHYXhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgA3PMS (ORCPT
+        id S1727276AbgA3PQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:12:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41466 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgA3PMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:12:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6CF3EB146;
-        Thu, 30 Jan 2020 15:12:16 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 07:02:06 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] rbd: optimize barrier usage for Rmw atomic bitops
-Message-ID: <20200130150206.gdqn3bspghd2xtwz@linux-p48b>
-References: <20200129181253.24999-1-dave@stgolabs.net>
- <CAOi1vP-75uoBBsnX262WoVL_jNreiSgnGmtytDKcsUE==ny2Jw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAOi1vP-75uoBBsnX262WoVL_jNreiSgnGmtytDKcsUE==ny2Jw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Thu, 30 Jan 2020 10:16:28 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46226 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3PQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:16:28 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so1787540pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:16:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=62RH6i159pjCf5mRYCuM088XJbc6cGaxujQfSC3GLZI=;
+        b=HVKHYXhT4o4w+zMQS2AtGEJIhzLbrsMFWeVU0nD2cG/CitiLpIQuuJaxAOu7z4dWH4
+         eNPjufH7RWMjuD2L3GwJua8gb8mdq3CNT2aAJJpRLOWM/rIzlajHgoLUhTQPcdk/1al6
+         qRb3C3jdFPyTsDl7d9qS4O0fHUA7bA1l+rX51PbXufUGIQN1ku2UTFCCpLcGIj14GhD1
+         R4Cti3AcvjdLkQaJ9sCMsmQimr/8o+W6GuM0P2WcP24qg7oS8DH6y+0NTZBHtSnSkJ2O
+         KV5u7Za5OR0Q/qg79ROIJWMJfVJKiWee2V2xGEYCru1kyaxLqfuzdolr+JGFmzhlOIOG
+         iLtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=62RH6i159pjCf5mRYCuM088XJbc6cGaxujQfSC3GLZI=;
+        b=m3MuNXjHT6Z4sFW80I77efnYicFYl9+az5R24G+ykwxKQPziCt6HrwLuQZppqSvw2v
+         NruBCh+JizMo5Y7ml+6A0ZrFWhW/tT85FUeNJLEFznAgbnRlrnbYhLolHmP0Sd+NuHMh
+         S+E3CxRGkwfhvP++mRe9oqsUIZ2LwkqqQ2+BtttdBCRBRqIokqvWFXN46XeUU7YmK963
+         O5I59EB8ruUxq9SU0kVMldBz7b6yT4C/hdPdwwRzmLY5uF2GBTyEj5ukEc6y6ttRH/WN
+         0loVgHeforsum9mV8gNXlAaOrn9RRm6XEPtU6ZvxXo6PBR8Bx8CfvgsqjSTXw2Mgtu4O
+         WCWg==
+X-Gm-Message-State: APjAAAV6FBOm6YCziNLWiBEmhRxaOi1aGXOZnaDSJTVRYChERD8eUT05
+        Pc4Yhr+gnN9+W7n2IHd0dUqvTQ==
+X-Google-Smtp-Source: APXvYqycZGASwVidXYxavpQ0DMrmgZbf4rvgkdr0PwMbxjAkTRUHx07KL/yoeNuPuvYzsfXRSe2bSQ==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr5604266pfi.131.1580397387669;
+        Thu, 30 Jan 2020 07:16:27 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:51ac:4d36:2f8d:8208? ([2601:646:c200:1ef2:51ac:4d36:2f8d:8208])
+        by smtp.gmail.com with ESMTPSA id z26sm7221537pfa.90.2020.01.30.07.16.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 07:16:27 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 1/2] KVM: x86: Emulate split-lock access as a write
+Date:   Thu, 30 Jan 2020 07:16:24 -0800
+Message-Id: <777C5046-B9DE-4F8C-B04F-28A546AE4A3F@amacapital.net>
+References: <db3b854fd03745738f46cfce451d9c98@AcuMS.aculab.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+In-Reply-To: <db3b854fd03745738f46cfce451d9c98@AcuMS.aculab.com>
+To:     David Laight <David.Laight@aculab.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020, Ilya Dryomov wrote:
 
->I don't think these barriers are needed at all.  I'll remove them.
 
-Even better, thanks.
+> On Jan 30, 2020, at 4:31 AM, David Laight <David.Laight@aculab.com> wrote:=
+
+>=20
+> =EF=BB=BFFrom: Xiaoyao Li
+>> Sent: 30 January 2020 12:20
+>> If split lock detect is enabled (warn/fatal), #AC handler calls die()
+>> when split lock happens in kernel.
+>>=20
+>> A sane guest should never tigger emulation on a split-lock access, but
+>> it cannot prevent malicous guest from doing this. So just emulating the
+>> access as a write if it's a split-lock access to avoid malicous guest
+>> polluting the kernel log.
+>=20
+> That doesn't seem right if, for example, the locked access is addx.
+> ISTM it would be better to force an immediate fatal error of some
+> kind than just corrupt the guest memory.
+>=20
+>   =20
+
+The existing page-spanning case is just as wrong.=
