@@ -2,189 +2,76 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99A2C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B52C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9E72083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Bu/0Np8d"
+	by mail.kernel.org (Postfix) with ESMTP id 93AB32082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgA3Mzd (ORCPT
+        id S1727347AbgA3Mzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:55:33 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40453 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3Mzc (ORCPT
+        Thu, 30 Jan 2020 07:55:35 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:59856 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbgA3Mze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:55:32 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200130125530euoutp0169780944e2ca95ab1c117262332cfc34~uq1wB6Kut0749907499euoutp01t;
-        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200130125530euoutp0169780944e2ca95ab1c117262332cfc34~uq1wB6Kut0749907499euoutp01t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580388930;
-        bh=FbzOWLJBcSv34oJT8B2hSKDVEoNugCLHrx4OSVScfl4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bu/0Np8dJVJcNpemMf7EwO1cNtYXlBab5dnQxE/PjGHsDWmp3IBQ35t1C+0ov6ebq
-         DCEYWjbqExnuxE04daFl51kO9bozNTecK8w5ktR0zk1svExYFfaKBS/45PfJSBok0S
-         3X1RhxKwBh/2TCM/KUDSob0btcErtCt+beAB//IY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200130125530eucas1p1e5ca5f154e51606f56c82c4ba65261b6~uq1v5Iwly0140001400eucas1p1r;
-        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 80.C1.60679.242D23E5; Thu, 30
-        Jan 2020 12:55:30 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200130125530eucas1p282d9749764c3a5c21c85c829d372b650~uq1vi_saz0591005910eucas1p2n;
-        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200130125530eusmtrp15a2ba543f607c10570774f791f035d15~uq1viX7Ft3069330693eusmtrp1c;
-        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-89-5e32d2425547
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C5.FE.07950.242D23E5; Thu, 30
-        Jan 2020 12:55:30 +0000 (GMT)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200130125530eusmtip21958aa4041acd7cfb574c706c35fd45f~uq1vVIcN72233122331eusmtip23;
-        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
-From:   =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] scripts/dtc: update fdtget.c to upstream
- version v1.4.7-57-gf267e674d145
-Date:   Thu, 30 Jan 2020 13:55:00 +0100
-In-Reply-To: <20200130124722.GJ25745@shell.armlinux.org.uk> (Russell King's
-        message of "Thu, 30 Jan 2020 12:47:22 +0000")
-Message-ID: <874kwdayu3.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 30 Jan 2020 07:55:34 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id wcvX210045USYZQ01cvXks; Thu, 30 Jan 2020 13:55:31 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ix9M2-0001OV-Vw; Thu, 30 Jan 2020 13:55:30 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ix9M2-0000bu-TS; Thu, 30 Jan 2020 13:55:30 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] mfd: syscon: Fix syscon_regmap_lookup_by_phandle_args() dummy
+Date:   Thu, 30 Jan 2020 13:55:29 +0100
+Message-Id: <20200130125529.2304-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djP87pOl4ziDI5f1bLY9Pgaq8XlXXPY
-        LGac38dkcWjqXkYHFo/L1y4ye2xeUu/xeZNcAHMUl01Kak5mWWqRvl0CV8bbqS8ZC16LVNzb
-        38bWwPhRsIuRk0NCwERiwsnJbF2MXBxCAisYJe4+fQrlfGGUaL+2E8r5zChx4OZMJpiWGwue
-        QCWWM0osPbiWESQhJPCcUWLKZ1UQm03AXqL/yD6WLkYODhEBK4kLPRogYWaBHIlLH+eBlQsL
-        pEvsu/qBCaSERUBVYmIXWJhToFpi0r8rYDavgLHEr/ddzCC2qIClxJYX99kh4oISJ2c+YYEY
-        mSsx8/wbRpBzJATmsUusffMX6k4Xidd3bjJD2MISr45vYYewZSROT+4BO01CoF5i8iQziN4e
-        Roltc36wQNRYS9w594sNwnaU2Nc4kw2ink/ixltBiL18EpO2TWeGCPNKdLQJQVSrSKzr3wM1
-        RUqi99UKRgjbQ+Lx863MkFDrY5T4fOkH2wRGhVlI3pmF5J1ZQGOZBTQl1u/ShwhrSyxb+JoZ
-        wraVWLfuPcsCRtZVjOKppcW56anFRnmp5XrFibnFpXnpesn5uZsYgUnm9L/jX3Yw7vqTdIhR
-        gINRiYfX44xRnBBrYllxZe4hRhWgSY82rL7AKMWSl5+XqiTCK+pqGCfEm5JYWZValB9fVJqT
-        WnyIUZqDRUmc13jRy1ghgfTEktTs1NSC1CKYLBMHp1QD46p1Hct7v0ibLV/CFJzKUTbFm2vK
-        8h15++YWzVyhwThrW4pqyS3dcz4uxz5O+izW9i9IjvP9/93sXVP/3DhWcFZE79XEPYbyKdm/
-        jAU4Enlq5muHbxR8vHmfz/SlWtEGiteNd3HanDVws02SdLsstnWR7AJu36dGn/tfv9vAsrWl
-        +nXgyr35SkosxRmJhlrMRcWJAAy8aAw6AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsVy+t/xe7pOl4ziDHo+C1psenyN1eLyrjls
-        FjPO72OyODR1L6MDi8flaxeZPTYvqff4vEkugDlKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
-        xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+Pt1JeMBa9FKu7tb2NrYPwo2MXIySEhYCJxY8ET
-        NhBbSGApo8TmSd5djBxAcSmJlXPTIUqEJf5c6wIq4QIqecoocf/9H7B6NgF7if4j+1hA6kUE
-        rCQu9GiAhJkFsiW2/VzECmILC6RKXF6wkh1ivJXE3zdbmEDKWQRUJSZ2MYKEOQWqJSb9uwJm
-        8woYS/x638UMYosKWEpseXGfHSIuKHFy5hMWmPFfVz9nnsAoMAtJahaS1CygDcwCmhLrd+lD
-        hLUlli18zQxh20qsW/eeZQEj6ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzA+Nh27OeWHYxd
-        74IPMQpwMCrx8HqcMYoTYk0sK67MPcSoAjTm0YbVFxilWPLy81KVRHhFXQ3jhHhTEiurUovy
-        44tKc1KLDzGaAr05kVlKNDkfGNN5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtS
-        i2D6mDg4pRoY7TUOKLvuOzuhQND4juY/q3KpOoNi4QfNhal2140lmbpm3/beXNEtvP+SSeRV
-        Y33u11e2cR1x3rA0Pczy/fTG9QfrFvCFhMVGC5Rp1fBZLF6idzb0sNyWZaw6ssmTdr999v7U
-        tQ2Rxc9yM6Z8m5SXdK6n8vG7gExe3p2FHxu+JNSvYE2y9lFTYinOSDTUYi4qTgQAa+uTtbEC
-        AAA=
-X-CMS-MailID: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
-X-Msg-Generator: CA
-X-RootMTR: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
-References: <20200130124722.GJ25745@shell.armlinux.org.uk>
-        <CGME20200130125530eucas1p282d9749764c3a5c21c85c829d372b650@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+If CONFIG_MFD_SYSCON=n:
 
-It was <2020-01-30 czw 12:47>, when Russell King - ARM Linux admin wrote:
-> On Thu, Jan 30, 2020 at 01:42:30PM +0100, =C5=81ukasz Stelmach wrote:
->> Build and fdtget and add fdtget.c to the list of update source files.
->>=20
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->> ---
->>  scripts/dtc/.gitignore           |   4 +
->>  scripts/dtc/Makefile             |   5 ++
->>  scripts/dtc/fdtget.c             | 125 ++++++++++++++++++-------------
->>  scripts/dtc/update-dtc-source.sh |   4 +-
->>  4 files changed, 82 insertions(+), 56 deletions(-)
->>=20
+    include/linux/mfd/syscon.h:54:23: warning: ‘syscon_regmap_lookup_by_phandle_args’ defined but not used [-Wunused-function]
 
-[...]
+Fix this by adding the missing inline keyword.
 
->> diff --git scripts/dtc/update-dtc-source.sh scripts/dtc/update-dtc-sourc=
-e.sh
->> index 7dd29a0362b8..8db277546785 100755
->> --- scripts/dtc/update-dtc-source.sh
->> +++ scripts/dtc/update-dtc-source.sh
->> @@ -31,8 +31,8 @@ set -ev
->>  DTC_UPSTREAM_PATH=3D`pwd`/../dtc
->>  DTC_LINUX_PATH=3D`pwd`/scripts/dtc
->>=20=20
->> -DTC_SOURCE=3D"checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.=
-c srcpos.c \
->> -		srcpos.h treesource.c util.c util.h version_gen.h yamltree.c Makefile=
-.dtc \
->> +DTC_SOURCE=3D"checks.c data.c dtc.c dtc.h fdtget.c flattree.c fstree.c =
-livetree.c
->> +		srcpos.c srcpos.h treesource.c util.c util.h version_gen.h Makefile.d=
-tc \
->
-> This looks like you're dropping yamltree.c.  Is that intentional?
->
+Fixes: 6a24f567af4accef ("mfd: syscon: Add arguments support for syscon reference")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ include/linux/mfd/syscon.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Not it isn't. Thanks. Fixed.
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 714cab1e09d3c1fd..7f20e9b502a5bd48 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -51,7 +51,7 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ 	return ERR_PTR(-ENOTSUPP);
+ }
+ 
+-static struct regmap *syscon_regmap_lookup_by_phandle_args(
++static inline struct regmap *syscon_regmap_lookup_by_phandle_args(
+ 					struct device_node *np,
+ 					const char *property,
+ 					int arg_count,
+-- 
+2.17.1
 
->>  		dtc-lexer.l dtc-parser.y"
->>  LIBFDT_SOURCE=3D"Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_=
-tree.c \
->>  		fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
->> --=20
->> 2.20.1
->>=20
->>=20
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> https://protect2.fireeye.com/url?k=3Dc03cfed5-9df03751-c03d759a-0cc47aa8=
-f5ba-45d60c6701b8fc7a&u=3Dhttp://lists.infradead.org/mailman/listinfo/linux=
--arm-kernel
-
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl4y0iQACgkQsK4enJil
-gBA9RQf/SNe+aQyxvKSVvcF48oJ+R39y5dG1jtl3Rkp+moKLHvcE4LjFbK7igxGz
-3wf0i6ByANZcS2xZkxK7wQTRIk3wl9Tjug93SxckMKGKyUthZ+n7jdaivDmmnoO1
-efkgfbxC12/Q37C+G1cAafgRctD0mb1cabPlVQAw90bG9GaPzzpDpR7FnSsThcba
-H6Mw56FEwdKvo+Os5tw8ePwMUNtT4O1UJjsEeTw21DTwClKuZUdaaJ3ktPFGVYcY
-x/Xt9cHvOLZjozJuJhgvmeu0TfMwp4BeUX9qYq2W3l7dSMJdBnomOLR8n6T1WAW5
-85YBsvT6R9YZeAvmvYiG320HY0+Dgw==
-=Kodj
------END PGP SIGNATURE-----
---=-=-=--
