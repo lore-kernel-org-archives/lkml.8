@@ -2,159 +2,166 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E32DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00945C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4BC20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WpD4ITRo"
+	by mail.kernel.org (Postfix) with ESMTP id D4E36214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgA3UIK (ORCPT
+        id S1727612AbgA3UIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:08:10 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34456 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgA3UIK (ORCPT
+        Thu, 30 Jan 2020 15:08:17 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48449 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgA3UIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:08:10 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so2062010pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:08:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HoUQ+yE0LEnd0V4DJaBMqfms/cYBhB81pcgudu6AOqs=;
-        b=WpD4ITRo93dijLN31FEvm/ZVopaujOGbmA9L1HVweIElOelDIgl6jdS+D9lBC3yPTL
-         AxD0PBlvInFtwuWFYJyHyMDzHpYMUXVtL/XgqbnKY7gmrxHKN3U/SCxcFZg4mMXPbjfr
-         J+9nzkmx16lYtuyZWjuJzo5xFFEduvxG1E9yk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HoUQ+yE0LEnd0V4DJaBMqfms/cYBhB81pcgudu6AOqs=;
-        b=o0cLGmRRKpC574IdmpZzsGy6ADUbWwBJUwZzXteMZaazvyYIGzpgMTHf1ccpJZVLOd
-         zOgsQZBpZajXu2KKRAgyC2Y5nRDAtrRkN9pfbew4H40/g8l5mmSTieiM+8Lqoljf03nW
-         g2Hgu6af2RQ6yoORbIlMVRiccMfzzzjjoIpw0Zjv7cRSimt8JsddGlapAyDtF+35yrhA
-         zdONjpMD7mqgFZqNjElKUitHDzTnxsz8CgFxSoKQtXcfA+26wD4/MtB5rSjcwdbCqSkb
-         Gp3HtdcQ2vRU80V1zHwk7ytMAO/6PeE692gMh3XQMBsjGHCkWqkxb4T7vh2RQPpPUVyK
-         HkTg==
-X-Gm-Message-State: APjAAAUyMFJRlbOIJ1Kh+6Q86oDCokYoH/V6GCOU94yC9Fs01Cm2m8C6
-        1XRPNpbHIqGueRMhVEIW5+4fbQ==
-X-Google-Smtp-Source: APXvYqybPhuB7qHu7jGKJ2xZeVYPaIIpGLPbQPGxCXOo+hLx+zRpgFSuOMCyCymtKU+jg4JLaMj7rg==
-X-Received: by 2002:a63:e545:: with SMTP id z5mr6298948pgj.209.1580414889068;
-        Thu, 30 Jan 2020 12:08:09 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z26sm7221191pgu.80.2020.01.30.12.08.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 12:08:08 -0800 (PST)
-Date:   Thu, 30 Jan 2020 12:08:07 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: Re: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
-Message-ID: <202001301206.13AF0512@keescook>
-References: <20200124181819.4840-1-hjl.tools@gmail.com>
- <20200124181819.4840-3-hjl.tools@gmail.com>
- <202001271531.B9ACE2A@keescook>
- <CAMe9rOrVyzvaTyURc4RJJTHUXGG6uAC9KyQomxQFzWzrAN4nrg@mail.gmail.com>
- <202001301143.288B55DCC1@keescook>
- <CAMe9rOocT960KsofP9o_y49FdgY9NGix=GcYnpKLvp7RhieZNA@mail.gmail.com>
+        Thu, 30 Jan 2020 15:08:17 -0500
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id EC913E0008;
+        Thu, 30 Jan 2020 20:08:10 +0000 (UTC)
+Subject: Re: [PATCH v2] powerpc: Do not consider weak unresolved symbol
+ relocations as bad
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+References: <20200118170335.21440-1-alex@ghiti.fr>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
+Date:   Thu, 30 Jan 2020 15:07:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMe9rOocT960KsofP9o_y49FdgY9NGix=GcYnpKLvp7RhieZNA@mail.gmail.com>
+In-Reply-To: <20200118170335.21440-1-alex@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:04:54PM -0800, H.J. Lu wrote:
-> > I don't understand this. "may not be incompatible"? Is there an error
-> > generated? If so, what does it look like?
-> 
-> When -mx86-used-note=yes is passed to assembler, with my patch, I got
-> 
-> [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
-> 
-> Displaying notes found in: .notes
->   Owner                Data size Description
->   Xen                  0x00000006 Unknown note type: (0x00000006)
->    description data: 6c 69 6e 75 78 00
->   Xen                  0x00000004 Unknown note type: (0x00000007)
->    description data: 32 2e 36 00
->   Xen                  0x00000008 Unknown note type: (0x00000005)
->    description data: 78 65 6e 2d 33 2e 30 00
->   Xen                  0x00000008 Unknown note type: (0x00000003)
->    description data: 00 00 00 80 ff ff ff ff
->   Xen                  0x00000008 Unknown note type: (0x0000000f)
->    description data: 00 00 00 00 80 00 00 00
->   Xen                  0x00000008 NT_VERSION (version)
->    description data: 80 a1 ba 82 ff ff ff ff
->   Xen                  0x00000008 NT_ARCH (architecture)
->    description data: 00 10 00 81 ff ff ff ff
->   Xen                  0x00000029 Unknown note type: (0x0000000a)
->    description data: 21 77 72 69 74 61 62 6c 65 5f 70 61 67 65 5f 74
-> 61 62 6c 65 73 7c 70 61 65 5f 70 67 64 69 72 5f 61 62 6f 76 65 5f 34
-> 67 62
->   Xen                  0x00000004 Unknown note type: (0x00000011)
->    description data: 01 88 00 00
->   Xen                  0x00000004 Unknown note type: (0x00000009)
->    description data: 79 65 73 00
->   Xen                  0x00000008 Unknown note type: (0x00000008)
->    description data: 67 65 6e 65 72 69 63 00
->   Xen                  0x00000010 Unknown note type: (0x0000000d)
->    description data: 01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00
->   Xen                  0x00000004 Unknown note type: (0x0000000e)
->    description data: 01 00 00 00
->   Xen                  0x00000004 Unknown note type: (0x00000010)
->    description data: 01 00 00 00
->   Xen                  0x00000008 Unknown note type: (0x0000000c)
->    description data: 00 00 00 00 00 80 ff ff
->   Xen                  0x00000008 Unknown note type: (0x00000004)
->    description data: 00 00 00 00 00 00 00 00
->   GNU                  0x00000014 NT_GNU_BUILD_ID (unique build ID bitstring)
->     Build ID: 11c73de2922f593e1b35b92ab3c70eaa1a80fa83
->   Linux                0x00000018 OPEN
->    description data: 35 2e 33 2e 39 2d 32 30 30 2e 30 2e 66 63 33 30
-> 2e 78 38 36 5f 36 34 00
->   Xen                  0x00000008 Unknown note type: (0x00000012)
->    description data: 70 04 00 01 00 00 00 00
-> [hjl@gnu-skx-1 linux]$
-> 
-> Without my patch,
-> 
-> [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
-> 
-> Displaying notes found in: .notes
->   Owner                Data size Description
->   Xen                  0x00000006 Unknown note type: (0x00000006)
->    description data: 6c 69 6e 75 78 00
->   Xen                  0x00000004 Unknown note type: (0x00000007)
->    description data: 32 2e 36 00
->   xen-3.0              0x00000005 Unknown note type: (0x006e6558)
->    description data: 08 00 00 00 03
-> readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
-> readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
-> 0x80000000, alignment: 8
-> [hjl@gnu-skx-1 linux]$
+On 1/18/20 12:03 PM, Alexandre Ghiti wrote:
+> Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
+> symbols that may be unresolved at link time which result in an absolute
+> relocation to 0. relocs_check.sh emits the following warning:
+>
+> "WARNING: 2 bad relocations
+> c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
+> c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
+>
+> whereas those relocations are legitimate even for a relocatable kernel
+> compiled with -pie option.
+>
+> relocs_check.sh already excluded some weak unresolved symbols explicitly:
+> remove those hardcoded symbols and add some logic that parses the symbols
+> using nm, retrieves all the weak unresolved symbols and excludes those from
+> the list of the potential bad relocations.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>
+> Changes in v2:
+> - Follow Stephen advice of using grep -F instead of looping over weak symbols
+>    using read, patch is way smaller and cleaner.
+> - Add missing nm in comment
+>
+>   arch/powerpc/Makefile.postlink     |  4 ++--
+>   arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
+>   2 files changed, 14 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
+> index 134f12f89b92..2268396ff4bb 100644
+> --- a/arch/powerpc/Makefile.postlink
+> +++ b/arch/powerpc/Makefile.postlink
+> @@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
+>   quiet_cmd_relocs_check = CHKREL  $@
+>   ifdef CONFIG_PPC_BOOK3S_64
+>         cmd_relocs_check =						\
+> -	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
+> +	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
+>   	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
+>   else
+>         cmd_relocs_check =						\
+> -	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
+> +	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
+>   endif
+>   
+>   # `@true` prevents complaint when there is nothing to be done
+> diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
+> index 7b9fe0a567cf..014e00e74d2b 100755
+> --- a/arch/powerpc/tools/relocs_check.sh
+> +++ b/arch/powerpc/tools/relocs_check.sh
+> @@ -10,14 +10,21 @@
+>   # based on relocs_check.pl
+>   # Copyright © 2009 IBM Corporation
+>   
+> -if [ $# -lt 2 ]; then
+> -	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
+> +if [ $# -lt 3 ]; then
+> +	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
+>   	exit 1
+>   fi
+>   
+> -# Have Kbuild supply the path to objdump so we handle cross compilation.
+> +# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
+>   objdump="$1"
+> -vmlinux="$2"
+> +nm="$2"
+> +vmlinux="$3"
+> +
+> +# Remove from the bad relocations those that match an undefined weak symbol
+> +# which will result in an absolute relocation to 0.
+> +# Weak unresolved symbols are of that form in nm output:
+> +# "                  w _binary__btf_vmlinux_bin_end"
+> +undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
+>   
+>   bad_relocs=$(
+>   $objdump -R "$vmlinux" |
+> @@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
+>   	# These relocations are okay
+>   	# On PPC64:
+>   	#	R_PPC64_RELATIVE, R_PPC64_NONE
+> -	#	R_PPC64_ADDR64 mach_<name>
+> -	#	R_PPC64_ADDR64 __crc_<name>
+>   	# On PPC:
+>   	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
+>   	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
+> @@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
+>   R_PPC_ADDR16_HA
+>   R_PPC_RELATIVE
+>   R_PPC_NONE' |
+> -	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
+> -	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
+> +	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
+>   )
+>   
+>   if [ -z "$bad_relocs" ]; then
 
-What is the source of this failure? Does readelf need updating instead?
-Is the linking step producing an invalid section? It seems like
-discarding the properties isn't the right solution here?
 
--- 
-Kees Cook
+Hi guys,
+
+
+Any thought about that ?
+
+I do think this patch makes the whole check about absolute relocations 
+clearer.
+And in the future, it will avoid anyone to spend some time on those 
+"bad" relocations
+which actually aren't.
+
+Thanks,
+
+Alex
+
