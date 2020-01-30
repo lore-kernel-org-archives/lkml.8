@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32091C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E86C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A922464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3D24682
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409923;
-	bh=tgiIWyaWgYWNqXLGQPohVSA04eXZ04wHRLN/JX73TAA=;
+	s=default; t=1580409925;
+	bh=eyQmVqZVHK7x4qjnteBvRUWKTk8fc86tqTK0aEqOcsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJltkl/jKw58Gv8upqTdCbpdTwJS4cKvauhxmWjHXasRLSttCBFYfxmorOfivL0oR
-	 vfSEXwmPVrSf5qfDcTsA5aiKdCo+8zCYdQ/jQxA/GY6IH5GA9LAEvCCQSUMFED9kqk
-	 FQjO/bN8DAJbxmUUFAaaA0qK5Av0LlKalvS5tkuM=
+	b=Fqv6mb5vqNC2ogJAEdUP78zbtKcJeYTGpEDLJ47ZIaturgGrnG6xJa0qM1T7IOPzu
+	 sq68VK5kQYem5ojR9OYwRt5iZLZBLXk3DamehcJacQ4sq41wnaxu1k7QMqkw7K5b1u
+	 tOWxVU3lz+f4shxa6zLzLpmWwPAW5mVVLb7CkD1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbgA3SpW (ORCPT
+        id S1730986AbgA3SpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54876 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731000AbgA3SpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:19 -0500
+        id S1731006AbgA3SpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61C892082E;
-        Thu, 30 Jan 2020 18:45:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A9702082E;
+        Thu, 30 Jan 2020 18:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409917;
-        bh=tgiIWyaWgYWNqXLGQPohVSA04eXZ04wHRLN/JX73TAA=;
+        s=default; t=1580409920;
+        bh=eyQmVqZVHK7x4qjnteBvRUWKTk8fc86tqTK0aEqOcsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYpMWZ5SLDhwZilVj6iluF4pXPqtNoXnwwB4v/M/age03v35UzaP6mjXfksbu0yaK
-         CEnl+zNVjdtg26yc/pa0XvhAYdCCxV5awb7Qt2J6hOvmY+WqfTvpel8/7fH+ftQgd9
-         smSW9Dpz7TVopdBsK7M/V8Yao3EHV9sPeal3Wysw=
+        b=UxQd+0wfkKAHyKlkQr/vTGyUh/Dg8ARiwWBQIsgNOGfLSKKw8x9J4BnIRKxC3GOY+
+         qVf0okFNzFpDzfQRoJMoXEejVANCPgZ9Gc9YCjTn0DoW+7S37pWrlJbAeuLIYlueQ0
+         G2TM0xcJRJVrB90460tgk6pJJXa7woJbPicGwgx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/110] bus: ti-sysc: Handle mstandby quirk and use it for musb
-Date:   Thu, 30 Jan 2020 19:38:59 +0100
-Message-Id: <20200130183623.991569511@linuxfoundation.org>
+Subject: [PATCH 5.4 084/110] bus: ti-sysc: Use swsup quirks also for am335x musb
+Date:   Thu, 30 Jan 2020 19:39:00 +0100
+Message-Id: <20200130183624.081826624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,59 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 03856e928b0e1a1c274eece1dfe4330a362c37f3 ]
+[ Upstream commit 1819ef2e2d12d5b1a6ee54ac1c2afe35cffc677c ]
 
-We need swsup quirks for sidle and mstandby for musb to work
-properly.
+Also on am335x we need the swsup quirks for musb.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index abbf281ee337b..44d4f4864ac2a 100644
+index 44d4f4864ac2a..0e5cfd752410d 100644
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -923,6 +923,9 @@ set_midle:
- 		return -EINVAL;
- 	}
- 
-+	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_MSTANDBY)
-+		best_mode = SYSC_IDLE_NO;
-+
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
- 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-@@ -984,6 +987,9 @@ static int sysc_disable_module(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (ddata->cfg.quirks & SYSC_QUIRK_SWSUP_MSTANDBY)
-+		best_mode = SYSC_IDLE_FORCE;
-+
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
- 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-@@ -1257,6 +1263,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("gpu", 0x50000000, 0x14, -1, -1, 0x00010201, 0xffffffff, 0),
- 	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff,
+@@ -1265,6 +1265,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
  		   SYSC_MODULE_QUIRK_SGX),
-+	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
-+		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
+ 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
+ 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
++	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
++		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
  	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
  		   SYSC_MODULE_QUIRK_WDT),
  	/* Watchdog on am3 and am4 */
-@@ -1315,8 +1323,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000008, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -1, 0x50700101, 0xffffffff, 0),
--	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
--		   0xffffffff, 0),
- 	SYSC_QUIRK("vfpe", 0, 0, 0x104, -1, 0x4d001200, 0xffffffff, 0),
- #endif
- };
 -- 
 2.20.1
 
