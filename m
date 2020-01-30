@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BD9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2ECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F8520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91F0214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409821;
-	bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
+	s=default; t=1580409823;
+	bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c74isMA+ZyADUFnZwBk3R+bwV9UWtHotpjb6euXpxGc6RitzkPXz+6637pjQT1+N4
-	 mPTmp2xALlxuJqbdkKx0fxRTXy8X3+kJxlKUzKpIcfoQyGPuyTrcBiSWvMkurN5I3g
-	 2caQKoxShVL+Y5o6ZRhzO2IV27CAkwRm8BlKH36c=
+	b=GZatrROSr3aXHaXYQA4DHg5ICUQjmpkZNRf43qaGgtHGHn65201ckUIFDtxYOUPyz
+	 C6BCzXgPyY4OYU/Xiir0dAH5Ejbg/gvSHcpP06zI/wbymUUQP3F1fbvmnxvGG0mSG7
+	 KQFvgBc6wua2p6BoHo1nxdzkJs4LZYcwmbQKqPmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgA3Snk (ORCPT
+        id S1730674AbgA3Snm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52204 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbgA3Snb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:31 -0500
+        id S1730645AbgA3Snh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC7A2083E;
-        Thu, 30 Jan 2020 18:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8127B20702;
+        Thu, 30 Jan 2020 18:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409809;
-        bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
+        s=default; t=1580409817;
+        bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgzycVbpg3OEnAxp2CfCiaVvizI6/hNldp+MtPLYnKYUf1Zqe7nTE32t8nhcdXTdX
-         FJZLfJOkNU1MRKPBmLClbaP2Sq2hDaMOCap0ujnEzTny5Xun9diTGvJBiPoZPeHw4x
-         3S11ODs/nayaOsfiGx6wbm2g/GuKvPLry2TKcDtE=
+        b=nnJg2WnIDDbplZRC6x0AlzQQh9+oq+3RDOcPYuHqybecxFEgFaRf6n7+7uC2v1zc0
+         WRiOhspo7X44sPq/hCTAUNGWe/CFx5LtNUqAGpSGAID8/VNrELbRub4eHJxhu3DB9i
+         ENPnHcoXmxVBLV9/P0VH6G0GCS2M8FV0KEdOTgtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 040/110] udp: segment looped gso packets correctly
-Date:   Thu, 30 Jan 2020 19:38:16 +0100
-Message-Id: <20200130183620.104536345@linuxfoundation.org>
+Subject: [PATCH 5.4 043/110] rxrpc: Fix use-after-free in rxrpc_receive_data()
+Date:   Thu, 30 Jan 2020 19:38:19 +0100
+Message-Id: <20200130183620.395412905@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,43 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6cd021a58c18a1731f7e47f83e172c0c302d65e5 ]
+[ Upstream commit 122d74fac84204b9a98263636f6f9a3b2e665639 ]
 
-Multicast and broadcast packets can be looped from egress to ingress
-pre segmentation with dev_loopback_xmit. That function unconditionally
-sets ip_summed to CHECKSUM_UNNECESSARY.
+The subpacket scanning loop in rxrpc_receive_data() references the
+subpacket count in the private data part of the sk_buff in the loop
+termination condition.  However, when the final subpacket is pasted into
+the ring buffer, the function is no longer has a ref on the sk_buff and
+should not be looking at sp->* any more.  This point is actually marked in
+the code when skb is cleared (but sp is not - which is an error).
 
-udp_rcv_segment segments gso packets in the udp rx path. Segmentation
-usually executes on egress, and does not expect packets of this type.
-__udp_gso_segment interprets !CHECKSUM_PARTIAL as CHECKSUM_NONE. But
-the offsets are not correct for gso_make_checksum.
+Fix this by caching sp->nr_subpackets in a local variable and using that
+instead.
 
-UDP GSO packets are of type CHECKSUM_PARTIAL, with their uh->check set
-to the correct pseudo header checksum. Reset ip_summed to this type.
-(CHECKSUM_PARTIAL is allowed on ingress, see comments in skbuff.h)
+Also clear 'sp' to catch accesses after that point.
 
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Fixes: cf329aa42b66 ("udp: cope with UDP GRO packet misdirection")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+This can show up as an oops in rxrpc_get_skb() if sp->nr_subpackets gets
+trashed by the sk_buff getting freed and reused in the meantime.
+
+Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/udp.h |    3 +++
- 1 file changed, 3 insertions(+)
+ net/rxrpc/input.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/include/net/udp.h
-+++ b/include/net/udp.h
-@@ -476,6 +476,9 @@ static inline struct sk_buff *udp_rcv_se
- 	if (!inet_get_convert_csum(sk))
- 		features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -413,7 +413,7 @@ static void rxrpc_input_data(struct rxrp
+ {
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+ 	enum rxrpc_call_state state;
+-	unsigned int j;
++	unsigned int j, nr_subpackets;
+ 	rxrpc_serial_t serial = sp->hdr.serial, ack_serial = 0;
+ 	rxrpc_seq_t seq0 = sp->hdr.seq, hard_ack;
+ 	bool immediate_ack = false, jumbo_bad = false;
+@@ -457,7 +457,8 @@ static void rxrpc_input_data(struct rxrp
+ 	call->ackr_prev_seq = seq0;
+ 	hard_ack = READ_ONCE(call->rx_hard_ack);
  
-+	if (skb->pkt_type == PACKET_LOOPBACK)
-+		skb->ip_summed = CHECKSUM_PARTIAL;
-+
- 	/* the GSO CB lays after the UDP one, no need to save and restore any
- 	 * CB fragment
- 	 */
+-	if (sp->nr_subpackets > 1) {
++	nr_subpackets = sp->nr_subpackets;
++	if (nr_subpackets > 1) {
+ 		if (call->nr_jumbo_bad > 3) {
+ 			ack = RXRPC_ACK_NOSPACE;
+ 			ack_serial = serial;
+@@ -465,11 +466,11 @@ static void rxrpc_input_data(struct rxrp
+ 		}
+ 	}
+ 
+-	for (j = 0; j < sp->nr_subpackets; j++) {
++	for (j = 0; j < nr_subpackets; j++) {
+ 		rxrpc_serial_t serial = sp->hdr.serial + j;
+ 		rxrpc_seq_t seq = seq0 + j;
+ 		unsigned int ix = seq & RXRPC_RXTX_BUFF_MASK;
+-		bool terminal = (j == sp->nr_subpackets - 1);
++		bool terminal = (j == nr_subpackets - 1);
+ 		bool last = terminal && (sp->rx_flags & RXRPC_SKB_INCL_LAST);
+ 		u8 flags, annotation = j;
+ 
+@@ -506,7 +507,7 @@ static void rxrpc_input_data(struct rxrp
+ 		}
+ 
+ 		if (call->rxtx_buffer[ix]) {
+-			rxrpc_input_dup_data(call, seq, sp->nr_subpackets > 1,
++			rxrpc_input_dup_data(call, seq, nr_subpackets > 1,
+ 					     &jumbo_bad);
+ 			if (ack != RXRPC_ACK_DUPLICATE) {
+ 				ack = RXRPC_ACK_DUPLICATE;
+@@ -564,6 +565,7 @@ static void rxrpc_input_data(struct rxrp
+ 			 * ring.
+ 			 */
+ 			skb = NULL;
++			sp = NULL;
+ 		}
+ 
+ 		if (last) {
 
 
