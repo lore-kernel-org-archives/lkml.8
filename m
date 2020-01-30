@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FD1C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D1C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349792082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54D82082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410184;
-	bh=kjXLKipwR2p3S9DUezFTTp4aHyQRzHHp1V4QcXI73M8=;
+	s=default; t=1580410187;
+	bh=Xx6NspAId0wP+mlZ4mJIqcrWJ7K8o+uHRjuJ9rUmNos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CWsoYnjVAbsHS2kcIM+xxasQOcQQpQmEjEFcFoySx+ttkt2IWe1kdaj27jzVlDeZM
-	 R3IhB5Rx6DkBmIlcdq6HM+f+ntVMTTLpuNhlJvqKWgV2bFMU7c1tPfrwdaDUMcJ6Uh
-	 orPGAPednUOJFU3r26K994xDBAeqOy2JJXJ8HjvU=
+	b=VoAk7caOoAK2DGrg1SbSyRgSyYHH1kIqxuqNZqHje8Q1eviR2+/1JZn2fhL5Yjy6V
+	 pY2fonRcLO3t2Pa4YJ8813MrhcBPHSLb7M6ssw8SF3fOLQdubH/QmcTY/CPjrHIrGK
+	 Onl1UsRHoUmlQTZTas+5NbxCxJDvVgcFTQDboMeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbgA3SsG (ORCPT
+        id S1731455AbgA3Sr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730958AbgA3SsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:04 -0500
+        id S1731431AbgA3Sru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC8B205F4;
-        Thu, 30 Jan 2020 18:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D6B20674;
+        Thu, 30 Jan 2020 18:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410082;
-        bh=kjXLKipwR2p3S9DUezFTTp4aHyQRzHHp1V4QcXI73M8=;
+        s=default; t=1580410069;
+        bh=Xx6NspAId0wP+mlZ4mJIqcrWJ7K8o+uHRjuJ9rUmNos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6Y3brAiHjLl48q/JcSzwt0NdQApCyWlR604vFwaB8mwDUF7FRgqK+hfDF/rl5q0s
-         JtuN1d4i/DfNRkwrZd+w1/Q43mI4KaoA+4NYdyLWlpM9BtquJj/ouy29Q5E8QkKxJI
-         CdfX51oRTrrPQ2glX4V0BTRcvaetAnWKhaM47EZU=
+        b=0fBkBYGmzeDrZQX3y/MQZgWGXoHYQnn84OaCZHZo0ePJG7lxyra2EOCpc4UH6jVIm
+         e9qLYGIETMSI9kkaK4UT1gailbZ8AKRRsmUrAxEAnu262nzalFExrqclAiJKF3H012
+         Cbts43a7lcFsOxRkbBKDgG51z0lKrGejnsz0WFF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/55] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
-Date:   Thu, 30 Jan 2020 19:39:19 +0100
-Message-Id: <20200130183615.407803147@linuxfoundation.org>
+Subject: [PATCH 4.19 34/55] watchdog: rn5t618_wdt: fix module aliases
+Date:   Thu, 30 Jan 2020 19:39:15 +0100
+Message-Id: <20200130183614.794969088@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -60,36 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit c5706c7defc79de68a115b5536376298a8fef111 ]
+[ Upstream commit a76dfb859cd42df6e3d1910659128ffcd2fb6ba2 ]
 
-Driver fails to compile in a minimized kernel's configuration because of
-the missing dependency on GPIOLIB_IRQCHIP.
+Platform device aliases were missing so module autoloading
+did not work.
 
- error: ‘struct gpio_chip’ has no member named ‘irq’
-   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200106015154.12040-1-digetx@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191213214802.22268-1-andreas@kemnade.info
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 1 +
+ drivers/watchdog/rn5t618_wdt.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ed51221621a5c..2c34e9537f9e4 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1059,6 +1059,7 @@ config GPIO_MADERA
- config GPIO_MAX77620
- 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
- 	depends on MFD_MAX77620
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
- 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
+diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
+index e60f55702ab79..d2e79cf70e774 100644
+--- a/drivers/watchdog/rn5t618_wdt.c
++++ b/drivers/watchdog/rn5t618_wdt.c
+@@ -193,6 +193,7 @@ static struct platform_driver rn5t618_wdt_driver = {
+ 
+ module_platform_driver(rn5t618_wdt_driver);
+ 
++MODULE_ALIAS("platform:rn5t618-wdt");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 watchdog driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
