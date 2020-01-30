@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7BC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5711C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562DB2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1212468A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410455;
-	bh=JprzsrsDkvh6ThURAg96n44ZwWxlCeOkPmVcxob7ag8=;
+	s=default; t=1580410457;
+	bh=N/VGsv4nbUCgQlYnuvBIaa7hCq3CZsorA+Vhoh+tDc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wRxJsnuYaceFMz5w2NuaC2lUtyvFRtXooFi/Ttf678kwHg1GeHiC/MG4xjVTp3qIX
-	 1QoJLdXiRpLB4GKgMz29ouX0vTmD83/WTY07ZQPHbItoZ5Avuw1Z31TuaPTx4gZznL
-	 rdthCyVULQ/T6Eu4rUcb2ScyiRTnIjq8wgD/XJHQ=
+	b=J6w/lXZUluFk+5oS11lXnpeIWqSR/2HQhgFX8cWluKB9QABGJ6vyv8D0FeeSG/LGh
+	 QYegu43K9GIfI2rrzEtQmOGLU8Oote6ITgoGDxw/Ln9M1UtSBn3lHIOwXAa9td6xI2
+	 cR+W+qfophG4XZZ+BZC/tDwNLlS1FLvK4NCipxno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbgA3Sk1 (ORCPT
+        id S1729948AbgA3Sk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47924 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgA3SkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:22 -0500
+        id S1729912AbgA3SkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ABE320702;
-        Thu, 30 Jan 2020 18:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C395F214DB;
+        Thu, 30 Jan 2020 18:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409621;
-        bh=JprzsrsDkvh6ThURAg96n44ZwWxlCeOkPmVcxob7ag8=;
+        s=default; t=1580409619;
+        bh=N/VGsv4nbUCgQlYnuvBIaa7hCq3CZsorA+Vhoh+tDc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THS7BXvFgREbUqJGfgNxs7t/u9dPvp5JaAhan6djLtl9SGuyG5wEeNnuxnfqrDpUf
-         I6SetjSPipIbLt0Wix9jtjjuJOHbjCCf/oOOt2b73kUbP80cbC8umU76ZQxDdkjFfi
-         MLbReCFm72sMY+e0na44YkYI7S9jmYGA5F21xl4Q=
+        b=iUxTGvdC+6nhz1VEENg8LEh5kU7YpcFY7Zn258H7dVYbb19+77FhFzSj1YYc++YaR
+         +YyQEHhdin/lCSgeftTzJ8QNJMdjWYR9LNiftRZMD6H6xb7+YHQb9oRL5m9oI5gO2G
+         exer4ADN8hopKrJnYyp7hDsxPGALpbUsZdkVIuAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.5 23/56] mei: me: add comet point (lake) H device ids
-Date:   Thu, 30 Jan 2020 19:38:40 +0100
-Message-Id: <20200130183613.454352144@linuxfoundation.org>
+        stable@vger.kernel.org, Ramalingam C <ramalingam.c@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH 5.5 22/56] mei: hdcp: bind only with i915 on the same PCH
+Date:   Thu, 30 Jan 2020 19:38:39 +0100
+Message-Id: <20200130183613.282806892@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,45 +62,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tomas Winkler <tomas.winkler@intel.com>
 
-commit 559e575a8946a6561dfe8880de341d4ef78d5994 upstream.
+commit 1e8d19d9b0dfcf11b61bac627203a290577e807a upstream.
 
-Add Comet Point device IDs for Comet Lake H platforms.
+The mei device and i915 must reside on the same
+PCH in order for HDCP to work. Make the component
+matching function enforce this requirement.
 
-Cc: <stable@vger.kernel.org>
+                   hdcp
+                    |
+   i915            mei
+    |               |
+    +----= PCH =----+
+
+Cc: <stable@vger.kernel.org> v5.0+
+Cc: Ramalingam C <ramalingam.c@intel.com>
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200119094229.20116-1-tomas.winkler@intel.com
+Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Link: https://lore.kernel.org/r/20191212084103.2893-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    4 ++++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 6 insertions(+)
+ drivers/misc/mei/hdcp/mei_hdcp.c |   33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -81,8 +81,12 @@
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -757,11 +757,38 @@ static const struct component_master_ops
+ 	.unbind = mei_component_master_unbind,
+ };
  
- #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
- #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
++/**
++ * mei_hdcp_component_match - compare function for matching mei hdcp.
++ *
++ *    The function checks if the driver is i915, the subcomponent is HDCP
++ *    and the grand parent of hdcp and the parent of i915 are the same
++ *    PCH device.
++ *
++ * @dev: master device
++ * @subcomponent: subcomponent to match (I915_COMPONENT_HDCP)
++ * @data: compare data (mei hdcp device)
++ *
++ * Return:
++ * * 1 - if components match
++ * * 0 - otherwise
++ */
+ static int mei_hdcp_component_match(struct device *dev, int subcomponent,
+ 				    void *data)
+ {
+-	return !strcmp(dev->driver->name, "i915") &&
+-	       subcomponent == I915_COMPONENT_HDCP;
++	struct device *base = data;
 +
- #define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
- 
-+#define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
-+#define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
++	if (strcmp(dev->driver->name, "i915") ||
++	    subcomponent != I915_COMPONENT_HDCP)
++		return 0;
 +
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
++	base = base->parent;
++	if (!base)
++		return 0;
++
++	base = base->parent;
++	dev = dev->parent;
++
++	return (base && dev && dev == base);
+ }
  
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -99,6 +99,8 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
+ static int mei_hdcp_probe(struct mei_cl_device *cldev,
+@@ -785,7 +812,7 @@ static int mei_hdcp_probe(struct mei_cl_
  
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
+ 	master_match = NULL;
+ 	component_match_add_typed(&cldev->dev, &master_match,
+-				  mei_hdcp_component_match, comp_master);
++				  mei_hdcp_component_match, &cldev->dev);
+ 	if (IS_ERR_OR_NULL(master_match)) {
+ 		ret = -ENOMEM;
+ 		goto err_exit;
 
 
