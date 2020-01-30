@@ -2,107 +2,253 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C45EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431D7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718B220702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1164E20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RRiHr7bW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ITmCna9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731800AbgA3Syl (ORCPT
+        id S1727947AbgA3S6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:54:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60664 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727946AbgA3Sj4 (ORCPT
+        Thu, 30 Jan 2020 13:58:05 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3326 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgA3S6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:39:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580409595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+IsZLk2QS34Oo7KTKmvIUSpjq3N05oYW9SD/Unr8w4=;
-        b=RRiHr7bW11uB7kK8R2TAIxYNnlnxwUqmQ9qWSPX6r3sA5HEEhdPs+U1HEIrdrvy/QP4JMO
-        ADkoLJaNOtcb7jqtcp/4nJBUvyNovOAu728VtWWbFJ7dWnBDsHsPnYbfnhnYQ3qdzLfr/B
-        zrPJ8fw8par5GEVdDvHcjCH9ATNABeA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-wb1VbVZAMMK-6Y2788fnkg-1; Thu, 30 Jan 2020 13:39:51 -0500
-X-MC-Unique: wb1VbVZAMMK-6Y2788fnkg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8439B1800D41;
-        Thu, 30 Jan 2020 18:39:49 +0000 (UTC)
-Received: from ovpn-112-12.rdu2.redhat.com (ovpn-112-12.rdu2.redhat.com [10.10.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1658219E9C;
-        Thu, 30 Jan 2020 18:39:47 +0000 (UTC)
-Message-ID: <dec7cce5138d4cfeb5596d63048db7ec19a18c3c.camel@redhat.com>
-Subject: Re: Redpine RS9116 M.2 module with NetworkManager
-From:   Dan Williams <dcbw@redhat.com>
-To:     Angus Ainslie <angus@akkea.ca>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 30 Jan 2020 12:39:52 -0600
-In-Reply-To: <59789f30ee686338c7bcffe3c6cbc453@akkea.ca>
-References: <59789f30ee686338c7bcffe3c6cbc453@akkea.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 30 Jan 2020 13:58:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3327260000>; Thu, 30 Jan 2020 10:57:42 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 10:58:02 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 10:58:02 -0800
+Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 18:58:02 +0000
+Subject: Re: Re: Re: Re: [RFC PATCH v1 5/5] arm64: tegra: Add Tegra VI CSI
+ suppport in device tree
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-6-git-send-email-skomatineni@nvidia.com>
+ <20200129094624.GD2479935@ulmo>
+ <bd18711d-ce23-cbee-7824-37a8c78908e6@nvidia.com>
+ <20200130123607.GB2584455@ulmo>
+ <c5fd4eb3-0026-95a5-5162-e1cf5302698e@nvidia.com>
+ <20200130175820.GA3155155@ulmo>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <deb6839b-2ddb-be54-a985-a2b7624374af@nvidia.com>
+Date:   Thu, 30 Jan 2020 10:58:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200130175820.GA3155155@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580410662; bh=QNM5QzcxkMUFdTXG9lkyArnht6Pwyaue/OM6xvKj7m0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ITmCna9sbrRh0pVzoqdUgyZz/6ImOFemFtsl4vdj/gf6PWpATy+sWSI6nF+ifGKrd
+         bnhVllCaiZ8kQPLOo1M5uvWz2qgA86mFdQS1D5WPIlXVjigxYOwx+CBHu3PM9Sd1MQ
+         S+tQY1MRuMxHNF8jCQLi6ltoifA6WpBSbEeuPRvFQHwl3AlmYehaj3d/W202b5Hjy4
+         MiD7qCCEKPTBaYAg24PAi8pJI0tNggkzoT0K1IQ8YNjHnh1RdZlp6Yk5D1cd2Q8NgW
+         j/X5bJF9U05rh7TIQkbOGpiVLaEXu8yBQJwPlEGJxd6xw/B+d3FxL0Ix3x6suelAhY
+         j/copeF0M0uLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-30 at 10:18 -0800, Angus Ainslie wrote:
-> Hi,
-> 
-> I'm trying the get a Redpine RS9116 module working with
-> networkmanager. 
-> I've tried this on 5.3, 5.5 and next-20200128. I'm using the Redpine
-> 1.5 
-> "rs9116_wlan_bt_classic.rps" firmware.
-> 
-> If I configure the interface using iw, wpa_supplicant and dhclient
-> all 
-> works as expected.
-> 
-> If I try to configure the interface using nmtui most of the time no
-> APs 
-> show up to associate to. "iw dev wlan0 list" shows all of the APs in
-> the 
-> vicinity.
-> 
-> If I do manage to get an AP to show when I try to "Activate a 
-> connection" I get the error below
-> 
-> Could not activate connection:
-> Activation failed: No reason given
-> 
-> I suspect this is a driver bug rather than a NM bug as I saw similar 
-> issues with an earlier Redpine proprietary driver that was fixed by 
-> updating that driver. What rsi_dbg zone will help debug this ?
 
-NM just uses wpa_supplicant underneath, so if you can get supplicant
-debug logs showing the failure, that would help. But perhaps the driver
-has a problem with scan MAC randomization that NM can be configured to
-do by default; that's been an issue with proprietary and out-of-tree
-drivers in the past. Just a thought.
+On 1/30/20 9:58 AM, Thierry Reding wrote:
+> On Thu, Jan 30, 2020 at 09:18:50AM -0800, Sowjanya Komatineni wrote:
+>> On 1/30/20 4:36 AM, Thierry Reding wrote:
+>>> On Wed, Jan 29, 2020 at 08:22:48AM -0800, Sowjanya Komatineni wrote:
+>>>> On 1/29/20 1:46 AM, Thierry Reding wrote:
+>>>>> On Tue, Jan 28, 2020 at 10:23:21AM -0800, Sowjanya Komatineni wrote:
+>>>>>> Tegra210 contains VI controller for video input capture from MIPI
+>>>>>> CSI camera sensors and also supports built-in test pattern generator.
+>>>>>>
+>>>>>> CSI ports can be one-to-one mapped to VI channels for capturing from
+>>>>>> an external sensor or from built-in test pattern generator.
+>>>>>>
+>>>>>> This patch adds support for VI and CSI and enables them in Tegra210
+>>>>>> device tree.
+>>>>>>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>     arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |  8 +++++++
+>>>>>>     arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 31 +++++++++++++++++++++++++-
+>>>>>>     2 files changed, 38 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>> index b0095072bc28..ec1b3033fa03 100644
+>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+>>>>>> @@ -10,6 +10,14 @@
+>>>>>>     			status = "okay";
+>>>>>>     		};
+>>>>>> +		vi@54080000 {
+>>>>>> +			status = "okay";
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		csi@0x54080838 {
+>>>>>> +			status = "okay";
+>>>>>> +		};
+>>>>>> +
+>>>>>>     		sor@54580000 {
+>>>>>>     			status = "okay";
+>>>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>> index 48c63256ba7f..c6107ec03ad1 100644
+>>>>>> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+>>>>>> @@ -136,9 +136,38 @@
+>>>>>>     		vi@54080000 {
+>>>>>>     			compatible = "nvidia,tegra210-vi";
+>>>>>> -			reg = <0x0 0x54080000 0x0 0x00040000>;
+>>>>>> +			reg = <0x0 0x54080000 0x0 0x808>;
+>>>>>>     			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>     			status = "disabled";
+>>>>>> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>>>> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+>>>>>> +
+>>>>>> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>>>> +			clock-names = "vi";
+>>>>>> +			resets = <&tegra_car 20>;
+>>>>>> +			reset-names = "vi";
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		csi@0x54080838 {
+>>>>>> +			compatible = "nvidia,tegra210-csi";
+>>>>>> +			reg = <0x0 0x54080838 0x0 0x2000>;
+>>>>>> +			status = "disabled";
+>>>>>> +			assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+>>>>>> +					  <&tegra_car TEGRA210_CLK_CILCD>,
+>>>>>> +					  <&tegra_car TEGRA210_CLK_CILE>;
+>>>>>> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+>>>>>> +						 <&tegra_car TEGRA210_CLK_PLL_P>,
+>>>>>> +						 <&tegra_car TEGRA210_CLK_PLL_P>;
+>>>>>> +			assigned-clock-rates = <102000000>,
+>>>>>> +					       <102000000>,
+>>>>>> +					       <102000000>;
+>>>>>> +
+>>>>>> +			clocks = <&tegra_car TEGRA210_CLK_CSI>,
+>>>>>> +				 <&tegra_car TEGRA210_CLK_CILAB>,
+>>>>>> +				 <&tegra_car TEGRA210_CLK_CILCD>,
+>>>>>> +				 <&tegra_car TEGRA210_CLK_CILE>;
+>>>>>> +			clock-names = "csi", "cilab", "cilcd", "cile";
+>>>>>> +
+>>>>>>     		};
+>>>>> Can this be a child of the vi node? Looking at the register ranges it
+>>>>> seems like these are actually a single IP block. If they have separate
+>>>>> blocks with clearly separate functionality, then it makes sense to have
+>>>>> CSI be a child node of VI, though it may also be okay to merge both and
+>>>>> have a single node with the driver doing all of the differentiation
+>>>>> between what's VI and what's CSI.
+>>>>>
+>>>>> Looking at later chips, the split between VI and CSI is more explicit,
+>>>>> so having the split in DT for Tegra210 may make sense for consistency.
+>>>>>
+>>>>> I know we've discussed this before, but for some reason I keep coming
+>>>>> back to this. I'll go through the other patches to see if I can get a
+>>>>> clearer picture of how this could all work together.
+>>>>>
+>>>>> Thierry
+>>>> We can keep it separate as we discussed.
+>>>>
+>>>> But as Tegra186 onwards, CSI is separate device to be all cosistent I kept
+>>>> CSI as separate node for Tegra210 as well.
+>>>   From our discussion, my understanding was that CSI would be a separate
+>>> device, but it would still be a subdevice of VI. The address offset of
+>>> the CSI registers not being aligned to a power of two is a strong
+>>> indication that this is really all part of the same block.
+>> Yes our earlier discussion is to have CSI as subdevice.
+>>
+>> Later looking into T186 and later NVCSI is totally separate so it will be
+>> separate device and to have driver common moved Tegra210 CSI also as
+>> separate device instead of having it as subdevice of VI.
+>>
+>> Earlier when we discussed at that time I am using TPG also from device
+>> graphs but not moved to hard media links inside driver for TPG.
+>>
+>> For this we need CSI to be available prior to VI.
+> Why is that? Does creating the hard media links need access to a struct
+> device? What if we created that device in the VI driver without any
+> reliance on DT? Shouldn't that also work? I have a hard time imagining
+> that there aren't other devices like this where we don't necessarily
+> have separate devices for these links.
+Yes we need CSI structure for hard link TPG also as all csi channel list 
+is part of CSI device.
 
-https://blog.muench-johannes.de/networkmanager-disable-mac-randomization-314
+We can create CSI channel subdevices within VI without using CSI device 
+from a separate CSI driver probe for Tegra210 and make all subdev 
+related ops implementations as global so they can be used from VI driver 
+for Tegra210 and can also be used for Tegra186 and later in separate CSI 
+driver.
 
-Dan
+During creating media links in VI driver for TPG, for T210 we can use 
+local CSI device structure and for T186+ we can use CSI device structure 
+created during CSI probe.
+
+Sorry, I didn't understood what you meant by separate devices for these 
+link.
+
+We only have Tegra CSI linked to Tegra VI for TPG/Real sensor.
+
+>> If we add CSI as subdevice to VI, CSI will not be available by the time
+>> VI init happens.
+> The CSI subdevice should be registered as part of the VI driver's probe,
+> right? That's typically where you'd call of_platform_populate(). Could
+> we not set up the hard media links in the ->init() callbacks for the
+> host1x clients? Those are called after all of the devices have been
+> probed, so the CSI device should be available at that time.
+>
+>> Currently host1x subdevices listed has CSI before VI and CSI init happens
+>> earlier so by the time VI init happens CSI is available to do media links
+>> b/w VI video entity and CSI subdevice entity.
+> Okay, I understand how this would be a convenient solution. However, the
+> device tree is a hardware description, so we need to ignore what we know
+> about the operating system infrastructure that we want to use when
+> writing the device tree bindings (and the device tree content) in order
+> to make sure the same binding will work on a different operating system
+> which may have a completely different infrastructure (or none at all).
+>
+>> Also having CSI as separate subdevice (not as subdevice to VI) for T210 will
+>> be consistent with T186 and later.
+> Again, I see how that's convenient. But the main difference between
+> Tegra210 and Tegra186 is that on the former, the CSI is merged with VI,
+> whereas on the latter the CSI is a completely separate hardware block.
+>
+> Since device tree describes the hardware, that difference should be
+> apparent in the device tree. I initially thought as well that it would
+> be advantageous if both had the same representation, but I do realize
+> now that this has a significant impact on the device tree, and it
+> violates the basic principles we base device tree binding design on.
+>
+> Thierry
+
+I just thought of driver implementation being common b/w T210 and T186+ 
+by having CSI as separate device node rather than as child node to VI to 
+avoid CSI structure handling within VI for T210 only.
+
+Will update DT and driver to have CSI as child node of VI for T210.
+
 
