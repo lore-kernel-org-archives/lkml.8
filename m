@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDC9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962AFC35246
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2568A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD2520702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409728;
-	bh=1M0YF0+4pADEq3v0NcUXt1p5XFbnlgw9zdlVcdV/OZo=;
+	s=default; t=1580409731;
+	bh=ITckDNbzz/TzTQNnL3xhySzEkpTq0zAHIzS2Ots334w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8a4uMgGjXwDLpGSABuU4CoK5e+AN/M2tU6vZEjuAloTCTXo++GiUr9BW5gkqCYcE
-	 14Bad5JgxINA4/FVaxO86oqgcg6L5xx8Dm8KvOeVoJtRupPzOdUmzgl5DOhEEqO11v
-	 1g2+h/QJSIDMhlmdZiExKyXM8LEUUHPt0zB8c2HY=
+	b=agfPwvAPwt4CYDjnw0BI58p8H3ec9Twyu24HAHymFAYBYK1l95D1q00NZqyUsAfx7
+	 V8Z8Y/bztDpNMZK2SrgnAw6n0qVh4c5EpYPOM7B2/7mdrCbTT/MGyTiEQC76sjOWa6
+	 3R0jRM0sCWxEBAY4daGu0jFFK6bytSGnTJXY9aSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgA3SmH (ORCPT
+        id S1728030AbgA3SmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50196 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgA3SmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:03 -0500
+        id S1730303AbgA3SmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A25120CC7;
-        Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6317920CC7;
+        Thu, 30 Jan 2020 18:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409722;
-        bh=1M0YF0+4pADEq3v0NcUXt1p5XFbnlgw9zdlVcdV/OZo=;
+        s=default; t=1580409727;
+        bh=ITckDNbzz/TzTQNnL3xhySzEkpTq0zAHIzS2Ots334w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0k2XNu2wki/cbh6MsSs4vBD91AOW+1hxySFrgtY1eAU3o+lf9e1e2AScnXfWRkas
-         7JisrN1B3qJlvTBSF+SomH/iSQ3AOffqDx36Cta9PLjUQ/rZCKt1shrYP/30wkahNB
-         xRJjs19GDB0IfiFtKYNYOL0fJntzQJa++fPsEgJE=
+        b=tptRsuC2foC7WG0DusCMTPdlVE9LZueuAny6BrrcP9KwT4AM5tSQF3673jX/FH6OI
+         hedOaMkoCuBfFc1DHJvwCY+LjkM0xVVEml1uhbMMtzhGu96ZtLiVesrdNjdj+E1heN
+         0dzbMLhJN1dXjWVFsMRkc/n/z+pvOt7AhU+XKGKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 33/56] brcmfmac: fix interface sanity check
-Date:   Thu, 30 Jan 2020 19:38:50 +0100
-Message-Id: <20200130183615.067958605@linuxfoundation.org>
+Subject: [PATCH 5.4 002/110] orinoco_usb: fix interface sanity check
+Date:   Thu, 30 Jan 2020 19:37:38 +0100
+Message-Id: <20200130183614.197437115@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
-References: <20200130183608.849023566@linuxfoundation.org>
+In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
+References: <20200130183613.810054545@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
+commit b73e05aa543cf8db4f4927e36952360d71291d41 upstream.
 
 Make sure to use the current alternate setting when verifying the
 interface descriptors to avoid binding to an invalid interface.
@@ -70,36 +69,29 @@ interface descriptors to avoid binding to an invalid interface.
 Failing to do so could cause the driver to misbehave or trigger a WARN()
 in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: stable <stable@vger.kernel.org>     # 3.4
-Cc: Arend van Spriel <arend@broadcom.com>
+Fixes: 9afac70a7305 ("orinoco: add orinoco_usb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.35
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
+ drivers/net/wireless/intersil/orinoco/orinoco_usb.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -1348,7 +1348,7 @@ brcmf_usb_probe(struct usb_interface *in
- 		goto fail;
- 	}
+--- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+@@ -1608,9 +1608,9 @@ static int ezusb_probe(struct usb_interf
+ 	/* set up the endpoint information */
+ 	/* check out the endpoints */
  
--	desc = &intf->altsetting[0].desc;
-+	desc = &intf->cur_altsetting->desc;
- 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
- 	    (desc->bInterfaceSubClass != 2) ||
- 	    (desc->bInterfaceProtocol != 0xff)) {
-@@ -1361,7 +1361,7 @@ brcmf_usb_probe(struct usb_interface *in
+-	iface_desc = &interface->altsetting[0].desc;
++	iface_desc = &interface->cur_altsetting->desc;
+ 	for (i = 0; i < iface_desc->bNumEndpoints; ++i) {
+-		ep = &interface->altsetting[0].endpoint[i].desc;
++		ep = &interface->cur_altsetting->endpoint[i].desc;
  
- 	num_of_eps = desc->bNumEndpoints;
- 	for (ep = 0; ep < num_of_eps; ep++) {
--		endpoint = &intf->altsetting[0].endpoint[ep].desc;
-+		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
- 		endpoint_num = usb_endpoint_num(endpoint);
- 		if (!usb_endpoint_xfer_bulk(endpoint))
- 			continue;
+ 		if (usb_endpoint_is_bulk_in(ep)) {
+ 			/* we found a bulk in endpoint */
 
 
