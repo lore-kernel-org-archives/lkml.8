@@ -2,50 +2,52 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783C8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1453EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B9C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED502082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409749;
-	bh=raZIuq08Y4veqZwuoIeXYqAmRzvHguhjRbatfveDZFI=;
+	s=default; t=1580409755;
+	bh=QM8fs0niulpjG3s5ouYT3crG1veUuBUT5ML3DohSjos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzJm2sJYhbkzmF2McXTQjOwUhYVcVuIJXnZO6iNpr2yo7EoKmtRI7VY9z1k58yOgd
-	 5eifEnttuD0UHsWTC/tAxLJzvTuaEMq825ouxY++/5FNabk65iU+qqfD3d/rd9xVMn
-	 qrf/1ELt4ga57etfsDl4XgYyWBCnGX6qHb5hBEBY=
+	b=TWz1aX2EA8u+b2ma93OXEjAI0ODwDV/7lkzujT9zvUazJFfuAi2TGCk/NBn+n/Y54
+	 EMppe3tvV5lLoARJevMG6KKt98vtFF5rn2ZhktaZ74OhD6hqJTvbowG++yAbtzi59q
+	 //OgW4zYuig6Uhq8gE4CRnzXvIzHLNijnw8l2gYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgA3Sm2 (ORCPT
+        id S1730405AbgA3Smf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730373AbgA3SmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:24 -0500
+        id S1730399AbgA3Smb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7C8214DB;
-        Thu, 30 Jan 2020 18:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F5F1215A4;
+        Thu, 30 Jan 2020 18:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409743;
-        bh=raZIuq08Y4veqZwuoIeXYqAmRzvHguhjRbatfveDZFI=;
+        s=default; t=1580409750;
+        bh=QM8fs0niulpjG3s5ouYT3crG1veUuBUT5ML3DohSjos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N74lMZQNxcXLevl3TWP1YpYSngFdos6cOjgjcTvUXaiYqkAdOsRvkP4UUJUKEdBKb
-         Q3b85SeOgoaKS/sgcdFb5JlAXDtEuEVepZ7w+P5aBQBXtXQ9EZSO+PI2pcScC7l1/i
-         V6DCuFLqCX2NKUo63kHclypq4Uf2iUkuH7NaSCEk=
+        b=w/8g22Qk9p2I3hEEBw7RN7x6QM39NvEdxAH28jofp3gvI/VrGSwe3cLZVivrNMCGi
+         zaCsB7ZYScNI3QBXFjF7uvVLD23pdsRKc3aXI0PZnay2ljyEYy4d1wegm1wjwP4MwM
+         2fLGqfxD71osbASmYPdcuHnb+XA64fRBfcpX2U6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.4 016/110] staging: vt6656: Fix false Tx excessive retries reporting.
-Date:   Thu, 30 Jan 2020 19:37:52 +0100
-Message-Id: <20200130183616.605839419@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Snowberg <eric.snowberg@oracle.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        James Morris <jamorris@linux.microsoft.com>
+Subject: [PATCH 5.4 019/110] debugfs: Return -EPERM when locked down
+Date:   Thu, 30 Jan 2020 19:37:55 +0100
+Message-Id: <20200130183617.133619897@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -58,39 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Eric Snowberg <eric.snowberg@oracle.com>
 
-commit 9dd631fa99dc0a0dfbd191173bf355ba30ea786a upstream.
+commit a37f4958f7b63d2b3cd17a76151fdfc29ce1da5f upstream.
 
-The driver reporting  IEEE80211_TX_STAT_ACK is not being handled
-correctly. The driver should only report on TSR_TMO flag is not
-set indicating no transmission errors and when not IEEE80211_TX_CTL_NO_ACK
-is being requested.
+When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
+trigger the following:
 
+WARNING: CPU: 48 PID: 3747
+CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
+Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
+RIP: 0010:do_dentry_open+0x343/0x3a0
+Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
+RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
+RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
+RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
+R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
+R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
+FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ vfs_open+0x2d/0x30
+ path_openat+0x2d4/0x1680
+ ? tty_mode_ioctl+0x298/0x4c0
+ do_filp_open+0x93/0x100
+ ? strncpy_from_user+0x57/0x1b0
+ ? __alloc_fd+0x46/0x150
+ do_sys_open+0x182/0x230
+ __x64_sys_openat+0x20/0x30
+ do_syscall_64+0x60/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x170/0x1d5
+RIP: 0033:0x7f45f5e5ce02
+Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
+RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
+RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
+RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
+R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
+
+Change the return type to int and return -EPERM when lockdown is enabled
+to remove the warning above. Also rename debugfs_is_locked_down to
+debugfs_locked_down to make it sound less like it returns a boolean.
+
+Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
+Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/340f1f7f-c310-dca5-476f-abc059b9cd97@gmail.com
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+Link: https://lore.kernel.org/r/20191207161603.35907-1-eric.snowberg@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/int.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/debugfs/file.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/drivers/staging/vt6656/int.c
-+++ b/drivers/staging/vt6656/int.c
-@@ -99,9 +99,11 @@ static int vnt_int_report_rate(struct vn
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -142,18 +142,21 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
+  * We also need to exclude any file that has ways to write or alter it as root
+  * can bypass the permissions check.
+  */
+-static bool debugfs_is_locked_down(struct inode *inode,
+-				   struct file *filp,
+-				   const struct file_operations *real_fops)
++static int debugfs_locked_down(struct inode *inode,
++			       struct file *filp,
++			       const struct file_operations *real_fops)
+ {
+ 	if ((inode->i_mode & 07777) == 0444 &&
+ 	    !(filp->f_mode & FMODE_WRITE) &&
+ 	    !real_fops->unlocked_ioctl &&
+ 	    !real_fops->compat_ioctl &&
+ 	    !real_fops->mmap)
+-		return false;
++		return 0;
  
- 	info->status.rates[0].count = tx_retry;
- 
--	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
-+	if (!(tsr & TSR_TMO)) {
- 		info->status.rates[0].idx = idx;
--		info->flags |= IEEE80211_TX_STAT_ACK;
+-	return security_locked_down(LOCKDOWN_DEBUGFS);
++	if (security_locked_down(LOCKDOWN_DEBUGFS))
++		return -EPERM;
 +
-+		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
-+			info->flags |= IEEE80211_TX_STAT_ACK;
- 	}
++	return 0;
+ }
  
- 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);
+ static int open_proxy_open(struct inode *inode, struct file *filp)
+@@ -168,7 +171,7 @@ static int open_proxy_open(struct inode
+ 
+ 	real_fops = debugfs_real_fops(filp);
+ 
+-	r = debugfs_is_locked_down(inode, filp, real_fops);
++	r = debugfs_locked_down(inode, filp, real_fops);
+ 	if (r)
+ 		goto out;
+ 
+@@ -298,7 +301,7 @@ static int full_proxy_open(struct inode
+ 
+ 	real_fops = debugfs_real_fops(filp);
+ 
+-	r = debugfs_is_locked_down(inode, filp, real_fops);
++	r = debugfs_locked_down(inode, filp, real_fops);
+ 	if (r)
+ 		goto out;
+ 
 
 
