@@ -2,136 +2,106 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC05C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAE5C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1002214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DI34Wepw"
+	by mail.kernel.org (Postfix) with ESMTP id DA804215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580414144;
+	bh=h28+OzWv84FMorXQcpuwm+CgBd4CxAA13jLAZ5nqeG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Ae4oykmOQc4qMi/GrSNtInP8ecqAwhj8D3YeCQrCfqaflFsOCeoT6SDao0LsnCQOA
+	 hgAZYQBAtdlds9eXoDPqs0BC6eSoWZmMUNW+X2K/tVga1rznKZA6DGVy++VAVK6aG9
+	 t4PYxdisYkcSCHCJlZJTJld5JzIGVdx1ZAqpGF1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgA3Tzb (ORCPT
+        id S1727525AbgA3Tzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:55:31 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46298 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgA3Tza (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:55:30 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so2176476pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:55:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pdsu7RCBoLcVOhLco/AVEx3fQJcXVrKTb9CxbekR3XM=;
-        b=DI34WepwXxsfZeW+FSgwROgBDBxak/LrfIeoJFt868CvBtLxqjUhcxo4gex8XV+usX
-         5snhM9WM5Auls6RoqhenMBXP3Celv5ymwtrYJ5qpv9kH9PRebunl/KP7I3PjL4yqfs/z
-         WPYAA19iWATbE6kVlcEfpF9cLBR7SI7XZ51xOP70l9nLXIxlw6mXPH33ZIR3B7xXVZOT
-         +CuDdFqOmmac6rbDbqQKNsjDNzm5lXDVyfZgD5i4WrlkQzuzoWt5DFPXs9EYvBEAjcHZ
-         5SqQIBCo1SKFNFDRu8k8ZwlJUi5HPXCnObZ+DnT6mhFo2zm9Z5T31+N+TkHZMwpP3EBR
-         UJXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pdsu7RCBoLcVOhLco/AVEx3fQJcXVrKTb9CxbekR3XM=;
-        b=XmOHljsNnNd/RZeRR4MyWRVpXfvPv5tthCGb/M6FvSAVmN//EP8v+0T7kDvCeMzJzM
-         SYUvQ5AHrFf/lplsTDRcH/Yq7SHXGLHhKTiewEba/BOSySBrKlqqRkCh98TGfTGicUnn
-         WY13yVK5EcdEZrajDLp7ExwjiEJQ9E5wb9sLbm1oMFQSOH+RZkpm5ejmLcVjqwLiAEvt
-         NDxohdv7v3CECAOc0j5FJnbCqyucwPz+u3IsfSGGqLtQ1Vg0wPm/DFsI2Jw5Bi1tAwtt
-         tWulEN7ryMjA0c/tC/X33AO6ymdwTJKT0/JOGriR9ZsQqQxCKrlfFj3st6mzb23/oX9c
-         z0HA==
-X-Gm-Message-State: APjAAAXmhcYyYZLrG/NzgQYBXUulwacbmz7hKbhLbvhelrRtomsQmefz
-        M2sVYvvSsWRnmpK6B4XmdsWLGosg1oCh8+jm7bilIw==
-X-Google-Smtp-Source: APXvYqw8k2aC1UM+gBdhOrs5MjUUN9JfLGAfIAxV2TmfEid43hv0iF4Y2HMsBRUHCIPpJPJWBz+DxywnBx15gs0eVA8=
-X-Received: by 2002:a63:1d5f:: with SMTP id d31mr6466014pgm.159.1580414128461;
- Thu, 30 Jan 2020 11:55:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com>
- <20191211192742.95699-3-brendanhiggins@google.com> <20200109162303.35f4f0a3@xps13>
- <CAFd5g47VLB6zOJsSySAYrJie8hj-OkvOC89-z2b9xMBZ2bxvYA@mail.gmail.com>
- <20200125162803.5a2375d7@xps13> <20200130205030.0f58cb02@xps13>
-In-Reply-To: <20200130205030.0f58cb02@xps13>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 30 Jan 2020 11:55:17 -0800
-Message-ID: <CAFd5g4736RQLyy-4wNmhLP1qigX7VgYTPSGh-dZGcM5NCeiO=g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/7] mtd: rawnand: add unspecified HAS_IOMEM dependency
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Piotr Sroka <piotrs@cadence.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jan 2020 14:55:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbgA3Tzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:55:42 -0500
+Received: from localhost.localdomain (unknown [194.230.155.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8280D20708;
+        Thu, 30 Jan 2020 19:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580414142;
+        bh=h28+OzWv84FMorXQcpuwm+CgBd4CxAA13jLAZ5nqeG4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=etdT/+iMcutb7+ZqXyY9N7nNmLoyK+tYGnjhtJEfT1PGuvNPHJNUdk/GrCYWz6n6R
+         LDOk2fkt7m8UqvCWVC35I1x2fRXINQXEIlFRuXy87RUBXbE6jwA6GgiJc7M+F6It96
+         By1Qf5Pul1V2ML6bPiIECano85qKpLoFCLjnKMI8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, openbmc@lists.ozlabs.org,
+        arm@kernel.org, soc@kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH 1/2] ARM: npcm: Bring back GPIOLIB support
+Date:   Thu, 30 Jan 2020 20:55:24 +0100
+Message-Id: <20200130195525.4525-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 11:50 AM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
->
-> Hello,
->
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sat, 25 Jan 2020
-> 16:28:03 +0100:
->
-> > Hi Brendan,
-> >
-> > Brendan Higgins <brendanhiggins@google.com> wrote on Fri, 24 Jan 2020
-> > 18:12:12 -0800:
-> >
-> > > On Thu, Jan 9, 2020 at 7:23 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > > >
-> > > > Hi Brendan,
-> > > >
-> > > > Brendan Higgins <brendanhiggins@google.com> wrote on Wed, 11 Dec 2019
-> > > > 11:27:37 -0800:
-> > > >
-> > > > > Currently CONFIG_MTD_NAND_CADENCE implicitly depends on
-> > > > > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> > > > > the following build error:
-> > > > >
-> > > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.o: in function `cadence_nand_dt_probe.cold.31':
-> > > > > drivers/mtd/nand/raw/cadence-nand-controller.c:2969: undefined reference to `devm_platform_ioremap_resource'
-> > > > > ld: drivers/mtd/nand/raw/cadence-nand-controller.c:2977: undefined reference to `devm_ioremap_resource'
-> > > > >
-> > > > > Fix the build error by adding the unspecified dependency.
-> > > > >
-> > > > > Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > > > > ---
-> > > >
-> > > > Sorry for the delay.
-> > > >
-> > > > Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > >
-> > > It looks like my change has not been applied to nand/next; is this the
-> > > branch it should be applied to? I have also verified that this patch
-> > > isn't in linux-next as of Jan 24th.
-> > >
-> > > Is mtd/linux the correct tree for this? Or do I need to reach out to
-> > > someone else?
-> >
-> > When I sent my Acked-by I supposed someone else would pick the patch,
-> > but there is actually no dependency with all the other patches so I
-> > don't know why I did it... Sorry about that. I'll take it anyway in my
-> > PR for 5.6.
->
-> It is applied on top of mtd/next since a few days, it will be part of
-> the 5.6 PR.
->
-> Sorry for the delay.
+The CONFIG_ARCH_REQUIRE_GPIOLIB is gone since commit 65053e1a7743
+("gpio: delete ARCH_[WANTS_OPTIONAL|REQUIRE]_GPIOLIB") and all platforms
+should explicitly select GPIOLIB to have it.
 
-No worries.
+Cc: <stable@vger.kernel.org>
+Fixes: 65053e1a7743 ("gpio: delete ARCH_[WANTS_OPTIONAL|REQUIRE]_GPIOLIB")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/mach-npcm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
+diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+index 880bc2a5cada..7f7002dc2b21 100644
+--- a/arch/arm/mach-npcm/Kconfig
++++ b/arch/arm/mach-npcm/Kconfig
+@@ -11,7 +11,7 @@ config ARCH_NPCM7XX
+ 	depends on ARCH_MULTI_V7
+ 	select PINCTRL_NPCM7XX
+ 	select NPCM7XX_TIMER
+-	select ARCH_REQUIRE_GPIOLIB
++	select GPIOLIB
+ 	select CACHE_L2X0
+ 	select ARM_GIC
+ 	select HAVE_ARM_TWD if SMP
+-- 
+2.17.1
+
