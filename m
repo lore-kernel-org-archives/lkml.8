@@ -2,57 +2,52 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E03FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20CEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CD7214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C065F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410002;
-	bh=yNI5ogw+07m/kN6nHUW3rK8XJmN2BvbV3VxJy40X4EQ=;
+	s=default; t=1580410007;
+	bh=8EYe6y5wyOfEea0xvGBOkJ7h0WnL6V5YlGvBrH3c06k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zsRSRZi5NtpprVu/wLRFjr1vYwDc+u5TcIAeBsoLAbQs7JaF5J1v1h7kpL9Y504Nr
-	 5J7CXjt1/DzxNmIrfE56huIHlKPqpz4A97iTvkTWMP5oa6ncBmYQXF9bZBt8FJ9hJP
-	 w2gC+KMBkOBHLYrr9ehAdGgryw2GRhi1WMa0lWrs=
+	b=m27yTXMMjdkOzuUusQ2TLfH+t1XixfhGrFponzzJhiPeJxy+0D3roDeId2x7WBP9E
+	 k4sZ8kW/OofdN2v2gs/jSbBdGcobHeUUJMN92L2wMKOnYSveVzCAKtk96oFEslnq2x
+	 2NbSbT4UG+kOb8fiS8ysQSVuifpqvP4zoaxkh8ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbgA3Sqm (ORCPT
+        id S1731256AbgA3Sqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731205AbgA3Sqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:36 -0500
+        id S1731242AbgA3Sqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9011C20674;
-        Thu, 30 Jan 2020 18:46:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D30A6205F4;
+        Thu, 30 Jan 2020 18:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409996;
-        bh=yNI5ogw+07m/kN6nHUW3rK8XJmN2BvbV3VxJy40X4EQ=;
+        s=default; t=1580410003;
+        bh=8EYe6y5wyOfEea0xvGBOkJ7h0WnL6V5YlGvBrH3c06k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUuBl+yCR0kB4VIFKLIBgztmevTO8yEhg89biglq8Tdmp1//pe1n4tqPiv0ojJY0I
-         7w6PBa0JpUakjMJOysuLutdkBXxQgeyJ/8luLziFdmKSJPJKgeB+ZLLLlVodTJWvYS
-         VJKQIKvCnTId5HFEIQqLhiNj6PQ3Ni2a/KX4laWY=
+        b=Ju2C3YTai5JqfoPQpbKz61TOdCa0Z/oGWvuo0cCANjDBqwhb48TKYt0lQ3iTvIh1d
+         TECz74VlwvEOU6gbSxqD7JPhDaRL8wlkK79rAjqDYu01jB67EFnECUyy/L4hIuJ8Gp
+         qNG2esry6acY2WL/ha5KACXOeM1dlwL4rzXEoXuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com,
-        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
-        Amitkumar Karwar <amit.karwar@redpinesignals.com>,
-        Fariya Fatima <fariyaf@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 100/110] rsi: fix use-after-free on failed probe and unbind
-Date:   Thu, 30 Jan 2020 19:39:16 +0100
-Message-Id: <20200130183625.571091732@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 093/110] mmc: sdhci-pci: Add support for Intel JSL
+Date:   Thu, 30 Jan 2020 19:39:09 +0100
+Message-Id: <20200130183625.059866694@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -65,72 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit e93cd35101b61e4c79149be2cfc927c4b28dc60c upstream.
+[ Upstream commit 315e3bd7ac19b18ba704d96cbb9b79bad485c01f ]
 
-Make sure to stop both URBs before returning after failed probe as well
-as on disconnect to avoid use-after-free in the completion handler.
+Add PCI Ids for Intel JSL.
 
-Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
-Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
-Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
-Cc: stable <stable@vger.kernel.org>     # 3.15
-Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
-Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
-Cc: Fariya Fatima <fariyaf@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_91x_usb.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-pci-core.c | 2 ++
+ drivers/mmc/host/sdhci-pci.h      | 2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -292,6 +292,15 @@ out:
- 		dev_kfree_skb(rx_cb->rx_skb);
- }
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+index 96a163f36a395..c9ea365c248c0 100644
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -1730,6 +1730,8 @@ static const struct pci_device_id pci_ids[] = {
+ 	SDHCI_PCI_DEVICE(INTEL, CML_EMMC,  intel_glk_emmc),
+ 	SDHCI_PCI_DEVICE(INTEL, CML_SD,    intel_byt_sd),
+ 	SDHCI_PCI_DEVICE(INTEL, CMLH_SD,   intel_byt_sd),
++	SDHCI_PCI_DEVICE(INTEL, JSL_EMMC,  intel_glk_emmc),
++	SDHCI_PCI_DEVICE(INTEL, JSL_SD,    intel_byt_sd),
+ 	SDHCI_PCI_DEVICE(O2, 8120,     o2),
+ 	SDHCI_PCI_DEVICE(O2, 8220,     o2),
+ 	SDHCI_PCI_DEVICE(O2, 8221,     o2),
+diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
+index 558202fe64c67..981bbbe63aff5 100644
+--- a/drivers/mmc/host/sdhci-pci.h
++++ b/drivers/mmc/host/sdhci-pci.h
+@@ -55,6 +55,8 @@
+ #define PCI_DEVICE_ID_INTEL_CML_EMMC	0x02c4
+ #define PCI_DEVICE_ID_INTEL_CML_SD	0x02f5
+ #define PCI_DEVICE_ID_INTEL_CMLH_SD	0x06f5
++#define PCI_DEVICE_ID_INTEL_JSL_EMMC	0x4dc4
++#define PCI_DEVICE_ID_INTEL_JSL_SD	0x4df8
  
-+static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
-+{
-+	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
-+	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
-+	struct urb *urb = rx_cb->rx_urb;
-+
-+	usb_kill_urb(urb);
-+}
-+
- /**
-  * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
-  * @adapter: Pointer to the adapter structure.
-@@ -823,10 +832,13 @@ static int rsi_probe(struct usb_interfac
- 	if (adapter->priv->coex_mode > 1) {
- 		status = rsi_rx_urb_submit(adapter, BT_EP);
- 		if (status)
--			goto err1;
-+			goto err_kill_wlan_urb;
- 	}
- 
- 	return 0;
-+
-+err_kill_wlan_urb:
-+	rsi_rx_urb_kill(adapter, WLAN_EP);
- err1:
- 	rsi_deinit_usb_interface(adapter);
- err:
-@@ -857,6 +869,10 @@ static void rsi_disconnect(struct usb_in
- 		adapter->priv->bt_adapter = NULL;
- 	}
- 
-+	if (adapter->priv->coex_mode > 1)
-+		rsi_rx_urb_kill(adapter, BT_EP);
-+	rsi_rx_urb_kill(adapter, WLAN_EP);
-+
- 	rsi_reset_card(adapter);
- 	rsi_deinit_usb_interface(adapter);
- 	rsi_91x_deinit(adapter);
+ #define PCI_DEVICE_ID_SYSKONNECT_8000	0x8000
+ #define PCI_DEVICE_ID_VIA_95D0		0x95d0
+-- 
+2.20.1
+
 
 
