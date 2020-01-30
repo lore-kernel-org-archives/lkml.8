@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C32C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC65AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD1620702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BACF20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410433;
-	bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
+	s=default; t=1580410435;
+	bh=+hVBz+rTNdM2v3aHOM+5hI3+r8Hhw8ncMHzn2aRJbI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JR7I2kuElrlaN38Iusj8UQ6U6b3qhkoIIft51Q6vG7wUGkwBebC8eSDOXXIM4tlNw
-	 a8j7XGAq1dCBWo1EawV2LgFjm3pEaWenEq8QNJThWZiyVyD9dEMgOkzcX4i0H5xuDI
-	 E16r8c/UtaeKzVquBphCG0HhMy7uT5dKAfZlBUl0=
+	b=ZJUpF2Dx4zHj04dmJ/Z8vps2Jn6izbbYU1yZ2u7ZG8a3zhTnVAyCk/IYCBPomcSvj
+	 LQroaFxnSrMOGnFMSM3gGR8l1whO4tZGT33PsQakVLxjs2ko5GmeTjEfoHqlITuB7r
+	 IMLIZr9QqSCsU3xWRJmPb4lTlK2RojN2r1K9Uyz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbgA3Sxw (ORCPT
+        id S1730108AbgA3SlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:53:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49094 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:41:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbgA3SlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:14 -0500
+        id S1730076AbgA3SlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE30F2082E;
-        Thu, 30 Jan 2020 18:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C9C205F4;
+        Thu, 30 Jan 2020 18:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409673;
-        bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
+        s=default; t=1580409660;
+        bh=+hVBz+rTNdM2v3aHOM+5hI3+r8Hhw8ncMHzn2aRJbI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRdsOXD/Rq7pXBYlJAcB9dqvV4fDFVLnPQmftuyLDVbdtaIamWqqrLg2WJmupBsme
-         ROOOkOstJu7F1NhLRb5wBu25uOx2ENUMqlVFyidp6DWYEkkQmrJDqGEPu2ZadwcEd0
-         p8do6Gt/MmchZtKpkTIpdHzPe9x1xxMRE9UvvyW0=
+        b=W/et+RMUCs6BW2EZ9JbRQ6F6fGeE1pyDdEyQZofCS2hY/t2MkniqzSPUjEBxleKt9
+         HLstM5nGarBmY/bbRb1rYvgxvYIPmvgmSBjB9G47uVp+41ZVwIRL4f2q5BxUyQjlGd
+         MQl6DLQjuBu1dtG/qL3xvvDw7jPnrZdyBjJFd/f0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 45/56] rxrpc: Fix use-after-free in rxrpc_receive_data()
-Date:   Thu, 30 Jan 2020 19:39:02 +0100
-Message-Id: <20200130183617.195550238@linuxfoundation.org>
+        stable@vger.kernel.org, Bin Liu <b-liu@ti.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 09/56] usb: dwc3: turn off VBUS when leaving host mode
+Date:   Thu, 30 Jan 2020 19:38:26 +0100
+Message-Id: <20200130183610.856071084@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -59,84 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Bin Liu <b-liu@ti.com>
 
-[ Upstream commit 122d74fac84204b9a98263636f6f9a3b2e665639 ]
+commit 09ed259fac621634d51cd986aa8d65f035662658 upstream.
 
-The subpacket scanning loop in rxrpc_receive_data() references the
-subpacket count in the private data part of the sk_buff in the loop
-termination condition.  However, when the final subpacket is pasted into
-the ring buffer, the function is no longer has a ref on the sk_buff and
-should not be looking at sp->* any more.  This point is actually marked in
-the code when skb is cleared (but sp is not - which is an error).
+VBUS should be turned off when leaving the host mode.
+Set GCTL_PRTCAP to device mode in teardown to de-assert DRVVBUS pin to
+turn off VBUS power.
 
-Fix this by caching sp->nr_subpackets in a local variable and using that
-instead.
-
-Also clear 'sp' to catch accesses after that point.
-
-This can show up as an oops in rxrpc_get_skb() if sp->nr_subpackets gets
-trashed by the sk_buff getting freed and reused in the meantime.
-
-Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5f94adfeed97 ("usb: dwc3: core: refactor mode initialization to its own function")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/input.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -413,7 +413,7 @@ static void rxrpc_input_data(struct rxrp
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
- 	enum rxrpc_call_state state;
--	unsigned int j;
-+	unsigned int j, nr_subpackets;
- 	rxrpc_serial_t serial = sp->hdr.serial, ack_serial = 0;
- 	rxrpc_seq_t seq0 = sp->hdr.seq, hard_ack;
- 	bool immediate_ack = false, jumbo_bad = false;
-@@ -457,7 +457,8 @@ static void rxrpc_input_data(struct rxrp
- 	call->ackr_prev_seq = seq0;
- 	hard_ack = READ_ONCE(call->rx_hard_ack);
- 
--	if (sp->nr_subpackets > 1) {
-+	nr_subpackets = sp->nr_subpackets;
-+	if (nr_subpackets > 1) {
- 		if (call->nr_jumbo_bad > 3) {
- 			ack = RXRPC_ACK_NOSPACE;
- 			ack_serial = serial;
-@@ -465,11 +466,11 @@ static void rxrpc_input_data(struct rxrp
- 		}
+---
+ drivers/usb/dwc3/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1246,6 +1246,9 @@ static void dwc3_core_exit_mode(struct d
+ 		/* do nothing */
+ 		break;
  	}
++
++	/* de-assert DRVVBUS for HOST and OTG mode */
++	dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+ }
  
--	for (j = 0; j < sp->nr_subpackets; j++) {
-+	for (j = 0; j < nr_subpackets; j++) {
- 		rxrpc_serial_t serial = sp->hdr.serial + j;
- 		rxrpc_seq_t seq = seq0 + j;
- 		unsigned int ix = seq & RXRPC_RXTX_BUFF_MASK;
--		bool terminal = (j == sp->nr_subpackets - 1);
-+		bool terminal = (j == nr_subpackets - 1);
- 		bool last = terminal && (sp->rx_flags & RXRPC_SKB_INCL_LAST);
- 		u8 flags, annotation = j;
- 
-@@ -506,7 +507,7 @@ static void rxrpc_input_data(struct rxrp
- 		}
- 
- 		if (call->rxtx_buffer[ix]) {
--			rxrpc_input_dup_data(call, seq, sp->nr_subpackets > 1,
-+			rxrpc_input_dup_data(call, seq, nr_subpackets > 1,
- 					     &jumbo_bad);
- 			if (ack != RXRPC_ACK_DUPLICATE) {
- 				ack = RXRPC_ACK_DUPLICATE;
-@@ -564,6 +565,7 @@ static void rxrpc_input_data(struct rxrp
- 			 * ring.
- 			 */
- 			skb = NULL;
-+			sp = NULL;
- 		}
- 
- 		if (last) {
+ static void dwc3_get_properties(struct dwc3 *dwc)
 
 
