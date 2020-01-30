@@ -2,127 +2,100 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5999DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93716C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4322083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580402842;
-	bh=i8A9qAzt/VXM+MP0WemAo06gYyO10bD7Y/0oYPeF7CU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=f7OqZpME/m1OyFEYkyTTt6FxTOhNZqVPgAJkfYFFFDXeTFYGr51GsxLpcJCMKm58b
-	 o0lmJrzbMEIWPBSP3FPWvGbdd2ocmt8u//uv4g/bBt+yDJ2dm17x3e606SfJ3S6ms1
-	 mWDW++EOz7HlscevYsaUG7LdYmdIXsvbEnTQF9P0=
+	by mail.kernel.org (Postfix) with ESMTP id 6706B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIi64FJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgA3QrV (ORCPT
+        id S1727378AbgA3Qwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:47:21 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36375 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgA3QrV (ORCPT
+        Thu, 30 Jan 2020 11:52:49 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38477 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgA3Qwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:47:21 -0500
-Received: by mail-qt1-f195.google.com with SMTP id t13so3006040qto.3;
-        Thu, 30 Jan 2020 08:47:19 -0800 (PST)
+        Thu, 30 Jan 2020 11:52:49 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so1786776pfc.5;
+        Thu, 30 Jan 2020 08:52:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=cRkmfZ70e1FN/dai6WJTy1Ty8v4BIDTiaHK0pQLcbpM=;
-        b=msmlzcdjC+TyANKBhZKTl1h2yOagQ43WqHjcbrMtcNUrNzFU/gaLY2HBa5xN/2WODX
-         h6+ZcRFdLaex3hEqFCWiVEGhC+QV99QFD9W9wOcspZRPS53Q3+iJe/MhBvWz94UMeViM
-         vWjDkkpxkBSr7yDexhoHJoUGfy58IVK8w3Yd3eO3yVJtt8omAFB4Xxa90XCI8gjeDJpA
-         0QKylSioDjUDa49oOuBRM6YPDiqfMHq3qM8OuqFeP4ZBOBtEMDDzrmlOAJYbGXc7vh93
-         L+GzYcO2xV/5CnDlVJfq6hy5QoyR/BvcSzHOByrmhKlMurzLQ6JTBtemCSDu4yv7HRUn
-         f4nQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BvfCsRSZW1p/nohOgM8F2lAATYVhdALP/v8/1rJaWIw=;
+        b=HIi64FJTLjxHew/88/vrJXKhLDqR8R6QvnJtquI3iltIEjCjSU1nAGjAshfg/9V9k+
+         3sZ8U+mmzEqNjIIkiWs8lLFeknSwKyfIuhqNcMYZcVZM5jKTgARs/qGz6lUSx0ccoNbC
+         ZpV02kmTCZFjFZBtt1jcUYnNRYr1fWLDECu3ZFQGmMsj8QcBmhc86WtTyjscXB/AgZRq
+         iXUANo6paHHqqmuCLPB9UHL9n1MvZzdWGm3lrrtQsD7amMO22ZWf9jx/mXkeAsiLQRGc
+         vN+fCNiweFpIQautL2z4APqMNgDe8Q0DJ2weSJdZ4gjtqTGFfkI3S1Ed88Ud7CFgJJiD
+         x3BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=cRkmfZ70e1FN/dai6WJTy1Ty8v4BIDTiaHK0pQLcbpM=;
-        b=Lmyhv5oVp4VY1rwefrlU44ZV+Lq+zctRSvZd9ulmDpXsi+zZhYB1iilKOWQBXeI6+k
-         UCFrRCPMpxmiytDTAJIHCSooRfYoDhd8SYuUbdDaUK77wa7EbQ5YNYvoREcdb6ZunCrO
-         ZUukNAxipg5K/OUMxvoE2ZEW9hqdh8m/4HwTvCuW08TyyAQT7RwYdiG1RP9eENVAXQoI
-         cYCYtfwZiDLjpXlzmcFIbgaAQMuag5+kNGF+QbVIDpHBujn4BWBG2Y8cenfWh4HAZgqn
-         O5k1UDLMiW075eHsWlLNQdBFa8wZGmZ7g7SaHdRS3tXGTeem4haPc4dnkRLgTi24GCmH
-         VmVA==
-X-Gm-Message-State: APjAAAXRvmWA+6vMzIWpH/yD0MPmYYnVXnJ57J2f0s9+hNb0Dk/rEAFq
-        p+Zh6qZHkbGVNKhwwD5xQlY=
-X-Google-Smtp-Source: APXvYqwrPTcNF2ywjVNYtwaeuLl+A5vMAx1dYlbTD+IMjVdAYmJyjIuPy0oCF2C5XcVNzkfDBTRzQQ==
-X-Received: by 2002:ac8:7352:: with SMTP id q18mr5631408qtp.125.1580402838461;
-        Thu, 30 Jan 2020 08:47:18 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::139])
-        by smtp.gmail.com with ESMTPSA id b22sm2950594qka.121.2020.01.30.08.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 08:47:17 -0800 (PST)
-Date:   Thu, 30 Jan 2020 11:47:17 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Li Zefan <lizefan@huawei.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH cgroup/for-5.6-fixes] cgroup: init_tasks shouldn't be linked
- to the root cgroup
-Message-ID: <20200130164717.GE180576@mtj.thefacebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BvfCsRSZW1p/nohOgM8F2lAATYVhdALP/v8/1rJaWIw=;
+        b=cDomHDO4NcACGybuJsFcTj8FC0EfJIooowQpFbGQNAc8KoseWt9wo28ryri5+udAAC
+         5d0BroVRLi/yHrfCr1IjYVABoE1ROb/24XZ5DlDXGc7hPMZ8JKWotyfrK66MBlertZqU
+         aZCNm86YSlVJifcWnhU0kZyxvfm/V+uVybos8tKyqzSnl1s5Zb7L2yPP5a3BVo4tpSUX
+         0P3s8lLpF6L8+iJbCsplCzw4EftTuK3RKGeWqHKCsYLDnoEtv43FyLF//Zr0w+VCq9eI
+         7zxJGRHQwKkLrB2vjJIpTF1ejJLsf3zCcq4shxiSIaKe9wQqAD7v31HWiqkEaHd9vDsp
+         Khzg==
+X-Gm-Message-State: APjAAAVklXs8U+A3lDZuX0Mr0YTCyqOorXb0cQg282MnLzjFpETQw9IT
+        xd/27wAyQsTqQ9oSEKFJpYkk+ExbUg8dr/Ywr+o=
+X-Google-Smtp-Source: APXvYqwEWnwqoePrgk5yXHpSjK3/YcAPZ1WeBxbdIORS5G9gXGM6VV7cscOzUakL5hFPRk8ijdgGnN27LxoUDdzE3YI=
+X-Received: by 2002:a62:1944:: with SMTP id 65mr6090835pfz.151.1580403168985;
+ Thu, 30 Jan 2020 08:52:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200130115255.20840-1-hdegoede@redhat.com> <20200130115255.20840-3-hdegoede@redhat.com>
+ <20200130134310.GX14914@hirez.programming.kicks-ass.net> <b77be8c0-7107-bece-5947-a625e556e129@redhat.com>
+ <01feee20ee5d4b83ab218c14fc35accb@AcuMS.aculab.com> <8a8fd7a1-945e-4541-f0bc-387fae7c6822@redhat.com>
+In-Reply-To: <8a8fd7a1-945e-4541-f0bc-387fae7c6822@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 30 Jan 2020 18:52:41 +0200
+Message-ID: <CAHp75VftbK+7uzBCQ6F5FFgJ4qq0f9pB1Qo7m0LwbBROYsrrYw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more accurate
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 0cd9d33ace336bc424fc30944aa3defd6786e4fe Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 30 Jan 2020 11:37:33 -0500
+On Thu, Jan 30, 2020 at 6:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 30-01-2020 17:02, David Laight wrote:
 
-5153faac18d2 ("cgroup: remove cgroup_enable_task_cg_lists()
-optimization") removed lazy initialization of css_sets so that new
-tasks are always lniked to its css_set. In the process, it incorrectly
-ended up adding init_tasks to root css_set. They show up as PID 0's in
-root's cgroup.procs triggering warnings in systemd and generally
-confusing people.
+> I have no idea. Andy if you can find any docs on the MSR_FSB_FREQ values
+> for Merriefield (BYT MID) and Moorefield (CHT MID) that would be great,
+> if not I suggest we stick with what we have.
 
-Fix it by skip css_set linking for init_tasks.
+First of all, Merrifield (Silvermont based Atom for phones, FYI: Intel
+Edison uses it) and Moorefield (Airmont) have nothing to do with code
+names Baytrail and Cherrytrail respectively.
+So, please don't confuse people.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: https://github.com/joanbm
-Link: https://github.com/systemd/systemd/issues/14682
-Fixes: 5153faac18d2 ("cgroup: remove cgroup_enable_task_cg_lists() optimization")
-Cc: stable@vger.kernel.org # v5.5+
----
- kernel/cgroup/cgroup.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+I'll try to find some information.
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index b3744872263e..cf8a36bdf5c8 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -5932,11 +5932,14 @@ void cgroup_post_fork(struct task_struct *child)
- 
- 	spin_lock_irq(&css_set_lock);
- 
--	WARN_ON_ONCE(!list_empty(&child->cg_list));
--	cset = task_css_set(current); /* current is @child's parent */
--	get_css_set(cset);
--	cset->nr_tasks++;
--	css_set_move_task(child, NULL, cset, false);
-+	/* init tasks are special, only link regular threads */
-+	if (likely(child->pid)) {
-+		WARN_ON_ONCE(!list_empty(&child->cg_list));
-+		cset = task_css_set(current); /* current is @child's parent */
-+		get_css_set(cset);
-+		cset->nr_tasks++;
-+		css_set_move_task(child, NULL, cset, false);
-+	}
- 
- 	/*
- 	 * If the cgroup has to be frozen, the new task has too.  Let's set
 -- 
-2.24.1
-
+With Best Regards,
+Andy Shevchenko
