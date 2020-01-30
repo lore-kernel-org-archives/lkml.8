@@ -4,488 +4,386 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40388C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8281BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D1720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FC92082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iSn2e0B9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BKFWBfY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgA3Pnt (ORCPT
+        id S1727374AbgA3Pos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:43:49 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4454 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbgA3Pnt (ORCPT
+        Thu, 30 Jan 2020 10:44:48 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33666 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgA3Pos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:43:49 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UFNKQt023070;
-        Thu, 30 Jan 2020 16:43:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=biLj6xFJWW3+f4odTJOl/4nkmScLnG6dpw9vfAKCEc4=;
- b=iSn2e0B9R0CQWxfEbNZwrzSG5hh7CF8z++d1tBUk5uP1eGR0qBjhcWeBqe/KP1ZB1NXr
- hGxn1/J/Bq8AJDKJVblc0EgNo8bOMhx36mGhbyMyTuFvGttdujSpediBDJ3HMKkg1LUO
- tEzymrPIYkbfcvhNnEbzwWxdJ6+K8/KJ6FXzK9Yq1vg0Ay/IWmxAle3AgKI7kkNwuh7D
- 0SuIoK3fK7XAB1ZvM7bdImyoCQIA+3XGK3cNXFXFYvlvYAqe6+Hkb70jSUHkuG4LF8tg
- wfw9glf7c7r5ZcqTT3aZ8nT/vBXR56cQlqnDUPG3T9JbLvCuA+UdlqoFAxEfCThgWFSh 6A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrcay9106-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 16:43:18 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A813D100034;
-        Thu, 30 Jan 2020 16:43:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 89CA32AF785;
-        Thu, 30 Jan 2020 16:43:17 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 16:43:16
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <wim@linux-watchdog.org>, <linux@roeck-us.net>, <p.paillet@st.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
-Date:   Thu, 30 Jan 2020 16:43:15 +0100
-Message-ID: <20200130154315.6260-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
+        Thu, 30 Jan 2020 10:44:48 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so3893757lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:44:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y5/5fHz3Wl1g0oPmezLLXZf0rfIMovdyqWbT8xKCz5U=;
+        b=BKFWBfY4IEyqnYgSRNiezu+BUWinoYQbjNSmIsCy9T4nyOeKQ+1/kgvqiFsg6Ec2Th
+         boIHb/LSiIhbBTCEmNJBloWOjjJJzYf2xtZY0A9uB6DnUplMqRiClVQGvaVeEr9sia+Q
+         fvrhJA65wLYKUI6OsPH1JBgvpZmo4lXWsPFVSeySW/h6N7+zssEN8pXEYa6YU1868jCW
+         b6V6aQSRqQIf5f5D0FKnG5ong+HhAm9zQetGTcHIphjPEhZFU+MxA0PF/TsL/zkqLuez
+         bCrX4JhZfOV7x0xVOZbKHgihk8K4KlaeGj3u+jqX+W9I9JctNebwPteiVW+baA6lx6UC
+         lR8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y5/5fHz3Wl1g0oPmezLLXZf0rfIMovdyqWbT8xKCz5U=;
+        b=cupQtev3zZv8bJVeeWiFz0L4ZavzOdguKHsTmYJ4NwtfIOgur1DRZeB2ijKlZhhwrk
+         HP2SlsX1pFkbX6anYK9SATdAc3FLQF9fvV58ZeJwjDFZpqGiHzO3e5HL11dqQagljboM
+         27gsuhqFwk/WlhHPT4xreYBDuGdW9MDPMfLqyfNHFw2tTgsfoQdgYS0yEVvK4rCugZqz
+         0FRM+OKHCATcQByXNJhrvV29wjt2MMTqyPs1srcZJDqVIQHcYNYsvlKDmrsYYFus+uHJ
+         YK/HJuBpQVJ2Q4t4d3e6IcqE81r+huZEKZ9xIia9pn/yuEcVLwSODvyoKM+46gTrnTAC
+         Fxlw==
+X-Gm-Message-State: APjAAAXmbSsCNWchz2iYx+LHuIEiIKsEefIEUBBn/j5P2pIVO7UHnQGh
+        A3SwjA543SVWK89g7amZuhC+NA==
+X-Google-Smtp-Source: APXvYqyD+XvywuSr2SrKuODVekHXZto6ykhDB6HrnHTN2/X1Oh/xXqcIz58KXVMCB37zMwtK3dRULA==
+X-Received: by 2002:a2e:98a:: with SMTP id 132mr3257970ljj.170.1580399085700;
+        Thu, 30 Jan 2020 07:44:45 -0800 (PST)
+Received: from localhost.localdomain ([37.157.136.193])
+        by smtp.gmail.com with ESMTPSA id h5sm3225267lja.16.2020.01.30.07.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 07:44:44 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] venus: vdec: Use pmruntime autosuspend
+Date:   Thu, 30 Jan 2020 17:44:24 +0200
+Message-Id: <20200130154424.29483-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert stpmic1 bindings to json-schema.
+Implement pmruntime autosuspend in video decoder. This will
+allow to save power while the userspace is inactive for some
+reasonable period of time. Here we power-off venus core clocks
+and power domain and don't touch vcodec because it is under
+hardware control. The later decision is made to simplify the
+code and avoid a mess in the power management code.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 ---
- .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ------
- .../devicetree/bindings/mfd/st,stpmic1.yaml        | 205 +++++++++++++++++++++
- .../bindings/regulator/st,stpmic1-regulator.txt    |  64 -------
- .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 --
- 5 files changed, 205 insertions(+), 164 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
- delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
- delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+ drivers/media/platform/qcom/venus/core.c |   3 +
+ drivers/media/platform/qcom/venus/core.h |   2 +
+ drivers/media/platform/qcom/venus/vdec.c | 134 +++++++++++++++++++----
+ 3 files changed, 119 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-deleted file mode 100644
-index eb8e83736c02..000000000000
---- a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--STMicroelectronics STPMIC1 Onkey
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index c7525d951e92..e7995cbd55c1 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -210,6 +210,8 @@ static int venus_probe(struct platform_device *pdev)
+ 	if (!core->res)
+ 		return -ENODEV;
+ 
++	mutex_init(&core->pm_lock);
++
+ 	core->pm_ops = venus_pm_get(core->res->hfi_version);
+ 	if (!core->pm_ops)
+ 		return -ENODEV;
+@@ -336,6 +338,7 @@ static int venus_remove(struct platform_device *pdev)
+ 	icc_put(core->cpucfg_path);
+ 
+ 	v4l2_device_unregister(&core->v4l2_dev);
++	mutex_destroy(&core->pm_lock);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 55bdeda780bc..75b869c095b4 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -128,6 +128,7 @@ struct venus_caps {
+  * @error:	an error returned during last HFI sync operations
+  * @sys_error:	an error flag that signal system error event
+  * @core_ops:	the core operations
++ * @pm_lock:	a lock for PM operations
+  * @enc_codecs:	encoders supported by this core
+  * @dec_codecs:	decoders supported by this core
+  * @max_sessions_supported:	holds the maximum number of sessions
+@@ -168,6 +169,7 @@ struct venus_core {
+ 	bool sys_error;
+ 	const struct hfi_core_ops *core_ops;
+ 	const struct venus_pm_ops *pm_ops;
++	struct mutex pm_lock;
+ 	unsigned long enc_codecs;
+ 	unsigned long dec_codecs;
+ 	unsigned int max_sessions_supported;
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index 4997ae294312..e7e97779bc68 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -545,6 +545,64 @@ static const struct v4l2_ioctl_ops vdec_ioctl_ops = {
+ 	.vidioc_decoder_cmd = vdec_decoder_cmd,
+ };
+ 
++static int vdec_pm_get(struct venus_inst *inst)
++{
++	struct venus_core *core = inst->core;
++	struct device *dev = core->dev_dec;
++	int ret;
++
++	mutex_lock(&core->pm_lock);
++	ret = pm_runtime_get_sync(dev);
++	mutex_unlock(&core->pm_lock);
++
++	return ret < 0 ? ret : 0;
++}
++
++static int vdec_pm_put(struct venus_inst *inst, bool autosuspend)
++{
++	struct venus_core *core = inst->core;
++	struct device *dev = core->dev_dec;
++	int ret;
++
++	mutex_lock(&core->pm_lock);
++
++	if (autosuspend)
++		ret = pm_runtime_put_autosuspend(dev);
++	else
++		ret = pm_runtime_put_sync(dev);
++
++	mutex_unlock(&core->pm_lock);
++
++	return ret < 0 ? ret : 0;
++}
++
++static int vdec_pm_get_put(struct venus_inst *inst)
++{
++	struct venus_core *core = inst->core;
++	struct device *dev = core->dev_dec;
++	int ret = 0;
++
++	mutex_lock(&core->pm_lock);
++
++	if (pm_runtime_suspended(dev)) {
++		ret = pm_runtime_get_sync(dev);
++		if (ret < 0)
++			goto error;
++
++		ret = pm_runtime_put_autosuspend(dev);
++	}
++
++error:
++	mutex_unlock(&core->pm_lock);
++
++	return ret < 0 ? ret : 0;
++}
++
++static void vdec_pm_touch(struct venus_inst *inst)
++{
++	pm_runtime_mark_last_busy(inst->core->dev_dec);
++}
++
+ static int vdec_set_properties(struct venus_inst *inst)
+ {
+ 	struct vdec_controls *ctr = &inst->controls.dec;
+@@ -746,11 +804,19 @@ static int vdec_queue_setup(struct vb2_queue *q,
+ 		return 0;
+ 	}
+ 
+-	ret = vdec_session_init(inst);
++	ret = vdec_pm_get(inst);
+ 	if (ret)
+ 		return ret;
+ 
++	ret = vdec_session_init(inst);
++	if (ret)
++		goto put_power;
++
+ 	ret = vdec_num_buffers(inst, &in_num, &out_num);
++	if (ret)
++		goto put_power;
++
++	ret = vdec_pm_put(inst, false);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -786,6 +852,10 @@ static int vdec_queue_setup(struct vb2_queue *q,
+ 	}
+ 
+ 	return ret;
++
++put_power:
++	vdec_pm_put(inst, false);
++	return ret;
+ }
+ 
+ static int vdec_verify_conf(struct venus_inst *inst)
+@@ -947,14 +1017,23 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
+ 
+ 	mutex_lock(&inst->lock);
+ 
+-	ret = venus_pm_acquire_core(inst);
+-	if (ret)
+-		return ret;
 -
--Required properties:
+-	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
++	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+ 		ret = vdec_start_capture(inst);
+-	else
++	} else {
++		ret = vdec_pm_get(inst);
++		if (ret)
++			goto error;
++
++		ret = venus_pm_acquire_core(inst);
++		if (ret)
++			goto put_power;
++
++		ret = vdec_pm_put(inst, true);
++		if (ret)
++			goto error;
++
+ 		ret = vdec_start_output(inst);
++	}
+ 
+ 	if (ret)
+ 		goto error;
+@@ -962,6 +1041,8 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
+ 	mutex_unlock(&inst->lock);
+ 	return 0;
+ 
++put_power:
++	vdec_pm_put(inst, false);
+ error:
+ 	venus_helper_buffers_done(inst, VB2_BUF_STATE_QUEUED);
+ 	mutex_unlock(&inst->lock);
+@@ -1055,8 +1136,9 @@ static void vdec_session_release(struct venus_inst *inst)
+ 	struct venus_core *core = inst->core;
+ 	int ret, abort = 0;
+ 
+-	mutex_lock(&inst->lock);
++	vdec_pm_get(inst);
+ 
++	mutex_lock(&inst->lock);
+ 	inst->codec_state = VENUS_DEC_STATE_DEINIT;
+ 
+ 	ret = hfi_session_stop(inst);
+@@ -1078,10 +1160,11 @@ static void vdec_session_release(struct venus_inst *inst)
+ 
+ 	venus_helper_free_dpb_bufs(inst);
+ 	venus_pm_load_scale(inst);
+-	venus_pm_release_core(inst);
+ 	INIT_LIST_HEAD(&inst->registeredbufs);
 -
--- compatible = "st,stpmic1-onkey";
--- interrupts: interrupt line to use
--- interrupt-names = "onkey-falling", "onkey-rising"
--	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
--	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
+ 	mutex_unlock(&inst->lock);
++
++	venus_pm_release_core(inst);
++	vdec_pm_put(inst, false);
+ }
+ 
+ static int vdec_buf_init(struct vb2_buffer *vb)
+@@ -1102,6 +1185,15 @@ static void vdec_buf_cleanup(struct vb2_buffer *vb)
+ 		vdec_session_release(inst);
+ }
+ 
++static void vdec_vb2_buf_queue(struct vb2_buffer *vb)
++{
++	struct venus_inst *inst = vb2_get_drv_priv(vb->vb2_queue);
++
++	vdec_pm_get_put(inst);
++
++	venus_helper_vb2_buf_queue(vb);
++}
++
+ static const struct vb2_ops vdec_vb2_ops = {
+ 	.queue_setup = vdec_queue_setup,
+ 	.buf_init = vdec_buf_init,
+@@ -1109,7 +1201,7 @@ static const struct vb2_ops vdec_vb2_ops = {
+ 	.buf_prepare = venus_helper_vb2_buf_prepare,
+ 	.start_streaming = vdec_start_streaming,
+ 	.stop_streaming = vdec_stop_streaming,
+-	.buf_queue = venus_helper_vb2_buf_queue,
++	.buf_queue = vdec_vb2_buf_queue,
+ };
+ 
+ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+@@ -1121,6 +1213,8 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+ 	struct vb2_buffer *vb;
+ 	unsigned int type;
+ 
++	vdec_pm_touch(inst);
++
+ 	if (buf_type == HFI_BUFFER_INPUT)
+ 		type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+ 	else
+@@ -1227,6 +1321,8 @@ static void vdec_event_notify(struct venus_inst *inst, u32 event,
+ 	struct venus_core *core = inst->core;
+ 	struct device *dev = core->dev_dec;
+ 
++	vdec_pm_touch(inst);
++
+ 	switch (event) {
+ 	case EVT_SESSION_ERROR:
+ 		inst->session_error = true;
+@@ -1347,13 +1443,9 @@ static int vdec_open(struct file *file)
+ 	init_waitqueue_head(&inst->reconf_wait);
+ 	venus_helper_init_instance(inst);
+ 
+-	ret = pm_runtime_get_sync(core->dev_dec);
+-	if (ret < 0)
+-		goto err_free_inst;
 -
--Optional properties:
--
--- st,onkey-clear-cc-flag: onkey is able power on after an
--  over-current shutdown event.
--- st,onkey-pu-inactive: onkey pull up is not active
--- power-off-time-sec: Duration in seconds which the key should be kept
--        pressed for device to power off automatically (from 1 to 16 seconds).
--        see See Documentation/devicetree/bindings/input/input.yaml
--
--Example:
--
--onkey {
--	compatible = "st,stpmic1-onkey";
--	interrupt-parent = <&pmic>;
--	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
--	interrupt-names = "onkey-falling", "onkey-rising";
--	power-off-time-sec = <10>;
--};
-diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-deleted file mode 100644
-index afd45c089585..000000000000
---- a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-+++ /dev/null
-@@ -1,61 +0,0 @@
--* STMicroelectronics STPMIC1 Power Management IC
--
--Required properties:
--- compatible:		: "st,stpmic1"
--- reg:			: The I2C slave address for the STPMIC1 chip.
--- interrupts:		: The interrupt line the device is connected to.
--- #interrupt-cells:	: Should be 1.
--- interrupt-controller:	: Marks the device node as an interrupt controller.
--			    Interrupt numbers are defined at
--			    dt-bindings/mfd/st,stpmic1.h.
--
--STPMIC1 consists in a varied group of sub-devices.
--Each sub-device binding is be described in own documentation file.
--
--Device			 Description
--------			------------
--st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
--st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
--st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
--
--Example:
--
--#include <dt-bindings/mfd/st,stpmic1.h>
--
--pmic: pmic@33 {
--	compatible = "st,stpmic1";
--	reg = <0x33>;
--	interrupt-parent = <&gpioa>;
--	interrupts = <0 2>;
--
--	interrupt-controller;
--	#interrupt-cells = <2>;
--
--	onkey {
--		compatible = "st,stpmic1-onkey";
--		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
--		interrupt-names = "onkey-falling", "onkey-rising";
--		power-off-time-sec = <10>;
--	};
--
--	watchdog {
--		compatible = "st,stpmic1-wdt";
--	};
--
--	regulators {
--		compatible = "st,stpmic1-regulators";
--
--		vdd_core: buck1 {
--			regulator-name = "vdd_core";
--			regulator-boot-on;
--			regulator-min-microvolt = <700000>;
--			regulator-max-microvolt = <1200000>;
--		};
--		vdd: buck3 {
--			regulator-name = "vdd";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-boot-on;
--			regulator-pull-down;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-new file mode 100644
-index 000000000000..5db86be683dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-@@ -0,0 +1,205 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 	ret = vdec_ctrl_init(inst);
+ 	if (ret)
+-		goto err_put_sync;
++		goto err_free;
+ 
+ 	ret = hfi_session_create(inst, &vdec_hfi_ops);
+ 	if (ret)
+@@ -1392,9 +1484,7 @@ static int vdec_open(struct file *file)
+ 	hfi_session_destroy(inst);
+ err_ctrl_deinit:
+ 	vdec_ctrl_deinit(inst);
+-err_put_sync:
+-	pm_runtime_put_sync(core->dev_dec);
+-err_free_inst:
++err_free:
+ 	kfree(inst);
+ 	return ret;
+ }
+@@ -1403,6 +1493,8 @@ static int vdec_close(struct file *file)
+ {
+ 	struct venus_inst *inst = to_inst(file);
+ 
++	vdec_pm_get(inst);
 +
-+title: STMicroelectonics STPMIC1 Power Management IC bindings
-+
-+description: STMicroelectronics STPMIC1 Power Management IC
-+
-+maintainers:
-+  - pascal Paillet <p.paillet@st.com>
-+
-+allOf:
-+  - $ref: ../input/input.yaml
-+  - $ref: ../regulator/regulator.yaml
-+
-+properties:
-+  compatible:
-+    const: st,stpmic1
-+
-+  reg:
-+    const: 0x33
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  onkey:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stpmic1-onkey
-+
-+      interrupts:
-+        items:
-+          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
-+          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
-+
-+      interrupt-names:
-+        items:
-+          - const: onkey-falling
-+          - const: onkey-rising
-+
-+      st,onkey-clear-cc-flag:
-+        description: onkey is able power on after an over-current shutdown event.
-+        $ref: /schemas/types.yaml#/definitions/flag
-+
-+      st,onkey-pu-inactive:
-+        description: onkey pull up is not active
-+        $ref: /schemas/types.yaml#/definitions/flag
-+
-+      power-off-time-sec:
-+        minimum: 1
-+        maximum: 16
-+
-+    required:
-+      - compatible
-+      - interrupts
-+      - interrupt-names
-+
-+  watchdog:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stpmic1-wdt
-+
-+    required:
-+      - compatible
-+
-+  regulators:
-+    type: object
-+
-+    description: |
-+      Available Regulators in STPMIC1 device are:
-+        - buck1 for Buck BUCK1
-+        - buck2 for Buck BUCK2
-+        - buck3 for Buck BUCK3
-+        - buck4 for Buck BUCK4
-+        - ldo1 for LDO LDO1
-+        - ldo2 for LDO LDO2
-+        - ldo3 for LDO LDO3
-+        - ldo4 for LDO LDO4
-+        - ldo5 for LDO LDO5
-+        - ldo6 for LDO LDO6
-+        - vref_ddr for LDO Vref DDR
-+        - boost for Buck BOOST
-+        - pwr_sw1 for VBUS_OTG switch
-+        - pwr_sw2 for SW_OUT switch
-+      Switches are fixed voltage regulators with only enable/disable capability.
-+
-+    properties:
-+      compatible:
-+        const: st,stpmic1-regulators
-+
-+    required:
-+      - compatible
-+
-+patternProperties:
-+  "^(buck[1-4]|ldo[1-6]|vref_ddr|boost|)$":
-+    type: object
-+
-+    properties:
-+      st,mask-reset:
-+        description: mask reset for this regulator,
-+                     the regulator configuration is maintained during pmic reset.
-+        $ref: /schemas/types.yaml#/definitions/flag
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      regulator-over-current-protection: true
-+
-+  "^(pwr_sw[1-2])$":
-+    type: object
-+
-+    properties:
-+      interrupts:
-+        maxItems: 1
-+
-+      regulator-over-current-protection: true
-+      regulator-active-discharge: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#interrupt-cells"
-+  - interrupt-controller
-+
-+examples:
-+  - |
-+    #include <dt-bindings/mfd/st,stpmic1.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c@0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      pmic@33 {
-+        compatible = "st,stpmic1";
-+        reg = <0x33>;
-+        interrupt-parent = <&gpioa>;
-+        interrupts = <0 2>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+
-+        onkey {
-+          compatible = "st,stpmic1-onkey";
-+          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-+          interrupt-names = "onkey-falling", "onkey-rising";
-+          power-off-time-sec = <10>;
-+        };
-+
-+        watchdog {
-+          compatible = "st,stpmic1-wdt";
-+        };
-+
-+        regulators {
-+          compatible = "st,stpmic1-regulators";
-+
-+          ldo6-supply = <&v3v3>;
-+
-+          buck1 {
-+            regulator-name = "vdd_core";
-+            interrupts = <IT_CURLIM_BUCK1 0>;
-+            st,mask-reset;
-+            regulator-boot-on;
-+            regulator-min-microvolt = <700000>;
-+            regulator-max-microvolt = <1200000>;
-+          };
-+
-+          buck3 {
-+            regulator-name = "vdd";
-+            regulator-min-microvolt = <3300000>;
-+            regulator-max-microvolt = <3300000>;
-+            regulator-boot-on;
-+            regulator-pull-down;
-+          };
-+
-+          buck4 {
-+            regulator-name = "v3v3";
-+            interrupts = <IT_CURLIM_BUCK4 0>;
-+            regulator-min-microvolt = <3300000>;
-+            regulator-max-microvolt = <3300000>;
-+          };
-+
-+          ldo6 {
-+            regulator-name = "v1v8";
-+            regulator-min-microvolt = <1800000>;
-+            regulator-max-microvolt = <1800000>;
-+            regulator-over-current-protection;
-+          };
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-deleted file mode 100644
-index 6189df71ea98..000000000000
---- a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--STMicroelectronics STPMIC1 Voltage regulators
--
--Regulator Nodes are optional depending on needs.
--
--Available Regulators in STPMIC1 device are:
--  - buck1 for Buck BUCK1
--  - buck2 for Buck BUCK2
--  - buck3 for Buck BUCK3
--  - buck4 for Buck BUCK4
--  - ldo1 for LDO LDO1
--  - ldo2 for LDO LDO2
--  - ldo3 for LDO LDO3
--  - ldo4 for LDO LDO4
--  - ldo5 for LDO LDO5
--  - ldo6 for LDO LDO6
--  - vref_ddr for LDO Vref DDR
--  - boost for Buck BOOST
--  - pwr_sw1 for VBUS_OTG switch
--  - pwr_sw2 for SW_OUT switch
--
--Switches are fixed voltage regulators with only enable/disable capability.
--
--Optional properties:
--- st,mask-reset: mask reset for this regulator: the regulator configuration
--  is maintained during pmic reset.
--- regulator-over-current-protection:
--    if set, all regulators are switched off in case of over-current detection
--    on this regulator,
--    if not set, the driver only sends an over-current event.
--- interrupts: index of current limit detection interrupt
--- <regulator>-supply: phandle to the parent supply/regulator node
--	each regulator supply can be described except vref_ddr.
--- regulator-active-discharge: can be used on pwr_sw1 and pwr_sw2.
--
--Example:
--regulators {
--	compatible = "st,stpmic1-regulators";
--
--	ldo6-supply = <&v3v3>;
--
--	vdd_core: buck1 {
--		regulator-name = "vdd_core";
--		interrupts = <IT_CURLIM_BUCK1 0>;
--		st,mask-reset;
--		regulator-pull-down;
--		regulator-min-microvolt = <700000>;
--		regulator-max-microvolt = <1200000>;
--	};
--
--	v3v3: buck4 {
--		regulator-name = "v3v3";
--		interrupts = <IT_CURLIM_BUCK4 0>;
--
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--
--	v1v8: ldo6 {
--		regulator-name = "v1v8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-over-current-protection;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt b/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
-deleted file mode 100644
-index 7cc1407f15cb..000000000000
---- a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
-+++ /dev/null
-@@ -1,11 +0,0 @@
--STMicroelectronics STPMIC1 Watchdog
--
--Required properties:
--
--- compatible : should be "st,stpmic1-wdt"
--
--Example:
--
--watchdog {
--	compatible = "st,stpmic1-wdt";
--};
+ 	v4l2_m2m_ctx_release(inst->m2m_ctx);
+ 	v4l2_m2m_release(inst->m2m_dev);
+ 	vdec_ctrl_deinit(inst);
+@@ -1411,7 +1503,7 @@ static int vdec_close(struct file *file)
+ 	v4l2_fh_del(&inst->fh);
+ 	v4l2_fh_exit(&inst->fh);
+ 
+-	pm_runtime_put_sync(inst->core->dev_dec);
++	vdec_pm_put(inst, false);
+ 
+ 	kfree(inst);
+ 	return 0;
+@@ -1468,6 +1560,8 @@ static int vdec_probe(struct platform_device *pdev)
+ 	core->dev_dec = dev;
+ 
+ 	video_set_drvdata(vdev, core);
++	pm_runtime_set_autosuspend_delay(dev, 2000);
++	pm_runtime_use_autosuspend(dev);
+ 	pm_runtime_enable(dev);
+ 
+ 	return 0;
 -- 
-2.15.0
+2.17.1
 
