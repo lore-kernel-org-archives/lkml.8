@@ -2,153 +2,159 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBDC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C462C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5FC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580418442;
-	bh=4P4sREC3cYV+vUNSvGXYnC5xTKG+r+SiT9QXQomCSNA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=louXZE7Ud6Yl+z7d3CFS/mcN67ayFZjBvO3+7vJpaz37bfC9rW4cAvuQdDoOAE8K4
-	 xNd1iyPBghfqmvXyURDRDOdtxTuZ//4ik4n+GAlceH51QtdO57j2kn2AHN6LJgvEfF
-	 WCXiuYUs7Ro0uKEW0B5K7x4VfijybsvjWUdIA9mk=
+	by mail.kernel.org (Postfix) with ESMTP id 6CBE920708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gUC0er51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgA3VHV (ORCPT
+        id S1727646AbgA3VLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:07:21 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33306 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3VHV (ORCPT
+        Thu, 30 Jan 2020 16:11:01 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33532 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3VLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:07:21 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q81so5135034oig.0;
-        Thu, 30 Jan 2020 13:07:20 -0800 (PST)
+        Thu, 30 Jan 2020 16:11:01 -0500
+Received: by mail-il1-f194.google.com with SMTP id s18so4351237iln.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:10:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PU5/cH0Wngrz1MgLpQX0MNgSDrR1feN6DXOeanfOIgU=;
+        b=gUC0er5187UO/d0eIo8H6Tjx7yQ48NFKfAnXOuOddehNzaTp/7NdSTtEcR0vk6CnPx
+         KQq74WRVprwoiDQOwaeavknl0iAx+YoJ1mcLV0k+IlX9ptMZgeKYe6N0PejT7cFrgP3I
+         XgeaIi5meYqQB13Qy8bBQC/OTD5cR2qJOfsHaaQ/HTNNvYIwnuH4Y3p5ORPj7Yaoiqev
+         zZeRSqysDb8V2bM3P8qOHebBNFxKOrZxTrYpF5C4al35aCS30gYSvKc2qfknefhjelYG
+         5yXnogmoZAzS0hn+MwWM+jpadGRI/cGgtF9p7Y0D3Y8QMjatSwvPKks6TDuDm9EjoY9z
+         yKkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+KhBsaQhYAtg/9op0ggWgTDIHD8rbgQILFtHm4y6ZFo=;
-        b=Hg92ugbkSXmLWCBJuOJK+7+OY/1o6//yBw15l6cqYBJXEexpN6B620zzvVqZDHrHe4
-         4cAo40MtEgPbkePpidXVDf2hyydSUT6q6SEjazmuJoRZGXy30agu0ADmo5A2Pih567bw
-         0WcoL8N24yE7JHAmtnzV7WuK9keTurqVGBogNj2FybFNVtqWOFM/gO4+SYscYlldYC2k
-         +5CC/GAPUoqVPfJYYtONxNXQPJp7I7+vlw8MIymy0YrNX/RF9afre8W0759NoNKaQkj4
-         jv8UvHibgAPuFy3Ei9cj1TlQQNuFKTR6zIt7gAww5p10E6FQuC1K9S3DFn2eISS0G4WP
-         s+9Q==
-X-Gm-Message-State: APjAAAVWpNLwewGboBwN4Hd2NZJycnNXhBgA8LzE/EK2ajDQPZ/3d3WG
-        6cLYO2dQMjiDSR24WPq4tCs7PtBXLwiBFWK0zgE=
-X-Google-Smtp-Source: APXvYqyl510fC9XqZsVw4DYiTbSHXnTxOvhV5KaMTO1VWv/L/jyTAjwQPata1SThgOjatlzBGwd4Q2asPWdLs4/wV/o=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr4359734oig.103.1580418440279;
- Thu, 30 Jan 2020 13:07:20 -0800 (PST)
+        bh=PU5/cH0Wngrz1MgLpQX0MNgSDrR1feN6DXOeanfOIgU=;
+        b=GztRQTVdI43/UXS/O/3KcJB4VyV6bAhM7cWVStyU3VAP3ZDb97+Zqvbv8KrsH8apaC
+         7M1lXcnGFqSQthNogq+WQeLM6+MXiledYdC/RXHWvQhGnlOZDDX7Niv0pxlVkoTurEML
+         79tMY6sS76yXjInkcdLfLmmgdZZRVDu4bIfHhX2+xoaR6l3Ed+YFUnMuy+0bF5jnuIYy
+         zvrl8JrWjvK0qWRimplqKFquoUoSL3A/UmHb8mf1ajTaBxP7Ni+Xnskl6wLh9lCrVIDI
+         D1V3CyX3L/+WNovNkkTVkxU1IIWIVHI7W+pNRcv2OMLJjupceqffMIaVNgEvv+ZafEW5
+         WoFg==
+X-Gm-Message-State: APjAAAXj5S2W3e6QJAa41OGlX8GgXpA3DX1U8CEMApNjWigwoGi5PBET
+        wcH+on1f5ydjNcepFhHlcQPgtKXtvdNwRQFCC3aomQ==
+X-Google-Smtp-Source: APXvYqzrztI9lG6S88/b67kLa+9IghKc8TeYLCFitVnLZ2reVJPOXcyj4RQJwicziNPFHZStIhjwP5IgL3SDbkxvGH0=
+X-Received: by 2002:a92:884e:: with SMTP id h75mr6301095ild.199.1580418658864;
+ Thu, 30 Jan 2020 13:10:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20200111022145.GA166025@localhost>
-In-Reply-To: <20200111022145.GA166025@localhost>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Jan 2020 22:07:09 +0100
-Message-ID: <CAJZ5v0hF2YDVHcvqx_4TaEzuqBKppVG7gZ4nXm_peF75Cfbzmg@mail.gmail.com>
-Subject: Re: [PATCH] acpi: button: Provide option for power button to directly
- signal init
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
+ <20200106125352.GB9198@dhcp22.suse.cz> <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
+ <20200108114952.GR32178@dhcp22.suse.cz> <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
+ <20200127141637.GL1183@dhcp22.suse.cz> <CAA25o9QuA_9EoivWo-DuJsWoHCdBm2wio3G8JYxuTfQErT42kg@mail.gmail.com>
+ <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
+ <CAA25o9RHKerPJNW6h5d6W48q1qA3wYJAmhOBU3XiBHwMcEChhA@mail.gmail.com> <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com>
+From:   Luigi Semenzato <semenzato@google.com>
+Date:   Thu, 30 Jan 2020 13:10:47 -0800
+Message-ID: <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geoff Pike <gpike@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 3:21 AM Josh Triplett <josh@joshtriplett.org> wrote:
+On Thu, Jan 30, 2020 at 12:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> Virtual machines and containers often use an ACPI power button event to
-> tell the machine to shut down gracefully.
+> On Mon, Jan 27, 2020 at 6:21 PM Luigi Semenzato <semenzato@google.com> wrote:
+> >
+> > On Mon, Jan 27, 2020 at 8:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Mon, Jan 27, 2020 at 5:13 PM Luigi Semenzato <semenzato@google.com> wrote:
+> > > >
+> > > > On Mon, Jan 27, 2020 at 6:16 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
+> > > > > [...]
+> > > > > > The purpose of my documentation patch was to make it clearer that
+> > > > > > hibernation may fail in situations in which suspend-to-RAM works; for
+> > > > > > instance, when there is no swap, and anonymous pages are over 50% of
+> > > > > > total RAM.  I will send a new version of the patch which hopefully
+> > > > > > makes this clearer.
+> > > > >
+> > > > > I was under impression that s2disk is pretty much impossible without any
+> > > > > swap.
+> > > >
+> > > > I am not sure what you mean by "swap" here.  S2disk needs a swap
+> > > > partition for storing the image, but that partition is not used for
+> > > > regular swap.
+> > >
+> > > That's not correct.
+> > >
+> > > The swap partition (or file) used by s2disk needs to be made active
+> > > before it can use it and the mm subsystem is also able to use it for
+> > > regular swap then.
+> >
+> > OK---I had this wrong, thanks.
+> >
+> > > >  If there is no swap, but more than 50% of RAM is free
+> > > > or reclaimable, s2disk works fine.  If anonymous is more than 50%,
+> > > > hibernation can still work, but swap needs to be set up (in addition
+> > > > to the space for the hibernation image).  The setup is not obvious and
+> > > > I don't think that the documentation is clear on this.
+> > >
+> > > Well, the entire contents of RAM must be preserved, this way or
+> > > another, during hibernation.  That should be totally obvious to anyone
+> > > using it really.
+> >
+> > Yes, that's obvious.
+> >
+> > > Some of the RAM contents is copies of data already there in the
+> > > filesystems on persistent storage and that does not need to be saved
+> > > again.  Everything else must be saved and s2disk (and Linux
+> > > hibernation in general) uses active swap space to save these things.
+> > > This implies that in order to hibernate the system, you generally need
+> > > the amount of swap space equal to the size of RAM minus the size of
+> > > files mapped into memory.
+> > >
+> > > So, to be on the safe side, the total amount of swap space to be used
+> > > for hibernation needs to match the size of RAM (even though
+> > > realistically it may be smaller than that in the majority of cases).
+> >
+> > This all makes sense, but we do this:
+> >
+> > -- add resume=/dev/sdc to the command line
+> > -- attach a disk (/dev/sdc) with size equal to RAM
+> > -- mkswap /dev/sdc
+> > -- swapon /dev/sdc
+> > -- echo disk > /sys/power/state
+> >
+> > and the last operation fails with ENOMEM.  Are we doing something
+> > wrong?  Are we hitting some other mm bug?
 >
-> Provide an optional, extremely lightweight way to handle this event by
-> signaling init directly, rather than running a separate daemon (such as
-> acpid or systemd-logind) that adds to startup time and VM image
-> complexity.
+> I would expect this to work, so the fact that it doesn't work for you
+> indicates a bug somewhere or at least an assumption that doesn't hold.
+>
+> Can you please remind me what you do to trigger the unexpected behavior?
 
-Well, I'm not convinced.
+Yes, I create processes that use a large amount of anon memory, more
+than 50% of RAM, like this:
 
-Even though the patch looks straightforward, the approach really is
-quite not so conceptually and honestly it looks like a band-aid.
+dd if=/dev/zero bs=1G count=1 | sleep infinity
 
-Also I'm not quite sure why the ACPI button driver is the target of
-this and not the input layer, for instance.
+I think dd has a 2 GB limit, or around that number, so you'll need a
+few of those.
 
-> By default, the power button will continue to notify userspace through
-> the input layer. With the button.power_signal parameter set, the
-> power button will instead send the configured signal to init. (For
-> instance, sending SIGINT will make the power button simulate
-> ctrl-alt-del.)
->
-> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
->  drivers/acpi/button.c                           | 11 +++++++++++
->  2 files changed, 17 insertions(+)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index ade4e6ec23e0..bbb598e148f4 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -450,6 +450,12 @@
->                         firmware feature for flushing multiple hpte entries
->                         at a time.
->
-> +       button.power_signal=
-> +                       [ACPI] When the power button is pressed, send this
-> +                       signal number to the init process. If set to 0
-> +                       (default), do not send a signal.
-> +                       Format: integer
-> +
->         c101=           [NET] Moxa C101 synchronous serial card
->
->         cachesize=      [BUGS=X86-32] Override level 2 CPU cache size detection.
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index b758b45737f5..923259f132d6 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -14,6 +14,7 @@
->  #include <linux/init.h>
->  #include <linux/types.h>
->  #include <linux/proc_fs.h>
-> +#include <linux/sched/signal.h>
->  #include <linux/seq_file.h>
->  #include <linux/input.h>
->  #include <linux/slab.h>
-> @@ -167,6 +168,10 @@ static unsigned long lid_report_interval __read_mostly = 500;
->  module_param(lid_report_interval, ulong, 0644);
->  MODULE_PARM_DESC(lid_report_interval, "Interval (ms) between lid key events");
->
-> +static int power_signal __read_mostly = 0;
-> +module_param(power_signal, int, 0644);
-> +MODULE_PARM_DESC(power_signal, "Power button sends this signal to init");
-> +
->  /* --------------------------------------------------------------------------
->                                FS Interface (/proc)
->     -------------------------------------------------------------------------- */
-> @@ -426,6 +431,12 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
->                         if (button->suspended)
->                                 break;
->
-> +                       if (power_signal
-> +                           && button->type == ACPI_BUTTON_TYPE_POWER) {
-> +                               kill_cad_pid(power_signal, 1);
-> +                               break;
-> +                       }
-> +
->                         keycode = test_bit(KEY_SLEEP, input->keybit) ?
->                                                 KEY_SLEEP : KEY_POWER;
->                         input_report_key(input, keycode, 1);
-> --
-> 2.25.0.rc2
->
+Thanks!
