@@ -2,43 +2,75 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2315CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DF3C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24C62082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4474F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgA3NmW (ORCPT
+        id S1727369AbgA3Nml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:42:22 -0500
-Received: from verein.lst.de ([213.95.11.211]:40298 "EHLO verein.lst.de"
+        Thu, 30 Jan 2020 08:42:41 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:53242 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbgA3NmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:42:22 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0F32C68C7B; Thu, 30 Jan 2020 14:42:18 +0100 (CET)
-Date:   Thu, 30 Jan 2020 14:42:17 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, phil@raspberrypi.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-contiguous: CMA: give precedence to cmdline
-Message-ID: <20200130134217.GA3713@lst.de>
-References: <20200110171933.15014-1-nsaenzjulienne@suse.de>
+        id S1726980AbgA3Nml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:42:41 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 89AFAFB05;
+        Thu, 30 Jan 2020 14:42:38 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ctoDdB-c76pI; Thu, 30 Jan 2020 14:42:37 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id B0EE24091B; Thu, 30 Jan 2020 14:42:36 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Tomas Novotny <tomas@novotny.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] iio: vncl4000: Enable runtime pm for vcnl4200/4040
+Date:   Thu, 30 Jan 2020 14:42:34 +0100
+Message-Id: <cover.1580391472.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110171933.15014-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've picked this up for Linux 5.6, sorry for the delay.
+This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0 we
+don't do anything since they use on demand measurement.
+
+Patch is against next-20200130.
+
+Changes from v2
+---------------
+- Based on review feedback Tomas Novotny
+  https://lore.kernel.org/linux-iio/20200120182853.37a724fa@tomas.local.tbs-biometrics.cz/
+  Drop long wait in vcnl4000_runtime_resume but rather
+  use vcnl4200_{al,ps}.last_measurement to make sure
+  we wait long enough.
+
+Guido Günther (2):
+  iio: vcnl4000: Use a single return when getting IIO_CHAN_INFO_RAW
+  iio: vncl4000: Enable runtime pm for vcnl4200/4040
+
+ drivers/iio/light/vcnl4000.c | 150 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 132 insertions(+), 18 deletions(-)
+
+-- 
+2.23.0
+
