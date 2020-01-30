@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018F0C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8390215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52E320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410101;
-	bh=+CXCHPZFxuFAhYwU84P3dabbs1o76IT9JCxq49576m8=;
+	s=default; t=1580410105;
+	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aw3Q8JmNVxJAFVpzuepu7PHuq04gSOf6LKqkweLJTQxwBMskD2rFvfQxHXEo5DqMy
-	 LKOk1mUAYwAamIeqxeI0/tzHvZmGg1uK32D+x/BVv9wvNs2MHzfttv3dzNaf0iAps8
-	 RJe54hhl2oTU8lCpz7Els0Zo5T6zilEKFywLYiFc=
+	b=sPmsrro+gzWBtx9xaoWZ+tQIw7dKWRGaUMGc4A0x3gpepKHIFM1d0CVhhCvPevgSf
+	 dPuYMwguHoM5OlDDk5nJayQGmBvU3EXRecoHeE+KdThGrKD0jY5khTaVhYVwPjwlyq
+	 eJ9frC/nrW3kLz4gBWbaLL8ji1hv1rjYgu+SceCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbgA3SsT (ORCPT
+        id S1731546AbgA3SsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59114 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731516AbgA3SsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:15 -0500
+        id S1731535AbgA3SsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368CB2082E;
-        Thu, 30 Jan 2020 18:48:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF8A214AF;
+        Thu, 30 Jan 2020 18:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410094;
-        bh=+CXCHPZFxuFAhYwU84P3dabbs1o76IT9JCxq49576m8=;
+        s=default; t=1580410099;
+        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEQux95+G8qz4XcWNKsAeMIYbOD1bO5EZDKWzo7+KN/u+oZ0x/Pcl3ocVOYvN4JzZ
-         peKWlpQPTbJ8UZRg7QWgMRvpEsP7ntxAb82ElIWajwFLpHC1ZCdVlKvDt3nixC3v6g
-         D5SwMjQ0ztuD19W8kxTNwAje8+7tGaE7jp0lu7vY=
+        b=c+bp+omCD/y8+9g7FEGfYefSz5/N1EqCc6YhbhjIEghglR2PO+palJzX31E+k/xyZ
+         bk6JcLB9fDm5dW3GkaJOSiSVP7MWLyPntU15KyYRl7Fawuaosh9LApWMmwJf4RrCeI
+         nZV73U60hw7bb6cif2fgE7bdQvos7tDERrr3i8XE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/55] iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
-Date:   Thu, 30 Jan 2020 19:39:24 +0100
-Message-Id: <20200130183616.368600456@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
+        Pacho Ramos <pachoramos@gmail.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 45/55] usb-storage: Disable UAS on JMicron SATA enclosure
+Date:   Thu, 30 Jan 2020 19:39:26 +0100
+Message-Id: <20200130183616.725138931@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -59,121 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Laura Abbott <labbott@fedoraproject.org>
 
-[ Upstream commit 3c124435e8dd516df4b2fc983f4415386fd6edae ]
+[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
 
-Non-Transparent Bridge (NTB) devices (among others) may have many DMA
-aliases seeing the hardware will send requests with different device ids
-depending on their origin across the bridged hardware.
+Steve Ellis reported incorrect block sizes and alignement
+offsets with a SATA enclosure. Adding a quirk to disable
+UAS fixes the problems.
 
-See commit ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec
-NTB") for more information on this.
-
-The AMD IOMMU IRQ remapping functionality ignores all PCI aliases for
-IRQs so if devices send an interrupt from one of their aliases they
-will be blocked on AMD hardware with the IOMMU enabled.
-
-To fix this, ensure IRQ remapping is enabled for all aliases with
-MSI interrupts.
-
-This is analogous to the functionality added to the Intel IRQ remapping
-code in commit 3f0c625c6ae7 ("iommu/vt-d: Allow interrupts from the entire
-bus for aliased devices")
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reported-by: Steven Ellis <sellis@redhat.com>
+Cc: Pacho Ramos <pachoramos@gmail.com>
+Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 37 ++++++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
+ drivers/usb/storage/unusual_uas.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index bea19aa337587..0783f44e9afe5 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3709,7 +3709,20 @@ static void set_remap_table_entry(struct amd_iommu *iommu, u16 devid,
- 	iommu_flush_dte(iommu, devid);
- }
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index d0bdebd87ce3a..1b23741036ee8 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_IGNORE_UAS),
  
--static struct irq_remap_table *alloc_irq_table(u16 devid)
-+static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
-+				       void *data)
-+{
-+	struct irq_remap_table *table = data;
-+
-+	irq_lookup_table[alias] = table;
-+	set_dte_irq_entry(alias, table);
-+
-+	iommu_flush_dte(amd_iommu_rlookup_table[alias], alias);
-+
-+	return 0;
-+}
-+
-+static struct irq_remap_table *alloc_irq_table(u16 devid, struct pci_dev *pdev)
- {
- 	struct irq_remap_table *table = NULL;
- 	struct irq_remap_table *new_table = NULL;
-@@ -3755,7 +3768,12 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
- 	table = new_table;
- 	new_table = NULL;
+-/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
++/*
++ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
++ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
++ */
+ UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
+ 		"JMicron",
+ 		"JMS566",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_NO_REPORT_OPCODES),
++		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
  
--	set_remap_table_entry(iommu, devid, table);
-+	if (pdev)
-+		pci_for_each_dma_alias(pdev, set_remap_table_entry_alias,
-+				       table);
-+	else
-+		set_remap_table_entry(iommu, devid, table);
-+
- 	if (devid != alias)
- 		set_remap_table_entry(iommu, alias, table);
- 
-@@ -3772,7 +3790,8 @@ out_unlock:
- 	return table;
- }
- 
--static int alloc_irq_index(u16 devid, int count, bool align)
-+static int alloc_irq_index(u16 devid, int count, bool align,
-+			   struct pci_dev *pdev)
- {
- 	struct irq_remap_table *table;
- 	int index, c, alignment = 1;
-@@ -3782,7 +3801,7 @@ static int alloc_irq_index(u16 devid, int count, bool align)
- 	if (!iommu)
- 		return -ENODEV;
- 
--	table = alloc_irq_table(devid);
-+	table = alloc_irq_table(devid, pdev);
- 	if (!table)
- 		return -ENODEV;
- 
-@@ -4215,7 +4234,7 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
- 		struct irq_remap_table *table;
- 		struct amd_iommu *iommu;
- 
--		table = alloc_irq_table(devid);
-+		table = alloc_irq_table(devid, NULL);
- 		if (table) {
- 			if (!table->min_index) {
- 				/*
-@@ -4232,11 +4251,15 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
- 		} else {
- 			index = -ENOMEM;
- 		}
--	} else {
-+	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
-+		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
- 		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
- 
--		index = alloc_irq_index(devid, nr_irqs, align);
-+		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
-+	} else {
-+		index = alloc_irq_index(devid, nr_irqs, false, NULL);
- 	}
-+
- 	if (index < 0) {
- 		pr_warn("Failed to allocate IRTE\n");
- 		ret = index;
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
 -- 
 2.20.1
 
