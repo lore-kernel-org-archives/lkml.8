@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7114C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE8D20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0E7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410124;
-	bh=lAGv5hVPt2gjbhYB93LgEM7B3OdgpEeGiDSS3ampSWg=;
+	s=default; t=1580410129;
+	bh=m7HO3EtQN1j59V/2gBIHF/vuLHrgFxMgrUCgTi7HC/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrTYU9Txuu59x6HtXRuFCYkiF8NAn9AnMcKuuN9zdhTQzkRqnziDqGd3aCKemuw8c
-	 EzEDTigpKKhbDgN4g9aqhWCx3WZXb764eeEbbZfzctkUdYB1DJAYyUmtF7xVD0CU70
-	 jASTv4Txr6eWED09f9wjA+X1F7DRqeoa71HpJ7jI=
+	b=IH8YbK+uEp0EkpW4DEJgYmH8ZzXUrwyDRd2GHcm7AS1T6ZHqpbN8AGVlfjFgYwO44
+	 /XqmDYEkg2Ugta9FBUqA+O1pHc1UP/0pBBlESmJXZ18NaCxbKL9M/Mu+Mqss38+8gf
+	 jtQbowMlqTmCSLZLTAp+KtIrsV3Epd79/1/O2lmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbgA3Ssn (ORCPT
+        id S1731616AbgA3Sss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731586AbgA3Ssh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:37 -0500
+        id S1731586AbgA3Ssp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C8C2082E;
-        Thu, 30 Jan 2020 18:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D76E3205F4;
+        Thu, 30 Jan 2020 18:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410116;
-        bh=lAGv5hVPt2gjbhYB93LgEM7B3OdgpEeGiDSS3ampSWg=;
+        s=default; t=1580410124;
+        bh=m7HO3EtQN1j59V/2gBIHF/vuLHrgFxMgrUCgTi7HC/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=usDQSiTItMrbt0GiQjPhkp4RsRRiUVXAv31DKyrY7R2cLmuDOKPRtq9O+goT1ho0c
-         RDCS2TzZZICGKqpP3t90w7p1BzF4NIeWFRd/aBF8d5JHKG8xW/gWeL9tE9QL2draqQ
-         uofBzjdesBb1pf2xnYEFE2uPYb4bgcH2mWPYlY8U=
+        b=A/EzGzLkfI3iYrUojGNpQBmvBDH1nMtA3EDjV40dClnfYyHNgEZgi3C9Q2smMcwqc
+         BgwYhLrPE41VoBHPHyx0D1m5aqkZLjiICjMec9yCyFcFmy6uzfnZ0wIUJck5w6iIuf
+         A/DCDUCXHAsLRK9HM2/j8q686l97Y4ywCS963vJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 4.19 13/55] serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
-Date:   Thu, 30 Jan 2020 19:38:54 +0100
-Message-Id: <20200130183611.283439048@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 16/55] iio: st_gyro: Correct data for LSM9DS0 gyro
+Date:   Thu, 30 Jan 2020 19:38:57 +0100
+Message-Id: <20200130183611.814778774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -60,49 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit dc76697d7e933d5e299116f219c890568785ea15 upstream.
+commit e825070f697abddf3b9b0a675ed0ff1884114818 upstream.
 
-Unbinding the bcm2835aux UART driver raises the following error if the
-maximum number of 8250 UARTs is set to 1 (via the 8250.nr_uarts module
-parameter or CONFIG_SERIAL_8250_RUNTIME_UARTS):
+The commit 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
+assumes that gyro in LSM9DS0 is the same as others with 0xd4 WAI ID,
+but datasheet tells slight different story, i.e. the first scale factor
+for the chip is 245 dps, and not 250 dps.
 
-(NULL device *): Removing wrong port: a6f80333 != fa20408b
+Correct this by introducing a separate settings for LSM9DS0.
 
-That's because bcm2835aux_serial_probe() retrieves UART line number 1
-from the devicetree and stores it in data->uart.port.line, while
-serial8250_register_8250_port() instead uses UART line number 0,
-which is stored in data->line.
-
-On driver unbind, bcm2835aux_serial_remove() uses data->uart.port.line,
-which contains the wrong number.  Fix it.
-
-The issue does not occur if the maximum number of 8250 UARTs is >= 2.
-
-Fixes: bdc5f3009580 ("serial: bcm2835: add driver for bcm2835-aux-uart")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.6+
-Cc: Martin Sperl <kernel@martin.sperl.org>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Link: https://lore.kernel.org/r/912ccf553c5258135c6d7e8f404a101ef320f0f4.1579175223.git.lukas@wunner.de
+Fixes: 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
+Depends-on: 45a4e4220bf4 ("iio: gyro: st_gyro: fix L3GD20H support")
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_bcm2835aux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/gyro/st_gyro_core.c |   75 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -115,7 +115,7 @@ static int bcm2835aux_serial_remove(stru
- {
- 	struct bcm2835aux_data *data = platform_get_drvdata(pdev);
- 
--	serial8250_unregister_port(data->uart.port.line);
-+	serial8250_unregister_port(data->line);
- 	clk_disable_unprepare(data->clk);
- 
- 	return 0;
+--- a/drivers/iio/gyro/st_gyro_core.c
++++ b/drivers/iio/gyro/st_gyro_core.c
+@@ -141,7 +141,6 @@ static const struct st_sensor_settings s
+ 			[2] = LSM330DLC_GYRO_DEV_NAME,
+ 			[3] = L3G4IS_GYRO_DEV_NAME,
+ 			[4] = LSM330_GYRO_DEV_NAME,
+-			[5] = LSM9DS0_GYRO_DEV_NAME,
+ 		},
+ 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
+ 		.odr = {
+@@ -205,6 +204,80 @@ static const struct st_sensor_settings s
+ 			},
+ 		},
+ 		.sim = {
++			.addr = 0x23,
++			.value = BIT(0),
++		},
++		.multi_read_bit = true,
++		.bootime = 2,
++	},
++	{
++		.wai = 0xd4,
++		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
++		.sensors_supported = {
++			[0] = LSM9DS0_GYRO_DEV_NAME,
++		},
++		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
++		.odr = {
++			.addr = 0x20,
++			.mask = GENMASK(7, 6),
++			.odr_avl = {
++				{ .hz = 95, .value = 0x00, },
++				{ .hz = 190, .value = 0x01, },
++				{ .hz = 380, .value = 0x02, },
++				{ .hz = 760, .value = 0x03, },
++			},
++		},
++		.pw = {
++			.addr = 0x20,
++			.mask = BIT(3),
++			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
++			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
++		},
++		.enable_axis = {
++			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
++			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
++		},
++		.fs = {
++			.addr = 0x23,
++			.mask = GENMASK(5, 4),
++			.fs_avl = {
++				[0] = {
++					.num = ST_GYRO_FS_AVL_245DPS,
++					.value = 0x00,
++					.gain = IIO_DEGREE_TO_RAD(8750),
++				},
++				[1] = {
++					.num = ST_GYRO_FS_AVL_500DPS,
++					.value = 0x01,
++					.gain = IIO_DEGREE_TO_RAD(17500),
++				},
++				[2] = {
++					.num = ST_GYRO_FS_AVL_2000DPS,
++					.value = 0x02,
++					.gain = IIO_DEGREE_TO_RAD(70000),
++				},
++			},
++		},
++		.bdu = {
++			.addr = 0x23,
++			.mask = BIT(7),
++		},
++		.drdy_irq = {
++			.int2 = {
++				.addr = 0x22,
++				.mask = BIT(3),
++			},
++			/*
++			 * The sensor has IHL (active low) and open
++			 * drain settings, but only for INT1 and not
++			 * for the DRDY line on INT2.
++			 */
++			.stat_drdy = {
++				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
++				.mask = GENMASK(2, 0),
++			},
++		},
++		.sim = {
+ 			.addr = 0x23,
+ 			.value = BIT(0),
+ 		},
 
 
