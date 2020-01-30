@@ -2,93 +2,97 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADC6C35246
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3C9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40782082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580401169;
-	bh=ZG83tzueYceIfvljFPHsMVwg62ykNzYfDwabPN4FDpw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=THPW/5IuYdE/7TeFnBzAtFJofGkYIkkgwkQ5XVvCSgKqbgzun/oToY7yaucdqyAkZ
-	 LAdrPO4kFKpdodREkuN2h7N+DRW3K2lOzIi4Iuc69PycwHoqKKs9d0PfOYoMO4HXvp
-	 JydDUf3rbHovNa2JRIdhJ3HWO1eApBX04wFWyRQQ=
+	by mail.kernel.org (Postfix) with ESMTP id ADFC420CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrRv+ayu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgA3QT2 (ORCPT
+        id S1727317AbgA3QWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:19:28 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44352 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgA3QT2 (ORCPT
+        Thu, 30 Jan 2020 11:22:35 -0500
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:38856 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3QWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:19:28 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so2642280lfa.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 08:19:26 -0800 (PST)
+        Thu, 30 Jan 2020 11:22:35 -0500
+Received: by mail-lj1-f182.google.com with SMTP id w1so4021470ljh.5;
+        Thu, 30 Jan 2020 08:22:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4aauck1BwjHmPxReHY5+5wBQQQKQ71X2qt0RvmNdruY=;
-        b=C79ZEneeywO5bDkFYspTf0mHqg+XFdEPkZsBeweiskD6zGKYsX69OLWfEGmiyq0kF4
-         7cVO+mYrSPIpx8aclMNM6JP+nr3WlLliM10cmXlSndRjIxf2x6/xKP/br5BKDGTfdn+l
-         Cdmuz/2CZ9lz/Lb8JfgQUlPOoXks5ZIoUYivY=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8ydSULXhpnS+IHlEO6mcIkif2rvznLkOx5g93ANwtj4=;
+        b=YrRv+ayu7UpfrV7pGLy+a1wa+oHB5N0itiEYbS0LqezYldLZ/c5CbJ9JuJueg/ZIN8
+         ejFl4HxejjDlj5znzvNDPmX7FC2r4Iq2JwbkdXdjxaX4mufNsu39LSXsuu02VtONt8bt
+         gLq1RkSU5ixbkximWiTgdoFw1RLbmbdyCmoWbKBgUHvBb4TNbxHMhS4zG0ii7hJFt8xp
+         GYF9XGi7MNZSrWpWESncKX6fFdJYOU3Jm2xgyB4zOgz52mwhUMOJV0S3Fw/bNdRoJp9b
+         IHSgAcsDWGGN7BShK9aDO40u4jM8g+/MSRnAwcbW3rsXVkBXgvJvvLgHPH73WZTFvF+k
+         SeGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4aauck1BwjHmPxReHY5+5wBQQQKQ71X2qt0RvmNdruY=;
-        b=GwtT8NbkM3PpbAbTNTG+G566mVv+3MluyNkrYK1+GwrMiHdtfwKgx9wjNLhse3ym/V
-         qBCNmSiKrhT1/JX1rJBgOXqUEe+8s5gR1Xjg4qAOMoYG2MMpSVWKOB6GMNCKJzFHUR2L
-         2NwYPw70g82pcxvJ5OV9HXgaUu00KR8NdvV0lkTyGvOMgdJPPySceAi2CSdZihjo8mGZ
-         4pbzxfTDiPZo1m3YP/PUsCH+f97GQimdGDIHEd1lBi/xXc79xJuvGo77KR027A4Xk5Ga
-         2pLKTKvS6X6t1lCCwV3A8OBqSHgtioeEV+pSNq+EM0vcPuEHOf6IiQTqDHbmt/g2i3i7
-         166Q==
-X-Gm-Message-State: APjAAAX/pajpMgFEmxpt72VtC6Qe79fAdBsko3MtY6qW35EneWCV5GJw
-        3MgBeaj9p4IVDspf32n/wFNVP+uaqNM=
-X-Google-Smtp-Source: APXvYqz2q8E7ASe9RqaHYTxoZ5SuNhGjgNOwdDPrvbgAP1/1nkOV74aME8ub06zNFutLaG1GAgpnng==
-X-Received: by 2002:ac2:4472:: with SMTP id y18mr2897554lfl.39.1580401164608;
-        Thu, 30 Jan 2020 08:19:24 -0800 (PST)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id q10sm3252851ljj.60.2020.01.30.08.19.23
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8ydSULXhpnS+IHlEO6mcIkif2rvznLkOx5g93ANwtj4=;
+        b=YohuPuZdOZ/33lHb+urHDqeVFN2Ah+/Fsvh5rdkr41l+uLS55oKHmPZFraCMk6tB4Z
+         +G1u0hMII3izYjjxbD2sLcXfFrPHSOhByWNfmvhi23viRfS+uHNyHV03miW7OjYyY98o
+         FYnfc2KYaoktBYbYwlKLNTgtP/cPmqbs7PahI0OsbsRpuTSjsiMo2cWno56Lg6fvvNQ7
+         leoP1XGSPpqv7aihhk6/aaFBDL91y6wrHU8a6e4l3qOtvH0JiKmPFG4qcc3C2TClXnSy
+         a1u0he3UaGhc2kgtEI4A0EJ78bSJsxapKif476f4/1vxlJuJD7I1S5xLYp/Eq2k6OiK2
+         4z0A==
+X-Gm-Message-State: APjAAAXcnysq+TQP31n2shNcMnWkMSWruJQbZMRTrBdnJ6hsy3TOvNM8
+        f/2vKwBROILNjtK+OSr82/U=
+X-Google-Smtp-Source: APXvYqygtCrUmUdUJMmbcfRWxioa9pHzvzUKG7bRsZbCukhjXSx3+2knDTwFGBmnS2g5idn/hQCveg==
+X-Received: by 2002:a2e:9d0f:: with SMTP id t15mr3339882lji.171.1580401351910;
+        Thu, 30 Jan 2020 08:22:31 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id q10sm3258034ljj.60.2020.01.30.08.22.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 08:19:24 -0800 (PST)
-Received: by mail-lf1-f48.google.com with SMTP id v201so2642192lfa.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 08:19:23 -0800 (PST)
-X-Received: by 2002:a19:4849:: with SMTP id v70mr3068446lfa.30.1580401163417;
- Thu, 30 Jan 2020 08:19:23 -0800 (PST)
+        Thu, 30 Jan 2020 08:22:31 -0800 (PST)
+Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-6-git-send-email-spujar@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ef701838-be43-e42c-9245-b28cda5ed9bb@gmail.com>
+Date:   Thu, 30 Jan 2020 19:22:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <CAPM=9twBvYvUoijdzAi2=FGLys0pfaK+PZw-uq2kyxqZipeujA@mail.gmail.com>
- <CAHk-=wi31OH0Rjv5=0ELTz3ZFUVaARmvq+w-oy+pRpGENd-iEA@mail.gmail.com>
-In-Reply-To: <CAHk-=wi31OH0Rjv5=0ELTz3ZFUVaARmvq+w-oy+pRpGENd-iEA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 30 Jan 2020 08:19:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whum_jLmptKrgV-fOvXZvHH68xbZU-wDSj1n9gWL5A5pA@mail.gmail.com>
-Message-ID: <CAHk-=whum_jLmptKrgV-fOvXZvHH68xbZU-wDSj1n9gWL5A5pA@mail.gmail.com>
-Subject: Re: [git pull] drm for 5.6-rc1
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1580380422-3431-6-git-send-email-spujar@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 8:13 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> That doesn't seem right. If I do that, I lose the added GEM_BUG_ON()'s.
+30.01.2020 13:33, Sameer Pujar пишет:
+...
+> +static int tegra_ahub_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra_ahub *ahub;
+> +	void __iomem *regs;
+> +	int ret;
+> +
+> +	ahub = devm_kcalloc(&pdev->dev, 1, sizeof(*ahub), GFP_KERNEL);
+> +	if (!ahub)
+> +		return -ENOMEM;
 
-Just for your ref: see commit ecc4d2a52df6 ("drm/i915/userptr: fix
-size calculation") for the source of those debug statements, and then
-2c86e55d2ab5 ("drm/i915/gtt: split up i915_gem_gtt") on the other side
-that just moved the functions..
-
-              Linus
+ahub = devm_kzalloc(&pdev->dev, sizeof(*ahub), GFP_KERNEL);
