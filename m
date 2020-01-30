@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB50C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C63AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A532F214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9CE214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409704;
-	bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
+	s=default; t=1580409708;
+	bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUN3d0OawQk+dZSzVQO+OGtA8EeLWMEZBnMPqqYnSMco69cl3erPy27stbHfacwFu
-	 A/h5bVpv5NpuIY2hpb6IOP2PiTbSJ7L4j7iOgHLmcDQJSy+8vPNMhQqL+5F+f5FO8d
-	 5FpdDqPPxVA9KoZ9xSSkGXxqhUu0l6qPLsBiCU8c=
+	b=AWiy1EO4cJtSZw3oQCDpKv4tVuqkMBLn1laNSLeS6VJaT8yHS+fFY1sxslHqKShyD
+	 HKAQnewyZnCD9R9T+wE9p8Qp4u3br76IvCiFTxJxabtxCMBjq7P8kfggFn2PfSM87G
+	 vTLuqHMsrERdczEi9USQzUcQCcn2Cp1rie45dD3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgA3Sln (ORCPT
+        id S1730244AbgA3Slr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:41:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49650 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:41:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgA3Sli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:38 -0500
+        id S1729435AbgA3Sln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99491205F4;
-        Thu, 30 Jan 2020 18:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA00205F4;
+        Thu, 30 Jan 2020 18:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409698;
-        bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
+        s=default; t=1580409703;
+        bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Dp2MA5j9xVf4gneBfhxn1jKm9j45X2cpCs9EfmMbE9QVZ3Qxn+y8ML5x+a1vXqNU
-         8iON2yMOlHcs2mk8vS85HMsKvRXqQlQlAIckc/j7weyStgt/TQnM+uy9G8f1FlpFpb
-         QOTgPS46yscCyQavBH7dbSefyK4Co1RqYOzIT4EI=
+        b=zuLpxkRCBTfLL1UxoJT2CfA//Z8FvFGOH1uwFCTJVJCep+wt7JgCE7SeMIy/56vNN
+         fgmnQCjmWJF+lftcEj/Bna1G/01+Wnhi3qgGEVPeb/7Yh+Z3AF4gFm62EUFKf+uKLf
+         Wa2Ku6Kbhb0tGjyBpZOsk8twuGIMJjLk/2TsU2/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.5 54/56] KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
-Date:   Thu, 30 Jan 2020 19:39:11 +0100
-Message-Id: <20200130183618.519896222@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.5 56/56] power/supply: ingenic-battery: Dont change scale if theres only one
+Date:   Thu, 30 Jan 2020 19:39:13 +0100
+Message-Id: <20200130183619.041405246@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -61,57 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 4942dc6638b07b5326b6d2faa142635c559e7cd5 upstream.
+commit 86b9182df8bb12610d4d6feac45a69f3ed57bfd2 upstream.
 
-On VHE systems arch.mdcr_el2 is written to mdcr_el2 at vcpu_load time to
-set options for self-hosted debug and the performance monitors
-extension.
+The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
+range, or in low-precision mode with a 7.5V range. The code in place in
+this driver will select the proper scale according to the maximum
+voltage of the battery.
 
-Unfortunately the value of arch.mdcr_el2 is not calculated until
-kvm_arm_setup_debug() in the run loop after the vcpu has been loaded.
-This means that the initial brief iterations of the run loop use a zero
-value of mdcr_el2 - until the vcpu is preempted. This also results in a
-delay between changes to vcpu->guest_debug taking effect.
+The JZ4770 however only has one mode, with a 6.6V range. If only one
+scale is available, there's no need to change it (and nothing to change
+it to), and trying to do so will fail with -EINVAL.
 
-Fix this by writing to mdcr_el2 in kvm_arm_setup_debug() on VHE systems
-when a change to arch.mdcr_el2 has been detected.
+Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
 
-Fixes: d5a21bcc2995 ("KVM: arm64: Move common VHE/non-VHE trap config in separate functions")
-Cc: <stable@vger.kernel.org> # 4.17.x-
-Suggested-by: James Morse <james.morse@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Artur Rojek <contact@artur-rojek.eu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kvm/debug.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/power/supply/ingenic-battery.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/kvm/debug.c
-+++ b/arch/arm64/kvm/debug.c
-@@ -101,7 +101,7 @@ void kvm_arm_reset_debug_ptr(struct kvm_
- void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
- {
- 	bool trap_debug = !(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY);
--	unsigned long mdscr;
-+	unsigned long mdscr, orig_mdcr_el2 = vcpu->arch.mdcr_el2;
+--- a/drivers/power/supply/ingenic-battery.c
++++ b/drivers/power/supply/ingenic-battery.c
+@@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(str
+ 		return -EINVAL;
+ 	}
  
- 	trace_kvm_arm_setup_debug(vcpu, vcpu->guest_debug);
- 
-@@ -197,6 +197,10 @@ void kvm_arm_setup_debug(struct kvm_vcpu
- 	if (vcpu_read_sys_reg(vcpu, MDSCR_EL1) & (DBG_MDSCR_KDE | DBG_MDSCR_MDE))
- 		vcpu->arch.flags |= KVM_ARM64_DEBUG_DIRTY;
- 
-+	/* Write mdcr_el2 changes since vcpu_load on VHE systems */
-+	if (has_vhe() && orig_mdcr_el2 != vcpu->arch.mdcr_el2)
-+		write_sysreg(vcpu->arch.mdcr_el2, mdcr_el2);
+-	return iio_write_channel_attribute(bat->channel,
+-					   scale_raw[best_idx],
+-					   scale_raw[best_idx + 1],
+-					   IIO_CHAN_INFO_SCALE);
++	/* Only set scale if there is more than one (fractional) entry */
++	if (scale_len > 2) {
++		ret = iio_write_channel_attribute(bat->channel,
++						  scale_raw[best_idx],
++						  scale_raw[best_idx + 1],
++						  IIO_CHAN_INFO_SCALE);
++		if (ret)
++			return ret;
++	}
 +
- 	trace_kvm_arm_set_dreg32("MDCR_EL2", vcpu->arch.mdcr_el2);
- 	trace_kvm_arm_set_dreg32("MDSCR_EL1", vcpu_read_sys_reg(vcpu, MDSCR_EL1));
++	return 0;
  }
+ 
+ static enum power_supply_property ingenic_battery_properties[] = {
 
 
