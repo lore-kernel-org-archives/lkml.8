@@ -1,141 +1,94 @@
 Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158FBC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE75EC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E879920702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1832083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="YI05/kb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgA3Lth (ORCPT
+        id S1727239AbgA3Lua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:49:37 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:41202 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgA3Ltf (ORCPT
+        Thu, 30 Jan 2020 06:50:30 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35466 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3Lua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:49:35 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: xm0/6OSD4e+3eQpnHGyGLqKiqn5zcKLCSW07SQYPKaHETLJb8Cr1jT3JcB9qfT69PjIEUbFwrF
- knBEIWTizVC1LSKwksO7EZLNZT/YzBbYzUhpdnIqYBOAoVhoFK3J4SvgdTboGySlMVP4lNakOI
- KB08x4lJtkfay8FabYr4VRx9xb3q7DZNdLsXPdVPMEqUoDmga1+IDmRvGRMJpCn2Lo4tGpZNLz
- 1ZUZj1Pdc28yUXZ3F6akK/2GepLoKhvr+gZt1V9NCetew+b1q/EMq210kiZPFjtHeR2R0owp5j
- voI=
-X-IronPort-AV: E=Sophos;i="5.70,381,1574146800"; 
-   d="scan'208";a="604905"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jan 2020 04:49:34 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 Jan 2020 04:49:34 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 30 Jan 2020 04:49:31 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <broonie@kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <mirq-linux@rere.qmqm.pl>, Arnd Bergmann <arnd@arndb.de>
-Subject: [RESEND PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
-Date:   Thu, 30 Jan 2020 13:49:30 +0200
-Message-ID: <20200130114930.28882-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+        Thu, 30 Jan 2020 06:50:30 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so1323151qvi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 03:50:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Ttghg393IcGYJbiUFt+itRymnd0g1UG0znqTqhkFJvg=;
+        b=YI05/kb5PylcWPrNdQz66P/RD1w239dHch8g0Ed+JSrJAyrwTMGmFQSi5sjikFFjxF
+         4nEz6igVFHV7W8JuJtfTJA9A7xsUKQnJDngMYyEe3f8Y+F06w2fTt+R6KcldkvgKNUKV
+         h+AFu+ksY6xGX7xyA4ZgQ7/77Bx6hZMdw52JT1XPuVhbekLGMfYd5P6SIjSfrbhn45/7
+         yE9xwrzKZbzCDLmHkAF7OUXaUnkd+/1/J61o78QaS/mPDer8tBRE0gLmOz+eTdV9Y9ff
+         1h3El82Y1tme6BsrI3jgMmHnKfGn9QYr2Mt7Iv8TfZu1I4UMYoEyTX++wl8u3Cp/bxDE
+         tP9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Ttghg393IcGYJbiUFt+itRymnd0g1UG0znqTqhkFJvg=;
+        b=oIRH4SwABGCKeMB3uZPHMR5vw+UjGWuA8rjgkPJw9P7yhgbteTyeRb13PPeDZ9/j8Q
+         +2W8rp/DPA/XklVxbBJhXSqeHblRrht8t1yBoP7YyTP2/FbsXpOwL8lpjABVJVf5wEKI
+         nktKDBTAlFGtQUN6hi2wGfZ+zAE3C3K98VM0y6BbQvqZYz/dU1DrjudkwTSNmGvfJzb0
+         rSXT84dIBUStwLjv140hl/1pbyp0asYpIYtlEVRz0HtFPFu5QTrTAQCUN7bKXRSzEgDb
+         JSwlFzRSFxguKbS+QGJ1It44PjnkelDOO1f+wyiFIWbIi/ZMKtiiT/KDMTFOFD6yn7uU
+         tIcg==
+X-Gm-Message-State: APjAAAVngwSJx0RgoMsqS428zVA6ykhKUvkF6gM8jqOjxrm5gTCuU43M
+        zvNV5vaND17UOKJKkZHSc5J/cA==
+X-Google-Smtp-Source: APXvYqz9K0TnyCHjPr4h7Ru5x4wYWQDd6UzsnvxHEaln5ea4uS8H4TF0QIknxQK6MN6zdBgpeV7czQ==
+X-Received: by 2002:a0c:ac4e:: with SMTP id m14mr3953888qvb.37.1580385029184;
+        Thu, 30 Jan 2020 03:50:29 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 206sm2604472qkf.132.2020.01.30.03.50.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 03:50:28 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/util: fix a data race in __vm_enough_memory()
+Date:   Thu, 30 Jan 2020 06:50:27 -0500
+Message-Id: <1135BD67-4CCB-4700-8150-44E7E323D385@lca.pw>
+References: <20200130042011.GI6615@bombadil.infradead.org>
+Cc:     akpm@linux-foundation.org, dennis@kernel.org, tj@kernel.org,
+        cl@linux.com, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200130042011.GI6615@bombadil.infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-The ssc audio driver can call into both pdc and dma backends.  With the
-latest rework, the logic to do this in a safe way avoiding link errors
-was removed, bringing back link errors that were fixed long ago in commit
-061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
+> On Jan 29, 2020, at 11:20 PM, Matthew Wilcox <willy@infradead.org> wrote:
+>=20
+> I'm really not a fan of exposing the internals of a percpu_counter outside=
 
-Fix it this time using Makefile hacks and a comment to prevent this
-from accidentally getting removed again rather than Kconfig hacks.
+> the percpu_counter.h file.  Why shouldn't this be fixed by putting the
+> READ_ONCE() inside percpu_counter_read()?
 
-Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
+It is because not all places suffer from a data race. For example, in __wb_u=
+pdate_bandwidth(), it was protected by a lock. I was a bit worry about blind=
+ly adding READ_ONCE() inside percpu_counter_read() might has unexpected side=
+-effect. For example, it is unnecessary to have READ_ONCE() for a volatile v=
+ariable. So, I thought just to keep the change minimal with a trade off by e=
+xposing a bit internal details as you mentioned.
 
-This patch applies fine to me on asoc/for-next, so this is just a resend.
-
- sound/soc/atmel/Kconfig  |  4 ++--
- sound/soc/atmel/Makefile | 10 ++++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index d1dc8e6366dc..71f2d42188c4 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -10,11 +10,11 @@ config SND_ATMEL_SOC
- if SND_ATMEL_SOC
- 
- config SND_ATMEL_SOC_PDC
--	tristate
-+	bool
- 	depends on HAS_DMA
- 
- config SND_ATMEL_SOC_DMA
--	tristate
-+	bool
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
- 
- config SND_ATMEL_SOC_SSC
-diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
-index 1f6890ed3738..c7d2989791be 100644
---- a/sound/soc/atmel/Makefile
-+++ b/sound/soc/atmel/Makefile
-@@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_dai.o
- snd-soc-atmel-i2s-objs := atmel-i2s.o
- snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
- 
--obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
--obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
-+# pdc and dma need to both be built-in if any user of
-+# ssc is built-in.
-+ifdef CONFIG_SND_ATMEL_SOC_PDC
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
-+endif
-+ifdef CONFIG_SND_ATMEL_SOC_DMA
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
-+endif
- obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
- obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
- obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
--- 
-2.20.1
-
+However, I had also copied the percpu maintainers to see if they have any pr=
+eferences?=
