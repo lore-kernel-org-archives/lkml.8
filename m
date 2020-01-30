@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA981C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B4B2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48424214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410132;
-	bh=Nj3wNvbTSk3uUQLxRSO5ABbac/0d7g8YK7ewTTKdhSE=;
+	s=default; t=1580410136;
+	bh=3OppFeTIC5EGVmWme2JxnhZ9O/cxokC45JreOYg3EiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wpB9os94d7TVEblG0pofbJ01g1a/fWf41ZmnqoL0ove8NU5yrb2MN3aSN0XIC1arh
-	 Cm37nPPu7mQ9h1w0GAZIE7sLNbUi3qxYPiom/yStE9lNhBzFbyaP2qzm6OTHQ0wuXY
-	 WPzGDS+RVM1hhG3/tKQJOYusbOgNV8iPauS7WULA=
+	b=mLyFntpheWQvXtXXDkifq+dkli2TNstbVZ1CzwwgnL7uddYgPVdYU4zDqUTSoB2h9
+	 EHmHUTCxjM3/96eQfC0HnEZ3JBLmnunikszB05g3QhxkGJppPoCZCk8K35ybTZN2nB
+	 yaWHf4+GBa/0T05p2jMVFolIdw6IYBdlKYOnnGKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgA3Ssv (ORCPT
+        id S1731633AbgA3Ssz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59850 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731603AbgA3Ssn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:43 -0500
+        id S1731620AbgA3Ssu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B66B205F4;
-        Thu, 30 Jan 2020 18:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AD32205F4;
+        Thu, 30 Jan 2020 18:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410121;
-        bh=Nj3wNvbTSk3uUQLxRSO5ABbac/0d7g8YK7ewTTKdhSE=;
+        s=default; t=1580410129;
+        bh=3OppFeTIC5EGVmWme2JxnhZ9O/cxokC45JreOYg3EiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuQiakrrnBwyt9EWvjN82MEK22Q6Qf2b90daaoBNrkjOHcNs1Qgi5GCq/v42i6eTS
-         KhGJUNAU5hN9D1eeMHn3NtgNAWLzM9xdkQjgok3Xecc9g5iwVcbqg0SlsCE/E+CNLp
-         T9tLpmOSu0uodf6xcaT1pegrwITOACo5CT8dardA=
+        b=BPWYIaL7yClDdNDRywe5QkKppKAg/uPe95pCLzMvFGHYSOnVfR9ol/Cs0mONYgKCt
+         b5AJObZ4vKXlmcm/Oxn/2vCxxk9utlIVJQynx8di047CQyN/K95JwAN21u9gHKoZXS
+         xGVXRGTJykbLG8TqcaFtDvIi66cXuuRNxalPp1gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 15/55] mei: me: add comet point (lake) H device ids
-Date:   Thu, 30 Jan 2020 19:38:56 +0100
-Message-Id: <20200130183611.634336644@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Shvetsov <andrey.shvetsov@k2l.de>
+Subject: [PATCH 4.19 08/55] staging: most: net: fix buffer overflow
+Date:   Thu, 30 Jan 2020 19:38:49 +0100
+Message-Id: <20200130183610.260601451@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -58,47 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Andrey Shvetsov <andrey.shvetsov@k2l.de>
 
-commit 559e575a8946a6561dfe8880de341d4ef78d5994 upstream.
+commit 4d1356ac12f4d5180d0df345d85ff0ee42b89c72 upstream.
 
-Add Comet Point device IDs for Comet Lake H platforms.
+If the length of the socket buffer is 0xFFFFFFFF (max size for an
+unsigned int), then payload_len becomes 0xFFFFFFF1 after subtracting 14
+(ETH_HLEN).  Then, mdp_len is set to payload_len + 16 (MDP_HDR_LEN)
+which overflows and results in a value of 2.  These values for
+payload_len and mdp_len will pass current buffer size checks.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200119094229.20116-1-tomas.winkler@intel.com
+This patch checks if derived from skb->len sum may overflow.
+
+The check is based on the following idea:
+
+For any `unsigned V1, V2` and derived `unsigned SUM = V1 + V2`,
+`V1 + V2` overflows iif `SUM < V1`.
+
+Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrey Shvetsov <andrey.shvetsov@k2l.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200116172238.6046-1-andrey.shvetsov@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    4 ++++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 6 insertions(+)
+ drivers/staging/most/net/net.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -141,8 +141,12 @@
+--- a/drivers/staging/most/net/net.c
++++ b/drivers/staging/most/net/net.c
+@@ -81,6 +81,11 @@ static int skb_to_mamac(const struct sk_
+ 	unsigned int payload_len = skb->len - ETH_HLEN;
+ 	unsigned int mdp_len = payload_len + MDP_HDR_LEN;
  
- #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
- #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
++	if (mdp_len < skb->len) {
++		pr_err("drop: too large packet! (%u)\n", skb->len);
++		return -EINVAL;
++	}
 +
- #define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
+ 	if (mbo->buffer_length < mdp_len) {
+ 		pr_err("drop: too small buffer! (%d for %d)\n",
+ 		       mbo->buffer_length, mdp_len);
+@@ -128,6 +133,11 @@ static int skb_to_mep(const struct sk_bu
+ 	u8 *buff = mbo->virt_address;
+ 	unsigned int mep_len = skb->len + MEP_HDR_LEN;
  
-+#define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
-+#define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
++	if (mep_len < skb->len) {
++		pr_err("drop: too large packet! (%u)\n", skb->len);
++		return -EINVAL;
++	}
 +
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
- 
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -108,6 +108,8 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
+ 	if (mbo->buffer_length < mep_len) {
+ 		pr_err("drop: too small buffer! (%d for %d)\n",
+ 		       mbo->buffer_length, mep_len);
 
 
