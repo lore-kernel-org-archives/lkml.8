@@ -2,122 +2,293 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3F1C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2025C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF1120CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D49A2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cln3i3ys"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X0EtWJq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgA3Vqi (ORCPT
+        id S1726070AbgA3Vu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:46:38 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:16072 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbgA3Vqi (ORCPT
+        Thu, 30 Jan 2020 16:50:56 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34074 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgA3Vu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:46:38 -0500
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ULiSaT011570
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:46:37 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=YcfWDCuE/Ac8073XNDYfUHxD78npEe5xhLoOqWMPqc4=;
- b=cln3i3yskgCOLMDpLfRLrVXA/8BPHQpM/5U7auDIORM7fV+CRIvL4BVQUbnoN2GZn1nI
- 7b1oJeoVJmkMqzab5N34kRgqi6Urt5qJlmfM9WWalF1ZAuXt073/EOPQp1Cs/Zfjnwam
- RjWa4J2IvRA2otE/cSh2wT60p4yZJochuTY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xufrv6pkf-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:46:37 -0800
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 30 Jan 2020 13:46:35 -0800
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id B19D21A8FA539; Thu, 30 Jan 2020 13:46:32 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <vijaykhemka@fb.com>, <sdasari@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] ARM: dts: aspeed: tiogapass: Add IPMB device
-Date:   Thu, 30 Jan 2020 13:46:26 -0800
-Message-ID: <20200130214626.2863329-1-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 30 Jan 2020 16:50:56 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00ULotO3056697;
+        Thu, 30 Jan 2020 15:50:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580421055;
+        bh=8RCvkl8ayizEkjvCU+aDmfK/mvQAExRVxcO9Jh5Um9k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X0EtWJq/RJmC1FwmrBUZC73P6kp5hgwf4biW86RDERI+rhD/jbYHI957VSRprTbBa
+         sd14tO6WQzoJkTMnTRsXLN2UyHHNrBY6bUOA2prAkc19LNchiDoRQ5tjDJadOxRx99
+         tCMIwOOsjQ+Tf5BBatStubCsRKqDPULe3dczhHLI=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00ULotV5002572
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 15:50:55 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 15:50:55 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 15:50:55 -0600
+Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00ULor8M100396;
+        Thu, 30 Jan 2020 15:50:54 -0600
+Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
+ memory node
+To:     Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200116135332.7819-1-t-kristo@ti.com>
+ <20200116135332.7819-7-t-kristo@ti.com>
+ <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
+ <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
+ <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
+ <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
+ <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
+ <7aed7a9f-3546-f622-37ac-34d33ddb4298@ti.com>
+ <50c69e97-034b-3160-e95e-97aec2e75cc6@ti.com>
+ <cf6fff1c-fde9-67b0-3173-7e019ce587cb@ti.com>
+ <127eff13-cc16-2b59-d8ce-06e61bb910bc@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <39b3e536-26a9-e7da-a39a-db2853e0fe04@ti.com>
+Date:   Thu, 30 Jan 2020 16:50:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_07:2020-01-30,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- suspectscore=0 mlxscore=0 adultscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=922 spamscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300146
-X-FB-Internal: deliver
+In-Reply-To: <127eff13-cc16-2b59-d8ce-06e61bb910bc@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding IPMB devices for facebook tiogapass platform.
+On 1/30/20 4:39 PM, Suman Anna wrote:
+> On 1/30/20 3:19 PM, Andrew F. Davis wrote:
+>> On 1/30/20 3:39 PM, Suman Anna wrote:
+>>> On 1/30/20 2:22 PM, Andrew F. Davis wrote:
+>>>> On 1/30/20 2:55 PM, Suman Anna wrote:
+>>>>> On 1/30/20 1:42 PM, Tero Kristo wrote:
+>>>>>> On 30/01/2020 21:20, Andrew F. Davis wrote:
+>>>>>>> On 1/30/20 2:18 PM, Tero Kristo wrote:
+>>>>>>>> On 30/01/2020 20:11, Andrew F. Davis wrote:
+>>>>>>>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
+>>>>>>>>>> From: Suman Anna <s-anna@ti.com>
+>>>>>>>>>>
+>>>>>>>>>> The reserved memory nodes are not assigned to platform devices by
+>>>>>>>>>> default in the driver core to avoid the lookup for every platform
+>>>>>>>>>> device and incur a penalty as the real users are expected to be
+>>>>>>>>>> only a few devices.
+>>>>>>>>>>
+>>>>>>>>>> OMAP remoteproc devices fall into the above category and the OMAP
+>>>>>>>>>> remoteproc driver _requires_ specific CMA pools to be assigned
+>>>>>>>>>> for each device at the moment to align on the location of the
+>>>>>>>>>> vrings and vring buffers in the RTOS-side firmware images. So,
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Same comment as before, this is a firmware issue for only some
+>>>>>>>>> firmwares
+>>>>>>>>> that do not handle being assigned vring locations correctly and instead
+>>>>>>>>> hard-code them.
+>>>>>
+>>>>> As for this statement, this can do with some updating. Post 4.20,
+>>>>> because of the lazy allocation scheme used for carveouts including the
+>>>>> vrings, the resource tables now have to use FW_RSC_ADDR_ANY and will
+>>>>> have to wait for the vdev synchronization to happen.
+>>>>>
+>>>>>>>>
+>>>>>>>> I believe we discussed this topic in length in previous version but
+>>>>>>>> there was no conclusion on it.
+>>>>>>>>
+>>>>>>>> The commit desc might be a bit misleading, we are not actually forced to
+>>>>>>>> use specific CMA buffers, as we use IOMMU to map these to device
+>>>>>>>> addresses. For example IPU1/IPU2 use internally exact same memory
+>>>>>>>> addresses, iommu is used to map these to specific CMA buffer.
+>>>>>>>>
+>>>>>>>> CMA buffers are mostly used so that we get aligned large chunk of memory
+>>>>>>>> which can be mapped properly with the limited IOMMU OMAP family of chips
+>>>>>>>> have. Not sure if there is any sane way to get this done in any other
+>>>>>>>> manner.
+>>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> Why not use the default CMA area?
+>>>>>>
+>>>>>> I think using default CMA area getting the actual memory block is not
+>>>>>> guaranteed and might fail. There are other users for the memory, and it
+>>>>>> might get fragmented at the very late phase we are grabbing the memory
+>>>>>> (omap remoteproc driver probe time.) Some chunks we need are pretty large.
+>>>>>>
+>>>>>> I believe I could experiment with this a bit though and see, or Suman
+>>>>>> could maybe provide feedback why this was designed initially like this
+>>>>>> and why this would not be a good idea.
+>>>>>
+>>>>> I have given some explanation on this on v4 as well, but if it is not
+>>>>> clear, there are restrictions with using default CMA. Default CMA has
+>>>>> switched to be assigned from the top of the memory (higher addresses,
+>>>>> since 3.18 IIRC), and the MMUs on IPUs and DSPs can only address
+>>>>> 32-bits. So, we cannot blindly use the default CMA pool, and this will
+>>>>> definitely not work on boards > 2 GB RAM. And, if you want to add in any
+>>>>> firewall capability, then specific physical addresses becomes mandatory.
+>>>>>
+>>>>
+>>>>
+>>>> If you need 32bit range allocations then
+>>>> dma_set_mask(dev, DMA_BIT_MASK(32));
+>>>>
+>>>> I'm not saying don't have support for carveouts, just make them
+>>>> optional, keystone_remoteproc.c does this:
+>>>>
+>>>> if (of_reserved_mem_device_init(dev))
+>>>> 	dev_warn(dev, "device does not have specific CMA pool\n");
+>>>>
+>>>> There doesn't even needs to be a warning but that is up to you.
+>>>
+>>> It is not exactly an apples to apples comparison. K2s do not have MMUs,
+>>> and most of our firmware images on K2 are actually running out of the
+>>> DSP internal memory.
+>>>
+>>
+>>
+>> So again we circle back to it being a firmware issue, if K2 can get away
+>> without needing carveouts and it doesn't even have an MMU then certainly
+>> OMAP/DRA7x class devices can handle it even better given they *do* have
+>> an IOMMU. Unless someone is hard-coding the IOMMU configuration.. In
+>> which case we are still just hacking around the problem here with
+>> mandatory specific address memory carveouts.
+> 
+> Optional carveouts on OMAP remoteprocs can be an enhancement in the
+> future, but at the moment, we won't be able to run use-cases without
+> this. And I have already given some of the reasons for the same here and
+> on v4.
+> 
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index fb7f034d5db2..1cb5b9bf468f 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -5,6 +5,7 @@
- 
- #include "aspeed-g5.dtsi"
- #include <dt-bindings/gpio/aspeed-gpio.h>
-+#include <dt-bindings/i2c/i2c.h>
- 
- / {
- 	model = "Facebook TiogaPass BMC";
-@@ -428,6 +429,12 @@
- &i2c4 {
- 	status = "okay";
- 	// BMC Debug Header
-+	multi-master;
-+	ipmb0@10 {
-+		compatible = "ipmb-dev";
-+		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
-+		i2c-protocol;
-+	};
- };
- 
- &i2c5 {
-@@ -509,6 +516,12 @@
- &i2c9 {
- 	status = "okay";
- 	//USB Debug Connector
-+	multi-master;
-+	ipmb0@10 {
-+		compatible = "ipmb-dev";
-+		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
-+		i2c-protocol;
-+	};
- };
- 
- &pwm_tacho {
--- 
-2.17.1
+No reason to be dismissive, my questions are valid.
 
+What "use-cases" are we talking about, I have firmware that doesn't need
+specific carved-out addresses. If you have misbehaving firmware that
+needs statically carved out memory addresses then you can have carveouts
+if you want, but it should be optional. If I don't want to pollute my
+system's memory space with a bunch of carveout holes then I shouldn't
+have to just because your specific firmware needs them.
+
+Andrew
+
+
+> regards
+> Suman
+> 
+>>
+>> Andrew
+>>
+>>
+>>> regards
+>>> Suman
+>>>
+>>>>
+>>>> Andrew
+>>>>
+>>>>
+>>>>> regards
+>>>>> Suman
+>>>>>
+>>>>>>
+>>>>>> -Tero
+>>>>>>
+>>>>>>>
+>>>>>>> Andrew
+>>>>>>>
+>>>>>>>
+>>>>>>>> -Tero
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> This is not a requirement of the remote processor itself and so it
+>>>>>>>>> should not fail to probe if a specific memory carveout isn't given.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> use the of_reserved_mem_device_init/release() API appropriately
+>>>>>>>>>> to assign the corresponding reserved memory region to the OMAP
+>>>>>>>>>> remoteproc device. Note that only one region per device is
+>>>>>>>>>> allowed by the framework.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>>>>>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>>>>>>> ---
+>>>>>>>>>> v5: no changes
+>>>>>>>>>>
+>>>>>>>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+>>>>>>>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
+>>>>>>>>>> b/drivers/remoteproc/omap_remoteproc.c
+>>>>>>>>>> index 0846839b2c97..194303b860b2 100644
+>>>>>>>>>> --- a/drivers/remoteproc/omap_remoteproc.c
+>>>>>>>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>>>>>>>>>> @@ -17,6 +17,7 @@
+>>>>>>>>>>    #include <linux/module.h>
+>>>>>>>>>>    #include <linux/err.h>
+>>>>>>>>>>    #include <linux/of_device.h>
+>>>>>>>>>> +#include <linux/of_reserved_mem.h>
+>>>>>>>>>>    #include <linux/platform_device.h>
+>>>>>>>>>>    #include <linux/dma-mapping.h>
+>>>>>>>>>>    #include <linux/remoteproc.h>
+>>>>>>>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
+>>>>>>>>>> platform_device *pdev)
+>>>>>>>>>>        if (ret)
+>>>>>>>>>>            goto free_rproc;
+>>>>>>>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
+>>>>>>>>>> +    if (ret) {
+>>>>>>>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
+>>>>>>>>>> pool\n");
+>>>>>>>>>> +        goto free_rproc;
+>>>>>>>>>> +    }
+>>>>>>>>>> +
+>>>>>>>>>>        platform_set_drvdata(pdev, rproc);
+>>>>>>>>>>          ret = rproc_add(rproc);
+>>>>>>>>>>        if (ret)
+>>>>>>>>>> -        goto free_rproc;
+>>>>>>>>>> +        goto release_mem;
+>>>>>>>>>>          return 0;
+>>>>>>>>>>    +release_mem:
+>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>>>>>>>    free_rproc:
+>>>>>>>>>>        rproc_free(rproc);
+>>>>>>>>>>        return ret;
+>>>>>>>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
+>>>>>>>>>> platform_device *pdev)
+>>>>>>>>>>          rproc_del(rproc);
+>>>>>>>>>>        rproc_free(rproc);
+>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>>>>>>>          return 0;
+>>>>>>>>>>    }
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>>> -- 
+>>>>>>
+>>>>>> -- 
+>>>>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>>>>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>>>>
+>>>
+> 
