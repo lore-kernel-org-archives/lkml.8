@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BD7C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF170C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EF420661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD4B20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410300;
-	bh=uoiKXNIuubbeNw3qBmSN+cRwAkJofhSu4WMXkX5YgXA=;
+	s=default; t=1580410305;
+	bh=wjHrwicYqiKxKhnPcqpsN8uJBxdY4FcFbXHeQmDRYC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+i2kCglXO+UFfDeC6U4+UdzGTFvrDHABUxIpzx6mCkdoyult9oh9LzW0AtRlummX
-	 o98Y+FhV4GMM3hE/E2nHycu3Nxly1CYlIcGRJdyuCx9ga1uOb0RPT0wN2fBOaxja1+
-	 coe0ED9Q2jCpscn0T6FNYPiaEbXVCISxpQfGhJ0k=
+	b=v73GnlxmM5t9sxlz2nBu6S7L7xzA6d14FwhCRnZ9hk1jekktTnDLBA9/2ehPxv8DX
+	 XFdHatPtZA0+/YVdoSUdfXtcMDwFclIFvXsLlV+KxjOsRjfhFkc5xcsF4HpP0dECBW
+	 WhIh8xSxecV1cf01tBliWQ5yW/WD+L/kpr3L9ZGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbgA3Sos (ORCPT
+        id S1731599AbgA3Svp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:51:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgA3Sop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:45 -0500
+        id S1730865AbgA3Son (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688912082E;
-        Thu, 30 Jan 2020 18:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFEC9205F4;
+        Thu, 30 Jan 2020 18:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409884;
-        bh=uoiKXNIuubbeNw3qBmSN+cRwAkJofhSu4WMXkX5YgXA=;
+        s=default; t=1580409882;
+        bh=wjHrwicYqiKxKhnPcqpsN8uJBxdY4FcFbXHeQmDRYC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3j2KeTs+5CIaWhFelGAW+hmkgGd8soS1f9QZJsEg2dMWvyFKpaTR6LRP4dAVdDbC
-         lrK8wjVskABAbG0B0Su7cKN/DXMWyI10LGlsCOhOSNtAAMS7QHdm8MwFbEoXbIiCxh
-         b8YaaPiQIry6KjRrEuYnmVjVS+ow27L/nzWoFVp0=
+        b=SZkhov2qu2BuUw2pJFVMk6RHPsQjv6vnEXrsfF5kgGj9snq7HbNRhvHhBz+oqfRwa
+         QUtb0rox9GYQtINTnP7CXF4atxEEQFE9EKECr1fh3yQTFcBUOCjYgtg/GdMIZldYcu
+         y+ZR93C7pBMGP1c3XpKuNPknAHC3yEqq+WP1P7zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
-        Thomas Anderson <thomasanderson@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/110] drm/amd/display: Reduce HDMI pixel encoding if max clock is exceeded
-Date:   Thu, 30 Jan 2020 19:38:47 +0100
-Message-Id: <20200130183622.883885909@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 070/110] iommu/dma: fix variable cookie set but not used
+Date:   Thu, 30 Jan 2020 19:38:46 +0100
+Message-Id: <20200130183622.809411748@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,106 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Anderson <thomasanderson@google.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 840c90fce6c78bc6b2c4cb9e836d70985ed32066 ]
+[ Upstream commit 55817b340a31951d23d1692db45522560b1d20f9 ]
 
-For high-res (8K) or HFR (4K120) displays, using uncompressed pixel
-formats like YCbCr444 would exceed the bandwidth of HDMI 2.0, so the
-"interesting" modes would be disabled, leaving only low-res or low
-framerate modes.
+The commit c18647900ec8 ("iommu/dma: Relax locking in
+iommu_dma_prepare_msi()") introduced a compliation warning,
 
-This change lowers the pixel encoding to 4:2:2 or 4:2:0 if the max TMDS
-clock is exceeded. Verified that 8K30 and 4K120 are now available and
-working with a Samsung Q900R over an HDMI 2.0b link from a Radeon 5700.
+drivers/iommu/dma-iommu.c: In function 'iommu_dma_prepare_msi':
+drivers/iommu/dma-iommu.c:1206:27: warning: variable 'cookie' set but
+not used [-Wunused-but-set-variable]
+  struct iommu_dma_cookie *cookie;
+                           ^~~~~~
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Thomas Anderson <thomasanderson@google.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: c18647900ec8 ("iommu/dma: Relax locking in iommu_dma_prepare_msi()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 45 ++++++++++---------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+ drivers/iommu/dma-iommu.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 4e9c15c409bac..360c87ba45956 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3266,27 +3266,21 @@ get_output_color_space(const struct dc_crtc_timing *dc_crtc_timing)
- 	return color_space;
- }
- 
--static void reduce_mode_colour_depth(struct dc_crtc_timing *timing_out)
--{
--	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
--		return;
--
--	timing_out->display_color_depth--;
--}
--
--static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_out,
--						const struct drm_display_info *info)
-+static bool adjust_colour_depth_from_display_info(
-+	struct dc_crtc_timing *timing_out,
-+	const struct drm_display_info *info)
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 51456e7f264f9..c68a1f072c314 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1177,7 +1177,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
  {
-+	enum dc_color_depth depth = timing_out->display_color_depth;
- 	int normalized_clk;
--	if (timing_out->display_color_depth <= COLOR_DEPTH_888)
--		return;
- 	do {
- 		normalized_clk = timing_out->pix_clk_100hz / 10;
- 		/* YCbCr 4:2:0 requires additional adjustment of 1/2 */
- 		if (timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420)
- 			normalized_clk /= 2;
- 		/* Adjusting pix clock following on HDMI spec based on colour depth */
--		switch (timing_out->display_color_depth) {
-+		switch (depth) {
-+		case COLOR_DEPTH_888:
-+			break;
- 		case COLOR_DEPTH_101010:
- 			normalized_clk = (normalized_clk * 30) / 24;
- 			break;
-@@ -3297,14 +3291,15 @@ static void adjust_colour_depth_from_display_info(struct dc_crtc_timing *timing_
- 			normalized_clk = (normalized_clk * 48) / 24;
- 			break;
- 		default:
--			return;
-+			/* The above depths are the only ones valid for HDMI. */
-+			return false;
- 		}
--		if (normalized_clk <= info->max_tmds_clock)
--			return;
--		reduce_mode_colour_depth(timing_out);
+ 	struct device *dev = msi_desc_to_dev(desc);
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+-	struct iommu_dma_cookie *cookie;
+ 	struct iommu_dma_msi_page *msi_page;
+ 	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
+ 
+@@ -1186,8 +1185,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+ 		return 0;
+ 	}
+ 
+-	cookie = domain->iova_cookie;
 -
--	} while (timing_out->display_color_depth > COLOR_DEPTH_888);
--
-+		if (normalized_clk <= info->max_tmds_clock) {
-+			timing_out->display_color_depth = depth;
-+			return true;
-+		}
-+	} while (--depth > COLOR_DEPTH_666);
-+	return false;
- }
- 
- static void fill_stream_properties_from_drm_display_mode(
-@@ -3370,8 +3365,14 @@ static void fill_stream_properties_from_drm_display_mode(
- 
- 	stream->out_transfer_func->type = TF_TYPE_PREDEFINED;
- 	stream->out_transfer_func->tf = TRANSFER_FUNCTION_SRGB;
--	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
--		adjust_colour_depth_from_display_info(timing_out, info);
-+	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
-+		if (!adjust_colour_depth_from_display_info(timing_out, info) &&
-+		    drm_mode_is_420_also(info, mode_in) &&
-+		    timing_out->pixel_encoding != PIXEL_ENCODING_YCBCR420) {
-+			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
-+			adjust_colour_depth_from_display_info(timing_out, info);
-+		}
-+	}
- }
- 
- static void fill_audio_info(struct audio_info *audio_info,
+ 	/*
+ 	 * In fact the whole prepare operation should already be serialised by
+ 	 * irq_domain_mutex further up the callchain, but that's pretty subtle
 -- 
 2.20.1
 
