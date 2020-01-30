@@ -2,130 +2,119 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9288CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE9FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8B1206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580407599;
-	bh=cMX2ncNTbZE2SYPt74jUaFO297MXZkPBMsegQpwvrzA=;
-	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
-	b=HtElHXHdJ8LJ+lk06inDOxAl1Je4xw2e8GulLts+RJFFzXiOBuIzytsuSXTrxEB62
-	 R5YOhTRF3bM+y2jkI5nPWF2KRhIcHRnYKend0OAkColzqrjZabNOGmIDXOqDD/Mnu+
-	 FPl8OuvM4n2Wr/AP2hkcJP70y+x8JUDtKdXtqo9o=
+	by mail.kernel.org (Postfix) with ESMTP id B1D18206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfrMRVU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgA3SGj (ORCPT
+        id S1728059AbgA3SHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:06:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbgA3SGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:06:38 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E02D206F0;
-        Thu, 30 Jan 2020 18:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580407597;
-        bh=cMX2ncNTbZE2SYPt74jUaFO297MXZkPBMsegQpwvrzA=;
-        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
-        b=NnghcJW7vQqO/W4RSF67e6JltA8KsbxwwEEJbGu1aTdDEFlbxpD0n/4szi4TGFp6D
-         41WMuKCB6fpAe/NSWK2QiGULYrjPlu9tN0BP1VRbP9mMGApWecEzChAlCY+1cO44M3
-         lVOAT8YQavaS5AHppb2ptWUJnJfFp5cH7DWZtlVI=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 Jan 2020 13:07:00 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42107 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbgA3SG7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:06:59 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so4784797edv.9;
+        Thu, 30 Jan 2020 10:06:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PURvTDGkSUrDj2LTVpV8Pg+XWaCpz3NX1Q3N4hEZo/g=;
+        b=PfrMRVU88Ynk9ecNRVarMgND4d2dO9ve3f3J1jIFfGfkAdOh9jpqZXLQccHJvT/nuv
+         HuPKXtSXx9pGanGx5ip8p2iIbc6yBKUR8Qz7S5++RZJYpLzi05KjN3ZCfmHHZLrOFkX5
+         DCfTHG2a/F2EaXD2nO+2LhL3oE7F17KRagiA8anNWVB/q16ug7ACi4zgBEkM3Nsxu1fb
+         C19si/PjDmhp0rpZQ2uFflFCbcp6n2ThIECJsze6U3NY6/nMUEVg/oGnFarRymIe29I3
+         zrrq4Q9rnwrmB3KRHYRHLsNotnYRQZgHCNrVzqk184agbgs4N+4Dxeuprnjm8txnLXCT
+         xevw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PURvTDGkSUrDj2LTVpV8Pg+XWaCpz3NX1Q3N4hEZo/g=;
+        b=CehDIzxQtDaBL5wlE6DeeBt2I3xxwJJT4CTu/D7ozZYytA+J+xFEJBh2TTeDHKH+3E
+         HuAMSaf0HpBynir9vj/uBqV1VusT5OG+grQAXmu4PQBnW/aKka52xP4NVHLlOtq5PYcd
+         w+yW6CDxHeQt/1qh17jPghQawcF0Jqb/vWe6+bvk0w+yQevFwxt3NvECX3+rz3kHorzD
+         Vos2Sm7V3KSLd3oKGb/ptN766ppvtgYAbSgxGoytZbATLHb6S9SeLABgvg/wUPkM4NyD
+         BqF9XqJOaPJpxZb9mma2gZ30Lt1792Uk5vwTPm18jETe2vG4YOfq1BmVLUV108/2nfHT
+         7qNA==
+X-Gm-Message-State: APjAAAXaxrdzpjdC78IJO45bBDnOEQJoTqfrKlkoqWy6P2T2h/67yfOY
+        VuAEfUMKfDGFYYvxobiz/g09kSqV
+X-Google-Smtp-Source: APXvYqzQtdMHNoz9NGUXQgCFiYz6koywyqCcsEXonvw+WVWbRJ4sIcU921NBiEhESaCve9uzS1sMZA==
+X-Received: by 2002:aa7:d856:: with SMTP id f22mr4739788eds.61.1580407617256;
+        Thu, 30 Jan 2020 10:06:57 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e24sm458269edy.93.2020.01.30.10.06.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 10:06:56 -0800 (PST)
+Subject: Re: [PATCH v6 12/16] dmaengine: tegra-apb: Clean up suspend-resume
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200130043804.32243-1-digetx@gmail.com>
+ <20200130043804.32243-13-digetx@gmail.com>
+ <e787bee2-4b52-1643-b3a5-8c4e70f6fdca@nvidia.com>
+ <394014f3-011a-d6b6-b5f2-f8c86834ec70@gmail.com>
+Message-ID: <ffd9dbd0-be74-7bb4-9ca9-a97ee8023fc2@gmail.com>
+Date:   Thu, 30 Jan 2020 21:06:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org> <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 30 Jan 2020 10:06:36 -0800
-Message-Id: <20200130180637.9E02D206F0@mail.kernel.org>
+In-Reply-To: <394014f3-011a-d6b6-b5f2-f8c86834ec70@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-01-29 20:18:41)
-> The Modem Subsystem clock provider have a bunch of generic properties
-> that are needed in a device tree. Add a YAML schemas for those.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,mss.yaml        | 58 ++++++++++++++++=
-++++++
+30.01.2020 19:08, Dmitry Osipenko пишет:
+> 30.01.2020 17:09, Jon Hunter пишет:
+>>
+>> On 30/01/2020 04:38, Dmitry Osipenko wrote:
+>>> It is enough to check whether hardware is busy on suspend and to reset
+>>> it across of suspend-resume because channel's configuration is fully
+>>> re-programmed on each DMA transaction anyways and because save-restore
+>>> of an active channel won't end up well without pausing transfer prior to
+>>> saving of the state (note that all channels shall be idling at the time of
+>>> suspend, so save-restore is not needed at all).
+>>
+>> I guess if we ever wanted to support SNDRV_PCM_INFO_PAUSE for audio and
+>> support the pause callback, then saving and restoring the channels could
+>> be needed. Right now I believe that it will just terminate_all transfers
+>> for audio on entering suspend. Any value in keeping this?
+> 
+> Indeed, looks like [1] pauses DMA during suspend if SNDRV_PCM_INFO_PAUSE
+> is supported.
+> 
+> [1]
+> https://elixir.bootlin.com/linux/v5.5/source/sound/core/pcm_dmaengine.c#L199
+> 
+> So we'll need to save-restore context only if DMA is in a paused state
+> during suspend, I'll adjust this patch to do that and will see if
+> enabling SNDRV_PCM_INFO_PAUSE works.
 
-Please rename to qcom,sc7180-mss.yaml
+I started to look at it and found that the .device_pause() hook isn't
+implemented by the driver. So, it's fine to remove the context's
+save-restore for now.
 
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Docu=
-mentation/devicetree/bindings/clock/qcom,mss.yaml
-> new file mode 100644
-> index 0000000..ebb04e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Modem Clock Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm modem clock control module which supports the clocks.
-
-Can you point to the header file from here?
-include/dt-bindings/clock/qcom,sc7180-mss.h I guess.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +       - qcom,sc7180-mss
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-
-Why is it optional? Don't these all go there?
-
-> +    items:
-> +      - description: gcc_mss_mfab_axi clock from GCC
-> +      - description: gcc_mss_nav_axi clock from GCC
-> +      - description: gcc_mss_cfg_ahb clock from GCC
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gcc_mss_mfab_axis_clk
-> +      - const: gcc_mss_nav_axi_clk
-> +      - const: cfg_clk
-
-Do these really need _clk at the end? Seems redundant.
-
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
+Jon, what about to keep this patch as-is? Later on I'll take a look at
+implementing the proper pausing functionality and try to cleanup code a
+bit further (remove the free list usage, etc).
