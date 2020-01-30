@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D41C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B377CC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BC92083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB892173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409719;
-	bh=5x8PPQJiNKA7767tXvocesBKsxHI1hUir67V25xNjqs=;
+	s=default; t=1580409722;
+	bh=N3f/o6OEfEATW92CUQoPs/h5ohxXzCma9kMlBT4/vuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sva+gFWHHxqhnF5jouCZlsU0SGorilyVpvXi5puRz/CJqFnjMCx8zfA7p0lClKAii
-	 3glpI42RyLjCGpM82ut6nNFCQvZ0wm8E/ACzXBRijbYMDm89tQrOGh3NPcDk2Y9y85
-	 RpNVUjUpl3CaukSlozhAiqliil21GxmnABhYr3To=
+	b=2oefgs0neb+5NBHEkTwjRT2KNUwQhWvN5iy+8rxmViuom5RXwJAh5OtuMR3zHN1DG
+	 VIEv80ZbKMlrvHf3Mx2KSw5F2FCOzNCdgiJyjp22UtPwScI/BMrKwiD9Eh5guI/mD6
+	 8QE1deZNVgP/AHhioO0EN13uaSMeNIEWV5ySTItM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbgA3Sl6 (ORCPT
+        id S1730298AbgA3SmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:41:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50014 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbgA3Sl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:56 -0500
+        id S1730286AbgA3Sl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB40E2465B;
-        Thu, 30 Jan 2020 18:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C61205F4;
+        Thu, 30 Jan 2020 18:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409715;
-        bh=5x8PPQJiNKA7767tXvocesBKsxHI1hUir67V25xNjqs=;
+        s=default; t=1580409717;
+        bh=N3f/o6OEfEATW92CUQoPs/h5ohxXzCma9kMlBT4/vuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQOm8WGxJd9mRdUnxT1HsrZnWJqJvKArxx+qBdHV7LoaKqk5QMyDM0jmCcq2Hw1Co
-         rEJeFskKG6rFgvjHzI7O1hN7qfDT/xNJh4N02bQkrnk/+5+v+9mR1wIfnjdkwfI44r
-         OjdFrakkn+DU/cBN1A2sKsir209fLPk132GDCthA=
+        b=khkk7Y0vtS2YfqCzQ//QG7BiQ4wrd42qXO8KAjIDJ7aAXweR75ghdFWbZSS6rJKYC
+         jKQTZlVyUiuh1sbHpMWTg9tRKRcwRQ3kL7gTd0T8tRoNdizPzeb1oYf2BmYy6jJMTn
+         QRCUiM0v07yINWOxWJ4+qOWP/CsrAmxJzun+x65E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jesper Dangaard Brouer <brouer@redhat.com>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 40/56] net: socionext: fix possible user-after-free in netsec_process_rx
-Date:   Thu, 30 Jan 2020 19:38:57 +0100
-Message-Id: <20200130183616.324057835@linuxfoundation.org>
+Subject: [PATCH 5.5 41/56] net: socionext: fix xdp_result initialization in netsec_process_rx
+Date:   Thu, 30 Jan 2020 19:38:58 +0100
+Message-Id: <20200130183616.528818741@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -63,12 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit b5e82e3c89c78ee0407ea8e8087af5519b6c7bae ]
+[ Upstream commit 02758cb6dac31a2b4bd9e535cffbe718acd46404 ]
 
-Fix possible use-after-free in in netsec_process_rx that can occurs if
-the first packet is sent to the normal networking stack and the
-following one is dropped by the bpf program attached to the xdp hook.
-Fix the issue defining the skb pointer in the 'budget' loop
+Fix xdp_result initialization in netsec_process_rx in order to not
+increase rx counters if there is no bpf program attached to the xdp hook
+and napi_gro_receive returns GRO_DROP
 
 Fixes: ba2b232108d3c ("net: netsec: add XDP support")
 Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
@@ -82,21 +81,15 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/net/ethernet/socionext/netsec.c
 +++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -929,7 +929,6 @@ static int netsec_process_rx(struct nets
- 	struct netsec_rx_pkt_info rx_info;
- 	enum dma_data_direction dma_dir;
- 	struct bpf_prog *xdp_prog;
--	struct sk_buff *skb = NULL;
- 	u16 xdp_xmit = 0;
- 	u32 xdp_act = 0;
- 	int done = 0;
-@@ -943,6 +942,7 @@ static int netsec_process_rx(struct nets
+@@ -942,8 +942,8 @@ static int netsec_process_rx(struct nets
  		struct netsec_de *de = dring->vaddr + (DESC_SZ * idx);
  		struct netsec_desc *desc = &dring->desc[idx];
  		struct page *page = virt_to_page(desc->addr);
-+		struct sk_buff *skb = NULL;
- 		u32 xdp_result = XDP_PASS;
++		u32 xdp_result = NETSEC_XDP_PASS;
+ 		struct sk_buff *skb = NULL;
+-		u32 xdp_result = XDP_PASS;
  		u16 pkt_len, desc_len;
  		dma_addr_t dma_handle;
+ 		struct xdp_buff xdp;
 
 
