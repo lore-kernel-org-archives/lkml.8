@@ -2,127 +2,178 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78630C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3AE2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEF32070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgA3A4p (ORCPT
+        id S1727263AbgA3A6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 19:56:45 -0500
-Received: from outbound-smtp44.blacknight.com ([46.22.136.52]:55543 "EHLO
-        outbound-smtp44.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726618AbgA3A4o (ORCPT
+        Wed, 29 Jan 2020 19:58:16 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47048 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726760AbgA3A6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 19:56:44 -0500
-X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 19:56:43 EST
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp44.blacknight.com (Postfix) with ESMTPS id 0D27FF886B
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 00:50:05 +0000 (GMT)
-Received: (qmail 8490 invoked from network); 30 Jan 2020 00:50:04 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Jan 2020 00:50:04 -0000
-Date:   Thu, 30 Jan 2020 00:50:02 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200130005002.GG3466@techsingularity.net>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
- <20200128091012.GZ3466@techsingularity.net>
- <20200129173852.GP14914@hirez.programming.kicks-ass.net>
- <20200129220021.GN18610@dread.disaster.area>
+        Wed, 29 Jan 2020 19:58:16 -0500
+Received: from callcc.thunk.org (guestnat-104-133-9-100.corp.google.com [104.133.9.100] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00U0w7fD007678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jan 2020 19:58:08 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 260E6420324; Wed, 29 Jan 2020 19:58:17 -0500 (EST)
+Date:   Wed, 29 Jan 2020 19:58:17 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: [GIT PULL] ext4 changes for 5.6
+Message-ID: <20200130005817.GA331314@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200129220021.GN18610@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 09:00:21AM +1100, Dave Chinner wrote:
-> On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
-> > > Peter, Ingo and Vincent -- I know the timing is bad due to the merge
-> > > window but do you have any thoughts on allowing select_idle_sibling to
-> > > stack a wakee task on the same CPU as a waker in this specific case?
-> > 
-> > I sort of see, but *groan*...
-> > 
-> > so if the kworker unlocks a contended mutex/rwsem/completion...
-> > 
-> > I suppose the fact that it limits it to tasks that were running on the
-> > same CPU limits the impact if we do get it wrong.
-> > 
-> > Elsewhere you write:
-> > 
-> > > I would prefer the wakeup code did not have to signal that it's a
-> > > synchronous wakeup. Sync wakeups so exist but callers got it wrong many
-> > > times where stacking was allowed and then the waker did not go to sleep.
-> > > While the chain of events are related, they are not related in a very
-> > > obvious way. I think it's much safer to keep this as a scheduler
-> > > heuristic instead of depending on callers to have sufficient knowledge
-> > > of the scheduler implementation.
-> > 
-> > That is true; the existing WF_SYNC has caused many issues for maybe
-> > being too strong.
-> > 
-> > But what if we create a new hint that combines both these ideas? Say
-> > WF_COMPLETE and subject that to these same criteria. This way we can
-> > eliminate wakeups from locks and such (they won't have this set).
-> > 
-> > Or am I just making things complicated again?
-> 
-> I suspect this is making it complicated again, because it requires
-> the people who maintain the code that is using workqueues to
-> understand when they might need to use a special wakeup interface in
-> the work function. And that includes code that currently calls
-> wake_up_all() because there can be hundreds of independent tasks
-> waiting on the IO completion (e.g all the wait queues in the XFS
-> journal code can (and do) have multiple threads waiting on them).
-> 
-> IOWs, requiring a special flag just to optimise this specific case
-> (i.e. single dependent waiter on same CPU as the kworker) when the
-> adverse behaviour is both hardware and workload dependent means it
-> just won't get used correctly or reliably.
-> 
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
 
-I agree. Pick any of Rusty's rules from "-2 Read the implementation
-and you'll get it wrong" all the way down to "-10 It's impossible to
-get right.".
+  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
 
-> Hence I'd much prefer the kernel detects and dynamically handles
-> this situation at runtime, because this pattern of workqueue usage
-> is already quite common and will only become more widespread as we
-> progress towards async processing of syscalls.
-> 
+are available in the Git repository at:
 
-To be fair, as Peter says, the kernel patch may not detect this
-properly. There are corner cases where it will get it wrong. My thinking is
-that *at the moment* when the heuristic is wrong, it's almost certainly
-because the machine was so over-saturated such that multiple related
-tasks are stacking anyway.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
 
-Depending on how async syscalls proceeds, this might get turn out to the
-the wrong heuristic and an API change will be required. At least if that
-happens, we'll have a few use cases to help guide what the API change
-should look like so we do not end up in WF_SYNC hell again.
+for you to fetch changes up to 7f6225e446cc8dfa4c3c7959a4de3dd03ec277bf:
 
--- 
-Mel Gorman
-SUSE Labs
+  jbd2: clean __jbd2_journal_abort_hard() and __journal_abort_soft() (2020-01-25 03:01:56 -0500)
+
+----------------------------------------------------------------
+This merge window, we've added some performance improvements in how we
+handle inode locking in the read/write paths, and improving the
+performance of Direct I/O overwrites.  We also now record the error
+code which caused the first and most recent ext4_error() report in the
+superblock, to make it easier to root cause problems in production
+systems.  There are also many of the usual cleanups and miscellaneous
+bug fixes.
+
+----------------------------------------------------------------
+Chengguang Xu (2):
+      ext4: remove unnecessary assignment in ext4_htree_store_dirent()
+      ext4: choose hardlimit when softlimit is larger than hardlimit in ext4_statfs_project()
+
+Dmitry Monakhov (3):
+      ext4: fix extent_status fragmentation for plain files
+      ext4: fix symbolic enum printing in trace output
+      ext4: fix extent_status trace points
+
+Eric Biggers (20):
+      ext4: remove unnecessary ifdefs in htree_dirblock_to_tree()
+      ext4: uninline ext4_inode_journal_mode()
+      ext4: remove unnecessary selections from EXT3_FS
+      docs: ext4.rst: add encryption and verity to features list
+      ext4: handle decryption error in __ext4_block_zero_page_range()
+      ext4: allow ZERO_RANGE on encrypted files
+      ext4: only use fscrypt_zeroout_range() on regular files
+      ext4: re-enable extent zeroout optimization on encrypted files
+      ext4: fix deadlock allocating crypto bounce page from mempool
+      ext4: fix deadlock allocating bio_post_read_ctx from mempool
+      ext4: remove unneeded check for error allocating bio_post_read_ctx
+      ext4: remove ext4_{ind,ext}_calc_metadata_amount()
+      ext4: clean up len and offset checks in ext4_fallocate()
+      ext4: remove redundant S_ISREG() checks from ext4_fallocate()
+      ext4: make some functions static in extents.c
+      ext4: fix documentation for ext4_ext_try_to_merge()
+      ext4: remove obsolete comment from ext4_can_extents_be_merged()
+      ext4: fix some nonstandard indentation in extents.c
+      ext4: add missing braces in ext4_ext_drop_refs()
+      ext4: fix race conditions in ->d_compare() and ->d_hash()
+
+Jan Kara (1):
+      ext4: Optimize ext4 DIO overwrites
+
+Kai Li (1):
+      jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+
+Martijn Coenen (1):
+      ext4: Add EXT4_IOC_FSGETXATTR/EXT4_IOC_FSSETXATTR to compat_ioctl
+
+Naoto Kobayashi (1):
+      ext4: Delete ext4_kvzvalloc()
+
+Ritesh Harjani (4):
+      ext4: fix ext4_dax_read/write inode locking sequence for IOCB_NOWAIT
+      ext4: Start with shared i_rwsem in case of DIO instead of exclusive
+      ext4: Move to shared i_rwsem even without dioread_nolock mount opt
+      ext4: remove unused macro MPAGE_DA_EXTENT_TAIL
+
+Shijie Luo (2):
+      ext4,jbd2: fix comment and code style
+      jbd2: remove pointless assertion in __journal_remove_journal_head
+
+Theodore Ts'o (8):
+      ext4: treat buffers contining write errors as valid in ext4_sb_bread()
+      Merge branch 'rk/inode_lock' into dev
+      ext4: save the error code which triggered an ext4_error() in the superblock
+      ext4: simulate various I/O and checksum errors when reading metadata
+      ext4: export information about first/last errors via /sys/fs/ext4/<dev>
+      ext4: avoid fetching btime in ext4_getattr() unless requested
+      ext4: drop ext4_kvmalloc()
+      ext4: make dioread_nolock the default
+
+Vasily Averin (1):
+      jbd2_seq_info_next should increase position index
+
+wangyan (1):
+      jbd2: delete the duplicated words in the comments
+
+zhangyi (F) (4):
+      jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+      ext4, jbd2: ensure panic when aborting with zero errno
+      jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
+      jbd2: clean __jbd2_journal_abort_hard() and __journal_abort_soft()
+
+zhengbin (1):
+      ext4: use true,false for bool variable
+
+ Documentation/admin-guide/ext4.rst    |   2 +
+ Documentation/filesystems/fscrypt.rst |   6 +--
+ fs/ext4/Kconfig                       |   6 ---
+ fs/ext4/balloc.c                      |   5 +-
+ fs/ext4/dir.c                         |  10 ++--
+ fs/ext4/ext4.h                        |  81 +++++++++++++++++++++++++------
+ fs/ext4/ext4_extents.h                |   5 --
+ fs/ext4/ext4_jbd2.c                   |  25 ++++++++++
+ fs/ext4/ext4_jbd2.h                   |  22 +--------
+ fs/ext4/extents.c                     | 205 +++++++++++++++++++++++++++++-------------------------------------------------
+ fs/ext4/extents_status.h              |   6 +++
+ fs/ext4/file.c                        | 203 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------
+ fs/ext4/ialloc.c                      |   6 ++-
+ fs/ext4/indirect.c                    |  26 ----------
+ fs/ext4/inline.c                      |   4 +-
+ fs/ext4/inode.c                       |  53 +++++++++++++++-----
+ fs/ext4/ioctl.c                       |   2 +
+ fs/ext4/mballoc.c                     |   4 ++
+ fs/ext4/mmp.c                         |   6 ++-
+ fs/ext4/namei.c                       |  20 +++++---
+ fs/ext4/page-io.c                     |  19 ++++++--
+ fs/ext4/readpage.c                    |  42 ++++++++--------
+ fs/ext4/resize.c                      |  10 ++--
+ fs/ext4/super.c                       | 122 +++++++++++++++++++++++++++++++++-------------
+ fs/ext4/sysfs.c                       |  88 +++++++++++++++++++++++++++++++++-
+ fs/ext4/xattr.c                       |   6 ++-
+ fs/jbd2/checkpoint.c                  |   2 +-
+ fs/jbd2/commit.c                      |   4 +-
+ fs/jbd2/journal.c                     | 119 +++++++++++++++++++--------------------------
+ fs/jbd2/transaction.c                 |   4 +-
+ include/linux/jbd2.h                  |   1 -
+ include/trace/events/ext4.h           |  27 +++++++++--
+ 32 files changed, 709 insertions(+), 432 deletions(-)
+
