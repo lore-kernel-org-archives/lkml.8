@@ -2,88 +2,87 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882F9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F99AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62821206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FFB206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkOH7nZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgA3KJu convert rfc822-to-8bit (ORCPT
+        id S1727024AbgA3KLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:09:50 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49687 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726873AbgA3KJu (ORCPT
+        Thu, 30 Jan 2020 05:11:42 -0500
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:36327 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3KLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:09:50 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-234-ziHQ9NlkMbaBnTTgqADTaw-1; Thu, 30 Jan 2020 10:09:45 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 10:09:45 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 Jan 2020 10:09:45 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Greg KH' <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@kernel.org>
-CC:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hpet: Fix struct_size() in kzalloc()
-Thread-Topic: [PATCH] hpet: Fix struct_size() in kzalloc()
-Thread-Index: AQHV1zIWYxQa+FO7zkqmoqcRV+KmjagC+3VQ
-Date:   Thu, 30 Jan 2020 10:09:45 +0000
-Message-ID: <b04253f40d9e49e597af925599bd4964@AcuMS.aculab.com>
-References: <202001300450.00U4ocvS083098@www262.sakura.ne.jp>
- <20200130052645.GA833@sol.localdomain> <20200130055650.GA623220@kroah.com>
-In-Reply-To: <20200130055650.GA623220@kroah.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: ziHQ9NlkMbaBnTTgqADTaw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Thu, 30 Jan 2020 05:11:41 -0500
+Received: by mail-pf1-f180.google.com with SMTP id 185so1255482pfv.3;
+        Thu, 30 Jan 2020 02:11:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mz6Sg+1xlyo1RAumtR2m9UZfDaDkaYdFhbdbNKvWKs4=;
+        b=HkOH7nZqbOyGwH1fu0ppaau8VwYWH0iMaAnnXrxYZPHWSes9zL4AVH4XpB9eO3PfQu
+         If7eVjiU18TtgXymv1vpr02ZZBsZVv7x0VOLx3mDChU+bWjwMOGHtGWLpaSr22mBhTNl
+         eqLWe4lJyL0z34vCcZTl7t0EFwsjvvRKic7DEYD4zHeYy3Jkmgv/DTW9xC0tbz6rTpuQ
+         pJJTe5v5WP52nOPqs6XfOPsQzEV8uByt6ZaIwNPWvZNvG5nhr+wg5zX0W3qALk+10v7I
+         nc16WMlE25YLLzE0JfcKyOBoA3pZk4wFAaROMMxAGBGgJy0DqC/f+UmsA9Uaf0KIhn7g
+         FJAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mz6Sg+1xlyo1RAumtR2m9UZfDaDkaYdFhbdbNKvWKs4=;
+        b=ell5nPFShiileDRWMxcnpSjpv0IgVySLFrAZRnVCRfroUfJIkmuJaqIilpLlSTD5ma
+         jBRM8rlJUPSFe8TUr0HmmoF18F7SnR751LYzQ4d+eSgZv+RvXw2VVWErPT4lanNeNrAN
+         srfOzGWBodPbmM7WTGIlpcr1RF5KmrFhGHyblSwo4b3iGzVr+179GbVB38Hk2J/ucHwW
+         K0xXUZtEZIEE2kn6AORV1OQR8jbGVuuqJ4pcOzMf4fPVPBdFUF/pUOl8Zb1Qf5W0H4jc
+         S6raozXj+Ga17K2PxIFpQKNWWU35nMrUCiucTX6/81WHNNSuGL0JGRRpFoz2WM4kdzi0
+         98dw==
+X-Gm-Message-State: APjAAAVCusOvyW+kk0myOcvga/zoIE/GB+Hsjx2+rw3zDFsIEWxK6ZeL
+        rhh6BEwuE2J2YghgTKJLcH1740S75zU=
+X-Google-Smtp-Source: APXvYqxryqEa+v+/LI4WvWVdSwoiDVrYKw2NS71V1082sPc/hxKYLdwKiBOeldsH7+QUoiR81NFJAA==
+X-Received: by 2002:a63:214e:: with SMTP id s14mr3857659pgm.428.1580379100984;
+        Thu, 30 Jan 2020 02:11:40 -0800 (PST)
+Received: from localhost.localdomain ([2405:204:848d:d4b5:49ce:a9e3:28b5:cf94])
+        by smtp.gmail.com with ESMTPSA id k21sm6239683pfa.63.2020.01.30.02.11.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 02:11:40 -0800 (PST)
+From:   Pragat Pandya <pragat.pandya@gmail.com>
+To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-fsdevel@vger.kernel.org,
+        Pragat Pandya <pragat.pandya@gmail.com>
+Subject: [PATCH 0/2] Remove unused structures from source
+Date:   Thu, 30 Jan 2020 15:41:16 +0530
+Message-Id: <20200130101118.15936-1-pragat.pandya@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
-> > > -	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs - 1),
-> > > +	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs),
-> > >  			GFP_KERNEL);
-> > >
-> > >  	if (!hpetp)
-> > > --
-> >
-> > Yep, "char: hpet: Use flexible-array member" started causing random boot
-> > failures on mainline for me.  Tetsuo beat me to sending the fix.
-> >
-> > Only thing I'll add is that GFP_KERNEL can now fit on the previous line.
-> 
-> Gustavo already sent a fix for this, I didn't realize it was causing
-> boot problems, I'll forward it on to Linus soon.
+This patchset removes following two unused structures from the source as
+they are not referenced in any other file(s).
+ -structure "part_info_t"
+ -structure "dev_info_t"
 
-grep -r --include '*.c' 'struct_size.*- 1'
-gives 4 other matches.
-I bet they all have the same bug.
-There might be others that simple pattern doesn't find.
 
-	David
+Pragat Pandya (2):
+  staging: exfat: Remove unused struct 'part_info_t'
+  staging: exfat: Remove unused struct 'dev_info_t'
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+ drivers/staging/exfat/exfat.h | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+-- 
+2.17.1
 
