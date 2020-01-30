@@ -2,69 +2,69 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F463C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 05:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737A2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 05:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579AC2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 05:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7692082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 05:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nxSLi57g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMxVyHV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgA3FsN (ORCPT
+        id S1727333AbgA3FsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 00:48:13 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43049 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727280AbgA3FsK (ORCPT
+        Thu, 30 Jan 2020 00:48:21 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51861 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbgA3FsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 00:48:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s1so895587pfh.10;
-        Wed, 29 Jan 2020 21:48:09 -0800 (PST)
+        Thu, 30 Jan 2020 00:48:05 -0500
+Received: by mail-pj1-f65.google.com with SMTP id fa20so839340pjb.1;
+        Wed, 29 Jan 2020 21:48:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pGnME5UnUSmVYH39WRYxMH/ihOy5W05BZhs06G3EBa4=;
-        b=nxSLi57gFvKusz8rO/jUyE8wbgODnZnpaz04OktxEOyilqGNNxChmJDw14JKehV5gI
-         9rqDYr0+O0JPlQxljPPJMo05vzjovPL0Gr5W4frf/l1oo4ED4KxPy0XgBJh5NKgLHXKN
-         Cu8nmCngL3tpp72WSmBPJdrjzoDgYg8Y/RfJhy5zqHSf4j4+fvRK0NRYw9QaciyR1CrA
-         HlU190Bbq7zF0EHveprSnR5KEzBVhjM5vTBme+MlAg0+T8WijSW59nBCxSjn9Sxnn6xD
-         ZsFFWVvyI8QBsPhFrYQE+l9d1JbV2CgGLq2yuZ2uG4/Z+yCOYNt3j4sPm+4cMRawyLrZ
-         9zxQ==
+        bh=L/+zfhhce+MGmNAWfBlnOWr6kzS8jMspJdiLQOshnKs=;
+        b=CMxVyHV5lCpKyxnYThhtaUb68Rx1d8RT2yhJ7aafTFC0w/x/MY+RislEMMDoIitjFS
+         u5HLLbABUC+tmC68/uDslAS9gZXfzFK+RSBGbEE/yuAvYQUSz8pCfqJzvrCbRIBfaRGx
+         7Xt5zL9bflkjjBvdAa+gUSuNNNzTOW/nARJsFDbe9lqSy3/O8+gsmEh1QXV5Yih0uWkY
+         91CcvdHsWIACtXiiXpQDkcTpUk7jQBIILbwiCRJzEFqzkR2gfsLdlJGmkirgq3U0LI9O
+         VFJTlBCgWyXyuMTqzPixuHxU0JI998iaKQNhiLzBIdxxmtThzkjIYFHExvcVw7/4f7el
+         445g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pGnME5UnUSmVYH39WRYxMH/ihOy5W05BZhs06G3EBa4=;
-        b=UTCytgrVGDpLGIYoph9q40K4W09PEtKS/Bdkx/lJStM8mAweiyBhZBTlOQ46UxecWP
-         mucYoTF4oXnsQIbphQRnhBWqnOF2z9PLzpFtrp/7c9yusvd6r+G6lbzshTOrEKVmH9LQ
-         O2BsIgA+SBBQHO9j3klvWqo2lvXjoejyS3js6ssTgMXiKMXplUwKm3l3iQoF608ARNNM
-         TaMPsetRgyc07VcIaiIvRh3GqOfFKsMC7yglRsCTMQh1/yCjBwFdlof2V274in3/qmhv
-         0TQ/puDLqfGacSlahjXOyJXTAbKjvvUjjzR8AHmC6ueRE7uKNELPVxBCD0fKMiduIJhp
-         CDTw==
-X-Gm-Message-State: APjAAAWBh+RrxrqKJygknHKk6m15TZZQcCmscYWGl6moFyoDGwU9GHa+
-        DEFMyD5zmGBA+pKc1Gov8dc=
-X-Google-Smtp-Source: APXvYqz5OQQr0+Ro5uzdR+/E3kWp/tLDU8CJOh0uO4GFLt6IDOX7Wgfg6nHW0rjgl7P2FMrNqfjvig==
-X-Received: by 2002:a63:484b:: with SMTP id x11mr3022258pgk.148.1580363289305;
-        Wed, 29 Jan 2020 21:48:09 -0800 (PST)
+        bh=L/+zfhhce+MGmNAWfBlnOWr6kzS8jMspJdiLQOshnKs=;
+        b=gG4FXa/hZmCI8D8hcgMhGHK/SDEA9z6fyqiwlZEmWtnvBPP4UpYbUrz1RjSF+Nfpel
+         gt3Bt++l1LAuhwRIBo49WFBvECi0vC2vjACWdfj9mQHCrO2e9lz0iHVowrnIBhKbZjHU
+         w9+YVDYOstqgWc+ncXkqPZ8cY2grn7BoiJVogAplc+vdkXg5HljTe0/lCG4Fnyw0lmph
+         tQVfj2r/xVih5QE8f4GNbrWTnjlBdWlcwUbxG7B8KnaTyFv5wRze3drtDjZxJB/ZnPyI
+         QUdszIUj6747mjW7GVFmVNYbl+ZKym7CYx3CLmkm63VGrpPHt7pj4EQ+BqC8pe+otT/k
+         izqg==
+X-Gm-Message-State: APjAAAXX5WlJg1R3HLbkQASDbzaPE7TH/W0qZyqVHelzWjUVM7faAKNW
+        KGnREnNDCxAExt27rDhN2LM=
+X-Google-Smtp-Source: APXvYqw4Z1nPu1acLeJJxhbNjn5y1Lu4JiHDYY9IdH6/ww/syNe0Y6AM6x5tcv9giDagxSB9vG9/DA==
+X-Received: by 2002:a17:90b:309:: with SMTP id ay9mr3851975pjb.22.1580363285069;
+        Wed, 29 Jan 2020 21:48:05 -0800 (PST)
 Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id q4sm4871495pfl.175.2020.01.29.21.48.08
+        by smtp.gmail.com with ESMTPSA id e1sm4983931pfl.98.2020.01.29.21.48.04
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 21:48:08 -0800 (PST)
+        Wed, 29 Jan 2020 21:48:04 -0800 (PST)
 From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
 X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
 To:     johan@kernel.org
 Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
         "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [PATCH V3 6/6] USB: serial: f81232: Add generator for F81534A
-Date:   Thu, 30 Jan 2020 13:47:52 +0800
-Message-Id: <20200130054752.9368-7-hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V3 4/6] USB: serial: f81232: Add F81534A support
+Date:   Thu, 30 Jan 2020 13:47:50 +0800
+Message-Id: <20200130054752.9368-5-hpeter+linux_kernel@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200130054752.9368-1-hpeter+linux_kernel@gmail.com>
 References: <20200130054752.9368-1-hpeter+linux_kernel@gmail.com>
@@ -73,222 +73,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Fintek F81534A series is contains 1 HUB / 1 GPIO device / n UARTs,
-but the UART is default disable and need enabled by GPIO device(2c42/16F8).
+The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
+and the serial port is default disabled when plugin computer.
 
-When F81534A plug to host, we can only see 1 HUB & 1 GPIO device and we
-write 0x8fff to GPIO device register F81534A_CTRL_CMD_ENABLE_PORT(116h)
-to enable all available serial ports.
+The IC is contains devices as following:
+	1. HUB (all devices is connected with this hub)
+	2. GPIO/Control device. (enable serial port and control GPIOs)
+	3. serial port 1 to x (2/4/8/12)
+
+It's most same with F81232, the UART device is difference as follow:
+	1. TX/RX bulk size is 128/512bytes
+	2. RX bulk layout change:
+		F81232: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
+		F81534A:[LEN][Data.....][LSR]
 
 Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
 ---
 Changelog:
 v3:
-	1. Modify some define with prefix F81534A_CTRL_.
-	2. Use kmemdup() in f81534a_ctrl_set_register().
-	3. Not accpet with short transfers in f81534a_ctrl_set_register().
-	4. Add comment in f81534a_ctrl_enable_all_ports() to describe magic
-	   constants.
-	5. Remove non-need usb_get_dev()/usb_put_dev().
-	6. Add F81534A_CTRL_ID in MODULE_DEVICE_TABLE().
+	1. Add prefix f81232 to original id_table[].
+	2. Change all_serial_id_table[] to combined_id_table[].
+	3. Remove non-used defines.
+	4. Fix typos.
+	5. Change some error message more reable.
+	6. Change urb->actual_length to len in f81534a_process_read_urb().
+	7. Remove f81534a_port_probe() and add it to next patch.
 
 v2:
-	1: Simplify the generator behavior.
-	2: Change multiply MODULE_DEVICE_TABLE() to 1 only.
+	1: Separate LSR handler to prior patch.
+	2: Use tty_insert_flip_string_fixed_char() when not a console.
+	3. Remove proxy function f81232_read_urb_proxy() and change it
+	   to usb-serial subdriver.
+	4. Change some error message more reable.
 
- drivers/usb/serial/f81232.c | 134 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 133 insertions(+), 1 deletion(-)
+ drivers/usb/serial/f81232.c | 128 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 122 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-index 21410a7f3a8b..0303f94b2521 100644
+index e080d678b0c2..df197c723273 100644
 --- a/drivers/usb/serial/f81232.c
 +++ b/drivers/usb/serial/f81232.c
-@@ -36,6 +36,9 @@
- 	{ USB_DEVICE(0x2c42, 0x1635) },	/* 8 port UART device */ \
- 	{ USB_DEVICE(0x2c42, 0x1636) }	/* 12 port UART device */
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * Fintek F81232 USB to serial adaptor driver
++ * Fintek F81532A/534A/535/536 USB to 2/4/8/12 serial adaptor driver
+  *
+  * Copyright (C) 2012 Greg Kroah-Hartman (gregkh@linuxfoundation.org)
+  * Copyright (C) 2012 Linux Foundation
+@@ -21,11 +22,36 @@
+ #include <linux/usb/serial.h>
+ #include <linux/serial_reg.h>
  
-+#define F81534A_CTRL_ID		\
-+	{ USB_DEVICE(0x2c42, 0x16f8) }	/* Global control device */
+-static const struct usb_device_id id_table[] = {
+-	{ USB_DEVICE(0x1934, 0x0706) },
++#define F81232_ID		\
++	{ USB_DEVICE(0x1934, 0x0706) }	/* 1 port UART device */
 +
- static const struct usb_device_id f81232_id_table[] = {
- 	F81232_ID,
- 	{ }					/* Terminating entry */
-@@ -46,9 +49,15 @@ static const struct usb_device_id f81534a_id_table[] = {
++#define F81534A_SERIES_ID	\
++	{ USB_DEVICE(0x2c42, 0x1602) },	/* In-Box 2 port UART device */	\
++	{ USB_DEVICE(0x2c42, 0x1604) },	/* In-Box 4 port UART device */	\
++	{ USB_DEVICE(0x2c42, 0x1605) },	/* In-Box 8 port UART device */	\
++	{ USB_DEVICE(0x2c42, 0x1606) },	/* In-Box 12 port UART device */ \
++	{ USB_DEVICE(0x2c42, 0x1608) },	/* Non-Flash type */ \
++	{ USB_DEVICE(0x2c42, 0x1632) },	/* 2 port UART device */ \
++	{ USB_DEVICE(0x2c42, 0x1634) },	/* 4 port UART device */ \
++	{ USB_DEVICE(0x2c42, 0x1635) },	/* 8 port UART device */ \
++	{ USB_DEVICE(0x2c42, 0x1636) }	/* 12 port UART device */
++
++static const struct usb_device_id f81232_id_table[] = {
++	F81232_ID,
  	{ }					/* Terminating entry */
  };
- 
-+static const struct usb_device_id f81534a_ctrl_id_table[] = {
-+	F81534A_CTRL_ID,
+-MODULE_DEVICE_TABLE(usb, id_table);
++
++static const struct usb_device_id f81534a_id_table[] = {
++	F81534A_SERIES_ID,
 +	{ }					/* Terminating entry */
 +};
 +
- static const struct usb_device_id combined_id_table[] = {
- 	F81232_ID,
- 	F81534A_SERIES_ID,
-+	F81534A_CTRL_ID,
- 	{ }					/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, combined_id_table);
-@@ -61,6 +70,7 @@ MODULE_DEVICE_TABLE(usb, combined_id_table);
- #define F81232_REGISTER_REQUEST		0xa0
- #define F81232_GET_REGISTER		0xc0
- #define F81232_SET_REGISTER		0x40
-+#define F81534A_ACCESS_REG_RETRY	2
++static const struct usb_device_id combined_id_table[] = {
++	F81232_ID,
++	F81534A_SERIES_ID,
++	{ }					/* Terminating entry */
++};
++MODULE_DEVICE_TABLE(usb, combined_id_table);
  
- #define SERIAL_BASE_ADDRESS		0x0120
- #define RECEIVE_BUFFER_REGISTER		(0x00 + SERIAL_BASE_ADDRESS)
-@@ -92,6 +102,8 @@ MODULE_DEVICE_TABLE(usb, combined_id_table);
- #define F81534A_TRIGGER_MULTIPLE_4X	BIT(3)
- #define F81534A_FIFO_128BYTE		(BIT(1) | BIT(0))
+ /* Maximum baudrate for F81232 */
+ #define F81232_MAX_BAUDRATE		1500000
+@@ -61,6 +87,11 @@ MODULE_DEVICE_TABLE(usb, id_table);
+ #define F81232_CLK_14_77_MHZ		(BIT(1) | BIT(0))
+ #define F81232_CLK_MASK			GENMASK(1, 0)
  
-+#define F81534A_MAX_PORT		12
-+
- /* Serial port self GPIO control, 2bytes [control&output data][input data] */
- #define F81534A_GPIO_REG		0x10e
- #define F81534A_GPIO_MODE2_DIR		BIT(6) /* 1: input, 0: output */
-@@ -101,6 +113,9 @@ MODULE_DEVICE_TABLE(usb, combined_id_table);
- #define F81534A_GPIO_MODE1_OUTPUT	BIT(1)
- #define F81534A_GPIO_MODE0_OUTPUT	BIT(0)
- 
-+#define F81534A_CTRL_CMD_ENABLE_PORT	0x116
-+
++#define F81534A_MODE_REG		0x107
++#define F81534A_TRIGGER_MASK		GENMASK(3, 2)
++#define F81534A_TRIGGER_MULTIPLE_4X	BIT(3)
++#define F81534A_FIFO_128BYTE		(BIT(1) | BIT(0))
 +
  struct f81232_private {
  	struct mutex lock;
  	u8 modem_control;
-@@ -848,6 +863,89 @@ static void f81232_lsr_worker(struct work_struct *work)
- 		dev_warn(&port->dev, "read LSR failed: %d\n", status);
+@@ -383,6 +414,47 @@ static void f81232_process_read_urb(struct urb *urb)
+ 	tty_flip_buffer_push(&port->port);
  }
  
-+static int f81534a_ctrl_set_register(struct usb_device *dev, u16 reg, u16 size,
-+					void *val)
++static void f81534a_process_read_urb(struct urb *urb)
 +{
-+	int retry = F81534A_ACCESS_REG_RETRY;
-+	int status;
-+	u8 *tmp;
++	struct usb_serial_port *port = urb->context;
++	unsigned char *data = urb->transfer_buffer;
++	char tty_flag;
++	unsigned int i;
++	u8 lsr;
++	u8 len;
 +
-+	tmp = kmemdup(val, size, GFP_KERNEL);
-+	if (!tmp)
-+		return -ENOMEM;
++	if (urb->actual_length < 3) {
++		dev_err(&port->dev, "short message received: %d\n",
++				urb->actual_length);
++		return;
++	}
 +
-+	while (retry--) {
-+		status = usb_control_msg(dev,
-+					usb_sndctrlpipe(dev, 0),
-+					F81232_REGISTER_REQUEST,
-+					F81232_SET_REGISTER,
-+					reg,
-+					0,
-+					tmp,
-+					size,
-+					USB_CTRL_SET_TIMEOUT);
-+		if (status != size) {
-+			status = usb_translate_errors(status);
-+			if (status == -EIO)
-+				continue;
++	len = data[0];
++	if (len != urb->actual_length) {
++		dev_err(&port->dev, "unexpected length: %d %d\n", len,
++				urb->actual_length);
++		return;
++	}
 +
-+			status = -EIO;
-+		} else {
-+			status = 0;
++	/* bulk-in data: [LEN][Data.....][LSR] */
++	lsr = data[len - 1];
++	tty_flag = f81232_handle_lsr(port, lsr);
++
++	if (port->port.console && port->sysrq) {
++		for (i = 1; i < len - 1; ++i) {
++			if (!usb_serial_handle_sysrq_char(port, data[i])) {
++				tty_insert_flip_char(&port->port, data[i],
++						tty_flag);
++			}
 +		}
-+
-+		break;
++	} else {
++		tty_insert_flip_string_fixed_flag(&port->port, &data[1],
++							tty_flag, len - 2);
 +	}
 +
-+	if (status) {
-+		dev_err(&dev->dev, "set ctrl reg: %x, failed status: %d\n",
-+				reg, status);
-+	}
-+
-+	kfree(tmp);
-+	return status;
++	tty_flip_buffer_push(&port->port);
 +}
 +
-+static int f81534a_ctrl_enable_all_ports(struct usb_interface *intf)
-+{
-+	struct usb_device *dev = interface_to_usbdev(intf);
-+	unsigned char enable[2];
-+	int status;
-+
-+	/*
-+	 * Enable all available serial ports, define as following:
-+	 * bit 15	: Reset behavior (when HUB got soft reset)
-+	 *			0: maintain all serial port enabled state.
-+	 *			1: disable all serial port.
-+	 * bit 0~11	: Serial port enable bit.
-+	 */
-+	enable[0] = 0xff;
-+	enable[1] = 0x8f;
-+
-+	status = f81534a_ctrl_set_register(dev, F81534A_CTRL_CMD_ENABLE_PORT,
-+			sizeof(enable), enable);
-+	if (status)
-+		dev_warn(&dev->dev, "set ENABLE_PORT failed: %d\n", status);
-+
-+	return status;
-+}
-+
-+static int f81534a_ctrl_probe(struct usb_interface *intf,
-+				const struct usb_device_id *id)
-+{
-+
-+	return f81534a_ctrl_enable_all_ports(intf);
-+}
-+
-+static void f81534a_ctrl_disconnect(struct usb_interface *intf)
-+{
-+}
-+
-+static int f81534a_ctrl_resume(struct usb_interface *intf)
-+{
-+	return f81534a_ctrl_enable_all_ports(intf);
-+}
-+
- static int f81232_port_probe(struct usb_serial_port *port)
+ static void f81232_break_ctl(struct tty_struct *tty, int break_state)
  {
- 	struct f81232_private *priv;
-@@ -975,7 +1073,41 @@ static struct usb_serial_driver * const serial_drivers[] = {
+ 	struct usb_serial_port *port = tty->driver_data;
+@@ -666,6 +738,24 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
+ 	return 0;
+ }
+ 
++static int f81534a_open(struct tty_struct *tty, struct usb_serial_port *port)
++{
++	int status;
++	u8 mask;
++	u8 val;
++
++	val = F81534A_TRIGGER_MULTIPLE_4X | F81534A_FIFO_128BYTE;
++	mask = F81534A_TRIGGER_MASK | F81534A_FIFO_128BYTE;
++
++	status = f81232_set_mask_register(port, F81534A_MODE_REG, mask, val);
++	if (status) {
++		dev_err(&port->dev, "failed to set MODE_REG: %d\n", status);
++		return status;
++	}
++
++	return f81232_open(tty, port);
++}
++
+ static void f81232_close(struct usb_serial_port *port)
+ {
+ 	struct f81232_private *port_priv = usb_get_serial_port_data(port);
+@@ -810,7 +900,7 @@ static struct usb_serial_driver f81232_device = {
+ 		.owner =	THIS_MODULE,
+ 		.name =		"f81232",
+ 	},
+-	.id_table =		id_table,
++	.id_table =		f81232_id_table,
+ 	.num_ports =		1,
+ 	.bulk_in_size =		256,
+ 	.bulk_out_size =	256,
+@@ -832,14 +922,40 @@ static struct usb_serial_driver f81232_device = {
+ 	.resume =		f81232_resume,
+ };
+ 
++static struct usb_serial_driver f81534a_device = {
++	.driver = {
++		.owner =	THIS_MODULE,
++		.name =		"f81534a",
++	},
++	.id_table =		f81534a_id_table,
++	.num_ports =		1,
++	.open =			f81534a_open,
++	.close =		f81232_close,
++	.dtr_rts =		f81232_dtr_rts,
++	.carrier_raised =	f81232_carrier_raised,
++	.get_serial =		f81232_get_serial_info,
++	.break_ctl =		f81232_break_ctl,
++	.set_termios =		f81232_set_termios,
++	.tiocmget =		f81232_tiocmget,
++	.tiocmset =		f81232_tiocmset,
++	.tiocmiwait =		usb_serial_generic_tiocmiwait,
++	.tx_empty =		f81232_tx_empty,
++	.process_read_urb =	f81534a_process_read_urb,
++	.read_int_callback =	f81232_read_int_callback,
++	.port_probe =		f81232_port_probe,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
++};
++
+ static struct usb_serial_driver * const serial_drivers[] = {
+ 	&f81232_device,
++	&f81534a_device,
  	NULL,
  };
  
--module_usb_serial_driver(serial_drivers, combined_id_table);
-+static struct usb_driver f81534a_ctrl_driver = {
-+	.name =		"f81534a_ctrl",
-+	.id_table =	f81534a_ctrl_id_table,
-+	.probe =	f81534a_ctrl_probe,
-+	.disconnect =	f81534a_ctrl_disconnect,
-+	.resume =	f81534a_ctrl_resume,
-+};
-+
-+static int __init f81232_init(void)
-+{
-+	int status;
-+
-+	status = usb_register_driver(&f81534a_ctrl_driver, THIS_MODULE,
-+			KBUILD_MODNAME);
-+	if (status)
-+		return status;
-+
-+	status = usb_serial_register_drivers(serial_drivers, KBUILD_MODNAME,
-+			combined_id_table);
-+	if (status) {
-+		usb_deregister(&f81534a_ctrl_driver);
-+		return status;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit f81232_exit(void)
-+{
-+	usb_serial_deregister_drivers(serial_drivers);
-+	usb_deregister(&f81534a_ctrl_driver);
-+}
-+
-+module_init(f81232_init);
-+module_exit(f81232_exit);
+-module_usb_serial_driver(serial_drivers, id_table);
++module_usb_serial_driver(serial_drivers, combined_id_table);
  
- MODULE_DESCRIPTION("Fintek F81232/532A/534A/535/536 USB to serial driver");
+-MODULE_DESCRIPTION("Fintek F81232 USB to serial adaptor driver");
++MODULE_DESCRIPTION("Fintek F81232/532A/534A/535/536 USB to serial driver");
  MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
+ MODULE_AUTHOR("Peter Hong <peter_hong@fintek.com.tw>");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
