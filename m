@@ -2,79 +2,83 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB86C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF60C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A145D20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5548E20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JsHO66/2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IEtluxk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgA3QxX (ORCPT
+        id S1727438AbgA3Qy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:53:23 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48128 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3QxX (ORCPT
+        Thu, 30 Jan 2020 11:54:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43694 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3Qy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:53:23 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8F9FC2008823;
-        Thu, 30 Jan 2020 08:53:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F9FC2008823
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1580403202;
-        bh=6u2e4utCv06M2/EwYUSUx/pCN776xEEyDnF/FBecuMo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JsHO66/2/Zk8xjQZsETKMnysO4RHQBlhEE32CKoz12JcE9hp3ahExAllWTt4WVHNq
-         WiC5IyWPZgb7R7XV8mZsxVpzzpi/AZyQxTUIh1RtXAxrowX3iP1QAXqXZ7e6PfP4RR
-         0fIRArL6Q3oUVnLy/jw50jaaoq2+5SQ/1m9pDGYA=
-Subject: Re: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
- on different TPM banks
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org
-References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
- <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <480498cc-861b-7efa-de6a-52bc651aad01@linux.microsoft.com>
-Date:   Thu, 30 Jan 2020 08:53:45 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 11:54:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qceikH9PHpCz39hioQYWaZZk7q8XBIPjc6qoISxbbjM=; b=IEtluxk0SuMb5ff+P3zrx0x0Z
+        ZDyJL2W+YIXQPZF2BhR1T7j0HbsbhoEMyK/NBw/UiOIiuLJpcb2m/xG5FDzMd5dm1zJi4/LpAYMtl
+        i4+TrlEqCOH6Mjr1dXF7PW36pKjEaB1Yc7W9+T8oD7KUeHdyh82rBQEDMKmojpNsQGfTlrQF2xmRh
+        P/GkTuDgHHGcdQbdRhUr8Kuec0tFxiPx4mG8soI0bqYR3ufvbJ3R6W7spCFqzO4jwxJe2OJFmJLeg
+        GkVE/fS5+SH9N0/DgmISRtEU8xC6+ZSOBvy9SnDTIp+CM7owxeFBT/DYppv32i7t0pNyA5ydEa3fQ
+        ymFavt1Mg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixD5F-0004ap-68; Thu, 30 Jan 2020 16:54:25 +0000
+Date:   Thu, 30 Jan 2020 08:54:25 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] splice: direct call for default_file_splice*()
+Message-ID: <20200130165425.GA8872@infradead.org>
+References: <12375b7baa741f0596d54eafc6b1cfd2489dd65a.1579553271.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12375b7baa741f0596d54eafc6b1cfd2489dd65a.1579553271.git.asml.silence@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/2020 8:22 AM, Mimi Zohar wrote:
+On Mon, Jan 20, 2020 at 11:49:46PM +0300, Pavel Begunkov wrote:
+> Indirect calls could be very expensive nowadays, so try to use direct calls
+> whenever possible.
 
-> +static enum hash_algo get_hash_algo(const char *algname)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < HASH_ALGO__LAST; i++) {
-> +		if (strcmp(algname, hash_algo_name[i]) == 0)
-> +			break;
-> +	}
-> +
-> +	return i;
-> +}
-> +
+... and independent of that your new version is much shorter and easier
+to read.  But it could be improved a tiny little bit further:
 
-ima_digest_data is passed to ima_calc_boot_aggregate(). This struct 
-contains the hash_algo. Can that be passed to 
-ima_calc_boot_aggregate_tfm() instead of using the above function to get 
-the hash_algo?
+>  	if (out->f_op->splice_write)
+> -		splice_write = out->f_op->splice_write;
+> +		return out->f_op->splice_write(pipe, out, ppos, len, flags);
+>  	else
+> -		splice_write = default_file_splice_write;
+> -
+> -	return splice_write(pipe, out, ppos, len, flags);
+> +		return default_file_splice_write(pipe, out, ppos, len, flags);
 
-  -lakshmi
+No need for the else after an return.
+
+>  	if (in->f_op->splice_read)
+> -		splice_read = in->f_op->splice_read;
+> +		return in->f_op->splice_read(in, ppos, pipe, len, flags);
+>  	else
+> -		splice_read = default_file_splice_read;
+> -
+> -	return splice_read(in, ppos, pipe, len, flags);
+> +		return default_file_splice_read(in, ppos, pipe, len, flags);
+
+Same here.
