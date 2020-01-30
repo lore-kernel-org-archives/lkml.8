@@ -2,345 +2,189 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99A2C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C66E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580388902;
-	bh=ZSyHk2gQWsgvdW1jKlYdrTbxG/nfMLtS5Ild90/BOdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gonlY8y4JyriJdXQcVY9NO90bJB7+hreg/955Ga6fzW3a9YtjdGTRRIJ6Y+Ahw+YI
-	 Z3w7uzllTmx4e6/8Gh4l8HDY0cVjDpoXTz+kjCMrmjJswhv5MPQPSxy6FHLkYA51dY
-	 +zF3hOqMF5lX/wyN/S+e2bIwKH5FxqZdyQ8ddRNE=
+	by mail.kernel.org (Postfix) with ESMTP id AE9E72083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Bu/0Np8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgA3MzB (ORCPT
+        id S1727330AbgA3Mzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:55:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43618 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3MzA (ORCPT
+        Thu, 30 Jan 2020 07:55:33 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40453 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3Mzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:55:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so3868076wre.10;
-        Thu, 30 Jan 2020 04:54:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oYvcmUjSmLBUQ9U5VYc0aSLEVqma0gKOwWNxEUmmA20=;
-        b=sPQ6x09r3kyPDssq7UTetnRy82leK1vvtJ6BBfUr5xZcB1bfuEgCdCLuwWofUcmehw
-         H5cte50SpobEJD8jmBqEAsZfiXMRKbG+DTDPmZNJ8j/cseMcACtOZvF9siPQBr5x239A
-         0HqvRELihi1qLrVCvV8SNBm8FAiXWpdj58hSze/CwEDhH5P8HbN3itSj88/f0xGESC61
-         SmQ0O2V/WhPylXSs70M9jqnn2wMD0XaGHzQfVkwjZM9gWv562jdhj1LHgJwzOzA1/hgP
-         qYLf6DltuV/pdEEKVL5VLqmKeogxb1gAaDs29eUFhRJSxX8Ueovb+mUBmcktSDT73HKd
-         kyfA==
-X-Gm-Message-State: APjAAAVnvyT19dTcrZmzWJyM6lmiR0+uNncsRWct/Mhdf/xRNcn2W/v/
-        E66jR4UYe6hyYQzlR8L/fvM=
-X-Google-Smtp-Source: APXvYqzFIK6la+Pc01qIm05eJVN1m6wNbazLvMGwS3c2BqV2o00UIYhJL+QJQYg3qkxz/6TyUVfwog==
-X-Received: by 2002:adf:e906:: with SMTP id f6mr586169wrm.258.1580388897911;
-        Thu, 30 Jan 2020 04:54:57 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id g7sm7189301wrq.21.2020.01.30.04.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 04:54:56 -0800 (PST)
-Date:   Thu, 30 Jan 2020 13:54:55 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
- low/min calculations
-Message-ID: <20200130125455.GV24244@dhcp22.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-3-hannes@cmpxchg.org>
+        Thu, 30 Jan 2020 07:55:32 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200130125530euoutp0169780944e2ca95ab1c117262332cfc34~uq1wB6Kut0749907499euoutp01t;
+        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200130125530euoutp0169780944e2ca95ab1c117262332cfc34~uq1wB6Kut0749907499euoutp01t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580388930;
+        bh=FbzOWLJBcSv34oJT8B2hSKDVEoNugCLHrx4OSVScfl4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bu/0Np8dJVJcNpemMf7EwO1cNtYXlBab5dnQxE/PjGHsDWmp3IBQ35t1C+0ov6ebq
+         DCEYWjbqExnuxE04daFl51kO9bozNTecK8w5ktR0zk1svExYFfaKBS/45PfJSBok0S
+         3X1RhxKwBh/2TCM/KUDSob0btcErtCt+beAB//IY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200130125530eucas1p1e5ca5f154e51606f56c82c4ba65261b6~uq1v5Iwly0140001400eucas1p1r;
+        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 80.C1.60679.242D23E5; Thu, 30
+        Jan 2020 12:55:30 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200130125530eucas1p282d9749764c3a5c21c85c829d372b650~uq1vi_saz0591005910eucas1p2n;
+        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200130125530eusmtrp15a2ba543f607c10570774f791f035d15~uq1viX7Ft3069330693eusmtrp1c;
+        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-89-5e32d2425547
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C5.FE.07950.242D23E5; Thu, 30
+        Jan 2020 12:55:30 +0000 (GMT)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200130125530eusmtip21958aa4041acd7cfb574c706c35fd45f~uq1vVIcN72233122331eusmtip23;
+        Thu, 30 Jan 2020 12:55:30 +0000 (GMT)
+From:   =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] scripts/dtc: update fdtget.c to upstream
+ version v1.4.7-57-gf267e674d145
+Date:   Thu, 30 Jan 2020 13:55:00 +0100
+In-Reply-To: <20200130124722.GJ25745@shell.armlinux.org.uk> (Russell King's
+        message of "Thu, 30 Jan 2020 12:47:22 +0000")
+Message-ID: <874kwdayu3.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219200718.15696-3-hannes@cmpxchg.org>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djP87pOl4ziDI5f1bLY9Pgaq8XlXXPY
+        LGac38dkcWjqXkYHFo/L1y4ye2xeUu/xeZNcAHMUl01Kak5mWWqRvl0CV8bbqS8ZC16LVNzb
+        38bWwPhRsIuRk0NCwERiwsnJbF2MXBxCAisYJe4+fQrlfGGUaL+2E8r5zChx4OZMJpiWGwue
+        QCWWM0osPbiWESQhJPCcUWLKZ1UQm03AXqL/yD6WLkYODhEBK4kLPRogYWaBHIlLH+eBlQsL
+        pEvsu/qBCaSERUBVYmIXWJhToFpi0r8rYDavgLHEr/ddzCC2qIClxJYX99kh4oISJ2c+YYEY
+        mSsx8/wbRpBzJATmsUusffMX6k4Xidd3bjJD2MISr45vYYewZSROT+4BO01CoF5i8iQziN4e
+        Roltc36wQNRYS9w594sNwnaU2Nc4kw2ink/ixltBiL18EpO2TWeGCPNKdLQJQVSrSKzr3wM1
+        RUqi99UKRgjbQ+Lx863MkFDrY5T4fOkH2wRGhVlI3pmF5J1ZQGOZBTQl1u/ShwhrSyxb+JoZ
+        wraVWLfuPcsCRtZVjOKppcW56anFRnmp5XrFibnFpXnpesn5uZsYgUnm9L/jX3Yw7vqTdIhR
+        gINRiYfX44xRnBBrYllxZe4hRhWgSY82rL7AKMWSl5+XqiTCK+pqGCfEm5JYWZValB9fVJqT
+        WnyIUZqDRUmc13jRy1ghgfTEktTs1NSC1CKYLBMHp1QD46p1Hct7v0ibLV/CFJzKUTbFm2vK
+        8h15++YWzVyhwThrW4pqyS3dcz4uxz5O+izW9i9IjvP9/93sXVP/3DhWcFZE79XEPYbyKdm/
+        jAU4Enlq5muHbxR8vHmfz/SlWtEGiteNd3HanDVws02SdLsstnWR7AJu36dGn/tfv9vAsrWl
+        +nXgyr35SkosxRmJhlrMRcWJAAy8aAw6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsVy+t/xe7pOl4ziDHo+C1psenyN1eLyrjls
+        FjPO72OyODR1L6MDi8flaxeZPTYvqff4vEkugDlKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
+        xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+Pt1JeMBa9FKu7tb2NrYPwo2MXIySEhYCJxY8ET
+        NhBbSGApo8TmSd5djBxAcSmJlXPTIUqEJf5c6wIq4QIqecoocf/9H7B6NgF7if4j+1hA6kUE
+        rCQu9GiAhJkFsiW2/VzECmILC6RKXF6wkh1ivJXE3zdbmEDKWQRUJSZ2MYKEOQWqJSb9uwJm
+        8woYS/x638UMYosKWEpseXGfHSIuKHFy5hMWmPFfVz9nnsAoMAtJahaS1CygDcwCmhLrd+lD
+        hLUlli18zQxh20qsW/eeZQEj6ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzA+Nh27OeWHYxd
+        74IPMQpwMCrx8HqcMYoTYk0sK67MPcSoAjTm0YbVFxilWPLy81KVRHhFXQ3jhHhTEiurUovy
+        44tKc1KLDzGaAr05kVlKNDkfGNN5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtS
+        i2D6mDg4pRoY7TUOKLvuOzuhQND4juY/q3KpOoNi4QfNhal2140lmbpm3/beXNEtvP+SSeRV
+        Y33u11e2cR1x3rA0Pczy/fTG9QfrFvCFhMVGC5Rp1fBZLF6idzb0sNyWZaw6ssmTdr999v7U
+        tQ2Rxc9yM6Z8m5SXdK6n8vG7gExe3p2FHxu+JNSvYE2y9lFTYinOSDTUYi4qTgQAa+uTtbEC
+        AAA=
+X-CMS-MailID: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
+X-Msg-Generator: CA
+X-RootMTR: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200130125530eucas1p282d9749764c3a5c21c85c829d372b650
+References: <20200130124722.GJ25745@shell.armlinux.org.uk>
+        <CGME20200130125530eucas1p282d9749764c3a5c21c85c829d372b650@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19-12-19 15:07:17, Johannes Weiner wrote:
-> The effective protection of any given cgroup is a somewhat complicated
-> construct that depends on the ancestor's configuration, siblings'
-> configurations, as well as current memory utilization in all these
-> groups. It's done this way to satisfy hierarchical delegation
-> requirements while also making the configuration semantics flexible
-> and expressive in complex real life scenarios.
-> 
-> Unfortunately, all the rules and requirements are sparsely documented,
-> and the code is a little too clever in merging different scenarios
-> into a single min() expression. This makes it hard to reason about the
-> implementation and avoid breaking semantics when making changes to it.
-> 
-> This patch documents each semantic rule individually and splits out
-> the handling of the overcommit case from the regular case.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-It took me a while to double check that the new code is indeed
-equivalent but the result is easier to grasp indeed.
+It was <2020-01-30 czw 12:47>, when Russell King - ARM Linux admin wrote:
+> On Thu, Jan 30, 2020 at 01:42:30PM +0100, =C5=81ukasz Stelmach wrote:
+>> Build and fdtget and add fdtget.c to the list of update source files.
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  scripts/dtc/.gitignore           |   4 +
+>>  scripts/dtc/Makefile             |   5 ++
+>>  scripts/dtc/fdtget.c             | 125 ++++++++++++++++++-------------
+>>  scripts/dtc/update-dtc-source.sh |   4 +-
+>>  4 files changed, 82 insertions(+), 56 deletions(-)
+>>=20
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+[...]
 
-> ---
->  mm/memcontrol.c | 190 ++++++++++++++++++++++++++----------------------
->  1 file changed, 104 insertions(+), 86 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 874a0b00f89b..9c771c4d6339 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6204,65 +6204,55 @@ struct cgroup_subsys memory_cgrp_subsys = {
->  	.early_init = 0,
->  };
->  
-> -/**
-> - * mem_cgroup_protected - check if memory consumption is in the normal range
-> - * @root: the top ancestor of the sub-tree being checked
-> - * @memcg: the memory cgroup to check
-> - *
-> - * WARNING: This function is not stateless! It can only be used as part
-> - *          of a top-down tree iteration, not for isolated queries.
-> - *
-> - * Returns one of the following:
-> - *   MEMCG_PROT_NONE: cgroup memory is not protected
-> - *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-> - *     an unprotected supply of reclaimable memory from other cgroups.
-> - *   MEMCG_PROT_MIN: cgroup memory is protected
-> - *
-> - * @root is exclusive; it is never protected when looked at directly
-> +/*
-> + * This function calculates an individual cgroup's effective
-> + * protection which is derived from its own memory.min/low, its
-> + * parent's and siblings' settings, as well as the actual memory
-> + * distribution in the tree.
->   *
-> - * To provide a proper hierarchical behavior, effective memory.min/low values
-> - * are used. Below is the description of how effective memory.low is calculated.
-> - * Effective memory.min values is calculated in the same way.
-> + * The following rules apply to the effective protection values:
->   *
-> - * Effective memory.low is always equal or less than the original memory.low.
-> - * If there is no memory.low overcommittment (which is always true for
-> - * top-level memory cgroups), these two values are equal.
-> - * Otherwise, it's a part of parent's effective memory.low,
-> - * calculated as a cgroup's memory.low usage divided by sum of sibling's
-> - * memory.low usages, where memory.low usage is the size of actually
-> - * protected memory.
-> + * 1. At the first level of reclaim, effective protection is equal to
-> + *    the declared protection in memory.min and memory.low.
->   *
-> - *                                             low_usage
-> - * elow = min( memory.low, parent->elow * ------------------ ),
-> - *                                        siblings_low_usage
-> + * 2. To enable safe delegation of the protection configuration, at
-> + *    subsequent levels the effective protection is capped to the
-> + *    parent's effective protection.
->   *
-> - * low_usage = min(memory.low, memory.current)
-> + * 3. To make complex and dynamic subtrees easier to configure, the
-> + *    user is allowed to overcommit the declared protection at a given
-> + *    level. If that is the case, the parent's effective protection is
-> + *    distributed to the children in proportion to how much protection
-> + *    they have declared and how much of it they are utilizing.
->   *
-> + *    This makes distribution proportional, but also work-conserving:
-> + *    if one cgroup claims much more protection than it uses memory,
-> + *    the unused remainder is available to its siblings.
->   *
-> - * Such definition of the effective memory.low provides the expected
-> - * hierarchical behavior: parent's memory.low value is limiting
-> - * children, unprotected memory is reclaimed first and cgroups,
-> - * which are not using their guarantee do not affect actual memory
-> - * distribution.
-> + *    Consider the following example tree:
->   *
-> - * For example, if there are memcgs A, A/B, A/C, A/D and A/E:
-> + *        A      A/memory.low = 2G, A/memory.current = 6G
-> + *       //\\
-> + *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
-> + *               C/memory.low = 1G  C/memory.current = 2G
-> + *               D/memory.low = 0   D/memory.current = 2G
-> + *               E/memory.low = 10G E/memory.current = 0
->   *
-> - *     A      A/memory.low = 2G, A/memory.current = 6G
-> - *    //\\
-> - *   BC  DE   B/memory.low = 3G  B/memory.current = 2G
-> - *            C/memory.low = 1G  C/memory.current = 2G
-> - *            D/memory.low = 0   D/memory.current = 2G
-> - *            E/memory.low = 10G E/memory.current = 0
-> + *    and memory pressure is applied, the following memory
-> + *    distribution is expected (approximately*):
->   *
-> - * and the memory pressure is applied, the following memory distribution
-> - * is expected (approximately):
-> + *      A/memory.current = 2G
-> + *      B/memory.current = 1.3G
-> + *      C/memory.current = 0.6G
-> + *      D/memory.current = 0
-> + *      E/memory.current = 0
->   *
-> - *     A/memory.current = 2G
-> + *    *assuming equal allocation rate and reclaimability
->   *
-> - *     B/memory.current = 1.3G
-> - *     C/memory.current = 0.6G
-> - *     D/memory.current = 0
-> - *     E/memory.current = 0
-> + * 4. Conversely, when the declared protection is undercommitted at a
-> + *    given level, the distribution of the larger parental protection
-> + *    budget is NOT proportional. A cgroup's protection from a sibling
-> + *    is capped to its own memory.min/low setting.
->   *
->   * These calculations require constant tracking of the actual low usages
->   * (see propagate_protected_usage()), as well as recursive calculation of
-> @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
->   * for next usage. This part is intentionally racy, but it's ok,
->   * as memory.low is a best-effort mechanism.
->   */
-> +static unsigned long effective_protection(unsigned long usage,
-> +					  unsigned long setting,
-> +					  unsigned long parent_effective,
-> +					  unsigned long siblings_protected)
-> +{
-> +	unsigned long protected;
-> +
-> +	protected = min(usage, setting);
-> +	/*
-> +	 * If all cgroups at this level combined claim and use more
-> +	 * protection then what the parent affords them, distribute
-> +	 * shares in proportion to utilization.
-> +	 *
-> +	 * We are using actual utilization rather than the statically
-> +	 * claimed protection in order to be work-conserving: claimed
-> +	 * but unused protection is available to siblings that would
-> +	 * otherwise get a smaller chunk than what they claimed.
-> +	 */
-> +	if (siblings_protected > parent_effective)
-> +		return protected * parent_effective / siblings_protected;
-> +
-> +	/*
-> +	 * Ok, utilized protection of all children is within what the
-> +	 * parent affords them, so we know whatever this child claims
-> +	 * and utilizes is effectively protected.
-> +	 *
-> +	 * If there is unprotected usage beyond this value, reclaim
-> +	 * will apply pressure in proportion to that amount.
-> +	 *
-> +	 * If there is unutilized protection, the cgroup will be fully
-> +	 * shielded from reclaim, but we do return a smaller value for
-> +	 * protection than what the group could enjoy in theory. This
-> +	 * is okay. With the overcommit distribution above, effective
-> +	 * protection is always dependent on how memory is actually
-> +	 * consumed among the siblings anyway.
-> +	 */
-> +	return protected;
-> +}
-> +
-> +/**
-> + * mem_cgroup_protected - check if memory consumption is in the normal range
-> + * @root: the top ancestor of the sub-tree being checked
-> + * @memcg: the memory cgroup to check
-> + *
-> + * WARNING: This function is not stateless! It can only be used as part
-> + *          of a top-down tree iteration, not for isolated queries.
-> + *
-> + * Returns one of the following:
-> + *   MEMCG_PROT_NONE: cgroup memory is not protected
-> + *   MEMCG_PROT_LOW: cgroup memory is protected as long there is
-> + *     an unprotected supply of reclaimable memory from other cgroups.
-> + *   MEMCG_PROT_MIN: cgroup memory is protected
-> + */
->  enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  						struct mem_cgroup *memcg)
->  {
->  	struct mem_cgroup *parent;
-> -	unsigned long emin, parent_emin;
-> -	unsigned long elow, parent_elow;
->  	unsigned long usage;
->  
->  	if (mem_cgroup_disabled())
-> @@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  	if (!usage)
->  		return MEMCG_PROT_NONE;
->  
-> -	emin = memcg->memory.min;
-> -	elow = memcg->memory.low;
-> -
->  	parent = parent_mem_cgroup(memcg);
->  	/* No parent means a non-hierarchical mode on v1 memcg */
->  	if (!parent)
->  		return MEMCG_PROT_NONE;
->  
-> -	if (parent == root)
-> -		goto exit;
-> -
-> -	parent_emin = READ_ONCE(parent->memory.emin);
-> -	emin = min(emin, parent_emin);
-> -	if (emin && parent_emin) {
-> -		unsigned long min_usage, siblings_min_usage;
-> -
-> -		min_usage = min(usage, memcg->memory.min);
-> -		siblings_min_usage = atomic_long_read(
-> -			&parent->memory.children_min_usage);
-> -
-> -		if (min_usage && siblings_min_usage)
-> -			emin = min(emin, parent_emin * min_usage /
-> -				   siblings_min_usage);
-> +	if (parent == root) {
-> +		memcg->memory.emin = memcg->memory.min;
-> +		memcg->memory.elow = memcg->memory.low;
-> +		goto out;
->  	}
->  
-> -	parent_elow = READ_ONCE(parent->memory.elow);
-> -	elow = min(elow, parent_elow);
-> -	if (elow && parent_elow) {
-> -		unsigned long low_usage, siblings_low_usage;
-> -
-> -		low_usage = min(usage, memcg->memory.low);
-> -		siblings_low_usage = atomic_long_read(
-> -			&parent->memory.children_low_usage);
-> +	memcg->memory.emin = effective_protection(usage,
-> +			memcg->memory.min, READ_ONCE(parent->memory.emin),
-> +			atomic_long_read(&parent->memory.children_min_usage));
->  
-> -		if (low_usage && siblings_low_usage)
-> -			elow = min(elow, parent_elow * low_usage /
-> -				   siblings_low_usage);
-> -	}
-> -
-> -exit:
-> -	memcg->memory.emin = emin;
-> -	memcg->memory.elow = elow;
-> +	memcg->memory.elow = effective_protection(usage,
-> +			memcg->memory.low, READ_ONCE(parent->memory.elow),
-> +			atomic_long_read(&parent->memory.children_low_usage));
->  
-> -	if (usage <= emin)
-> +out:
-> +	if (usage <= memcg->memory.emin)
->  		return MEMCG_PROT_MIN;
-> -	else if (usage <= elow)
-> +	else if (usage <= memcg->memory.elow)
->  		return MEMCG_PROT_LOW;
->  	else
->  		return MEMCG_PROT_NONE;
-> -- 
-> 2.24.1
-> 
+>> diff --git scripts/dtc/update-dtc-source.sh scripts/dtc/update-dtc-sourc=
+e.sh
+>> index 7dd29a0362b8..8db277546785 100755
+>> --- scripts/dtc/update-dtc-source.sh
+>> +++ scripts/dtc/update-dtc-source.sh
+>> @@ -31,8 +31,8 @@ set -ev
+>>  DTC_UPSTREAM_PATH=3D`pwd`/../dtc
+>>  DTC_LINUX_PATH=3D`pwd`/scripts/dtc
+>>=20=20
+>> -DTC_SOURCE=3D"checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.=
+c srcpos.c \
+>> -		srcpos.h treesource.c util.c util.h version_gen.h yamltree.c Makefile=
+.dtc \
+>> +DTC_SOURCE=3D"checks.c data.c dtc.c dtc.h fdtget.c flattree.c fstree.c =
+livetree.c
+>> +		srcpos.c srcpos.h treesource.c util.c util.h version_gen.h Makefile.d=
+tc \
+>
+> This looks like you're dropping yamltree.c.  Is that intentional?
+>
 
--- 
-Michal Hocko
-SUSE Labs
+Not it isn't. Thanks. Fixed.
+
+>>  		dtc-lexer.l dtc-parser.y"
+>>  LIBFDT_SOURCE=3D"Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_=
+tree.c \
+>>  		fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
+>> --=20
+>> 2.20.1
+>>=20
+>>=20
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> https://protect2.fireeye.com/url?k=3Dc03cfed5-9df03751-c03d759a-0cc47aa8=
+f5ba-45d60c6701b8fc7a&u=3Dhttp://lists.infradead.org/mailman/listinfo/linux=
+-arm-kernel
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl4y0iQACgkQsK4enJil
+gBA9RQf/SNe+aQyxvKSVvcF48oJ+R39y5dG1jtl3Rkp+moKLHvcE4LjFbK7igxGz
+3wf0i6ByANZcS2xZkxK7wQTRIk3wl9Tjug93SxckMKGKyUthZ+n7jdaivDmmnoO1
+efkgfbxC12/Q37C+G1cAafgRctD0mb1cabPlVQAw90bG9GaPzzpDpR7FnSsThcba
+H6Mw56FEwdKvo+Os5tw8ePwMUNtT4O1UJjsEeTw21DTwClKuZUdaaJ3ktPFGVYcY
+x/Xt9cHvOLZjozJuJhgvmeu0TfMwp4BeUX9qYq2W3l7dSMJdBnomOLR8n6T1WAW5
+85YBsvT6R9YZeAvmvYiG320HY0+Dgw==
+=Kodj
+-----END PGP SIGNATURE-----
+--=-=-=--
