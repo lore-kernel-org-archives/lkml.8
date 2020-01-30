@@ -2,178 +2,160 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511D6C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4DC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D25920702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2549620702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgA3Jvj (ORCPT
+        id S1727088AbgA3Jxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:51:39 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44916 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgA3Jvj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:51:39 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h9so2501739otj.11;
-        Thu, 30 Jan 2020 01:51:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lZNzSqthLHYkqAf+ynA39kr/Am6N06NLfXmilmY21PI=;
-        b=plffaIm5S+vxOS/hjxxtl6OlTNg1cu8OmnP1JU5c2DVqdUmE5s0fdayrCkzoBmieba
-         uGJqdKmpWZzeReAhD5WJmwm7RkBowzcD2Am7wxfNCjCuIFe6RqMMUIeRHjLa0uqt3N5X
-         IctQ2+LIM53LVPFtG/H+Lq7uKIc2vguNjh2Zkn+X1cP9ruASTQrKG1S+zcMjbFu066g0
-         K9rm7uamzpshWdJmMUC47D1klhXDw+J/O8A/0KzDT9bMTzhh3KMmIwhc4jRyCDRPy5V6
-         7kfpj40eEx/dw8nv1hYaJ8Mvd5l5SE8qPDFSza30xZ8fFKtgjwuwgk5a4PCzWpEbq+CG
-         T7rQ==
-X-Gm-Message-State: APjAAAUEBJvfNUPvNusPYsbqkSTMFfH9akCPKOIAX5VSq0DAzNBH3Nsl
-        a27oeoKttRPgeUtE0CYDm991JNgQ6572bQSunNQ=
-X-Google-Smtp-Source: APXvYqwyg/qS8aFHHOnNRKRfBClQCFobEzaSBr7Pf+yd1CQDOhKad4sRfpmh2hkgiTFs7j6p7qwwKqxAJgjq+8QCHKQ=
-X-Received: by 2002:a9d:146:: with SMTP id 64mr2859825otu.39.1580377898038;
- Thu, 30 Jan 2020 01:51:38 -0800 (PST)
+        Thu, 30 Jan 2020 04:53:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726922AbgA3Jxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:53:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D4B6FAC4B;
+        Thu, 30 Jan 2020 09:53:47 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 10:53:46 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>, nstange@suse.de
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
+References: <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
+ <20200121161045.dhihqibnpyrk2lsu@treble>
+ <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
+ <20200122214239.ivnebi7hiabi5tbs@treble>
+ <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
+ <20200128150014.juaxfgivneiv6lje@treble>
+ <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
+ <20200128170254.igb72ib5n7lvn3ds@treble>
+ <alpine.LSU.2.21.2001291249430.28615@pobox.suse.cz>
+ <20200129155951.qvf3tjsv2qvswciw@treble>
 MIME-Version: 1.0
-References: <20200117153056.31363-1-geert+renesas@glider.be> <e219bc58-0d30-582f-4872-559097f212d2@ti.com>
-In-Reply-To: <e219bc58-0d30-582f-4872-559097f212d2@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 10:51:26 +0100
-Message-ID: <CAMuHMdWim4kq=JCrprybMOA+ipaxNTm4+zgjrmoFxffM+nSnPw@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129155951.qvf3tjsv2qvswciw@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Wed 2020-01-29 09:59:51, Josh Poimboeuf wrote:
+> In retrospect, the prerequisites for merging it should have been:
 
-On Thu, Jan 30, 2020 at 10:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 17/01/2020 17.30, Geert Uytterhoeven wrote:
-> > Currently it is not easy to find out which DMA channels are in use, and
-> > which slave devices are using which channels.
-> >
-> > Fix this by creating two symlinks between the DMA channel and the actual
-> > slave device when a channel is requested:
-> >   1. A "slave" symlink from DMA channel to slave device,
-> >   2. A "dma:<name>" symlink slave device to DMA channel.
-> > When the channel is released, the symlinks are removed again.
-> > The latter requires keeping track of the slave device and the channel
-> > name in the dma_chan structure.
-> >
-> > Note that this is limited to channel request functions for requesting an
-> > exclusive slave channel that take a device pointer (dma_request_chan()
-> > and dma_request_slave_channel*()).
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+OK, let me do one more move in this game.
 
-> > --- a/drivers/dma/dmaengine.c
-> > +++ b/drivers/dma/dmaengine.c
-> > @@ -60,6 +60,8 @@ static long dmaengine_ref_count;
-> >
-> >  /* --- sysfs implementation --- */
-> >
-> > +#define DMA_SLAVE_NAME       "slave"
-> > +
-> >  /**
-> >   * dev_to_dma_chan - convert a device pointer to its sysfs container object
-> >   * @dev - device node
-> > @@ -730,11 +732,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
-> >       if (has_acpi_companion(dev) && !chan)
-> >               chan = acpi_dma_request_slave_chan_by_name(dev, name);
-> >
-> > -     if (chan) {
-> > -             /* Valid channel found or requester needs to be deferred */
-> > -             if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
-> > -                     return chan;
-> > -     }
-> > +     if (PTR_ERR(chan) == -EPROBE_DEFER)
-> > +             return chan;
-> > +
-> > +     if (!IS_ERR_OR_NULL(chan))
-> > +             goto found;
-> >
-> >       /* Try to find the channel via the DMA filter map(s) */
-> >       mutex_lock(&dma_list_mutex);
-> > @@ -754,7 +756,23 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
-> >       }
-> >       mutex_unlock(&dma_list_mutex);
-> >
-> > -     return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> > +     if (!IS_ERR_OR_NULL(chan))
-> > +             goto found;
-> > +
-> > +     return ERR_PTR(-EPROBE_DEFER);
-> > +
-> > +found:
-> > +     chan->slave = dev;
-> > +     chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
-> > +     if (!chan->name)
-> > +             return ERR_PTR(-ENOMEM);
->
-> You will lock the channel... It is requested, but it is not released in
-> case of failure.
 
-True. Perhaps this error should just be ignored, cfr. below.
-However, if this operation fails, chances are high the system will die very soon
-anyway.
+> 1) Document how source-based patches can be safely generated;
 
-> > +
-> > +     if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
-> > +                           DMA_SLAVE_NAME))
-> > +             dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
-> > +     if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
-> > +             dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
->
-> It is not a problem if these fail?
+I agree that the information are really scattered over many files
+in Documentation/livepatch/. Anyway, there is a lot of useful
+hints:
 
-IMHO, a failure to create these links is not fatal for the operation of
-the device, and thus can be ignored.  Just like for debugfs.
+   + structure and behavior of the livepatch module, link
+     to a sample, limitations, are described in livepatch.rst
 
-> > +     return chan;
-> >  }
-> >  EXPORT_SYMBOL_GPL(dma_request_chan);
-> >
-> > @@ -812,6 +830,13 @@ void dma_release_channel(struct dma_chan *chan)
-> >       /* drop PRIVATE cap enabled by __dma_request_channel() */
-> >       if (--chan->device->privatecnt == 0)
-> >               dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
-> > +     if (chan->slave) {
-> > +             sysfs_remove_link(&chan->slave->kobj, chan->name);
-> > +             kfree(chan->name);
-> > +             chan->name = NULL;
-> > +             chan->slave = NULL;
-> > +     }
-> > +     sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
->
-> If a non slave channel is released, then you remove the link you have
-> never created?
->
-> What happens if the link creation fails and here you attempt to remove
-> the failed ones?
+   + many other catches are described in the other files:
+     callbacks, module-elf-fomat, cumulative-patches,
+     system-state.
 
-sysfs_remove_link() should handle removing non-existent links, and just
-return -ENOENT.
+Yes, it would be great to have a better structure, more information.
+But do not get me wrong. Anyone, Joe definitely, is able to create
+livepatch from sources by this information.
 
-Gr{oetje,eeting}s,
+Anyone could play with it, ask questions, and improve the
+documentation. Better documentation would help but it is
+not a blocker, definitely.
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 2) Fix the scheduler performance regression;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The optimizations are disabled only when livepatching is enabled.
+I would consider this as a prize for the feature. There are
+many things like this.
+
+As it was said. It was 1-3 percent in scheduler microbenchmark.
+It would make sense to fix it only when it causes such a regression
+in real workloads. Do you have any?
+
+
+> 3) Figure out if there are any other regressions by detecting which
+>    function interfaces are affected by the flag and seeing if they're
+>    hot path;
+
+IMHO, benchmarks are much more effective and we spent non-trivial
+resources when running them.
+
+
+> 4) Provide a way for the N-1 users to opt-out
+
+AFAIK, the only prize is the 1-3 percent scheduler performance degradation.
+If you really do not want to pay this prize, let's make it configurable.
+
+But the option is definitely needed when source livepatches are used.
+There is no other reasonable way to detect and workaround these
+problems. For this, it has to be in upstream kernel. It is in line
+with the effort to make livepatching less and less error prone.
+
+And please, let's stop playing this multi-user games. There is at least
+one known user of source based livepatches. By coincidence, it is also
+a big contributor to this subsystem. Adding an extra option into
+CFLAGS is quite error prone. You can imagine how complicated is
+a kernel rpm spec file for more kernel flavors. The only safe way
+is to have the optimization tight with the CONFIG option in
+kernel sources.
+
+
+> 5) Fix the objtool warnings (or is it a GCC bug)
+
+Nobody was aware of them. I wonder if they even existed at that time.
+We have a simple fix now. Let's continue in the thread started by
+Jikos if we could get a better solution.
+
+
+> 6) Make -flive-patching compatible with LTO (or at least acknowledge
+>    that it should and will be done soon)
+
+Is LTO officially supported upstream?
+Are all patches, features tested for LTO compactibility?
+Is there any simple way to build and run LTO kernel?
+
+
+> 7) At least make it build- or runtime-incompatible with Clang-built
+>    kernels to prevent people from assuming it's safe.
+
+Same questions as for LTO.
+
+
+> If you don't want to revert the patch, then address my concerns instead
+> of minimizing and deflecting at every opportunity.
+
+I would really like to keep focusing on realistic problems and
+realistic solutions:
+
+   + make the optimization configurable if you resist on it
+   + fix the objtool warnings
+
+Anything else is out of scope of this thread from my POV.
+
+Best Regards,
+Petr
