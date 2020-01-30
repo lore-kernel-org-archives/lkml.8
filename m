@@ -2,134 +2,146 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F6C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A039C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8726C20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d5XnP8rb"
+	by mail.kernel.org (Postfix) with ESMTP id 616F120707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580410844;
+	bh=0V7/13J81EhycIrEm5fbG8cZoHrvu3RkJ0uQ6AYKmdY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=y071mIM4Bcjg3Sj47xcjCnMboaharVS5e7UCyA2YeHg1ojvYipPwGZ41IxxzsFcnB
+	 Xdg5JphpZw1AjgU7K+eh8Cs5uJv1Sh0w6jdRXRie9kgOzt/bVtvPt7c+0zUkPBinO+
+	 Q3sQ0URmQLnK4uhbtYuSHxQM+fyKhwfiYFFruPx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgA3S6n (ORCPT
+        id S1727756AbgA3TAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:58:43 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4738 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgA3S6n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:58:43 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3327540000>; Thu, 30 Jan 2020 10:58:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 10:58:42 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 10:58:42 -0800
-Received: from [10.26.11.91] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 18:58:39 +0000
-Subject: Re: [PATCH v6 12/16] dmaengine: tegra-apb: Clean up suspend-resume
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-13-digetx@gmail.com>
- <e787bee2-4b52-1643-b3a5-8c4e70f6fdca@nvidia.com>
- <394014f3-011a-d6b6-b5f2-f8c86834ec70@gmail.com>
- <ffd9dbd0-be74-7bb4-9ca9-a97ee8023fc2@gmail.com>
- <3d8f599d-a46f-a7e5-8816-e0c44e2aceff@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <08b6a1f7-3c4d-ce6a-0d00-450f7bd4eeb3@nvidia.com>
-Date:   Thu, 30 Jan 2020 18:58:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 14:00:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727285AbgA3TAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:00:43 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A019F20707;
+        Thu, 30 Jan 2020 19:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580410842;
+        bh=0V7/13J81EhycIrEm5fbG8cZoHrvu3RkJ0uQ6AYKmdY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=x/FbzEiXAeCzgutao2QMOoM0wfo2bZwEKIdS1yXImdUT16yth7tm26Tl35DmJSB00
+         zPe0dQPesVg3xCd3MyNJ+Qy9g8sSsSbjL6cyuglam2aC9dfaXqlJnS1J92MD4vRBxh
+         bdMq6gAWstR1sZAbQD3rVgLh9tVcpWzRR+S7/M98=
+Date:   Thu, 30 Jan 2020 13:00:40 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+Message-ID: <20200130190040.GA96992@google.com>
 MIME-Version: 1.0
-In-Reply-To: <3d8f599d-a46f-a7e5-8816-e0c44e2aceff@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580410708; bh=uuoNO3MXCVy5v51r78aV++s6e2wrHYCAZeI4MlBHlZU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=d5XnP8rbMyzgDwPK1HuueIvdvgFMwQkyaoyx4vv+ApUC9rbyZs1jNDNFcV8hbXQll
-         zli8m0ljzOQmd3FFVwbMZGB6fEYPRjG87K4pgQ1rxHNYX7F5vuZQ+vWcQ8l7qAWeFa
-         7L5vs8WtB17ZT5TtsFkqA0eR5sHCQxcuryPB0OIIDjKKr2SOYr2YSuJo1WQRWU7wnF
-         E25HgsnI3ztx4QLHPQatWe79tfDugVuJixyZH1cp/Tb2gxAa360sxjtpx46fQ0DCGp
-         diQRsyWbP9eUkOUleVu9qIS4O3wSolNAQSMrqfE68cxPtYn0MhOwpuNGoQENAc+lMG
-         Dnt1I6UuLR6/g==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+ijB_SNqRiC1Fn0Uw3OpiS7go4dPPYm6YZckaQ0fuq=QQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 30, 2020 at 09:37:48PM +0530, Muni Sekhar wrote:
+> On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
+> > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > > > > Hi,
+> > > > >
+> > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > > > > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> > > > > I see that my system freezes without capturing the crash dump for
+> > > > > certain tests. I debugged this issue and it was tracked down to the
+> > > > > below mentioned interrupt handler code.
+> > > > >
+> > > > >
+> > > > > In ISR, first reads the Interrupt Status register using ‘readl()’ as
+> > > > > given below.
+> > > > >     status = readl(ctrl->reg + INT_STATUS);
+> > > > >
+> > > > >
+> > > > > And then clears the pending interrupts using ‘writel()’ as given blow.
+> > > > >         writel(status, ctrl->reg + INT_STATUS);
+> > > > >
+> > > > >
+> > > > > I've noticed a kernel hang if INT_STATUS register read again after
+> > > > > clearing the pending interrupts.
+> > > > >
+> > > > > Can someone clarify me why the kernel hangs without crash dump incase
+> > > > > if I read the INT_STATUS register using readl() after clearing the
+> > > > > pending bits?
+> > > > >
+> > > > > Can readl() block?
+> > > >
+> > > > readl() should not block in software.  Obviously at the hardware CPU
+> > > > instruction level, the read instruction has to wait for the result of
+> > > > the read.  Since that data is provided by the device, i.e., your FPGA,
+> > > > it's possible there's a problem there.
+> > >
+> > > Thank you very much for your reply.
+> > > Where can I find the details about what is protocol for reading the
+> > > ‘memory mapped IO’? Can you point me to any useful links..
+> > > I tried locate the exact point of the kernel code where CPU waits for
+> > > read instruction as given below.
+> > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+> > > Do I need to check for the assembly instructions, here?
+> >
+> > The C pointer dereference, e.g., "*address", will be some sort of a
+> > "load" instruction in assembly.  The CPU wait isn't explicit; it's
+> > just that when you load a value, the CPU waits for the value.
+> >
+> > > > Can you tell whether the FPGA has received the Memory Read for
+> > > > INT_STATUS and sent the completion?
+> > >
+> > > Is there a way to know this with the help of software debugging(either
+> > > enabling dynamic debugging or adding new debug prints)? Can you please
+> > > point some tools\hw needed to find this?
+> >
+> > You could learn this either via a PCIe analyzer (expensive piece of
+> > hardware) or possibly some logic in the FPGA that would log PCIe
+> > transactions in a buffer and make them accessible via some other
+> > interface (you mentioned it had parallel and other interfaces).
+> >
+> > > > On the architectures I'm familiar with, if a device doesn't respond,
+> > > > something would eventually time out so the CPU doesn't wait forever.
+> > >
+> > > What is timeout here? I mean how long CPU waits for completion? Since
+> > > this code runs from interrupt context, does it causes the system to
+> > > freeze if timeout is more?
+> >
+> > The Root Port should have a Completion Timeout.  This is required by
+> > the PCIe spec.  The *reporting* of the timeout is somewhat
+> > implementation-specific since the reporting is outside the PCIe
+> > domain.  I don't know the duration of the timeout, but it certainly
+> > shouldn't be long enough to look like a "system freeze".
+> Does kernel writes to PCIe configuration space register ‘Device
+> Control 2 Register’ (Offset 0x28)? When I tried to read this register,
+> I noticed bit 4 is set (which disables completion timeouts) and rest
+> all other bits are zero. So, Completion Timeout detection mechanism is
+> disabled, right? If so what could be the reason for this?
 
-On 30/01/2020 18:26, Dmitry Osipenko wrote:
-> 30.01.2020 21:06, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 30.01.2020 19:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> 30.01.2020 17:09, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>
->>>> On 30/01/2020 04:38, Dmitry Osipenko wrote:
->>>>> It is enough to check whether hardware is busy on suspend and to rese=
-t
->>>>> it across of suspend-resume because channel's configuration is fully
->>>>> re-programmed on each DMA transaction anyways and because save-restor=
-e
->>>>> of an active channel won't end up well without pausing transfer prior=
- to
->>>>> saving of the state (note that all channels shall be idling at the ti=
-me of
->>>>> suspend, so save-restore is not needed at all).
->>>>
->>>> I guess if we ever wanted to support SNDRV_PCM_INFO_PAUSE for audio an=
-d
->>>> support the pause callback, then saving and restoring the channels cou=
-ld
->>>> be needed. Right now I believe that it will just terminate_all transfe=
-rs
->>>> for audio on entering suspend. Any value in keeping this?
->>>
->>> Indeed, looks like [1] pauses DMA during suspend if SNDRV_PCM_INFO_PAUS=
-E
->>> is supported.
->>>
->>> [1]
->>> https://elixir.bootlin.com/linux/v5.5/source/sound/core/pcm_dmaengine.c=
-#L199
->>>
->>> So we'll need to save-restore context only if DMA is in a paused state
->>> during suspend, I'll adjust this patch to do that and will see if
->>> enabling SNDRV_PCM_INFO_PAUSE works.
->>
->> I started to look at it and found that the .device_pause() hook isn't
->> implemented by the driver. So, it's fine to remove the context's
->> save-restore for now.
->>
->> Jon, what about to keep this patch as-is? Later on I'll take a look at
->> implementing the proper pausing functionality and try to cleanup code a
->> bit further (remove the free list usage, etc).
->=20
-> Ah, only T114+ supports the per-channel pausing. So, I won't care about
-> implementing the device_pause(), let's leave it to somebody else :)
+To my knowledge Linux doesn't set PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+except for one powerpc case.  You can check yourself by using cscope
+or grep to look for PCI_EXP_DEVCTL2_COMP_TMOUT_DIS or PCI_EXP_DEVCTL2.
 
-That's fine. We have lived with out it for this long.
+If you're seeing bit 4 (PCI_EXP_DEVCTL2_COMP_TMOUT_DIS) set, it's
+likely because firmware set it.  You can try booting with
+"pci=earlydump" to see what's there before Linux starts changing
+things.
 
-Jon
-
---=20
-nvpublic
+Bjorn
