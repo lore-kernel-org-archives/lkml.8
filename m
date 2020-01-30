@@ -2,167 +2,184 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E357C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED05BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052432082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBEE2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jrv0WHN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgA3QXL (ORCPT
+        id S1727409AbgA3QXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:23:11 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727193AbgA3QXL (ORCPT
+        Thu, 30 Jan 2020 11:23:47 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40963 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3QXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:23:11 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UGK8q0039930
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:23:10 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xu5qcena8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:23:09 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 30 Jan 2020 16:23:07 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 Jan 2020 16:23:05 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UGN42429819044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 16:23:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7599342042;
-        Thu, 30 Jan 2020 16:23:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ACE204203F;
-        Thu, 30 Jan 2020 16:23:03 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.199.205])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jan 2020 16:23:03 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v3 2/2] ima: support calculating the boot_aggregate based on different TPM banks
-Date:   Thu, 30 Jan 2020 11:22:43 -0500
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
-References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20013016-0012-0000-0000-000003823BAF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013016-0013-0000-0000-000021BE96E8
-Message-Id: <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_05:2020-01-28,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- adultscore=0 mlxlogscore=999 suspectscore=1 priorityscore=1501
- malwarescore=0 mlxscore=0 clxscore=1015 bulkscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300114
+        Thu, 30 Jan 2020 11:23:46 -0500
+Received: by mail-io1-f68.google.com with SMTP id m25so4653020ioo.8;
+        Thu, 30 Jan 2020 08:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2gREjzEu+n1RGwcI4Ki/0u5ITWrtl7Q643uPluzcC6Q=;
+        b=Jrv0WHN7yRVxfBnyMJ72ZzWz6N5sC8I1J6CH3a++mf5Dedod2NjdUrkqUU6KrccI6h
+         5xg/WqoB11z2trhDWikP2SxkNlMgZu2MjbbFqmg7QKquqqa7iUHYke0qa2AU39FRx2hD
+         XzxM/Bof/YO9jGjxnwu0McGA8WAYbSgfZ0Qvos+A8e9pAvVUgG6uUONoBDSCU+zbAUNu
+         37TgqEtZEyv51BYDyEp5FO4LZeB7zpmZPf0Ow4dRC1aUiTq+wtFUkCziCj91ENmsTQtp
+         UaoEe5highcynG0TZzsUYySaePbWu6B6IDTYtvuu1gAS37+peP54GXNchSBenEkvBwK+
+         F22A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2gREjzEu+n1RGwcI4Ki/0u5ITWrtl7Q643uPluzcC6Q=;
+        b=VQjXFPand3XQmtWkg8Q1GZT3vZpkcBchokrBpWUp3DvIdGhyADsizQIMAq1xLfJ9MB
+         kogJhdaWq+aXl0WXA+1UwBYLOAWcs1D+s4tXgcV54X6XhnZVHk5RcZUzmiFgbgbb+72K
+         cH6wrcSBf0ILfETR+JNSE0psDex8PcACdE98xjRua7CZrvH7h370IlZq7U9DnlEfbZNx
+         ASl4TC0n7t3jI/EbGEZDVUnfhZdTGQLjV+8Nq9e+q+uYTrh9NEcknj6rK/fuNxE6zyLd
+         E1A4aECo8xRfbGtl7zcWagyyncf/5aNQJxqgt4XgGBnb1C/PEyBiJ2g6NmD76WQ1EkQj
+         QRMA==
+X-Gm-Message-State: APjAAAV/BCjUy4q7p4NJKD8AylTbbvRI4oB/jh//8bl6nvAjrzx9DU8f
+        CMaKpaMpDCZ4JyqgjaM68Ek=
+X-Google-Smtp-Source: APXvYqz2qktLCVw9l/mhVDz/5QkWJ7tkyH5WkN+czNFtmkH1J24j8E2eAjpJybZ0EJppbz/k4sk6Mw==
+X-Received: by 2002:a5e:8a03:: with SMTP id d3mr4837467iok.269.1580401425755;
+        Thu, 30 Jan 2020 08:23:45 -0800 (PST)
+Received: from localhost.localdomain ([216.249.49.11])
+        by smtp.googlemail.com with ESMTPSA id l2sm2035951ilo.6.2020.01.30.08.23.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 08:23:45 -0800 (PST)
+From:   Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     Ethan Sommer <e5ten.arch@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] make yacc usage POSIX-compliant
+Date:   Thu, 30 Jan 2020 11:23:11 -0500
+Message-Id: <20200130162314.31449-1-e5ten.arch@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calculating the boot_aggregate attempts to read the TPM SHA1 bank,
-assuming it is always enabled.  With TPM 2.0 hash agility, TPM chips
-could support multiple TPM PCR banks, allowing firmware to configure and
-enable different banks.
+use -b and -d to generate correctly named source and header files,
+instead of bison-specific --defines and non-POSIX -o
+check that YACC command is found in path or is an executable file,
+instead of using bison-specific --version flag to display an error when
+it is missing
+explicitly define yyltype in scripts/genksyms/lex.l, instead of relying
+on bison automatically defining it
+replace bison-specific %destructor use in scripts/kconfig/parser.y
+dtc's yacc usage is not covered here, as its use of bison-specific
+features is much greater, and it is only built on certain architectures,
+unlike kconfig and genksyms
 
-Instead of hard coding the TPM 2.0 bank hash algorithm used for calculating
-the boot-aggregate, use the same hash algorithm for reading the TPM PCRs as
-for calculating the boot aggregate digest.  Preference is given to the
-configured IMA default hash algorithm.
-
-For TPM 1.2 SHA1 is the only supported hash algorithm.
-
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Ethan Sommer <e5ten.arch@gmail.com>
 ---
- security/integrity/ima/ima_crypto.c | 45 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ scripts/Makefile.host     |  2 +-
+ scripts/genksyms/Makefile |  6 ++++--
+ scripts/genksyms/lex.l    |  2 ++
+ scripts/kconfig/parser.y  | 14 +++++++-------
+ 4 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..a020aaefdea8 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -656,13 +656,34 @@ static void __init ima_pcrread(u32 idx, struct tpm_digest *d)
- 		pr_err("Error Communicating to TPM chip\n");
- }
+diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+index 4c51c95d40f4..64e98e1d4825 100644
+--- a/scripts/Makefile.host
++++ b/scripts/Makefile.host
+@@ -11,7 +11,7 @@ $(obj)/%.lex.c: $(src)/%.l FORCE
+ # YACC
+ # ---------------------------------------------------------------------------
+ quiet_cmd_bison = YACC    $(basename $@).[ch]
+-      cmd_bison = $(YACC) -o $(basename $@).c --defines=$(basename $@).h -t -l $<
++      cmd_bison = $(YACC) -b $(basename $(basename $@)) -d -t -l $<
  
-+static enum hash_algo get_hash_algo(const char *algname)
-+{
-+	int i;
-+
-+	for (i = 0; i < HASH_ALGO__LAST; i++) {
-+		if (strcmp(algname, hash_algo_name[i]) == 0)
-+			break;
-+	}
-+
-+	return i;
-+}
-+
- /*
-- * Calculate the boot aggregate hash
-+ * The boot_aggregate is a cumulative hash over TPM registers 0 - 7.  With
-+ * TPM 1.2 the boot_aggregate was based on reading the SHA1 PCRs, but with
-+ * TPM 2.0 hash agility, TPM chips could support multiple TPM PCR banks,
-+ * allowing firmware to configure and enable different banks.
-+ *
-+ * Knowing which TPM bank is read to calculate the boot_aggregate digest
-+ * needs to be conveyed to a verifier.  For this reason, use the same
-+ * hash algorithm for reading the TPM PCRs as for calculating the boot
-+ * aggregate digest as stored in the measurement list.
-  */
- static int __init ima_calc_boot_aggregate_tfm(char *digest,
- 					      struct crypto_shash *tfm)
- {
- 	struct tpm_digest d = { .alg_id = TPM_ALG_SHA1, .digest = {0} };
-+	enum hash_algo crypto_id;
- 	int rc;
- 	u32 i;
- 	SHASH_DESC_ON_STACK(shash, tfm);
-@@ -673,6 +694,28 @@ static int __init ima_calc_boot_aggregate_tfm(char *digest,
- 	if (rc != 0)
- 		return rc;
+ $(obj)/%.tab.c $(obj)/%.tab.h: $(src)/%.y FORCE
+ 	$(call if_changed,bison)
+diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
+index 78629f515e78..1e120328fa88 100644
+--- a/scripts/genksyms/Makefile
++++ b/scripts/genksyms/Makefile
+@@ -14,9 +14,11 @@ genksyms-objs	:= genksyms.o parse.tab.o lex.lex.o
+ # so that 'bison: not found' will be displayed if it is missing.
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
  
-+	crypto_id = get_hash_algo(crypto_shash_alg_name(tfm));
-+	if (crypto_id == HASH_ALGO__LAST) {
-+		pr_devel("unknown hash algorithm (%s), failing to read PCRs.\n",
-+			 crypto_shash_alg_name(tfm));
-+		return 0;
-+	}
++ifeq ($(shell command -v $(YACC) || [ -x $(YACC) ] && echo y),)
++  $(error command not found: $(YACC))
++endif
+ quiet_cmd_bison_no_warn = $(quiet_cmd_bison)
+-      cmd_bison_no_warn = $(YACC) --version >/dev/null; \
+-			  $(cmd_bison) 2>/dev/null
++      cmd_bison_no_warn = $(cmd_bison) 2>/dev/null
+ 
+ $(obj)/pars%.tab.c $(obj)/pars%.tab.h: $(src)/pars%.y FORCE
+ 	$(call if_changed,bison_no_warn)
+diff --git a/scripts/genksyms/lex.l b/scripts/genksyms/lex.l
+index e265c5d96861..0580c088527f 100644
+--- a/scripts/genksyms/lex.l
++++ b/scripts/genksyms/lex.l
+@@ -19,6 +19,8 @@
+ #include "genksyms.h"
+ #include "parse.tab.h"
+ 
++extern YYSTYPE yylval;
 +
-+	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
-+		if (ima_tpm_chip->allocated_banks[i].crypto_id == crypto_id) {
-+			d.alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
-+			break;
-+		}
-+	}
-+	if (i == ima_tpm_chip->nr_allocated_banks) {
-+		pr_devel("TPM %s bank not allocated, failing to read PCRs.\n",
-+			 crypto_shash_alg_name(tfm));
-+		return 0;
-+	}
+ /* We've got a two-level lexer here.  We let flex do basic tokenization
+    and then we categorize those basic tokens in the second stage.  */
+ #define YY_DECL		static int yylex1(void)
+diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+index b3eff9613cf8..9eb9a94a68e0 100644
+--- a/scripts/kconfig/parser.y
++++ b/scripts/kconfig/parser.y
+@@ -20,6 +20,8 @@
+ 
+ int cdebug = PRINTD;
+ 
++int yynerrs = 0;
 +
-+	pr_devel("calculating the boot-aggregregate based on TPM bank: %04x\n",
-+		  d.alg_id);
-+
- 	/* cumulative sha1 over tpm registers 0-7 */
- 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
- 		ima_pcrread(i, &d);
+ static void yyerror(const char *err);
+ static void zconfprint(const char *err, ...);
+ static void zconf_error(const char *err, ...);
+@@ -101,13 +103,6 @@ static struct menu *current_menu, *current_entry;
+ %type <string> word_opt assign_val
+ %type <flavor> assign_op
+ 
+-%destructor {
+-	fprintf(stderr, "%s:%d: missing end statement for this entry\n",
+-		$$->file->name, $$->lineno);
+-	if (current_menu == $$)
+-		menu_end_menu();
+-} if_entry menu_entry choice_entry
+-
+ %%
+ input: mainmenu_stmt stmt_list | stmt_list;
+ 
+@@ -529,6 +524,11 @@ static bool zconf_endtoken(const char *tokenname,
+ 	if (strcmp(tokenname, expected_tokenname)) {
+ 		zconf_error("unexpected '%s' within %s block",
+ 			    tokenname, expected_tokenname);
++		if (!strcmp(tokenname, "if") || !strcmp(tokenname, "menu") ||
++			!strcmp(tokenname, "choice"))
++			fprintf(stderr, "%s:%d: missing end statement for this entry\n",
++				current_menu->file->name, current_menu->lineno);
++		menu_end_menu();
+ 		yynerrs++;
+ 		return false;
+ 	}
 -- 
-2.7.5
+2.25.0
 
