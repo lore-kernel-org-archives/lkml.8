@@ -2,127 +2,70 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C996C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8511EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67539206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A007206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:23:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ben.gmbh header.i=@ben.gmbh header.b="tXXJXUSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgA3DJZ (ORCPT
+        id S1726833AbgA3DXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 22:09:25 -0500
-Received: from smtprelay0080.hostedemail.com ([216.40.44.80]:53563 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726719AbgA3DJZ (ORCPT
+        Wed, 29 Jan 2020 22:23:47 -0500
+Received: from sagan.benjaminlowry.com ([45.63.74.94]:40688 "EHLO
+        sagan.benjaminlowry.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgA3DXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 22:09:25 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0B627100E7B42;
-        Thu, 30 Jan 2020 03:09:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bell00_6ef0b4c9d2c14
-X-Filterd-Recvd-Size: 3866
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 30 Jan 2020 03:09:22 +0000 (UTC)
-Message-ID: <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
-Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
- easier debug
-From:   Joe Perches <joe@perches.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>, jmorris@namei.org,
-        serge@hallyn.com, mpe@ellerman.id.au, zohar@linux.ibm.com,
-        erichte@linux.ibm.com, nayna@linux.ibm.com, yuehaibing@huawei.com
-Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 29 Jan 2020 19:08:15 -0800
-In-Reply-To: <20200130020129.15328-1-skhan@linuxfoundation.org>
-References: <20200130020129.15328-1-skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 29 Jan 2020 22:23:47 -0500
+X-Greylist: delayed 507 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 22:23:47 EST
+From:   Benjamin Lowry <ben@ben.gmbh>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ben.gmbh; s=mail;
+        t=1580354119; bh=j8oyEOiPBP56U9yWLGORPNAsQ1g/OQ1gsXovl0MjMyE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tXXJXUStU6lMhGMkw4cCSy2Wam77wjqZaxc9cvr+iRLazQJZqQnCUcjAK5VpdaVGt
+         nHL32GjnQX3j0/t54bkoYkFn6gtzBMGByZTB9s1Wznq35XVucMefEe9YEFtPkLUtjg
+         obK36h/PXpzB8Z0koTti/D9CHkkJfaBmBWAqN0DibxLjLVzLAPIJ/jLPajYFGeCKAF
+         ZEovlgIbpeOe4KCTTse1/eg+tnLabGqZyDv14xUpHX0yu4avjW+ZR5T9BK2kU27mBv
+         owXX4FWt8wxE0EdRUz2Ez8Ak3WX9qFNwPTDV35wDYjylnYn9+K9Q/tDclGcMZQeHlz
+         FdBoFN4Fuussg==
+To:     linux-kernel@vger.kernel.org
+Cc:     Benjamin Lowry <ben@ben.gmbh>
+Subject: [PATCH] tools/testing/selftests/proc: replace "pragma once" with include guard
+Date:   Wed, 29 Jan 2020 21:14:06 -0600
+Message-Id: <20200130031404.30136-1-ben@ben.gmbh>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
-> Change messages to messages to make it easier to debug. The following
-> error message isn't informative enough to figure out what failed.
-> Change messages to include function information.
-> 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> ---
->  .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
->  security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
->  2 files changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-
-perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-so all the pr_<level> logging is more specific.
-
-This would prefix all pr_<level> output with "integrity: "
-
-3integrity: Couldn't get size: 0x%lx
-3integrity: Error reading db var: 0x%lx
-3integrity: MODSIGN: Couldn't get UEFI db list
-3integrity: Couldn't parse db signatures: %d
-6integrity: Couldn't get UEFI MokListRT
-3integrity: Couldn't parse MokListRT signatures: %d
-6integrity: Couldn't get UEFI dbx list
-3integrity: Couldn't parse dbx signatures: %d
-
-5integrity: Platform Keyring initialized
-6integrity: Error adding keys to platform keyring %s
-
+Signed-off-by: Benjamin Lowry <ben@ben.gmbh>
 ---
- security/integrity/platform_certs/load_powerpc.c     | 3 +++
- security/integrity/platform_certs/load_uefi.c        | 2 ++
- security/integrity/platform_certs/platform_keyring.c | 2 ++
- 3 files changed, 7 insertions(+)
+ tools/testing/selftests/proc/proc.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-index a2900c..5cfbd0 100644
---- a/security/integrity/platform_certs/load_powerpc.c
-+++ b/security/integrity/platform_certs/load_powerpc.c
-@@ -5,6 +5,9 @@
-  *
-  *      - loads keys and hashes stored and controlled by the firmware.
-  */
+diff --git a/tools/testing/selftests/proc/proc.h b/tools/testing/selftests/proc/proc.h
+index b7d57ea40237..627f99c3740d 100644
+--- a/tools/testing/selftests/proc/proc.h
++++ b/tools/testing/selftests/proc/proc.h
+@@ -1,4 +1,5 @@
+-#pragma once
++#ifndef _PROC_H
++#define _PROC_H
+ #undef NDEBUG
+ #include <assert.h>
+ #include <dirent.h>
+@@ -49,3 +50,5 @@ static struct dirent *xreaddir(DIR *d)
+ 	assert(de || errno == 0);
+ 	return de;
+ }
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/cred.h>
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-index 111898a..480450a 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/cred.h>
-diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
-index 7646e35..9bd2846 100644
---- a/security/integrity/platform_certs/platform_keyring.c
-+++ b/security/integrity/platform_certs/platform_keyring.c
-@@ -6,6 +6,8 @@
-  * Author(s): Nayna Jain <nayna@linux.ibm.com>
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
++#endif
+-- 
+2.24.1
 
