@@ -6,48 +6,56 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E121C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7675C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46962206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8557206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgA3KXD (ORCPT
+        id S1727091AbgA3KcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:23:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgA3KXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:23:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68EAD206D5;
-        Thu, 30 Jan 2020 10:23:02 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 11:23:00 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH] USB: serial: relax unthrottle memory barrier
-Message-ID: <20200130102300.GA927405@kroah.com>
-References: <20200130100658.683-1-johan@kernel.org>
+        Thu, 30 Jan 2020 05:32:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55694 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3KcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 05:32:09 -0500
+Received: from [89.27.154.14] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ix779-00009R-Gd; Thu, 30 Jan 2020 10:31:59 +0000
+Date:   Thu, 30 Jan 2020 11:31:58 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     peterz@infradead.org, mingo@kernel.org, oleg@redhat.com,
+        paulmck@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
+Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
+Message-ID: <20200130103158.azxldyfnugwvv6vy@wittgenstein>
+References: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200130100658.683-1-johan@kernel.org>
+In-Reply-To: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 11:06:58AM +0100, Johan Hovold wrote:
-> Commit a8d78d9f3856 ("USB: serial: clean up throttle handling")
-> converted the throttle handling to use atomic bitops. This means that we
-> can relax the smp_mb() in unthrottle() to smp_mb__after_atomic(), which
-> for example is a no-op on architectures like x86 that provide fully
-> ordered atomics.
+On Thu, Jan 30, 2020 at 11:50:28AM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> This patch fixes the following sparse error:
+> kernel/exit.c:627:25: error: incompatible types in comparison expression
+> 
+> And the following warning:
+> kernel/exit.c:626:40: warning: incorrect type in assignment
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I think the previous version was already fine but hopefully
+RCU_INIT_POINTER() really saves some overhead. In any case:
+
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
