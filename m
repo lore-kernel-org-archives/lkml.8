@@ -2,159 +2,212 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB1DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8403FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22CF2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:21:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oo5DZEdT"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB962083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgA3MVC (ORCPT
+        id S1727125AbgA3MWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:21:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34380 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3MVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:21:01 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so3823155wrr.1;
-        Thu, 30 Jan 2020 04:20:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=39kKGSsq/ObIawmRn5Y1+axiVM/RiW/k7k81hkLQRko=;
-        b=oo5DZEdTb3XjAOtMywZUicFSjYM+vuNT+aYsFJ5fHdEK0MvAU8ag7x5JNILJr07qNI
-         0sGA7fXgaAhgD0kNkPT9V+DoHZkeDYuuhjrd8bHButpUvM1XzVnyQHZ72ByCxDk7XGIT
-         PtkoPEpf0dM7iKsWCL5gmgffZf0Say7AdBWqt3FzX5ez/lbjm2xznyP6m3XEXAl9rK7v
-         o0dy/uznwHToU1ACefu1SctXFI73OackEEGD6wKH/Ft63JUMHjdoq/gROTb6deg17r28
-         iF+xvK4ZyewjQdBzfTNJGflEpkFJXqxF6yMKYYJ6qIzL82LBWeI7UWMdDVD0kZN+JJ1o
-         tiew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=39kKGSsq/ObIawmRn5Y1+axiVM/RiW/k7k81hkLQRko=;
-        b=l6wqIi7pVzedJ2jBkp6FrDj39qzCjrPLNAoeFogunjxlL5m2DsUFGY3H0vXOhbWsEG
-         UutVnAlPq3ui85YFtMjBw2aNJ7/dXxG9/UmBj2bDiuVmo5goMQ2FEt50TplsIabN+8fJ
-         Ntic+TNVzs2t4KURUziUG762EiGfGyj/2xBNvaUFiNtNTB/GEZufNBsW1FoT/fTPS3OX
-         dp4a4ZapBMiivF4B4mSVXMHCN/Rk8CQrg6h5vA6zZ1JlEP+0hYqYpCVvwGiyUrIEIrvA
-         HSTi4FE95wsYgH2Ifq/A+yBzHu1zuiKmLBOZ19rMGBBSazmFOFaTtaRitJ2JiyUaRoUG
-         L9SQ==
-X-Gm-Message-State: APjAAAXKPZ41uHcxllt6Dt+ZM3H24AkDych8KDpeSn6AuB5PjOAA6zct
-        BagC4sDZX/khTivyvkY7ggN5ITSG
-X-Google-Smtp-Source: APXvYqyxv03XTlw/35Gt0k++PPZwBCYXIg/xJFHtkjG8IrqT3QT85s5kM89Y38/s+l0sWBR5FrZ0WQ==
-X-Received: by 2002:a5d:4b4e:: with SMTP id w14mr5424825wrs.187.1580386859077;
-        Thu, 30 Jan 2020 04:20:59 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id o129sm6081097wmb.1.2020.01.30.04.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 04:20:57 -0800 (PST)
-Date:   Thu, 30 Jan 2020 13:20:55 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Thu, 30 Jan 2020 07:22:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48224 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgA3MWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:22:30 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EBDA1B1D2;
+        Thu, 30 Jan 2020 12:22:26 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 13:22:26 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input
- driver for Tegra210
-Message-ID: <20200130122055.GA2584455@ulmo>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
- <20200129111340.GF2479935@ulmo>
- <070f9a4c-1919-f3f6-fef3-ed0a84cf5776@nvidia.com>
+Subject: Re: [PATCH v3 4/5] console: Avoid positive return code from
+ unregister_console()
+Message-ID: <20200130122226.u4qsa53a3cbwdcpt@pathway.suse.cz>
+References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
+ <20200127114719.69114-4-andriy.shevchenko@linux.intel.com>
+ <20200130090428.f5lrkxclnmuegqxw@pathway.suse.cz>
+ <20200130095807.GQ32742@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <070f9a4c-1919-f3f6-fef3-ed0a84cf5776@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200130095807.GQ32742@smile.fi.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 2020-01-30 11:58:07, Andy Shevchenko wrote:
+> On Thu, Jan 30, 2020 at 10:04:29AM +0100, Petr Mladek wrote:
+> > On Mon 2020-01-27 13:47:18, Andy Shevchenko wrote:
+> > > There are two callers which use the returned code from unregister_console().
+> > > In some cases, i.e. successfully unregistered Braille console or when console
+> > > has not been enabled the return code is 1. This code is ambiguous and also
+> > > prevents callers to distinguish successful operation.
+> > >
+> > > Replace this logic to return only negative error codes or 0 when console,
+> > > either enabled, disabled or Braille has been successfully unregistered.
+> > 
+> > I am quite confused by the above message. It is probably because
+> > the patched code is so confusing ;-)
+> 
+> True, and thanks for the elaboration. Some comments below, nevertheless.
+> 
+> > I would start with something like:
+> > 
+> > <begin>
+> > There are only two callers that use the returned code from
+> > unregister_console():
+> > 
+> >   + unregister_early_console() in arch/m68k/kernel/early_printk.c
+> >   + kgdb_unregister_nmi_console() in drivers/tty/serial/kgdb_nmi.c
+> > 
+> > They both expect to get "0" on success and a non-zero value on error.
+> > </end>
+> 
+> I'll rewrite commit message.
+> 
+> > The above is more or less clear. Now, the question is what behavior
+> > is considered as success and what is failure.
+> > 
+> > I started thinking about this in a paranoid mode. The console
+> > registration code is so tricky and it is easy to create
+> > regression.
+> > 
+> > But I think that it is actually not much important. There are only
+> > two callers that handle the return code:
+> > 
+> >    + The 1st one m68k is a late init call and the error code of
+> >      init calls is ignored.
+> 
+> That's not fully true. If you pass initcall_debug it will be helpful to see
+> what is failed and what is not.
+> 
+> >    + The 2nd one in kdb code is not much important. I wonder if anyone
+> >      is actually using kdb. If I remember correctly then Linus
+> >      prosed to remove it completely during the discussion about
+> >      lockless printk at Plumbers 2019 and nobody was against.
+> 
+> I agree with Linus, but It's not my area of expertise, for the scope of this
+> series I would rather ignore what it does with returned code and fix it later
+> if anybody complains (probably we won't see any complaint).
+> 
+> >      In fact, the kdb code is probably wrong. tty_register_driver()
+> >      is called before register_console() in
+> >      kgdb_register_nmi_console() =>
+> > 
+> >      kgdb_unregister_nmi_console() should probably call
+> >      tty_unregister_driver() even when unregister_console() fails.
+> > 
+> > unregister_console() is exported symbol but I doubt that the are
+> > more users of the error code.
+> > 
+> > So, I think that we do not need to care about regressions.
+> > But it is worth to define some resonable behavior, see
+> > below.
+> 
+> Agree.
+> 
+> > > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > > index d40a316908da..da6a9bdf76b6 100644
+> > > --- a/kernel/printk/printk.c
+> > > +++ b/kernel/printk/printk.c
+> > > @@ -2817,10 +2817,12 @@ int unregister_console(struct console *console)
+> > >  		console->name, console->index);
+> > >  
+> > >  	res = _braille_unregister_console(console);
+> > > -	if (res)
+> > > +	if (res < 0)
+> > >  		return res;
+> > > +	if (res > 0)
+> > > +		return 0;
+> > 
+> > Sigh, I wish that _braille_unregister_console() did not returned 1
+> > on success but ...
+> > 
+> > I would describe this as a bugfix. unregister_console() should return
+> > success (0) when _braille_unregister_console() succeeds.
+> 
+> You mean do a separate patch for it with Fixes tag?
+> 
+> > > -	res = 1;
+> > > +	res = -ENODEV;
+> > 
+> > I would describe this as using a regular "meaningful" error code.
+> 
+> In the commit message? Will do!
+> 
+> > >  	console_lock();
+> > >  	if (console_drivers == console) {
+> > >  		console_drivers=console->next;
+> > > @@ -2838,6 +2840,9 @@ int unregister_console(struct console *console)
+> > >  	if (!res && (console->flags & CON_EXTENDED))
+> > >  		nr_ext_console_drivers--;
+> > >  
+> > > +	if (res && !(console->flags & CON_ENABLED))
+> > > +		res = 0;
+> > 
+> > I personally think that success or failure of unregister_console()
+> > should not depend on the state of CON_ENABLED flag:
+> > 
+> >   + As it was discussed in the other thread. There are few consoles
+> >     that have set CON_ENABLED by default. unregister_console()
+> >     should not succeed when register_console() was not called
+> >     before.
+> > 
+> >   + This check would open a question if we should return error
+> >     when the console was in the list but CON_ENABLED was not set.
+> >     But consoles might be temporary disabled, see console_stop().
+> >     unregister_console() should succeed even when the console
+> >     was temporary stopped.
+> > 
+> > But I think that this is only theoretical discussion. IMHO, nobody
+> > really depends on the return code in reality. Alternative solution
+> > would be to make it symetric with register_console() and do not
+> > return the error code at all.
+> 
+> Okay, I understand that for time being it's matter of how eloquent
+> the commit message will be. (And maybe some comments in the code?)
+> Is it correct?
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good question.
 
-On Wed, Jan 29, 2020 at 09:23:38AM -0800, Sowjanya Komatineni wrote:
->=20
-> On 1/29/20 3:13 AM, Thierry Reding wrote:
-> > On Tue, Jan 28, 2020 at 10:23:20AM -0800, Sowjanya Komatineni wrote:
-[...]
-> > > diff --git a/drivers/staging/media/tegra/host1x-video.c b/drivers/sta=
-ging/media/tegra/host1x-video.c
-[...]
-> > > +	media_device_init(&cam->media_dev);
-> > > +	ret =3D media_device_register(&cam->media_dev);
-> > > +	if (ret < 0) {
-> > > +		dev_err(cam->dev, "failed to register media device: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	cam->v4l2_dev.mdev =3D &cam->media_dev;
-> > > +	ret =3D v4l2_device_register(cam->dev, &cam->v4l2_dev);
-> > > +	if (ret < 0) {
-> > > +		dev_err(cam->dev, "V4L2 device registration failed: %d\n", ret);
-> > > +		goto register_error;
-> > > +	}
-> > > +
-> > > +	dev_set_drvdata(&dev->dev, cam);
-> > > +
-> > > +	ret =3D host1x_device_init(dev);
-> > > +	if (ret < 0)
-> > > +		goto dev_exit;
-> > > +
-> > > +	return 0;
-> > > +
-> > > +dev_exit:
-> > > +	host1x_device_exit(dev);
-> > There should be no need to call host1x_device_exit() when
-> > host1x_device_init() failed because the latter already takes care of
-> > undoing whatever it did already.
-> >=20
-> host1x_device_init can fail if any of its client ops init fails.
->=20
-> So, calling host1x_device_exit here to undo the things done in other
-> successful client init ops.
+Please, remove the last hunk if Sergey is not against it.
+I think that the success/error should not depend on the state
+of CON_ENABLED flag.
 
-host1x_device_init() already takes care of undoing what it did on
-failure. Also, it makes sure to only undo what had already been done,
-rather than tear down every client, even if it hadn't been initialized
-yet when the failure happened. The latter is what would happen if you
-called host1x_device_exit() to cleanup at this point.
+The other two changes might stay in the same patch. We just need
+to make the commit message easier to understand. I would write
+something like:
 
-Thierry
+<begin>
+There are only two callers that use the returned code from
+unregister_console():
 
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
+  + unregister_early_console() in arch/m68k/kernel/early_printk.c
+  + kgdb_unregister_nmi_console() in drivers/tty/serial/kgdb_nmi.c
 
------BEGIN PGP SIGNATURE-----
+They both expect to get "0" on success and a non-zero value on error.
+But the current behavior is confusing and buggy:
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4yyiQACgkQ3SOs138+
-s6Egvw/+Nt0LgFzPcflJKTBtvEJ+MNiUId+X2Lhb9zZ6HgVKJ2WZqabYUUydRq7a
-RePVuSe28Q9GPY7XIBS5qLsaglkrI4TqELRyOFzBwrhFGg14XQbeMGs84IDTLfd+
-okiQvOORTCHDzhYfyYU1Fn62+IVzAV5hXsMfYDKo1U43JgocUfwDlateRn7E47HI
-T/sQbQ7/AlxY+9pWPy+pBErXZ+PxbbHnotTlM1pCYO3aQIueOJwUo3PpXiUg1oSa
-DtFxxh4Ez8dfOpb5JEU35/URi2yUNlFGuuAb6d7rAVwQXm9bcIdUZcnwd7ICUSD8
-qiZo88c/s9qb8niupzp4kWP1oq6ddk0QWQ+tin3Pk5mtp3+6OXZLzwYYnYBI+UXm
-y4tcfSLc5jMn9VpLg3aH5cZjPGBg6Iv3Elku0+iIZQLBO48A1YRd5g1+uDjl2D/g
-3Ee0mA/zX6XcjAj0OJm/tM14mNgQTrORC3xZ1uY/4iYrvFPaP/yO+4ijaxo5bWhX
-qsJmfubdA5Uz9Fp3TLkiBsXuiJ/3yJV3NCG6Ci86nFhGBBjsbYBYite+k2O3sPNU
-s8T6yjyIPnSF1eJPZpr0BUVgR2FMc8saU3Hyy38qpTDGbAREiMHidYG2u7FigvAS
-NV5GHdLs4DAUf58P5f2EVPmVVVqzhxgC4kUaaP1HHGvJGJUVflc=
-=kfTx
------END PGP SIGNATURE-----
+  + _braille_unregister_console() returns "1" on success
+  + unregister_console() returns "1" on error
 
---J2SCkAp4GZ/dPZZf--
+Fix and clean up the behavior:
+
+  + Return success when _braille_unregister_console() succeeded.
+  + Return a meaningful error code when the console was not
+    registered before.
+</end>
+
+Best Regards,
+Petr
