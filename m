@@ -7,61 +7,69 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C3AC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D262B214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5571020708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g7awB2ne"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JkyEhE+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgA3Ueb (ORCPT
+        id S1727836AbgA3Ueq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:34:31 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38610 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727515AbgA3Ueb (ORCPT
+        Thu, 30 Jan 2020 15:34:46 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46782 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbgA3Ueq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:34:31 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so2247238pgm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:34:30 -0800 (PST)
+        Thu, 30 Jan 2020 15:34:46 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y8so1771165pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:34:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ls2tMeKv9f/jgxrcgT00rlFPgO3Iqf2bPNU9NTKhuuA=;
-        b=g7awB2ne4o5cENNYO4XNZlKcdtN8PAc/gTPbg8CFzfTmV7vVXy0DaMpOT1WCpvirXj
-         ILtB4VGoCSqxDbVxIIg6dkSkjOOAzvGm2Muc0iM7VUAcvoFOWtR6d8uoQGpV8IHdkguE
-         GUejGP2g1hEG3giv+H3VxhLiwH9QDlLB1OYpE=
+        bh=wNvy6xwMxMabKrq0MY/fy2p6dAUXxsNgojqhZXniMoQ=;
+        b=JkyEhE+s5+Wpe9JqeSPNRzRf/NSIQQ56u17SUmBOAa7egf0+ZaDkuoAvRhnnAG12ds
+         bEdtqtp1BK2D3cPBgOqkNhVR6QHyoUi1YP6tLF8B7FVnhbU0Ov24O7JESM0XfWqcSGsG
+         SDvrf0ATbPRbMVN7jDm8tF3mLtiRZTIaeNx4s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ls2tMeKv9f/jgxrcgT00rlFPgO3Iqf2bPNU9NTKhuuA=;
-        b=FzmqFKNpd0pm1I8dptS7dZOq7c72YOm6VLhHalV/gtoJfPQ7lfLYIBeZBNCRrGrvWK
-         dvqrZZGUgH8zLCMwMc4+kq5hkLrTpxG6U3xlZoZ7/8NIwW5W2rvZHi5Z3Jv/srhG4S8H
-         U0JWnmVdSfoDMhWrW92F5gyPEmt9A9JxhVwx5qI6sf8vwNrEMSQLHpZxJs4Wo6QPwfOq
-         FSVa3+D/2N2oSpcmY/P1+rjmACA8WcI0Ttya759hOLU1nzMuBg787coRv6xDCntG/KTf
-         2nq8zkMFqtDCN+NxOVuCuiXioNpvvXwsfFPOv9waxPzmgJzTqkf+fPgrrLSQ/JJSjH+F
-         Caxg==
-X-Gm-Message-State: APjAAAUeHzGhgahmM3O2KVNr3HBPsEgYtB/0yev5k7v49ejQ9u3F9Jsh
-        wHWWNFcx/yjJR6FCpkq+EtjXZdeXAG/hHw==
-X-Google-Smtp-Source: APXvYqy/Joy7rxQu+O8dsSuoijXrNllSzK67kFbyoHNLVIFp3OdJPOLc29S4oQ8YzWkHSSCf0ip0mA==
-X-Received: by 2002:a63:ed4a:: with SMTP id m10mr5736301pgk.99.1580416469829;
-        Thu, 30 Jan 2020 12:34:29 -0800 (PST)
+        bh=wNvy6xwMxMabKrq0MY/fy2p6dAUXxsNgojqhZXniMoQ=;
+        b=PwW0pKrTCvGcmsnInKlS2PeDnfxxew6e08MmEsH8X+QblDvKRZr+/p2tBGi8Mt5ntY
+         Vih2LV4mbOtlHyyFsnQvAqGmF/O9rM/0f5+uWZAWjdicf3gFWqzcIl6kYI12vcgvT8he
+         Ns6JU1nQFGm5MyHnbS3Wxaps2ZRUJsI8RQnzSLkcMIqau1hkecviPe27aOtKyOdw3UaX
+         M0pbiTvoiUjqjy/1skeJwGCknblF3V9+3y4Wvfj6f6ipX9TTsbefc9z6Fps3K29WBorc
+         0akiRIAsO33GpbqncGP6ROagraO7+Kwmb3IvbG3GXgfL5aOGbnOG2jE7ZVlRqa60BLLE
+         dhPg==
+X-Gm-Message-State: APjAAAX0Ur78ZKKCgqjAEl2ouWy7lPGBHy0+3X3YE6Yy7KfQUCddjPhB
+        mqGnkdjj+UjSKY8LnqxgF5z9DzUTH6IuaQ==
+X-Google-Smtp-Source: APXvYqwiXDNqu57rhE6CnJCrN58jJFirKHsZJl4ezmSLzTkhqKVwa9mGJxyZ9RclnPgN5RlRhnwY7A==
+X-Received: by 2002:a17:90a:c20d:: with SMTP id e13mr8010288pjt.95.1580416485444;
+        Thu, 30 Jan 2020 12:34:45 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.34.29
+        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 12:34:29 -0800 (PST)
+        Thu, 30 Jan 2020 12:34:45 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org (open list:HID CORE LAYER)
-Subject: [PATCH 09/17] hid: google-hammer: Use cros_ec_send_cmd_msg()
-Date:   Thu, 30 Jan 2020 12:30:52 -0800
-Message-Id: <20200130203106.201894-10-pmalani@chromium.org>
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS)
+Subject: [PATCH 10/17] iio: cros_ec: Use cros_ec_send_cmd_msg()
+Date:   Thu, 30 Jan 2020 12:30:54 -0800
+Message-Id: <20200130203106.201894-11-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200130203106.201894-1-pmalani@chromium.org>
 References: <20200130203106.201894-1-pmalani@chromium.org>
@@ -72,61 +80,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace cros_ec_cmd_xfer_status() with cros_ec_send_cmd_msg() which does
-the message buffer setup and cleanup.
+Replace cros_ec_cmd_xfer_status() with cros_ec_send_cmd_msg()
+which does the message buffer setup and cleanup.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- drivers/hid/hid-google-hammer.c | 23 +++++------------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 43 +++++++++----------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index 2aa4ed157aec87..428762a6a4993f 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -53,38 +53,25 @@ static bool cbas_parse_base_state(const void *data)
- static int cbas_ec_query_base(struct cros_ec_device *ec_dev, bool get_state,
- 				  bool *state)
+diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+index 81a7f692de2f37..f92032e97a84d7 100644
+--- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
++++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+@@ -31,24 +31,16 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+ 					     u16 cmd_offset, u16 cmd, u32 *mask)
  {
--	struct ec_params_mkbp_info *params;
--	struct cros_ec_command *msg;
-+	struct ec_params_mkbp_info params = {0};
  	int ret;
- 
--	msg = kzalloc(sizeof(*msg) + max(sizeof(u32), sizeof(*params)),
--		      GFP_KERNEL);
--	if (!msg)
--		return -ENOMEM;
+-	struct {
+-		struct cros_ec_command msg;
+-		union {
+-			struct ec_params_get_cmd_versions params;
+-			struct ec_response_get_cmd_versions resp;
+-		};
+-	} __packed buf = {
+-		.msg = {
+-			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+-			.insize = sizeof(struct ec_response_get_cmd_versions),
+-			.outsize = sizeof(struct ec_params_get_cmd_versions)
+-			},
+-		.params = {.cmd = cmd}
+-	};
 -
--	msg->command = EC_CMD_MKBP_INFO;
--	msg->version = 1;
--	msg->outsize = sizeof(*params);
--	msg->insize = sizeof(u32);
--	params = (struct ec_params_mkbp_info *)msg->data;
--	params->info_type = get_state ?
-+	params.info_type = get_state ?
- 		EC_MKBP_INFO_CURRENT : EC_MKBP_INFO_SUPPORTED;
--	params->event_type = EC_MKBP_EVENT_SWITCH;
-+	params.event_type = EC_MKBP_EVENT_SWITCH;
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	ret = cros_ec_send_cmd_msg(ec_dev, 1, EC_CMD_MKBP_INFO,
-+				   &params, sizeof(params), state, sizeof(u32));
- 	if (ret >= 0) {
- 		if (ret != sizeof(u32)) {
- 			dev_warn(ec_dev->dev, "wrong result size: %d != %zu\n",
- 				 ret, sizeof(u32));
- 			ret = -EPROTO;
- 		} else {
--			*state = cbas_parse_base_state(msg->data);
- 			ret = 0;
- 		}
- 	}
- 
--	kfree(msg);
--
+-	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
++	struct ec_params_get_cmd_versions params = {0};
++	struct ec_response_get_cmd_versions resp = {0};
++
++	params.cmd = cmd;
++	ret = cros_ec_send_cmd_msg(ec_dev, 0,
++				   EC_CMD_GET_CMD_VERSIONS + cmd_offset,
++				   &params, sizeof(params),
++				   &resp, sizeof(resp));
+ 	if (ret >= 0)
+-		*mask = buf.resp.version_mask;
++		*mask = resp.version_mask;
  	return ret;
  }
+ 
+@@ -164,15 +156,22 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+ 				 u16 opt_length)
+ {
+ 	int ret;
++	struct cros_ec_command *msg = state->msg;
+ 
+ 	if (opt_length)
+-		state->msg->insize = min(opt_length, state->ec->max_response);
++		msg->insize = min(opt_length, state->ec->max_response);
+ 	else
+-		state->msg->insize = state->ec->max_response;
++		msg->insize = state->ec->max_response;
+ 
+-	memcpy(state->msg->data, &state->param, sizeof(state->param));
+-
+-	ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
++	/*
++	 * In order to not disrupt the usage of struct cros_ec_command *msg,
++	 * which is defined higher up in the call stack, we pass in its
++	 * members to cros_ec_send_cmd_msg, instead of removing it at all
++	 * calling locations.
++	 */
++	ret = cros_ec_send_cmd_msg(state->ec, msg->version, msg->command,
++				   &state->param, sizeof(state->param),
++				   msg->data, msg->insize);
+ 	if (ret < 0)
+ 		return ret;
  
 -- 
 2.25.0.341.g760bfbb309-goog
