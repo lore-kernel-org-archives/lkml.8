@@ -2,168 +2,111 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEC0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B4C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F07E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8783C20708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jz7FW5QU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEUK2qda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgA3XI4 (ORCPT
+        id S1727601AbgA3XWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 18:08:56 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:53393 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbgA3XIq (ORCPT
+        Thu, 30 Jan 2020 18:22:16 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35929 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgA3XWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 18:08:46 -0500
-Received: by mail-pj1-f73.google.com with SMTP id h6so3015126pju.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 15:08:44 -0800 (PST)
+        Thu, 30 Jan 2020 18:22:16 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so5242724ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 15:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VLqpq28FQRNQIVptajpFe63XhXFy0jhE9mXehwRafIA=;
-        b=jz7FW5QU7Lk7TNOglAB0pQLHAXY15yKO+wUPozFqMZXyMlBLlb6/X5oUjtRgVLQoX5
-         leNaWs2uAAoWweShkRCnuCM8GAhGpe2U/pdwmZFC+YZY/8Y3bg4lXRQnLBrq6XdKHZpq
-         14wtOnyDqjspPfbK9+mSK/qcSo7QHDPN7wzK/oM2+WSP7brw45o+sfHNjF0eG3KuuTgW
-         KusUu8QrBJB2TWX08qxa06d8cbGlCHz7UsUiBq3VON2Kv3zJqZNO22MMFKt7LbzxkzPu
-         IBzxyH5QZSUj3GDAGOAYnHSNvOPpyEQnauUuT5CHnuMeqvdkZRAEQJo9Slwod8umeU91
-         UIWg==
+        bh=N4pLYntMtcNk/QyMGMKvQCVzanZck9/zOb6bpHQ9EQI=;
+        b=lEUK2qdaPMJDOGemYqUp9+l4fajGrH26MZzmOmKwRvhVulg3P4yB7FGm+fA6xHcnrg
+         OmXPbaTxjRxGqphgXuDAxKiaGbhzxCaDTGn97OlZq7rOx9jcXKvKCdoyz/YO6ZS2g0q9
+         kXs8OHU0qWGY3g4TCy3W2+cPIeFpfxgBi6SDAHHl80nS84lSrexIGj4KNGslTtgiffAt
+         +D3IK5MB7DpA/4XHDT+H/85GEnGIKw6/sYNOGpRdt7inkPPh0ke4RC70c0e5CI0YVTW+
+         bfVb4lF5bkE7knJ75b1MSAyjvEu0RYRDrb0nHQIedvptCIfMDsVIOxxldh5PG1iTs2Vm
+         sCXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=VLqpq28FQRNQIVptajpFe63XhXFy0jhE9mXehwRafIA=;
-        b=RDfFXKfR6Kur8UUuZSntbtA0G3hjJSogPTsEZfDAF87rfB532+bTcQn0pNh745QiRO
-         o3rWjy9LRvcICHCgbsgZx6gS/tE7UcfG62bYbEjv7B5WaSYYQLcoKzOzqS47crukgO9g
-         ienThf3DMdX/seVPNi0PfPAsAGhykzKOBToUvpW6V6wnnP24nbv22a8fOA5hpEz+e/O2
-         LiIMY+0Ci/s7ot5jJqF//jtIgcF8nPkaU3f/EJhf30Jj41uVRu9akdpvG7xSPJ0hm2/W
-         38YAfh42G1gv53y++zHD2jEGZRZkt1DAUXXrzmtSCR8TBSpx+89qCYSXkgpQJLTfda+p
-         Mybw==
-X-Gm-Message-State: APjAAAWNgzm37p/p7Nv5CkRirno7bXWE4CXAD9Uv+PhVKjOCUT4Hhw0k
-        fbhzjf2BmoiNKHA8Of4mhsL+vx7LZMsCFQb+QIBp9Q==
-X-Google-Smtp-Source: APXvYqzBqNRIyEKJeeJ3vuVUa5lujbAxG836k8LFK157Mt4Z9zRai9oKPPjbAb0UbTVrzR42WihyGzrGGGpxul8Euvoifw==
-X-Received: by 2002:a63:1119:: with SMTP id g25mr7065313pgl.359.1580425724082;
- Thu, 30 Jan 2020 15:08:44 -0800 (PST)
-Date:   Thu, 30 Jan 2020 15:08:11 -0800
-In-Reply-To: <20200130230812.142642-1-brendanhiggins@google.com>
-Message-Id: <20200130230812.142642-7-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20200130230812.142642-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2 6/7] kunit: Add 'kunit_shutdown' option
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com,
-        frowand.list@gmail.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, knut.omang@oracle.com,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N4pLYntMtcNk/QyMGMKvQCVzanZck9/zOb6bpHQ9EQI=;
+        b=rOUUXs3OPt04BTkiL8Hvm47WJeAqdQdOVM4LVD8TcE0foL4y4sTF8modRNGflpDLRl
+         KoYB3OeHqNEYtFj1zlbR8kFpP7HKlByx/INfby2U31uZ1yw2IRVWT75F4Dqb8m41w8Bm
+         GWRgnjc/47A0lXhxziQcS8bKVSansHcNznrnlrU3+wMxGigHPenKty5MZEDXUcbVSLHA
+         08yYsliYYTO94LZXtY+5XwOjecl0+2Q1iN0B4uyrYa8vzaEwQF/Qro7c5lxsJaohMWHc
+         t1SwnReb+iCOHRrk47KXnVJAqWGAZa2+ghhj9l8Er5CKK4uk0OLd+/6BOiNaDSO7rpxd
+         TLqw==
+X-Gm-Message-State: APjAAAXpY28Yb3+8xIy1Y28Em91qL4zb6HG2rOLvMjsXqcuvit2GbaC1
+        rnaeS/L+hAy0gDsmZ7z3NtbJBmFd8ZK4/UX7MN4=
+X-Google-Smtp-Source: APXvYqw/YlzAhwTZE6Giqw01b4YrMH0v8eLT4uWRQMvVdJUbTErJPFr5BqmT/vcBe29BoFwYiLzFDDqUJEBXR/set4g=
+X-Received: by 2002:a05:651c:414:: with SMTP id 20mr4056104lja.165.1580426532516;
+ Thu, 30 Jan 2020 15:22:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20191128135057.20020-1-benjamin.gaignard@st.com>
+ <878snsvxzu.fsf@intel.com> <CA+M3ks5WvYoDLSrbvaGBbJg9+nnkX=xyCiD389QD8tSCdNqB+g@mail.gmail.com>
+ <CA+M3ks4Y4LemFh=dQds91Z-LGJPK3vHKv=GeUNYHjNhdwz_m2g@mail.gmail.com>
+ <CA+M3ks4yEBejzMoXPw_OK_LNP7ag5SNXZjvHqNeuZ8+9r2X-qw@mail.gmail.com>
+ <b273036b10d8c2882800d01dcda7392e93b731fa.camel@redhat.com>
+ <CA+M3ks5cuC5yJ-e0DCUiY1HtyyeU=mM9z56y4e_UduKaxcbw-A@mail.gmail.com> <08f4b69b1e48a81e90f28e7672da15cc5165969c.camel@redhat.com>
+In-Reply-To: <08f4b69b1e48a81e90f28e7672da15cc5165969c.camel@redhat.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 31 Jan 2020 09:22:00 +1000
+Message-ID: <CAPM=9txafoQNfMFf0Ff1SnBTgq6jYyvjJyjCSJua6-SJVVkScQ@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/dp_mst: Fix W=1 warnings
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <sean@poorly.run>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Gow <davidgow@google.com>
+> > > >
+> > > hi-actually yes, we should probably be using this instead of just dropping
+> > > this. Also, I didn't write this code originally I just refactored a bunch
+> > > of
+> > > it - Dave Airlied is the original author, but the original version of this
+> > > code was written ages ago. tbh, I think it's a safe bet to say that they
+> > > probably did mean to use this but forgot to and no one noticed until now.
+> >
+> > Hi,
+> >
+> > Any clue about how to use crc value ? Does it have to be checked
+> > against something else ?
+> > If crc are not matching what should we do of the data copied just before ?
+>
+> We should be able to just take the CRC value from the sideband message and
+> then generate our own CRC value using the sideband message contents, and check
+> if the two are equal. If they aren't, something went wrong and we didn't
+> receive the message properly.
+>
+> Now as to what we should do when we have CRC mismatches? That's a bit more
+> difficult. If you have access to the DP MST spec, I suppose a place to start
+> figuring that out would be checking if there's a way for us to request that a
+> branch device resend whatever message it sent previously. If there isn't, I
+> guess we should just print an error in dmesg (possibly with a hexdump of the
+> failed message as well) and not forward the message to the driver. Not sure of
+> any better way of handling it then that
 
-Add a new kernel command-line option, 'kunit_shutdown', which allows the
-user to specify that the kernel poweroff, halt, or reboot after
-completing all KUnit tests; this is very handy for running KUnit tests
-on UML or a VM so that the UML/VM process exits cleanly immediately
-after running all tests without needing a special initramfs.
+Yeah I think this reflects what I wanted to do, I've no memory of a
+retransmit option in the spec, but I've away from it for a while. But
+we'd want to compare the CRC with what we got to make sure the are the
+same.
 
-Signed-off-by: David Gow <davidgow@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- lib/kunit/executor.c                | 20 ++++++++++++++++++++
- tools/testing/kunit/kunit_kernel.py |  2 +-
- tools/testing/kunit/kunit_parser.py |  2 +-
- 3 files changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-index 7fd16feff157e..a93821116ccec 100644
---- a/lib/kunit/executor.c
-+++ b/lib/kunit/executor.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/reboot.h>
- #include <kunit/test.h>
- 
- /*
-@@ -11,6 +12,23 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
- 
- #if IS_BUILTIN(CONFIG_KUNIT)
- 
-+static char *kunit_shutdown;
-+core_param(kunit_shutdown, kunit_shutdown, charp, 0644);
-+
-+static void kunit_handle_shutdown(void)
-+{
-+	if (!kunit_shutdown)
-+		return;
-+
-+	if (!strcmp(kunit_shutdown, "poweroff"))
-+		kernel_power_off();
-+	else if (!strcmp(kunit_shutdown, "halt"))
-+		kernel_halt();
-+	else if (!strcmp(kunit_shutdown, "reboot"))
-+		kernel_restart(NULL);
-+
-+}
-+
- static void kunit_print_tap_header(void)
- {
- 	struct kunit_suite * const * const *suites, * const *subsuite;
-@@ -42,6 +60,8 @@ int kunit_run_all_tests(void)
- 		}
- 	}
- 
-+	kunit_handle_shutdown();
-+
- 	if (has_test_failed)
- 		return -EFAULT;
- 
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index cc5d844ecca13..43314aa537d30 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -141,7 +141,7 @@ class LinuxSourceTree(object):
- 		return True
- 
- 	def run_kernel(self, args=[], timeout=None, build_dir=''):
--		args.extend(['mem=256M'])
-+		args.extend(['mem=256M', 'kunit_shutdown=halt'])
- 		process = self._ops.linux_bin(args, timeout, build_dir)
- 		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
- 			for line in process.stdout:
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 78b3bdd03b1e4..633811dd9bce8 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -48,7 +48,7 @@ class TestStatus(Enum):
- 	FAILURE_TO_PARSE_TESTS = auto()
- 
- kunit_start_re = re.compile(r'^TAP version [0-9]+$')
--kunit_end_re = re.compile('List of all partitions:')
-+kunit_end_re = re.compile(r'reboot: System halted')
- 
- def isolate_kunit_output(kernel_output):
- 	started = False
--- 
-2.25.0.341.g760bfbb309-goog
-
+Dave.
