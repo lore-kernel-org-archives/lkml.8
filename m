@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E1CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3984C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7512820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7737D205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409994;
-	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+	s=default; t=1580409996;
+	bh=vVzGl/1LrNLQUWSDodjDFOxHqfKPOheroeyONEUOIAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUT8POQlWM3G0J5arH6tvNXo/SoUB5uZnrrp0rNUSfGkDvYzVPXxgcG5l7HEk/Ab5
-	 8OFt5pZWJakP3CqupNLlKKUbAtKGwngboSQaG+GypJqmhXs59toPljV09cC7Bhp/2G
-	 WlNPQiSMD+nydnq+03n1xalUj1m1jF9h169S3kR0=
+	b=W9mHTeKO5HkC58Loh/fjkimQvkpwDfG8Ddk+I22cK+ndBwsJ6dVQpXMVjxABYefCh
+	 rUlePioFpRBSdVjy36OehWWqt9CKIDjJNNgBkPJcAUYkbz5buaqGC3YaqIMq18ajNQ
+	 N4jpGvSzenEjer9emEW+lj0fI/t68JVglU356SqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbgA3Sqd (ORCPT
+        id S1731225AbgA3Sqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbgA3SqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:23 -0500
+        id S1731205AbgA3Sq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDE9320674;
-        Thu, 30 Jan 2020 18:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E3520674;
+        Thu, 30 Jan 2020 18:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409983;
-        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
+        s=default; t=1580409988;
+        bh=vVzGl/1LrNLQUWSDodjDFOxHqfKPOheroeyONEUOIAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2unGKum/abviiiSlkrMBEzMuTd/rh6j95jo5JLTqMzN3qDW0Ss7WO/LcH5DWCsTK0
-         tRtvdGn9uO0Nhe8Mdy1FH1SakHMGzCDxTlldGr75jYJkZ86GCKk+agfHwY00EzE2uX
-         4YwWgjC7vK0sY9QjZGKk8jtDlT1uEGHtIarNL+eQ=
+        b=GbOjZYsAreMswFh4xQflWn+MXQDsqOpSA6zneMCV5npIGikW9gcfcn/oWH1HMv1O0
+         ISzJRuJ591bo8QVYgxah0r+cKt2t6rSaci6Jsji2Xl+XeS7AxCHTeXqD0+nr1RuHfw
+         BYYXGQCELOHcij3AxvLo5r6ADxdmUGNTOZgdQcOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
-        Pacho Ramos <pachoramos@gmail.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Andre Heider <a.heider@gmail.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 095/110] usb-storage: Disable UAS on JMicron SATA enclosure
-Date:   Thu, 30 Jan 2020 19:39:11 +0100
-Message-Id: <20200130183625.212740705@linuxfoundation.org>
+Subject: [PATCH 5.4 097/110] Bluetooth: Allow combination of BDADDR_PROPERTY and INVALID_BDADDR quirks
+Date:   Thu, 30 Jan 2020 19:39:13 +0100
+Message-Id: <20200130183625.357467844@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,45 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@fedoraproject.org>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
+[ Upstream commit 7fdf6c6a0d0e032aac2aa4537a23af1e04a397ce ]
 
-Steve Ellis reported incorrect block sizes and alignement
-offsets with a SATA enclosure. Adding a quirk to disable
-UAS fixes the problems.
+When utilizing BDADDR_PROPERTY and INVALID_BDADDR quirks together it
+results in an unconfigured controller even if the bootloader provides
+a valid address. Fix this by allowing a bootloader provided address
+to mark the controller as configured.
 
-Reported-by: Steven Ellis <sellis@redhat.com>
-Cc: Pacho Ramos <pachoramos@gmail.com>
-Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Tested-by: Andre Heider <a.heider@gmail.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_uas.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/bluetooth/hci_core.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index d0bdebd87ce3a..1b23741036ee8 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_IGNORE_UAS),
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 0cc9ce9172229..9e19d5a3aac87 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -1444,11 +1444,20 @@ static int hci_dev_do_open(struct hci_dev *hdev)
  
--/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
-+/*
-+ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
-+ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
-+ */
- UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
- 		"JMicron",
- 		"JMS566",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
--		US_FL_NO_REPORT_OPCODES),
-+		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ 	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
+ 	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
++		bool invalid_bdaddr;
++
+ 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
  
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
+ 		if (hdev->setup)
+ 			ret = hdev->setup(hdev);
+ 
++		/* The transport driver can set the quirk to mark the
++		 * BD_ADDR invalid before creating the HCI device or in
++		 * its setup callback.
++		 */
++		invalid_bdaddr = test_bit(HCI_QUIRK_INVALID_BDADDR,
++					  &hdev->quirks);
++
+ 		if (ret)
+ 			goto setup_failed;
+ 
+@@ -1457,20 +1466,33 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+ 				hci_dev_get_bd_addr_from_property(hdev);
+ 
+ 			if (bacmp(&hdev->public_addr, BDADDR_ANY) &&
+-			    hdev->set_bdaddr)
++			    hdev->set_bdaddr) {
+ 				ret = hdev->set_bdaddr(hdev,
+ 						       &hdev->public_addr);
++
++				/* If setting of the BD_ADDR from the device
++				 * property succeeds, then treat the address
++				 * as valid even if the invalid BD_ADDR
++				 * quirk indicates otherwise.
++				 */
++				if (!ret)
++					invalid_bdaddr = false;
++			}
+ 		}
+ 
+ setup_failed:
+ 		/* The transport driver can set these quirks before
+ 		 * creating the HCI device or in its setup callback.
+ 		 *
++		 * For the invalid BD_ADDR quirk it is possible that
++		 * it becomes a valid address if the bootloader does
++		 * provide it (see above).
++		 *
+ 		 * In case any of them is set, the controller has to
+ 		 * start up as unconfigured.
+ 		 */
+ 		if (test_bit(HCI_QUIRK_EXTERNAL_CONFIG, &hdev->quirks) ||
+-		    test_bit(HCI_QUIRK_INVALID_BDADDR, &hdev->quirks))
++		    invalid_bdaddr)
+ 			hci_dev_set_flag(hdev, HCI_UNCONFIGURED);
+ 
+ 		/* For an unconfigured controller it is required to
 -- 
 2.20.1
 
