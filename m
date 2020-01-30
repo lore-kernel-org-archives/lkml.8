@@ -2,51 +2,55 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6755AC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ECFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A29205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41A2205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410280;
-	bh=Zq4F/Ve3Iyslt78uHqrrDIEnnHV8eM3FeTzoQFH0KQA=;
+	s=default; t=1580410287;
+	bh=CKCrECNmgHj6S4af5+GDElQKarJnX+Ott2IWHk8nNoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11VVnTjD2QDcgDUQwW1qnbjhM0ZfaQ2bMo3mQjCt3b6QfZACTwS6HDOdatcrnpy9t
-	 f7YtIsXlvCLJv3LqvLzA6ltXR53eDxDoUOzF7e6RqT2CCjZYGa9aT0vSRKe0KThMCc
-	 0TqoHy5pTwXZpn1Smg0IBVvrO23gwJBgEvl8Z1LY=
+	b=VhbJ0UWQsIP6gdEOQOu+FE6N8UCsb7Eo08jDMwCjwBXvdPAHhZWjgWzJ4V5ZY05tc
+	 XkxvjoUX+4+47yVaMfNEotBv09HtxIjXZv2HV5ouUQJmo1AmVqbcEFNKqlRxwjcfs9
+	 0SPjt4dFh7qwhCYf6K5p8YHqJZH/6clIwO6jUogI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731627AbgA3SvT (ORCPT
+        id S1730975AbgA3SpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731016AbgA3Sp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:29 -0500
+        id S1730690AbgA3SpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67551215A4;
-        Thu, 30 Jan 2020 18:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ECFA205F4;
+        Thu, 30 Jan 2020 18:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409927;
-        bh=Zq4F/Ve3Iyslt78uHqrrDIEnnHV8eM3FeTzoQFH0KQA=;
+        s=default; t=1580409908;
+        bh=CKCrECNmgHj6S4af5+GDElQKarJnX+Ott2IWHk8nNoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDdozfyQtRtua5OPO4XKjn4mS5hWLrffkuka60SbcW3CpQOsAJVUPoBlKjJPi2fnT
-         zh5PE/gzDtCQDyOL8gGGXocY4X+ZJziCB1+BdGbEnwdOx8vXWhXEjHpaTFvUdTy7yK
-         V2Mb9FSyzd/mLmD2Ez4/SS5nXuO+nbMcVyH0Tg08=
+        b=UcaGNdzj9gmyz52f93wZtCh9OSy2ahCC/J1jhPxka90VPpZtp6FI+Z52ga4S4iMhR
+         bjjylz6UqN90eq3U/M5VfnEKjmcLR34iV8aKgGXWaCQs6FC1xqHTLK6d2hCKBGOiwr
+         y/5HNEN9QtaBkAJLiTt0fvnywoGT15NMQTG+VwTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/110] iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
-Date:   Thu, 30 Jan 2020 19:39:03 +0100
-Message-Id: <20200130183624.526829149@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 053/110] ASoC: SOF: Intel: hda: hda-dai: fix oops on hda_link .hw_free
+Date:   Thu, 30 Jan 2020 19:38:29 +0100
+Message-Id: <20200130183621.422518579@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,121 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 3c124435e8dd516df4b2fc983f4415386fd6edae ]
+[ Upstream commit 921162c81a089aa2f442103290f1af9ba281fc9f ]
 
-Non-Transparent Bridge (NTB) devices (among others) may have many DMA
-aliases seeing the hardware will send requests with different device ids
-depending on their origin across the bridged hardware.
+When the PCM_PARAM IPC fails while configuring the FE, the kernel
+oopses in the HDaudio link DMA .hw_free operation. The root cause is a
+NULL dma_data since the BE .hw_params was never called by the SOC
+core.
 
-See commit ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec
-NTB") for more information on this.
+This error can also happen if the HDaudio link DMA configuration IPC
+fails in the BE .hw_params.
 
-The AMD IOMMU IRQ remapping functionality ignores all PCI aliases for
-IRQs so if devices send an interrupt from one of their aliases they
-will be blocked on AMD hardware with the IOMMU enabled.
+This patches makes sure the dma_data is properly saved in .hw_params,
+and tested before being use in hw_free.
 
-To fix this, ensure IRQ remapping is enabled for all aliases with
-MSI interrupts.
+GitHub issue: https://github.com/thesofproject/linux/issues/1417
 
-This is analogous to the functionality added to the Intel IRQ remapping
-code in commit 3f0c625c6ae7 ("iommu/vt-d: Allow interrupts from the entire
-bus for aliased devices")
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191218000518.5830-3-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 37 ++++++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
+ sound/soc/sof/intel/hda-dai.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 16e0e3af2de0e..454695b372c8c 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3741,7 +3741,20 @@ static void set_remap_table_entry(struct amd_iommu *iommu, u16 devid,
- 	iommu_flush_dte(iommu, devid);
- }
- 
--static struct irq_remap_table *alloc_irq_table(u16 devid)
-+static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
-+				       void *data)
-+{
-+	struct irq_remap_table *table = data;
+diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
+index 8796f385be76c..896d21984b735 100644
+--- a/sound/soc/sof/intel/hda-dai.c
++++ b/sound/soc/sof/intel/hda-dai.c
+@@ -216,6 +216,8 @@ static int hda_link_hw_params(struct snd_pcm_substream *substream,
+ 		link_dev = hda_link_stream_assign(bus, substream);
+ 		if (!link_dev)
+ 			return -EBUSY;
 +
-+	irq_lookup_table[alias] = table;
-+	set_dte_irq_entry(alias, table);
-+
-+	iommu_flush_dte(amd_iommu_rlookup_table[alias], alias);
-+
-+	return 0;
-+}
-+
-+static struct irq_remap_table *alloc_irq_table(u16 devid, struct pci_dev *pdev)
- {
- 	struct irq_remap_table *table = NULL;
- 	struct irq_remap_table *new_table = NULL;
-@@ -3787,7 +3800,12 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
- 	table = new_table;
- 	new_table = NULL;
- 
--	set_remap_table_entry(iommu, devid, table);
-+	if (pdev)
-+		pci_for_each_dma_alias(pdev, set_remap_table_entry_alias,
-+				       table);
-+	else
-+		set_remap_table_entry(iommu, devid, table);
-+
- 	if (devid != alias)
- 		set_remap_table_entry(iommu, alias, table);
- 
-@@ -3804,7 +3822,8 @@ out_unlock:
- 	return table;
- }
- 
--static int alloc_irq_index(u16 devid, int count, bool align)
-+static int alloc_irq_index(u16 devid, int count, bool align,
-+			   struct pci_dev *pdev)
- {
- 	struct irq_remap_table *table;
- 	int index, c, alignment = 1;
-@@ -3814,7 +3833,7 @@ static int alloc_irq_index(u16 devid, int count, bool align)
- 	if (!iommu)
- 		return -ENODEV;
- 
--	table = alloc_irq_table(devid);
-+	table = alloc_irq_table(devid, pdev);
- 	if (!table)
- 		return -ENODEV;
- 
-@@ -4247,7 +4266,7 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
- 		struct irq_remap_table *table;
- 		struct amd_iommu *iommu;
- 
--		table = alloc_irq_table(devid);
-+		table = alloc_irq_table(devid, NULL);
- 		if (table) {
- 			if (!table->min_index) {
- 				/*
-@@ -4264,11 +4283,15 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
- 		} else {
- 			index = -ENOMEM;
- 		}
--	} else {
-+	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
-+		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
- 		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
- 
--		index = alloc_irq_index(devid, nr_irqs, align);
-+		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
-+	} else {
-+		index = alloc_irq_index(devid, nr_irqs, false, NULL);
++		snd_soc_dai_set_dma_data(dai, substream, (void *)link_dev);
  	}
+ 
+ 	stream_tag = hdac_stream(link_dev)->stream_tag;
+@@ -228,8 +230,6 @@ static int hda_link_hw_params(struct snd_pcm_substream *substream,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	snd_soc_dai_set_dma_data(dai, substream, (void *)link_dev);
+-
+ 	link = snd_hdac_ext_bus_get_link(bus, codec_dai->component->name);
+ 	if (!link)
+ 		return -EINVAL;
+@@ -361,6 +361,13 @@ static int hda_link_hw_free(struct snd_pcm_substream *substream,
+ 	bus = hstream->bus;
+ 	rtd = snd_pcm_substream_chip(substream);
+ 	link_dev = snd_soc_dai_get_dma_data(dai, substream);
 +
- 	if (index < 0) {
- 		pr_warn("Failed to allocate IRTE\n");
- 		ret = index;
++	if (!link_dev) {
++		dev_dbg(dai->dev,
++			"%s: link_dev is not assigned\n", __func__);
++		return -EINVAL;
++	}
++
+ 	hda_stream = hstream_to_sof_hda_stream(link_dev);
+ 
+ 	/* free the link DMA channel in the FW */
 -- 
 2.20.1
 
