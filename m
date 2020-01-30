@@ -2,110 +2,327 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B969DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABC1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F32E206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:57:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/UuJZsH"
+	by mail.kernel.org (Postfix) with ESMTP id 1C6C620702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 07:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgA3G5d (ORCPT
+        id S1726647AbgA3HHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 01:57:33 -0500
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:40116 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgA3G5d (ORCPT
+        Thu, 30 Jan 2020 02:07:32 -0500
+Received: from mx04.melco.co.jp ([192.218.140.144]:35261 "EHLO
+        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgA3HHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 01:57:33 -0500
-Received: by mail-pf1-f175.google.com with SMTP id q8so990754pfh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 22:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=huaVosl53nJpP94v/buh4oiNNpbIxxq4KUuvCVKsRvg=;
-        b=Z/UuJZsHzzCP0r8iNe0I5jcgDk7nS7QrCbZrFnip3NLgUewZWXkz4CQ1c/Q1cVT8Q1
-         +1GseJSJv2M3+mm4Hwh6Ywqx/ef7eZKb8Ct4LFiHcYQms0xoHXpeBixjapicNSPiDH2Q
-         cZUNZMu6GBoHdBdPHOKZ+eLjW4QmBOYTEIjSCnpVEgdDOxp+N0DDFJLfNiZZHVnCAjss
-         N2u6mfe98Z5Z7uZ9D1G5imSzIgGg0sdi3sTvRwBxM3ebVM2phop9IIH+wq3wqcaqd5No
-         ZW9/7OPeZZ3UgnnBS9HCMoJjQz2PUr+zMfX9wjArH/BUNY7E167G8kLrPt+UOKjHP7P6
-         Uv9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=huaVosl53nJpP94v/buh4oiNNpbIxxq4KUuvCVKsRvg=;
-        b=W9CMXWcxM6AG4Hj61rTDPGlj4r1sX7Wu5C4nPr89uRq4qZ73Zj9vF1ymO1t2E1ZdsX
-         1/WNP5gWYb5YFeVh7DPy799XoI24+p/7GA44jbFk311RMB+IkNYw/Zz94tKvsxcNwZT8
-         2cQ1PZ/6qVoal1grzuX42eRW7f2Q7osHd+8Y+EPTXtLdxK8AiFliWSOysiZ6G/6pZTIg
-         tNFhn56Yt3gsgSuiaP/h+oyZGvNoJk8TqPeMuXOMcaMQxwh60tvgyaqqUzMJ0wnORSO1
-         i1CpTD1xDOYB/A8WcR0BF9ZfcvZocBZ08qakeXKlQ9t32DhHPUcwhgpnr2xQYu7T9HBP
-         4v3g==
-X-Gm-Message-State: APjAAAVRgDZyNlzi9f1p0MdFIoeT58f0C8LEx3+olEtYu55c45CwKIyJ
-        8AL4psroGPR4aQurUUQ1994=
-X-Google-Smtp-Source: APXvYqyE7G6+WsXmD6yFeRj72KzFz7PcN7/o2vL2fDMibf6sPdxfm++Q7pFYY+JRKgQjAj5Os8ygXw==
-X-Received: by 2002:a63:8349:: with SMTP id h70mr3155850pge.396.1580367452803;
-        Wed, 29 Jan 2020 22:57:32 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id g8sm4970595pfh.43.2020.01.29.22.57.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 22:57:32 -0800 (PST)
-Date:   Thu, 30 Jan 2020 15:57:30 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: -Wfortify-source in kernel/printk/printk.c
-Message-ID: <20200130065730.GG115889@google.com>
-References: <20200130021648.GA32309@ubuntu-x2-xlarge-x86>
- <20200130051711.GF115889@google.com>
- <f099965dc5de82fc5fb60ba10371cd9f1aed2d94.camel@perches.com>
+        Thu, 30 Jan 2020 02:07:32 -0500
+Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
+        by mx04.melco.co.jp (Postfix) with ESMTP id D63DE3A4110;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from mr04.melco.co.jp (unknown [127.0.0.1])
+        by mr04.imss (Postfix) with ESMTP id 487WdF5VKdzRk3M;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
+        by mr04.melco.co.jp (Postfix) with ESMTP id 487WdF5B7YzRk2v;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from mf04.melco.co.jp (unknown [133.141.98.184])
+        by mf04_second.melco.co.jp (Postfix) with ESMTP id 487WdF576tzRk67;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf04.melco.co.jp (Postfix) with ESMTP id 487WdF4ZpfzRkDv;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 00U77Tja025901;
+        Thu, 30 Jan 2020 16:07:29 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 6539A17E075;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (mailgw1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 58D7017E073;
+        Thu, 30 Jan 2020 16:07:29 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 00U77T38003768;
+        Thu, 30 Jan 2020 16:07:29 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp,
+        Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v2] staging: exfat: remove 'vol_type' variable.
+Date:   Thu, 30 Jan 2020 16:06:13 +0900
+Message-Id: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f099965dc5de82fc5fb60ba10371cd9f1aed2d94.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/29 22:39), Joe Perches wrote:
-> > > It isn't wrong, given that when CONFIG_PRINTK is disabled, text's length
-> > > is 0 (LOG_LINE_MAX and PREFIX_MAX are both zero). How should this
-> > > warning be dealt this? I am not familiar enough with the printk code to
-> > > say myself.
-> > 
-> > It's not wrong.
-> > 
-> > Unless I'm missing something completely obvious: with disabled printk()
-> > we don't have any functions that can append messages to the logbuf, hence
-> > we can't overflow it. So the error in question should never trigger.
-> > 
-> > - Normal printk() is void, so kernel cannot append messages;
-> > - dev_printk() is void, so drivers cannot append messages and dicts;
-> > - devkmsg_write() is void, so user space cannot write to logbuf.
-> > 
-> > So I think we should never trigger that overflow (assuming that I
-> > didn't miss something) message.
-> > 
-> > In any case feel free to submit a patch - switch it to snprintf().
-> 
-> and/or make the code depend on CONFIG_PRINTK
+remove 'vol_type' variable.
 
-console_unlock() still needs to at least up() the console semaphore.
-We don't have printk(), but the tty subsystem is still there and serial
-consoles and definitely still up and running. So... maybe we can have
-two versions of console_unlock().
+The following issues are described in exfat's TODO.
+> clean up the remaining vol_type checks, which are of two types:
+> some are ?: operators with magic numbers, and the rest are places
+> where we're doing stuff with '.' and '..'.
 
-	-ss
+The vol_type variable is always set to 'EXFAT'.
+The variable checks are unnessesary, so remove unused code.
+
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Reviewed-by: Mori Takahiro <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+Changes in v2:
+- Remove wrong check in exfat_readdir(), as suggested by Dan Carpenter.
+- Update comment in exfat_readdir().
+
+ drivers/staging/exfat/exfat.h       |  1 -
+ drivers/staging/exfat/exfat_core.c  | 26 +++----------
+ drivers/staging/exfat/exfat_super.c | 60 ++++++++++-------------------
+ 3 files changed, 27 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 4d87360fab35..28d245b10e82 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -518,7 +518,6 @@ struct buf_cache_t {
+ 
+ struct fs_info_t {
+ 	u32      drv;                    /* drive ID */
+-	u32      vol_type;               /* volume FAT type */
+ 	u32      vol_id;                 /* volume serial number */
+ 
+ 	u64      num_sectors;            /* num of sectors in volume */
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index 07b460d01334..5a686289a1db 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -1560,11 +1560,7 @@ static s32 search_deleted_or_unused_entry(struct super_block *sb,
+ 			if (num_empty >= num_entries) {
+ 				p_fs->hint_uentry.dir = CLUSTER_32(~0);
+ 				p_fs->hint_uentry.entry = -1;
+-
+-				if (p_fs->vol_type == EXFAT)
+-					return dentry - (num_entries - 1);
+-				else
+-					return dentry;
++				return dentry - (num_entries - 1);
+ 			}
+ 		}
+ 
+@@ -1914,7 +1910,7 @@ s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
+ 
+ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
+ {
+-	int i, count = 0;
++	int i;
+ 	s32 dentries_per_clu;
+ 	u32 type;
+ 	struct chain_t clu;
+@@ -1943,15 +1939,7 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
+ 
+ 			if (type == TYPE_UNUSED)
+ 				return true;
+-			if ((type != TYPE_FILE) && (type != TYPE_DIR))
+-				continue;
+-
+-			if (p_dir->dir == CLUSTER_32(0)) /* FAT16 root_dir */
+-				return false;
+-
+-			if (p_fs->vol_type == EXFAT)
+-				return false;
+-			if ((p_dir->dir == p_fs->root_dir) || ((++count) > 2))
++			if ((type == TYPE_FILE) || (type == TYPE_DIR))
+ 				return false;
+ 		}
+ 
+@@ -2128,7 +2116,6 @@ s32 exfat_mount(struct super_block *sb, struct pbr_sector_t *p_pbr)
+ 	p_fs->num_clusters = GET32(p_bpb->clu_count) + 2;
+ 	/* because the cluster index starts with 2 */
+ 
+-	p_fs->vol_type = EXFAT;
+ 	p_fs->vol_id = GET32(p_bpb->vol_serial);
+ 
+ 	p_fs->root_dir = GET32(p_bpb->root_cluster);
+@@ -2165,7 +2152,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
+ 
+ 	clu.dir = CLUSTER_32(~0);
+ 	clu.size = 0;
+-	clu.flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	clu.flags = 0x03;
+ 
+ 	/* (1) allocate a cluster */
+ 	ret = exfat_alloc_cluster(sb, 1, &clu);
+@@ -2198,7 +2185,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
+ 	fid->entry = dentry;
+ 
+ 	fid->attr = ATTR_SUBDIR;
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 	fid->size = size;
+ 	fid->start_clu = clu.dir;
+ 
+@@ -2215,7 +2202,6 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+ 	s32 ret, dentry, num_entries;
+ 	struct dos_name_t dos_name;
+ 	struct super_block *sb = inode->i_sb;
+-	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname, &num_entries,
+ 					   &dos_name);
+@@ -2247,7 +2233,7 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+ 	fid->entry = dentry;
+ 
+ 	fid->attr = ATTR_ARCHIVE | mode;
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index b81d2a87b82e..da4ee387b70b 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -494,7 +494,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+ 	if (p_fs->used_clusters == UINT_MAX)
+ 		p_fs->used_clusters = exfat_count_used_clusters(sb);
+ 
+-	info->FatType = p_fs->vol_type;
++	info->FatType = EXFAT;
+ 	info->ClusterSize = p_fs->cluster_size;
+ 	info->NumClusters = p_fs->num_clusters - 2; /* clu 0 & 1 */
+ 	info->UsedClusters = p_fs->used_clusters;
+@@ -602,7 +602,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+ 
+ 		fid->size = exfat_get_entry_size(ep2);
+ 		if ((fid->type == TYPE_FILE) && (fid->size == 0)) {
+-			fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++			fid->flags = 0x03;
+ 			fid->start_clu = CLUSTER_32(~0);
+ 		} else {
+ 			fid->flags = exfat_get_entry_flag(ep2);
+@@ -1095,7 +1095,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+ 	fid->size = new_size;
+ 	fid->attr |= ATTR_ARCHIVE;
+ 	if (new_size == 0) {
+-		fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++		fid->flags = 0x03;
+ 		fid->start_clu = CLUSTER_32(~0);
+ 	}
+ 
+@@ -1203,14 +1203,6 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+ 
+ 	dentry = fid->entry;
+ 
+-	/* check if the old file is "." or ".." */
+-	if (p_fs->vol_type != EXFAT) {
+-		if ((olddir.dir != p_fs->root_dir) && (dentry < 2)) {
+-			ret = -EPERM;
+-			goto out2;
+-		}
+-	}
+-
+ 	ep = get_entry_in_dir(sb, &olddir, dentry, NULL);
+ 	if (!ep) {
+ 		ret = -ENOENT;
+@@ -1342,7 +1334,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+ 
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 
+ #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+ 	fs_sync(sb, true);
+@@ -2020,12 +2012,6 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ 	dentry = fid->entry;
+ 
+-	/* check if the file is "." or ".." */
+-	if (p_fs->vol_type != EXFAT) {
+-		if ((dir.dir != p_fs->root_dir) && (dentry < 2))
+-			return -EPERM;
+-	}
+-
+ 	/* acquire the lock for file system critical section */
+ 	mutex_lock(&p_fs->v_mutex);
+ 
+@@ -2048,7 +2034,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+ 
+ 	fid->size = 0;
+ 	fid->start_clu = CLUSTER_32(~0);
+-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
++	fid->flags = 0x03;
+ 
+ #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+ 	fs_sync(sb, true);
+@@ -2073,8 +2059,6 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
+ {
+ 	struct inode *inode = file_inode(filp);
+ 	struct super_block *sb = inode->i_sb;
+-	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+-	struct fs_info_t *p_fs = &sbi->fs_info;
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 	struct dir_entry_t de;
+ 	unsigned long inum;
+@@ -2084,24 +2068,22 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
+ 	__lock_super(sb);
+ 
+ 	cpos = ctx->pos;
+-	/* Fake . and .. for the root directory. */
+-	if ((p_fs->vol_type == EXFAT) || (inode->i_ino == EXFAT_ROOT_INO)) {
+-		while (cpos < 2) {
+-			if (inode->i_ino == EXFAT_ROOT_INO)
+-				inum = EXFAT_ROOT_INO;
+-			else if (cpos == 0)
+-				inum = inode->i_ino;
+-			else /* (cpos == 1) */
+-				inum = parent_ino(filp->f_path.dentry);
+-
+-			if (!dir_emit_dots(filp, ctx))
+-				goto out;
+-			cpos++;
+-			ctx->pos++;
+-		}
+-		if (cpos == 2)
+-			cpos = 0;
++	/* Fake . and .. for any directory. */
++	while (cpos < 2) {
++		if (inode->i_ino == EXFAT_ROOT_INO)
++			inum = EXFAT_ROOT_INO;
++		else if (cpos == 0)
++			inum = inode->i_ino;
++		else /* (cpos == 1) */
++			inum = parent_ino(filp->f_path.dentry);
++		
++		if (!dir_emit_dots(filp, ctx))
++			goto out;
++		cpos++;
++		ctx->pos++;
+ 	}
++	if (cpos == 2)
++		cpos = 0;
+ 	if (cpos & (DENTRY_SIZE - 1)) {
+ 		err = -ENOENT;
+ 		goto out;
+@@ -3345,7 +3327,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 			return -EIO;
+ 
+ 	} else {
+-		info.FatType = p_fs->vol_type;
++		info.FatType = EXFAT;
+ 		info.ClusterSize = p_fs->cluster_size;
+ 		info.NumClusters = p_fs->num_clusters - 2;
+ 		info.UsedClusters = p_fs->used_clusters;
+-- 
+2.25.0
+
