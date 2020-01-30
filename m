@@ -2,97 +2,164 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3C9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17CDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFC420CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrRv+ayu"
+	by mail.kernel.org (Postfix) with ESMTP id 8292E206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgA3QWf (ORCPT
+        id S1727369AbgA3QXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:22:35 -0500
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:38856 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3QWf (ORCPT
+        Thu, 30 Jan 2020 11:23:10 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727333AbgA3QXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:22:35 -0500
-Received: by mail-lj1-f182.google.com with SMTP id w1so4021470ljh.5;
-        Thu, 30 Jan 2020 08:22:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8ydSULXhpnS+IHlEO6mcIkif2rvznLkOx5g93ANwtj4=;
-        b=YrRv+ayu7UpfrV7pGLy+a1wa+oHB5N0itiEYbS0LqezYldLZ/c5CbJ9JuJueg/ZIN8
-         ejFl4HxejjDlj5znzvNDPmX7FC2r4Iq2JwbkdXdjxaX4mufNsu39LSXsuu02VtONt8bt
-         gLq1RkSU5ixbkximWiTgdoFw1RLbmbdyCmoWbKBgUHvBb4TNbxHMhS4zG0ii7hJFt8xp
-         GYF9XGi7MNZSrWpWESncKX6fFdJYOU3Jm2xgyB4zOgz52mwhUMOJV0S3Fw/bNdRoJp9b
-         IHSgAcsDWGGN7BShK9aDO40u4jM8g+/MSRnAwcbW3rsXVkBXgvJvvLgHPH73WZTFvF+k
-         SeGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8ydSULXhpnS+IHlEO6mcIkif2rvznLkOx5g93ANwtj4=;
-        b=YohuPuZdOZ/33lHb+urHDqeVFN2Ah+/Fsvh5rdkr41l+uLS55oKHmPZFraCMk6tB4Z
-         +G1u0hMII3izYjjxbD2sLcXfFrPHSOhByWNfmvhi23viRfS+uHNyHV03miW7OjYyY98o
-         FYnfc2KYaoktBYbYwlKLNTgtP/cPmqbs7PahI0OsbsRpuTSjsiMo2cWno56Lg6fvvNQ7
-         leoP1XGSPpqv7aihhk6/aaFBDL91y6wrHU8a6e4l3qOtvH0JiKmPFG4qcc3C2TClXnSy
-         a1u0he3UaGhc2kgtEI4A0EJ78bSJsxapKif476f4/1vxlJuJD7I1S5xLYp/Eq2k6OiK2
-         4z0A==
-X-Gm-Message-State: APjAAAXcnysq+TQP31n2shNcMnWkMSWruJQbZMRTrBdnJ6hsy3TOvNM8
-        f/2vKwBROILNjtK+OSr82/U=
-X-Google-Smtp-Source: APXvYqygtCrUmUdUJMmbcfRWxioa9pHzvzUKG7bRsZbCukhjXSx3+2knDTwFGBmnS2g5idn/hQCveg==
-X-Received: by 2002:a2e:9d0f:: with SMTP id t15mr3339882lji.171.1580401351910;
-        Thu, 30 Jan 2020 08:22:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q10sm3258034ljj.60.2020.01.30.08.22.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 08:22:31 -0800 (PST)
-Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-6-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ef701838-be43-e42c-9245-b28cda5ed9bb@gmail.com>
-Date:   Thu, 30 Jan 2020 19:22:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1580380422-3431-6-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 30 Jan 2020 11:23:10 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UGMqBd075603
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:23:09 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xu5q6gw6q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:23:09 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 30 Jan 2020 16:23:07 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 Jan 2020 16:23:04 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UGN3nB39780488
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 16:23:03 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CC1742041;
+        Thu, 30 Jan 2020 16:23:03 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 746F54203F;
+        Thu, 30 Jan 2020 16:23:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.199.205])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jan 2020 16:23:02 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH v3 1/2] ima: support calculating the boot aggregate based on non-SHA1 algorithms
+Date:   Thu, 30 Jan 2020 11:22:42 -0500
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 20013016-0016-0000-0000-000002E23C14
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013016-0017-0000-0000-00003345077F
+Message-Id: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_05:2020-01-28,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 mlxscore=0 bulkscore=0 spamscore=0 suspectscore=1
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.01.2020 13:33, Sameer Pujar пишет:
-...
-> +static int tegra_ahub_probe(struct platform_device *pdev)
-> +{
-> +	struct tegra_ahub *ahub;
-> +	void __iomem *regs;
-> +	int ret;
-> +
-> +	ahub = devm_kcalloc(&pdev->dev, 1, sizeof(*ahub), GFP_KERNEL);
-> +	if (!ahub)
-> +		return -ENOMEM;
+The boot aggregate is a cumulative SHA1 hash over TPM registers 0 - 7.
+NIST has depreciated the usage of SHA1 in most instances.  Instead of
+continuing to use SHA1 to calculate the boot_aggregate, use the same
+hash algorithm for reading the TPM PCRs as for calculating the boot
+aggregate digest.  Preference is given to the configured IMA default
+hash algorithm.
 
-ahub = devm_kzalloc(&pdev->dev, sizeof(*ahub), GFP_KERNEL);
+Although the IMA measurement list boot_aggregate template data contains
+the hash algorithm followed by the digest, allowing verifiers (e.g.
+attesttaion servers) to calculate and verify the boot_aggregate, the
+verifiers might not have the knowledge of what constitutes a good value
+based on a different hash algorithm.
+
+Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>  # using common alg
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/ima_init.c | 41 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 195cb4079b2b..e79fdd8cc860 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -27,7 +27,7 @@ struct tpm_chip *ima_tpm_chip;
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+  *
+- * Calculate the boot aggregate, a SHA1 over tpm registers 0-7,
++ * Calculate the boot aggregate, a hash over tpm registers 0-7,
+  * assuming a TPM chip exists, and zeroes if the TPM chip does not
+  * exist.  Add the boot aggregate measurement to the measurement
+  * list and extend the PCR register.
+@@ -49,18 +49,49 @@ static int __init ima_add_boot_aggregate(void)
+ 					     .filename = boot_aggregate_name };
+ 	int result = -ENOMEM;
+ 	int violation = 0;
++	int i;
+ 	struct {
+ 		struct ima_digest_data hdr;
+-		char digest[TPM_DIGEST_SIZE];
++		char digest[TPM_MAX_DIGEST_SIZE];
+ 	} hash;
+ 
+ 	memset(iint, 0, sizeof(*iint));
+ 	memset(&hash, 0, sizeof(hash));
+ 	iint->ima_hash = &hash.hdr;
+-	iint->ima_hash->algo = HASH_ALGO_SHA1;
+-	iint->ima_hash->length = SHA1_DIGEST_SIZE;
+-
++	iint->ima_hash->algo = ima_hash_algo;	/* preferred algorithm */
++	iint->ima_hash->length = hash_digest_size[ima_hash_algo];
++
++	/*
++	 * With TPM 2.0 hash agility, TPM chips could support multiple TPM
++	 * PCR banks, allowing firmware to configure and enable different
++	 * banks.  The SHA1 bank is not necessarily enabled.
++	 *
++	 * Use the same hash algorithm for reading the TPM PCRs as for
++	 * calculating the boot aggregate digest.  Preference is given to
++	 * the configured IMA default hash algorithm.  Otherwise, use the
++	 * TPM required banks - SHA256 for TPM 2.0, SHA1 for TPM 1.2.
++	 */
+ 	if (ima_tpm_chip) {
++		for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
++			if (ima_hash_algo ==
++			    ima_tpm_chip->allocated_banks[i].crypto_id)
++				break;
++		}
++
++		/*
++		 * The IMA default hash algo is not an enabled TPM PCR
++		 * bank, use the TPM required bank.
++		 */
++		if (i == ima_tpm_chip->nr_allocated_banks) {
++			if (ima_tpm_chip->flags & TPM_CHIP_FLAG_TPM2) {
++				iint->ima_hash->algo = HASH_ALGO_SHA256;
++				iint->ima_hash->length = SHA256_DIGEST_SIZE;
++			} else {
++				iint->ima_hash->algo = HASH_ALGO_SHA1;
++				iint->ima_hash->length = SHA1_DIGEST_SIZE;
++			}
++		}
++
+ 		result = ima_calc_boot_aggregate(&hash.hdr);
+ 		if (result < 0) {
+ 			audit_cause = "hashing_error";
+-- 
+2.7.5
+
