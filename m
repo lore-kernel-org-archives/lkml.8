@@ -2,75 +2,160 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B835BC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C1FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE6F206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD92206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Tsy8nAO0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgA3LXq (ORCPT
+        id S1727186AbgA3LbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:23:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:51236 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbgA3LXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:23:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBFFB328;
-        Thu, 30 Jan 2020 03:23:45 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8139E3F67D;
-        Thu, 30 Jan 2020 03:23:44 -0800 (PST)
-Date:   Thu, 30 Jan 2020 11:23:38 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, jeremy.linton@arm.com,
-        arnd@arndb.de, olof@lixom.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, guohanjun@huawei.com,
-        gregkh@linuxfoundation.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH RFC 1/2] ACPI/PPTT: Add acpi_pptt_get_package_info() API
-Message-ID: <20200130112338.GA54532@bogus>
-References: <1580210059-199540-1-git-send-email-john.garry@huawei.com>
- <1580210059-199540-2-git-send-email-john.garry@huawei.com>
- <20200128123415.GB36168@bogus>
+        Thu, 30 Jan 2020 06:31:22 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44133 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgA3LbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 06:31:21 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so2901869ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 03:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/EN520UCUxsEUBwp+gxS6OoGlcVQKRNBVBF0BZx9y+I=;
+        b=Tsy8nAO0PvaScoyPHxQ8u0Q+uBQzLnebXEkKCAg+P2fPtHalLWm98o3bNIETmJk5Ax
+         GIRK0uSiHJ59wddWXiQye/G8OPgZv2mm0LsDsZ2nZHJirH3IYNo46TkDYqgz5CMTQ1xw
+         3wr3AseYMfQDfaItEw9mxy6wVkEHMXK3pBatYbOrO+QJm5HvMdWQdcvT4UvyPjEjlV2I
+         c7o3jEmW8+sHIEpnAt1EMA8iI5ykE01yWc3XdnCvW/XjyKW71c9UFc0YbgGm38DCjXvU
+         4b7+TJJVVG8NR6O6Z0y2TSvGBoBUJu7xGq45uwGY0olDpcFxUsT1bVJAtVtVMKT7uqdU
+         My4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/EN520UCUxsEUBwp+gxS6OoGlcVQKRNBVBF0BZx9y+I=;
+        b=b2xHNcQW7bD5pvVu4uHRy6djpet3L57cFiY2vAgxA6lydyAVbLM2dGLgLvKspVu0bk
+         G/yBn8wcFTWsiq2Z5yQBMvSChXfkgtZuKtS7DUgRp5TZu8sphLPHcjH9si/1Kx+5Ugcc
+         t2F88kpHTaoRTT3VmWAtPY0Kkz3M9KdpbZMOXIEu6z8ODWoBEQzqxOEGXafK13xu56op
+         SroxEY+FhASEFiYfSkbMCC8j7K60mk6Xc0UWUioiPejloG5oTjsF0QURDJDMoC1q7KHG
+         biGmO5McE8+Lr6XapBOvijP96fzxk1x+Lx4zOIA/N9zoka6LCFNNZ3VbBuog9R08Z4XT
+         hBDQ==
+X-Gm-Message-State: APjAAAW1lVOxRJ9AZAAznxezs34i59QIYzjs+PBcoWWABNhpQ0AOmTsS
+        0+OCGcHScreFdYxcRtHUMRzXiQ==
+X-Google-Smtp-Source: APXvYqzOfHleShWYEZ7+vculAYaLdAq1R8IjRRLv6oV11NywrAJ0QawfN5bbH06GtSQcqK2Wevv/Xw==
+X-Received: by 2002:a2e:9218:: with SMTP id k24mr2468907ljg.262.1580383878986;
+        Thu, 30 Jan 2020 03:31:18 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id u25sm2683666ljj.70.2020.01.30.03.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 03:31:18 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id C35F8100B00; Thu, 30 Jan 2020 14:31:26 +0300 (+03)
+Date:   Thu, 30 Jan 2020 14:31:26 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2 4/8] mm/gup: track FOLL_PIN pages
+Message-ID: <20200130113126.5ftq4gd5k7o7tipj@box>
+References: <20200129032417.3085670-1-jhubbard@nvidia.com>
+ <20200129032417.3085670-5-jhubbard@nvidia.com>
+ <20200129135153.knie7ptvsxcgube6@box>
+ <0be743df-e9af-6da9-c593-9e25ab194acf@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128123415.GB36168@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0be743df-e9af-6da9-c593-9e25ab194acf@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 12:34:15PM +0000, Sudeep Holla wrote:
-> On Tue, Jan 28, 2020 at 07:14:18PM +0800, John Garry wrote:
-> > The ACPI PPTT ID structure (see 6.2 spec, section 5.2.29.3) allows the
-> > vendor to provide an identifier (or vendor specific part number) for a
-> > particular processor hierarchy node structure. That may be a processor
-> > identifier for a processor node, or some chip identifier for a processor
-> > package node.
-> >
->
-> Unfortunately, there were plans to deprecate this in favour of the new
-> SOC_ID SMCCC API[1]. I am not sure if you or anyone in your company have
-> access to UEFI ASWG mantis where you can look for the ECR for the PPTT
-> Type 2 deprecation. I understand it's not ideal, but we need to converge,
-> please take a look at both before further discussion.
->
-> I personally would not prefer to add the support when I know it is getting
-> deprecated. I am not sure on kernel community policy on the same.
->
+On Wed, Jan 29, 2020 at 10:44:50PM -0800, John Hubbard wrote:
+> On 1/29/20 5:51 AM, Kirill A. Shutemov wrote:
+> > > +/**
+> > > + * page_dma_pinned() - report if a page is pinned for DMA.
+> > > + *
+> > > + * This function checks if a page has been pinned via a call to
+> > > + * pin_user_pages*().
+> > > + *
+> > > + * For non-huge pages, the return value is partially fuzzy: false is not fuzzy,
+> > > + * because it means "definitely not pinned for DMA", but true means "probably
+> > > + * pinned for DMA, but possibly a false positive due to having at least
+> > > + * GUP_PIN_COUNTING_BIAS worth of normal page references".
+> > > + *
+> > > + * False positives are OK, because: a) it's unlikely for a page to get that many
+> > > + * refcounts, and b) all the callers of this routine are expected to be able to
+> > > + * deal gracefully with a false positive.
+> > 
+> > I wounder if we should reverse the logic and name -- page_not_dma_pinned()
+> > or something -- too emphasise that we can only know for sure when the page
+> > is not pinned, but not necessary when it is.
+> > 
+> 
+> This is an interesting point. I agree that it's worth maybe adding information
+> into the function name, but I'd like to keep the bool "positive", because there
+> will be a number of callers that ask "if it is possibly dma-pinned, then ...".
+> So combining that, how about this function name:
+> 
+> 	page_maybe_dma_pinned()
+> 
+> , which I could live with and I think would be acceptable?
 
-OK, the details on the proposal to deprecate can be now found in UEFI
-bugzilla [1]
+I would still prefer the negative version, but up to you.
 
---
-Regards,
-Sudeep
+> > I see opportunity to split the patch further.
+> 
+> 
+> ah, OK. I wasn't sure how far to go before I get tagged for "excessive
+> patch splitting"! haha. Anyway, are you suggesting to put the
+> page_ref_sub_return() routine into it's own patch?
+> 
+> Another thing to split out would be adding the flags to the remaining
+> functions, such as undo_dev_pagemap(). That burns quite a few lines of
+> diff. Anything else to split out?
 
-[1] https://bugzilla.tianocore.org/show_bug.cgi?id=2492
+Nothing I see immediately.
+
+> 
+> > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > > index 0a55dec68925..b1079aaa6f24 100644
+> > > --- a/mm/huge_memory.c
+> > > +++ b/mm/huge_memory.c
+> > > @@ -958,6 +958,11 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+> > >   	 */
+> > >   	WARN_ONCE(flags & FOLL_COW, "mm: In follow_devmap_pmd with FOLL_COW set");
+> > > +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> > > +	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
+> > > +			 (FOLL_PIN | FOLL_GET)))
+> > 
+> > Too many parentheses.
+> 
+> 
+> OK, I'll remove at least one. :)
+
+I see two.
+
+-- 
+ Kirill A. Shutemov
