@@ -2,159 +2,228 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C462C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAEEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBE920708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E63D20708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gUC0er51"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SQtPMKRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgA3VLB (ORCPT
+        id S1727708AbgA3VMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:11:01 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33532 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3VLB (ORCPT
+        Thu, 30 Jan 2020 16:12:49 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46946 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3VMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:11:01 -0500
-Received: by mail-il1-f194.google.com with SMTP id s18so4351237iln.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:10:59 -0800 (PST)
+        Thu, 30 Jan 2020 16:12:49 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so2273184pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:12:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PU5/cH0Wngrz1MgLpQX0MNgSDrR1feN6DXOeanfOIgU=;
-        b=gUC0er5187UO/d0eIo8H6Tjx7yQ48NFKfAnXOuOddehNzaTp/7NdSTtEcR0vk6CnPx
-         KQq74WRVprwoiDQOwaeavknl0iAx+YoJ1mcLV0k+IlX9ptMZgeKYe6N0PejT7cFrgP3I
-         XgeaIi5meYqQB13Qy8bBQC/OTD5cR2qJOfsHaaQ/HTNNvYIwnuH4Y3p5ORPj7Yaoiqev
-         zZeRSqysDb8V2bM3P8qOHebBNFxKOrZxTrYpF5C4al35aCS30gYSvKc2qfknefhjelYG
-         5yXnogmoZAzS0hn+MwWM+jpadGRI/cGgtF9p7Y0D3Y8QMjatSwvPKks6TDuDm9EjoY9z
-         yKkg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DL3Xj2gy1feowgW/Sg72hYm7o1TkTy8xgZkITqMjsW4=;
+        b=SQtPMKRtj01P5JJJGS396b8R3/3VeGV4/R0qVWQ0LNcuyKhXZKWXHympAr0KWSUzEp
+         HJsnhbaR0wQdSzKp2GquCd5O7h/XslBk3nd1vkThvsPahkHe/OZwg/G4Rhvk56OQsU7C
+         D+39eKvuEznG/23cEBUnljBFerE9MHyGZ9HOM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PU5/cH0Wngrz1MgLpQX0MNgSDrR1feN6DXOeanfOIgU=;
-        b=GztRQTVdI43/UXS/O/3KcJB4VyV6bAhM7cWVStyU3VAP3ZDb97+Zqvbv8KrsH8apaC
-         7M1lXcnGFqSQthNogq+WQeLM6+MXiledYdC/RXHWvQhGnlOZDDX7Niv0pxlVkoTurEML
-         79tMY6sS76yXjInkcdLfLmmgdZZRVDu4bIfHhX2+xoaR6l3Ed+YFUnMuy+0bF5jnuIYy
-         zvrl8JrWjvK0qWRimplqKFquoUoSL3A/UmHb8mf1ajTaBxP7Ni+Xnskl6wLh9lCrVIDI
-         D1V3CyX3L/+WNovNkkTVkxU1IIWIVHI7W+pNRcv2OMLJjupceqffMIaVNgEvv+ZafEW5
-         WoFg==
-X-Gm-Message-State: APjAAAXj5S2W3e6QJAa41OGlX8GgXpA3DX1U8CEMApNjWigwoGi5PBET
-        wcH+on1f5ydjNcepFhHlcQPgtKXtvdNwRQFCC3aomQ==
-X-Google-Smtp-Source: APXvYqzrztI9lG6S88/b67kLa+9IghKc8TeYLCFitVnLZ2reVJPOXcyj4RQJwicziNPFHZStIhjwP5IgL3SDbkxvGH0=
-X-Received: by 2002:a92:884e:: with SMTP id h75mr6301095ild.199.1580418658864;
- Thu, 30 Jan 2020 13:10:58 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DL3Xj2gy1feowgW/Sg72hYm7o1TkTy8xgZkITqMjsW4=;
+        b=Li+GMOnV1P8MlDwSio1dPeJYhr3dIqGruMQx5Bdp5PLxxXoROC1fiqBoHtSqqt6SQB
+         xQ67d4+53U7+91baxZyRGtvErYVLStYuq46ZU5O9lOu7+GgmyI+UDe7djVv0hGffYs9z
+         iz0PgsgnEE9sp4NKztP/vO29R82lb8vsMZ+UtT1yKV7P8KW79U+NSry1YzHNJxDf9xdL
+         qUMT7T8HXAHMWTYakKDj9/bNsVeVcwyKmAbKu8SXNufV92Mt8+n4Jmx7pC5bASbp68cz
+         FOOekqsx5RZwB8yFEkZJ2LLeWX/OYJAwPwFW17WDjSSX7t4yMdhh78ROuZ2rp1FLQ+NJ
+         zJ5A==
+X-Gm-Message-State: APjAAAWAsArL6mycURY27qCnlePnLDLTsAuA1qjhFKiFt68tT6yxu7Ha
+        COJu7llEX7D/op1EiFVQ4HGJzw==
+X-Google-Smtp-Source: APXvYqyydq94vw+3/2Uuxvh7TPDi7rgVwiLWorocrqm2vUTw+2MylyCLOwQKrq2TEnAs18vfsj+N1w==
+X-Received: by 2002:a63:4d4c:: with SMTP id n12mr6860359pgl.212.1580418768475;
+        Thu, 30 Jan 2020 13:12:48 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id ci5sm4343871pjb.5.2020.01.30.13.12.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 13:12:48 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>, jeffrey.l.hugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, harigovi@codeaurora.org,
+        devicetree@vger.kernel.org, mka@chromium.org,
+        kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-clk@vger.kernel.org, hoegsberg@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
+Date:   Thu, 30 Jan 2020 13:12:16 -0800
+Message-Id: <20200130211231.224656-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
- <20200106125352.GB9198@dhcp22.suse.cz> <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
- <20200108114952.GR32178@dhcp22.suse.cz> <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
- <20200127141637.GL1183@dhcp22.suse.cz> <CAA25o9QuA_9EoivWo-DuJsWoHCdBm2wio3G8JYxuTfQErT42kg@mail.gmail.com>
- <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
- <CAA25o9RHKerPJNW6h5d6W48q1qA3wYJAmhOBU3XiBHwMcEChhA@mail.gmail.com> <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com>
-From:   Luigi Semenzato <semenzato@google.com>
-Date:   Thu, 30 Jan 2020 13:10:47 -0800
-Message-ID: <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Mon, Jan 27, 2020 at 6:21 PM Luigi Semenzato <semenzato@google.com> wrote:
-> >
-> > On Mon, Jan 27, 2020 at 8:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Mon, Jan 27, 2020 at 5:13 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > >
-> > > > On Mon, Jan 27, 2020 at 6:16 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > >
-> > > > > On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
-> > > > > [...]
-> > > > > > The purpose of my documentation patch was to make it clearer that
-> > > > > > hibernation may fail in situations in which suspend-to-RAM works; for
-> > > > > > instance, when there is no swap, and anonymous pages are over 50% of
-> > > > > > total RAM.  I will send a new version of the patch which hopefully
-> > > > > > makes this clearer.
-> > > > >
-> > > > > I was under impression that s2disk is pretty much impossible without any
-> > > > > swap.
-> > > >
-> > > > I am not sure what you mean by "swap" here.  S2disk needs a swap
-> > > > partition for storing the image, but that partition is not used for
-> > > > regular swap.
-> > >
-> > > That's not correct.
-> > >
-> > > The swap partition (or file) used by s2disk needs to be made active
-> > > before it can use it and the mm subsystem is also able to use it for
-> > > regular swap then.
-> >
-> > OK---I had this wrong, thanks.
-> >
-> > > >  If there is no swap, but more than 50% of RAM is free
-> > > > or reclaimable, s2disk works fine.  If anonymous is more than 50%,
-> > > > hibernation can still work, but swap needs to be set up (in addition
-> > > > to the space for the hibernation image).  The setup is not obvious and
-> > > > I don't think that the documentation is clear on this.
-> > >
-> > > Well, the entire contents of RAM must be preserved, this way or
-> > > another, during hibernation.  That should be totally obvious to anyone
-> > > using it really.
-> >
-> > Yes, that's obvious.
-> >
-> > > Some of the RAM contents is copies of data already there in the
-> > > filesystems on persistent storage and that does not need to be saved
-> > > again.  Everything else must be saved and s2disk (and Linux
-> > > hibernation in general) uses active swap space to save these things.
-> > > This implies that in order to hibernate the system, you generally need
-> > > the amount of swap space equal to the size of RAM minus the size of
-> > > files mapped into memory.
-> > >
-> > > So, to be on the safe side, the total amount of swap space to be used
-> > > for hibernation needs to match the size of RAM (even though
-> > > realistically it may be smaller than that in the majority of cases).
-> >
-> > This all makes sense, but we do this:
-> >
-> > -- add resume=/dev/sdc to the command line
-> > -- attach a disk (/dev/sdc) with size equal to RAM
-> > -- mkswap /dev/sdc
-> > -- swapon /dev/sdc
-> > -- echo disk > /sys/power/state
-> >
-> > and the last operation fails with ENOMEM.  Are we doing something
-> > wrong?  Are we hitting some other mm bug?
->
-> I would expect this to work, so the fact that it doesn't work for you
-> indicates a bug somewhere or at least an assumption that doesn't hold.
->
-> Can you please remind me what you do to trigger the unexpected behavior?
+The aim of this series is to get the dispcc and gpucc in a workable
+shape upstream for sc7180.  I personally wasn't focusing on (and
+didn't test much) videocc but pulled it along for the ride.
 
-Yes, I create processes that use a large amount of anon memory, more
-than 50% of RAM, like this:
+Most of the work in this series deals with the fact that the parenting
+info for these clock controllers was in a bad shape.  It looks like it
+was half transitioned from the old way of doing things (relying on
+global names) to the new way of doing things (putting the linkage in
+the device tree).  This should fully transition us.
 
-dd if=/dev/zero bs=1G count=1 | sleep infinity
+As part of this transition I update the sdm845.dtsi file to specify
+the info as per the new way of doing things.  Although I've now put
+the linkage info in the sdm845.dtsi file, though, I haven't updated
+the sdm845 clock drivers in Linux so they still work via the global
+name matching.  It's left as an exercise to the reader to update the
+sdm845 clock drivers in Linux.
 
-I think dd has a 2 GB limit, or around that number, so you'll need a
-few of those.
+This series passes these things for me on linux-next (next-20200129)
+after picking the recent gcc fix I posted [1]:
 
-Thanks!
+  for f in \
+    Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml \
+    Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml; do \
+        ARCH=arm64 make dtbs_check DT_SCHEMA_FILES=$f; \
+    done
+
+  I also tried this:
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    ARCH=arm64 make dt_binding_check | grep 'clock/qcom'
+  ...and that didn't seem to indicate problems.
+
+  I also tried this (make sure you don't run w/ -j64 or diff is hard):
+    # Delete broken yaml:
+    rm Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+    git checkout beforeMyCode
+    ARCH=arm64 make dt_binding_check > old.txt 2>&1
+    git checkout myCode
+    ARCH=arm64 make dt_binding_check > new.txt 2>&1
+    diff old.txt new.txt
+  ...and that didn't seem to indicate problems.
+
+I have confirmed that (with extra patches) the display/gpu come up on
+sc7180 and sdm845-cheza.  You can find the top of my downstream tree at:
+  https://crrev.com/c/2017976/4
+
+I have confirmed that sdm845-cheza display / GPU come up atop
+next-20200129, which is what this series is posted against.
+
+Compared to v2, this series has quite a few changes.  Mostly it's:
+- Always split into multiple files (Stephen).
+- Use internal names, not purist names (Taniya).
+- I realized that I forgot to update the sc7180 video clock controller
+  driver in v2.
+- A few other misc cleanups / fixes, see each patch for details.
+
+It feels like with this many patches there's very little chance I
+didn't do something stupid like make a tpyo or a paste-o paste-o,
+though I tried to cross-check as much as I could.  I apologize in
+advance for the stupid things I did that I should have known better
+about.
+
+[1] https://lore.kernel.org/r/20200129152458.v2.1.I4452dc951d7556ede422835268742b25a18b356b@changeid
+
+Changes in v3:
+- Add Matthias tag.
+- Added include file to description.
+- Added pointer to inlude file in description.
+- Added videocc include file.
+- Discovered / added new gcc input clock on sdm845.
+- Everyone but msm8998 now uses internal QC names.
+- Fixed typo grpahics => graphics
+- Newly discovered gcc_disp_gpll0_div_clk_src added.
+- Patch ("clk: qcom: Get rid of fallback...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...dispcc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...gpucc-sc7180") split out for v3.
+- Patch ("clk: qcom: Get rid of the test...videocc-sc7180") new for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in dispcc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in gpucc-sc7180...") split out for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in videocc-sc7180...") new for v3.
+- Split bindings into 3 files.
+- Split sc7180 and sdm845 into two files.
+- Split videocc bindings into 2 files.
+- Switched names to internal QC names rather than logical ones.
+- Unlike in v2, use internal name instead of purist name.
+- Updated commit description.
+
+Changes in v2:
+- Added includes
+- Changed various parent names to match bindings / driver
+- Patch ("arm64: dts: qcom: sdm845: Add...dispcc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...gpucc") new for v2.
+- Patch ("arm64: dts: qcom: sdm845: Add...videocc") new for v2.
+- Patch ("clk: qcom: rcg2: Don't crash...") new for v2.
+- Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,dispcc...") new for v2.
+- Patch ("dt-bindings: clock: Fix qcom,gpucc...") new for v2.
+
+Douglas Anderson (14):
+  clk: qcom: rcg2: Don't crash if our parent can't be found; return an
+    error
+  dt-bindings: clock: Fix qcom,dispcc bindings for sdm845/sc7180
+  arm64: dts: qcom: sdm845: Add the missing clocks on the dispcc
+  clk: qcom: Get rid of fallback global names for dispcc-sc7180
+  clk: qcom: Get rid of the test clock for dispcc-sc7180
+  clk: qcom: Use ARRAY_SIZE in dispcc-sc7180 for parent clocks
+  dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998
+  arm64: dts: qcom: sdm845: Add missing clocks / fix names on the gpucc
+  clk: qcom: Get rid of the test clock for gpucc-sc7180
+  clk: qcom: Use ARRAY_SIZE in gpucc-sc7180 for parent clocks
+  dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180
+  clk: qcom: Get rid of the test clock for videocc-sc7180
+  clk: qcom: Use ARRAY_SIZE in videocc-sc7180 for parent clocks
+  arm64: dts: qcom: sdm845: Add the missing clock on the videocc
+
+Taniya Das (1):
+  arm64: dts: sc7180: Add clock controller nodes
+
+ .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
+ ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+ .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
+ .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+ .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
+ ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
+ drivers/clk/qcom/clk-rcg2.c                   |  3 +
+ drivers/clk/qcom/dispcc-sc7180.c              | 45 +++------
+ drivers/clk/qcom/gpucc-sc7180.c               |  4 +-
+ drivers/clk/qcom/videocc-sc7180.c             |  4 +-
+ 14 files changed, 513 insertions(+), 140 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,dispcc.yaml => qcom,msm8998-gpucc.yaml} (51%)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml
+ rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (60%)
+
+-- 
+2.25.0.341.g760bfbb309-goog
+
