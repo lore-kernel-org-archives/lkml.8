@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06282C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29064C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAAB220702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F396A205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410256;
-	bh=7jlyodMR1hMib1vLo8tBYpdkJz1ljJqLkFdpx1YkWZc=;
+	s=default; t=1580410261;
+	bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z89Je5c1YSsd1a9jk8NaLf1FHdk2XTwFchn8hm+J2yvQh8XkJ5eynYYWBcGyVXnWB
-	 3g/OFsQ5aQiuCoNr/Qh4RQ6p8YoO2BLjSW3IlOP2YufNTRWazR3NTBNjm1FyxPE0sO
-	 s8sCW70SFrL4g130ASbivEmZTlXH+/y9BlU5zpuo=
+	b=16A7ZpfRhAdXgcaJ5243nQKHDQ4Z5lop31ti0/zge1KdWhGaCRu5nm1tLHNQJMtEB
+	 r9XGoLy9hCJR0Gikmh2zt0gmUY5fF+RaWRxE+KVp8SZ3j78GZnXixNf/+YWj5VPT4w
+	 /PoXDj/C7m5WvMosgq2TzYbV3y+YFvN4Ha1LMdKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbgA3SqQ (ORCPT
+        id S1731720AbgA3Su7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731123AbgA3SqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:04 -0500
+        id S1731161AbgA3SqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 230FB20674;
-        Thu, 30 Jan 2020 18:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E93220674;
+        Thu, 30 Jan 2020 18:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409963;
-        bh=7jlyodMR1hMib1vLo8tBYpdkJz1ljJqLkFdpx1YkWZc=;
+        s=default; t=1580409976;
+        bh=jN6ANbQqioYljWwZi7eZoRc2McZejpuPir7nTRbPY+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrHGxclw1KMYn3SsVyDUTF3hJs+JcbIJ5kIKPlSOI4WXcgC9c6CY0NIdVIKAviNyx
-         3TMH1XLaFt229TdBdXMF9vOocMqobqeqVIGndufZZZxE1FRax4lOB7H7kxFrstk93x
-         fpixHP2pgvadmuj8JT4n5qUYhmrJDzRed81wkRPA=
+        b=Yg0TCDrnLALwLQcdq/cPkT2T48qU9ROHcE1sJXBazWB7nmWmxD1oKxn1umZOibcXF
+         W9EoSJ3yTiQeVQTKb7DcntWpjkrZf8pK2nMsaEuGJFSm/wQLAYmVaHC6yqakBW5g1N
+         Vw79CEmMQmCt+u3N8sZg/ABfUv2MsyS/RckBcW50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 103/110] rsi: fix non-atomic allocation in completion handler
-Date:   Thu, 30 Jan 2020 19:39:19 +0100
-Message-Id: <20200130183625.791081129@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.4 108/110] KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
+Date:   Thu, 30 Jan 2020 19:39:24 +0100
+Message-Id: <20200130183626.144364351@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,84 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Andrew Murray <andrew.murray@arm.com>
 
-commit b9b9f9fea21830f85cf0148cd8dce001ae55ead1 upstream.
+commit 4942dc6638b07b5326b6d2faa142635c559e7cd5 upstream.
 
-USB completion handlers are called in atomic context and must
-specifically not allocate memory using GFP_KERNEL.
+On VHE systems arch.mdcr_el2 is written to mdcr_el2 at vcpu_load time to
+set options for self-hosted debug and the performance monitors
+extension.
 
-Fixes: a1854fae1414 ("rsi: improve RX packet handling in USB interface")
-Cc: stable <stable@vger.kernel.org> # 4.17
-Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Unfortunately the value of arch.mdcr_el2 is not calculated until
+kvm_arm_setup_debug() in the run loop after the vcpu has been loaded.
+This means that the initial brief iterations of the run loop use a zero
+value of mdcr_el2 - until the vcpu is preempted. This also results in a
+delay between changes to vcpu->guest_debug taking effect.
+
+Fix this by writing to mdcr_el2 in kvm_arm_setup_debug() on VHE systems
+when a change to arch.mdcr_el2 has been detected.
+
+Fixes: d5a21bcc2995 ("KVM: arm64: Move common VHE/non-VHE trap config in separate functions")
+Cc: <stable@vger.kernel.org> # 4.17.x-
+Suggested-by: James Morse <james.morse@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/rsi/rsi_91x_usb.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/arm64/kvm/debug.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -16,6 +16,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/types.h>
- #include <net/rsi_91x.h>
- #include "rsi_usb.h"
- #include "rsi_hal.h"
-@@ -29,7 +30,7 @@ MODULE_PARM_DESC(dev_oper_mode,
- 		 "9[Wi-Fi STA + BT LE], 13[Wi-Fi STA + BT classic + BT LE]\n"
- 		 "6[AP + BT classic], 14[AP + BT classic + BT LE]");
- 
--static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num);
-+static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t flags);
- 
- /**
-  * rsi_usb_card_write() - This function writes to the USB Card.
-@@ -285,7 +286,7 @@ static void rsi_rx_done_handler(struct u
- 	status = 0;
- 
- out:
--	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num))
-+	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num, GFP_ATOMIC))
- 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission", __func__);
- 
- 	if (status)
-@@ -307,7 +308,7 @@ static void rsi_rx_urb_kill(struct rsi_h
-  *
-  * Return: 0 on success, a negative error code on failure.
-  */
--static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num)
-+static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t mem_flags)
+--- a/arch/arm64/kvm/debug.c
++++ b/arch/arm64/kvm/debug.c
+@@ -101,7 +101,7 @@ void kvm_arm_reset_debug_ptr(struct kvm_
+ void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
  {
- 	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
- 	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
-@@ -337,7 +338,7 @@ static int rsi_rx_urb_submit(struct rsi_
- 			  rsi_rx_done_handler,
- 			  rx_cb);
+ 	bool trap_debug = !(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY);
+-	unsigned long mdscr;
++	unsigned long mdscr, orig_mdcr_el2 = vcpu->arch.mdcr_el2;
  
--	status = usb_submit_urb(urb, GFP_KERNEL);
-+	status = usb_submit_urb(urb, mem_flags);
- 	if (status) {
- 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission\n", __func__);
- 		dev_kfree_skb(skb);
-@@ -827,12 +828,12 @@ static int rsi_probe(struct usb_interfac
- 		rsi_dbg(INIT_ZONE, "%s: Device Init Done\n", __func__);
- 	}
+ 	trace_kvm_arm_setup_debug(vcpu, vcpu->guest_debug);
  
--	status = rsi_rx_urb_submit(adapter, WLAN_EP);
-+	status = rsi_rx_urb_submit(adapter, WLAN_EP, GFP_KERNEL);
- 	if (status)
- 		goto err1;
+@@ -197,6 +197,10 @@ void kvm_arm_setup_debug(struct kvm_vcpu
+ 	if (vcpu_read_sys_reg(vcpu, MDSCR_EL1) & (DBG_MDSCR_KDE | DBG_MDSCR_MDE))
+ 		vcpu->arch.flags |= KVM_ARM64_DEBUG_DIRTY;
  
- 	if (adapter->priv->coex_mode > 1) {
--		status = rsi_rx_urb_submit(adapter, BT_EP);
-+		status = rsi_rx_urb_submit(adapter, BT_EP, GFP_KERNEL);
- 		if (status)
- 			goto err_kill_wlan_urb;
- 	}
++	/* Write mdcr_el2 changes since vcpu_load on VHE systems */
++	if (has_vhe() && orig_mdcr_el2 != vcpu->arch.mdcr_el2)
++		write_sysreg(vcpu->arch.mdcr_el2, mdcr_el2);
++
+ 	trace_kvm_arm_set_dreg32("MDCR_EL2", vcpu->arch.mdcr_el2);
+ 	trace_kvm_arm_set_dreg32("MDSCR_EL1", vcpu_read_sys_reg(vcpu, MDSCR_EL1));
+ }
 
 
