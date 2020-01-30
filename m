@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C63AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565CBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9CE214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D13205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409708;
-	bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
+	s=default; t=1580409712;
+	bh=SSZBkAhW4Il/TRVH99TGWnSXMPf9K7zc2YX6XuW3fdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWiy1EO4cJtSZw3oQCDpKv4tVuqkMBLn1laNSLeS6VJaT8yHS+fFY1sxslHqKShyD
-	 HKAQnewyZnCD9R9T+wE9p8Qp4u3br76IvCiFTxJxabtxCMBjq7P8kfggFn2PfSM87G
-	 vTLuqHMsrERdczEi9USQzUcQCcn2Cp1rie45dD3Q=
+	b=SOlHLlqsb9GKU4HEYv2+xIXCftlwqT5a9KqXFAzc8wv5fDiMqw9JNqDSOFHVDCutx
+	 FkNjzE1IK6Eq2vAaLk2bXA2JBwjt9tmqdFpPjEWHrBoKz7YfNOtWOFrKlevJX8/lto
+	 BvG7TNP0D5PNB0GZUOEnCT1PXJXN4j0ZvvTbm/vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgA3Slr (ORCPT
+        id S1730255AbgA3Slv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:41:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49736 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:41:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbgA3Sln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:43 -0500
+        id S1730236AbgA3Slq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA00205F4;
-        Thu, 30 Jan 2020 18:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5582083E;
+        Thu, 30 Jan 2020 18:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409703;
-        bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
+        s=default; t=1580409705;
+        bh=SSZBkAhW4Il/TRVH99TGWnSXMPf9K7zc2YX6XuW3fdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuLpxkRCBTfLL1UxoJT2CfA//Z8FvFGOH1uwFCTJVJCep+wt7JgCE7SeMIy/56vNN
-         fgmnQCjmWJF+lftcEj/Bna1G/01+Wnhi3qgGEVPeb/7Yh+Z3AF4gFm62EUFKf+uKLf
-         Wa2Ku6Kbhb0tGjyBpZOsk8twuGIMJjLk/2TsU2/A=
+        b=w9IyqasUdrcn3UZuItCyKVc7FCju985qeLSCXvW6+QpJhJ1LTg6ljbhREcWf18dDs
+         uEugk9Oi20br6PJ5EepawAYIX2AlZj35OC1+0zll3YpWFCixhf5MIi92ixKKMtY4UD
+         iacKfs/9S5b6qJB3eZ/i5CNk4jiJ4IeFbN3CkQ10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.5 56/56] power/supply: ingenic-battery: Dont change scale if theres only one
-Date:   Thu, 30 Jan 2020 19:39:13 +0100
-Message-Id: <20200130183619.041405246@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 36/56] mvneta driver disallow XDP program on hardware buffer management
+Date:   Thu, 30 Jan 2020 19:38:53 +0100
+Message-Id: <20200130183615.531603716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,54 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Sven Auhagen <sven.auhagen@voleatech.de>
 
-commit 86b9182df8bb12610d4d6feac45a69f3ed57bfd2 upstream.
+[ Upstream commit 79572c98c554dcdb080bca547c871a51716dcdf8 ]
 
-The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
-range, or in low-precision mode with a 7.5V range. The code in place in
-this driver will select the proper scale according to the maximum
-voltage of the battery.
+Recently XDP Support was added to the mvneta driver
+for software buffer management only.
+It is still possible to attach an XDP program if
+hardware buffer management is used.
+It is not doing anything at that point.
 
-The JZ4770 however only has one mode, with a 6.6V range. If only one
-scale is available, there's no need to change it (and nothing to change
-it to), and trying to do so will fail with -EINVAL.
+The patch disallows attaching XDP programs to mvneta
+if hardware buffer management is used.
 
-Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
+I am sorry about that. It is my first submission and I am having
+some troubles with the format of my emails.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Artur Rojek <contact@artur-rojek.eu>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+v4 -> v5:
+- Remove extra tabs
+
+v3 -> v4:
+- Please ignore v3 I accidentally submitted
+  my other patch with git-send-mail and v4 is correct
+
+v2 -> v3:
+- My mailserver corrupted the patch
+  resubmission with git-send-email
+
+v1 -> v2:
+- Fixing the patches indentation
+
+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/power/supply/ingenic-battery.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/power/supply/ingenic-battery.c
-+++ b/drivers/power/supply/ingenic-battery.c
-@@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(str
- 		return -EINVAL;
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -4226,6 +4226,12 @@ static int mvneta_xdp_setup(struct net_d
+ 		return -EOPNOTSUPP;
  	}
  
--	return iio_write_channel_attribute(bat->channel,
--					   scale_raw[best_idx],
--					   scale_raw[best_idx + 1],
--					   IIO_CHAN_INFO_SCALE);
-+	/* Only set scale if there is more than one (fractional) entry */
-+	if (scale_len > 2) {
-+		ret = iio_write_channel_attribute(bat->channel,
-+						  scale_raw[best_idx],
-+						  scale_raw[best_idx + 1],
-+						  IIO_CHAN_INFO_SCALE);
-+		if (ret)
-+			return ret;
++	if (pp->bm_priv) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "Hardware Buffer Management not supported on XDP");
++		return -EOPNOTSUPP;
 +	}
 +
-+	return 0;
- }
- 
- static enum power_supply_property ingenic_battery_properties[] = {
+ 	need_update = !!pp->xdp_prog != !!prog;
+ 	if (running && need_update)
+ 		mvneta_stop(dev);
 
 
