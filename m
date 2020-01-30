@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA338C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702AB20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0F32082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409917;
-	bh=8SpjqQJ6XefrrOUtpsnLYmKICQ97bfsQ1FpvcQPhArE=;
+	s=default; t=1580409919;
+	bh=dpSH7wm6P98BNVbE4Ngg343Teh85IXSxwMZFTo00bpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUxDyyq+V4QZC9kRuPv18Xmp2usF53l5KVmTO/rHcLFiLTJyu4Ay+t6OuxtRoeIpC
-	 CaD/yvPd95fn1wwRtkNaiBub+xUJEHhSaMrGLY6k7SHHBY484+eKOUu7ASHayai+G8
-	 Rz88Y0uuatBe3nRxu/qgweN4TGg9sq8ClGHgsWYU=
+	b=X5FpOqRrqgvx1S3asRubKbrKywG4wZOZXAghl5yQxJ2FToGx/rKlZB8FehnXXD9zg
+	 0282LrsiPgcGqHWN3kd9SoAs7s1JtAIkhA2RKP+MTm9YILZNjVUPuNJJiVxPmlD4tK
+	 xZOJx+5VdTJA6a2uA8jHg3C6zBqztXzPoUWjpNBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbgA3SpQ (ORCPT
+        id S1731003AbgA3SpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730981AbgA3SpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:13 -0500
+        id S1730986AbgA3SpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73DB32082E;
-        Thu, 30 Jan 2020 18:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D62B320CC7;
+        Thu, 30 Jan 2020 18:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409912;
-        bh=8SpjqQJ6XefrrOUtpsnLYmKICQ97bfsQ1FpvcQPhArE=;
+        s=default; t=1580409915;
+        bh=dpSH7wm6P98BNVbE4Ngg343Teh85IXSxwMZFTo00bpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXmdeo5ZVAork8Hx6BDZYxGJ5FPRpnijTxgb5YwRTq+aM/ksd6R/NISFK15eLV4I3
-         dGkuVUc/WxHmQGpt71j58AIIKzB4+3org+7B8d7X5m8mpe0gAFhYyzp9xsDXPYN5yZ
-         4XLtVqH+YLKYUvKAJ1CdoxRglpcra5FKvwOMa964=
+        b=PXhf2mPwHX3+ecBZqT6Y8kq3M7/aTUn+846r5O/R5C0yP1wDa6h6stDaQ9oLwO/zJ
+         xgc113ntYiM5qgBYAYHcgjfA3eNNdjc+JGoW5reaQjfFYuqaqfSXmSHIpqNB0sWRfQ
+         SYPeZJ/ePgZiN1ZbVz9dRtXhHsa55qBHrU+XEMjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Slawomir Pawlowski <slawomir.pawlowski@intel.com>,
-        Przemek Kitszel <przemyslawx.kitszel@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Thomas Voegtle <tv@lio96.de>,
+        Jan Pieter van Woerkom <jp@jpvw.nl>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/110] PCI: Add DMA alias quirk for Intel VCA NTB
-Date:   Thu, 30 Jan 2020 19:38:57 +0100
-Message-Id: <20200130183623.811457664@linuxfoundation.org>
+Subject: [PATCH 5.4 082/110] media: dvbsky: add support for eyeTV Geniatech T2 lite
+Date:   Thu, 30 Jan 2020 19:38:58 +0100
+Message-Id: <20200130183623.902015896@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,78 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+From: Thomas Voegtle <tv@lio96.de>
 
-[ Upstream commit 56b4cd4b7da9ee95778eb5c8abea49f641ebfd91 ]
+[ Upstream commit 14494583336880640654300c76d0f5df3360d85f ]
 
-Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
+Adds USB ID for the eyeTV Geniatech T2 lite to the dvbsky driver.
+This is a Geniatech T230C based stick without IR and a different USB ID.
 
-Similarly to MIC x200, we need to add DMA aliases to allow buffer access
-when IOMMU is enabled.
-
-Add aliases to allow computational unit access to host memory.  These
-aliases mark the whole VCA device as one IOMMU group.
-
-All possible slot numbers (0x20) are used, since we are unable to tell what
-slot is used on other side.  This quirk is intended for both host and
-computational unit sides.  The VCA devices have up to five functions: four
-for DMA channels and one additional.
-
-Link: https://lore.kernel.org/r/5683A335CC8BE1438C3C30C49DCC38DF637CED8E@IRSMSX102.ger.corp.intel.com
-Signed-off-by: Slawomir Pawlowski <slawomir.pawlowski@intel.com>
-Signed-off-by: Przemek Kitszel <przemyslawx.kitszel@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Thomas Voegtle <tv@lio96.de>
+Tested-by: Jan Pieter van Woerkom <jp@jpvw.nl>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/media/usb/dvb-usb-v2/dvbsky.c | 3 +++
+ include/media/dvb-usb-ids.h           | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 1593b8494ebbc..2f88b1ff7ada4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4080,6 +4080,40 @@ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
- 
-+/*
-+ * Intel Visual Compute Accelerator (VCA) is a family of PCIe add-in devices
-+ * exposing computational units via Non Transparent Bridges (NTB, PEX 87xx).
-+ *
-+ * Similarly to MIC x200, we need to add DMA aliases to allow buffer access
-+ * when IOMMU is enabled.  These aliases allow computational unit access to
-+ * host memory.  These aliases mark the whole VCA device as one IOMMU
-+ * group.
-+ *
-+ * All possible slot numbers (0x20) are used, since we are unable to tell
-+ * what slot is used on other side.  This quirk is intended for both host
-+ * and computational unit sides.  The VCA devices have up to five functions
-+ * (four for DMA channels and one additional).
-+ */
-+static void quirk_pex_vca_alias(struct pci_dev *pdev)
-+{
-+	const unsigned int num_pci_slots = 0x20;
-+	unsigned int slot;
-+
-+	for (slot = 0; slot < num_pci_slots; slot++) {
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2956, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2958, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2959, quirk_pex_vca_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
-+
- /*
-  * The IOMMU and interrupt controller on Broadcom Vulcan/Cavium ThunderX2 are
-  * associated not at the root bus, but at a bridge below. This quirk avoids
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+index 617a306f6815d..dc380c0c95369 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -792,6 +792,9 @@ static const struct usb_device_id dvbsky_id_table[] = {
+ 	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C,
+ 		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C",
+ 		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
++	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C_LITE,
++		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C Lite",
++		NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230C2,
+ 		&mygica_t230c_props, "MyGica Mini DVB-T2 USB Stick T230C v2",
+ 		RC_MAP_TOTAL_MEDIA_IN_HAND_02) },
+diff --git a/include/media/dvb-usb-ids.h b/include/media/dvb-usb-ids.h
+index 7ce4e83324219..1409230ad3a4c 100644
+--- a/include/media/dvb-usb-ids.h
++++ b/include/media/dvb-usb-ids.h
+@@ -389,6 +389,7 @@
+ #define USB_PID_MYGICA_T230				0xc688
+ #define USB_PID_MYGICA_T230C				0xc689
+ #define USB_PID_MYGICA_T230C2				0xc68a
++#define USB_PID_MYGICA_T230C_LITE			0xc699
+ #define USB_PID_ELGATO_EYETV_DIVERSITY			0x0011
+ #define USB_PID_ELGATO_EYETV_DTT			0x0021
+ #define USB_PID_ELGATO_EYETV_DTT_2			0x003f
 -- 
 2.20.1
 
