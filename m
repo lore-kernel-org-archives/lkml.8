@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DAAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16DC20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5236820674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410058;
-	bh=8Fe2iBeciYBwPKPi0FEOt8js/IBKrjykSDBPJL7NGm0=;
+	s=default; t=1580410061;
+	bh=wHPonvutOoxd/qL4Er+BAu1NwV+YwyWbafCbpcSJIzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lp95W9BxqydG7HxVvriNZAmpdKLm0h82uGx9JWf9cga879o+12myR9nCcEj/mExT/
-	 /3P3fZULCqgZsQbxJ5hdLPAkQopAC/usbWwyMw7XB1PPXGRqi+U+criaNck+3YTjiw
-	 Yp0yZ1cIBw4tvwuqeJbU3TDTb/oTOwlUJN0cIdLc=
+	b=YmFIXZWngx4gSAbthK+I1tT1OQHEmsn/+8K8gPDuWw4Y0+BI9IF+oC6E0fmCC7OVT
+	 NSiF26wDjJyw7HEiyvT2cTaWtx8zUv785wb3KQiALpMsO2aEvJ9OtqUU28/W+6EHnH
+	 mWDBTeAgbYitMEYBJ3CGmzYk1bk7C6g+vkZangjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbgA3Sri (ORCPT
+        id S1731410AbgA3Srk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58164 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731383AbgA3Sra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:30 -0500
+        id S1731157AbgA3Sri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B42205F4;
-        Thu, 30 Jan 2020 18:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3D4120674;
+        Thu, 30 Jan 2020 18:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410050;
-        bh=8Fe2iBeciYBwPKPi0FEOt8js/IBKrjykSDBPJL7NGm0=;
+        s=default; t=1580410057;
+        bh=wHPonvutOoxd/qL4Er+BAu1NwV+YwyWbafCbpcSJIzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivqxBU40T4FTp92GdkLRZ5wpJwWgruRerkqGsgRjI55h72Wp7LBqy6qWHP0KA29Cq
-         Z5Q3EFsxKVkvq3m4Z+IPiQCFgy2iT0ZxsgY5UbYdFChOAEpUo2zI1CtyxM0qRhLGfN
-         uav2HY0yuqq2JXK45h5AM55VmnUshktEGTB5Dwco=
+        b=oq10pmOkkemwwj7iiJdmHPrW8DXXF1JpWbDiFv+XszW1N0oM3nYSXQgsNn/UaRhtz
+         LUnU99LNLdvcoGiu9QrCfJaPJOkqvlSVGfG5gGw8KP/l58k26QR029MNxGs3k8myhj
+         m/LAzClaBtTC21+TGtVbN4qtKI8Bxwj2kYEqSoxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Priit Laes <plaes@plaes.org>,
+        stable@vger.kernel.org, Pavel Balan <admin@kryma.net>,
         Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/55] HID: Add quirk for Xin-Mo Dual Controller
-Date:   Thu, 30 Jan 2020 19:39:08 +0100
-Message-Id: <20200130183613.660573513@linuxfoundation.org>
+Subject: [PATCH 4.19 29/55] HID: Add quirk for incorrect input length on Lenovo Y720
+Date:   Thu, 30 Jan 2020 19:39:10 +0100
+Message-Id: <20200130183613.975173189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -59,32 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Priit Laes <plaes@plaes.org>
+From: Pavel Balan <admin@kryma.net>
 
-[ Upstream commit c62f7cd8ed066a93a243643ebf57ca99f754388e ]
+[ Upstream commit fd0913768701612fc2b8ab9c8a5c019133e8d978 ]
 
-Without the quirk, joystick shows up as single controller
-for both first and second player pads/pins.
+Apply it to the Lenovo Y720 gaming laptop I2C peripheral then.
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
+This fixes dmesg being flooded with errors visible on un-suspend
+in Linux Mint 19 Cinnamon.
+
+Example of error log:
+
+<...>
+[    4.326588] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.326845] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327095] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327341] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+[    4.327609] i2c_hid i2c-ITE33D1:00: i2c_hid_get_input: incomplete report (2/4)
+<...>
+
+Example of fixed log (debug on)
+
+<...>
+[ 3731.333183] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.333581] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.333842] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.334107] i2c_hid i2c-ITE33D1:00: input: 02 00
+[ 3731.334367] i2c_hid i2c-ITE33D1:00: input: 02 00
+<...>
+
+[jkosina@suse.cz: rebase onto more recent codebase]
+Signed-off-by: Pavel Balan <admin@kryma.net>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-ids.h              |  1 +
+ drivers/hid/i2c-hid/i2c-hid-core.c | 16 +++++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 57d6fe9ed4163..b9529bed4d763 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -175,6 +175,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WALTOP, USB_DEVICE_ID_WALTOP_SIRIUS_BATTERY_FREE_TABLET), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 03d65b6910673..f491092f36ff9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -620,6 +620,7 @@
+ #define USB_VENDOR_ID_ITE               0x048d
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA   0x8386
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA2  0x8350
++#define I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720	0x837a
+ #define USB_DEVICE_ID_ITE_LENOVO_YOGA900	0x8396
+ #define USB_DEVICE_ID_ITE8595		0x8595
  
- 	{ 0 }
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 0a39e444e3080..f2c8c59fc5823 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -52,6 +52,8 @@
+ #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
+ #define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
+ #define I2C_HID_QUIRK_RESET_ON_RESUME		BIT(5)
++#define I2C_HID_QUIRK_BAD_INPUT_SIZE		BIT(6)
++
+ 
+ /* flags */
+ #define I2C_HID_STARTED		0
+@@ -185,6 +187,8 @@ static const struct i2c_hid_quirks {
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ USB_VENDOR_ID_ALPS_JP, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_RESET_ON_RESUME },
++	{ USB_VENDOR_ID_ITE, I2C_DEVICE_ID_ITE_LENOVO_LEGION_Y720,
++		I2C_HID_QUIRK_BAD_INPUT_SIZE },
+ 	{ 0, 0 }
  };
+ 
+@@ -516,9 +520,15 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
+ 	}
+ 
+ 	if ((ret_size > size) || (ret_size < 2)) {
+-		dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
+-			__func__, size, ret_size);
+-		return;
++		if (ihid->quirks & I2C_HID_QUIRK_BAD_INPUT_SIZE) {
++			ihid->inbuf[0] = size & 0xff;
++			ihid->inbuf[1] = size >> 8;
++			ret_size = size;
++		} else {
++			dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
++				__func__, size, ret_size);
++			return;
++		}
+ 	}
+ 
+ 	i2c_hid_dbg(ihid, "input: %*ph\n", ret_size, ihid->inbuf);
 -- 
 2.20.1
 
