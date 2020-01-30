@@ -6,71 +6,70 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEDCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A6AC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9612083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1092083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580372709;
-	bh=oLADHjwsZK/zmHyFtHVsSOYErltf5rGudZWVt9X53gQ=;
+	s=default; t=1580372805;
+	bh=PNkPSwdJQbySAJzRp9xVNQkgJtkqcubS7xriykYfYnk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CjkFOW/6jMW+OJPMIjj7gnEwg404tQs2Ir843kZrkJ8oPbd/gjRmYDjBz+LHAYHPe
-	 TuDYkrt2HT7nBT7fQz7JxsoAi9PMGaKEtBQXtvdIIcefdH4exHkoqLiupMy9IgTfzd
-	 UUhD6YoA3a3sJFhxDV9Fe3A++DoOp69+e41lzLTI=
+	b=bRO3/tbHhXUsCDBjEdfo/+KP5EYK/JJj90WWeH+ti7wakoru2gqN904yK/YHUBr8C
+	 hBfRZxrstUXAQKWK/7DIuB6132mIgvS7KsK4ArdUMULNkE7i4v1THzfauWYnzHDHUq
+	 wpnTFePYB2Cdx4Yn5jC9UB2niV/bgzAOzp6YI/AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgA3IZI (ORCPT
+        id S1726911AbgA3I0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:25:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54734 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 03:26:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgA3IZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:25:08 -0500
+        id S1726464AbgA3I0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:26:44 -0500
 Received: from localhost (unknown [117.99.87.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2739206D5;
-        Thu, 30 Jan 2020 08:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D306206D5;
+        Thu, 30 Jan 2020 08:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580372707;
-        bh=oLADHjwsZK/zmHyFtHVsSOYErltf5rGudZWVt9X53gQ=;
+        s=default; t=1580372804;
+        bh=PNkPSwdJQbySAJzRp9xVNQkgJtkqcubS7xriykYfYnk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P+qhIqJa76JfwK7WzQlywJzMe3cyG8N4B/5+L+1h7UrZwiDF+xemU8OYiAEEpbMSO
-         gWoo1Jn5IkfyJFb3w1k/JihqxhbvXbYnSXzCrOrE8NqUn2y9MkbB3wVUI9ZpO5MLGU
-         wcxyTiwbpXEqr49mtNa7oEi3kckbyOL8jL/H+f5g=
-Date:   Thu, 30 Jan 2020 13:55:03 +0530
+        b=uj4iPoBln9edjloZ4nT58Z5bRZbPhm0c8bE2eraniQPadGNV05+6F9W3SGhPVs/7g
+         cDvCc9IWLL/gsQbz/SQ+++iWw1GpVQlI7bJwSzWgJQdXcp7W/mA4yQ6WIsO6HQpZEb
+         katJ6biF3BtF/UCOLXRGPxuLOISr82YjyFJwUn4A=
+Date:   Thu, 30 Jan 2020 13:56:40 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2] dmaengine: Fix return value for dma_requrest_chan()
- in case of failure
-Message-ID: <20200130082503.GD2841@vkoul-mobl>
-References: <CGME20200130070850eucas1p1a7a09e2bec2f6fe652f206b61a8a04ae@eucas1p1.samsung.com>
- <20200130070834.17537-1-m.szyprowski@samsung.com>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, dmaengine@vger.kernel.org,
+        mgalka@collabora.com, enric.balletbo@collabora.com,
+        broonie@kernel.org, khilman@baylibre.com,
+        tomeu.vizoso@collabora.com, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: mainline/master bisection: baseline.login on odroid-xu3
+Message-ID: <20200130082640.GE2841@vkoul-mobl>
+References: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com>
+ <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130070834.17537-1-m.szyprowski@samsung.com>
+In-Reply-To: <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-01-20, 08:08, Marek Szyprowski wrote:
-> Commit 71723a96b8b1 ("dmaengine: Create symlinks between DMA channels and
-> slaves") changed the dma_request_chan() function flow in such a way that
-> it always returns EPROBE_DEFER in case of channels that cannot be found.
-> This break the operation of the devices which have optional DMA channels
-> as it puts their drivers in endless deferred probe loop. Fix this by
-> propagating the proper error value.
+On 29-01-20, 23:13, Guillaume Tucker wrote:
+> Please see the bisection report below about a boot failure.
+> 
+> Reports aren't automatically sent to the public while we're
+> trialing new bisection features on kernelci.org but this one
+> looks valid.
 
-Fixed the title and Applied, thanks
+Thanks, the fix has been pushed out to dmaengine-next and should be in
+linux-next tomorrow.
 
 -- 
 ~Vinod
