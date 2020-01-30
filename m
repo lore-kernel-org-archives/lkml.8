@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF170C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA07BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD4B20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E4020661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410305;
-	bh=wjHrwicYqiKxKhnPcqpsN8uJBxdY4FcFbXHeQmDRYC0=;
+	s=default; t=1580410313;
+	bh=EC6QQiIYGsK8EcLjTfUdiC4ff2xg3vzkssFEfamPy7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v73GnlxmM5t9sxlz2nBu6S7L7xzA6d14FwhCRnZ9hk1jekktTnDLBA9/2ehPxv8DX
-	 XFdHatPtZA0+/YVdoSUdfXtcMDwFclIFvXsLlV+KxjOsRjfhFkc5xcsF4HpP0dECBW
-	 WhIh8xSxecV1cf01tBliWQ5yW/WD+L/kpr3L9ZGQ=
+	b=O83nNTh0bnhUhndcTKOxrDvnvRYFCL9F5C43A8x7Yw+GByGdOdupr4G5DZJGKr4UN
+	 Tnq0Tk1SrkK9hGhIqQJGhdSqGrC9mD/3lTkG76fyyHHKLfoPtofFdZ492qLVwGdMI+
+	 2eAIBv3Y0dFMJZdvzjsWWLUJGjuq5ydXrNNHj15s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbgA3Svp (ORCPT
+        id S1731266AbgA3Svw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:51:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730865AbgA3Son (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:43 -0500
+        id S1730580AbgA3Sof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFEC9205F4;
-        Thu, 30 Jan 2020 18:44:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C655C214AF;
+        Thu, 30 Jan 2020 18:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409882;
-        bh=wjHrwicYqiKxKhnPcqpsN8uJBxdY4FcFbXHeQmDRYC0=;
+        s=default; t=1580409874;
+        bh=EC6QQiIYGsK8EcLjTfUdiC4ff2xg3vzkssFEfamPy7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZkhov2qu2BuUw2pJFVMk6RHPsQjv6vnEXrsfF5kgGj9snq7HbNRhvHhBz+oqfRwa
-         QUtb0rox9GYQtINTnP7CXF4atxEEQFE9EKECr1fh3yQTFcBUOCjYgtg/GdMIZldYcu
-         y+ZR93C7pBMGP1c3XpKuNPknAHC3yEqq+WP1P7zk=
+        b=UyFNeLst++znf0A7zDFUrLF93fciRe0aF0+GYIMfkPq4iC4CqkxZDAq3ysUzcNCpf
+         OWg/HX5+dW3qAQChTEC5zQ+zgsQ17iaCpt7EuD4CrkFrQSVdzU7GEKY5NUrvkCLQnk
+         FjogmUCacXH0QaNoW57IqEYCtGQrDAV5xF6orUaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/110] iommu/dma: fix variable cookie set but not used
-Date:   Thu, 30 Jan 2020 19:38:46 +0100
-Message-Id: <20200130183622.809411748@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 068/110] net: wan: sdla: Fix cast from pointer to integer of different size
+Date:   Thu, 30 Jan 2020 19:38:44 +0100
+Message-Id: <20200130183622.662917201@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,49 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 55817b340a31951d23d1692db45522560b1d20f9 ]
+[ Upstream commit 00c0688cecadbf7ac2f5b4cdb36d912a2d3f0cca ]
 
-The commit c18647900ec8 ("iommu/dma: Relax locking in
-iommu_dma_prepare_msi()") introduced a compliation warning,
+Since net_device.mem_start is unsigned long, it should not be cast to
+int right before casting to pointer.  This fixes warning (compile
+testing on alpha architecture):
 
-drivers/iommu/dma-iommu.c: In function 'iommu_dma_prepare_msi':
-drivers/iommu/dma-iommu.c:1206:27: warning: variable 'cookie' set but
-not used [-Wunused-but-set-variable]
-  struct iommu_dma_cookie *cookie;
-                           ^~~~~~
+    drivers/net/wan/sdla.c: In function ‘sdla_transmit’:
+    drivers/net/wan/sdla.c:711:13: warning:
+        cast to pointer from integer of different size [-Wint-to-pointer-cast]
 
-Fixes: c18647900ec8 ("iommu/dma: Relax locking in iommu_dma_prepare_msi()")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dma-iommu.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/wan/sdla.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 51456e7f264f9..c68a1f072c314 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1177,7 +1177,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- {
- 	struct device *dev = msi_desc_to_dev(desc);
- 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
--	struct iommu_dma_cookie *cookie;
- 	struct iommu_dma_msi_page *msi_page;
- 	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
+diff --git a/drivers/net/wan/sdla.c b/drivers/net/wan/sdla.c
+index e2e679a01b65a..77ccf3672ede7 100644
+--- a/drivers/net/wan/sdla.c
++++ b/drivers/net/wan/sdla.c
+@@ -708,7 +708,7 @@ static netdev_tx_t sdla_transmit(struct sk_buff *skb,
  
-@@ -1186,8 +1185,6 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- 		return 0;
- 	}
- 
--	cookie = domain->iova_cookie;
--
- 	/*
- 	 * In fact the whole prepare operation should already be serialised by
- 	 * irq_domain_mutex further up the callchain, but that's pretty subtle
+ 					spin_lock_irqsave(&sdla_lock, flags);
+ 					SDLA_WINDOW(dev, addr);
+-					pbuf = (void *)(((int) dev->mem_start) + (addr & SDLA_ADDR_MASK));
++					pbuf = (void *)(dev->mem_start + (addr & SDLA_ADDR_MASK));
+ 					__sdla_write(dev, pbuf->buf_addr, skb->data, skb->len);
+ 					SDLA_WINDOW(dev, addr);
+ 					pbuf->opp_flag = 1;
 -- 
 2.20.1
 
