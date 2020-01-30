@@ -2,100 +2,79 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93716C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB86C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6706B20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A145D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIi64FJT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JsHO66/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgA3Qwt (ORCPT
+        id S1727430AbgA3QxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:52:49 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38477 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgA3Qwt (ORCPT
+        Thu, 30 Jan 2020 11:53:23 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:48128 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3QxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:52:49 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x185so1786776pfc.5;
-        Thu, 30 Jan 2020 08:52:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BvfCsRSZW1p/nohOgM8F2lAATYVhdALP/v8/1rJaWIw=;
-        b=HIi64FJTLjxHew/88/vrJXKhLDqR8R6QvnJtquI3iltIEjCjSU1nAGjAshfg/9V9k+
-         3sZ8U+mmzEqNjIIkiWs8lLFeknSwKyfIuhqNcMYZcVZM5jKTgARs/qGz6lUSx0ccoNbC
-         ZpV02kmTCZFjFZBtt1jcUYnNRYr1fWLDECu3ZFQGmMsj8QcBmhc86WtTyjscXB/AgZRq
-         iXUANo6paHHqqmuCLPB9UHL9n1MvZzdWGm3lrrtQsD7amMO22ZWf9jx/mXkeAsiLQRGc
-         vN+fCNiweFpIQautL2z4APqMNgDe8Q0DJ2weSJdZ4gjtqTGFfkI3S1Ed88Ud7CFgJJiD
-         x3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BvfCsRSZW1p/nohOgM8F2lAATYVhdALP/v8/1rJaWIw=;
-        b=cDomHDO4NcACGybuJsFcTj8FC0EfJIooowQpFbGQNAc8KoseWt9wo28ryri5+udAAC
-         5d0BroVRLi/yHrfCr1IjYVABoE1ROb/24XZ5DlDXGc7hPMZ8JKWotyfrK66MBlertZqU
-         aZCNm86YSlVJifcWnhU0kZyxvfm/V+uVybos8tKyqzSnl1s5Zb7L2yPP5a3BVo4tpSUX
-         0P3s8lLpF6L8+iJbCsplCzw4EftTuK3RKGeWqHKCsYLDnoEtv43FyLF//Zr0w+VCq9eI
-         7zxJGRHQwKkLrB2vjJIpTF1ejJLsf3zCcq4shxiSIaKe9wQqAD7v31HWiqkEaHd9vDsp
-         Khzg==
-X-Gm-Message-State: APjAAAVklXs8U+A3lDZuX0Mr0YTCyqOorXb0cQg282MnLzjFpETQw9IT
-        xd/27wAyQsTqQ9oSEKFJpYkk+ExbUg8dr/Ywr+o=
-X-Google-Smtp-Source: APXvYqwEWnwqoePrgk5yXHpSjK3/YcAPZ1WeBxbdIORS5G9gXGM6VV7cscOzUakL5hFPRk8ijdgGnN27LxoUDdzE3YI=
-X-Received: by 2002:a62:1944:: with SMTP id 65mr6090835pfz.151.1580403168985;
- Thu, 30 Jan 2020 08:52:48 -0800 (PST)
+        Thu, 30 Jan 2020 11:53:23 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8F9FC2008823;
+        Thu, 30 Jan 2020 08:53:22 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F9FC2008823
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1580403202;
+        bh=6u2e4utCv06M2/EwYUSUx/pCN776xEEyDnF/FBecuMo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JsHO66/2/Zk8xjQZsETKMnysO4RHQBlhEE32CKoz12JcE9hp3ahExAllWTt4WVHNq
+         WiC5IyWPZgb7R7XV8mZsxVpzzpi/AZyQxTUIh1RtXAxrowX3iP1QAXqXZ7e6PfP4RR
+         0fIRArL6Q3oUVnLy/jw50jaaoq2+5SQ/1m9pDGYA=
+Subject: Re: [PATCH v3 2/2] ima: support calculating the boot_aggregate based
+ on different TPM banks
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org
+References: <1580401363-5593-1-git-send-email-zohar@linux.ibm.com>
+ <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <480498cc-861b-7efa-de6a-52bc651aad01@linux.microsoft.com>
+Date:   Thu, 30 Jan 2020 08:53:45 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200130115255.20840-1-hdegoede@redhat.com> <20200130115255.20840-3-hdegoede@redhat.com>
- <20200130134310.GX14914@hirez.programming.kicks-ass.net> <b77be8c0-7107-bece-5947-a625e556e129@redhat.com>
- <01feee20ee5d4b83ab218c14fc35accb@AcuMS.aculab.com> <8a8fd7a1-945e-4541-f0bc-387fae7c6822@redhat.com>
-In-Reply-To: <8a8fd7a1-945e-4541-f0bc-387fae7c6822@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jan 2020 18:52:41 +0200
-Message-ID: <CAHp75VftbK+7uzBCQ6F5FFgJ4qq0f9pB1Qo7m0LwbBROYsrrYw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more accurate
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vipul Kumar <vipulk0511@gmail.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Len Brown <len.brown@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1580401363-5593-2-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 6:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 30-01-2020 17:02, David Laight wrote:
+On 1/30/2020 8:22 AM, Mimi Zohar wrote:
 
-> I have no idea. Andy if you can find any docs on the MSR_FSB_FREQ values
-> for Merriefield (BYT MID) and Moorefield (CHT MID) that would be great,
-> if not I suggest we stick with what we have.
+> +static enum hash_algo get_hash_algo(const char *algname)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < HASH_ALGO__LAST; i++) {
+> +		if (strcmp(algname, hash_algo_name[i]) == 0)
+> +			break;
+> +	}
+> +
+> +	return i;
+> +}
+> +
 
-First of all, Merrifield (Silvermont based Atom for phones, FYI: Intel
-Edison uses it) and Moorefield (Airmont) have nothing to do with code
-names Baytrail and Cherrytrail respectively.
-So, please don't confuse people.
+ima_digest_data is passed to ima_calc_boot_aggregate(). This struct 
+contains the hash_algo. Can that be passed to 
+ima_calc_boot_aggregate_tfm() instead of using the above function to get 
+the hash_algo?
 
-I'll try to find some information.
-
--- 
-With Best Regards,
-Andy Shevchenko
+  -lakshmi
