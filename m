@@ -2,53 +2,54 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98FDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060A8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B75217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D382521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409874;
-	bh=m6bc5YESLPX3tHV+DdMc2TMiL3pkOqdd2l98jsO9fXw=;
+	s=default; t=1580409879;
+	bh=8OuebgqwLV2pZs9r42PHayOw/w5zaMYEWWmMvxUg8HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxjY96hziTHz1oO1qaC7mCkQUUyfFo07jw35QtFH3p7AN3ZZofOHYn0yRJ05lem7r
-	 /ZAVmoU8vVKeKFPlNZkybQARbXY7rZHSz2AHoj/pl3d2ir3eyLPHnGy8jrq+LXy6H0
-	 8GOGk1y8uJhriPB/rErrwUbr/JQfWBHHgq5IxDrQ=
+	b=PCRd+y5F8EW39legQ98F24CvOcicIfRanqgOORkDbkDx4Jg3Mn1DFAIH7KprCj4sR
+	 oGMj+nd+Q26N4WTfeejMrGhfRjzq1ujo+5wK1l9Kx/sMmXUKiooFmpOc3YK+M/F1BK
+	 UQEVqnSDxlaUMmM560nWV6qtrkiYsO3sV7XE80j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgA3Soc (ORCPT
+        id S1730858AbgA3Soj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53656 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbgA3So3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:29 -0500
+        id S1730840AbgA3Soc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A043C2173E;
-        Thu, 30 Jan 2020 18:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 187DB21734;
+        Thu, 30 Jan 2020 18:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409869;
-        bh=m6bc5YESLPX3tHV+DdMc2TMiL3pkOqdd2l98jsO9fXw=;
+        s=default; t=1580409871;
+        bh=8OuebgqwLV2pZs9r42PHayOw/w5zaMYEWWmMvxUg8HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBzlMkxoxBC8pAejmHCjkHUdzR6miySMfAzyiiCO28sKTKrYP0ToxVQek63yc4/d0
-         TqAcO0xPtA7UBiCQNtwezVsI7bvjvAqSZg6aEY6Af4jtiaP7Skeq5hgAPF+ALwfVKL
-         1fDvOO75sPN/jt4eRHjbVJL3Y6zPcoxhWcdkHUw8=
+        b=N+Plv1Ekx4CPQy3dWcwe7eJVnUx9/ywa0AB8e1uEAOpvoc2Ht1k9HB+Em3GtlmldE
+         qI1sktvZLtxyQgW/NiwFMC73wR65UAu6Bao7KfYfYJ2Q2c4Mf/7b7zhIR8wJqH2E3A
+         PnAnrqKzPRhHewiiRNct5TzeONgGq+8j7vCscMCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Si-Wei Liu <si-wei.liu@oracle.com>,
-        Liran Alon <liran.alon@oracle.com>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/110] net: Google gve: Remove dma_wmb() before ringing doorbell
-Date:   Thu, 30 Jan 2020 19:38:42 +0100
-Message-Id: <20200130183622.527019051@linuxfoundation.org>
+Subject: [PATCH 5.4 067/110] drivers/net/b44: Change to non-atomic bit operations on pwol_mask
+Date:   Thu, 30 Jan 2020 19:38:43 +0100
+Message-Id: <20200130183622.595145543@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,69 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-[ Upstream commit b54ef37b1ce892fdf6b632d566246d2f2f539910 ]
+[ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
 
-Current code use dma_wmb() to ensure Rx/Tx descriptors are visible
-to device before writing to doorbell.
+Atomic operations that span cache lines are super-expensive on x86
+(not just to the current processor, but also to other processes as all
+memory operations are blocked until the operation completes). Upcoming
+x86 processors have a switch to cause such operations to generate a #AC
+trap. It is expected that some real time systems will enable this mode
+in BIOS.
 
-However, these dma_wmb() are wrong and unnecessary. Therefore,
-they should be removed.
+In preparation for this, it is necessary to fix code that may execute
+atomic instructions with operands that cross cachelines because the #AC
+trap will crash the kernel.
 
-iowrite32be() called from gve_rx_write_doorbell()/gve_tx_put_doorbell()
-should guaratee that all previous writes to WB/UC memory is visible to
-device before the write done by iowrite32be().
+Since "pwol_mask" is local and never exposed to concurrency, there is
+no need to set bits in pwol_mask using atomic operations.
 
-E.g. On ARM64, iowrite32be() calls __iowmb() which expands to dma_wmb()
-and only then calls __raw_writel().
+Directly operate on the byte which contains the bit instead of using
+__set_bit() to avoid any big endian concern due to type cast to
+unsigned long in __set_bit().
 
-Reviewed-by: Si-Wei Liu <si-wei.liu@oracle.com>
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/google/gve/gve_rx.c | 2 --
- drivers/net/ethernet/google/gve/gve_tx.c | 6 ------
- 2 files changed, 8 deletions(-)
+ drivers/net/ethernet/broadcom/b44.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
-index edec61dfc8687..9f52e72ff641d 100644
---- a/drivers/net/ethernet/google/gve/gve_rx.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx.c
-@@ -418,8 +418,6 @@ bool gve_clean_rx_done(struct gve_rx_ring *rx, int budget,
- 	rx->cnt = cnt;
- 	rx->fill_cnt += work_done;
+diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
+index 97ab0dd255522..1a7710c399d74 100644
+--- a/drivers/net/ethernet/broadcom/b44.c
++++ b/drivers/net/ethernet/broadcom/b44.c
+@@ -1519,8 +1519,10 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 	int ethaddr_bytes = ETH_ALEN;
  
--	/* restock desc ring slots */
--	dma_wmb();	/* Ensure descs are visible before ringing doorbell */
- 	gve_rx_write_doorbell(priv, rx);
- 	return gve_rx_work_pending(rx);
- }
-diff --git a/drivers/net/ethernet/google/gve/gve_tx.c b/drivers/net/ethernet/google/gve/gve_tx.c
-index f4889431f9b70..d0244feb03011 100644
---- a/drivers/net/ethernet/google/gve/gve_tx.c
-+++ b/drivers/net/ethernet/google/gve/gve_tx.c
-@@ -487,10 +487,6 @@ netdev_tx_t gve_tx(struct sk_buff *skb, struct net_device *dev)
- 		 * may have added descriptors without ringing the doorbell.
- 		 */
+ 	memset(ppattern + offset, 0xff, magicsync);
+-	for (j = 0; j < magicsync; j++)
+-		set_bit(len++, (unsigned long *) pmask);
++	for (j = 0; j < magicsync; j++) {
++		pmask[len >> 3] |= BIT(len & 7);
++		len++;
++	}
  
--		/* Ensure tx descs from a prior gve_tx are visible before
--		 * ringing doorbell.
--		 */
--		dma_wmb();
- 		gve_tx_put_doorbell(priv, tx->q_resources, tx->req);
- 		return NETDEV_TX_BUSY;
+ 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
+ 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
+@@ -1532,7 +1534,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 		for (k = 0; k< ethaddr_bytes; k++) {
+ 			ppattern[offset + magicsync +
+ 				(j * ETH_ALEN) + k] = macaddr[k];
+-			set_bit(len++, (unsigned long *) pmask);
++			pmask[len >> 3] |= BIT(len & 7);
++			len++;
+ 		}
  	}
-@@ -505,8 +501,6 @@ netdev_tx_t gve_tx(struct sk_buff *skb, struct net_device *dev)
- 	if (!netif_xmit_stopped(tx->netdev_txq) && netdev_xmit_more())
- 		return NETDEV_TX_OK;
- 
--	/* Ensure tx descs are visible before ringing doorbell */
--	dma_wmb();
- 	gve_tx_put_doorbell(priv, tx->q_resources, tx->req);
- 	return NETDEV_TX_OK;
- }
+ 	return len - 1;
 -- 
 2.20.1
 
