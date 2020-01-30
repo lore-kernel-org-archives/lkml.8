@@ -2,76 +2,134 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BDDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3E8C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA23020674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VnyD5sE4"
+	by mail.kernel.org (Postfix) with ESMTP id 26BF0214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgA3Ps2 (ORCPT
+        id S1727313AbgA3Pt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:48:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44940 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgA3Ps1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:48:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gkmcA19dmheKO/JHYtjj5Ou65Kq3kHywN8tGMAK+PU0=; b=VnyD5sE4FCMuAHC+XD1p+hPPv
-        pgxkWwwd40QnTUl7XIBoVqAg3NKiiNbJ0ZifmbPqtB4xFnB9v/cI21Vx6MA680U/O/K00IlvUNCrp
-        svx+QN2pqxqJwYlB66IerhREpH6isOjkVWnNeyV2For9jiRPYZKrS2pA8JxT2NlaiirUCS6jbIjnu
-        QnpIxqUFJ4sp/dZIqMOqT6ZJndMt3/Ry1iU3EZBOfo4ijoyHjDzYtqQ9mEF6cIGtpqfM7QLy8u8ni
-        TmpFk4f/EL42bdiSW63EINoxza3UXeWP76qG+QePtsbx2bwxJzDOG4Yi5PBt514sDWl5o5HMYI2P8
-        Sg/nZQNiA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixC3D-0000h0-JI; Thu, 30 Jan 2020 15:48:15 +0000
-Date:   Thu, 30 Jan 2020 07:48:15 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Marta Rybczynska <mrybczyn@kalray.eu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH] nvme: fix uninitialized-variable warning
-Message-ID: <20200130154815.GA2463@infradead.org>
-References: <20200107214215.935781-1-arnd@arndb.de>
- <20200130150451.GA25427@infradead.org>
- <CAK8P3a0EgfQkrSr77jE12Wm_NKemEZ1rFZLMcVhkAuu1cwOOWQ@mail.gmail.com>
+        Thu, 30 Jan 2020 10:49:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:54636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbgA3Pt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:49:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5867731B;
+        Thu, 30 Jan 2020 07:49:25 -0800 (PST)
+Received: from localhost (unknown [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED9E53F67D;
+        Thu, 30 Jan 2020 07:49:24 -0800 (PST)
+Date:   Thu, 30 Jan 2020 15:49:23 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, mingo@redhat.com,
+        ggherdovich@suse.cz, vincent.guittot@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] arm64: use activity monitors for frequency
+ invariance
+Message-ID: <20200130154923.GB5208@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-7-ionela.voinescu@arm.com>
+ <96fdead6-9896-5695-6744-413300d424f5@arm.com>
+ <3ed9af08-82ef-e30c-b1ec-3a1dac0d2091@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0EgfQkrSr77jE12Wm_NKemEZ1rFZLMcVhkAuu1cwOOWQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ed9af08-82ef-e30c-b1ec-3a1dac0d2091@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 04:36:48PM +0100, Arnd Bergmann wrote:
-> > This one is just gross.  I think we'll need to find some other fix
-> > that doesn't obsfucate the code as much.
-> 
-> Initializing the nvme_result in nvme_features() would do it, as would
-> setting it in the error path in __nvme_submit_sync_cmd() -- either
-> way the compiler cannot be confused about whether it is initialized
-> later on.
+Hi Valentin,
 
-Given that this is outside the hot path we can just zero the whole
-structure before submitting the I/O.
+On Wednesday 29 Jan 2020 at 23:39:11 (+0000), Valentin Schneider wrote:
+> On 29/01/2020 17:13, Valentin Schneider wrote:
+> > I had a brief look at the Arm ARM, for the arch timer it says it is
+> > "typically in the range 1-50MHz", but then also gives an example with 20KHz
+> > in a low-power mode.
+> > 
+> > If we take say 5GHz max CPU frequency, our lower bound for the arch timer
+> > (with that SCHED_CAPACITY_SCALE² trick) is about ~4.768KHz. It's not *too*
+> > far from that 20KHz, but I'm not sure we would actually be executing stuff
+> > in that low-power mode.
+> > 
+> 
+> I mixed up a few things in there; that low-power mode is supposed to do
+> higher increments, so it would emulate a similar frequency as the non-low-power
+> mode. Thus the actual frequency matters less than what is reported in CNTFRQ
+> (though we hope to get the behaviour we're told we should see), so we should
+> be quite safe from that ~5KHz value. Still, to make it obvious, I don't think
+> something like this would hurt:
+> 
+> ---
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index 9a5464c625b45..a72832093575a 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned int cpu)
+>  	return 0;
+>  }
+>  
+> +static int validate_timer_rate(void)
+> +{
+> +	if (!arch_timer_rate)
+> +		return 1;
+> +
+> +	/* Arch timer frequency < 1MHz is shady */
+> +	WARN_ON(arch_timer_rate < 1000000);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * For historical reasons, when probing with DT we use whichever (non-zero)
+>   * rate was probed first, and don't verify that others match. If the first node
+> @@ -900,7 +911,7 @@ static void arch_timer_of_configure_rate(u32 rate, struct device_node *np)
+>  		arch_timer_rate = rate;
+>  
+>  	/* Check the timer frequency. */
+> -	if (arch_timer_rate == 0)
+> +	if (validate_timer_rate())
+>  		pr_warn("frequency not available\n");
+>  }
+>  
+> @@ -1594,7 +1605,7 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+>  	 * CNTFRQ value. This *must* be correct.
+>  	 */
+>  	arch_timer_rate = arch_timer_get_cntfrq();
+> -	if (!arch_timer_rate) {
+> +	if (validate_timer_rate()) {
+>  		pr_err(FW_BUG "frequency not available.\n");
+>  		return -EINVAL;
+>  	}
+> ---
+> 
+
+Okay, I'll add this as a separate patch to the series and put you as
+author. That is if you want me to tie this check to this usecase that
+proves its usefulness. Otherwise it can stand on its own as well if
+you want to submit it separately.
+
+In regards to the ratio computation for frequency invariance where this
+plays a role, I'll do a check and bail out if the ratio is 0, which I'm
+ashamed to not have added before :).
+
+Thanks,
+Ionela.
+
+
+> > Long story short, we're probably fine, but it would nice to shove some of
+> > the above into comments (especially the SCHED_CAPACITY_SCALE² trick)
+> > 
