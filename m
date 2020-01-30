@@ -2,229 +2,122 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F43C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3F1C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BAA2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF1120CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBsol0OI"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cln3i3ys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgA3Vpu (ORCPT
+        id S1727576AbgA3Vqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:45:50 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43107 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgA3Vpt (ORCPT
+        Thu, 30 Jan 2020 16:46:38 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:16072 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgA3Vqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:45:49 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so5996094wre.10;
-        Thu, 30 Jan 2020 13:45:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wHp3wY6EbskwLtVSraRT0zmeUswYzI0IaeiJ+sQlEAY=;
-        b=UBsol0OI94UvcceGUkGGbg9BPk2SYryPULvUtgtT4LJCuK4zNC5sSNi6sKSGdrkZiE
-         F1/tT9KaZ8qhWdKzt+292Vb2ml+Bp+TUyJ5wHx7YXTnjBTGUP7kbQn15vaZ9D5hqnWGM
-         TIA4a/rT9KIoI+1OurqPl48V7XMRmS3MT+LLGbwplNUk+cKQnsJRdtxTEkXUNgTLKnW+
-         0FgxgWfLutvvQPK51TTe7I1hqKwJ7mzK59Or65fdJm89QpG17aBl7ToFeX9+WZBwll/p
-         cj16GjSv9ZZB8GgGKQfHoz/kF1+xgZgT2hm+MOERxI/DNTeDrSl5l1izCqNQtDbFAPB6
-         mN0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wHp3wY6EbskwLtVSraRT0zmeUswYzI0IaeiJ+sQlEAY=;
-        b=nzI6iM4OhOdoHvr9g+MlnT2N4ylwAnyqNrnYNhKgPuJsQldfgN0+e7TSHRbdM8DrC4
-         lGDmLmMiMR5tqj6YgR4knjS2r5+U3AshOoQ3LV0MMurZ6kkDfdN7xdi5IfGwA5pQWqQN
-         tkzDt2fGsvGdRbZayVhhvHPMqBKIIo84fd+mP65+HgOlUAkWv/yPk/697pGJo7R6HO3j
-         1ZWn0IRTQ5meJ6M4mtbFw4y3wKk1/gxiHVHROGKWjkgPc/NY2VofVagLydAucQNzRH6n
-         VUcz8iOEXAlkQQcH1CHVxwAhI4DVna3Q/Jxc9zFXgtdkSYYB2fFU8YxCACcoGMGQvldV
-         b0ow==
-X-Gm-Message-State: APjAAAVSB1VGbOPcgeL9GUf4FdctIfftQnKpKMEvtXzHktL/DZxzWCQw
-        JVWhwbdNx57d0n6b3ONioug=
-X-Google-Smtp-Source: APXvYqzARgdfdA9GrP/iZ3VHGJvyoNKKns7gvUBGHXL/oYoPanZqPLggoX3TmU6Y86PDjyJuCy5AwA==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr8112298wrn.251.1580420745935;
-        Thu, 30 Jan 2020 13:45:45 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:4039:5a2f:e01:48bf? (p200300EA8F29600040395A2F0E0148BF.dip0.t-ipconnect.de. [2003:ea:8f29:6000:4039:5a2f:e01:48bf])
-        by smtp.googlemail.com with ESMTPSA id d204sm7941097wmd.30.2020.01.30.13.45.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 13:45:45 -0800 (PST)
-Subject: Re: [PATCH net] net: thunderx: workaround BGX TX Underflow issue
-To:     Robert Jones <rjones@gateworks.com>,
-        Sunil Goutham <sgoutham@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        David Miller <davem@davemloft.net>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
-References: <20200129223609.9327-1-rjones@gateworks.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <dfb2fb4c-4147-dcd2-7c60-1c3653e1092f@gmail.com>
-Date:   Thu, 30 Jan 2020 22:45:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 16:46:38 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ULiSaT011570
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:46:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=YcfWDCuE/Ac8073XNDYfUHxD78npEe5xhLoOqWMPqc4=;
+ b=cln3i3yskgCOLMDpLfRLrVXA/8BPHQpM/5U7auDIORM7fV+CRIvL4BVQUbnoN2GZn1nI
+ 7b1oJeoVJmkMqzab5N34kRgqi6Urt5qJlmfM9WWalF1ZAuXt073/EOPQp1Cs/Zfjnwam
+ RjWa4J2IvRA2otE/cSh2wT60p4yZJochuTY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xufrv6pkf-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:46:37 -0800
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 30 Jan 2020 13:46:35 -0800
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id B19D21A8FA539; Thu, 30 Jan 2020 13:46:32 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2] ARM: dts: aspeed: tiogapass: Add IPMB device
+Date:   Thu, 30 Jan 2020 13:46:26 -0800
+Message-ID: <20200130214626.2863329-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-In-Reply-To: <20200129223609.9327-1-rjones@gateworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_07:2020-01-30,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 adultscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=922 spamscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300146
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.01.2020 23:36, Robert Jones wrote:
-> From: Tim Harvey <tharvey@gateworks.com>
-> 
-> While it is not yet understood why a TX underflow can easily occur
-> for SGMII interfaces resulting in a TX wedge. It has been found that
-> disabling/re-enabling the LMAC resolves the issue.
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> Reviewed-by: Robert Jones <rjones@gateworks.com>
-> ---
->  drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 54 +++++++++++++++++++++++
->  drivers/net/ethernet/cavium/thunder/thunder_bgx.h |  9 ++++
->  2 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-> index c4f6ec0..078ecea 100644
-> --- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-> +++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-> @@ -74,6 +74,7 @@ struct bgx {
->  	struct pci_dev		*pdev;
->  	bool                    is_dlm;
->  	bool                    is_rgx;
-> +	char			irq_name[7];
+Adding IPMB devices for facebook tiogapass platform.
 
-Why do you store the name? It's used in probe() only.
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
->  };
-> 
->  static struct bgx *bgx_vnic[MAX_BGX_THUNDER];
-> @@ -1535,6 +1536,53 @@ static int bgx_init_phy(struct bgx *bgx)
->  	return bgx_init_of_phy(bgx);
->  }
-> 
-> +static irqreturn_t bgx_intr_handler(int irq, void *data)
-> +{
-> +	struct bgx *bgx = (struct bgx *)data;
-> +	struct device *dev = &bgx->pdev->dev;
-> +	u64 status, val;
-> +	int lmac;
-> +
-> +	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-> +		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-> +		if (status & GMI_TXX_INT_UNDFLW) {
-> +			dev_err(dev, "BGX%d lmac%d UNDFLW\n", bgx->bgx_id,
-
-Using pci_err() would make your life a lttle easier.
-
-> +				lmac);
-> +			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-> +			val &= ~CMR_EN;
-> +			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-> +			val |= CMR_EN;
-> +			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-> +		}
-> +		/* clear interrupts */
-> +		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int bgx_register_intr(struct pci_dev *pdev)
-> +{
-> +	struct bgx *bgx = pci_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +	int num_vec, ret;
-> +
-> +	/* Enable MSI-X */
-> +	num_vec = pci_msix_vec_count(pdev);
-> +	ret = pci_alloc_irq_vectors(pdev, num_vec, num_vec, PCI_IRQ_MSIX);
-
-Why do you want to enforce using MSI-X? Any interrupt type should be
-fine for you, so let the system decide and use PCI_IRQ_ALL_TYPES.
-And why do you need more than one vector if all you're interested in
-is tx underflow events?
-
-> +	if (ret < 0) {
-> +		dev_err(dev, "Req for #%d msix vectors failed\n", num_vec);
-> +		return 1;
-> +	}
-> +	sprintf(bgx->irq_name, "BGX%d", bgx->bgx_id);
-> +	ret = request_irq(pci_irq_vector(pdev, GMPX_GMI_TX_INT),
-> +		bgx_intr_handler, 0, bgx->irq_name, bgx);
-
-Here using pci_request_irq() would make your life easier.
-This function also allows to dynamically create the irq name.
-
-> +	if (ret)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
->  static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  {
->  	int err;
-> @@ -1604,6 +1652,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-> 
->  	bgx_init_hw(bgx);
-> 
-> +	bgx_register_intr(pdev);
-> +
->  	/* Enable all LMACs */
->  	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
->  		err = bgx_lmac_enable(bgx, lmac);
-> @@ -1614,6 +1664,10 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  				bgx_lmac_disable(bgx, --lmac);
->  			goto err_enable;
->  		}
-> +
-> +		/* enable TX FIFO Underflow interrupt */
-> +		bgx_reg_modify(bgx, lmac, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-> +			       GMI_TXX_INT_UNDFLW);
-
-If allocating an interrupt fails then you most likely don't want to do this.
-And do you need this interrupt if the interface is down? If not then you
-could think about moving this to the ndo_open() callback.
-And the chip interrupt should be masked if not needed any longer.
-Else you risk spurious interrupts e.g. after driver unload.
-
->  	}
-> 
->  	return 0;
-> diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-> index 2588870..cdea493 100644
-> --- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-> +++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-> @@ -180,6 +180,15 @@
->  #define BGX_GMP_GMI_TXX_BURST		0x38228
->  #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
->  #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-> +#define BGX_GMP_GMI_TXX_INT		0x38500
-> +#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-> +#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-> +#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-> +#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-> +#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-> +#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-> +#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-> +#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
-> 
->  #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
->  #define BGX_MSIX_VEC_0_29_CTL		0x400008
-> --
-> 2.9.2
-> 
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index fb7f034d5db2..1cb5b9bf468f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -5,6 +5,7 @@
+ 
+ #include "aspeed-g5.dtsi"
+ #include <dt-bindings/gpio/aspeed-gpio.h>
++#include <dt-bindings/i2c/i2c.h>
+ 
+ / {
+ 	model = "Facebook TiogaPass BMC";
+@@ -428,6 +429,12 @@
+ &i2c4 {
+ 	status = "okay";
+ 	// BMC Debug Header
++	multi-master;
++	ipmb0@10 {
++		compatible = "ipmb-dev";
++		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
++		i2c-protocol;
++	};
+ };
+ 
+ &i2c5 {
+@@ -509,6 +516,12 @@
+ &i2c9 {
+ 	status = "okay";
+ 	//USB Debug Connector
++	multi-master;
++	ipmb0@10 {
++		compatible = "ipmb-dev";
++		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
++		i2c-protocol;
++	};
+ };
+ 
+ &pwm_tacho {
+-- 
+2.17.1
 
