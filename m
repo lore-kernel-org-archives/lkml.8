@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F0DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1563C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D10E2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70ED42083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409857;
-	bh=JJ8+gzjBcqD4VvCA71mKfdhHv1H5sxdLCa5olQTQlag=;
+	s=default; t=1580409860;
+	bh=l/54tbrLAeoXmLygfmCUMy7nlKmDi4RKwGSnm2fHF3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naFg1MPKpXi2t+Wkvd8XevnBh45odCGy73t9nGEAU5beXboECVi+kvnE+2XIB52Al
-	 +/JBUiY2zlgrVzcoeu5V5WlSlxLWZdGd8cIybjTsdry2j8u8U2y+U61l4OCS2qKI9m
-	 jPtlJbEGyyLD9KbUdDsWuqGG0WUWRRdeD24XIGNs=
+	b=QoHOPfCkZU31iyV0TeVes4ookmxt/oFuYsO5VP0clhvpUJW6qdHi3V8yjyNpQGxkt
+	 sVTbwZvqggy/NAbSXNsHG/kboD9Gmqvcu2Sq6SUrbGTun4/DbecpnGcMhrnxHrA9JI
+	 6WefKLbzUA0oZbVJRUClVa+Njp/4qT+WUnpUshAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgA3SoQ (ORCPT
+        id S1730810AbgA3SoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53246 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgA3SoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:12 -0500
+        id S1730801AbgA3SoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B19205F4;
-        Thu, 30 Jan 2020 18:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20F5A205F4;
+        Thu, 30 Jan 2020 18:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409851;
-        bh=JJ8+gzjBcqD4VvCA71mKfdhHv1H5sxdLCa5olQTQlag=;
+        s=default; t=1580409856;
+        bh=l/54tbrLAeoXmLygfmCUMy7nlKmDi4RKwGSnm2fHF3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiRc7zuFT/0ooWABjRO6CYf96KMWiC7G6VwA/0MXBGNGt/aiv2Ets2mKql2ktlHNS
-         pS8I3uuaDQULxiMtxIv7YYcORRLILlm/Ma5qNKCIuoUifhgaBjXLuywKmZ/FmoiF8X
-         ZF/aLM7LUtBLiAKlsKAqrTiW7bKk8sboJIY0iuz0=
+        b=OD+FJ/vvtqvsoQx16cw7Hz4wEdbxOkr6QoKBSjwoLuXgq7sZhnwhJIIGfPNLtbVTZ
+         i1Nh9NKHX8IqHftHaQ7Zj2U9Li8aPGSO2ZZI6tVtrkQHvbebLrS7Vd3tXZlZMEENHs
+         gxHOPbithv6EtbbUGTPf2Z26D+ytZbM1P/bf7TQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/110] HID: wacom: Recognize new MobileStudio Pro PID
-Date:   Thu, 30 Jan 2020 19:38:27 +0100
-Message-Id: <20200130183621.169874874@linuxfoundation.org>
+Subject: [PATCH 5.4 061/110] watchdog: rn5t618_wdt: fix module aliases
+Date:   Thu, 30 Jan 2020 19:38:37 +0100
+Message-Id: <20200130183622.170030070@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,43 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit fe4e940f0f91b4a506f048b42e00386f5ad322b6 ]
+[ Upstream commit a76dfb859cd42df6e3d1910659128ffcd2fb6ba2 ]
 
-A new PID is in use for repaired MobileStudio Pro devices. Add it to the
-list of devices that need special-casing in wacom_wac_pad_event.
+Platform device aliases were missing so module autoloading
+did not work.
 
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191213214802.22268-1-andreas@kemnade.info
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_wac.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/watchdog/rn5t618_wdt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/wacom_wac.c b/drivers/hid/wacom_wac.c
-index ccb74529bc782..d99a9d407671c 100644
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2096,14 +2096,16 @@ static void wacom_wac_pad_event(struct hid_device *hdev, struct hid_field *field
- 		    (hdev->product == 0x34d || hdev->product == 0x34e ||  /* MobileStudio Pro */
- 		     hdev->product == 0x357 || hdev->product == 0x358 ||  /* Intuos Pro 2 */
- 		     hdev->product == 0x392 ||				  /* Intuos Pro 2 */
--		     hdev->product == 0x398 || hdev->product == 0x399)) { /* MobileStudio Pro */
-+		     hdev->product == 0x398 || hdev->product == 0x399 ||  /* MobileStudio Pro */
-+		     hdev->product == 0x3AA)) {				  /* MobileStudio Pro */
- 			value = (field->logical_maximum - value);
+diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
+index 2348760474317..6e524c8e26a8f 100644
+--- a/drivers/watchdog/rn5t618_wdt.c
++++ b/drivers/watchdog/rn5t618_wdt.c
+@@ -188,6 +188,7 @@ static struct platform_driver rn5t618_wdt_driver = {
  
- 			if (hdev->product == 0x357 || hdev->product == 0x358 ||
- 			    hdev->product == 0x392)
- 				value = wacom_offset_rotation(input, usage, value, 3, 16);
- 			else if (hdev->product == 0x34d || hdev->product == 0x34e ||
--				 hdev->product == 0x398 || hdev->product == 0x399)
-+				 hdev->product == 0x398 || hdev->product == 0x399 ||
-+				 hdev->product == 0x3AA)
- 				value = wacom_offset_rotation(input, usage, value, 1, 2);
- 		}
- 		else {
+ module_platform_driver(rn5t618_wdt_driver);
+ 
++MODULE_ALIAS("platform:rn5t618-wdt");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 watchdog driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
