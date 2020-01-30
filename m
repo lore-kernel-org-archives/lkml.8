@@ -2,155 +2,68 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A1FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC95AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49E5206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A2C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgA3NHP (ORCPT
+        id S1727296AbgA3NJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:07:15 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40501 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3NHP (ORCPT
+        Thu, 30 Jan 2020 08:09:03 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:8274 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727125AbgA3NJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:07:15 -0500
-Received: by mail-io1-f69.google.com with SMTP id m24so1879628iol.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 05:07:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lOTvOukD/lUVj4x5/yR5484vnn5bH7e+8C47S9yK3RU=;
-        b=CmT9g8+WVLwtciwNwQWsRvwZbHI3kP7DX5MMDkeJ0de5A7d7hd1w6LCvsXh3PiyOeJ
-         +rc14kKhGj7otrpLk8tV7pUIYFwBtEkw536kN4vgSIreQ3ARkb5onZhPjVH4+0EIyp8N
-         07z6L3qxS2PrW8a/6wqFniZoMTdwThLSykIeigPvwKNkEgixzWww8Ov6D3zKWzZXkZf+
-         Vor9P+4Lr4BnpBZilMGc8TGS9SATwFakrEE56W0SZcQPm/K11fVNCTdYJC35fJFy8BOH
-         nki9yLXRzs+4+JE9FPn0KTqjN+2G+U/Ym8vo0JVxgdCdTRBvvSzmVkvI3nZvRkmnrwyv
-         uyYQ==
-X-Gm-Message-State: APjAAAWXMQY3OvKoKLDv9C+LCL9cmaeVLMr9OjcIvO1kR3l8/EtIGCai
-        ghigGJp+VVj9gYj70yU+7N86mMEEpGgYXMKaSiMvb6cor21H
-X-Google-Smtp-Source: APXvYqw79b5qijCZMslbzwM37BQRk64ZBJdqqeDOXkg4lVhL154z2P5SobkobeJh93e2tAsExd5bFB49mD1ASaEH50k8FOS0y+Pk
+        Thu, 30 Jan 2020 08:09:02 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TomMfq-_1580389734;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TomMfq-_1580389734)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 30 Jan 2020 21:09:00 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] hrtimer: fix an explicit cast in __ktime_divns()
+Date:   Thu, 30 Jan 2020 21:08:51 +0800
+Message-Id: <20200130130851.29204-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:cd0d:: with SMTP id g13mr3832686jaq.110.1580389634360;
- Thu, 30 Jan 2020 05:07:14 -0800 (PST)
-Date:   Thu, 30 Jan 2020 05:07:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c349e1059d5b2290@google.com>
-Subject: INFO: rcu detected stall in do_iter_write
-From:   syzbot <syzbot+a87c28845c1590eb47e5@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+do_div() does a 64-by-32 division, while the divisor 'div' is
+explicitly casted to unsigned long, thus 64-bit on 64-bit platforms.
+In addition, the above lines also ensures that the divisor is less
+than 2^32. Hence the proper cast type is u32.
 
-syzbot found the following crash on:
-
-HEAD commit:    2821e26f Merge tag 'for-linus' of git://git.armlinux.org.u..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15311611e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f1c1f9c2d5c6ce1b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a87c28845c1590eb47e5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1069c611e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b01d85e00000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1014e769e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1214e769e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1414e769e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a87c28845c1590eb47e5@syzkaller.appspotmail.com
-
-hrtimer: interrupt took 32883 ns
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-	(detected by 1, t=10502 jiffies, g=11349, q=5)
-rcu: All QSes seen, last rcu_preempt kthread activity 10503 (4295059717-4295049214), jiffies_till_next_fqs=1, root ->qsmask 0x0
-syz-executor996 R  running task    24984 10669  10660 0x00004000
-Call Trace:
- <IRQ>
- sched_show_task kernel/sched/core.c:5954 [inline]
- sched_show_task.cold+0x2ee/0x35d kernel/sched/core.c:5929
- print_other_cpu_stall kernel/rcu/tree_stall.h:410 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:538 [inline]
- rcu_pending kernel/rcu/tree.c:2827 [inline]
- rcu_sched_clock_irq.cold+0xaf4/0xc0d kernel/rcu/tree.c:2271
- update_process_times+0x2d/0x70 kernel/time/timer.c:1726
- tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
- tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
- smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1135
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:preempt_count arch/x86/include/asm/preempt.h:26 [inline]
-RIP: 0010:check_kcov_mode kernel/kcov.c:153 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0xd/0x50 kernel/kcov.c:187
-Code: 04 25 c0 1e 02 00 48 8b 80 98 13 00 00 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 65 48 8b 04 25 c0 1e 02 00 <65> 8b 15 14 27 8d 7e 81 e2 00 01 1f 00 48 8b 75 08 75 2b 8b 90 80
-RSP: 0018:ffffc90002067870 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: ffff88807c3ac380 RBX: ffff8880a8953ac0 RCX: ffffffff81bd09dd
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: ffffc90002067870 R08: ffff88807c3ac380 R09: ffffed10118b2e85
-R10: ffffed10118b2e84 R11: ffff88808c597427 R12: 0000000000000002
-R13: ffff88808c597348 R14: 0000000000000000 R15: 00000000000000d6
- fsnotify_modify include/linux/fsnotify.h:248 [inline]
- do_iter_write fs/read_write.c:974 [inline]
- do_iter_write+0x26b/0x610 fs/read_write.c:951
- vfs_iter_write+0x77/0xb0 fs/read_write.c:983
- iter_file_splice_write+0x717/0xc10 fs/splice.c:760
- do_splice_from fs/splice.c:863 [inline]
- direct_splice_actor+0x123/0x190 fs/splice.c:1037
- splice_direct_to_actor+0x3b4/0xa30 fs/splice.c:992
- do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
- do_sendfile+0x597/0xd00 fs/read_write.c:1464
- __do_sys_sendfile64 fs/read_write.c:1525 [inline]
- __se_sys_sendfile64 fs/read_write.c:1511 [inline]
- __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4419e9
-Code: e8 7c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc2dc15cd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00007ffc2dc15e80 RCX: 00000000004419e9
-RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 00008000fffffffe R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004026c0 R14: 0000000000000000 R15: 0000000000000000
-rcu: rcu_preempt kthread starved for 10544 jiffies! g11349 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     R  running task    28960    10      2 0x80004000
-Call Trace:
- context_switch kernel/sched/core.c:3385 [inline]
- __schedule+0x934/0x1f90 kernel/sched/core.c:4081
- schedule+0xdc/0x2b0 kernel/sched/core.c:4155
- schedule_timeout+0x486/0xc50 kernel/time/timer.c:1895
- rcu_gp_fqs_loop kernel/rcu/tree.c:1661 [inline]
- rcu_gp_kthread+0x9b2/0x18d0 kernel/rcu/tree.c:1821
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d8b62f93fc8d..57e543860660 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -311,7 +311,7 @@ s64 __ktime_divns(const ktime_t kt, s64 div)
+ 		div >>= 1;
+ 	}
+ 	tmp >>= sft;
+-	do_div(tmp, (unsigned long) div);
++	do_div(tmp, (u32) div);
+ 	return dclc < 0 ? -tmp : tmp;
+ }
+ EXPORT_SYMBOL_GPL(__ktime_divns);
+-- 
+2.23.0
+
