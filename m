@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F95CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1959C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD85F214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3D32082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409605;
-	bh=KfBzupkFxBd+ifbwc5W3OUYtV+2mG+5kcjHNzbruZGg=;
+	s=default; t=1580409608;
+	bh=qKhS42DKhwOlaVHptcXhWdipn3EhSDcP09MoYcfm5sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RkTHEhN+QW+IXvvNiLdkgPOAZA77+5qIvW5Ad6gdDbU9HNFZfYHsiv+6FEBzMSWIE
-	 WX7ntda75maXjyLkwXMuJRR6tqUMiV+zr12Y2BjjRAP+V1ZgHIehmngU4Rm0fI+oVY
-	 5YNfcDX4BRw88KeQF9xq+4YAI8Q5M23gTHs/EGzk=
+	b=u9PSEedMKmvXkhWik9u2TPRAcSu77MNmM1R1iqLq7h3Pny2jSfk8QKWIblAe2mtXz
+	 bjwaBgOD9mRSjVU06h0yzNsdGz+D4xUM+Dgr+qdBiSur4F64gVXFaFLWaEMGJUa/0B
+	 f7r1+GFgmhEaBIiPr3ALIIGgytoFuRXVmBfdhi40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgA3SkE (ORCPT
+        id S1729334AbgA3SkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbgA3SkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:01 -0500
+        id S1728481AbgA3SkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379032083E;
-        Thu, 30 Jan 2020 18:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C1D92083E;
+        Thu, 30 Jan 2020 18:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409599;
-        bh=KfBzupkFxBd+ifbwc5W3OUYtV+2mG+5kcjHNzbruZGg=;
+        s=default; t=1580409604;
+        bh=qKhS42DKhwOlaVHptcXhWdipn3EhSDcP09MoYcfm5sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYvWC68OvcgPo6MT5JLL3KHvZoaPPYpfPrHqgJC+p52mGneurAz/cQ0pSj2fjN6sV
-         QWP4tDDOsDGPIZbe0zxNkNYmVR5gNBP1FuEqSnm/EDPv3WBbURMmdHZOffXQvEIMPN
-         7fJixz3rFk6WRDFKX5yF2epn2hpp4abMUdF4utnQ=
+        b=fkG6Go+cjyEItyjxzjHRhNNOGPcWjfPojv8iesteLRWbCo+cx/depf3TBIuMdpyBH
+         T0eCQD8Mj1W8kt74LUvO9SKve+VSaf7qJcfJLrnTbyqx4To4xZsWx5gGR30lTeAm5l
+         RcfxCtX9jqTJk6ncQYoT417qReUgDqdYLLoGlKH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.5 15/56] staging: vt6656: use NULLFUCTION stack on mac80211
-Date:   Thu, 30 Jan 2020 19:38:32 +0100
-Message-Id: <20200130183612.078415490@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 5.5 17/56] serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
+Date:   Thu, 30 Jan 2020 19:38:34 +0100
+Message-Id: <20200130183612.395861450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -58,66 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit d579c43c82f093e63639151625b2139166c730fd upstream.
+commit dc76697d7e933d5e299116f219c890568785ea15 upstream.
 
-It appears that the drivers does not go into power save correctly the
-NULL data packets are not being transmitted because it not enabled
-in mac80211.
+Unbinding the bcm2835aux UART driver raises the following error if the
+maximum number of 8250 UARTs is set to 1 (via the 8250.nr_uarts module
+parameter or CONFIG_SERIAL_8250_RUNTIME_UARTS):
 
-The driver needs to capture ieee80211_is_nullfunc headers and
-copy the duration_id to it's own duration data header.
+(NULL device *): Removing wrong port: a6f80333 != fa20408b
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/610971ae-555b-a6c3-61b3-444a0c1e35b4@gmail.com
+That's because bcm2835aux_serial_probe() retrieves UART line number 1
+from the devicetree and stores it in data->uart.port.line, while
+serial8250_register_8250_port() instead uses UART line number 0,
+which is stored in data->line.
+
+On driver unbind, bcm2835aux_serial_remove() uses data->uart.port.line,
+which contains the wrong number.  Fix it.
+
+The issue does not occur if the maximum number of 8250 UARTs is >= 2.
+
+Fixes: bdc5f3009580 ("serial: bcm2835: add driver for bcm2835-aux-uart")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.6+
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/912ccf553c5258135c6d7e8f404a101ef320f0f4.1579175223.git.lukas@wunner.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/main_usb.c |    1 +
- drivers/staging/vt6656/rxtx.c     |   14 +++++---------
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ drivers/tty/serial/8250/8250_bcm2835aux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -1015,6 +1015,7 @@ vt6656_probe(struct usb_interface *intf,
- 	ieee80211_hw_set(priv->hw, RX_INCLUDES_FCS);
- 	ieee80211_hw_set(priv->hw, REPORTS_TX_ACK_STATUS);
- 	ieee80211_hw_set(priv->hw, SUPPORTS_PS);
-+	ieee80211_hw_set(priv->hw, PS_NULLFUNC_STACK);
+--- a/drivers/tty/serial/8250/8250_bcm2835aux.c
++++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+@@ -113,7 +113,7 @@ static int bcm2835aux_serial_remove(stru
+ {
+ 	struct bcm2835aux_data *data = platform_get_drvdata(pdev);
  
- 	priv->hw->max_signal = 100;
+-	serial8250_unregister_port(data->uart.port.line);
++	serial8250_unregister_port(data->line);
+ 	clk_disable_unprepare(data->clk);
  
---- a/drivers/staging/vt6656/rxtx.c
-+++ b/drivers/staging/vt6656/rxtx.c
-@@ -278,11 +278,9 @@ static u16 vnt_rxtx_datahead_g(struct vn
- 			  PK_TYPE_11B, &buf->b);
- 
- 	/* Get Duration and TimeStamp */
--	if (ieee80211_is_pspoll(hdr->frame_control)) {
--		__le16 dur = cpu_to_le16(priv->current_aid | BIT(14) | BIT(15));
--
--		buf->duration_a = dur;
--		buf->duration_b = dur;
-+	if (ieee80211_is_nullfunc(hdr->frame_control)) {
-+		buf->duration_a = hdr->duration_id;
-+		buf->duration_b = hdr->duration_id;
- 	} else {
- 		buf->duration_a = vnt_get_duration_le(priv,
- 						tx_context->pkt_type, need_ack);
-@@ -371,10 +369,8 @@ static u16 vnt_rxtx_datahead_ab(struct v
- 			  tx_context->pkt_type, &buf->ab);
- 
- 	/* Get Duration and TimeStampOff */
--	if (ieee80211_is_pspoll(hdr->frame_control)) {
--		__le16 dur = cpu_to_le16(priv->current_aid | BIT(14) | BIT(15));
--
--		buf->duration = dur;
-+	if (ieee80211_is_nullfunc(hdr->frame_control)) {
-+		buf->duration = hdr->duration_id;
- 	} else {
- 		buf->duration = vnt_get_duration_le(priv, tx_context->pkt_type,
- 						    need_ack);
+ 	return 0;
 
 
