@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC78AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C45C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED15206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3DA206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7t3Sa0+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsNKPTzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgA3Eln (ORCPT
+        id S1727413AbgA3Elg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 23:41:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52902 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbgA3Eld (ORCPT
+        Wed, 29 Jan 2020 23:41:36 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45032 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbgA3Ela (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 23:41:33 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so2242455wmc.2;
-        Wed, 29 Jan 2020 20:41:31 -0800 (PST)
+        Wed, 29 Jan 2020 23:41:30 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so2280083wrx.11;
+        Wed, 29 Jan 2020 20:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5EBoa/11BC9T7X5//l8eeEjFWiZ834E6/s6B9Dz4ejw=;
-        b=T7t3Sa0+D/j2xCXwhefagh+pCBoeRqBP6Mallm4E/gnjg7Y5K4iscb1lQyGQYiFeOw
-         RM4ncvQlFbhlZWuRtQs+bZzyapPBNOPEjTQsTWXoLBkFf28BhN/jNsivWXJ6HW0LhPUg
-         fO0oWy9uLHplTLVc6SAU+ZUUSgG7UDcGi2QEYLU/kHnxRBc1k+3mhS9WndOOulqHNCoh
-         CTCxmJRsSxCsku9JXCYDmJhJaB92dkDYlubgCow3l+iNJCVlCr0i4FQFzXY3WXA84s7v
-         ySPjTkJ3Lr/AzyECsrTJ+Z7VbEsNKLEhr1Mh4u+NgIgoy4RiXcu2uZ+1vSOnK2MVc586
-         tg4g==
+        bh=gfFOKKBycfoTA+tP8C+2g2g1I1HSJbXw7d1KRYGNlF8=;
+        b=FsNKPTzOSYhTcJdP167/pyLqgktDgRCg/AjEABBjfBXmNTfKrDj0z/0u3yo9AN+Z7s
+         wwyxVsO1nfoQxBdjAkwXhOsaLR0DD4mkLZcaALmYwHwFCulf5Jfx1kWPjXK5YkPfPRMp
+         siWTmO3r/kvWD3NAP0jzONQ946JqA5TCc6gJfO1kHAHIu4B6Ra+VGFhHP3BT1M0JfhQR
+         uSDovfQgYmXPSumhhBnTcdd2kDzNi7bT/4mdTydFQyA6eAlerVwJS2DBu9Pv00lkpglJ
+         2FvF4tqmJfIBSWOZalg6HcXNqPIg8AjBno6Z4JiC61fxQc7czLDYtgt4HOblukE8eLLC
+         sXNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5EBoa/11BC9T7X5//l8eeEjFWiZ834E6/s6B9Dz4ejw=;
-        b=aRIn1b1E2mtIEgV7dSFlTv+ytKuaGc63hQkMHN20st5p7zWiKWytsQ7N5wWQCN+qud
-         BclPtmQIHAVVUl6RpjepI4HrtBaNsJpT4ICcYV+2DuJK0eiJnF7vP6ALzbjtTdUmtOQR
-         zqbrNhfJUZcsnuZUPU9Kw5Jaol9GsKATSliGDgXiEmYJN0XhCPMRPhdAFnhbkW0KupXe
-         IIB7m2TFOtwJKMvn8e1WqD22CGYuk78cQJz1GcXlI4rh8btGwFgB+a+1Wl1roOrHd6PS
-         hpiFzbvoqpjKp4c+Ss4Zowv8Jx/+h4f+uCC9Lj7hgjWyPfOqGe/gAfXlMteKR23MOJha
-         Dfqg==
-X-Gm-Message-State: APjAAAXgg8t59uFpCRrLeZGIUh+bRzqw3UYnmhxiPGvnmxTlA394+Mgi
-        o+Q+9dW9gibacgb5d2CgJZc=
-X-Google-Smtp-Source: APXvYqzWGrOP/XZbWMYROui9UuHCoc7MMRJdWy1NKRHioIGJ/mYfvcIN2TPMSNlIYDk/K2aXfabiPw==
-X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr468223wmu.149.1580359290393;
-        Wed, 29 Jan 2020 20:41:30 -0800 (PST)
+        bh=gfFOKKBycfoTA+tP8C+2g2g1I1HSJbXw7d1KRYGNlF8=;
+        b=kc32pgF1SjABjBYTmlC4vdFs/sX5j2aU5/zkYD/qt92f8PTOX6L+vrygP9YtURdSoy
+         i3wh6shxoLI3jZe1j32u+BgGRkbnlwi156BAskz8+iqcwX5LhyaClwdkfqxHh6hEhOwA
+         rawTPuXsq2Hjmz+WEvGYJkmZJkB7a4x+InrKEKz+e55NHOIgx1xQnTeqETQVjCdUFqpU
+         0XgUv5APLWxo8LaAemdHzBsITdwZ7Wfx6WRInlwKOfN0fIyqgeV6wSMtaqZGJjzvVnn0
+         w9LtCTGrAwhhfSFidW69/X6JD3QD6FiCLkMSJKc4L9fFjU9bA2hFLgyHqYAce/VqiSr1
+         kiLw==
+X-Gm-Message-State: APjAAAXCWZ2ywu8/Z3r2mWNtAVR+izE/U2NfXmyCzBqJM56FD2LUU76d
+        fvIp4RiP4jTOojWZEUlvATE=
+X-Google-Smtp-Source: APXvYqwUNseDyEBG4iaE2M+lLRu8bHphKJpv9wgXRxA8URzzmpif6FkJ23UjNnqXHjZRWRcjEI1ABw==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr2702825wrs.11.1580359286731;
+        Wed, 29 Jan 2020 20:41:26 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g128sm4494672wme.47.2020.01.29.20.41.29
+        by smtp.gmail.com with ESMTPSA id g128sm4494672wme.47.2020.01.29.20.41.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 20:41:30 -0800 (PST)
+        Wed, 29 Jan 2020 20:41:26 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 16/16] dmaengine: tegra-apb: Support COMPILE_TEST
-Date:   Thu, 30 Jan 2020 07:38:04 +0300
-Message-Id: <20200130043804.32243-17-digetx@gmail.com>
+Subject: [PATCH v6 13/16] dmaengine: tegra-apb: Add missing of_dma_controller_free
+Date:   Thu, 30 Jan 2020 07:38:01 +0300
+Message-Id: <20200130043804.32243-14-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200130043804.32243-1-digetx@gmail.com>
 References: <20200130043804.32243-1-digetx@gmail.com>
@@ -79,27 +79,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is nothing arch-specific in the driver's code, so let's enable
-compile-testing for the driver.
+The DMA controller shall be released on driver's removal.
 
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 98daf3aafdcc..7fc725d928b2 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -617,7 +617,7 @@ config TXX9_DMAC
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 4a371891b7c4..8f4281ab6296 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -1587,6 +1587,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
+ {
+ 	struct tegra_dma *tdma = platform_get_drvdata(pdev);
  
- config TEGRA20_APB_DMA
- 	tristate "NVIDIA Tegra20 APB DMA support"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	select DMA_ENGINE
- 	help
- 	  Support for the NVIDIA Tegra20 APB DMA controller driver. The
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_unprepare(tdma->dma_clk);
 -- 
 2.24.0
 
