@@ -2,117 +2,80 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDEFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEEDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C180206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E6E206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580379277;
+	bh=7+a/JdBuU0Ik2kLLVqVSrGbsAkLWIhTEzDwbXHfTo84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N59A+Cw/HXExDpg+yuHA+mbrYQjDegSrZC9j1hzjGzzjFYF7ABFP/ZkrnKlbXkYuQ
+	 Z5jQdBlTdJZxfOgioPpHilvagQLGPpgmvwq24fMX/64XeBMMXs3sK9W5RAVYuBH7/U
+	 Fs4iFHAFNz5GbQsSzf5FkesZvaCPVWRHd+EU1V6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgA3KON (ORCPT
+        id S1727134AbgA3KOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:14:13 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49128 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgA3KON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:14:13 -0500
-Received: by mail-io1-f71.google.com with SMTP id e15so1606196ioh.15
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 02:14:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t4vo0u6KTxFmuW+mHcgJMo7mTce20UYxGm5eCY798RA=;
-        b=jKLZlYq/one1AIAVDvUtzvnB2PnSqtmEo1Npeh3FMAJHZGHO5uxfs5kjHmdM8QftDy
-         zxDLislOzAukMU7PLKr75Nh/fNRFD3tjYau2YODGnT8IgISZcZqBGQ0aFLxrQ3VijGwN
-         zu1jFE/xzkr7MMjuN6BeBVQKhsNKP18wMrfzmc7G/6iK0Vl4UhQ4mmTi4zRgb6xKmccE
-         fZ0lqtiaZYXMuuqLrvZhmAaYpBwmnNyVDMKNpKUtiQOvGtzgJ015RtwPkITFRsuwMXb/
-         pzesH3dSVq7Ner6KYiKq/jSI8CxPKE+MfwTg3DaIAf3ZMuMNqXWIgrg5tHAcXQSgJaoT
-         +QKQ==
-X-Gm-Message-State: APjAAAVWdD46S2QmgqOUCBUy5W6fbveHM/yyZRbGAuDhjLwbWV4opjbC
-        Iewg1Y6UIOoXfsNnjjOSOKBndTvAZg7OFYU+61o07ZUaRRsm
-X-Google-Smtp-Source: APXvYqyONdgzswDRKfG1rhocXQ7TVEMtch8eeq/tqqhxi82eDLzCNnoaJ2Bd3fTC9XZdSe5R8UP1ZRpOsy1KxhBq992CW6Yxw+1L
-MIME-Version: 1.0
-X-Received: by 2002:a5e:8f41:: with SMTP id x1mr3578346iop.113.1580379252307;
- Thu, 30 Jan 2020 02:14:12 -0800 (PST)
-Date:   Thu, 30 Jan 2020 02:14:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1bced059d58b712@google.com>
-Subject: WARNING in default_device_exit_batch
-From:   syzbot <syzbot+dfdfbdef099aa0f92df1@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com, edumazet@google.com,
-        gnault@redhat.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, nicolas.dichtel@6wind.com,
+        Thu, 30 Jan 2020 05:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgA3KOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 05:14:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6775A206D5;
+        Thu, 30 Jan 2020 10:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580379275;
+        bh=7+a/JdBuU0Ik2kLLVqVSrGbsAkLWIhTEzDwbXHfTo84=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i+6w+VlwvJ2VhG4DX2kkJ/tzqgan60dczqPTXcJpsm0sfqaNrGK8xpX/+m8T9aIyH
+         nFycxwThI1a+58K19FxSd9bO1B0/VTdppr0f5Fm/qq2trZcr7uDq9LKlydCvWXw02H
+         uCqsIouyCrmn8OmsZleBXEjE5zbHBDi6JXn5EI4U=
+Date:   Thu, 30 Jan 2020 11:14:33 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     syzbot <syzbot+2b149e3a2468e54d2178@syzkaller.appspotmail.com>
+Cc:     arnd@arndb.de, clemens@ladisch.de, linux-kernel@vger.kernel.org,
         syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: upstream boot error: KASAN: slab-out-of-bounds Write in
+ hpet_alloc
+Message-ID: <20200130101433.GB866317@kroah.com>
+References: <000000000000e3e280059d589ef4@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e3e280059d589ef4@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Jan 30, 2020 at 02:07:11AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    39bed42d Merge tag 'for-linus-hmm' of git://git.kernel.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1569d9a5e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2646535f8818ae25
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2b149e3a2468e54d2178
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+2b149e3a2468e54d2178@syzkaller.appspotmail.com
 
-syzbot found the following crash on:
+Fix is already in my tree and will show up in the next linux-next.
 
-HEAD commit:    08a45c59 Merge branch 'mptcp-part-two'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1799f721e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8d2cca7133bc3ccc
-dashboard link: https://syzkaller.appspot.com/bug?extid=dfdfbdef099aa0f92df1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+thanks,
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+dfdfbdef099aa0f92df1@syzkaller.appspotmail.com
-
-bond2 (unregistering): Released all slaves
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 7 at net/core/dev.c:8782 rollback_registered_many+0xcca/0x1030 net/core/dev.c:8782
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:rollback_registered_many+0xcca/0x1030 net/core/dev.c:8782
-Code: 6b 1a 00 00 48 c7 c6 40 b7 d6 88 48 c7 c7 20 b8 d6 88 c6 05 03 9f 52 04 01 e8 51 3b 20 fb 0f 0b e9 a1 fd ff ff e8 46 8b 4f fb <0f> 0b e9 76 fd ff ff e8 3a 8b 4f fb 0f 0b e9 af fa ff ff e8 2e 8b
-RSP: 0018:ffffc90000cdf9c0 EFLAGS: 00010293
-RAX: ffff8880a99a81c0 RBX: ffff888057e90000 RCX: ffffffff862571fe
-RDX: 0000000000000000 RSI: ffffffff8625748a RDI: 0000000000000001
-RBP: ffffc90000cdfae8 R08: ffff8880a99a81c0 R09: fffffbfff149c655
-R10: fffffbfff149c654 R11: ffffffff8a4e32a7 R12: ffff8880946ee6c0
-R13: dffffc0000000000 R14: 00000000a0105a01 R15: ffffc90000cdfac0
- unregister_netdevice_many.part.0+0x1b/0x1f0 net/core/dev.c:9912
- unregister_netdevice_many net/core/dev.c:9911 [inline]
- default_device_exit_batch+0x360/0x420 net/core/dev.c:10385
- ops_exit_list.isra.0+0x10c/0x160 net/core/net_namespace.c:175
- cleanup_net+0x549/0xb10 net/core/net_namespace.c:589
- process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
