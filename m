@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A71C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E1CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8A62082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7512820674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409991;
-	bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+	s=default; t=1580409994;
+	bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKhf9mzH38/sK7ojt7+tSrEal2hBnLUR0K8PvY9+ltETOAKNpuvGwTRI6Pss/VjXY
-	 8avxyZlMmdwjiKUAdSHlKs71IwsD6FZKIGERdiN75VMUamYeRjgIi+MRigV3xGDHPy
-	 K2WpQpESIRocv3DXM/uamDqAw2HoeJhJMI+UveZM=
+	b=NUT8POQlWM3G0J5arH6tvNXo/SoUB5uZnrrp0rNUSfGkDvYzVPXxgcG5l7HEk/Ab5
+	 8OFt5pZWJakP3CqupNLlKKUbAtKGwngboSQaG+GypJqmhXs59toPljV09cC7Bhp/2G
+	 WlNPQiSMD+nydnq+03n1xalUj1m1jF9h169S3kR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgA3Sqb (ORCPT
+        id S1730966AbgA3Sqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbgA3Sq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:26 -0500
+        id S1731190AbgA3SqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3ED205F4;
-        Thu, 30 Jan 2020 18:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE9320674;
+        Thu, 30 Jan 2020 18:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409985;
-        bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
+        s=default; t=1580409983;
+        bh=xjiIuT2evy8epx2GISn700fzYHTLGE7gpt2NB0cwO60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJz612MTmqaJ4slYZPyEmp7xU2SwLeCAopmcNRmVxz32fBjnb25KqWSx78b0qvyAQ
-         yBdUIrOe/0eOF5e8wkkeC7OLHNYDlXb7m0Fl6vEM6xXCj7ap8qbwY2Ya8rdR08B+Xi
-         Y3ilNezcOF+mqMjm5sN7DO2tXDdy4vk+xTPE/8Xc=
+        b=2unGKum/abviiiSlkrMBEzMuTd/rh6j95jo5JLTqMzN3qDW0Ss7WO/LcH5DWCsTK0
+         tRtvdGn9uO0Nhe8Mdy1FH1SakHMGzCDxTlldGr75jYJkZ86GCKk+agfHwY00EzE2uX
+         4YwWgjC7vK0sY9QjZGKk8jtDlT1uEGHtIarNL+eQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/110] ALSA: hda/realtek - Move some alc236 pintbls to fallback table
-Date:   Thu, 30 Jan 2020 19:39:12 +0100
-Message-Id: <20200130183625.285401267@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Ellis <sellis@redhat.com>,
+        Pacho Ramos <pachoramos@gmail.com>,
+        Laura Abbott <labbott@fedoraproject.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 095/110] usb-storage: Disable UAS on JMicron SATA enclosure
+Date:   Thu, 30 Jan 2020 19:39:11 +0100
+Message-Id: <20200130183625.212740705@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,58 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Laura Abbott <labbott@fedoraproject.org>
 
-[ Upstream commit d64ebdbfd4f71406f58210f5ccb16977b4cd31d2 ]
+[ Upstream commit bc3bdb12bbb3492067c8719011576370e959a2e6 ]
 
-We have a new Dell machine which needs to apply the quirk
-ALC255_FIXUP_DELL1_MIC_NO_PRESENCE, try to use the fallback table
-to fix it this time. And we could remove all pintbls of alc236
-for applying DELL1_MIC_NO_PRESENCE on Dell machines.
+Steve Ellis reported incorrect block sizes and alignement
+offsets with a SATA enclosure. Adding a quirk to disable
+UAS fixes the problems.
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20191121022644.8078-2-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Steven Ellis <sellis@redhat.com>
+Cc: Pacho Ramos <pachoramos@gmail.com>
+Signed-off-by: Laura Abbott <labbott@fedoraproject.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
+ drivers/usb/storage/unusual_uas.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index d293488dc3dd3..68832f52c1ad2 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7563,20 +7563,6 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
- 		{0x19, 0x02a11020},
- 		{0x1a, 0x02a11030},
- 		{0x21, 0x0221101f}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x90a60140},
--		{0x14, 0x90170110},
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x90a60140},
--		{0x14, 0x90170150},
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x21, 0x02211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
--		{0x12, 0x40000000},
--		{0x14, 0x90170110},
--		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x02211020}),
-@@ -7901,6 +7887,9 @@ static const struct snd_hda_pin_quirk alc269_fallback_pin_fixup_tbl[] = {
- 	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
- 		{0x19, 0x40000000},
- 		{0x1a, 0x40000000}),
-+	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x19, 0x40000000},
-+		{0x1a, 0x40000000}),
- 	{}
- };
+diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
+index d0bdebd87ce3a..1b23741036ee8 100644
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -87,12 +87,15 @@ UNUSUAL_DEV(0x2537, 0x1068, 0x0000, 0x9999,
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_IGNORE_UAS),
  
+-/* Reported-by: Takeo Nakayama <javhera@gmx.com> */
++/*
++ * Initially Reported-by: Takeo Nakayama <javhera@gmx.com>
++ * UAS Ignore Reported by Steven Ellis <sellis@redhat.com>
++ */
+ UNUSUAL_DEV(0x357d, 0x7788, 0x0000, 0x9999,
+ 		"JMicron",
+ 		"JMS566",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_NO_REPORT_OPCODES),
++		US_FL_NO_REPORT_OPCODES | US_FL_IGNORE_UAS),
+ 
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x4971, 0x1012, 0x0000, 0x9999,
 -- 
 2.20.1
 
