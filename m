@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF17C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EC3C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B32E20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC012082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410446;
-	bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
+	s=default; t=1580410451;
+	bh=aGwpC8iju2NDmog4SVcTMHJcsWidLpQKpc1y0YLMHAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpfdmIOD0Z+3CydaIno16NTwEH7H4GYorMar2b1KL6gQW49Hzp4jShdMiFJtsXpuu
-	 qySmyRxTw0f4OyJ/bvqEhtKIIDfb2E1atNW2MD0igYA/6YcQEKfaa8BWYanUOu9MY9
-	 megplPxgVi4i8NypGGg1prI+xIBPCDJE2t4T/QcA=
+	b=awH8QPavQF521ELL8XVVbLcS8qZ16j0djjFPLvj3+j+7NfYwAfa3eUjdT2zgXXeaE
+	 J1aIWp3t5Fknpm4vyGlmVkDybBwDnTadIaJCXdIMKwDrVxPMlOj/siXpcpu2/58clh
+	 j6BBPgDZt/AqohKtsYf5GUSwX0WxUC/q8nZ+NX5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731795AbgA3SyF (ORCPT
+        id S1729996AbgA3Ski (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgA3Skq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:46 -0500
+        id S1729978AbgA3Skf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B16214AF;
-        Thu, 30 Jan 2020 18:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C69D214AF;
+        Thu, 30 Jan 2020 18:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409646;
-        bh=JR1RwpBMjLTWErhKmNkJO3sfcrMLDq74tnVgsfQQTM8=;
+        s=default; t=1580409633;
+        bh=aGwpC8iju2NDmog4SVcTMHJcsWidLpQKpc1y0YLMHAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/vVAEWADN5gAAzF5mvVlkW8j9UIyo8lK3lqdO8hSuzLIPcyl+0uTnvM5Rdd5sePC
-         gqHAqCP1NdCkoqj1Owr9Aq//mbJjTz0HrhMK7+9QItB4OtzvLKLYS97zA4O7RfBBGa
-         +6MmKCqCzpwhr/9O2GkA2TRFHB6Jh3jGfu04QlcI=
+        b=z/2YUu23ctYJo8caWk1OGr9x6im1Nk6gGVx1nGeyd4FbOat24AG4FyjLScJG21mEe
+         AU2NTuFQjyAF9alaUt6cGqzOfZHMvFR7ooostB1cNU+BMZv9wza1Hh/gBvf+rS25+Y
+         jKAIzzwvv1v61QKwz9Of6g7J5HUYGHCWY1z/iM7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 32/56] ath9k: fix storage endpoint lookup
-Date:   Thu, 30 Jan 2020 19:38:49 +0100
-Message-Id: <20200130183614.877209750@linuxfoundation.org>
+        stable@vger.kernel.org, Atul Gupta <atul.gupta@chelsio.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 28/56] crypto: chelsio - fix writing tfm flags to wrong place
+Date:   Thu, 30 Jan 2020 19:38:45 +0100
+Message-Id: <20200130183614.222569639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -59,37 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
+commit bd56cea012fc2d6381e8cd3209510ce09f9de8c9 upstream.
 
-Make sure to use the current alternate setting when verifying the
-storage interface descriptors to avoid submitting an URB to an invalid
-endpoint.
+The chelsio crypto driver is casting 'struct crypto_aead' directly to
+'struct crypto_tfm', which is incorrect because the crypto_tfm isn't the
+first field of 'struct crypto_aead'.  Consequently, the calls to
+crypto_tfm_set_flags() are modifying some other field in the struct.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Also, the driver is setting CRYPTO_TFM_RES_BAD_KEY_LEN in
+->setauthsize(), not just in ->setkey().  This is incorrect since this
+flag is for bad key lengths, not for bad authentication tag lengths.
 
-Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
-Cc: stable <stable@vger.kernel.org>     # 2.6.39
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fix these bugs by removing the broken crypto_tfm_set_flags() calls from
+->setauthsize() and by fixing them in ->setkey().
+
+Fixes: 324429d74127 ("chcr: Support for Chelsio's Crypto Hardware")
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Atul Gupta <atul.gupta@chelsio.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/chelsio/chcr_algo.c |   16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -1216,7 +1216,7 @@ err_fw:
- static int send_eject_command(struct usb_interface *interface)
- {
- 	struct usb_device *udev = interface_to_usbdev(interface);
--	struct usb_host_interface *iface_desc = &interface->altsetting[0];
-+	struct usb_host_interface *iface_desc = interface->cur_altsetting;
- 	struct usb_endpoint_descriptor *endpoint;
- 	unsigned char *cmd;
- 	u8 bulk_out_ep;
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -3195,9 +3195,6 @@ static int chcr_gcm_setauthsize(struct c
+ 		aeadctx->mayverify = VERIFY_SW;
+ 		break;
+ 	default:
+-
+-		  crypto_tfm_set_flags((struct crypto_tfm *) tfm,
+-			CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		return -EINVAL;
+ 	}
+ 	return crypto_aead_setauthsize(aeadctx->sw_cipher, authsize);
+@@ -3222,8 +3219,6 @@ static int chcr_4106_4309_setauthsize(st
+ 		aeadctx->mayverify = VERIFY_HW;
+ 		break;
+ 	default:
+-		crypto_tfm_set_flags((struct crypto_tfm *)tfm,
+-				     CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		return -EINVAL;
+ 	}
+ 	return crypto_aead_setauthsize(aeadctx->sw_cipher, authsize);
+@@ -3264,8 +3259,6 @@ static int chcr_ccm_setauthsize(struct c
+ 		aeadctx->mayverify = VERIFY_HW;
+ 		break;
+ 	default:
+-		crypto_tfm_set_flags((struct crypto_tfm *)tfm,
+-				     CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		return -EINVAL;
+ 	}
+ 	return crypto_aead_setauthsize(aeadctx->sw_cipher, authsize);
+@@ -3290,8 +3283,7 @@ static int chcr_ccm_common_setkey(struct
+ 		ck_size = CHCR_KEYCTX_CIPHER_KEY_SIZE_256;
+ 		mk_size = CHCR_KEYCTX_MAC_KEY_SIZE_256;
+ 	} else {
+-		crypto_tfm_set_flags((struct crypto_tfm *)aead,
+-				     CRYPTO_TFM_RES_BAD_KEY_LEN);
++		crypto_aead_set_flags(aead, CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		aeadctx->enckey_len = 0;
+ 		return	-EINVAL;
+ 	}
+@@ -3329,8 +3321,7 @@ static int chcr_aead_rfc4309_setkey(stru
+ 	int error;
+ 
+ 	if (keylen < 3) {
+-		crypto_tfm_set_flags((struct crypto_tfm *)aead,
+-				     CRYPTO_TFM_RES_BAD_KEY_LEN);
++		crypto_aead_set_flags(aead, CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		aeadctx->enckey_len = 0;
+ 		return	-EINVAL;
+ 	}
+@@ -3380,8 +3371,7 @@ static int chcr_gcm_setkey(struct crypto
+ 	} else if (keylen == AES_KEYSIZE_256) {
+ 		ck_size = CHCR_KEYCTX_CIPHER_KEY_SIZE_256;
+ 	} else {
+-		crypto_tfm_set_flags((struct crypto_tfm *)aead,
+-				     CRYPTO_TFM_RES_BAD_KEY_LEN);
++		crypto_aead_set_flags(aead, CRYPTO_TFM_RES_BAD_KEY_LEN);
+ 		pr_err("GCM: Invalid key length %d\n", keylen);
+ 		ret = -EINVAL;
+ 		goto out;
 
 
