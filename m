@@ -2,125 +2,117 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A218EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7942DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813DA206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F67720702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YUsBAZ71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgA3MdC (ORCPT
+        id S1727234AbgA3Mfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:33:02 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35510 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3MdC (ORCPT
+        Thu, 30 Jan 2020 07:35:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36373 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgA3Mfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:33:02 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r16so2967386otd.2;
-        Thu, 30 Jan 2020 04:33:01 -0800 (PST)
+        Thu, 30 Jan 2020 07:35:33 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g15so2964045otp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 04:35:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JChikV2eDuxHeLtfwZM5oT2t0AhKhE72FILijwgC87M=;
+        b=YUsBAZ71sBC1TVR1hKRZFi1hmpwB9zhsnlhdWL3ICTqBooSAMFFMXZbSBFSKgdRiRs
+         2xsfHXBBEj7yGw0MZ0CGqRBIfoJlZVnnBAVwixr97b3sdPC7zE3bdgnIZiMsmjnl4kta
+         7otz7uWSguPylhanlVvJmGvb9wkkGJn83byq0JK2qzqW2QxovIam5kWVILEYi++eLZgC
+         3Bjd4uumjplegcu8AiADFuzxLn05QfbOtY/PhGncK+3qM6wwUm/c/CpY0o8suWm3UiMl
+         3zkdHX1df6YOWpCuAAolzgzgxy3/itRkFubaSIbf2WSQVtTZWmGp5EfW8hnz0rWRvHCY
+         /HnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SF4A8MXH4i+NehAjiTIe/wipSti1DDnySBzIoKhtngY=;
-        b=eSq6OFsX4FUlr2UyT62wcGR/P57xE6a1RWZKmFOUveUDcc2MF6HDoUuqNOKoI/hX/Q
-         5mG9gOuUPYXSq10Qquk70XLbbshE489kwzMlFyZ/fEMlG1cIKE/CzjcSdydLnhPi93pY
-         oUiTEq0UNwlUVxyKVDVRblmdhGAbQT9xy25izoBxIHzbm7hJYMOJqM4Ost6sGI3KcV1G
-         gqRgmUqoqjbDSgGI83nRBNWfLmi5uX1BpcJiQ2PgVmRuTAvi1Z/KTVwzYLhEphYxUJOT
-         cLxQusUClWa9kQ1e5q+NZnJLeiH2oO8cubqo3dFJKVzHmCwvo5wPP6cUAVeldR5XuTgr
-         Rfrg==
-X-Gm-Message-State: APjAAAVpvdwBCH8pCGTItPOSbZJJAPxLOQZpQw64tf297s9Ibff0pkIj
-        TIpPhBLdXTu5Th82Y6AOkaWnFsLRXCSkwzbjVkc=
-X-Google-Smtp-Source: APXvYqymSbwIVGK+M1CJKuu8V4/Pmg47Q6gWht5FbqvzeN05ArmzMI8NjyeixcBdRSkS9xgrJChKC5UFlRm4eXp+0T0=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr3438190otm.297.1580387581450;
- Thu, 30 Jan 2020 04:33:01 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JChikV2eDuxHeLtfwZM5oT2t0AhKhE72FILijwgC87M=;
+        b=ofKSCWH1oDofmbH5spCyGiuHrDix4c36ML5+645Aa0fRz2hE/C02tnzR1GczGt4RJ7
+         zQbNAuLNSoVJGYJfdiHCPOXitu/DjpLZJefBVl0UPu7sYwaEwkXpVdnSxrhKiXRLeovO
+         kI2Q0LvemHz/5Fthvb2fGWtEu74pBH8Mn3jFrIleZykhEU3jFmxbRz1/lT23TSEjeSXK
+         5j0ztwdbpocXdK5hfZ3brni8KDLSUNeA8+i9cP+J4a43Nt4qSfCjNkAoFbvsckEAfcdQ
+         4dOApLwk1TZXvV9xGxCMlk8oI87I0GSbnwYJSKAN2g95MCl5J9gdInXCmQWPW8gwmA3Y
+         4Yrw==
+X-Gm-Message-State: APjAAAUTlwKLd6CbSFuZnCCeuKWggec/EYtAql8bIEqHuctGG60PVzC5
+        DFRkD8O+jkNpWM0fqOW8j+zMsSE/t77+OUQcRrSGXw==
+X-Google-Smtp-Source: APXvYqxlMiItmIGzWpPjTehVgqmQudgnyMa5XuMeysm+8SBqlIDbsQDGlMs2wwGLilvOTimeqi4YyHBwdOczbyzWLKQ=
+X-Received: by 2002:a9d:4711:: with SMTP id a17mr3422842otf.233.1580387729374;
+ Thu, 30 Jan 2020 04:35:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200129161955.30562-1-erosca@de.adit-jv.com>
-In-Reply-To: <20200129161955.30562-1-erosca@de.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 13:32:50 +0100
-Message-ID: <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Support custom speed setting
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Magnus Damm <magnus.damm@gmail.com>
+References: <20200130042011.GI6615@bombadil.infradead.org> <1135BD67-4CCB-4700-8150-44E7E323D385@lca.pw>
+In-Reply-To: <1135BD67-4CCB-4700-8150-44E7E323D385@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 30 Jan 2020 13:35:18 +0100
+Message-ID: <CANpmjNNr_Kq6Do+UYrR-3aF0sO3++psUfN7Ppt8mmgcF5ynzrA@mail.gmail.com>
+Subject: Re: [PATCH] mm/util: fix a data race in __vm_enough_memory()
+To:     Qian Cai <cai@lca.pw>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, dennis@kernel.org,
+        tj@kernel.org, Christoph Lameter <cl@linux.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
-
-On Wed, Jan 29, 2020 at 5:20 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
+On Thu, 30 Jan 2020 at 12:50, Qian Cai <cai@lca.pw> wrote:
 >
-> This patch is necessary to use BT module and XM module with DENSO TEN
-> development board.
+> > On Jan 29, 2020, at 11:20 PM, Matthew Wilcox <willy@infradead.org> wrot=
+e:
+> >
+> > I'm really not a fan of exposing the internals of a percpu_counter outs=
+ide
+> > the percpu_counter.h file.  Why shouldn't this be fixed by putting the
+> > READ_ONCE() inside percpu_counter_read()?
 >
-> This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
-> custom speed setting with setserial(1).
+> It is because not all places suffer from a data race. For example, in __w=
+b_update_bandwidth(), it was protected by a lock. I was a bit worry about b=
+lindly adding READ_ONCE() inside percpu_counter_read() might has unexpected=
+ side-effect. For example, it is unnecessary to have READ_ONCE() for a vola=
+tile variable. So, I thought just to keep the change minimal with a trade o=
+ff by exposing a bit internal details as you mentioned.
 >
-> The custom speed is calculated from uartclk and custom_divisor.
-> If custom_divisor is zero, custom speed setting is invalid.
->
-> Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> [erosca: rebase against v5.5]
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> However, I had also copied the percpu maintainers to see if they have any=
+ preferences?
 
-Thanks for your patch!
+I would not add READ_ONCE to percpu_counter_read(), given the writes
+(increments) are not atomic either, so not much is gained.
 
-While this seems to work fine[*], I have a few comments/questions:
-  1. This feature seems to be deprecated:
+Notice that this is inside a WARN_ONCE, so you may argue that a data
+race here doesn't matter to the correct behaviour of the system
+(except if you have panic_on_warn on).
 
-         sh-sci e6e68000.serial: setserial sets custom speed on
-ttySC1. This is deprecated.
+For the warning to trigger, vm_committed_as must decrease. Assume that
+a data race (assuming bad compiler optimizations) can somehow
+accomplish this, then the load or write must cause a transient value
+to somehow be less than a stable value. My hypothesis is this is very
+unlikely.
 
-  2. As the wanted speed is specified as a divider, the resulting speed
-     may be off, cfr. the example for 57600 below.
-     Note that the SCIF device has multiple clock inputs, and can do
-     57600 perfectly if the right crystal has been fitted.
+Given the fact this is a WARN_ONCE, and the fact that a transient
+decrease in the value is unlikely, you may consider
+'VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as)) <
+...)'. That way you won't modify percpu_counter_read and still catch
+unintended races elsewhere.
 
- 3. What to do with "[PATCH/RFC] serial: sh-sci: Update uartclk based
-     on selected clock" (https://patchwork.kernel.org/patch/11103703/)?
-     Combined with this, things become pretty complicated and
-     unpredictable, as uartclk now always reflect the frequency of the
-     last used base clock, which was the optimal one for the previously
-     used speed....
+[ Note that the 'data_race()' macro is still only in -next, -tip, and -rcu.=
+ ]
 
-I think it would be easier if we just had an API to specify a raw speed.
-Perhaps that already exists?
-
-BTW, what's the speed you need for your BT/XM modules?
-
-[*] stty speed 38400 < /dev/ttySC1 followed by
-    setserial /dev/ttySC1 spd_cust divisor 1128 gives 57624 bps on Koelsch.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+-- Marco
