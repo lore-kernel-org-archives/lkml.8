@@ -2,100 +2,138 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7CFC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB30FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF1D206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:16:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLyXhXuS"
+	by mail.kernel.org (Postfix) with ESMTP id B1226206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgA3CQw (ORCPT
+        id S1726863AbgA3CRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 21:16:52 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41817 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgA3CQv (ORCPT
+        Wed, 29 Jan 2020 21:17:42 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726715AbgA3CRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 21:16:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so1963031oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:16:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ESEG2SF4akO3jo6AanTsK74LjMSE+YgL8aNUFKiXd6Q=;
-        b=hLyXhXuSVgxb+NZsynbVR3QoYFnSUmGs00E2bmQLv0Gc/8BpQYV4mTPnD8RudQfgQ6
-         RZk1sxQaqEH61oPbAi06tfzJmyRw168PjFcXX/JlcLd58nGifG6S2nkQsLPak2lxGMdR
-         yqkKGmSDPJ4NDoo3C+7DgKKau/yT0G7uWG/gDSIKTlzRpe/x/px8BA9uRPQXyDEGF3w+
-         hkH8HMXuwc59SyLTBaaaqYQoqeJPAc4Wb2EE+c2cp7JoY79YCClE+CGwK5y0CSULE0Bs
-         0vxbG0iiruPpY1GULNGoYb/BR9nfvJ5D56MgxeZI7vNaxnKiY774QxcgBCQgev1XPeGh
-         aSIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ESEG2SF4akO3jo6AanTsK74LjMSE+YgL8aNUFKiXd6Q=;
-        b=hmwrK86HknfzxAun8+24RrCtOLD39Uva91BSAtZoayKXwgrnfVK03Y1jBtY9AMnjy3
-         KjXMpBhpUsYAuwJqq/4gZK7gx5Pfji03PO9+nLa5EytZ6fXSJN7svXEhkOild5urwx9+
-         tROWluUzYlMFtuUzqOVm27wd9B7YTtooZiknjUUBJFVNq+lUfuKW3g3WbmKhsOYhBAvc
-         2zHMtvO/E1Jp6UMXpgtUKvD1wMmgf7PbxtqrnYN2LxLkByZIfIEqfAkQ/lRorKJEDVCJ
-         xmLO0GSIe4K3JXE+uOxowvzAIv1FN6NxLVQS/pt9XWhCv4wYPRc7Y/IMEb19iGEKX2fF
-         xFXw==
-X-Gm-Message-State: APjAAAVXMPCkjZ+XxZ8B3sExDwS5F1XH81Ob1dR+w9anyUnDEg/gxsvB
-        rKdL+LAdeYSyhTo6Gv55HMbHMAgf
-X-Google-Smtp-Source: APXvYqynhyei0zV/c5d79YEq3hJvt3n0EfRNdiF0zgrTRs6pNn74WKX554VGDb7T9EL0Keh53TcHAw==
-X-Received: by 2002:aca:4809:: with SMTP id v9mr1377408oia.92.1580350610665;
-        Wed, 29 Jan 2020 18:16:50 -0800 (PST)
-Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g25sm1355617otr.8.2020.01.29.18.16.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jan 2020 18:16:50 -0800 (PST)
-Date:   Wed, 29 Jan 2020 19:16:48 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: -Wfortify-source in kernel/printk/printk.c
-Message-ID: <20200130021648.GA32309@ubuntu-x2-xlarge-x86>
+        Wed, 29 Jan 2020 21:17:41 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00U29Y60077227
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 21:17:40 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xttnubhm1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 21:17:40 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Thu, 30 Jan 2020 02:17:38 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 Jan 2020 02:17:35 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00U2HYDh32178262
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 02:17:34 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74D82AE04D;
+        Thu, 30 Jan 2020 02:17:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36E6FAE045;
+        Thu, 30 Jan 2020 02:17:32 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.51.93])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Jan 2020 02:17:31 +0000 (GMT)
+Date:   Thu, 30 Jan 2020 07:47:29 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 27/28] tools/cgroup: make slabinfo.py compatible with
+ new slab controller
+Reply-To: bharata@linux.ibm.com
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-28-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200127173453.2089565-28-guro@fb.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20013002-4275-0000-0000-0000039C283E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013002-4276-0000-0000-000038B044AF
+Message-Id: <20200130021729.GB21973@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_08:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, Jan 27, 2020 at 09:34:52AM -0800, Roman Gushchin wrote:
+> Make slabinfo.py compatible with the new slab controller.
+ 
+Tried using slabinfo.py, but run into some errors. (I am using your
+new_slab.2 branch)
 
-After commit 6d485ff455e ("Improve static checks for sprintf and
-__builtin___sprintf_chk") in clang [1], the following warning appears
-when CONFIG_PRINTK is disabled (e.g. allnoconfig):
+ ./tools/cgroup/slabinfo.py /sys/fs/cgroup/memory/1
+Traceback (most recent call last):
+  File "/usr/local/bin/drgn", line 11, in <module>
+    sys.exit(main())
+  File "/usr/local/lib/python3.6/dist-packages/drgn/internal/cli.py", line 127, in main
+    runpy.run_path(args.script[0], init_globals=init_globals, run_name="__main__")
+  File "/usr/lib/python3.6/runpy.py", line 263, in run_path
+    pkg_name=pkg_name, script_name=fname)
+  File "/usr/lib/python3.6/runpy.py", line 96, in _run_module_code
+    mod_name, mod_spec, pkg_name, script_name)
+  File "/usr/lib/python3.6/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "./tools/cgroup/slabinfo.py", line 220, in <module>
+    main()
+  File "./tools/cgroup/slabinfo.py", line 165, in main
+    find_memcg_ids()
+  File "./tools/cgroup/slabinfo.py", line 43, in find_memcg_ids
+    MEMCGS[css.cgroup.kn.id.ino.value_()] = memcg
+AttributeError: '_drgn.Object' object has no attribute 'ino'
 
-../kernel/printk/printk.c:2416:10: warning: 'sprintf' will always
-overflow; destination buffer has size 0, but format string expands
-to at least 33 [-Wfortify-source]
-                        len = sprintf(text,
-                              ^
-1 warning generated.
+I did make this change...
 
-Specifically referring to
-https://elixir.bootlin.com/linux/v5.5/source/kernel/printk/printk.c#L2416.
+# git diff
+diff --git a/tools/cgroup/slabinfo.py b/tools/cgroup/slabinfo.py
+index b779a4863beb..571fd95224d6 100755
+--- a/tools/cgroup/slabinfo.py
++++ b/tools/cgroup/slabinfo.py
+@@ -40,7 +40,7 @@ def find_memcg_ids(css=prog['root_mem_cgroup'].css, prefix=''):
+                                        'sibling'):
+             name = prefix + '/' + css.cgroup.kn.name.string_().decode('utf-8')
+             memcg = container_of(css, 'struct mem_cgroup', 'css')
+-            MEMCGS[css.cgroup.kn.id.ino.value_()] = memcg
++            MEMCGS[css.cgroup.kn.id.value_()] = memcg
+             find_memcg_ids(css, name)
 
-It isn't wrong, given that when CONFIG_PRINTK is disabled, text's length
-is 0 (LOG_LINE_MAX and PREFIX_MAX are both zero). How should this
-warning be dealt this? I am not familiar enough with the printk code to
-say myself.
 
-[1]: https://github.com/llvm/llvm-project/commit/6d485ff455ea2b37fef9e06e426dae6c1241b231
+but now get empty output.
 
-Cheers,
-Nathan
+# ./tools/cgroup/slabinfo.py /sys/fs/cgroup/memory/1
+# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+
+Guess this script is not yet ready for the upstream kernel?
+
+Regards,
+Bharata.
+
