@@ -2,54 +2,55 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1898FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF4BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E243E20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E9620702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410264;
-	bh=iKjqdQ3xF9xmP29Ev2BGUdYr1kdrt+juC44ZexWRT4M=;
+	s=default; t=1580410267;
+	bh=43kTr0NPBcUNY5/WCSeWOm0xRl5ynf2UYA22QRGlEVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2BJK0rcbs4Kxte4Y95Ohx57TcqvDYMkz8vWwcF5hhn1FIcmIxVOE213Kwb9UH3l/
-	 c58ZPVz/4DhQu+cPjubOrvuD1S6kWJwbx7lzgWBaC94BCsC4K+y9mNx9v6Fs+nnd2Q
-	 nPmYWCxF97huss+o+o12lavZtfMHF7RPk+7ScQCQ=
+	b=rOYxz+i8lxJc/xaCo+JoYxhhGp9qTZkSdsCinmNGR6VYkj9K8VJimJQWITcIfMyCr
+	 tarIu06ejxdfTfd9Qt0RvG3DB0t6V2f7MmTrgDavhiyBgNxH6T6NabzxkEc2ud7VYe
+	 f1bjS6vloi22WdAOc0LA0YGJmZiVtsT6UItqtTRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgA3SvC (ORCPT
+        id S1731136AbgA3SqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56094 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731151AbgA3SqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:11 -0500
+        id S1731103AbgA3Spy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A932B20CC7;
-        Thu, 30 Jan 2020 18:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B83F2083E;
+        Thu, 30 Jan 2020 18:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409971;
-        bh=iKjqdQ3xF9xmP29Ev2BGUdYr1kdrt+juC44ZexWRT4M=;
+        s=default; t=1580409953;
+        bh=43kTr0NPBcUNY5/WCSeWOm0xRl5ynf2UYA22QRGlEVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k21A9rmnCrpXn4YilQ7XVhgscnhLNgid5jCRCZoT7LTxjRzkryXceCswfdu6rz9Os
-         EjfeghR37YnKZQtwGa2YGAjzNbwmbd1WiGMe1ScBvYCXiQAx/dlrBvdJS2z2EUMa32
-         KwT+bzunG+9lzVtMlbAPKo2CxAEFh0genIf7DEe8=
+        b=YcOj1Zs8eP8T8s8aWz/7vDlVPwCDB0zom3QUo0JqKi9Q5DEvdr78oVxwJzqoXU42U
+         egALbaYJj5pjEpGJ4QvTcMDFYZtdOI2Ak8qpOA6NvT3/OUCJuZnV0HcJkgVsKnfHAH
+         Dx7Bfn66UU6cG2qtR3+zVQ8X+qrlE6Ion86UiWpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 106/110] crypto: caam - do not reset pointer size from MCFGR register
-Date:   Thu, 30 Jan 2020 19:39:22 +0100
-Message-Id: <20200130183626.004894950@linuxfoundation.org>
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/110] phy: cpcap-usb: Prevent USB line glitches from waking up modem
+Date:   Thu, 30 Jan 2020 19:38:34 +0100
+Message-Id: <20200130183621.938204099@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,43 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iuliana Prodan <iuliana.prodan@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 7278fa25aa0ebcc0e62c39b12071069df13f7e77 upstream.
+[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
 
-In commit 'a1cf573ee95 ("crypto: caam - select DMA address size at runtime")'
-CAAM pointer size (caam_ptr_size) is changed from
-sizeof(dma_addr_t) to runtime value computed from MCFGR register.
-Therefore, do not reset MCFGR[PS].
+The micro-USB connector on Motorola Mapphone devices can be muxed between
+the SoC and the mdm6600 modem. But even when used for the SoC, configuring
+the PHY with ID pin grounded will wake up the modem from idle state. Looks
+like the issue is probably caused by line glitches.
 
-Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: <stable@vger.kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Alison Wang <alison.wang@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We can prevent the glitches by using a previously unknown mode of the
+GPIO mux to prevent the USB lines from being connected to the moden while
+configuring the USB PHY, and enable the USB lines after configuring the
+PHY.
 
+Note that this only prevents waking up mdm6600 as regular USB A-host mode,
+and does not help when connected to a lapdock. The lapdock specific issue
+still needs to be debugged separately.
+
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/ctrl.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -685,11 +685,9 @@ static int caam_probe(struct platform_de
- 	of_node_put(np);
+diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
+index 9a38741d3546d..5baf64dfb24de 100644
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
+ enum cpcap_gpio_mode {
+ 	CPCAP_DM_DP,
+ 	CPCAP_MDM_RX_TX,
+-	CPCAP_UNKNOWN,
++	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
+ 	CPCAP_OTG_DM_DP,
+ };
  
- 	if (!ctrlpriv->mc_en)
--		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK | MCFGR_LONG_PTR,
-+		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK,
- 			      MCFGR_AWCACHE_CACH | MCFGR_AWCACHE_BUFF |
--			      MCFGR_WDENABLE | MCFGR_LARGE_BURST |
--			      (sizeof(dma_addr_t) == sizeof(u64) ?
--			       MCFGR_LONG_PTR : 0));
-+			      MCFGR_WDENABLE | MCFGR_LARGE_BURST);
+@@ -381,7 +381,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
+ {
+ 	int error;
  
- 	handle_imx6_err005766(&ctrl->mcr);
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		goto out_err;
  
+@@ -408,6 +409,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
+ 
++	/* Enable UART mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
++	if (error)
++		goto out_err;
++
+ 	return 0;
+ 
+ out_err:
+@@ -420,7 +426,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
+ {
+ 	int error;
+ 
+-	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	/* Disable lines to prevent glitches from waking up mdm6600 */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
+ 	if (error)
+ 		return error;
+ 
+@@ -460,6 +467,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
+ 	if (error)
+ 		goto out_err;
+ 
++	/* Enable USB mode */
++	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
++	if (error)
++		goto out_err;
++
+ 	return 0;
+ 
+ out_err:
+-- 
+2.20.1
+
 
 
