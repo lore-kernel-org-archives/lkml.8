@@ -2,99 +2,192 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1032C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D32C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B951206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B802082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 13:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgA3NPh (ORCPT
+        id S1727346AbgA3NQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 08:15:37 -0500
-Received: from mga06.intel.com ([134.134.136.31]:37750 "EHLO mga06.intel.com"
+        Thu, 30 Jan 2020 08:16:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49944 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgA3NPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:15:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 05:14:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
-   d="scan'208";a="232923285"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 30 Jan 2020 05:14:26 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ix9eN-0006n1-MV; Thu, 30 Jan 2020 15:14:27 +0200
-Date:   Thu, 30 Jan 2020 15:14:27 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] console: Introduce ->exit() callback
-Message-ID: <20200130131427.GZ32742@smile.fi.intel.com>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-5-andriy.shevchenko@linux.intel.com>
- <20200128051711.GB115889@google.com>
- <20200128094418.GY32742@smile.fi.intel.com>
- <20200129134141.GA537@jagdpanzerIV.localdomain>
- <20200129142558.GF32742@smile.fi.intel.com>
- <20200129151243.GA488@jagdpanzerIV.localdomain>
- <20200129165053.GA392@jagdpanzerIV.localdomain>
+        id S1727193AbgA3NQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 08:16:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 20EC1AC24;
+        Thu, 30 Jan 2020 13:16:35 +0000 (UTC)
+Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
+To:     Christopher Lameter <cl@linux.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+References: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
+ <20191204173224.GN25242@dhcp22.suse.cz>
+ <20200106115733.GH12699@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001061550270.23163@www.lameter.com>
+ <20200109145236.GS4951@dhcp22.suse.cz>
+ <20200109114415.cf01bd3ad30c5c4aec981653@linux-foundation.org>
+ <20200117171331.GA17179@blackbody.suse.cz>
+ <20200118161528.94dc18c074aeaa384200486b@linux-foundation.org>
+ <20200127173336.GB17425@blackbody.suse.cz>
+ <alpine.DEB.2.21.2001272304080.25307@www.lameter.com>
+ <20200128085107.GF17425@blackbody.suse.cz>
+ <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <57b0f41f-cb8c-c295-a0a0-5607d30ccf1f@suse.cz>
+Date:   Thu, 30 Jan 2020 14:16:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129165053.GA392@jagdpanzerIV.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.2001281813130.745@www.lameter.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 01:50:53AM +0900, Sergey Senozhatsky wrote:
-> On (20/01/30 00:12), Sergey Senozhatsky wrote:
-> > On (20/01/29 16:25), Andy Shevchenko wrote:
-> > > I understand. Seems the ->setup() has to be idempotent. We can tell the same
-> > > for ->exit() in some comment.
-> > > 
-> > > Can you describe, btw, struct console in kernel doc format?
-> > > It will be very helpful!
-> > 
-> > We probably need some documentation.
-> > 
-> > > > > In both cases we will get the console to have CON_ENABLED flag set.
-> > > > 
-> > > > And there are sneaky consoles that have CON_ENABLED before we even
-> > > > register them.
-> > > 
-> > > So, taking into consideration my comment to the previous patch, what would be
-> > > suggested guard here?
-> > > 
-> > > For a starter something like this?
-> > > 
-> > >   if ((console->flags & CON_ENABLED) && console->exit)
-> > > 	console->exit(console);
-> > 
-> > This will work if we also add something like this
+On 1/28/20 7:13 PM, Christopher Lameter wrote:
+> On Tue, 28 Jan 2020, Michal Koutný wrote:
 > 
-> No, wait... This will not work, console can be suspended, yet
-> still registered. I think the only criteria is "the console is
-> on the list".
+>> On Mon, Jan 27, 2020 at 11:04:53PM +0000, Christopher Lameter <cl@linux.com> wrote:
+>>> The patch exposes details of cgroup caches? Which patch are we talking
+>>> about?
+>> Sorry, that's misunderstanding. I mean the current state (sending
+>> uevents) exposes the internals (creation of caches per cgroup). The
+>> patch [1] removing uevent notifications is rectifying it.
+> 
+> 
+> From: Christoph Lameter <cl@linux.com>
+> Subject: slub: Remove userspace notifier for cache add/remove
+> 
+> Kmem caches are internal kernel structures so it is strange that
+> userspace notifiers would be needed. And I am not aware of any use
+> of these notifiers. These notifiers may just exist because in the
+> initial slub release the sysfs code was copied from another
+> subsystem.
+> 
+> Signed-off-by: Christoph Lameter <cl@linux.com>
 
-Okay, I guess we need to drop CON_ENABLE bits from this patch and
-rely on the res value instead.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Index: linux/mm/slub.c
+> ===================================================================
+> --- linux.orig/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
+> +++ linux/mm/slub.c	2020-01-28 18:13:02.134506141 +0000
+> @@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
+>  	.release = kmem_cache_release,
+>  };
+> 
+> -static int uevent_filter(struct kset *kset, struct kobject *kobj)
+> -{
+> -	struct kobj_type *ktype = get_ktype(kobj);
+> -
+> -	if (ktype == &slab_ktype)
+> -		return 1;
+> -	return 0;
+> -}
+> -
+> -static const struct kset_uevent_ops slab_uevent_ops = {
+> -	.filter = uevent_filter,
+> -};
+> -
+>  static struct kset *slab_kset;
+> 
+>  static inline struct kset *cache_kset(struct kmem_cache *s)
+> @@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
+>  #ifdef CONFIG_MEMCG
+>  	kset_unregister(s->memcg_kset);
+>  #endif
+> -	kobject_uevent(&s->kobj, KOBJ_REMOVE);
+>  out:
+>  	kobject_put(&s->kobj);
+>  }
+> @@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
+>  	}
+>  #endif
+> 
+> -	kobject_uevent(&s->kobj, KOBJ_ADD);
+>  	if (!unmergeable) {
+>  		/* Setup first alias */
+>  		sysfs_slab_alias(s, s->name);
+> @@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
+> 
+>  	mutex_lock(&slab_mutex);
+> 
+> -	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
+> +	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
+>  	if (!slab_kset) {
+>  		mutex_unlock(&slab_mutex);
+>  		pr_err("Cannot register slab subsystem.\n");
+> 
 
