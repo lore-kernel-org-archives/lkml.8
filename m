@@ -2,125 +2,117 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A8EC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F41C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF060214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A212E20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McU784o+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G39DJeW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgA3RJt (ORCPT
+        id S1727466AbgA3RJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:09:49 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41341 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3RJt (ORCPT
+        Thu, 30 Jan 2020 12:09:55 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35078 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbgA3RJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:09:49 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so4595747eds.8;
-        Thu, 30 Jan 2020 09:09:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yel/LjQW25KcQEFu+jzZC73Egkh1tqmmLbvqWmoKP8c=;
-        b=McU784o+BlKHiU8m5vavNqQyA3oFBpzOf3HlAuCMmdNFGz14lvO6yRPhgp4Ds4XVp6
-         xpAvGZTEv5SCKQaFFrYwvi75BMEkZDA8i++ymWsMVkOxfW8HgsbWyQQk17cRno5N8yNy
-         +eIYCA09AdUds5GQp5XlCVuz/67NmydI1ExgXMUGQFlMcp5FGKG/ZtrQ/KCpvil1xyVO
-         0ksORwuZ0HqRtD5JoqebvM+XYG3wA0+1+jUB9RegC363PKmF5T0++3mtERGo7eQT9ejz
-         sToBBqbfHIJj1AGeYQFSLG+RrdNaGhNET4V1YnbxG1yRxsjjVFAvJtCdYFhJBthvZJ94
-         0Fog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yel/LjQW25KcQEFu+jzZC73Egkh1tqmmLbvqWmoKP8c=;
-        b=CAa92roEjYmgqg66N4WE3LAaPk5wQY0zB6/F1GK1ZhZk93hgfiB0/r48Sg+CjZu9kZ
-         5IdnQfdEccqqr6skQEnxAlmQjxPLa9B4tlWTOONzHSnYhZPFTSc1WfbvqsXDL2FSyhdV
-         PI+1V5W4UrXr5UWqg/OcpytpAB4ACGW8R0k/Fg/BD4tvuTEtrud/H0A7IriqqoWmnzYe
-         UK6E/zGHLdI36ntO4UCFp5mb/7gzKtn9Fv3Y5y3MVVhxbDEvzL7sCj+J0+9BV8Egct81
-         GtjJjxDLDGCMNbvfwzGJSV/rrduElCrSQUhyaxUlTbJwxtAP3/9umR+ZIErMAfTpsA89
-         4DFw==
-X-Gm-Message-State: APjAAAWPwKA2Oj2RtAP9szB5oWIqonHxiv8B6GptEXqJ2UfPjjZbf3TO
-        BGq4dfkkyDcQC9iwuwzDFyI=
-X-Google-Smtp-Source: APXvYqwq3GK/kZ6ctkM0oUPdYfKKLpmFsfdQxaEw47STW+5vOHF65mQWT7BC3nPoioz0sKAOgdJxuA==
-X-Received: by 2002:a05:6402:168c:: with SMTP id a12mr4871067edv.43.1580404185669;
-        Thu, 30 Jan 2020 09:09:45 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u9sm493512edt.91.2020.01.30.09.09.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 09:09:44 -0800 (PST)
-Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-6-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bd802f93-dd03-f39d-86e1-39f8571bbbb0@gmail.com>
-Date:   Thu, 30 Jan 2020 20:09:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 30 Jan 2020 12:09:55 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UH8sTu120578;
+        Thu, 30 Jan 2020 11:08:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580404134;
+        bh=zCnXxzU/EUyxz2StGAYBKDJKmkVjS0wWM+yswum6tEc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G39DJeW9wpm9C/7pNqXSda95uaioGn1Ihy5r/RUiX0c+l58jt9GtlfYrZ95LFcKMw
+         9+h3vai439QcZ6jcMzv2NnByN4gaI/JerdlZMNDzipRa5I0EiNxXxm9DEA3t9hs2hP
+         A/ylH5/pLGwg2/PYQYczua4RutEdnmo+sOk08g3A=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UH8sdK126653
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 11:08:54 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 11:08:54 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 11:08:54 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UH8rQO026105;
+        Thu, 30 Jan 2020 11:08:53 -0600
+Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+References: <20200127231208.1443-1-s-anna@ti.com>
+ <CAHp75VfaOfBZYjQa960keORW=VjOn2PdwoYpJMG7SsN83daSJg@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <99a04c52-1ff6-1611-5cf6-2c71b810ba43@ti.com>
+Date:   Thu, 30 Jan 2020 11:08:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1580380422-3431-6-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAHp75VfaOfBZYjQa960keORW=VjOn2PdwoYpJMG7SsN83daSJg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.01.2020 13:33, Sameer Pujar пишет:
-...
-> +	ret = devm_snd_soc_register_component(&pdev->dev,
-> +					      ahub->soc_data->cmpnt_drv,
-> +					      ahub->soc_data->dai_drv,
-> +					      ahub->soc_data->num_dais);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to register component, err: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-In the the patch #4 ("ASoC: tegra: add Tegra210 based I2S driver") I see
-the following:
+Hi Andy,
 
-	ret = devm_snd_soc_register_component(dev, &tegra210_i2s_cmpnt,
-					tegra210_i2s_dais,
-					ARRAY_SIZE(tegra210_i2s_dais));
-	if (ret != 0) {
-		dev_err(dev, "can't register I2S component, err: %d\n", ret);
-		return ret;
-	}
+On 1/30/20 9:34 AM, Andy Shevchenko wrote:
+> On Tue, Jan 28, 2020 at 1:14 AM Suman Anna <s-anna@ti.com> wrote:
+>>
+>> The DT node full name is currently being used in regmap_config
+>> which in turn is used to create the regmap debugfs directories.
+>> This name however is not guaranteed to be unique and the regmap
+>> debugfs registration can fail in the cases where the syscon nodes
+>> have the same unit-address but are present in different DT node
+>> hierarchies. Replace this logic using the syscon reg resource
+>> address instead (inspired from logic used while creating platform
+>> devices) to ensure a unique name is given for each syscon.
+> 
+>> -       syscon_config.name = of_node_full_name(np);
+>> +       syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
+>> +                                      (u64)res.start);
+> 
+> Explicit castings in printf() usually tell us that something is not okay.
 
-Please be consistent in regards to errors checking. The correct variant
-should be: if (ret != 0). Usually error codes are a negative value, but
-it is much safer to check whether value isn't 0 in all cases where
-positive value isn't expected to happen.
+Yes, I agree in general.
 
-I'd also recommend to rename all "ret" variables to "err" everywhere in
-the code where returned value is used only for errors checking. This
-will make code more explicit, and hence, easier to read and follow.
+> Yes, for resource_size_t we have %pa.
 
-So, it will be nicer to write it as:
+And that was the first thing I tried when doing v2, before moving away
+from it. This is not for a console printf statement, but is rather for
+the regmap debugfs name. Using a %pa adds the 0x and leading zeros in
+the debugfs name, when compared to the name before this patch. The
+typecast retains the current format, and replaces the unit-address
+without the leading 0s either. Introducing a local-variable to avoid the
+typecast is overkill.
 
-	err = devm_snd_soc_register_component(&pdev->dev,
-					ahub->soc_data->cmpnt_drv,
-					ahub->soc_data->dai_drv,
-					ahub->soc_data->num_dais);
-	if (err) {
-		dev_err(&pdev->dev, "failed to register component: %d\n", err);
-		return err;
-	}
+> 
+> On top of that, I would rather see %pfwn to avoid modification for
+> other fwnode types.
+
+Did you mean %pfwP? That can probably be handled when syscon code is
+updated to use fwnode API.
+
+regards
+Suman
