@@ -2,134 +2,129 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3E1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43673C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB7D20716
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196972071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LJ9NJDtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgA3Anj (ORCPT
+        id S1727257AbgA3AoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 19:43:39 -0500
-Received: from outbound-smtp19.blacknight.com ([46.22.139.246]:50687 "EHLO
-        outbound-smtp19.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726401AbgA3Anj (ORCPT
+        Wed, 29 Jan 2020 19:44:04 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48668 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgA3AoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 19:43:39 -0500
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp19.blacknight.com (Postfix) with ESMTPS id 218851C3FC7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 00:43:36 +0000 (GMT)
-Received: (qmail 22593 invoked from network); 30 Jan 2020 00:43:35 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Jan 2020 00:43:35 -0000
-Date:   Thu, 30 Jan 2020 00:43:34 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200130004334.GF3466@techsingularity.net>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
- <20200128091012.GZ3466@techsingularity.net>
- <20200129173852.GP14914@hirez.programming.kicks-ass.net>
+        Wed, 29 Jan 2020 19:44:04 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00U0SbKm039876;
+        Thu, 30 Jan 2020 00:43:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=HxaL1diqaEv286OlhDwXeFz8SznwXgpMh0T9XvkcS/4=;
+ b=LJ9NJDtZ0xIKPfo7TT45ZkKFwtd9FFccN180bLdE9yns4f+qBam/ogmCeWLDlc2ZNCAg
+ I+FH9dVYVyMPmEjJyYU2ddfw6f4duwPwx7jCXuAMw49PxmA2JGAHhY+J6wfFjaA7rC0U
+ DY1g+95BqBT5v8sSEvlm9s55Xe2OpckmxNgf+UDRxw9DGZC/CBpXQu/Jm/LchvMU/aOV
+ jxoV82UQsrwH/kS3aw+K7BHRBy3utlkidz/84ERau0SgG7q+VrCvTzEVbwPHN2HxtklE
+ 6Zm2vdYAvRE7A2FV5xurm72isVkq0rcJ2EYPCZe5og/YSoQpt08U8mwyHjf9aqRw9SXQ Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xreargvmn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 00:43:55 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00U0Ta5l022634;
+        Thu, 30 Jan 2020 00:41:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xuc2xu82x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 00:41:54 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00U0frUM019805;
+        Thu, 30 Jan 2020 00:41:53 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 Jan 2020 16:41:53 -0800
+Subject: Re: [PATCH v10 2/8] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     David Rientjes <rientjes@google.com>,
+        Mina Almasry <almasrymina@google.com>
+Cc:     shakeelb@google.com, shuah@kernel.org, gthelen@google.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com
+References: <20200115012651.228058-1-almasrymina@google.com>
+ <20200115012651.228058-2-almasrymina@google.com>
+ <alpine.DEB.2.21.2001291312490.175731@chino.kir.corp.google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <43930e45-7505-1fc2-36ac-69a91a00a336@oracle.com>
+Date:   Wed, 29 Jan 2020 16:41:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200129173852.GP14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.2001291312490.175731@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9515 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001300001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9515 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001300001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
-> > Peter, Ingo and Vincent -- I know the timing is bad due to the merge
-> > window but do you have any thoughts on allowing select_idle_sibling to
-> > stack a wakee task on the same CPU as a waker in this specific case?
+On 1/29/20 1:21 PM, David Rientjes wrote:
+> On Tue, 14 Jan 2020, Mina Almasry wrote:
 > 
-> I sort of see, but *groan*...
+>> diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
+>> index 063962f6dfc6a..eab8a70d5bcb5 100644
+>> --- a/include/linux/hugetlb_cgroup.h
+>> +++ b/include/linux/hugetlb_cgroup.h
+>> @@ -20,29 +20,37 @@
+>>  struct hugetlb_cgroup;
+>>  /*
+>>   * Minimum page order trackable by hugetlb cgroup.
+>> - * At least 3 pages are necessary for all the tracking information.
+>> + * At least 4 pages are necessary for all the tracking information.
+>>   */
+>>  #define HUGETLB_CGROUP_MIN_ORDER	2
 > 
-
-This is the reaction I kinda expected. Sync wakeups and select_idle_sibling
-probably caused someone PTSD at some point before my time in kernel/sched/.
-
-> so if the kworker unlocks a contended mutex/rwsem/completion...
+> I always struggle with a way to document and protect these types of 
+> usages.  In this case, we are using the private filed of tail pages; in 
+> thp code, we enumerate these usages separately in struct page: see "Tail 
+> pages of compound page" comment in the union.  Using the private field is 
+> fine to store a pointer to the hugetlb_cgroup, but I'm wondering if we can 
+> document or protect against future patches not understanding this usage.  
+> Otherwise it's implicit beyond this comment.
 > 
-> I suppose the fact that it limits it to tasks that were running on the
-> same CPU limits the impact if we do get it wrong.
-> 
+> Maybe an expanded comment here is the only thing that is needed because 
+> it's unique to struct hugetlb_cgroup that describes what struct page 
+> represents for the second, third, and (now) fourth tail page.
 
-And it's limited to no other task currently running on the
-CPU. Now, potentially multiple sleepers are on that CPU waiting for
-a mutex/rwsem/completion but it's very unlikely and mostly likely due
-to the machine being saturated in which case searching for an idle CPU
-will probably fail. It would also be bound by a small window after the
-first wakeup before the task becomes runnable before the nr_running check
-mitigages the problem. Besides, if the sleeping task is waiting on the
-lock, it *is* related to the kworker which is probably finished.
+I think that expanding the comment may be sufficient.  Let's at least
+document what the private field of the of the tail pages are used for
+WRT cgroups.
+Second tail page (hpage[2]) usage cgroup
+Third tail page (hpage[3]) reservation cgroup
 
-In other words, even this patches worst-case behaviour does not seem
-that bad.
-
-> Elsewhere you write:
-> 
-> > I would prefer the wakeup code did not have to signal that it's a
-> > synchronous wakeup. Sync wakeups so exist but callers got it wrong many
-> > times where stacking was allowed and then the waker did not go to sleep.
-> > While the chain of events are related, they are not related in a very
-> > obvious way. I think it's much safer to keep this as a scheduler
-> > heuristic instead of depending on callers to have sufficient knowledge
-> > of the scheduler implementation.
-> 
-> That is true; the existing WF_SYNC has caused many issues for maybe
-> being too strong.
-> 
-
-Exactly. It ended up being almost ignored. It basically just means that
-the waker CPU may be used as the target for wake_affine because the
-users were not obeying the contract.
-
-> But what if we create a new hint that combines both these ideas? Say
-> WF_COMPLETE and subject that to these same criteria. This way we can
-> eliminate wakeups from locks and such (they won't have this set).
-> 
-
-I think that'll end up with three consequences. First, it falls foul
-of Rusty's Rules of API Design[1] because even if people read the
-implementation and the documentation, they might still get it wrong like
-what happened with WF_SYNC.  Second, some other subsystem will think it's
-special and use the flag because it happens to work for one benchmark or
-worse, they happened to copy/paste the code for some reason. Finally,
-the workqueue implementation may change in some way that renders the
-use of the flag incorrect. With this patch, if workqueues change design,
-it's more likely the patch becomes a no-op.
-
-> Or am I just making things complicated again?
-
-I think so but I also wrote the patch so I'm biased. I think the callers
-would be forced into an API change if it's a common pattern where multiple
-unbound tasks can sleep on the same CPU waiting on a single kworker and
-I struggle to think of such an example.
-
-The length of time it took this issue to be detected and patched is
-indicative that not everyone is familiar with kernel/sched/fair.c and its
-consequences.  If they were, chances are they would have implemented some
-mental hack like binding a task to a single CPU until the IO completes.
-
-[1] http://sweng.the-davies.net/Home/rustys-api-design-manifesto
-
+BTW, we are just adding usage of the third tail page IIUC.  The comment
+that 4 pages are necessary includes the head page.
 -- 
-Mel Gorman
-SUSE Labs
+Mike Kravetz
