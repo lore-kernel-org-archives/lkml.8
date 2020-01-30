@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9048EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4CDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C2F215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1D020702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409693;
-	bh=bGoDS0mBgh3I4daVnCZ7k2qTbcUa8RGgkJZ9QH04wi4=;
+	s=default; t=1580409697;
+	bh=Wha8RaYeuye8yMvMNocTallzMzxYbMMpXjBjFv1Fxyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJZVmBpl2h7XGVssgrDFn17kv/ypBUalckw3QpAlqlFYDi9JFTMypW9kzK0SDv1X/
-	 i1+UTmwTPzDyuwa4KGvjCtuAAx4CDI+FLx+IHNk2i/QLbm6dbI+axNs1oqBg+TaFM4
-	 1Z/r92HdwT9cil8lIVR2sqzjQmaZhJYCTTfzAOTg=
+	b=AFelzQsmz6IE3ZFDzi1hOp6g/h/Pp0Ul4Bu50HlMKhFoI/G0+TuSdO+PDgjYN/r7d
+	 nwDy2fEZWMHEbAwkyurWdrHn/xunG0v2vmZ+hws/W92EuKqmhROOL4UQ1tDjxFfUxX
+	 zGEdMhRHEM8saFwGeDEQbDTuQgt2+OX/nqErbwIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgA3Slc (ORCPT
+        id S1730204AbgA3Slg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:41:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:41:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgA3Sl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:28 -0500
+        id S1730180AbgA3Sla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7577A2082E;
-        Thu, 30 Jan 2020 18:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA86215A4;
+        Thu, 30 Jan 2020 18:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409687;
-        bh=bGoDS0mBgh3I4daVnCZ7k2qTbcUa8RGgkJZ9QH04wi4=;
+        s=default; t=1580409690;
+        bh=Wha8RaYeuye8yMvMNocTallzMzxYbMMpXjBjFv1Fxyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRvNfCvOhxJhcltJAlWf5khuKitrNTbaMK/ET8f0c5zfAEYtM/5NqhLZ4JgViSdOu
-         i4jBHf1q6nJ+gfXQv+jiR3/XEAyHQTH1z1axfYzJw7psQzt3nRQ+DmGztL+aO8PR7R
-         xm8A6szOBPi6q+tzIT+8E+2MDSm8wpCR6Cm/q61s=
+        b=x7gqO5bWij5+S7zxejrjOzthG0CDn1uEEhHGyNaHQ/owbjDf4DGaL0MIGP4/5HG09
+         HohOIP0ydce6l+R0E6EDlG1RHNPMoivY9sKbnOpoROgmBjFRTFugDYr0bU3Zi4VC33
+         7zyv+fF2qvPMpSiREpDKFP6yNDvNc7TUBTiYWL0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>,
+        stable@vger.kernel.org, Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 51/56] crypto: vmx - reject xts inputs that are too short
-Date:   Thu, 30 Jan 2020 19:39:08 +0100
-Message-Id: <20200130183618.075735523@linuxfoundation.org>
+Subject: [PATCH 5.5 52/56] crypto: caam - do not reset pointer size from MCFGR register
+Date:   Thu, 30 Jan 2020 19:39:09 +0100
+Message-Id: <20200130183618.226576789@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -62,49 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-commit 1372a51b88fa0d5a8ed2803e4975c98da3f08463 upstream.
+commit 7278fa25aa0ebcc0e62c39b12071069df13f7e77 upstream.
 
-When the kernel XTS implementation was extended to deal with ciphertext
-stealing in commit 8083b1bf8163 ("crypto: xts - add support for ciphertext
-stealing"), a check was added to reject inputs that were too short.
+In commit 'a1cf573ee95 ("crypto: caam - select DMA address size at runtime")'
+CAAM pointer size (caam_ptr_size) is changed from
+sizeof(dma_addr_t) to runtime value computed from MCFGR register.
+Therefore, do not reset MCFGR[PS].
 
-However, in the vmx enablement - commit 239668419349 ("crypto: vmx/xts -
-use fallback for ciphertext stealing"), that check wasn't added to the
-vmx implementation. This disparity leads to errors like the following:
-
-alg: skcipher: p8_aes_xts encryption unexpectedly succeeded on test vector "random: len=0 klen=64"; expected_error=-22, cfg="random: inplace may_sleep use_finup src_divs=[<flush>66.99%@+10, 33.1%@alignmask+1155]"
-
-Return -EINVAL if asked to operate with a cryptlen smaller than the AES
-block size. This brings vmx in line with the generic implementation.
-
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206049
-Fixes: 239668419349 ("crypto: vmx/xts - use fallback for ciphertext stealing")
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[dja: commit message]
-Signed-off-by: Daniel Axtens <dja@axtens.net>
+Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc: <stable@vger.kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Alison Wang <alison.wang@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/vmx/aes_xts.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/caam/ctrl.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/vmx/aes_xts.c
-+++ b/drivers/crypto/vmx/aes_xts.c
-@@ -84,6 +84,9 @@ static int p8_aes_xts_crypt(struct skcip
- 	u8 tweak[AES_BLOCK_SIZE];
- 	int ret;
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -671,11 +671,9 @@ static int caam_probe(struct platform_de
+ 	of_node_put(np);
  
-+	if (req->cryptlen < AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	if (!crypto_simd_usable() || (req->cryptlen % XTS_BLOCK_SIZE) != 0) {
- 		struct skcipher_request *subreq = skcipher_request_ctx(req);
+ 	if (!ctrlpriv->mc_en)
+-		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK | MCFGR_LONG_PTR,
++		clrsetbits_32(&ctrl->mcr, MCFGR_AWCACHE_MASK,
+ 			      MCFGR_AWCACHE_CACH | MCFGR_AWCACHE_BUFF |
+-			      MCFGR_WDENABLE | MCFGR_LARGE_BURST |
+-			      (sizeof(dma_addr_t) == sizeof(u64) ?
+-			       MCFGR_LONG_PTR : 0));
++			      MCFGR_WDENABLE | MCFGR_LARGE_BURST);
+ 
+ 	handle_imx6_err005766(&ctrl->mcr);
  
 
 
