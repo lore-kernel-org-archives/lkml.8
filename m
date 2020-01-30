@@ -2,324 +2,259 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAB5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7220CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF65220674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BhOJAS17"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b+qRri66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgA3WGh (ORCPT
+        id S1727069AbgA3WGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:06:37 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35300 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgA3WGg (ORCPT
+        Thu, 30 Jan 2020 17:06:46 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50427 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgA3WGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:06:36 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UM6ZXu060450;
-        Thu, 30 Jan 2020 16:06:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580421995;
-        bh=I1W3Rcm1kjaDWtaABSVntnuxFGEk/nyberVs6bCgbFk=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BhOJAS17j56iVYTU8w0+PYes6W5FaJil8/YmVsjtLirVLTqB79iLxlnV/HnVcYEgk
-         7Ajs2ZFeq38nSx/jo1jfffMENe+8IXFbZ9iW9kQ/wf+zlbGM1hWlHK19OTaTAWcKrV
-         z2CHsIWD4wvIW7DScvTETksoDtVnN1IlhX7PGh0k=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UM6Zkx123142
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 16:06:35 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 16:06:34 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 16:06:35 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UM6Ycs030121;
-        Thu, 30 Jan 2020 16:06:34 -0600
-Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-From:   Suman Anna <s-anna@ti.com>
-To:     "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-7-t-kristo@ti.com>
- <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
- <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
- <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
- <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
- <be337641-b4ac-d2be-b814-55b7681cb91a@ti.com>
- <7aed7a9f-3546-f622-37ac-34d33ddb4298@ti.com>
- <50c69e97-034b-3160-e95e-97aec2e75cc6@ti.com>
- <cf6fff1c-fde9-67b0-3173-7e019ce587cb@ti.com>
- <127eff13-cc16-2b59-d8ce-06e61bb910bc@ti.com>
- <39b3e536-26a9-e7da-a39a-db2853e0fe04@ti.com>
- <a92ab534-1525-f7d6-d29b-361809e0cae1@ti.com>
-Message-ID: <279b6f35-a316-94dd-af62-2891815cf453@ti.com>
-Date:   Thu, 30 Jan 2020 16:06:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 Jan 2020 17:06:45 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r67so1934686pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:06:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IaiYlJ8x6SsCSSpZVibf8iX+e0GId7Y17A2fckU9LQo=;
+        b=b+qRri66Fx+w0aNtGYjpUlLMKUokoJZGKBrQzQmnqaQegoPF6h0P0yXV78IfW1U2Qm
+         u2uZE5hQWc1hQO2OGOXGGh0vU3dgxImOoibXOLQxA3oD/lThnPI8+zdSfYKiQe6IyTvV
+         Ozl0tTjVY24kiZuQ6408n3TGHfZ+Mm0F0nCe8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IaiYlJ8x6SsCSSpZVibf8iX+e0GId7Y17A2fckU9LQo=;
+        b=ozTF+nzOVBG7Dt2NIYFxL37X5I9D4UTPTONUT/k667mp00CJ4+NGUeQDg3HmM7UO5l
+         n4tmKsbEi8bxviaFAOfOZ9+ccrNAqKBdq0gQzlOe/uw4Fb6YyP2O2Y3axsfdSR0tsO5a
+         EldUYJq17iVXPnghQ2ADFIBysrj/L5WYAYEZanyTftWwFhGGInwos11c38BPo7WHGf8/
+         NIWlx+lxQ0Sbb3wiZB2yVFlESuAU9++sByH4Fy+gPLij9cAQ6DrUr5XSl12fubBYx72I
+         Dv9/Du+drS09jqtdT2swXsqU91OGAtbsILzd+t8gDTJKaz2zbHggTS0DesuQdNY6fLV3
+         87aQ==
+X-Gm-Message-State: APjAAAV6+1iytMqDUdO7Qftxchprgcvhj0B/kjlTo4E+tCIHQn2TDRg0
+        gscedhP2KrjndsNZNNivAX5/tw==
+X-Google-Smtp-Source: APXvYqxsvjVIZj+o1ecmVZ0lswYiXZbS34q+y1EJMTqSdiyBF/a7XfB7BwF42i3lg0osQa/31f5P4g==
+X-Received: by 2002:a17:90a:2e86:: with SMTP id r6mr1076727pjd.104.1580422004621;
+        Thu, 30 Jan 2020 14:06:44 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 136sm7242547pgg.74.2020.01.30.14.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 14:06:43 -0800 (PST)
+Date:   Thu, 30 Jan 2020 14:06:42 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
+Message-ID: <202001301405.D90AF02@keescook>
+References: <20200124181819.4840-1-hjl.tools@gmail.com>
+ <20200124181819.4840-3-hjl.tools@gmail.com>
+ <202001271531.B9ACE2A@keescook>
+ <CAMe9rOrVyzvaTyURc4RJJTHUXGG6uAC9KyQomxQFzWzrAN4nrg@mail.gmail.com>
+ <202001301143.288B55DCC1@keescook>
+ <CAMe9rOocT960KsofP9o_y49FdgY9NGix=GcYnpKLvp7RhieZNA@mail.gmail.com>
+ <202001301206.13AF0512@keescook>
+ <CAMe9rOoU1B8enyoL4-SSQKYLHpevR5yrbp5ewztC=Owr69y2SQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a92ab534-1525-f7d6-d29b-361809e0cae1@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMe9rOoU1B8enyoL4-SSQKYLHpevR5yrbp5ewztC=Owr69y2SQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 3:57 PM, Suman Anna wrote:
-> On 1/30/20 3:50 PM, Andrew F. Davis wrote:
->> On 1/30/20 4:39 PM, Suman Anna wrote:
->>> On 1/30/20 3:19 PM, Andrew F. Davis wrote:
->>>> On 1/30/20 3:39 PM, Suman Anna wrote:
->>>>> On 1/30/20 2:22 PM, Andrew F. Davis wrote:
->>>>>> On 1/30/20 2:55 PM, Suman Anna wrote:
->>>>>>> On 1/30/20 1:42 PM, Tero Kristo wrote:
->>>>>>>> On 30/01/2020 21:20, Andrew F. Davis wrote:
->>>>>>>>> On 1/30/20 2:18 PM, Tero Kristo wrote:
->>>>>>>>>> On 30/01/2020 20:11, Andrew F. Davis wrote:
->>>>>>>>>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
->>>>>>>>>>>> From: Suman Anna <s-anna@ti.com>
->>>>>>>>>>>>
->>>>>>>>>>>> The reserved memory nodes are not assigned to platform devices by
->>>>>>>>>>>> default in the driver core to avoid the lookup for every platform
->>>>>>>>>>>> device and incur a penalty as the real users are expected to be
->>>>>>>>>>>> only a few devices.
->>>>>>>>>>>>
->>>>>>>>>>>> OMAP remoteproc devices fall into the above category and the OMAP
->>>>>>>>>>>> remoteproc driver _requires_ specific CMA pools to be assigned
->>>>>>>>>>>> for each device at the moment to align on the location of the
->>>>>>>>>>>> vrings and vring buffers in the RTOS-side firmware images. So,
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Same comment as before, this is a firmware issue for only some
->>>>>>>>>>> firmwares
->>>>>>>>>>> that do not handle being assigned vring locations correctly and instead
->>>>>>>>>>> hard-code them.
->>>>>>>
->>>>>>> As for this statement, this can do with some updating. Post 4.20,
->>>>>>> because of the lazy allocation scheme used for carveouts including the
->>>>>>> vrings, the resource tables now have to use FW_RSC_ADDR_ANY and will
->>>>>>> have to wait for the vdev synchronization to happen.
->>>>>>>
->>>>>>>>>>
->>>>>>>>>> I believe we discussed this topic in length in previous version but
->>>>>>>>>> there was no conclusion on it.
->>>>>>>>>>
->>>>>>>>>> The commit desc might be a bit misleading, we are not actually forced to
->>>>>>>>>> use specific CMA buffers, as we use IOMMU to map these to device
->>>>>>>>>> addresses. For example IPU1/IPU2 use internally exact same memory
->>>>>>>>>> addresses, iommu is used to map these to specific CMA buffer.
->>>>>>>>>>
->>>>>>>>>> CMA buffers are mostly used so that we get aligned large chunk of memory
->>>>>>>>>> which can be mapped properly with the limited IOMMU OMAP family of chips
->>>>>>>>>> have. Not sure if there is any sane way to get this done in any other
->>>>>>>>>> manner.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> Why not use the default CMA area?
->>>>>>>>
->>>>>>>> I think using default CMA area getting the actual memory block is not
->>>>>>>> guaranteed and might fail. There are other users for the memory, and it
->>>>>>>> might get fragmented at the very late phase we are grabbing the memory
->>>>>>>> (omap remoteproc driver probe time.) Some chunks we need are pretty large.
->>>>>>>>
->>>>>>>> I believe I could experiment with this a bit though and see, or Suman
->>>>>>>> could maybe provide feedback why this was designed initially like this
->>>>>>>> and why this would not be a good idea.
->>>>>>>
->>>>>>> I have given some explanation on this on v4 as well, but if it is not
->>>>>>> clear, there are restrictions with using default CMA. Default CMA has
->>>>>>> switched to be assigned from the top of the memory (higher addresses,
->>>>>>> since 3.18 IIRC), and the MMUs on IPUs and DSPs can only address
->>>>>>> 32-bits. So, we cannot blindly use the default CMA pool, and this will
->>>>>>> definitely not work on boards > 2 GB RAM. And, if you want to add in any
->>>>>>> firewall capability, then specific physical addresses becomes mandatory.
->>>>>>>
->>>>>>
->>>>>>
->>>>>> If you need 32bit range allocations then
->>>>>> dma_set_mask(dev, DMA_BIT_MASK(32));
->>>>>>
->>>>>> I'm not saying don't have support for carveouts, just make them
->>>>>> optional, keystone_remoteproc.c does this:
->>>>>>
->>>>>> if (of_reserved_mem_device_init(dev))
->>>>>> 	dev_warn(dev, "device does not have specific CMA pool\n");
->>>>>>
->>>>>> There doesn't even needs to be a warning but that is up to you.
->>>>>
->>>>> It is not exactly an apples to apples comparison. K2s do not have MMUs,
->>>>> and most of our firmware images on K2 are actually running out of the
->>>>> DSP internal memory.
->>>>>
->>>>
->>>>
->>>> So again we circle back to it being a firmware issue, if K2 can get away
->>>> without needing carveouts and it doesn't even have an MMU then certainly
->>>> OMAP/DRA7x class devices can handle it even better given they *do* have
->>>> an IOMMU. Unless someone is hard-coding the IOMMU configuration.. In
->>>> which case we are still just hacking around the problem here with
->>>> mandatory specific address memory carveouts.
->>>
->>> Optional carveouts on OMAP remoteprocs can be an enhancement in the
->>> future, but at the moment, we won't be able to run use-cases without
->>> this. And I have already given some of the reasons for the same here and
->>> on v4.
->>>
->>
->>
->> No reason to be dismissive, my questions are valid.
->>
->> What "use-cases" are we talking about, I have firmware that doesn't need
->> specific carved-out addresses. 
+On Thu, Jan 30, 2020 at 12:20:30PM -0800, H.J. Lu wrote:
+> On Thu, Jan 30, 2020 at 12:08 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Thu, Jan 30, 2020 at 12:04:54PM -0800, H.J. Lu wrote:
+> > > > I don't understand this. "may not be incompatible"? Is there an error
+> > > > generated? If so, what does it look like?
+> > >
+> > > When -mx86-used-note=yes is passed to assembler, with my patch, I got
+> > >
+> > > [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+> > >
+> > > Displaying notes found in: .notes
+> > >   Owner                Data size Description
+> > >   Xen                  0x00000006 Unknown note type: (0x00000006)
+> > >    description data: 6c 69 6e 75 78 00
+> > >   Xen                  0x00000004 Unknown note type: (0x00000007)
+> > >    description data: 32 2e 36 00
+> > >   Xen                  0x00000008 Unknown note type: (0x00000005)
+> > >    description data: 78 65 6e 2d 33 2e 30 00
+> > >   Xen                  0x00000008 Unknown note type: (0x00000003)
+> > >    description data: 00 00 00 80 ff ff ff ff
+> > >   Xen                  0x00000008 Unknown note type: (0x0000000f)
+> > >    description data: 00 00 00 00 80 00 00 00
+> > >   Xen                  0x00000008 NT_VERSION (version)
+> > >    description data: 80 a1 ba 82 ff ff ff ff
+> > >   Xen                  0x00000008 NT_ARCH (architecture)
+> > >    description data: 00 10 00 81 ff ff ff ff
+> > >   Xen                  0x00000029 Unknown note type: (0x0000000a)
+> > >    description data: 21 77 72 69 74 61 62 6c 65 5f 70 61 67 65 5f 74
+> > > 61 62 6c 65 73 7c 70 61 65 5f 70 67 64 69 72 5f 61 62 6f 76 65 5f 34
+> > > 67 62
+> > >   Xen                  0x00000004 Unknown note type: (0x00000011)
+> > >    description data: 01 88 00 00
+> > >   Xen                  0x00000004 Unknown note type: (0x00000009)
+> > >    description data: 79 65 73 00
+> > >   Xen                  0x00000008 Unknown note type: (0x00000008)
+> > >    description data: 67 65 6e 65 72 69 63 00
+> > >   Xen                  0x00000010 Unknown note type: (0x0000000d)
+> > >    description data: 01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00
+> > >   Xen                  0x00000004 Unknown note type: (0x0000000e)
+> > >    description data: 01 00 00 00
+> > >   Xen                  0x00000004 Unknown note type: (0x00000010)
+> > >    description data: 01 00 00 00
+> > >   Xen                  0x00000008 Unknown note type: (0x0000000c)
+> > >    description data: 00 00 00 00 00 80 ff ff
+> > >   Xen                  0x00000008 Unknown note type: (0x00000004)
+> > >    description data: 00 00 00 00 00 00 00 00
+> > >   GNU                  0x00000014 NT_GNU_BUILD_ID (unique build ID bitstring)
+> > >     Build ID: 11c73de2922f593e1b35b92ab3c70eaa1a80fa83
+> > >   Linux                0x00000018 OPEN
+> > >    description data: 35 2e 33 2e 39 2d 32 30 30 2e 30 2e 66 63 33 30
+> > > 2e 78 38 36 5f 36 34 00
+> > >   Xen                  0x00000008 Unknown note type: (0x00000012)
+> > >    description data: 70 04 00 01 00 00 00 00
+> > > [hjl@gnu-skx-1 linux]$
+> > >
+> > > Without my patch,
+> > >
+> > > [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+> > >
+> > > Displaying notes found in: .notes
+> > >   Owner                Data size Description
+> > >   Xen                  0x00000006 Unknown note type: (0x00000006)
+> > >    description data: 6c 69 6e 75 78 00
+> > >   Xen                  0x00000004 Unknown note type: (0x00000007)
+> > >    description data: 32 2e 36 00
+> > >   xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+> > >    description data: 08 00 00 00 03
+> > > readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+> > > readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+> > > 0x80000000, alignment: 8
+> > > [hjl@gnu-skx-1 linux]$
+> >
+> > What is the source of this failure? Does readelf need updating instead?
+> > Is the linking step producing an invalid section? It seems like
+> > discarding the properties isn't the right solution here?
 > 
-> I think you are well aware of all the usecases we provide with the TI
-> SDKs with IPUs and DSPs. And what is the firmware that you have and what
-> do you use it for?
-> 
-> If you have misbehaving firmware that
->> needs statically carved out memory addresses then you can have carveouts
->> if you want, but it should be optional. 
-> If I don't want to pollute my
->> system's memory space with a bunch of carveout holes then I shouldn't
->> have to just because your specific firmware needs them.
-> 
-> Further follow-up series like early-boot and late-attach will mandate
-> fixed carveouts actually. You cannot just run out of any random memory.
+> With the command-line option, -mx86-used-note=yes, the x86 assembler
+> in binutils 2.32 and above generates a program property note in a note
+> section, .note.gnu.property, to encode used x86 ISAs and features.
+> But x86 kernel linker script only contains a signle NOTE segment:
 
-Also, these are CMA pools ("reusable"), so they are not actual carveout
-holes ("no-map"). This is the preferred method in remoteproc mode so
-that the memory is available for kernel when remoteprocs are not in use.
-Customers can always choose to make these carveouts so that they do not
-run into memory allocation issues when changing firmwares and under
-stress conditions. These will have to be carveouts for early-boot usecases.
-
-regards
-Suman
+typo: signle -> single
 
 > 
-> regards
-> Suman
+> PHDRS {
+>  text PT_LOAD FLAGS(5);
+>  data PT_LOAD FLAGS(6);
+>  percpu PT_LOAD FLAGS(6);
+>  init PT_LOAD FLAGS(7);
+>  note PT_NOTE FLAGS(0);
+> }
+> SECTIONS
+> {
+> ...
+>  .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+> e.*)) __stop_notes = .; } :text :note
+> ...
+> }
 > 
->>
->> Andrew
->>
->>
->>> regards
->>> Suman
->>>
->>>>
->>>> Andrew
->>>>
->>>>
->>>>> regards
->>>>> Suman
->>>>>
->>>>>>
->>>>>> Andrew
->>>>>>
->>>>>>
->>>>>>> regards
->>>>>>> Suman
->>>>>>>
->>>>>>>>
->>>>>>>> -Tero
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Andrew
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>> -Tero
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> This is not a requirement of the remote processor itself and so it
->>>>>>>>>>> should not fail to probe if a specific memory carveout isn't given.
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>> use the of_reserved_mem_device_init/release() API appropriately
->>>>>>>>>>>> to assign the corresponding reserved memory region to the OMAP
->>>>>>>>>>>> remoteproc device. Note that only one region per device is
->>>>>>>>>>>> allowed by the framework.
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>>>>>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>>>>>>>>>> ---
->>>>>>>>>>>> v5: no changes
->>>>>>>>>>>>
->>>>>>>>>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->>>>>>>>>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>> b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>> index 0846839b2c97..194303b860b2 100644
->>>>>>>>>>>> --- a/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
->>>>>>>>>>>> @@ -17,6 +17,7 @@
->>>>>>>>>>>>    #include <linux/module.h>
->>>>>>>>>>>>    #include <linux/err.h>
->>>>>>>>>>>>    #include <linux/of_device.h>
->>>>>>>>>>>> +#include <linux/of_reserved_mem.h>
->>>>>>>>>>>>    #include <linux/platform_device.h>
->>>>>>>>>>>>    #include <linux/dma-mapping.h>
->>>>>>>>>>>>    #include <linux/remoteproc.h>
->>>>>>>>>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
->>>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>>        if (ret)
->>>>>>>>>>>>            goto free_rproc;
->>>>>>>>>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
->>>>>>>>>>>> +    if (ret) {
->>>>>>>>>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
->>>>>>>>>>>> pool\n");
->>>>>>>>>>>> +        goto free_rproc;
->>>>>>>>>>>> +    }
->>>>>>>>>>>> +
->>>>>>>>>>>>        platform_set_drvdata(pdev, rproc);
->>>>>>>>>>>>          ret = rproc_add(rproc);
->>>>>>>>>>>>        if (ret)
->>>>>>>>>>>> -        goto free_rproc;
->>>>>>>>>>>> +        goto release_mem;
->>>>>>>>>>>>          return 0;
->>>>>>>>>>>>    +release_mem:
->>>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>>    free_rproc:
->>>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>>>        return ret;
->>>>>>>>>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
->>>>>>>>>>>> platform_device *pdev)
->>>>>>>>>>>>          rproc_del(rproc);
->>>>>>>>>>>>        rproc_free(rproc);
->>>>>>>>>>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>>>>>>>>>          return 0;
->>>>>>>>>>>>    }
->>>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> -- 
->>>>>>>>
->>>>>>>> -- 
->>>>>>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>>>>>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>>>>>
->>>>>
->>>
-> 
+> But .note.gnu.property must be 8-byte aligned.  Linker deals with it
+> by generating
+> 2 PT_NOTE segments, one has 4-byte alignment and the other has 8-byte alignment:
 
+Ah-ha! Okay, thanks for this detail.
+
+> 
+> [hjl@gnu-cfl-1 ~]$ readelf -l /usr/local/bin/ld
+> 
+> Elf file type is EXEC (Executable file)
+> Entry point 0x404530
+> There are 13 program headers, starting at offset 64
+> 
+> Program Headers:
+>   Type           Offset             VirtAddr           PhysAddr
+>                  FileSiz            MemSiz              Flags  Align
+>   PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040
+>                  0x00000000000002d8 0x00000000000002d8  R      0x8
+>   INTERP         0x0000000000000318 0x0000000000400318 0x0000000000400318
+>                  0x000000000000001c 0x000000000000001c  R      0x1
+>       [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+>   LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
+>                  0x0000000000002a30 0x0000000000002a30  R      0x1000
+>   LOAD           0x0000000000003000 0x0000000000403000 0x0000000000403000
+>                  0x00000000000d7b35 0x00000000000d7b35  R E    0x1000
+>   LOAD           0x00000000000db000 0x00000000004db000 0x00000000004db000
+>                  0x0000000000179248 0x0000000000179248  R      0x1000
+>   LOAD           0x0000000000254de0 0x0000000000655de0 0x0000000000655de0
+>                  0x00000000000062e8 0x000000000000ba68  RW     0x1000
+>   DYNAMIC        0x0000000000254df0 0x0000000000655df0 0x0000000000655df0
+>                  0x0000000000000200 0x0000000000000200  RW     0x8
+>   NOTE           0x0000000000000338 0x0000000000400338 0x0000000000400338
+>                  0x0000000000000030 0x0000000000000030  R      0x8
+>   NOTE           0x0000000000000368 0x0000000000400368 0x0000000000400368
+>                  0x0000000000000044 0x0000000000000044  R      0x4
+>   GNU_PROPERTY   0x0000000000000338 0x0000000000400338 0x0000000000400338
+>                  0x0000000000000030 0x0000000000000030  R      0x8
+>   GNU_EH_FRAME   0x0000000000233efc 0x0000000000633efc 0x0000000000633efc
+>                  0x000000000000478c 0x000000000000478c  R      0x4
+>   GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+>                  0x0000000000000000 0x0000000000000000  RW     0x10
+>   GNU_RELRO      0x0000000000254de0 0x0000000000655de0 0x0000000000655de0
+>                  0x0000000000000220 0x0000000000000220  R      0x1
+> 
+>  Section to Segment mapping:
+>   Segment Sections...
+>    00
+>    01     .interp
+>    02     .interp .note.gnu.property .note.gnu.build-id .note.ABI-tag
+> .hash .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn
+> .rela.plt
+>    03     .init .plt .text .fini
+>    04     .rodata .eh_frame_hdr .eh_frame
+>    05     .init_array .fini_array .dynamic .got .got.plt .data .bss
+>    06     .dynamic
+>    07     .note.gnu.property
+>    08     .note.gnu.build-id .note.ABI-tag
+>    09     .note.gnu.property
+>    10     .eh_frame_hdr
+>    11
+>    12     .init_array .fini_array .dynamic .got
+> [hjl@gnu-cfl-1 ~]$
+> 
+> Since .note.gnu.property in vmlinux is unused, it can be discarded.
+
+Okay, I'm convinced. If we ever DO need it, it seems the solution would
+be to make the regular .note 8 byte aligned...
+
+Thanks for the extra details!
+
+-Kees
+
+-- 
+Kees Cook
