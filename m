@@ -2,183 +2,76 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CEFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C910E20708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iL6rs2LP"
+	by mail.kernel.org (Postfix) with ESMTP id 28CB4206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580412078;
+	bh=JjNDVJm+v6HWDhnhInttXBEV3fn14//iNMHEewyjbmU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=n3NlLYFmoq3q2TcESY+AGljDqydjoalbY9WRhE0ewQMexdUIi2xwDybyuCHsTHJP4
+	 gOjN3G9AS2dDZyBdIsjlInWrZrpUw5SFQOspZBkEN9QUh+RN7R8RR6GwobIOh6WsL5
+	 z1GttcFYCDwX3SMD99e6/vfVbGxxtrLCriT+hpZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgA3TUh (ORCPT
+        id S1727943AbgA3TVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:20:37 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57146 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbgA3TUe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:20:34 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UJKX9F022401;
-        Thu, 30 Jan 2020 13:20:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580412033;
-        bh=J2BkUUYFPqKxH/QQInFALmsEOVsQkQXSQAa1S4XFWVA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iL6rs2LPbVdJDn+B6grxVLHAofbHJwuQVv3ZZs1nz+1/VbMyglofh3hNxLymKzV6c
-         pr024z2BJBkdHFA/ve8bQ5E4Le2OKCaIKHjL+qmKF9e2dyGqZNFiStgZsOWVBAnIB/
-         IN7IdI2KI4RHYEfQdsZGl9RGD9xHY4hSItEQx4aE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UJKXBK089542
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 13:20:33 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 13:20:33 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 13:20:32 -0600
-Received: from [10.250.70.160] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UJKV1r057455;
-        Thu, 30 Jan 2020 13:20:31 -0600
-Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <s-anna@ti.com>, <linux-omap@vger.kernel.org>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-7-t-kristo@ti.com>
- <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
- <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
-Date:   Thu, 30 Jan 2020 14:20:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 30 Jan 2020 14:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727538AbgA3TVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:21:17 -0500
+Received: from localhost.localdomain (unknown [194.230.155.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D290206D3;
+        Thu, 30 Jan 2020 19:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580412076;
+        bh=JjNDVJm+v6HWDhnhInttXBEV3fn14//iNMHEewyjbmU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zUmQ+u4BkxmGfeOUI8WwSq1SbFxKIzuVcQaChR/h+kuMhEOOTvdcM9xpu+Js6fyVl
+         zWj8QwJmW3aG0X2Er9ohpGLt/sFBJOl2cUOORIaxy94VkR39YS+Xnjlt+JKO1407UU
+         NamPrJp2f/FJy/YwpNX64fGSrKoPW+6puX+eFc3A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Brian Cain <bcain@codeaurora.org>, linux-hexagon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] hexagon: configs: Cleanup CONFIG_CROSS_COMPILE
+Date:   Thu, 30 Jan 2020 20:21:10 +0100
+Message-Id: <20200130192110.2605-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 2:18 PM, Tero Kristo wrote:
-> On 30/01/2020 20:11, Andrew F. Davis wrote:
->> On 1/16/20 8:53 AM, Tero Kristo wrote:
->>> From: Suman Anna <s-anna@ti.com>
->>>
->>> The reserved memory nodes are not assigned to platform devices by
->>> default in the driver core to avoid the lookup for every platform
->>> device and incur a penalty as the real users are expected to be
->>> only a few devices.
->>>
->>> OMAP remoteproc devices fall into the above category and the OMAP
->>> remoteproc driver _requires_ specific CMA pools to be assigned
->>> for each device at the moment to align on the location of the
->>> vrings and vring buffers in the RTOS-side firmware images. So,
->>
->>
->> Same comment as before, this is a firmware issue for only some firmwares
->> that do not handle being assigned vring locations correctly and instead
->> hard-code them.
-> 
-> I believe we discussed this topic in length in previous version but
-> there was no conclusion on it.
-> 
-> The commit desc might be a bit misleading, we are not actually forced to
-> use specific CMA buffers, as we use IOMMU to map these to device
-> addresses. For example IPU1/IPU2 use internally exact same memory
-> addresses, iommu is used to map these to specific CMA buffer.
-> 
-> CMA buffers are mostly used so that we get aligned large chunk of memory
-> which can be mapped properly with the limited IOMMU OMAP family of chips
-> have. Not sure if there is any sane way to get this done in any other
-> manner.
-> 
+CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+CONFIG_CROSS_COMPILE support").
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/hexagon/configs/comet_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Why not use the default CMA area?
+diff --git a/arch/hexagon/configs/comet_defconfig b/arch/hexagon/configs/comet_defconfig
+index e324f65f41e7..9e0da536c0c6 100644
+--- a/arch/hexagon/configs/comet_defconfig
++++ b/arch/hexagon/configs/comet_defconfig
+@@ -2,7 +2,6 @@ CONFIG_SMP=y
+ CONFIG_DEFAULT_MMAP_MIN_ADDR=0
+ CONFIG_HZ_100=y
+ CONFIG_EXPERIMENTAL=y
+-CONFIG_CROSS_COMPILE="hexagon-"
+ CONFIG_LOCALVERSION="-smp"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_SYSVIPC=y
+-- 
+2.17.1
 
-Andrew
-
-
-> -Tero
-> 
->>
->> This is not a requirement of the remote processor itself and so it
->> should not fail to probe if a specific memory carveout isn't given.
->>
->>
->>> use the of_reserved_mem_device_init/release() API appropriately
->>> to assign the corresponding reserved memory region to the OMAP
->>> remoteproc device. Note that only one region per device is
->>> allowed by the framework.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>> ---
->>> v5: no changes
->>>
->>>   drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->>>   1 file changed, 11 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/remoteproc/omap_remoteproc.c
->>> b/drivers/remoteproc/omap_remoteproc.c
->>> index 0846839b2c97..194303b860b2 100644
->>> --- a/drivers/remoteproc/omap_remoteproc.c
->>> +++ b/drivers/remoteproc/omap_remoteproc.c
->>> @@ -17,6 +17,7 @@
->>>   #include <linux/module.h>
->>>   #include <linux/err.h>
->>>   #include <linux/of_device.h>
->>> +#include <linux/of_reserved_mem.h>
->>>   #include <linux/platform_device.h>
->>>   #include <linux/dma-mapping.h>
->>>   #include <linux/remoteproc.h>
->>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
->>> platform_device *pdev)
->>>       if (ret)
->>>           goto free_rproc;
->>>   +    ret = of_reserved_mem_device_init(&pdev->dev);
->>> +    if (ret) {
->>> +        dev_err(&pdev->dev, "device does not have specific CMA
->>> pool\n");
->>> +        goto free_rproc;
->>> +    }
->>> +
->>>       platform_set_drvdata(pdev, rproc);
->>>         ret = rproc_add(rproc);
->>>       if (ret)
->>> -        goto free_rproc;
->>> +        goto release_mem;
->>>         return 0;
->>>   +release_mem:
->>> +    of_reserved_mem_device_release(&pdev->dev);
->>>   free_rproc:
->>>       rproc_free(rproc);
->>>       return ret;
->>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
->>> platform_device *pdev)
->>>         rproc_del(rproc);
->>>       rproc_free(rproc);
->>> +    of_reserved_mem_device_release(&pdev->dev);
->>>         return 0;
->>>   }
->>>
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
