@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB59AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5E5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B24621734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B0B2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409863;
-	bh=qsORcU52zr2Vq4Oqy+qSQle/OTS7u/Pcf1nBx+OzJBc=;
+	s=default; t=1580409867;
+	bh=bzJX7PYVkASWHqjAYN30b4sZoLH8MdDr3I91jheyyO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oeo+hLY2qCjz0jKekdgQM0iJ+PS8cf25LvzVpnBKvQTYYAgZ4qxpJaRtdv74xwinv
-	 I3UuBVFEK9TPghrGwtWvC44ggPoaPiXWVMQS2kmXkSphiEeysKKaa/lmdlWhUZ7Y7V
-	 JlHzSghW2EmpoYkw3RDff49ul+2B0iEn4HozugZo=
+	b=rdnQm9qXJGq2W9dDiY/e94RT46ZrH0z6fYgLkWxVCTfM5VgwjRs2yz3pVmxCVW7zi
+	 3TEBiT0jR+GXPRxHy/VvKfTRSpo2Bzmb5hkHOG6jqbDGep4yew87TeAgjJ1DiHgqN2
+	 ivn1OnLfoJhrzwZzmuoYfoNHOeH9OXxzgiCHxjQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgA3SoW (ORCPT
+        id S1730827AbgA3So0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730811AbgA3SoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:19 -0500
+        id S1730532AbgA3SoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15432082E;
-        Thu, 30 Jan 2020 18:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7D2214DB;
+        Thu, 30 Jan 2020 18:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409859;
-        bh=qsORcU52zr2Vq4Oqy+qSQle/OTS7u/Pcf1nBx+OzJBc=;
+        s=default; t=1580409861;
+        bh=bzJX7PYVkASWHqjAYN30b4sZoLH8MdDr3I91jheyyO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQ9kApeRIXc8bC52KGCGBPez5wX2A3Vn67X2cvEP1L8qbOcqv/Cn7xAZuz3Vtazs8
-         Hg2QIv+CaswrQNQzR+xagQCAI3o1NLspic5i/yqcoag5v+xQJuonEQQCcrhQ7TS428
-         bMVqzFUKiYuouxJ5xVRQr5UcbaduuBYCUqGOKdkQ=
+        b=D54IlUGM+2uF0EGWFzJwJpaj5D57LmlBAZTNy4bDQ7n3GAo7rsoq234DqdMFktb9l
+         GWuKodKM6ci7DXLpX06tFHp/vc+SIoLH2tXb+H2c/u9n2EvzgqaoKtNPCRjpPifcNi
+         zufIoDb8UfM6ZGGCwF4Z/bmZv8hdE2URHI+C4BO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/110] watchdog: orion: fix platform_get_irq() complaints
-Date:   Thu, 30 Jan 2020 19:38:38 +0100
-Message-Id: <20200130183622.243888264@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Bin Liu <b-liu@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 063/110] usb: musb: jz4740: Silence error if code is -EPROBE_DEFER
+Date:   Thu, 30 Jan 2020 19:38:39 +0100
+Message-Id: <20200130183622.317918205@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,50 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit dcbce5fbcc69bf2553f650004aad44bf390eca73 ]
+[ Upstream commit ce03cbcb4b4fd2a3817f32366001f1ca45d213b8 ]
 
-Fix:
+Avoid printing any error message if the error code is -EPROBE_DEFER.
 
-orion_wdt f1020300.watchdog: IRQ index 1 not found
-
-which is caused by platform_get_irq() now complaining when optional
-IRQs are not found.  Neither interrupt for orion is required, so
-make them both optional.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/E1iahcN-0000AT-Co@rmk-PC.armlinux.org.uk
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20191216162432.1256-1-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/orion_wdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/musb/jz4740.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 1cccf8eb1c5d4..8e6dfe76f9c9d 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -602,7 +602,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &dev->wdt.status);
+diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
+index 5261f8dfedecd..e3b8c84ccdb80 100644
+--- a/drivers/usb/musb/jz4740.c
++++ b/drivers/usb/musb/jz4740.c
+@@ -75,14 +75,17 @@ static struct musb_hdrc_platform_data jz4740_musb_platform_data = {
+ static int jz4740_musb_init(struct musb *musb)
+ {
+ 	struct device *dev = musb->controller->parent;
++	int err;
  
- 	/* Request the IRQ only after the watchdog is disabled */
--	irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0) {
- 		/*
- 		 * Not all supported platforms specify an interrupt for the
-@@ -617,7 +617,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 	if (dev->of_node)
+ 		musb->xceiv = devm_usb_get_phy_by_phandle(dev, "phys", 0);
+ 	else
+ 		musb->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+ 	if (IS_ERR(musb->xceiv)) {
+-		dev_err(dev, "No transceiver configured\n");
+-		return PTR_ERR(musb->xceiv);
++		err = PTR_ERR(musb->xceiv);
++		if (err != -EPROBE_DEFER)
++			dev_err(dev, "No transceiver configured: %d", err);
++		return err;
  	}
  
- 	/* Optional 2nd interrupt for pretimeout */
--	irq = platform_get_irq(pdev, 1);
-+	irq = platform_get_irq_optional(pdev, 1);
- 	if (irq > 0) {
- 		orion_wdt_info.options |= WDIOF_PRETIMEOUT;
- 		ret = devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
+ 	/* Silicon does not implement ConfigData register.
 -- 
 2.20.1
 
