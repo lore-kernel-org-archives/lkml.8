@@ -2,106 +2,212 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA16C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5F32082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942EA20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KbnW8hcV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f4pKrMQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgA3GbA (ORCPT
+        id S1726713AbgA3Gd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 01:31:00 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40031 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbgA3GbA (ORCPT
+        Thu, 30 Jan 2020 01:33:59 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19859 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgA3Gd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 01:31:00 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k25so1109200pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 22:30:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc:user-agent:date;
-        bh=0tFsYcjfOOa4j0wNofi5s1JbHK10UxRY/7iGvUSf+kk=;
-        b=KbnW8hcVBL+cjoPJI4C8c4WYYBRdr3lVrJlK+VN35PtAz96+RJuL/ELLxdLSp0mLQr
-         U9iIpV6CcuvgD2XX6SiYM16zJwlenQUU/44+VCqojADOc8i5f1SrK9zHJA1yIoDzcTsb
-         JyPMx/3lnzwjm2LBn+HJSPUK6x2NxxcpNjT24=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
-         :user-agent:date;
-        bh=0tFsYcjfOOa4j0wNofi5s1JbHK10UxRY/7iGvUSf+kk=;
-        b=sNUpLzSEX8zE8AJBSL3JL/BR4XhyBQmIFVceAJKi+BLtq9vymPYuJSaYVwiNcgJVhO
-         0hxuJ6AKsHqC9qwPp/S8DFM6KHc2rzv2lGhQOV6RqQtFkkmlIguI+59nWFsnT5PpMTNs
-         8WOsNhuX7UhTnTOIDbjfJ4MVLtgM8bNc1eZkWhuXMXUVEN1Zx4/LRt0TYi+mNOhK19ie
-         9AzHMwZ/Zscy8Zoi5R8A0v7eE79T+fvnhNIdK9A16s8+Bj7ae74ZanX0sokEJCvYNLhZ
-         MHDztgm1UGnL+jZZKqvjRmvbJxkJVSdw4VHBeiKmNNcSn+nysed0oQOT3VeoGshZB+S0
-         0FOg==
-X-Gm-Message-State: APjAAAXMrdnw8K1h38K8seapP0Gta3Uo/IcNZmlPeu+2c8UT5KdHBiO/
-        p52EVCM6lUX6/yWKVi3+YsjKQw==
-X-Google-Smtp-Source: APXvYqxkoOSz3EElUiJyrS7XLxT4E2RrTKPRQZsLo3gTD8kEkuzwObe1rg6ylHw8yiou5ZegP9TqoA==
-X-Received: by 2002:a63:e911:: with SMTP id i17mr3199910pgh.42.1580365859422;
-        Wed, 29 Jan 2020 22:30:59 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q12sm4862272pfh.158.2020.01.29.22.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 22:30:58 -0800 (PST)
-Message-ID: <5e327822.1c69fb81.80136.dfc1@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 Jan 2020 01:33:58 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3278c70000>; Wed, 29 Jan 2020 22:33:43 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 22:33:57 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 29 Jan 2020 22:33:57 -0800
+Received: from [10.2.165.69] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 06:33:57 +0000
+Subject: Re: [PATCH v2 1/8] mm: dump_page: print head page's refcount, for
+ compound pages
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200129032417.3085670-1-jhubbard@nvidia.com>
+ <20200129032417.3085670-2-jhubbard@nvidia.com>
+ <20200129112510.ulims6u36ofk2qwa@box>
+ <b74e8aa9-fcfd-0340-594c-61f185a0ae65@nvidia.com>
+ <20200129225957.GH6615@bombadil.infradead.org>
+ <a0d66400-96a2-f94e-311d-a94f75e72d65@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <c9aea9a3-53b1-83f0-9f69-c294647e0925@nvidia.com>
+Date:   Wed, 29 Jan 2020 22:30:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <a0d66400-96a2-f94e-311d-a94f75e72d65@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <202001271525.E6EB4FDD6@keescook>
-References: <20200123160031.9853-1-saiprakash.ranjan@codeaurora.org> <202001271525.E6EB4FDD6@keescook>
-Subject: Re: [PATCH] pstore: Fix printing of duplicate boot messages to console
-To:     Kees Cook <keescook@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 29 Jan 2020 22:30:57 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580366023; bh=iZY1/g2/MCQ3KPYqu+CkoD4OYyNxEEjqeo4JNbOECuM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=f4pKrMQlnQ5lVGDlW7PYL/KTudIQAYyxHJ7kADvSvQcMo7xwDlpmNiw7jRHH02XRu
+         LUbhtnmhoFfoViXeCzyURJZ5ZT2tFv9w7Gk9BnbjxiHqqR68cmGGsL8OQpAUrTKwh+
+         R+Oe2oriRiuX2tYa5Q/Y6J9XiamJIsg3qsDjvCKVjyu1CTO3AmyUYsyMOqgYJGoiKo
+         sesGH5ZgSCJZQl6twIoECnFRiCw9hq7fox55hgonciXWj/8hqlGsB2QlJUJEzVCVGm
+         qVSi0u7Haqg8rNwptdG7Ds19fKzYYVrSXNV3FYLO8hwx3z1RyYmwXoib0tTh2UpcP+
+         0MLpWfq4Ga0vw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kees Cook (2020-01-27 15:27:33)
-> On Thu, Jan 23, 2020 at 09:30:31PM +0530, Sai Prakash Ranjan wrote:
-> > Since commit f92b070f2dc8 ("printk: Do not miss new messages
-> > when replaying the log"), CON_PRINTBUFFER flag causes the
-> > duplicate boot messages to be printed on the console when
-> > PSTORE_CONSOLE and earlycon (boot console) is enabled.
-> > Pstore console registers to boot console when earlycon is
-> > enabled during pstore_register_console as a part of ramoops
-> > initialization in postcore_initcall and the printk core
-> > checks for CON_PRINTBUFFER flag and replays the log buffer
-> > to registered console (in this case pstore console which
-> > just registered to boot console) causing duplicate messages
-> > to be printed. Remove the CON_PRINTBUFFER flag from pstore
-> > console since pstore is not concerned with the printing of
-> > buffer to console but with writing of the buffer to the
-> > backend.
+On 1/29/20 10:23 PM, John Hubbard wrote:
+> On 1/29/20 2:59 PM, Matthew Wilcox wrote:
+> ...
+>> I have a hunk in my current tree which looks like this:
+>>
+>> @@ -77,6 +77,11 @@ void __dump_page(struct page *page, const char *reaso=
+n)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("page:%px refcount:%d mapcount:%d mapping:=
+%px index:%#lx
+>> \n",
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
+ge, page_ref_count(page), mapcount,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pa=
+ge->mapping, page_to_pgoff(page));
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PageTail(page)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 struct page *head =3D compound_head(page);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 pr_warn("head:%px mapping:%px index:%#lx\n",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 head, head-=
+>mapping, page_to_pgoff(head));
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PageKsm(page))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &p=
+age->flags);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (PageAnon(page)=
+)
+>>
+>> I wonder if we can combine these two patches in some more useful way?
+>>
+>> I also think we probably want a sanity check that 'head' and 'page'
+>> are within a sane range of each other (ie head < page and head +
+>> MAX_ORDER_NR_PAGES > page) to protect against a struct page that contain=
+s
+>> complete garbage.
+>>
 >=20
-> I agree this patch isn't the solution, but I'm trying to understand
-> where better logic could be added. Is the issue that printk sees both
-> earlycon and CON_PRINTBUFFER active? Can we add a new CON_* flag that
-> means "not actually printing anything"? (Or maybe a new flag for
-> non-printing to replace CON_PRINTBUFFER that lets pstore still work?)
+> OK, here's a go at combining those. I like the observation, implicit in y=
+our
+> diffs, that PageTail rather than PageCompound is the key differentiator i=
+n
+> deciding what to print. How's this look:
 >=20
+> diff --git a/mm/debug.c b/mm/debug.c
+> index a90da5337c14..944652843e7b 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -75,12 +75,31 @@ void __dump_page(struct page *page, const char *reaso=
+n)
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>  =C2=A0=C2=A0=C2=A0=C2=A0 mapcount =3D PageSlab(page) ? 0 : page_mapcount=
+(page);
+>=20
+> -=C2=A0=C2=A0=C2=A0 if (PageCompound(page))
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("page:%px refcount:%d=
+ mapcount:%d mapping:%px "
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "inde=
+x:%#lx compound_mapcount: %d\n",
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page,=
+ page_ref_count(page), mapcount,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page-=
+>mapping, page_to_pgoff(page),
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compo=
+und_mapcount(page));
+> +=C2=A0=C2=A0=C2=A0 if (PageTail(page)) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct page *head =3D compoun=
+d_head(page);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((page < head) || (page >=
+=3D head + MAX_ORDER_NR_PAGES)) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ * Page is hopelessly corrupted, so limit any reporting
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ * to information about the page itself. Do not attempt
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ * to look at the head page.
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ */
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_wa=
+rn("page:%px refcount:%d mapcount:%d mapping:%px "
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 "index:%#lx (corrupted tail page case)\n",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 page, page_ref_count(page), mapcount,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 page->mapping, page_to_pgoff(page));
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_wa=
+rn("page:%px compound refcount:%d mapcount:%d "
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 "mapping:%px index:%#lx compound_mapcount:%d\n",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 page, page_ref_count(head),
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 mapcount, head->mapping, page_to_pgoff(head),
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 compound_mapcount(page));
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (p=
+age_ref_count(page) !=3D 0)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 pr_warn("page:%px PROBLEM: non-zero refcount (=3D=3D%d) =
+on "
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "this tail page\n", page, page_r=
+ef_count(page));
 
-This seems to be fixed by commit def97da13651 ("printk: fix
-exclusive_console replaying"). I think there's nothing to do.
+...ahem, I sorta botched the above statement, because that should
+be outside (just below) the "else" statement--it can be done whether or
+not the page fails the safety/bounds check. :)
 
+thanks,
+--=20
+John Hubbard
+NVIDIA
