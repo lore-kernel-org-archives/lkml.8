@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B85C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E172AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5C320CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEE520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410372;
-	bh=LB/jhMm8iYGqv+XZf8uTtmFGIWRKm6uVsonSPnVWzv4=;
+	s=default; t=1580410380;
+	bh=ybi2agjHtsH6PwtVn5gxm6bDkgl8N3lWVMdY04N68ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eoth2AVWSEllqNmuIaDJ/OR0T7KJYFPutoTh31ijvf5qRxEEoP1Ozgz0dyeBRyxC8
-	 aaDRVogDOfOkmyvoT6rPJoEU4zEyeVmaegPIQmYiTdnoMZNIjnNi9Jc0SqYwhnT5nU
-	 svJyfzPEZJG/v4zXGBGIC/It9AVSVGQNiRxh85uU=
+	b=F4UoKVwHaoJigWmIbq7Wrwnne4X+RNZHzmxvwcW0sTp1o4630UGIclesLUZKjY+JC
+	 dIT4SZGXHNAdD1jzO7nAe7DCABzgxE1ZzuOGgCKqYDWODw1AqnOK8BKMouEx5DeM2w
+	 w4HQ+Sflnw7w+4TdgH9k4R2CY4LYST1ToCJR0MZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgA3Smu (ORCPT
+        id S1731007AbgA3Sw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:52:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730456AbgA3Smr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:47 -0500
+        id S1730428AbgA3Smi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30F80205F4;
-        Thu, 30 Jan 2020 18:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41E12082E;
+        Thu, 30 Jan 2020 18:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409766;
-        bh=LB/jhMm8iYGqv+XZf8uTtmFGIWRKm6uVsonSPnVWzv4=;
+        s=default; t=1580409758;
+        bh=ybi2agjHtsH6PwtVn5gxm6bDkgl8N3lWVMdY04N68ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvHTDQ2Ebt9dsQ9UyjM/it7bxC6jkiwiA7GEunn+g5dKTMF82493nYS76PhJ/qvtM
-         C9jKqEOfVIdcqVx9iSCyq2ZkbR9+XlvPxZPj5t3PLDwjii4UhwYFk4BHNekIm0n4rr
-         zC6YJETarZVn1tP/jSqac7R1/sbUcZio+7ZnMYPY=
+        b=pzKoBIsAc2q503em5oHJGsDWymoyxMHhudFprCmETv0cNII6o4kPoeKF+caGNPOBR
+         jJGDpmjvfU8FMBIrHA+JU5fZ88shCOVN5/4K29Qk0cPZntyTaKKCuL+zL7JLEXP37c
+         gdQ6MVw/N06ifKtlypFrDZYqe4Dq5hZyWNCerNLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 025/110] iio: st_gyro: Correct data for LSM9DS0 gyro
-Date:   Thu, 30 Jan 2020 19:38:01 +0100
-Message-Id: <20200130183618.066414861@linuxfoundation.org>
+        stable@vger.kernel.org, Ramalingam C <ramalingam.c@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH 5.4 022/110] mei: hdcp: bind only with i915 on the same PCH
+Date:   Thu, 30 Jan 2020 19:37:58 +0100
+Message-Id: <20200130183617.618805174@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,120 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Tomas Winkler <tomas.winkler@intel.com>
 
-commit e825070f697abddf3b9b0a675ed0ff1884114818 upstream.
+commit 1e8d19d9b0dfcf11b61bac627203a290577e807a upstream.
 
-The commit 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
-assumes that gyro in LSM9DS0 is the same as others with 0xd4 WAI ID,
-but datasheet tells slight different story, i.e. the first scale factor
-for the chip is 245 dps, and not 250 dps.
+The mei device and i915 must reside on the same
+PCH in order for HDCP to work. Make the component
+matching function enforce this requirement.
 
-Correct this by introducing a separate settings for LSM9DS0.
+                   hdcp
+                    |
+   i915            mei
+    |               |
+    +----= PCH =----+
 
-Fixes: 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
-Depends-on: 45a4e4220bf4 ("iio: gyro: st_gyro: fix L3GD20H support")
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: <stable@vger.kernel.org> v5.0+
+Cc: Ramalingam C <ramalingam.c@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Link: https://lore.kernel.org/r/20191212084103.2893-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/gyro/st_gyro_core.c |   75 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+ drivers/misc/mei/hdcp/mei_hdcp.c |   33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -139,7 +139,6 @@ static const struct st_sensor_settings s
- 			[2] = LSM330DLC_GYRO_DEV_NAME,
- 			[3] = L3G4IS_GYRO_DEV_NAME,
- 			[4] = LSM330_GYRO_DEV_NAME,
--			[5] = LSM9DS0_GYRO_DEV_NAME,
- 		},
- 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
- 		.odr = {
-@@ -203,6 +202,80 @@ static const struct st_sensor_settings s
- 			},
- 		},
- 		.sim = {
-+			.addr = 0x23,
-+			.value = BIT(0),
-+		},
-+		.multi_read_bit = true,
-+		.bootime = 2,
-+	},
-+	{
-+		.wai = 0xd4,
-+		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
-+		.sensors_supported = {
-+			[0] = LSM9DS0_GYRO_DEV_NAME,
-+		},
-+		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
-+		.odr = {
-+			.addr = 0x20,
-+			.mask = GENMASK(7, 6),
-+			.odr_avl = {
-+				{ .hz = 95, .value = 0x00, },
-+				{ .hz = 190, .value = 0x01, },
-+				{ .hz = 380, .value = 0x02, },
-+				{ .hz = 760, .value = 0x03, },
-+			},
-+		},
-+		.pw = {
-+			.addr = 0x20,
-+			.mask = BIT(3),
-+			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
-+			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-+		},
-+		.enable_axis = {
-+			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
-+			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
-+		},
-+		.fs = {
-+			.addr = 0x23,
-+			.mask = GENMASK(5, 4),
-+			.fs_avl = {
-+				[0] = {
-+					.num = ST_GYRO_FS_AVL_245DPS,
-+					.value = 0x00,
-+					.gain = IIO_DEGREE_TO_RAD(8750),
-+				},
-+				[1] = {
-+					.num = ST_GYRO_FS_AVL_500DPS,
-+					.value = 0x01,
-+					.gain = IIO_DEGREE_TO_RAD(17500),
-+				},
-+				[2] = {
-+					.num = ST_GYRO_FS_AVL_2000DPS,
-+					.value = 0x02,
-+					.gain = IIO_DEGREE_TO_RAD(70000),
-+				},
-+			},
-+		},
-+		.bdu = {
-+			.addr = 0x23,
-+			.mask = BIT(7),
-+		},
-+		.drdy_irq = {
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = BIT(3),
-+			},
-+			/*
-+			 * The sensor has IHL (active low) and open
-+			 * drain settings, but only for INT1 and not
-+			 * for the DRDY line on INT2.
-+			 */
-+			.stat_drdy = {
-+				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
-+				.mask = GENMASK(2, 0),
-+			},
-+		},
-+		.sim = {
- 			.addr = 0x23,
- 			.value = BIT(0),
- 		},
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -758,11 +758,38 @@ static const struct component_master_ops
+ 	.unbind = mei_component_master_unbind,
+ };
+ 
++/**
++ * mei_hdcp_component_match - compare function for matching mei hdcp.
++ *
++ *    The function checks if the driver is i915, the subcomponent is HDCP
++ *    and the grand parent of hdcp and the parent of i915 are the same
++ *    PCH device.
++ *
++ * @dev: master device
++ * @subcomponent: subcomponent to match (I915_COMPONENT_HDCP)
++ * @data: compare data (mei hdcp device)
++ *
++ * Return:
++ * * 1 - if components match
++ * * 0 - otherwise
++ */
+ static int mei_hdcp_component_match(struct device *dev, int subcomponent,
+ 				    void *data)
+ {
+-	return !strcmp(dev->driver->name, "i915") &&
+-	       subcomponent == I915_COMPONENT_HDCP;
++	struct device *base = data;
++
++	if (strcmp(dev->driver->name, "i915") ||
++	    subcomponent != I915_COMPONENT_HDCP)
++		return 0;
++
++	base = base->parent;
++	if (!base)
++		return 0;
++
++	base = base->parent;
++	dev = dev->parent;
++
++	return (base && dev && dev == base);
+ }
+ 
+ static int mei_hdcp_probe(struct mei_cl_device *cldev,
+@@ -786,7 +813,7 @@ static int mei_hdcp_probe(struct mei_cl_
+ 
+ 	master_match = NULL;
+ 	component_match_add_typed(&cldev->dev, &master_match,
+-				  mei_hdcp_component_match, comp_master);
++				  mei_hdcp_component_match, &cldev->dev);
+ 	if (IS_ERR_OR_NULL(master_match)) {
+ 		ret = -ENOMEM;
+ 		goto err_exit;
 
 
