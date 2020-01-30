@@ -2,52 +2,52 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B0EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484CAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D9F20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FA12082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409617;
-	bh=QM8fs0niulpjG3s5ouYT3crG1veUuBUT5ML3DohSjos=;
+	s=default; t=1580409624;
+	bh=IzDMZNQl3J1nGNsNXmPv0XusuU1RExicvphwbiLdAOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zX9w9XsJE9DNMpRefzlWHal2j+3TZloAUrGEdALDt0YBA5dAwmdS3s6AaFvVxfPDg
-	 59qYxID5QJfVhxpqpJM5QTd30HF/qTueHmKwqQaoD6oojn/NY36LJBugYrf+519R7v
-	 Fm9+OXzaqTlswxXu/d+PSQRBRLnpClD74SiVcwTI=
+	b=TGmljJMt/4eSlRI/OD9iTgfg3ePUmd3WETTwsMpcoVHCXwiSe/hLKxtWAaI070dXd
+	 r+1nmH+pTNPG/ueEAP/L49YnGL3Dium4yANRwXoqTzjqhvoH2ixyfSs9AmAPqLDp92
+	 9+sxP+MdwOWYglSUVcFivE7l07Nn46KWVv1Z4XAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgA3SkQ (ORCPT
+        id S1729935AbgA3SkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbgA3SkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:10 -0500
+        id S1728000AbgA3SkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D86AC214DB;
-        Thu, 30 Jan 2020 18:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1700420702;
+        Thu, 30 Jan 2020 18:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409609;
-        bh=QM8fs0niulpjG3s5ouYT3crG1veUuBUT5ML3DohSjos=;
+        s=default; t=1580409616;
+        bh=IzDMZNQl3J1nGNsNXmPv0XusuU1RExicvphwbiLdAOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ChmlC6yUg8vfDGAfQ6vst5AynUFeCIFullHv8m7qri5ui06gr1WwLE6Z/mBaT5r8D
-         dSM3Y/4JtT2K+n1Ox0v9LGCgzi2Y0cAw330sa7ZRDui35L+cq0ycMiooksYKCDuVrp
-         vhL/LTBqfMw3Q+m4DdCoBhJrnoFZ6IbDFOOtE8z0=
+        b=gaSQtA8TDuKGt3r66yE+cQoFB9kRR14geqKhGlHaEORnv6+p8Zsg6u2QWW0xPqiXx
+         VKiBEZ3EvBLNip0vpPWacdAXStMFFdUh7RRryNUgwxd9mWWb1pCuWC83QsGDC14bMv
+         GSlI/U7SAgbAegnet32WNmy1i0uUkbUbqWfnvL50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Snowberg <eric.snowberg@oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        James Morris <jamorris@linux.microsoft.com>
-Subject: [PATCH 5.5 19/56] debugfs: Return -EPERM when locked down
-Date:   Thu, 30 Jan 2020 19:38:36 +0100
-Message-Id: <20200130183612.721720425@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 5.5 21/56] binder: fix log spam for existing debugfs file creation.
+Date:   Thu, 30 Jan 2020 19:38:38 +0100
+Message-Id: <20200130183613.111465806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,112 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Snowberg <eric.snowberg@oracle.com>
+From: Martin Fuzzey <martin.fuzzey@flowbird.group>
 
-commit a37f4958f7b63d2b3cd17a76151fdfc29ce1da5f upstream.
+commit eb143f8756e77c8fcfc4d574922ae9efd3a43ca9 upstream.
 
-When lockdown is enabled, debugfs_is_locked_down returns 1. It will then
-trigger the following:
+Since commit 43e23b6c0b01 ("debugfs: log errors when something goes wrong")
+debugfs logs attempts to create existing files.
 
-WARNING: CPU: 48 PID: 3747
-CPU: 48 PID: 3743 Comm: bash Not tainted 5.4.0-1946.x86_64 #1
-Hardware name: Oracle Corporation ORACLE SERVER X7-2/ASM, MB, X7-2, BIOS 41060400 05/20/2019
-RIP: 0010:do_dentry_open+0x343/0x3a0
-Code: 00 40 08 00 45 31 ff 48 c7 43 28 40 5b e7 89 e9 02 ff ff ff 48 8b 53 28 4c 8b 72 70 4d 85 f6 0f 84 10 fe ff ff e9 f5 fd ff ff <0f> 0b 41 bf ea ff ff ff e9 3b ff ff ff 41 bf e6 ff ff ff e9 b4 fe
-RSP: 0018:ffffb8740dde7ca0 EFLAGS: 00010202
-RAX: ffffffff89e88a40 RBX: ffff928c8e6b6f00 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff928dbfd97778 RDI: ffff9285cff685c0
-RBP: ffffb8740dde7cc8 R08: 0000000000000821 R09: 0000000000000030
-R10: 0000000000000057 R11: ffffb8740dde7a98 R12: ffff926ec781c900
-R13: ffff928c8e6b6f10 R14: ffffffff8936e190 R15: 0000000000000001
-FS:  00007f45f6777740(0000) GS:ffff928dbfd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff95e0d5d8 CR3: 0000001ece562006 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- vfs_open+0x2d/0x30
- path_openat+0x2d4/0x1680
- ? tty_mode_ioctl+0x298/0x4c0
- do_filp_open+0x93/0x100
- ? strncpy_from_user+0x57/0x1b0
- ? __alloc_fd+0x46/0x150
- do_sys_open+0x182/0x230
- __x64_sys_openat+0x20/0x30
- do_syscall_64+0x60/0x1b0
- entry_SYSCALL_64_after_hwframe+0x170/0x1d5
-RIP: 0033:0x7f45f5e5ce02
-Code: 25 00 00 41 00 3d 00 00 41 00 74 4c 48 8d 05 25 59 2d 00 8b 00 85 c0 75 6d 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 0f 87 a2 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
-RSP: 002b:00007fff95e0d2e0 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000561178c069b0 RCX: 00007f45f5e5ce02
-RDX: 0000000000000241 RSI: 0000561178c08800 RDI: 00000000ffffff9c
-RBP: 00007fff95e0d3e0 R08: 0000000000000020 R09: 0000000000000005
-R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000003 R14: 0000000000000001 R15: 0000561178c08800
+However binder attempts to create multiple debugfs files with
+the same name when a single PID has multiple contexts, this leads
+to log spamming during an Android boot (17 such messages during
+boot on my system).
 
-Change the return type to int and return -EPERM when lockdown is enabled
-to remove the warning above. Also rename debugfs_is_locked_down to
-debugfs_locked_down to make it sound less like it returns a boolean.
+Fix this by checking if we already know the PID and only create
+the debugfs entry for the first context per PID.
 
-Fixes: 5496197f9b08 ("debugfs: Restrict debugfs when the kernel is locked down")
-Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Do the same thing for binderfs for symmetry.
+
+Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+Acked-by: Todd Kjos <tkjos@google.com>
+Fixes: 43e23b6c0b01 ("debugfs: log errors when something goes wrong")
 Cc: stable <stable@vger.kernel.org>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Link: https://lore.kernel.org/r/20191207161603.35907-1-eric.snowberg@oracle.com
+Link: https://lore.kernel.org/r/1578671054-5982-1-git-send-email-martin.fuzzey@flowbird.group
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/debugfs/file.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/android/binder.c |   37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -142,18 +142,21 @@ EXPORT_SYMBOL_GPL(debugfs_file_put);
-  * We also need to exclude any file that has ways to write or alter it as root
-  * can bypass the permissions check.
-  */
--static bool debugfs_is_locked_down(struct inode *inode,
--				   struct file *filp,
--				   const struct file_operations *real_fops)
-+static int debugfs_locked_down(struct inode *inode,
-+			       struct file *filp,
-+			       const struct file_operations *real_fops)
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -5199,10 +5199,11 @@ err_bad_arg:
+ 
+ static int binder_open(struct inode *nodp, struct file *filp)
  {
- 	if ((inode->i_mode & 07777) == 0444 &&
- 	    !(filp->f_mode & FMODE_WRITE) &&
- 	    !real_fops->unlocked_ioctl &&
- 	    !real_fops->compat_ioctl &&
- 	    !real_fops->mmap)
--		return false;
-+		return 0;
+-	struct binder_proc *proc;
++	struct binder_proc *proc, *itr;
+ 	struct binder_device *binder_dev;
+ 	struct binderfs_info *info;
+ 	struct dentry *binder_binderfs_dir_entry_proc = NULL;
++	bool existing_pid = false;
  
--	return security_locked_down(LOCKDOWN_DEBUGFS);
-+	if (security_locked_down(LOCKDOWN_DEBUGFS))
-+		return -EPERM;
-+
-+	return 0;
- }
+ 	binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
+ 		     current->group_leader->pid, current->pid);
+@@ -5235,19 +5236,24 @@ static int binder_open(struct inode *nod
+ 	filp->private_data = proc;
  
- static int open_proxy_open(struct inode *inode, struct file *filp)
-@@ -168,7 +171,7 @@ static int open_proxy_open(struct inode
+ 	mutex_lock(&binder_procs_lock);
++	hlist_for_each_entry(itr, &binder_procs, proc_node) {
++		if (itr->pid == proc->pid) {
++			existing_pid = true;
++			break;
++		}
++	}
+ 	hlist_add_head(&proc->proc_node, &binder_procs);
+ 	mutex_unlock(&binder_procs_lock);
  
- 	real_fops = debugfs_real_fops(filp);
+-	if (binder_debugfs_dir_entry_proc) {
++	if (binder_debugfs_dir_entry_proc && !existing_pid) {
+ 		char strbuf[11];
  
--	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	r = debugfs_locked_down(inode, filp, real_fops);
- 	if (r)
- 		goto out;
+ 		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
+ 		/*
+-		 * proc debug entries are shared between contexts, so
+-		 * this will fail if the process tries to open the driver
+-		 * again with a different context. The priting code will
+-		 * anyway print all contexts that a given PID has, so this
+-		 * is not a problem.
++		 * proc debug entries are shared between contexts.
++		 * Only create for the first PID to avoid debugfs log spamming
++		 * The printing code will anyway print all contexts for a given
++		 * PID so this is not a problem.
+ 		 */
+ 		proc->debugfs_entry = debugfs_create_file(strbuf, 0444,
+ 			binder_debugfs_dir_entry_proc,
+@@ -5255,19 +5261,16 @@ static int binder_open(struct inode *nod
+ 			&proc_fops);
+ 	}
  
-@@ -298,7 +301,7 @@ static int full_proxy_open(struct inode
+-	if (binder_binderfs_dir_entry_proc) {
++	if (binder_binderfs_dir_entry_proc && !existing_pid) {
+ 		char strbuf[11];
+ 		struct dentry *binderfs_entry;
  
- 	real_fops = debugfs_real_fops(filp);
+ 		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
+ 		/*
+ 		 * Similar to debugfs, the process specific log file is shared
+-		 * between contexts. If the file has already been created for a
+-		 * process, the following binderfs_create_file() call will
+-		 * fail with error code EEXIST if another context of the same
+-		 * process invoked binder_open(). This is ok since same as
+-		 * debugfs, the log file will contain information on all
+-		 * contexts of a given PID.
++		 * between contexts. Only create for the first PID.
++		 * This is ok since same as debugfs, the log file will contain
++		 * information on all contexts of a given PID.
+ 		 */
+ 		binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
+ 			strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
+@@ -5277,10 +5280,8 @@ static int binder_open(struct inode *nod
+ 			int error;
  
--	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	r = debugfs_locked_down(inode, filp, real_fops);
- 	if (r)
- 		goto out;
+ 			error = PTR_ERR(binderfs_entry);
+-			if (error != -EEXIST) {
+-				pr_warn("Unable to create file %s in binderfs (error %d)\n",
+-					strbuf, error);
+-			}
++			pr_warn("Unable to create file %s in binderfs (error %d)\n",
++				strbuf, error);
+ 		}
+ 	}
  
 
 
