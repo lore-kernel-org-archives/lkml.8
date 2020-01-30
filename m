@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484CAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF9BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FA12082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BAD214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409624;
-	bh=IzDMZNQl3J1nGNsNXmPv0XusuU1RExicvphwbiLdAOQ=;
+	s=default; t=1580409629;
+	bh=005QrlpyeISwVRM5donYC0s406q/R2jnUVfuLChgDP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGmljJMt/4eSlRI/OD9iTgfg3ePUmd3WETTwsMpcoVHCXwiSe/hLKxtWAaI070dXd
-	 r+1nmH+pTNPG/ueEAP/L49YnGL3Dium4yANRwXoqTzjqhvoH2ixyfSs9AmAPqLDp92
-	 9+sxP+MdwOWYglSUVcFivE7l07Nn46KWVv1Z4XAA=
+	b=vkFx9x2hWCBavfCwaoDH6Oodo+1sfrajaj/ahnJZagB96DcaH6lDZ1M3O988gTNYt
+	 NbuSS7F8ZidegjP6T6gmnwj2FhjMfW+vVv91Z/IYh7cKsAfKOnpbqHPlY9rIEfLMs/
+	 7XN4hM30oPl2SITdGZKtOfI4XTQ27SFJ26j2Hgbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgA3SkX (ORCPT
+        id S1729966AbgA3Sk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47794 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgA3SkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:17 -0500
+        id S1729943AbgA3SkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1700420702;
-        Thu, 30 Jan 2020 18:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DCA220702;
+        Thu, 30 Jan 2020 18:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409616;
-        bh=IzDMZNQl3J1nGNsNXmPv0XusuU1RExicvphwbiLdAOQ=;
+        s=default; t=1580409624;
+        bh=005QrlpyeISwVRM5donYC0s406q/R2jnUVfuLChgDP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gaSQtA8TDuKGt3r66yE+cQoFB9kRR14geqKhGlHaEORnv6+p8Zsg6u2QWW0xPqiXx
-         VKiBEZ3EvBLNip0vpPWacdAXStMFFdUh7RRryNUgwxd9mWWb1pCuWC83QsGDC14bMv
-         GSlI/U7SAgbAegnet32WNmy1i0uUkbUbqWfnvL50=
+        b=l2vBa8N/sJN8kJvbuWLi5uYSEvE6/Vc8tILOIDaqSmIQuqqKoDuNba+ZWOQgynXS2
+         meWdcFmPuHJOIzl9r5+GZRm9I7YgJHhCoZbygSEBxfsvONo1ti2BC/6DxQED9JvcbC
+         2W40ZY6+DSAn8R3neNqdUVmvgU43ULgck0iamr28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH 5.5 21/56] binder: fix log spam for existing debugfs file creation.
-Date:   Thu, 30 Jan 2020 19:38:38 +0100
-Message-Id: <20200130183613.111465806@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.5 24/56] mei: me: add jasper point DID
+Date:   Thu, 30 Jan 2020 19:38:41 +0100
+Message-Id: <20200130183613.603678518@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,116 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group>
+From: Tomas Winkler <tomas.winkler@intel.com>
 
-commit eb143f8756e77c8fcfc4d574922ae9efd3a43ca9 upstream.
+commit 0db4a15d4c2787b1112001790d4f95bd2c5fed6f upstream.
 
-Since commit 43e23b6c0b01 ("debugfs: log errors when something goes wrong")
-debugfs logs attempts to create existing files.
+Add Jasper Point (Jasper Lake) device id for MEI
 
-However binder attempts to create multiple debugfs files with
-the same name when a single PID has multiple contexts, this leads
-to log spamming during an Android boot (17 such messages during
-boot on my system).
-
-Fix this by checking if we already know the PID and only create
-the debugfs entry for the first context per PID.
-
-Do the same thing for binderfs for symmetry.
-
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Acked-by: Todd Kjos <tkjos@google.com>
-Fixes: 43e23b6c0b01 ("debugfs: log errors when something goes wrong")
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1578671054-5982-1-git-send-email-martin.fuzzey@flowbird.group
+Link: https://lore.kernel.org/r/20200124001455.24176-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder.c |   37 +++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ drivers/misc/mei/hw-me-regs.h |    2 ++
+ drivers/misc/mei/pci-me.c     |    2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -5199,10 +5199,11 @@ err_bad_arg:
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -89,6 +89,8 @@
  
- static int binder_open(struct inode *nodp, struct file *filp)
- {
--	struct binder_proc *proc;
-+	struct binder_proc *proc, *itr;
- 	struct binder_device *binder_dev;
- 	struct binderfs_info *info;
- 	struct dentry *binder_binderfs_dir_entry_proc = NULL;
-+	bool existing_pid = false;
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
  
- 	binder_debug(BINDER_DEBUG_OPEN_CLOSE, "%s: %d:%d\n", __func__,
- 		     current->group_leader->pid, current->pid);
-@@ -5235,19 +5236,24 @@ static int binder_open(struct inode *nod
- 	filp->private_data = proc;
++#define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
++
+ #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
  
- 	mutex_lock(&binder_procs_lock);
-+	hlist_for_each_entry(itr, &binder_procs, proc_node) {
-+		if (itr->pid == proc->pid) {
-+			existing_pid = true;
-+			break;
-+		}
-+	}
- 	hlist_add_head(&proc->proc_node, &binder_procs);
- 	mutex_unlock(&binder_procs_lock);
+ #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -106,6 +106,8 @@ static const struct pci_device_id mei_me
  
--	if (binder_debugfs_dir_entry_proc) {
-+	if (binder_debugfs_dir_entry_proc && !existing_pid) {
- 		char strbuf[11];
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
  
- 		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
- 		/*
--		 * proc debug entries are shared between contexts, so
--		 * this will fail if the process tries to open the driver
--		 * again with a different context. The priting code will
--		 * anyway print all contexts that a given PID has, so this
--		 * is not a problem.
-+		 * proc debug entries are shared between contexts.
-+		 * Only create for the first PID to avoid debugfs log spamming
-+		 * The printing code will anyway print all contexts for a given
-+		 * PID so this is not a problem.
- 		 */
- 		proc->debugfs_entry = debugfs_create_file(strbuf, 0444,
- 			binder_debugfs_dir_entry_proc,
-@@ -5255,19 +5261,16 @@ static int binder_open(struct inode *nod
- 			&proc_fops);
- 	}
- 
--	if (binder_binderfs_dir_entry_proc) {
-+	if (binder_binderfs_dir_entry_proc && !existing_pid) {
- 		char strbuf[11];
- 		struct dentry *binderfs_entry;
- 
- 		snprintf(strbuf, sizeof(strbuf), "%u", proc->pid);
- 		/*
- 		 * Similar to debugfs, the process specific log file is shared
--		 * between contexts. If the file has already been created for a
--		 * process, the following binderfs_create_file() call will
--		 * fail with error code EEXIST if another context of the same
--		 * process invoked binder_open(). This is ok since same as
--		 * debugfs, the log file will contain information on all
--		 * contexts of a given PID.
-+		 * between contexts. Only create for the first PID.
-+		 * This is ok since same as debugfs, the log file will contain
-+		 * information on all contexts of a given PID.
- 		 */
- 		binderfs_entry = binderfs_create_file(binder_binderfs_dir_entry_proc,
- 			strbuf, &proc_fops, (void *)(unsigned long)proc->pid);
-@@ -5277,10 +5280,8 @@ static int binder_open(struct inode *nod
- 			int error;
- 
- 			error = PTR_ERR(binderfs_entry);
--			if (error != -EEXIST) {
--				pr_warn("Unable to create file %s in binderfs (error %d)\n",
--					strbuf, error);
--			}
-+			pr_warn("Unable to create file %s in binderfs (error %d)\n",
-+				strbuf, error);
- 		}
- 	}
++	{MEI_PCI_DEVICE(MEI_DEV_ID_JSP_N, MEI_ME_PCH15_CFG)},
++
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH15_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
  
 
 
