@@ -2,86 +2,62 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6DDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC7C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3212063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350FD20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgA3KBE (ORCPT
+        id S1727103AbgA3KCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:01:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:57775 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgA3KBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:01:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 02:01:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,381,1574150400"; 
-   d="scan'208";a="262121220"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jan 2020 02:01:02 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ix6dD-0004b9-Sn; Thu, 30 Jan 2020 12:01:03 +0200
-Date:   Thu, 30 Jan 2020 12:01:03 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 30 Jan 2020 05:02:40 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52624 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgA3KCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 05:02:40 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4CF9E15AB0D16;
+        Thu, 30 Jan 2020 02:02:38 -0800 (PST)
+Date:   Thu, 30 Jan 2020 11:02:36 +0100 (CET)
+Message-Id: <20200130.110236.635220430261346308.davem@davemloft.net>
+To:     b.zolnierkie@samsung.com
+Cc:     ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org,
+        corbet@lwn.net, linux-ide@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] console: Introduce ->exit() callback
-Message-ID: <20200130100103.GR32742@smile.fi.intel.com>
-References: <20200127114719.69114-1-andriy.shevchenko@linux.intel.com>
- <20200127114719.69114-5-andriy.shevchenko@linux.intel.com>
- <20200130090917.sg5vnwvlng4ox6ua@pathway.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130090917.sg5vnwvlng4ox6ua@pathway.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: Re: [PATCH 1/3] ide: remove no longer used au1xxx-ide driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200116122938.20789-2-b.zolnierkie@samsung.com>
+References: <20200116122938.20789-1-b.zolnierkie@samsung.com>
+        <CGME20200116122951eucas1p27bed87e1d46b5e1d8fc91abc33cd013a@eucas1p2.samsung.com>
+        <20200116122938.20789-2-b.zolnierkie@samsung.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 02:02:40 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 10:09:17AM +0100, Petr Mladek wrote:
-> On Mon 2020-01-27 13:47:19, Andy Shevchenko wrote:
-> > Some consoles might require special operations on unregistering. For example,
-> > serial console, when registered in the kernel, keeps power on for entire time,
-> > until it gets unregistered. For such cases to have a balance we would provide
-> > ->exit() callback.
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Date: Thu, 16 Jan 2020 13:29:36 +0100
+
+> Commit 54ff4a1d1732 ("MIPS: Alchemy: pata_platform for DB1200")
+> from year 2014 converted the only user of au1xxx-ide IDE host
+> driver (MIPS Alchemy DB1200 platform) to use pata_platform
+> libata host driver instead. This patch removes dead au1xxx-ide
+> driver code.
 > 
-> Is there any plan to use this callback, please?
-> 
-> The console init, setup, registration code needs a clean up,
-> definitely. If you plan some rework, I would like to understand
-> the bigger picture before we start adding new callbacks.
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-Yes, as mentioned in the commit message I would like to use it for balancing
-runtime PM reference counters in the UART code later on.
-
-It will look like:
-
-	->setup():
-		pm_runtime_get(...);
-
-	->exit():
-		pm_runtime_put(...);
-
-The current operations have no needs to be undone.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: David S. Miller <davem@davemloft.net>
