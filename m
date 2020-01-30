@@ -2,85 +2,125 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51446C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A218EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D71920702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813DA206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgA3Mbv convert rfc822-to-8bit (ORCPT
+        id S1727198AbgA3MdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:31:51 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35122 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727001AbgA3Mbu (ORCPT
+        Thu, 30 Jan 2020 07:33:02 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35510 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3MdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:31:50 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-78-nO0nl3ftMxusiiUxHSydGw-1; Thu, 30 Jan 2020 12:31:47 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 12:31:44 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 Jan 2020 12:31:44 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Xiaoyao Li' <xiaoyao.li@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH 1/2] KVM: x86: Emulate split-lock access as a write
-Thread-Topic: [PATCH 1/2] KVM: x86: Emulate split-lock access as a write
-Thread-Index: AQHV12hLFMkYqgCTIEO98IqgYw6YoagDIpWg
-Date:   Thu, 30 Jan 2020 12:31:44 +0000
-Message-ID: <db3b854fd03745738f46cfce451d9c98@AcuMS.aculab.com>
-References: <20200130121939.22383-1-xiaoyao.li@intel.com>
- <20200130121939.22383-2-xiaoyao.li@intel.com>
-In-Reply-To: <20200130121939.22383-2-xiaoyao.li@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 30 Jan 2020 07:33:02 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r16so2967386otd.2;
+        Thu, 30 Jan 2020 04:33:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SF4A8MXH4i+NehAjiTIe/wipSti1DDnySBzIoKhtngY=;
+        b=eSq6OFsX4FUlr2UyT62wcGR/P57xE6a1RWZKmFOUveUDcc2MF6HDoUuqNOKoI/hX/Q
+         5mG9gOuUPYXSq10Qquk70XLbbshE489kwzMlFyZ/fEMlG1cIKE/CzjcSdydLnhPi93pY
+         oUiTEq0UNwlUVxyKVDVRblmdhGAbQT9xy25izoBxIHzbm7hJYMOJqM4Ost6sGI3KcV1G
+         gqRgmUqoqjbDSgGI83nRBNWfLmi5uX1BpcJiQ2PgVmRuTAvi1Z/KTVwzYLhEphYxUJOT
+         cLxQusUClWa9kQ1e5q+NZnJLeiH2oO8cubqo3dFJKVzHmCwvo5wPP6cUAVeldR5XuTgr
+         Rfrg==
+X-Gm-Message-State: APjAAAVpvdwBCH8pCGTItPOSbZJJAPxLOQZpQw64tf297s9Ibff0pkIj
+        TIpPhBLdXTu5Th82Y6AOkaWnFsLRXCSkwzbjVkc=
+X-Google-Smtp-Source: APXvYqymSbwIVGK+M1CJKuu8V4/Pmg47Q6gWht5FbqvzeN05ArmzMI8NjyeixcBdRSkS9xgrJChKC5UFlRm4eXp+0T0=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr3438190otm.297.1580387581450;
+ Thu, 30 Jan 2020 04:33:01 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: nO0nl3ftMxusiiUxHSydGw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200129161955.30562-1-erosca@de.adit-jv.com>
+In-Reply-To: <20200129161955.30562-1-erosca@de.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Jan 2020 13:32:50 +0100
+Message-ID: <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Support custom speed setting
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
+        Yasushi Asano <yasano@jp.adit-jv.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
+        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoyao Li
-> Sent: 30 January 2020 12:20
-> If split lock detect is enabled (warn/fatal), #AC handler calls die()
-> when split lock happens in kernel.
-> 
-> A sane guest should never tigger emulation on a split-lock access, but
-> it cannot prevent malicous guest from doing this. So just emulating the
-> access as a write if it's a split-lock access to avoid malicous guest
-> polluting the kernel log.
+Hi Eugeniu,
 
-That doesn't seem right if, for example, the locked access is addx.
-ISTM it would be better to force an immediate fatal error of some
-kind than just corrupt the guest memory.
+On Wed, Jan 29, 2020 at 5:20 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
+>
+> This patch is necessary to use BT module and XM module with DENSO TEN
+> development board.
+>
+> This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
+> custom speed setting with setserial(1).
+>
+> The custom speed is calculated from uartclk and custom_divisor.
+> If custom_divisor is zero, custom speed setting is invalid.
+>
+> Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
+> [erosca: rebase against v5.5]
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-	David
+Thanks for your patch!
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+While this seems to work fine[*], I have a few comments/questions:
+  1. This feature seems to be deprecated:
 
+         sh-sci e6e68000.serial: setserial sets custom speed on
+ttySC1. This is deprecated.
+
+  2. As the wanted speed is specified as a divider, the resulting speed
+     may be off, cfr. the example for 57600 below.
+     Note that the SCIF device has multiple clock inputs, and can do
+     57600 perfectly if the right crystal has been fitted.
+
+ 3. What to do with "[PATCH/RFC] serial: sh-sci: Update uartclk based
+     on selected clock" (https://patchwork.kernel.org/patch/11103703/)?
+     Combined with this, things become pretty complicated and
+     unpredictable, as uartclk now always reflect the frequency of the
+     last used base clock, which was the optimal one for the previously
+     used speed....
+
+I think it would be easier if we just had an API to specify a raw speed.
+Perhaps that already exists?
+
+BTW, what's the speed you need for your BT/XM modules?
+
+[*] stty speed 38400 < /dev/ttySC1 followed by
+    setserial /dev/ttySC1 spd_cust divisor 1128 gives 57624 bps on Koelsch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
