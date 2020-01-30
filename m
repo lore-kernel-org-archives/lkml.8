@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5711C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5373C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1212468A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7311F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410457;
-	bh=N/VGsv4nbUCgQlYnuvBIaa7hCq3CZsorA+Vhoh+tDc4=;
+	s=default; t=1580410459;
+	bh=IEY2DK0mVd3QRoS/LYnosAPqfWr7Mx1laUopAzlAE6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6w/lXZUluFk+5oS11lXnpeIWqSR/2HQhgFX8cWluKB9QABGJ6vyv8D0FeeSG/LGh
-	 QYegu43K9GIfI2rrzEtQmOGLU8Oote6ITgoGDxw/Ln9M1UtSBn3lHIOwXAa9td6xI2
-	 cR+W+qfophG4XZZ+BZC/tDwNLlS1FLvK4NCipxno=
+	b=EYubOAbhBvnFQIu09EYKIQmIUcvdXn3xfaN80h+xPovJI9N/KFXQv4zjZaNcfKEUv
+	 mGcsmlxOzgj+mA0gUw5PUhavBSdmlaxbY4r5CUz0mgrXLaCHAPDq74d7f8tpha4k7O
+	 pPxHPNPcy2VIpW1TRnfLvjKDXopyBBs+45uWFpOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgA3Sk0 (ORCPT
+        id S1731044AbgA3SyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbgA3SkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:19 -0500
+        id S1729951AbgA3Sk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C395F214DB;
-        Thu, 30 Jan 2020 18:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0032082E;
+        Thu, 30 Jan 2020 18:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409619;
-        bh=N/VGsv4nbUCgQlYnuvBIaa7hCq3CZsorA+Vhoh+tDc4=;
+        s=default; t=1580409626;
+        bh=IEY2DK0mVd3QRoS/LYnosAPqfWr7Mx1laUopAzlAE6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUxTGvdC+6nhz1VEENg8LEh5kU7YpcFY7Zn258H7dVYbb19+77FhFzSj1YYc++YaR
-         +YyQEHhdin/lCSgeftTzJ8QNJMdjWYR9LNiftRZMD6H6xb7+YHQb9oRL5m9oI5gO2G
-         exer4ADN8hopKrJnYyp7hDsxPGALpbUsZdkVIuAs=
+        b=HAouV2QIW3DkCf3j1WW/AvOrbke1CbITAi5fuGUvVwTWRo/Jnn72DSjRUcNqUqC89
+         MFkqC0YdYryJgpfH/xZsHHzGQ33L6cd5loIRuCa296iSeXvnD8s608dNLcGNWd74Bd
+         /2sVVb+7n/FLWcWpYOBXC8hFZxqFnPwN8YhTvWR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ramalingam C <ramalingam.c@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH 5.5 22/56] mei: hdcp: bind only with i915 on the same PCH
-Date:   Thu, 30 Jan 2020 19:38:39 +0100
-Message-Id: <20200130183613.282806892@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 25/56] iio: adc: stm32-dfsdm: fix single conversion
+Date:   Thu, 30 Jan 2020 19:38:42 +0100
+Message-Id: <20200130183613.744768597@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -60,82 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit 1e8d19d9b0dfcf11b61bac627203a290577e807a upstream.
+commit dc26935fb60e8da8d59655dd2ec0de47b20d7d8f upstream.
 
-The mei device and i915 must reside on the same
-PCH in order for HDCP to work. Make the component
-matching function enforce this requirement.
+Apply data formatting to single conversion,
+as this is already done in continuous and trigger modes.
 
-                   hdcp
-                    |
-   i915            mei
-    |               |
-    +----= PCH =----+
+Fixes: 102afde62937 ("iio: adc: stm32-dfsdm: manage data resolution in trigger mode")
 
-Cc: <stable@vger.kernel.org> v5.0+
-Cc: Ramalingam C <ramalingam.c@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Link: https://lore.kernel.org/r/20191212084103.2893-1-tomas.winkler@intel.com
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Cc: <Stable@vger.kernel.org>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hdcp/mei_hdcp.c |   33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ drivers/iio/adc/stm32-dfsdm-adc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -757,11 +757,38 @@ static const struct component_master_ops
- 	.unbind = mei_component_master_unbind,
- };
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -1204,6 +1204,8 @@ static int stm32_dfsdm_single_conv(struc
  
-+/**
-+ * mei_hdcp_component_match - compare function for matching mei hdcp.
-+ *
-+ *    The function checks if the driver is i915, the subcomponent is HDCP
-+ *    and the grand parent of hdcp and the parent of i915 are the same
-+ *    PCH device.
-+ *
-+ * @dev: master device
-+ * @subcomponent: subcomponent to match (I915_COMPONENT_HDCP)
-+ * @data: compare data (mei hdcp device)
-+ *
-+ * Return:
-+ * * 1 - if components match
-+ * * 0 - otherwise
-+ */
- static int mei_hdcp_component_match(struct device *dev, int subcomponent,
- 				    void *data)
- {
--	return !strcmp(dev->driver->name, "i915") &&
--	       subcomponent == I915_COMPONENT_HDCP;
-+	struct device *base = data;
-+
-+	if (strcmp(dev->driver->name, "i915") ||
-+	    subcomponent != I915_COMPONENT_HDCP)
-+		return 0;
-+
-+	base = base->parent;
-+	if (!base)
-+		return 0;
-+
-+	base = base->parent;
-+	dev = dev->parent;
-+
-+	return (base && dev && dev == base);
- }
+ 	stm32_dfsdm_stop_conv(adc);
  
- static int mei_hdcp_probe(struct mei_cl_device *cldev,
-@@ -785,7 +812,7 @@ static int mei_hdcp_probe(struct mei_cl_
++	stm32_dfsdm_process_data(adc, res);
++
+ stop_dfsdm:
+ 	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
  
- 	master_match = NULL;
- 	component_match_add_typed(&cldev->dev, &master_match,
--				  mei_hdcp_component_match, comp_master);
-+				  mei_hdcp_component_match, &cldev->dev);
- 	if (IS_ERR_OR_NULL(master_match)) {
- 		ret = -ENOMEM;
- 		goto err_exit;
 
 
