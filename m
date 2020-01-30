@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6412BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C140C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAA02083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533C72083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409939;
-	bh=krs1E6STY5LR20e9JwyiHDEkwvcPO5sWYrmHL6wEJZc=;
+	s=default; t=1580409942;
+	bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwpHz6eOrXi3wTKWoD6BCNeXgAkb8TkonIYgzqAioytolGV+rm1r20c9GnU89QK6S
-	 h93628q0Q5o0RGF7GPA97yic+lMwPhPUKyUXl/ieeDcnjsQxilLP4ScqKpVjNNCmsc
-	 1wYfqMw2LDqqhecT255aJKoovxqvZbRjfdUFM5Hs=
+	b=U5koPy+ACSObwc5CjyMsJJSNLFcnmD3c5KpMaQYLwDYp47vMCa5Q7MS+JMMutZCkr
+	 qqU0POAgYZZnFi+H6QI1khW52iEIDgkHfrv0Q4oxOe4N9HQZrh/PAKNF6DXZ/dBxUP
+	 f922htrTJYygzshrIBbB7ofxc9bk3tIKgokm45UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgA3Spi (ORCPT
+        id S1731075AbgA3Spl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgA3Spg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:36 -0500
+        id S1728079AbgA3Spj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB42221734;
-        Thu, 30 Jan 2020 18:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30B3E217BA;
+        Thu, 30 Jan 2020 18:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409936;
-        bh=krs1E6STY5LR20e9JwyiHDEkwvcPO5sWYrmHL6wEJZc=;
+        s=default; t=1580409938;
+        bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVMPnzAbsY61LLEJvPjSp80a7V637fkktNV7KUSsHpBKQQHoJB6Ml3RWG6VaPcrLO
-         bskDLU+fROofHgH2unyoJv9RHrIBpqc6xpyvAn2VEOMt6TKp1/Sow8zAJXVrrTx1Z4
-         v+oXXohVceMiGFzwRRIclAJDf+zXd/5wqg3nS4B0=
+        b=WuJjH78JTzpNQVH2OLrciLRMhWhIeTA3dR+/W5bo3d38cKps6t1ri7yCmJjYMJLpk
+         8gSO0FfZ0Ug2Xi/oD2ZGByGbeFqJYHk8Vc6UIe5fN8PRZiygyN+nuhottrdCiwZ4FS
+         3TcakazEm64inA8osHkLpoOZ0zwgx8hFF5wI5F+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Zhang <zhangpan26@huawei.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/110] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
-Date:   Thu, 30 Jan 2020 19:38:30 +0100
-Message-Id: <20200130183621.535866519@linuxfoundation.org>
+Subject: [PATCH 5.4 090/110] ARM: config: aspeed-g5: Enable 8250_DW quirks
+Date:   Thu, 30 Jan 2020 19:39:06 +0100
+Message-Id: <20200130183624.805590706@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,42 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Zhang <zhangpan26@huawei.com>
+From: Joel Stanley <joel@jms.id.au>
 
-[ Upstream commit 306d5acbfc66e7cccb4d8f91fc857206b8df80d1 ]
+[ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
 
-1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
-1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
-1004
-1005         if (input_mt_is_active(i_slot) &&
-1006             input_mt_is_used(mt, i_slot))
-1007             return -EAGAIN;
-1008     }
+This driver option is used by the AST2600 A0 boards to work around a
+hardware issue.
 
-We previously assumed 'mt' could be null (see line 1002).
-
-The following situation is similar, so add a judgement.
-
-Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-multitouch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/configs/aspeed_g5_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index f0d4172d51319..362805ddf3777 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
- 		tool = MT_TOOL_DIAL;
- 	else if (unlikely(!confidence_state)) {
- 		tool = MT_TOOL_PALM;
--		if (!active &&
-+		if (!active && mt &&
- 		    input_mt_is_active(&mt->slots[slotnum])) {
- 			/*
- 			 * The non-confidence was reported for
+diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
+index 597536cc9573d..b87508c7056c9 100644
+--- a/arch/arm/configs/aspeed_g5_defconfig
++++ b/arch/arm/configs/aspeed_g5_defconfig
+@@ -139,6 +139,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=6
+ CONFIG_SERIAL_8250_EXTENDED=y
+ CONFIG_SERIAL_8250_ASPEED_VUART=y
+ CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_DW=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_ASPEED_KCS_IPMI_BMC=y
+ CONFIG_ASPEED_BT_IPMI_BMC=y
 -- 
 2.20.1
 
