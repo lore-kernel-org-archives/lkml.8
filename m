@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B3BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5736214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7E522522
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409642;
-	bh=HKqzDXkp00HeXNsngCf20siiQoRDHUQjDG6IiyeRCB8=;
+	s=default; t=1580409646;
+	bh=JkVwYf0IXv2ijGwm1KGIIPEiPDUR4873p/dAQ6BicAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hLukcKJZZoAcQa8hXKp2sYpXPEzyqaN9AUI8Pw9tBb8wDbdo3u8tUEMHC5NySQNWw
-	 BPZARHUtM7jOkEOnFX7UaFl3fOxhhYMwYlrxGrggo+ERaHj2+KU4F/qaeHxK/lcWTi
-	 fHuapqTFnwsnlHVDnq7f0iROnm/FDP/p+TkyYVT8=
+	b=GTxDWHu4jDJduOSkNdqprcmRBWGkmgGnXJ/I5//p5hqw0MFqCa3FkQnV/+OOaMve7
+	 QRbTlQH5fHisiVTRuT/EuHgrshCpFsp318F3uinq30LEt+pOd71CCB+4GemEhA/aNq
+	 rBXL7GlNVlUqDDiAkxss0obE+Ozxyb9jnk3Ih16s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgA3Skl (ORCPT
+        id S1730027AbgA3Skp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbgA3Skh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:37 -0500
+        id S1730008AbgA3Skl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79AF214D8;
-        Thu, 30 Jan 2020 18:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA73214AF;
+        Thu, 30 Jan 2020 18:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409636;
-        bh=HKqzDXkp00HeXNsngCf20siiQoRDHUQjDG6IiyeRCB8=;
+        s=default; t=1580409641;
+        bh=JkVwYf0IXv2ijGwm1KGIIPEiPDUR4873p/dAQ6BicAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RtXliqo6v5vGyULj8NdvmkfjyptFCbvtsrsHR/Gj3jJPAisvyrVWx5qPSGTBfQ/wf
-         WR8GG5UtqPA4zNEJ0vC9wZvQx8lQzrW8wfiXKAjkVXWwRZBhYDlLQFAo7lTgl7ngc+
-         +7M8+X0nGCCQEpFmQZ2lE9FtoWB82qmSZdD1n3WU=
+        b=bnqJIbtDfbQFISeEDiqG0nvFThrXIXUE+x+QV0cLi4vlKrUPzvOT1FXDplxlmpQAg
+         HnNqd3k7z7y5ysgp1h3DZsngWEwAcFN8eBD1/KSQFyv731eMS+hF6KrObgxJBR5Q2j
+         psOQOSgx0NmdX5HXGlQMFJqg9fX5VZFGC7aERFqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
         Steve French <stfrench@microsoft.com>,
-        "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
         Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.5 29/56] CIFS: Fix task struct use-after-free on reconnect
-Date:   Thu, 30 Jan 2020 19:38:46 +0100
-Message-Id: <20200130183614.397453624@linuxfoundation.org>
+Subject: [PATCH 5.5 30/56] cifs: set correct max-buffer-size for smb2_ioctl_init()
+Date:   Thu, 30 Jan 2020 19:38:47 +0100
+Message-Id: <20200130183614.551929041@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -62,173 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit f1f27ad74557e39f67a8331a808b860f89254f2d upstream.
+commit 731b82bb1750a906c1e7f070aedf5505995ebea7 upstream.
 
-The task which created the MID may be gone by the time cifsd attempts to
-call the callbacks on MIDs from cifs_reconnect().
+Fix two places where we need to adjust down the max response size for
+ioctl when it is used together with compounding.
 
-This leads to a use-after-free of the task struct in cifs_wake_up_task:
-
- ==================================================================
- BUG: KASAN: use-after-free in __lock_acquire+0x31a0/0x3270
- Read of size 8 at addr ffff8880103e3a68 by task cifsd/630
-
- CPU: 0 PID: 630 Comm: cifsd Not tainted 5.5.0-rc6+ #119
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
- Call Trace:
-  dump_stack+0x8e/0xcb
-  print_address_description.constprop.5+0x1d3/0x3c0
-  ? __lock_acquire+0x31a0/0x3270
-  __kasan_report+0x152/0x1aa
-  ? __lock_acquire+0x31a0/0x3270
-  ? __lock_acquire+0x31a0/0x3270
-  kasan_report+0xe/0x20
-  __lock_acquire+0x31a0/0x3270
-  ? __wake_up_common+0x1dc/0x630
-  ? _raw_spin_unlock_irqrestore+0x4c/0x60
-  ? mark_held_locks+0xf0/0xf0
-  ? _raw_spin_unlock_irqrestore+0x39/0x60
-  ? __wake_up_common_lock+0xd5/0x130
-  ? __wake_up_common+0x630/0x630
-  lock_acquire+0x13f/0x330
-  ? try_to_wake_up+0xa3/0x19e0
-  _raw_spin_lock_irqsave+0x38/0x50
-  ? try_to_wake_up+0xa3/0x19e0
-  try_to_wake_up+0xa3/0x19e0
-  ? cifs_compound_callback+0x178/0x210
-  ? set_cpus_allowed_ptr+0x10/0x10
-  cifs_reconnect+0xa1c/0x15d0
-  ? generic_ip_connect+0x1860/0x1860
-  ? rwlock_bug.part.0+0x90/0x90
-  cifs_readv_from_socket+0x479/0x690
-  cifs_read_from_socket+0x9d/0xe0
-  ? cifs_readv_from_socket+0x690/0x690
-  ? mempool_resize+0x690/0x690
-  ? rwlock_bug.part.0+0x90/0x90
-  ? memset+0x1f/0x40
-  ? allocate_buffers+0xff/0x340
-  cifs_demultiplex_thread+0x388/0x2a50
-  ? cifs_handle_standard+0x610/0x610
-  ? rcu_read_lock_held_common+0x120/0x120
-  ? mark_lock+0x11b/0xc00
-  ? __lock_acquire+0x14ed/0x3270
-  ? __kthread_parkme+0x78/0x100
-  ? lockdep_hardirqs_on+0x3e8/0x560
-  ? lock_downgrade+0x6a0/0x6a0
-  ? lockdep_hardirqs_on+0x3e8/0x560
-  ? _raw_spin_unlock_irqrestore+0x39/0x60
-  ? cifs_handle_standard+0x610/0x610
-  kthread+0x2bb/0x3a0
-  ? kthread_create_worker_on_cpu+0xc0/0xc0
-  ret_from_fork+0x3a/0x50
-
- Allocated by task 649:
-  save_stack+0x19/0x70
-  __kasan_kmalloc.constprop.5+0xa6/0xf0
-  kmem_cache_alloc+0x107/0x320
-  copy_process+0x17bc/0x5370
-  _do_fork+0x103/0xbf0
-  __x64_sys_clone+0x168/0x1e0
-  do_syscall_64+0x9b/0xec0
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- Freed by task 0:
-  save_stack+0x19/0x70
-  __kasan_slab_free+0x11d/0x160
-  kmem_cache_free+0xb5/0x3d0
-  rcu_core+0x52f/0x1230
-  __do_softirq+0x24d/0x962
-
- The buggy address belongs to the object at ffff8880103e32c0
-  which belongs to the cache task_struct of size 6016
- The buggy address is located 1960 bytes inside of
-  6016-byte region [ffff8880103e32c0, ffff8880103e4a40)
- The buggy address belongs to the page:
- page:ffffea000040f800 refcount:1 mapcount:0 mapping:ffff8880108da5c0
- index:0xffff8880103e4c00 compound_mapcount: 0
- raw: 4000000000010200 ffffea00001f2208 ffffea00001e3408 ffff8880108da5c0
- raw: ffff8880103e4c00 0000000000050003 00000001ffffffff 0000000000000000
- page dumped because: kasan: bad access detected
-
- Memory state around the buggy address:
-  ffff8880103e3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880103e3980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- >ffff8880103e3a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8880103e3a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880103e3b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ==================================================================
-
-This can be reliably reproduced by adding the below delay to
-cifs_reconnect(), running find(1) on the mount, restarting the samba
-server while find is running, and killing find during the delay:
-
-  	spin_unlock(&GlobalMid_Lock);
-  	mutex_unlock(&server->srv_mutex);
-
- +	msleep(10000);
- +
-  	cifs_dbg(FYI, "%s: issuing mid callbacks\n", __func__);
-  	list_for_each_safe(tmp, tmp2, &retry_list) {
-  		mid_entry = list_entry(tmp, struct mid_q_entry, qhead);
-
-Fix this by holding a reference to the task struct until the MID is
-freed.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Reviewed-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
 Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsglob.h      |    1 +
- fs/cifs/smb2transport.c |    2 ++
- fs/cifs/transport.c     |    3 +++
- 3 files changed, 6 insertions(+)
+ fs/cifs/smb2ops.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1588,6 +1588,7 @@ struct mid_q_entry {
- 	mid_callback_t *callback; /* call completion callback */
- 	mid_handle_t *handle; /* call handle mid callback */
- 	void *callback_data;	  /* general purpose pointer for callback */
-+	struct task_struct *creator;
- 	void *resp_buf;		/* pointer to received SMB header */
- 	unsigned int resp_buf_size;
- 	int mid_state;	/* wish this were enum but can not pass to wait_event */
---- a/fs/cifs/smb2transport.c
-+++ b/fs/cifs/smb2transport.c
-@@ -685,6 +685,8 @@ smb2_mid_entry_alloc(const struct smb2_s
- 	 * The default is for the mid to be synchronous, so the
- 	 * default callback just wakes up the current task.
- 	 */
-+	get_task_struct(current);
-+	temp->creator = current;
- 	temp->callback = cifs_wake_up_task;
- 	temp->callback_data = current;
- 
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -76,6 +76,8 @@ AllocMidQEntry(const struct smb_hdr *smb
- 	 * The default is for the mid to be synchronous, so the
- 	 * default callback just wakes up the current task.
- 	 */
-+	get_task_struct(current);
-+	temp->creator = current;
- 	temp->callback = cifs_wake_up_task;
- 	temp->callback_data = current;
- 
-@@ -158,6 +160,7 @@ static void _cifs_mid_q_entry_release(st
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1523,7 +1523,9 @@ smb2_ioctl_query_info(const unsigned int
+ 					     COMPOUND_FID, COMPOUND_FID,
+ 					     qi.info_type, true, buffer,
+ 					     qi.output_buffer_length,
+-					     CIFSMaxBufSize);
++					     CIFSMaxBufSize -
++					     MAX_SMB2_CREATE_RESPONSE_SIZE -
++					     MAX_SMB2_CLOSE_RESPONSE_SIZE);
  		}
- 	}
- #endif
-+	put_task_struct(midEntry->creator);
+ 	} else if (qi.flags == PASSTHRU_SET_INFO) {
+ 		/* Can eventually relax perm check since server enforces too */
+@@ -2697,7 +2699,10 @@ smb2_query_symlink(const unsigned int xi
  
- 	mempool_free(midEntry, cifs_mid_poolp);
- }
+ 	rc = SMB2_ioctl_init(tcon, &rqst[1], fid.persistent_fid,
+ 			     fid.volatile_fid, FSCTL_GET_REPARSE_POINT,
+-			     true /* is_fctl */, NULL, 0, CIFSMaxBufSize);
++			     true /* is_fctl */, NULL, 0,
++			     CIFSMaxBufSize -
++			     MAX_SMB2_CREATE_RESPONSE_SIZE -
++			     MAX_SMB2_CLOSE_RESPONSE_SIZE);
+ 	if (rc)
+ 		goto querty_exit;
+ 
 
 
