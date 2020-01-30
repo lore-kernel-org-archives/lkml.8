@@ -2,133 +2,125 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF557C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A8EC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB558206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF060214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McU784o+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgA3RGc convert rfc822-to-8bit (ORCPT
+        id S1727416AbgA3RJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:06:32 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:59262 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbgA3RGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:06:31 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 7B0BB1B0DC; Thu, 30 Jan 2020 17:06:29 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
-References: <20200124152504.23411-1-mans@mansr.com>
-        <20200127153506.GA4589@bogus> <yw1xy2tsvnww.fsf@mansr.com>
-        <20200128134745.GA3048749@kroah.com> <yw1xpnf3vchs.fsf@mansr.com>
-        <20200128152818.GB3437093@kroah.com>
-        <20200128165243.GC3666045@kroah.com>
-        <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
-Date:   Thu, 30 Jan 2020 17:06:29 +0000
-In-Reply-To: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
-        (Rob Herring's message of "Tue, 28 Jan 2020 12:21:32 -0600")
-Message-ID: <yw1ximksvppm.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Thu, 30 Jan 2020 12:09:49 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41341 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3RJt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 12:09:49 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so4595747eds.8;
+        Thu, 30 Jan 2020 09:09:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yel/LjQW25KcQEFu+jzZC73Egkh1tqmmLbvqWmoKP8c=;
+        b=McU784o+BlKHiU8m5vavNqQyA3oFBpzOf3HlAuCMmdNFGz14lvO6yRPhgp4Ds4XVp6
+         xpAvGZTEv5SCKQaFFrYwvi75BMEkZDA8i++ymWsMVkOxfW8HgsbWyQQk17cRno5N8yNy
+         +eIYCA09AdUds5GQp5XlCVuz/67NmydI1ExgXMUGQFlMcp5FGKG/ZtrQ/KCpvil1xyVO
+         0ksORwuZ0HqRtD5JoqebvM+XYG3wA0+1+jUB9RegC363PKmF5T0++3mtERGo7eQT9ejz
+         sToBBqbfHIJj1AGeYQFSLG+RrdNaGhNET4V1YnbxG1yRxsjjVFAvJtCdYFhJBthvZJ94
+         0Fog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yel/LjQW25KcQEFu+jzZC73Egkh1tqmmLbvqWmoKP8c=;
+        b=CAa92roEjYmgqg66N4WE3LAaPk5wQY0zB6/F1GK1ZhZk93hgfiB0/r48Sg+CjZu9kZ
+         5IdnQfdEccqqr6skQEnxAlmQjxPLa9B4tlWTOONzHSnYhZPFTSc1WfbvqsXDL2FSyhdV
+         PI+1V5W4UrXr5UWqg/OcpytpAB4ACGW8R0k/Fg/BD4tvuTEtrud/H0A7IriqqoWmnzYe
+         UK6E/zGHLdI36ntO4UCFp5mb/7gzKtn9Fv3Y5y3MVVhxbDEvzL7sCj+J0+9BV8Egct81
+         GtjJjxDLDGCMNbvfwzGJSV/rrduElCrSQUhyaxUlTbJwxtAP3/9umR+ZIErMAfTpsA89
+         4DFw==
+X-Gm-Message-State: APjAAAWPwKA2Oj2RtAP9szB5oWIqonHxiv8B6GptEXqJ2UfPjjZbf3TO
+        BGq4dfkkyDcQC9iwuwzDFyI=
+X-Google-Smtp-Source: APXvYqwq3GK/kZ6ctkM0oUPdYfKKLpmFsfdQxaEw47STW+5vOHF65mQWT7BC3nPoioz0sKAOgdJxuA==
+X-Received: by 2002:a05:6402:168c:: with SMTP id a12mr4871067edv.43.1580404185669;
+        Thu, 30 Jan 2020 09:09:45 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id u9sm493512edt.91.2020.01.30.09.09.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 09:09:44 -0800 (PST)
+Subject: Re: [PATCH v2 5/9] ASoC: tegra: add Tegra210 based AHUB driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-6-git-send-email-spujar@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <bd802f93-dd03-f39d-86e1-39f8571bbbb0@gmail.com>
+Date:   Thu, 30 Jan 2020 20:09:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1580380422-3431-6-git-send-email-spujar@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+30.01.2020 13:33, Sameer Pujar Ð¿Ð¸ÑˆÐµÑ‚:
+...
+> +	ret = devm_snd_soc_register_component(&pdev->dev,
+> +					      ahub->soc_data->cmpnt_drv,
+> +					      ahub->soc_data->dai_drv,
+> +					      ahub->soc_data->num_dais);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to register component, err: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+In the the patch #4 ("ASoC: tegra: add Tegra210 based I2S driver") I see
+the following:
 
-> n Tue, Jan 28, 2020 at 10:52 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->>
->> On Tue, Jan 28, 2020 at 04:28:18PM +0100, Greg Kroah-Hartman wrote:
->> > On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
->> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> > >
->> > > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
->> > > >> Rob Herring <robh@kernel.org> writes:
->> > > >>
->> > > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
->> > > >> >> Add a non-removable-ports property that lists the hardwired downstream
->> > > >> >> ports of a hub.  Although hubs can provide this information, they are
->> > > >> >> not always configured correctly.  An alternate means of indicating this
->> > > >> >> for built-in USB devices is thus useful.
->> > > >> >>
->> > > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> > > >> >
->> > > >> > I reviewed this already, but since you didn't add my reviewed-by, I'm
->> > > >> > looking at it again and having 2nd thoughts.
->> > > >> >
->> > > >> >> ---
->> > > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
->> > > >> >>  1 file changed, 4 insertions(+)
->> > > >> >>
->> > > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
->> > > >> >> index 036be172b1ae..92d863cc96b6 100644
->> > > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
->> > > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
->> > > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
->> > > >> >>  - #size-cells: shall be 0
->> > > >> >>
->> > > >> >>
->> > > >> >> +Optional properties for hub and host-controller nodes:
->> > > >> >> +- non-removable-ports: list of hardwired downstream ports
->> > > >> >
->> > > >> > If you have a hardwired device and need to know that, doesn't that imply
->> > > >> > there's some other stuff you need to describe beyond what a standard USB
->> > > >> > device has. Such as a power supply that's not Vbus from the hub.
->> > > >>
->> > > >> I suppose there could be, but there isn't in my actual situation.
->> > > >>
->> > > >> > At a minimum, I think this should be a per port property.
->> > > >>
->> > > >> That's what I suggested first.  Greg told me to do it like this instead.
->> > > >
->> > > > I said that?  I do not remember discussing this at all, when did that
->> > > > happen?
->> > >
->> > > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
->> >
->> > Almost a full year ago!  Hah, I can't remember what I wrote last week.
->>
->> Ah, ok, all I said was "do what ACPI does here", as that's a model of
->> what has already been agreed apon by a whole huge number of people and
->> standardized.  No need for DT to come up with something totally
->> different instead, making a mess of things :)
->>
->> If this is doing what ACPI does, fine, if not, it should.  It was here
->> first.
->
-> That's not always possible as ACPI and DT work in different ways. The
-> DT (Open Firmware) USB binding originated in 1998[1]. While ancient,
-> that is what defines the node structure of USB hubs, ports, and
-> devices that we use today.
->
-> However, after a quick read of ACPI sec 9.14, I'd say what I suggested
-> is more aligned to ACPI than what's proposed here. Ports are child
-> nodes ("Device" in ACPI terms) and the properties to determine all
-> this are properties of the port node(s). Aligning beyond that isn't
-> really possible. ACPI has a standard thing (not sure what the proper
-> term is) called '_PLD' for describing device location which includes
-> 'user visible' among several other things. There is no such concept in
-> DT to align with. What we have is the 'non-removable' property and IMO
-> that's what we should use here.
+	ret = devm_snd_soc_register_component(dev, &tegra210_i2s_cmpnt,
+					tegra210_i2s_dais,
+					ARRAY_SIZE(tegra210_i2s_dais));
+	if (ret != 0) {
+		dev_err(dev, "can't register I2S component, err: %d\n", ret);
+		return ret;
+	}
 
-Can you guys please agree on something or other.  I'm happy to do it
-whichever way you decide, but I'd rather not waste my time making
-patches that will just get rejected.
+Please be consistent in regards to errors checking. The correct variant
+should be: if (ret != 0). Usually error codes are a negative value, but
+it is much safer to check whether value isn't 0 in all cases where
+positive value isn't expected to happen.
 
--- 
-Måns Rullgård
+I'd also recommend to rename all "ret" variables to "err" everywhere in
+the code where returned value is used only for errors checking. This
+will make code more explicit, and hence, easier to read and follow.
+
+So, it will be nicer to write it as:
+
+	err = devm_snd_soc_register_component(&pdev->dev,
+					ahub->soc_data->cmpnt_drv,
+					ahub->soc_data->dai_drv,
+					ahub->soc_data->num_dais);
+	if (err) {
+		dev_err(&pdev->dev, "failed to register component: %d\n", err);
+		return err;
+	}
