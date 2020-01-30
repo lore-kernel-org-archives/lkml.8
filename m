@@ -2,126 +2,118 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3ACC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D64A206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FF5206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="m1CNO0r9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnxJ2hMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgA3LdZ (ORCPT
+        id S1727229AbgA3Ldw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:33:25 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34411 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgA3LdZ (ORCPT
+        Thu, 30 Jan 2020 06:33:52 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39248 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727139AbgA3Ldw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:33:25 -0500
-Received: by mail-vs1-f66.google.com with SMTP id g15so1859936vsf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 03:33:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sachUFQOePxVrLNclWklF0gCfdMb5uCt5/iIiiOjQ6k=;
-        b=m1CNO0r97qGHq1nZLkvorYbHCl6n3yiSngEKvS8X15JFdYJBqxFNmht5iX0MecxIOP
-         4O6kew+CVKxdg87E9RakdF7ZlSNNkO0O1OoKOxGWLojbtznM9xvA2OxGq3aXJsNzwrDm
-         1IYGvi7B54p545j97fkkv04Amo4Hq9RpS2+z+lyNUoF4an8lBtJjS/G4cTjJbQkmX2bc
-         h7nNqV39Z5K0/ImATsG6f52N36W+LLu5YT3ohyEgwAbYlPcglHJRq56hKNjEu74wW88j
-         EMpyr9P8VkVZQJk6fiw8x7mSXBySOcs1tFJc2COZrCNRnWB+2VDvGZapfDNs+Ksg28iw
-         zZYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sachUFQOePxVrLNclWklF0gCfdMb5uCt5/iIiiOjQ6k=;
-        b=MHMt5WnDOwwboo52lQVFtHuOpow3M4tFhgwJmGNKCKLkdI/ZKk7A6PIxjCRheHS0W4
-         k3v+hOAKxsUVjAUDc9mNbt+w7gW+80++kRVNb3UZE3BpofH5SH1gK3sRoD86xrqHbXu3
-         EY6joutBjaJjb7+cegWhhbnL+2sX9tP/BqLaQhwb53+aNGqcMYUl8DCEiH4lv8bV8iqa
-         wbh2etxRb/cOtQlfaCEVcZ+Di+FIH9dcmjTkSFz3/fPOBvuptzDm0L8CKtnspFf3FbKz
-         W7k6M61bZZNLiqq9/x8DaqfPhEy/GAsfeEcr+qjdBiOD0eZg68kleXkTIM25NdGuJxJ/
-         dJjQ==
-X-Gm-Message-State: APjAAAVRxJIWkuYR0I08msJn6EmPpxc/PBPJgqEfNpkb0Z+gLZqI/xxV
-        9q07LugivGyGb0tKMbMlA1k1fXGQ3SOLpdNYmuLYGA==
-X-Google-Smtp-Source: APXvYqwRQewNB6JLSsvrZO8yrxek6cyYeBRvAzzDHbobVzvuHWcoLLJAsh/yeAgxIeeiqq8PqEYjkLQByU/8fRohxEg=
-X-Received: by 2002:a67:fb14:: with SMTP id d20mr2749866vsr.136.1580384004008;
- Thu, 30 Jan 2020 03:33:24 -0800 (PST)
+        Thu, 30 Jan 2020 06:33:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580384031;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LckSruGS9mnZBhfnh1yRL8G9a5TasGSKYWZgAtg7IgQ=;
+        b=LnxJ2hMKK37F6m/OVEnYpZ2yJ9b7idtobo2MAnraRIV2mGol/JxvHrVRyTL/R2gGtOyVsf
+        xRI9s5LXw7hMznXfmv7WkdB10M45YBJtMK1yN4/IYdUNu+Ic0uEhGGWEdQiRD5udUHMb2w
+        9u2baHnyv5jfiG19xF1JK6GQne7P0go=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-WnfvjFYcPFqnPoKMKI5ZAQ-1; Thu, 30 Jan 2020 06:33:46 -0500
+X-MC-Unique: WnfvjFYcPFqnPoKMKI5ZAQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D4EF190B2D7;
+        Thu, 30 Jan 2020 11:33:44 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 431E487B01;
+        Thu, 30 Jan 2020 11:33:42 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 30 Jan 2020 12:33:43 +0100 (CET)
+Date:   Thu, 30 Jan 2020 12:33:41 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     madhuparnabhowmik10@gmail.com, peterz@infradead.org,
+        mingo@kernel.org, paulmck@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
+Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
+Message-ID: <20200130113339.GA25426@redhat.com>
+References: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
+ <20200130103158.azxldyfnugwvv6vy@wittgenstein>
 MIME-Version: 1.0
-References: <20200129143757.680-1-gilad@benyossef.com> <20200129143757.680-5-gilad@benyossef.com>
- <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Thu, 30 Jan 2020 13:33:11 +0200
-Message-ID: <CAOtvUMdUBMkmZ6nzGVxi1W_Y4yFvcd6rfvz6BA63h4eq2QFUdA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130103158.azxldyfnugwvv6vy@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 5:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On 01/30, Christian Brauner wrote:
 >
-> Hi Gilad,
->
-> On Wed, Jan 29, 2020 at 3:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > Fix an error causing no block sizes to be reported during
-> > all AEAD registrations.
+> On Thu, Jan 30, 2020 at 11:50:28AM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > >
-> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > This patch fixes the following sparse error:
+> > kernel/exit.c:627:25: error: incompatible types in comparison expression
+> >
+> > And the following warning:
+> > kernel/exit.c:626:40: warning: incorrect type in assignment
+> >
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 >
-> Thanks, this fixes:
->
->     alg: aead: blocksize for authenc-hmac-sha1-cbc-aes-ccree (0)
-> doesn't match generic impl (16)
->     alg: aead: blocksize for authenc-hmac-sha256-cbc-aes-ccree (0)
-> doesn't match generic impl (16)
->
-> which you may want to mention in the commit description, so
-> people who search for the error message will find the fix.
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Note that even after applying this series, the kernel still crashes with
->
-> kernel BUG at kernel/dma/swiotlb.c:497!
-> ....
-> Call trace:
->  swiotlb_tbl_map_single+0x30c/0x380
->  swiotlb_map+0xb0/0x300
->  dma_direct_map_page+0xb8/0x140
->  dma_direct_map_sg+0x78/0xe0
->  cc_map_sg+0xa0/0xd0
->  cc_aead_chain_data.constprop.25+0x17c/0x6a0
->  cc_map_aead_request+0x61c/0x990
->  cc_proc_aead+0x140/0xeb0
->  cc_aead_decrypt+0x48/0x68
->  crypto_aead_decrypt+0x30/0x48
->  test_aead_vec_cfg+0x5a0/0x8d0
->
-> but you may be aware of that.
->
-> CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n
-> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> I think the previous version was already fine but hopefully
+> RCU_INIT_POINTER() really saves some overhead. In any case:
+
+It is not about overhead, RCU_INIT_POINTER() documents the fact that we
+didn't make any changes to the new parent, we only need to change the
+pointer.
+
+And btw, I don't really understand the __rcu annotations. Say, according
+to sparse this code is wrong:
+
+	int __rcu *P;
+
+	void func(int *p)
+	{
+		P = p;
+	}
+
+OK, although quite possibly it is fine.
+
+However, this code
+
+	int __rcu *P;
+
+	void func(int __rcu *p)
+	{
+		*p = 10;
+	       	P = p;
+	}
+
+is almost certainly wrong but sparse is happy, asn is the same.
 
 
-OK, this is a new one yet - we are now crashing in out-of-place decryption.
-And again, I am not seeing this in the different test board, even with
-DMA debug turned on.
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Can you help me out and print the cryptlen and assoclen (I'm guessing
-both are zero), authlen and which AEAD/mode this is?
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-Thanks alot,
-Gilad
