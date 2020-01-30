@@ -2,123 +2,273 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFFAC35248
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339BDC35246
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1C20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE9F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580373052;
+	bh=nRMfIkLZ7iuxO+beJ4K043JMk2fJH/+jJbevKn1T2Uw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=yMqcLgP9It6b11PhHAL0vlvqo9YOi9sd2FmlvAZEKlimeplirraICEdZNd0v6l0eF
+	 6RcGQazi101RKr4NC4LVQKBFTK1mF6PvDyeqw1TFkWVpJfmFSDu2E+QjbBkC0R5QLY
+	 HAnc/7z2ELaWvBqjOjFLszqgZWkEEr4EW9m08O2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgA3Iay convert rfc822-to-8bit (ORCPT
+        id S1727149AbgA3Iav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:30:54 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40323 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbgA3Iaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:30:52 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a142so2696378oii.7;
-        Thu, 30 Jan 2020 00:30:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HFTK0wLPJ+srAEMsmW9EKJT73bxP4s92jNe0BbzHj1g=;
-        b=CR93tJ3WcpSPgIxergpCOlxP5AIPboPtJy4YA1T/L+bQZ7kd4Tl2KheszhxN2aN05K
-         iUkRHFiq/QW0HOh/oOZEN5wSVIllPTQDUY6iZmxf5vM7YSZ7WszMKFTkpos30mBdlsib
-         Q0BtuVATIFvr6NkUSurPUn5VPBTMmbs/jG9U0DQDmbmZ+qTyIYlB70HOYNLSwGpOVXtg
-         FQ6hWlKM0Vi/FHjGkkUSAjOfgnxEbEYEXeRkhzyWHX3zDcGz7ojiqba9NnJqOMbjt8ST
-         l21i73rsPYJXF10CIO+raLyR28FsX7fFRq1VXHqgLcNZHAlh4Vac+9TGapzX2KfjUL6d
-         6J+A==
-X-Gm-Message-State: APjAAAXacx5q0kYcrNP3nSV94HtGtUpVry4gL/XSxc+DZYmSKZW7soUZ
-        bZlcF4Hr44MKojv5KKHPC12LfYGjMpPaGEiqa84=
-X-Google-Smtp-Source: APXvYqwdBg3qw8VeW5AasrBWdbzZwZ65QZDik+thkFtTX1iARiC/7M8S0iGAXnwKuQ9SN1mrRsJB2TwXIC6DBGV06FA=
-X-Received: by 2002:aca:5905:: with SMTP id n5mr2177710oib.54.1580373051929;
- Thu, 30 Jan 2020 00:30:51 -0800 (PST)
+        Thu, 30 Jan 2020 03:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbgA3Iau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:30:50 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1115A2082E;
+        Thu, 30 Jan 2020 08:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580373049;
+        bh=nRMfIkLZ7iuxO+beJ4K043JMk2fJH/+jJbevKn1T2Uw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=btLC/WtsXRwAUg+nWdcmAxI/OlMNmYfuECnnat3/5ij0gSORZ0MFtRgTHz6d0tun+
+         gMlMre5XZqrPjPzrfGU3dnBiTTFXG7tT1ZVazvu8b+BhIZWWtdllIwWkyDML/3SCnZ
+         wyXK9KaQXAHzoovRZz55IDCCMOXS1XSdbgNFQRHk=
+Date:   Thu, 30 Jan 2020 09:30:47 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.169
+Message-ID: <20200130083047.GA646131@kroah.com>
 MIME-Version: 1.0
-References: <CGME20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb@eucas1p1.samsung.com>
- <20200117153056.31363-1-geert+renesas@glider.be> <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
-In-Reply-To: <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 09:30:38 +0100
-Message-ID: <CAMuHMdXds2HuBAnLXmLVaCWKX77iZGvNSnD35-ysY9AnG9TKMw@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
 
-On Wed, Jan 29, 2020 at 6:47 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> On 17.01.2020 16:30, Geert Uytterhoeven wrote:
-> > Currently it is not easy to find out which DMA channels are in use, and
-> > which slave devices are using which channels.
-> >
-> > Fix this by creating two symlinks between the DMA channel and the actual
-> > slave device when a channel is requested:
-> >    1. A "slave" symlink from DMA channel to slave device,
-> >    2. A "dma:<name>" symlink slave device to DMA channel.
-> > When the channel is released, the symlinks are removed again.
-> > The latter requires keeping track of the slave device and the channel
-> > name in the dma_chan structure.
-> >
-> > Note that this is limited to channel request functions for requesting an
-> > exclusive slave channel that take a device pointer (dma_request_chan()
-> > and dma_request_slave_channel*()).
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
->
-> This patch breaks booting on almost all Exynos based boards:
->
-> https://lore.kernel.org/linux-samsung-soc/20200129161113.GE3928@sirena.org.uk/T/#u
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for the breakage.
+I'm announcing the release of the 4.14.169 kernel.
 
-> I've already sent a fix:
->
-> https://lkml.org/lkml/2020/1/29/498
+All users of the 4.14 kernel series must upgrade.
 
-Thanks a lot!
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-> BTW, this patch reminds me some of my earlier work:
->
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1329778.html
->
-> I had similar need to keep a client's struct device pointer for every
-> requested channel, but it turned out to be much more complicated than
-> I've initially thought. I've abandoned that, due to lack of time, but
-> maybe some of that discussion and concerns are still valid (I hope that
-> links to earlier versions are still working)...
+thanks,
 
-Oh right, Runtime PM for DMA channels.
+greg k-h
 
-As several DMA calls can be made from atomic context, probably the API
-should be split in a non-atomic and an atomic part, cfr. the difference
-between clk_prepare() and clk_enable().  Still, DMA slave drivers would need
-to be modified, to call the "prepare" to make use of this...
+------------
 
-Gr{oetje,eeting}s,
+ Documentation/admin-guide/kernel-parameters.txt |    6 +
+ Makefile                                        |    2=20
+ drivers/atm/firestream.c                        |    3=20
+ drivers/hwmon/adt7475.c                         |    5 -
+ drivers/hwmon/hwmon.c                           |   83 +++++++++++++++----=
+-----
+ drivers/hwmon/nct7802.c                         |    4 -
+ drivers/hwtracing/coresight/coresight-etb10.c   |    4 -
+ drivers/hwtracing/coresight/coresight-tmc-etf.c |    4 -
+ drivers/infiniband/ulp/isert/ib_isert.c         |   12 ---
+ drivers/input/misc/keyspan_remote.c             |    9 +-
+ drivers/input/misc/pm8xxx-vibrator.c            |    2=20
+ drivers/input/rmi4/rmi_smbus.c                  |    2=20
+ drivers/input/tablet/aiptek.c                   |    6 -
+ drivers/input/tablet/gtco.c                     |   10 --
+ drivers/input/tablet/pegasus_notetaker.c        |    2=20
+ drivers/input/touchscreen/sun4i-ts.c            |    6 +
+ drivers/input/touchscreen/sur40.c               |    2=20
+ drivers/md/bitmap.c                             |   10 +-
+ drivers/md/bitmap.h                             |    2=20
+ drivers/md/md-cluster.c                         |    6 -
+ drivers/media/v4l2-core/v4l2-ioctl.c            |   24 +++---
+ drivers/mmc/host/sdhci-tegra.c                  |    2=20
+ drivers/mmc/host/sdhci.c                        |   10 +-
+ drivers/net/can/slcan.c                         |   12 ++-
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c |    2=20
+ drivers/net/gtp.c                               |   10 +-
+ drivers/net/slip/slip.c                         |   12 ++-
+ drivers/net/usb/lan78xx.c                       |   15 ++++
+ drivers/net/wireless/marvell/libertas/cfg.c     |   16 +++-
+ drivers/scsi/scsi_transport_iscsi.c             |    7 ++
+ drivers/scsi/sd.c                               |    8 +-
+ drivers/target/iscsi/iscsi_target.c             |    6 -
+ fs/namei.c                                      |   17 ++--
+ include/linux/bitmap.h                          |    8 ++
+ include/linux/netdevice.h                       |    1=20
+ include/linux/netfilter/ipset/ip_set.h          |    7 --
+ include/trace/events/xen.h                      |    6 +
+ lib/bitmap.c                                    |   20 +++++
+ net/core/dev.c                                  |   36 ++++++----
+ net/core/net-sysfs.c                            |   39 ++++++-----
+ net/core/rtnetlink.c                            |   13 +++
+ net/ipv4/ip_tunnel.c                            |    4 -
+ net/ipv4/tcp_bbr.c                              |    3=20
+ net/ipv6/ip6_tunnel.c                           |    4 -
+ net/ipv6/seg6_local.c                           |    4 -
+ net/netfilter/ipset/ip_set_bitmap_gen.h         |    2=20
+ net/netfilter/ipset/ip_set_bitmap_ip.c          |    6 -
+ net/netfilter/ipset/ip_set_bitmap_ipmac.c       |    6 -
+ net/netfilter/ipset/ip_set_bitmap_port.c        |    6 -
+ net/sched/ematch.c                              |    2=20
+ net/x25/af_x25.c                                |    6 +
+ scripts/recordmcount.c                          |   17 ++++
+ 52 files changed, 335 insertions(+), 176 deletions(-)
 
-                        Geert
+Al Viro (1):
+      do_last(): fetch directory ->i_mode and ->i_uid before it's too late
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Alex Sverdlin (1):
+      ARM: 8950/1: ftrace/recordmcount: filter relocation types
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Andy Shevchenko (2):
+      md: Avoid namespace collision with bitmap API
+      bitmap: Add bitmap_alloc(), bitmap_zalloc() and bitmap_free()
+
+Bart Van Assche (1):
+      scsi: RDMA/isert: Fix a recently introduced regression related to log=
+out
+
+Bo Wu (1):
+      scsi: iscsi: Avoid potential deadlock in iscsi_if_rx func
+
+Changbin Du (1):
+      tracing: xen: Ordered comparison of function pointers
+
+Chuhong Yuan (1):
+      Input: sun4i-ts - add a check for devm_thermal_zone_of_sensor_register
+
+Cong Wang (1):
+      net_sched: fix datalen for ematch
+
+Dmitry Osipenko (1):
+      hwmon: (core) Fix double-free in __hwmon_device_register()
+
+Eric Dumazet (3):
+      gtp: make sure only SOCK_DGRAM UDP sockets are accepted
+      net-sysfs: fix netdev_queue_add_kobject() breakage
+      net: rtnetlink: validate IFLA_MTU attribute in rtnl_create_link()
+
+Gilles Buloz (1):
+      hwmon: (nct7802) Fix voltage limits to wrong registers
+
+Greg Kroah-Hartman (1):
+      Linux 4.14.169
+
+Guenter Roeck (1):
+      hwmon: (core) Do not use device managed functions for memory allocati=
+ons
+
+Hans Verkuil (2):
+      Revert "Input: synaptics-rmi4 - don't increment rmiaddr for SMBus tra=
+nsfers"
+      media: v4l2-ioctl.c: zero reserved fields for S/TRY_FMT
+
+James Hughes (1):
+      net: usb: lan78xx: Add .ndo_features_check
+
+Jeremy Linton (1):
+      Documentation: Document arm64 kpti control
+
+Johan Hovold (5):
+      Input: keyspan-remote - fix control-message timeouts
+      Input: sur40 - fix interface sanity checks
+      Input: gtco - fix endpoint sanity check
+      Input: aiptek - fix endpoint sanity check
+      Input: pegasus_notetaker - fix endpoint sanity check
+
+Jouni Hogander (4):
+      net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+      net-sysfs: Call dev_hold always in netdev_queue_add_kobject
+      net-sysfs: Call dev_hold always in rx_queue_add_kobject
+      net-sysfs: Fix reference count leak
+
+Kadlecsik J=C3=B3zsef (1):
+      netfilter: ipset: use bitmap infrastructure completely
+
+Linus Walleij (1):
+      hwmon: Deal with errors from the thermal subsystem
+
+Luuk Paulussen (1):
+      hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
+
+Martin Schiller (1):
+      net/x25: fix nonblocking connect
+
+Masato Suzuki (1):
+      sd: Fix REQ_OP_ZONE_REPORT completion handling
+
+Michael Ellerman (1):
+      net: cxgb3_main: Add CAP_NET_ADMIN check to CHELSIO_GET_MEM
+
+Micha=C5=82 Miros=C5=82aw (2):
+      mmc: tegra: fix SDR50 tuning override
+      mmc: sdhci: fix minimum clock rate for v3 controller
+
+Richard Palethorpe (1):
+      can, slip: Protect tty->disc_data in write_wakeup and close with RCU
+
+Stephan Gerhold (1):
+      Input: pm8xxx-vib - fix handling of separate enable register
+
+Suzuki K Poulose (2):
+      coresight: etb10: Do not call smp_processor_id from preemptible
+      coresight: tmc-etf: Do not call smp_processor_id from preemptible
+
+Wen Huang (1):
+      libertas: Fix two buffer overflows at parsing bss descriptor
+
+Wen Yang (1):
+      tcp_bbr: improve arithmetic division in bbr_update_bw()
+
+Wenwen Wang (1):
+      firestream: fix memory leaks
+
+William Dauchy (2):
+      net, ip6_tunnel: fix namespaces move
+      net, ip_tunnel: fix namespaces move
+
+Yuki Taguchi (1):
+      ipv6: sr: remove SKB_GSO_IPXIP6 on End.D* actions
+
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl4ylDcACgkQONu9yGCS
+aT7WuxAAmTrtihyahy0W1l+2lMmieTGUdaLj2yms8aorOhc20QvHtEoBWQC2NGaI
+wVmlgbco6KZA3Z0rHi870h3ISs1Bql5Q7HGmT2fmQQG12GRVKpBW+MHFgPfmlWC1
+3Zdt2wBCJI0h2egA9MwNOTYxPZj/95u7eCGS9ynejTtkX4ibzkoDXe9orPEQXOO6
+JKDVHKkuBjy5iwl6zWL2A3xvPiDm0ZdJl9Nl8RC53clfor4ojxslkGmGSv0xifaF
+/lGlJ9waUdE15v5GbyR+23FQsFnZFVPKaza8uYOHMU/h0xuKBmomS+/9G2IkPKWZ
+7loqKaUHFEM8s26nZEHFk+6dL7j6s1VXSibwG0mMdvNjLf2MxEWMriyJx5MMONMu
+1df+x0y5QMASpRz1GYqwqDqBFzoUdJ1tZo9JO/yi8cNSdSQloCv8ZlPpERUIu+JD
+ne6G+NyHD7pPREl6KZ7eT08oKMjEqePmpjWs0CvBkLYR6gKjx8jc8uf7lIz9qxMH
+/FWSyDoNH9cFV/3Ljs22Vp8nhl8cv9ZvBl4TKxyHa7J58dNb16+pU6eLshV0sXQ1
+4AfedoEh6x2nKrYnX7h4lDR+J3Qoc/9OumtleVDhtbgcJu6P8zmpVa/2e7ixXUmi
+RZZ15WKSP2Y6lyo/ffrwVm4hpb67kqyYI4pmXzdBAIV33oVN2Mo=
+=4JQf
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
