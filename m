@@ -2,93 +2,101 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70280C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EBEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E842067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E90206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgA3IVE (ORCPT
+        id S1727103AbgA3IV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:21:04 -0500
-Received: from sauhun.de ([88.99.104.3]:46490 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgA3IVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:21:04 -0500
-Received: from localhost (p54B33261.dip0.t-ipconnect.de [84.179.50.97])
-        by pokefinder.org (Postfix) with ESMTPSA id 381C12C0697;
-        Thu, 30 Jan 2020 09:21:02 +0100 (CET)
-Date:   Thu, 30 Jan 2020 09:21:01 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        michal.simek@xilinx.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>
-Subject: Re: [PATCH 3/4] i2c: cadence: Implement save restore
-Message-ID: <20200130082101.GE2208@ninjato>
-References: <1575888052-20447-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1575888052-20447-3-git-send-email-shubhrajyoti.datta@gmail.com>
+        Thu, 30 Jan 2020 03:21:29 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44372 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgA3IV3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:21:29 -0500
+Received: by mail-oi1-f195.google.com with SMTP id d62so2638947oia.11;
+        Thu, 30 Jan 2020 00:21:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R0CMrbfOTHcIlX3pLVmWEtIOvCOJB8+9FkEBbskQwuI=;
+        b=ewvL2KIDsyQ/9tatqGx4AL2iBRL4gddPBnR6N1iagkO7q9cU5cf5g3UdWS398T19jA
+         LpQdwQxOWiwM8j0Z6mvXcKCagsg9qOP3Z8xvHgI51KRD57zasbc4v0Zoo60qM68U2mIy
+         S0nH+ubJ/X8RKomKiwxOF1NFyDq9Yjxntxv5w5qEFmi7fxY6wM2pIanESnK0RL4V9J4q
+         m0dM9XB6ClCAqFg61XJ9onwgs+q8XoVjT/TC41sWLa1Fbhow1fM+kNjNMBu3lxwh++U4
+         7sHX9cgW3bjBfQDj2tWwbWKms1QslRJx7uJz/b9Pd/Gff9e6vnRMy0joMOy39yUrFPaf
+         G2fQ==
+X-Gm-Message-State: APjAAAWIpN3eqjclEsrS/LTWU6X55Wn/BFLjAC2xfFJBHbPQrV7i6mrr
+        Mca2s4xsc8otDduFKNTm3ye2jtevGmoN5KbRYQAC4sce
+X-Google-Smtp-Source: APXvYqyqd7AXCMzlIJtBE2MuMQ8G/It9kiRThIbbMfcPRXWnXQFAGVSIA9aFAmPiwTIFEZG61scdB0mvEYwYHmaLlB4=
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr2015275oif.131.1580372488319;
+ Thu, 30 Jan 2020 00:21:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
-Content-Disposition: inline
-In-Reply-To: <1575888052-20447-3-git-send-email-shubhrajyoti.datta@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com> <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
+In-Reply-To: <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Jan 2020 09:21:17 +0100
+Message-ID: <CAMuHMdW1DRCHqb+YQToTCF6r_-uZy+NAO9qRigdJL6ec1atNRQ@mail.gmail.com>
+Subject: Re: mainline/master bisection: baseline.login on odroid-xu3
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        dmaengine@vger.kernel.org, mgalka@collabora.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Guillaume,
 
---lteA1dqeVaWQ9QQl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 30, 2020 at 12:13 AM Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
+> On 29/01/2020 23:00, kernelci.org bot wrote:
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > * This automated bisection report was sent to you on the basis  *
+> > * that you may be involved with the breaking commit it has      *
+> > * found.  No manual investigation has been done to verify it,   *
+> > * and the root cause of the problem may be somewhere else.      *
+> > *                                                               *
+> > * If you do send a fix, please include this trailer:            *
+> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> > *                                                               *
+> > * Hope this helps!                                              *
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> >
+> > mainline/master bisection: baseline.login on odroid-xu3
+> >
+> > Summary:
+> >   Start:      b3a608222336 Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
+> >   Plain log:  https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.txt
+> >   HTML log:   https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.html
+> >   Result:     71723a96b8b1 dmaengine: Create symlinks between DMA channels and slaves
 
-On Mon, Dec 09, 2019 at 04:10:51PM +0530, shubhrajyoti.datta@gmail.com wrot=
-e:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->=20
-> Implement save restore for i2c module.
-> Since we have only a couple of registers
-> an unconditional restore is done.
+Sorry for the breakage. Please try Marek's fix:
+https://lore.kernel.org/lkml/20200130070834.17537-1-m.szyprowski@samsung.com/
 
-The patch description misses an explanation *why* this is needed. From a
-distance looks like a bugfix, so a Fixes tag may be needed, too.
+Gr{oetje,eeting}s,
 
->=20
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhraj@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+                        Geert
 
-This is messy. Ack + SoB from Michal. Two xilinx-SoBs from you. Please
-fix.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---lteA1dqeVaWQ9QQl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4yke0ACgkQFA3kzBSg
-Kbah0BAAkHn88Scg/zpt+EU72A4cw0obkraMJPGCmKv0DE9Usx42GUtPKjeocOMS
-6n0HxZVbf0aQwmlrMQwX3cac/16ExLzvTrni9V1G6MqMbNvggZzPTcujRZVyMu2E
-AngmDAr1gOuC5P6pYAXzp1kY/JCxapFx/dLq8BTFOF1X5LZT8JePHLjfS1sJlb5c
-PHk+uHmgPC2EbatAIhWZUSR4FdkQX1GkDOE8DaWE2Ahuvqx27aljZbclvqekJfVn
-IPOYf/z63HHopLNA9py2iR9s/wUVPlYGYO2+FwfEJAaxY+oC4OWOGo5z3ZQ896ka
-/bZNFgRm2ySA3E5mdQsf9RCa+OXoBKy/idNBFjbjHI8B59Im0F/fGiLbzeK/ppun
-WwQGdzRf3kJbM384cKtmtjCbI+A0GhIMRleHddQ7Yr5D6POUsbKTOyC4K+Ryjd4i
-yq1ZTen2rzJ68iLUecuI6huSTtigPTog3txSeGpexeOJ4nnvGLco0/RzghMIVKm3
-HGVbKSlqqmxdpYX6xEPmePFCJwkahvzm7V56IdDyMo7x23MQ96JGpdNGrJ7RLW8M
-bZa232eg8j3gJHLl+02iwYOZ0hmuJB/NhvcvSIKFcxgF60et3AJXGL6vc3LKlqIs
-P25Nb90Ntn7ZisHUpMEfCNBuWSpAfwSGUIFDuzPh2XAcRWRBjIQ=
-=w7E3
------END PGP SIGNATURE-----
-
---lteA1dqeVaWQ9QQl--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
