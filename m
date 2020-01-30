@@ -1,460 +1,127 @@
 Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD7BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30EDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8200320708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BEA20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:06:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ioKZPM/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgA3WGB (ORCPT
+        id S1726487AbgA3WGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:06:01 -0500
-Received: from smtprelay0040.hostedemail.com ([216.40.44.40]:38242 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725855AbgA3WGB (ORCPT
+        Thu, 30 Jan 2020 17:06:35 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:37734 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgA3WGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:06:01 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 0503849961A;
-        Thu, 30 Jan 2020 22:06:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: heat78_8b0a421ba2a53
-X-Filterd-Recvd-Size: 11101
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 30 Jan 2020 22:05:55 +0000 (UTC)
-Message-ID: <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com>
-Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
-From:   Joe Perches <joe@perches.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, openbmc@lists.ozlabs.org,
-        arm@kernel.org, soc@kernel.org
-Date:   Thu, 30 Jan 2020 14:04:49 -0800
-In-Reply-To: <20200130195525.4525-2-krzk@kernel.org>
-References: <20200130195525.4525-1-krzk@kernel.org>
-         <20200130195525.4525-2-krzk@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Jan 2020 17:06:34 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UM3PG3086147;
+        Thu, 30 Jan 2020 22:05:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=YcC/ENL9iqZSK4D+kLTsVIomtiqLWyzWEd1epN64/qk=;
+ b=ioKZPM/slJXaLf4ZqEMqjvk+50DLqvuHkdOHw+Cgz8ayZR5+WNQDpbi+xWzC6CTS4RLn
+ i3wVxKs03PWdcARBZlEUP/KsqLSz610530AVUDlI8I5/aW+Hd6HWJFiiaHRZIzJdV3Fg
+ p8OihU85jmRVEcM6UZKji5cXyfayxFbypX7itJApNsW84VvXKL+RF1e22fwewf3h0K/H
+ 2DvwJG2xHcGPXJSWW7z1EGzHVNlPlGf+5aD9b35PzKGqjV2zmjZXtiTXusU1TuwNrxeQ
+ YG9dvPPKsKK6hiJgPFc61QUVg8U/hpQYi6es26RzP4RG1R5PlKRyoyrMAsC3dWiH2fpQ Ig== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xrdmqy3u2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 22:05:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00UM3hR2033459;
+        Thu, 30 Jan 2020 22:05:37 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xuemxby59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 22:05:37 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00UM5VAY018630;
+        Thu, 30 Jan 2020 22:05:31 GMT
+Received: from [10.39.234.252] (/10.39.234.252)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 Jan 2020 14:05:30 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20200125111931.GW11457@worktop.programming.kicks-ass.net>
+Date:   Thu, 30 Jan 2020 17:05:28 -0500
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
+References: <20191230194042.67789-5-alex.kogan@oracle.com>
+ <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+ <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+ <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
+ <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
+ <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
+ <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
+ <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
+ <20200125111931.GW11457@worktop.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001300147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001300147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
-> CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
-> Delete bounce buffer Kconfig option").
-> 
-> CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
-> CONFIG_LBDAF").
-> 
-> CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
-> commit f382fb0bcef4 ("block: remove legacy IO schedulers").
-> 
-> The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-> now enabled by default (along with MQ_IOSCHED_KYBER).
-> 
-> The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
-> previously choosing the latter.
-> 
-> CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
-> CONFIG_CROSS_COMPILE support").
 
-Hi Krzysztof.
+> On Jan 25, 2020, at 6:19 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> On Fri, Jan 24, 2020 at 01:19:05PM -0500, Alex Kogan wrote:
+>=20
+>> Is there a lightweight way to identify such a =E2=80=9Cprioritized=E2=80=
+=9D thread?
+>=20
+> No; people might for instance care about tail latencies between their
+> identically spec'ed worker tasks.
 
-There seems there are a lot more of these unused CONFIG_<foo>
-symbols in various defconfigs. (just for arm and treewide below)
+I would argue that those users need to tune/reduce the intra-node =
+handoff
+threshold for their needs. Or disable CNA altogether.
 
-ARM defconfigs:
+In general, Peter, seems like you are not on board with the way Longman
+suggested to handle prioritized threads. Am I right?
 
---------------------------------------------------------------------
-
-# find all defined config symbols in Kconfig files
-
-$ git grep -P -oh '^\s*(?:menu)?config\s+\w+' -- '*/Kconfig*' | \
-  sed -r -e 's/\s*config\s+//' -e 's/\s*menuconfig\s+//' | \
-  sort | uniq > config_symbols
-
-# find CONFIG_ symbols in arm defconfigs
-
-$ git grep -w -oh -P 'CONFIG_\w+' 'arch/arm*/*defconfig*' | \
-  sort | uniq > used_in_arm_defconfigs
-
-# find all the unused symbols
-
-$ cat used_in_arm_defconfigs | \
-  while read line ; do \
-    echo -n "$line " ; grep -w -c ${line/CONFIG_/} config_symbols ; \
-  done | \
-  grep " 0" | \
-  sed 's/ 0//'
-CONFIG_ARCH_AUTCPU12
-CONFIG_ARCH_CDB89712
-CONFIG_ARCH_CLEP7312
-CONFIG_ARCH_EDB7211
-CONFIG_ARCH_P720T
-CONFIG_ARCH_R8A7796
-CONFIG_BT_HCIBTUART
-CONFIG_CC_STACKPROTECTOR_REGULAR
-CONFIG_CHR_DEV_OSST
-CONFIG_CIFS_STATS
-CONFIG_CROSS_COMPILE
-CONFIG_DEBUG_SPINLOCK_SLEEP
-CONFIG_DETECT_SOFTLOCKUP
-CONFIG_DM9000_DEBUGLEVEL
-CONFIG_DRM_TINYDRM
-CONFIG_EXT3_DEFAULTS_TO_ORDERED
-CONFIG_EXT3_FS_XATTR
-CONFIG_FB_XGI
-CONFIG_GPIO_MOXART
-CONFIG_HOTPLUG
-CONFIG_INET6_XFRM_MODE_BEET
-CONFIG_INET6_XFRM_MODE_TRANSPORT
-CONFIG_INET6_XFRM_MODE_TUNNEL
-CONFIG_INET_XFRM_MODE_BEET
-CONFIG_INET_XFRM_MODE_TRANSPORT
-CONFIG_INET_XFRM_MODE_TUNNEL
-CONFIG_IOSCHED_CFQ
-CONFIG_IOSCHED_DEADLINE
-CONFIG_IP_NF_MATCH_ADDRTYPE
-CONFIG_IP_NF_TARGET_LOG
-CONFIG_IPX
-CONFIG_IRCOMM
-CONFIG_IRDA
-CONFIG_IRDA_CACHE_LAST_LSAP
-CONFIG_IRDA_DEBUG
-CONFIG_IRDA_FAST_RR
-CONFIG_IRDA_ULTRA
-CONFIG_IRLAN
-CONFIG_IRNET
-CONFIG_IRTTY_SIR
-CONFIG_KALLSYMS_EXTRA_PASS
-CONFIG_LBDAF
-CONFIG_LEDS_CPU
-CONFIG_LEDS_TIMER
-CONFIG_MAC80211_RC_PID
-CONFIG_MACH_BIGDISK
-CONFIG_MACH_D2NET
-CONFIG_MACH_DOVE_DT
-CONFIG_MACH_EDMINI_V2_DT
-CONFIG_MACH_LINKSTATION_LSCHL
-CONFIG_MACH_MSS2
-CONFIG_MACH_U300_SPIDUMMY
-CONFIG_MACH_VOICEBLUE
-CONFIG_MEDIA_TUNER_CUSTOMISE
-CONFIG_MMC_BLOCK_BOUNCE
-CONFIG_MMP_SPI
-CONFIG_MTD_DEBUG
-CONFIG_MTD_DEBUG_VERBOSE
-CONFIG_MTD_DOC2000
-CONFIG_MTD_DOC2001
-CONFIG_MTD_DOC2001PLUS
-CONFIG_MTD_DOCPROBE_ADDRESS
-CONFIG_MTD_DOCPROBE_ADVANCED
-CONFIG_MTD_DOCPROBE_HIGH
-CONFIG_MTD_M25P80
-CONFIG_NET_CADENCE
-CONFIG_NET_DMA
-CONFIG_NET_ETHERNET
-CONFIG_NET_PCI
-CONFIG_NET_PCMCIA
-CONFIG_NET_VENDOR_SMC
-CONFIG_NF_CONNTRACK_IPV4
-CONFIG_NF_CONNTRACK_IPV6
-CONFIG_PCIE_AXXIA
-CONFIG_PM_RUNTIME
-CONFIG_PROC_DEVICETREE
-CONFIG_PXA_FICP
-CONFIG_QCOM_ADSP_PIL
-CONFIG_QCOM_Q6V5_PIL
-CONFIG_SA1100_FIR
-CONFIG_SCSI_MULTI_LUN
-CONFIG_SMB_FS
-CONFIG_SMB_NLS_DEFAULT
-CONFIG_SOC_CAMERA_OV2640
-CONFIG_SOC_CAMERA_PLATFORM
-CONFIG_SOUND_DMAP
-CONFIG_SOUND_OSS
-CONFIG_SOUND_PRIME
-CONFIG_SOUND_TRACEINIT
-CONFIG_SOUND_VIDC
-CONFIG_SOUND_WAVEARTIST
-CONFIG_SOUND_YM3812
-CONFIG_SUSPEND_TIME
-CONFIG_SYSCTL_SYSCALL
-CONFIG_TIMER_STATS
-CONFIG_UID_STAT
-CONFIG_USB_CHIPIDEA_ULPI
-CONFIG_USB_EHCI_HCD_AXXIA
-CONFIG_USB_EHCI_MSM
-CONFIG_USB_GADGET_DUMMY_HCD
-CONFIG_USB_MSM_OTG
-CONFIG_V4L_USB_DRIVERS
-CONFIG_VIDEO_HELPER_CHIPS_AUTO
-CONFIG_WAN_ROUTER
-CONFIG_WAN_ROUTER_DRIVERS
-CONFIG_WINBOND_FIR
-
---------------------------------------------------------------------
-
-And treewide defconfigs:
-
-$ git grep -P -oh '^\s*(?:menu)?config\s+\w+' -- '*/Kconfig*' | \
-  sed -r -e 's/\s*config\s+//' -e 's/\s*menuconfig\s+//' | \
-  sort | uniq > config_symbols
-
-$ git grep -w -oh -P 'CONFIG_\w+' '*defconfig*' | \
-  sort | uniq >  used_in_defconfigs
-
-$ cat used_in_defconfigs | \
-  while read line ; do \
-    echo -n "$line " ; grep -w -c ${line/CONFIG_/} config_symbols ;  \
-  done | \
-  grep " 0" | \
-  sed 's/ 0//'
-CONFIG_ALI_FIR
-CONFIG_ARCH_AUTCPU12
-CONFIG_ARCH_CDB89712
-CONFIG_ARCH_CLEP7312
-CONFIG_ARCH_EDB7211
-CONFIG_ARCH_P720T
-CONFIG_ARCH_R8A7796
-CONFIG_ARCPGU_DISPTYPE
-CONFIG_ARCPGU_RGB888
-CONFIG_ARPD
-CONFIG_ATH79_MACH_AP121
-CONFIG_ATH79_MACH_AP136
-CONFIG_ATH79_MACH_AP81
-CONFIG_ATH79_MACH_DB120
-CONFIG_ATH79_MACH_PB44
-CONFIG_ATH79_MACH_UBNT_XM
-CONFIG_BLK_DEV_RAM_DAX
-CONFIG_BOARD_EVM6457
-CONFIG_BOARD_EVM6472
-CONFIG_BOARD_EVM6474
-CONFIG_BOARD_EVM6678
-CONFIG_BT_HCIBTUART
-CONFIG_CC_STACKPROTECTOR_REGULAR
-CONFIG_CFQ_GROUP_IOSCHED
-CONFIG_CGROUP_MEMCG
-CONFIG_CGROUP_MEMCG_SWAP
-CONFIG_CHR_DEV_OSST
-CONFIG_CIFS_STATS
-CONFIG_CROSS_COMPILE
-CONFIG_CRYPTO_AES_586
-CONFIG_CSKY_MPTIMER
-CONFIG_DEBUG_SPINLOCK_SLEEP
-CONFIG_DEFAULT_DEADLINE
-CONFIG_DEFAULT_NOOP
-CONFIG_DETECT_SOFTLOCKUP
-CONFIG_DEVPTS_MULTIPLE_INSTANCES
-CONFIG_DM9000_DEBUGLEVEL
-CONFIG_DRM_TINYDRM
-CONFIG_DSCC4
-CONFIG_DVB_FE_CUSTOMISE
-CONFIG_ENABLE_WARN_DEPRECATED
-CONFIG_EXOFS_FS
-CONFIG_EXPERIMENTAL
-CONFIG_EXT2_FS_XIP
-CONFIG_EXT3_DEFAULTS_TO_ORDERED
-CONFIG_EXT3_FS_XATTR
-CONFIG_FB_SH7785FB
-CONFIG_FB_XGI
-CONFIG_GPIO_MOXART
-CONFIG_HEADERS_CHECK
-CONFIG_HID_SUPPORT
-CONFIG_HOTPLUG
-CONFIG_I2C_PARPORT_LIGHT
-CONFIG_INET6_XFRM_MODE_BEET
-CONFIG_INET6_XFRM_MODE_ROUTEOPTIMIZATION
-CONFIG_INET6_XFRM_MODE_TRANSPORT
-CONFIG_INET6_XFRM_MODE_TUNNEL
-CONFIG_INET_LRO
-CONFIG_INET_XFRM_MODE_BEET
-CONFIG_INET_XFRM_MODE_TRANSPORT
-CONFIG_INET_XFRM_MODE_TUNNEL
-CONFIG_INFINIBAND_CXGB3
-CONFIG_IOSCHED_CFQ
-CONFIG_IOSCHED_DEADLINE
-CONFIG_IP_NF_MATCH_ADDRTYPE
-CONFIG_IP_NF_TARGET_LOG
-CONFIG_IPV6_PRIVACY
-CONFIG_IPX
-CONFIG_IRCOMM
-CONFIG_IRDA
-CONFIG_IRDA_CACHE_LAST_LSAP
-CONFIG_IRDA_DEBUG
-CONFIG_IRDA_FAST_RR
-CONFIG_IRDA_ULTRA
-CONFIG_IRLAN
-CONFIG_IRNET
-CONFIG_IRTTY_SIR
-CONFIG_KALLSYMS_EXTRA_PASS
-CONFIG_KINGSUN_DONGLE
-CONFIG_KS959_DONGLE
-CONFIG_KSDAZZLE_DONGLE
-CONFIG_LBDAF
-CONFIG_LEDS_CPU
-CONFIG_LEDS_TIMER
-CONFIG_MAC80211_RC_PID
-CONFIG_MACH_BIGDISK
-CONFIG_MACH_D2NET
-CONFIG_MACH_DOVE_DT
-CONFIG_MACH_EDMINI_V2_DT
-CONFIG_MACH_LINKSTATION_LSCHL
-CONFIG_MACH_MSS2
-CONFIG_MACH_U300_SPIDUMMY
-CONFIG_MACH_VOICEBLUE
-CONFIG_MCS_FIR
-CONFIG_MEDIA_TUNER_CUSTOMISE
-CONFIG_MFD_SH_MOBILE_SDHI
-CONFIG_MMC_BLOCK_BOUNCE
-CONFIG_MMP_SPI
-CONFIG_MTD_CHAR
-CONFIG_MTD_DEBUG
-CONFIG_MTD_DEBUG_VERBOSE
-CONFIG_MTD_DOC2000
-CONFIG_MTD_DOC2001
-CONFIG_MTD_DOC2001PLUS
-CONFIG_MTD_DOCPROBE_ADDRESS
-CONFIG_MTD_DOCPROBE_ADVANCED
-CONFIG_MTD_DOCPROBE_HIGH
-CONFIG_MTD_M25P80
-CONFIG_MTD_PARTITIONS
-CONFIG_NCP_FS
-CONFIG_NCPFS_EXTRAS
-CONFIG_NCPFS_IOCTL_LOCKING
-CONFIG_NCPFS_NFS_NS
-CONFIG_NCPFS_NLS
-CONFIG_NCPFS_OS2_NS
-CONFIG_NCPFS_PACKET_SIGNING
-CONFIG_NCPFS_SMALLDOS
-CONFIG_NCPFS_STRONG
-CONFIG_NET_CADENCE
-CONFIG_NET_DCCPPROBE
-CONFIG_NETDEV_1000
-CONFIG_NETDEV_10000
-CONFIG_NET_DMA
-CONFIG_NET_ETHERNET
-CONFIG_NET_PACKET_ENGINE
-CONFIG_NET_PCI
-CONFIG_NET_PCMCIA
-CONFIG_NET_TCPPROBE
-CONFIG_NET_VENDOR_EXAR
-CONFIG_NET_VENDOR_SMC
-CONFIG_NF_CONNTRACK_IPV4
-CONFIG_NF_CONNTRACK_IPV6
-CONFIG_NF_NAT_IPV4
-CONFIG_NF_NAT_IPV6
-CONFIG_NR_DMA_CHANNELS
-CONFIG_NR_DMA_CHANNELS_BOOL
-CONFIG_NSC_FIR
-CONFIG_OCTEON_ETHERNET
-CONFIG_OCTEON_USB
-CONFIG_PCIEASPM_DEBUG
-CONFIG_PCIE_AXXIA
-CONFIG_PCI_LEGACY
-CONFIG_PERF_COUNTERS
-CONFIG_PHONE
-CONFIG_PM_RUNTIME
-CONFIG_PROC_DEVICETREE
-CONFIG_PUV3_AC97
-CONFIG_PUV3_MMC
-CONFIG_PUV3_MUSB
-CONFIG_PUV3_NAND
-CONFIG_PUV3_UART
-CONFIG_PUV3_UMAL
-CONFIG_PXA_FICP
-CONFIG_QCOM_ADSP_PIL
-CONFIG_QCOM_Q6V5_PIL
-CONFIG_RCU_CPU_STALL_INFO
-CONFIG_SA1100_FIR
-CONFIG_SBC834x
-CONFIG_SCSI_MULTI_LUN
-CONFIG_SCSI_OSD_INITIATOR
-CONFIG_SCSI_OSD_ULD
-CONFIG_SECURITY_SELINUX_BOOTPARAM_VALUE
-CONFIG_SH_SIR
-CONFIG_SIGMATEL_FIR
-CONFIG_SMB_FS
-CONFIG_SMB_NLS_DEFAULT
-CONFIG_SMC_IRCC_FIR
-CONFIG_SND_FSI_AK4642
-CONFIG_SND_FSI_DA7210
-CONFIG_SOC_CAMERA_MT9T112
-CONFIG_SOC_CAMERA_OV2640
-CONFIG_SOC_CAMERA_OV772X
-CONFIG_SOC_CAMERA_PLATFORM
-CONFIG_SOC_CAMERA_TW9910
-CONFIG_SOUND_DMAP
-CONFIG_SOUND_OSS
-CONFIG_SOUND_PRIME
-CONFIG_SOUND_TRACEINIT
-CONFIG_SOUND_VIDC
-CONFIG_SOUND_WAVEARTIST
-CONFIG_SOUND_YM3812
-CONFIG_SPI_XILINX_PLTFM
-CONFIG_STAGING_EXCLUDE_BUILD
-CONFIG_SUSPEND_TIME
-CONFIG_SYSCTL_SYSCALL
-CONFIG_TIMER_STATS
-CONFIG_TOSHIBA_FIR
-CONFIG_TREE_PREEMPT_RCU
-CONFIG_UID_STAT
-CONFIG_UIO_PDRV
-CONFIG_USB_CHIPIDEA_ULPI
-CONFIG_USB_CMMB_INNOFIDEI
-CONFIG_USB_EHCI_HCD_AXXIA
-CONFIG_USB_EHCI_MSM
-CONFIG_USB_GADGET_DUMMY_HCD
-CONFIG_USB_GADGET_M66592
-CONFIG_USB_IRDA
-CONFIG_USB_MSM_OTG
-CONFIG_USB_WLAN_HED_AQ3
-CONFIG_V4L_USB_DRIVERS
-CONFIG_VIA_FIR
-CONFIG_VIDEO_ALLOW_V4L1
-CONFIG_VIDEO_HELPER_CHIPS_AUTO
-CONFIG_VIDEO_SH_MOBILE_CEU
-CONFIG_VLSI_FIR
-CONFIG_W1_SLAVE_DS2760
-CONFIG_WAN_ROUTER
-CONFIG_WAN_ROUTER_DRIVERS
-CONFIG_WINBOND_FIR
-CONFIG_WLAN_80211
-
+Thanks,
+=E2=80=94 Alex
 
