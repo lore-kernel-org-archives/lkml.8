@@ -6,37 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27377C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0786CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A9B21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D291A2465B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgA3OsP (ORCPT
+        id S1727552AbgA3Osd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:48:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 09:48:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727472AbgA3OsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:48:13 -0500
+        id S1727510AbgA3OsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 09:48:15 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC1B22522;
-        Thu, 30 Jan 2020 14:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CA224694;
+        Thu, 30 Jan 2020 14:48:14 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ixB75-001CN6-CL; Thu, 30 Jan 2020 09:48:11 -0500
-Message-Id: <20200130144811.265074620@goodmis.org>
+        id 1ixB77-001CTt-Ff; Thu, 30 Jan 2020 09:48:13 -0500
+Message-Id: <20200130144813.363630935@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 30 Jan 2020 09:47:50 -0500
+Date:   Thu, 30 Jan 2020 09:48:04 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 07/21] tracing: Add trace_array_find/_get() to find instance trace arrays
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 21/21] tracing: Move tracing selftests to bottom of menu
 References: <20200130144743.527378179@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,106 +43,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Add a new trace_array_find() function that can be used to find a trace
-array given the instance name, and replace existing code that does the
-same thing with it.  Also add trace_array_find_get() which does the
-same but returns the trace array after upping its refcount.
+Move all the tracing selftest configs to the bottom of the tracing menu.
+There's no reason for them to be interspersed throughout.
 
-Also make both available for use outside of trace.c.
+Also, move the bootconfig menu to the top.
 
-Link: http://lkml.kernel.org/r/cb68528c975eba95bee4561ac67dd1499423b2e5.1580323897.git.zanussi@kernel.org
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 43 +++++++++++++++++++++++++++++++++----------
- kernel/trace/trace.h |  2 ++
- 2 files changed, 35 insertions(+), 10 deletions(-)
+ kernel/trace/Kconfig | 168 +++++++++++++++++++++----------------------
+ 1 file changed, 84 insertions(+), 84 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8d144fd94aa8..183b031a3828 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8499,6 +8499,34 @@ static void update_tracer_options(struct trace_array *tr)
- 	mutex_unlock(&trace_types_lock);
- }
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 2014056682f5..91e885194dbc 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -141,6 +141,15 @@ menuconfig FTRACE
  
-+/* Must have trace_types_lock held */
-+struct trace_array *trace_array_find(const char *instance)
-+{
-+	struct trace_array *tr, *found = NULL;
+ if FTRACE
+ 
++config BOOTTIME_TRACING
++	bool "Boot-time Tracing support"
++	depends on BOOT_CONFIG && TRACING
++	default y
++	help
++	  Enable developer to setup ftrace subsystem via supplemental
++	  kernel cmdline at boot time for debugging (tracing) driver
++	  initialization and boot process.
 +
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		if (tr->name && strcmp(tr->name, instance) == 0) {
-+			found = tr;
-+			break;
-+		}
-+	}
+ config FUNCTION_TRACER
+ 	bool "Kernel Function Tracer"
+ 	depends on HAVE_FUNCTION_TRACER
+@@ -605,41 +614,6 @@ config FTRACE_MCOUNT_RECORD
+ 	depends on DYNAMIC_FTRACE
+ 	depends on HAVE_FTRACE_MCOUNT_RECORD
+ 
+-config FTRACE_SELFTEST
+-	bool
+-
+-config FTRACE_STARTUP_TEST
+-	bool "Perform a startup test on ftrace"
+-	depends on GENERIC_TRACER
+-	select FTRACE_SELFTEST
+-	help
+-	  This option performs a series of startup tests on ftrace. On bootup
+-	  a series of tests are made to verify that the tracer is
+-	  functioning properly. It will do tests on all the configured
+-	  tracers of ftrace.
+-
+-config EVENT_TRACE_STARTUP_TEST
+-	bool "Run selftest on trace events"
+-	depends on FTRACE_STARTUP_TEST
+-	default y
+-	help
+-	  This option performs a test on all trace events in the system.
+-	  It basically just enables each event and runs some code that
+-	  will trigger events (not necessarily the event it enables)
+-	  This may take some time run as there are a lot of events.
+-
+-config EVENT_TRACE_TEST_SYSCALLS
+-	bool "Run selftest on syscall events"
+-	depends on EVENT_TRACE_STARTUP_TEST
+-	help
+-	 This option will also enable testing every syscall event.
+-	 It only enables the event and disables it and runs various loads
+-	 with the event enabled. This adds a bit more time for kernel boot
+-	 up since it runs this on every system call defined.
+-
+-	 TBD - enable a way to actually call the syscalls as we test their
+-	       events
+-
+ config TRACING_MAP
+ 	bool
+ 	depends on ARCH_HAVE_NMI_SAFE_CMPXCHG
+@@ -726,6 +700,81 @@ config RING_BUFFER_BENCHMARK
+ 
+ 	  If unsure, say N.
+ 
++config TRACE_EVAL_MAP_FILE
++       bool "Show eval mappings for trace events"
++       depends on TRACING
++       help
++	The "print fmt" of the trace events will show the enum/sizeof names
++	instead of their values. This can cause problems for user space tools
++	that use this string to parse the raw data as user space does not know
++	how to convert the string to its value.
 +
-+	return found;
-+}
++	To fix this, there's a special macro in the kernel that can be used
++	to convert an enum/sizeof into its value. If this macro is used, then
++	the print fmt strings will be converted to their values.
 +
-+struct trace_array *trace_array_find_get(const char *instance)
-+{
-+	struct trace_array *tr;
++	If something does not get converted properly, this option can be
++	used to show what enums/sizeof the kernel tried to convert.
 +
-+	mutex_lock(&trace_types_lock);
-+	tr = trace_array_find(instance);
-+	if (tr)
-+		tr->ref++;
-+	mutex_unlock(&trace_types_lock);
++	This option is for debugging the conversions. A file is created
++	in the tracing directory called "eval_map" that will show the
++	names matched with their values and what trace event system they
++	belong too.
 +
-+	return tr;
-+}
++	Normally, the mapping of the strings to values will be freed after
++	boot up or module load. With this option, they will not be freed, as
++	they are needed for the "eval_map" file. Enabling this option will
++	increase the memory footprint of the running kernel.
 +
- static struct trace_array *trace_array_create(const char *name)
- {
- 	struct trace_array *tr;
-@@ -8575,10 +8603,8 @@ static int instance_mkdir(const char *name)
- 	mutex_lock(&trace_types_lock);
++	If unsure, say N.
++
++config GCOV_PROFILE_FTRACE
++	bool "Enable GCOV profiling on ftrace subsystem"
++	depends on GCOV_KERNEL
++	help
++	  Enable GCOV profiling on ftrace subsystem for checking
++	  which functions/lines are tested.
++
++	  If unsure, say N.
++
++	  Note that on a kernel compiled with this config, ftrace will
++	  run significantly slower.
++
++config FTRACE_SELFTEST
++	bool
++
++config FTRACE_STARTUP_TEST
++	bool "Perform a startup test on ftrace"
++	depends on GENERIC_TRACER
++	select FTRACE_SELFTEST
++	help
++	  This option performs a series of startup tests on ftrace. On bootup
++	  a series of tests are made to verify that the tracer is
++	  functioning properly. It will do tests on all the configured
++	  tracers of ftrace.
++
++config EVENT_TRACE_STARTUP_TEST
++	bool "Run selftest on trace events"
++	depends on FTRACE_STARTUP_TEST
++	default y
++	help
++	  This option performs a test on all trace events in the system.
++	  It basically just enables each event and runs some code that
++	  will trigger events (not necessarily the event it enables)
++	  This may take some time run as there are a lot of events.
++
++config EVENT_TRACE_TEST_SYSCALLS
++	bool "Run selftest on syscall events"
++	depends on EVENT_TRACE_STARTUP_TEST
++	help
++	 This option will also enable testing every syscall event.
++	 It only enables the event and disables it and runs various loads
++	 with the event enabled. This adds a bit more time for kernel boot
++	 up since it runs this on every system call defined.
++
++	 TBD - enable a way to actually call the syscalls as we test their
++	       events
++
+ config RING_BUFFER_STARTUP_TEST
+        bool "Ring buffer startup self test"
+        depends on RING_BUFFER
+@@ -799,55 +848,6 @@ config KPROBE_EVENT_GEN_TEST
  
- 	ret = -EEXIST;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0)
--			goto out_unlock;
--	}
-+	if (trace_array_find(name))
-+		goto out_unlock;
+ 	  If unsure, say N.
  
- 	tr = trace_array_create(name);
+-config TRACE_EVAL_MAP_FILE
+-       bool "Show eval mappings for trace events"
+-       depends on TRACING
+-       help
+-	The "print fmt" of the trace events will show the enum/sizeof names
+-	instead of their values. This can cause problems for user space tools
+-	that use this string to parse the raw data as user space does not know
+-	how to convert the string to its value.
+-
+-	To fix this, there's a special macro in the kernel that can be used
+-	to convert an enum/sizeof into its value. If this macro is used, then
+-	the print fmt strings will be converted to their values.
+-
+-	If something does not get converted properly, this option can be
+-	used to show what enums/sizeof the kernel tried to convert.
+-
+-	This option is for debugging the conversions. A file is created
+-	in the tracing directory called "eval_map" that will show the
+-	names matched with their values and what trace event system they
+-	belong too.
+-
+-	Normally, the mapping of the strings to values will be freed after
+-	boot up or module load. With this option, they will not be freed, as
+-	they are needed for the "eval_map" file. Enabling this option will
+-	increase the memory footprint of the running kernel.
+-
+-	If unsure, say N.
+-
+-config GCOV_PROFILE_FTRACE
+-	bool "Enable GCOV profiling on ftrace subsystem"
+-	depends on GCOV_KERNEL
+-	help
+-	  Enable GCOV profiling on ftrace subsystem for checking
+-	  which functions/lines are tested.
+-
+-	  If unsure, say N.
+-
+-	  Note that on a kernel compiled with this config, ftrace will
+-	  run significantly slower.
+-
+-config BOOTTIME_TRACING
+-	bool "Boot-time Tracing support"
+-	depends on BOOT_CONFIG && TRACING
+-	default y
+-	help
+-	  Enable developer to setup ftrace subsystem via supplemental
+-	  kernel cmdline at boot time for debugging (tracing) driver
+-	  initialization and boot process.
+-
+ endif # FTRACE
  
-@@ -8706,12 +8732,9 @@ static int instance_rmdir(const char *name)
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = -ENODEV;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0) {
--			ret = __remove_instance(tr);
--			break;
--		}
--	}
-+	tr = trace_array_find(name);
-+	if (tr)
-+		ret = __remove_instance(tr);
- 
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b3075b637d14..f5480a2aa334 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -358,6 +358,8 @@ extern struct mutex trace_types_lock;
- 
- extern int trace_array_get(struct trace_array *tr);
- extern int tracing_check_open_get_tr(struct trace_array *tr);
-+extern struct trace_array *trace_array_find(const char *instance);
-+extern struct trace_array *trace_array_find_get(const char *instance);
- 
- extern int tracing_set_time_stamp_abs(struct trace_array *tr, bool abs);
- extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
+ endif # TRACING_SUPPORT
 -- 
 2.24.1
 
