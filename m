@@ -2,80 +2,122 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3F9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF24C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6CD20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580398016;
-	bh=YjnAL/bGTXUIr0WPqnrvgpQ0zIdLsvbJjuEaH6/zhkQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HoQRo9tY5NB+gSrkuTSN0tQ5M0Pn9Rx3HaMPEfWWdEGbLn7ddn5Oet6VCTvVnofmn
-	 jI5pIaU3klfoWWdEer0VEi40jxlFkGHI6ybKEShp1DPyqQr58Opjo9kX1ZaDkc8BIv
-	 OI4MGWfhdcl979GTHwfiz6DVwJ2dSV1FQPoP+7Y8=
+	by mail.kernel.org (Postfix) with ESMTP id 8C62C20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbgA3P04 (ORCPT
+        id S1727313AbgA3P12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:26:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbgA3P0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:26:55 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 344442083E;
-        Thu, 30 Jan 2020 15:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580398015;
-        bh=YjnAL/bGTXUIr0WPqnrvgpQ0zIdLsvbJjuEaH6/zhkQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Czplotu4uxip/C6E/oNc60VZPAfLLViPbUwPxINpVyH7BEBlqCtgyVBnOp2QtrDR3
-         hu8y176gfUPKYRVE8ZsOGq2MpRIYLbDUg1DzJ5eOjv4TSRUAfSNcug1SAfIXszlUIS
-         P0WrwaWbGnqNeygcIyflQBWqG6S/olZ3uBwDYPoY=
-Received: by mail-qk1-f178.google.com with SMTP id q15so3247845qke.9;
-        Thu, 30 Jan 2020 07:26:55 -0800 (PST)
-X-Gm-Message-State: APjAAAV5HShdL2PqEnk+dBhFb6Nws3g2GO82jU/m6lnhxcvUXtfKPIUe
-        mJKlisYz4Sp2qyRmwofS7VrFus3wteR7KibPMg==
-X-Google-Smtp-Source: APXvYqwFQOFE7AjB7HrdydN1cq2Bv0ALSQioPG+tb7hj4dPC/A6oB67Zmcj6qnvImljLC9OPV//XNxwUim+Qn0JT4Ig=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr5759809qkd.223.1580398014296;
- Thu, 30 Jan 2020 07:26:54 -0800 (PST)
+        Thu, 30 Jan 2020 10:27:28 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2329 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727186AbgA3P11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:27:27 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 193B34E794727836E010;
+        Thu, 30 Jan 2020 15:27:25 +0000 (GMT)
+Received: from fraeml715-chm.china.huawei.com (10.206.15.34) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 Jan 2020 15:27:24 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 Jan 2020 16:27:24 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Thu, 30 Jan 2020 16:27:24 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>, Petr Vorel <pvorel@suse.cz>
+CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+Thread-Topic: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+Thread-Index: AQHV1SsskZfHgOFdME+uHgUEG6qPTKf+632AgAALuoCAAkpuAIAA8HoAgADpZbA=
+Date:   Thu, 30 Jan 2020 15:27:24 +0000
+Message-ID: <2e3ec5f5a4e748a898baeac8a88487ab@huawei.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <20200127204941.2ewman4y5nzvkjqe@cantor>
+         <1580160699.5088.64.camel@linux.ibm.com>
+ <20200129083034.GA387@dell5510> <1580338276.4790.8.camel@linux.ibm.com>
+In-Reply-To: <1580338276.4790.8.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org> <1579006416-11599-3-git-send-email-dikshita@codeaurora.org>
-In-Reply-To: <1579006416-11599-3-git-send-email-dikshita@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 30 Jan 2020 09:26:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLHj0H6GC+UwaLM3=LP=a_SGhcOGyUzEfYy=JhVsdVQ7A@mail.gmail.com>
-Message-ID: <CAL_JsqLHj0H6GC+UwaLM3=LP=a_SGhcOGyUzEfYy=JhVsdVQ7A@mail.gmail.com>
-Subject: Re: [PATCH V4 2/4] dt-bindings: media: venus: Add sc7180 DT schema
-To:     Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 6:54 AM Dikshita Agarwal
-<dikshita@codeaurora.org> wrote:
->
-> Add new qcom,sc7180-venus DT binding schema.
->
-> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  .../bindings/media/qcom,sc7180-venus.yaml          | 144 +++++++++++++++++++++
->  1 file changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
+ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
+Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IFdlZG5lc2RheSwg
+SmFudWFyeSAyOSwgMjAyMCAxMTo1MSBQTQ0KPiBUbzogUGV0ciBWb3JlbCA8cHZvcmVsQHN1c2Uu
+Y3o+DQo+IENjOiBKZXJyeSBTbml0c2VsYWFyIDxqc25pdHNlbEByZWRoYXQuY29tPjsgbGludXgt
+aW50ZWdyaXR5QHZnZXIua2VybmVsLm9yZzsNCj4gSmFtZXMgQm90dG9tbGV5IDxKYW1lcy5Cb3R0
+b21sZXlAaGFuc2VucGFydG5lcnNoaXAuY29tPjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCAxLzJdIGltYTogdXNlIHRoZSBJTUEgY29uZmlndXJlZCBoYXNoIGFsZ28g
+dG8gY2FsY3VsYXRlDQo+IHRoZSBib290IGFnZ3JlZ2F0ZQ0KPiANCj4gT24gV2VkLCAyMDIwLTAx
+LTI5IGF0IDA5OjMwICswMTAwLCBQZXRyIFZvcmVsIHdyb3RlOg0KPiA+IEhpIE1pbWksDQo+ID4N
+Cj4gPiBSZXZpZXdlZC1ieTogUGV0ciBWb3JlbCA8cHZvcmVsQHN1c2UuY3o+DQo+ID4NCj4gPiA+
+IFRoZSBvcmlnaW5hbCBMVFAgaW1hX2Jvb3RfYWdncmVnYXRlLmMgdGVzdCBuZWVkZWQgdG8gYmUg
+dXBkYXRlZCB0bw0KPiA+ID4gc3VwcG9ydCBUUE0gMi4wIGJlZm9yZSB0aGlzIGNoYW5nZS4gwqBG
+b3IgVFBNIDIuMCwgdGhlIFBDUnMgYXJlIG5vdA0KPiA+ID4gZXhwb3J0ZWQuIMKgV2l0aCB0aGlz
+IGNoYW5nZSwgdGhlIGtlcm5lbCBjb3VsZCBiZSByZWFkaW5nIFBDUnMgZnJvbSBhDQo+ID4gPiBU
+UE0gYmFuayBvdGhlciB0aGFuIFNIQTEgYW5kIGNhbGN1bGF0aW5nIHRoZSBib290X2FnZ3JlZ2F0
+ZSBiYXNlZCBvbg0KPiBhDQo+ID4gPiBkaWZmZXJlbnQgaGFzaCBhbGdvcml0aG0gYXMgd2VsbC4g
+wqBJJ20gbm90IHN1cmUgaG93IGEgcmVtb3RlIHZlcmlmaWVyDQo+ID4gPiB3b3VsZCBrbm93IHdo
+aWNoIFRQTSBiYW5rIHdhcyByZWFkLCB3aGVuIGNhbGN1bGF0aW5nIHRoZSBib290LQ0KPiA+ID4g
+YWdncmVnYXRlLg0KPiA+IE1pbWksIGRvIHlvdSBwbGFuIHRvIGRvIHVwZGF0ZSBMVFAgdGVzdD8N
+Cj4gDQo+IEluIG9yZGVyIHRvIHRlc3QgUm9iZXJ0bydzIHBhdGNoZXMgdGhhdCBjYWxjdWxhdGVz
+IGFuZCBleHRlbmRzIHRoZQ0KPiBkaWZmZXJlbnQgVFBNIGJhbmtzIHdpdGggdGhlIGFwcHJvcHJp
+YXRlIGhhc2hlcywgd2UnbGwgbmVlZCBzb21lIHRlc3QNCj4gdG8gdmVyaWZ5IHRoYXQgaXQgaXMg
+d29ya2luZyBwcm9wZXJseS4gwqBBcyB0byB3aGV0aGVyIHRoaXMgd2lsbCBiZSBpbg0KPiBMVFAg
+b3IgaW1hLWV2bS11dGlscywgSSdtIG5vdCBzdXJlLg0KDQphdHRlc3QtdG9vbHMgKGh0dHBzOi8v
+Z2l0aHViLmNvbS9ldWxlcm9zL2F0dGVzdC10b29scywgYnJhbmNoIDAuMi1kZXZlbCkgaGFzIHRo
+ZQ0KYWJpbGl0eSB0byBwYXJzZSB0aGUgQklPUyBhbmQgSU1BIGV2ZW50IGxvZ3MsIGFuZCB0byBj
+b21wYXJlIGJvb3RfYWdncmVnYXRlDQp3aXRoIHRoZSBkaWdlc3Qgb2YgZmluYWwgUENSIHZhbHVl
+cyBvYnRhaW5lZCBieSBwZXJmb3JtaW5nIGluIHNvZnR3YXJlIHRoZSBQQ1INCmV4dGVuZCBvcGVy
+YXRpb24gd2l0aCBkaWdlc3RzIGluIHRoZSBCSU9TIGV2ZW50IGxvZy4NCg0KVG8gcGVyZm9ybSB0
+aGUgdGVzdCwgaXQgaXMgbmVjZXNzYXJ5IHRvIGhhdmUgYSBjb21wbGV0ZSBCSU9TIGV2ZW50IGxv
+Zy4NCg0KQ3JlYXRlIHJlcS5qc29uIHdpdGggdGhpcyBjb250ZW50Og0KLS0tDQp7DQogICJyZXFz
+Ijp7DQogICAgImR1bW15fHZlcmlmeSI6IiIsDQogICAgImltYV9ib290X2FnZ3JlZ2F0ZXx2ZXJp
+ZnkiOiIiDQogIH0NCn0NCi0tLQ0KDQpXaXRoIHRoZSByZXF1aXJlbWVudHMgYWJvdmUsIHdlIGFy
+ZSB0ZWxsaW5nIGF0dGVzdC10b29scyB0byB2ZXJpZnkgb25seQ0KYm9vdF9hZ2dyZWdhdGUuIFdp
+dGhvdXQgdGhlIGR1bW15IHJlcXVpcmVtZW50LCB2ZXJpZmljYXRpb24gd291bGQNCmZhaWwgKEJJ
+T1MgYW5kIHJlbWFpbmluZyBJTUEgbWVhc3VyZW1lbnQgZW50cmllcyBhcmUgbm90IHByb2Nlc3Nl
+ZCkuDQoNCk9uIHNlcnZlciBzaWRlIHJ1bjoNCiMgYXR0ZXN0X3JhX3NlcnZlciAtcCAxMCAtciBy
+ZXEuanNvbiAtcyAtaQ0KDQotcyBkaXNhYmxlcyBUUE0gc2lnbmF0dXJlIHZlcmlmaWNhdGlvbg0K
+LWkgYWxsb3dzIElNQSB2aW9sYXRpb25zDQoNClRvIGVuYWJsZSBUUE0gc2lnbmF0dXJlIHZlcmlm
+aWNhdGlvbiBpdCBpcyBuZWNlc3NhcnkgdG8gaGF2ZSBhIHZhbGlkIEFLDQpjZXJ0aWZpY2F0ZS4g
+SXQgY2FuIGJlIG9idGFpbmVkIGJ5IGZvbGxvd2luZyB0aGUgaW5zdHJ1Y3Rpb25zIGF0Og0KDQpo
+dHRwczovL2dpdGh1Yi5jb20vZXVsZXJvcy9hdHRlc3QtdG9vbHMvYmxvYi8wLjItZGV2ZWwvUkVB
+RE1FDQoNCk9uIGNsaWVudCBzaWRlIHJ1bjoNCiMgZWNobyB0ZXN0ID4gYWlrX2NlcnQucGVtDQoj
+IGVjaG8gYWlrX2NlcnQucGVtID4gbGlzdF9wcml2YWN5X2NhDQojIGF0dGVzdF9yYV9jbGllbnQg
+LUENCg0KVGhlIGNvbW1hbmQgYWJvdmUgZ2VuZXJhdGVzIGFuIEFLLg0KDQojIGF0dGVzdF9yYV9j
+bGllbnQgLXMgPHNlcnZlciBJUD4gLXEgLXAgMTAgLVAgPFBDUiBhbGdvPiAtYiAtaQ0KDQpUaGUg
+Y29tbWFuZCBhYm92ZSBzZW5kcyB0aGUgVFBNIHF1b3RlIGFuZCB0aGUgZXZlbnQgbG9ncw0KdG8g
+dGhlIFJBIHNlcnZlciBhbmQgZ2V0cyB0aGUgcmVzcG9uc2UgKHN1Y2Nlc3NmdWwvZmFpbGVkDQp2
+ZXJpZmljYXRpb24pLg0KDQotYiBpbmNsdWRlcyB0aGUgQklPUyBldmVudCBsb2cgZnJvbSBzZWN1
+cml0eWZzDQotaSBpbmNsdWRlcyB0aGUgSU1BIGV2ZW50IGxvZyBmcm9tIHNlY3VyaXR5ZnMNCg0K
+VG8gY2hlY2sgdGhhdCBib290X2FnZ3JlZ2F0ZSBpcyBjYWxjdWxhdGVkIHByb3Blcmx5LCB1c2Ug
+LVAgc2hhMjU2DQppbiBhdHRlc3RfcmFfY2xpZW50IGFuZCBzZXQgaW1hX2hhc2g9c2hhMjU2IGlu
+IHRoZSBrZXJuZWwgY29tbWFuZA0KbGluZS4NCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9H
+SUVTIER1ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBl
+bmcsIExpIEppYW4sIFNoaSBZYW5saQ0K
