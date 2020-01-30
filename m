@@ -6,151 +6,96 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67608C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06579C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF2E2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D511C2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgA3W7h (ORCPT
+        id S1727635AbgA3XEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:59:37 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60534 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727656AbgA3W7f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:59:35 -0500
-Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 180C43A3C38;
-        Fri, 31 Jan 2020 09:59:22 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ixImP-0005Mg-7O; Fri, 31 Jan 2020 09:59:21 +1100
-Date:   Fri, 31 Jan 2020 09:59:21 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     "hare@suse.de" <hare@suse.de>, Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "jth@kernel.org" <jth@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v9 1/2] fs: New zonefs file system
-Message-ID: <20200130225921.GR18610@dread.disaster.area>
-References: <20200127100521.53899-1-damien.lemoal@wdc.com>
- <20200127100521.53899-2-damien.lemoal@wdc.com>
- <20200128174608.GR3447196@magnolia>
- <b404c1cd7a0c8ccbabcbd3c8aed440542750706e.camel@wdc.com>
- <20200129213318.GM18610@dread.disaster.area>
- <069a9841bc2a6fc9baee05847812720eb1f6517e.camel@wdc.com>
+        Thu, 30 Jan 2020 18:04:55 -0500
+Received: from mga09.intel.com ([134.134.136.24]:56248 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbgA3XEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 18:04:54 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 15:04:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,383,1574150400"; 
+   d="scan'208";a="218436177"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga007.jf.intel.com with ESMTP; 30 Jan 2020 15:04:52 -0800
+Date:   Fri, 31 Jan 2020 07:05:07 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
+        kirill@shutemov.name, dan.j.williams@intel.com,
+        yang.shi@linux.alibaba.com, thellstrom@vmware.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [Patch v2 0/4] mm/mremap: cleanup move_page_tables() a little
+Message-ID: <20200130230507.GA15192@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200129002642.13508-1-richardw.yang@linux.intel.com>
+ <50f408bd-502e-bd02-53d4-719300736ce2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <069a9841bc2a6fc9baee05847812720eb1f6517e.camel@wdc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=x1mIa0GL801llPKVRlUA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <50f408bd-502e-bd02-53d4-719300736ce2@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 03:00:32AM +0000, Damien Le Moal wrote:
-> On Thu, 2020-01-30 at 08:33 +1100, Dave Chinner wrote:
-> > On Wed, Jan 29, 2020 at 01:06:29PM +0000, Damien Le Moal wrote:
-> > > Exactly. This is how the ZBC & ZAC (and upcoming ZNS) specifications
-> > > define the write pointer behavior. That makes error recovery a lot
-> > > easier and does not result in stale data accesses. Just notice the one-
-> > > off difference for the WP position from your example as WP will be
-> > > pointing at the error location, not the last written location. Indexing
-> > > from 0, we get (wp - zone start) always being isize with all written
-> > > and readable data in the sector range between zone start and zone write
-> > > pointer.
-> > 
-> > Ok, I'm going throw a curve ball here: volatile device caches.
-> > 
-> > How does the write pointer updates interact with device write
-> > caches? i.e.  the first write could be sitting in the device write
-> > cache, and the OS write pointer has been advanced. Then another write
-> > occurs, the device decides to write both to physical media, and it
-> > gets a write error in the area of the first write that only hit the
-> > volatile cache.
-> > 
-> > So does this mean that, from the POV of the OS, the device zone
-> > write pointer has gone backwards?
-> 
-> You are absolutely correct. Forgot to consider this case.
-> Nice pitching :)
+On Fri, Jan 31, 2020 at 01:18:00AM +0300, Dmitry Osipenko wrote:
+>29.01.2020 03:26, Wei Yang пишет:
+>> move_page_tables() tries to move page table by PMD or PTE.
+>> 
+>> The root reason is if it tries to move PMD, both old and new range should
+>> be PMD aligned. But current code calculate old range and new range
+>> separately.  This leads to some redundant check and calculation.
+>> 
+>> This cleanup tries to consolidate the range check in one place to reduce
+>> some extra range handling.
+>> 
+>> v2:
+>>   * remove 3rd patch which doesn't work on ARM platform. Thanks report from
+>>     Dmitry Osipenko
+>> 
+>> Wei Yang (4):
+>>   mm/mremap: format the check in move_normal_pmd() same as
+>>     move_huge_pmd()
+>>   mm/mremap: it is sure to have enough space when extent meets
+>>     requirement
+>>   mm/mremap: calculate extent in one place
+>>   mm/mremap: start addresses are properly aligned
+>> 
+>>  include/linux/huge_mm.h |  2 +-
+>>  mm/huge_memory.c        |  8 +-------
+>>  mm/mremap.c             | 17 ++++++-----------
+>>  3 files changed, 8 insertions(+), 19 deletions(-)
+>> 
+>
+>Hello Wei,
+>
+>I haven't noticed any problems using the v2. Thank you very much for
+>addressing the problem!
+>
 
-Potentially adverse IO ordering interactions with volatile device
-caches are never that far from the mind of filesystem engineers...
-:)
+Glad to hear this.
 
-> > Unless there's some other magic that ensures device cached writes
-> > that have been signalled as successfully completed to the OS
-> > can never fail or that sequential zone writes are never cached in
-> > volatile memory in drives, I can't see how the above guarantees
-> > can be provided.
-> 
-> There not, at least from the standards point of view. Such guarantees
-> would be device implementation dependent and so we cannot rely on
-> anything in this regard. The write pointer ending up below the position
-> of the last issue direct IO is thus a possibility and not necessarily
-> indicative of an external action (and we actually cannot distinguish
-> which case it really is).
+Actually, really thanks for your patience on testing and reporting the
+problem.
 
-*nod*
+Have a nice day :-)
 
-> > > It is hard to decide on the best action to take here considering the
-> > > simple nature of zonefs (i.e. another better interface to do raw block
-> > > device file accesses). Including your comments on mount options, I cam
-> > > up with these actions that the user can choose with mount options:
-> > > * repair: Truncate the inode size only, nothing else
-> > > * remount-ro (default): Truncate the inode size and remount read-only
-> > > * zone-ro: Truncate the inode size and set the inode read-only
-> > > * zone-offline: Truncate the inode size to 0 and assume that its zone 
-> > > is offline (no reads nor writes possible).
-> > > 
-> > > This gives I think a good range of possible behaviors that the user may
-> > > want, from almost nothing (repair) to extreme to avoid accessing bad
-> > > data (zone-offline).
-> > 
-> > I would suggest that this is something that can be added later as it
-> > is not critical to supporting the underlying functionality.  Right
-> > now I'd just pick the safest option: shutdown to protect what data
-> > is on the storage right now and then let the user take action to
-> > recover/fix the issue.
-> 
-> By shutdown, do you mean remounting read-only ? Or do you mean
-> something more aggressive like preventing all accesses and changes to
-> files, i.e. assuming all zones are offline ? The former is already
-> there and is the default.
+>Tested-by: Dmitry Osipenko <digetx@gmail.com>
 
-"shutdown" in this context means "do whatever is necessary to
-prevent the problem getting worse". So, at minimum, it would be to
-prevent further writes to the zone that has gone bad.
-
-If there's potential for other zones to be affected, then moving to
-a global read-only state is the right thing to do.
-
-If there's potential for the error to expose stale data, propagate
-the error further into currently good on-disk structures, or walk
-off the end of corrupt structures (kernel crash and/or memory
-corruption), then an aggressive "error out as early as possible"
-shutdown is the right solution....
-
-I suspect that zonefs really only needs to go as far as remounting
-read-only as long as the hardware write pointers prevent reading the
-zone beyond that point....
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Wei Yang
+Help you, Help me
