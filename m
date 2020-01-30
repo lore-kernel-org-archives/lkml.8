@@ -2,53 +2,54 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDFFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE09C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49260215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414B4215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410074;
-	bh=4AtbueEFuNKAL6mZDMVjdBYtBNKuiC/Tvwz9VqmlWJc=;
+	s=default; t=1580410079;
+	bh=KGVdJI4QeammafVVxIwwiX4/OvI88n2ymAv/vzMJ+04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7H+tUbGNx71nuiI7bUcHkNSn3oEC022RMN0nQwF+W/2zbLfOTFnpom2Krm28k2r7
-	 YHjAaWAXCR6/KquCY2Rnmqats+yeql1zrJ3oILgABe+fjX7hEF5Og7Bph5HniCoDUv
-	 FHBz3/VitysjDvptto+Vg3QiTS9kCu71DfYBDgf4=
+	b=08WQmBnERV965ne9Z+IHZnsCkNLvrpPr+S1t1VesQpxUQB0SFqNU0R88/znHqm+Qo
+	 C96j4aToAowMGmFM1wp5nrVFE4zOW4te+oAswMX/G3Fv7Psdl1o4PGru5VqKlC12hn
+	 RERAXQBRAk8HrgZifsXONHI733fK+I30H1xCMKZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbgA3Srx (ORCPT
+        id S1730931AbgA3Sr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731026AbgA3Srr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:47 -0500
+        id S1731451AbgA3Srz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE9452082E;
-        Thu, 30 Jan 2020 18:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A86217BA;
+        Thu, 30 Jan 2020 18:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410067;
-        bh=4AtbueEFuNKAL6mZDMVjdBYtBNKuiC/Tvwz9VqmlWJc=;
+        s=default; t=1580410074;
+        bh=KGVdJI4QeammafVVxIwwiX4/OvI88n2ymAv/vzMJ+04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBxLyeeVXkVpDmVedKMKYBHUsnIB3Uy50ZJxqc0yqjM8HtjH4k4NDE4lCeUwZMcjD
-         ETY+h1YBYfCFm0KJSM8ZxFuFp6nLub/4bbY6iCqYpUSkvDO5DbHw53s79HFBrnpvez
-         B78pOPz3pP+ZKIr3uLfz4HK0nN5mBbJuA8reEYd8=
+        b=LopmQZ9SnYjPcWN/QgYavm6eTeTvfzRT+zddfejDfpGN25AKzWsP+U30OSXvWfM9s
+         Q0DNXl8vUM5g2aFz6euSry8rWtVWIRE/E7ydj+OeUOdoD+Zboc6ElNVXBRS7GntQzr
+         ZUPkxFYmNQ7fj/ODJYOu1ZoO2gQQhVAfDSrtXZKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/55] watchdog: max77620_wdt: fix potential build errors
-Date:   Thu, 30 Jan 2020 19:39:14 +0100
-Message-Id: <20200130183614.628871091@linuxfoundation.org>
+Subject: [PATCH 4.19 36/55] drivers/net/b44: Change to non-atomic bit operations on pwol_mask
+Date:   Thu, 30 Jan 2020 19:39:17 +0100
+Message-Id: <20200130183615.120752961@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -61,35 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Engraf <david.engraf@sysgo.com>
+From: Fenghua Yu <fenghua.yu@intel.com>
 
-[ Upstream commit da9e3f4e30a53cd420cf1e6961c3b4110f0f21f0 ]
+[ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
 
-max77620_wdt uses watchdog core functions. Enable CONFIG_WATCHDOG_CORE
-to fix potential build errors.
+Atomic operations that span cache lines are super-expensive on x86
+(not just to the current processor, but also to other processes as all
+memory operations are blocked until the operation completes). Upcoming
+x86 processors have a switch to cause such operations to generate a #AC
+trap. It is expected that some real time systems will enable this mode
+in BIOS.
 
-Signed-off-by: David Engraf <david.engraf@sysgo.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191127084617.16937-1-david.engraf@sysgo.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+In preparation for this, it is necessary to fix code that may execute
+atomic instructions with operands that cross cachelines because the #AC
+trap will crash the kernel.
+
+Since "pwol_mask" is local and never exposed to concurrency, there is
+no need to set bits in pwol_mask using atomic operations.
+
+Directly operate on the byte which contains the bit instead of using
+__set_bit() to avoid any big endian concern due to type cast to
+unsigned long in __set_bit().
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/b44.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index b165c46aca741..709d4de11f40f 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -594,6 +594,7 @@ config MAX63XX_WATCHDOG
- config MAX77620_WATCHDOG
- 	tristate "Maxim Max77620 Watchdog Timer"
- 	depends on MFD_MAX77620 || COMPILE_TEST
-+	select WATCHDOG_CORE
- 	help
- 	 This is the driver for the Max77620 watchdog timer.
- 	 Say 'Y' here to enable the watchdog timer support for
+diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
+index e445ab724827f..88f8d31e4c833 100644
+--- a/drivers/net/ethernet/broadcom/b44.c
++++ b/drivers/net/ethernet/broadcom/b44.c
+@@ -1519,8 +1519,10 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 	int ethaddr_bytes = ETH_ALEN;
+ 
+ 	memset(ppattern + offset, 0xff, magicsync);
+-	for (j = 0; j < magicsync; j++)
+-		set_bit(len++, (unsigned long *) pmask);
++	for (j = 0; j < magicsync; j++) {
++		pmask[len >> 3] |= BIT(len & 7);
++		len++;
++	}
+ 
+ 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
+ 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
+@@ -1532,7 +1534,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 		for (k = 0; k< ethaddr_bytes; k++) {
+ 			ppattern[offset + magicsync +
+ 				(j * ETH_ALEN) + k] = macaddr[k];
+-			set_bit(len++, (unsigned long *) pmask);
++			pmask[len >> 3] |= BIT(len & 7);
++			len++;
+ 		}
+ 	}
+ 	return len - 1;
 -- 
 2.20.1
 
