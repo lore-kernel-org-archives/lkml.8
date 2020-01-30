@@ -2,187 +2,88 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC6FC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3CF20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFD120708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DAFPPSbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgA3VdI (ORCPT
+        id S1727506AbgA3Vfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:33:08 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:36186 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgA3VdI (ORCPT
+        Thu, 30 Jan 2020 16:35:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43228 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgA3Vfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:33:08 -0500
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <rjones@gateworks.com>)
-        id 1ixHRL-00011c-SA; Thu, 30 Jan 2020 21:33:31 +0000
-From:   Robert Jones <rjones@gateworks.com>
-To:     Sunil Goutham <sgoutham@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        David Miller <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH net v2] net: thunderx: workaround BGX TX Underflow issue
-Date:   Thu, 30 Jan 2020 13:32:52 -0800
-Message-Id: <20200130213252.17005-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.9.2
+        Thu, 30 Jan 2020 16:35:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lEn2eE0qOiISzFnNdvDGTgaPAAcv7U9pblByr/9zg6c=; b=DAFPPSbZLJzapcIIVHAkTsDui
+        ESwf8hNfGcili9VLWVLlUWojxXG8dmtOkmhpNJMNDfr1NOAf2y/MTKl/wLBm+mj70IAwtT0zMpLUX
+        p0r2w2q62Nzaet7BZIIXus++tM1PqmAFhj/g3rEYYneyJ72JmTx+D4DVz2k+T/qFFULwE+QSKjYJB
+        igA92CNMZvne0oqySDWQBzkBi4yXRxi0SCqmwxb4rD7xsie2n7SOJ/gPBuVBkjZAW+qVS/ijKuYak
+        ihfZadlAQ8kEO2vaM8l9Qz6ZGZyIMVOde4//DQ7V15gpcMX1LQ5axAcp0Nz8ErMhyDQCzyVg8fQsg
+        dbclkQHtg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixHTJ-0005Mj-9O; Thu, 30 Jan 2020 21:35:33 +0000
+Date:   Thu, 30 Jan 2020 13:35:33 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] fuse: Convert from readpages to readahead
+Message-ID: <20200130213533.GN6615@bombadil.infradead.org>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-12-willy@infradead.org>
+ <20200129010829.GK18610@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129010829.GK18610@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+On Wed, Jan 29, 2020 at 12:08:29PM +1100, Dave Chinner wrote:
+> On Fri, Jan 24, 2020 at 05:35:52PM -0800, Matthew Wilcox wrote:
+> > +	while (nr_pages--) {
+> > +		struct page *page = readahead_page(mapping, start++);
+> > +		int err = fuse_readpages_fill(&data, page);
+> > +
+> > +		if (!err)
+> > +			continue;
+> > +		nr_pages++;
+> > +		goto out;
+> >  	}
+> 
+> That's some pretty convoluted logic. Perhaps:
+> 
+> 	for (; nr_pages > 0 ; nr_pages--) {
+> 		struct page *page = readahead_page(mapping, start++);
+> 
+> 		if (fuse_readpages_fill(&data, page))
+> 			goto out;
+> 	}
 
-While it is not yet understood why a TX underflow can easily occur
-for SGMII interfaces resulting in a TX wedge. It has been found that
-disabling/re-enabling the LMAC resolves the issue.
+I have a bit of an aversion to that style of for loop ... I like this
+instead:
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Reviewed-by: Robert Jones <rjones@gateworks.com>
----
-Changes in v2:
- - Changed bgx_register_intr() to a void return
- - Added pci_free_irq_vectors() calls to free irq if named/allocated
- - Use snprintf instead of sprintf for irq names
+        while (nr_pages) {
+                struct page *page = readahead_page(mapping, start++);
 
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 59 +++++++++++++++++++++++
- drivers/net/ethernet/cavium/thunder/thunder_bgx.h |  9 ++++
- 2 files changed, 68 insertions(+)
-
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index c4f6ec0..cbf8596 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -74,6 +74,7 @@ struct bgx {
- 	struct pci_dev		*pdev;
- 	bool                    is_dlm;
- 	bool                    is_rgx;
-+	char			irq_name[7];
- };
- 
- static struct bgx *bgx_vnic[MAX_BGX_THUNDER];
-@@ -1535,6 +1536,53 @@ static int bgx_init_phy(struct bgx *bgx)
- 	return bgx_init_of_phy(bgx);
- }
- 
-+static irqreturn_t bgx_intr_handler(int irq, void *data)
-+{
-+	struct bgx *bgx = (struct bgx *)data;
-+	struct device *dev = &bgx->pdev->dev;
-+	u64 status, val;
-+	int lmac;
-+
-+	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-+		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-+		if (status & GMI_TXX_INT_UNDFLW) {
-+			dev_err(dev, "BGX%d lmac%d UNDFLW\n", bgx->bgx_id,
-+				lmac);
-+			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-+			val &= ~CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+			val |= CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+		}
-+		/* clear interrupts */
-+		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bgx_register_intr(struct pci_dev *pdev)
-+{
-+	struct bgx *bgx = pci_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	int num_vec, ret;
-+
-+	/* Enable MSI-X */
-+	num_vec = pci_msix_vec_count(pdev);
-+	ret = pci_alloc_irq_vectors(pdev, num_vec, num_vec, PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		dev_err(dev, "Req for #%d msix vectors failed\n", num_vec);
-+		return;
-+	}
-+	snprintf(bgx->irq_name, sizeof(bgx->irqname), "BGX%d", bgx->bgx_id);
-+	ret = request_irq(pci_irq_vector(pdev, GMPX_GMI_TX_INT),
-+			  bgx_intr_handler, 0, bgx->irq_name, bgx);
-+	if (ret) {
-+		if (bgx->irq_name[0])
-+			pci_free_irq_vectors(pdev);
-+	}
-+}
-+
- static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int err;
-@@ -1604,6 +1652,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	bgx_init_hw(bgx);
- 
-+	bgx_register_intr(pdev);
-+
- 	/* Enable all LMACs */
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
- 		err = bgx_lmac_enable(bgx, lmac);
-@@ -1614,12 +1664,18 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 				bgx_lmac_disable(bgx, --lmac);
- 			goto err_enable;
- 		}
-+
-+		/* enable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmac, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-+			       GMI_TXX_INT_UNDFLW);
- 	}
- 
- 	return 0;
- 
- err_enable:
- 	bgx_vnic[bgx->bgx_id] = NULL;
-+	if (bgx->irq_name[0])
-+		pci_free_irq_vectors(pdev);
- err_release_regions:
- 	pci_release_regions(pdev);
- err_disable_device:
-@@ -1637,6 +1693,9 @@ static void bgx_remove(struct pci_dev *pdev)
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
- 		bgx_lmac_disable(bgx, lmac);
- 
-+	if (bgx->irq_name[0])
-+		pci_free_irq_vectors(pdev);
-+
- 	bgx_vnic[bgx->bgx_id] = NULL;
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-index 2588870..cdea493 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-@@ -180,6 +180,15 @@
- #define BGX_GMP_GMI_TXX_BURST		0x38228
- #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
- #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-+#define BGX_GMP_GMI_TXX_INT		0x38500
-+#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-+#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-+#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-+#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-+#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-+#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
- 
- #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
- #define BGX_MSIX_VEC_0_29_CTL		0x400008
--- 
-2.9.2
+                if (fuse_readpages_fill(&data, page) != 0)
+                        goto out;
+                nr_pages--;
+        }
 
