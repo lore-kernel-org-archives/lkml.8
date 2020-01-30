@@ -2,377 +2,241 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44038C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88458C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EC72082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580412457;
-	bh=TZ2YQmQqvfzk64TrrHyrrAVuvqNTPoqAfJ4u9CxoiQI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Qk6qN7Jj+coJjRuAICBviCtptXYLhwuJGvvpa059bodlVyLyahGZ0BAAm5uV3SZ+6
-	 FsJQD/Vf/hgAP6WttS2jq0ODnEz6VcbdYQdvb5svqbBCY7mkAyIOwoUdYT8MZlHXqW
-	 EuHu29UkWxzq8JFlNlJTTMf/sbMT31K+QeHYJJJA=
+	by mail.kernel.org (Postfix) with ESMTP id 570542082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBKTLWwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgA3T1g (ORCPT
+        id S1727598AbgA3T2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgA3T1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:27:36 -0500
-Received: from localhost.localdomain (unknown [194.230.155.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 30 Jan 2020 14:28:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37756 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727546AbgA3T2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:28:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580412491;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7ZRSoce4aDIhYGocvIcGv2HpCjE5w9Q4ooxBftKFFfE=;
+        b=JBKTLWwKMBQLtVlNauUjcFfifrMl24vFZxaUQjN8lKQ3iHx8tF7o0efieRYnKJceOnaMcH
+        cz3hBBVs4RANfcf+yKw6xa7EzZ16LL1+fm0aSIBJAJLY8p3cFtC+jzSUeb40g6/ZBGbVtK
+        d+wcBh+aRhJc112TE9W1MYxAbHXweUs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-1e8F8O_FMeypJ7O5vFx2sw-1; Thu, 30 Jan 2020 14:28:09 -0500
+X-MC-Unique: 1e8F8O_FMeypJ7O5vFx2sw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D83BD205F4;
-        Thu, 30 Jan 2020 19:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580412454;
-        bh=TZ2YQmQqvfzk64TrrHyrrAVuvqNTPoqAfJ4u9CxoiQI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=S4C/RU0xlkQYMldZNZlso4aYg8E9VzeekMvTPZVx0OB0mK2BwCuVFb/a+84WKn1pL
-         xpU8vheLDv6PPqfMDHut0xyhxI0IbRcjtJIuj5NUNTSmrSksRgy/Q2WGpwlBZMSidg
-         dcdBAZW4563qu3fkFKDhQzzxeoFu0UL9BFCtFbj0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] sh: configs: Cleanup old Kconfig IO scheduler options
-Date:   Thu, 30 Jan 2020 20:27:28 +0100
-Message-Id: <20200130192728.3398-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9001413E5;
+        Thu, 30 Jan 2020 19:28:07 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8AC9219488;
+        Thu, 30 Jan 2020 19:27:56 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 14:27:53 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+Message-ID: <20200130192753.n7jjrshbhrczjzoe@madcap2.tricolour.ca>
+References: <cover.1577736799.git.rgb@redhat.com>
+ <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com>
+ <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
-commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+On 2020-01-22 16:29, Paul Moore wrote:
+> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > Track the parent container of a container to be able to filter and
+> > report nesting.
+> >
+> > Now that we have a way to track and check the parent container of a
+> > container, modify the contid field format to be able to report that
+> > nesting using a carrat ("^") separator to indicate nesting.  The
+> > original field format was "contid=<contid>" for task-associated records
+> > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
+> > records.  The new field format is
+> > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
+> 
+> Let's make sure we always use a comma as a separator, even when
+> recording the parent information, for example:
+> "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
 
-The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-now enabled by default (along with MQ_IOSCHED_KYBER).
+The intent here is to clearly indicate and separate nesting from
+parallel use of several containers by one netns.  If we do away with
+that distinction, then we lose that inheritance accountability and
+should really run the list through a "uniq" function to remove the
+produced redundancies.  This clear inheritance is something Steve was
+looking for since tracking down individual events/records to show that
+inheritance was not aways feasible due to rolled logs or search effort.
 
-The BFQ_GROUP_IOSCHED is the only multiqueue scheduler which comes with
-group scheduling so select it in configs previously choosing
-CFQ_GROUP_IOSCHED.
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  include/linux/audit.h |  1 +
+> >  kernel/audit.c        | 53 +++++++++++++++++++++++++++++++++++++++++++--------
+> >  kernel/audit.h        |  1 +
+> >  kernel/auditfilter.c  | 17 ++++++++++++++++-
+> >  kernel/auditsc.c      |  2 +-
+> >  5 files changed, 64 insertions(+), 10 deletions(-)
+> 
+> ...
+> 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index ef8e07524c46..68be59d1a89b 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> 
+> > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns, struct task_struct *p)
+> >                 audit_netns_contid_add(new->net_ns, contid);
+> >  }
+> >
+> > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
+> 
+> If we need a forward declaration, might as well just move it up near
+> the top of the file with the rest of the declarations.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/sh/configs/apsh4ad0a_defconfig    | 3 ++-
- arch/sh/configs/kfr2r09_defconfig      | 2 --
- arch/sh/configs/magicpanelr2_defconfig | 2 --
- arch/sh/configs/polaris_defconfig      | 1 -
- arch/sh/configs/r7780mp_defconfig      | 2 --
- arch/sh/configs/r7785rp_defconfig      | 2 --
- arch/sh/configs/rsk7201_defconfig      | 2 --
- arch/sh/configs/rsk7203_defconfig      | 2 --
- arch/sh/configs/rsk7264_defconfig      | 2 --
- arch/sh/configs/rsk7269_defconfig      | 2 --
- arch/sh/configs/sdk7786_defconfig      | 3 ++-
- arch/sh/configs/se7206_defconfig       | 2 --
- arch/sh/configs/se7343_defconfig       | 1 -
- arch/sh/configs/se7619_defconfig       | 2 --
- arch/sh/configs/se7705_defconfig       | 2 --
- arch/sh/configs/se7712_defconfig       | 2 --
- arch/sh/configs/se7721_defconfig       | 2 --
- arch/sh/configs/se7722_defconfig       | 2 --
- arch/sh/configs/se7780_defconfig       | 1 -
- arch/sh/configs/sh7710voipgw_defconfig | 1 -
- arch/sh/configs/shmin_defconfig        | 2 --
- arch/sh/configs/ul2_defconfig          | 2 --
- 22 files changed, 4 insertions(+), 38 deletions(-)
+Ok.
 
-diff --git a/arch/sh/configs/apsh4ad0a_defconfig b/arch/sh/configs/apsh4ad0a_defconfig
-index 6dd0da73ca5a..6abd9bd70106 100644
---- a/arch/sh/configs/apsh4ad0a_defconfig
-+++ b/arch/sh/configs/apsh4ad0a_defconfig
-@@ -20,7 +20,8 @@ CONFIG_PROFILING=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--CONFIG_CFQ_GROUP_IOSCHED=y
-+CONFIG_IOSCHED_BFQ=y
-+CONFIG_BFQ_GROUP_IOSCHED=y
- CONFIG_CPU_SUBTYPE_SH7786=y
- CONFIG_MEMORY_SIZE=0x10000000
- CONFIG_HUGETLB_PAGE_SIZE_1MB=y
-diff --git a/arch/sh/configs/kfr2r09_defconfig b/arch/sh/configs/kfr2r09_defconfig
-index 1dc3f670c481..833404490cfe 100644
---- a/arch/sh/configs/kfr2r09_defconfig
-+++ b/arch/sh/configs/kfr2r09_defconfig
-@@ -10,8 +10,6 @@ CONFIG_SLAB=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7724=y
- CONFIG_MEMORY_SIZE=0x08000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/magicpanelr2_defconfig b/arch/sh/configs/magicpanelr2_defconfig
-index 664c4dee6e6a..0989ed929540 100644
---- a/arch/sh/configs/magicpanelr2_defconfig
-+++ b/arch/sh/configs/magicpanelr2_defconfig
-@@ -14,8 +14,6 @@ CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- CONFIG_MODULE_SRCVERSION_ALL=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7720=y
- CONFIG_MEMORY_START=0x0C000000
- CONFIG_MEMORY_SIZE=0x03F00000
-diff --git a/arch/sh/configs/polaris_defconfig b/arch/sh/configs/polaris_defconfig
-index e3a1d3d2694a..246408ec7462 100644
---- a/arch/sh/configs/polaris_defconfig
-+++ b/arch/sh/configs/polaris_defconfig
-@@ -12,7 +12,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
- CONFIG_CPU_SUBTYPE_SH7709=y
- CONFIG_MEMORY_START=0x0C000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/r7780mp_defconfig b/arch/sh/configs/r7780mp_defconfig
-index 0a18f8011c55..c97ec60cff27 100644
---- a/arch/sh/configs/r7780mp_defconfig
-+++ b/arch/sh/configs/r7780mp_defconfig
-@@ -12,8 +12,6 @@ CONFIG_OPROFILE=m
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7780=y
- CONFIG_MEMORY_SIZE=0x08000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/r7785rp_defconfig b/arch/sh/configs/r7785rp_defconfig
-index 7226ac5a1d44..55fce65eb454 100644
---- a/arch/sh/configs/r7785rp_defconfig
-+++ b/arch/sh/configs/r7785rp_defconfig
-@@ -15,8 +15,6 @@ CONFIG_KPROBES=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7785=y
- CONFIG_MEMORY_SIZE=0x08000000
- CONFIG_HUGETLB_PAGE_SIZE_1MB=y
-diff --git a/arch/sh/configs/rsk7201_defconfig b/arch/sh/configs/rsk7201_defconfig
-index 9f4f474705b7..841809b5c2dc 100644
---- a/arch/sh/configs/rsk7201_defconfig
-+++ b/arch/sh/configs/rsk7201_defconfig
-@@ -15,8 +15,6 @@ CONFIG_PROFILING=y
- CONFIG_OPROFILE=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7201=y
- CONFIG_MEMORY_SIZE=0x01000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/rsk7203_defconfig b/arch/sh/configs/rsk7203_defconfig
-index 10a32bd4cf66..0055031664ad 100644
---- a/arch/sh/configs/rsk7203_defconfig
-+++ b/arch/sh/configs/rsk7203_defconfig
-@@ -16,8 +16,6 @@ CONFIG_PROFILING=y
- CONFIG_OPROFILE=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7203=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x01000000
-diff --git a/arch/sh/configs/rsk7264_defconfig b/arch/sh/configs/rsk7264_defconfig
-index 78643191c99e..f7b9c528c6df 100644
---- a/arch/sh/configs/rsk7264_defconfig
-+++ b/arch/sh/configs/rsk7264_defconfig
-@@ -17,8 +17,6 @@ CONFIG_MMAP_ALLOW_UNINITIALIZED=y
- CONFIG_PROFILING=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7264=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/rsk7269_defconfig b/arch/sh/configs/rsk7269_defconfig
-index fb9fa7faf635..4bff14fb185d 100644
---- a/arch/sh/configs/rsk7269_defconfig
-+++ b/arch/sh/configs/rsk7269_defconfig
-@@ -4,8 +4,6 @@ CONFIG_EMBEDDED=y
- # CONFIG_VM_EVENT_COUNTERS is not set
- CONFIG_SLAB=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_SWAP_IO_SPACE=y
- CONFIG_CPU_SUBTYPE_SH7269=y
- CONFIG_MEMORY_START=0x0c000000
-diff --git a/arch/sh/configs/sdk7786_defconfig b/arch/sh/configs/sdk7786_defconfig
-index 7fa116b436c3..61bec46ebd66 100644
---- a/arch/sh/configs/sdk7786_defconfig
-+++ b/arch/sh/configs/sdk7786_defconfig
-@@ -39,7 +39,8 @@ CONFIG_OPROFILE=m
- CONFIG_KPROBES=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
--CONFIG_CFQ_GROUP_IOSCHED=y
-+CONFIG_IOSCHED_BFQ=y
-+CONFIG_BFQ_GROUP_IOSCHED=y
- CONFIG_CPU_SUBTYPE_SH7786=y
- CONFIG_MEMORY_START=0x40000000
- CONFIG_MEMORY_SIZE=0x20000000
-diff --git a/arch/sh/configs/se7206_defconfig b/arch/sh/configs/se7206_defconfig
-index a93402b3a319..21a43f14ffac 100644
---- a/arch/sh/configs/se7206_defconfig
-+++ b/arch/sh/configs/se7206_defconfig
-@@ -28,8 +28,6 @@ CONFIG_OPROFILE=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7206=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_FLATMEM_MANUAL=y
-diff --git a/arch/sh/configs/se7343_defconfig b/arch/sh/configs/se7343_defconfig
-index 06d067c842cd..4e794e719a28 100644
---- a/arch/sh/configs/se7343_defconfig
-+++ b/arch/sh/configs/se7343_defconfig
-@@ -11,7 +11,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7343=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x01000000
-diff --git a/arch/sh/configs/se7619_defconfig b/arch/sh/configs/se7619_defconfig
-index f54722dbc8f5..3264415a5931 100644
---- a/arch/sh/configs/se7619_defconfig
-+++ b/arch/sh/configs/se7619_defconfig
-@@ -11,8 +11,6 @@ CONFIG_LOG_BUF_SHIFT=14
- # CONFIG_VM_EVENT_COUNTERS is not set
- CONFIG_SLAB=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_FLATMEM_MANUAL=y
- CONFIG_CPU_BIG_ENDIAN=y
-diff --git a/arch/sh/configs/se7705_defconfig b/arch/sh/configs/se7705_defconfig
-index ddfc69841955..4496b94b7d88 100644
---- a/arch/sh/configs/se7705_defconfig
-+++ b/arch/sh/configs/se7705_defconfig
-@@ -8,8 +8,6 @@ CONFIG_BLK_DEV_INITRD=y
- CONFIG_SLAB=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7705=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x02000000
-diff --git a/arch/sh/configs/se7712_defconfig b/arch/sh/configs/se7712_defconfig
-index 9a527f978106..ee6d28ae08de 100644
---- a/arch/sh/configs/se7712_defconfig
-+++ b/arch/sh/configs/se7712_defconfig
-@@ -12,8 +12,6 @@ CONFIG_KALLSYMS_ALL=y
- CONFIG_SLAB=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7712=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x02000000
-diff --git a/arch/sh/configs/se7721_defconfig b/arch/sh/configs/se7721_defconfig
-index 3b0e1eb6e874..bad921bc10f8 100644
---- a/arch/sh/configs/se7721_defconfig
-+++ b/arch/sh/configs/se7721_defconfig
-@@ -12,8 +12,6 @@ CONFIG_KALLSYMS_ALL=y
- CONFIG_SLAB=y
- CONFIG_MODULES=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7721=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x02000000
-diff --git a/arch/sh/configs/se7722_defconfig b/arch/sh/configs/se7722_defconfig
-index 88bf9e849008..09e455817447 100644
---- a/arch/sh/configs/se7722_defconfig
-+++ b/arch/sh/configs/se7722_defconfig
-@@ -8,8 +8,6 @@ CONFIG_PROFILING=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7722=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_NUMA=y
-diff --git a/arch/sh/configs/se7780_defconfig b/arch/sh/configs/se7780_defconfig
-index ec32c82646ed..dcd85b858ac8 100644
---- a/arch/sh/configs/se7780_defconfig
-+++ b/arch/sh/configs/se7780_defconfig
-@@ -9,7 +9,6 @@ CONFIG_LOG_BUF_SHIFT=14
- CONFIG_SLAB=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7780=y
- CONFIG_MEMORY_SIZE=0x08000000
- CONFIG_SH_7780_SOLUTION_ENGINE=y
-diff --git a/arch/sh/configs/sh7710voipgw_defconfig b/arch/sh/configs/sh7710voipgw_defconfig
-index c86f28442a80..08426913c0e3 100644
---- a/arch/sh/configs/sh7710voipgw_defconfig
-+++ b/arch/sh/configs/sh7710voipgw_defconfig
-@@ -11,7 +11,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7710=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x00800000
-diff --git a/arch/sh/configs/shmin_defconfig b/arch/sh/configs/shmin_defconfig
-index d589cfdfb7eb..a27b129b93c5 100644
---- a/arch/sh/configs/shmin_defconfig
-+++ b/arch/sh/configs/shmin_defconfig
-@@ -12,8 +12,6 @@ CONFIG_LOG_BUF_SHIFT=14
- # CONFIG_SHMEM is not set
- CONFIG_SLOB=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7706=y
- CONFIG_MEMORY_START=0x0c000000
- CONFIG_MEMORY_SIZE=0x00800000
-diff --git a/arch/sh/configs/ul2_defconfig b/arch/sh/configs/ul2_defconfig
-index dc2e3061130f..103b81ec1ffb 100644
---- a/arch/sh/configs/ul2_defconfig
-+++ b/arch/sh/configs/ul2_defconfig
-@@ -8,8 +8,6 @@ CONFIG_PROFILING=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_CPU_SUBTYPE_SH7366=y
- CONFIG_MEMORY_SIZE=0x01f00000
- CONFIG_NUMA=y
--- 
-2.17.1
+> > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
+> > +{
+> > +       struct audit_contobj *cont = NULL, *prcont = NULL;
+> > +       int h;
+> 
+> It seems safer to pass the audit container ID object and not the u64.
+
+It would also be faster, but in some places it isn't available such as
+for ptrace and signal targets.  This also links back to the drop record
+refcounts to hold onto the contobj until process exit, or signal
+delivery.
+
+What we could do is to supply two potential parameters, a contobj and/or
+a contid, and have it use the contobj if it is valid, otherwise, use the
+contid, as is done for names and paths supplied to audit_log_name().
+
+> > +       if (!audit_contid_valid(contid)) {
+> > +               audit_log_format(ab, "%llu", contid);
+> 
+> Do we really want to print (u64)-1 here?  Since this is a known
+> invalid number, would "?" be a better choice?
+
+I'll defer to Steve here.  "?" would be one character vs 20 for (u64)-1.
+I don't expect there to be that many records containing (u64)-1, but it
+would also make them visually easier to pick out if that is a factor.
+
+> > +               return;
+> > +       }
+> > +       h = audit_hash_contid(contid);
+> > +       rcu_read_lock();
+> > +       list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> > +               if (cont->id == contid) {
+> > +                       prcont = cont;
+> 
+> Why not just pull the code below into the body of this if statement?
+> It all needs to be done under the RCU read lock anyway and the code
+> would read much better this way.
+
+Ok.
+
+> > +                       break;
+> > +               }
+> > +       if (!prcont) {
+> > +               audit_log_format(ab, "%llu", contid);
+> > +               goto out;
+> > +       }
+> > +       while (prcont) {
+> > +               audit_log_format(ab, "%llu", prcont->id);
+> > +               prcont = prcont->parent;
+> > +               if (prcont)
+> > +                       audit_log_format(ab, "^");
+> 
+> In the interest of limiting the number of calls to audit_log_format(),
+> how about something like the following:
+> 
+>   audit_log_format("%llu", cont);
+>   iter = cont->parent;
+>   while (iter) {
+>     if (iter->parent)
+>       audit_log_format("^%llu,", iter);
+>     else
+>       audit_log_format("^%llu", iter);
+>     iter = iter->parent;
+>   }
+
+Ok.
+
+> > +       }
+> > +out:
+> > +       rcu_read_unlock();
+> > +}
+> > +
+> >  /*
+> >   * audit_log_container_id - report container info
+> >   * @context: task or local context for record
+> 
+> ...
+> 
+> > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+> >         if (!ab)
+> >                 return rc;
+> >
+> > -       audit_log_format(ab,
+> > -                        "op=set opid=%d contid=%llu old-contid=%llu",
+> > -                        task_tgid_nr(task), contid, oldcontid);
+> > +       audit_log_format(ab, "op=set opid=%d contid=", task_tgid_nr(task));
+> > +       audit_log_contid(ab, contid);
+> > +       audit_log_format(ab, " old-contid=");
+> > +       audit_log_contid(ab, oldcontid);
+> 
+> This is an interesting case where contid and old-contid are going to
+> be largely the same, only the first (current) ID is going to be
+> different; do we want to duplicate all of those IDs?
+
+At first when I read your comment, I thought we could just take contid
+and drop oldcontid, but if it fails, we still want all the information,
+so given the way I've set up the search code in userspace, listing only
+the newest contid in the contid field and all the rest in oldcontid
+could be a good compromise.
+
+> >         audit_log_end(ab);
+> >         return rc;
+> >  }
+> > @@ -2723,9 +2760,9 @@ void audit_log_container_drop(void)
+> 
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
