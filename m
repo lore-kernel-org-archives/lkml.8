@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08277C2D0DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31560C35240
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7220708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C0620CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCivQUGP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLNPfSYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgA3Wpe (ORCPT
+        id S1727576AbgA3Wpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 30 Jan 2020 17:45:34 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43718 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbgA3Wpe (ORCPT
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37871 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgA3Wpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:45:34 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u131so2388857pgc.10
+        Thu, 30 Jan 2020 17:45:33 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so2245837pfn.4
         for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:45:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pJLzxzkNtbblZiMU2t1sW8XMMhW2XUAhXW1NL4oiL6A=;
-        b=TCivQUGPIKZ6fn8CFevCtyXI2st0TrHeS9cJtB0B8/ug8HYuiqyEAl3K088O9m+r1g
-         dBGNPaHvW8OE/srGEBul10rYXoAdoQyI8ZjH0LodoRKm7rxBaovCdZTLTsB9R5+RZiNq
-         dWMtcynOgnwwksu1Rq6c/1SkQPQrEr2WpD/J5tgwZ6iahBGyjVouLLNjdFzbVptvQEqG
-         tnBBct1KfQoMlIHFZwah/JeQusmjk32pwMqAtMFiwcFwrTyaSGSoSODKvFUIW8GkmkPn
-         c4BNUVJCzRFqXN78ZNqyHREaTFn+aafnkJEnE94lD9H9oSd9E7zPWqTCBpJBzjY5cuqx
-         uUBw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h7XqBAsrYIK8FLRIT9H/d4BITTm+9Id5ebdTfElvMn0=;
+        b=iLNPfSYtx11W34RpnVI2MTCu+nXOwbO/qPSz9xuxi02xZhKlpnq2xtgv+A8eSZlUPT
+         AdBBzZNQjHT8jeCmkjbGpk+QutXQbSP9LJbE13Q7BimRBuQjIkqK3nBoIXVzpMaEMIed
+         I77CUqH4DEpfg/Gd1y7ljoizStQ9R3ImHTpbAC+kOD2lfLwctKlvp+cTjkZPvmT0PRXe
+         JCOQgeUrnhrPjB/kQmcl7qm0ob/lo2+AwXaHUlpimD8FpQQMFL5+GEQb6Sl2rcRU7cx/
+         HN/Tqefo/S2EegMJ9ctVEiYguKmnYf0KXgQoSxYe9iahDAgrSJs8olxhvgWIfCu+6T8S
+         ABGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pJLzxzkNtbblZiMU2t1sW8XMMhW2XUAhXW1NL4oiL6A=;
-        b=c6E3Ek5vTNWJrfD6TjP2Ae/9PPq/cMU1FdkTeO7Mi09Oe9GdfTVitCnE2fVQ/lbVo/
-         XsUhT1NDGMduJa9kbZfWBjXCAUOozES73rydvtFko5K5X5ppcUK8mfbRQIlHSuvVl2Nc
-         6PfPUum7CX4uCglkhqAOMx2dmMg2YL+fVOUBSc59OiIdmkgnmZXgFfkWduwTxzoztmK1
-         XzeTjGSVJ7J7VRLfd77uuXyFTStK9sIfCRFhc8ErsRTvJEWPq0w59ePWkQw00xOScusq
-         upMpnxn5fdv7thWnt6iL1kmapR+afIiS0p6ANGdcD+eoYL68MSU91aqB//DEwu5evftd
-         rzuQ==
-X-Gm-Message-State: APjAAAWOOSz8eymX5GUQSvfF++tvXtgT3LofYjnuhPkpBR6llFeerS/9
-        cGqHPMkBZQ6EevR4IF3ey8o=
-X-Google-Smtp-Source: APXvYqzhpw0o69yvYtAggWnTZVCmYRGNK7iqOwqj+WK+bRhuQmDKbfkd8VYIL6TEUYZgvTM26Ogz+Q==
-X-Received: by 2002:a62:4e42:: with SMTP id c63mr7278166pfb.86.1580424333344;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h7XqBAsrYIK8FLRIT9H/d4BITTm+9Id5ebdTfElvMn0=;
+        b=Y+umU2r10becv88uT7zcQjtasDDE0wGsArS4dA3G+ICXERsBaIbYUssvWdG/s2JiVS
+         8iW7DbTBA4i0znDuVZw6YBPpW+CBrL2DN8f+orqcY+++ajFNshMvJl6ZMY7e4a7byKiI
+         booGXXxYEqzGv338KzpOdcnjIm7JVEyLCFwcUnxl9wiJWziS2/crGirMqhfqe15QM9Oh
+         EznY2DSE8/08Gn/w9Y9YENr8wkTrsGFcHKSAHREDK4wZxgArom2DttZg9RqA9aI0Vz23
+         0EwkyElVjC+NncUPW7hATurnwREPMUokxlrtl9alQzVD4zGln54G6xjnJMqlxF+5bh4U
+         IR2A==
+X-Gm-Message-State: APjAAAWDKE+rsLw9v3bw9MxrAD3FGZnRalpoE/IP3EbFbCun1chxokrh
+        kGAlcJGs3mhDSBc9XPEFzYE=
+X-Google-Smtp-Source: APXvYqxMcluY7JT5XLaxgwa3WBBRDX8Oxa9fDzEWTdNI5E6ZrGIjD21R86MA8eik40vbB3xNMFaB7Q==
+X-Received: by 2002:a63:5b0e:: with SMTP id p14mr7313672pgb.315.1580424333056;
         Thu, 30 Jan 2020 14:45:33 -0800 (PST)
-Received: from gnu-efi-2.localdomain ([172.58.38.183])
-        by smtp.gmail.com with ESMTPSA id u18sm7580429pgi.44.2020.01.30.14.45.32
+Received: from gnu-efi-2.localdomain ([2607:fb90:a75c:e5dc:7703:db9b:85b8:a043])
+        by smtp.gmail.com with ESMTPSA id d14sm7938731pfq.117.2020.01.30.14.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 30 Jan 2020 14:45:32 -0800 (PST)
 Received: from gnu-efi-2.localdomain (localhost [127.0.0.1])
-        by gnu-efi-2.localdomain (Postfix) with ESMTP id D6A5F100800;
+        by gnu-efi-2.localdomain (Postfix) with ESMTP id C66DC1007FF;
         Thu, 30 Jan 2020 14:43:37 -0800 (PST)
 From:   "H.J. Lu" <hjl.tools@gmail.com>
 To:     linux-kernel@vger.kernel.org
@@ -71,12 +71,10 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH] Discard .note.gnu.property sections in generic NOTES
-Date:   Thu, 30 Jan 2020 14:43:37 -0800
-Message-Id: <20200130224337.4150-2-hjl.tools@gmail.com>
+Subject: [PATCH] Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+Date:   Thu, 30 Jan 2020 14:43:36 -0800
+Message-Id: <20200130224337.4150-1-hjl.tools@gmail.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200130224337.4150-1-hjl.tools@gmail.com>
-References: <20200130224337.4150-1-hjl.tools@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,78 +82,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the command-line option, -mx86-used-note=yes, the x86 assembler
-in binutils 2.32 and above generates a program property note in a note
-section, .note.gnu.property, to encode used x86 ISAs and features.  But
-kernel linker script only contains a single NOTE segment:
-
-PHDRS {
- text PT_LOAD FLAGS(5);
- data PT_LOAD FLAGS(6);
- percpu PT_LOAD FLAGS(6);
- init PT_LOAD FLAGS(7);
- note PT_NOTE FLAGS(0);
-}
-SECTIONS
-{
-...
- .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
-e.*)) __stop_notes = .; } :text :note
-...
-}
-
-The NOTE segment generated by kernel linker script is aligned to 4 bytes.
-But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
-we get
-
-[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
-
-Displaying notes found in: .notes
-  Owner                Data size Description
-  Xen                  0x00000006 Unknown note type: (0x00000006)
-   description data: 6c 69 6e 75 78 00
-  Xen                  0x00000004 Unknown note type: (0x00000007)
-   description data: 32 2e 36 00
-  xen-3.0              0x00000005 Unknown note type: (0x006e6558)
-   description data: 08 00 00 00 03
-readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
-readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
-0x80000000, alignment: 8
-[hjl@gnu-skx-1 linux]$
-
-Since note.gnu.property section in kernel image is never used, this patch
-discards .note.gnu.property sections in kernel linker script by adding
-
-/DISCARD/ : {
-  *(.note.gnu.property)
-}
-
-before kernel NOTE segment in generic NOTES.
+In x86 kernel, .exit.text and .exit.data sections are discarded at
+runtime, not by linker.  Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+and define it in x86 kernel linker script to keep them.
 
 Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- include/asm-generic/vmlinux.lds.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kernel/vmlinux.lds.S     |  1 +
+ include/asm-generic/vmlinux.lds.h | 10 ++++++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 6b943fb8c5fd..6659a7c07c84 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -818,7 +818,14 @@
- #define TRACEDATA
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index e3296aa028fe..7206e1ac23dd 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -21,6 +21,7 @@
+ #define LOAD_OFFSET __START_KERNEL_map
  #endif
  
-+/*
-+ * Discard .note.gnu.property sections which are unused and have
-+ * different alignment requirement from kernel note sections.
-+ */
- #define NOTES								\
-+	/DISCARD/ : {							\
-+		*(.note.gnu.property)					\
-+	}								\
- 	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
- 		__start_notes = .;					\
- 		KEEP(*(.note.*))					\
++#define RUNTIME_DISCARD_EXIT
+ #define EMITS_PT_NOTE
+ #define RO_EXCEPTION_TABLE_ALIGN	16
+ 
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index e00f41aa8ec4..6b943fb8c5fd 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -894,10 +894,16 @@
+  * section definitions so that such archs put those in earlier section
+  * definitions.
+  */
++#ifdef RUNTIME_DISCARD_EXIT
++#define EXIT_DISCARDS
++#else
++#define EXIT_DISCARDS							\
++	EXIT_TEXT							\
++	EXIT_DATA
++#endif
+ #define DISCARDS							\
+ 	/DISCARD/ : {							\
+-	EXIT_TEXT							\
+-	EXIT_DATA							\
++	EXIT_DISCARDS							\
+ 	EXIT_CALL							\
+ 	*(.discard)							\
+ 	*(.discard.*)							\
 -- 
 2.24.1
 
