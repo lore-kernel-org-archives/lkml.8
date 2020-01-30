@@ -2,51 +2,53 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E17C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071AEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3745020702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A2B20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410343;
-	bh=zuEUBKlZdyeN4POlgMWZuq1e8qLu6fLRLaFLDyY2sQM=;
+	s=default; t=1580410351;
+	bh=Hs5PgR11akM00vuuaeTXEUHOa44riobDyTbwi8I4R5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KVHk1Cr7Fw8hS6qx4cDReOHDRFMioNMXDDg3L5aoZtdGJXoRE+9RWbjNYbbJjnFJ3
-	 28t5+1TQ9xixK8gPUlAqRLkdmsJG99+bY+JTlILqeTZc3yi//xqN8Txsz8dadAYMVC
-	 De+/QmRB28S1Z+DrraGjG8DBoPE0SAhNkUjAo8L4=
+	b=OVc8hxJ5OLL5CYVtE2V6KDT9Z9DftnEKfXzYT7LlRwQiR7A1/oeIC0CJ7HWevPkD4
+	 M/BfLt1wQgrvX5eSaUEkGnGtETsR/sGfUAH7APkqk8+YqSBEAdKMTU7KX7gs/P1lTk
+	 BO08JehyQatFe0sRUm+poO8fMF11MQBvOrhh39tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbgA3SwW (ORCPT
+        id S1730595AbgA3SnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:52:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbgA3Snk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:40 -0500
+        id S1730563AbgA3SnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E153B20CC7;
-        Thu, 30 Jan 2020 18:43:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0DC20702;
+        Thu, 30 Jan 2020 18:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409819;
-        bh=zuEUBKlZdyeN4POlgMWZuq1e8qLu6fLRLaFLDyY2sQM=;
+        s=default; t=1580409794;
+        bh=Hs5PgR11akM00vuuaeTXEUHOa44riobDyTbwi8I4R5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQro36d0HUNnN/x5tXLrbjEVCZgFsS1aT2ko3fDgRLwjqICJ/4UzKtE8REDAiOlCw
-         QNbNc8aKKSX7gGNgBX2Km0awrd8S8GJeubEgC9OkFcFNzKQKLXlAiiArJa91ecPvIx
-         WEJiXH3r9MJ4wQX5t6eYU3PWkG35hi90sooViItg=
+        b=C9Kc7fzej3TuxOU+2QYZKAg/fXghEwYy6cRj5q3RoZgrXyuMpVxgye4AcA1J5qLR8
+         /hO+mVd4xjV1Pj2Ku5WkbdnGreOJc2NP2ioNG9XW1oF05bcziXy9y0AIegtaZgq0gI
+         AbuZOhBjI0rWsSLY6qgfVP0BtUxaNcFJSTRXvGdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/110] HID: multitouch: Add LG MELF0410 I2C touchscreen support
-Date:   Thu, 30 Jan 2020 19:38:20 +0100
-Message-Id: <20200130183620.526273375@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 035/110] net_sched: ematch: reject invalid TCF_EM_SIMPLE
+Date:   Thu, 30 Jan 2020 19:38:11 +0100
+Message-Id: <20200130183619.517719472@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,49 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Ma <aaron.ma@canonical.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 348b80b273fbf4ce2a307f9e38eadecf37828cad ]
+[ Upstream commit 55cd9f67f1e45de8517cdaab985fb8e56c0bc1d8 ]
 
-Add multitouch support for LG MELF I2C touchscreen.
-Apply the same workaround as LG USB touchscreen.
+It is possible for malicious userspace to set TCF_EM_SIMPLE bit
+even for matches that should not have this bit set.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This can fool two places using tcf_em_is_simple()
+
+1) tcf_em_tree_destroy() -> memory leak of em->data
+   if ops->destroy() is NULL
+
+2) tcf_em_tree_dump() wrongly report/leak 4 low-order bytes
+   of a kernel pointer.
+
+BUG: memory leak
+unreferenced object 0xffff888121850a40 (size 32):
+  comm "syz-executor927", pid 7193, jiffies 4294941655 (age 19.840s)
+  hex dump (first 32 bytes):
+    00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
+    [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
+    [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
+    [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
+    [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
+    [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
+    [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
+    [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+    [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
+    [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
+    [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
+    [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
+    [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
+    [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+    [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
+    [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
+    [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+    [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+    [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+    [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
+    [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
+    [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ net/sched/ematch.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6273e7178e785..2888817261999 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -730,6 +730,7 @@
- #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
- #define USB_DEVICE_ID_LG_MELFAS_MT	0x6007
- #define I2C_DEVICE_ID_LG_8001		0x8001
-+#define I2C_DEVICE_ID_LG_7010		0x7010
+--- a/net/sched/ematch.c
++++ b/net/sched/ematch.c
+@@ -238,6 +238,9 @@ static int tcf_em_validate(struct tcf_pr
+ 			goto errout;
  
- #define USB_VENDOR_ID_LOGITECH		0x046d
- #define USB_DEVICE_ID_LOGITECH_AUDIOHUB 0x0a0e
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 3cfeb1629f79f..f0d4172d51319 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1985,6 +1985,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_LG,
- 		HID_USB_DEVICE(USB_VENDOR_ID_LG,
- 			USB_DEVICE_ID_LG_MELFAS_MT) },
-+	{ .driver_data = MT_CLS_LG,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_GENERIC,
-+			USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_7010) },
- 
- 	/* MosArt panels */
- 	{ .driver_data = MT_CLS_CONFIDENCE_MINUS_ONE,
--- 
-2.20.1
-
+ 		if (em->ops->change) {
++			err = -EINVAL;
++			if (em_hdr->flags & TCF_EM_SIMPLE)
++				goto errout;
+ 			err = em->ops->change(net, data, data_len, em);
+ 			if (err < 0)
+ 				goto errout;
 
 
