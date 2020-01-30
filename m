@@ -2,198 +2,168 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991CFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BCEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B60214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBFE20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I+QiVsqC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJL+RzKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgA3TmZ (ORCPT
+        id S1727501AbgA3ToP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:42:25 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43776 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgA3TmZ (ORCPT
+        Thu, 30 Jan 2020 14:44:15 -0500
+Received: from mail-il1-f176.google.com ([209.85.166.176]:35801 "EHLO
+        mail-il1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgA3ToP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:42:25 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UJgN0Z112282;
-        Thu, 30 Jan 2020 13:42:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580413344;
-        bh=khQiwUxzw9t9BsPyN/juluBZCq+yrSeFBSrntRrXeoU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=I+QiVsqCdNNSGYh0a5n9WmH1kakAZTBDdieZS6DlHbCiCn1gs+StV7jZk1fGXINxv
-         M48ULcPEKDVuqlIriLjlk7Yfv9AhwrdEuwT4IgnbDYbHbWm2Yzbw5z/N/cqXu/PwT+
-         MJCMwZgXsnenyHP4Dp1HhIobNVas+ad4/9UFYPUA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UJgNmZ121128
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 30 Jan 2020 13:42:23 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 13:42:23 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 13:42:23 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UJgL7Z073877;
-        Thu, 30 Jan 2020 13:42:21 -0600
-Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
- memory node
-To:     "Andrew F. Davis" <afd@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <s-anna@ti.com>, <linux-omap@vger.kernel.org>
-References: <20200116135332.7819-1-t-kristo@ti.com>
- <20200116135332.7819-7-t-kristo@ti.com>
- <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
- <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
- <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
-Date:   Thu, 30 Jan 2020 21:42:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 14:44:15 -0500
+Received: by mail-il1-f176.google.com with SMTP id g12so4135402ild.2;
+        Thu, 30 Jan 2020 11:44:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=AsHysUzz35VUzNfhyJLvwCw0cKuHK0TPagQM9CrhcfE=;
+        b=qJL+RzKpd19iGZl3zupV/oViVpK+hxuX6wCspLd3Bt36LeJV9g6l+jx76ZMMmoqU6a
+         fDOeYBDQhvbgtpVejaKMqLh+K3J/52eerOd/VKrnoGJEcBa+ge2r9tvJiNDhhPTJEOph
+         u1dUqfmmkhr0yIL6NGpUzkj0Jzusq3i+ZfzkiRi9yXJXMzwGPRp15VdtPQfc5tNJXx3w
+         pj5mzykaxZd1N/lCOfBI++oMZ+Fr5Gn3Oe+Lj+6tofo0hjWWOprPoYRiGb1J5g++3exW
+         mRRNLdS4z9s7VUBam8LQVL3+Wv7PzbtUBL2SYyIR5+N6Ya0p6rv/8TzhfCPKPjMNuwVW
+         pcZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=AsHysUzz35VUzNfhyJLvwCw0cKuHK0TPagQM9CrhcfE=;
+        b=HB6NHgShT3hy28mRq+QPHxZUcka+Xn7UFsqsQ8RMil8n/suESZwOIuf943AIUTew5d
+         mlJjm3ISkNOZhtkdunBVqTwcXQRycQXo3VOWcL6aNBpT9nko9sHsNqHfXyTeUaWOzh8j
+         QGKXVy7fh/xvZD0AQV5kcjKqjDYbSJNbJ1d4qegPc2K7mgfTlE8NMjxouZjPhQfJrhBg
+         4Xrucm4IGBrdZiKK0/9wfm/njH1vOKk/GUIIIyddJlJi1hBalOp3mHDsPnurcvtXVqLb
+         MhvirknkaYpi7ZHOKqYF9A32u7n7tQE4/1Wqq7X0ZkdWMZpZzOjhZZQf6/4io5n5UCeb
+         papA==
+X-Gm-Message-State: APjAAAUvvYh3mtd42tXIMEB6hO9vn31N2yFVoEpXKKHxhsiKtycSDeRG
+        7AgYmJreswgHkRtQ5YyEgL9rKpFJpy6MBkYo/ZY=
+X-Google-Smtp-Source: APXvYqzm8TgIXIxwMXUzdTXrE+XOvZPOBsZwAGw8ACeHNAXIyk1AZaauS+TKRswRDLQHpaJDnq7cJfm5ue7JKmWLYr4=
+X-Received: by 2002:a92:58d7:: with SMTP id z84mr5699591ilf.179.1580413454466;
+ Thu, 30 Jan 2020 11:44:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Fri, 31 Jan 2020 00:44:03 +0500
+Message-ID: <CABXGCsOn=W+grZcZBybY8FkQBL_WH_OH6mQgGHKj3ojJbL-Osw@mail.gmail.com>
+Subject: Microcode SW error detected on Wi-Fi 6 AX200 (rev 1a)
+To:     linuxwifi@intel.com,
+        Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/01/2020 21:20, Andrew F. Davis wrote:
-> On 1/30/20 2:18 PM, Tero Kristo wrote:
->> On 30/01/2020 20:11, Andrew F. Davis wrote:
->>> On 1/16/20 8:53 AM, Tero Kristo wrote:
->>>> From: Suman Anna <s-anna@ti.com>
->>>>
->>>> The reserved memory nodes are not assigned to platform devices by
->>>> default in the driver core to avoid the lookup for every platform
->>>> device and incur a penalty as the real users are expected to be
->>>> only a few devices.
->>>>
->>>> OMAP remoteproc devices fall into the above category and the OMAP
->>>> remoteproc driver _requires_ specific CMA pools to be assigned
->>>> for each device at the moment to align on the location of the
->>>> vrings and vring buffers in the RTOS-side firmware images. So,
->>>
->>>
->>> Same comment as before, this is a firmware issue for only some firmwares
->>> that do not handle being assigned vring locations correctly and instead
->>> hard-code them.
->>
->> I believe we discussed this topic in length in previous version but
->> there was no conclusion on it.
->>
->> The commit desc might be a bit misleading, we are not actually forced to
->> use specific CMA buffers, as we use IOMMU to map these to device
->> addresses. For example IPU1/IPU2 use internally exact same memory
->> addresses, iommu is used to map these to specific CMA buffer.
->>
->> CMA buffers are mostly used so that we get aligned large chunk of memory
->> which can be mapped properly with the limited IOMMU OMAP family of chips
->> have. Not sure if there is any sane way to get this done in any other
->> manner.
->>
-> 
-> 
-> Why not use the default CMA area?
+Hi folks.
+During Wi-Fi operation, the following entry in the kernel logs was noticed:
+Microcode SW error detected. Restarting 0x0.
+Start IWL Error Log Dump:
+Status: 0x00000040, count: 6
+Loaded firmware version: 48.4fa0041f.0
+0x00000034 | NMI_INTERRUPT_WDG
+0x0000A2F0 | trm_hw_status0
+0x00000000 | trm_hw_status1
+0x004F8E3C | branchlink2
+0x0000DBBA | interruptlink1
+0x0000DBBA | interruptlink2
+0x004F7FB6 | data1
+0x00000002 | data2
+0xF0000008 | data3
+0x02001D26 | beacon time
+0xC9CE631E | tsf low
+0x00000113 | tsf hi
+0x00000000 | time gp1
+0xCEE30220 | time gp2
+0x00000001 | uCode revision type
+0x00000030 | uCode version major
+0x4FA0041F | uCode version minor
+0x00000340 | hw version
+0x00C89000 | board version
+0x80A0FC0F | hcmd
+0xE6FA0000 | isr0
+0x00400000 | isr1
+0x08F80002 | isr2
+0x4CC1FFDC | isr3
+0x00000000 | isr4
+0x0542001C | last cmd Id
+0x004F7FB6 | wait_event
+0x00000094 | l2p_control
+0x00000020 | l2p_duration
+0x0000000F | l2p_mhvalid
+0x000000C7 | l2p_addr_match
+0x00000009 | lmpm_pmg_sel
+0x00000000 | timestamp
+0x0000E080 | flow_handler
+Start IWL Error Log Dump:
+Status: 0x00000040, count: 7
+0x20000070 | NMI_INTERRUPT_LMAC_FATAL
+0x00000000 | umac branchlink1
+0xC008CC3C | umac branchlink2
+0x8048D0E6 | umac interruptlink1
+0x8048D0E6 | umac interruptlink2
+0x00000400 | umac data1
+0x8048D0E6 | umac data2
+0x00000000 | umac data3
+0x00000030 | umac major
+0x4FA0041F | umac minor
+0xCEE30231 | frame pointer
+0xC0886284 | stack pointer
+0x0010011D | last host cmd
+0x00000000 | isr status reg
+Fseq Registers:
+0xE0000101 | FSEQ_ERROR_CODE
+0x00290008 | FSEQ_TOP_INIT_VERSION
+0x80050008 | FSEQ_CNVIO_INIT_VERSION
+0x0000A503 | FSEQ_OTP_VERSION
+0x80000003 | FSEQ_TOP_CONTENT_VERSION
+0x4552414E | FSEQ_ALIVE_TOKEN
+0x00100530 | FSEQ_CNVI_ID
+0x00000532 | FSEQ_CNVR_ID
+0x00100530 | CNVI_AUX_MISC_CHIP
+0x00000532 | CNVR_AUX_MISC_CHIP
+0x05B0905B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+0x0000025B | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+Collecting data: trigger 2 fired.
 
-I think using default CMA area getting the actual memory block is not 
-guaranteed and might fail. There are other users for the memory, and it 
-might get fragmented at the very late phase we are grabbing the memory 
-(omap remoteproc driver probe time.) Some chunks we need are pretty large.
+lspci detect Wi Fi device as "04:00.0 Network controller: Intel
+Corporation Wi-Fi 6 AX200 (rev 1a)"
 
-I believe I could experiment with this a bit though and see, or Suman 
-could maybe provide feedback why this was designed initially like this 
-and why this would not be a good idea.
+$ ethtool -i wlp4s0 | grep firmware
+firmware-version: 48.4fa0041f.0
 
--Tero
+Full kernel log is here: https://pastebin.com/gtpyTaeM
 
-> 
-> Andrew
-> 
-> 
->> -Tero
->>
->>>
->>> This is not a requirement of the remote processor itself and so it
->>> should not fail to probe if a specific memory carveout isn't given.
->>>
->>>
->>>> use the of_reserved_mem_device_init/release() API appropriately
->>>> to assign the corresponding reserved memory region to the OMAP
->>>> remoteproc device. Note that only one region per device is
->>>> allowed by the framework.
->>>>
->>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>> ---
->>>> v5: no changes
->>>>
->>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
->>>>    1 file changed, 11 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
->>>> b/drivers/remoteproc/omap_remoteproc.c
->>>> index 0846839b2c97..194303b860b2 100644
->>>> --- a/drivers/remoteproc/omap_remoteproc.c
->>>> +++ b/drivers/remoteproc/omap_remoteproc.c
->>>> @@ -17,6 +17,7 @@
->>>>    #include <linux/module.h>
->>>>    #include <linux/err.h>
->>>>    #include <linux/of_device.h>
->>>> +#include <linux/of_reserved_mem.h>
->>>>    #include <linux/platform_device.h>
->>>>    #include <linux/dma-mapping.h>
->>>>    #include <linux/remoteproc.h>
->>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
->>>> platform_device *pdev)
->>>>        if (ret)
->>>>            goto free_rproc;
->>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
->>>> +    if (ret) {
->>>> +        dev_err(&pdev->dev, "device does not have specific CMA
->>>> pool\n");
->>>> +        goto free_rproc;
->>>> +    }
->>>> +
->>>>        platform_set_drvdata(pdev, rproc);
->>>>          ret = rproc_add(rproc);
->>>>        if (ret)
->>>> -        goto free_rproc;
->>>> +        goto release_mem;
->>>>          return 0;
->>>>    +release_mem:
->>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>    free_rproc:
->>>>        rproc_free(rproc);
->>>>        return ret;
->>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
->>>> platform_device *pdev)
->>>>          rproc_del(rproc);
->>>>        rproc_free(rproc);
->>>> +    of_reserved_mem_device_release(&pdev->dev);
->>>>          return 0;
->>>>    }
->>>>
->>
->> -- 
+I hope it helps fix the problem.
+
+Take this opportunity I wanna ask is it normal that kernel logs
+flooded with such messages:
+authenticate with 50:ff:20:04:c8:dc
+send auth to 50:ff:20:04:c8:dc (try 1/3)
+authenticated
+associate with 50:ff:20:04:c8:dc (try 1/3)
+RX AssocResp from 50:ff:20:04:c8:dc (capab=0x1811 status=53 aid=1)
+50:ff:20:04:c8:dc denied association (code=53)
+authenticate with 50:ff:20:04:c8:dc
+send auth to 50:ff:20:04:c8:dc (try 1/3)
+authenticate with 50:ff:20:04:c8:dc
+send auth to 50:ff:20:04:c8:dc (try 1/3)
+authenticated
+associate with 50:ff:20:04:c8:dc (try 1/3)
+RX AssocResp from 50:ff:20:04:c8:dc (capab=0x1811 status=0 aid=1)
+associated
+
+Thanks.
 
 --
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best Regards,
+Mike Gavrilov.
