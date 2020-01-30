@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E172AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A1CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEE520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A7E20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410380;
-	bh=ybi2agjHtsH6PwtVn5gxm6bDkgl8N3lWVMdY04N68ms=;
+	s=default; t=1580410384;
+	bh=qKhS42DKhwOlaVHptcXhWdipn3EhSDcP09MoYcfm5sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4UoKVwHaoJigWmIbq7Wrwnne4X+RNZHzmxvwcW0sTp1o4630UGIclesLUZKjY+JC
-	 dIT4SZGXHNAdD1jzO7nAe7DCABzgxE1ZzuOGgCKqYDWODw1AqnOK8BKMouEx5DeM2w
-	 w4HQ+Sflnw7w+4TdgH9k4R2CY4LYST1ToCJR0MZg=
+	b=zHY5JGEolovnhUI3hZpDWEAF6CFFLK+SfoIR8VfDBPcwfzQ3GcwAGGwSoSRvAiDZr
+	 os8o0e6UZ1vsQUjuu/NNnOr1hxSb57sOPDbC5Lk8VtXwCwXHSonuvS42V+hnBgkHI9
+	 ZRGH5ENN1q5AGOt1v5eKk/r7du4nHuNAvh/p1aPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgA3Sw7 (ORCPT
+        id S1730408AbgA3Smc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:52:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730428AbgA3Smi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:38 -0500
+        id S1728035AbgA3Sm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B41E12082E;
-        Thu, 30 Jan 2020 18:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3716F20702;
+        Thu, 30 Jan 2020 18:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409758;
-        bh=ybi2agjHtsH6PwtVn5gxm6bDkgl8N3lWVMdY04N68ms=;
+        s=default; t=1580409745;
+        bh=qKhS42DKhwOlaVHptcXhWdipn3EhSDcP09MoYcfm5sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzKoBIsAc2q503em5oHJGsDWymoyxMHhudFprCmETv0cNII6o4kPoeKF+caGNPOBR
-         jJGDpmjvfU8FMBIrHA+JU5fZ88shCOVN5/4K29Qk0cPZntyTaKKCuL+zL7JLEXP37c
-         gdQ6MVw/N06ifKtlypFrDZYqe4Dq5hZyWNCerNLA=
+        b=PkrI8iQTIHFhproo5GOq9XigzFwKau+fgNoeKPP+cLgSrnf/zTa54+yNQ4Zv0p7JL
+         XD+5fSWTzZh/JdWdGBbMeXMgYY70RxnTAgN6jaS3Of3EXjLPw7EpY9JUxwr/IORl/Y
+         0yB7g5xFQDj+pAa0f0RWlq95yY3cmxFj0ems5uZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ramalingam C <ramalingam.c@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH 5.4 022/110] mei: hdcp: bind only with i915 on the same PCH
-Date:   Thu, 30 Jan 2020 19:37:58 +0100
-Message-Id: <20200130183617.618805174@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 5.4 017/110] serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
+Date:   Thu, 30 Jan 2020 19:37:53 +0100
+Message-Id: <20200130183616.787406722@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,82 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 1e8d19d9b0dfcf11b61bac627203a290577e807a upstream.
+commit dc76697d7e933d5e299116f219c890568785ea15 upstream.
 
-The mei device and i915 must reside on the same
-PCH in order for HDCP to work. Make the component
-matching function enforce this requirement.
+Unbinding the bcm2835aux UART driver raises the following error if the
+maximum number of 8250 UARTs is set to 1 (via the 8250.nr_uarts module
+parameter or CONFIG_SERIAL_8250_RUNTIME_UARTS):
 
-                   hdcp
-                    |
-   i915            mei
-    |               |
-    +----= PCH =----+
+(NULL device *): Removing wrong port: a6f80333 != fa20408b
 
-Cc: <stable@vger.kernel.org> v5.0+
-Cc: Ramalingam C <ramalingam.c@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Link: https://lore.kernel.org/r/20191212084103.2893-1-tomas.winkler@intel.com
+That's because bcm2835aux_serial_probe() retrieves UART line number 1
+from the devicetree and stores it in data->uart.port.line, while
+serial8250_register_8250_port() instead uses UART line number 0,
+which is stored in data->line.
+
+On driver unbind, bcm2835aux_serial_remove() uses data->uart.port.line,
+which contains the wrong number.  Fix it.
+
+The issue does not occur if the maximum number of 8250 UARTs is >= 2.
+
+Fixes: bdc5f3009580 ("serial: bcm2835: add driver for bcm2835-aux-uart")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.6+
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/912ccf553c5258135c6d7e8f404a101ef320f0f4.1579175223.git.lukas@wunner.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hdcp/mei_hdcp.c |   33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_bcm2835aux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -758,11 +758,38 @@ static const struct component_master_ops
- 	.unbind = mei_component_master_unbind,
- };
- 
-+/**
-+ * mei_hdcp_component_match - compare function for matching mei hdcp.
-+ *
-+ *    The function checks if the driver is i915, the subcomponent is HDCP
-+ *    and the grand parent of hdcp and the parent of i915 are the same
-+ *    PCH device.
-+ *
-+ * @dev: master device
-+ * @subcomponent: subcomponent to match (I915_COMPONENT_HDCP)
-+ * @data: compare data (mei hdcp device)
-+ *
-+ * Return:
-+ * * 1 - if components match
-+ * * 0 - otherwise
-+ */
- static int mei_hdcp_component_match(struct device *dev, int subcomponent,
- 				    void *data)
+--- a/drivers/tty/serial/8250/8250_bcm2835aux.c
++++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+@@ -113,7 +113,7 @@ static int bcm2835aux_serial_remove(stru
  {
--	return !strcmp(dev->driver->name, "i915") &&
--	       subcomponent == I915_COMPONENT_HDCP;
-+	struct device *base = data;
-+
-+	if (strcmp(dev->driver->name, "i915") ||
-+	    subcomponent != I915_COMPONENT_HDCP)
-+		return 0;
-+
-+	base = base->parent;
-+	if (!base)
-+		return 0;
-+
-+	base = base->parent;
-+	dev = dev->parent;
-+
-+	return (base && dev && dev == base);
- }
+ 	struct bcm2835aux_data *data = platform_get_drvdata(pdev);
  
- static int mei_hdcp_probe(struct mei_cl_device *cldev,
-@@ -786,7 +813,7 @@ static int mei_hdcp_probe(struct mei_cl_
+-	serial8250_unregister_port(data->uart.port.line);
++	serial8250_unregister_port(data->line);
+ 	clk_disable_unprepare(data->clk);
  
- 	master_match = NULL;
- 	component_match_add_typed(&cldev->dev, &master_match,
--				  mei_hdcp_component_match, comp_master);
-+				  mei_hdcp_component_match, &cldev->dev);
- 	if (IS_ERR_OR_NULL(master_match)) {
- 		ret = -ENOMEM;
- 		goto err_exit;
+ 	return 0;
 
 
