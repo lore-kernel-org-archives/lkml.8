@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1EEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDFFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E79205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49260215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410068;
-	bh=E5MHSmI3yutRirhYzzRsacg3dm4AkkPV77sttgFsImA=;
+	s=default; t=1580410074;
+	bh=4AtbueEFuNKAL6mZDMVjdBYtBNKuiC/Tvwz9VqmlWJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAW0l7BL4JL2m5AfsXzd5EJQgc0zfMxqwKmvcjfBe+YUdjPcfJmF9sdRDW2AIkZ16
-	 gbKlZBHr2rpSOUK8wbTksOH+iM9jiquCHKC8z/LBeTP9VKIgLhvVv1faemEOnBQdZ0
-	 ypJi1Qgl8m62nUH/I/aRIt9N0F/BfC8UbEY/2pDQ=
+	b=X7H+tUbGNx71nuiI7bUcHkNSn3oEC022RMN0nQwF+W/2zbLfOTFnpom2Krm28k2r7
+	 YHjAaWAXCR6/KquCY2Rnmqats+yeql1zrJ3oILgABe+fjX7hEF5Og7Bph5HniCoDUv
+	 FHBz3/VitysjDvptto+Vg3QiTS9kCu71DfYBDgf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbgA3Srq (ORCPT
+        id S1731446AbgA3Srx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:47:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730566AbgA3Srm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:47:42 -0500
+        id S1731026AbgA3Srr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF28205F4;
-        Thu, 30 Jan 2020 18:47:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9452082E;
+        Thu, 30 Jan 2020 18:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410062;
-        bh=E5MHSmI3yutRirhYzzRsacg3dm4AkkPV77sttgFsImA=;
+        s=default; t=1580410067;
+        bh=4AtbueEFuNKAL6mZDMVjdBYtBNKuiC/Tvwz9VqmlWJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJcYZdeUsi5jQ5cbOrZDfVbiyYiNCT9A/iO8FDZL3+QsUhk11ha0MjxC+f4ebtFVQ
-         ol5sU2RPhnlVv6JKX8De63wQcso5Eq2QctPfPp7xGreelTTdNq5L0lDyfjIdPQSajS
-         YtLxPjwKttcuiX1q4/wJcioKzbz0t3KB3hpCMNZg=
+        b=TBxLyeeVXkVpDmVedKMKYBHUsnIB3Uy50ZJxqc0yqjM8HtjH4k4NDE4lCeUwZMcjD
+         ETY+h1YBYfCFm0KJSM8ZxFuFp6nLub/4bbY6iCqYpUSkvDO5DbHw53s79HFBrnpvez
+         B78pOPz3pP+ZKIr3uLfz4HK0nN5mBbJuA8reEYd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/55] phy: qcom-qmp: Increase PHY ready timeout
-Date:   Thu, 30 Jan 2020 19:39:12 +0100
-Message-Id: <20200130183614.289558622@linuxfoundation.org>
+Subject: [PATCH 4.19 33/55] watchdog: max77620_wdt: fix potential build errors
+Date:   Thu, 30 Jan 2020 19:39:14 +0100
+Message-Id: <20200130183614.628871091@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -63,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: David Engraf <david.engraf@sysgo.com>
 
-[ Upstream commit cd217ee6867d285ceecd610fa1006975d5c683fa ]
+[ Upstream commit da9e3f4e30a53cd420cf1e6961c3b4110f0f21f0 ]
 
-It's typical for the QHP PHY to take slightly above 1ms to initialize,
-so increase the timeout of the PHY ready check to 10ms - as already done
-in the downstream PCIe driver.
+max77620_wdt uses watchdog core functions. Enable CONFIG_WATCHDOG_CORE
+to fix potential build errors.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Evan Green <evgreen@chromium.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191127084617.16937-1-david.engraf@sysgo.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 4c470104a0d61..cf515928fed09 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -66,7 +66,7 @@
- /* QPHY_V3_PCS_MISC_CLAMP_ENABLE register bits */
- #define CLAMP_EN				BIT(0) /* enables i/o clamp_n */
- 
--#define PHY_INIT_COMPLETE_TIMEOUT		1000
-+#define PHY_INIT_COMPLETE_TIMEOUT		10000
- #define POWER_DOWN_DELAY_US_MIN			10
- #define POWER_DOWN_DELAY_US_MAX			11
- 
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index b165c46aca741..709d4de11f40f 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -594,6 +594,7 @@ config MAX63XX_WATCHDOG
+ config MAX77620_WATCHDOG
+ 	tristate "Maxim Max77620 Watchdog Timer"
+ 	depends on MFD_MAX77620 || COMPILE_TEST
++	select WATCHDOG_CORE
+ 	help
+ 	 This is the driver for the Max77620 watchdog timer.
+ 	 Say 'Y' here to enable the watchdog timer support for
 -- 
 2.20.1
 
