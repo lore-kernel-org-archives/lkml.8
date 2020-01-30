@@ -2,147 +2,111 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE132C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6E6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C988E206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FAE214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTYRlrP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgA3Orm (ORCPT
+        id S1727466AbgA3Orx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:47:42 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53550 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbgA3Ork (ORCPT
+        Thu, 30 Jan 2020 09:47:53 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38740 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbgA3Orv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:47:40 -0500
-Received: from 79.184.253.19.ipv4.supernova.orange.pl (79.184.253.19) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 5628b28504f96a71; Thu, 30 Jan 2020 15:47:38 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        David Box <david.e.box@linux.intel.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 1/2] intel_idle: Introduce 'use_acpi' module parameter
-Date:   Thu, 30 Jan 2020 15:46:24 +0100
-Message-ID: <5626578.OFR1oUKyPK@kreacher>
-In-Reply-To: <1720216.0Jr2BLnqKp@kreacher>
-References: <1720216.0Jr2BLnqKp@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 30 Jan 2020 09:47:51 -0500
+Received: by mail-pl1-f193.google.com with SMTP id t6so1436471plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 06:47:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8j7vPXQ8NnTfCALzCvlEWGGchYaunD8ZmjFF9OfryBo=;
+        b=dTYRlrP1Sg5/xLx73QGqX7OvqDFxXjeAQpEcGzWdvNok45gR/uNcMELPLogJvlqukJ
+         5p6eRnQKAbCK+qxWIuVY8ecUzC35l3XjURCG9TmnYqtJDnGYqCcULECCl8n4gLWy1muU
+         zd1xmyRkjTwHELeVGWvx8ku+TYdQpEesAFPd61I6wmI4hUQ2878FMLmlZdGCy4c0zBx2
+         AZ9l4ruslNPJ4yCPjHNECJKtZs5fIMHSByDfxIr0QxPzGmCDi3mY+d5hPkbQwH3AwTTJ
+         ATO6K/wdTw2kRcqd9UuUimpgQnjlBuiCQ0Q8t6/+FhMdxKU/84RmSgaOQJYUczl86xuR
+         +23Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8j7vPXQ8NnTfCALzCvlEWGGchYaunD8ZmjFF9OfryBo=;
+        b=rbDVqvullL1FHuAlsFQU7+YLOR09uIvpZnW6+6UM+S7pgEqPxhXHFowX03t2Jjlsq+
+         SMGz8AiECyjUQ56ZO7W8lNaOieW3orkbj2xWJ/FksRBGrM0aMMDO5dCr4zF4l8am3p9V
+         gK8+tuDM5QPdh/AEk8NgP6EcbNr160auzOT3JP42Sew0zOFUdTr5O46YBsH7QYyLXX6y
+         GuR+oHoRaVh+PV8zUfypkZNPg6UR08EcmbBeZJrNXzDNRhYxDIhGry6hDIy7b/tVuvPU
+         hub4VSzpPap2jLMFJp6mqUMQbSZKsiTkbKLUB8fyDQ3qcOpsqLO/Fgdj+JXtrihWxHYc
+         VDAg==
+X-Gm-Message-State: APjAAAUKMiYU2XTI+KhurxCxM+X/eUM+R3auA82cKkrX6vlxCTJZs4OV
+        /8hcMWdmO1qCUaxxG+P0Mye7W7s=
+X-Google-Smtp-Source: APXvYqxweGS12eq7xzPRA2TGNxLW34igZlRxFgUer0mcaJqfFCqFllIcyokHKrPw9a9xIZBKM24v8g==
+X-Received: by 2002:a17:90a:e653:: with SMTP id ep19mr6606383pjb.58.1580395671183;
+        Thu, 30 Jan 2020 06:47:51 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee1:f815:d421:7a49:b2e4:2bd6])
+        by smtp.gmail.com with ESMTPSA id b1sm7204927pfg.182.2020.01.30.06.47.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 06:47:50 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        olsa@redhat.com, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, frextrite@gmail.com,
+        joel@joelfernandes.org, paulmck@kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] perf_event.h: Add RCU Annotation to struct ring_buffer in perf_event
+Date:   Thu, 30 Jan 2020 20:17:28 +0530
+Message-Id: <20200130144728.24072-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-For diagnostics, it is generally useful to be able to make intel_idle
-take the system's ACPI tables into consideration even if that is not
-required for the processor model in there, so introduce a new module
-parameter, 'use_acpi', to make that happen and update the documentation
-to cover it.
+This patch fixes the following sparse errors in events/core.c
+and events/ring_buffer.c by adding RCU Annotation to struct
+ring_buffer in perf_event:
 
-While at it, fix the 'no_acpi' module parameter name in the
-documentation.
+kernel/events/core.c:5597:9: error: incompatible types in comparison expression
+kernel/events/core.c:5303:22: error: incompatible types in comparison expression
+kernel/events/core.c:5439:14: error: incompatible types in comparison expression
+kernel/events/core.c:5472:14: error: incompatible types in comparison expression
+kernel/events/core.c:5529:14: error: incompatible types in comparison expression
+kernel/events/core.c:5615:14: error: incompatible types in comparison expression
+kernel/events/core.c:5615:14: error: incompatible types in comparison expression
+kernel/events/core.c:7183:13: error: incompatible types in comparison expression
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+kernel/events/ring_buffer.c:169:14: error: incompatible types in comparison expression
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- Documentation/admin-guide/pm/intel_idle.rst |   13 +++++++++----
- drivers/idle/intel_idle.c                   |   11 +++++++++--
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ include/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: linux-pm/drivers/idle/intel_idle.c
-===================================================================
---- linux-pm.orig/drivers/idle/intel_idle.c
-+++ linux-pm/drivers/idle/intel_idle.c
-@@ -1131,6 +1131,10 @@ static bool no_acpi __read_mostly;
- module_param(no_acpi, bool, 0444);
- MODULE_PARM_DESC(no_acpi, "Do not use ACPI _CST for building the idle states list");
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 6d4c22aee384..1691107d2800 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -694,7 +694,7 @@ struct perf_event {
+ 	struct mutex			mmap_mutex;
+ 	atomic_t			mmap_count;
  
-+static bool use_acpi __read_mostly; /* No effect if no_acpi is set. */
-+module_param(use_acpi, bool, 0444);
-+MODULE_PARM_DESC(use_acpi, "Use ACPI _CST for building the idle states list");
-+
- static struct acpi_processor_power acpi_state_table __initdata;
- 
- /**
-@@ -1258,6 +1262,8 @@ static bool __init intel_idle_off_by_def
- 	return true;
- }
- #else /* !CONFIG_ACPI_PROCESSOR_CSTATE */
-+#define use_acpi	(false)
-+
- static inline bool intel_idle_acpi_cst_extract(void) { return false; }
- static inline void intel_idle_init_cstates_acpi(struct cpuidle_driver *drv) { }
- static inline bool intel_idle_off_by_default(u32 mwait_hint) { return false; }
-@@ -1460,7 +1466,8 @@ static void __init intel_idle_init_cstat
- 		/* Structure copy. */
- 		drv->states[drv->state_count] = cpuidle_state_table[cstate];
- 
--		if (icpu->use_acpi && intel_idle_off_by_default(mwait_hint) &&
-+		if ((icpu->use_acpi || use_acpi) &&
-+		    intel_idle_off_by_default(mwait_hint) &&
- 		    !(cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_ALWAYS_ENABLE))
- 			drv->states[drv->state_count].flags |= CPUIDLE_FLAG_OFF;
- 
-@@ -1607,7 +1614,7 @@ static int __init intel_idle_init(void)
- 	icpu = (const struct idle_cpu *)id->driver_data;
- 	if (icpu) {
- 		cpuidle_state_table = icpu->state_table;
--		if (icpu->use_acpi)
-+		if (icpu->use_acpi || use_acpi)
- 			intel_idle_acpi_cst_extract();
- 	} else if (!intel_idle_acpi_cst_extract()) {
- 		return -ENODEV;
-Index: linux-pm/Documentation/admin-guide/pm/intel_idle.rst
-===================================================================
---- linux-pm.orig/Documentation/admin-guide/pm/intel_idle.rst
-+++ linux-pm/Documentation/admin-guide/pm/intel_idle.rst
-@@ -60,6 +60,9 @@ of the system.  The former are always us
- recognized by ``intel_idle`` and the latter are used if that is required for
- the given processor model (which is the case for all server processor models
- recognized by ``intel_idle``) or if the processor model is not recognized.
-+[There is a module parameter that can be used to make the driver use the ACPI
-+tables with any processor model recognized by it; see
-+`below <intel-idle-parameters_>`_.]
- 
- If the ACPI tables are going to be used for building the list of available idle
- states, ``intel_idle`` first looks for a ``_CST`` object under one of the ACPI
-@@ -165,7 +168,7 @@ and ``idle=nomwait``.  If any of them is
- ``MWAIT`` instruction is not allowed to be used, so the initialization of
- ``intel_idle`` will fail.
- 
--Apart from that there are two module parameters recognized by ``intel_idle``
-+Apart from that there are three module parameters recognized by ``intel_idle``
- itself that can be set via the kernel command line (they cannot be updated via
- sysfs, so that is the only way to change their values).
- 
-@@ -186,9 +189,11 @@ QoS) feature can be used to prevent ``CP
- even if they have been enumerated (see :ref:`cpu-pm-qos` in :doc:`cpuidle`).
- Setting ``max_cstate`` to 0 causes the ``intel_idle`` initialization to fail.
- 
--The ``noacpi`` module parameter (which is recognized by ``intel_idle`` if the
--kernel has been configured with ACPI support), can be set to make the driver
--ignore the system's ACPI tables entirely (it is unset by default).
-+The ``no_acpi`` and ``use_acpi`` module parameters (recognized by ``intel_idle``
-+if the kernel has been configured with ACPI support) can be set to make the
-+driver ignore the system's ACPI tables entirely or use them for all of the
-+recognized processor models, respectively (they both are unset by default and
-+``use_acpi`` has no effect if ``no_acpi`` is set).
- 
- 
- .. _intel-idle-core-and-package-idle-states:
-
-
+-	struct ring_buffer		*rb;
++	struct ring_buffer __rcu	*rb;
+ 	struct list_head		rb_entry;
+ 	unsigned long			rcu_batches;
+ 	int				rcu_pending;
+-- 
+2.17.1
 
