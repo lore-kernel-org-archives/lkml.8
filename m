@@ -2,213 +2,240 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C41AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB31C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9AB2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5332083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSaB8Xzx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgA3UU6 convert rfc822-to-8bit (ORCPT
+        id S1727626AbgA3UVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:20:58 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34007 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3UU5 (ORCPT
+        Thu, 30 Jan 2020 15:21:08 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39505 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgA3UVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:20:57 -0500
-X-Originating-IP: 93.23.196.10
-Received: from xps13 (10.196.23.93.rev.sfr.net [93.23.196.10])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 166BB1C0002;
-        Thu, 30 Jan 2020 20:20:53 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 21:20:52 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Changes for 5.6
-Message-ID: <20200130212052.11ca8719@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 30 Jan 2020 15:21:07 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so4359881oty.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:21:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fOJEE1fkLwQsVSnFFDCeiNMIe7GX26OPeYKy9HbEFGg=;
+        b=dSaB8Xzxl0tgYBnY8WWqccFO4aKhOpEKCcG8OYcXKqhigHa4cX5a+yQ6m3OoPjKe2a
+         9KtGInNtcrHL82kDG1PHJCpk15YLNm4JbKkuAz58+CPLeNUN/BzlL4RZHZx4wzj0F8zv
+         gIo2SXPaWtKj5ASJEqCiWPC4BKKt5TXBMSvmSalsF4BA1EkOpS+NFqlFsc1o8s4ZOyZF
+         RYLSwGwLF1T3Z6mw+kMgBJqs2HwgokfUxtN5xRXKyrWvLTXCKZdSHoa9TqV7uEiX7NLx
+         E9meXMT/aBKgHxVSzDSh7eFntmyec2YfC8nOp2aNXD7V6Isx3eU3sKBB3/5QlMHxxANl
+         Hg8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fOJEE1fkLwQsVSnFFDCeiNMIe7GX26OPeYKy9HbEFGg=;
+        b=oaCTJt/zp2FGCk56qgcfIFZ5JLjxWH1XY1lGuLwIlnrU1IyQjiCPriHPh7sY7FFRdX
+         r1I0ZIkJkKufbMHj33QNOxySaUGxKlNMMAdWTWPtTgGUZkM2R3LBB23sO3+ZLe4gkaEC
+         UI9fPANc7NXNrNluR+vuYASOsIvYkr988dyHURcTGdBgD1lVSgXTDWLDPIH5YffE4jyx
+         yjTt1kYm5VdFkNlFRa4EOUHZR3ZD9g+XqgHMNbrYUfAAyB5mQRdxDyBK6uydqBRhVsvV
+         EVGfgz2aPIXWeGsaVYL+hInoHw0cQQeGONedjrLTBgY2fDifJ81BtLlYt21Xwmatos7P
+         5vtg==
+X-Gm-Message-State: APjAAAUw/9erOMX7gMCh3OsJr6HZTQoG1k/Gb/bRgR6+iZlRQwdAugml
+        oVl/wwO9rQyeMN6tPwFb9U+ivHXg+0S3xlcvC+I=
+X-Google-Smtp-Source: APXvYqzDM8OCFgNpvqzUl2WS7ghEHAAo5ALxx1Xwxs+PJKijo5lCEE8CT8lEB9ddQyjzOMjy6M3gmCPlGP6jjUGEAPw=
+X-Received: by 2002:a05:6830:1e30:: with SMTP id t16mr5070986otr.220.1580415665784;
+ Thu, 30 Jan 2020 12:21:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200124181819.4840-1-hjl.tools@gmail.com> <20200124181819.4840-3-hjl.tools@gmail.com>
+ <202001271531.B9ACE2A@keescook> <CAMe9rOrVyzvaTyURc4RJJTHUXGG6uAC9KyQomxQFzWzrAN4nrg@mail.gmail.com>
+ <202001301143.288B55DCC1@keescook> <CAMe9rOocT960KsofP9o_y49FdgY9NGix=GcYnpKLvp7RhieZNA@mail.gmail.com>
+ <202001301206.13AF0512@keescook>
+In-Reply-To: <202001301206.13AF0512@keescook>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Thu, 30 Jan 2020 12:20:30 -0800
+Message-ID: <CAMe9rOoU1B8enyoL4-SSQKYLHpevR5yrbp5ewztC=Owr69y2SQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86: Discard .note.gnu.property sections in vmlinux
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Thu, Jan 30, 2020 at 12:08 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Jan 30, 2020 at 12:04:54PM -0800, H.J. Lu wrote:
+> > > I don't understand this. "may not be incompatible"? Is there an error
+> > > generated? If so, what does it look like?
+> >
+> > When -mx86-used-note=yes is passed to assembler, with my patch, I got
+> >
+> > [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+> >
+> > Displaying notes found in: .notes
+> >   Owner                Data size Description
+> >   Xen                  0x00000006 Unknown note type: (0x00000006)
+> >    description data: 6c 69 6e 75 78 00
+> >   Xen                  0x00000004 Unknown note type: (0x00000007)
+> >    description data: 32 2e 36 00
+> >   Xen                  0x00000008 Unknown note type: (0x00000005)
+> >    description data: 78 65 6e 2d 33 2e 30 00
+> >   Xen                  0x00000008 Unknown note type: (0x00000003)
+> >    description data: 00 00 00 80 ff ff ff ff
+> >   Xen                  0x00000008 Unknown note type: (0x0000000f)
+> >    description data: 00 00 00 00 80 00 00 00
+> >   Xen                  0x00000008 NT_VERSION (version)
+> >    description data: 80 a1 ba 82 ff ff ff ff
+> >   Xen                  0x00000008 NT_ARCH (architecture)
+> >    description data: 00 10 00 81 ff ff ff ff
+> >   Xen                  0x00000029 Unknown note type: (0x0000000a)
+> >    description data: 21 77 72 69 74 61 62 6c 65 5f 70 61 67 65 5f 74
+> > 61 62 6c 65 73 7c 70 61 65 5f 70 67 64 69 72 5f 61 62 6f 76 65 5f 34
+> > 67 62
+> >   Xen                  0x00000004 Unknown note type: (0x00000011)
+> >    description data: 01 88 00 00
+> >   Xen                  0x00000004 Unknown note type: (0x00000009)
+> >    description data: 79 65 73 00
+> >   Xen                  0x00000008 Unknown note type: (0x00000008)
+> >    description data: 67 65 6e 65 72 69 63 00
+> >   Xen                  0x00000010 Unknown note type: (0x0000000d)
+> >    description data: 01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00
+> >   Xen                  0x00000004 Unknown note type: (0x0000000e)
+> >    description data: 01 00 00 00
+> >   Xen                  0x00000004 Unknown note type: (0x00000010)
+> >    description data: 01 00 00 00
+> >   Xen                  0x00000008 Unknown note type: (0x0000000c)
+> >    description data: 00 00 00 00 00 80 ff ff
+> >   Xen                  0x00000008 Unknown note type: (0x00000004)
+> >    description data: 00 00 00 00 00 00 00 00
+> >   GNU                  0x00000014 NT_GNU_BUILD_ID (unique build ID bitstring)
+> >     Build ID: 11c73de2922f593e1b35b92ab3c70eaa1a80fa83
+> >   Linux                0x00000018 OPEN
+> >    description data: 35 2e 33 2e 39 2d 32 30 30 2e 30 2e 66 63 33 30
+> > 2e 78 38 36 5f 36 34 00
+> >   Xen                  0x00000008 Unknown note type: (0x00000012)
+> >    description data: 70 04 00 01 00 00 00 00
+> > [hjl@gnu-skx-1 linux]$
+> >
+> > Without my patch,
+> >
+> > [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+> >
+> > Displaying notes found in: .notes
+> >   Owner                Data size Description
+> >   Xen                  0x00000006 Unknown note type: (0x00000006)
+> >    description data: 6c 69 6e 75 78 00
+> >   Xen                  0x00000004 Unknown note type: (0x00000007)
+> >    description data: 32 2e 36 00
+> >   xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+> >    description data: 08 00 00 00 03
+> > readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+> > readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+> > 0x80000000, alignment: 8
+> > [hjl@gnu-skx-1 linux]$
+>
+> What is the source of this failure? Does readelf need updating instead?
+> Is the linking step producing an invalid section? It seems like
+> discarding the properties isn't the right solution here?
 
-This is the MTD PR for 5.6.
+With the command-line option, -mx86-used-note=yes, the x86 assembler
+in binutils 2.32 and above generates a program property note in a note
+section, .note.gnu.property, to encode used x86 ISAs and features.
+But x86 kernel linker script only contains a signle NOTE segment:
 
-Thanks,
-Miquèl
+PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ note PT_NOTE FLAGS(0);
+}
+SECTIONS
+{
+...
+ .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+e.*)) __stop_notes = .; } :text :note
+...
+}
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+But .note.gnu.property must be 8-byte aligned.  Linker deals with it
+by generating
+2 PT_NOTE segments, one has 4-byte alignment and the other has 8-byte alignment:
 
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+[hjl@gnu-cfl-1 ~]$ readelf -l /usr/local/bin/ld
 
-are available in the Git repository at:
+Elf file type is EXEC (Executable file)
+Entry point 0x404530
+There are 13 program headers, starting at offset 64
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.6
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040
+                 0x00000000000002d8 0x00000000000002d8  R      0x8
+  INTERP         0x0000000000000318 0x0000000000400318 0x0000000000400318
+                 0x000000000000001c 0x000000000000001c  R      0x1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000
+                 0x0000000000002a30 0x0000000000002a30  R      0x1000
+  LOAD           0x0000000000003000 0x0000000000403000 0x0000000000403000
+                 0x00000000000d7b35 0x00000000000d7b35  R E    0x1000
+  LOAD           0x00000000000db000 0x00000000004db000 0x00000000004db000
+                 0x0000000000179248 0x0000000000179248  R      0x1000
+  LOAD           0x0000000000254de0 0x0000000000655de0 0x0000000000655de0
+                 0x00000000000062e8 0x000000000000ba68  RW     0x1000
+  DYNAMIC        0x0000000000254df0 0x0000000000655df0 0x0000000000655df0
+                 0x0000000000000200 0x0000000000000200  RW     0x8
+  NOTE           0x0000000000000338 0x0000000000400338 0x0000000000400338
+                 0x0000000000000030 0x0000000000000030  R      0x8
+  NOTE           0x0000000000000368 0x0000000000400368 0x0000000000400368
+                 0x0000000000000044 0x0000000000000044  R      0x4
+  GNU_PROPERTY   0x0000000000000338 0x0000000000400338 0x0000000000400338
+                 0x0000000000000030 0x0000000000000030  R      0x8
+  GNU_EH_FRAME   0x0000000000233efc 0x0000000000633efc 0x0000000000633efc
+                 0x000000000000478c 0x000000000000478c  R      0x4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
+  GNU_RELRO      0x0000000000254de0 0x0000000000655de0 0x0000000000655de0
+                 0x0000000000000220 0x0000000000000220  R      0x1
 
-for you to fetch changes up to 4575243c5c173f8adbc08a5c6ea2269742ea2b47:
+ Section to Segment mapping:
+  Segment Sections...
+   00
+   01     .interp
+   02     .interp .note.gnu.property .note.gnu.build-id .note.ABI-tag
+.hash .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn
+.rela.plt
+   03     .init .plt .text .fini
+   04     .rodata .eh_frame_hdr .eh_frame
+   05     .init_array .fini_array .dynamic .got .got.plt .data .bss
+   06     .dynamic
+   07     .note.gnu.property
+   08     .note.gnu.build-id .note.ABI-tag
+   09     .note.gnu.property
+   10     .eh_frame_hdr
+   11
+   12     .init_array .fini_array .dynamic .got
+[hjl@gnu-cfl-1 ~]$
 
-  Merge tag 'nand/for-5.6' into mtd/next (2020-01-27 17:49:15 +0100)
+Since .note.gnu.property in vmlinux is unused, it can be discarded.
 
-----------------------------------------------------------------
-MTD core
-* block2mtd: page index should use pgoff_t
-* maps: physmap: minimal Runtime PM support
-* maps: pcmciamtd: avoid possible sleep-in-atomic-context bugs
-* concat: Fix a comment referring to an unknown symbol
-
-Raw NAND
-* Macronix: Use match_string() helper
-* Atmel: switch to using devm_fwnode_gpiod_get()
-* Denali: rework the SKIP_BYTES feature and add reset controlling
-* Brcmnand: set appropriate DMA mask
-* Cadence: add unspecified HAS_IOMEM dependency
-* Various cleanup.
-
-Onenand
-* Rename Samsung and Omap2 drivers to avoid possible build warnings
-* Enable compile testing
-* Various build issues
-* Kconfig cleanup
-
-SPI-NAND
-* Support for Toshiba TC58CVG2S0HRAIJ
-
-SPI-NOR:
-- Add support for TB selection using SR bit 6,
-- Add support for few flashes.
-
-----------------------------------------------------------------
-Brendan Higgins (1):
-      mtd: rawnand: add unspecified HAS_IOMEM dependency
-
-Chen Wandun (1):
-      mtd: onenand: samsung: remove set but not used variable
-
-David Bauer (1):
-      mtd: spi-nor: Add support for mx25r3235f
-
-Dmitry Torokhov (1):
-      mtd: rawnand: atmel: switch to using devm_fwnode_gpiod_get()
-
-Florian Fainelli (1):
-      mtd: rawnand: brcmnand: Set appropriate DMA mask
-
-Geert Uytterhoeven (1):
-      mtd: maps: physmap: Add minimal Runtime PM support
-
-Jerome Brunet (1):
-      mtd: spi-nor: add Gigadevice gd25lq128d support
-
-Jia-Ju Bai (1):
-      mtd: maps: pcmciamtd: fix possible sleep-in-atomic-context bugs in pcmciamtd_set_vpp()
-
-John Garry (1):
-      mtd: spi-nor: hisi-sfc: Try to provide some clarity on which SFC we are
-
-Joseph Kust (1):
-      mtd: spi-nor: Add support for sst26vf016b
-
-Jungseung Lee (4):
-      mtd: spi-nor: fix typo of "JESB216" in comment
-      mtd: spi-nor: Rename SR_TB to indicate the bit used
-      mtd: spi-nor: Support TB selection using SR bit 6
-      mtd: spi-nor: Fix wrong TB selection of GD25Q256
-
-Krzysztof Kozlowski (4):
-      mtd: onenand: Fix Kconfig indentation
-      mtd: onenand: samsung: Fix pointer cast -Wpointer-to-int-cast warnings on 64 bit
-      mtd: onenand: samsung: Fix printing format for size_t on 64-bit
-      mtd: onenand: Enable compile testing of OMAP and Samsung drivers
-
-Liu Song (1):
-      mtd: block2mtd: page index should use pgoff_t
-
-Marek Vasut (1):
-      mtd: rawnand: denali_dt: Add support for configuring SPARE_AREA_SKIP_BYTES
-
-Masahiro Yamada (4):
-      mtd: rawnand: denali_dt: error out if platform has no associated data
-      dt-bindings: mtd: denali_dt: document reset property
-      mtd: rawnand: denali_dt: add reset controlling
-      mtd: rawnand: denali: remove hard-coded DENALI_DEFAULT_OOB_SKIP_BYTES
-
-Michael Walle (3):
-      mtd: spi-nor: remove unused enum spi_nor_ops
-      mtd: spi-nor: Add support for w25q32jwm
-      mtd: spi-nor: Add support for at25sl321
-
-Mika Westerberg (2):
-      mtd: spi-nor: intel-spi: Add support for Intel Jasper Lake SPI serial flash
-      mtd: spi-nor: intel-spi: Add support for Intel Comet Lake-V SPI serial flash
-
-Miquel Raynal (5):
-      mtd: onenand: Use a better name for samsung driver
-      mtd: onenand: Rename omap2 driver to avoid a build warning
-      mtd: concat: Fix a comment referring to an unknown symbol
-      Merge tag 'spi-nor/for-5.6' into mtd/next
-      Merge tag 'nand/for-5.6' into mtd/next
-
-Nathan Chancellor (1):
-      mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
-
-Robert Marko (2):
-      mtd: spi-nor: Add 4B_OPCODES flag to w25q256
-      mtd: spinand: add support for Toshiba TC58CVG2S0HRAIJ
-
-Vignesh Raghavendra (3):
-      mtd: spi-nor: Split mt25qu512a (n25q512a) entry into two
-      mtd: spi-nor: Add entries for mt25q variants
-      mtd: spi-nor: Add USE_FSR flag for n25q* entries
-
-YueHaibing (2):
-      mtd: sharpslpart: Fix unsigned comparison to zero
-      mtd: rawnand: macronix: Use match_string() helper to simplify the code
-
-zhengbin (1):
-      mtd: rawnand: mpc5121: Remove unneeded semicolon
-
- Documentation/devicetree/bindings/mtd/denali-nand.txt   |   7 ++
- drivers/mtd/devices/block2mtd.c                         |   8 +-
- drivers/mtd/maps/pcmciamtd.c                            |   7 +-
- drivers/mtd/maps/physmap-core.c                         |  20 +++-
- drivers/mtd/mtdconcat.c                                 |   5 +-
- drivers/mtd/nand/onenand/Kconfig                        |  14 +--
- drivers/mtd/nand/onenand/Makefile                       |   4 +-
- drivers/mtd/nand/onenand/onenand_base.c                 |  82 +++++++--------
- drivers/mtd/nand/onenand/{omap2.c => onenand_omap2.c}   |   0
- .../nand/onenand/{samsung_mtd.c => onenand_samsung.c}   |   9 +-
- drivers/mtd/nand/raw/Kconfig                            |   2 +-
- drivers/mtd/nand/raw/atmel/nand-controller.c            |  20 ++--
- drivers/mtd/nand/raw/brcmnand/brcmnand.c                |  10 ++
- drivers/mtd/nand/raw/denali.c                           |  14 +--
- drivers/mtd/nand/raw/denali_dt.c                        |  56 ++++++++--
- drivers/mtd/nand/raw/mpc5121_nfc.c                      |   2 +-
- drivers/mtd/nand/raw/nand_macronix.c                    |  11 +-
- drivers/mtd/nand/spi/toshiba.c                          |  10 ++
- drivers/mtd/parsers/sharpslpart.c                       |   4 +-
- drivers/mtd/spi-nor/Kconfig                             |   4 +-
- drivers/mtd/spi-nor/aspeed-smc.c                        |   4 +-
- drivers/mtd/spi-nor/cadence-quadspi.c                   |   4 +-
- drivers/mtd/spi-nor/hisi-sfc.c                          |   6 +-
- drivers/mtd/spi-nor/intel-spi-pci.c                     |   2 +
- drivers/mtd/spi-nor/spi-nor.c                           | 127 ++++++++++++++++-------
- include/linux/mtd/spi-nor.h                             |  16 +--
- 26 files changed, 286 insertions(+), 162 deletions(-)
- rename drivers/mtd/nand/onenand/{omap2.c => onenand_omap2.c} (100%)
- rename drivers/mtd/nand/onenand/{samsung_mtd.c => onenand_samsung.c} (99%)
+-- 
+H.J.
