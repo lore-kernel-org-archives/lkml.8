@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FBCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D8520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC862082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410465;
-	bh=ITckDNbzz/TzTQNnL3xhySzEkpTq0zAHIzS2Ots334w=;
+	s=default; t=1580410467;
+	bh=W7nfk0mbH79NWZr6d75aI0ZGr3L4fvnrkEYSC93NwW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUOaYcV09Dw8bwQcs7FPtlGcHN+FddPzaN0aFq/f30ePTRyoQQ4kqNqEFiTmrgvBE
-	 CmKDcfjpvJKrl8l9HdPShM1+ISFMz4wn0uLBJ+u15OLyRgX+PIzoT33AC5w5zgVEf4
-	 blBB//wrwBzHYu9/LjsQUXI+j3CrZ4prg/3IulpU=
+	b=lkrlpiBUkNyivNKe82IOmnuF28THr0b8k4ZPvh5De0ouhEqg5sxWuLPhyY5xAmy08
+	 +vBtR7KbwYHtonoLnLfJtYGHPpQc7UgcogndWU4gm/S7EAJ4RvUT+1L7+3Lc/W+Rwm
+	 /gucQVhHRSet25rflgdvZZjTve85znJeIL9MwiLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgA3SkW (ORCPT
+        id S1727875AbgA3SkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbgA3SkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:13 -0500
+        id S1729899AbgA3SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4154320702;
-        Thu, 30 Jan 2020 18:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6ECC2082E;
+        Thu, 30 Jan 2020 18:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409611;
-        bh=ITckDNbzz/TzTQNnL3xhySzEkpTq0zAHIzS2Ots334w=;
+        s=default; t=1580409614;
+        bh=W7nfk0mbH79NWZr6d75aI0ZGr3L4fvnrkEYSC93NwW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDnDLgoRapQaO4jl/rSSa1OhLeZ+baryrBeHMQnxFsq8pYzg1PDoHwhAYqpVX3NM3
-         Cr5h98idoSUiWyVfoWI8hOo2YOwwiZ1UyxP2lHPzyAyi3sIjdbpDq37RtG2ZNYz2Qd
-         AkFg7XdmxJ8ZOOeWaz94/gi4zMIRvhMd3JshzUJI=
+        b=PgqqrsMgyjIfUXkoPmtnpI7jOB13rOzdiNqZZkhAP0WKghZ+DcDIiBuUVkaYEx9CS
+         NtH7CBmztuQNB1xUzID/VFcdB+Zg7S43ZGz6xSVUn7d7LOGqQfqneuOg9JolbsFEgf
+         utNjtpi52ehmbAz7dYHqic7y1a1DB+S8dAFDe7U0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 02/56] orinoco_usb: fix interface sanity check
-Date:   Thu, 30 Jan 2020 19:38:19 +0100
-Message-Id: <20200130183609.410847643@linuxfoundation.org>
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH 5.5 20/56] component: do not dereference opaque pointer in debugfs
+Date:   Thu, 30 Jan 2020 19:38:37 +0100
+Message-Id: <20200130183612.904859905@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -59,39 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-commit b73e05aa543cf8db4f4927e36952360d71291d41 upstream.
+commit ef9ffc1e5f1ac73ecd2fb3b70db2a3b2472ff2f7 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+The match data does not have to be a struct device pointer, and indeed
+very often is not. Attempt to treat it as such easily results in a
+crash.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+For the components that are not registered, we don't know which device
+is missing. Once it it is there, we can use the struct component to get
+the device and whether it's bound or not.
 
-Fixes: 9afac70a7305 ("orinoco: add orinoco_usb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.35
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 59e73854b5fd ('component: add debugfs support')
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Cc: stable <stable@vger.kernel.org>
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20191118115431.63626-1-lkundrak@v3.sk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/component.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -1608,9 +1608,9 @@ static int ezusb_probe(struct usb_interf
- 	/* set up the endpoint information */
- 	/* check out the endpoints */
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -102,11 +102,11 @@ static int component_devices_show(struct
+ 	seq_printf(s, "%-40s %20s\n", "device name", "status");
+ 	seq_puts(s, "-------------------------------------------------------------\n");
+ 	for (i = 0; i < match->num; i++) {
+-		struct device *d = (struct device *)match->compare[i].data;
++		struct component *component = match->compare[i].component;
  
--	iface_desc = &interface->altsetting[0].desc;
-+	iface_desc = &interface->cur_altsetting->desc;
- 	for (i = 0; i < iface_desc->bNumEndpoints; ++i) {
--		ep = &interface->altsetting[0].endpoint[i].desc;
-+		ep = &interface->cur_altsetting->endpoint[i].desc;
+-		seq_printf(s, "%-40s %20s\n", dev_name(d),
+-			   match->compare[i].component ?
+-			   "registered" : "not registered");
++		seq_printf(s, "%-40s %20s\n",
++			   component ? dev_name(component->dev) : "(unknown)",
++			   component ? (component->bound ? "bound" : "not bound") : "not registered");
+ 	}
+ 	mutex_unlock(&component_mutex);
  
- 		if (usb_endpoint_is_bulk_in(ep)) {
- 			/* we found a bulk in endpoint */
 
 
