@@ -2,183 +2,121 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78DBC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03235C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E578206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D8220716
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 01:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfWX/ESk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgA3B3t (ORCPT
+        id S1727269AbgA3BdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 20:29:49 -0500
-Received: from mga14.intel.com ([192.55.52.115]:49565 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgA3B3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 20:29:48 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Jan 2020 17:29:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,380,1574150400"; 
-   d="scan'208";a="262007116"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jan 2020 17:29:45 -0800
-Date:   Thu, 30 Jan 2020 09:30:00 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Dmitry Osipenko <digetx@gmail.com>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
-        kirill@shutemov.name, yang.shi@linux.alibaba.com,
-        thellstrom@vmware.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-Message-ID: <20200130013000.GA5137@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
- <20200129094738.GE25745@shell.armlinux.org.uk>
- <20200129215745.GA20736@richard>
- <20200129232441.GI25745@shell.armlinux.org.uk>
+        Wed, 29 Jan 2020 20:33:14 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33792 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgA3BdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 20:33:14 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so1926781oig.1;
+        Wed, 29 Jan 2020 17:33:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5ZdzI82fvwujvYsag8I7TqJgzKEukKEgmUxw93uz7R0=;
+        b=FfWX/ESk/Ny+soGUtrSk5sBftjMj5pXOQcWF82TaJBaEL0q9IwJVd6Zf27SJ90qTJx
+         2QA4hFaB/nS+UD4pGjVKm8dKvBPVmEXqzZotl2Bc5nTfQZ8wZ+HX6vt4HbHsyj3Cy8Qh
+         tVS2tsY5FhnUJmseLiVblX0u5b5zDWVaWTA7H/qNLurJBpt7VbWL3ZgIFLzizSN9Hfp3
+         MAILHnkofSiqwIqvlLv2z15G24koWdJaX7MyQC++n/H6GfYnzRrDn+hI8+jr0N10k5r/
+         aXxUN7gjq0HF+DpSc1ytLuDhUgrmplLsEVY/FvNmHA8FZswsZpuNvMnRHkk5vVBoIcEs
+         yd3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5ZdzI82fvwujvYsag8I7TqJgzKEukKEgmUxw93uz7R0=;
+        b=ddSMsYE1hXDxYfJeBzpAkoX3lZ9PBgziLHfDnWGyzmNF8pI0pjsBcr1rFCb9yBuWfz
+         EpBZC0JXRlPqM80N3l5wh5vaqUB20xOPyGf+bpHtbdqAU/z+qerZlK1zCVWwfGBPDwIc
+         FSIT5aYxw5amLdRiQr1uYYIMMAgFzl5XTqf2d6a+frfs81pFMfwSWleXMQi9nWybZItK
+         ME4R9EdLuoN9hWB4icYjHgXaiAv1oWkPsmRZH1x998YP+L5iKjq5ADZGxBkOxIpxcod5
+         uWpAlGQYgFx3hYOfZXiDG/+mtTLMAFfmFrJs///uRNP9ghFNxNKZCzsX5DqAExcXzHzG
+         Fyxg==
+X-Gm-Message-State: APjAAAVEOXuTa394Y6ucizOVztKxPnoOvLDvDaLD73CAq5Z2BktqEkOG
+        07YkWrIzTkeq1q8SfGRw5UU=
+X-Google-Smtp-Source: APXvYqwiujT7PdmmUTwP1B9oYsiW6xYwpjN4TQq2gTWxjUxEg75TIEEyy9SW2soJdDmlJkt5YB7D1g==
+X-Received: by 2002:aca:d483:: with SMTP id l125mr1277102oig.124.1580347993400;
+        Wed, 29 Jan 2020 17:33:13 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id i12sm1336938otk.11.2020.01.29.17.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 17:33:12 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+Date:   Wed, 29 Jan 2020 18:33:08 -0700
+Message-Id: <20200130013308.16395-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200129232441.GI25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:24:41PM +0000, Russell King - ARM Linux admin wrote:
->On Thu, Jan 30, 2020 at 05:57:45AM +0800, Wei Yang wrote:
->> On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
->> >On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
->> >> 18.01.2020 02:22, Wei Yang пишет:
->> >> > Use the general helper instead of do it by hand.
->> >> > 
->> >> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> >> > ---
->> >> >  mm/mremap.c | 7 ++-----
->> >> >  1 file changed, 2 insertions(+), 5 deletions(-)
->> >> > 
->> >> > diff --git a/mm/mremap.c b/mm/mremap.c
->> >> > index c2af8ba4ba43..a258914f3ee1 100644
->> >> > --- a/mm/mremap.c
->> >> > +++ b/mm/mremap.c
->> >> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >> >  
->> >> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
->> >> >  		cond_resched();
->> >> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
->> >> > -		/* even if next overflowed, extent below will be ok */
->> >> > +		next = pmd_addr_end(old_addr, old_end);
->> >> >  		extent = next - old_addr;
->> >> > -		if (extent > old_end - old_addr)
->> >> > -			extent = old_end - old_addr;
->> >> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
->> >> >  		if (!old_pmd)
->> >> >  			continue;
->> >> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->> >> >  
->> >> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
->> >> >  			break;
->> >> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
->> >> > +		next = pmd_addr_end(new_addr, new_addr + len);
->> >> >  		if (extent > next - new_addr)
->> >> >  			extent = next - new_addr;
->> >> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
->> >> > 
->> >> 
->> >> Hello Wei,
->> >> 
->> >> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
->> >> Tegra (ARM32):
->> >> 
->> >>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
->> >> 
->> >> and eventually kernel hangs.
->> >> 
->> >> Git's bisection points to this patch and reverting it helps. Please fix,
->> >> thanks in advance.
->> >
->> >The above is definitely wrong - pXX_addr_end() are designed to be used
->> >with an address index within the pXX table table and the address index
->> >of either the last entry in the same pXX table or the beginning of the
->> >_next_ pXX table.  Arbitary end address indicies are not allowed.
->> >
->> 
->> #define pmd_addr_end(addr, end)						\
->> ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
->> 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
->> })
->> 
->> If my understanding is correct, the definition here align the addr to next PMD
->> boundary or end.
->> 
->> I don't see the possibility to across another PMD. Do I miss something?
->
->Look at the definition of p*_addr_end() that are used when page tables
->are rolled up.
->
+Clang warns a few times (trimmed for brevity):
 
-Sorry, I don't get your point.
+../drivers/net/wireless/realtek/rtw88/wow.c:295:7: warning: variable
+'ret' is used uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
 
-What's the meaning of "roll up" here?
+Initialize ret to true and change the other assignments to false because
+it is a boolean value.
 
-Would you mind giving me an example? I see pmd_addr_end() is not used in many
-places in core kernel. By glancing those usages, all the places use it like
-pmd_addr_end(addr, end). Seems no specially handing on the end address.
+Fixes: 44bc17f7f5b3 ("rtw88: support wowlan feature for 8822c")
+Link: https://github.com/ClangBuiltLinux/linux/issues/850
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/wireless/realtek/rtw88/wow.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Or you mean the case when pmd_addr_end() is defined to return "end" directly? 
-
->> >When page tables are "rolled up" when levels don't exist, it is common
->> >practice for these macros to just return their end address index.
->> >Hence, if they are used with arbitary end address indicies, then the
->> >iteration will fail.
->> >
->> >The only way to do this is:
->> >
->> >	next = pmd_addr_end(old_addr,
->> >			pud_addr_end(old_addr,
->> >				p4d_addr_end(old_addr,
->> >					pgd_addr_end(old_addr, old_end))));
->> >
->> >which gives pmd_addr_end() (and each of the intermediate pXX_addr_end())
->> >the correct end argument.  However, that's a more complex and verbose,
->> >and likely less efficient than the current code.
->> >
->> >I'd suggest that there's nothing to "fix" in the v5.5 code wrt this,
->> >and trying to "clean it up" will just result in less efficient or
->> >broken code.
->> >
->> >-- 
->> >RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
->> >FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
->> >According to speedtest.net: 11.9Mbps down 500kbps up
->> 
->> -- 
->> Wei Yang
->> Help you, Help me
->> 
->
->-- 
->RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
->FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
->According to speedtest.net: 11.9Mbps down 500kbps up
-
+diff --git a/drivers/net/wireless/realtek/rtw88/wow.c b/drivers/net/wireless/realtek/rtw88/wow.c
+index af5c27e1bb07..5db49802c72c 100644
+--- a/drivers/net/wireless/realtek/rtw88/wow.c
++++ b/drivers/net/wireless/realtek/rtw88/wow.c
+@@ -283,18 +283,18 @@ static void rtw_wow_rx_dma_start(struct rtw_dev *rtwdev)
+ 
+ static bool rtw_wow_check_fw_status(struct rtw_dev *rtwdev, bool wow_enable)
+ {
+-	bool ret;
++	bool ret = true;
+ 
+ 	/* wait 100ms for wow firmware to finish work */
+ 	msleep(100);
+ 
+ 	if (wow_enable) {
+ 		if (!rtw_read8(rtwdev, REG_WOWLAN_WAKE_REASON))
+-			ret = 0;
++			ret = false;
+ 	} else {
+ 		if (rtw_read32_mask(rtwdev, REG_FE1IMR, BIT_FS_RXDONE) == 0 &&
+ 		    rtw_read32_mask(rtwdev, REG_RXPKT_NUM, BIT_RW_RELEASE) == 0)
+-			ret = 0;
++			ret = false;
+ 	}
+ 
+ 	if (ret)
 -- 
-Wei Yang
-Help you, Help me
+2.25.0
+
