@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D860C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E1DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F6F20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB942082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580407230;
-	bh=2/ZSv7Dx7c+P3mc4S1Sy8HpjfXMRztYJsni16dkb0XA=;
+	s=default; t=1580407234;
+	bh=TVVDERnbLki7svyKzOyarGVOuHHjFwqBLbk8pS/iIKM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xpzuGZeomKBK2Ya9XgaYW76MHDths9PsCeu+aG8xPxTzB0AgQv/hW3DloAHact980
-	 w97KUMnP2Fl6NlKoRg9ZIf9indoDQ+NIHViXla6OsJ4qktbTwL/4cZ7PU9RtCD79xI
-	 Jn6R+lt92IxGbkEPO4jiaO5d8vYjneSuQGm4Ds/c=
+	b=GVY/RProaCKKb1uMvUhm9kPgDrQKvYk6PN6OcXv4YbZ9d6t6z2AqrslJBWwoYIIeQ
+	 UGfoBWobycuM9Tv9LskCv1p0fFlaKPOzuPYREg+kDMgTfEz/+i+GVccXunIqjOY+yq
+	 XUkbsLM5tCbGz+ghzSeh69nElkYzJfs9RqZZK7zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbgA3SAZ (ORCPT
+        id S1727570AbgA3SAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:00:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbgA3SAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jan 2020 13:00:22 -0500
-Subject: Re: [GIT] Sparc
+Received: from mail.kernel.org ([198.145.29.99]:35764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727552AbgA3SAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:00:20 -0500
+Subject: Re: [GIT] IDE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580407222;
-        bh=2/ZSv7Dx7c+P3mc4S1Sy8HpjfXMRztYJsni16dkb0XA=;
+        s=default; t=1580407219;
+        bh=TVVDERnbLki7svyKzOyarGVOuHHjFwqBLbk8pS/iIKM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cNgyfblXPgKJ2+plbH7PIraTdzTHqF/pBvAOiZUim8w6DX2XXcVJ5kZRGLyOX8tPt
-         Qu2HzLd/890g6SQqJ4Y92Xj1dR/OOtSr7SAjwByWYXXAInorHL6DYVZXUG0EawA74t
-         0mF1pQNEpfviM0E0VKfjdF/VJMTHf8hsM3k2+UEc=
+        b=08aifFAukUW0CWZ7A+kr2tcJsnlEQpYEddSH0PEpqzdrWTQlXMgDQUtU6D7+MrhMg
+         l41f4zFTBCUNuDC/uYNbk3oaFhJNl+wcdUvXyQbWDKF9yktI8IQup3HO57lDgqyL9n
+         hyYNkFJvEq0u4mHg+jJqzJjqtNOmNSJdRiALjnmI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200130.111927.1184332737812002632.davem@davemloft.net>
-References: <20200130.111927.1184332737812002632.davem@davemloft.net>
+In-Reply-To: <20200130.110713.2121058244629085751.davem@davemloft.net>
+References: <20200130.110713.2121058244629085751.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200130.111927.1184332737812002632.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git
- refs/heads/master
-X-PR-Tracked-Commit-Id: d68712ee35069455ea4043d443c8d4fb9a1ee956
+X-PR-Tracked-Message-Id: <20200130.110713.2121058244629085751.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/ide.git refs/heads/master
+X-PR-Tracked-Commit-Id: 2fd3c5c617937cde5aafa48db4f4056e1f705987
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9ca4c6429f92598a84e4c3292ea7d187c9d7b033
-Message-Id: <158040722204.2766.8349842403156129206.pr-tracker-bot@kernel.org>
-Date:   Thu, 30 Jan 2020 18:00:22 +0000
+X-PR-Merge-Commit-Id: 5e237e8c77279a0873a5e9806a5459ebc840c9ce
+Message-Id: <158040721985.2766.17217644178676220349.pr-tracker-bot@kernel.org>
+Date:   Thu, 30 Jan 2020 18:00:19 +0000
 To:     David Miller <davem@davemloft.net>
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 30 Jan 2020 11:19:27 +0100 (CET):
+The pull request you sent on Thu, 30 Jan 2020 11:07:13 +0100 (CET):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git refs/heads/master
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/ide.git refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9ca4c6429f92598a84e4c3292ea7d187c9d7b033
+https://git.kernel.org/torvalds/c/5e237e8c77279a0873a5e9806a5459ebc840c9ce
 
 Thank you!
 
