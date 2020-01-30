@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78012C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BFAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453E720CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABB02083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409813;
-	bh=HbLFfeGQCXCLi8mrUB2mh0jjKcgAoECwm3vUCTiKN2c=;
+	s=default; t=1580409818;
+	bh=raX50WWaKVukrHP5KXHr94zDerD/GUrE8P+KgpctcOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IujoZdIbDrCbqPQcO1U5g0Dprj4UxwYXVJUnxy836J770uekvsXnJljAn+Ps7Calj
-	 A2kC1NxaNbh6nJKgPBY+pzpqSzYvbq/mviKLEfE605zjMf9ce+tUG1/jV8kunthxii
-	 /Omzbf9jUIOolDIK5NSvXbr200PFBaQNzDDH8wW0=
+	b=KyrT2/tmoLvO+a+feKnNr5PHr7Ri1VjLI0DddKmDhK0H7P+ZRGPfRHfV1WnMOuCLU
+	 fbynPXdD88yLGDNPrqAEhxghdnr1cJzzwifcgGHqbSJcU+8MAsH1o9XyuuhTThZ92K
+	 P7waRJM0oPdnR2heRq5hjG2e9SNCBefdkJ5KtGT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgA3Snc (ORCPT
+        id S1730646AbgA3Snh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:43:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52130 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730613AbgA3Sn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:43:27 -0500
+        id S1730632AbgA3Snc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:43:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9AF20702;
-        Thu, 30 Jan 2020 18:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4BC620702;
+        Thu, 30 Jan 2020 18:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409807;
-        bh=HbLFfeGQCXCLi8mrUB2mh0jjKcgAoECwm3vUCTiKN2c=;
+        s=default; t=1580409812;
+        bh=raX50WWaKVukrHP5KXHr94zDerD/GUrE8P+KgpctcOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yd/pzMyoovoKCSEpcgOUsiaY7W4XMOlEixeJbI4P0wWL0odz9amw+eFkTVW+GK6et
-         QaUu+AYY5G6zr/Yj9EA3kTggOYVkwjZoSl5FlQ8MVSODVuSjHnc802Fakld18zFPCe
-         IY0HNNRxPkTojtmarxIgJYCflF0xaTmP9lMQ46wE=
+        b=ND8a9CjONwRRbUDsHGtlEtgeCZ9hrmE96DNbV52VXODE6SkrN8yEGXPYX/WiqE3ot
+         v8Y8w8+ikq4PNMJi81lVjQCDnEfs1ZIuUfNx/vzMY0xjXctQyg0dsdb87rxebHU0V6
+         ow5a6X3n8XGCkSDsF7ELuN5PzYFs0K+CL3uMpCS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 039/110] net: socionext: fix xdp_result initialization in netsec_process_rx
-Date:   Thu, 30 Jan 2020 19:38:15 +0100
-Message-Id: <20200130183619.986884058@linuxfoundation.org>
+Subject: [PATCH 5.4 041/110] mlxsw: minimal: Fix an error handling path in mlxsw_m_port_create()
+Date:   Thu, 30 Jan 2020 19:38:17 +0100
+Message-Id: <20200130183620.204606891@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 02758cb6dac31a2b4bd9e535cffbe718acd46404 ]
+[ Upstream commit 6dd4b4f3936e17fedea1308bc70e9716f68bf232 ]
 
-Fix xdp_result initialization in netsec_process_rx in order to not
-increase rx counters if there is no bpf program attached to the xdp hook
-and napi_gro_receive returns GRO_DROP
+An 'alloc_etherdev()' called is not ballanced by a corresponding
+'free_netdev()' call in one error handling path.
 
-Fixes: ba2b232108d3c ("net: netsec: add XDP support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Slighly reorder the error handling code to catch the missed case.
+
+Fixes: c100e47caa8e ("mlxsw: minimal: Add ethtool support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/socionext/netsec.c |    2 +-
+ drivers/net/ethernet/mellanox/mlxsw/minimal.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -941,8 +941,8 @@ static int netsec_process_rx(struct nets
- 		struct netsec_de *de = dring->vaddr + (DESC_SZ * idx);
- 		struct netsec_desc *desc = &dring->desc[idx];
- 		struct page *page = virt_to_page(desc->addr);
-+		u32 xdp_result = NETSEC_XDP_PASS;
- 		struct sk_buff *skb = NULL;
--		u32 xdp_result = XDP_PASS;
- 		u16 pkt_len, desc_len;
- 		dma_addr_t dma_handle;
- 		struct xdp_buff xdp;
+--- a/drivers/net/ethernet/mellanox/mlxsw/minimal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/minimal.c
+@@ -204,8 +204,8 @@ mlxsw_m_port_create(struct mlxsw_m *mlxs
+ 
+ err_register_netdev:
+ 	mlxsw_m->ports[local_port] = NULL;
+-	free_netdev(dev);
+ err_dev_addr_get:
++	free_netdev(dev);
+ err_alloc_etherdev:
+ 	mlxsw_core_port_fini(mlxsw_m->core, local_port);
+ 	return err;
 
 
