@@ -2,99 +2,79 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7B1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808EBC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7FF20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580393471;
-	bh=G0gBjAny5yN8fGZvT15qlodFm7KjouPKenaASKGMRxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R2rUoHfqALl4M5QOPpKdBrFRHBwo57bcSqerf+u/YbCZVj8UYt5/eAW5s++vCkGuG
-	 oj9b7Rv3jlKJUyvyfNcVr5v+ysSkUF3COca0+xxnjPzjzHlMsFs2tfSGZ0ZidhXT/o
-	 aO7XwyHyY7EwNUYVhch5ihri86LWURNFOk/c+Wg0=
+	by mail.kernel.org (Postfix) with ESMTP id 570792082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgA3OLK (ORCPT
+        id S1727322AbgA3ONO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:11:10 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51947 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727260AbgA3OLK (ORCPT
+        Thu, 30 Jan 2020 09:13:14 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59783 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3ONO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:11:10 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so3928589wmi.1;
-        Thu, 30 Jan 2020 06:11:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q4JcWlTe/zyFu8ktXOL2ermwd8PkUTZPqu99fFqglok=;
-        b=PELddM3/DNwRWFFCa+0FQswbMO1Du5Ln/pkQSTMxbiSJLDaoSkZJ/6MoNySi6BaEbY
-         RPsApofmJvjg6ahjIdGGDf3K97cGkDLV+qy1qvJgG0zhpGzbxrk4HH7Qj2fScRZjnui3
-         qoPURYZjzHn+WDDTe4g1kiPzGsx4sS1pEBtCT9vC4YGEYVYgJDzmINdlNv6erAmjg1cf
-         6u9lzqPPFK+DYbmQBlMiYxskmKnDPyKIgJ4IxZWRCVBHHU0MQ6fldFU3vtgO1DziovBA
-         hECydFHqgzr+IrkWHltOJdvwQQJNs9G1j/knKsNN5U3mQLq86ezg7rYNxqUUgpXQ86kp
-         UQOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q4JcWlTe/zyFu8ktXOL2ermwd8PkUTZPqu99fFqglok=;
-        b=J77YJo6VKN2Dncy2ySAXo0SYLVM4jJYS81h8D+BFAD9aJpRNfvT1PSSwb2lgics6Ah
-         M9kw6liAuBbYW+OjXFNv26S+Vjb2D102W54WH+DVUXNVQZI6DohRXBqTzaWGxoYQQT0z
-         vmBe7/5HfZ22MvRK/pY/hzFdTJed1RBi7RHU7uhDBBDL8uo4A3hchUWl+wgGK5UIlVwN
-         v9GLZZ5tu+5lf3mu8Xu2oZCW+YkOFdCSQ1Z0VJ8zPU4dhOReuSayRUU9e0POo4gAttkm
-         cfbjL/jnHt+zLGJuN4cbuhVVHpqRXCGUDZ8sVAc0lgJBmVXRPxO1nuRPZVXqKl7d8f+v
-         xZoA==
-X-Gm-Message-State: APjAAAUWMOIbO17Updq8VtcM9FqKgOxpNkpWW+g4ovqqdfmZAWtiGy0t
-        fANAjLRJqG+W8LrWMlF6djo=
-X-Google-Smtp-Source: APXvYqwouINwxupUGjm9+xYVizQvCNu2xbJw/0I+bZf+JGGE9mwkWx4GM3izcsSlc52BkQdbWxWTsg==
-X-Received: by 2002:a1c:9602:: with SMTP id y2mr5837435wmd.23.1580393467708;
-        Thu, 30 Jan 2020 06:11:07 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i16sm6998338wmb.36.2020.01.30.06.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 06:11:07 -0800 (PST)
-Date:   Thu, 30 Jan 2020 15:11:05 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL tip/core/rcu urgent] RCU fix for boot-time splat
-Message-ID: <20200130141105.GA130017@gmail.com>
-References: <20200129120206.GA15554@paulmck-ThinkPad-P72>
- <CAHk-=whK-nw7PizDEzMgKwQQ6H5NXg0=NTwb6ECDb5PfchFQjQ@mail.gmail.com>
+        Thu, 30 Jan 2020 09:13:14 -0500
+Received: from [109.134.33.162] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ixAZE-0008IN-2q; Thu, 30 Jan 2020 14:13:12 +0000
+Date:   Thu, 30 Jan 2020 15:13:11 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH 01/17] do_add_mount(): lift lock_mount/unlock_mount into
+ callers
+Message-ID: <20200130141311.zm54wadpeipckoqk@wittgenstein>
+References: <20200119031423.GV8904@ZenIV.linux.org.uk>
+ <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whK-nw7PizDEzMgKwQQ6H5NXg0=NTwb6ECDb5PfchFQjQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Wed, Jan 29, 2020 at 4:02 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > Hello, Ingo,
-> >
-> > This pull request contains a single commit that fixes an embarrassing
-> > bug discussed here:
+On Sun, Jan 19, 2020 at 03:17:13AM +0000, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> Ingo, just FYI: I'll just take this pull directly, just to avoid
-> having the warning in my current tree.
+> preparation to finish_automount() fix (next commit)
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-Thanks!
+Just a naming nit below.
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-	Ingo
+> ---
+>  fs/namespace.c | 47 ++++++++++++++++++++++++-----------------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 2fd0c8bcb8c1..5f0a80f17651 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2697,45 +2697,32 @@ static int do_move_mount_old(struct path *path, const char *old_name)
+>  /*
+>   * add a mount into a namespace's mount tree
+>   */
+> -static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
+> +static int do_add_mount(struct mount *newmnt, struct mountpoint *mp,
+> +			struct path *path, int mnt_flags)
+
+Maybe this should now be named do_add_mount_locked() so callers know
+that they need to do locking themselves?
+But that's bikeshedding...
+
+Christian
