@@ -2,123 +2,160 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1314DC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08277C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59F12083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB7220708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCivQUGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgA3W04 (ORCPT
+        id S1727598AbgA3Wpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:26:56 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726327AbgA3W0z (ORCPT
+        Thu, 30 Jan 2020 17:45:34 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43718 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbgA3Wpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:26:55 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UMBcp5121416
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 17:26:54 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xv7ddrucc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 17:26:54 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 30 Jan 2020 22:26:52 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 Jan 2020 22:26:49 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UMQmCB23461998
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 22:26:48 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48845AE051;
-        Thu, 30 Jan 2020 22:26:48 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C162AE056;
-        Thu, 30 Jan 2020 22:26:47 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.209.158])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jan 2020 22:26:47 +0000 (GMT)
-Subject: Re: [PATCH 0/8] ima: support stronger algorithms for attestation
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        jarkko.sakkinen@linux.intel.com,
-        james.bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Thu, 30 Jan 2020 17:26:46 -0500
-In-Reply-To: <20200127170443.21538-1-roberto.sassu@huawei.com>
-References: <20200127170443.21538-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 30 Jan 2020 17:45:34 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u131so2388857pgc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:45:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pJLzxzkNtbblZiMU2t1sW8XMMhW2XUAhXW1NL4oiL6A=;
+        b=TCivQUGPIKZ6fn8CFevCtyXI2st0TrHeS9cJtB0B8/ug8HYuiqyEAl3K088O9m+r1g
+         dBGNPaHvW8OE/srGEBul10rYXoAdoQyI8ZjH0LodoRKm7rxBaovCdZTLTsB9R5+RZiNq
+         dWMtcynOgnwwksu1Rq6c/1SkQPQrEr2WpD/J5tgwZ6iahBGyjVouLLNjdFzbVptvQEqG
+         tnBBct1KfQoMlIHFZwah/JeQusmjk32pwMqAtMFiwcFwrTyaSGSoSODKvFUIW8GkmkPn
+         c4BNUVJCzRFqXN78ZNqyHREaTFn+aafnkJEnE94lD9H9oSd9E7zPWqTCBpJBzjY5cuqx
+         uUBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pJLzxzkNtbblZiMU2t1sW8XMMhW2XUAhXW1NL4oiL6A=;
+        b=c6E3Ek5vTNWJrfD6TjP2Ae/9PPq/cMU1FdkTeO7Mi09Oe9GdfTVitCnE2fVQ/lbVo/
+         XsUhT1NDGMduJa9kbZfWBjXCAUOozES73rydvtFko5K5X5ppcUK8mfbRQIlHSuvVl2Nc
+         6PfPUum7CX4uCglkhqAOMx2dmMg2YL+fVOUBSc59OiIdmkgnmZXgFfkWduwTxzoztmK1
+         XzeTjGSVJ7J7VRLfd77uuXyFTStK9sIfCRFhc8ErsRTvJEWPq0w59ePWkQw00xOScusq
+         upMpnxn5fdv7thWnt6iL1kmapR+afIiS0p6ANGdcD+eoYL68MSU91aqB//DEwu5evftd
+         rzuQ==
+X-Gm-Message-State: APjAAAWOOSz8eymX5GUQSvfF++tvXtgT3LofYjnuhPkpBR6llFeerS/9
+        cGqHPMkBZQ6EevR4IF3ey8o=
+X-Google-Smtp-Source: APXvYqzhpw0o69yvYtAggWnTZVCmYRGNK7iqOwqj+WK+bRhuQmDKbfkd8VYIL6TEUYZgvTM26Ogz+Q==
+X-Received: by 2002:a62:4e42:: with SMTP id c63mr7278166pfb.86.1580424333344;
+        Thu, 30 Jan 2020 14:45:33 -0800 (PST)
+Received: from gnu-efi-2.localdomain ([172.58.38.183])
+        by smtp.gmail.com with ESMTPSA id u18sm7580429pgi.44.2020.01.30.14.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 14:45:32 -0800 (PST)
+Received: from gnu-efi-2.localdomain (localhost [127.0.0.1])
+        by gnu-efi-2.localdomain (Postfix) with ESMTP id D6A5F100800;
+        Thu, 30 Jan 2020 14:43:37 -0800 (PST)
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH] Discard .note.gnu.property sections in generic NOTES
+Date:   Thu, 30 Jan 2020 14:43:37 -0800
+Message-Id: <20200130224337.4150-2-hjl.tools@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200130224337.4150-1-hjl.tools@gmail.com>
+References: <20200130224337.4150-1-hjl.tools@gmail.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20013022-4275-0000-0000-0000039C9631
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013022-4276-0000-0000-000038B0B55D
-Message-Id: <1580423206.6104.19.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_07:2020-01-30,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- phishscore=0 mlxscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto,
+With the command-line option, -mx86-used-note=yes, the x86 assembler
+in binutils 2.32 and above generates a program property note in a note
+section, .note.gnu.property, to encode used x86 ISAs and features.  But
+kernel linker script only contains a single NOTE segment:
 
-On Mon, 2020-01-27 at 18:04 +0100, Roberto Sassu wrote:
-> IMA extends Platform Configuration Registers (PCRs) of the TPM to give a
-> proof to a remote verifier that the measurement list contains all
-> measurements done by the kernel and that the list was not maliciously
-> modified by an attacker.
-> 
-> IMA was originally designed to extend PCRs with a SHA1 digest, provided
-> with the measurement list, and was subsequently updated to extend all PCR
-> banks in case a TPM 2.0 is used. Non-SHA1 PCR banks are not supposed to be
-> used for remote attestation, as they are extended with a SHA1 digest padded
-> with zeros, which does not increase the strength.
-> 
-> This patch set addresses this issue by extending PCRs with the digest of
-> the measurement entry calculated with the crypto subsystem. The list of
-> algorithms used to calculate the digest are taken from
-> ima_tpm_chip->allocated_banks, returned by the TPM driver. The SHA1 digest
-> is always calculated, as SHA1 still remains the default algorithm for the
-> template digest in the measurement list.
-> 
-> This patch set also makes two additional modifications related to the usage
-> of hash algorithms. First, since now the template digest for the default
-> IMA algorithm is always calculated, this is used for hash collision
-> detection, to check if there are duplicate measurement entries.
-> 
-> Second, it uses the default IMA hash algorithm to calculate the boot
-> aggregate, assuming that the corresponding PCR bank is currently allocated.
-> Otherwise, it finds the first PCR bank for which the crypto ID is known.
-> IMA initialization fails only if no algorithm known to the crypto subsystem
-> is found.
-> 
-> This patch set does not yet modify the format of the measurement list to
-> provide the digests passed to the TPM. However, reconstructing the value of
-> the quoted PCR is still possible for the verifier by calculating the digest
-> on measurement data found in binary_runtime_measurements.
+PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ note PT_NOTE FLAGS(0);
+}
+SECTIONS
+{
+...
+ .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+e.*)) __stop_notes = .; } :text :note
+...
+}
 
-Thank you!  I'm still reviewing and testing the patches, but it is
-really nicely written.
+The NOTE segment generated by kernel linker script is aligned to 4 bytes.
+But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
+we get
 
-Mimi 
+[hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+
+Displaying notes found in: .notes
+  Owner                Data size Description
+  Xen                  0x00000006 Unknown note type: (0x00000006)
+   description data: 6c 69 6e 75 78 00
+  Xen                  0x00000004 Unknown note type: (0x00000007)
+   description data: 32 2e 36 00
+  xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+   description data: 08 00 00 00 03
+readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+0x80000000, alignment: 8
+[hjl@gnu-skx-1 linux]$
+
+Since note.gnu.property section in kernel image is never used, this patch
+discards .note.gnu.property sections in kernel linker script by adding
+
+/DISCARD/ : {
+  *(.note.gnu.property)
+}
+
+before kernel NOTE segment in generic NOTES.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+---
+ include/asm-generic/vmlinux.lds.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 6b943fb8c5fd..6659a7c07c84 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -818,7 +818,14 @@
+ #define TRACEDATA
+ #endif
+ 
++/*
++ * Discard .note.gnu.property sections which are unused and have
++ * different alignment requirement from kernel note sections.
++ */
+ #define NOTES								\
++	/DISCARD/ : {							\
++		*(.note.gnu.property)					\
++	}								\
+ 	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
+ 		__start_notes = .;					\
+ 		KEEP(*(.note.*))					\
+-- 
+2.24.1
 
