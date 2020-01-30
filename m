@@ -7,61 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4429FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ACEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC1020708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8889B2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BmOwB5s2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DNjZlxuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgA3UeA (ORCPT
+        id S1727830AbgA3UeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:34:00 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54333 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgA3Ud7 (ORCPT
+        Thu, 30 Jan 2020 15:34:13 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37442 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727697AbgA3UeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:33:59 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so1833382pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:33:59 -0800 (PST)
+        Thu, 30 Jan 2020 15:34:12 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so1847366pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:34:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6aPMzV2Twuv/PNe7f+NGNr6jf/YyibOiqVxBpI/Om0U=;
-        b=BmOwB5s2VR3gXrSAcICvbniyjGZRamp2jkUqWxzFxoZwoPNSFHzlYpVUpoESdUtMmN
-         Dk+06KpWRAIb3gNW6L4X0My2rocciAsC4NnP5LfuN3VjkOZ/NWxRSNkafXsIhrenwP1C
-         v/R8WF+DNtBBes06nxn9UVqQT2D0FaXB3RKUo=
+        bh=poNd8Knt9iYU4WLCgt+W/hIt77GJjU6hjXWszSb6Ux0=;
+        b=DNjZlxuWNQShvB5zjTDJjJvNicwKi9rnDgK69x7wLe7r15G52//uN0wdGU9MDNbwPr
+         uLNs2OolqwOKVua+MGTuHHTw4MGR4Ci15Iu5Tsk5xqbkqQefEbNtzbj9dRfV+n+H3XE2
+         Z/z6ggAwTRHEpcpZco9L74L9wyXGgghSzykio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6aPMzV2Twuv/PNe7f+NGNr6jf/YyibOiqVxBpI/Om0U=;
-        b=DIBQ6/RP2nXbS4B4kTeW8QhQHwOuBtBEm8ArAG1qPmbwxYn7t8svs+eb+734iDX6jg
-         6nezx+BL7+ewCorbOGXDaPiz1fMbuEAqa/FvFS98zg5bt4H+pOGJqpUaib7cXKSiuA1z
-         Az2lTTQefDjnNogGpxWOZOlMpU19yuMnvEfDzpxQUSxmLONKvry+tH80ysdCKOwIO11i
-         piJaW5/21Vm15jfTVWbtz5YSwIHtnBGiEo9elqFxkz4doFB9o94vMvskfRQSYIkGJx0R
-         usHZXM5Mrv4YIN1WAij4++23SOLvBwdveNM+RHDe5FKst5JUdfZVjtG3FZ3T7FOe4kb3
-         VwOQ==
-X-Gm-Message-State: APjAAAWOQRK+qLWbad/wAqaq+e9v/7dDGZTUaR5FqAiFa0JYzW5spScm
-        D6MeCTrnjeuFJKeQQHwl4+dpp8yJQlo=
-X-Google-Smtp-Source: APXvYqyIoAwW3bIE4yiLiJHEAs0ZRiFzLRL9e37f9nSuDNYegDj3aB1doTXCHljKX5/FfL/9C+7PMA==
-X-Received: by 2002:a17:90a:8a0c:: with SMTP id w12mr7924130pjn.61.1580416438940;
-        Thu, 30 Jan 2020 12:33:58 -0800 (PST)
+        bh=poNd8Knt9iYU4WLCgt+W/hIt77GJjU6hjXWszSb6Ux0=;
+        b=BhQNZwW6waxf8+6KwnXttPJ+GaE95oGC+2mJsF2pxpyGamj+W63To0iaRga/oxB1S8
+         6bbw1P9cFLqJD4KGxTkP3pR6w7XRbCChKSj0i8kzoNXEeSpYM60rWo1q/yEdB7IJNeMI
+         srtVGogvD+dT9kuYW283snp6bN91iQX4yO4WpPB0xYz0STwwDszMabTWwVJMp4wUgDt4
+         v0X4P7epas3zrHN+RPyNkp0Q5AriuAlPfjyObEzBd0THcvQQ+/tSsI6QvycukmTgu5mA
+         uWJUuwwmcHd1zKp361CzIwBdQF0q/6ROp9Z5AmjvRQbDZC9WsZQ/tS9Ddyu3OlYQPxTK
+         uFDA==
+X-Gm-Message-State: APjAAAW7V8o1ougx/kxKilisnOS/hFnFA6x5/be5TY64CRWx7Hmgx2Fk
+        JV8CvXuhfIi+eKGsmauwF/zg05FIz0Hl3A==
+X-Google-Smtp-Source: APXvYqye5KJgxBgi3l2rxg/g1KlRyWFBGEe/VeBl118G0P+FitCf/Dws3Ig06DI/5Fv0+Rhk0h+Htg==
+X-Received: by 2002:a17:902:76c5:: with SMTP id j5mr70044plt.172.1580416451708;
+        Thu, 30 Jan 2020 12:34:11 -0800 (PST)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.33.58
+        by smtp.gmail.com with ESMTPSA id q12sm7469321pfh.158.2020.01.30.12.34.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 12:33:58 -0800 (PST)
+        Thu, 30 Jan 2020 12:34:11 -0800 (PST)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Prashant Malani <pmalani@chromium.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 07/17] platform/chrome: sysfs: Use send_cmd_msg()
-Date:   Thu, 30 Jan 2020 12:30:47 -0800
-Message-Id: <20200130203106.201894-8-pmalani@chromium.org>
+Subject: [PATCH 08/17] extcon: cros_ec: Use cros_ec_send_cmd_msg()
+Date:   Thu, 30 Jan 2020 12:30:49 -0800
+Message-Id: <20200130203106.201894-9-pmalani@chromium.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200130203106.201894-1-pmalani@chromium.org>
 References: <20200130203106.201894-1-pmalani@chromium.org>
@@ -72,242 +74,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace cros_ec_cmd_xfer_status() calls to the new function
-cros_ec_send_cmd_msg() which is more readable and does the message setup code.
+Replace cros_ec_pd_command() with cros_ec_send_cmd_msg() which does the
+same thing, but is defined in a common location in platform/chrome and
+exposed for other modules to use.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- drivers/platform/chrome/cros_ec_sysfs.c | 106 ++++++++++--------------
- 1 file changed, 42 insertions(+), 64 deletions(-)
+ drivers/extcon/extcon-usbc-cros-ec.c | 62 ++++------------------------
+ 1 file changed, 9 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-index 74d36b8d4f46c7..87d5bfa1fcfa61 100644
---- a/drivers/platform/chrome/cros_ec_sysfs.c
-+++ b/drivers/platform/chrome/cros_ec_sysfs.c
-@@ -52,20 +52,13 @@ static ssize_t reboot_store(struct device *dev,
- 		{"hibernate",    EC_REBOOT_HIBERNATE, 0},
- 		{"at-shutdown",  -1, EC_REBOOT_FLAG_ON_AP_SHUTDOWN},
- 	};
--	struct cros_ec_command *msg;
--	struct ec_params_reboot_ec *param;
-+	struct ec_params_reboot_ec param = {0};
- 	int got_cmd = 0, offset = 0;
- 	int i;
- 	int ret;
- 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+diff --git a/drivers/extcon/extcon-usbc-cros-ec.c b/drivers/extcon/extcon-usbc-cros-ec.c
+index 5290cc2d19d953..e42d929d3a76da 100644
+--- a/drivers/extcon/extcon-usbc-cros-ec.c
++++ b/drivers/extcon/extcon-usbc-cros-ec.c
+@@ -45,49 +45,6 @@ enum usb_data_roles {
+ 	DR_DEVICE,
+ };
  
--	msg = kmalloc(sizeof(*msg) + sizeof(*param), GFP_KERNEL);
+-/**
+- * cros_ec_pd_command() - Send a command to the EC.
+- * @info: pointer to struct cros_ec_extcon_info
+- * @command: EC command
+- * @version: EC command version
+- * @outdata: EC command output data
+- * @outsize: Size of outdata
+- * @indata: EC command input data
+- * @insize: Size of indata
+- *
+- * Return: 0 on success, <0 on failure.
+- */
+-static int cros_ec_pd_command(struct cros_ec_extcon_info *info,
+-			      unsigned int command,
+-			      unsigned int version,
+-			      void *outdata,
+-			      unsigned int outsize,
+-			      void *indata,
+-			      unsigned int insize)
+-{
+-	struct cros_ec_command *msg;
+-	int ret;
+-
+-	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
 -	if (!msg)
 -		return -ENOMEM;
 -
--	param = (struct ec_params_reboot_ec *)msg->data;
+-	msg->version = version;
+-	msg->command = command;
+-	msg->outsize = outsize;
+-	msg->insize = insize;
 -
--	param->flags = 0;
-+	param.flags = 0;
- 	while (1) {
- 		/* Find word to start scanning */
- 		while (buf[offset] && isspace(buf[offset]))
-@@ -77,9 +70,9 @@ static ssize_t reboot_store(struct device *dev,
- 			if (!strncasecmp(words[i].str, buf+offset,
- 					 strlen(words[i].str))) {
- 				if (words[i].flags) {
--					param->flags |= words[i].flags;
-+					param.flags |= words[i].flags;
- 				} else {
--					param->cmd = words[i].cmd;
-+					param.cmd = words[i].cmd;
- 					got_cmd = 1;
- 				}
- 				break;
-@@ -96,15 +89,12 @@ static ssize_t reboot_store(struct device *dev,
- 		goto exit;
- 	}
- 
--	msg->version = 0;
--	msg->command = EC_CMD_REBOOT_EC + ec->cmd_offset;
--	msg->outsize = sizeof(*param);
--	msg->insize = 0;
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	ret = cros_ec_send_cmd_msg(ec->ec_dev, 0,
-+				   EC_CMD_REBOOT_EC + ec->cmd_offset,
-+				   &param, sizeof(param), NULL, 0);
- 	if (ret < 0)
- 		count = ret;
- exit:
--	kfree(msg);
- 	return count;
- }
- 
-@@ -116,25 +106,24 @@ static ssize_t version_show(struct device *dev,
- 	struct ec_response_get_chip_info *r_chip;
- 	struct ec_response_board_version *r_board;
- 	struct cros_ec_command *msg;
-+	void *ec_buf;
- 	int ret;
- 	int count = 0;
- 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
- 
--	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
--	if (!msg)
-+	ec_buf = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
-+	if (!ec_buf)
- 		return -ENOMEM;
- 
- 	/* Get versions. RW may change. */
--	msg->version = 0;
--	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
--	msg->insize = sizeof(*r_ver);
--	msg->outsize = 0;
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	ret = cros_ec_send_cmd_msg(ec->ec_dev, 0,
-+				   EC_CMD_GET_VERSION  + ec->cmd_offset,
-+				   NULL, 0, ec_buf, sizeof(*r_ver));
- 	if (ret < 0) {
- 		count = ret;
- 		goto exit;
- 	}
--	r_ver = (struct ec_response_get_version *)msg->data;
-+	r_ver = (struct ec_response_get_version *)ec_buf;
- 	/* Strings should be null-terminated, but let's be sure. */
- 	r_ver->version_string_ro[sizeof(r_ver->version_string_ro) - 1] = '\0';
- 	r_ver->version_string_rw[sizeof(r_ver->version_string_rw) - 1] = '\0';
-@@ -146,8 +135,10 @@ static ssize_t version_show(struct device *dev,
- 			   "Firmware copy: %s\n",
- 			   (r_ver->current_image < ARRAY_SIZE(image_names) ?
- 			    image_names[r_ver->current_image] : "?"));
-+	memset(ec_buf, 0, sizeof(*msg) + EC_HOST_PARAM_SIZE);
- 
- 	/* Get build info. */
-+	msg = (struct cros_ec_command *)ec_buf;
- 	msg->command = EC_CMD_GET_BUILD_INFO + ec->cmd_offset;
- 	msg->insize = EC_HOST_PARAM_SIZE;
- 	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-@@ -206,40 +197,29 @@ static ssize_t version_show(struct device *dev,
- 	}
- 
- exit:
--	kfree(msg);
-+	kfree(ec_buf);
- 	return count;
- }
- 
- static ssize_t flashinfo_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
--	struct ec_response_flash_info *resp;
--	struct cros_ec_command *msg;
-+	struct ec_response_flash_info resp = {0};
- 	int ret;
- 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
- 
--	msg = kmalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
--	if (!msg)
--		return -ENOMEM;
+-	if (outsize)
+-		memcpy(msg->data, outdata, outsize);
 -
--	/* The flash info shouldn't ever change, but ask each time anyway. */
--	msg->version = 0;
--	msg->command = EC_CMD_FLASH_INFO + ec->cmd_offset;
--	msg->insize = sizeof(*resp);
--	msg->outsize = 0;
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	ret = cros_ec_send_cmd_msg(ec->ec_dev, 0,
-+				   EC_CMD_FLASH_INFO + ec->cmd_offset,
-+				   NULL, 0, &resp, sizeof(resp));
- 	if (ret < 0)
- 		goto exit;
- 
--	resp = (struct ec_response_flash_info *)msg->data;
+-	ret = cros_ec_cmd_xfer_status(info->ec, msg);
+-	if (ret >= 0 && insize)
+-		memcpy(indata, msg->data, insize);
 -
- 	ret = scnprintf(buf, PAGE_SIZE,
- 			"FlashSize %d\nWriteSize %d\n"
- 			"EraseSize %d\nProtectSize %d\n",
--			resp->flash_size, resp->write_block_size,
--			resp->erase_block_size, resp->protect_block_size);
-+			resp.flash_size, resp.write_block_size,
-+			resp.erase_block_size, resp.protect_block_size);
- exit:
 -	kfree(msg);
- 	return ret;
- }
- 
-@@ -250,29 +230,27 @@ static ssize_t kb_wake_angle_show(struct device *dev,
- 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
- 	struct ec_response_motion_sense *resp;
- 	struct ec_params_motion_sense *param;
--	struct cros_ec_command *msg;
-+	void *ec_buf;
+-	return ret;
+-}
+-
+ /**
+  * cros_ec_usb_get_power_type() - Get power type info about PD device attached
+  * to given port.
+@@ -102,8 +59,8 @@ static int cros_ec_usb_get_power_type(struct cros_ec_extcon_info *info)
  	int ret;
  
--	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
--	if (!msg)
-+	ec_buf = kmalloc(EC_HOST_PARAM_SIZE, GFP_KERNEL);
-+	if (!ec_buf)
- 		return -ENOMEM;
- 
--	param = (struct ec_params_motion_sense *)msg->data;
--	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
--	msg->version = 2;
-+	param = (struct ec_params_motion_sense *)ec_buf;
-+	resp = (struct ec_response_motion_sense *)ec_buf;
- 	param->cmd = MOTIONSENSE_CMD_KB_WAKE_ANGLE;
- 	param->kb_wake_angle.data = EC_MOTION_SENSE_NO_VALUE;
--	msg->outsize = sizeof(*param);
--	msg->insize = sizeof(*resp);
- 
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	ret = cros_ec_send_cmd_msg(ec->ec_dev, 2,
-+				   EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset,
-+				   param, sizeof(*param), resp, sizeof(*resp));
+ 	req.port = info->port_id;
+-	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_POWER_INFO, 0,
+-				 &req, sizeof(req), &resp, sizeof(resp));
++	ret = cros_ec_send_cmd_msg(info->ec, 0, EC_CMD_USB_PD_POWER_INFO,
++				   &req, sizeof(req), &resp, sizeof(resp));
  	if (ret < 0)
- 		goto exit;
- 
--	resp = (struct ec_response_motion_sense *)msg->data;
- 	ret = scnprintf(buf, PAGE_SIZE, "%d\n", resp->kb_wake_angle.ret);
- exit:
--	kfree(msg);
-+	kfree(ec_buf);
- 	return ret;
- }
- 
-@@ -282,7 +260,8 @@ static ssize_t kb_wake_angle_store(struct device *dev,
- {
- 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
- 	struct ec_params_motion_sense *param;
--	struct cros_ec_command *msg;
-+	struct ec_response_motion_sense *resp;
-+	void *ec_buf;
- 	u16 angle;
- 	int ret;
- 
-@@ -290,20 +269,19 @@ static ssize_t kb_wake_angle_store(struct device *dev,
- 	if (ret)
  		return ret;
  
--	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
--	if (!msg)
-+	ec_buf = kmalloc(EC_HOST_PARAM_SIZE, GFP_KERNEL);
-+	if (!ec_buf)
- 		return -ENOMEM;
+@@ -123,9 +80,8 @@ static int cros_ec_usb_get_pd_mux_state(struct cros_ec_extcon_info *info)
+ 	int ret;
  
--	param = (struct ec_params_motion_sense *)msg->data;
--	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
--	msg->version = 2;
-+	param = (struct ec_params_motion_sense *)ec_buf;
-+	resp = (struct ec_response_motion_sense *)ec_buf;
- 	param->cmd = MOTIONSENSE_CMD_KB_WAKE_ANGLE;
- 	param->kb_wake_angle.data = angle;
--	msg->outsize = sizeof(*param);
--	msg->insize = sizeof(struct ec_response_motion_sense);
- 
--	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
--	kfree(msg);
-+	ret = cros_ec_send_cmd_msg(ec->ec_dev, 2,
-+				   EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset,
-+				   param, sizeof(*param), resp, sizeof(*resp));
-+	kfree(ec_buf);
+ 	req.port = info->port_id;
+-	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_MUX_INFO, 0,
+-				 &req, sizeof(req),
+-				 &resp, sizeof(resp));
++	ret = cros_ec_send_cmd_msg(info->ec, 0, EC_CMD_USB_PD_MUX_INFO,
++				   &req, sizeof(req), &resp, sizeof(resp));
  	if (ret < 0)
  		return ret;
- 	return count;
+ 
+@@ -152,9 +108,9 @@ static int cros_ec_usb_get_role(struct cros_ec_extcon_info *info,
+ 	pd_control.role = USB_PD_CTRL_ROLE_NO_CHANGE;
+ 	pd_control.mux = USB_PD_CTRL_MUX_NO_CHANGE;
+ 	pd_control.swap = USB_PD_CTRL_SWAP_NONE;
+-	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_CONTROL, 1,
+-				 &pd_control, sizeof(pd_control),
+-				 &resp, sizeof(resp));
++	ret = cros_ec_send_cmd_msg(info->ec, 1, EC_CMD_USB_PD_CONTROL,
++				   &pd_control, sizeof(pd_control),
++				   &resp, sizeof(resp));
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -177,8 +133,8 @@ static int cros_ec_pd_get_num_ports(struct cros_ec_extcon_info *info)
+ 	struct ec_response_usb_pd_ports resp;
+ 	int ret;
+ 
+-	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_PORTS,
+-				 0, NULL, 0, &resp, sizeof(resp));
++	ret = cros_ec_send_cmd_msg(info->ec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
++				   &resp, sizeof(resp));
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.0.341.g760bfbb309-goog
 
