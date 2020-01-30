@@ -2,98 +2,139 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90494C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFADC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2BF2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A307620674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgA3Pi3 (ORCPT
+        id S1727348AbgA3PlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:38:29 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:55710 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgA3Pi3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:38:29 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixBth-004oy2-Rz; Thu, 30 Jan 2020 15:38:25 +0000
-Date:   Thu, 30 Jan 2020 15:38:25 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 04/17] follow_automount() doesn't need the entire
- nameidata
-Message-ID: <20200130153825.GA23230@ZenIV.linux.org.uk>
-References: <20200119031423.GV8904@ZenIV.linux.org.uk>
- <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
- <20200119031738.2681033-4-viro@ZenIV.linux.org.uk>
- <20200130144520.hnf2yk5tjalxfddn@wittgenstein>
+        Thu, 30 Jan 2020 10:41:01 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2330 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727107AbgA3PlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:41:00 -0500
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BCAF478D3962AD087CBC;
+        Thu, 30 Jan 2020 15:40:58 +0000 (GMT)
+Received: from fraeml707-chm.china.huawei.com (10.206.15.35) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 30 Jan 2020 15:40:59 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 Jan 2020 16:40:57 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Thu, 30 Jan 2020 16:40:57 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, Petr Vorel <pvorel@suse.cz>
+CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+Thread-Topic: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
+ the boot aggregate
+Thread-Index: AQHV1SsskZfHgOFdME+uHgUEG6qPTKf+632AgAALuoCAAkpuAIAA8HoAgADpZbCAAEAyAA==
+Date:   Thu, 30 Jan 2020 15:40:57 +0000
+Message-ID: <43d93cbe8ab04182bb6d8579e8499634@huawei.com>
+References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
+         <20200127204941.2ewman4y5nzvkjqe@cantor>
+         <1580160699.5088.64.camel@linux.ibm.com>
+ <20200129083034.GA387@dell5510> <1580338276.4790.8.camel@linux.ibm.com>
+ <2e3ec5f5a4e748a898baeac8a88487ab@huawei.com>
+In-Reply-To: <2e3ec5f5a4e748a898baeac8a88487ab@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130144520.hnf2yk5tjalxfddn@wittgenstein>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 03:45:20PM +0100, Christian Brauner wrote:
-> > -	nd->total_link_count++;
-> > -	if (nd->total_link_count >= 40)
-> > +	if (count && *count++ >= 40)
-> 
-> He, side-effects galore. :)
-> Isn't this incrementing the address but you want to increment the
-> counter?
-> Seems like this should be
-> 
-> if (count && (*count)++ >= 40)
-
-Nice catch; incidentally, it means that usual testsuites (xfstests,
-LTP) are missing the automount loop detection.  Hmm...
-
-Something like
-
-export $FOO over nfs4 to localhost
-
-mkdir $FOO/sub
-touch $FOO/a
-mount $SCRATCH_DEV $FOO/sub
-touch $FOO/sub/a
-cd $BAR
-mkdir nfs
-mount -t nfs localhost:$FOO nfs
-for i in `seq 40`; do ln -s l`expr $i - 1` l$i; done
-for i in `seq 40`; do ln -s m`expr $i - 1` m$i; done
-ln -s nfs/sub/a l0
-ln -s nfs/a m0
-for i in `seq 40`; do
-	umount nfs/sub 2>/dev/null
-	cat l$i m$i
-done
-
-BTW, the check of pre-increment value is more correct - it's
-accidental, but it does give consistency with the normal symlink
-following.  We do allow up to 40 symlinks over the pathname
-resolution, not up to 39.
-
-The thing above should produce
-cat: l39: Too many levels of symbolic links
-cat: l40: Too many levels of symbolic links
-cat: m40: Too many levels of symbolic links
-
-Here l<n> and m<n> go through n + 1 symlink, ending at
-nfs/sub/a and nfs/a resp.; the former does trigger an automount,
-the latter does not.
-
-On mainline it actually starts to complain about l38, l39, l40 and m40,
-due to that off-by-one in follow_automount().
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
+ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
+Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBSb2JlcnRvIFNhc3N1DQo+IFNlbnQ6IFRodXJzZGF5
+LCBKYW51YXJ5IDMwLCAyMDIwIDQ6MjcgUE0NCj4gVG86IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4
+LmlibS5jb20+OyBQZXRyIFZvcmVsIDxwdm9yZWxAc3VzZS5jej4NCj4gQ2M6IEplcnJ5IFNuaXRz
+ZWxhYXIgPGpzbml0c2VsQHJlZGhhdC5jb20+OyBsaW51eC1pbnRlZ3JpdHlAdmdlci5rZXJuZWwu
+b3JnOw0KPiBKYW1lcyBCb3R0b21sZXkgPEphbWVzLkJvdHRvbWxleUBoYW5zZW5wYXJ0bmVyc2hp
+cC5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTog
+W1BBVENIIDEvMl0gaW1hOiB1c2UgdGhlIElNQSBjb25maWd1cmVkIGhhc2ggYWxnbyB0byBjYWxj
+dWxhdGUNCj4gdGhlIGJvb3QgYWdncmVnYXRlDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+ID4gRnJvbTogbGludXgtaW50ZWdyaXR5LW93bmVyQHZnZXIua2VybmVsLm9yZyBb
+bWFpbHRvOmxpbnV4LWludGVncml0eS0NCj4gPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJl
+aGFsZiBPZiBNaW1pIFpvaGFyDQo+ID4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5IDI5LCAyMDIw
+IDExOjUxIFBNDQo+ID4gVG86IFBldHIgVm9yZWwgPHB2b3JlbEBzdXNlLmN6Pg0KPiA+IENjOiBK
+ZXJyeSBTbml0c2VsYWFyIDxqc25pdHNlbEByZWRoYXQuY29tPjsgbGludXgtDQo+IGludGVncml0
+eUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gSmFtZXMgQm90dG9tbGV5IDxKYW1lcy5Cb3R0b21sZXlA
+aGFuc2VucGFydG5lcnNoaXAuY29tPjsgbGludXgtDQo+ID4ga2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPg0KPiA+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0ggMS8yXSBpbWE6IHVzZSB0aGUgSU1BIGNvbmZpZ3VyZWQgaGFzaCBhbGdvIHRv
+DQo+IGNhbGN1bGF0ZQ0KPiA+IHRoZSBib290IGFnZ3JlZ2F0ZQ0KPiA+DQo+ID4gT24gV2VkLCAy
+MDIwLTAxLTI5IGF0IDA5OjMwICswMTAwLCBQZXRyIFZvcmVsIHdyb3RlOg0KPiA+ID4gSGkgTWlt
+aSwNCj4gPiA+DQo+ID4gPiBSZXZpZXdlZC1ieTogUGV0ciBWb3JlbCA8cHZvcmVsQHN1c2UuY3o+
+DQo+ID4gPg0KPiA+ID4gPiBUaGUgb3JpZ2luYWwgTFRQIGltYV9ib290X2FnZ3JlZ2F0ZS5jIHRl
+c3QgbmVlZGVkIHRvIGJlIHVwZGF0ZWQgdG8NCj4gPiA+ID4gc3VwcG9ydCBUUE0gMi4wIGJlZm9y
+ZSB0aGlzIGNoYW5nZS4gwqBGb3IgVFBNIDIuMCwgdGhlIFBDUnMgYXJlIG5vdA0KPiA+ID4gPiBl
+eHBvcnRlZC4gwqBXaXRoIHRoaXMgY2hhbmdlLCB0aGUga2VybmVsIGNvdWxkIGJlIHJlYWRpbmcg
+UENScyBmcm9tIGENCj4gPiA+ID4gVFBNIGJhbmsgb3RoZXIgdGhhbiBTSEExIGFuZCBjYWxjdWxh
+dGluZyB0aGUgYm9vdF9hZ2dyZWdhdGUgYmFzZWQNCj4gb24NCj4gPiBhDQo+ID4gPiA+IGRpZmZl
+cmVudCBoYXNoIGFsZ29yaXRobSBhcyB3ZWxsLiDCoEknbSBub3Qgc3VyZSBob3cgYSByZW1vdGUg
+dmVyaWZpZXINCj4gPiA+ID4gd291bGQga25vdyB3aGljaCBUUE0gYmFuayB3YXMgcmVhZCwgd2hl
+biBjYWxjdWxhdGluZyB0aGUgYm9vdC0NCj4gPiA+ID4gYWdncmVnYXRlLg0KPiA+ID4gTWltaSwg
+ZG8geW91IHBsYW4gdG8gZG8gdXBkYXRlIExUUCB0ZXN0Pw0KPiA+DQo+ID4gSW4gb3JkZXIgdG8g
+dGVzdCBSb2JlcnRvJ3MgcGF0Y2hlcyB0aGF0IGNhbGN1bGF0ZXMgYW5kIGV4dGVuZHMgdGhlDQo+
+ID4gZGlmZmVyZW50IFRQTSBiYW5rcyB3aXRoIHRoZSBhcHByb3ByaWF0ZSBoYXNoZXMsIHdlJ2xs
+IG5lZWQgc29tZSB0ZXN0DQo+ID4gdG8gdmVyaWZ5IHRoYXQgaXQgaXMgd29ya2luZyBwcm9wZXJs
+eS4gwqBBcyB0byB3aGV0aGVyIHRoaXMgd2lsbCBiZSBpbg0KPiA+IExUUCBvciBpbWEtZXZtLXV0
+aWxzLCBJJ20gbm90IHN1cmUuDQo+IA0KPiBhdHRlc3QtdG9vbHMgKGh0dHBzOi8vZ2l0aHViLmNv
+bS9ldWxlcm9zL2F0dGVzdC10b29scywgYnJhbmNoIDAuMi1kZXZlbCkgaGFzDQo+IHRoZQ0KPiBh
+YmlsaXR5IHRvIHBhcnNlIHRoZSBCSU9TIGFuZCBJTUEgZXZlbnQgbG9ncywgYW5kIHRvIGNvbXBh
+cmUNCj4gYm9vdF9hZ2dyZWdhdGUNCj4gd2l0aCB0aGUgZGlnZXN0IG9mIGZpbmFsIFBDUiB2YWx1
+ZXMgb2J0YWluZWQgYnkgcGVyZm9ybWluZyBpbiBzb2Z0d2FyZSB0aGUNCj4gUENSDQo+IGV4dGVu
+ZCBvcGVyYXRpb24gd2l0aCBkaWdlc3RzIGluIHRoZSBCSU9TIGV2ZW50IGxvZy4NCj4gDQo+IFRv
+IHBlcmZvcm0gdGhlIHRlc3QsIGl0IGlzIG5lY2Vzc2FyeSB0byBoYXZlIGEgY29tcGxldGUgQklP
+UyBldmVudCBsb2cuDQo+IA0KPiBDcmVhdGUgcmVxLmpzb24gd2l0aCB0aGlzIGNvbnRlbnQ6DQo+
+IC0tLQ0KPiB7DQo+ICAgInJlcXMiOnsNCj4gICAgICJkdW1teXx2ZXJpZnkiOiIiLA0KPiAgICAg
+ImltYV9ib290X2FnZ3JlZ2F0ZXx2ZXJpZnkiOiIiDQo+ICAgfQ0KPiB9DQo+IC0tLQ0KPiANCj4g
+V2l0aCB0aGUgcmVxdWlyZW1lbnRzIGFib3ZlLCB3ZSBhcmUgdGVsbGluZyBhdHRlc3QtdG9vbHMg
+dG8gdmVyaWZ5IG9ubHkNCj4gYm9vdF9hZ2dyZWdhdGUuIFdpdGhvdXQgdGhlIGR1bW15IHJlcXVp
+cmVtZW50LCB2ZXJpZmljYXRpb24gd291bGQNCj4gZmFpbCAoQklPUyBhbmQgcmVtYWluaW5nIElN
+QSBtZWFzdXJlbWVudCBlbnRyaWVzIGFyZSBub3QgcHJvY2Vzc2VkKS4NCj4gDQo+IE9uIHNlcnZl
+ciBzaWRlIHJ1bjoNCj4gIyBhdHRlc3RfcmFfc2VydmVyIC1wIDEwIC1yIHJlcS5qc29uIC1zIC1p
+DQo+IA0KPiAtcyBkaXNhYmxlcyBUUE0gc2lnbmF0dXJlIHZlcmlmaWNhdGlvbg0KPiAtaSBhbGxv
+d3MgSU1BIHZpb2xhdGlvbnMNCj4gDQo+IFRvIGVuYWJsZSBUUE0gc2lnbmF0dXJlIHZlcmlmaWNh
+dGlvbiBpdCBpcyBuZWNlc3NhcnkgdG8gaGF2ZSBhIHZhbGlkIEFLDQo+IGNlcnRpZmljYXRlLiBJ
+dCBjYW4gYmUgb2J0YWluZWQgYnkgZm9sbG93aW5nIHRoZSBpbnN0cnVjdGlvbnMgYXQ6DQo+IA0K
+PiBodHRwczovL2dpdGh1Yi5jb20vZXVsZXJvcy9hdHRlc3QtdG9vbHMvYmxvYi8wLjItZGV2ZWwv
+UkVBRE1FDQo+IA0KPiBPbiBjbGllbnQgc2lkZSBydW46DQo+ICMgZWNobyB0ZXN0ID4gYWlrX2Nl
+cnQucGVtDQo+ICMgZWNobyBhaWtfY2VydC5wZW0gPiBsaXN0X3ByaXZhY3lfY2ENCj4gIyBhdHRl
+c3RfcmFfY2xpZW50IC1BDQo+IA0KPiBUaGUgY29tbWFuZCBhYm92ZSBnZW5lcmF0ZXMgYW4gQUsu
+DQo+IA0KPiAjIGF0dGVzdF9yYV9jbGllbnQgLXMgPHNlcnZlciBJUD4gLXEgLXAgMTAgLVAgPFBD
+UiBhbGdvPiAtYiAtaQ0KPiANCj4gVGhlIGNvbW1hbmQgYWJvdmUgc2VuZHMgdGhlIFRQTSBxdW90
+ZSBhbmQgdGhlIGV2ZW50IGxvZ3MNCj4gdG8gdGhlIFJBIHNlcnZlciBhbmQgZ2V0cyB0aGUgcmVz
+cG9uc2UgKHN1Y2Nlc3NmdWwvZmFpbGVkDQo+IHZlcmlmaWNhdGlvbikuDQo+IA0KPiAtYiBpbmNs
+dWRlcyB0aGUgQklPUyBldmVudCBsb2cgZnJvbSBzZWN1cml0eWZzDQo+IC1pIGluY2x1ZGVzIHRo
+ZSBJTUEgZXZlbnQgbG9nIGZyb20gc2VjdXJpdHlmcw0KPiANCj4gVG8gY2hlY2sgdGhhdCBib290
+X2FnZ3JlZ2F0ZSBpcyBjYWxjdWxhdGVkIHByb3Blcmx5LCB1c2UgLVAgc2hhMjU2DQoNCmFuZCB0
+byBjaGVjayB0aGF0IElNQSBleHRlbmRzIG5vbi1TSEExIFBDUiBiYW5rcyB3aXRoIGFuIGFwcHJv
+cHJpYXRlDQpkaWdlc3QsDQoNCj4gaW4gYXR0ZXN0X3JhX2NsaWVudCBhbmQgc2V0IGltYV9oYXNo
+PXNoYTI1NiBpbiB0aGUga2VybmVsIGNvbW1hbmQNCj4gbGluZS4NCg0KUm9iZXJ0bw0KDQpIVUFX
+RUkgVEVDSE5PTE9HSUVTIER1ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGly
+ZWN0b3I6IExpIFBlbmcsIExpIEppYW4sIFNoaSBZYW5saQ0K
