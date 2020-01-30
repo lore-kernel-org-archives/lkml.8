@@ -2,298 +2,122 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E17C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EC9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A263320CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580412580;
-	bh=NT3UVOyFjqEBVWiIxTifWBnX6L8l9pz2bc/FL5vNEwE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iY8vcYVmdSoJXiWyGeuV9EF0gE8KDcL5rHbM2ZeeNOTkTwUpMODN0CPlIzN4pRgvY
-	 skqlTaHbSU4wbpZ+i8vxlv7TQ+F4dTjVNPfgc9lKw8sywoBzy6R3+PGCb5zv8qwMgV
-	 R4AstNuHQdr9oQTFysUwKzLi0jV7PocxOszRO/mE=
+	by mail.kernel.org (Postfix) with ESMTP id 6CE292082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/XUfyOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgA3T3k (ORCPT
+        id S1727535AbgA3Ten (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:29:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbgA3T3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:29:39 -0500
-Received: from localhost.localdomain (unknown [194.230.155.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30E7C2082E;
-        Thu, 30 Jan 2020 19:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580412579;
-        bh=NT3UVOyFjqEBVWiIxTifWBnX6L8l9pz2bc/FL5vNEwE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0HyBPdXibj9ZVRtLSPiFwfP3dLIuZ38jThYyMYG31CgIJmRYiRohv0aYj1EGcB+7T
-         2z+gZxMreGhN3EQSUeD3J86VTlNvziSue+MzOMSGuxmDDzHurSgIMXO0V8Lmad0FFA
-         H7fhOAts+P2IeW0mVJrpD5d1UjsWz5tshLGFJ7b0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] MIPS: configs: Cleanup old Kconfig options
-Date:   Thu, 30 Jan 2020 20:29:26 +0100
-Message-Id: <20200130192926.3635-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jan 2020 14:34:43 -0500
+Received: from mail-io1-f41.google.com ([209.85.166.41]:46514 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgA3Ten (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:34:43 -0500
+Received: by mail-io1-f41.google.com with SMTP id t26so5319945ioi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:34:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Uqfd4nHPzlTao5D1BCx3Lm6HKEPbqy0Pm2K9v2dKhEc=;
+        b=l/XUfyOZQcEys/3CmHKqR38z2/ZBH3253kzyOszVOzfvOxa1yHnN654HGX68pkzXLR
+         wnuzMh358yIMK3o+4lSIT0VygAqyRmatDqENZSVDd6UnH3arZPm54UeegmrT1ukw2x5Z
+         VCOhUHYkXHkMWnmfa/ZwZZFjpJK3BlhG7YdjmhtOR67YNDd4KkviRccgCKbtHmduZ5jx
+         GoeBDB1XxsUsdTEOACS+CIJ3YLXtKnOY29zGaE3ucLey4WiaxfdMujfUoEfSjSGKxTTs
+         FBsMSIto2UhIGf+yhBSBdEvut6figPgUtB3nL+JH8tp6rF625Y9G/jlpObmqDOkd342B
+         x8yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Uqfd4nHPzlTao5D1BCx3Lm6HKEPbqy0Pm2K9v2dKhEc=;
+        b=bQ2UUo+zEUMWHjd8iW7BlH1xaw/JpTdcJ/6O364x/11AoCRTQysmhHTST8wLZtzX2x
+         z30xa9Xs0aQg7O7CUig6YfRyRwMvAonoD029LUYNfulGHxukBXtJodwlvf3govKkG54j
+         YMxl5J3FQ3tR0vRav7R3J3qjyORD0s81gtcZXAr451QuWK+MWt0QKEaaUXIqtRwxU+/8
+         LWfgtfxClDnp3B9eWA5G1yKv/pxeS2yzcIaV3qT3zcRXF+X2HQln2AF766QChUYfwM3X
+         Pl3ndMzEwbYZknctyGInoFKIZwjiIMuUOzbmyaV/5iwmGw8WH+SyxBj99+UAm7H7sMpQ
+         SBUQ==
+X-Gm-Message-State: APjAAAVUKEuqJAMXpdrVsDfyYJqg3iySXeLVF5HW98iixzrajMbfZufN
+        f0g+YnTAV8H+eAYubcMVQN5k3F+dVANfApyxqXjiwjDR56U5xg==
+X-Google-Smtp-Source: APXvYqxzmQHoBuJf804yymWbET6TVNO0QQs/sw6vTG9Zhd91VfLEVDxNI0Y0iLieowscYVLAlh8CLoyKPzkYejAXXZs=
+X-Received: by 2002:a5d:9285:: with SMTP id s5mr5475456iom.85.1580412880940;
+ Thu, 30 Jan 2020 11:34:40 -0800 (PST)
+MIME-Version: 1.0
+From:   Salman Qazi <sqazi@google.com>
+Date:   Thu, 30 Jan 2020 11:34:29 -0800
+Message-ID: <CAKUOC8WM3XU5y9QKHrO8VBdC4Dghexqy+o9OGM1qUs4kGQxZdQ@mail.gmail.com>
+Subject: Hung tasks with multiple partitions
+To:     Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_MTD_NAND_IDS is gone and not needed (part of CONFIG_MTD_NAND)
-since commit f16bd7ca0457 ("mtd: nand: Kill the MTD_NAND_IDS Kconfig
-option").
+Hi,
 
-CONFIG_IOSCHED_DEADLINE, CONFIG_IOSCHED_CFQ and CONFIG_DEFAULT_NOOP are
-gone since commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+I am writing on behalf of the Chromium OS team at Google.  We found
+the root cause for some hung tasks we were experiencing and we would
+like to get your opinion on potential solutions.  The bugs were
+encountered on 4.19 kernel.
+However my reading of the code suggests that the relevant portions of the
+code have not changed since then.
 
-The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-now enabled by default (along with MQ_IOSCHED_KYBER).
+We have an eMMC flash drive that has been carved into partitions on an
+8 CPU system.  The repro case that we came up with, is to use 8
+threaded fio write-mostly workload against one partition, let the
+system use the other partition as the read-write filesystem (i.e. just
+background activity) and then run the following loop:
 
-The BFQ_GROUP_IOSCHED is the only multiqueue scheduler which comes with
-group scheduling so select it in configs previously choosing
-CFQ_GROUP_IOSCHED.
+while true; do sync; sleep 1 ; done
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/mips/configs/ar7_defconfig                 | 1 -
- arch/mips/configs/ath25_defconfig               | 1 -
- arch/mips/configs/ath79_defconfig               | 1 -
- arch/mips/configs/bcm63xx_defconfig             | 2 --
- arch/mips/configs/bmips_be_defconfig            | 2 --
- arch/mips/configs/bmips_stb_defconfig           | 2 --
- arch/mips/configs/db1xxx_defconfig              | 1 -
- arch/mips/configs/generic/board-ni169445.config | 1 -
- arch/mips/configs/lasat_defconfig               | 2 --
- arch/mips/configs/lemote2f_defconfig            | 2 +-
- arch/mips/configs/loongson3_defconfig           | 5 +++--
- arch/mips/configs/msp71xx_defconfig             | 2 --
- arch/mips/configs/pnx8335_stb225_defconfig      | 2 --
- arch/mips/configs/rb532_defconfig               | 1 -
- arch/mips/configs/rt305x_defconfig              | 1 -
- arch/mips/configs/xway_defconfig                | 1 -
- 16 files changed, 4 insertions(+), 23 deletions(-)
+The hung task stack traces look like the following:
 
-diff --git a/arch/mips/configs/ar7_defconfig b/arch/mips/configs/ar7_defconfig
-index cef2754bd408..cf9c6329b807 100644
---- a/arch/mips/configs/ar7_defconfig
-+++ b/arch/mips/configs/ar7_defconfig
-@@ -21,7 +21,6 @@ CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_BSD_DISKLABEL=y
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/ath25_defconfig b/arch/mips/configs/ath25_defconfig
-index c35add2fd716..7143441f5476 100644
---- a/arch/mips/configs/ath25_defconfig
-+++ b/arch/mips/configs/ath25_defconfig
-@@ -22,7 +22,6 @@ CONFIG_HZ_100=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
-diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
-index 4ffc59cab436..3d14d67dc746 100644
---- a/arch/mips/configs/ath79_defconfig
-+++ b/arch/mips/configs/ath79_defconfig
-@@ -23,7 +23,6 @@ CONFIG_PCI=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/bcm63xx_defconfig b/arch/mips/configs/bcm63xx_defconfig
-index 54e2f9a659fb..861f680184b9 100644
---- a/arch/mips/configs/bcm63xx_defconfig
-+++ b/arch/mips/configs/bcm63xx_defconfig
-@@ -21,8 +21,6 @@ CONFIG_PCI=y
- CONFIG_PCCARD=y
- CONFIG_PCMCIA_BCM63XX=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_UNIX=y
- CONFIG_INET=y
-diff --git a/arch/mips/configs/bmips_be_defconfig b/arch/mips/configs/bmips_be_defconfig
-index f669a40e085b..032bb51defe8 100644
---- a/arch/mips/configs/bmips_be_defconfig
-+++ b/arch/mips/configs/bmips_be_defconfig
-@@ -12,8 +12,6 @@ CONFIG_NR_CPUS=4
- # CONFIG_SECCOMP is not set
- CONFIG_MIPS_O32_FP64_SUPPORT=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_PACKET_DIAG=y
-diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
-index a0b775893dba..625bd2d7e685 100644
---- a/arch/mips/configs/bmips_stb_defconfig
-+++ b/arch/mips/configs/bmips_stb_defconfig
-@@ -21,8 +21,6 @@ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
- CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
- CONFIG_BMIPS_CPUFREQ=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_PACKET_DIAG=y
-diff --git a/arch/mips/configs/db1xxx_defconfig b/arch/mips/configs/db1xxx_defconfig
-index bc9b6ae046b2..e6f3e8e3da39 100644
---- a/arch/mips/configs/db1xxx_defconfig
-+++ b/arch/mips/configs/db1xxx_defconfig
-@@ -28,7 +28,6 @@ CONFIG_PCMCIA_ALCHEMY_DEVBOARD=y
- CONFIG_FIRMWARE_MEMMAP=y
- CONFIG_BLK_DEV_BSGLIB=y
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_DEFAULT_NOOP=y
- CONFIG_CMA=y
- CONFIG_CMA_DEBUG=y
- CONFIG_NET=y
-diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
-index 1ed0d3e8715e..fc3580e4e6bc 100644
---- a/arch/mips/configs/generic/board-ni169445.config
-+++ b/arch/mips/configs/generic/board-ni169445.config
-@@ -19,7 +19,6 @@ CONFIG_MTD_NAND_ECC_SW_HAMMING=y
- CONFIG_MTD_NAND_ECC_SW_BCH=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPIO=y
--CONFIG_MTD_NAND_IDS=y
- 
- CONFIG_MTD_UBI=y
- CONFIG_MTD_UBI_BLOCK=y
-diff --git a/arch/mips/configs/lasat_defconfig b/arch/mips/configs/lasat_defconfig
-index c66ca3785655..00cf461db971 100644
---- a/arch/mips/configs/lasat_defconfig
-+++ b/arch/mips/configs/lasat_defconfig
-@@ -16,8 +16,6 @@ CONFIG_HZ_1000=y
- # CONFIG_SECCOMP is not set
- CONFIG_PCI=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
-index f9f93427c9bd..8254d7d1396f 100644
---- a/arch/mips/configs/lemote2f_defconfig
-+++ b/arch/mips/configs/lemote2f_defconfig
-@@ -26,7 +26,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- CONFIG_BLK_DEV_INTEGRITY=y
--CONFIG_IOSCHED_DEADLINE=m
-+CONFIG_MQ_IOSCHED_DEADLINE=m
- CONFIG_BINFMT_MISC=m
- CONFIG_NET=y
- CONFIG_PACKET=y
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index 360c6b2d397a..51675f5000d6 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -38,8 +38,9 @@ CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_MODVERSIONS=y
- CONFIG_PARTITION_ADVANCED=y
--CONFIG_IOSCHED_DEADLINE=m
--CONFIG_CFQ_GROUP_IOSCHED=y
-+CONFIG_MQ_IOSCHED_DEADLINE=m
-+CONFIG_IOSCHED_BFQ=y
-+CONFIG_BFQ_GROUP_IOSCHED=y
- CONFIG_BINFMT_MISC=m
- CONFIG_KSM=y
- CONFIG_NET=y
-diff --git a/arch/mips/configs/msp71xx_defconfig b/arch/mips/configs/msp71xx_defconfig
-index 0fdc03fda12e..6ad1a2381226 100644
---- a/arch/mips/configs/msp71xx_defconfig
-+++ b/arch/mips/configs/msp71xx_defconfig
-@@ -14,8 +14,6 @@ CONFIG_PCI=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODVERSIONS=y
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_UNIX=y
- CONFIG_XFRM_USER=y
-diff --git a/arch/mips/configs/pnx8335_stb225_defconfig b/arch/mips/configs/pnx8335_stb225_defconfig
-index 738ba3b1374b..d06db6b87959 100644
---- a/arch/mips/configs/pnx8335_stb225_defconfig
-+++ b/arch/mips/configs/pnx8335_stb225_defconfig
-@@ -14,8 +14,6 @@ CONFIG_HZ_128=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
--# CONFIG_IOSCHED_DEADLINE is not set
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
-index 5b947183852b..252d472387aa 100644
---- a/arch/mips/configs/rb532_defconfig
-+++ b/arch/mips/configs/rb532_defconfig
-@@ -23,7 +23,6 @@ CONFIG_MODULE_UNLOAD=y
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_MAC_PARTITION=y
- CONFIG_BSD_DISKLABEL=y
--# CONFIG_IOSCHED_CFQ is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-diff --git a/arch/mips/configs/rt305x_defconfig b/arch/mips/configs/rt305x_defconfig
-index 110948bc6b39..8c2ead53007a 100644
---- a/arch/mips/configs/rt305x_defconfig
-+++ b/arch/mips/configs/rt305x_defconfig
-@@ -21,7 +21,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COREDUMP is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
-diff --git a/arch/mips/configs/xway_defconfig b/arch/mips/configs/xway_defconfig
-index 49b5ea6eff62..9abbc0debc2a 100644
---- a/arch/mips/configs/xway_defconfig
-+++ b/arch/mips/configs/xway_defconfig
-@@ -23,7 +23,6 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
--# CONFIG_IOSCHED_CFQ is not set
- # CONFIG_COREDUMP is not set
- # CONFIG_COMPACTION is not set
- CONFIG_NET=y
--- 
-2.17.1
+[  128.994891] jbd2/dm-1-8     D    0   367      2 0x00000028
+last_sleep: 96340206998.  last_runnable: 96340140151
+[  128.994898] Call trace:
+[  128.994903]  __switch_to+0x120/0x13c
+[  128.994909]  __schedule+0x60c/0x7dc
+[  128.994914]  schedule+0x74/0x94
+[  128.994919]  io_schedule+0x1c/0x40
+[  128.994925]  bit_wait_io+0x18/0x58
+[  128.994930]  __wait_on_bit+0x78/0xdc
+[  128.994935]  out_of_line_wait_on_bit+0xa0/0xcc
+[  128.994943]  __wait_on_buffer+0x48/0x54
+[  128.994948]  jbd2_journal_commit_transaction+0x1198/0x1a4c
+[  128.994956]  kjournald2+0x19c/0x268
+[  128.994961]  kthread+0x120/0x130
+[  128.994967]  ret_from_fork+0x10/0x18
 
+I added some more information to trace points to understand what was
+going on.  It turns out that blk_mq_sched_dispatch_requests had
+checked hctx->dispatch, found it empty, and then began consuming
+requests from the io scheduler (in blk_mq_do_dispatch_sched).
+Unfortunately, the deluge from the I/O scheduler (BFQ in our case)
+doesn't stop for 30 seconds and there is no mechanism present in
+blk_mq_do_dispatch_sched to terminate early or reconsider
+hctx->dispatch contents.  In the meantime, a flush command arrives in
+hctx->dispatch (via insertion in  blk_mq_sched_bypass_insert) and
+languishes there.  Eventually the thread waiting on the flush triggers
+the hung task watchdog.
+
+The solution that comes to mind is to periodically check
+hctx->dispatch in blk_mq_do_dispatch_sched and exit early if it is
+non-empty.  However, not being an expert in this subsystem, I am not
+sure if there would be other consequences.
+
+Any help is appreciated,
+
+Salman
