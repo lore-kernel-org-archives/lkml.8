@@ -2,66 +2,66 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE75C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4AA206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0FF20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gu2kirdO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWM7AMTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbgA3SCF (ORCPT
+        id S1727758AbgA3SCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:02:05 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46024 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgA3SCD (ORCPT
+        Thu, 30 Jan 2020 13:02:09 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36807 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727728AbgA3SCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:02:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a6so5198956wrx.12;
-        Thu, 30 Jan 2020 10:02:02 -0800 (PST)
+        Thu, 30 Jan 2020 13:02:07 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so5410468wma.1;
+        Thu, 30 Jan 2020 10:02:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wxAE+rmvrsDq27Iqeo6nEv/48a4RUlHGSm7qdXtegOw=;
-        b=gu2kirdOGx8YQhv8sLhotM0mi1J0Qxp5BjsY+pQjI6/ZTbFWCJPndiRPKWm/HDqmLJ
-         XrdZ/pum1kE1hsiSoUh/EwOf/XbPnUKFxGxLJ1Dbp+NNYYYBhuqB7vb2BTf+CDy/avLi
-         XHyEr141cj3gsW9MYKy5q7JhbjkYtRveUIYo+Fk55BKddNPHSm2u0+kkc+dPi5wMnIhh
-         xKrU3B21Uv9NcBZ+nAevzs4JtE7ZljK2Gyx02Ro6oVF6ISuvlsfwjcd+ixxDvnxbmZG9
-         i7OJ34QStHDTlibxr38Bj7/0XItrSlEGP6GEweIruQlZGbn/mZxqXTdoOolIQDQ0o6MV
-         wcag==
+        bh=Kj0vyrXH7QR7unCChoOZszZJi2rlsZtvdnmK5XaO1uo=;
+        b=eWM7AMTNMqhErTPIy9xpuR5NXPXz9OsQrL3YwHB+DudINSvFdE2QMWMCfbEY7H73A9
+         x2xntrvzwkyoFqnpvSPAscjxb47flhcS5GYhORnD4yeOXSV1VjNzLZGITsH90eAqnKE5
+         NIcXuZzb+a2Ax1liUUjUGs9FydjQ1FMJXbqW7QC9NS7X+rnqjDvct8S2a+ma2aC/xxa+
+         LzquKB/Z/vexxC5CAlliTbP5we9gFKF+mQLu/DVwCqKvyvIgp3kQ+XwC3qOoIFTRlyxf
+         cbetoVw7xRn8/y6Np2hLljYc1wMOfRSlW0VZh1/8Zc5Z2IZ7Yks1qM94lFa2WREGpd1J
+         35UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=wxAE+rmvrsDq27Iqeo6nEv/48a4RUlHGSm7qdXtegOw=;
-        b=tS1P9AFKY6kFApHdhoQVBE7L4ahgjPz+P+jWTjV2rH+sBUlDlm+8x6vkREvLo2UPTb
-         MCva3xpjVHa6ZzttQ2pYjCQExKGmcWU/wqYr5LDcMN1xe2OlcDGMFaA4PX872PIsUJTD
-         dPh9AIV+bmfNfGCDkC0Hhzlzlo8hmTX2yvix4DrrqI1FYhHZn0mAzGdYyCn+S835F35w
-         VrE3UNbTmKqawDIKC67BC7CchuBjCN7C98praSCfgoiixgI6nkNIu0CF6q3Y0AXZnmDd
-         CJsWHDqtHnb3JOQ/bVFrqLG7PN1YF1SlX82LXlg/RwxavYM1U2c/LNvOdV0I1pRzCJjf
-         W6Jg==
-X-Gm-Message-State: APjAAAX9HVGtSJBGKzTekqsmi+6KD45sMBTsSHaeFakQp5XgkOiKizQV
-        o3Pw+8YnHoJHtUjp8mgzFXshWVfPbWw=
-X-Google-Smtp-Source: APXvYqwxNN2iCPg7v5ok/gV29ASxuj2urpqlce/yebuWXUT28AiUgavY1YOz82pb/64V0SWdvoCNeA==
-X-Received: by 2002:a5d:4c88:: with SMTP id z8mr6804519wrs.395.1580407321318;
-        Thu, 30 Jan 2020 10:02:01 -0800 (PST)
+        bh=Kj0vyrXH7QR7unCChoOZszZJi2rlsZtvdnmK5XaO1uo=;
+        b=VOvzQDw9WomOaiWEoV/FI1hdCAnyJSeBPkOt2CH11Qeh7qMGpcVZeKL//gm6qmkJ/O
+         TuOOxtP4uBbfgEMyApGIVB7WzdoB07xefrAfqtPjHO5uZtox21WeLs/RCoGiw4IjRzVR
+         RGVXw5Fo49HMFRK9J/zHUYnNlI3uqXH5asQbhdttQYJJdGI9HJiieeVuV6EMBoCrlN/1
+         eAxW8LKNI5g3FtrefugaJ53n8W9bxpjnYTQ4+ZpeqR4iLuYKDvRTOk1i370z+i8TEHOe
+         fPGO+kaAMdHfUYSOwdQlbEfdnwJh1jW480F590qBHqQq34ZyTAVQxb6qYn/MoPWGJ0bN
+         Xzzg==
+X-Gm-Message-State: APjAAAWHTcpxlEU7B590tyEkPdCB476cL4kX/Wi7xEkqWZZY+r4vwVx6
+        yOaCw7BcKoBGl7hNpUh7RtFR4/5iC6Q=
+X-Google-Smtp-Source: APXvYqwB2jmuxzyKr2zpDGIIjLZzOU+UOq7DdE8OxcYPU6Vw+/KqPaKy9LUMuEqhjbfpyAxBW/KVHQ==
+X-Received: by 2002:a7b:c258:: with SMTP id b24mr7155543wmj.140.1580407325310;
+        Thu, 30 Jan 2020 10:02:05 -0800 (PST)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id w19sm6956878wmc.22.2020.01.30.10.02.00
+        by smtp.gmail.com with ESMTPSA id w19sm6956878wmc.22.2020.01.30.10.02.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2020 10:02:00 -0800 (PST)
+        Thu, 30 Jan 2020 10:02:04 -0800 (PST)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         stable@vger.kernel.org
-Subject: [FYI PATCH 1/5] x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
-Date:   Thu, 30 Jan 2020 19:01:52 +0100
-Message-Id: <1580407316-11391-2-git-send-email-pbonzini@redhat.com>
+Subject: [FYI PATCH 5/5] x86/KVM: Clean up host's steal time structure
+Date:   Thu, 30 Jan 2020 19:01:56 +0100
+Message-Id: <1580407316-11391-6-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
 References: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
@@ -72,36 +72,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-kvm_steal_time_set_preempted() may accidentally clear KVM_VCPU_FLUSH_TLB
-bit if it is called more than once while VCPU is preempted.
+Now that we are mapping kvm_steal_time from the guest directly we
+don't need keep a copy of it in kvm_vcpu_arch.st. The same is true
+for the stime field.
 
 This is part of CVE-2019-3016.
-
-(This bug was also independently discovered by Jim Mattson
-<jmattson@google.com>)
 
 Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/x86.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  3 +--
+ arch/x86/kvm/x86.c              | 11 +++--------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f48a306e..4925bdb 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -685,10 +685,9 @@ struct kvm_vcpu_arch {
+ 	bool pvclock_set_guest_stopped_request;
+ 
+ 	struct {
++		u8 preempted;
+ 		u64 msr_val;
+ 		u64 last_steal;
+-		struct gfn_to_hva_cache stime;
+-		struct kvm_steal_time steal;
+ 		struct gfn_to_pfn_cache cache;
+ 	} st;
+ 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index cf91713..8c93691 100644
+index f1845df..a0381ec 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -3504,6 +3504,9 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+@@ -2604,7 +2604,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
+ 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
+ 
+-	vcpu->arch.st.steal.preempted = 0;
++	vcpu->arch.st.preempted = 0;
+ 
+ 	if (st->version & 1)
+ 		st->version += 1;  /* first time write, random junk */
+@@ -2788,11 +2788,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (data & KVM_STEAL_RESERVED_MASK)
+ 			return 1;
+ 
+-		if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.st.stime,
+-						data & KVM_STEAL_VALID_BITS,
+-						sizeof(struct kvm_steal_time)))
+-			return 1;
+-
+ 		vcpu->arch.st.msr_val = data;
+ 
+ 		if (!(data & KVM_MSR_ENABLED))
+@@ -3509,7 +3504,7 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
  	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
  		return;
  
-+	if (vcpu->arch.st.steal.preempted)
-+		return;
-+
- 	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
+-	if (vcpu->arch.st.steal.preempted)
++	if (vcpu->arch.st.preempted)
+ 		return;
  
- 	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
+ 	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
+@@ -3519,7 +3514,7 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+ 	st = map.hva +
+ 		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
+ 
+-	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
++	st->preempted = vcpu->arch.st.preempted = KVM_VCPU_PREEMPTED;
+ 
+ 	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
+ }
 -- 
 1.8.3.1
 
