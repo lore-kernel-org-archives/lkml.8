@@ -2,132 +2,117 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533EBC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059F2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D522173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67F620674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNMMt0D4"
+	dkim=pass (2048-bit key) header.d=familie-tometzki.de header.i=@familie-tometzki.de header.b="BTeF3Bw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgA3QoB (ORCPT
+        id S1727421AbgA3QpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:44:01 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38256 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbgA3QoB (ORCPT
+        Thu, 30 Jan 2020 11:45:17 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36856 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbgA3QpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:44:01 -0500
-Received: by mail-pj1-f68.google.com with SMTP id j17so1576074pjz.3;
-        Thu, 30 Jan 2020 08:44:00 -0800 (PST)
+        Thu, 30 Jan 2020 11:45:17 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so4943263wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 08:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=familie-tometzki.de; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ycendjGGLSJJKfAddBUkv4GJlX2it4/z973MJkVu4LQ=;
-        b=QNMMt0D4HauFvbceWCYa4yl3fmMXCwgOzLBSGRqGg4xXXov2lZqkxZAwhHal5r1V3i
-         +1oiOouohVEWcUf9vRBzBQ/ZbfhwvmGhDimwvZ8OwDNLhB68j8Ffky2c/bxYAzL7btHr
-         +ZyXXemTp2aF+9WFM+6moabMxJzblgl12e3dQ6OX6UaUbFXmJ/1DS/kK/BKlvb7Nc3zb
-         3wnuVNnrTbzGbzav9yhf7aB3AhmLAh25EsrZNYk59Hr0aQQIe2oHeXjNpZcz1UkWCuTq
-         S9czNlkoP1QcyI4tJD6mf8OuzrDueiCaYnoJ7If3X9QVhU5wNvCun/AgbDw2y3wKa7xQ
-         +4Sw==
+         :cc:content-transfer-encoding;
+        bh=g0UrPH6iQiBpC0TWOe6cT/cBGUUxDYJOmDYdrkMQqGI=;
+        b=BTeF3Bw1Z3ZKvaNrtxGZZbPesztbis+EK+M6Zu1lrzuWmAO2sew1APe+NTi71+a4QN
+         ib6tkL7n2X2rH7G8yoA9y86vuVbBgAKNes1RMuQ1w4szzK4wG+0IB1Cum8EPT4E95BGV
+         BovIBaCMSF6/mmziqQdq2+2HcmbLgc3jRxxw+EHaRO6c2nW8mnh9ckd0WlrmMJVxJv6w
+         XP86W0s7GsMRW3YCVDnVtzJIHdm67wvriKD11MS7v4PZd+7IA7F7/tITDRkZok4V4VoV
+         KW6uMmQ7pVtWOfD4BF6NLk/wX0AlQwqKmju2IM8r4WhRVB8/AzT3RxzV9tOkvX9CmP3H
+         cthw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ycendjGGLSJJKfAddBUkv4GJlX2it4/z973MJkVu4LQ=;
-        b=KfFJQba8ZwX71Ob5IkXa4rfBHuwWN/pByblL7WF1Y0AztvqBnkdR4xz+CvZMMRZY0h
-         geRcNBk6tqplNg6g/6w9HDAoUxHyIjz0jRx6uIqXuRusxWW0jZuKoypyLJuBjeYT2kpN
-         G+ddMykA63SSf7SNEKx9D4VjEmXReB4w5PCrYWMTylTryZwFji2U2gbFySaC5tywj2qM
-         /SVFn9L/y4MlhEp8+2Ee2tgSs+L8CTxnSMhmXitSK0W5vPzdapZjxgiurp58JrIEjCaa
-         siq+LOMyvAxgpbmoXKXSc5a5TYret5Q8aBOksiP9MnC/idI27fr6Vr2CKYXs4JjGZkAs
-         NKOg==
-X-Gm-Message-State: APjAAAVOdMnwIfEH6Y49vWO+nRi+ga7TtyI0c9fYQtXRwqtfFFXBX1U/
-        xP4s8iSS5gkklB4BL+5xGFi5y1oAWDChY6gpjBE=
-X-Google-Smtp-Source: APXvYqyvQUPN02uVigJHi7v9slp8OLJElsr+cBUH7gHdJaw4tTtV5sPNiocWAArfhdKm1Uuc3mV3V8am+LG6yGz8adk=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr6947188pjb.30.1580402640436;
- Thu, 30 Jan 2020 08:44:00 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=g0UrPH6iQiBpC0TWOe6cT/cBGUUxDYJOmDYdrkMQqGI=;
+        b=K6CLPcf/vOevIlbduR8n4V9DG0UaJ04NoFPWfTIU/WchTylcCzsZq3qLYo2+TcdPEn
+         2i3yPOPQuHd5g3V+h4mWMFB4EZ5dlIWhIy5mD/ZiOVHDG7v5U33KP5+ebcnMtQBViGqo
+         JbDRrhR4h9Noc7UK2Uysl36tCHRuExKb6crM0V/o/hiv0+SIIBIJOAJBYZKMgDizP1nA
+         z2sTX+Fz9JsXf0mvgVv4RaijSHLM0w9EFHjyDhztu9d+Is8ZlJEjUrYhY0vDomMYqYFI
+         p91EXUCLU6pPuJtuG+dMTrY129wA8wdLKZKdnTNTUB7UbZBkOOh6eDwDNV+V0y9CVl/Y
+         P5sA==
+X-Gm-Message-State: APjAAAXH6xknycigI6GytroLD5D72kg2g2Z9jVLp4gg8Aka6LZrrKPhN
+        5jo+z+Q/Arg4tvQneDK42IjKg86WhLL9syiJ9e/Avw==
+X-Google-Smtp-Source: APXvYqzns5TdoLjnflFXgHdidMjCxTkXNoTbhg7Y2+9Jap1zOyAGUmBGDo+4TD1LjbTsRKL22TvtmpZo6oaJcErE9kM=
+X-Received: by 2002:a5d:4c88:: with SMTP id z8mr6487084wrs.395.1580402715227;
+ Thu, 30 Jan 2020 08:45:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20200127210415.5708-1-chris.packham@alliedtelesis.co.nz> <20200127210415.5708-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200127210415.5708-3-chris.packham@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jan 2020 18:43:52 +0200
-Message-ID: <CAHp75Vd1i2rDwVcK54tox_5=q3b5HHjTa2dcsQqK_UE5ODcsVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] spi: Add generic SPI multiplexer
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+ <20200129132618.GA30979@zn.tnic> <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+ <20200129183404.GB30979@zn.tnic> <c08616b8-d209-ff08-1b74-645a49a486d2@familie-tometzki.de>
+ <20200130075549.GA6684@zn.tnic> <20200130111057.GA21459@linux.ibm.com>
+ <20200130115326.GG6684@zn.tnic> <20200130115959.GA24611@linux.ibm.com> <20200130120617.GH6684@zn.tnic>
+In-Reply-To: <20200130120617.GH6684@zn.tnic>
+From:   Damian Tometzki <damian.tometzki@familie-tometzki.de>
+Date:   Thu, 30 Jan 2020 17:45:04 +0100
+Message-ID: <CAL=B37kQpv+8V0ahyxdhXmJqS2YBEqPyy=07w6FgDQ5csEAk1A@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 11:04 PM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+Hello Borislav,
+
+System is now boots without errors.
+
+tested.
+Damian
+
+On Thu, Jan 30, 2020 at 1:06 PM Borislav Petkov <bp@suse.de> wrote:
 >
-> Add a SPI device driver that sits in-band and provides a SPI controller
-> which supports chip selects via a mux-control. This enables extra SPI
-> devices to be connected with limited native chip selects.
-
-...
-
->  obj-$(CONFIG_SPI_MEM)                  += spi-mem.o
->  obj-$(CONFIG_SPI_SPIDEV)               += spidev.o
->  obj-$(CONFIG_SPI_LOOPBACK_TEST)                += spi-loopback-test.o
-> +obj-$(CONFIG_SPI_MUX)                  += spi-mux.o
-
-Maybe after SPI_MEM ?
-
-...
-
-> +struct spi_mux_priv {
-> +       struct spi_device       *spi;
-> +       unsigned int            current_cs;
-> +
-
-> +       void                    (*child_mesg_complete)(void *context);
-> +       void                    *child_mesg_context;
-> +       struct spi_device       *child_mesg_dev;
-
-mesg -> msg ?
-
-> +       struct mux_control      *mux;
-> +};
-
-...
-
-> +static int spi_mux_select(struct spi_device *spi)
-> +{
-> +       struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
-
-> +       int ret = 0;
-
-Drop this assignment...
-
-> +       if (priv->current_cs != spi->chip_select) {
-
-...convert this to
- if (cs == chip_select)
-    return 0;
-
-> +               dev_dbg(&priv->spi->dev,
-> +                       "setting up the mux for cs %d\n",
-> +                       spi->chip_select);
-
-After above changes this perhaps fits one line (now it fits two, by
-the way, not three).
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+> On Thu, Jan 30, 2020 at 01:59:59PM +0200, Mike Rapoport wrote:
+> > I've seen similar crash with my qemu/kvm and bisected it to that commit=
+.
+> >
+> > The hpet allocation is off-by-one and as a result hpet corrupts the mem=
+ory
+> > somewhere in the slab
+>
+> Oh wow, wonderful. Good that we have bisection in such cases - there's
+> no way in hell I'll debug it to that. ;-\
+>
+> Thanks for saving me a bunch of time.
+>
+> Damian, can you test the patch at the bottom of that mail:
+>
+> https://lore.kernel.org/lkml/202001300450.00U4ocvS083098@www262.sakura.ne=
+.jp/
+>
+> ?
+>
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> SUSE Software Solutions Germany GmbH, GF: Felix Imend=C3=B6rffer, HRB 368=
+09, AG N=C3=BCrnberg
