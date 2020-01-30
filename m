@@ -2,256 +2,96 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD73C35246
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CC8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C972083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xdr+1884"
+	by mail.kernel.org (Postfix) with ESMTP id 6F8C42082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgA3Ke4 (ORCPT
+        id S1727091AbgA3KhO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:34:56 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4502 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgA3Kew (ORCPT
+        Thu, 30 Jan 2020 05:37:14 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:37040 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726893AbgA3KhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:34:52 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e32b1170001>; Thu, 30 Jan 2020 02:34:00 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 02:34:51 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 30 Jan 2020 02:34:51 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 10:34:51 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 30 Jan 2020 10:34:51 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e32b1460002>; Thu, 30 Jan 2020 02:34:50 -0800
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v2 9/9] arm64: tegra: enable AHUB modules for few Tegra chips
-Date:   Thu, 30 Jan 2020 16:03:42 +0530
-Message-ID: <1580380422-3431-10-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+        Thu, 30 Jan 2020 05:37:14 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-177-BUQPPyd0Pc2k7YXNfMyzWA-1; Thu, 30 Jan 2020 10:37:08 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 10:37:07 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 Jan 2020 10:37:07 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Greg KH' <gregkh@linuxfoundation.org>,
+        'Eric Biggers' <ebiggers@kernel.org>
+CC:     'Tetsuo Handa' <penguin-kernel@i-love.sakura.ne.jp>,
+        "'gustavo@embeddedor.com'" <gustavo@embeddedor.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] hpet: Fix struct_size() in kzalloc()
+Thread-Topic: [PATCH] hpet: Fix struct_size() in kzalloc()
+Thread-Index: AQHV1zIWYxQa+FO7zkqmoqcRV+KmjagC+3VQgAAHKIA=
+Date:   Thu, 30 Jan 2020 10:37:07 +0000
+Message-ID: <69fae096f556414c96a71747f49d1e08@AcuMS.aculab.com>
+References: <202001300450.00U4ocvS083098@www262.sakura.ne.jp>
+ <20200130052645.GA833@sol.localdomain> <20200130055650.GA623220@kroah.com>
+ <b04253f40d9e49e597af925599bd4964@AcuMS.aculab.com>
+In-Reply-To: <b04253f40d9e49e597af925599bd4964@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580380440; bh=QLJog4DfYyxTa/pGhw8zE2jdA/xz/qI7iFpPR8p4Zno=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=Xdr+1884nT/V3CnT8DtNbpGOgWygZYfG5YRoi4cWexkcgQL3t6kPLKh4HsweOruLY
-         kAzOLNC1xQ0sgX8W/2KnoShZVe7bMacYIBtNWKNb8AhkRO9QNSbPR8Q5BQiGEZ9+EH
-         Q3Qa5W2mKCN0X4o/QZ1Xyn9ccXC+QFxLlBlW90+0BCMMilSy19lNKP1hozWjS7j6Pe
-         ogoaCwcB+YOnk8l2z3QQEg79ht8iTa7BnS/wKVe52cAilzf16yquunPwyKmbUgIpqG
-         J3E6LiPdn2vdGakohHWCp6K7fR9X1JepGYYtINQBLGwKXnfFIGmweMpu8SfuCGvRGO
-         SYt7S5/lLWFlA==
+X-MC-Unique: BUQPPyd0Pc2k7YXNfMyzWA-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables AHUB, ADMAIF modules for following Tegra platforms.
-Along with this specific instances of I/O modules are enabled as per
-the board design.
+> ...
+> > > > -	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs - 1),
+> > > > +	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs),
+> > > >  			GFP_KERNEL);
+> > > >
+> > > >  	if (!hpetp)
+> > > > --
+> > >
+> > > Yep, "char: hpet: Use flexible-array member" started causing random boot
+> > > failures on mainline for me.  Tetsuo beat me to sending the fix.
+> > >
+> > > Only thing I'll add is that GFP_KERNEL can now fit on the previous line.
+> >
+> > Gustavo already sent a fix for this, I didn't realize it was causing
+> > boot problems, I'll forward it on to Linus soon.
+> 
+> grep -r --include '*.c' 'struct_size.*- 1'
+> gives 4 other matches.
+> I bet they all have the same bug.
+> There might be others that simple pattern doesn't find.
 
- * Jetson TX1
-   - I2S1, I2S2, I2S3, I2S4 and I2S5
-   - DMIC1, DMIC2 and DMIC3
+kvm_main.c is ok - although why it reallocates 1 entry smaller on
+    delete is any bodies guess.
+megaraid_sas_fusion.c is broken, header has seq[1]
+   (and lots of __packed).
+iavf_virtchnl.c is broken, header has list[1].
+ice_sched.c is broken, header has generic[1].
 
- * Jetson TX2
-   - I2S1, I2S2, I2S3, I2S4, I2S5 and I2S6
-   - DMIC1, DMIC2 and DMIC3
-   - DSPK2
+	David
 
- * Jetson AGX Xavier
-   - I2S1, I2S2, I2S4 and I2S6
-   - DMIC2 and DMIC3
-   - DSPK1
-
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 48 ++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 36 ++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 40 ++++++++++++++++++
- 3 files changed, 124 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index f1de4ff..717993c 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -20,6 +20,54 @@
- 		interrupt-controller@2a40000 {
- 			status = "okay";
- 		};
-+
-+		ahub@2900800 {
-+			status = "okay";
-+
-+			admaif@290f000 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901000 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901100 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901200 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901300 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901400 {
-+				status = "okay";
-+			};
-+
-+			i2s@2901500 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904000 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904100 {
-+				status = "okay";
-+			};
-+
-+			dmic@2904200 {
-+				status = "okay";
-+			};
-+
-+			dspk@2905100 {
-+				status = "okay";
-+			};
-+		};
- 	};
- 
- 	i2c@3160000 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index 985e7d8..f5d5832 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -21,6 +21,42 @@
- 			interrupt-controller@2a40000 {
- 				status = "okay";
- 			};
-+
-+			ahub@2900800 {
-+				status = "okay";
-+
-+				admaif@290f000 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901000 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901100 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901300 {
-+					status = "okay";
-+				};
-+
-+				i2s@2901500 {
-+					status = "okay";
-+				};
-+
-+				dmic@2904100 {
-+					status = "okay";
-+				};
-+
-+				dmic@2904200 {
-+					status = "okay";
-+				};
-+
-+				dspk@2905000 {
-+					status = "okay";
-+				};
-+			};
- 		};
- 
- 		ddc: i2c@31c0000 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-index a3cafe3..c8d2c21 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -123,5 +123,45 @@
- 		agic@702f9000 {
- 			status = "okay";
- 		};
-+
-+		ahub@702d0800 {
-+			status = "okay";
-+
-+			admaif@702d0000 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1000 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1100 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1200 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1300 {
-+				status = "okay";
-+			};
-+
-+			i2s@702d1400 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4000 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4100 {
-+				status = "okay";
-+			};
-+
-+			dmic@702d4200 {
-+				status = "okay";
-+			};
-+		};
- 	};
- };
--- 
-2.7.4
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
