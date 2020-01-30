@@ -2,172 +2,127 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C0C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C996C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2632206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zBLRHy2S"
+	by mail.kernel.org (Postfix) with ESMTP id 67539206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgA3DIC (ORCPT
+        id S1726980AbgA3DJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 22:08:02 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46674 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgA3DIB (ORCPT
+        Wed, 29 Jan 2020 22:09:25 -0500
+Received: from smtprelay0080.hostedemail.com ([216.40.44.80]:53563 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726719AbgA3DJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 22:08:01 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1FE88891A9;
-        Thu, 30 Jan 2020 16:07:57 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1580353677;
-        bh=VwVKeAXGYG/qLeDQHPdbOAovnx1jlVZPO9hTF9Q9Rk4=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=zBLRHy2S6BLqsl/6+AQa8s/GgjbMDg8J2fHl2E47O45tLr55mvkDSvQP2a46waBwT
-         svDppjxUzEQv6wJzDoCISEYqcyNaSRnvKirXlftWFlSjhQSn4ao8ZuAWaPTVs/18wX
-         VeHbGBhKoM9MieKYbsjF+LVOhL9dOAPZYC81b71xS2v6l3sFRbIYWMWFLWDd21TYKz
-         4rFGE6x404CiF+HACdIuMJKg/Z40F8V2zqNVKAF9J1Bv0F+QSqckDbwcEKBn/gbJhi
-         CjQAzGSRKhwUdvBmW0pzcYHVnJ8SPiU0nNao5XPUZ4Gb9siPvs5u5Y7GQa8e22XXqt
-         c9eswVe7xIjKQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e32488d0001>; Thu, 30 Jan 2020 16:07:57 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Thu, 30 Jan 2020 16:07:56 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Thu, 30 Jan 2020 16:07:56 +1300
-From:   Logan Shaw <Logan.Shaw@alliedtelesis.co.nz>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joshua Scott <Joshua.Scott@alliedtelesis.co.nz>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Topic: [PATCH v6 2/2] dt-bindings: hwmon: (adt7475) Added missing
- adt7475 documentation
-Thread-Index: AQHV1JVtwGwHv/A/qEeLHCGfFZLcOaf9zzQAgAPiowA=
-Date:   Thu, 30 Jan 2020 03:07:56 +0000
-Message-ID: <9d4afb3f77e1dea7f050fe32616ca955fb95eaa9.camel@alliedtelesis.co.nz>
-References: <20200126221014.2978-1-logan.shaw@alliedtelesis.co.nz>
-         <20200126221014.2978-3-logan.shaw@alliedtelesis.co.nz>
-         <20200127154800.GA7023@bogus>
-In-Reply-To: <20200127154800.GA7023@bogus>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:25:ae22:bff:fe77:dd09]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <922FE763DB5A4E4D853151B7CFC1996E@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 29 Jan 2020 22:09:25 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0B627100E7B42;
+        Thu, 30 Jan 2020 03:09:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: bell00_6ef0b4c9d2c14
+X-Filterd-Recvd-Size: 3866
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 30 Jan 2020 03:09:22 +0000 (UTC)
+Message-ID: <ab2e19123cc15e3f8039b0d36e6ebae385db700e.camel@perches.com>
+Subject: Re: [PATCH] security/integrity: Include __func__ in messages for
+ easier debug
+From:   Joe Perches <joe@perches.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>, jmorris@namei.org,
+        serge@hallyn.com, mpe@ellerman.id.au, zohar@linux.ibm.com,
+        erichte@linux.ibm.com, nayna@linux.ibm.com, yuehaibing@huawei.com
+Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 29 Jan 2020 19:08:15 -0800
+In-Reply-To: <20200130020129.15328-1-skhan@linuxfoundation.org>
+References: <20200130020129.15328-1-skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTI3IGF0IDA5OjQ4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gTW9uLCBKYW4gMjcsIDIwMjAgYXQgMTE6MTA6MTRBTSArMTMwMCwgTG9nYW4gU2hhdyB3cm90
-ZToNCj4gPiBBZGRlZCBhIG5ldyBmaWxlIGRvY3VtZW50aW5nIHRoZSBhZHQ3NDc1IGRldmljZXRy
-ZWUgYW5kIGFkZGVkIHRoZQ0KPiA+IGZvdXINCj4gPiBuZXcgcHJvcGVydGllcyB0byBpdC4NCj4g
-PiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBMb2dhbiBTaGF3IDxsb2dhbi5zaGF3QGFsbGllZHRlbGVz
-aXMuY28ubno+DQo+ID4gLS0tDQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2h3bW9uL2FkdDc0NzUueWFtbCAgICB8IDk1DQo+ID4gKysrKysrKysrKysrKysrKysrKw0KPiA+
-ICAxIGZpbGUgY2hhbmdlZCwgOTUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaHdtb24vYWR0NzQ3NS55
-YW1sDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9od21vbi9hZHQ3NDc1LnlhbWwNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9od21vbi9hZHQ3NDc1LnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uNDUwZGE1ZTY2ZTA3DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9od21vbi9hZHQ3NDc1Lnlh
-bWwNCj4gPiBAQCAtMCwwICsxLDk1IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjANCj4gDQo+IER1YWwgbGljZW5zZSBuZXcgYmluZGluZ3MgcGxlYXNlOg0KPiANCj4g
-KEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpDQo+IA0KPiA+ICslWUFNTCAxLjINCj4gPiAr
-LS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvYWR0NzQ3NS55YW1s
-Iw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUu
-eWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBBRFQ3NDc1IGh3bW9uIHNlbnNvcg0KPiA+ICsNCj4g
-PiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBKZWFuIERlbHZhcmUgPGpkZWx2YXJlQHN1c2UuY29t
-Pg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBUaGUgQURUNzQ3MywgQURUNzQ3
-NSwgQURUNzQ3NiwgYW5kIEFEVDc0OTAgYXJlIHRoZXJtYWwgbW9uaXRvcnMNCj4gPiBhbmQgbXVs
-dGlwbGUNCj4gPiArICBQV04gZmFuIGNvbnRyb2xsZXJzLg0KPiA+ICsNCj4gPiArICBUaGV5IHN1
-cHBvcnQgbW9uaXRvcmluZyBhbmQgY29udHJvbGxpbmcgdXAgdG8gZm91ciBmYW5zICh0aGUNCj4g
-PiBBRFQ3NDkwIGNhbiBvbmx5DQo+ID4gKyAgY29udHJvbCB1cCB0byB0aHJlZSkuIFRoZXkgc3Vw
-cG9ydCByZWFkaW5nIGEgc2luZ2xlIG9uIGNoaXANCj4gPiB0ZW1wZXJhdHVyZQ0KPiA+ICsgIHNl
-bnNvciBhbmQgdHdvIG9mZiBjaGlwIHRlbXBlcmF0dXJlIHNlbnNvcnMgKHRoZSBBRFQ3NDkwDQo+
-ID4gYWRkaXRpb25hbGx5DQo+ID4gKyAgc3VwcG9ydHMgbWVhc3VyaW5nIHVwIHRvIHRocmVlIGN1
-cnJlbnQgZXh0ZXJuYWwgdGVtcGVyYXR1cmUNCj4gPiBzZW5zb3JzIHdpdGgNCj4gPiArICBzZXJp
-ZXMgcmVzaXN0YW5jZSBjYW5jZWxsYXRpb24gKFNSQykpLg0KPiA+ICsNCj4gPiArICBEYXRhc2hl
-ZXRzOg0KPiA+ICsgIGh0dHBzOi8vd3d3Lm9uc2VtaS5jb20vcHViL0NvbGxhdGVyYWwvQURUNzQ3
-My1ELlBERg0KPiA+ICsgIGh0dHBzOi8vd3d3Lm9uc2VtaS5jb20vcHViL0NvbGxhdGVyYWwvQURU
-NzQ3NS1ELlBERg0KPiA+ICsgIGh0dHBzOi8vd3d3Lm9uc2VtaS5jb20vcHViL0NvbGxhdGVyYWwv
-QURUNzQ3Ni1ELlBERg0KPiA+ICsgIGh0dHBzOi8vd3d3Lm9uc2VtaS5jb20vcHViL0NvbGxhdGVy
-YWwvQURUNzQ5MC1ELlBERg0KPiA+ICsNCj4gPiArICBEZXNjcmlwdGlvbiB0YWtlbiBmcm9tIG9t
-c2VtaWNvbmR1Y3RvcnMgc3BlY2lmaWNhdGlvbiBzaGVldHMsDQo+ID4gd2l0aCBtaW5vcg0KPiAN
-Cj4gb21zZW1pPw0KPiAgXg0KPiANCj4gPiArICByZXBocmFzaW5nLg0KPiA+ICsNCj4gPiArcHJv
-cGVydGllczoNCj4gPiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgZW51bToNCj4gPiArICAgICAg
-LSBhZGksYWR0NzQ3Mw0KPiA+ICsgICAgICAtIGFkaSxhZHQ3NDc1DQo+ID4gKyAgICAgIC0gYWRp
-LGFkdDc0NzYNCj4gPiArICAgICAgLSBhZGksYWR0NzQ5MA0KPiA+ICsNCj4gPiArICByZWc6DQo+
-ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBieXBhc3MtYXR0ZW51YXRvci1pbjA6
-DQo+IA0KPiBOZWVkcyBhIHZlbmRvciBwcmVmaXggYW5kIGEgdHlwZSByZWYuIA0KPiANCj4gPiAr
-ICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIENvbmZpZ3VyZXMgYnlwYXNzaW5nIHRoZSBp
-bmRpdmlkdWFsIHZvbHRhZ2UgaW5wdXQNCj4gPiArICAgICAgYXR0ZW51YXRvciwgb24gaW4wLiBU
-aGlzIGlzIHN1cHBvcnRlZCBvbiB0aGUgQURUNzQ3NiBhbmQNCj4gPiBBRFQ3NDkwLg0KPiA+ICsg
-ICAgICBJZiBzZXQgdG8gYSBub24temVybyBpbnRlZ2VyIHRoZSBhdHRlbnVhdG9yIGlzIGJ5cGFz
-c2VkLCBpZg0KPiA+IHNldCB0bw0KPiA+ICsgICAgICB6ZXJvIHRoZSBhdHRlbnVhdG9yIGlzIG5v
-dCBieXBhc3NlZC4gSWYgdGhlIHByb3BlcnR5IGlzDQo+ID4gYWJzZW50IHRoZW4NCj4gPiArICAg
-ICAgdGhlIGNvbmZpZyByZWdpc3RlciBpcyBub3QgbW9kaWZpZWQuDQo+IA0KPiBTb3VuZHMgbGlr
-ZSB0aGlzIGNvdWxkIGJlIGJvb2xlYW4/IElmIG5vdCwgZGVmaW5lIGEgc2NoZW1hIGZvciB3aGF0
-DQo+IGFyZSANCj4gdmFsaWQgdmFsdWVzLg0KDQpCeSBib29sZWFuIGFyZSB5b3UgcmVmZXJyaW5n
-IHRvIGEgZHRzIHByb3BlcnR5IHRoYXQgaXMgZXZhbHVhdGVkICh1c2luZw0KZnVuY3Rpb24gb2Zf
-cHJvcGVydHlfcmVhZF9ib29sKSBhcyB0cnVlL2ZhbHNlLCBkZXBlbmRpbmcgb24gaXRzDQpwcmVz
-ZW5jZT8gRm9yIGV4YW1wbGUgInJlZ3VsYXRvci1hbHdheXMtb24iIGluOg0KL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnlhbWwgLg0KDQo+IA0K
-PiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgYnlwYXNzLWF0dGVudWF0b3ItaW4x
-Og0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgQ29uZmlndXJlcyBieXBhc3Np
-bmcgdGhlIGluZGl2aWR1YWwgdm9sdGFnZSBpbnB1dA0KPiA+ICsgICAgICBhdHRlbnVhdG9yLCBv
-biBpbjEuIFRoaXMgaXMgc3VwcG9ydGVkIG9uIHRoZSBBRFQ3NDczLA0KPiA+IEFEVDc0NzUsDQo+
-ID4gKyAgICAgIEFEVDc0NzYgYW5kIEFEVDc0OTAuIElmIHNldCB0byBhIG5vbi16ZXJvIGludGVn
-ZXIgdGhlDQo+ID4gYXR0ZW51YXRvcg0KPiA+ICsgICAgICBpcyBieXBhc3NlZCwgaWYgc2V0IHRv
-IHplcm8gdGhlIGF0dGVudWF0b3IgaXMgbm90IGJ5cGFzc2VkLg0KPiA+IElmIHRoZQ0KPiA+ICsg
-ICAgICBwcm9wZXJ0eSBpcyBhYnNlbnQgdGhlbiB0aGUgY29uZmlnIHJlZ2lzdGVyIGlzIG5vdCBt
-b2RpZmllZC4NCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGJ5cGFzcy1hdHRl
-bnVhdG9yLWluMzoNCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIENvbmZpZ3Vy
-ZXMgYnlwYXNzaW5nIHRoZSBpbmRpdmlkdWFsIHZvbHRhZ2UgaW5wdXQNCj4gPiArICAgICAgYXR0
-ZW51YXRvciwgb24gaW4zLiBUaGlzIGlzIHN1cHBvcnRlZCBvbiB0aGUgQURUNzQ3NiBhbmQNCj4g
-PiBBRFQ3NDkwLg0KPiA+ICsgICAgICBJZiBzZXQgdG8gYSBub24temVybyBpbnRlZ2VyIHRoZSBh
-dHRlbnVhdG9yIGlzIGJ5cGFzc2VkLCBpZg0KPiA+IHNldCB0bw0KPiA+ICsgICAgICB6ZXJvIHRo
-ZSBhdHRlbnVhdG9yIGlzIG5vdCBieXBhc3NlZC4gSWYgdGhlIHByb3BlcnR5IGlzDQo+ID4gYWJz
-ZW50IHRoZW4NCj4gPiArICAgICAgdGhlIGNvbmZpZyByZWdpc3RlciBpcyBub3QgbW9kaWZpZWQu
-DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBieXBhc3MtYXR0ZW51YXRvci1p
-bjQ6DQo+IA0KPiBUaGVzZSA0IGNvdWxkIGJlIGEgc2luZ2xlIGVudHJ5IHVuZGVyIHBhdHRlcm5Q
-cm9wZXJ0aWVzLg0KPiANCj4gDQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBD
-b25maWd1cmVzIGJ5cGFzc2luZyB0aGUgaW5kaXZpZHVhbCB2b2x0YWdlIGlucHV0DQo+ID4gKyAg
-ICAgIGF0dGVudWF0b3IsIG9uIGluNC4gVGhpcyBpcyBzdXBwb3J0ZWQgb24gdGhlIEFEVDc0NzYg
-YW5kDQo+ID4gQURUNzQ5MC4NCj4gPiArICAgICAgSWYgc2V0IHRvIGEgbm9uLXplcm8gaW50ZWdl
-ciB0aGUgYXR0ZW51YXRvciBpcyBieXBhc3NlZCwgaWYNCj4gPiBzZXQgdG8NCj4gPiArICAgICAg
-emVybyB0aGUgYXR0ZW51YXRvciBpcyBub3QgYnlwYXNzZWQuIElmIHRoZSBwcm9wZXJ0eSBpcw0K
-PiA+IGFic2VudCB0aGVuDQo+ID4gKyAgICAgIHRoZSBjb25maWcgcmVnaXN0ZXIgaXMgbm90IG1v
-ZGlmaWVkLg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+
-ICsgIC0gY29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+ID4gKw0KPiA+ICtleGFtcGxlczoNCj4g
-PiArICAtIHwNCj4gPiArICAgIGkyYyB7DQo+ID4gKyAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+
-Ow0KPiA+ICsgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArDQo+ID4gKyAgICAgIGh3bW9u
-QDJlIHsNCj4gPiArICAgICAgICBjb21wYXRpYmxlID0gImFkaSxhZHQ3NDc2IjsNCj4gPiArICAg
-ICAgICByZWcgPSA8MHgyZT47DQo+ID4gKyAgICAgICAgYnlwYXNzLWF0dGVudWF0b3ItaW4wID0g
-PDE+Ow0KPiA+ICsgICAgICAgIGJ5cGFzcy1hdHRlbnVhdG9yLWluMSA9IDwwPjsNCj4gPiArICAg
-ICAgfTsNCj4gPiArICAgIH07DQo+ID4gKy4uLg0KPiA+IC0tIA0KPiA+IDIuMjUuMA0KPiA+IA0K
+On Wed, 2020-01-29 at 19:01 -0700, Shuah Khan wrote:
+> Change messages to messages to make it easier to debug. The following
+> error message isn't informative enough to figure out what failed.
+> Change messages to include function information.
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
+>  security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
+>  2 files changed, 18 insertions(+), 13 deletions(-)
+> 
+> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
+
+perhaps instead add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+so all the pr_<level> logging is more specific.
+
+This would prefix all pr_<level> output with "integrity: "
+
+3integrity: Couldn't get size: 0x%lx
+3integrity: Error reading db var: 0x%lx
+3integrity: MODSIGN: Couldn't get UEFI db list
+3integrity: Couldn't parse db signatures: %d
+6integrity: Couldn't get UEFI MokListRT
+3integrity: Couldn't parse MokListRT signatures: %d
+6integrity: Couldn't get UEFI dbx list
+3integrity: Couldn't parse dbx signatures: %d
+
+5integrity: Platform Keyring initialized
+6integrity: Error adding keys to platform keyring %s
+
+---
+ security/integrity/platform_certs/load_powerpc.c     | 3 +++
+ security/integrity/platform_certs/load_uefi.c        | 2 ++
+ security/integrity/platform_certs/platform_keyring.c | 2 ++
+ 3 files changed, 7 insertions(+)
+
+diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
+index a2900c..5cfbd0 100644
+--- a/security/integrity/platform_certs/load_powerpc.c
++++ b/security/integrity/platform_certs/load_powerpc.c
+@@ -5,6 +5,9 @@
+  *
+  *      - loads keys and hashes stored and controlled by the firmware.
+  */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/cred.h>
+diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+index 111898a..480450a 100644
+--- a/security/integrity/platform_certs/load_uefi.c
++++ b/security/integrity/platform_certs/load_uefi.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/cred.h>
+diff --git a/security/integrity/platform_certs/platform_keyring.c b/security/integrity/platform_certs/platform_keyring.c
+index 7646e35..9bd2846 100644
+--- a/security/integrity/platform_certs/platform_keyring.c
++++ b/security/integrity/platform_certs/platform_keyring.c
+@@ -6,6 +6,8 @@
+  * Author(s): Nayna Jain <nayna@linux.ibm.com>
+  */
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+
