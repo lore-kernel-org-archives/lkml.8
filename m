@@ -2,117 +2,198 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A825C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991CFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFAE20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B60214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BJgoPeGN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I+QiVsqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgA3Tkr (ORCPT
+        id S1727495AbgA3TmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:40:47 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36424 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgA3Tkr (ORCPT
+        Thu, 30 Jan 2020 14:42:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43776 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgA3TmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:40:47 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 185so2019763pfv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 11:40:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DVn6zbqy7bvZdTzwM8BmdQE5K+7bxb6nlu5mnSErUpY=;
-        b=BJgoPeGNtguEc08sRtnri1L2Fp3wrVFyIvN9w/oiBfOkSfQrhgwQODRJcjlocCfbgT
-         bQz8ymHSya7KffQ8tIp17+5tx9GSMrmV5lZVBFM+XI/VH0YrCCwpzu7ry3YQcDkpqmKN
-         kmvQ6TjemqI+feJDJxrUWbSuozUtFoB+al26o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DVn6zbqy7bvZdTzwM8BmdQE5K+7bxb6nlu5mnSErUpY=;
-        b=Y2zV1ZdmNa7421lKpCtTui3wHxtqJMqeaMixHDM8vQ4SD8xsyAOpK9Ff0RkYIAqQ0h
-         XQU1Qn4cKIltPTzvhU8XcWb6usiHszLv7KWfeVMusmJOeZSPlmOoslPn9ak+hJUkW5PF
-         710CzGuXn9PePZ2ftOLtn6rBNzyQXjTPvv6P6MHCXsvlzEIV9FSwp67F7Pa1KqNeTLNW
-         IqzJoh4u7E96NkyIv3tqcRdPlnsBQTyFG7bOy+oS19EFJF2ICDhPsg8ItHputGCygVKO
-         fd+Th3EDzPU7K8UFUfVwuSJG3NFPxXom+J14udazwo53OI8YYELDnuL9bXkykRVdFYRm
-         Wglw==
-X-Gm-Message-State: APjAAAWNW9HW38Bwu8iK4XCjIajXFhrZkjukEkPa5jBREhhwU6fSN5I9
-        3hWpEGUrlQacdBb7cgXwMKOvDA==
-X-Google-Smtp-Source: APXvYqzH5KF5EcZIxk0wMeMAL8h3j+AnDMn6/vcruHtTmLB/P3BDW3QMj3wD1FLunx2J1zGgGW3EEA==
-X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr6544241pfd.70.1580413246643;
-        Thu, 30 Jan 2020 11:40:46 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q8sm7334400pgg.92.2020.01.30.11.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 11:40:45 -0800 (PST)
-Date:   Thu, 30 Jan 2020 11:40:44 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: Re: [PATCH] x86: Don't discard .exit.text and .exit.data at link-time
-Message-ID: <202001301139.F8859A4@keescook>
-References: <20200130180048.2901-1-hjl.tools@gmail.com>
+        Thu, 30 Jan 2020 14:42:25 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UJgN0Z112282;
+        Thu, 30 Jan 2020 13:42:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580413344;
+        bh=khQiwUxzw9t9BsPyN/juluBZCq+yrSeFBSrntRrXeoU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I+QiVsqCdNNSGYh0a5n9WmH1kakAZTBDdieZS6DlHbCiCn1gs+StV7jZk1fGXINxv
+         M48ULcPEKDVuqlIriLjlk7Yfv9AhwrdEuwT4IgnbDYbHbWm2Yzbw5z/N/cqXu/PwT+
+         MJCMwZgXsnenyHP4Dp1HhIobNVas+ad4/9UFYPUA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UJgNmZ121128
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 13:42:23 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 13:42:23 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 13:42:23 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UJgL7Z073877;
+        Thu, 30 Jan 2020 13:42:21 -0600
+Subject: Re: [PATCHv5 06/14] remoteproc/omap: Initialize and assign reserved
+ memory node
+To:     "Andrew F. Davis" <afd@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <s-anna@ti.com>, <linux-omap@vger.kernel.org>
+References: <20200116135332.7819-1-t-kristo@ti.com>
+ <20200116135332.7819-7-t-kristo@ti.com>
+ <249c293c-6a23-165f-1df5-4859ee47658a@ti.com>
+ <37db5d57-b1cd-1cec-2c9b-31c49e3bdc10@ti.com>
+ <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <2aaa4024-1e2c-5cab-c9f3-3be59c57e9ac@ti.com>
+Date:   Thu, 30 Jan 2020 21:42:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130180048.2901-1-hjl.tools@gmail.com>
+In-Reply-To: <a0e85451-7c05-884c-4997-b4e8c5684c3e@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 10:00:48AM -0800, H.J. Lu wrote:
-> Since .exit.text and .exit.data sections are discarded at runtime, we
-> should undefine EXIT_TEXT and EXIT_DATA to exclude .exit.text and
-> .exit.data sections from default discarded sections.
+On 30/01/2020 21:20, Andrew F. Davis wrote:
+> On 1/30/20 2:18 PM, Tero Kristo wrote:
+>> On 30/01/2020 20:11, Andrew F. Davis wrote:
+>>> On 1/16/20 8:53 AM, Tero Kristo wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> The reserved memory nodes are not assigned to platform devices by
+>>>> default in the driver core to avoid the lookup for every platform
+>>>> device and incur a penalty as the real users are expected to be
+>>>> only a few devices.
+>>>>
+>>>> OMAP remoteproc devices fall into the above category and the OMAP
+>>>> remoteproc driver _requires_ specific CMA pools to be assigned
+>>>> for each device at the moment to align on the location of the
+>>>> vrings and vring buffers in the RTOS-side firmware images. So,
+>>>
+>>>
+>>> Same comment as before, this is a firmware issue for only some firmwares
+>>> that do not handle being assigned vring locations correctly and instead
+>>> hard-code them.
+>>
+>> I believe we discussed this topic in length in previous version but
+>> there was no conclusion on it.
+>>
+>> The commit desc might be a bit misleading, we are not actually forced to
+>> use specific CMA buffers, as we use IOMMU to map these to device
+>> addresses. For example IPU1/IPU2 use internally exact same memory
+>> addresses, iommu is used to map these to specific CMA buffer.
+>>
+>> CMA buffers are mostly used so that we get aligned large chunk of memory
+>> which can be mapped properly with the limited IOMMU OMAP family of chips
+>> have. Not sure if there is any sane way to get this done in any other
+>> manner.
+>>
+> 
+> 
+> Why not use the default CMA area?
 
-This is just a correctness fix, yes? The EXIT_TEXT and EXIT_DATA were
-already included before the /DISCARD/ section here, so there's no
-behavioral change with this patch, correct?
+I think using default CMA area getting the actual memory block is not 
+guaranteed and might fail. There are other users for the memory, and it 
+might get fragmented at the very late phase we are grabbing the memory 
+(omap remoteproc driver probe time.) Some chunks we need are pretty large.
 
--Kees
+I believe I could experiment with this a bit though and see, or Suman 
+could maybe provide feedback why this was designed initially like this 
+and why this would not be a good idea.
+
+-Tero
 
 > 
-> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Andrew
 > 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index d1b942365d27..fb2c45cb1d1f 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -416,6 +416,12 @@ SECTIONS
->  	STABS_DEBUG
->  	DWARF_DEBUG
->  
-> +	/* Sections to be discarded.  EXIT_TEXT and EXIT_DATA discard at runtime.
-> +	 * not link time.  */
-> +#undef EXIT_TEXT
-> +#define EXIT_TEXT
-> +#undef EXIT_DATA
-> +#define EXIT_DATA
->  	DISCARDS
->  	/DISCARD/ : {
->  		*(.eh_frame)
-> -- 
-> 2.24.1
 > 
+>> -Tero
+>>
+>>>
+>>> This is not a requirement of the remote processor itself and so it
+>>> should not fail to probe if a specific memory carveout isn't given.
+>>>
+>>>
+>>>> use the of_reserved_mem_device_init/release() API appropriately
+>>>> to assign the corresponding reserved memory region to the OMAP
+>>>> remoteproc device. Note that only one region per device is
+>>>> allowed by the framework.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>> ---
+>>>> v5: no changes
+>>>>
+>>>>    drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+>>>>    1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/remoteproc/omap_remoteproc.c
+>>>> b/drivers/remoteproc/omap_remoteproc.c
+>>>> index 0846839b2c97..194303b860b2 100644
+>>>> --- a/drivers/remoteproc/omap_remoteproc.c
+>>>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>>>> @@ -17,6 +17,7 @@
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/err.h>
+>>>>    #include <linux/of_device.h>
+>>>> +#include <linux/of_reserved_mem.h>
+>>>>    #include <linux/platform_device.h>
+>>>>    #include <linux/dma-mapping.h>
+>>>>    #include <linux/remoteproc.h>
+>>>> @@ -480,14 +481,22 @@ static int omap_rproc_probe(struct
+>>>> platform_device *pdev)
+>>>>        if (ret)
+>>>>            goto free_rproc;
+>>>>    +    ret = of_reserved_mem_device_init(&pdev->dev);
+>>>> +    if (ret) {
+>>>> +        dev_err(&pdev->dev, "device does not have specific CMA
+>>>> pool\n");
+>>>> +        goto free_rproc;
+>>>> +    }
+>>>> +
+>>>>        platform_set_drvdata(pdev, rproc);
+>>>>          ret = rproc_add(rproc);
+>>>>        if (ret)
+>>>> -        goto free_rproc;
+>>>> +        goto release_mem;
+>>>>          return 0;
+>>>>    +release_mem:
+>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>    free_rproc:
+>>>>        rproc_free(rproc);
+>>>>        return ret;
+>>>> @@ -499,6 +508,7 @@ static int omap_rproc_remove(struct
+>>>> platform_device *pdev)
+>>>>          rproc_del(rproc);
+>>>>        rproc_free(rproc);
+>>>> +    of_reserved_mem_device_release(&pdev->dev);
+>>>>          return 0;
+>>>>    }
+>>>>
+>>
+>> -- 
 
--- 
-Kees Cook
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
