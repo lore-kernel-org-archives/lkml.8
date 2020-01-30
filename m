@@ -2,206 +2,268 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416B1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23602C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D63620658
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96152082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gZUm7KU4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayCbSthN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgA3OPk (ORCPT
+        id S1727448AbgA3OPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:15:40 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:56972 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgA3OPk (ORCPT
+        Thu, 30 Jan 2020 09:15:45 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44765 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbgA3OPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:15:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gX6hyt20QV23hW9BRxe2F20Xz12H4clKTdo4rjaVKBc=; b=gZUm7KU4jFD/ciDCawzCmQ4Qk
-        BbhLC8I4sZQXvUmlzEilMB1DVfY3XM3xypcYqkiLSIJOeNRHBJLlXy1+SttaI9bOTE4tqilqEUTp3
-        zuwGWZDR4DrnNm2V16/SirM6jMaoTXTqQ/14Fk5HuHvbogzgsSGkEOaDFKhH57y9KJB2N8cd6rIwk
-        4iIlgmchckGeFZjvrlcJJawcO/0Fsb/5KD5oJUSFEUSGEmR8zSn0fU5HGTrvGr87HXpPkOSuywh0q
-        3doHTSTEUH+1o2SRqlk/y4CZyoPo+OTr17xSPuPx2WwmBGflMV3yQxpdmoFuSAPGdlTp8xI1dLMPV
-        Yog7MvofQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33698)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ixAb9-0003h7-6h; Thu, 30 Jan 2020 14:15:11 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ixAb3-0004SG-Mt; Thu, 30 Jan 2020 14:15:05 +0000
-Date:   Thu, 30 Jan 2020 14:15:05 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
-        kirill@shutemov.name, yang.shi@linux.alibaba.com,
-        thellstrom@vmware.com, Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
- move_page_tables()
-Message-ID: <20200130141505.GK25745@shell.armlinux.org.uk>
-References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
- <20200117232254.2792-4-richardw.yang@linux.intel.com>
- <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
- <20200129094738.GE25745@shell.armlinux.org.uk>
- <20200129215745.GA20736@richard>
- <20200129232441.GI25745@shell.armlinux.org.uk>
- <20200130013000.GA5137@richard>
+        Thu, 30 Jan 2020 09:15:43 -0500
+Received: by mail-io1-f67.google.com with SMTP id e7so4103628iof.11;
+        Thu, 30 Jan 2020 06:15:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eDbn66+ZS+nXSxCmLlLabueM3/KUJun483QO8xHqbiQ=;
+        b=ayCbSthN1D07Q50RjsKekYgdDnjpXRwpSiTxj8Fg4Wjo601TXnFDYi3ZpQ70TduDzx
+         0iO2QzS4IOixGHCqRG8E/uTjChPBkmYzGmHV2MPRYPyVZWLo0IQQrqLQEBdCXEpBVbdf
+         YpMDZeLy9IzNAwgjFrlkqOnwMrPGNTxgc9tJcZyNgeLGW4ecrdqwDd3yC9juQ3SAZ7D1
+         X2E55fREkV8WE3sOYQnfEE0zg1vfitMMhTEUrBSXNtcnKKPnCMZpy9FFOtXx77kjBYvA
+         KI46tnEN8/nKLWtlc4Tp6mI9XwaBPhhE/9A5G0NrPJOLmKKMg6flibX8msO4E7d4HlCU
+         qNPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eDbn66+ZS+nXSxCmLlLabueM3/KUJun483QO8xHqbiQ=;
+        b=bM5xdH7QIpYFXCxjk2qJScOrBAwW6fg9T7kdABTSLAZox1PBJy5//8vVaLJcR3Buy8
+         t6e72LAYLg6lc8SOtBerzBYP2BOl6tuNbTXtlRgcrnlE1KvUnXgTeDDbYD9PFTjSoIrp
+         PxxILYqcnnJ2iZoww2Aw2N8fefgNRMqlJ8zrhCfVPMzFn3nzO4h/lxK2EAtm4xxZEQ5u
+         X4UXsEjifJORki+nCF0qC/tcATPs9owTxelrGPh2mtzvDIF+xB4xUUhxBepMrF5Zsqk4
+         tZIluPIurYDcd70P4GPa5zntzhnVlwOAPAhwLn6PW/GNlFOqIHeXUBDbcdkqv4L1GDui
+         ARnw==
+X-Gm-Message-State: APjAAAWaRFjd055EjcGtqggXvSqCx+wHtRncRdF00ob79VlmWncX9e05
+        qZyaeQAqXNXmC0M8wRacbS3tH6YX0tCpgUkhg6SHEyJUL4c=
+X-Google-Smtp-Source: APXvYqwwjcKol1eLUrPmgqTQasp3Z+HBWPRDPPc/TV6N1XeGuRauvqRmcmbvoi52aZvuV6+XYUY/yQRVfOIWNmmA8ec=
+X-Received: by 2002:a6b:17c4:: with SMTP id 187mr4167678iox.143.1580393742934;
+ Thu, 30 Jan 2020 06:15:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200130013000.GA5137@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200129182011.5483-1-lhenriques@suse.com> <20200129182011.5483-2-lhenriques@suse.com>
+In-Reply-To: <20200129182011.5483-2-lhenriques@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Thu, 30 Jan 2020 15:15:52 +0100
+Message-ID: <CAOi1vP92rXoNU7ne-XrOiGH=WzVmMO9h8XnbReeEDO=xAcXHEg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ceph: parallelize all copy-from requests in copy_file_range
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 09:30:00AM +0800, Wei Yang wrote:
-> On Wed, Jan 29, 2020 at 11:24:41PM +0000, Russell King - ARM Linux admin wrote:
-> >On Thu, Jan 30, 2020 at 05:57:45AM +0800, Wei Yang wrote:
-> >> On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
-> >> >On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
-> >> >> 18.01.2020 02:22, Wei Yang пишет:
-> >> >> > Use the general helper instead of do it by hand.
-> >> >> > 
-> >> >> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> >> >> > ---
-> >> >> >  mm/mremap.c | 7 ++-----
-> >> >> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> >> >> > 
-> >> >> > diff --git a/mm/mremap.c b/mm/mremap.c
-> >> >> > index c2af8ba4ba43..a258914f3ee1 100644
-> >> >> > --- a/mm/mremap.c
-> >> >> > +++ b/mm/mremap.c
-> >> >> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
-> >> >> >  
-> >> >> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
-> >> >> >  		cond_resched();
-> >> >> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
-> >> >> > -		/* even if next overflowed, extent below will be ok */
-> >> >> > +		next = pmd_addr_end(old_addr, old_end);
-> >> >> >  		extent = next - old_addr;
-> >> >> > -		if (extent > old_end - old_addr)
-> >> >> > -			extent = old_end - old_addr;
-> >> >> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
-> >> >> >  		if (!old_pmd)
-> >> >> >  			continue;
-> >> >> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
-> >> >> >  
-> >> >> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
-> >> >> >  			break;
-> >> >> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
-> >> >> > +		next = pmd_addr_end(new_addr, new_addr + len);
-> >> >> >  		if (extent > next - new_addr)
-> >> >> >  			extent = next - new_addr;
-> >> >> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
-> >> >> > 
-> >> >> 
-> >> >> Hello Wei,
-> >> >> 
-> >> >> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
-> >> >> Tegra (ARM32):
-> >> >> 
-> >> >>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
-> >> >> 
-> >> >> and eventually kernel hangs.
-> >> >> 
-> >> >> Git's bisection points to this patch and reverting it helps. Please fix,
-> >> >> thanks in advance.
-> >> >
-> >> >The above is definitely wrong - pXX_addr_end() are designed to be used
-> >> >with an address index within the pXX table table and the address index
-> >> >of either the last entry in the same pXX table or the beginning of the
-> >> >_next_ pXX table.  Arbitary end address indicies are not allowed.
-> >> >
-> >> 
-> >> #define pmd_addr_end(addr, end)						\
-> >> ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
-> >> 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-> >> })
-> >> 
-> >> If my understanding is correct, the definition here align the addr to next PMD
-> >> boundary or end.
-> >> 
-> >> I don't see the possibility to across another PMD. Do I miss something?
-> >
-> >Look at the definition of p*_addr_end() that are used when page tables
-> >are rolled up.
-> >
-> 
-> Sorry, I don't get your point.
-> 
-> What's the meaning of "roll up" here?
-> 
-> Would you mind giving me an example? I see pmd_addr_end() is not used in many
-> places in core kernel. By glancing those usages, all the places use it like
-> pmd_addr_end(addr, end). Seems no specially handing on the end address.
-> 
-> Or you mean the case when pmd_addr_end() is defined to return "end" directly? 
+On Wed, Jan 29, 2020 at 7:20 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> Right now the copy_file_range syscall serializes all the OSDs 'copy-from'
+> operations, waiting for each request to complete before sending the next
+> one.  This patch modifies copy_file_range so that all the 'copy-from'
+> operations are sent in bulk and wait for its completion at the end.  This
+> will allow significant speed-ups, specially when sending requests to
+> different target OSDs.
+>
+> There's also a throttling mechanism so that OSDs aren't flooded with
+> requests when a client performs a big file copy.  Currently the throttling
+> mechanism simply waits for the requests when the number of in-flight
+> requests reaches (wsize / object size) * 4.
+>
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/file.c                  | 34 ++++++++++++++++++++--
+>  include/linux/ceph/osd_client.h |  5 +++-
+>  net/ceph/osd_client.c           | 50 ++++++++++++++++++++++++---------
+>  3 files changed, 72 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 1e6cdf2dfe90..77a16324dcb4 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1943,12 +1943,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>         struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+>         struct ceph_object_locator src_oloc, dst_oloc;
+>         struct ceph_object_id src_oid, dst_oid;
+> +       struct ceph_osd_request *req;
+>         loff_t endoff = 0, size;
+>         ssize_t ret = -EIO;
+>         u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+>         u32 src_objlen, dst_objlen, object_size;
+> -       int src_got = 0, dst_got = 0, err, dirty;
+> +       int src_got = 0, dst_got = 0, err, dirty, ncopies;
+>         bool do_final_copy = false;
+> +       LIST_HEAD(osd_reqs);
+>
+>         if (src_inode->i_sb != dst_inode->i_sb) {
+>                 struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> @@ -2083,6 +2085,12 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         goto out_caps;
+>         }
+>         object_size = src_ci->i_layout.object_size;
+> +
+> +       /*
+> +        * Throttle the object copies: ncopies holds the number of allowed
+> +        * in-flight 'copy-from' requests before waiting for their completion
+> +        */
+> +       ncopies = (src_fsc->mount_options->wsize / object_size) * 4;
+>         while (len >= object_size) {
+>                 ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+>                                               object_size, &src_objnum,
+> @@ -2097,7 +2105,7 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                 ceph_oid_printf(&dst_oid, "%llx.%08llx",
+>                                 dst_ci->i_vino.ino, dst_objnum);
+>                 /* Do an object remote copy */
+> -               err = ceph_osdc_copy_from(
+> +               req = ceph_osdc_copy_from(
+>                         &src_fsc->client->osdc,
+>                         src_ci->i_vino.snap, 0,
+>                         &src_oid, &src_oloc,
+> @@ -2108,7 +2116,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+>                         dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+>                         CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> -               if (err) {
+> +               if (IS_ERR(req)) {
+> +                       err = PTR_ERR(req);
+>                         if (err == -EOPNOTSUPP) {
 
-Not all hardware has five levels of page tables.  When hardware does not
-have five levels, it is common to "roll up" some of the page tables into
-others.
+No point in checking for EOPNOTSUPP here, because ceph_osdc_copy_from()
+won't ever return that.  This loop needs more massaging and more testing
+on old OSDs...
 
-There are generic ways to implement this, which include using:
+>                                 src_fsc->have_copy_from2 = false;
+>                                 pr_notice("OSDs don't support 'copy-from2'; "
+> @@ -2117,14 +2126,33 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         dout("ceph_osdc_copy_from returned %d\n", err);
+>                         if (!ret)
+>                                 ret = err;
+> +                       /* wait for all queued requests */
+> +                       ceph_osdc_wait_requests(&osd_reqs);
+>                         goto out_caps;
+>                 }
+> +               list_add(&req->r_private_item, &osd_reqs);
+>                 len -= object_size;
+>                 src_off += object_size;
+>                 dst_off += object_size;
+>                 ret += object_size;
 
-include/asm-generic/pgtable-nop4d.h
-include/asm-generic/pgtable-nopud.h
-include/asm-generic/pgtable-nopmd.h
+So ret is incremented here, but you have numerious tests where ret is
+assigned an error only if ret is 0.  Unless I'm missing something, this
+interferes with returning errors from __ceph_copy_file_range().
 
-and then there's architecture ways to implement this.  32-bit ARM takes
-its implementation for PMD not from the generic version, which
-post-dates 32-bit ARM, but from how page table roll-up was implemented
-back at the time when the current ARM scheme was devised.  The generic
-scheme is unsuitable for 32-bit ARM since we do more than just roll-up
-page tables, but this is irrelevent for this discussion.
+> +               if (--ncopies == 0) {
+> +                       err = ceph_osdc_wait_requests(&osd_reqs);
+> +                       if (err) {
+> +                               if (!ret)
+> +                                       ret = err;
+> +                               goto out_caps;
+> +                       }
+> +                       ncopies = (src_fsc->mount_options->wsize /
+> +                                  object_size) * 4;
 
-All three of the generic implementations, and 32-bit ARM, define the
-pXX_addr_end() macros thusly:
+The object size is constant within a file, so ncopies should be too.
+Perhaps introduce a counter instead of recalculating ncopies here?
 
-include/asm-generic/pgtable-nop4d.h:#define p4d_addr_end(addr, end) (end)
-include/asm-generic/pgtable-nopmd.h:#define pmd_addr_end(addr, end) (end)
-include/asm-generic/pgtable-nopud.h:#define pud_addr_end(addr, end) (end)
-arch/arm/include/asm/pgtable-2level.h:#define pmd_addr_end(addr,end) (end)
+> +               }
+>         }
+>
+> +       err = ceph_osdc_wait_requests(&osd_reqs);
+> +       if (err) {
+> +               if (!ret)
+> +                       ret = err;
+> +               goto out_caps;
+> +       }
+>         if (len)
+>                 /* We still need one final local copy */
+>                 do_final_copy = true;
+> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> index 5a62dbd3f4c2..25565dbfd65a 100644
+> --- a/include/linux/ceph/osd_client.h
+> +++ b/include/linux/ceph/osd_client.h
+> @@ -526,7 +526,8 @@ extern int ceph_osdc_writepages(struct ceph_osd_client *osdc,
+>                                 struct timespec64 *mtime,
+>                                 struct page **pages, int nr_pages);
+>
+> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+> +struct ceph_osd_request *ceph_osdc_copy_from(
+> +                       struct ceph_osd_client *osdc,
+>                         u64 src_snapid, u64 src_version,
+>                         struct ceph_object_id *src_oid,
+>                         struct ceph_object_locator *src_oloc,
+> @@ -537,6 +538,8 @@ int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+>                         u32 truncate_seq, u64 truncate_size,
+>                         u8 copy_from_flags);
+>
+> +int ceph_osdc_wait_requests(struct list_head *osd_reqs);
+> +
+>  /* watch/notify */
+>  struct ceph_osd_linger_request *
+>  ceph_osdc_watch(struct ceph_osd_client *osdc,
+> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> index b68b376d8c2f..c123e231eaf4 100644
+> --- a/net/ceph/osd_client.c
+> +++ b/net/ceph/osd_client.c
+> @@ -5346,23 +5346,47 @@ static int osd_req_op_copy_from_init(struct ceph_osd_request *req,
+>         return 0;
+>  }
+>
+> -int ceph_osdc_copy_from(struct ceph_osd_client *osdc,
+> -                       u64 src_snapid, u64 src_version,
+> -                       struct ceph_object_id *src_oid,
+> -                       struct ceph_object_locator *src_oloc,
+> -                       u32 src_fadvise_flags,
+> -                       struct ceph_object_id *dst_oid,
+> -                       struct ceph_object_locator *dst_oloc,
+> -                       u32 dst_fadvise_flags,
+> -                       u32 truncate_seq, u64 truncate_size,
+> -                       u8 copy_from_flags)
+> +int ceph_osdc_wait_requests(struct list_head *osd_reqs)
+> +{
+> +       struct ceph_osd_request *req;
+> +       int ret = 0, err;
+> +
+> +       while (!list_empty(osd_reqs)) {
+> +               req = list_first_entry(osd_reqs,
+> +                                      struct ceph_osd_request,
+> +                                      r_private_item);
+> +               list_del_init(&req->r_private_item);
+> +               err = ceph_osdc_wait_request(req->r_osdc, req);
+> +               if (err) {
+> +                       if (!ret)
+> +                               ret = err;
+> +                       dout("copy request failed (err=%d)\n", err);
 
-since, as I stated, pXX_addr_end() expects its "end" argument to be
-the address index of the next entry in the immediately upper page
-table level, or the address index of the last entry we wish to
-process, which ever is smaller.
+This dout needs updating, but I'd just remove it.  The error code is
+there in other messages.
 
-If it's larger than the address index of the next entry in the
-immediately upper page table level, then the effect of all these
-macros will be to walk off the end of the current level of page
-table.
+> +               }
+> +               ceph_osdc_put_request(req);
+> +       }
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(ceph_osdc_wait_requests);
 
-To see how they _should_ be used, see the loops in free_pgd_range()
-and the free_pXX_range() functions called from there and below.
+Move this function after ceph_osdc_wait_request(), so that they are
+close to each other (and osd_req_op_copy_from_init() isn't separated
+from ceph_osdc_copy_from() by something unrelated).
 
-In all cases when the pXX_addr_end() macro was introduced, what I state
-above holds true - and I believe still holds true today, until this
-patch that has reportedly caused issues.
+Thanks,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+                Ilya
