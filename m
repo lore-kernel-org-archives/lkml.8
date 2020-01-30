@@ -6,37 +6,35 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA03AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09E2206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A6321734
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgA3OsU (ORCPT
+        id S1727234AbgA3OsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:48:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 09:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbgA3OsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727322AbgA3OsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jan 2020 09:48:14 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A382124695;
-        Thu, 30 Jan 2020 14:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7FE24685;
+        Thu, 30 Jan 2020 14:48:14 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ixB76-001CQy-JA; Thu, 30 Jan 2020 09:48:12 -0500
-Message-Id: <20200130144812.469324081@goodmis.org>
+        id 1ixB77-001CSQ-1j; Thu, 30 Jan 2020 09:48:13 -0500
+Message-Id: <20200130144812.928328487@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 30 Jan 2020 09:47:58 -0500
+Date:   Thu, 30 Jan 2020 09:48:01 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 15/21] tracing: Change trace_boot to use kprobe_event interface
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 18/21] tracing: Move all function tracing configs together
 References: <20200130144743.527378179@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -45,107 +43,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Have trace_boot_add_kprobe_event() use the kprobe_event interface.
+The features that depend on the function tracer were spread out through the
+tracing menu, pull them together as it is easier to manage.
 
-Also, rename kprobe_event_run_cmd() to kprobe_event_run_command() now
-that trace_boot's version is gone.
-
-Link: http://lkml.kernel.org/r/af5429d11291ab1e9a85a0ff944af3b2bcf193c7.1580323897.git.zanussi@kernel.org
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_boot.c   | 35 +++++++++++++++--------------------
- kernel/trace/trace_kprobe.c |  9 ++-------
- 2 files changed, 17 insertions(+), 27 deletions(-)
+ kernel/trace/Kconfig | 142 +++++++++++++++++++++----------------------
+ 1 file changed, 71 insertions(+), 71 deletions(-)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 4d37bf5c3742..2298a70cdda6 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -88,37 +88,32 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
- }
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 4484e783f68d..32fcbc00753b 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -172,6 +172,77 @@ config FUNCTION_GRAPH_TRACER
+ 	  the return value. This is done by setting the current return
+ 	  address on the current task structure into a stack of calls.
  
- #ifdef CONFIG_KPROBE_EVENTS
--extern int trace_kprobe_run_command(const char *command);
--
- static int __init
- trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- {
-+	struct dynevent_cmd cmd;
- 	struct xbc_node *anode;
- 	char buf[MAX_BUF_LEN];
- 	const char *val;
--	char *p;
--	int len;
-+	int ret;
- 
--	len = snprintf(buf, ARRAY_SIZE(buf) - 1, "p:kprobes/%s ", event);
--	if (len >= ARRAY_SIZE(buf)) {
--		pr_err("Event name is too long: %s\n", event);
--		return -E2BIG;
--	}
--	p = buf + len;
--	len = ARRAY_SIZE(buf) - len;
-+	kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
++config DYNAMIC_FTRACE
++	bool "enable/disable function tracing dynamically"
++	depends on FUNCTION_TRACER
++	depends on HAVE_DYNAMIC_FTRACE
++	default y
++	help
++	  This option will modify all the calls to function tracing
++	  dynamically (will patch them out of the binary image and
++	  replace them with a No-Op instruction) on boot up. During
++	  compile time, a table is made of all the locations that ftrace
++	  can function trace, and this table is linked into the kernel
++	  image. When this is enabled, functions can be individually
++	  enabled, and the functions not enabled will not affect
++	  performance of the system.
 +
-+	ret = kprobe_event_gen_cmd_start(&cmd, event, NULL);
-+	if (ret)
-+		return ret;
- 
- 	xbc_node_for_each_array_value(node, "probes", anode, val) {
--		if (strlcpy(p, val, len) >= len) {
--			pr_err("Probe definition is too long: %s\n", val);
--			return -E2BIG;
--		}
--		if (trace_kprobe_run_command(buf) < 0) {
--			pr_err("Failed to add probe: %s\n", buf);
--			return -EINVAL;
--		}
-+		ret = kprobe_event_add_field(&cmd, val);
-+		if (ret)
-+			return ret;
- 	}
- 
--	return 0;
-+	ret = kprobe_event_gen_cmd_end(&cmd);
-+	if (ret)
-+		pr_err("Failed to add probe: %s\n", buf);
++	  See the files in /sys/kernel/debug/tracing:
++	    available_filter_functions
++	    set_ftrace_filter
++	    set_ftrace_notrace
 +
-+	return ret;
- }
- #else
- static inline int __init
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index f43548b466d0..307abb724a71 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -901,12 +901,7 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
- 	return ret == -ECANCELED ? -EINVAL : ret;
- }
++	  This way a CONFIG_FUNCTION_TRACER kernel is slightly larger, but
++	  otherwise has native performance as long as no tracing is active.
++
++config DYNAMIC_FTRACE_WITH_REGS
++	def_bool y
++	depends on DYNAMIC_FTRACE
++	depends on HAVE_DYNAMIC_FTRACE_WITH_REGS
++
++config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
++	def_bool y
++	depends on DYNAMIC_FTRACE
++	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
++
++config FUNCTION_PROFILER
++	bool "Kernel function profiler"
++	depends on FUNCTION_TRACER
++	default n
++	help
++	  This option enables the kernel function profiler. A file is created
++	  in debugfs called function_profile_enabled which defaults to zero.
++	  When a 1 is echoed into this file profiling begins, and when a
++	  zero is entered, profiling stops. A "functions" file is created in
++	  the trace_stat directory; this file shows the list of functions that
++	  have been hit and their counters.
++
++	  If in doubt, say N.
++
++config STACK_TRACER
++	bool "Trace max stack"
++	depends on HAVE_FUNCTION_TRACER
++	select FUNCTION_TRACER
++	select STACKTRACE
++	select KALLSYMS
++	help
++	  This special tracer records the maximum stack footprint of the
++	  kernel and displays it in /sys/kernel/debug/tracing/stack_trace.
++
++	  This tracer works by hooking into every function call that the
++	  kernel executes, and keeping a maximum stack depth value and
++	  stack-trace saved.  If this is configured with DYNAMIC_FTRACE
++	  then it will not have any overhead while the stack tracer
++	  is disabled.
++
++	  To enable the stack tracer on bootup, pass in 'stacktrace'
++	  on the kernel command line.
++
++	  The stack tracer can also be enabled or disabled via the
++	  sysctl kernel.stack_tracer_enabled
++
++	  Say N if unsure.
++
+ config TRACE_PREEMPT_TOGGLE
+ 	bool
+ 	help
+@@ -410,30 +481,6 @@ config BRANCH_TRACER
  
--int trace_kprobe_run_command(const char *command)
--{
--	return trace_run_command(command, create_or_delete_trace_kprobe);
--}
+ 	  Say N if unsure.
+ 
+-config STACK_TRACER
+-	bool "Trace max stack"
+-	depends on HAVE_FUNCTION_TRACER
+-	select FUNCTION_TRACER
+-	select STACKTRACE
+-	select KALLSYMS
+-	help
+-	  This special tracer records the maximum stack footprint of the
+-	  kernel and displays it in /sys/kernel/debug/tracing/stack_trace.
 -
--static int trace_kprobe_run_cmd(struct dynevent_cmd *cmd)
-+static int trace_kprobe_run_command(struct dynevent_cmd *cmd)
- {
- 	return trace_run_command(cmd->buf, create_or_delete_trace_kprobe);
- }
-@@ -923,7 +918,7 @@ static int trace_kprobe_run_cmd(struct dynevent_cmd *cmd)
- void kprobe_event_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen)
- {
- 	dynevent_cmd_init(cmd, buf, maxlen, DYNEVENT_TYPE_KPROBE,
--			  trace_kprobe_run_cmd);
-+			  trace_kprobe_run_command);
- }
- EXPORT_SYMBOL_GPL(kprobe_event_cmd_init);
+-	  This tracer works by hooking into every function call that the
+-	  kernel executes, and keeping a maximum stack depth value and
+-	  stack-trace saved.  If this is configured with DYNAMIC_FTRACE
+-	  then it will not have any overhead while the stack tracer
+-	  is disabled.
+-
+-	  To enable the stack tracer on bootup, pass in 'stacktrace'
+-	  on the kernel command line.
+-
+-	  The stack tracer can also be enabled or disabled via the
+-	  sysctl kernel.stack_tracer_enabled
+-
+-	  Say N if unsure.
+-
+ config BLK_DEV_IO_TRACE
+ 	bool "Support for tracing block IO actions"
+ 	depends on SYSFS
+@@ -531,53 +578,6 @@ config DYNAMIC_EVENTS
+ config PROBE_EVENTS
+ 	def_bool n
  
+-config DYNAMIC_FTRACE
+-	bool "enable/disable function tracing dynamically"
+-	depends on FUNCTION_TRACER
+-	depends on HAVE_DYNAMIC_FTRACE
+-	default y
+-	help
+-	  This option will modify all the calls to function tracing
+-	  dynamically (will patch them out of the binary image and
+-	  replace them with a No-Op instruction) on boot up. During
+-	  compile time, a table is made of all the locations that ftrace
+-	  can function trace, and this table is linked into the kernel
+-	  image. When this is enabled, functions can be individually
+-	  enabled, and the functions not enabled will not affect
+-	  performance of the system.
+-
+-	  See the files in /sys/kernel/debug/tracing:
+-	    available_filter_functions
+-	    set_ftrace_filter
+-	    set_ftrace_notrace
+-
+-	  This way a CONFIG_FUNCTION_TRACER kernel is slightly larger, but
+-	  otherwise has native performance as long as no tracing is active.
+-
+-config DYNAMIC_FTRACE_WITH_REGS
+-	def_bool y
+-	depends on DYNAMIC_FTRACE
+-	depends on HAVE_DYNAMIC_FTRACE_WITH_REGS
+-
+-config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+-	def_bool y
+-	depends on DYNAMIC_FTRACE
+-	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+-
+-config FUNCTION_PROFILER
+-	bool "Kernel function profiler"
+-	depends on FUNCTION_TRACER
+-	default n
+-	help
+-	  This option enables the kernel function profiler. A file is created
+-	  in debugfs called function_profile_enabled which defaults to zero.
+-	  When a 1 is echoed into this file profiling begins, and when a
+-	  zero is entered, profiling stops. A "functions" file is created in
+-	  the trace_stat directory; this file shows the list of functions that
+-	  have been hit and their counters.
+-
+-	  If in doubt, say N.
+-
+ config BPF_KPROBE_OVERRIDE
+ 	bool "Enable BPF programs to override a kprobed function"
+ 	depends on BPF_EVENTS
 -- 
 2.24.1
 
