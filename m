@@ -2,62 +2,73 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC7C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84C9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350FD20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943D520702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 10:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgA3KCk (ORCPT
+        id S1727024AbgA3KFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 05:02:40 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52624 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgA3KCk (ORCPT
+        Thu, 30 Jan 2020 05:05:43 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55036 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3KFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 05:02:40 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4CF9E15AB0D16;
-        Thu, 30 Jan 2020 02:02:38 -0800 (PST)
-Date:   Thu, 30 Jan 2020 11:02:36 +0100 (CET)
-Message-Id: <20200130.110236.635220430261346308.davem@davemloft.net>
-To:     b.zolnierkie@samsung.com
-Cc:     ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org,
-        corbet@lwn.net, linux-ide@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ide: remove no longer used au1xxx-ide driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200116122938.20789-2-b.zolnierkie@samsung.com>
-References: <20200116122938.20789-1-b.zolnierkie@samsung.com>
-        <CGME20200116122951eucas1p27bed87e1d46b5e1d8fc91abc33cd013a@eucas1p2.samsung.com>
-        <20200116122938.20789-2-b.zolnierkie@samsung.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 02:02:40 -0800 (PST)
+        Thu, 30 Jan 2020 05:05:43 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ix6hd-00070v-NY; Thu, 30 Jan 2020 10:05:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Pascal Paillet <p.paillet@st.com>, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] thermal: stm32: fix spelling mistake "preprare" -> "prepare"
+Date:   Thu, 30 Jan 2020 10:05:37 +0000
+Message-Id: <20200130100537.18069-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Date: Thu, 16 Jan 2020 13:29:36 +0100
+From: Colin Ian King <colin.king@canonical.com>
 
-> Commit 54ff4a1d1732 ("MIPS: Alchemy: pata_platform for DB1200")
-> from year 2014 converted the only user of au1xxx-ide IDE host
-> driver (MIPS Alchemy DB1200 platform) to use pata_platform
-> libata host driver instead. This patch removes dead au1xxx-ide
-> driver code.
-> 
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+There is a spelling mistake in a dev_err error message. Fix it.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/thermal/st/stm_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+index 1cc5e6c5709e..ad9e3bf8fdf6 100644
+--- a/drivers/thermal/st/stm_thermal.c
++++ b/drivers/thermal/st/stm_thermal.c
+@@ -535,7 +535,7 @@ static int stm_thermal_probe(struct platform_device *pdev)
+ 	/* Configure and enable HW sensor */
+ 	ret = stm_thermal_prepare(sensor);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Error preprare sensor: %d\n", ret);
++		dev_err(&pdev->dev, "Error prepare sensor: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.24.0
+
