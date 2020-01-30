@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A81C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33BC206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C72214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgA3Osr (ORCPT
+        id S1727593AbgA3Osp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:48:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 09:48:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbgA3OsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727500AbgA3OsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 30 Jan 2020 09:48:14 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A332468E;
-        Thu, 30 Jan 2020 14:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C7824691;
+        Thu, 30 Jan 2020 14:48:13 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ixB75-001COY-QT; Thu, 30 Jan 2020 09:48:11 -0500
-Message-Id: <20200130144811.696872536@goodmis.org>
+        id 1ixB76-001CRS-Np; Thu, 30 Jan 2020 09:48:12 -0500
+Message-Id: <20200130144812.620182693@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 30 Jan 2020 09:47:53 -0500
+Date:   Thu, 30 Jan 2020 09:47:59 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 10/21] tracing: Add dynamic event command creation interface
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [for-next][PATCH 16/21] tracing: Add kprobe event command generation test module
 References: <20200130144743.527378179@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -47,359 +47,288 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <zanussi@kernel.org>
 
-Add an interface used to build up dynamic event creation commands,
-such as synthetic and kprobe events.  Interfaces specific to those
-particular types of events and others can be built on top of this
-interface.
+Add a test module that checks the basic functionality of the in-kernel
+kprobe event command generation API by creating kprobe events from a
+module.
 
-Command creation is started by first using the dynevent_cmd_init()
-function to initialize the dynevent_cmd object.  Following that, args
-are appended and optionally checked by the dynevent_arg_add() and
-dynevent_arg_pair_add() functions, which use objects representing
-arguments and pairs of arguments, initialized respectively by
-dynevent_arg_init() and dynevent_arg_pair_init().  Finally, once all
-args have been successfully added, the command is finalized and
-actually created using dynevent_create().
+Link: http://lkml.kernel.org/r/97e502b204f9dba948e3fa3a4315448298218787.1580323897.git.zanussi@kernel.org
 
-The code here for actually printing into the dyn_event->cmd buffer
-using snprintf() etc was adapted from v4 of Masami's 'tracing/boot:
-Add synthetic event support' patch.
-
-Link: http://lkml.kernel.org/r/1f65fa44390b6f238f6036777c3784ced1dcc6a0.1580323897.git.zanussi@kernel.org
-
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/trace_events.h  |  23 ++++
- kernel/trace/trace_dynevent.c | 240 ++++++++++++++++++++++++++++++++++
- kernel/trace/trace_dynevent.h |  33 +++++
- 3 files changed, 296 insertions(+)
+ kernel/trace/Kconfig                 |  12 ++
+ kernel/trace/Makefile                |   1 +
+ kernel/trace/kprobe_event_gen_test.c | 225 +++++++++++++++++++++++++++
+ 3 files changed, 238 insertions(+)
+ create mode 100644 kernel/trace/kprobe_event_gen_test.c
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 25fe743bcbaf..651b03d5e272 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -354,6 +354,29 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
- 						     const char *event);
- extern void trace_put_event_file(struct trace_event_file *file);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 4f2041166a2f..4484e783f68d 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -787,6 +787,18 @@ config SYNTH_EVENT_GEN_TEST
  
-+#define MAX_DYNEVENT_CMD_LEN	(2048)
-+
-+enum dynevent_type {
-+	DYNEVENT_TYPE_NONE,
-+};
-+
-+struct dynevent_cmd;
-+
-+typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
-+
-+struct dynevent_cmd {
-+	char			*buf;
-+	const char		*event_name;
-+	int			maxlen;
-+	int			remaining;
-+	unsigned int		n_fields;
-+	enum dynevent_type	type;
-+	dynevent_create_fn_t	run_command;
-+	void			*private_data;
-+};
-+
-+extern int dynevent_create(struct dynevent_cmd *cmd);
-+
- extern int synth_event_delete(const char *name);
+ 	  If unsure, say N.
  
- /*
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 89779eb84a07..6ffdbc4fda53 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -223,3 +223,243 @@ static __init int init_dynamic_event(void)
- 	return 0;
- }
- fs_initcall(init_dynamic_event);
++config KPROBE_EVENT_GEN_TEST
++	tristate "Test module for in-kernel kprobe event generation"
++	depends on KPROBE_EVENTS
++	help
++          This option creates a test module to check the base
++          functionality of in-kernel kprobe event definition.
 +
-+/**
-+ * dynevent_arg_add - Add an arg to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @arg: The argument to append to the current cmd
++          To test, insert the module, and then check the trace buffer
++	  for the generated kprobe events.
++
++	  If unsure, say N.
++
+ config TRACE_EVAL_MAP_FILE
+        bool "Show eval mappings for trace events"
+        depends on TRACING
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 32012f50fb79..f9dcd19165fa 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -45,6 +45,7 @@ obj-$(CONFIG_TRACING) += trace_printk.o
+ obj-$(CONFIG_TRACING_MAP) += tracing_map.o
+ obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
+ obj-$(CONFIG_SYNTH_EVENT_GEN_TEST) += synth_event_gen_test.o
++obj-$(CONFIG_KPROBE_EVENT_GEN_TEST) += kprobe_event_gen_test.o
+ obj-$(CONFIG_CONTEXT_SWITCH_TRACER) += trace_sched_switch.o
+ obj-$(CONFIG_FUNCTION_TRACER) += trace_functions.o
+ obj-$(CONFIG_PREEMPTIRQ_TRACEPOINTS) += trace_preemptirq.o
+diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
+new file mode 100644
+index 000000000000..18b0f1cbb947
+--- /dev/null
++++ b/kernel/trace/kprobe_event_gen_test.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Test module for in-kernel kprobe event creation and generation.
 + *
-+ * Append an argument to a dynevent_cmd.  The argument string will be
-+ * appended to the current cmd string, followed by a separator, if
-+ * applicable.  Before the argument is added, the check_arg()
-+ * function, if defined, is called.
-+ *
-+ * The cmd string, separator, and check_arg() function should be set
-+ * using the dynevent_arg_init() before any arguments are added using
-+ * this function.
-+ *
-+ * Return: 0 if successful, error otherwise.
++ * Copyright (C) 2019 Tom Zanussi <zanussi@kernel.org>
 + */
-+int dynevent_arg_add(struct dynevent_cmd *cmd,
-+		     struct dynevent_arg *arg)
++
++#include <linux/module.h>
++#include <linux/trace_events.h>
++
++/*
++ * This module is a simple test of basic functionality for in-kernel
++ * kprobe/kretprobe event creation.  The first test uses
++ * kprobe_event_gen_cmd_start(), kprobe_event_add_fields() and
++ * kprobe_event_gen_cmd_end() to create a kprobe event, which is then
++ * enabled in order to generate trace output.  The second creates a
++ * kretprobe event using kretprobe_event_gen_cmd_start() and
++ * kretprobe_event_gen_cmd_end(), and is also then enabled.
++ *
++ * To test, select CONFIG_KPROBE_EVENT_GEN_TEST and build the module.
++ * Then:
++ *
++ * # insmod kernel/trace/kprobe_event_gen_test.ko
++ * # cat /sys/kernel/debug/tracing/trace
++ *
++ * You should see many instances of the "gen_kprobe_test" and
++ * "gen_kretprobe_test" events in the trace buffer.
++ *
++ * To remove the events, remove the module:
++ *
++ * # rmmod kprobe_event_gen_test
++ *
++ */
++
++static struct trace_event_file *gen_kprobe_test;
++static struct trace_event_file *gen_kretprobe_test;
++
++/*
++ * Test to make sure we can create a kprobe event, then add more
++ * fields.
++ */
++static int __init test_gen_kprobe_cmd(void)
 +{
-+	int ret = 0;
-+	int delta;
-+	char *q;
++	struct dynevent_cmd cmd;
++	char *buf;
++	int ret;
 +
-+	if (arg->check_arg) {
-+		ret = arg->check_arg(arg);
-+		if (ret)
-+			return ret;
++	/* Create a buffer to hold the generated command */
++	buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	/* Before generating the command, initialize the cmd object */
++	kprobe_event_cmd_init(&cmd, buf, MAX_DYNEVENT_CMD_LEN);
++
++	/*
++	 * Define the gen_kprobe_test event with the first 2 kprobe
++	 * fields.
++	 */
++	ret = kprobe_event_gen_cmd_start(&cmd, "gen_kprobe_test",
++					 "do_sys_open",
++					 "dfd=%ax", "filename=%dx");
++	if (ret)
++		goto free;
++
++	/* Use kprobe_event_add_fields to add the rest of the fields */
++
++	ret = kprobe_event_add_fields(&cmd, "flags=%cx", "mode=+4($stack)");
++	if (ret)
++		goto free;
++
++	/*
++	 * This actually creates the event.
++	 */
++	ret = kprobe_event_gen_cmd_end(&cmd);
++	if (ret)
++		goto free;
++
++	/*
++	 * Now get the gen_kprobe_test event file.  We need to prevent
++	 * the instance and event from disappearing from underneath
++	 * us, which trace_get_event_file() does (though in this case
++	 * we're using the top-level instance which never goes away).
++	 */
++	gen_kprobe_test = trace_get_event_file(NULL, "kprobes",
++					       "gen_kprobe_test");
++	if (IS_ERR(gen_kprobe_test)) {
++		ret = PTR_ERR(gen_kprobe_test);
++		goto delete;
 +	}
 +
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-+
-+	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("String is too long: %s\n", arg->str);
-+		return -E2BIG;
++	/* Enable the event or you won't see anything */
++	ret = trace_array_set_clr_event(gen_kprobe_test->tr,
++					"kprobes", "gen_kprobe_test", true);
++	if (ret) {
++		trace_put_event_file(gen_kprobe_test);
++		goto delete;
 +	}
-+	cmd->remaining -= delta;
++ out:
++	return ret;
++ delete:
++	/* We got an error after creating the event, delete it */
++	ret = kprobe_event_delete("gen_kprobe_test");
++ free:
++	kfree(buf);
++
++	goto out;
++}
++
++/*
++ * Test to make sure we can create a kretprobe event.
++ */
++static int __init test_gen_kretprobe_cmd(void)
++{
++	struct dynevent_cmd cmd;
++	char *buf;
++	int ret;
++
++	/* Create a buffer to hold the generated command */
++	buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	/* Before generating the command, initialize the cmd object */
++	kprobe_event_cmd_init(&cmd, buf, MAX_DYNEVENT_CMD_LEN);
++
++	/*
++	 * Define the kretprobe event.
++	 */
++	ret = kretprobe_event_gen_cmd_start(&cmd, "gen_kretprobe_test",
++					    "do_sys_open",
++					    "$retval");
++	if (ret)
++		goto free;
++
++	/*
++	 * This actually creates the event.
++	 */
++	ret = kretprobe_event_gen_cmd_end(&cmd);
++	if (ret)
++		goto free;
++
++	/*
++	 * Now get the gen_kretprobe_test event file.  We need to
++	 * prevent the instance and event from disappearing from
++	 * underneath us, which trace_get_event_file() does (though in
++	 * this case we're using the top-level instance which never
++	 * goes away).
++	 */
++	gen_kretprobe_test = trace_get_event_file(NULL, "kprobes",
++						  "gen_kretprobe_test");
++	if (IS_ERR(gen_kretprobe_test)) {
++		ret = PTR_ERR(gen_kretprobe_test);
++		goto delete;
++	}
++
++	/* Enable the event or you won't see anything */
++	ret = trace_array_set_clr_event(gen_kretprobe_test->tr,
++					"kprobes", "gen_kretprobe_test", true);
++	if (ret) {
++		trace_put_event_file(gen_kretprobe_test);
++		goto delete;
++	}
++ out:
++	return ret;
++ delete:
++	/* We got an error after creating the event, delete it */
++	ret = kprobe_event_delete("gen_kretprobe_test");
++ free:
++	kfree(buf);
++
++	goto out;
++}
++
++static int __init kprobe_event_gen_test_init(void)
++{
++	int ret;
++
++	ret = test_gen_kprobe_cmd();
++	if (ret)
++		return ret;
++
++	ret = test_gen_kretprobe_cmd();
++	if (ret) {
++		WARN_ON(trace_array_set_clr_event(gen_kretprobe_test->tr,
++						  "kprobes",
++						  "gen_kretprobe_test", false));
++		trace_put_event_file(gen_kretprobe_test);
++		WARN_ON(kprobe_event_delete("gen_kretprobe_test"));
++	}
 +
 +	return ret;
 +}
 +
-+/**
-+ * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @arg_pair: The argument pair to append to the current cmd
-+ *
-+ * Append an argument pair to a dynevent_cmd.  An argument pair
-+ * consists of a left-hand-side argument and a right-hand-side
-+ * argument separated by an operator, which can be whitespace, all
-+ * followed by a separator, if applicable.  This can be used to add
-+ * arguments of the form 'type variable_name;' or 'x+y'.
-+ *
-+ * The lhs argument string will be appended to the current cmd string,
-+ * followed by an operator, if applicable, followd by the rhs string,
-+ * followed finally by a separator, if applicable.  Before anything is
-+ * added, the check_arg() function, if defined, is called.
-+ *
-+ * The cmd strings, operator, separator, and check_arg() function
-+ * should be set using the dynevent_arg_pair_init() before any arguments
-+ * are added using this function.
-+ *
-+ * Return: 0 if successful, error otherwise.
-+ */
-+int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
-+			  struct dynevent_arg_pair *arg_pair)
++static void __exit kprobe_event_gen_test_exit(void)
 +{
-+	int ret = 0;
-+	int delta;
-+	char *q;
++	/* Disable the event or you can't remove it */
++	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
++					  "kprobes",
++					  "gen_kprobe_test", false));
 +
-+	if (arg_pair->check_arg) {
-+		ret = arg_pair->check_arg(arg_pair);
-+		if (ret)
-+			return ret;
-+	}
++	/* Now give the file and instance back */
++	trace_put_event_file(gen_kprobe_test);
 +
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
++	/* Now unregister and free the event */
++	WARN_ON(kprobe_event_delete("gen_kprobe_test"));
 +
-+	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
-+			 arg_pair->operator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("field string is too long: %s\n", arg_pair->lhs);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta; q += delta;
++	/* Disable the event or you can't remove it */
++	WARN_ON(trace_array_set_clr_event(gen_kprobe_test->tr,
++					  "kprobes",
++					  "gen_kretprobe_test", false));
 +
-+	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
-+			 arg_pair->separator);
-+	if (delta >= cmd->remaining) {
-+		pr_err("field string is too long: %s\n", arg_pair->rhs);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta; q += delta;
++	/* Now give the file and instance back */
++	trace_put_event_file(gen_kretprobe_test);
 +
-+	return ret;
++	/* Now unregister and free the event */
++	WARN_ON(kprobe_event_delete("gen_kretprobe_test"));
 +}
 +
-+/**
-+ * dynevent_str_add - Add a string to a dynevent_cmd
-+ * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-+ * @str: The string to append to the current cmd
-+ *
-+ * Append a string to a dynevent_cmd.  The string will be appended to
-+ * the current cmd string as-is, with nothing prepended or appended.
-+ *
-+ * Return: 0 if successful, error otherwise.
-+ */
-+int dynevent_str_add(struct dynevent_cmd *cmd, const char *str)
-+{
-+	int ret = 0;
-+	int delta;
-+	char *q;
++module_init(kprobe_event_gen_test_init)
++module_exit(kprobe_event_gen_test_exit)
 +
-+	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-+
-+	delta = snprintf(q, cmd->remaining, "%s", str);
-+	if (delta >= cmd->remaining) {
-+		pr_err("String is too long: %s\n", str);
-+		return -E2BIG;
-+	}
-+	cmd->remaining -= delta;
-+
-+	return ret;
-+}
-+
-+/**
-+ * dynevent_cmd_init - Initialize a dynevent_cmd object
-+ * @cmd: A pointer to the dynevent_cmd struct representing the cmd
-+ * @buf: A pointer to the buffer to generate the command into
-+ * @maxlen: The length of the buffer the command will be generated into
-+ * @type: The type of the cmd, checked against further operations
-+ * @run_command: The type-specific function that will actually run the command
-+ *
-+ * Initialize a dynevent_cmd.  A dynevent_cmd is used to build up and
-+ * run dynamic event creation commands, such as commands for creating
-+ * synthetic and kprobe events.  Before calling any of the functions
-+ * used to build the command, a dynevent_cmd object should be
-+ * instantiated and initialized using this function.
-+ *
-+ * The initialization sets things up by saving a pointer to the
-+ * user-supplied buffer and its length via the @buf and @maxlen
-+ * params, and by saving the cmd-specific @type and @run_command
-+ * params which are used to check subsequent dynevent_cmd operations
-+ * and actually run the command when complete.
-+ */
-+void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
-+		       enum dynevent_type type,
-+		       dynevent_create_fn_t run_command)
-+{
-+	memset(cmd, '\0', sizeof(*cmd));
-+
-+	cmd->buf = buf;
-+	cmd->maxlen = maxlen;
-+	cmd->remaining = cmd->maxlen;
-+	cmd->type = type;
-+	cmd->run_command = run_command;
-+}
-+
-+/**
-+ * dynevent_arg_init - Initialize a dynevent_arg object
-+ * @arg: A pointer to the dynevent_arg struct representing the arg
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-+ * @separator: An (optional) separator, appended after adding the arg
-+ *
-+ * Initialize a dynevent_arg object.  A dynevent_arg represents an
-+ * object used to append single arguments to the current command
-+ * string.  The @check_arg function, if present, will be used to check
-+ * the sanity of the current arg string (which is directly set by the
-+ * caller).  After the arg string is successfully appended to the
-+ * command string, the optional @separator is appended.  If no
-+ * separator was specified when initializing the arg, a space will be
-+ * appended.
-+ */
-+void dynevent_arg_init(struct dynevent_arg *arg,
-+		       dynevent_check_arg_fn_t check_arg,
-+		       char separator)
-+{
-+	memset(arg, '\0', sizeof(*arg));
-+
-+	if (!separator)
-+		separator = ' ';
-+	arg->separator = separator;
-+
-+	arg->check_arg = check_arg;
-+}
-+
-+/**
-+ * dynevent_arg_pair_init - Initialize a dynevent_arg_pair object
-+ * @arg_pair: A pointer to the dynevent_arg_pair struct representing the arg
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-+ * @operator: An (optional) operator, appended after adding the first arg
-+ * @separator: An (optional) separator, appended after adding the second arg
-+ *
-+ * Initialize a dynevent_arg_pair object.  A dynevent_arg_pair
-+ * represents an object used to append argument pairs such as 'type
-+ * variable_name;' or 'x+y' to the current command string.  An
-+ * argument pair consists of a left-hand-side argument and a
-+ * right-hand-side argument separated by an operator, which can be
-+ * whitespace, all followed by a separator, if applicable. The
-+ * @check_arg function, if present, will be used to check the sanity
-+ * of the current arg strings (which is directly set by the caller).
-+ * After the first arg string is successfully appended to the command
-+ * string, the optional @operator is appended, followed by the second
-+ * arg and and optional @separator.  If no separator was specified
-+ * when initializing the arg, a space will be appended.
-+ */
-+void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
-+			    dynevent_check_arg_fn_t check_arg,
-+			    char operator, char separator)
-+{
-+	memset(arg_pair, '\0', sizeof(*arg_pair));
-+
-+	if (!operator)
-+		operator = ' ';
-+	arg_pair->operator = operator;
-+
-+	if (!separator)
-+		separator = ' ';
-+	arg_pair->separator = separator;
-+
-+	arg_pair->check_arg = check_arg;
-+}
-+
-+/**
-+ * dynevent_create - Create the dynamic event contained in dynevent_cmd
-+ * @cmd: The dynevent_cmd object containing the dynamic event creation command
-+ *
-+ * Once a dynevent_cmd object has been successfully built up via the
-+ * dynevent_cmd_init(), dynevent_arg_add() and dynevent_arg_pair_add()
-+ * functions, this function runs the final command to actually create
-+ * the event.
-+ *
-+ * Return: 0 if the event was successfully created, error otherwise.
-+ */
-+int dynevent_create(struct dynevent_cmd *cmd)
-+{
-+	return cmd->run_command(cmd);
-+}
-+EXPORT_SYMBOL_GPL(dynevent_create);
-diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
-index 46898138d2df..b593fc34c5b1 100644
---- a/kernel/trace/trace_dynevent.h
-+++ b/kernel/trace/trace_dynevent.h
-@@ -117,4 +117,37 @@ int dyn_event_release(int argc, char **argv, struct dyn_event_operations *type);
- #define for_each_dyn_event_safe(pos, n)	\
- 	list_for_each_entry_safe(pos, n, &dyn_event_list, list)
- 
-+extern void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
-+			      enum dynevent_type type,
-+			      dynevent_create_fn_t run_command);
-+
-+typedef int (*dynevent_check_arg_fn_t)(void *data);
-+
-+struct dynevent_arg {
-+	const char		*str;
-+	char			separator; /* e.g. ';', ',', or nothing */
-+	dynevent_check_arg_fn_t	check_arg;
-+};
-+
-+extern void dynevent_arg_init(struct dynevent_arg *arg,
-+			      dynevent_check_arg_fn_t check_arg,
-+			      char separator);
-+extern int dynevent_arg_add(struct dynevent_cmd *cmd,
-+			    struct dynevent_arg *arg);
-+
-+struct dynevent_arg_pair {
-+	const char		*lhs;
-+	const char		*rhs;
-+	char			operator; /* e.g. '=' or nothing */
-+	char			separator; /* e.g. ';', ',', or nothing */
-+	dynevent_check_arg_fn_t	check_arg;
-+};
-+
-+extern void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
-+				   dynevent_check_arg_fn_t check_arg,
-+				   char operator, char separator);
-+extern int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
-+				 struct dynevent_arg_pair *arg_pair);
-+extern int dynevent_str_add(struct dynevent_cmd *cmd, const char *str);
-+
- #endif
++MODULE_AUTHOR("Tom Zanussi");
++MODULE_DESCRIPTION("kprobe event generation test");
++MODULE_LICENSE("GPL v2");
 -- 
 2.24.1
 
