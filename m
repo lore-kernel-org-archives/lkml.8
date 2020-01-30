@@ -2,109 +2,203 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29524C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946BEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060C3206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644AA2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BQDWkRnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgA3GVA (ORCPT
+        id S1726461AbgA3G0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 01:21:00 -0500
-Received: from olimex.com ([184.105.72.32]:54138 "EHLO olimex.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgA3GVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 01:21:00 -0500
-Received: from 94.155.250.134 ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 22:20:58 -0800
-Subject: Re: [PATCH v3 1/1] drm: sun4i: hdmi: Add support for sun4i HDMI
- encoder audio
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@googlegroups.com
-References: <20200128140642.8404-1-stefan@olimex.com>
- <20200128140642.8404-2-stefan@olimex.com>
- <20200129164321.34mornbi3xvx5dys@gilmour.lan>
-From:   Stefan Mavrodiev <stefan@olimex.com>
-Message-ID: <64676a4b-e149-146c-81b4-7fd5e792efc5@olimex.com>
-Date:   Thu, 30 Jan 2020 08:20:55 +0200
+        Thu, 30 Jan 2020 01:26:13 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17654 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgA3G0N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 01:26:13 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3276cf0000>; Wed, 29 Jan 2020 22:25:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 29 Jan 2020 22:26:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 29 Jan 2020 22:26:11 -0800
+Received: from [10.2.165.69] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 06:26:10 +0000
+Subject: Re: [PATCH v2 1/8] mm: dump_page: print head page's refcount, for
+ compound pages
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200129032417.3085670-1-jhubbard@nvidia.com>
+ <20200129032417.3085670-2-jhubbard@nvidia.com>
+ <20200129112510.ulims6u36ofk2qwa@box>
+ <b74e8aa9-fcfd-0340-594c-61f185a0ae65@nvidia.com>
+ <20200129225957.GH6615@bombadil.infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <a0d66400-96a2-f94e-311d-a94f75e72d65@nvidia.com>
+Date:   Wed, 29 Jan 2020 22:23:10 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200129164321.34mornbi3xvx5dys@gilmour.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200129225957.GH6615@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580365520; bh=JHRJR+nRNJ+fPdKgdhNh0UpV2gT6YF7QTq3XuI/pnwo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BQDWkRnLH1j0+3TFcqwPmncBEuhinrmCw80Gb5nfjCWCm7Q+eTszuPPxdRdT/9ncI
+         x3vf//wCgavyZ2zurvNKovAxI/vZkKZclk357DNkl6D/x0aJAzNgqEhRFJp40iDBED
+         blM/4jKRxhuyVU/WLFsXsLkxawG9WIwlVDfIJ1gmdL52WG4s3jP21Q+xONM74akxo2
+         o3rwO1ZZPh/0w73Q2KfxYhHRtPrL4ctXCQQyM51KBuG20kGnsUbBy868Exg0yU1S/h
+         uGFVs4y/C8Uwpoh/bi+N1dF2g3hx5+SVKe+Fwn5Npk5ECCkzzyiD+r1UvShA2fyeI4
+         td4jAMZ7SAJdw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 1/29/20 2:59 PM, Matthew Wilcox wrote:
+...
+> I have a hunk in my current tree which looks like this:
+> 
+> @@ -77,6 +77,11 @@ void __dump_page(struct page *page, const char *reason)
+>                  pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx
+> \n",
+>                          page, page_ref_count(page), mapcount,
+>                          page->mapping, page_to_pgoff(page));
+> +       if (PageTail(page)) {
+> +               struct page *head = compound_head(page);
+> +               pr_warn("head:%px mapping:%px index:%#lx\n",
+> +                       head, head->mapping, page_to_pgoff(head));
+> +       }
+>          if (PageKsm(page))
+>                  pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>          else if (PageAnon(page))
+> 
+> I wonder if we can combine these two patches in some more useful way?
+> 
+> I also think we probably want a sanity check that 'head' and 'page'
+> are within a sane range of each other (ie head < page and head +
+> MAX_ORDER_NR_PAGES > page) to protect against a struct page that contains
+> complete garbage.
+> 
 
-On 1/29/20 6:43 PM, Maxime Ripard wrote:
-> Hi,
->
-> On Tue, Jan 28, 2020 at 04:06:42PM +0200, Stefan Mavrodiev wrote:
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> index 68d4644ac2dc..4cd35c97c503 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> @@ -23,6 +23,8 @@
->>   #include <drm/drm_print.h>
->>   #include <drm/drm_probe_helper.h>
->>
->> +#include <sound/soc.h>
->> +
->>   #include "sun4i_backend.h"
->>   #include "sun4i_crtc.h"
->>   #include "sun4i_drv.h"
->> @@ -87,6 +89,10 @@ static void sun4i_hdmi_disable(struct drm_encoder *encoder)
->>
->>   	DRM_DEBUG_DRIVER("Disabling the HDMI Output\n");
->>
->> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
->> +	sun4i_hdmi_audio_destroy(hdmi);
->> +#endif
->> +
->>   	val = readl(hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
->>   	val &= ~SUN4I_HDMI_VID_CTRL_ENABLE;
->>   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
->> @@ -114,6 +120,11 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
->>   		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
->>
->>   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
->> +
->> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
->> +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
->> +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
->> +#endif
-> I really don't think we should be creating / removing the audio card
-> at enable / disable time.
+OK, here's a go at combining those. I like the observation, implicit in your
+diffs, that PageTail rather than PageCompound is the key differentiator in
+deciding what to print. How's this look:
 
-For me it's unnatural to have sound card all the time, even when the HDMI
-is not plugged-in.
+diff --git a/mm/debug.c b/mm/debug.c
+index a90da5337c14..944652843e7b 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -75,12 +75,31 @@ void __dump_page(struct page *page, const char *reason)
+  	 */
+  	mapcount = PageSlab(page) ? 0 : page_mapcount(page);
+  
+-	if (PageCompound(page))
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+-			"index:%#lx compound_mapcount: %d\n",
+-			page, page_ref_count(page), mapcount,
+-			page->mapping, page_to_pgoff(page),
+-			compound_mapcount(page));
++	if (PageTail(page)) {
++		struct page *head = compound_head(page);
++
++		if ((page < head) || (page >= head + MAX_ORDER_NR_PAGES)) {
++			/*
++			 * Page is hopelessly corrupted, so limit any reporting
++			 * to information about the page itself. Do not attempt
++			 * to look at the head page.
++			 */
++			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
++				"index:%#lx (corrupted tail page case)\n",
++				page, page_ref_count(page), mapcount,
++				page->mapping, page_to_pgoff(page));
++		} else {
++			pr_warn("page:%px compound refcount:%d mapcount:%d "
++				"mapping:%px index:%#lx compound_mapcount:%d\n",
++				page, page_ref_count(head),
++				mapcount, head->mapping, page_to_pgoff(head),
++				compound_mapcount(page));
++
++			if (page_ref_count(page) != 0)
++				pr_warn("page:%px PROBLEM: non-zero refcount (==%d) on "
++					"this tail page\n", page, page_ref_count(page));
++		}
++	}
+  	else
+  		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+  			page, page_ref_count(page), mapcount,
 
-I'll follow your suggestion. Besides it's easier for me just to drop this
-register/unregister mechanism.
+?
 
-Best regards,
-Stefan Mavrodiev
+Here's sample output for a normal page, a tail page, and a tail page with a bad
+(non-zero) refcount:
 
->
-> To fix the drvdata pointer, you just need to use the card pointer in
-> the unbind, and that's it.
->
-> Maxime
+============
+Normal page:
+============
+[   38.572084] page:ffffea0011465880 refcount:2 mapcount:1 mapping:ffff888454d99001 index:0xb2
+[   38.579256] anon flags: 0x17ffe0000080036(referenced|uptodate|lru|active|swapbacked)
+[   38.585799] raw: 017ffe0000080036 ffffea0011460fc8 ffffea0011466d08 ffff888454d99001
+[   38.592350] raw: 00000000000000b2 0000000000000000 0000000200000000 0000000000000000
+[   38.598885] page dumped because: test dump page
+
+
+==========
+Tail page:
+==========
+[   38.436384] page:ffffea0010aa0280 compound refcount:503 mapcount:1 mapping:ffff888455fb3399 index:0xa8 compound_mapcount:1
+[   38.446350] anon flags: 0x17ffe0000000000()
+[   38.449661] raw: 017ffe0000000000 ffffea0010aa0001 ffffea0010aa0288 dead000000000400
+[   38.456228] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+[   38.462794] page dumped because: test dump page
+
+============================
+Tail page with bad refcount:
+============================
+[   38.466088] page:ffffea0010aa0b40 compound refcount:468 mapcount:1 mapping:ffff888455fb3399 index:0xa8 compound_mapcount:1
+[   38.475967] page:ffffea0010aa0b40 PROBLEM: non-zero refcount (==2) on this tail page
+[   38.482490] anon flags: 0x17ffe0000000000()
+[   38.485432] raw: 017ffe0000000000 ffffea0010aa0001 ffffea0010aa0b48 dead000000000400
+[   38.491996] raw: 0000000000000000 0000000000000000 00000002ffffffff 0000000000000000
+[   38.498532] page dumped because: test bad tail page refcount
+
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
