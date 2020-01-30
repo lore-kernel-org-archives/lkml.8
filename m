@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E107C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08294214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8390215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410098;
-	bh=HAP1qeT1fMGgx/Oo/Gp+yGVNtUk2NbKLKvDDB7a2iFY=;
+	s=default; t=1580410101;
+	bh=+CXCHPZFxuFAhYwU84P3dabbs1o76IT9JCxq49576m8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AaXzk3A4OcFA4KVtlEziTqEAPGiLD6K/YlWORk6OqUcbO6X2lauEzEmFxI9qRXXsX
-	 ZfsCn9JdaCLXwh6zBx86ppKPs7KhPh2xbVelHNwB1h+YrAzjh/gtnd6VgtpKzjqrFg
-	 lfKY+ciBv/2wbtEFsEQYJohq0EYGR5P/haBv01lI=
+	b=aw3Q8JmNVxJAFVpzuepu7PHuq04gSOf6LKqkweLJTQxwBMskD2rFvfQxHXEo5DqMy
+	 LKOk1mUAYwAamIeqxeI0/tzHvZmGg1uK32D+x/BVv9wvNs2MHzfttv3dzNaf0iAps8
+	 RJe54hhl2oTU8lCpz7Els0Zo5T6zilEKFywLYiFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbgA3SsR (ORCPT
+        id S1731287AbgA3SsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59010 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731498AbgA3SsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:09 -0500
+        id S1731516AbgA3SsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C64205F4;
-        Thu, 30 Jan 2020 18:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368CB2082E;
+        Thu, 30 Jan 2020 18:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410089;
-        bh=HAP1qeT1fMGgx/Oo/Gp+yGVNtUk2NbKLKvDDB7a2iFY=;
+        s=default; t=1580410094;
+        bh=+CXCHPZFxuFAhYwU84P3dabbs1o76IT9JCxq49576m8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wn/I+pUqO0m/JO4d01FdvxIgxhPzu4Z5CUkhOTbyUak3huLArmsHY+GKQrO7QzCCu
-         cfxXicCLkS/2nJ4YXX/ghK282BP4meD8CHQbdDD7L3WirD9s2nNOfyNgNBTkc4EHrt
-         sbbquptgkMv+T/HnjaPvCcbBsjSzVC307P+iD7H0=
+        b=KEQux95+G8qz4XcWNKsAeMIYbOD1bO5EZDKWzo7+KN/u+oZ0x/Pcl3ocVOYvN4JzZ
+         peKWlpQPTbJ8UZRg7QWgMRvpEsP7ntxAb82ElIWajwFLpHC1ZCdVlKvDt3nixC3v6g
+         D5SwMjQ0ztuD19W8kxTNwAje8+7tGaE7jp0lu7vY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/55] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
-Date:   Thu, 30 Jan 2020 19:39:22 +0100
-Message-Id: <20200130183615.973501269@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 43/55] iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
+Date:   Thu, 30 Jan 2020 19:39:24 +0100
+Message-Id: <20200130183616.368600456@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -63,86 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 10b65e2915b2fcc606d173e98a972850101fb4c4 ]
+[ Upstream commit 3c124435e8dd516df4b2fc983f4415386fd6edae ]
 
-This patch adds a quirk disabling keyboard backlight support for the
-Dell Inspiron 1012 and 1018.
+Non-Transparent Bridge (NTB) devices (among others) may have many DMA
+aliases seeing the hardware will send requests with different device ids
+depending on their origin across the bridged hardware.
 
-Those models wrongly report supporting keyboard backlight control
-features (through SMBIOS tokens) even though they're not equipped with
-a backlit keyboard. This led to broken controls being exposed
-through sysfs by this driver which froze the system when used.
+See commit ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec
+NTB") for more information on this.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
-Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The AMD IOMMU IRQ remapping functionality ignores all PCI aliases for
+IRQs so if devices send an interrupt from one of their aliases they
+will be blocked on AMD hardware with the IOMMU enabled.
+
+To fix this, ensure IRQ remapping is enabled for all aliases with
+MSI interrupts.
+
+This is analogous to the functionality added to the Intel IRQ remapping
+code in commit 3f0c625c6ae7 ("iommu/vt-d: Allow interrupts from the entire
+bus for aliased devices")
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/iommu/amd_iommu.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 3433986d52200..949dbc8aab413 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -37,6 +37,7 @@
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index bea19aa337587..0783f44e9afe5 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3709,7 +3709,20 @@ static void set_remap_table_entry(struct amd_iommu *iommu, u16 devid,
+ 	iommu_flush_dte(iommu, devid);
+ }
  
- struct quirk_entry {
- 	bool touchpad_led;
-+	bool kbd_led_not_present;
- 	bool kbd_led_levels_off_1;
- 	bool kbd_missing_ac_tag;
- 
-@@ -77,6 +78,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
- 	.kbd_led_levels_off_1 = true,
- };
- 
-+static struct quirk_entry quirk_dell_inspiron_1012 = {
-+	.kbd_led_not_present = true,
-+};
+-static struct irq_remap_table *alloc_irq_table(u16 devid)
++static int set_remap_table_entry_alias(struct pci_dev *pdev, u16 alias,
++				       void *data)
++{
++	struct irq_remap_table *table = data;
 +
- static struct platform_driver platform_driver = {
- 	.driver = {
- 		.name = "dell-laptop",
-@@ -314,6 +319,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_dell_latitude_e6410,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1012",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron 1018",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
-+		},
-+		.driver_data = &quirk_dell_inspiron_1012,
-+	},
- 	{ }
- };
- 
-@@ -1497,6 +1520,9 @@ static void kbd_init(void)
++	irq_lookup_table[alias] = table;
++	set_dte_irq_entry(alias, table);
++
++	iommu_flush_dte(amd_iommu_rlookup_table[alias], alias);
++
++	return 0;
++}
++
++static struct irq_remap_table *alloc_irq_table(u16 devid, struct pci_dev *pdev)
  {
- 	int ret;
+ 	struct irq_remap_table *table = NULL;
+ 	struct irq_remap_table *new_table = NULL;
+@@ -3755,7 +3768,12 @@ static struct irq_remap_table *alloc_irq_table(u16 devid)
+ 	table = new_table;
+ 	new_table = NULL;
  
-+	if (quirks && quirks->kbd_led_not_present)
-+		return;
+-	set_remap_table_entry(iommu, devid, table);
++	if (pdev)
++		pci_for_each_dma_alias(pdev, set_remap_table_entry_alias,
++				       table);
++	else
++		set_remap_table_entry(iommu, devid, table);
 +
- 	ret = kbd_init_info();
- 	kbd_init_tokens();
+ 	if (devid != alias)
+ 		set_remap_table_entry(iommu, alias, table);
  
+@@ -3772,7 +3790,8 @@ out_unlock:
+ 	return table;
+ }
+ 
+-static int alloc_irq_index(u16 devid, int count, bool align)
++static int alloc_irq_index(u16 devid, int count, bool align,
++			   struct pci_dev *pdev)
+ {
+ 	struct irq_remap_table *table;
+ 	int index, c, alignment = 1;
+@@ -3782,7 +3801,7 @@ static int alloc_irq_index(u16 devid, int count, bool align)
+ 	if (!iommu)
+ 		return -ENODEV;
+ 
+-	table = alloc_irq_table(devid);
++	table = alloc_irq_table(devid, pdev);
+ 	if (!table)
+ 		return -ENODEV;
+ 
+@@ -4215,7 +4234,7 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		struct irq_remap_table *table;
+ 		struct amd_iommu *iommu;
+ 
+-		table = alloc_irq_table(devid);
++		table = alloc_irq_table(devid, NULL);
+ 		if (table) {
+ 			if (!table->min_index) {
+ 				/*
+@@ -4232,11 +4251,15 @@ static int irq_remapping_alloc(struct irq_domain *domain, unsigned int virq,
+ 		} else {
+ 			index = -ENOMEM;
+ 		}
+-	} else {
++	} else if (info->type == X86_IRQ_ALLOC_TYPE_MSI ||
++		   info->type == X86_IRQ_ALLOC_TYPE_MSIX) {
+ 		bool align = (info->type == X86_IRQ_ALLOC_TYPE_MSI);
+ 
+-		index = alloc_irq_index(devid, nr_irqs, align);
++		index = alloc_irq_index(devid, nr_irqs, align, info->msi_dev);
++	} else {
++		index = alloc_irq_index(devid, nr_irqs, false, NULL);
+ 	}
++
+ 	if (index < 0) {
+ 		pr_warn("Failed to allocate IRTE\n");
+ 		ret = index;
 -- 
 2.20.1
 
