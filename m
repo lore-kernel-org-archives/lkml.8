@@ -2,103 +2,109 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F05C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29524C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E48C206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhtpN2xs"
+	by mail.kernel.org (Postfix) with ESMTP id 060C3206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 06:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgA3GUv (ORCPT
+        id S1726646AbgA3GVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 01:20:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45256 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgA3GUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 01:20:50 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so1083317pgk.12;
-        Wed, 29 Jan 2020 22:20:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zMHEc0flI99qBQqzj4e4DXxEH1EhacSSKhwIiUnp+1c=;
-        b=VhtpN2xsAoab5j+OLu9VSC+ZOwi4XRzPI0yYbHyjphZYtfbtU8Jxg+H/BRglroO/f0
-         a0ITfk+IK607kmTkp+dIw0/dnJGuYSOXJoeVIDiFio4O0pfs7BE+jXmlKXBI1OZfXFJp
-         NATXjkr1AF363UXRaXv1RHERVT9x+3eqmJiDEENZcPVuQsauRJ9YYnt2cCoURmUMIi/D
-         AEDIqhUw/JhYlweTSumgx4F/HI2qCKUrvHxxzO5Bh2LmM1rEV/qWR15jZ18BlKGFHNwB
-         HxzQuYAeGMKauOLO1w9ci8mb56YK5s78dME+mxfSu8PDKgTzENuuVwSLx8Z5Ll5Hv4Ox
-         l/Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zMHEc0flI99qBQqzj4e4DXxEH1EhacSSKhwIiUnp+1c=;
-        b=M7jSCpvjcTT1gfbPbKIsXPXihvKar6SsxTjYm85Jzln6kEa40sKgyxUIld2+0LxxDi
-         kg64DWX1GGMzlJ4Jyiaq+fusLJZUuOt9oFNpJmmwfsCEuI/fsLP+1fyeN1zE5Bb4APKh
-         Wg8hh/Wg+w5SULIvPDyvzZfvzXdWvEcHxJfiXTfD5yJEiVoWNMme/8HV5IMJbSgfl92U
-         rl1FtnKVfLY3nc2OE7MoWmDETiu0jv9s4/qHQAOypFgzdHrAI/Svs9I7KMRDDrLGEAWO
-         IcXXeQFcwonKmmVjurnAjNS9SxCPsFtdKhKbsjh9L6+LFI/yEXHjwJuGam0OWuNYERwX
-         9xKQ==
-X-Gm-Message-State: APjAAAXUi2YpU+wAn9HdA/7jkdPnnt7dUKmvKYy0dDKI2v1Da7tvPsuq
-        SBpfwuYjL3U6Lo4is9+V8A==
-X-Google-Smtp-Source: APXvYqw4a2hKiGpcYewgSpLWc2dNqkZ5HkxaNFMcdKHAIBTJy2upjUfpxVclQix8G82rDVwgCtkqJg==
-X-Received: by 2002:a63:597:: with SMTP id 145mr2947677pgf.384.1580365249786;
-        Wed, 29 Jan 2020 22:20:49 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1eed:fc71:d421:7a49:b2e4:2bd6])
-        by smtp.gmail.com with ESMTPSA id s124sm5041496pfc.57.2020.01.29.22.20.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 22:20:49 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     peterz@infradead.org, mingo@kernel.org, oleg@redhat.com,
-        christian.brauner@ubuntu.com, paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] exit.c: Fix Sparse errors and warnings
-Date:   Thu, 30 Jan 2020 11:50:28 +0530
-Message-Id: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jan 2020 01:21:00 -0500
+Received: from olimex.com ([184.105.72.32]:54138 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbgA3GVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 01:21:00 -0500
+Received: from 94.155.250.134 ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 22:20:58 -0800
+Subject: Re: [PATCH v3 1/1] drm: sun4i: hdmi: Add support for sun4i HDMI
+ encoder audio
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@googlegroups.com
+References: <20200128140642.8404-1-stefan@olimex.com>
+ <20200128140642.8404-2-stefan@olimex.com>
+ <20200129164321.34mornbi3xvx5dys@gilmour.lan>
+From:   Stefan Mavrodiev <stefan@olimex.com>
+Message-ID: <64676a4b-e149-146c-81b4-7fd5e792efc5@olimex.com>
+Date:   Thu, 30 Jan 2020 08:20:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200129164321.34mornbi3xvx5dys@gilmour.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi,
 
-This patch fixes the following sparse error:
-kernel/exit.c:627:25: error: incompatible types in comparison expression
+On 1/29/20 6:43 PM, Maxime Ripard wrote:
+> Hi,
+>
+> On Tue, Jan 28, 2020 at 04:06:42PM +0200, Stefan Mavrodiev wrote:
+>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> index 68d4644ac2dc..4cd35c97c503 100644
+>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> @@ -23,6 +23,8 @@
+>>   #include <drm/drm_print.h>
+>>   #include <drm/drm_probe_helper.h>
+>>
+>> +#include <sound/soc.h>
+>> +
+>>   #include "sun4i_backend.h"
+>>   #include "sun4i_crtc.h"
+>>   #include "sun4i_drv.h"
+>> @@ -87,6 +89,10 @@ static void sun4i_hdmi_disable(struct drm_encoder *encoder)
+>>
+>>   	DRM_DEBUG_DRIVER("Disabling the HDMI Output\n");
+>>
+>> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
+>> +	sun4i_hdmi_audio_destroy(hdmi);
+>> +#endif
+>> +
+>>   	val = readl(hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+>>   	val &= ~SUN4I_HDMI_VID_CTRL_ENABLE;
+>>   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+>> @@ -114,6 +120,11 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
+>>   		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
+>>
+>>   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+>> +
+>> +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
+>> +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
+>> +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
+>> +#endif
+> I really don't think we should be creating / removing the audio card
+> at enable / disable time.
 
-And the following warning:
-kernel/exit.c:626:40: warning: incorrect type in assignment
+For me it's unnatural to have sound card all the time, even when the HDMI
+is not plugged-in.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- kernel/exit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'll follow your suggestion. Besides it's easier for me just to drop this
+register/unregister mechanism.
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index bcbd59888e67..daf827a4aa25 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -623,8 +623,8 @@ static void forget_original_parent(struct task_struct *father,
- 	reaper = find_new_reaper(father, reaper);
- 	list_for_each_entry(p, &father->children, sibling) {
- 		for_each_thread(p, t) {
--			t->real_parent = reaper;
--			BUG_ON((!t->ptrace) != (t->parent == father));
-+			RCU_INIT_POINTER(t->real_parent, reaper);
-+			BUG_ON((!t->ptrace) != (rcu_access_pointer(t->parent) == father));
- 			if (likely(!t->ptrace))
- 				t->parent = t->real_parent;
- 			if (t->pdeath_signal)
--- 
-2.17.1
+Best regards,
+Stefan Mavrodiev
 
+>
+> To fix the drvdata pointer, you just need to use the card pointer in
+> the unbind, and that's it.
+>
+> Maxime
