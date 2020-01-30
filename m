@@ -2,108 +2,146 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04AEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85282C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6443206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:16:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KtcHvisD"
+	by mail.kernel.org (Postfix) with ESMTP id 5C1D7206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgA3IQa (ORCPT
+        id S1726948AbgA3ISk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:16:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46344 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgA3IQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:16:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TCsQ3GzavAe26bRtqfddchOtZ1YoWhMpGMKjZxM60vI=; b=KtcHvisDsABiHx64Iuvyz6yaB
-        X07tpTx9cNQomPHTclUK8DQVorusdFctcSZoMQgOUd77/FH5pTTe2VacSPBXFXU4NVnbmaaZI1JaO
-        914ynMtjZMtxIcliWLkqqu1cgy/+rt14w69YJnSkfcLDCu8gQfpfJePnfJocKNngud26WUUobBTW5
-        /f5KPthpaEi9byvQIifLgw3Qhp28h24Cx3EtF0m7we9PcOB7EfHcunkvE8MaluUR3GAYk0Z67sWW3
-        gFm+pW5G7wCZtoQU8EdS+n9G87ooGZi7w9d+9ErttwPCMGGSg4Vu8ki7jNHgxmC9TutETsihaM696
-        EFGmwzEhA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ix4zx-0001t8-S7; Thu, 30 Jan 2020 08:16:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 710D03011DD;
-        Thu, 30 Jan 2020 09:14:40 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9B9522B7334D2; Thu, 30 Jan 2020 09:16:23 +0100 (CET)
-Date:   Thu, 30 Jan 2020 09:16:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Schmitz <schmitzmic@gmail.com>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux/m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Development <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
-Message-ID: <20200130081623.GW14879@hirez.programming.kicks-ass.net>
-References: <20200129103941.304769381@infradead.org>
- <bbdb9596-583e-5d26-ac1c-4775440059b9@physik.fu-berlin.de>
- <20200129115412.GN14914@hirez.programming.kicks-ass.net>
- <CAOmrzkJ8dsuSnomcE7uhyY9ip6T9ADLT7LhjydvY-hizpikBiA@mail.gmail.com>
- <20200129193109.GS14914@hirez.programming.kicks-ass.net>
- <b72358cc-ddd2-52d6-7eed-c88bab46e6f1@gmail.com>
+        Thu, 30 Jan 2020 03:18:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40250 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbgA3ISk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:18:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 98069B246;
+        Thu, 30 Jan 2020 08:18:37 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: optimize barrier usage for Rmw atomics
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, dsterba@suse.cz,
+        dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+References: <20200129180324.24099-1-dave@stgolabs.net>
+ <20200129191439.GN3929@twin.jikos.cz>
+ <20200129192550.nnfkkgde445nrbko@linux-p48b>
+ <f49aaafa-9144-5644-adae-d5bc13b6ca41@gmx.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c45bf499-b879-bdff-33e2-eb9e3737a305@suse.com>
+Date:   Thu, 30 Jan 2020 10:18:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b72358cc-ddd2-52d6-7eed-c88bab46e6f1@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f49aaafa-9144-5644-adae-d5bc13b6ca41@gmx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Michael,
 
-On Thu, Jan 30, 2020 at 08:31:13PM +1300, Michael Schmitz wrote:
-
-> Not much difference:
-> 
->              total       used       free     shared    buffers     cached
-> Mem:         10712      10120        592          0       1860       2276
-> -/+ buffers/cache:       5984       4728
-> Swap:      2097144       1552    2095592
+On 30.01.20 г. 1:55 ч., Qu Wenruo wrote:
 > 
 > 
-> vs. vanilla 5.5rc5:
->              total       used       free     shared    buffers     cached
-> Mem:         10716      10104        612          0       1588       2544
-> -/+ buffers/cache:       5972       4744
-> Swap:      2097144       1296    2095848
+> On 2020/1/30 上午3:25, Davidlohr Bueso wrote:
+>> On Wed, 29 Jan 2020, David Sterba wrote:
+>>
+>>> On Wed, Jan 29, 2020 at 10:03:24AM -0800, Davidlohr Bueso wrote:
+>>>> Use smp_mb__after_atomic() instead of smp_mb() and avoid the
+>>>> unnecessary barrier for non LL/SC architectures, such as x86.
+>>>
+>>> So that's a conflicting advice from what we got when discussing wich
+>>> barriers to use in 6282675e6708ec78518cc0e9ad1f1f73d7c5c53d and the
+>>> memory is still fresh. My first idea was to take the
+>>> smp_mb__after_atomic and __before_atomic variants and after discussion
+>>> with various people the plain smp_wmb/smp_rmb were suggested and used in
+>>> the end.
+>>
+>> So the patch you mention deals with test_bit(), which is out of the scope
+>> of smp_mb__{before,after}_atomic() as it's not a RMW operation.
+>> atomic_inc()
+>> and set_bit() are, however, meant to use these barriers.
 > 
-> By sheer coincidence, the boot with your patch series happened to run a full
-> filesystem check on the root filesystem, so I'd say it got a good workout
-> re: paging and swapping (even though it's just a paltry 4 GB).
+> Exactly!
+> I'm still not convinced to use full barrier for test_bit() and I see no
+> reason to use any barrier for test_bit().
+> All mb should only be needed between two or more memory access, thus mb
+> should sit between set/clear_bit() and other operations, not around
+> test_bit().
+> 
+>>
+>>>
+>>> I can dig the email threads and excerpts from irc conversations, maybe
+>>> Nik has them at hand too. We do want to get rid of all unnecessary and
+>>> uncommented barriers in btrfs code, so I appreciate your patch.
+>>
+>> Yeah, I struggled with the amount of undocumented barriers, and decided
+>> not to go down that rabbit hole. This patch is only an equivalent of
+>> what is currently there. When possible, getting rid of barriers is of
+>> course better.
+> 
+> BTW, is there any convincing method to do proper mb examination?
+> 
+> I really found it hard to convince others or even myself when mb is
+> involved.
 
-Sweet!, can I translate this into a Tested-by: from you?
-
-> Haven't tried any VM stress testing yet (not sure what to do for that; it's
-> been years since I tried that sort of stuff).
-
-I think, this not being SMP, doing what you just did tickled just about
-everything there is.
-
-There is one more potential issue with MMU-gather / TLB invalidate on
-m68k (and a whole bunch of other archs) and I have patches for that
-(although I now need to redo the m68k one.
-
-Meanwhile the build robot gifted me with a build issue, and Will had
-some nitpicks, so I'll go respin and repost these patches.
+Yes there is - the LKMM, you can write a litmus test. Check out
+tootls/memory-model
+> 
+> Thanks,
+> Qu
+> 
+>>
+>> Thanks,
+>> Davidlohr
