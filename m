@@ -2,52 +2,51 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A964AC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A71C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781512082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8A62082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409988;
-	bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
+	s=default; t=1580409991;
+	bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lwWiBlVUTtWEJb6xDtsG39oiQzui1SsNGJIhk0P0Vg5JJ5JxwB2BgzzI/Js6RN92I
-	 uSLnocJTSzFi+od4i9nwcYfeSBgvXaSPrRUgfmYE1TTdnWo8byJAhsqfO2gQlvcVji
-	 oBbTGVtJpsY43OVUxBN/8aZ1yc9aTtZspEk58/tY=
+	b=fKhf9mzH38/sK7ojt7+tSrEal2hBnLUR0K8PvY9+ltETOAKNpuvGwTRI6Pss/VjXY
+	 8avxyZlMmdwjiKUAdSHlKs71IwsD6FZKIGERdiN75VMUamYeRjgIi+MRigV3xGDHPy
+	 K2WpQpESIRocv3DXM/uamDqAw2HoeJhJMI+UveZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgA3Sq1 (ORCPT
+        id S1730946AbgA3Sqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56312 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbgA3SqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:21 -0500
+        id S1731195AbgA3Sq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7029A217BA;
-        Thu, 30 Jan 2020 18:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A3ED205F4;
+        Thu, 30 Jan 2020 18:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409980;
-        bh=VqDmHkwwQXUzjmkuYi1yVAWOTe1K9YymAZQllXMZIEg=;
+        s=default; t=1580409985;
+        bh=Pt57xNn7PwEg7RGA+JlsfMYabBJJPJkE2lr3e5SGsSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k//I/OdIoJjeTpZLvhovMTJxoQGiARLGDUKsfpn3f6tBNGP/0dAegjF/R/JmTLke5
-         svG5J3puTU38j1AINhGCJxHOjVxamM2rwlnar4+lNH07l3OtTT91IilcNXreTg6hRV
-         I69n1jq2bIDGAGsluBMwI1JO52gZ9602LsBNdw30=
+        b=jJz612MTmqaJ4slYZPyEmp7xU2SwLeCAopmcNRmVxz32fBjnb25KqWSx78b0qvyAQ
+         yBdUIrOe/0eOF5e8wkkeC7OLHNYDlXb7m0Fl6vEM6xXCj7ap8qbwY2Ya8rdR08B+Xi
+         Y3ilNezcOF+mqMjm5sN7DO2tXDdy4vk+xTPE/8Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.4 110/110] power/supply: ingenic-battery: Dont change scale if theres only one
-Date:   Thu, 30 Jan 2020 19:39:26 +0100
-Message-Id: <20200130183626.282928977@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 096/110] ALSA: hda/realtek - Move some alc236 pintbls to fallback table
+Date:   Thu, 30 Jan 2020 19:39:12 +0100
+Message-Id: <20200130183625.285401267@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,54 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 86b9182df8bb12610d4d6feac45a69f3ed57bfd2 upstream.
+[ Upstream commit d64ebdbfd4f71406f58210f5ccb16977b4cd31d2 ]
 
-The ADC in the JZ4740 can work either in high-precision mode with a 2.5V
-range, or in low-precision mode with a 7.5V range. The code in place in
-this driver will select the proper scale according to the maximum
-voltage of the battery.
+We have a new Dell machine which needs to apply the quirk
+ALC255_FIXUP_DELL1_MIC_NO_PRESENCE, try to use the fallback table
+to fix it this time. And we could remove all pintbls of alc236
+for applying DELL1_MIC_NO_PRESENCE on Dell machines.
 
-The JZ4770 however only has one mode, with a 6.6V range. If only one
-scale is available, there's no need to change it (and nothing to change
-it to), and trying to do so will fail with -EINVAL.
-
-Fixes: fb24ccfbe1e0 ("power: supply: add Ingenic JZ47xx battery driver.")
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Artur Rojek <contact@artur-rojek.eu>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20191121022644.8078-2-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/ingenic-battery.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
---- a/drivers/power/supply/ingenic-battery.c
-+++ b/drivers/power/supply/ingenic-battery.c
-@@ -100,10 +100,17 @@ static int ingenic_battery_set_scale(str
- 		return -EINVAL;
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d293488dc3dd3..68832f52c1ad2 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7563,20 +7563,6 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x19, 0x02a11020},
+ 		{0x1a, 0x02a11030},
+ 		{0x21, 0x0221101f}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x90a60140},
+-		{0x14, 0x90170110},
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x90a60140},
+-		{0x14, 0x90170150},
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x21, 0x02211020}),
+-	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+-		{0x12, 0x40000000},
+-		{0x14, 0x90170110},
+-		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -7901,6 +7887,9 @@ static const struct snd_hda_pin_quirk alc269_fallback_pin_fixup_tbl[] = {
+ 	SND_HDA_PIN_QUIRK(0x10ec0274, 0x1028, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB,
+ 		{0x19, 0x40000000},
+ 		{0x1a, 0x40000000}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x19, 0x40000000},
++		{0x1a, 0x40000000}),
+ 	{}
+ };
  
--	return iio_write_channel_attribute(bat->channel,
--					   scale_raw[best_idx],
--					   scale_raw[best_idx + 1],
--					   IIO_CHAN_INFO_SCALE);
-+	/* Only set scale if there is more than one (fractional) entry */
-+	if (scale_len > 2) {
-+		ret = iio_write_channel_attribute(bat->channel,
-+						  scale_raw[best_idx],
-+						  scale_raw[best_idx + 1],
-+						  IIO_CHAN_INFO_SCALE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static enum power_supply_property ingenic_battery_properties[] = {
+-- 
+2.20.1
+
 
 
