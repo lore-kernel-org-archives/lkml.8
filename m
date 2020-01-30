@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D92C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06282C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F8C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAB220702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410254;
-	bh=2BhG2UfRcRv4KkAOEGoXmpxxPK5f9ImHCleRROl0MyA=;
+	s=default; t=1580410256;
+	bh=7jlyodMR1hMib1vLo8tBYpdkJz1ljJqLkFdpx1YkWZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DQgV6945/KlYQQkveguAni8RcZyLQV71b27XrhRQu4qxBNgNHbLo+7p0Nwy38w7E
-	 iY73JY0sTHXs5yFUPTz1iWZYdjNaRbYSav6nJNppyMR5RyGVKys0z15Q4JWEuj3PRJ
-	 zQv/z/DWChbeAFbAk2mZz1tiiqaGlDizc+H5kVAs=
+	b=Z89Je5c1YSsd1a9jk8NaLf1FHdk2XTwFchn8hm+J2yvQh8XkJ5eynYYWBcGyVXnWB
+	 3g/OFsQ5aQiuCoNr/Qh4RQ6p8YoO2BLjSW3IlOP2YufNTRWazR3NTBNjm1FyxPE0sO
+	 s8sCW70SFrL4g130ASbivEmZTlXH+/y9BlU5zpuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbgA3Sux (ORCPT
+        id S1731164AbgA3SqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:50:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56244 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:46:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731177AbgA3SqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:46:19 -0500
+        id S1731123AbgA3SqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D31A20CC7;
-        Thu, 30 Jan 2020 18:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230FB20674;
+        Thu, 30 Jan 2020 18:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409978;
-        bh=2BhG2UfRcRv4KkAOEGoXmpxxPK5f9ImHCleRROl0MyA=;
+        s=default; t=1580409963;
+        bh=7jlyodMR1hMib1vLo8tBYpdkJz1ljJqLkFdpx1YkWZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tY4T7k1vAEHIX4qG7rDbuuTYetdKpbIkSPx5h32PnF7iojjpV9fNu86uKkqoeEO5w
-         zeK3+Y1IB34nWr181pqekqMBFdQEcJ7dmSNUlgtLhyziDwqERgAkdfBJVTtXBP2ZUQ
-         AsuZ5CNGN+f5buN+jFRf3tl/q+2dYaE62ob2uNDY=
+        b=UrHGxclw1KMYn3SsVyDUTF3hJs+JcbIJ5kIKPlSOI4WXcgC9c6CY0NIdVIKAviNyx
+         3TMH1XLaFt229TdBdXMF9vOocMqobqeqVIGndufZZZxE1FRax4lOB7H7kxFrstk93x
+         fpixHP2pgvadmuj8JT4n5qUYhmrJDzRed81wkRPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 109/110] Revert "um: Enable CONFIG_CONSTRUCTORS"
-Date:   Thu, 30 Jan 2020 19:39:25 +0100
-Message-Id: <20200130183626.212910444@linuxfoundation.org>
+        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 103/110] rsi: fix non-atomic allocation in completion handler
+Date:   Thu, 30 Jan 2020 19:39:19 +0100
+Message-Id: <20200130183625.791081129@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,103 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 87c9366e17259040a9118e06b6dc8de986e5d3d1 upstream.
+commit b9b9f9fea21830f85cf0148cd8dce001ae55ead1 upstream.
 
-This reverts commit 786b2384bf1c ("um: Enable CONFIG_CONSTRUCTORS").
+USB completion handlers are called in atomic context and must
+specifically not allocate memory using GFP_KERNEL.
 
-There are two issues with this commit, uncovered by Anton in tests
-on some (Debian) systems:
-
-1) I completely forgot to call any constructors if CONFIG_CONSTRUCTORS
-   isn't set. Don't recall now if it just wasn't needed on my system, or
-   if I never tested this case.
-
-2) With that fixed, it works - with CONFIG_CONSTRUCTORS *unset*. If I
-   set CONFIG_CONSTRUCTORS, it fails again, which isn't totally
-   unexpected since whatever wanted to run is likely to have to run
-   before the kernel init etc. that calls the constructors in this case.
-
-Basically, some constructors that gcc emits (libc has?) need to run
-very early during init; the failure mode otherwise was that the ptrace
-fork test already failed:
-
-----------------------
-$ ./linux mem=512M
-Core dump limits :
-	soft - 0
-	hard - NONE
-Checking that ptrace can change system call numbers...check_ptrace : child exited with exitcode 6, while expecting 0; status 0x67f
-Aborted
-----------------------
-
-Thinking more about this, it's clear that we simply cannot support
-CONFIG_CONSTRUCTORS in UML. All the cases we need now (gcov, kasan)
-involve not use of the __attribute__((constructor)), but instead
-some constructor code/entry generated by gcc. Therefore, we cannot
-distinguish between kernel constructors and system constructors.
-
-Thus, revert this commit.
-
-Cc: stable@vger.kernel.org [5.4+]
-Fixes: 786b2384bf1c ("um: Enable CONFIG_CONSTRUCTORS")
-Reported-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>
+Fixes: a1854fae1414 ("rsi: improve RX packet handling in USB interface")
+Cc: stable <stable@vger.kernel.org> # 4.17
+Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
-
 ---
- arch/um/include/asm/common.lds.S |    2 +-
- arch/um/kernel/dyn.lds.S         |    1 +
- init/Kconfig                     |    1 +
- kernel/gcov/Kconfig              |    2 +-
- 4 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_usb.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/arch/um/include/asm/common.lds.S
-+++ b/arch/um/include/asm/common.lds.S
-@@ -83,8 +83,8 @@
- 	__preinit_array_end = .;
-   }
-   .init_array : {
--        /* dummy - we call this ourselves */
- 	__init_array_start = .;
-+	*(.init_array)
- 	__init_array_end = .;
-   }
-   .fini_array : {
---- a/arch/um/kernel/dyn.lds.S
-+++ b/arch/um/kernel/dyn.lds.S
-@@ -103,6 +103,7 @@ SECTIONS
-      be empty, which isn't pretty.  */
-   . = ALIGN(32 / 8);
-   .preinit_array     : { *(.preinit_array) }
-+  .init_array     : { *(.init_array) }
-   .fini_array     : { *(.fini_array) }
-   .data           : {
-     INIT_TASK_DATA(KERNEL_STACK_SIZE)
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -54,6 +54,7 @@ config CC_DISABLE_WARN_MAYBE_UNINITIALIZ
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -16,6 +16,7 @@
+  */
  
- config CONSTRUCTORS
- 	bool
-+	depends on !UML
+ #include <linux/module.h>
++#include <linux/types.h>
+ #include <net/rsi_91x.h>
+ #include "rsi_usb.h"
+ #include "rsi_hal.h"
+@@ -29,7 +30,7 @@ MODULE_PARM_DESC(dev_oper_mode,
+ 		 "9[Wi-Fi STA + BT LE], 13[Wi-Fi STA + BT classic + BT LE]\n"
+ 		 "6[AP + BT classic], 14[AP + BT classic + BT LE]");
  
- config IRQ_WORK
- 	bool
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -4,7 +4,7 @@ menu "GCOV-based kernel profiling"
- config GCOV_KERNEL
- 	bool "Enable gcov-based kernel profiling"
- 	depends on DEBUG_FS
--	select CONSTRUCTORS
-+	select CONSTRUCTORS if !UML
- 	default n
- 	---help---
- 	This option enables gcov-based code profiling (e.g. for code coverage
+-static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num);
++static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t flags);
+ 
+ /**
+  * rsi_usb_card_write() - This function writes to the USB Card.
+@@ -285,7 +286,7 @@ static void rsi_rx_done_handler(struct u
+ 	status = 0;
+ 
+ out:
+-	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num))
++	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num, GFP_ATOMIC))
+ 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission", __func__);
+ 
+ 	if (status)
+@@ -307,7 +308,7 @@ static void rsi_rx_urb_kill(struct rsi_h
+  *
+  * Return: 0 on success, a negative error code on failure.
+  */
+-static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num)
++static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t mem_flags)
+ {
+ 	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
+ 	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
+@@ -337,7 +338,7 @@ static int rsi_rx_urb_submit(struct rsi_
+ 			  rsi_rx_done_handler,
+ 			  rx_cb);
+ 
+-	status = usb_submit_urb(urb, GFP_KERNEL);
++	status = usb_submit_urb(urb, mem_flags);
+ 	if (status) {
+ 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission\n", __func__);
+ 		dev_kfree_skb(skb);
+@@ -827,12 +828,12 @@ static int rsi_probe(struct usb_interfac
+ 		rsi_dbg(INIT_ZONE, "%s: Device Init Done\n", __func__);
+ 	}
+ 
+-	status = rsi_rx_urb_submit(adapter, WLAN_EP);
++	status = rsi_rx_urb_submit(adapter, WLAN_EP, GFP_KERNEL);
+ 	if (status)
+ 		goto err1;
+ 
+ 	if (adapter->priv->coex_mode > 1) {
+-		status = rsi_rx_urb_submit(adapter, BT_EP);
++		status = rsi_rx_urb_submit(adapter, BT_EP, GFP_KERNEL);
+ 		if (status)
+ 			goto err_kill_wlan_urb;
+ 	}
 
 
