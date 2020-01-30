@@ -2,130 +2,144 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CE5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA29C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA092082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:10:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYSCd6s3"
+	by mail.kernel.org (Postfix) with ESMTP id 161CE2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgA3LKT (ORCPT
+        id S1727158AbgA3LLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:10:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41274 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726959AbgA3LKS (ORCPT
+        Thu, 30 Jan 2020 06:11:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726902AbgA3LLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:10:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580382617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hl+74QNlq0Fe4UtuI+hqFs5mISin5uD8WN32HNCWFSs=;
-        b=EYSCd6s3L98gFj2AJQgNy2UG6SSaq3Yq4/Sz90Dkf3pYPH1dnOOA0pm0LFirJymjzhaCLC
-        MDJqqClO1xVj/oKDudnMvFmgGvBICcLU8L60KkzJ0309+dBK9ic7+cjvW7nVbgs1czhmPf
-        wt2sMQ6j8oybhl1pn5RBUVcGNiWzGV4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-9ALw2e1pP1yEfjlHMQxp0g-1; Thu, 30 Jan 2020 06:10:13 -0500
-X-MC-Unique: 9ALw2e1pP1yEfjlHMQxp0g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9C91477;
-        Thu, 30 Jan 2020 11:10:08 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-29.ams2.redhat.com [10.36.116.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D71891001B05;
-        Thu, 30 Jan 2020 11:10:01 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 30 Jan 2020 06:11:07 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UB9cEU025698
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 06:11:06 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xtfh1u6j8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 06:11:06 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 30 Jan 2020 11:11:04 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 Jan 2020 11:11:01 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UBB0w642467410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 11:11:00 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82E9642042;
+        Thu, 30 Jan 2020 11:11:00 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97A5442047;
+        Thu, 30 Jan 2020 11:10:59 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.154])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Jan 2020 11:10:59 +0000 (GMT)
+Date:   Thu, 30 Jan 2020 13:10:57 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Damian Tometzki <damian.tometzki@familie-tometzki.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
-        <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
-        <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com>
-        <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
-        <alpine.DEB.2.21.2001212141590.1231@www.lameter.com>
-        <1648013936.596672.1579655468604.JavaMail.zimbra@efficios.com>
-        <ead7a565-9a23-a7d7-904d-c4860f63952a@zytor.com>
-        <87a76efuux.fsf@oldenburg2.str.redhat.com>
-        <134428560.600911.1580153955842.JavaMail.zimbra@efficios.com>
-Date:   Thu, 30 Jan 2020 12:10:00 +0100
-In-Reply-To: <134428560.600911.1580153955842.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Mon, 27 Jan 2020 14:39:15 -0500
-        (EST)")
-Message-ID: <87blql5hfb.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+References: <20200128165906.GA67781@gmail.com>
+ <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+ <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+ <20200129132618.GA30979@zn.tnic>
+ <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+ <20200129183404.GB30979@zn.tnic>
+ <c08616b8-d209-ff08-1b74-645a49a486d2@familie-tometzki.de>
+ <20200130075549.GA6684@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130075549.GA6684@zn.tnic>
+X-TM-AS-GCONF: 00
+x-cbid: 20013011-0020-0000-0000-000003A5714E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013011-0021-0000-0000-000021FD2636
+Message-Id: <20200130111057.GA21459@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_03:2020-01-28,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=772 bulkscore=0
+ malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Thu, Jan 30, 2020 at 08:55:49AM +0100, Borislav Petkov wrote:
+> Hello Damian,
+> 
+> On Thu, Jan 30, 2020 at 06:47:14AM +0100, Damian Tometzki wrote:
+> > in my qemu env the system isnt coming up. I tried both with and without the
+> > changes from Borislav.
+> 
+> in the future, please do not hijack the thread like that but start a new
+> one or open a bug on bugzilla.kernel.org. Your issue is something else.
+> 
+> > 0.605193] ------------[ cut here ]------------
+> > [    0.605933] General protection fault in user access. Non-canonical
+> > address?
+> 
+> There it is.
+> 
+> > [    0.605948] WARNING: CPU: 0 PID: 1 at arch/x86/mm/extable.c:77
+> > ex_handler_uaccess+0x48/0x50
+> > [    0.606931] Modules linked in:
+> > [    0.606931] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0 #15
+> > [    0.606931] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> > rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+> > [    0.606931] RIP: 0010:ex_handler_uaccess+0x48/0x50
 
-> It brings an interesting idea to the table though. Let's assume for now that
-> the only intended use of pin_on_cpu(2) would be to allow rseq(2) critical
-> sections to update per-cpu data on specific cpu number targets. In fact,
-> considering that userspace can be preempted at any point, we still need a
-> mechanism to guarantee atomicity with respect to other threads running on
-> the same runqueue, which rseq(2) provides. Therefore, that assumption does
-> not appear too far-fetched.
->
-> There are 2 scenarios we need to consider here:
->
-> A) pin_on_cpu(2) targets a CPU which is not part of the affinity mask.
->
-> This case is easy: pin_on_cpu can return an error, and the caller needs to act
-> accordingly (e.g. figure out that this is a design error and report it, or
-> decide that it really did not want to touch that per-cpu data that badly and
-> make the entire process fall-back to a mechanism which does not use per-cpu
-> data at all from that point onwards)
+...
+ 
+> It looks like dquot_init->register_sysctl_table-> ... does copy_to_user
+> at some point and it goes off into the weeds and %rsi becomes
+> non-canonical.
+> 
+> Please start a new thread or open a bug and upload your .config and
+> dmesg. We'll continue debugging that there.
 
-Affinity masks currently are not like process memory: there is an
-expectation that they can be altered from outside the process.
+Maybe that won't be needed.
 
-Given that the caller may not have any ways to recover from the
-suggested pin_on_cpu behavior, that seems problematic.
+It seems that this a random boot crash caused by 987f028b8637cfa7 ("char:
+hpet: Use flexible-array member") and fix is on the way:
 
-What I would expect is that if pin_on_cpu cannot achieve implied
-exclusion by running on the associated CPU, it acquires a lock that
-prevents others pin_on_cpu calls from entering the critical section, and
-tasks in the same task group from running on that CPU (if the CPU
-becomes available to the task group).  The second part should maintain
-exclusion of rseq sequences even if their fast path is not changed.
+https://lore.kernel.org/lkml/202001300450.00U4ocvS083098@www262.sakura.ne.jp/
+ 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
 
-(On the other hand, I'm worried that per-CPU data structures are a dead
-end for user space unless we get containerized affinity masks, so that
-contains only see resources that are actually available to them.)
-
-Thanks,
-Florian
+-- 
+Sincerely yours,
+Mike.
 
