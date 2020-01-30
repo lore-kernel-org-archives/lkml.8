@@ -2,71 +2,92 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D917CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799CEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD0921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580428229;
-	bh=byWzMdC5VzPUaMxxqzsKKy4GLzsK1n8h38uudDXjQ6A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=eftgr8GOpybHouktbkn7Jsutf9bMlrzZ+RyhAoB8fNSg7NmJ3XOLt0RCKKvNwOO17
-	 x/TTD2IebO8QazV/1+TdlaK1ktT9sPx5UPtcZ3wH8ji0emM6VH6j4wsZU7Kp6ttIWH
-	 /mgzs/EZ4VfKHvWLZGu3CE118tnmNB/OZAnbeLG0=
+	by mail.kernel.org (Postfix) with ESMTP id 4E5F720409
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:59:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pbguk1Vu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgA3Xu3 (ORCPT
+        id S1727628AbgA3X6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 18:50:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbgA3XuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 18:50:21 -0500
-Subject: Re: [GIT PULL] mtd: Changes for 5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580428220;
-        bh=byWzMdC5VzPUaMxxqzsKKy4GLzsK1n8h38uudDXjQ6A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=BP1QD6LCGemSPfModyC6TC35FxMQc23KWTP9uEC+8dpQbhUJLYvy54YEZSiaVfsxc
-         Nrxz18etI9uMHiwIrQdLbQWObcDr6Zt7OtCPPICfliZV6mItdOF20U3QAx0yskZViE
-         jMr4kAyxjgQZd+rj/FIalPrvwUyhSS6eSoNOEg6g=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200130212052.11ca8719@xps13>
-References: <20200130212052.11ca8719@xps13>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200130212052.11ca8719@xps13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.6
-X-PR-Tracked-Commit-Id: 4575243c5c173f8adbc08a5c6ea2269742ea2b47
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 35c222fd323629cf2e834eb8aff77058856ffdda
-Message-Id: <158042822052.30792.15827763280633240047.pr-tracker-bot@kernel.org>
-Date:   Thu, 30 Jan 2020 23:50:20 +0000
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-kernel@vger.kernel.org
+        Thu, 30 Jan 2020 18:58:05 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34406 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgA3X6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 18:58:04 -0500
+Received: by mail-pg1-f195.google.com with SMTP id j4so2496463pgi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 15:58:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bkEoSxiIFSIBmIjDJvwmwkDr10wCmUtM3ogvmSTNOOM=;
+        b=Pbguk1VuKmMl8wfCRQpGeW4W+cBH2CF5Vhhdr902Zc3g2Rz1BP99zMAQCrH8hpXIOU
+         JKiC13/sE5vdMdmhwLXNNATDIQS9qRv7VPTwY67yoEgtLxbBOed0go+Z/Nve6nYRAivJ
+         XiPaMAiLz5mvPRgUC/aaTEIxt+thPN2/5pjaOW6H9yInzyJ2h7jasvXnZgTtmydNu4+n
+         RmsB7U1Tgbos5+Zy71zDtuv16WVvCuzxMCfOAwo0YYNmB/sH+89cD4iz6LGQZl5bUdY2
+         ih06b1SfkvKWZ2oVO0ZGp/q2ph64R64gr7/TrHpkY5JTQXVdcmRr7OoIli9md4twB5Su
+         EVPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bkEoSxiIFSIBmIjDJvwmwkDr10wCmUtM3ogvmSTNOOM=;
+        b=oMAk0nBTcdPLVyQkKfRqL3opSSqyP8NeTifUHuvOQsN2qGAvwGO9ZYXsO3DPRkiTn/
+         bAsqDWiNpRaqfzZruFupZ6UCAwS6NyqbEd6JV9WmBTDLJc4PInC0R1gXk51tKsJPSYrH
+         M3mHMt9CU/Oy/ygpw+piaCu/enEuXrt8lTgSlIbwJGFNSu6lQKWjwQoQ4wlvcl9ODFo6
+         TCA2dvtle5WaKE6uxHce9HOZO+XAT448lsWswePF/nUfCozmNl3AvMMh2Ak96GrC0cPc
+         7n5bhuf6ymNPLQBSdYisj/dVnnEt2E6SYcnHRYYONESHlBDk/6ZMasvQ6ctnvYxU5bd1
+         M7IA==
+X-Gm-Message-State: APjAAAWJeiQaAkdjiSwGZhgTv40cqkinctVjeO1tj2QAE+4IaSsSOo8h
+        boyahwk+Alv19JBFzXwkouZlyJPex8487PMVy/+Nrg==
+X-Google-Smtp-Source: APXvYqzixJ7GEdILtQGm5ko/4d0slKWLyxlOw1tHWdlu1yS2Pq+DANtjshTj5j/hy/mTVP89HWl6HEKm7y9NdPDWacA=
+X-Received: by 2002:a63:1d5f:: with SMTP id d31mr7432066pgm.159.1580428682829;
+ Thu, 30 Jan 2020 15:58:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200130192129.2677-1-krzk@kernel.org>
+In-Reply-To: <20200130192129.2677-1-krzk@kernel.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Thu, 30 Jan 2020 15:57:51 -0800
+Message-ID: <CAMo8BfJiC1O18+9AXCwPk-+AMd7c5Jc-xUZv17tfcD-zstPNFQ@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: configs: Cleanup old Kconfig IO scheduler options
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 30 Jan 2020 21:20:52 +0100:
+On Thu, Jan 30, 2020 at 11:21 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
+> commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+>
+> The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
+> now enabled by default (along with MQ_IOSCHED_KYBER).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/xtensa/configs/audio_kc705_defconfig   | 2 --
+>  arch/xtensa/configs/cadence_csp_defconfig   | 2 --
+>  arch/xtensa/configs/generic_kc705_defconfig | 2 --
+>  arch/xtensa/configs/iss_defconfig           | 2 --
+>  arch/xtensa/configs/nommu_kc705_defconfig   | 2 --
+>  arch/xtensa/configs/smp_lx200_defconfig     | 2 --
+>  6 files changed, 12 deletions(-)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-5.6
+Thanks, applied to my xtensa tree.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/35c222fd323629cf2e834eb8aff77058856ffdda
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-- Max
