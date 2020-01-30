@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF33C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58992C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35917215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2917120CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409586;
-	bh=1Lk7hPEkOLOEcPqJfFAlWYzJ+zQGDXWu3g8dnRXH9yM=;
+	s=default; t=1580409590;
+	bh=IVVM1hgl08D2fgpzsJMgLZQwDiwjlJhV9sFa2kUzlz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pAKhSBylgg1uIEfXAgmhBWPfRzF+ICfeGJr8nceXN47rfvF+4mz47LjF6DZqH5xxy
-	 UCG0HVmOtVDowQ5aEihB+JbGB/jQnf2gBFeA1KqZDxxz9nhzTQ/PRPE+sereqOw5bt
-	 m1f7yC37Iq1D43VJbXrEkjqbNUsR6VVA/Jv5KkTk=
+	b=ygcwZPJOwGec9ohUTWghpW/SJxaMANDLSfhq6OyNqbxk/yD0HVEcIXjgGX4VbPKDH
+	 eFiVPIpjAHXG4QeaarAxX6BYIvkoiwxxxM1O8HFz388R7JwSipO7D5aiRSRasHeQ8L
+	 Z+y8m3BmXMie8Tk0bKuV+0lCENBZXi+yrT35MU5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbgA3Sjp (ORCPT
+        id S1727882AbgA3Sjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:39:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47038 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:39:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727285AbgA3Sjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:39:45 -0500
+        id S1727285AbgA3Sjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:39:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4A520702;
-        Thu, 30 Jan 2020 18:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD3CA2082E;
+        Thu, 30 Jan 2020 18:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409584;
-        bh=1Lk7hPEkOLOEcPqJfFAlWYzJ+zQGDXWu3g8dnRXH9yM=;
+        s=default; t=1580409587;
+        bh=IVVM1hgl08D2fgpzsJMgLZQwDiwjlJhV9sFa2kUzlz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HpveTHkIYfK5N+LOUue45QZv1KHo1dW29N4w5ZrvQv0ROxkw8rM3hFYXnDldOSWci
-         US16yV75qI9rCBeUsECLOhLOZHyVFBEDeS1MBoffR5dwT65SiQVxvFlGHgGjN9cFyu
-         mVZ2wyYCR+1oV8iMefVnr2mFdKNhlTnK+RCfAbco=
+        b=vdW9PcrTq85ORY7Fts+ae6D61sB1hyxJFpoRDyZAS8LEIkJkAhh7apF3xVvFbAysb
+         eIJO5tKITrEZROK1GwjG7u59uF/nZc4DmbKYzzjdbUfo7wVjHiXObQQJkHI/3lM7tD
+         rWxO3qyFUPXlP/WS8DYJoA+PDJWkhe/aDSZs97EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Johan Hovold <johan@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.5 01/56] Bluetooth: btusb: fix non-atomic allocation in completion handler
-Date:   Thu, 30 Jan 2020 19:38:18 +0100
-Message-Id: <20200130183609.173830396@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.5 10/56] usb: typec: wcove: fix "op-sink-microwatt" default that was in mW
+Date:   Thu, 30 Jan 2020 19:38:27 +0100
+Message-Id: <20200130183611.051674781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-commit 22cc6b7a1dbb58da4afc539d9b7d470b23a25eea upstream.
+commit 0e64350bf4668d0fbbfec66fd8e637b971b4e976 upstream.
 
-USB completion handlers are called in atomic context and must
-specifically not allocate memory using GFP_KERNEL.
+commit 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
+didn't convert this value from mW to uW when migrating to a new
+specification format like it should have.
 
-Fixes: a1c49c434e15 ("Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB devices")
-Cc: stable <stable@vger.kernel.org>     # 5.3
-Cc: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/d8be32512efd31995ad7d65b27df9d443131b07c.1579529334.git.tommyhebb@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/btusb.c |    2 +-
+ drivers/usb/typec/tcpm/wcove.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2602,7 +2602,7 @@ static void btusb_mtk_wmt_recv(struct ur
- 		 * and being processed the events from there then.
- 		 */
- 		if (test_bit(BTUSB_TX_WAIT_VND_EVT, &data->flags)) {
--			data->evt_skb = skb_clone(skb, GFP_KERNEL);
-+			data->evt_skb = skb_clone(skb, GFP_ATOMIC);
- 			if (!data->evt_skb)
- 				goto err_out;
- 		}
+--- a/drivers/usb/typec/tcpm/wcove.c
++++ b/drivers/usb/typec/tcpm/wcove.c
+@@ -597,7 +597,7 @@ static const struct property_entry wcove
+ 	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+-	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000),
++	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000000),
+ 	{ }
+ };
+ 
 
 
