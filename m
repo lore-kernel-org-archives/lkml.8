@@ -2,276 +2,157 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URI_HEX,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A39C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C59C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4EB420CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WD+8d45Z"
+	by mail.kernel.org (Postfix) with ESMTP id 4FE9C206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgA3Jmr (ORCPT
+        id S1727210AbgA3Jpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:42:47 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54516 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3Jmr (ORCPT
+        Thu, 30 Jan 2020 04:45:34 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:58652 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgA3Jpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:42:47 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00U9ganA011927;
-        Thu, 30 Jan 2020 03:42:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580377356;
-        bh=vmHw7UFWIoxsoLu0lFcIEhK30xYRE7CF6RQRjKrMXjc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WD+8d45ZkSf28l85jT6CNEFPxGaD/QeFowB3xwDmHtNFCntlH2IMazAI8iHbEmPqU
-         AZv8CNjkCiPD8xnjDG94RG7KA6NMvkTBeBHAi+hvOIdNmgaUlavLezBHhovwzPjQzp
-         G9QjF0RYGqQXwYHZJ5UzC++Rys25nAIR7iTQo3rs=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00U9gaHm105194;
-        Thu, 30 Jan 2020 03:42:36 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 03:42:35 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 03:42:35 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00U9gXIh039641;
-        Thu, 30 Jan 2020 03:42:34 -0600
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200117153056.31363-1-geert+renesas@glider.be>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e219bc58-0d30-582f-4872-559097f212d2@ti.com>
-Date:   Thu, 30 Jan 2020 11:43:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200117153056.31363-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 30 Jan 2020 04:45:33 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id wZlT2100D5USYZQ01ZlTDw; Thu, 30 Jan 2020 10:45:30 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ix6O7-0002b2-Bd; Thu, 30 Jan 2020 10:45:27 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ix6O7-0005rO-90; Thu, 30 Jan 2020 10:45:27 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Peter Krystad <peter.krystad@linux.intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] mptcp: Fix undefined mptcp_handle_ipv6_mapped for modular IPV6
+Date:   Thu, 30 Jan 2020 10:45:26 +0100
+Message-Id: <20200130094526.22483-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert,
+If CONFIG_MPTCP=y, CONFIG_MPTCP_IPV6=n, and CONFIG_IPV6=m:
 
-On 17/01/2020 17.30, Geert Uytterhoeven wrote:
-> Currently it is not easy to find out which DMA channels are in use, and
-> which slave devices are using which channels.
-> 
-> Fix this by creating two symlinks between the DMA channel and the actual
-> slave device when a channel is requested:
->   1. A "slave" symlink from DMA channel to slave device,
->   2. A "dma:<name>" symlink slave device to DMA channel.
-> When the channel is released, the symlinks are removed again.
-> The latter requires keeping track of the slave device and the channel
-> name in the dma_chan structure.
-> 
-> Note that this is limited to channel request functions for requesting an
-> exclusive slave channel that take a device pointer (dma_request_chan()
-> and dma_request_slave_channel*()).
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Add DMA_SLAVE_NAME macro,
->   - Also handle channels from FIXME,
->   - Add backlinks from slave device to DMA channel,
-> 
-> On r8a7791/koelsch, the following new symlinks are created:
-> 
->     /sys/devices/platform/soc/
->     ├── e6700000.dma-controller/dma/dma0chan0/slave -> ../../../e6e20000.spi
->     ├── e6700000.dma-controller/dma/dma0chan1/slave -> ../../../e6e20000.spi
->     ├── e6700000.dma-controller/dma/dma0chan2/slave -> ../../../ee100000.sd
->     ├── e6700000.dma-controller/dma/dma0chan3/slave -> ../../../ee100000.sd
->     ├── e6700000.dma-controller/dma/dma0chan4/slave -> ../../../ee160000.sd
->     ├── e6700000.dma-controller/dma/dma0chan5/slave -> ../../../ee160000.sd
->     ├── e6700000.dma-controller/dma/dma0chan6/slave -> ../../../e6e68000.serial
->     ├── e6700000.dma-controller/dma/dma0chan7/slave -> ../../../e6e68000.serial
->     ├── e6720000.dma-controller/dma/dma1chan0/slave -> ../../../e6b10000.spi
->     ├── e6720000.dma-controller/dma/dma1chan1/slave -> ../../../e6b10000.spi
->     ├── e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
->     ├── e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
->     ├── e6b10000.spi/dma:rx -> ../e6720000.dma-controller/dma/dma1chan1
->     ├── e6b10000.spi/dma:tx -> ../e6720000.dma-controller/dma/dma1chan0
->     ├── e6e20000.spi/dma:rx -> ../e6700000.dma-controller/dma/dma0chan1
->     ├── e6e20000.spi/dma:tx -> ../e6700000.dma-controller/dma/dma0chan0
->     ├── e6e68000.serial/dma:rx -> ../e6700000.dma-controller/dma/dma0chan7
->     ├── e6e68000.serial/dma:tx -> ../e6700000.dma-controller/dma/dma0chan6
->     ├── ee100000.sd/dma:rx -> ../e6700000.dma-controller/dma/dma0chan3
->     ├── ee100000.sd/dma:tx -> ../e6700000.dma-controller/dma/dma0chan2
->     ├── ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
->     ├── ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
->     ├── ee160000.sd/dma:rx -> ../e6700000.dma-controller/dma/dma0chan5
->     └── ee160000.sd/dma:tx -> ../e6700000.dma-controller/dma/dma0chan4
-> 
-> On r8a77951/salvator-xs:
-> 
->     /sys/devices/platform/soc/
->     ├── e6460000.dma-controller/dma/dma4chan0/slave -> ../../../e659c000.usb
->     ├── e6460000.dma-controller/dma/dma4chan1/slave -> ../../../e659c000.usb
->     ├── e6470000.dma-controller/dma/dma5chan0/slave -> ../../../e659c000.usb
->     ├── e6470000.dma-controller/dma/dma5chan1/slave -> ../../../e659c000.usb
->     ├── e6510000.i2c/dma:tx -> ../e7300000.dma-controller/dma/dma7chan0
->     ├── e6550000.serial/dma:rx -> ../e7310000.dma-controller/dma/dma8chan1
->     ├── e6550000.serial/dma:tx -> ../e7310000.dma-controller/dma/dma8chan0
->     ├── e6590000.usb/dma:ch0 -> ../e65a0000.dma-controller/dma/dma2chan0
->     ├── e6590000.usb/dma:ch1 -> ../e65a0000.dma-controller/dma/dma2chan1
->     ├── e6590000.usb/dma:ch2 -> ../e65b0000.dma-controller/dma/dma3chan0
->     ├── e6590000.usb/dma:ch3 -> ../e65b0000.dma-controller/dma/dma3chan1
->     ├── e659c000.usb/dma:ch0 -> ../e6460000.dma-controller/dma/dma4chan0
->     ├── e659c000.usb/dma:ch1 -> ../e6460000.dma-controller/dma/dma4chan1
->     ├── e659c000.usb/dma:ch2 -> ../e6470000.dma-controller/dma/dma5chan0
->     ├── e659c000.usb/dma:ch3 -> ../e6470000.dma-controller/dma/dma5chan1
->     ├── e65a0000.dma-controller/dma/dma2chan0/slave -> ../../../e6590000.usb
->     ├── e65a0000.dma-controller/dma/dma2chan1/slave -> ../../../e6590000.usb
->     ├── e65b0000.dma-controller/dma/dma3chan0/slave -> ../../../e6590000.usb
->     ├── e65b0000.dma-controller/dma/dma3chan1/slave -> ../../../e6590000.usb
->     ├── e7300000.dma-controller/dma/dma7chan0/slave -> ../../../e6510000.i2c
->     ├── e7310000.dma-controller/dma/dma8chan0/slave -> ../../../e6550000.serial
->     └── e7310000.dma-controller/dma/dma8chan1/slave -> ../../../e6550000.serial
-> ---
->  drivers/dma/dmaengine.c   | 37 +++++++++++++++++++++++++++++++------
->  include/linux/dmaengine.h |  4 ++++
->  2 files changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 56a8420c388679d3..617c84cf6800962b 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -60,6 +60,8 @@ static long dmaengine_ref_count;
->  
->  /* --- sysfs implementation --- */
->  
-> +#define DMA_SLAVE_NAME	"slave"
-> +
->  /**
->   * dev_to_dma_chan - convert a device pointer to its sysfs container object
->   * @dev - device node
-> @@ -730,11 +732,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  	if (has_acpi_companion(dev) && !chan)
->  		chan = acpi_dma_request_slave_chan_by_name(dev, name);
->  
-> -	if (chan) {
-> -		/* Valid channel found or requester needs to be deferred */
-> -		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
-> -			return chan;
-> -	}
-> +	if (PTR_ERR(chan) == -EPROBE_DEFER)
-> +		return chan;
-> +
-> +	if (!IS_ERR_OR_NULL(chan))
-> +		goto found;
->  
->  	/* Try to find the channel via the DMA filter map(s) */
->  	mutex_lock(&dma_list_mutex);
-> @@ -754,7 +756,23 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  	}
->  	mutex_unlock(&dma_list_mutex);
->  
-> -	return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> +	if (!IS_ERR_OR_NULL(chan))
-> +		goto found;
-> +
-> +	return ERR_PTR(-EPROBE_DEFER);
-> +
-> +found:
-> +	chan->slave = dev;
-> +	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
-> +	if (!chan->name)
-> +		return ERR_PTR(-ENOMEM);
+    ERROR: "mptcp_handle_ipv6_mapped" [net/ipv6/ipv6.ko] undefined!
 
-You will lock the channel... It is requested, but it is not released in
-case of failure.
+This does not happen if CONFIG_MPTCP_IPV6=y, as CONFIG_MPTCP_IPV6
+selects CONFIG_IPV6, and thus forces CONFIG_IPV6 builtin.
 
-> +
-> +	if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
-> +			      DMA_SLAVE_NAME))
-> +		dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
-> +	if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
-> +		dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
+As exporting a symbol for an empty function would be a bit wasteful, fix
+this by providing a dummy version of mptcp_handle_ipv6_mapped() for the
+CONFIG_MPTCP_IPV6=n case.
 
-It is not a problem if these fail?
+Rename mptcp_handle_ipv6_mapped() to mptcpv6_handle_mapped(), to make it
+clear this is a pure-IPV6 function, just like mptcpv6_init().
 
-> +	return chan;
->  }
->  EXPORT_SYMBOL_GPL(dma_request_chan);
->  
-> @@ -812,6 +830,13 @@ void dma_release_channel(struct dma_chan *chan)
->  	/* drop PRIVATE cap enabled by __dma_request_channel() */
->  	if (--chan->device->privatecnt == 0)
->  		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
-> +	if (chan->slave) {
-> +		sysfs_remove_link(&chan->slave->kobj, chan->name);
-> +		kfree(chan->name);
-> +		chan->name = NULL;
-> +		chan->slave = NULL;
-> +	}
-> +	sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
+Fixes: cec37a6e41aae7bf ("mptcp: Handle MP_CAPABLE options for outgoing connections")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ include/net/mptcp.h | 9 +++------
+ net/ipv6/tcp_ipv6.c | 6 +++---
+ net/mptcp/subflow.c | 6 +++---
+ 3 files changed, 9 insertions(+), 12 deletions(-)
 
-If a non slave channel is released, then you remove the link you have
-never created?
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 27627e2d1bc2e9a1..c971d25431ea9412 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -174,15 +174,12 @@ static inline bool mptcp_skb_can_collapse(const struct sk_buff *to,
+ 
+ #endif /* CONFIG_MPTCP */
+ 
+-void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped);
+-
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+ int mptcpv6_init(void);
++void mptcpv6_handle_mapped(struct sock *sk, bool mapped);
+ #elif IS_ENABLED(CONFIG_IPV6)
+-static inline int mptcpv6_init(void)
+-{
+-	return 0;
+-}
++static inline int mptcpv6_init(void) { return 0; }
++static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
+ #endif
+ 
+ #endif /* __NET_MPTCP_H */
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index 33a578a3eb3abadb..eaf09e6b78442e09 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -239,7 +239,7 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
+ 
+ 		icsk->icsk_af_ops = &ipv6_mapped;
+ 		if (sk_is_mptcp(sk))
+-			mptcp_handle_ipv6_mapped(sk, true);
++			mptcpv6_handle_mapped(sk, true);
+ 		sk->sk_backlog_rcv = tcp_v4_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 		tp->af_specific = &tcp_sock_ipv6_mapped_specific;
+@@ -251,7 +251,7 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
+ 			icsk->icsk_ext_hdr_len = exthdrlen;
+ 			icsk->icsk_af_ops = &ipv6_specific;
+ 			if (sk_is_mptcp(sk))
+-				mptcp_handle_ipv6_mapped(sk, false);
++				mptcpv6_handle_mapped(sk, false);
+ 			sk->sk_backlog_rcv = tcp_v6_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 			tp->af_specific = &tcp_sock_ipv6_specific;
+@@ -1208,7 +1208,7 @@ static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *
+ 
+ 		inet_csk(newsk)->icsk_af_ops = &ipv6_mapped;
+ 		if (sk_is_mptcp(newsk))
+-			mptcp_handle_ipv6_mapped(newsk, true);
++			mptcpv6_handle_mapped(newsk, true);
+ 		newsk->sk_backlog_rcv = tcp_v4_do_rcv;
+ #ifdef CONFIG_TCP_MD5SIG
+ 		newtp->af_specific = &tcp_sock_ipv6_mapped_specific;
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 1662e117894900a8..de04b03fa41e70a6 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -582,9 +582,9 @@ subflow_default_af_ops(struct sock *sk)
+ 	return &subflow_specific;
+ }
+ 
+-void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
+-{
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
++void mptcpv6_handle_mapped(struct sock *sk, bool mapped)
++{
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct inet_connection_sock_af_ops *target;
+@@ -599,8 +599,8 @@ void mptcp_handle_ipv6_mapped(struct sock *sk, bool mapped)
+ 
+ 	subflow->icsk_af_ops = icsk->icsk_af_ops;
+ 	icsk->icsk_af_ops = target;
+-#endif
+ }
++#endif
+ 
+ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
+ {
+-- 
+2.17.1
 
-What happens if the link creation fails and here you attempt to remove
-the failed ones?
-
->  	mutex_unlock(&dma_list_mutex);
->  }
->  EXPORT_SYMBOL_GPL(dma_release_channel);
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 2cd1d6d7ef0fcce5..2804da93e27e114b 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -238,10 +238,12 @@ struct dma_router {
->  /**
->   * struct dma_chan - devices supply DMA channels, clients use them
->   * @device: ptr to the dma device who supplies this channel, always !%NULL
-> + * @slave: ptr to the device using this channel
->   * @cookie: last cookie value returned to client
->   * @completed_cookie: last completed cookie for this channel
->   * @chan_id: channel ID for sysfs
->   * @dev: class device for sysfs
-> + * @name: backlink name for sysfs
->   * @device_node: used to add this to the device chan list
->   * @local: per-cpu pointer to a struct dma_chan_percpu
->   * @client_count: how many clients are using this channel
-> @@ -252,12 +254,14 @@ struct dma_router {
->   */
->  struct dma_chan {
->  	struct dma_device *device;
-> +	struct device *slave;
->  	dma_cookie_t cookie;
->  	dma_cookie_t completed_cookie;
->  
->  	/* sysfs */
->  	int chan_id;
->  	struct dma_chan_dev *dev;
-> +	const char *name;
->  
->  	struct list_head device_node;
->  	struct dma_chan_percpu __percpu *local;
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
