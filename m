@@ -2,163 +2,329 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28682C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498AEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB70F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="rDgtTmDH";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="PmT4eU5i"
+	by mail.kernel.org (Postfix) with ESMTP id 07E442082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580410221;
+	bh=ZgAbJnQqB8T9wgapFXZrn8RVdA0u48nSyqfXHQ8VjPM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wGIlge7hET4bPbrfMjgjT4GaEnmJSLGSQnLJT+mET3KBPUvzNokeD3N63eOzy49J2
+	 NiEeqriV4SsJhbDAN1spXiQdpjtdjxd+hpODFriWPfa/ixuXBoTLB19l2GLvFBNDO/
+	 VsRlNbECOSHmAxaQN0jjuWE+i2EGDEPRjCyh/SR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731704AbgA3SuP (ORCPT
+        id S1731329AbgA3SrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:50:15 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:2148 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731595AbgA3SuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:50:11 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UIjuuO026545;
-        Thu, 30 Jan 2020 10:49:49 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=+Yt21OdYIWf5YAuMwdaVEhzhRm91McuIiUGBOeID8SA=;
- b=rDgtTmDH07U1zLS6QUDc8waFZSOf9Ky8C8/lXwOMizW8ffYgSt+Ko/OAyQKlO+je/LNz
- b0I2qgEpbyeN41h/bAayg2wP8sh4D2hFLbMYSEGXBDqlyCxLHeQhlrHg5JgBvT4agTsM
- jiNKvUheoPCpbgOznlcLNdxXHX+Pqfm0roEU1YOsjlfPI1wBBSzt2os7YQSzHIJBZ8SU
- IrJdIp2obVOtMP5bYV6gP3yWTDHhun0Rez+FK53XjXS8gvmHP43nksGF9z3gx1+EKOeB
- nTwU0aBUzgvsifFxL01vGqQwFv73M6++NmwYZEKJWPdn/Zy+1tuSYI43YH/LmZDx2/et Sw== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2xrp2tfqcg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 10:49:49 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 30 Jan
- 2020 10:49:47 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Thu, 30 Jan 2020 10:49:47 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Stz1wxtPZ85f9USggPGPU8+84WHYqVe4h6lYetEVBnX/LTakVh65g+ojwd5dVX0TKkzjrfBVUgqcyVBOQGOSD6BhLIg9qzBAP3rGkkeSIUu9ja96SY1cZrNDup5ClxRAlGk565jyFPUrbI0/0h1x6+LYkvJt7srLvhPHpYB44ninutje2FexSsH1wbbPLpY3rSCq8st0H3trLxn07oh1nMO3FR9AJfsoVHdUVn0lg4jZP/s61UVptwDfNEtg96xJ6BMRP8cbQWueaWso7myMvMbvMW/3OdNESDu2AqTsAQZOHCibf5lMuh/G+mlqbmaSiNngl8npoLaKo7nwuFCtEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Yt21OdYIWf5YAuMwdaVEhzhRm91McuIiUGBOeID8SA=;
- b=B3pEo6Z2D+SBFSXpCbWxcwP2LOt8iKAY2LZszamXsczA2vD/n+gTGTSFLPWiIXH86TZORNt/MC1HoAv10DGzgtELrE90685JPBle2EXJx9SJZ5t1f05HRUoq2CfRI3wLBfgJ7x66lqnp0WzheTnWQgGz7FiJMRU04XcR2LG+0xpBa3IpdDoSlz89dJS8nKG0pjz4ISh0p8z8ODk8bp6IKUo7NS15vXsizpu8PDs7aDcXum6Yqvf5L5WDStAKJPgX2rs0KtOvnjhM++epY3j+rhzEI9JM96pxVbOvx7ikgCq2/4m31Dgy6oZWnHoM+ZGOiAr5qd7N/GG+rpAslZTJzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+Yt21OdYIWf5YAuMwdaVEhzhRm91McuIiUGBOeID8SA=;
- b=PmT4eU5iOMgxy/SXiOxC01KHYQhSSSClIEmIiUWY0Vedf3EBm0+xkoHYMdBSd8z8pn5W2jB0PEj3UA17Nim0/A2BW5jv18RpIaiZfyJLFRvWI85zdXXObXtb8iluKGaZQZ9W/isADS21yEwgT3DVIxXDG58vE/XcwqmwVwWNO7o=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB3167.namprd18.prod.outlook.com (10.255.236.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.26; Thu, 30 Jan 2020 18:49:45 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::b96d:5663:6402:82ea]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::b96d:5663:6402:82ea%7]) with mapi id 15.20.2665.027; Thu, 30 Jan 2020
- 18:49:45 +0000
-Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0191.eurprd05.prod.outlook.com (2603:10a6:3:f9::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend Transport; Thu, 30 Jan 2020 18:49:43 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Matthias Brugger <mbrugger@suse.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v3 02/10] EDAC/mc: Reorder functions edac_mc_alloc*()
-Thread-Topic: [PATCH v3 02/10] EDAC/mc: Reorder functions edac_mc_alloc*()
-Thread-Index: AQHV154Ks6Q1ygfxD0miMcSSOV5mJQ==
-Date:   Thu, 30 Jan 2020 18:49:45 +0000
-Message-ID: <20200130184938.4epgnbnqlc4fkjll@rric.localdomain>
-References: <20200123090210.26933-1-rrichter@marvell.com>
- <20200123090210.26933-3-rrichter@marvell.com>
- <45ce6d35-6e07-8ff4-5f67-84adfcb44f14@suse.com>
-In-Reply-To: <45ce6d35-6e07-8ff4-5f67-84adfcb44f14@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0191.eurprd05.prod.outlook.com
- (2603:10a6:3:f9::15) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 59eb7026-790c-4f43-1d27-08d7a5b52ca1
-x-ms-traffictypediagnostic: MN2PR18MB3167:
-x-microsoft-antispam-prvs: <MN2PR18MB3167640E770DC40976222D51D9040@MN2PR18MB3167.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 02981BE340
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(1076003)(54906003)(956004)(4326008)(7696005)(186003)(26005)(8936002)(81156014)(66446008)(64756008)(66556008)(66476007)(66946007)(16526019)(86362001)(498600001)(8676002)(81166006)(6916009)(2906002)(4744005)(52116002)(966005)(5660300002)(6506007)(53546011)(71200400001)(9686003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3167;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RhaxdKGsBinDUX/PK0RJPcmIhqEQlAXe6um3QaE2n8Af1svn0jW+CAOr8DuSabgYGzmJJZa02oX6WhEXIOe+/dMDAha7BmWUO/SaJK5+N8QUGfj7Xeq66sRCBlwPjSJwBS9oYyOijjqVT60ZDpiiUiIVCzfSQ1zJqzfef9aMjR/yayHD0jGV361DX52n+5cCAi0LGfNbFZMHC1JMj5wPfQO+gi76b4MjEryqCPd87NicOLCw1daKKHAiXmUWBUUDPDLNIeFe1ViBqAfjW/QX0tKd93BiEcTKP/BDQOBIzyZ+tVhDOufd5DA1XHbQxCgHlSId9yATRk1DFcEYj6r6XcIOMCiNC4ljtrVD+OtD7TIDvbWGZpHuGPQJ1u9m2N5PHyqJkAEtKemV14Ibafn1LGU/8xhhyChPBNpC1RV4FL7Ma9QPVAE2h75VeJnOKKeHBaGLWgxxDKY64b6MEXsd0ehmwxnymVg9I2gwJ+GE5Pn/CYEzoRWolaOF0RWsnQj3Ms7qXMa2TYZXhUvtMrryWg==
-x-ms-exchange-antispam-messagedata: T8JtmCFwvwA9DZk5uupqcxzUjyv8zAa6UxxipQ7OPc2ooynEccS0hu+T7yEqdTWlttLbcP9wDNCeCCXtAkg8T4xv333YPhiaWBqo4rjKsmKF4nZH5xADCnzhaUXg0SlLkpw5p8pyZgRlvmh+eCbt3w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8DBE63BA33A5234D8E44054D38C172E9@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 Jan 2020 13:47:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731062AbgA3SrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:47:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C9AB20CC7;
+        Thu, 30 Jan 2020 18:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580410023;
+        bh=ZgAbJnQqB8T9wgapFXZrn8RVdA0u48nSyqfXHQ8VjPM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pyqe45TOC1i5zNlKr4xW3+7uuPkvXwfABtHON6sfU5+30obZwwh1jeR8j6KgtLQMF
+         2e9uyBI0XrzJELPkDS4sHhc5l76khEzbYFc1DFP3ikhfIK1o6jxUr88uOUJl8s0CAm
+         MrPi4StXMssGEjYb2I+LED5y8vLFZsiGSdAXa890=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/55] 4.19.101-stable review
+Date:   Thu, 30 Jan 2020 19:38:41 +0100
+Message-Id: <20200130183608.563083888@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59eb7026-790c-4f43-1d27-08d7a5b52ca1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2020 18:49:45.5604
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8wxdZKBooIFq8bbq7TLd0TIHlUv9yPVQimOzFsdH/CZ6Vuv2YwDANtQyOqQBTr8ShtzX+fFf18Gfw4Yk42A98A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3167
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_06:2020-01-30,2020-01-30 signatures=0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.101-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.101-rc1
+X-KernelTest-Deadline: 2020-02-01T18:36+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthias,
+This is the start of the stable review cycle for the 4.19.101 release.
+There are 55 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-On 23.01.20 20:02:00, Matthias Brugger wrote:
-> On 23/01/2020 10:02, Robert Richter wrote:
-> > Reorder the new created functions edac_mc_alloc_csrows() and
-> > edac_mc_alloc_dimms() and move them before edac_mc_alloc(). No further
-> > code changes.
-> >=20
-> > Signed-off-by: Robert Richter <rrichter@marvell.com>
-> > Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > Acked-by: Aristeu Rozanski <aris@redhat.com>
-> > ---
-> >  drivers/edac/edac_mc.c | 209 ++++++++++++++++++++---------------------
-> >  1 file changed, 103 insertions(+), 106 deletions(-)
-> >=20
-> > diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> > index d71006a4f07b..1e227e69e216 100644
+Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
+Anything received after that time might be too late.
 
-Sorry, I missed that mail.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.101-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-I have rebased v3 series on top of edac-for-next *plus* use-after-
-free-fix, see here:
+thanks,
 
- https://lore.kernel.org/patchwork/patch/1169444/
+greg k-h
 
-So the patch above must be applied before the series.
+-------------
+Pseudo-Shortlog of commits:
 
-Sorry for the confusion and not being more clear here.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.101-rc1
 
--Robert
+Andrew Murray <andrew.murray@arm.com>
+    KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
+
+Dave Chinner <dchinner@redhat.com>
+    block: fix 32 bit overflow in __blkdev_issue_discard()
+
+Ming Lei <ming.lei@redhat.com>
+    block: cleanup __blkdev_issue_discard()
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    random: try to actively add entropy rather than passively wait for it
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    crypto: af_alg - Use bh_lock_sock in sk_destruct
+
+Johan Hovold <johan@kernel.org>
+    rsi: fix non-atomic allocation in completion handler
+
+Johan Hovold <johan@kernel.org>
+    rsi: fix memory leak on failed URB submission
+
+Johan Hovold <johan@kernel.org>
+    rsi: fix use-after-free on probe errors
+
+Vincent Guittot <vincent.guittot@linaro.org>
+    sched/fair: Fix insertion in rq->leaf_cfs_rq_list
+
+Peter Zijlstra <peterz@infradead.org>
+    sched/fair: Add tmp_alone_branch assertion
+
+Laura Abbott <labbott@fedoraproject.org>
+    usb-storage: Disable UAS on JMicron SATA enclosure
+
+Ben Dooks <ben.dooks@codethink.co.uk>
+    ARM: OMAP2+: SmartReflex: add omap_sr_pdata definition
+
+Logan Gunthorpe <logang@deltatee.com>
+    iommu/amd: Support multiple PCI DMA aliases in IRQ Remapping
+
+Slawomir Pawlowski <slawomir.pawlowski@intel.com>
+    PCI: Add DMA alias quirk for Intel VCA NTB
+
+Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+    platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
+
+Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+    HID: steam: Fix input device disappearing
+
+Arnd Bergmann <arnd@arndb.de>
+    atm: eni: fix uninitialized variable warning
+
+Dmitry Osipenko <digetx@gmail.com>
+    gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
+
+Krzysztof Kozlowski <krzk@kernel.org>
+    net: wan: sdla: Fix cast from pointer to integer of different size
+
+Fenghua Yu <fenghua.yu@intel.com>
+    drivers/net/b44: Change to non-atomic bit operations on pwol_mask
+
+wuxu.wu <wuxu.wu@huawei.com>
+    spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
+
+Andreas Kemnade <andreas@kemnade.info>
+    watchdog: rn5t618_wdt: fix module aliases
+
+David Engraf <david.engraf@sysgo.com>
+    watchdog: max77620_wdt: fix potential build errors
+
+Tony Lindgren <tony@atomide.com>
+    phy: cpcap-usb: Prevent USB line glitches from waking up modem
+
+Bjorn Andersson <bjorn.andersson@linaro.org>
+    phy: qcom-qmp: Increase PHY ready timeout
+
+Pan Zhang <zhangpan26@huawei.com>
+    drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+
+Pavel Balan <admin@kryma.net>
+    HID: Add quirk for incorrect input length on Lenovo Y720
+
+Hans de Goede <hdegoede@redhat.com>
+    HID: ite: Add USB id match for Acer SW5-012 keyboard dock
+
+Priit Laes <plaes@plaes.org>
+    HID: Add quirk for Xin-Mo Dual Controller
+
+Randy Dunlap <rdunlap@infradead.org>
+    arc: eznps: fix allmodconfig kconfig warning
+
+Aaron Ma <aaron.ma@canonical.com>
+    HID: multitouch: Add LG MELF0410 I2C touchscreen support
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: fix ops->bind_class() implementations
+
+Eric Dumazet <edumazet@google.com>
+    net_sched: ematch: reject invalid TCF_EM_SIMPLE
+
+Johan Hovold <johan@kernel.org>
+    zd1211rw: fix storage endpoint lookup
+
+Johan Hovold <johan@kernel.org>
+    rtl8xxxu: fix interface sanity check
+
+Johan Hovold <johan@kernel.org>
+    brcmfmac: fix interface sanity check
+
+Johan Hovold <johan@kernel.org>
+    ath9k: fix storage endpoint lookup
+
+Paulo Alcantara (SUSE) <pc@cjr.nz>
+    cifs: Fix memory allocation in __smb2_handle_cancelled_cmd()
+
+Eric Biggers <ebiggers@google.com>
+    crypto: chelsio - fix writing tfm flags to wrong place
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    iio: st_gyro: Correct data for LSM9DS0 gyro
+
+Tomas Winkler <tomas.winkler@intel.com>
+    mei: me: add comet point (lake) H device ids
+
+Lubomir Rintel <lkundrak@v3.sk>
+    component: do not dereference opaque pointer in debugfs
+
+Lukas Wunner <lukas@wunner.de>
+    serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6656: Fix false Tx excessive retries reporting.
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6656: use NULLFUCTION stack on mac80211
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6656: correct packet types for CTS protect, mode.
+
+Colin Ian King <colin.king@canonical.com>
+    staging: wlan-ng: ensure error return is actually returned
+
+Andrey Shvetsov <andrey.shvetsov@k2l.de>
+    staging: most: net: fix buffer overflow
+
+Bin Liu <b-liu@ti.com>
+    usb: dwc3: turn off VBUS when leaving host mode
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: ir-usb: fix IrLAP framing
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: ir-usb: fix link-speed handling
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: ir-usb: add missing endpoint sanity check
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    usb: dwc3: pci: add ID for the Intel Comet Lake -V variant
+
+Johan Hovold <johan@kernel.org>
+    rsi_91x_usb: fix interface sanity check
+
+Johan Hovold <johan@kernel.org>
+    orinoco_usb: fix interface sanity check
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/arc/plat-eznps/Kconfig                        |   2 +-
+ arch/arm64/kvm/debug.c                             |   6 +-
+ block/blk-lib.c                                    |  23 +---
+ crypto/af_alg.c                                    |   6 +-
+ drivers/atm/eni.c                                  |   4 +-
+ drivers/base/component.c                           |   8 +-
+ drivers/char/random.c                              |  62 ++++++++-
+ drivers/crypto/chelsio/chcr_algo.c                 |  16 +--
+ drivers/gpio/Kconfig                               |   1 +
+ drivers/hid/hid-ids.h                              |   3 +
+ drivers/hid/hid-ite.c                              |   3 +
+ drivers/hid/hid-multitouch.c                       |   5 +-
+ drivers/hid/hid-quirks.c                           |   1 +
+ drivers/hid/hid-steam.c                            |   4 +
+ drivers/hid/i2c-hid/i2c-hid-core.c                 |  16 ++-
+ drivers/iio/gyro/st_gyro_core.c                    |  75 +++++++++-
+ drivers/iommu/amd_iommu.c                          |  37 ++++-
+ drivers/misc/mei/hw-me-regs.h                      |   4 +
+ drivers/misc/mei/pci-me.c                          |   2 +
+ drivers/net/ethernet/broadcom/b44.c                |   9 +-
+ drivers/net/wan/sdla.c                             |   2 +-
+ drivers/net/wireless/ath/ath9k/hif_usb.c           |   2 +-
+ .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c |   4 +-
+ .../net/wireless/intersil/orinoco/orinoco_usb.c    |   4 +-
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |   2 +-
+ drivers/net/wireless/rsi/rsi_91x_hal.c             |  12 +-
+ drivers/net/wireless/rsi/rsi_91x_usb.c             |  19 +--
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c       |   2 +-
+ drivers/pci/quirks.c                               |  34 +++++
+ drivers/phy/motorola/phy-cpcap-usb.c               |  18 ++-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                |   2 +-
+ drivers/platform/x86/dell-laptop.c                 |  26 ++++
+ drivers/spi/spi-dw.c                               |  15 +-
+ drivers/spi/spi-dw.h                               |   1 +
+ drivers/staging/most/net/net.c                     |  10 ++
+ drivers/staging/vt6656/device.h                    |   2 +
+ drivers/staging/vt6656/int.c                       |   6 +-
+ drivers/staging/vt6656/main_usb.c                  |   1 +
+ drivers/staging/vt6656/rxtx.c                      |  26 ++--
+ drivers/staging/wlan-ng/prism2mgmt.c               |   2 +-
+ drivers/tty/serial/8250/8250_bcm2835aux.c          |   2 +-
+ drivers/usb/dwc3/core.c                            |   3 +
+ drivers/usb/dwc3/dwc3-pci.c                        |   4 +
+ drivers/usb/serial/ir-usb.c                        | 136 +++++++++++++-----
+ drivers/usb/storage/unusual_uas.h                  |   7 +-
+ drivers/watchdog/Kconfig                           |   1 +
+ drivers/watchdog/rn5t618_wdt.c                     |   1 +
+ fs/cifs/smb2misc.c                                 |   2 +-
+ include/linux/power/smartreflex.h                  |   3 +
+ include/linux/usb/irda.h                           |  13 +-
+ include/net/pkt_cls.h                              |  33 +++--
+ include/net/sch_generic.h                          |   3 +-
+ kernel/sched/fair.c                                | 153 +++++++++++++--------
+ net/sched/cls_basic.c                              |  11 +-
+ net/sched/cls_bpf.c                                |  11 +-
+ net/sched/cls_flower.c                             |  11 +-
+ net/sched/cls_fw.c                                 |  11 +-
+ net/sched/cls_matchall.c                           |  11 +-
+ net/sched/cls_route.c                              |  11 +-
+ net/sched/cls_rsvp.h                               |  11 +-
+ net/sched/cls_tcindex.c                            |  11 +-
+ net/sched/cls_u32.c                                |  11 +-
+ net/sched/ematch.c                                 |   3 +
+ net/sched/sch_api.c                                |   6 +-
+ 65 files changed, 710 insertions(+), 240 deletions(-)
+
+
