@@ -2,93 +2,67 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11004C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37E9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BF020658
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5317D20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 19:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="pOO9Itn2";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="JYlXYzUu"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="xTVum6uC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgA3TIY (ORCPT
+        id S1727666AbgA3TKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 14:08:24 -0500
-Received: from node.akkea.ca ([192.155.83.177]:59260 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbgA3TIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 14:08:23 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 375164E204D;
-        Thu, 30 Jan 2020 19:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1580411303; bh=QCWqH3i6d7d//U54D23iF2Hbhl80FK9JvAL3ILoF+mE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=pOO9Itn2isE39rKwYWjLZuG0PjnqpBRrjBatfdhXx1gXo5/x7qBUtyTjWR1JIFOEg
-         VoOCQ2Ou3A75wCcZntUteAjd34cbEReRk+efA4XTL7SDRwGRKIFQbNfaYr2R/VRvQ1
-         xJny9RnrFPk3orRjH35Pnpwh346cr6nXbAv+IrdA=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id e0iH27lz8nbj; Thu, 30 Jan 2020 19:08:22 +0000 (UTC)
-Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
-        by node.akkea.ca (Postfix) with ESMTPSA id AE0BA4E200C;
-        Thu, 30 Jan 2020 19:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1580411302; bh=QCWqH3i6d7d//U54D23iF2Hbhl80FK9JvAL3ILoF+mE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=JYlXYzUu+ZVgG563aVfsaQ99S9y/WvTjFPlAI8N3r4iMe/smi2lGQMlZri0yfiwVY
-         BFoP5No+HHdspJjFgD9I8P/hFjtVLeNX3KYlmsM8jECpvU3GMFLYa9p3XLqWztFa9K
-         XA0CaUykfYrziL+9kXgSRCifzJGKiGdy/nrw0TyQ=
+        Thu, 30 Jan 2020 14:10:09 -0500
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:16031 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbgA3TKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 14:10:09 -0500
+Date:   Thu, 30 Jan 2020 19:10:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1580411406;
+        bh=B793CPK7LFZlogFfXtw3UaxaxhpPATfXTFrDbkKkc18=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=xTVum6uCmTJ+JCOIv6JPfPZachOF+tuUjb97ymAqmThugbzSW9Y68ynTokTLqUpLb
+         oneS9WeREjHNj7S3xdV12+3udnxVpMXUN6pkNKNmau7w9kHncJrjeyW4jrASxRYHw3
+         CZvPGDYpXIUmPRd3vq0vFEUD5zSGFUwNpIcygOoA=
+To:     "linux-kernel\\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Krzysztof Piecuch <piecuch@protonmail.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo\\@redhat.com" <mingo@redhat.com>,
+        "bp\\@alien8.de" <bp@alien8.de>, "hpa\\@zytor.com" <hpa@zytor.com>,
+        "x86\\@kernel.org" <x86@kernel.org>,
+        "rafael.j.wysocki\\@intel.com" <rafael.j.wysocki@intel.com>,
+        "drake\\@endlessm.com" <drake@endlessm.com>,
+        "viresh.kumar\\@linaro.org" <viresh.kumar@linaro.org>,
+        "juri.lelli\\@redhat.com" <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "mzhivich\\@akamai.com" <mzhivich@akamai.com>,
+        "malat\\@debian.org" <malat@debian.org>,
+        "piecuch@protonmail.com" <piecuch@protonmail.com>
+Reply-To: Krzysztof Piecuch <piecuch@protonmail.com>
+Subject: Re: [PATCH] x86/tsc: Add tsc_early_khz command line parameter overriding early TSC calibration
+Message-ID: <WIxfn1FPETITrmzdhnFHwujR0uEbHZ44PWZgmtRAzmj4rJ4wfzQUbcSWMtneOk0p7HkbJubs0z1BSLaBY3IXJarup8Ukw7Kv0WWYNgPk5bo=@protonmail.com>
+In-Reply-To: <O2CpIOrqLZHgNRkfjRpz_LGqnc1ix_seNIiOCvHY4RHoulOVRo6kMXKuLOfBVTi0SMMevg6Go1uZ_cL9fLYtYdTRNH78ChaFaZyG3VAyYz8=@protonmail.com>
+References: <O2CpIOrqLZHgNRkfjRpz_LGqnc1ix_seNIiOCvHY4RHoulOVRo6kMXKuLOfBVTi0SMMevg6Go1uZ_cL9fLYtYdTRNH78ChaFaZyG3VAyYz8=@protonmail.com>
+Feedback-ID: krphKiiPlx_XKIryTSpdJ_XtBwogkHXWA-Us-PsTeaBSrzOTAKWxwbFkseT4Z85b_7PMRvSnq3Ah7f9INXrOMw==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 30 Jan 2020 11:08:22 -0800
-From:   Angus Ainslie <angus@akkea.ca>
-To:     Dan Williams <dcbw@redhat.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Redpine RS9116 M.2 module with NetworkManager
-In-Reply-To: <dec7cce5138d4cfeb5596d63048db7ec19a18c3c.camel@redhat.com>
-References: <59789f30ee686338c7bcffe3c6cbc453@akkea.ca>
- <dec7cce5138d4cfeb5596d63048db7ec19a18c3c.camel@redhat.com>
-Message-ID: <47d5e080faa1edbf17d2bdeccee5ded9@akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Can I please have some feedback on this patch?
 
-On 2020-01-30 10:39, Dan Williams wrote:
-> On Thu, 2020-01-30 at 10:18 -0800, Angus Ainslie wrote:
->> 
->> I suspect this is a driver bug rather than a NM bug as I saw similar
->> issues with an earlier Redpine proprietary driver that was fixed by
->> updating that driver. What rsi_dbg zone will help debug this ?
-> 
-> NM just uses wpa_supplicant underneath, so if you can get supplicant
-> debug logs showing the failure, that would help. But perhaps the driver
-> has a problem with scan MAC randomization that NM can be configured to
-> do by default; that's been an issue with proprietary and out-of-tree
-> drivers in the past. Just a thought.
-> 
-> https://blog.muench-johannes.de/networkmanager-disable-mac-randomization-314
-> 
 
-Thanks that was the fix.
+Kind regards,
+Krzysztof Piecuch
 
-Angus
-
-> Dan
