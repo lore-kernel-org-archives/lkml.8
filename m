@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DEFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C32C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70121214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD1620702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410426;
-	bh=yNI5ogw+07m/kN6nHUW3rK8XJmN2BvbV3VxJy40X4EQ=;
+	s=default; t=1580410433;
+	bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpoOfxLfUo3WwewB+uxeCl2Y5o3Mt+42pNAh3czXGpmVAntcJJMtrWdImcSJnDwnY
-	 tO65bVnZoL1huR4Y0Tn0V/nfVInrGMlruLZ/8WR5FOtsqdbR9N+coyMTMYLCgl5rFD
-	 DMWUXXStZmlSwKRJQqPFBSEdKahmbCetZPrzY72c=
+	b=JR7I2kuElrlaN38Iusj8UQ6U6b3qhkoIIft51Q6vG7wUGkwBebC8eSDOXXIM4tlNw
+	 a8j7XGAq1dCBWo1EawV2LgFjm3pEaWenEq8QNJThWZiyVyD9dEMgOkzcX4i0H5xuDI
+	 E16r8c/UtaeKzVquBphCG0HhMy7uT5dKAfZlBUl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgA3Sxq (ORCPT
+        id S1731785AbgA3Sxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:53:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49152 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:53:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgA3SlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:16 -0500
+        id S1730118AbgA3SlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EF962083E;
-        Thu, 30 Jan 2020 18:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE30F2082E;
+        Thu, 30 Jan 2020 18:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409675;
-        bh=yNI5ogw+07m/kN6nHUW3rK8XJmN2BvbV3VxJy40X4EQ=;
+        s=default; t=1580409673;
+        bh=byCXBGSQFZqwCBWUAMGSYw1vJeHlsfyIX9xMMhCO7R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Je1yExcrWySGfzOW5n9ewoVluoHkBHYp36sfHpvdy76sEjWwHQem6YCb0fuQPp982
-         mJPyW56P+L4oQSyVGtSh0Zq45g8+blrEt/8CbQY04KXNWSJWB9mEcPF0fn/TTsG4MX
-         fydZ6VoXJGB4sUzSYyahuxRdc6Ba2RGI07FACjLU=
+        b=yRdsOXD/Rq7pXBYlJAcB9dqvV4fDFVLnPQmftuyLDVbdtaIamWqqrLg2WJmupBsme
+         ROOOkOstJu7F1NhLRb5wBu25uOx2ENUMqlVFyidp6DWYEkkQmrJDqGEPu2ZadwcEd0
+         p8do6Gt/MmchZtKpkTIpdHzPe9x1xxMRE9UvvyW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com,
-        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
-        Amitkumar Karwar <amit.karwar@redpinesignals.com>,
-        Fariya Fatima <fariyaf@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.5 46/56] rsi: fix use-after-free on failed probe and unbind
-Date:   Thu, 30 Jan 2020 19:39:03 +0100
-Message-Id: <20200130183617.350722335@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 45/56] rxrpc: Fix use-after-free in rxrpc_receive_data()
+Date:   Thu, 30 Jan 2020 19:39:02 +0100
+Message-Id: <20200130183617.195550238@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -65,72 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: David Howells <dhowells@redhat.com>
 
-commit e93cd35101b61e4c79149be2cfc927c4b28dc60c upstream.
+[ Upstream commit 122d74fac84204b9a98263636f6f9a3b2e665639 ]
 
-Make sure to stop both URBs before returning after failed probe as well
-as on disconnect to avoid use-after-free in the completion handler.
+The subpacket scanning loop in rxrpc_receive_data() references the
+subpacket count in the private data part of the sk_buff in the loop
+termination condition.  However, when the final subpacket is pasted into
+the ring buffer, the function is no longer has a ref on the sk_buff and
+should not be looking at sp->* any more.  This point is actually marked in
+the code when skb is cleared (but sp is not - which is an error).
 
-Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
-Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
-Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
-Cc: stable <stable@vger.kernel.org>     # 3.15
-Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
-Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
-Cc: Fariya Fatima <fariyaf@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fix this by caching sp->nr_subpackets in a local variable and using that
+instead.
+
+Also clear 'sp' to catch accesses after that point.
+
+This can show up as an oops in rxrpc_get_skb() if sp->nr_subpackets gets
+trashed by the sk_buff getting freed and reused in the meantime.
+
+Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/rsi/rsi_91x_usb.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ net/rxrpc/input.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -292,6 +292,15 @@ out:
- 		dev_kfree_skb(rx_cb->rx_skb);
- }
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -413,7 +413,7 @@ static void rxrpc_input_data(struct rxrp
+ {
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+ 	enum rxrpc_call_state state;
+-	unsigned int j;
++	unsigned int j, nr_subpackets;
+ 	rxrpc_serial_t serial = sp->hdr.serial, ack_serial = 0;
+ 	rxrpc_seq_t seq0 = sp->hdr.seq, hard_ack;
+ 	bool immediate_ack = false, jumbo_bad = false;
+@@ -457,7 +457,8 @@ static void rxrpc_input_data(struct rxrp
+ 	call->ackr_prev_seq = seq0;
+ 	hard_ack = READ_ONCE(call->rx_hard_ack);
  
-+static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
-+{
-+	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
-+	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
-+	struct urb *urb = rx_cb->rx_urb;
-+
-+	usb_kill_urb(urb);
-+}
-+
- /**
-  * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
-  * @adapter: Pointer to the adapter structure.
-@@ -823,10 +832,13 @@ static int rsi_probe(struct usb_interfac
- 	if (adapter->priv->coex_mode > 1) {
- 		status = rsi_rx_urb_submit(adapter, BT_EP);
- 		if (status)
--			goto err1;
-+			goto err_kill_wlan_urb;
+-	if (sp->nr_subpackets > 1) {
++	nr_subpackets = sp->nr_subpackets;
++	if (nr_subpackets > 1) {
+ 		if (call->nr_jumbo_bad > 3) {
+ 			ack = RXRPC_ACK_NOSPACE;
+ 			ack_serial = serial;
+@@ -465,11 +466,11 @@ static void rxrpc_input_data(struct rxrp
+ 		}
  	}
  
- 	return 0;
-+
-+err_kill_wlan_urb:
-+	rsi_rx_urb_kill(adapter, WLAN_EP);
- err1:
- 	rsi_deinit_usb_interface(adapter);
- err:
-@@ -857,6 +869,10 @@ static void rsi_disconnect(struct usb_in
- 		adapter->priv->bt_adapter = NULL;
- 	}
+-	for (j = 0; j < sp->nr_subpackets; j++) {
++	for (j = 0; j < nr_subpackets; j++) {
+ 		rxrpc_serial_t serial = sp->hdr.serial + j;
+ 		rxrpc_seq_t seq = seq0 + j;
+ 		unsigned int ix = seq & RXRPC_RXTX_BUFF_MASK;
+-		bool terminal = (j == sp->nr_subpackets - 1);
++		bool terminal = (j == nr_subpackets - 1);
+ 		bool last = terminal && (sp->rx_flags & RXRPC_SKB_INCL_LAST);
+ 		u8 flags, annotation = j;
  
-+	if (adapter->priv->coex_mode > 1)
-+		rsi_rx_urb_kill(adapter, BT_EP);
-+	rsi_rx_urb_kill(adapter, WLAN_EP);
-+
- 	rsi_reset_card(adapter);
- 	rsi_deinit_usb_interface(adapter);
- 	rsi_91x_deinit(adapter);
+@@ -506,7 +507,7 @@ static void rxrpc_input_data(struct rxrp
+ 		}
+ 
+ 		if (call->rxtx_buffer[ix]) {
+-			rxrpc_input_dup_data(call, seq, sp->nr_subpackets > 1,
++			rxrpc_input_dup_data(call, seq, nr_subpackets > 1,
+ 					     &jumbo_bad);
+ 			if (ack != RXRPC_ACK_DUPLICATE) {
+ 				ack = RXRPC_ACK_DUPLICATE;
+@@ -564,6 +565,7 @@ static void rxrpc_input_data(struct rxrp
+ 			 * ring.
+ 			 */
+ 			skb = NULL;
++			sp = NULL;
+ 		}
+ 
+ 		if (last) {
 
 
