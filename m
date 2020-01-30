@@ -2,152 +2,187 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3E3C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBEAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC8620674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3406320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnC2Wzqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgA3Upb (ORCPT
+        id S1727631AbgA3Urp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:45:31 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35081 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgA3UpY (ORCPT
+        Thu, 30 Jan 2020 15:47:45 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43228 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbgA3Uro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:45:24 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so5876781wro.2;
-        Thu, 30 Jan 2020 12:45:21 -0800 (PST)
+        Thu, 30 Jan 2020 15:47:44 -0500
+Received: by mail-ot1-f65.google.com with SMTP id p8so4397574oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:47:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GjvZAdb+dPg7WQDK5MQE15dbidK+TtdUyyc+BBbAtRw=;
+        b=OnC2WzqvXVUUegI2fDHqNJCr0T92rdUTTuht/QKSV9u6p1A9ogXryrMFNkrByEwUl8
+         znSkYwIvlzEGliCJySlrpvv5zmIkfZA9hdRyDErLp8JaCP7KHQlBeX6YlyzFSc5G9cFX
+         hHS3vndnIUdZpmcMSF+X4KGpsGxgdpKg8I79kIKCRqq1eYFIGwF1Rc7+fju4r0XkMpMR
+         BKE+dXemfx48rKGkJCT1V5b179Z29oE61KUYtN/BKJDxD+gC7YFgfNpQvwsOgE7kcuGH
+         /TZAr4wuat4KHgm+uSOeRh+oS/DBwwPcZi7EZpQJBOw5bU6j8QDS/HqH8UX9U90CZPFF
+         KpxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c3k6VjpBHrIjrTaQQqSSGNBzkMebYDOeyw44+9Ugl28=;
-        b=BZbL7AZmPKc+N/zSWqpQwIg9PS5WhatQpMDFlKj9pbvh1MPpjOzOeI35auwFWimMqh
-         km4io1AwxZ0BGwZ/sZx8gu71qjj5Igb22xaJssDy84Md3aEEvrtYvFwAigu/HxlMKRIK
-         TeTXehQbW9+Q6atDHlk9F8j4lPLd4eu/yECKzOH2VGtcDnuh0lheQCUUQf1saD6y6Q8b
-         esaHUs7CkrnsPownPc9EcXKcVZ3UhyqpXZnJdQc9yM2oD7BrwZfUXHOsJ8paXMXsz3xT
-         wwx/FJlcFJWRoWlDS8y4mLzbAMLr+eJy7Q6aaxmFFXdMX0PBSa5OiDYv6c9Iozpwe5VW
-         YQBw==
-X-Gm-Message-State: APjAAAXWrWJkmhZfr3jbMlQhKWGLdF1kG0tpJ1WXTuQz0Bn/Cuq40ktE
-        2j+frSH3YR0dvZDXXETJBApdGbU/R2I=
-X-Google-Smtp-Source: APXvYqzufaKIH2yFtJKt/PAlyEiLYKiQxZwNEqm75p8FMQ5XDYt4a/jHjsFBr4WM0QP6oZC70qK17A==
-X-Received: by 2002:a05:6000:8c:: with SMTP id m12mr1285707wrx.142.1580417120933;
-        Thu, 30 Jan 2020 12:45:20 -0800 (PST)
-Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id x7sm8874885wrq.41.2020.01.30.12.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 12:45:20 -0800 (PST)
-From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
-Date:   Thu, 30 Jan 2020 20:45:14 +0000
-Message-Id: <20200130204516.4760-1-git@andred.net>
-X-Mailer: git-send-email 2.23.0.rc1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GjvZAdb+dPg7WQDK5MQE15dbidK+TtdUyyc+BBbAtRw=;
+        b=CxZLDwmVIKFBl7NLiyTeascPfGi8Iwnh1IAJIDDN+w480aGnMb2l27jrTlkfjZDyJx
+         qbfamaMVhTuJXJA2mreDXF+0OgObdK2Qw4Lg+rZIWUsVnbbR1msB5yuiltfL02aDMmGX
+         CpKvsZxffwBWY24YwfuuwIIpVVRw7hlfzBKMyuMHp++m5NmKys36+buHku/zzNXD9KFF
+         LDowjd36TD02HcXb/0o5l0FlGDG2R29RRaWQoIU6+LK97uWHa/ZprOWPms7bLXfZhZAI
+         cfYlHIJAta+I7kFkuCKA66hM/omsM0udod/Bcu2d6Ny+ACVvOs87hlcDNpg6mY/VnPe6
+         H+gQ==
+X-Gm-Message-State: APjAAAV60rcKUtVXZiTvx4lJ00J2xsy3xfOXDyqdiLWXMoCv6lNPQai+
+        FCFDrc5TLmY5H37/HeKuMwOyUAoMphFK4fEZEw4=
+X-Google-Smtp-Source: APXvYqyah544SkEus4oz7h25yjaaMR5pX+tQEkuECkWzNyFFrCjbtTIlavJyGB/39Y1RmtUL/rxLy7vl9HNHfIlgydY=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr4702972otk.89.1580417263552;
+ Thu, 30 Jan 2020 12:47:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200130180048.2901-1-hjl.tools@gmail.com> <202001301139.F8859A4@keescook>
+ <CAMe9rOrrrZFWgVpsKAWjHKzVh3ZziFLs2ua0m0Ewymrjs-b+EA@mail.gmail.com>
+ <202001301152.DF108B6CC@keescook> <CAMe9rOp1SJvsjSMtDFi4HWKPpu2eePCDiedTPAndUEL5-HSU1w@mail.gmail.com>
+In-Reply-To: <CAMe9rOp1SJvsjSMtDFi4HWKPpu2eePCDiedTPAndUEL5-HSU1w@mail.gmail.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Thu, 30 Jan 2020 12:47:07 -0800
+Message-ID: <CAMe9rOqYh3QEdT16C8TOCBhYqfzsYJ6re0x+MDjpad9_59krZw@mail.gmail.com>
+Subject: [PATCH] Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Content-Type: multipart/mixed; boundary="000000000000976d3f059d61916d"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On i.MX7, the SNVS requires a clock. This is similar to the clock
-bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,
-then SNVS doesn't work, and as such the pwrkey driver doesn't
-work (i.e. hangs the kernel, as the clock isn't enabled).
+--000000000000976d3f059d61916d
+Content-Type: text/plain; charset="UTF-8"
 
-Also see commit ec2a844ef7c1
-("ARM: dts: imx7s: add snvs rtc clock")
-for a similar fix.
+On Thu, Jan 30, 2020 at 12:06 PM H.J. Lu <hjl.tools@gmail.com> wrote:
+>
+> On Thu, Jan 30, 2020 at 11:58 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Thu, Jan 30, 2020 at 11:45:15AM -0800, H.J. Lu wrote:
+> > > On Thu, Jan 30, 2020 at 11:40 AM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > On Thu, Jan 30, 2020 at 10:00:48AM -0800, H.J. Lu wrote:
+> > > > > Since .exit.text and .exit.data sections are discarded at runtime, we
+> > > > > should undefine EXIT_TEXT and EXIT_DATA to exclude .exit.text and
+> > > > > .exit.data sections from default discarded sections.
+> > > >
+> > > > This is just a correctness fix, yes? The EXIT_TEXT and EXIT_DATA were
+> > > > already included before the /DISCARD/ section here, so there's no
+> > > > behavioral change with this patch, correct?
+> > >
+> > > That is correct.  I was confused by EXIT_TEXT and EXIT_DATA in generic
+> > > DISCARDS.   My patch just makes it more explicit.
+> >
+> > Okay, so to that end and because this isn't arch-specific, I'd like to
+> > see this be a behavioral flag, and then the generic DISCARDS macro can
+> > be adjusted. This lets all architectures implement this without having
+> > to scatter undef/define lines in each arch.
+> >
+> > Something like this:
+> >
+> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > index e00f41aa8ec4..f242d3b4814d 100644
+> > --- a/include/asm-generic/vmlinux.lds.h
+> > +++ b/include/asm-generic/vmlinux.lds.h
+> > @@ -894,11 +894,17 @@
+> >   * section definitions so that such archs put those in earlier section
+> >   * definitions.
+> >   */
+> > -#define DISCARDS                                                       \
+> > -       /DISCARD/ : {                                                   \
+> > +#ifdef RUNTIME_DISCARD_EXIT
+> > +#define EXIT_DISCARDS
+> > +#else
+> > +#define EXIT_DISCARDS                                                  \
+> >         EXIT_TEXT                                                       \
+> >         EXIT_DATA                                                       \
+> > -       EXIT_CALL                                                       \
+> > +       EXIT_CALL
+> > +#endif
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Anson Huang <Anson.Huang@nxp.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Horia Geantă" <horia.geanta@nxp.com>
-Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org
----
- .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi                    |  2 ++
- 2 files changed, 19 insertions(+)
+We should keep EXIT_CALL in DISCARDS.  Only .exit.text and .exit.data
+sections are discarded at runtime.
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index 2fe245ca816a..755c2838d658 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -449,6 +449,19 @@ System ON/OFF key driver
-       Value type: <phandle>
-       Definition: this is phandle to the register map node.
- 
-+   - clocks
-+      Usage: optional, required if SNVS LP requires explicit
-+          enablement of clocks
-+      Value type: <prop_encoded-array>
-+      Definition:  a clock specifier describing the clock required for
-+          enabling and disabling SNVS LP RTC.
-+
-+   - clock-names
-+      Usage: optional, required if SNVS LP requires explicit
-+          enablement of clocks
-+      Value type: <string>
-+      Definition: clock name string should be "snvs-pwrkey".
-+
- EXAMPLE:
- 	snvs-pwrkey@020cc000 {
- 		compatible = "fsl,sec-v4.0-pwrkey";
-@@ -456,6 +469,8 @@ EXAMPLE:
- 		interrupts = <0 4 0x4>
- 	        linux,keycode = <116>; /* KEY_POWER */
- 		wakeup-source;
-+		clocks = <&clks IMX7D_SNVS_CLK>;
-+		clock-names = "snvs-pwrkey";
- 	};
- 
- =====================================================================
-@@ -547,6 +562,8 @@ FULL EXAMPLE
- 			interrupts = <0 4 0x4>;
- 			linux,keycode = <116>; /* KEY_POWER */
- 			wakeup-source;
-+			clocks = <&clks IMX7D_SNVS_CLK>;
-+			clock-names = "snvs-pwrkey";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 1b812f4e7453..6240a6f58048 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -614,6 +614,8 @@
- 					linux,keycode = <KEY_POWER>;
- 					wakeup-source;
- 					status = "disabled";
-+					clocks = <&clks IMX7D_SNVS_CLK>;
-+					clock-names = "snvs-pwrkey";
- 				};
- 			};
- 
+> > +#define DISCARDS                                                       \
+> > +       /DISCARD/ : {                                                   \
+> > +       EXIT_DISCARDS                                                   \
+> >         *(.discard)                                                     \
+> >         *(.discard.*)                                                   \
+> >         *(.modinfo)                                                     \
+> >
+> > Then x86 and all other architectures that do this can just use
+> > #define RUNTIME_DISCARD_EXIT
+> > at the top (like EMITS_PT_NOTE, etc).
+> >
+>
+> It should work.
+
+Here is the patch to add RUNTIME_DISCARD_EXIT to generic DISCARDS.
+
 -- 
-2.23.0.rc1
+H.J.
 
+--000000000000976d3f059d61916d
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-Add-RUNTIME_DISCARD_EXIT-to-generic-DISCARDS.patch"
+Content-Disposition: attachment; 
+	filename="0001-Add-RUNTIME_DISCARD_EXIT-to-generic-DISCARDS.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k617jujr0>
+X-Attachment-Id: f_k617jujr0
+
+RnJvbSBiZGUyODIxZjVlMDFhNWY0OWIyMjdjNmZiOGJhNjE5NWMyNjM4MWE5IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiAiSC5KLiBMdSIgPGhqbC50b29sc0BnbWFpbC5jb20+CkRhdGU6
+IFRodSwgMzAgSmFuIDIwMjAgMTI6MzE6MjIgLTA4MDAKU3ViamVjdDogW1BBVENIXSBBZGQgUlVO
+VElNRV9ESVNDQVJEX0VYSVQgdG8gZ2VuZXJpYyBESVNDQVJEUwoKSW4geDg2IGtlcm5lbCwgLmV4
+aXQudGV4dCBhbmQgLmV4aXQuZGF0YSBzZWN0aW9ucyBhcmUgZGlzY2FyZGVkIGF0CnJ1bnRpbWUg
+bm90IGJ5IGxpbmtlci4gIEFkZCBSVU5USU1FX0RJU0NBUkRfRVhJVCB0byBnZW5lcmljIERJU0NB
+UkRTCmFuZCBkZWZpbmUgaXQgaW4geDg2IGtlcm5lbCBsaW5rZXIgc2NyaXB0IHRvIGtlZXAgdGhl
+bS4KLS0tCiBhcmNoL3g4Ni9rZXJuZWwvdm1saW51eC5sZHMuUyAgICAgfCAgMSArCiBpbmNsdWRl
+L2FzbS1nZW5lcmljL3ZtbGludXgubGRzLmggfCAxMCArKysrKysrKy0tCiAyIGZpbGVzIGNoYW5n
+ZWQsIDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL3g4
+Ni9rZXJuZWwvdm1saW51eC5sZHMuUyBiL2FyY2gveDg2L2tlcm5lbC92bWxpbnV4Lmxkcy5TCmlu
+ZGV4IGUzMjk2YWEwMjhmZS4uNzIwNmUxYWMyM2RkIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJu
+ZWwvdm1saW51eC5sZHMuUworKysgYi9hcmNoL3g4Ni9rZXJuZWwvdm1saW51eC5sZHMuUwpAQCAt
+MjEsNiArMjEsNyBAQAogI2RlZmluZSBMT0FEX09GRlNFVCBfX1NUQVJUX0tFUk5FTF9tYXAKICNl
+bmRpZgogCisjZGVmaW5lIFJVTlRJTUVfRElTQ0FSRF9FWElUCiAjZGVmaW5lIEVNSVRTX1BUX05P
+VEUKICNkZWZpbmUgUk9fRVhDRVBUSU9OX1RBQkxFX0FMSUdOCTE2CiAKZGlmZiAtLWdpdCBhL2lu
+Y2x1ZGUvYXNtLWdlbmVyaWMvdm1saW51eC5sZHMuaCBiL2luY2x1ZGUvYXNtLWdlbmVyaWMvdm1s
+aW51eC5sZHMuaAppbmRleCBlMDBmNDFhYThlYzQuLjZiOTQzZmI4YzVmZCAxMDA2NDQKLS0tIGEv
+aW5jbHVkZS9hc20tZ2VuZXJpYy92bWxpbnV4Lmxkcy5oCisrKyBiL2luY2x1ZGUvYXNtLWdlbmVy
+aWMvdm1saW51eC5sZHMuaApAQCAtODk0LDEwICs4OTQsMTYgQEAKICAqIHNlY3Rpb24gZGVmaW5p
+dGlvbnMgc28gdGhhdCBzdWNoIGFyY2hzIHB1dCB0aG9zZSBpbiBlYXJsaWVyIHNlY3Rpb24KICAq
+IGRlZmluaXRpb25zLgogICovCisjaWZkZWYgUlVOVElNRV9ESVNDQVJEX0VYSVQKKyNkZWZpbmUg
+RVhJVF9ESVNDQVJEUworI2Vsc2UKKyNkZWZpbmUgRVhJVF9ESVNDQVJEUwkJCQkJCQlcCisJRVhJ
+VF9URVhUCQkJCQkJCVwKKwlFWElUX0RBVEEKKyNlbmRpZgogI2RlZmluZSBESVNDQVJEUwkJCQkJ
+CQlcCiAJL0RJU0NBUkQvIDogewkJCQkJCQlcCi0JRVhJVF9URVhUCQkJCQkJCVwKLQlFWElUX0RB
+VEEJCQkJCQkJXAorCUVYSVRfRElTQ0FSRFMJCQkJCQkJXAogCUVYSVRfQ0FMTAkJCQkJCQlcCiAJ
+KiguZGlzY2FyZCkJCQkJCQkJXAogCSooLmRpc2NhcmQuKikJCQkJCQkJXAotLSAKMi4yNC4xCgo=
+--000000000000976d3f059d61916d--
