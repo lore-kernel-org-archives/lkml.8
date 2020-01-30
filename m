@@ -2,67 +2,123 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6965BC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFFAC35248
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABD42082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA1C20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgA3Iav convert rfc822-to-8bit (ORCPT
+        id S1727186AbgA3Iay convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:30:51 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:39951 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbgA3Iav (ORCPT
+        Thu, 30 Jan 2020 03:30:54 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40323 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbgA3Iaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:30:51 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0C80B1BF219;
-        Thu, 30 Jan 2020 08:30:48 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 09:30:48 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     shiva.linuxworks@gmail.com
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Shivamurthy Shastri <sshivamurthy@micron.com>
-Subject: Re: [PATCH 1/4] mtd: spinand: Generalize the OOB layout structure
- and function names
-Message-ID: <20200130093048.5f196495@xps13>
-In-Reply-To: <20200119145432.10405-2-sshivamurthy@micron.com>
-References: <20200119145432.10405-1-sshivamurthy@micron.com>
-        <20200119145432.10405-2-sshivamurthy@micron.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 30 Jan 2020 03:30:52 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so2696378oii.7;
+        Thu, 30 Jan 2020 00:30:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HFTK0wLPJ+srAEMsmW9EKJT73bxP4s92jNe0BbzHj1g=;
+        b=CR93tJ3WcpSPgIxergpCOlxP5AIPboPtJy4YA1T/L+bQZ7kd4Tl2KheszhxN2aN05K
+         iUkRHFiq/QW0HOh/oOZEN5wSVIllPTQDUY6iZmxf5vM7YSZ7WszMKFTkpos30mBdlsib
+         Q0BtuVATIFvr6NkUSurPUn5VPBTMmbs/jG9U0DQDmbmZ+qTyIYlB70HOYNLSwGpOVXtg
+         FQ6hWlKM0Vi/FHjGkkUSAjOfgnxEbEYEXeRkhzyWHX3zDcGz7ojiqba9NnJqOMbjt8ST
+         l21i73rsPYJXF10CIO+raLyR28FsX7fFRq1VXHqgLcNZHAlh4Vac+9TGapzX2KfjUL6d
+         6J+A==
+X-Gm-Message-State: APjAAAXacx5q0kYcrNP3nSV94HtGtUpVry4gL/XSxc+DZYmSKZW7soUZ
+        bZlcF4Hr44MKojv5KKHPC12LfYGjMpPaGEiqa84=
+X-Google-Smtp-Source: APXvYqwdBg3qw8VeW5AasrBWdbzZwZ65QZDik+thkFtTX1iARiC/7M8S0iGAXnwKuQ9SN1mrRsJB2TwXIC6DBGV06FA=
+X-Received: by 2002:aca:5905:: with SMTP id n5mr2177710oib.54.1580373051929;
+ Thu, 30 Jan 2020 00:30:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <CGME20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb@eucas1p1.samsung.com>
+ <20200117153056.31363-1-geert+renesas@glider.be> <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
+In-Reply-To: <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 30 Jan 2020 09:30:38 +0100
+Message-ID: <CAMuHMdXds2HuBAnLXmLVaCWKX77iZGvNSnD35-ysY9AnG9TKMw@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiva,
+Hi Marek,
 
-shiva.linuxworks@gmail.com wrote on Sun, 19 Jan 2020 15:54:29 +0100:
+On Wed, Jan 29, 2020 at 6:47 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+> On 17.01.2020 16:30, Geert Uytterhoeven wrote:
+> > Currently it is not easy to find out which DMA channels are in use, and
+> > which slave devices are using which channels.
+> >
+> > Fix this by creating two symlinks between the DMA channel and the actual
+> > slave device when a channel is requested:
+> >    1. A "slave" symlink from DMA channel to slave device,
+> >    2. A "dma:<name>" symlink slave device to DMA channel.
+> > When the channel is released, the symlinks are removed again.
+> > The latter requires keeping track of the slave device and the channel
+> > name in the dma_chan structure.
+> >
+> > Note that this is limited to channel request functions for requesting an
+> > exclusive slave channel that take a device pointer (dma_request_chan()
+> > and dma_request_slave_channel*()).
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+>
+> This patch breaks booting on almost all Exynos based boards:
+>
+> https://lore.kernel.org/linux-samsung-soc/20200129161113.GE3928@sirena.org.uk/T/#u
 
-> From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> 
+Sorry for the breakage.
 
-I would also prefix the commit with "mtd: spinand: micron:".
+> I've already sent a fix:
+>
+> https://lkml.org/lkml/2020/1/29/498
 
-> In order to add new Micron SPI NAND devices, we generalized the OOB
-> layout structure and function names.
-> 
-> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+Thanks a lot!
 
-Thanks,
-Miquèl
+> BTW, this patch reminds me some of my earlier work:
+>
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1329778.html
+>
+> I had similar need to keep a client's struct device pointer for every
+> requested channel, but it turned out to be much more complicated than
+> I've initially thought. I've abandoned that, due to lack of time, but
+> maybe some of that discussion and concerns are still valid (I hope that
+> links to earlier versions are still working)...
+
+Oh right, Runtime PM for DMA channels.
+
+As several DMA calls can be made from atomic context, probably the API
+should be split in a non-atomic and an atomic part, cfr. the difference
+between clk_prepare() and clk_enable().  Still, DMA slave drivers would need
+to be modified, to call the "prepare" to make use of this...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
