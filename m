@@ -2,204 +2,204 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D4CC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE971C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3472071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580349694;
-	bh=a4KWsJRiuNAu+S0um97LfdSQg/QjtCJtt53SgVg+TF8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LB02KH+JbIJ6ncP3WR7qKTrZCmAX5pbcy3uTKzQj73duhsoVF9p1p/Eclf8Dq351v
-	 Fj6GxElReIW80HUyU6atj3cRctlIMTwRnuUsd8n0Gw3bzTLAeKyCbZ+u4a4Nq1Na6A
-	 fMKe6uEIHaaT5g12+bahds+G8VfKancneybeyLEw=
+	by mail.kernel.org (Postfix) with ESMTP id 6F11C206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 02:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgA3CBe (ORCPT
+        id S1726771AbgA3CGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 21:01:34 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42449 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgA3CBd (ORCPT
+        Wed, 29 Jan 2020 21:06:39 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726632AbgA3CGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 21:01:33 -0500
-Received: by mail-io1-f68.google.com with SMTP id n11so2141724iom.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 18:01:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SLLmNga7Fg92j7Wp0mHpBfgEy1+qMj+VIGuo+fS2/qk=;
-        b=a+JuYJP7DExfh7Xj7D1MP+WDtc/4pqFZPRUg5vQnLk8/ZyMguwk24cOHfvPd/+sGjo
-         h/Bex96QHbUA/Do6IBNm3aQUtZ0/MIKqTX6OzyaprNtd5rcC2BwqmSEmVBo/H2cKZlIX
-         UwRdkikLwwWO0ZxE/cPRXFdIK2yswvPPSnjfk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SLLmNga7Fg92j7Wp0mHpBfgEy1+qMj+VIGuo+fS2/qk=;
-        b=mzY6agxfJm/Rk6w5q8u4uOTzNONbldflqOLvA4ajS8dXVsm7/lxnGffa3myx88+WVe
-         jM7PKmqusOCZIg8PlF24eOw8PPA5hT6n3SlIuAG3g5hzKjtKB59hbtLaofLJ9K378XwM
-         PjxexWqQLecVI9CRpj37/r9QnJQywr08JqIiwmSL0M/y+ehPdEx24eVBYqebGpy2nSza
-         uUYZEJE617QGtFhH18+haTq3RlfhvCnctEZcdhXvRdkdO6Hd591aexYJk+P/kRh9CaQo
-         iZApaUWAzOSbDxyK7tefOq3tYd5b/oYo3bktqQ0ELOOK///45QfKgNwRA4N5Tpov+k4Q
-         6+ZQ==
-X-Gm-Message-State: APjAAAW34uDItBljlTIXaLG7GA2IZgQBIZuIFdCvc1qBEiqbFJxO3ZZB
-        W1w8ULe9xBa0+1ARpzGdRZIBsA==
-X-Google-Smtp-Source: APXvYqwIZP1v3iiH4xKUKmxt616Y3bG9d/QnCJDyKghwbYBWw8lWb+GqRRh4rI20P6dDFb83B1oLRQ==
-X-Received: by 2002:a6b:c742:: with SMTP id x63mr2231819iof.162.1580349692648;
-        Wed, 29 Jan 2020 18:01:32 -0800 (PST)
-Received: from localhost.localdomain (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id n17sm1306437ile.68.2020.01.29.18.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 18:01:31 -0800 (PST)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     jmorris@namei.org, serge@hallyn.com, mpe@ellerman.id.au,
-        zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
-        yuehaibing@huawei.com
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] security/integrity: Include __func__ in messages for easier debug
-Date:   Wed, 29 Jan 2020 19:01:29 -0700
-Message-Id: <20200130020129.15328-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 29 Jan 2020 21:06:39 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00U1xCOO011991
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 21:06:37 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xtfh1dn6x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 21:06:37 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Thu, 30 Jan 2020 02:06:35 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 Jan 2020 02:06:32 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00U25dMs47972700
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jan 2020 02:05:39 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F4F04C04E;
+        Thu, 30 Jan 2020 02:06:31 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDD544C040;
+        Thu, 30 Jan 2020 02:06:28 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.199.51.93])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Jan 2020 02:06:28 +0000 (GMT)
+Date:   Thu, 30 Jan 2020 07:36:26 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
+Reply-To: bharata@linux.ibm.com
+References: <20200127173453.2089565-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200127173453.2089565-1-guro@fb.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20013002-0028-0000-0000-000003D5A2F8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013002-0029-0000-0000-00002499EFF2
+Message-Id: <20200130020626.GA21973@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-29_08:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 suspectscore=2 mlxlogscore=999 bulkscore=0
+ malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001300011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change messages to messages to make it easier to debug. The following
-error message isn't informative enough to figure out what failed.
+On Mon, Jan 27, 2020 at 09:34:25AM -0800, Roman Gushchin wrote:
+> The existing cgroup slab memory controller is based on the idea of
+> replicating slab allocator internals for each memory cgroup.
+> This approach promises a low memory overhead (one pointer per page),
+> and isn't adding too much code on hot allocation and release paths.
+> But is has a very serious flaw: it leads to a low slab utilization.
+> 
+> Using a drgn* script I've got an estimation of slab utilization on
+> a number of machines running different production workloads. In most
+> cases it was between 45% and 65%, and the best number I've seen was
+> around 85%. Turning kmem accounting off brings it to high 90s. Also
+> it brings back 30-50% of slab memory. It means that the real price
+> of the existing slab memory controller is way bigger than a pointer
+> per page.
+> 
+> The real reason why the existing design leads to a low slab utilization
+> is simple: slab pages are used exclusively by one memory cgroup.
+> If there are only few allocations of certain size made by a cgroup,
+> or if some active objects (e.g. dentries) are left after the cgroup is
+> deleted, or the cgroup contains a single-threaded application which is
+> barely allocating any kernel objects, but does it every time on a new CPU:
+> in all these cases the resulting slab utilization is very low.
+> If kmem accounting is off, the kernel is able to use free space
+> on slab pages for other allocations.
+> 
+> Arguably it wasn't an issue back to days when the kmem controller was
+> introduced and was an opt-in feature, which had to be turned on
+> individually for each memory cgroup. But now it's turned on by default
+> on both cgroup v1 and v2. And modern systemd-based systems tend to
+> create a large number of cgroups.
+> 
+> This patchset provides a new implementation of the slab memory controller,
+> which aims to reach a much better slab utilization by sharing slab pages
+> between multiple memory cgroups. Below is the short description of the new
+> design (more details in commit messages).
+> 
+> Accounting is performed per-object instead of per-page. Slab-related
+> vmstat counters are converted to bytes. Charging is performed on page-basis,
+> with rounding up and remembering leftovers.
+> 
+> Memcg ownership data is stored in a per-slab-page vector: for each slab page
+> a vector of corresponding size is allocated. To keep slab memory reparenting
+> working, instead of saving a pointer to the memory cgroup directly an
+> intermediate object is used. It's simply a pointer to a memcg (which can be
+> easily changed to the parent) with a built-in reference counter. This scheme
+> allows to reparent all allocated objects without walking them over and
+> changing memcg pointer to the parent.
+> 
+> Instead of creating an individual set of kmem_caches for each memory cgroup,
+> two global sets are used: the root set for non-accounted and root-cgroup
+> allocations and the second set for all other allocations. This allows to
+> simplify the lifetime management of individual kmem_caches: they are
+> destroyed with root counterparts. It allows to remove a good amount of code
+> and make things generally simpler.
+> 
+> The patchset* has been tested on a number of different workloads in our
+> production. In all cases it saved significant amount of memory, measured
+> from high hundreds of MBs to single GBs per host. On average, the size
+> of slab memory has been reduced by 35-45%.
 
-Couldn't get size: 0x800000000000000e
+Here are some numbers from multiple runs of sysbench and kernel compilation
+with this patchset on a 10 core POWER8 host:
 
-Change messages to include function information.
+==========================================================================
+Peak usage of memory.kmem.usage_in_bytes, memory.usage_in_bytes and
+meminfo:Slab for Sysbench oltp_read_write with mysqld running as part
+of a mem cgroup (Sampling every 5s)
+--------------------------------------------------------------------------
+				5.5.0-rc7-mm1	+slab patch	%reduction
+--------------------------------------------------------------------------
+memory.kmem.usage_in_bytes	15859712	4456448		72
+memory.usage_in_bytes		337510400	335806464	.5
+Slab: (kB)			814336		607296		25
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- .../integrity/platform_certs/load_powerpc.c     | 14 ++++++++------
- security/integrity/platform_certs/load_uefi.c   | 17 ++++++++++-------
- 2 files changed, 18 insertions(+), 13 deletions(-)
+memory.kmem.usage_in_bytes	16187392	4653056		71
+memory.usage_in_bytes		318832640	300154880	5
+Slab: (kB)			789888		559744		29
+--------------------------------------------------------------------------
 
-diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-index a2900cb85357..621454148fbc 100644
---- a/security/integrity/platform_certs/load_powerpc.c
-+++ b/security/integrity/platform_certs/load_powerpc.c
-@@ -25,7 +25,7 @@ static __init void *get_cert_list(u8 *key, unsigned long keylen, uint64_t *size)
- 
- 	rc = secvar_ops->get(key, keylen, NULL, size);
- 	if (rc) {
--		pr_err("Couldn't get size: %d\n", rc);
-+		pr_err("%s: Couldn't get size: %d\n", __func__, rc);
- 		return NULL;
- 	}
- 
-@@ -36,7 +36,7 @@ static __init void *get_cert_list(u8 *key, unsigned long keylen, uint64_t *size)
- 	rc = secvar_ops->get(key, keylen, db, size);
- 	if (rc) {
- 		kfree(db);
--		pr_err("Error reading %s var: %d\n", key, rc);
-+		pr_err("%s: Error reading %s var: %d\n", __func__, key, rc);
- 		return NULL;
- 	}
- 
-@@ -69,23 +69,25 @@ static int __init load_powerpc_certs(void)
- 	 */
- 	db = get_cert_list("db", 3, &dbsize);
- 	if (!db) {
--		pr_err("Couldn't get db list from firmware\n");
-+		pr_err("%s: Couldn't get db list from firmware\n", __func__);
- 	} else {
- 		rc = parse_efi_signature_list("powerpc:db", db, dbsize,
- 					      get_handler_for_db);
- 		if (rc)
--			pr_err("Couldn't parse db signatures: %d\n", rc);
-+			pr_err("%s: Couldn't parse db signatures: %d\n",
-+				__func__, rc);
- 		kfree(db);
- 	}
- 
- 	dbx = get_cert_list("dbx", 4,  &dbxsize);
- 	if (!dbx) {
--		pr_info("Couldn't get dbx list from firmware\n");
-+		pr_info("%s: Couldn't get dbx list from firmware\n", __func__);
- 	} else {
- 		rc = parse_efi_signature_list("powerpc:dbx", dbx, dbxsize,
- 					      get_handler_for_dbx);
- 		if (rc)
--			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-+			pr_err("%s: Couldn't parse dbx signatures: %d\n",
-+				__func__, rc);
- 		kfree(dbx);
- 	}
- 
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-index 111898aad56e..c3cf6575abc1 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -44,7 +44,7 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
- 
- 	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
- 	if (status != EFI_BUFFER_TOO_SMALL) {
--		pr_err("Couldn't get size: 0x%lx\n", status);
-+		pr_err("%s: Couldn't get size: 0x%lx\n", __func__, status);
- 		return NULL;
- 	}
- 
-@@ -55,7 +55,7 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
- 	status = efi.get_variable(name, guid, NULL, &lsize, db);
- 	if (status != EFI_SUCCESS) {
- 		kfree(db);
--		pr_err("Error reading db var: 0x%lx\n", status);
-+		pr_err("%s: Error reading db var: 0x%lx\n", __func__, status);
- 		return NULL;
- 	}
- 
-@@ -85,13 +85,14 @@ static int __init load_uefi_certs(void)
- 	if (!uefi_check_ignore_db()) {
- 		db = get_cert_list(L"db", &secure_var, &dbsize);
- 		if (!db) {
--			pr_err("MODSIGN: Couldn't get UEFI db list\n");
-+			pr_err("%s: MODSIGN: Couldn't get UEFI db list\n",
-+				__func__);
- 		} else {
- 			rc = parse_efi_signature_list("UEFI:db",
- 					db, dbsize, get_handler_for_db);
- 			if (rc)
--				pr_err("Couldn't parse db signatures: %d\n",
--				       rc);
-+				pr_err("%s: Couldn't parse db signatures: %d\n",
-+				       __func__, rc);
- 			kfree(db);
- 		}
- 	}
-@@ -103,7 +104,8 @@ static int __init load_uefi_certs(void)
- 		rc = parse_efi_signature_list("UEFI:MokListRT",
- 					      mok, moksize, get_handler_for_db);
- 		if (rc)
--			pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
-+			pr_err("%s: Couldn't parse MokListRT signatures: %d\n",
-+				__func__, rc);
- 		kfree(mok);
- 	}
- 
-@@ -115,7 +117,8 @@ static int __init load_uefi_certs(void)
- 					      dbx, dbxsize,
- 					      get_handler_for_dbx);
- 		if (rc)
--			pr_err("Couldn't parse dbx signatures: %d\n", rc);
-+			pr_err("%s: Couldn't parse dbx signatures: %d\n",
-+				__func__, rc);
- 		kfree(dbx);
- 	}
- 
--- 
-2.20.1
+
+Peak usage of memory.kmem.usage_in_bytes, memory.usage_in_bytes and
+meminfo:Slab for kernel compilation (make -s -j64) Compilation was
+done from bash that is in a memory cgroup. (Sampling every 5s)
+--------------------------------------------------------------------------
+				5.5.0-rc7-mm1	+slab patch	%reduction
+--------------------------------------------------------------------------
+memory.kmem.usage_in_bytes	338493440	231931904	31
+memory.usage_in_bytes		7368015872	6275923968	15
+Slab: (kB)			1139072		785408		31
+
+memory.kmem.usage_in_bytes	341835776	236453888	30
+memory.usage_in_bytes		6540427264	6072893440	7
+Slab: (kB)			1074304		761280		29
+
+memory.kmem.usage_in_bytes	340525056	233570304	31
+memory.usage_in_bytes		6406209536	6177357824	3
+Slab: (kB)			1244288		739712		40
+--------------------------------------------------------------------------
+
+Slab consumption right after boot
+--------------------------------------------------------------------------
+				5.5.0-rc7-mm1	+slab patch	%reduction
+--------------------------------------------------------------------------
+Slab: (kB)			821888		583424		29
+==========================================================================
+
+Summary:
+
+With sysbench and kernel compilation,  memory.kmem.usage_in_bytes shows
+around 70% and 30% reduction consistently.
+
+Didn't see consistent reduction of memory.usage_in_bytes with sysbench and
+kernel compilation.
+
+Slab usage (from /proc/meminfo) shows consistent 30% reduction and the
+same is seen right after boot too.
+
+Regards,
+Bharata.
 
