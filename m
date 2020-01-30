@@ -2,211 +2,175 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DB4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6CAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCEAF2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E57206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vG5bFN1/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lXUDQdB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgA3LQ7 (ORCPT
+        id S1727142AbgA3LSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:16:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45860 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3LQ6 (ORCPT
+        Thu, 30 Jan 2020 06:18:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:41973 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726902AbgA3LSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:16:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a6so3489665wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 03:16:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ehUykenqKwV54i+OuegUUpgup9/eDyMdZ+/yEv9GMMw=;
-        b=vG5bFN1/9xHpACXgC0EkEJb/J2QQY5za504PaQWFgrZQF6EkzWtJXNro2bziJD3dfq
-         EFQnh4Vj7b0crjOP1Um4kTfgMCUnKTBCbvG84Lk49nkmlo0HHKYo1mHH/yH+VQ+3QxZR
-         CsWaPzDG5owIDBR/xYMlM7GUNkBM82E56rtbhqq1U/K4oEvGZke76RYEINPqludVdGZG
-         3M3u+CzGtaRV+6a0xC8t7jY5CPDeOWjP6syYJPz9W9w1mrOujIU2UYAdBOCIT4H6yEi3
-         2Mp9M3kcriNpafWPD8fuT2BTl3dQ+7azxncr9SM3Fxmo8pUoUEvoo5AbXrJy8hosXlAy
-         +p4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ehUykenqKwV54i+OuegUUpgup9/eDyMdZ+/yEv9GMMw=;
-        b=SE0wFaOkdORnbHwSOoT0/Jn8ptz50WS0diETE34iWV1j9r+cZh4K6vDWlRFzkzcG3v
-         ZLl21O0lW5vx+DeNzXyx5SvspFHDUuarto8kTBtLmlGF8z482Ic09Wyp24WftL4ZT+55
-         xObsiIYHjVpQiHZC2XIk5C51AfhGHLUOKps/CdijXJk4aEtnI9bH3W3qJlToc+icdcSx
-         2pBC/irJFpgfFpttpSUj+VlTJOm9fDEpBsZdzzYCV2g/c0Rbig8TXBQh5DIIokGk2baH
-         ELNGbGqM8Uc0kQmlvMHMXDVj9TpKeHeOZKF8tUV4uZXdrqlQ8dBfLKCSdQKqww0IxDQp
-         0rUw==
-X-Gm-Message-State: APjAAAUu/Mp22bMnLSILLh2EYPnCQ3B4tZ0ZZ5NkCe3gu7cAbiTXd+pC
-        3Uhfbl7U/NWyg4JA4R7ybXM=
-X-Google-Smtp-Source: APXvYqwZ7cSB2OwLsICD0z2wkTN5YHywvBCvKQ8DeusS/mnI0it68o6aB2D5TLhSXAr/H5bTRKjWOw==
-X-Received: by 2002:adf:dfc8:: with SMTP id q8mr299842wrn.135.1580383015625;
-        Thu, 30 Jan 2020 03:16:55 -0800 (PST)
-Received: from quaco.ghostprotocols.net (20014C4D19C29300C4AE62814D0D5430.dsl.pool.telekom.hu. [2001:4c4d:19c2:9300:c4ae:6281:4d0d:5430])
-        by smtp.gmail.com with ESMTPSA id b16sm5835234wmj.39.2020.01.30.03.16.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 03:16:54 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DED8540A7D; Thu, 30 Jan 2020 12:16:53 +0100 (CET)
-Date:   Thu, 30 Jan 2020 12:16:53 +0100
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     jolsa@redhat.com, namhyung@kernel.org, irogers@google.com,
-        songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] perf annotate: Remove privsize from
- symbol__annotate() args
-Message-ID: <20200130111653.GE3841@kernel.org>
-References: <20200124080432.8065-1-ravi.bangoria@linux.ibm.com>
- <20200124080432.8065-2-ravi.bangoria@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200124080432.8065-2-ravi.bangoria@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+        Thu, 30 Jan 2020 06:18:33 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580383112; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=aa+36n0hz5H/cqeSiC1wp8nTMgGYZejOu0SrpL3H1mY=; b=lXUDQdB92nCPVUf75Z/6xH10aWUag+nqhhCzuB+QkpiVMEltgOdhWZJDMbQdDg9C8+G1wAe2
+ Cxlfh8OR1LhmwNL1k0M1W1Yn3vLi3P0dNrn/sN1ILjJ8517Kuy8LJTpUsyukj/B31WkdqZV7
+ 3sfsSd7aTsrcjSrG2Oi51+OpPxw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e32bb85.7f62f4c2f5e0-smtp-out-n02;
+ Thu, 30 Jan 2020 11:18:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7A1CCC4479F; Thu, 30 Jan 2020 11:18:29 +0000 (UTC)
+Received: from vjitta-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59F7CC43383;
+        Thu, 30 Jan 2020 11:18:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59F7CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+From:   vjitta@codeaurora.org
+To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        kernel-team@android.com, Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: [PATCH] mm: slub: reinitialize random sequence cache on slab object update
+Date:   Thu, 30 Jan 2020 16:47:44 +0530
+Message-Id: <1580383064-16536-1-git-send-email-vjitta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1580379523-32272-1-git-send-email-vjitta@codeaurora.org>
+References: <1580379523-32272-1-git-send-email-vjitta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jan 24, 2020 at 01:34:27PM +0530, Ravi Bangoria escreveu:
-> privsize is passed as 0 from all the symbol__annotate() callers.
-> Remove it from argument list.
+From: Vijayanand Jitta <vjitta@codeaurora.org>
 
-Right, trying to figure out when was it that this became unnecessary to
-see if this in fact is hiding some other problem...
+Random sequence cache is precomputed during slab object creation
+based up on the object size and no of objects per slab. These could
+be changed when flags like SLAB_STORE_USER, SLAB_POISON are updated
+from sysfs. So when shuffle_freelist is called during slab_alloc it
+uses updated object count to access the precomputed random sequence
+cache. This could result in incorrect access of the random sequence
+cache which could further result in slab corruption. Fix this by
+reinitializing the random sequence cache up on slab object update.
 
-It all starts in the following change, re-reading those patches...
+A sample panic trace when write to slab_store_user was attempted.
 
-- Arnaldo
+Call trace0:
+ exception
+ set_freepointer(inline)
+ shuffle_freelist(inline)
+ new_slab+0x688/0x690
+ ___slab_alloc+0x548/0x6f8
+ kmem_cache_alloc+0x3dc/0x418
+ zs_malloc+0x60/0x578
+ zram_bvec_rw+0x66c/0xaa0
+ zram_make_request+0x190/0x2c8
+ generic_make_request+0x1f8/0x420
+ submit_bio+0x140/0x1d8
+ submit_bh_wbc+0x1a0/0x1e0
+ __block_write_full_page+0x3a0/0x5e8
+ block_write_full_page+0xec/0x108
+ blkdev_writepage+0x2c/0x38
+ __writepage+0x34/0x98
+ write_cache_pages+0x33c/0x598
+ generic_writepages+0x54/0x98
+ blkdev_writepages+0x24/0x30
+ do_writepages+0x90/0x138
+ __filemap_fdatawrite_range+0xc0/0x128
+ file_write_and_wait_range+0x44/0xa0
+ blkdev_fsync+0x38/0x68
+ __arm64_sys_fsync+0x6c/0xb8
 
+Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+---
+ mm/slub.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-commit c835e1914c4bcfdd41f43d270cafc6d8119d7782
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed Oct 11 17:01:37 2017 +0200
-
-    perf annotate: Add annotation_line__(new|delete) functions
-    
-    Changing the way the annotation lines are allocated and adding
-    annotation_line__(new|delete) functions to deal with this.
-    
-    Before the allocation schema was as follows:
-    
-      -----------------------------------------------------------
-      struct disasm_line | struct annotation_line | private space
-      -----------------------------------------------------------
-    
-    Where the private space is used in TUI code to store computed
-    annotation data for events. The stdio code computes the data
-    on the fly.
-    
-    The goal is to compute and store annotation line's data directly
-    in the struct annotation_line itself, so this patch changes the
-    line allocation schema as follows:
-    
-      ------------------------------------------------------------
-      privsize space | struct disasm_line | struct annotation_line
-      ------------------------------------------------------------
-    
-    Moving struct annotation_line to the end, because in following
-    changes we will move here the non-fixed length event's data.
+diff --git a/mm/slub.c b/mm/slub.c
+index 0ab92ec..b88dd0f 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1533,6 +1533,24 @@ static int init_cache_random_seq(struct kmem_cache *s)
+ 	return 0;
+ }
  
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  tools/perf/builtin-top.c     | 2 +-
->  tools/perf/ui/gtk/annotate.c | 2 +-
->  tools/perf/util/annotate.c   | 7 ++++---
->  tools/perf/util/annotate.h   | 2 +-
->  4 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 8affcab75604..3e37747364e0 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -143,7 +143,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
->  		return err;
->  	}
->  
-> -	err = symbol__annotate(&he->ms, evsel, 0, &top->annotation_opts, NULL);
-> +	err = symbol__annotate(&he->ms, evsel, &top->annotation_opts, NULL);
->  	if (err == 0) {
->  		top->sym_filter_entry = he;
->  	} else {
-> diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-> index 22cc240f7371..35f9641bf670 100644
-> --- a/tools/perf/ui/gtk/annotate.c
-> +++ b/tools/perf/ui/gtk/annotate.c
-> @@ -174,7 +174,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
->  	if (ms->map->dso->annotate_warned)
->  		return -1;
->  
-> -	err = symbol__annotate(ms, evsel, 0, &annotation__default_options, NULL);
-> +	err = symbol__annotate(ms, evsel, &annotation__default_options, NULL);
->  	if (err) {
->  		char msg[BUFSIZ];
->  		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index ca73fb74ad03..ea70bc050bce 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2149,9 +2149,10 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
->  	annotation__calc_percent(notes, evsel, symbol__size(sym));
->  }
->  
-> -int symbol__annotate(struct map_symbol *ms, struct evsel *evsel, size_t privsize,
-> +int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
->  		     struct annotation_options *options, struct arch **parch)
->  {
-> +	size_t privsize = 0;
->  	struct symbol *sym = ms->sym;
->  	struct annotation *notes = symbol__annotation(sym);
->  	struct annotate_args args = {
-> @@ -2790,7 +2791,7 @@ int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel,
->  	struct symbol *sym = ms->sym;
->  	struct rb_root source_line = RB_ROOT;
->  
-> -	if (symbol__annotate(ms, evsel, 0, opts, NULL) < 0)
-> +	if (symbol__annotate(ms, evsel, opts, NULL) < 0)
->  		return -1;
->  
->  	symbol__calc_percent(sym, evsel);
-> @@ -3070,7 +3071,7 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
->  	if (perf_evsel__is_group_event(evsel))
->  		nr_pcnt = evsel->core.nr_members;
->  
-> -	err = symbol__annotate(ms, evsel, 0, options, parch);
-> +	err = symbol__annotate(ms, evsel, options, parch);
->  	if (err)
->  		goto out_free_offsets;
->  
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index 455403e8fede..dade64781670 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -352,7 +352,7 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
->  void symbol__annotate_zero_histograms(struct symbol *sym);
->  
->  int symbol__annotate(struct map_symbol *ms,
-> -		     struct evsel *evsel, size_t privsize,
-> +		     struct evsel *evsel,
->  		     struct annotation_options *options,
->  		     struct arch **parch);
->  int symbol__annotate2(struct map_symbol *ms,
-> -- 
-> 2.24.1
-> 
-
++/* re-initialize the random sequence cache */
++static int reinit_cache_random_seq(struct kmem_cache *s)
++{
++	int err;
++
++	if (s->random_seq) {
++		cache_random_seq_destroy(s);
++		err = init_cache_random_seq(s);
++
++		if (err) {
++			pr_err("SLUB: Unable to re-initialize random sequence cache for %s\n",
++				s->name);
++			return err;
++		}
++	}
++
++	return 0;
++}
+ /* Initialize each random sequence freelist per cache */
+ static void __init init_freelist_randomization(void)
+ {
+@@ -1607,6 +1625,10 @@ static inline int init_cache_random_seq(struct kmem_cache *s)
+ {
+ 	return 0;
+ }
++static int reinit_cache_random_seq(struct kmem_cache *s)
++{
++	return 0;
++}
+ static inline void init_freelist_randomization(void) { }
+ static inline bool shuffle_freelist(struct kmem_cache *s, struct page *page)
+ {
+@@ -5192,6 +5214,7 @@ static ssize_t red_zone_store(struct kmem_cache *s,
+ 		s->flags |= SLAB_RED_ZONE;
+ 	}
+ 	calculate_sizes(s, -1);
++	reinit_cache_random_seq(s);
+ 	return length;
+ }
+ SLAB_ATTR(red_zone);
+@@ -5212,6 +5235,7 @@ static ssize_t poison_store(struct kmem_cache *s,
+ 		s->flags |= SLAB_POISON;
+ 	}
+ 	calculate_sizes(s, -1);
++	reinit_cache_random_seq(s);
+ 	return length;
+ }
+ SLAB_ATTR(poison);
+@@ -5233,6 +5257,7 @@ static ssize_t store_user_store(struct kmem_cache *s,
+ 		s->flags |= SLAB_STORE_USER;
+ 	}
+ 	calculate_sizes(s, -1);
++	reinit_cache_random_seq(s);
+ 	return length;
+ }
+ SLAB_ATTR(store_user);
 -- 
-
-- Arnaldo
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
