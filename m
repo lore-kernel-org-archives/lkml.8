@@ -2,104 +2,170 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA177C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2907C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7957A20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdqtidcT"
+	by mail.kernel.org (Postfix) with ESMTP id B037C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 20:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgA3Unh (ORCPT
+        id S1727640AbgA3UpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 15:43:37 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38046 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgA3Ung (ORCPT
+        Thu, 30 Jan 2020 15:45:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35064 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgA3UpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 15:43:36 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so2092063pfc.5;
-        Thu, 30 Jan 2020 12:43:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0dxYpvbP3+MitgaCJiQJwbd1PLgONyG5Ng5sN3hHzdc=;
-        b=AdqtidcT3UyXX4tOAnsEgclFfQ+sfOYmLxjGeZOjbsO1dNlm6Hz+JFf3TvhvlJO9Wb
-         5BJ2UbFzD2Se8VVQoiKvNLl0DnbchDFaZdaJqxkSyQxgvFmmjH9a3K++2MGLrghdgSRL
-         Vh6blAXKV1tyNP/0cZ1GHUeWdo4iAjFITjZieOeI/feu6Uws5jf60Iaex3J4hmyys4V8
-         oXZEaG83wKW9I9CeNi1f1M5obf9FmqBLfuvYu9FsTKePYFap4zG8nLNrwGg/OkySyAdQ
-         WSUjOe8GXmKd6TR2AZOEvfBnzl/THm8g8oIRZhLAjGg1Ydqa7PoaL66Eq2VA/ZgCt4L7
-         aV8w==
+        Thu, 30 Jan 2020 15:45:24 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b17so5993987wmb.0;
+        Thu, 30 Jan 2020 12:45:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0dxYpvbP3+MitgaCJiQJwbd1PLgONyG5Ng5sN3hHzdc=;
-        b=XdxFJ5RX7NsbG5ey3QHLsNhxorO62/EhYyfWqKxcN0F8oBX9AWqY914ge9YBsA9vBA
-         7Qrc1eotq6b10R4pxCm4kWDh6Avx7JqUn6SA4K1G1Ek0WfU1r8+Y2vgsL5kQYnqEbk+w
-         LJebzO8U8LslpVa/VqWvCCJAuJXfD7HtdpRbQIc42e/DSZ1eURODbe8P1W+wt9IEdrwU
-         Kk6KNOYGRuPR5YJBtL4eXQ+5a+5Q8oNfUYI10iOGr2Cz8E7FzW6/hECH03hUBAiFTH/i
-         uDM0/hYna/Apf6pDO6auMt68xnpR0g//TXgYPVS+NICAnZ7kJ6ed7chFhOFsK0QZ1qAA
-         IaYQ==
-X-Gm-Message-State: APjAAAWUGqArfMf5XS86SMQQmxJ+hq96Jzj/vd1PlAGRfMDExfhNdmcz
-        IZRD3oDSoqPXybCKZ6sG1cDVL68O+f55nFiIqvA=
-X-Google-Smtp-Source: APXvYqxtungvuJiW+tQaf+Q4OiC4fCw/m5Y6NFIJtHQbGTC2Ce2BKAtg6nHhDwrtGEnA52l43PrAt1t3SwmrQzwCwg4=
-X-Received: by 2002:a65:5242:: with SMTP id q2mr6412421pgp.74.1580417015788;
- Thu, 30 Jan 2020 12:43:35 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aMCqGO6pzPjnIyQyehlTcprRJgNKArYeT/n5QqHWbwU=;
+        b=UA36xoDgTEicI4r5nCLrlVqzHgrzXysWdmtx31gNpABAIOsJuk0v+3QP2ouvk+YhlJ
+         2vH5O2sWoMbksgVYszFsqclSd+57iH4e84b1rZYInAjYbBEZ3bD/cSuI89kgfOv55bLX
+         NBFBagHCc/H8p04ZiSW/y1UWtJn7ulqcvbIcf2Z2F+yMHXZo64R6f6EN9oES1nb5ZFop
+         yp1H1NOEdOPvJ/trTWVu4J1nILdWtuvRKVrgETMv/YU66GQfKP2zOk7rC6ioQj0ExDet
+         Cc0c3bhHvQftpynu1ab95jQKnIlGs6eTBa2XJ+VhfopEAyaBa6d2x8+DDpVLik0/Iump
+         x6kA==
+X-Gm-Message-State: APjAAAWhzuxAkSZkufRYW1sOw1krY4VPOuPcTYK9q9xbSQfqYeEu9ais
+        dsOyWFrk1iC9IM8oGayxc1mBstDjdGs=
+X-Google-Smtp-Source: APXvYqzrgdzJcsprJtbQOSYTQznza0XkNwRyr+mAW4GFha2hvfsajM2WB3HFwV4uoD1PbB+UUbeBsA==
+X-Received: by 2002:a1c:7d93:: with SMTP id y141mr7380983wmc.111.1580417121978;
+        Thu, 30 Jan 2020 12:45:21 -0800 (PST)
+Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id x7sm8874885wrq.41.2020.01.30.12.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 12:45:21 -0800 (PST)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Date:   Thu, 30 Jan 2020 20:45:15 +0000
+Message-Id: <20200130204516.4760-2-git@andred.net>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200130204516.4760-1-git@andred.net>
+References: <20200130204516.4760-1-git@andred.net>
 MIME-Version: 1.0
-References: <20200127231208.1443-1-s-anna@ti.com> <CAHp75VfaOfBZYjQa960keORW=VjOn2PdwoYpJMG7SsN83daSJg@mail.gmail.com>
- <99a04c52-1ff6-1611-5cf6-2c71b810ba43@ti.com>
-In-Reply-To: <99a04c52-1ff6-1611-5cf6-2c71b810ba43@ti.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 30 Jan 2020 22:43:25 +0200
-Message-ID: <CAHp75VfhLDpuJD+ftdEWt3bwooRD5U=KfOnKZeKm9d4N21HOtw@mail.gmail.com>
-Subject: Re: [PATCH v2] mfd: syscon: Use a unique name with regmap_config
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 7:09 PM Suman Anna <s-anna@ti.com> wrote:
-> On 1/30/20 9:34 AM, Andy Shevchenko wrote:
-> > On Tue, Jan 28, 2020 at 1:14 AM Suman Anna <s-anna@ti.com> wrote:
+At the moment, enabling this driver without the SNVS RTC driver
+being active will hang the kernel as soon as the power button
+is pressed.
 
-...
+The reason is that in that case the SNVS isn't enabled, and
+any attempt to read the SNVS registers will simply hang forever.
 
-> >> -       syscon_config.name = of_node_full_name(np);
-> >> +       syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
-> >> +                                      (u64)res.start);
-> >
-> > Explicit castings in printf() usually tell us that something is not okay.
->
-> Yes, I agree in general.
->
-> > Yes, for resource_size_t we have %pa.
->
-> And that was the first thing I tried when doing v2, before moving away
-> from it. This is not for a console printf statement, but is rather for
-> the regmap debugfs name. Using a %pa adds the 0x and leading zeros in
-> the debugfs name, when compared to the name before this patch. The
-> typecast retains the current format, and replaces the unit-address
-> without the leading 0s either. Introducing a local-variable to avoid the
-> typecast is overkill.
+Ensure the clock is enabled (during the interrupt handler) to
+make this driver work.
 
-Thanks for the clarification.
+Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
+and commit edb190cb1734
+("rtc: snvs: make sure clock is enabled for interrupt handle")
+for similar updates to the snvs rtc driver.
 
+Signed-off-by: André Draszik <git@andred.net>
+Cc: Anson Huang <Anson.Huang@nxp.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Horia Geantă" <horia.geanta@nxp.com>
+Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org
+---
+ drivers/input/keyboard/snvs_pwrkey.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 2f5e3ab5ed63..c29711d8735c 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -16,6 +16,7 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeirq.h>
++#include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+ 
+@@ -38,6 +39,7 @@ struct pwrkey_drv_data {
+ 	int wakeup;
+ 	struct timer_list check_timer;
+ 	struct input_dev *input;
++	struct clk *clk;
+ 	u8 minor_rev;
+ };
+ 
+@@ -72,6 +74,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 	struct input_dev *input = pdata->input;
+ 	u32 lp_status;
+ 
++	if (pdata->clk)
++		clk_enable(pdata->clk);
++
+ 	pm_wakeup_event(input->dev.parent, 0);
+ 
+ 	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+@@ -96,6 +101,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 	/* clear SPO status */
+ 	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+ 
++	if (pdata->clk)
++		clk_disable(pdata->clk);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 	if (pdata->irq < 0)
+ 		return -EINVAL;
+ 
++	pdata->clk = devm_clk_get(&pdev->dev, "snvs-pwrkey");
++	if (IS_ERR(pdata->clk)) {
++		pdata->clk = NULL;
++	} else {
++		error = clk_prepare_enable(pdata->clk);
++		if (error) {
++			dev_err(&pdev->dev,
++				"Could not prepare or enable the snvs clock\n");
++			return error;
++		}
++		error = devm_add_action_or_reset(&pdev->dev,
++				(void(*)(void *))clk_disable_unprepare,
++				pdata->clk);
++		if (error) {
++			dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");
++			return error;
++		}
++	}
++
+ 	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
+ 	pdata->minor_rev = vid & 0xff;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0.rc1
+
