@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0953BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E12C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2396214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706D620702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410408;
-	bh=Hs5PgR11akM00vuuaeTXEUHOa44riobDyTbwi8I4R5U=;
+	s=default; t=1580410413;
+	bh=xHo0HUXMaKuIR8GNazyiMondTjXHwMlEX5W8bC5zkK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6bgLwmHpVaLgluLfWlppakY047ebrjVQMvJtfjXyyXkMreEBTU5/3sbn5/MVEiwG
-	 WvmVj9Lef62lh/angWPFNi24XOE7EROzHdof7Sl23C3s2UcO+6ByUglvme0ZegkHAW
-	 bwexVmI2lFPrhLBgC0TKbu33qhKlsQ9Sv2t//DPA=
+	b=NQavPwDuL1MMIBDVaQKYeSPEvFzgC/LgHD4ljUWBULfypA1D6QC+iPq17m8cyZFs2
+	 T6vGPrUYypFy9u4XOMfxEaBfde7Yl2+AcIkquBnR6VjjoPttENcLcBs4e+Iy/jnpOx
+	 l9VozbZ+KDUmA5kG56U9e/4qFW5JNHYMzYzhax14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731759AbgA3Sx1 (ORCPT
+        id S1731764AbgA3Sxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:53:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49836 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:53:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729435AbgA3Sls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:48 -0500
+        id S1730217AbgA3Sll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:41:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D95205F4;
-        Thu, 30 Jan 2020 18:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F6A02082E;
+        Thu, 30 Jan 2020 18:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409708;
-        bh=Hs5PgR11akM00vuuaeTXEUHOa44riobDyTbwi8I4R5U=;
+        s=default; t=1580409700;
+        bh=xHo0HUXMaKuIR8GNazyiMondTjXHwMlEX5W8bC5zkK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifeRGb19uaIM0y9IFlyKMQz331MCBotl9wCMO41cPNQheoYERaehj17j/Pbf+btcQ
-         Eu+dMJQYdZ+VRPO3aOnMvTLR3B4UYdSFvGdEr2AyhP34UFaz+ot08CocTRaY83+B4Q
-         f1dsedUoqGqRhvrMNDNZVVg+QVnugrnSBU5lGJ34=
+        b=KcdcZYspE3UTHOdkkyC5BPAiQikVLUyN5yyMY/vLGyRrJyUQV/gHRaNqyvTxAxuDi
+         RpMvDeXT8ylhELuWH6OhT0IYjhq8uyAZlRZlP7bAA9PyIdxLcQrWjO8GPaih4gWN6A
+         E5p/u4VIjDf/vFwphGzeiBMphcLVulESGjrDICXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 37/56] net_sched: ematch: reject invalid TCF_EM_SIMPLE
-Date:   Thu, 30 Jan 2020 19:38:54 +0100
-Message-Id: <20200130183615.700152415@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 5.5 55/56] Revert "um: Enable CONFIG_CONSTRUCTORS"
+Date:   Thu, 30 Jan 2020 19:39:12 +0100
+Message-Id: <20200130183618.800456221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -61,79 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 55cd9f67f1e45de8517cdaab985fb8e56c0bc1d8 ]
+commit 87c9366e17259040a9118e06b6dc8de986e5d3d1 upstream.
 
-It is possible for malicious userspace to set TCF_EM_SIMPLE bit
-even for matches that should not have this bit set.
+This reverts commit 786b2384bf1c ("um: Enable CONFIG_CONSTRUCTORS").
 
-This can fool two places using tcf_em_is_simple()
+There are two issues with this commit, uncovered by Anton in tests
+on some (Debian) systems:
 
-1) tcf_em_tree_destroy() -> memory leak of em->data
-   if ops->destroy() is NULL
+1) I completely forgot to call any constructors if CONFIG_CONSTRUCTORS
+   isn't set. Don't recall now if it just wasn't needed on my system, or
+   if I never tested this case.
 
-2) tcf_em_tree_dump() wrongly report/leak 4 low-order bytes
-   of a kernel pointer.
+2) With that fixed, it works - with CONFIG_CONSTRUCTORS *unset*. If I
+   set CONFIG_CONSTRUCTORS, it fails again, which isn't totally
+   unexpected since whatever wanted to run is likely to have to run
+   before the kernel init etc. that calls the constructors in this case.
 
-BUG: memory leak
-unreferenced object 0xffff888121850a40 (size 32):
-  comm "syz-executor927", pid 7193, jiffies 4294941655 (age 19.840s)
-  hex dump (first 32 bytes):
-    00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
-    [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
-    [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-    [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
-    [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
-    [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
-    [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
-    [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
-    [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
-    [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
-    [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
-    [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
-    [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
-    [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-    [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
-    [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
-    [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-    [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-    [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-    [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
-    [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
-    [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+Basically, some constructors that gcc emits (libc has?) need to run
+very early during init; the failure mode otherwise was that the ptrace
+fork test already failed:
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+----------------------
+$ ./linux mem=512M
+Core dump limits :
+	soft - 0
+	hard - NONE
+Checking that ptrace can change system call numbers...check_ptrace : child exited with exitcode 6, while expecting 0; status 0x67f
+Aborted
+----------------------
+
+Thinking more about this, it's clear that we simply cannot support
+CONFIG_CONSTRUCTORS in UML. All the cases we need now (gcov, kasan)
+involve not use of the __attribute__((constructor)), but instead
+some constructor code/entry generated by gcc. Therefore, we cannot
+distinguish between kernel constructors and system constructors.
+
+Thus, revert this commit.
+
+Cc: stable@vger.kernel.org [5.4+]
+Fixes: 786b2384bf1c ("um: Enable CONFIG_CONSTRUCTORS")
+Reported-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/ematch.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/net/sched/ematch.c
-+++ b/net/sched/ematch.c
-@@ -238,6 +238,9 @@ static int tcf_em_validate(struct tcf_pr
- 			goto errout;
+Signed-off-by: Richard Weinberger <richard@nod.at>
+
+---
+ arch/um/include/asm/common.lds.S |    2 +-
+ arch/um/kernel/dyn.lds.S         |    1 +
+ init/Kconfig                     |    1 +
+ kernel/gcov/Kconfig              |    2 +-
+ 4 files changed, 4 insertions(+), 2 deletions(-)
+
+--- a/arch/um/include/asm/common.lds.S
++++ b/arch/um/include/asm/common.lds.S
+@@ -82,8 +82,8 @@
+ 	__preinit_array_end = .;
+   }
+   .init_array : {
+-        /* dummy - we call this ourselves */
+ 	__init_array_start = .;
++	*(.init_array)
+ 	__init_array_end = .;
+   }
+   .fini_array : {
+--- a/arch/um/kernel/dyn.lds.S
++++ b/arch/um/kernel/dyn.lds.S
+@@ -103,6 +103,7 @@ SECTIONS
+      be empty, which isn't pretty.  */
+   . = ALIGN(32 / 8);
+   .preinit_array     : { *(.preinit_array) }
++  .init_array     : { *(.init_array) }
+   .fini_array     : { *(.fini_array) }
+   .data           : {
+     INIT_TASK_DATA(KERNEL_STACK_SIZE)
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -54,6 +54,7 @@ config CC_DISABLE_WARN_MAYBE_UNINITIALIZ
  
- 		if (em->ops->change) {
-+			err = -EINVAL;
-+			if (em_hdr->flags & TCF_EM_SIMPLE)
-+				goto errout;
- 			err = em->ops->change(net, data, data_len, em);
- 			if (err < 0)
- 				goto errout;
+ config CONSTRUCTORS
+ 	bool
++	depends on !UML
+ 
+ config IRQ_WORK
+ 	bool
+--- a/kernel/gcov/Kconfig
++++ b/kernel/gcov/Kconfig
+@@ -4,7 +4,7 @@ menu "GCOV-based kernel profiling"
+ config GCOV_KERNEL
+ 	bool "Enable gcov-based kernel profiling"
+ 	depends on DEBUG_FS
+-	select CONSTRUCTORS
++	select CONSTRUCTORS if !UML
+ 	default n
+ 	---help---
+ 	This option enables gcov-based code profiling (e.g. for code coverage
 
 
