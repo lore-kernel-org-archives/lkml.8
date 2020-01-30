@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B39C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD5DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124DE2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B12214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410113;
-	bh=99BtX/pBn3r/H1nNWbh9nCTgSnUF/ehvAdurJE7FIyo=;
+	s=default; t=1580410118;
+	bh=9iG22UzrO86NfxLszAS2E7TuX2F/lsc6RrgcOzJYdCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GciBlQMR2phHvWbxT77lfkwwVZ94ZJkD8O1EWZ7ZXqngxrw3tuaE+h3y2ynL1tfzG
-	 SVsFsMa6tl9WK2RByhJ0RtginCsqz9ztV1Va4EqiXTZ1NWpXTd6pHgTZH7GRBfx81C
-	 5QHAIfrWkxEKGeUXrAcS2ET4sfj/m8wJQ7g1RmXU=
+	b=wgQlCt3iggcWUmdhz63S8n+nWAn/bqI1FNzzuwC0zBLF19aDVclPXxjivdRBBxCU4
+	 CK1FckqUAQog3z0Q7TWVP688197fkBP6tiRm1OySkAweiAzL73ql+oovNBXjJEK6or
+	 EpahLxBMb4PUQfdRHSIpMYKs6sbaxV8B2Bk7aXAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgA3Ssc (ORCPT
+        id S1731589AbgA3Ssh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:48:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731553AbgA3Ss1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:48:27 -0500
+        id S1731324AbgA3Ssc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:48:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72DFF2082E;
-        Thu, 30 Jan 2020 18:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7D62082E;
+        Thu, 30 Jan 2020 18:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580410106;
-        bh=99BtX/pBn3r/H1nNWbh9nCTgSnUF/ehvAdurJE7FIyo=;
+        s=default; t=1580410111;
+        bh=9iG22UzrO86NfxLszAS2E7TuX2F/lsc6RrgcOzJYdCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkj7JTn52yWQbBt90+yPnsUO+LZPbwnXwxJ+tAo7gIRC8p/Utsg3eCip+8ZSAnjYZ
-         GSKM4FV5bpy2nRiMA3ZsfBPQHCEml84M+DPx9r/GEvKEFAriLyMlt80G0EduLCf+Qq
-         lRHzyc0WEeaLXi0A7QmfHPTavKn52XopD2rf1/XA=
+        b=H2L9APmnoc0P8mDeUoxYbJ5REi70rbcMvbYzW9/5tUbs6s23YSeoZdChF094ObTYA
+         Kz4lsif24H2w52VKTkhg7pbOXDyKPqoohumpvjFqJCq3/X2LQLDoqmVTsW4pD/Hzb7
+         bZlKbFX5U4ufOOq0MRyvgSf4P5y1m6J5KiWT013Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 12/55] staging: vt6656: Fix false Tx excessive retries reporting.
-Date:   Thu, 30 Jan 2020 19:38:53 +0100
-Message-Id: <20200130183611.067371290@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 49/55] rsi: fix memory leak on failed URB submission
+Date:   Thu, 30 Jan 2020 19:39:30 +0100
+Message-Id: <20200130183617.390724625@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 References: <20200130183608.563083888@linuxfoundation.org>
@@ -58,39 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9dd631fa99dc0a0dfbd191173bf355ba30ea786a upstream.
+commit 47768297481184932844ab01a86752ba31a38861 upstream.
 
-The driver reporting  IEEE80211_TX_STAT_ACK is not being handled
-correctly. The driver should only report on TSR_TMO flag is not
-set indicating no transmission errors and when not IEEE80211_TX_CTL_NO_ACK
-is being requested.
+Make sure to free the skb on failed receive-URB submission (e.g. on
+disconnect or currently also due to a missing endpoint).
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/340f1f7f-c310-dca5-476f-abc059b9cd97@gmail.com
+Fixes: a1854fae1414 ("rsi: improve RX packet handling in USB interface")
+Cc: stable <stable@vger.kernel.org>     # 4.17
+Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/int.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_usb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/int.c
-+++ b/drivers/staging/vt6656/int.c
-@@ -97,9 +97,11 @@ static int vnt_int_report_rate(struct vn
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -327,8 +327,10 @@ static int rsi_rx_urb_submit(struct rsi_
+ 			  rx_cb);
  
- 	info->status.rates[0].count = tx_retry;
+ 	status = usb_submit_urb(urb, GFP_KERNEL);
+-	if (status)
++	if (status) {
+ 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission\n", __func__);
++		dev_kfree_skb(skb);
++	}
  
--	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
-+	if (!(tsr & TSR_TMO)) {
- 		info->status.rates[0].idx = idx;
--		info->flags |= IEEE80211_TX_STAT_ACK;
-+
-+		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
-+			info->flags |= IEEE80211_TX_STAT_ACK;
- 	}
- 
- 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);
+ 	return status;
+ }
 
 
