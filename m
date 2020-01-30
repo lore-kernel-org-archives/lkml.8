@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF4BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B45C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E9620702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B38205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410267;
-	bh=43kTr0NPBcUNY5/WCSeWOm0xRl5ynf2UYA22QRGlEVg=;
+	s=default; t=1580410272;
+	bh=yr0wdufzFhlPQ0gsJL1aqhP0QumkI5k5iXv5R4fQngg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOYxz+i8lxJc/xaCo+JoYxhhGp9qTZkSdsCinmNGR6VYkj9K8VJimJQWITcIfMyCr
-	 tarIu06ejxdfTfd9Qt0RvG3DB0t6V2f7MmTrgDavhiyBgNxH6T6NabzxkEc2ud7VYe
-	 f1bjS6vloi22WdAOc0LA0YGJmZiVtsT6UItqtTRo=
+	b=MhiOMgk5PS5FHwgIZT+s5mJeR/Wndxy2uy8LvI9PbVeYsZ16Ic052+ThkS5HeoTgX
+	 w4TEATGc68vdMU2vVmV91b5+muOhMKiwNYBm4928kCMx18yT8zlLalHRKEPNOZ45cY
+	 PsOMry6TDLZdMmgOTmjvYHjfuJInr7tfID4V5ro8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbgA3SqH (ORCPT
+        id S1731729AbgA3SvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:46:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:51:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbgA3Spy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:54 -0500
+        id S1730670AbgA3SqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:46:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B83F2083E;
-        Thu, 30 Jan 2020 18:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6629B2083E;
+        Thu, 30 Jan 2020 18:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409953;
-        bh=43kTr0NPBcUNY5/WCSeWOm0xRl5ynf2UYA22QRGlEVg=;
+        s=default; t=1580409960;
+        bh=yr0wdufzFhlPQ0gsJL1aqhP0QumkI5k5iXv5R4fQngg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YcOj1Zs8eP8T8s8aWz/7vDlVPwCDB0zom3QUo0JqKi9Q5DEvdr78oVxwJzqoXU42U
-         egALbaYJj5pjEpGJ4QvTcMDFYZtdOI2Ak8qpOA6NvT3/OUCJuZnV0HcJkgVsKnfHAH
-         Dx7Bfn66UU6cG2qtR3+zVQ8X+qrlE6Ion86UiWpE=
+        b=F2s6p/OfHpsjVXwadoLQGboQkA7SzCJfU+WMN0WLUgvHEWSGYx2+GqeMf/eeVdK6X
+         KBytbJv2MZQH+q9T88fXD0MOgYJu6VnKfwz2ICVJgewj5QsTUYtMchbPQ5CmTpxBaO
+         b0uX/P8dZi4Q9innHXtipM6qTv/HGvSW8tGt6+YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/110] phy: cpcap-usb: Prevent USB line glitches from waking up modem
-Date:   Thu, 30 Jan 2020 19:38:34 +0100
-Message-Id: <20200130183621.938204099@linuxfoundation.org>
+Subject: [PATCH 5.4 094/110] bus: ti-sysc: Add module enable quirk for audio AESS
+Date:   Thu, 30 Jan 2020 19:39:10 +0100
+Message-Id: <20200130183625.136301986@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -65,90 +62,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 63078b6ba09e842f09df052c5728857389fddcd2 ]
+[ Upstream commit 020003f763e24e4ed0bb3d8909f3940891536d5d ]
 
-The micro-USB connector on Motorola Mapphone devices can be muxed between
-the SoC and the mdm6600 modem. But even when used for the SoC, configuring
-the PHY with ID pin grounded will wake up the modem from idle state. Looks
-like the issue is probably caused by line glitches.
+We must set the autogating bit on enable for AESS (Audio Engine SubSystem)
+when probed with ti-sysc interconnect target module driver. Otherwise it
+won't idle properly.
 
-We can prevent the glitches by using a previously unknown mode of the
-GPIO mux to prevent the USB lines from being connected to the moden while
-configuring the USB PHY, and enable the USB lines after configuring the
-PHY.
-
-Note that this only prevents waking up mdm6600 as regular USB A-host mode,
-and does not help when connected to a lapdock. The lapdock specific issue
-still needs to be debugged separately.
-
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/motorola/phy-cpcap-usb.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/bus/ti-sysc.c                 | 14 +++++++++++++-
+ include/linux/platform_data/ti-sysc.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
-index 9a38741d3546d..5baf64dfb24de 100644
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -115,7 +115,7 @@ struct cpcap_usb_ints_state {
- enum cpcap_gpio_mode {
- 	CPCAP_DM_DP,
- 	CPCAP_MDM_RX_TX,
--	CPCAP_UNKNOWN,
-+	CPCAP_UNKNOWN_DISABLED,	/* Seems to disable USB lines */
- 	CPCAP_OTG_DM_DP,
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 0e5cfd752410d..ea16a2d4fb532 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1248,6 +1248,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 		   SYSC_QUIRK_SWSUP_SIDLE),
+ 
+ 	/* Quirks that need to be set based on detected module */
++	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
++		   SYSC_MODULE_QUIRK_AESS),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
+ 		   SYSC_MODULE_QUIRK_HDQ1W),
+ 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
+@@ -1276,7 +1278,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ #ifdef DEBUG
+ 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
+ 	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
+-	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff, 0),
+ 	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
+ 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
+ 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
+@@ -1408,6 +1409,14 @@ static void sysc_clk_enable_quirk_hdq1w(struct sysc *ddata)
+ 	sysc_write(ddata, offset, val);
+ }
+ 
++/* AESS (Audio Engine SubSystem) needs autogating set after enable */
++static void sysc_module_enable_quirk_aess(struct sysc *ddata)
++{
++	int offset = 0x7c;	/* AESS_AUTO_GATING_ENABLE */
++
++	sysc_write(ddata, offset, 1);
++}
++
+ /* I2C needs extra enable bit toggling for reset */
+ static void sysc_clk_quirk_i2c(struct sysc *ddata, bool enable)
+ {
+@@ -1490,6 +1499,9 @@ static void sysc_init_module_quirks(struct sysc *ddata)
+ 		return;
+ 	}
+ 
++	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
++		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
++
+ 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
+ 		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
+ 
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+index b5b7a3423ca81..0b93804751444 100644
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -49,6 +49,7 @@ struct sysc_regbits {
+ 	s8 emufree_shift;
  };
  
-@@ -381,7 +381,8 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
- 
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		goto out_err;
- 
-@@ -408,6 +409,11 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable UART mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
-+	if (error)
-+		goto out_err;
-+
- 	return 0;
- 
- out_err:
-@@ -420,7 +426,8 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- {
- 	int error;
- 
--	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	/* Disable lines to prevent glitches from waking up mdm6600 */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
- 	if (error)
- 		return error;
- 
-@@ -460,6 +467,11 @@ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata)
- 	if (error)
- 		goto out_err;
- 
-+	/* Enable USB mode */
-+	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_OTG_DM_DP);
-+	if (error)
-+		goto out_err;
-+
- 	return 0;
- 
- out_err:
++#define SYSC_MODULE_QUIRK_AESS		BIT(19)
+ #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+ #define SYSC_MODULE_QUIRK_HDQ1W		BIT(17)
+ #define SYSC_MODULE_QUIRK_I2C		BIT(16)
 -- 
 2.20.1
 
