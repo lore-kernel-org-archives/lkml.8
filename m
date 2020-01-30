@@ -2,65 +2,115 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2EDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9380AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E0B20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E282206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgA3Oiz (ORCPT
+        id S1727395AbgA3Ol0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:38:55 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:60446 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3Oiz (ORCPT
+        Thu, 30 Jan 2020 09:41:26 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:55048 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3Ol0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:38:55 -0500
-Received: from [109.134.33.162] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ixAy5-0001c1-DG; Thu, 30 Jan 2020 14:38:53 +0000
-Date:   Thu, 30 Jan 2020 15:38:53 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 03/17] follow_automount(): get rid of dead^Wstillborn code
-Message-ID: <20200130143853.ferv2mtgwka5q4lx@wittgenstein>
-References: <20200119031423.GV8904@ZenIV.linux.org.uk>
- <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
- <20200119031738.2681033-3-viro@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200119031738.2681033-3-viro@ZenIV.linux.org.uk>
+        Thu, 30 Jan 2020 09:41:26 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1344B1495BD07;
+        Thu, 30 Jan 2020 06:41:24 -0800 (PST)
+Date:   Thu, 30 Jan 2020 15:41:23 +0100 (CET)
+Message-Id: <20200130.154123.1710430183269161404.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 06:41:25 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 03:17:15AM +0000, Al Viro wrote:
-> From: Al Viro <viro@zeniv.linux.org.uk>
-> 
-> 1) no instances of ->d_automount() have ever made use of the "return
-> ERR_PTR(-EISDIR) if you don't feel like mounting anything" - that's
-> a rudiment of plans that got superseded before the thing went into
-> the tree.  Despite the comment in follow_automount(), autofs has
-> never done that.
-> 
-> 2) if there's no ->d_automount() in dentry_operations, filesystems
-> should not set DCACHE_NEED_AUTOMOUNT in the first place.  None have
-> ever done so...
-> 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-I can't speak to 1) but code seems correct:
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+1) Various mptcp fixupes from Florian Westphal and Geery Uytterhoeven.
+
+2) Don't clear the node/port GUIDs after we've assigned the correct
+   values to them.  From Leon Romanovsky.
+
+Please pull, thanks a lot!
+
+The following changes since commit b3a6082223369203d7e7db7e81253ac761377644:
+
+  Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security (2020-01-28 18:55:17 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
+
+for you to fetch changes up to 9fbf082f569980ddd7cab348e0a118678db0e47e:
+
+  net/core: Do not clear VF index for node/port GUIDs query (2020-01-30 15:20:26 +0100)
+
+----------------------------------------------------------------
+David S. Miller (2):
+      mptcp: Fix build with PROC_FS disabled.
+      Merge branch 'mptcp-fix-sockopt-crash-and-lockdep-splats'
+
+Florian Westphal (4):
+      mptcp: defer freeing of cached ext until last moment
+      mptcp: fix panic on user pointer access
+      mptcp: avoid a lockdep splat when mcast group was joined
+      mptcp: handle tcp fallback when using syn cookies
+
+Geert Uytterhoeven (3):
+      mptcp: Fix incorrect IPV6 dependency check
+      mptcp: MPTCP_HMAC_TEST should depend on MPTCP
+      mptcp: Fix undefined mptcp_handle_ipv6_mapped for modular IPV6
+
+Joe Perches (2):
+      sch_choke: Use kvcalloc
+      net: drop_monitor: Use kstrdup
+
+Leon Romanovsky (1):
+      net/core: Do not clear VF index for node/port GUIDs query
+
+Lorenzo Bianconi (1):
+      net: mvneta: fix XDP support if sw bm is used as fallback
+
+Mat Martineau (1):
+      Revert "MAINTAINERS: mptcp@ mailing list is moderated"
+
+Randy Dunlap (1):
+      MAINTAINERS: mptcp@ mailing list is moderated
+
+Willem de Bruijn (1):
+      udp: document udp_rcv_segment special case for looped packets
+
+ drivers/net/ethernet/marvell/mvneta.c | 10 +++++++---
+ include/linux/tcp.h                   |  2 --
+ include/net/mptcp.h                   |  9 +++------
+ include/net/udp.h                     |  7 +++++++
+ net/core/drop_monitor.c               |  8 ++------
+ net/core/rtnetlink.c                  |  4 ++--
+ net/ipv4/syncookies.c                 |  4 ++++
+ net/ipv4/tcp_input.c                  |  3 +++
+ net/ipv6/syncookies.c                 |  3 +++
+ net/ipv6/tcp_ipv6.c                   |  6 +++---
+ net/mptcp/Kconfig                     |  6 ++++--
+ net/mptcp/protocol.c                  | 56 +++++++++++++++++++++++++++++++++-----------------------
+ net/mptcp/subflow.c                   | 13 +++++++++----
+ net/sched/sch_choke.c                 |  2 +-
+ 14 files changed, 81 insertions(+), 52 deletions(-)
