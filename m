@@ -2,157 +2,187 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4217C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC6FC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30DD20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580419790;
-	bh=TDxDDVlOqoczMz4L2v8NNvn2thK4NM3+vAX1UWj903o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XFvyfhH1BWXL2uO7TFoP4bwM51K1zwyVVmP4z8nw6d0krfPnMQQCf36LvjTcU9XS2
-	 q6t5z2bRiFSlAeOssB2aB80kZcGM6V8ZzYnUey6QBnMLkf3ISU1VYk92cELqQjEu3q
-	 K7QYZipCOmi5EVgpUJ2H/RLR4e6lSuC4ZZ3chAzA=
+	by mail.kernel.org (Postfix) with ESMTP id 8A3CF20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 21:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgA3V3t (ORCPT
+        id S1727520AbgA3VdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 16:29:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37416 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgA3V3t (ORCPT
+        Thu, 30 Jan 2020 16:33:08 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:36186 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgA3VdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 16:29:49 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q84so5162627oic.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 13:29:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=soBhgt6ejO4/2ekR+e8tGWX3kM/LmDzHreUHc+EeF3w=;
-        b=UmA6OAApu+akBNpGLj811nB/xI4YpTmmiAlK8p4fpq0gu2jkanyjSbcOfxkW6Efe7X
-         ceef7+Yof8hoCgGDSDPps+pTfnFiM5dxaVigpic6Ta2HuMlY5xj6m3gcCEQ4nfTkm8l6
-         b2gX9hY+S44619efqx+zCzXXOZ7irt0LA8gh+iGt/BzKWopiG/KFIgwvR0Sl8IBS+sXg
-         Z0MzlepV2gPbg/IBATIsG4h8SY9JTnZwxHaojIErTGj7GA2+KBMH0aijEOLwG+1lLy7X
-         RO4MbUWFLSRcW033ethZu2O5G76F7Sw+1Zrdbx1wEHzmsVVZ+w2TQ8nSky0Ff/hGAWy3
-         Cs9w==
-X-Gm-Message-State: APjAAAXuL7dlB//JXYaUr22dQFzeX/cgk3K6/euK6gZJ5ICaqMDxcJVp
-        eJ0WhmBsvMN7epQqY1wqx5IKpcyReOHXyjd6jNQ=
-X-Google-Smtp-Source: APXvYqzmrxwT5kg4qHFYISAvEGZKVv/ulcjCjrlzB51QlPN+V0/LTyu6B2NTj5sCi1ymxut6dzXFAgD5rAs4g4Pnv0o=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr4402249oiy.110.1580419788640;
- Thu, 30 Jan 2020 13:29:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20191226220205.128664-1-semenzato@google.com> <20191226220205.128664-2-semenzato@google.com>
- <20200106125352.GB9198@dhcp22.suse.cz> <CAA25o9S7EzQ0xcoxuWtYr2dd0WB4KSQNP4OxPb2gAeaz0EgomA@mail.gmail.com>
- <20200108114952.GR32178@dhcp22.suse.cz> <CAA25o9Q4XP8weCNcTr1ZT9N7Y3V=B90mK8mykLOyy=-4RJ_uHQ@mail.gmail.com>
- <20200127141637.GL1183@dhcp22.suse.cz> <CAA25o9QuA_9EoivWo-DuJsWoHCdBm2wio3G8JYxuTfQErT42kg@mail.gmail.com>
- <CAJZ5v0iDtk+WWHV8F2C+9EdeMSx_JKYDEiarProoE55kiBOjkg@mail.gmail.com>
- <CAA25o9RHKerPJNW6h5d6W48q1qA3wYJAmhOBU3XiBHwMcEChhA@mail.gmail.com>
- <CAJZ5v0jiZMtv8s7AQBz212=aEm75hniJr9jXsMma8YxhRYZFJw@mail.gmail.com> <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
-In-Reply-To: <CAA25o9R26U6RKvSAL9ckz+d-hH+5aZ0ufQPqiefn4dOhSiDS0w@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Jan 2020 22:29:37 +0100
-Message-ID: <CAJZ5v0i=v_+n1yVdmO7L1FYpe=3WQHM03NQqHNfTCTKG5MVtNQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: clarify limitations of hibernation
-To:     Luigi Semenzato <semenzato@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geoff Pike <gpike@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jan 2020 16:33:08 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <rjones@gateworks.com>)
+        id 1ixHRL-00011c-SA; Thu, 30 Jan 2020 21:33:31 +0000
+From:   Robert Jones <rjones@gateworks.com>
+To:     Sunil Goutham <sgoutham@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH net v2] net: thunderx: workaround BGX TX Underflow issue
+Date:   Thu, 30 Jan 2020 13:32:52 -0800
+Message-Id: <20200130213252.17005-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 10:11 PM Luigi Semenzato <semenzato@google.com> wrote:
->
-> On Thu, Jan 30, 2020 at 12:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Mon, Jan 27, 2020 at 6:21 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > >
-> > > On Mon, Jan 27, 2020 at 8:28 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > >
-> > > > On Mon, Jan 27, 2020 at 5:13 PM Luigi Semenzato <semenzato@google.com> wrote:
-> > > > >
-> > > > > On Mon, Jan 27, 2020 at 6:16 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > > >
-> > > > > > On Fri 24-01-20 08:37:12, Luigi Semenzato wrote:
-> > > > > > [...]
-> > > > > > > The purpose of my documentation patch was to make it clearer that
-> > > > > > > hibernation may fail in situations in which suspend-to-RAM works; for
-> > > > > > > instance, when there is no swap, and anonymous pages are over 50% of
-> > > > > > > total RAM.  I will send a new version of the patch which hopefully
-> > > > > > > makes this clearer.
-> > > > > >
-> > > > > > I was under impression that s2disk is pretty much impossible without any
-> > > > > > swap.
-> > > > >
-> > > > > I am not sure what you mean by "swap" here.  S2disk needs a swap
-> > > > > partition for storing the image, but that partition is not used for
-> > > > > regular swap.
-> > > >
-> > > > That's not correct.
-> > > >
-> > > > The swap partition (or file) used by s2disk needs to be made active
-> > > > before it can use it and the mm subsystem is also able to use it for
-> > > > regular swap then.
-> > >
-> > > OK---I had this wrong, thanks.
-> > >
-> > > > >  If there is no swap, but more than 50% of RAM is free
-> > > > > or reclaimable, s2disk works fine.  If anonymous is more than 50%,
-> > > > > hibernation can still work, but swap needs to be set up (in addition
-> > > > > to the space for the hibernation image).  The setup is not obvious and
-> > > > > I don't think that the documentation is clear on this.
-> > > >
-> > > > Well, the entire contents of RAM must be preserved, this way or
-> > > > another, during hibernation.  That should be totally obvious to anyone
-> > > > using it really.
-> > >
-> > > Yes, that's obvious.
-> > >
-> > > > Some of the RAM contents is copies of data already there in the
-> > > > filesystems on persistent storage and that does not need to be saved
-> > > > again.  Everything else must be saved and s2disk (and Linux
-> > > > hibernation in general) uses active swap space to save these things.
-> > > > This implies that in order to hibernate the system, you generally need
-> > > > the amount of swap space equal to the size of RAM minus the size of
-> > > > files mapped into memory.
-> > > >
-> > > > So, to be on the safe side, the total amount of swap space to be used
-> > > > for hibernation needs to match the size of RAM (even though
-> > > > realistically it may be smaller than that in the majority of cases).
-> > >
-> > > This all makes sense, but we do this:
-> > >
-> > > -- add resume=/dev/sdc to the command line
-> > > -- attach a disk (/dev/sdc) with size equal to RAM
-> > > -- mkswap /dev/sdc
-> > > -- swapon /dev/sdc
-> > > -- echo disk > /sys/power/state
-> > >
-> > > and the last operation fails with ENOMEM.  Are we doing something
-> > > wrong?  Are we hitting some other mm bug?
-> >
-> > I would expect this to work, so the fact that it doesn't work for you
-> > indicates a bug somewhere or at least an assumption that doesn't hold.
-> >
-> > Can you please remind me what you do to trigger the unexpected behavior?
->
-> Yes, I create processes that use a large amount of anon memory, more
-> than 50% of RAM, like this:
->
-> dd if=/dev/zero bs=1G count=1 | sleep infinity
->
-> I think dd has a 2 GB limit, or around that number, so you'll need a
-> few of those.
+From: Tim Harvey <tharvey@gateworks.com>
 
-And then you get -ENOMEM from hibernate_preallocate_memory(), or from
-somewhere else?
+While it is not yet understood why a TX underflow can easily occur
+for SGMII interfaces resulting in a TX wedge. It has been found that
+disabling/re-enabling the LMAC resolves the issue.
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Robert Jones <rjones@gateworks.com>
+---
+Changes in v2:
+ - Changed bgx_register_intr() to a void return
+ - Added pci_free_irq_vectors() calls to free irq if named/allocated
+ - Use snprintf instead of sprintf for irq names
+
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 59 +++++++++++++++++++++++
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.h |  9 ++++
+ 2 files changed, 68 insertions(+)
+
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index c4f6ec0..cbf8596 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -74,6 +74,7 @@ struct bgx {
+ 	struct pci_dev		*pdev;
+ 	bool                    is_dlm;
+ 	bool                    is_rgx;
++	char			irq_name[7];
+ };
+ 
+ static struct bgx *bgx_vnic[MAX_BGX_THUNDER];
+@@ -1535,6 +1536,53 @@ static int bgx_init_phy(struct bgx *bgx)
+ 	return bgx_init_of_phy(bgx);
+ }
+ 
++static irqreturn_t bgx_intr_handler(int irq, void *data)
++{
++	struct bgx *bgx = (struct bgx *)data;
++	struct device *dev = &bgx->pdev->dev;
++	u64 status, val;
++	int lmac;
++
++	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
++		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
++		if (status & GMI_TXX_INT_UNDFLW) {
++			dev_err(dev, "BGX%d lmac%d UNDFLW\n", bgx->bgx_id,
++				lmac);
++			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
++			val &= ~CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++			val |= CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++		}
++		/* clear interrupts */
++		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void bgx_register_intr(struct pci_dev *pdev)
++{
++	struct bgx *bgx = pci_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
++	int num_vec, ret;
++
++	/* Enable MSI-X */
++	num_vec = pci_msix_vec_count(pdev);
++	ret = pci_alloc_irq_vectors(pdev, num_vec, num_vec, PCI_IRQ_MSIX);
++	if (ret < 0) {
++		dev_err(dev, "Req for #%d msix vectors failed\n", num_vec);
++		return;
++	}
++	snprintf(bgx->irq_name, sizeof(bgx->irqname), "BGX%d", bgx->bgx_id);
++	ret = request_irq(pci_irq_vector(pdev, GMPX_GMI_TX_INT),
++			  bgx_intr_handler, 0, bgx->irq_name, bgx);
++	if (ret) {
++		if (bgx->irq_name[0])
++			pci_free_irq_vectors(pdev);
++	}
++}
++
+ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int err;
+@@ -1604,6 +1652,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	bgx_init_hw(bgx);
+ 
++	bgx_register_intr(pdev);
++
+ 	/* Enable all LMACs */
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+ 		err = bgx_lmac_enable(bgx, lmac);
+@@ -1614,12 +1664,18 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 				bgx_lmac_disable(bgx, --lmac);
+ 			goto err_enable;
+ 		}
++
++		/* enable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmac, BGX_GMP_GMI_TXX_INT_ENA_W1S,
++			       GMI_TXX_INT_UNDFLW);
+ 	}
+ 
+ 	return 0;
+ 
+ err_enable:
+ 	bgx_vnic[bgx->bgx_id] = NULL;
++	if (bgx->irq_name[0])
++		pci_free_irq_vectors(pdev);
+ err_release_regions:
+ 	pci_release_regions(pdev);
+ err_disable_device:
+@@ -1637,6 +1693,9 @@ static void bgx_remove(struct pci_dev *pdev)
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
+ 		bgx_lmac_disable(bgx, lmac);
+ 
++	if (bgx->irq_name[0])
++		pci_free_irq_vectors(pdev);
++
+ 	bgx_vnic[bgx->bgx_id] = NULL;
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+index 2588870..cdea493 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+@@ -180,6 +180,15 @@
+ #define BGX_GMP_GMI_TXX_BURST		0x38228
+ #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
+ #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
++#define BGX_GMP_GMI_TXX_INT		0x38500
++#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
++#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
++#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
++#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
++#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
++#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
++#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
++#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+ 
+ #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
+ #define BGX_MSIX_VEC_0_29_CTL		0x400008
+-- 
+2.9.2
+
