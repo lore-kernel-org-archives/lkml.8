@@ -2,32 +2,32 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E81C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF84C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629832071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0E020661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgA3Atp (ORCPT
+        id S1727283AbgA3Atr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 19:49:45 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:42154 "EHLO inva020.nxp.com"
+        Wed, 29 Jan 2020 19:49:47 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:52882 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgA3Atp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 19:49:45 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 65D321A01EC;
-        Thu, 30 Jan 2020 01:49:43 +0100 (CET)
+        id S1726760AbgA3Atq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 19:49:46 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BFD5E201220;
+        Thu, 30 Jan 2020 01:49:44 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 570201A0535;
-        Thu, 30 Jan 2020 01:49:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B104320120D;
+        Thu, 30 Jan 2020 01:49:44 +0100 (CET)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EDBF9204BE;
-        Thu, 30 Jan 2020 01:49:42 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 49BC9204BE;
+        Thu, 30 Jan 2020 01:49:44 +0100 (CET)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -38,80 +38,220 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>,
         Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v5 0/9] crypto: caam - backlogging support
-Date:   Thu, 30 Jan 2020 02:49:15 +0200
-Message-Id: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH v5 3/9] crypto: caam - refactor ahash_edesc_alloc
+Date:   Thu, 30 Jan 2020 02:49:18 +0200
+Message-Id: <1580345364-7606-4-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
+References: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integrate crypto_engine framework into CAAM, to make use of
-the engine queue.
-Added support for SKCIPHER, HASH, RSA and AEAD algorithms.
-This is intended to be used for CAAM backlogging support.
-The requests, with backlog flag (e.g. from dm-crypt) will be
-listed into crypto-engine queue and processed by CAAM when free.
+Changed parameters for ahash_edesc_alloc function:
+- remove flags since they can be computed in
+ahash_edesc_alloc, the only place they are needed;
+- use ahash_request instead of caam_hash_ctx, to be
+able to compute gfp flags.
 
-While here, I've also made some refactorization.
-Patches #1 - #4 include some refactorizations on caamalg, caamhash
-and caampkc.
-Patch #5 changes the return code of caam_jr_enqueue function
-to -EINPROGRESS, in case of success, -ENOSPC in case the CAAM is
-busy, -EIO if it cannot map the caller's descriptor.
-Patches #6 - #9 integrate crypto_engine into CAAM, for
-SKCIPHER/AEAD/RSA/HASH algorithms.
-
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
 ---
-Changes since V4:
-	- reorganize {skcipher,aead,rsa}_edesc struct for a proper
-	  cacheline sharing.
+ drivers/crypto/caam/caamhash.c | 62 +++++++++++++++---------------------------
+ 1 file changed, 22 insertions(+), 40 deletions(-)
 
-Changes since V3:
-	- update return on ahash_enqueue_req function from patch #9.
-
-Changes since V2:
-	- remove patch ("crypto: caam - refactor caam_jr_enqueue"),
-	  that added some structures not needed anymore;
-	- use _done_ callback function directly for skcipher and aead;
-	- handle resource leak in case of transfer request to crypto-engine;
-	- update commit messages.
-
-Changes since V1:
-	- remove helper function - akcipher_request_cast;
-	- remove any references to crypto_async_request,
-	  use specific request type;
-	- remove bypass crypto-engine queue, in case is empty;
-	- update some commit messages;
-	- remove unrelated changes, like whitespaces;
-	- squash some changes from patch #9 to patch #6;
-	- added Reviewed-by.
-
-Iuliana Prodan (9):
-  crypto: caam - refactor skcipher/aead/gcm/chachapoly {en,de}crypt
-    functions
-  crypto: caam - refactor ahash_done callbacks
-  crypto: caam - refactor ahash_edesc_alloc
-  crypto: caam - refactor RSA private key _done callbacks
-  crypto: caam - change return code in caam_jr_enqueue function
-  crypto: caam - support crypto_engine framework for SKCIPHER algorithms
-  crypto: caam - add crypto_engine support for AEAD algorithms
-  crypto: caam - add crypto_engine support for RSA algorithms
-  crypto: caam - add crypto_engine support for HASH algorithms
-
- drivers/crypto/caam/Kconfig    |   1 +
- drivers/crypto/caam/caamalg.c  | 416 ++++++++++++++++++-----------------------
- drivers/crypto/caam/caamhash.c | 341 ++++++++++++++++-----------------
- drivers/crypto/caam/caampkc.c  | 187 +++++++++++-------
- drivers/crypto/caam/caampkc.h  |  10 +
- drivers/crypto/caam/caamrng.c  |   4 +-
- drivers/crypto/caam/intern.h   |   2 +
- drivers/crypto/caam/jr.c       |  37 +++-
- drivers/crypto/caam/key_gen.c  |   2 +-
- 9 files changed, 523 insertions(+), 477 deletions(-)
-
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index 59881a8..4db8507 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -661,11 +661,14 @@ static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
+  * Allocate an enhanced descriptor, which contains the hardware descriptor
+  * and space for hardware scatter table containing sg_num entries.
+  */
+-static struct ahash_edesc *ahash_edesc_alloc(struct caam_hash_ctx *ctx,
++static struct ahash_edesc *ahash_edesc_alloc(struct ahash_request *req,
+ 					     int sg_num, u32 *sh_desc,
+-					     dma_addr_t sh_desc_dma,
+-					     gfp_t flags)
++					     dma_addr_t sh_desc_dma)
+ {
++	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
++	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
++	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
++		       GFP_KERNEL : GFP_ATOMIC;
+ 	struct ahash_edesc *edesc;
+ 	unsigned int sg_size = sg_num * sizeof(struct sec4_sg_entry);
+ 
+@@ -724,8 +727,6 @@ static int ahash_update_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -779,8 +780,8 @@ static int ahash_update_ctx(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, pad_nents, ctx->sh_desc_update,
+-					  ctx->sh_desc_update_dma, flags);
++		edesc = ahash_edesc_alloc(req, pad_nents, ctx->sh_desc_update,
++					  ctx->sh_desc_update_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
+@@ -854,8 +855,6 @@ static int ahash_final_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+ 	int sec4_sg_bytes;
+@@ -867,8 +866,8 @@ static int ahash_final_ctx(struct ahash_request *req)
+ 			sizeof(struct sec4_sg_entry);
+ 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, 4, ctx->sh_desc_fin,
+-				  ctx->sh_desc_fin_dma, flags);
++	edesc = ahash_edesc_alloc(req, 4, ctx->sh_desc_fin,
++				  ctx->sh_desc_fin_dma);
+ 	if (!edesc)
+ 		return -ENOMEM;
+ 
+@@ -920,8 +919,6 @@ static int ahash_finup_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+ 	int sec4_sg_src_index;
+@@ -950,9 +947,8 @@ static int ahash_finup_ctx(struct ahash_request *req)
+ 	sec4_sg_src_index = 1 + (buflen ? 1 : 0);
+ 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
+-				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
++				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1000,8 +996,6 @@ static int ahash_digest(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u32 *desc;
+ 	int digestsize = crypto_ahash_digestsize(ahash);
+ 	int src_nents, mapped_nents;
+@@ -1028,9 +1022,8 @@ static int ahash_digest(struct ahash_request *req)
+ 	}
+ 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ? mapped_nents : 0,
+-				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, mapped_nents > 1 ? mapped_nents : 0,
++				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1077,8 +1070,6 @@ static int ahash_final_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+@@ -1087,8 +1078,8 @@ static int ahash_final_no_ctx(struct ahash_request *req)
+ 	int ret;
+ 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, 0, ctx->sh_desc_digest,
+-				  ctx->sh_desc_digest_dma, flags);
++	edesc = ahash_edesc_alloc(req, 0, ctx->sh_desc_digest,
++				  ctx->sh_desc_digest_dma);
+ 	if (!edesc)
+ 		return -ENOMEM;
+ 
+@@ -1136,8 +1127,6 @@ static int ahash_update_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -1190,10 +1179,9 @@ static int ahash_update_no_ctx(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, pad_nents,
++		edesc = ahash_edesc_alloc(req, pad_nents,
+ 					  ctx->sh_desc_update_first,
+-					  ctx->sh_desc_update_first_dma,
+-					  flags);
++					  ctx->sh_desc_update_first_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
+@@ -1261,8 +1249,6 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+ 	int sec4_sg_bytes, sec4_sg_src_index, src_nents, mapped_nents;
+@@ -1292,9 +1278,8 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 			 sizeof(struct sec4_sg_entry);
+ 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
+-				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
++				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1347,8 +1332,6 @@ static int ahash_update_first(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -1396,11 +1379,10 @@ static int ahash_update_first(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ?
++		edesc = ahash_edesc_alloc(req, mapped_nents > 1 ?
+ 					  mapped_nents : 0,
+ 					  ctx->sh_desc_update_first,
+-					  ctx->sh_desc_update_first_dma,
+-					  flags);
++					  ctx->sh_desc_update_first_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
 -- 
 2.1.0
 
