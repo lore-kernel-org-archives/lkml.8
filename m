@@ -2,53 +2,50 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC84C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B2A20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E11220661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580410320;
-	bh=VowLuk2K+luDJz7dwmIIDAHycgX1yz4Y/RRQAU+DonU=;
+	s=default; t=1580410326;
+	bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXogXxsEEu7sythzzACKdfmmMu1LfdbLJO625qjMcqlGU0VWnFX48XB/4Es9Mfbad
-	 jS8JJ5GEH4szfa1ZSEZjf8ZegCqN/NhfWno/i90TNravSogQJRnbFtYu6wbEK9cSn2
-	 et4Fc94vVXUnqp5s3STBl9t93qHHBNTixK2CQ+OA=
+	b=AwyHn3IiopAsr8OjYpr7LrSFVOBHbOjzAToYblJplO5GiSXFrlBGc9HU9pcXDExpK
+	 HUvllVVSrD+ko/fOKRyM+0iBMs96kR5xEfZ0dVvj096UVM/sIl2w+cl7IDZJJ5P0l7
+	 Tjm22g4e39Td5B62Mfmhrunm7xNHXqg7G/Zsp2tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgA3Sv7 (ORCPT
+        id S1731749AbgA3SwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:51:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:52:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730791AbgA3SoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:14 -0500
+        id S1730757AbgA3SoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB80214AF;
-        Thu, 30 Jan 2020 18:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A621E20CC7;
+        Thu, 30 Jan 2020 18:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409854;
-        bh=VowLuk2K+luDJz7dwmIIDAHycgX1yz4Y/RRQAU+DonU=;
+        s=default; t=1580409844;
+        bh=PcYjAsbCfzF+5dESTDBeoAdBwesnGNr/0H4djHcVYs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdrpgIhj5JthqxStEUT+AIYTNb54YUc5hyqTF7I0UOeqwb8OzrDCG414nGEWd2aA7
-         hqUBnbM21IWIduWNtVIjF+N/8qg9p2lndtmfFugp+8sh4fL7ds2sL04TEs5o4I4DzV
-         +dH0gS2bBHvqXerVHcDtHJ8fSu10QNfYbgl5wM4g=
+        b=WCiHHEAuueWkszZRy5Ip1E/Q93nrj0WiE3D46PETwhaCy6nCzuC8io1w4DrKXXzFM
+         UVV61j/KaGttopBRBl9AmglWsgww/JPksazmlBgfEoPP2fVdO9c8ILlNZ+rkJUApL9
+         CidwiaWs5/+L943HTzcq3616oprFOg7QhyO8B3dM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/110] watchdog: max77620_wdt: fix potential build errors
-Date:   Thu, 30 Jan 2020 19:38:36 +0100
-Message-Id: <20200130183622.096206213@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.4 014/110] staging: vt6656: correct packet types for CTS protect, mode.
+Date:   Thu, 30 Jan 2020 19:37:50 +0100
+Message-Id: <20200130183616.221145548@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,37 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Engraf <david.engraf@sysgo.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ Upstream commit da9e3f4e30a53cd420cf1e6961c3b4110f0f21f0 ]
+commit d971fdd3412f8342747778fb59b8803720ed82b1 upstream.
 
-max77620_wdt uses watchdog core functions. Enable CONFIG_WATCHDOG_CORE
-to fix potential build errors.
+It appears that the driver still transmits in CTS protect mode even
+though it is not enabled in mac80211.
 
-Signed-off-by: David Engraf <david.engraf@sysgo.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191127084617.16937-1-david.engraf@sysgo.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+That is both packet types PK_TYPE_11GA and PK_TYPE_11GB both use CTS protect.
+The only difference between them GA does not use B rates.
+
+Find if only B rate in GB or GA in protect mode otherwise transmit packets
+as PK_TYPE_11A.
+
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/9c1323ff-dbb3-0eaa-43e1-9453f7390dc0@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/watchdog/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/vt6656/device.h |    2 ++
+ drivers/staging/vt6656/rxtx.c   |   12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 4c761abc56883..e2745f6861960 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -687,6 +687,7 @@ config MAX63XX_WATCHDOG
- config MAX77620_WATCHDOG
- 	tristate "Maxim Max77620 Watchdog Timer"
- 	depends on MFD_MAX77620 || COMPILE_TEST
-+	select WATCHDOG_CORE
- 	help
- 	 This is the driver for the Max77620 watchdog timer.
- 	 Say 'Y' here to enable the watchdog timer support for
--- 
-2.20.1
-
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -52,6 +52,8 @@
+ #define RATE_AUTO	12
+ 
+ #define MAX_RATE			12
++#define VNT_B_RATES	(BIT(RATE_1M) | BIT(RATE_2M) |\
++			BIT(RATE_5M) | BIT(RATE_11M))
+ 
+ /*
+  * device specific
+--- a/drivers/staging/vt6656/rxtx.c
++++ b/drivers/staging/vt6656/rxtx.c
+@@ -815,10 +815,14 @@ int vnt_tx_packet(struct vnt_private *pr
+ 		if (info->band == NL80211_BAND_5GHZ) {
+ 			pkt_type = PK_TYPE_11A;
+ 		} else {
+-			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT)
+-				pkt_type = PK_TYPE_11GB;
+-			else
+-				pkt_type = PK_TYPE_11GA;
++			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT) {
++				if (priv->basic_rates & VNT_B_RATES)
++					pkt_type = PK_TYPE_11GB;
++				else
++					pkt_type = PK_TYPE_11GA;
++			} else {
++				pkt_type = PK_TYPE_11A;
++			}
+ 		}
+ 	} else {
+ 		pkt_type = PK_TYPE_11B;
 
 
