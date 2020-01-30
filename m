@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF9BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170DEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BAD214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8974214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409629;
-	bh=005QrlpyeISwVRM5donYC0s406q/R2jnUVfuLChgDP4=;
+	s=default; t=1580409633;
+	bh=bxk9yNk/N4n0H8vazRDqQh0DVJDhvAsAxShkNseNHhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkFx9x2hWCBavfCwaoDH6Oodo+1sfrajaj/ahnJZagB96DcaH6lDZ1M3O988gTNYt
-	 NbuSS7F8ZidegjP6T6gmnwj2FhjMfW+vVv91Z/IYh7cKsAfKOnpbqHPlY9rIEfLMs/
-	 7XN4hM30oPl2SITdGZKtOfI4XTQ27SFJ26j2Hgbc=
+	b=RIz970xeK3ArxSWs3r/StkOwlz6TsFglxpXn23vMmdv7eDRXcpbaxWkwx7l14olrs
+	 7paXI6fTtQDXiFa/qZViLgPZ4wPgaDYZh9ToYj8cSnqXByPB9WT0pC5bE2QuRRaHOU
+	 cX9Jrzh5btEo9tNzbKHAk4djoX0QzsCM3JFDpuc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgA3Sk2 (ORCPT
+        id S1729975AbgA3Skc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbgA3SkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:25 -0500
+        id S1727639AbgA3Sk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DCA220702;
-        Thu, 30 Jan 2020 18:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACE120702;
+        Thu, 30 Jan 2020 18:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409624;
-        bh=005QrlpyeISwVRM5donYC0s406q/R2jnUVfuLChgDP4=;
+        s=default; t=1580409628;
+        bh=bxk9yNk/N4n0H8vazRDqQh0DVJDhvAsAxShkNseNHhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2vBa8N/sJN8kJvbuWLi5uYSEvE6/Vc8tILOIDaqSmIQuqqKoDuNba+ZWOQgynXS2
-         meWdcFmPuHJOIzl9r5+GZRm9I7YgJHhCoZbygSEBxfsvONo1ti2BC/6DxQED9JvcbC
-         2W40ZY6+DSAn8R3neNqdUVmvgU43ULgck0iamr28=
+        b=teCmqWlK/ad6UxZ0hqtWI03BsNrSiUyFMkZ7rIXxRz6/5ypgXehd6Z80HsPZIuxpf
+         eiPqEMLVmWbdIAlvsyLVmu9/HG3deUFxVoC0wpNFf9DM3TZf7W6pRfS8vc1mdfIgZR
+         4lyMKqUGga+t4eS369VllfsEr/bcBbgFxkqd8zvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.5 24/56] mei: me: add jasper point DID
-Date:   Thu, 30 Jan 2020 19:38:41 +0100
-Message-Id: <20200130183613.603678518@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 26/56] iio: st_gyro: Correct data for LSM9DS0 gyro
+Date:   Thu, 30 Jan 2020 19:38:43 +0100
+Message-Id: <20200130183613.900108281@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -58,43 +62,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 0db4a15d4c2787b1112001790d4f95bd2c5fed6f upstream.
+commit e825070f697abddf3b9b0a675ed0ff1884114818 upstream.
 
-Add Jasper Point (Jasper Lake) device id for MEI
+The commit 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
+assumes that gyro in LSM9DS0 is the same as others with 0xd4 WAI ID,
+but datasheet tells slight different story, i.e. the first scale factor
+for the chip is 245 dps, and not 250 dps.
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200124001455.24176-1-tomas.winkler@intel.com
+Correct this by introducing a separate settings for LSM9DS0.
+
+Fixes: 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
+Depends-on: 45a4e4220bf4 ("iio: gyro: st_gyro: fix L3GD20H support")
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    2 ++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/iio/gyro/st_gyro_core.c |   75 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 1 deletion(-)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -89,6 +89,8 @@
- 
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
- 
-+#define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
-+
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
- 
- #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -106,6 +106,8 @@ static const struct pci_device_id mei_me
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
- 
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_JSP_N, MEI_ME_PCH15_CFG)},
-+
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH15_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
- 
+--- a/drivers/iio/gyro/st_gyro_core.c
++++ b/drivers/iio/gyro/st_gyro_core.c
+@@ -138,7 +138,6 @@ static const struct st_sensor_settings s
+ 			[2] = LSM330DLC_GYRO_DEV_NAME,
+ 			[3] = L3G4IS_GYRO_DEV_NAME,
+ 			[4] = LSM330_GYRO_DEV_NAME,
+-			[5] = LSM9DS0_GYRO_DEV_NAME,
+ 		},
+ 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
+ 		.odr = {
+@@ -202,6 +201,80 @@ static const struct st_sensor_settings s
+ 			},
+ 		},
+ 		.sim = {
++			.addr = 0x23,
++			.value = BIT(0),
++		},
++		.multi_read_bit = true,
++		.bootime = 2,
++	},
++	{
++		.wai = 0xd4,
++		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
++		.sensors_supported = {
++			[0] = LSM9DS0_GYRO_DEV_NAME,
++		},
++		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
++		.odr = {
++			.addr = 0x20,
++			.mask = GENMASK(7, 6),
++			.odr_avl = {
++				{ .hz = 95, .value = 0x00, },
++				{ .hz = 190, .value = 0x01, },
++				{ .hz = 380, .value = 0x02, },
++				{ .hz = 760, .value = 0x03, },
++			},
++		},
++		.pw = {
++			.addr = 0x20,
++			.mask = BIT(3),
++			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
++			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
++		},
++		.enable_axis = {
++			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
++			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
++		},
++		.fs = {
++			.addr = 0x23,
++			.mask = GENMASK(5, 4),
++			.fs_avl = {
++				[0] = {
++					.num = ST_GYRO_FS_AVL_245DPS,
++					.value = 0x00,
++					.gain = IIO_DEGREE_TO_RAD(8750),
++				},
++				[1] = {
++					.num = ST_GYRO_FS_AVL_500DPS,
++					.value = 0x01,
++					.gain = IIO_DEGREE_TO_RAD(17500),
++				},
++				[2] = {
++					.num = ST_GYRO_FS_AVL_2000DPS,
++					.value = 0x02,
++					.gain = IIO_DEGREE_TO_RAD(70000),
++				},
++			},
++		},
++		.bdu = {
++			.addr = 0x23,
++			.mask = BIT(7),
++		},
++		.drdy_irq = {
++			.int2 = {
++				.addr = 0x22,
++				.mask = BIT(3),
++			},
++			/*
++			 * The sensor has IHL (active low) and open
++			 * drain settings, but only for INT1 and not
++			 * for the DRDY line on INT2.
++			 */
++			.stat_drdy = {
++				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
++				.mask = GENMASK(2, 0),
++			},
++		},
++		.sim = {
+ 			.addr = 0x23,
+ 			.value = BIT(0),
+ 		},
 
 
