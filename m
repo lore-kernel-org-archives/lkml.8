@@ -2,160 +2,163 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4DC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A217AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2549620702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C1D20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 09:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgA3Jxv (ORCPT
+        id S1727125AbgA3JyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 04:53:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33068 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbgA3Jxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:53:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D4B6FAC4B;
-        Thu, 30 Jan 2020 09:53:47 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 10:53:46 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>, nstange@suse.de
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
-References: <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
- <20200121161045.dhihqibnpyrk2lsu@treble>
- <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
- <20200128150014.juaxfgivneiv6lje@treble>
- <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
- <20200128170254.igb72ib5n7lvn3ds@treble>
- <alpine.LSU.2.21.2001291249430.28615@pobox.suse.cz>
- <20200129155951.qvf3tjsv2qvswciw@treble>
+        Thu, 30 Jan 2020 04:54:16 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:56653 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgA3JyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:54:16 -0500
+Received: by mail-io1-f69.google.com with SMTP id d13so1554249ioo.23
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 01:54:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9hAzEAIPae/MS5XBWrAm6eWP2RI7+2OSiqzmgbR9qTw=;
+        b=WAlf0gv0VxHeE4KnyE+shgs/Ff59FJnYd4Nv43LbNSmLJ16G6dzV9cZRf2Kp3UwaeF
+         S7mxaNLqVHJnxrg3xJktj2Qj17mG+KsKUPzxfGzZU5vq3gU9DprYVsEjPpvWFRu4Xn4U
+         IP2zarpEGWuy7WDy3+KYT9JFZWw4KGZYsHli3r7hY+Ripcsnf7AASIexvaOpobfDJkFs
+         Mq6urP+kLuZl+p8DBkZTkvr9F3m7wmaFPtsE5EA6wPsCXjlshjNdx3gN+UKhPcVgSCqV
+         FJ2DyLgX8IDFq8G5C4c/OYINEkla0FSsQSFR/TYq51F35xb2GcXZPIdEMh9+WoAIIjxq
+         YY/A==
+X-Gm-Message-State: APjAAAViMrM2ivKSlk682fieU/+L8r6BHj04DpIO4g9JZZHpu+GjMF6K
+        4FsiTSLG9ro47Ftoefm7cuX9zdQq4As6tTETPPY3vb0eLcAr
+X-Google-Smtp-Source: APXvYqyR/5l8VfWndFqVVJTxabbsWjeWfENhMAfCpTTMDHa3eKLcpO/4QKWSk3yOAWWOEHMqZFLMuJYy+Shr5HEJrMPxPhf0f36S
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129155951.qvf3tjsv2qvswciw@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-Received: by 2002:a02:5489:: with SMTP id t131mr3089108jaa.40.1580378055222;
+ Thu, 30 Jan 2020 01:54:15 -0800 (PST)
+Date:   Thu, 30 Jan 2020 01:54:15 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000097a900059d58700d@google.com>
+Subject: WARNING in nsim_fib6_rt_nh_del
+From:   syzbot <syzbot+63abe9d5f32ff88090eb@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-01-29 09:59:51, Josh Poimboeuf wrote:
-> In retrospect, the prerequisites for merging it should have been:
+Hello,
 
-OK, let me do one more move in this game.
+syzbot found the following crash on:
+
+HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12461f66e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=614e56d86457f3a7
+dashboard link: https://syzkaller.appspot.com/bug?extid=63abe9d5f32ff88090eb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+63abe9d5f32ff88090eb@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 24083 at drivers/net/netdevsim/fib.c:448 nsim_fib6_rt_nh_del+0x287/0x350 drivers/net/netdevsim/fib.c:448
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 24083 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:176 [inline]
+ fixup_bug arch/x86/kernel/traps.c:171 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:269
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:288
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:nsim_fib6_rt_nh_del+0x287/0x350 drivers/net/netdevsim/fib.c:448
+Code: 85 db 74 2a e8 ca 00 77 fc 4c 89 e7 e8 52 3a b5 fc e8 bd 00 77 fc 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 a9 00 77 fc <0f> 0b eb e3 e8 a0 00 77 fc be 03 00 00 00 4c 89 f7 e8 33 11 9f fe
+RSP: 0018:ffffc90004c462b8 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: dffffc0000000000 RCX: ffffc90014a0f000
+RDX: 0000000000040000 RSI: ffffffff84fe6cf7 RDI: ffff88809f945480
+RBP: ffffc90004c462e8 R08: ffff8880a79660c0 R09: ffff8880a7966950
+R10: ffffc90004c462f8 R11: ffffffff8a82e707 R12: ffff88809f9454b8
+R13: ffff88809575a600 R14: ffff88809f9454b8 R15: ffff88809ed44710
+ nsim_fib6_rt_remove drivers/net/netdevsim/fib.c:688 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:725 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:744 [inline]
+ nsim_fib_event_nb+0x1582/0x2670 drivers/net/netdevsim/fib.c:772
+ notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
+ __atomic_notifier_call_chain+0xa6/0x1a0 kernel/notifier.c:173
+ atomic_notifier_call_chain+0x2e/0x40 kernel/notifier.c:183
+ call_fib_notifiers+0x173/0x2a0 net/core/fib_notifier.c:35
+ call_fib6_notifiers+0x4b/0x60 net/ipv6/fib6_notifier.c:22
+ call_fib6_entry_notifiers+0xfb/0x150 net/ipv6/ip6_fib.c:399
+ fib6_del_route net/ipv6/ip6_fib.c:1980 [inline]
+ fib6_del+0xec1/0x1550 net/ipv6/ip6_fib.c:2016
+ fib6_clean_node+0x3c4/0x5b0 net/ipv6/ip6_fib.c:2178
+ fib6_walk_continue+0x4a9/0x8e0 net/ipv6/ip6_fib.c:2100
+ fib6_walk+0x9d/0x100 net/ipv6/ip6_fib.c:2148
+ fib6_clean_tree+0xea/0x120 net/ipv6/ip6_fib.c:2228
+ __fib6_clean_all+0x118/0x2a0 net/ipv6/ip6_fib.c:2244
+ fib6_clean_all+0x2b/0x40 net/ipv6/ip6_fib.c:2255
+ rt6_sync_down_dev+0x134/0x150 net/ipv6/route.c:4755
+ rt6_disable_ip+0x27/0x460 net/ipv6/route.c:4760
+ addrconf_ifdown+0x9b/0x12c0 net/ipv6/addrconf.c:3708
+ addrconf_notify+0x5a6/0x2270 net/ipv6/addrconf.c:3633
+ notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
+ __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
+ call_netdevice_notifiers_info net/core/dev.c:1943 [inline]
+ call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1928
+ call_netdevice_notifiers_extack net/core/dev.c:1955 [inline]
+ call_netdevice_notifiers net/core/dev.c:1969 [inline]
+ __dev_notify_flags+0x1e9/0x2c0 net/core/dev.c:8193
+ dev_change_flags+0x10d/0x170 net/core/dev.c:8229
+ do_setlink+0xa47/0x3720 net/core/rtnetlink.c:2596
+ rtnl_group_changelink net/core/rtnetlink.c:3103 [inline]
+ __rtnl_newlink+0xdd1/0x1790 net/core/rtnetlink.c:3257
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3377
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5438
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b349
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fbf97294c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fbf972956d4 RCX: 000000000045b349
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009c7 R14: 00000000004cb327 R15: 000000000075bf2c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> 1) Document how source-based patches can be safely generated;
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I agree that the information are really scattered over many files
-in Documentation/livepatch/. Anyway, there is a lot of useful
-hints:
-
-   + structure and behavior of the livepatch module, link
-     to a sample, limitations, are described in livepatch.rst
-
-   + many other catches are described in the other files:
-     callbacks, module-elf-fomat, cumulative-patches,
-     system-state.
-
-Yes, it would be great to have a better structure, more information.
-But do not get me wrong. Anyone, Joe definitely, is able to create
-livepatch from sources by this information.
-
-Anyone could play with it, ask questions, and improve the
-documentation. Better documentation would help but it is
-not a blocker, definitely.
-
-
-> 2) Fix the scheduler performance regression;
-
-The optimizations are disabled only when livepatching is enabled.
-I would consider this as a prize for the feature. There are
-many things like this.
-
-As it was said. It was 1-3 percent in scheduler microbenchmark.
-It would make sense to fix it only when it causes such a regression
-in real workloads. Do you have any?
-
-
-> 3) Figure out if there are any other regressions by detecting which
->    function interfaces are affected by the flag and seeing if they're
->    hot path;
-
-IMHO, benchmarks are much more effective and we spent non-trivial
-resources when running them.
-
-
-> 4) Provide a way for the N-1 users to opt-out
-
-AFAIK, the only prize is the 1-3 percent scheduler performance degradation.
-If you really do not want to pay this prize, let's make it configurable.
-
-But the option is definitely needed when source livepatches are used.
-There is no other reasonable way to detect and workaround these
-problems. For this, it has to be in upstream kernel. It is in line
-with the effort to make livepatching less and less error prone.
-
-And please, let's stop playing this multi-user games. There is at least
-one known user of source based livepatches. By coincidence, it is also
-a big contributor to this subsystem. Adding an extra option into
-CFLAGS is quite error prone. You can imagine how complicated is
-a kernel rpm spec file for more kernel flavors. The only safe way
-is to have the optimization tight with the CONFIG option in
-kernel sources.
-
-
-> 5) Fix the objtool warnings (or is it a GCC bug)
-
-Nobody was aware of them. I wonder if they even existed at that time.
-We have a simple fix now. Let's continue in the thread started by
-Jikos if we could get a better solution.
-
-
-> 6) Make -flive-patching compatible with LTO (or at least acknowledge
->    that it should and will be done soon)
-
-Is LTO officially supported upstream?
-Are all patches, features tested for LTO compactibility?
-Is there any simple way to build and run LTO kernel?
-
-
-> 7) At least make it build- or runtime-incompatible with Clang-built
->    kernels to prevent people from assuming it's safe.
-
-Same questions as for LTO.
-
-
-> If you don't want to revert the patch, then address my concerns instead
-> of minimizing and deflecting at every opportunity.
-
-I would really like to keep focusing on realistic problems and
-realistic solutions:
-
-   + make the optimization configurable if you resist on it
-   + fix the objtool warnings
-
-Anything else is out of scope of this thread from my POV.
-
-Best Regards,
-Petr
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
