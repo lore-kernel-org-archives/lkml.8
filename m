@@ -2,95 +2,114 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828BFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF978C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F152083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bS9Rk2UG"
+	by mail.kernel.org (Postfix) with ESMTP id 8E95F206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgA3Lq1 (ORCPT
+        id S1727238AbgA3LrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:46:27 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41941 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3Lq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:46:27 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t14so1248239plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 03:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mHao4L7Q0say/yc3EdBS2/qgIAGpyMl6zHoPJFWmk+c=;
-        b=bS9Rk2UG0HVFPtXwL1Yv4Zwi5H3ZxA3xW54L3VGdpWZrDfwN8d27Y/iWSTx+C/yYOz
-         gKU8iQRF/pTxvXuIhxnq/5GNQ35mT/MYk1iigVTf545BkdH3VkgJNTKCa1RpoGUtIOkC
-         DjxtOpaxG+s5iqEzqHX5f8v+CrQzGtSAkRmgG9s131/uDLa+fkNoVONLWGuvJgMjaR60
-         PV93+kuLSgtp8PNfv3fBqeeiRP6g1c41GCGsGSUeGEdDwvqQ55vUKeoParHllMVwpKru
-         zlxgfKgk7g6Qzq9y94rYhnUY5pjC6pX4q92/BZmeCalmzhEPhF6qfxldRxZrovI8FBVD
-         Ez9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mHao4L7Q0say/yc3EdBS2/qgIAGpyMl6zHoPJFWmk+c=;
-        b=meLBQT+QzxgWhWoMwOTnAuI4atHTbZUPE1OPAfvNBUR5QEGHF3uFBzRlthu5/CNqqQ
-         ZqgBe9W0sNwIwvnV8uUvftWrIHlBGgVPGv78yZkY1uhNzJD0WwGpzrWPqfz7Hzyl/tvN
-         OhITdQamwc9d4JI4rAGIk+4/RaL//g2WzDP/NvHXxvEGwe+BH14jM3Gb//I1dB+rPqcR
-         sVyvS7YUUJZU8305Gmt/Vjgcvg/8VHTirvWZ6dnC3DUairWtJmSvwGVt2NA4WR84UMq8
-         Cj9Wvjr1HsFLCggNdkTg+G6z80pWKJGm1XN8e8UGOxHcXOdb/TMksWQK3VD5uz5TTIqH
-         LpFg==
-X-Gm-Message-State: APjAAAVzNPrLU1y/y3ZQt/H6dqIxFq3E4Ce4S4fF5tLL+iWQbQdDBiF/
-        NkvNrMi/ygOj+Kxo4z9SiGY=
-X-Google-Smtp-Source: APXvYqyvDdryt+qtPTjYS7ZGrvIstLr6juyWwbAChzdEyYVSmf75ACaxLHP0qn9eVBL4Wff2B3uLcg==
-X-Received: by 2002:a17:902:ba8a:: with SMTP id k10mr4502251pls.333.1580384786626;
-        Thu, 30 Jan 2020 03:46:26 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id u11sm6270705pjn.2.2020.01.30.03.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 03:46:25 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 30 Jan 2020 20:46:23 +0900
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Anvin <hpa@zytor.com>, x86@kernel.org,
+        Thu, 30 Jan 2020 06:47:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:51500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbgA3LrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 06:47:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B77EB328;
+        Thu, 30 Jan 2020 03:47:20 -0800 (PST)
+Received: from [10.37.12.72] (unknown [10.37.12.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1978D3F68E;
+        Thu, 30 Jan 2020 03:47:18 -0800 (PST)
+Subject: Re: [PATCH 0/1] drivers: devfreq: use DELAYED_WORK in DEVFREQ
+ monitoring subsystem
+To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: fix kaslr-enabled build
-Message-ID: <20200130114623.GA179090@jagdpanzerIV.localdomain>
-References: <20200129162926.1006-1-sergey.senozhatsky@gmail.com>
- <20200130110008.GD6656@zn.tnic>
- <20200130113134.GA498@jagdpanzerIV.localdomain>
- <20200130113619.GE6656@zn.tnic>
+Cc:     b.zolnierkie@samsung.com
+References: <20200127151731.8640-1-lukasz.luba@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b4d1624f-4ca8-c985-ff42-f5f677c72fa9@arm.com>
+Date:   Thu, 30 Jan 2020 11:47:16 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130113619.GE6656@zn.tnic>
+In-Reply-To: <20200127151731.8640-1-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/30 12:36), Borislav Petkov wrote:
-> On Thu, Jan 30, 2020 at 08:31:34PM +0900, Sergey Senozhatsky wrote:
-> > Oh, didn't occur to me that this can be compiler specific.
-> > But yes, apparently it is. gcc-9.2 is fine, but not gcc-10
-> > release-candidate.
-> 
-> Ah ok, that makes more sense. That's being discussed ATM but it is merge
-> window so it'll take a while:
-> 
-> https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
->
+Hi Chanwoo, MyungJoo,
 
-Cool. Sorry for the noise then.
+Gentle ping. The issue is not only in the devfreq itself,
+but also it affects thermal. The devfreq cooling rely on
+busy_time and total_time updated by the devfreq monitoring
+(in simple_ondemand).
+Thermal uses DELAYED_WORK and is more reliable, but uses stale
+data from devfreq_dev_stats. It is especially visible when
+you have cgroup spanning one cluster. Android uses cgroups
+heavily. You can make easily this setup using 'taskset',
+run some benchmarks and observe 'devfreq_monitor' traces and
+timestamps, i.e. for your exynos-bus.
 
-	-ss
+The patch is really non-invasive and simple. It can be a good starting
+point for testing and proposing other solutions.
+
+Regards,
+Lukasz
+
+On 1/27/20 3:17 PM, lukasz.luba@arm.com wrote:
+> From: Lukasz Luba <lukasz.luba@arm.com>
+> 
+> Hi all,
+> 
+> This patch is a continuation of my previous work for fixing DEVFREQ monitoring
+> subsystem [1]. The issue is around DEFERRABLE_WORK, which uses TIMER_DEFERRABLE
+> under the hood which will work normally when the system is busy, but will not
+> cause a CPU to come out of idle and serve the DEVFREQ monitoring requests.
+> 
+> This is especially important in the SMP systems with many CPUs, when the load
+> balance tries to keep some CPUs idle. The next service request could not be
+> triggered when the CPU went idle in the meantime.
+> 
+> The DELAYED_WORK is going to be triggered even on an idle CPU. This will allow
+> to call the DEVFREQ monitoring in reliable intervals. Some of the drivers might
+> use internal counters to monitor their load, when the DEVFREQ work is not
+> triggered in a predictable way, these counters might overflow leaving the
+> device in undefined state.
+> 
+> To observe the difference, the trace output might be used, i.e.
+> 
+> echo 1 > /sys/kernel/debug/tracing/events/devfreq/enable
+> #your test starts here, i.e. 'sleep 5' or 'dd ' or 'gfxbench'
+> echo 0 > /sys/kernel/debug/tracing/events/devfreq/enable
+> cat /sys/kernel/debug/tracing/trace
+> 
+> When there are some registered devfreq drivers, you should see the traces
+> 'devfreq_moniotor' triggered in reliable intervals.
+> 
+> The patch set is based on Chanwoo's devfreq repository and branch
+> 'devfreq-next' [2].
+> 
+> Regards,
+> Lukasz Luba
+> 
+> [1] https://lkml.org/lkml/2019/2/12/1179
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-next
+> 
+> 
+> Lukasz Luba (1):
+>    drivers: devfreq: add DELAYED_WORK to monitoring subsystem
+> 
+>   drivers/devfreq/Kconfig   | 19 +++++++++++++++++++
+>   drivers/devfreq/devfreq.c |  6 +++++-
+>   2 files changed, 24 insertions(+), 1 deletion(-)
+> 
