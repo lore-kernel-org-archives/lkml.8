@@ -2,109 +2,76 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE72C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAF2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BED21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twe8H9y+"
+	by mail.kernel.org (Postfix) with ESMTP id 1475E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgA3MwX (ORCPT
+        id S1727257AbgA3Mya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:52:23 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40027 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3MwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:52:22 -0500
-Received: by mail-io1-f66.google.com with SMTP id x1so3831308iop.7;
-        Thu, 30 Jan 2020 04:52:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WWWqqdl6/zFK7VCcqGs7VSKzeXfwiFPT65eOA+JJXKk=;
-        b=twe8H9y+mCOg6TGOfiQIftqYD39FkUN+YYK91PDxtj17ajF94Z3zgVLNpUHMzeh68r
-         o3vq1prap/dQZg/9D1cNFSRFvTZudwh3u8x0bpCsrswZbhjnVxk5GsflWiQ0LGMhhm27
-         3gvOMGq2hdLp2XoFs9VcLX0LBECMYnSM+3tT1Oc3IWsl95uCWUqJ4Rd3PuXhc02QwCgQ
-         zqJPfmmZQSMXGND86753npb18I2EgTD7f/RGp2ZSRUOpZjdwQQ4mKShWBA9OwvJm6O+A
-         EVybu0s2fbr8KqjM94fvKXC06DNkYB+LJmun8aJI0JAn41KfTHcPFDrfX4ICkyRZW037
-         bvMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WWWqqdl6/zFK7VCcqGs7VSKzeXfwiFPT65eOA+JJXKk=;
-        b=GB8rryzJ7Yau848v1WXVfsvzeHYbfCI8OiArPti/gnlPi/sk/TMHwayy8H4DRMXONT
-         pOPuC07Zrk526nKzxHSAq7quEXLKwDXeuIFHePl2cYBTuUydYSxbcVcWMn94J7AA1KI+
-         cO81bYIQMeafxNC5181BK6YrnoUxPE+HfezXE5Jc8450TEOeE42Qruqvv5912a2nq7y5
-         CtDijfFAA2aGWALghkTdJZhX0BIEIOdsLYdFS9Q6Gat8HHV8YLz7osnw9QuaecUM965G
-         +abksj22ezavYb6wH16Db2ci6mreebtBlT6apq/9uAwNNbCtLCdsEfb3bnzUuyQTezVr
-         8APQ==
-X-Gm-Message-State: APjAAAVtocwuh3nQsh55Se9SroLfHKv9uY4mM1M84enErwIWwPlOIcvf
-        404J+F+cA9BWDcVhL7I3NNF16aRLEYXZ0OXX52c=
-X-Google-Smtp-Source: APXvYqwLWvk3owCDvlr+AA1Dl8UWosu0KT7f6EU+23kap2Gjhu+X7y/CbfG9Wir0asR8yty0iCS+9l4/Rw3M22bp2V0=
-X-Received: by 2002:a5d:9707:: with SMTP id h7mr4159275iol.112.1580388742224;
- Thu, 30 Jan 2020 04:52:22 -0800 (PST)
+        Thu, 30 Jan 2020 07:54:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbgA3Mya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:54:30 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D83DD20702;
+        Thu, 30 Jan 2020 12:54:28 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 07:54:27 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        borntraeger@de.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
+ issue)
+Message-ID: <20200130075427.303478a0@gandalf.local.home>
+In-Reply-To: <20200130105804.GD3841@kernel.org>
+References: <20200124073941.39119-1-tmricht@linux.ibm.com>
+        <20200124100742.4050c15e@gandalf.local.home>
+        <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
+        <20200124113610.662f4afb@gandalf.local.home>
+        <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
+        <20200127105553.3cd92ef8@gandalf.local.home>
+        <20200130105804.GD3841@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200129181253.24999-1-dave@stgolabs.net>
-In-Reply-To: <20200129181253.24999-1-dave@stgolabs.net>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Thu, 30 Jan 2020 13:52:32 +0100
-Message-ID: <CAOi1vP-75uoBBsnX262WoVL_jNreiSgnGmtytDKcsUE==ny2Jw@mail.gmail.com>
-Subject: Re: [PATCH] rbd: optimize barrier usage for Rmw atomic bitops
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 7:23 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
->
-> For both set and clear_bit, we can avoid the unnecessary barrier
-> on non LL/SC architectures, such as x86. Instead, use the
-> smp_mb__{before,after}_atomic() calls.
->
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  drivers/block/rbd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 2b184563cd32..7bc79b2b8f65 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -1371,13 +1371,13 @@ static void rbd_osd_submit(struct ceph_osd_request *osd_req)
->  static void img_request_layered_set(struct rbd_img_request *img_request)
->  {
->         set_bit(IMG_REQ_LAYERED, &img_request->flags);
-> -       smp_mb();
-> +       smp_mb__after_atomic();
->  }
->
->  static void img_request_layered_clear(struct rbd_img_request *img_request)
->  {
->         clear_bit(IMG_REQ_LAYERED, &img_request->flags);
-> -       smp_mb();
-> +       smp_mb__after_atomic();
->  }
->
->  static bool img_request_layered_test(struct rbd_img_request *img_request)
+On Thu, 30 Jan 2020 11:58:04 +0100
+Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
 
-Hi Davidlohr,
+> Em Mon, Jan 27, 2020 at 10:55:53AM -0500, Steven Rostedt escreveu:
+> > On Mon, 27 Jan 2020 08:34:23 +0100
+> > Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >   
+> > > Steven and Masami,
+> > > 
+> > > thanks for the patch, it fixes this issue!  
+> > 
+> > Thanks for letting me know. I'll add a:
+> > 
+> >   Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > 
+> > to the commit.  
+> 
+> So you're taking it, right?
 
-I don't think these barriers are needed at all.  I'll remove them.
+Yes (Linus already has it in his tree), because it was a kernel fix. The
+tools lib traceevent does not need to be changed for this.
 
-Thanks,
-
-                Ilya
+-- Steve
