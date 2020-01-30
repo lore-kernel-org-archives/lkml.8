@@ -2,245 +2,85 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EC5C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52FFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E949206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MW1puIL4"
+	by mail.kernel.org (Postfix) with ESMTP id 96EDD206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580388121;
+	bh=qzZKzJgbkkvTCNT1E1c6c/3+Mf9tyaDlOB6yKOTF4Us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B1Kc62IpQF/j+8gNViSdJuw8U2fler+cknxNLZcE6HRkgYc2YxTxlWuz0GPtS0rl3
+	 4jA80SMkZP289kquzZ+9pIm+YMApNqibhmeWMUTK6bKhdWdWHjSPq+qQRF38ZCKZcM
+	 Y3r2lvyA00mjMyUgCSmLBfzoGnmlp+djQ3JsLoms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgA3Ml5 (ORCPT
+        id S1727227AbgA3MmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:41:57 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:10577 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3Ml4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:41:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1580388115; x=1611924115;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=RYelv+ZOHc2F4o+UOLMQUvM6WVUst1DmQxZ06rGG3Mk=;
-  b=MW1puIL4VprB7eaaABxKj3RMJszHdrNM4u4ScxV24auG8zi6HJLIhbBa
-   GKGRA1s/E7A7Zd0kkzxiLOyZNyUoO/DT5d6a5JaJci6m+ql38Mb4kLUYE
-   5SLX/AgqDtr2r4jtLUhD8C7yPqvi6icquENgw3Y0eP7dvXY8UTszFEjj4
-   k=;
-IronPort-SDR: aeC/5RG4HaCQhPRg1bOmUwtsFtt5qsFjOM17qG7XJcl3e1uuYHAtBphOCE6SfInp3BrcuHiAct
- mCsRuAL4vdOQ==
-X-IronPort-AV: E=Sophos;i="5.70,381,1574121600"; 
-   d="scan'208";a="13617219"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Jan 2020 12:41:44 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id BE21AA17BE;
-        Thu, 30 Jan 2020 12:41:42 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Thu, 30 Jan 2020 12:41:42 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.153) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 30 Jan 2020 12:41:35 +0000
-From:   <sjpark@amazon.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     <sjpark@amazon.com>, David Miller <davem@davemloft.net>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Martin KaFai Lau" <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        <andriin@fb.com>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        <aams@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <dola@amazon.com>
-Subject: Re: Re: Latency spikes occurs from frequent socket connections
-Date:   Thu, 30 Jan 2020 13:41:21 +0100
-Message-ID: <20200130124121.24587-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CANn89iJOK9UMQspgikPWb-NA6vmo+wQPB5q7hnWpHDSxYrUSnA@mail.gmail.com> (raw)
+        Thu, 30 Jan 2020 07:42:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:51960 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbgA3Ml6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:41:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A04C4328;
+        Thu, 30 Jan 2020 04:41:57 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E7B43F68E;
+        Thu, 30 Jan 2020 04:41:56 -0800 (PST)
+Date:   Thu, 30 Jan 2020 12:41:55 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        mirq-linux@rere.qmqm.pl, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RESEND PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
+Message-ID: <20200130124155.GA6682@sirena.org.uk>
+References: <20200130114930.28882-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.153]
-X-ClientProxiedBy: EX13D36UWA003.ant.amazon.com (10.43.160.237) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <20200130114930.28882-1-codrin.ciubotariu@microchip.com>
+X-Cookie: Positively no smoking.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 09:52:43 -0800 Eric Dumazet <edumazet@google.com> wrote:
 
-> On Wed, Jan 29, 2020 at 9:14 AM <sjpark@amazon.com> wrote:
-> >
-> > Hello,
-> >
-> >
-> > We found races in the kernel code that incur latency spikes.  We thus would
-> > like to share our investigations and hear your opinions.
-> >
-> >
-> > Problem Reproduce
-> > =================
-> >
-> > You can reproduce the problem by compiling and running source code of
-> > 'server.c' and 'client.c', which I pasted at the end of this mail, as below:
-> >
-> >     $ gcc -o client client.c
-> >     $ gcc -o server server.c
-> >     $ ./server &
-> >     $ ./client
-> >     ...
-> >     port: 45150, lat: 1005320, avg: 229, nr: 1070811
-> >     ...
-> >
-> 
-> Thanks for the repro !
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-My pleasure :)
+On Thu, Jan 30, 2020 at 01:49:30PM +0200, Codrin Ciubotariu wrote:
 
-> 
-[...]
-> > Experimental Fix
-> > ----------------
-> >
-> > We confirmed this is the case by logging and some experiments.  Further,
-> > because the process of RST/ACK packet would stuck in front of the critical
-> > section while the ACK is being processed inside the critical section in most
-> > case, we add one more check of the RST/ACK inside the critical section.  In
-> > detail, it's as below:
-> >
-> >     --- a/net/ipv4/tcp_ipv4.c
-> >     +++ b/net/ipv4/tcp_ipv4.c
-> >     @@ -1912,6 +1912,29 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> >             tcp_segs_in(tcp_sk(sk), skb);
-> >             ret = 0;
-> >             if (!sock_owned_by_user(sk)) {
-> >     +               // While waiting for the socket lock, the sk may have
-> >     +               // transitioned to FIN_WAIT2/TIME_WAIT so lookup the
-> >     +               // twsk and if one is found reprocess the skb
-> >     +               if (unlikely(sk->sk_state == TCP_CLOSE && !th->syn
-> >     +                       && (th->fin || th->rst))) {
-> >     +                       struct sock *sk2 = __inet_lookup_established(
-> >     +                               net, &tcp_hashinfo,
-> >     +                               iph->saddr, th->source,
-> >     +                               iph->daddr, ntohs(th->dest),
-> >     +                               inet_iif(skb), sdif);
-> >     +                       if (sk2) {
-> >     +                               if (sk2 == sk) {
-> >     +                                       sock_put(sk2);
-> >     +                               } else {
-> >     +                                       bh_unlock_sock(sk);
-> >     +                                       tcp_v4_restore_cb(skb);
-> >     +                                       if (refcounted) sock_put(sk);
-> >     +                                       sk = sk2;
-> >     +                                       refcounted = true;
-> >     +                                       goto process;
-> >     +                               }
-> >     +                       }
-> >     +               }
-> 
-> 
-> Here are my comments
-> 
-> 
-> 1) This fixes IPv4 side only, so it can not be a proper fix.
-> 
-> 2) TCP is best effort. You can retry the lookup in ehash tables as
-> many times you want, a race can always happen after your last lookup.
-> 
->   Normal TCP flows going through a real NIC wont hit this race, since
-> all packets for a given 4-tuple are handled by one cpu (RSS affinity)
-> 
-> Basically, the race here is that 2 packets for the same flow are
-> handled by two cpus.
-> Who wins the race is random, we can not enforce a particular order.
+> Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-Thank you for the comments!  I personally agree with your opinions.
+I can't take any patches without a signoff, please see
+submitting-patches.rst.
 
-> 
-> I would rather try to fix the issue more generically, without adding
-> extra lookups as you did, since they might appear
-> to reduce the race, but not completely fix it.
-> 
-> For example, the fact that the client side ignores the RST and
-> retransmits a SYN after one second might be something that should be
-> fixed.
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I also agree with this direction.  It seems detecting this situation and
-adjusting the return value of tcp_timeout_init() to a value much lower than the
-one second would be a straightforward solution.  For a test, I modified the
-function to return 1 (4ms for CONFIG_HZ=250) and confirmed the reproducer be
-silent.  My following question is, how we can detect this situation in kernel?
-However, I'm unsure how we can distinguish this specific case from other cases,
-as everything is working as normal according to the TCP protocol.
+-----BEGIN PGP SIGNATURE-----
 
-Also, it seems the value is made to be adjustable from the user space using the
-bpf callback, BPF_SOCK_OPS_TIMEOUT_INIT:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4yzxAACgkQJNaLcl1U
+h9DhMggAgULBasGe93GC8xP7foe0sWUQUTvtUeuVxUrWZlYrXAPuYZI6f0/bMeDf
+chL5NIydQW2a9sMqyqBKfu5WZbl1k1ABVrFmA/CmUflMej4IdsVLM6mKdkhetmgu
+XjQtVObQGU7Rx7dkpGjsrVQkzuC94G5DfcGWJYq3uABTsMlDM5+Xdp6bUbWXHza1
+uCdbwrrbNivS4UH6WPvYW7I82MpdvonLc7ZhsDFa3yonrmHSnIvAQr0KLJZkCE5R
+6zGBQike3MUxHiwIYAslGI3Kc7pmMlVNUHzja77PpZVFNGN7TYCeRri8FQtLXZQt
+1lhBjUL3wgBwVOAYTzHtsXtUEgCOoQ==
+=f+66
+-----END PGP SIGNATURE-----
 
-    BPF_SOCK_OPS_TIMEOUT_INIT,  /* Should return SYN-RTO value to use or
-    				 * -1 if default value should be used
-    				 */
- 
-Thus, it sounds like you are suggesting to do the detection and adjustment from
-user space.  Am I understanding your point?  If not, please let me know.
-
-> 
-> 
-> 
-> 11:57:14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
-> 2560603644, win 65495, options [mss 65495,sackOK,TS val 953760623 ecr
-> 0,nop,wscale 7], length 0
-> 11:57:14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5,
-> win 512, options [nop,nop,TS val 953760623 ecr 953759375], length 0
-> 11:57:14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq
-> 2541101298, win 0, length 0
-> 11:57:15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
-> 2560603644, win 65495, options [mss 65495,sackOK,TS val 953761652 ecr
-> 0,nop,wscale 7], length 0
-> 
-> 
-> 
->                     skb_to_free = sk->sk_rx_skb_cache;
-> >                     sk->sk_rx_skb_cache = NULL;
-> >                     ret = tcp_v4_do_rcv(sk, skb);
-> >
-> > We applied this change to the kernel and confirmed that the latency spikes
-> > disappeared with the reproduce program.
-> >
-> >
-> > More Races
-> > ----------
-> >
-> > Further, the man who found the code path and made the fix found another race
-> > resulted from the commit ec94c2696f0b ("tcp/dccp: avoid one atomic operation
-> > for timewait hashdance").  He believes the 'refcount_set()' should be done
-> > before the 'spin_lock()', as it allows others to see the packet in the list but
-> > ignore as the reference count is zero.  This race seems much rare than the
-> > above one and thus we have no reproducible test for this, yet.
-> 
-> Again, TCP is best effort, seeing the refcount being 0 or not is
-> absolutely fine.
-> 
-> The cpu reading the refcnt can always be faster than the cpu setting
-> the refcount to non zero value, no matter how hard you try.
-> 
-> The rules are more like : we need to ensure all fields have
-> stable/updated values before allowing other cpus to get the object.
-> Therefore, writing a non zero refcount should happen last.
-
-I personally agree on this, either.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> Thanks.
-[...]
+--ew6BAiZeqk4r7MaW--
