@@ -2,114 +2,122 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF48C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAA7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452DD206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ECF920707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgA3PUv (ORCPT
+        id S1727334AbgA3PVO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:20:51 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33392 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgA3PUv (ORCPT
+        Thu, 30 Jan 2020 10:21:14 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:54864 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727186AbgA3PVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:20:51 -0500
-Received: from [109.134.33.162] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ixBca-0004pl-BA; Thu, 30 Jan 2020 15:20:44 +0000
-Date:   Thu, 30 Jan 2020 16:20:43 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     madhuparnabhowmik10@gmail.com, peterz@infradead.org,
-        mingo@kernel.org, paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
-Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
-Message-ID: <20200130152043.kgcf5s6h6qaalpbl@wittgenstein>
-References: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com>
- <20200130103158.azxldyfnugwvv6vy@wittgenstein>
- <20200130113339.GA25426@redhat.com>
- <32DE6B3E-ADC3-49EB-888C-CABCF82330FE@ubuntu.com>
+        Thu, 30 Jan 2020 10:21:14 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-41-bGG4hDvvOfmWYjQy5O4gVw-1; Thu, 30 Jan 2020 15:21:09 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 Jan 2020 15:21:09 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 Jan 2020 15:21:09 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>
+CC:     Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Topic: [PATCH 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Index: AQHV13M/Jf366MsxW0K0cA6JkRCOwKgDUdtg
+Date:   Thu, 30 Jan 2020 15:21:08 +0000
+Message-ID: <e0926d9a7bc3461a9157d24210c679df@AcuMS.aculab.com>
+References: <20200130115255.20840-1-hdegoede@redhat.com>
+ <20200130115255.20840-3-hdegoede@redhat.com>
+ <20200130134310.GX14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200130134310.GX14914@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <32DE6B3E-ADC3-49EB-888C-CABCF82330FE@ubuntu.com>
+X-MC-Unique: bGG4hDvvOfmWYjQy5O4gVw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:45:26PM +0100, Christian Brauner wrote:
-> On January 30, 2020 12:33:41 PM GMT+01:00, Oleg Nesterov <oleg@redhat.com> wrote:
-> >On 01/30, Christian Brauner wrote:
-> >>
-> >> On Thu, Jan 30, 2020 at 11:50:28AM +0530,
-> >madhuparnabhowmik10@gmail.com wrote:
-> >> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> >> >
-> >> > This patch fixes the following sparse error:
-> >> > kernel/exit.c:627:25: error: incompatible types in comparison
-> >expression
-> >> >
-> >> > And the following warning:
-> >> > kernel/exit.c:626:40: warning: incorrect type in assignment
-> >> >
-> >> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> >>
-> >> I think the previous version was already fine but hopefully
-> >> RCU_INIT_POINTER() really saves some overhead. In any case:
-> >
-> >It is not about overhead, RCU_INIT_POINTER() documents the fact that we
-> >didn't make any changes to the new parent, we only need to change the
-> >pointer.
+From: Peter Zijlstra
+> Sent: 30 January 2020 13:43
+...
+> > + * Bay Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> > + *  000:   100 *  5 /  6  =  83.3333 MHz
+> > + *  001:   100 *  1 /  1  = 100.0000 MHz
+> > + *  010:   100 *  4 /  3  = 133.3333 MHz
+> > + *  011:   100 *  7 /  6  = 116.6667 MHz
+> > + *  100:   100 *  4 /  5  =  80.0000 MHz
 > 
-> Right, I wasn't complaining.  RCU_INIT_POINTER() claims that it has less overhead than rcu_assign_pointer().
-> So that is an additional argument for it.
+> > + * Cherry Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> > + * 0000:   100 *  5 /  6  =  83.3333 MHz
+> > + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> > + * 0010:   100 *  4 /  3  = 133.3333 MHz
+> > + * 0011:   100 *  7 /  6  = 116.6667 MHz
+> > + * 0100:   100 *  4 /  5  =  80.0000 MHz
+> > + * 0101:   100 * 14 / 15  =  93.3333 MHz
+> > + * 0110:   100 *  9 / 10  =  90.0000 MHz
+> > + * 0111:   100 *  8 /  9  =  88.8889 MHz
+> > + * 1000:   100 *  7 /  8  =  87.5000 MHz
 > 
-> >
-> >And btw, I don't really understand the __rcu annotations. Say,
-> >according
-> >to sparse this code is wrong:
-> >
-> >	int __rcu *P;
-> >
-> >	void func(int *p)
-> >	{
-> >		P = p;
-> >	}
-> >
-> >OK, although quite possibly it is fine.
-> >
-> >However, this code
-> >
-> >	int __rcu *P;
-> >
-> >	void func(int __rcu *p)
-> >	{
-> >		*p = 10;
-> >	       	P = p;
-> >	}
-> >
-> >is almost certainly wrong but sparse is happy, asn is the same.
+> > + * Merriefield (BYT MID) SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> > + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> > + * 0010:   100 *  4 /  3  = 133.3333 MHz
 > 
-> That's more an argument to fix sparse I guess?
-> The annotations themselves are rather useful I think.
-> They at least help me when reading the code.
-> It's not that rcu lifetimes are trivial and anything that helps remind me that an object wants rcu semantics I'm happy to take it. :)
+> > + * Moorefield (CHT MID) SDM MSR_FSB_FREQ frequencies simplified PLL model:
+> > + * 0000:   100 *  5 /  6  =  83.3333 MHz
+> > + * 0001:   100 *  1 /  1  = 100.0000 MHz
+> > + * 0010:   100 *  4 /  3  = 133.3333 MHz
+> > + * 0011:   100 *  1 /  1  = 100.0000 MHz
 > 
-> >
-> >
-> >> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-> >
-> >Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Unless I'm going cross-eyed, that's 4 times the exact same table.
 
-Thanks, applied for post -rc1.
-Christian
+Apart from the very last line which duplicates 100MHz.
+And the fact that some entries are missing (presumed invalid?)
+for certain cpu.
+
+If the tables are ever used for setting the frequency
+then the valid range (and values?) would need to be known.
+
+I did wonder if the 'mask' was necessary?
+Are the unused bits reserved and zero?
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
