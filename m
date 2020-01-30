@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170DEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B8CC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8974214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F0E214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409633;
-	bh=bxk9yNk/N4n0H8vazRDqQh0DVJDhvAsAxShkNseNHhI=;
+	s=default; t=1580409636;
+	bh=prWKBOSnA91RLf3LQDCLLz2iB8AjvxPjxv1Icpu7c/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIz970xeK3ArxSWs3r/StkOwlz6TsFglxpXn23vMmdv7eDRXcpbaxWkwx7l14olrs
-	 7paXI6fTtQDXiFa/qZViLgPZ4wPgaDYZh9ToYj8cSnqXByPB9WT0pC5bE2QuRRaHOU
-	 cX9Jrzh5btEo9tNzbKHAk4djoX0QzsCM3JFDpuc8=
+	b=r+1oOczA1IVWW5vi+G2059e3sR94yr9YFzIQIKg+Ov69xTkHKm7WMJDJ0+u3hqLcx
+	 K62k+dr32mUfVdzQe4WRtO7AMSnd1HAOL6zb7MueZ6G7afKNwIEZqC7kazpFjRARUG
+	 +rv5NB4KvAR+zNsMIw6ULc3MWlsaKst1/teAyBt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgA3Skc (ORCPT
+        id S1729987AbgA3Skf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:40:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:40:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbgA3Sk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:40:29 -0500
+        id S1729971AbgA3Skb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:40:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ACE120702;
-        Thu, 30 Jan 2020 18:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AD02083E;
+        Thu, 30 Jan 2020 18:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409628;
-        bh=bxk9yNk/N4n0H8vazRDqQh0DVJDhvAsAxShkNseNHhI=;
+        s=default; t=1580409631;
+        bh=prWKBOSnA91RLf3LQDCLLz2iB8AjvxPjxv1Icpu7c/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teCmqWlK/ad6UxZ0hqtWI03BsNrSiUyFMkZ7rIXxRz6/5ypgXehd6Z80HsPZIuxpf
-         eiPqEMLVmWbdIAlvsyLVmu9/HG3deUFxVoC0wpNFf9DM3TZf7W6pRfS8vc1mdfIgZR
-         4lyMKqUGga+t4eS369VllfsEr/bcBbgFxkqd8zvg=
+        b=sbKFcNpRrGIKNYqSOakEYSVqwn4lGvANsxUCaFHWQ979GfpFBvOUipU+5ttWHAqfm
+         LA+FkpQt08G1DaaL01ZgD/phHeVlxzE4DBHaM3yz+D1pTdLKxNiLKwhCIQZSQJKMXe
+         XjXwgcDbC9GSvvlvlWRQfYRTTyYr8eH1qnUIVZgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.5 26/56] iio: st_gyro: Correct data for LSM9DS0 gyro
-Date:   Thu, 30 Jan 2020 19:38:43 +0100
-Message-Id: <20200130183613.900108281@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.5 27/56] driver core: Fix test_async_driver_probe if NUMA is disabled
+Date:   Thu, 30 Jan 2020 19:38:44 +0100
+Message-Id: <20200130183614.066118554@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -62,120 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit e825070f697abddf3b9b0a675ed0ff1884114818 upstream.
+commit 264d25275a46fce5da501874fa48a2ae5ec571c8 upstream.
 
-The commit 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
-assumes that gyro in LSM9DS0 is the same as others with 0xd4 WAI ID,
-but datasheet tells slight different story, i.e. the first scale factor
-for the chip is 245 dps, and not 250 dps.
+Since commit 57ea974fb871 ("driver core: Rewrite test_async_driver_probe
+to cover serialization and NUMA affinity"), running the test with NUMA
+disabled results in warning messages similar to the following.
 
-Correct this by introducing a separate settings for LSM9DS0.
+test_async_driver test_async_driver.12: NUMA node mismatch -1 != 0
 
-Fixes: 41c128cb25ce ("iio: st_gyro: Add lsm9ds0-gyro support")
-Depends-on: 45a4e4220bf4 ("iio: gyro: st_gyro: fix L3GD20H support")
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+If CONFIG_NUMA=n, dev_to_node(dev) returns -1, and numa_node_id()
+returns 0. Both are widely used, so it appears risky to change return
+values. Augment the check with IS_ENABLED(CONFIG_NUMA) instead
+to fix the problem.
+
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Fixes: 57ea974fb871 ("driver core: Rewrite test_async_driver_probe to cover serialization and NUMA affinity")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Link: https://lore.kernel.org/r/20191127202453.28087-1-linux@roeck-us.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/gyro/st_gyro_core.c |   75 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+ drivers/base/test/test_async_driver_probe.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -138,7 +138,6 @@ static const struct st_sensor_settings s
- 			[2] = LSM330DLC_GYRO_DEV_NAME,
- 			[3] = L3G4IS_GYRO_DEV_NAME,
- 			[4] = LSM330_GYRO_DEV_NAME,
--			[5] = LSM9DS0_GYRO_DEV_NAME,
- 		},
- 		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
- 		.odr = {
-@@ -202,6 +201,80 @@ static const struct st_sensor_settings s
- 			},
- 		},
- 		.sim = {
-+			.addr = 0x23,
-+			.value = BIT(0),
-+		},
-+		.multi_read_bit = true,
-+		.bootime = 2,
-+	},
-+	{
-+		.wai = 0xd4,
-+		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
-+		.sensors_supported = {
-+			[0] = LSM9DS0_GYRO_DEV_NAME,
-+		},
-+		.ch = (struct iio_chan_spec *)st_gyro_16bit_channels,
-+		.odr = {
-+			.addr = 0x20,
-+			.mask = GENMASK(7, 6),
-+			.odr_avl = {
-+				{ .hz = 95, .value = 0x00, },
-+				{ .hz = 190, .value = 0x01, },
-+				{ .hz = 380, .value = 0x02, },
-+				{ .hz = 760, .value = 0x03, },
-+			},
-+		},
-+		.pw = {
-+			.addr = 0x20,
-+			.mask = BIT(3),
-+			.value_on = ST_SENSORS_DEFAULT_POWER_ON_VALUE,
-+			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-+		},
-+		.enable_axis = {
-+			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
-+			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
-+		},
-+		.fs = {
-+			.addr = 0x23,
-+			.mask = GENMASK(5, 4),
-+			.fs_avl = {
-+				[0] = {
-+					.num = ST_GYRO_FS_AVL_245DPS,
-+					.value = 0x00,
-+					.gain = IIO_DEGREE_TO_RAD(8750),
-+				},
-+				[1] = {
-+					.num = ST_GYRO_FS_AVL_500DPS,
-+					.value = 0x01,
-+					.gain = IIO_DEGREE_TO_RAD(17500),
-+				},
-+				[2] = {
-+					.num = ST_GYRO_FS_AVL_2000DPS,
-+					.value = 0x02,
-+					.gain = IIO_DEGREE_TO_RAD(70000),
-+				},
-+			},
-+		},
-+		.bdu = {
-+			.addr = 0x23,
-+			.mask = BIT(7),
-+		},
-+		.drdy_irq = {
-+			.int2 = {
-+				.addr = 0x22,
-+				.mask = BIT(3),
-+			},
-+			/*
-+			 * The sensor has IHL (active low) and open
-+			 * drain settings, but only for INT1 and not
-+			 * for the DRDY line on INT2.
-+			 */
-+			.stat_drdy = {
-+				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
-+				.mask = GENMASK(2, 0),
-+			},
-+		},
-+		.sim = {
- 			.addr = 0x23,
- 			.value = BIT(0),
- 		},
+--- a/drivers/base/test/test_async_driver_probe.c
++++ b/drivers/base/test/test_async_driver_probe.c
+@@ -44,7 +44,8 @@ static int test_probe(struct platform_de
+ 	 * performing an async init on that node.
+ 	 */
+ 	if (dev->driver->probe_type == PROBE_PREFER_ASYNCHRONOUS) {
+-		if (dev_to_node(dev) != numa_node_id()) {
++		if (IS_ENABLED(CONFIG_NUMA) &&
++		    dev_to_node(dev) != numa_node_id()) {
+ 			dev_warn(dev, "NUMA node mismatch %d != %d\n",
+ 				 dev_to_node(dev), numa_node_id());
+ 			atomic_inc(&warnings);
 
 
