@@ -2,61 +2,90 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD3FC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A2C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AADF20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079F2206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 16:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgA3Q0L (ORCPT
+        id S1727346AbgA3Q1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 11:26:11 -0500
-Received: from verein.lst.de ([213.95.11.211]:40905 "EHLO verein.lst.de"
+        Thu, 30 Jan 2020 11:27:44 -0500
+Received: from verein.lst.de ([213.95.11.211]:40913 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbgA3Q0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 11:26:11 -0500
+        id S1727263AbgA3Q1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 11:27:43 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 07E0468B20; Thu, 30 Jan 2020 17:26:07 +0100 (CET)
-Date:   Thu, 30 Jan 2020 17:26:06 +0100
+        id 442FB68C4E; Thu, 30 Jan 2020 17:27:41 +0100 (CET)
+Date:   Thu, 30 Jan 2020 17:27:40 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jan Vesely <jano.vesely@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link
- bandwidth notification"
-Message-ID: <20200130162606.GB6377@lst.de>
-References: <20200115221008.GA191037@google.com> <20200120023326.GA149019@google.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Eric Dumazet <edumazet@google.com>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] dma-debug: increase HASH_SIZE
+Message-ID: <20200130162740.GA6429@lst.de>
+References: <20191030184844.84219-1-edumazet@google.com> <CAMuHMdVK=dUxhJh1pjLe4bGn3V=FHJ_90oga0USRBw-wSqd8Pw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120023326.GA149019@google.com>
+In-Reply-To: <CAMuHMdVK=dUxhJh1pjLe4bGn3V=FHJ_90oga0USRBw-wSqd8Pw@mail.gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 08:33:26PM -0600, Bjorn Helgaas wrote:
-> NVMe, GPU folks, do your drivers or devices change PCIe link
-> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
-> the PCI core interprets changes like that as problems that need to be
-> reported.
+On Tue, Dec 10, 2019 at 03:55:08PM +0100, Geert Uytterhoeven wrote:
+> On Wed, Oct 30, 2019 at 8:13 PM Eric Dumazet <edumazet@google.com> wrote:
+> > With modern NIC, it is not unusual having about ~256,000 active dma
+> > mappings. Hash size of 1024 buckets is too small.
+> >
+> > Forcing full cache line per bucket does not seem useful,
+> > especially now that we have a contention on free_entries_lock
+> > for allocations and freeing of entries. Better using space
+> > to fit more buckets.
+> >
+> > Signed-off-by: Eric Dumazet <edumazet@google.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >  kernel/dma/debug.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+> > index 4ad74f5987ea9e95f9bb5e2d1592254e367d24fb..35e2a853bff9c482d789ab331d79aaee07753a97 100644
+> > --- a/kernel/dma/debug.c
+> > +++ b/kernel/dma/debug.c
+> > @@ -27,7 +27,7 @@
+> >
+> >  #include <asm/sections.h>
+> >
+> > -#define HASH_SIZE       1024ULL
+> > +#define HASH_SIZE       16384ULL
+> >  #define HASH_FN_SHIFT   13
+> >  #define HASH_FN_MASK    (HASH_SIZE - 1)
+> >
+> > @@ -87,7 +87,7 @@ typedef bool (*match_fn)(struct dma_debug_entry *, struct dma_debug_entry *);
+> >  struct hash_bucket {
+> >         struct list_head list;
+> >         spinlock_t lock;
+> > -} ____cacheline_aligned_in_smp;
+> > +};
+> >
+> >  /* Hash list to save the allocated dma addresses */
+> >  static struct hash_bucket dma_entry_hash[HASH_SIZE];
+> 
+> JFTR, this increases dma_entry_hash size by 327680 bytes, and pushes
+> a few more boards beyond their bootloader-imposed kernel size limits.
+> 
+> Disabling CONFIG_DMA_API_DEBUG fixes that.
+> Of course the real fix is to fix the bootloaders...
 
-The NVMe driver doesn't.  For devices I don't know of any, but Ican't
-find anything in the spec that would forbid it.
+Can someone just send a patch to switch this to a dynamic allocation?
