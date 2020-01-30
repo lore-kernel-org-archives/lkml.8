@@ -2,95 +2,89 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2664DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EFCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC61E20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bm8CJepr"
+	by mail.kernel.org (Postfix) with ESMTP id 26ED420702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgA3IAP (ORCPT
+        id S1726891AbgA3IDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:00:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43462 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgA3IAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:00:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XnXHQPHbbFlev6SIF+EFCVeGDG26FYxTO2L/ebYCkAs=; b=bm8CJepr+Pj34KELoYqkEhCwX
-        fCm7LnxR3yvUvOsU9h+7moHepsw9ZxY6bkv0zxIkXzWmgaOlhZeXRmkU3IHdA31RzYqMF6B3ezEkE
-        HZD/42zes2LO55eEMAXR+7dq4wlG047PdjLDu2pKs1B/2GPNh3NrLDcuVusZaSg8RH0zFRGwPcG4D
-        U3fiAtVhIvGy4Ikf+Pus5ZSsJqxHtyDXyVK72q1UEpinu8jcZnHaLrnb5SHWYYn5L8ZcDx1iU+q00
-        59EPRzfQl88oljwbmQaGuaB+C9h7ksljceO2cJmAxImXrs+f9JGFUmRMf4VqSksHdLlokhYF95CJF
-        ep8CWbGiw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ix4kH-0004zP-OW; Thu, 30 Jan 2020 08:00:13 +0000
-Date:   Thu, 30 Jan 2020 00:00:13 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com
-Subject: Re: [PATCH 04/12] mm: Add readahead address space operation
-Message-ID: <20200130080013.GK6615@bombadil.infradead.org>
-References: <20200125013553.24899-1-willy@infradead.org>
- <20200125013553.24899-5-willy@infradead.org>
- <20200129002456.GH18610@dread.disaster.area>
+        Thu, 30 Jan 2020 03:03:13 -0500
+Received: from sauhun.de ([88.99.104.3]:46338 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbgA3IDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 03:03:13 -0500
+Received: from localhost (p54B33261.dip0.t-ipconnect.de [84.179.50.97])
+        by pokefinder.org (Postfix) with ESMTPSA id 6EABE2C0697;
+        Thu, 30 Jan 2020 09:03:11 +0100 (CET)
+Date:   Thu, 30 Jan 2020 09:03:07 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     alex.williams@ettus.com
+Cc:     mical.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Williams <alex.williams@ni.com>
+Subject: Re: [PATCH] i2c: cadence: Handle transfer_size rollover
+Message-ID: <20200130080307.GA2208@ninjato>
+References: <20190131213957.11568-1-alex.williams@ettus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
 Content-Disposition: inline
-In-Reply-To: <20200129002456.GH18610@dread.disaster.area>
+In-Reply-To: <20190131213957.11568-1-alex.williams@ettus.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 11:24:56AM +1100, Dave Chinner wrote:
-> On Fri, Jan 24, 2020 at 05:35:45PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > This replaces ->readpages with a saner interface:
-> >  - Return the number of pages not read instead of an ignored error code.
-> >  - Pages are already in the page cache when ->readahead is called.
-> >  - Implementation looks up the pages in the page cache instead of
-> >    having them passed in a linked list.
-> ....
-> > diff --git a/mm/readahead.c b/mm/readahead.c
-> > index 5a6676640f20..6d65dae6dad0 100644
-> > --- a/mm/readahead.c
-> > +++ b/mm/readahead.c
-> > @@ -121,7 +121,18 @@ static void read_pages(struct address_space *mapping, struct file *filp,
-> >  
-> >  	blk_start_plug(&plug);
-> >  
-> > -	if (mapping->a_ops->readpages) {
-> > +	if (mapping->a_ops->readahead) {
-> > +		unsigned left = mapping->a_ops->readahead(filp, mapping,
-> > +				start, nr_pages);
-> > +
-> > +		while (left) {
-> > +			struct page *page = readahead_page(mapping,
-> > +					start + nr_pages - left - 1);
-> 
-> Off by one? start = 2, nr_pages = 2, left = 1, this looks up the
-> page at index 2, which is the one we issued IO on, not the one we
-> "left behind" which is at index 3.
 
-Yup.  I originally had:
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-		while (left--) ...
+On Thu, Jan 31, 2019 at 01:39:57PM -0800, alex.williams@ettus.com wrote:
+> From: Alex Williams <alex.williams@ni.com>
+>=20
+> Under certain conditions, Cadence's I2C controller's transfer_size
+> register will roll over and generate invalid read transactions. Before
+> this change, the ISR relied solely on the RXDV bit to determine when to
+> write more data to the user's buffer. The invalid read data would cause
+> overruns, smashing stacks and worse.
+>=20
+> This change stops the buffer writes to the requested boundary and
+> reports the error. The controller will be reset so normal transactions
+> may resume.
+>=20
+> Signed-off-by: Alex Williams <alex.williams@ni.com>
 
-decided that was too confusing and didn't quite complete that thought.
+Applied to for-next with another Rev-by from Michal given in another
+thread, thanks!
+
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4yjbcACgkQFA3kzBSg
+Kbb8RxAAiCoAtge6yROLbqYc4Ruq1gKWnE76UU2AbpwSK1GEFdyKat70l9hN0Edb
+7ISc+b+z9X8gYfm8Sx8CjKoqC+B4ldxyZM+hNCOzkMfzbIGUNTllajhZIAb5MEhI
+E405O36pd94ogiFGcTALsgtLgfaC2HDzVTqm5xOyJqJRte+W0palPx4UL6+33PbR
+QYmMkPhA+6AUlnCXsrtDjM13eg3u6gRn/IG/ZfztOPufyzsE3sHaMgyqLhE1puI/
+5N3kjDQQAfespuTspjLm8S7J4cqSxEYpieog6II6NGCRFQTsfiYv6iHCzyywJ5Xk
+t5CgEaqnqZBzr8WFWmpgngz33RrYBTEOPbM5WScvVKaMfm3bKAP20Q23yEaDwZAC
+SfI0SQJAyJ9EZi/z2NuDRi8QgED5hoqchWN0MT9VYhGsSEfZA4q4LiECkHL8Zg85
+VxZMCZcfQHzER3epg0P3imvP5slj6L4LhSzg2mu9JdHUSqcsjIA16E+Di9kZ/eCF
+rJkh8Sb4tK1ClVlnTW4/YtmfC7Ru0XrN5ZFeugZxUurByG5Q3NtezkJHAzrVJGFz
+L3AbX0Fl7lA3/nX/astrsUgG4sXoOG7bWW/7FiA0jWPrX+WglbEbXZQ64I6MXN5E
+TOjyGoxiXCU2zyrlqeiHwf7XDRmzMpxAOLYZjmKgibcX1OcjLBw=
+=WTaX
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
