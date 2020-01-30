@@ -2,115 +2,130 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9380AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA213C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E282206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE609206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="r75JM9pR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgA3Ol0 (ORCPT
+        id S1727446AbgA3Ol6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:41:26 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55048 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3Ol0 (ORCPT
+        Thu, 30 Jan 2020 09:41:58 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34339 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726902AbgA3Ol5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:41:26 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1344B1495BD07;
-        Thu, 30 Jan 2020 06:41:24 -0800 (PST)
-Date:   Thu, 30 Jan 2020 15:41:23 +0100 (CET)
-Message-Id: <20200130.154123.1710430183269161404.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        Thu, 30 Jan 2020 09:41:57 -0500
+Received: from [IPv6:2001:420:44c1:2577:91db:5aec:4999:a214]
+ ([IPv6:2001:420:44c1:2577:91db:5aec:4999:a214])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id xB0wi8DaDn7E5xB10ihO2H; Thu, 30 Jan 2020 15:41:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580395314; bh=QnPaP0j7tU+614rpIwXLpxlJdA4DU0xJ3ZxN1G79ADQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=r75JM9pRExf82CZ7FTBGlvkFhPkPpCm2DkdDJINO6iJLHjtBlgmFv1Cb74Y4xU1HN
+         5j+JSYi9g1tRZeqf/i7OM7IWlauH0nRLUzf4RRH7Ak064pkFjkAETMb9YMWxqNnerj
+         Xq8asYxF8w2DfV3MM0LpaztPE65XxDhvBLat//JhmNq3OMXhdCrs9c3CdrhNx7nBZr
+         zSnMiyirRNlq6PratqnuLv0kpm1MFxIDyqsrbx03Hppe6Lc60YNP8qriaTUr+vLA3H
+         XBun4lMMYIk4G/Of9cUwzOKulAqDHCVd6ArajwBXxWQ8o/LXYZ7UGjDxnSlmtwaptf
+         +vsndPF+uLtsg==
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 06:41:25 -0800 (PST)
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+Date:   Thu, 30 Jan 2020 15:41:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfN+R3ebeiMNb2jJ1P75j291PEX7Nx0Vzuu5rpXhX/cJ38nUz/4cnLiRCfwVJYfJCp/PkuNx0rQWRF/xNAiuZxjbGS1z51MggWPtc4+dtx+wXvGHWJJKu
+ cyfZmlbdcWigV2+QEOY+HCeV/V34tI23h763YO8GoG2/NECw0Neg+njWR/4eurtljC2w5qduoYwUDJ4JlT5BCsXEzix3dUiZsqdYgpq15Jr6evsknO11Lc9/
+ ZhKgWLbF4iGzuTUG6BqLqGc0F2MlCvBBltw5wI9DSDwcd4m+VQAMibmVIfJrniLo3mRCV+A5Saceg9UlQNa26uTo7q/BVZWJA6WodoTqS/ySvEOfSbjufqUT
+ 2mG55hSvr7OJbhx1Y4g8iugiAB4nojbnAKFx7eAKAicO8xqLeO+qWiI/Zk4V44ywXScsZdieB2CA92LkRmjnbC/xJPdzqGk+QTUyYuS7U/Sk6ybPJ/TA1pxb
+ 8MWxU5lkx88SLfdOppp29RZAkVnbvNicF38sw5TAiu5TmtLBp4hl397SG8C1xNC0eUE1J9m7YyMpygeCX04Kv00Ns5mEN7cJLTOIghbfUwZP3hDtVC36H0BW
+ znA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sowjanya,
 
-1) Various mptcp fixupes from Florian Westphal and Geery Uytterhoeven.
+On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+> This series adds Tegra210 VI and CSI driver for built-in test pattern
+> generator (TPG) capture.
+> 
+> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+> CSI port is one-to-one mapped to VI channel for video capture.
+> 
+> This series has TPG support only where it creates hard media links
+> between CSI subdevice and VI video device without device graphs.
+> 
+> v4l2-compliance results are available below the patch diff.
+> 
+> [v0]:	Includes,
+> 	- Adds CSI TPG clock to Tegra210 clock driver
+> 	- Host1x video driver with VI and CSI clients.
+> 	- Support for Tegra210 only.
+> 	- VI CSI TPG support with hard media links in driver.
+> 	- Video formats supported by Tegra210 VI
+> 	- CSI TPG supported video formats
 
-2) Don't clear the node/port GUIDs after we've assigned the correct
-   values to them.  From Leon Romanovsky.
+I'm trying to compile this patch series using the media_tree master
+branch (https://git.linuxtv.org//media_tree.git), but it fails:
 
-Please pull, thanks a lot!
+drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
+drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
+   71 |  unsigned int count = *nbuffers;
+      |               ^~~~~
+drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
+drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
+  518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+      |                                                       ^
+make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
+drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
+  157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+      |                                                       ^
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
+drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
+drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
+  213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
+  259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
+drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
+  246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
+drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
+drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
+  286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+      |                                                   ^~
 
-The following changes since commit b3a6082223369203d7e7db7e81253ac761377644:
+And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
+have a 'host' field.
 
-  Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security (2020-01-28 18:55:17 -0800)
+Does this series depend on another patch that's not yet in mainline?
 
-are available in the Git repository at:
+Regards,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
-
-for you to fetch changes up to 9fbf082f569980ddd7cab348e0a118678db0e47e:
-
-  net/core: Do not clear VF index for node/port GUIDs query (2020-01-30 15:20:26 +0100)
-
-----------------------------------------------------------------
-David S. Miller (2):
-      mptcp: Fix build with PROC_FS disabled.
-      Merge branch 'mptcp-fix-sockopt-crash-and-lockdep-splats'
-
-Florian Westphal (4):
-      mptcp: defer freeing of cached ext until last moment
-      mptcp: fix panic on user pointer access
-      mptcp: avoid a lockdep splat when mcast group was joined
-      mptcp: handle tcp fallback when using syn cookies
-
-Geert Uytterhoeven (3):
-      mptcp: Fix incorrect IPV6 dependency check
-      mptcp: MPTCP_HMAC_TEST should depend on MPTCP
-      mptcp: Fix undefined mptcp_handle_ipv6_mapped for modular IPV6
-
-Joe Perches (2):
-      sch_choke: Use kvcalloc
-      net: drop_monitor: Use kstrdup
-
-Leon Romanovsky (1):
-      net/core: Do not clear VF index for node/port GUIDs query
-
-Lorenzo Bianconi (1):
-      net: mvneta: fix XDP support if sw bm is used as fallback
-
-Mat Martineau (1):
-      Revert "MAINTAINERS: mptcp@ mailing list is moderated"
-
-Randy Dunlap (1):
-      MAINTAINERS: mptcp@ mailing list is moderated
-
-Willem de Bruijn (1):
-      udp: document udp_rcv_segment special case for looped packets
-
- drivers/net/ethernet/marvell/mvneta.c | 10 +++++++---
- include/linux/tcp.h                   |  2 --
- include/net/mptcp.h                   |  9 +++------
- include/net/udp.h                     |  7 +++++++
- net/core/drop_monitor.c               |  8 ++------
- net/core/rtnetlink.c                  |  4 ++--
- net/ipv4/syncookies.c                 |  4 ++++
- net/ipv4/tcp_input.c                  |  3 +++
- net/ipv6/syncookies.c                 |  3 +++
- net/ipv6/tcp_ipv6.c                   |  6 +++---
- net/mptcp/Kconfig                     |  6 ++++--
- net/mptcp/protocol.c                  | 56 +++++++++++++++++++++++++++++++++-----------------------
- net/mptcp/subflow.c                   | 13 +++++++++----
- net/sched/sch_choke.c                 |  2 +-
- 14 files changed, 81 insertions(+), 52 deletions(-)
+	Hans
