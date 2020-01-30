@@ -2,130 +2,95 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3A7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C7D20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED8B20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgA3PcV (ORCPT
+        id S1727314AbgA3PdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:32:21 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10678 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727186AbgA3PcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:32:21 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UFSulN110948;
-        Thu, 30 Jan 2020 10:32:16 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xrvwa4fd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 10:32:14 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00UFVZLv006647;
-        Thu, 30 Jan 2020 15:32:09 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 2xrda7g6sq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jan 2020 15:32:09 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UFW7NK36766184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 15:32:07 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC97713604F;
-        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C8D5136055;
-        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
-Received: from [9.163.57.149] (unknown [9.163.57.149])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jan 2020 15:32:07 +0000 (GMT)
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <20200130144609.GD6682@sirena.org.uk>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <3eaf74eb-1817-a04d-1fc9-146c188584d0@linux.ibm.com>
-Date:   Thu, 30 Jan 2020 09:32:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 30 Jan 2020 10:33:25 -0500
+Received: from mga06.intel.com ([134.134.136.31]:47862 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbgA3PdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:33:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 07:26:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
+   d="scan'208";a="218308624"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 30 Jan 2020 07:26:00 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6322A25A; Thu, 30 Jan 2020 17:25:59 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 3/6] console: Use for_each_console() helper in unregister_console()
+Date:   Thu, 30 Jan 2020 17:25:55 +0200
+Message-Id: <20200130152558.51839-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200130152558.51839-1-andriy.shevchenko@linux.intel.com>
+References: <20200130152558.51839-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200130144609.GD6682@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 mlxlogscore=952 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300111
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We have rather open coded single linked list manipulations where we may
+simple use for_each_console() helper with properly set exit conditions.
 
-On 1/30/20 8:46 AM, Mark Brown wrote:
-> On Wed, Jan 29, 2020 at 02:08:24PM -0600, Eddie James wrote:
->
-> Overall this looks good, some comments below but they're all fairly
-> minor.
+Replace open coded single-linked list handling with for_each_console()
+helper in use.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+v4: Add tag (Petr)
+ kernel/printk/printk.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-Thanks for the quick review! I'll fix what you've suggested below.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 51337ed426e0..d40a316908da 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2809,7 +2809,7 @@ EXPORT_SYMBOL(register_console);
+ 
+ int unregister_console(struct console *console)
+ {
+-        struct console *a, *b;
++	struct console *con;
+ 	int res;
+ 
+ 	pr_info("%sconsole [%s%d] disabled\n",
+@@ -2825,11 +2825,10 @@ int unregister_console(struct console *console)
+ 	if (console_drivers == console) {
+ 		console_drivers=console->next;
+ 		res = 0;
+-	} else if (console_drivers) {
+-		for (a=console_drivers->next, b=console_drivers ;
+-		     a; b=a, a=b->next) {
+-			if (a == console) {
+-				b->next = a->next;
++	} else {
++		for_each_console(con) {
++			if (con->next == console) {
++				con->next = console->next;
+ 				res = 0;
+ 				break;
+ 			}
+-- 
+2.24.1
 
-Thanks,
-
-Eddie
-
-
->
->> +++ b/drivers/spi/spi-fsi.c
->> @@ -0,0 +1,547 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Copyright (C) IBM Corporation 2020
->> + */
-> Please make the entire comment a C++ one so things look more
-> intentional.
->
->> +
->> +static int fsi_spi_data_in(u64 in, u8 *rx, int len)
->> +{
->> +	int i;
->> +	int num_bytes = len > 8 ? 8 : len;
-> Please write normal conditional statements to improve legibility, the
-> ternery operator isn't really needed here.
->
->> +static int fsi_spi_reset(struct fsi_spi *ctx)
->> +{
->> +	int rc;
->> +
->> +	dev_info(ctx->dev, "Resetting SPI controller.\n");
-> This should be lowered to dev_dbg() at most, it's not really adding
-> anything otherwise.
->
->> +static int fsi_spi_remove(struct device *dev)
->> +{
->> +	return 0;
->> +}
-> Remove empty functions, if they can safely be empty then it should be
-> possible to omit them.
->
->> +static const struct fsi_device_id fsi_spi_ids[] = {
->> +	{ FSI_ENGID_SPI, FSI_VERSION_ANY },
->> +	{ }
->> +};
-> This needs a MODULE_DEVICE_TABLE annotation.
