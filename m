@@ -2,185 +2,128 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8803C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508FEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6EC20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580385734;
-	bh=tVPXQH5q8XnlGUk0C1Vzpy1lLJul14m7fKhEYVRrAd4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=pa8SH2zySCnXhabbqLlq6oRiyiwTjynWsgVK8JJHFLYAm8M9bHTJ4yWJ2XUJT8gnS
-	 +rKQl6zeCdxhG0UehGgkKNDpRGkfMNCSANnAh83a9jIpUBR9Ja+iHW+cWEC+rFekfn
-	 w3R64cRpRn0OFjZ2QY2g3tIWyAxBPC22Nssm3fMU=
+	by mail.kernel.org (Postfix) with ESMTP id 3035D20702
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgA3MCO (ORCPT
+        id S1727235AbgA3MCu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:02:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44422 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgA3MCN (ORCPT
+        Thu, 30 Jan 2020 07:02:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39866 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgA3MCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:02:13 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so2998701ljj.11;
-        Thu, 30 Jan 2020 04:02:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=CbriAO+YYaiW8OHBrskHol8fuQgG0MiL80JrFGJ4VkU=;
-        b=GieZAgTO7yJC2xV9LQSQzlexrQv1xAzIbArjSVsjF/UQ6sRD5l+n37p6UWh5ImVjbD
-         CPEbE8hVZfFXzuHyhT1cKbKy8BczbXLDba0jDWXMseIYgEaS2hvMbN+Gpf6e+1xCg4Qn
-         7xDmpVmrHNz0kFY1aU2zJp+5BPFVvD/2y0oWaZxnx0bcJW4L4O5Rvyd9buX8k6M9vd1L
-         3TvecjiGY6F56qCAPI94sPVDGVPnp8ycI6m4eDKccq8Eb+8qaPg0nhDQP0xWJDdOmfR3
-         ef3T0CC9nUWl3fjYJOUsHOFWbdxLdXKdNzjgpuij1XPujePgrmHUgNf9E4GT99g/Cbd6
-         /HkQ==
+        Thu, 30 Jan 2020 07:02:50 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so3912381wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 04:02:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=CbriAO+YYaiW8OHBrskHol8fuQgG0MiL80JrFGJ4VkU=;
-        b=QNRSnQHWWcMRY58wF4CrRn2XmGUla2k+mJrq75oIAwvujhMfdxcLptMY+xdE4ripmQ
-         Xa5RkAu+xB3PN0JTFfC5f7JGqQqlAZw944Caqjrfac2cP1gjeMy9OP6PuWAUaA7+zxKd
-         USAFiWCl149YZPzMlFjj5Lg9GdevizI93cPyMMyEuZYtD3gz1uyyM7hlXNVloZfU1oqE
-         92lLn0/S19dmENoQ44nUAbn+xZtYv8Fiowb7PkVesrq9wjbL318Mvgp3WDS2DWfNS2lE
-         ZqTsIqxqOAmZs4sCoFSXZbbUmTgykLwwMItrAE5fIX1+Jn+5qys7T+Td/ByiY2LrVlXE
-         Cvog==
-X-Gm-Message-State: APjAAAUhLz4rzRGkpx1P7LrtIpfvVqfswCUpY9I5hj5V+mjf7Ue7xgEF
-        DlgdAMk4R+5p0T/5x3prras=
-X-Google-Smtp-Source: APXvYqy+RM59IGhHmXCuppva3qQWf3mfMzt7K1mfteyOWdFXq1P548w6Hc+gLb3RWWm1szJQCH80wQ==
-X-Received: by 2002:a2e:9a01:: with SMTP id o1mr2647487lji.247.1580385731111;
-        Thu, 30 Jan 2020 04:02:11 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id f29sm2702633ljo.76.2020.01.30.04.02.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jan 2020 04:02:10 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, bigeasy@linutronix.de,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH][RESEND] usb: dwc3: gadget: Handle dequeuing of non queued URB gracefully
-In-Reply-To: <20200116132459.22383-1-alexandru.ardelean@analog.com>
-References: <20191106144553.16956-1-alexandru.ardelean@analog.com> <20200116132459.22383-1-alexandru.ardelean@analog.com>
-Date:   Thu, 30 Jan 2020 14:02:05 +0200
-Message-ID: <87d0b1885e.fsf@kernel.org>
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=Eti0yRnmjwLs2yRe1krSvPdmZnl0PtvNqJ94tkjn534=;
+        b=kkKsJE5o7fnQpWjt6/nrllPjmwTjb822a27IWsTqVCWCjL8A3dpa550lKZBRVj1HWw
+         1mu2qLTjAx8MTOXijLsV7MqIzzcocE1zxstE+N+eJ3ZIm+hliSKsbmncfvVv2xqLW4z8
+         1bvWXU/mdHtEl8ww6WPMhBCc3wAaeP+sf866Xs7ff2hR4d/BLbQ6nVgXZZUOWFAwdY1e
+         KDAPLJYooe50lvtcEi4F7sFTn+ZDPmOdUSabZTiKPRfP79cptGdWB2ID1gk8dkX3MjI0
+         Mdvsk0D/FqYICvTQQe3sywRaOvoOP2y8n4bR82K/gueWrZJZvxXJ1jDCD+P26RWHpL1V
+         U0tA==
+X-Gm-Message-State: APjAAAW5ZeRVkcRza3iSFAJAV5nwkb+dSjqrMXbNU1sD0uYpW6Cimqqw
+        FVmWYvRfXowPl/R67YpPBUkGog==
+X-Google-Smtp-Source: APXvYqxNJ2gaOJkwmVoFcJMWZ4ZHP8gYRIU3hwNEd8Jbog0G2JtnUuUg0Cz8MDtps+Uu5rm/vUM+/A==
+X-Received: by 2002:a1c:f008:: with SMTP id a8mr3810733wmb.81.1580385767515;
+        Thu, 30 Jan 2020 04:02:47 -0800 (PST)
+Received: from ?IPv6:2a00:20:8033:fc11:1c15:76bc:997f:b2bd? ([2a00:20:8033:fc11:1c15:76bc:997f:b2bd])
+        by smtp.gmail.com with ESMTPSA id h8sm7282645wrx.63.2020.01.30.04.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 04:02:46 -0800 (PST)
+Date:   Thu, 30 Jan 2020 12:45:26 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200130113339.GA25426@redhat.com>
+References: <20200130062028.4870-1-madhuparnabhowmik10@gmail.com> <20200130103158.azxldyfnugwvv6vy@wittgenstein> <20200130113339.GA25426@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] exit.c: Fix Sparse errors and warnings
+To:     Oleg Nesterov <oleg@redhat.com>
+CC:     madhuparnabhowmik10@gmail.com, peterz@infradead.org,
+        mingo@kernel.org, paulmck@kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, rcu@vger.kernel.org
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+Message-ID: <32DE6B3E-ADC3-49EB-888C-CABCF82330FE@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Alexandru Ardelean <alexandru.ardelean@analog.com> writes:
-
-> From: Lars-Peter Clausen <lars@metafoo.de>
+On January 30, 2020 12:33:41 PM GMT+01:00, Oleg Nesterov <oleg@redhat.com> wrote:
+>On 01/30, Christian Brauner wrote:
+>>
+>> On Thu, Jan 30, 2020 at 11:50:28AM +0530,
+>madhuparnabhowmik10@gmail.com wrote:
+>> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>> >
+>> > This patch fixes the following sparse error:
+>> > kernel/exit.c:627:25: error: incompatible types in comparison
+>expression
+>> >
+>> > And the following warning:
+>> > kernel/exit.c:626:40: warning: incorrect type in assignment
+>> >
+>> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>>
+>> I think the previous version was already fine but hopefully
+>> RCU_INIT_POINTER() really saves some overhead. In any case:
 >
-> Trying to dequeue and URB that is currently not queued should be a no-op
-> and be handled gracefully.
+>It is not about overhead, RCU_INIT_POINTER() documents the fact that we
+>didn't make any changes to the new parent, we only need to change the
+>pointer.
+
+Right, I wasn't complaining.  RCU_INIT_POINTER() claims that it has less overhead than rcu_assign_pointer().
+So that is an additional argument for it.
+
 >
-> Use the list field of the URB to indicate whether it is queued or not by
-> setting it to the empty list when it is not queued.
+>And btw, I don't really understand the __rcu annotations. Say,
+>according
+>to sparse this code is wrong:
 >
-> Handling this gracefully allows for race condition free synchronization
-> between the complete callback being called to to a completed transfer and
-> trying to call usb_ep_dequeue() at the same time.
-
-We need a little more information here. Can you further explain what
-happens and how you caught this?
-
-> Tested-by: Michael Olbrich <m.olbrich@pengutronix.de>
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
+>	int __rcu *P;
 >
-> * Added Michael Olbrich's Tested-by tag
->   https://lore.kernel.org/linux-usb/20191112144108.GA1859@pengutronix.de/
+>	void func(int *p)
+>	{
+>		P = p;
+>	}
 >
->  drivers/usb/dwc3/gadget.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>OK, although quite possibly it is fine.
 >
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 1b8014ab0b25..22a78eb41a5b 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -177,7 +177,7 @@ static void dwc3_gadget_del_and_unmap_request(struct =
-dwc3_ep *dep,
->  {
->  	struct dwc3			*dwc =3D dep->dwc;
->=20=20
-> -	list_del(&req->list);
-> +	list_del_init(&req->list);
+>However, this code
+>
+>	int __rcu *P;
+>
+>	void func(int __rcu *p)
+>	{
+>		*p = 10;
+>	       	P = p;
+>	}
+>
+>is almost certainly wrong but sparse is happy, asn is the same.
 
-this should *not* be necessary. Neither the INIT_LIST_HEAD() below.
+That's more an argument to fix sparse I guess?
+The annotations themselves are rather useful I think.
+They at least help me when reading the code.
+It's not that rcu lifetimes are trivial and anything that helps remind me that an object wants rcu semantics I'm happy to take it. :)
 
->  	req->remaining =3D 0;
->  	req->needs_extra_trb =3D false;
->=20=20
-> @@ -847,6 +847,7 @@ static struct usb_request *dwc3_gadget_ep_alloc_reque=
-st(struct usb_ep *ep,
->  	req->epnum	=3D dep->number;
->  	req->dep	=3D dep;
->  	req->status	=3D DWC3_REQUEST_STATUS_UNKNOWN;
-> +	INIT_LIST_HEAD(&req->list);
->=20=20
->  	trace_dwc3_alloc_request(req);
->=20=20
-> @@ -1549,6 +1550,10 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *e=
-p,
->=20=20
->  	spin_lock_irqsave(&dwc->lock, flags);
->=20=20
-> +	/* Not queued, nothing to do */
-> +	if (list_empty(&req->list))
-> +		goto out0;
+>
+>
+>> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>
+>Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-The loop below is actually looking for the request in our lists. You
-just made the entire loop below unnecessary, but you didn't change it
-accordingly. Moreover, I think that a user dequeueing a request that
-wasn't queued for the current endpoint indicates a possible bug in the
-gadget driver which needs to be fixed.
-
-If you really disagree, suffice to change "ret =3D -EINVAL;" to "ret =3D
-0;" and you would get what you want, without any of the extra cruft.
-
-cheers
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4yxb0ACgkQzL64meEa
-mQa6yRAA3qZXokGaKbxI6YrzLjwzLNFTAfuzXmIzXQdyzTU5RKaFW/QMno+DKv/B
-vBdYcrsuBInSw74GU4IRTwDTsy9q2Xpyn2lsRqQqjfGys0XzCX/b47HxdiPDlClT
-rGwBXjp96qxcr/eeOLELxrH6EjhRBptD85/tK91Vqi0PmaAt1mt/7kPk80df92PH
-h7kcxC0ZgsERFU3O5maWlNo5oHzWqr0aiRWOV8wsbWpecCk3UJhS00cQb0y+BHQ3
-ByiQjIBCNpOxXvA7cerSeMTuJd2IaQ1GOzAwynGE+2VCzNR91/xJ24GMysD25KD2
-XoiKOqgG1fm38UjI0WYdYRzTyuQwhvch+8FuBVO1grH55bJ1y16m4g9ZrMkv9LJP
-ciob6UlmsuuYBBHBD/puZmeAPW4DPmhS7ZYaa1OdYwjIMf1EOO/iEiyENyysDHE+
-ZnmOj4lO8Loip1HeFOE+HmmPi3Gg4zPlzdrtHSGGJFhVgciQ46SAHfRGf7+6TGR2
-4U3pAZGsR69tuirwCbVWKRVmrH1ybxnuOOzM//rUhrK/IMRrFWnROCU57WXnDAh5
-v8c8mxKiHTQ3aN4tD5P6w7DDC528gT555g6J3iyc1/85vrkdkFu3JEO+gMRNSuea
-ubV8SgriXmYHAd4+ggcRed6AYUtpYAAIrt+8f9yV57PpH3gP0OE=
-=BG5P
------END PGP SIGNATURE-----
---=-=-=--
