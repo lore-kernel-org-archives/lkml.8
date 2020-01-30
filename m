@@ -2,267 +2,128 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C1AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED37320707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5CA20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K94PvBPM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f+KBjjef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgA3RCW (ORCPT
+        id S1727484AbgA3RCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:02:22 -0500
-Received: from mail-yw1-f45.google.com ([209.85.161.45]:42104 "EHLO
-        mail-yw1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgA3RCV (ORCPT
+        Thu, 30 Jan 2020 12:02:25 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13959 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgA3RCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:02:21 -0500
-Received: by mail-yw1-f45.google.com with SMTP id b81so2307411ywe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 09:02:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GWyw2294XdMAvsthTlcx13XjSW4J/Y/cJveTRnfDmRs=;
-        b=K94PvBPMaoFOmbLn+LR29NEndRELbCTzCdiuSGcC3rB0u0GiPIs+BZtubd6awuEI38
-         H4ed5a0tCrr2QKR5WhL/mxXv2gR03TUMWiaMt23D5j6XeuVXoqACNGvCPh49Y1P2jfdM
-         CtCwy4TrPvSonNdA0bFihQpIPBVNJ/WtfzphGNeHTVO5IFfOSNpZsqq2RF9KUb7VXNwQ
-         GNzy8+xNksndYdW0sRruQQlLmeGbmXl64n0vR69XH4K+LkmL56xZNzOwjUvvMs3ZsTVK
-         pTCOHho5QwrhDrVnwi4RE6KAc+eU5l3/1ZmPiA+Wwontvc3Ft0YHNzHzMzvS7QUdaf5Z
-         MtCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GWyw2294XdMAvsthTlcx13XjSW4J/Y/cJveTRnfDmRs=;
-        b=F2OWLKM3dL8Fi243M78qyyeWB8cuLWn3MRHUA3XXCk/KgqdnqAxyg//bZ7i4EcPlTK
-         8FPl9sibWhAMRDaPukFIdyAY1VAvT5/iqgGtcDcZp2titL1bU8QYZ4+ORNrHCAZ1/GCL
-         +9w44iN2G2SpiW4y8xHbtMft3jKUmugpgLgjG7kSXWjg5ifzAI+TPmK9/xBACP7z1CeL
-         sgx03G3LZLS/lZZChVJf7e3UM6o6JNCGJICPjd5Ipb5XQFnsi61npqIZ9kq00YYOn5IC
-         xbaxGnk38VNbJPx4rHTOvOU9SuOd//dp3xFYDeEmJGsRKqh6lWYkq3SbTP8UhO2lqwbr
-         qQgw==
-X-Gm-Message-State: APjAAAXWhTpi80EMmShMEzIITyTcJxDkTQYgzsCOqyhajhDev1MZAo8v
-        ocWhgJ/jOU5IOofG3jLtayfcdDRn3YDrvwH/DPCCWg==
-X-Google-Smtp-Source: APXvYqyTjdHogLaV/3tWd/Kd2UXYv0Awbm0eMTiU1lyEzQFA73rkgoTS511rXtpynkwnHbysBe+KZRyxowbmk8x9Jno=
-X-Received: by 2002:a81:3a06:: with SMTP id h6mr4135966ywa.170.1580403740040;
- Thu, 30 Jan 2020 09:02:20 -0800 (PST)
+        Thu, 30 Jan 2020 12:02:24 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e330c0b0000>; Thu, 30 Jan 2020 09:02:03 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 Jan 2020 09:02:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 09:02:23 -0800
+Received: from [10.2.164.115] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
+ 2020 17:02:23 +0000
+Subject: Re: Re: Re: [RFC PATCH v1 4/5] media: tegra: Add Tegra Video input
+ driver for Tegra210
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <1580235801-4129-5-git-send-email-skomatineni@nvidia.com>
+ <20200129111340.GF2479935@ulmo>
+ <070f9a4c-1919-f3f6-fef3-ed0a84cf5776@nvidia.com>
+ <20200130122055.GA2584455@ulmo>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <5a45782a-d88f-099a-f3b6-3c0255131f6b@nvidia.com>
+Date:   Thu, 30 Jan 2020 09:02:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CANn89iJOK9UMQspgikPWb-NA6vmo+wQPB5q7hnWpHDSxYrUSnA@mail.gmail.com>
- <20200130124121.24587-1-sjpark@amazon.com>
-In-Reply-To: <20200130124121.24587-1-sjpark@amazon.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 30 Jan 2020 09:02:08 -0800
-Message-ID: <CANn89iKDn2XhrnLo2rLf7HGXanEuokprqJ_mb0iPqXEnARc9tw@mail.gmail.com>
-Subject: Re: Re: Latency spikes occurs from frequent socket connections
-To:     sjpark@amazon.com
-Cc:     David Miller <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        andriin@fb.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        aams@amazon.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        dola@amazon.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200130122055.GA2584455@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580403723; bh=A9RuPB5fbixK5sm9wKeq5QfAS+EZrvYRY7JYNhFDIxM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=f+KBjjefTnGF+7UwoAa9RNl2MGpafpuIMkycNlYO3mvZKyGb+pnAb7SfZtnWE9Qiq
+         pXfRB7v8J2Kbfb0ONZ+7H0yt/iEibISeh9AWrAjNpBFg4c3Mb5V0Nf3NWa7tp75GT7
+         OAAXITy2uqWyrz5UtCH6UcbZ+jMRie1i9EzYlhMhlKYGxfS6ld28TpFFU+5reXQOmy
+         +Chrfc/+ecGwiCVNveR2ge83D+ZY+2k4lQdT3bSgwpc4UNb/t+k5Q20OJexu3t+TlB
+         ShQsGCdA2nuVSXex8Xj/09EMUrnPjuIUiSWCntiL2nhyDA+N5fpR4jF8AB850rRdBq
+         6O16IKT8ainJA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 4:41 AM <sjpark@amazon.com> wrote:
->
-> On Wed, 29 Jan 2020 09:52:43 -0800 Eric Dumazet <edumazet@google.com> wrote:
->
-> > On Wed, Jan 29, 2020 at 9:14 AM <sjpark@amazon.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > >
-> > > We found races in the kernel code that incur latency spikes.  We thus would
-> > > like to share our investigations and hear your opinions.
-> > >
-> > >
-> > > Problem Reproduce
-> > > =================
-> > >
-> > > You can reproduce the problem by compiling and running source code of
-> > > 'server.c' and 'client.c', which I pasted at the end of this mail, as below:
-> > >
-> > >     $ gcc -o client client.c
-> > >     $ gcc -o server server.c
-> > >     $ ./server &
-> > >     $ ./client
-> > >     ...
-> > >     port: 45150, lat: 1005320, avg: 229, nr: 1070811
-> > >     ...
-> > >
-> >
-> > Thanks for the repro !
->
-> My pleasure :)
->
-> >
+
+On 1/30/20 4:20 AM, Thierry Reding wrote:
+> On Wed, Jan 29, 2020 at 09:23:38AM -0800, Sowjanya Komatineni wrote:
+>> On 1/29/20 3:13 AM, Thierry Reding wrote:
+>>> On Tue, Jan 28, 2020 at 10:23:20AM -0800, Sowjanya Komatineni wrote:
 > [...]
-> > > Experimental Fix
-> > > ----------------
-> > >
-> > > We confirmed this is the case by logging and some experiments.  Further,
-> > > because the process of RST/ACK packet would stuck in front of the critical
-> > > section while the ACK is being processed inside the critical section in most
-> > > case, we add one more check of the RST/ACK inside the critical section.  In
-> > > detail, it's as below:
-> > >
-> > >     --- a/net/ipv4/tcp_ipv4.c
-> > >     +++ b/net/ipv4/tcp_ipv4.c
-> > >     @@ -1912,6 +1912,29 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> > >             tcp_segs_in(tcp_sk(sk), skb);
-> > >             ret = 0;
-> > >             if (!sock_owned_by_user(sk)) {
-> > >     +               // While waiting for the socket lock, the sk may have
-> > >     +               // transitioned to FIN_WAIT2/TIME_WAIT so lookup the
-> > >     +               // twsk and if one is found reprocess the skb
-> > >     +               if (unlikely(sk->sk_state == TCP_CLOSE && !th->syn
-> > >     +                       && (th->fin || th->rst))) {
-> > >     +                       struct sock *sk2 = __inet_lookup_established(
-> > >     +                               net, &tcp_hashinfo,
-> > >     +                               iph->saddr, th->source,
-> > >     +                               iph->daddr, ntohs(th->dest),
-> > >     +                               inet_iif(skb), sdif);
-> > >     +                       if (sk2) {
-> > >     +                               if (sk2 == sk) {
-> > >     +                                       sock_put(sk2);
-> > >     +                               } else {
-> > >     +                                       bh_unlock_sock(sk);
-> > >     +                                       tcp_v4_restore_cb(skb);
-> > >     +                                       if (refcounted) sock_put(sk);
-> > >     +                                       sk = sk2;
-> > >     +                                       refcounted = true;
-> > >     +                                       goto process;
-> > >     +                               }
-> > >     +                       }
-> > >     +               }
-> >
-> >
-> > Here are my comments
-> >
-> >
-> > 1) This fixes IPv4 side only, so it can not be a proper fix.
-> >
-> > 2) TCP is best effort. You can retry the lookup in ehash tables as
-> > many times you want, a race can always happen after your last lookup.
-> >
-> >   Normal TCP flows going through a real NIC wont hit this race, since
-> > all packets for a given 4-tuple are handled by one cpu (RSS affinity)
-> >
-> > Basically, the race here is that 2 packets for the same flow are
-> > handled by two cpus.
-> > Who wins the race is random, we can not enforce a particular order.
->
-> Thank you for the comments!  I personally agree with your opinions.
->
-> >
-> > I would rather try to fix the issue more generically, without adding
-> > extra lookups as you did, since they might appear
-> > to reduce the race, but not completely fix it.
-> >
-> > For example, the fact that the client side ignores the RST and
-> > retransmits a SYN after one second might be something that should be
-> > fixed.
->
-> I also agree with this direction.  It seems detecting this situation and
-> adjusting the return value of tcp_timeout_init() to a value much lower than the
-> one second would be a straightforward solution.  For a test, I modified the
-> function to return 1 (4ms for CONFIG_HZ=250) and confirmed the reproducer be
-> silent.  My following question is, how we can detect this situation in kernel?
-> However, I'm unsure how we can distinguish this specific case from other cases,
-> as everything is working as normal according to the TCP protocol.
->
-> Also, it seems the value is made to be adjustable from the user space using the
-> bpf callback, BPF_SOCK_OPS_TIMEOUT_INIT:
->
->     BPF_SOCK_OPS_TIMEOUT_INIT,  /* Should return SYN-RTO value to use or
->                                  * -1 if default value should be used
->                                  */
->
-> Thus, it sounds like you are suggesting to do the detection and adjustment from
-> user space.  Am I understanding your point?  If not, please let me know.
->
-
-No, I was suggesting to implement a mitigation in the kernel :
-
-When in SYN_SENT state, receiving an suspicious ACK should not
-simply trigger a RST.
-
-There are multiple ways maybe to address the issue.
-
-1) Abort the SYN_SENT state and let user space receive an error to its
-connect() immediately.
-
-2) Instead of a RST, allow the first SYN retransmit to happen immediately
-(This is kind of a challenge SYN. Kernel already implements challenge acks)
-
-3) After RST is sent (to hopefully clear the state of the remote),
-schedule a SYN rtx in a few ms,
-instead of ~ one second.
-
-
-> >
-> >
-> >
-> > 11:57:14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
-> > 2560603644, win 65495, options [mss 65495,sackOK,TS val 953760623 ecr
-> > 0,nop,wscale 7], length 0
-> > 11:57:14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5,
-> > win 512, options [nop,nop,TS val 953760623 ecr 953759375], length 0
-> > 11:57:14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq
-> > 2541101298, win 0, length 0
-> > 11:57:15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
-> > 2560603644, win 65495, options [mss 65495,sackOK,TS val 953761652 ecr
-> > 0,nop,wscale 7], length 0
-> >
-> >
-> >
-> >                     skb_to_free = sk->sk_rx_skb_cache;
-> > >                     sk->sk_rx_skb_cache = NULL;
-> > >                     ret = tcp_v4_do_rcv(sk, skb);
-> > >
-> > > We applied this change to the kernel and confirmed that the latency spikes
-> > > disappeared with the reproduce program.
-> > >
-> > >
-> > > More Races
-> > > ----------
-> > >
-> > > Further, the man who found the code path and made the fix found another race
-> > > resulted from the commit ec94c2696f0b ("tcp/dccp: avoid one atomic operation
-> > > for timewait hashdance").  He believes the 'refcount_set()' should be done
-> > > before the 'spin_lock()', as it allows others to see the packet in the list but
-> > > ignore as the reference count is zero.  This race seems much rare than the
-> > > above one and thus we have no reproducible test for this, yet.
-> >
-> > Again, TCP is best effort, seeing the refcount being 0 or not is
-> > absolutely fine.
-> >
-> > The cpu reading the refcnt can always be faster than the cpu setting
-> > the refcount to non zero value, no matter how hard you try.
-> >
-> > The rules are more like : we need to ensure all fields have
-> > stable/updated values before allowing other cpus to get the object.
-> > Therefore, writing a non zero refcount should happen last.
->
-> I personally agree on this, either.
->
->
-> Thanks,
-> SeongJae Park
->
-> >
-> > Thanks.
+>>>> diff --git a/drivers/staging/media/tegra/host1x-video.c b/drivers/staging/media/tegra/host1x-video.c
 > [...]
+>>>> +	media_device_init(&cam->media_dev);
+>>>> +	ret = media_device_register(&cam->media_dev);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(cam->dev, "failed to register media device: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	cam->v4l2_dev.mdev = &cam->media_dev;
+>>>> +	ret = v4l2_device_register(cam->dev, &cam->v4l2_dev);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(cam->dev, "V4L2 device registration failed: %d\n", ret);
+>>>> +		goto register_error;
+>>>> +	}
+>>>> +
+>>>> +	dev_set_drvdata(&dev->dev, cam);
+>>>> +
+>>>> +	ret = host1x_device_init(dev);
+>>>> +	if (ret < 0)
+>>>> +		goto dev_exit;
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +dev_exit:
+>>>> +	host1x_device_exit(dev);
+>>> There should be no need to call host1x_device_exit() when
+>>> host1x_device_init() failed because the latter already takes care of
+>>> undoing whatever it did already.
+>>>
+>> host1x_device_init can fail if any of its client ops init fails.
+>>
+>> So, calling host1x_device_exit here to undo the things done in other
+>> successful client init ops.
+> host1x_device_init() already takes care of undoing what it did on
+> failure. Also, it makes sure to only undo what had already been done,
+> rather than tear down every client, even if it hadn't been initialized
+> yet when the failure happened. The latter is what would happen if you
+> called host1x_device_exit() to cleanup at this point.
+>
+> Thierry
+
+Sorry, yes I see host1x_device_init calls exit ops on failures .
+
+Will remove it. Thanks Thierry.
+
