@@ -2,108 +2,164 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7715BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11A4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCA2206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07572063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 22:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TMfOq3Cm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ejEL51Fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgA3WvC (ORCPT
+        id S1727598AbgA3WwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 17:51:02 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43054 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgA3WvC (ORCPT
+        Thu, 30 Jan 2020 17:52:17 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43770 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgA3WwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 17:51:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u131so2395030pgc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:51:00 -0800 (PST)
+        Thu, 30 Jan 2020 17:52:17 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p11so1908712plq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 14:52:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nm7q/eqnnGMhJ4cSfabctzSKxn0MOorqNV0sKFngedQ=;
-        b=TMfOq3Cm7tFFkVWajkEH/mOlfghX4QyLqQHqYZZWR4V20ArmjrlHpz0d8+8xSByinZ
-         hdNbCAldYk6XW/2l4H6+W+D99nfYFDFdlo1JF1zsEkJxE9vw/m1xetfRlk4B1wB04LUf
-         vgQJJnXFxYGn+sGKkA8pUh58KRPmTHCO35p+LwSV7Wkci1t0zGgCnSKFVsD3CJRVFyCo
-         Hx7zchW0IfdwQSjwaOeDPLPmvT/qzRZbY0PFmpfI+3jsVs5e+ZwXMFUc5OJY345A6bMq
-         pB48aI/3uWmIP/mXK6bLsZAtTLERYf85LGN/IzjM9ZEQtYWVvQ1wOCqgnYJxKRvVLiz2
-         DaBg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eaWMUtXcOeIEHnvDinmqZzdKFQeL2HEGtQM6ZC3zDaU=;
+        b=ejEL51FeSlA7f3DlyTEeDXC2pe93wORkySV3bmhw/BO6aB42bwX7V7tjSj9J6P2SHp
+         f5/HYe3bVMgbAD4gac0DFdBMI8KHgQxFd0hUJQ1yFyQYmiMFlExiolbkXivF6/OdZ+Rj
+         7bfSnjiXzvTFSo8uhQG+GzZKOsC20MowmNzKw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nm7q/eqnnGMhJ4cSfabctzSKxn0MOorqNV0sKFngedQ=;
-        b=TBGGFUIez4Hf/PSatalhPmBGUeO0SalvSVSsmI2B1xb8nPRVU6CTqS9zdvQ6g2/dt+
-         TuuICPt3wbqUJxWXhDdnjQbLG1x/AFuWSusvoXsUbaH/7ZqIOpZG7mphFyKtGgZdMgTs
-         txf20Le7eixahNZ+Ei2Un69oXjQsl3X/n3yCfLLEVGbwsVVOWl7ENPzQ1w1qmlZTooa6
-         tx4y56pGdXyh3AW61L0J/aCrz+Sfkgt+oayPrAf6EmF1RxNWEytL6MZe7NbPZm3wuuaN
-         elIrLIEETASmXjXStQ1otyKYi1zHcoNw8kualeGMf1VabrBnv5/ZwdZiS3Rmq7aslbX7
-         CskA==
-X-Gm-Message-State: APjAAAUBISqCWKKW+lgT6cf3+k9iur/30NwiTI+SW4Y/f5KLXast6NLM
-        p4cj+xqWVwYL7zlLUW4x+DtxCsQsVwiaXmkcLRIr6A==
-X-Google-Smtp-Source: APXvYqx0i4HutGZ0NwffQW6YWyeSX4LgIJj846OBe2RwSGkQlJX/8HwMxqcna9y1bwf7blHqEu8eaWZyufGuXP7EBl4=
-X-Received: by 2002:a63:597:: with SMTP id 145mr6755667pgf.384.1580424659726;
- Thu, 30 Jan 2020 14:50:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eaWMUtXcOeIEHnvDinmqZzdKFQeL2HEGtQM6ZC3zDaU=;
+        b=DlXiZkx20DeaN0GZFfkU+K2YPYWjSwz08Uk3pdrYaK1kyJOX9kCLkbUDqx1gci9A3y
+         GzXW02/nwgRG1MPFJU4KkesR4rjkwFfSqAegBaXYv2MY7AOYbkbvwpj9zyubtBnavOjo
+         1R9wHXxTr56RvuG/X/9Ajjroj0MzvoyH3QgWi1yfuf9+pzp1vnQOFzAF1c3eqjCzg3k7
+         uKBC+MpCFtRC4QyDHBzjGZIgTpWmacfZhWoN3nJJs3awpdpUWTgBcgqMSMa+yMbzkCNK
+         fwTN1aqZmtZF9uFh6FhjyTU3IBj96bBrNVMwm//W9aQ+9FL45hZlXXPdla8H9xG+HwNN
+         2H7A==
+X-Gm-Message-State: APjAAAWhQWRFDILH6/rnXASZghUPAFwN2YNYNWtdYO8gPG+UjBQfHFdv
+        NQNY3JlPtQudK/ojYHzQb14u2A==
+X-Google-Smtp-Source: APXvYqwuaul4KGpwmFeFZDa4/0hUeCp30cet4kZXjU9b1GuBJP7Qp5KLNa3km9ESjmx+/Cj0sBvgjw==
+X-Received: by 2002:a17:90a:c24c:: with SMTP id d12mr8713302pjx.113.1580424736927;
+        Thu, 30 Jan 2020 14:52:16 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r66sm8064315pfc.74.2020.01.30.14.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 14:52:16 -0800 (PST)
+Date:   Thu, 30 Jan 2020 14:52:14 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH] Discard .note.gnu.property sections in generic NOTES
+Message-ID: <202001301452.84D47F5@keescook>
+References: <20200130224337.4150-1-hjl.tools@gmail.com>
+ <20200130224337.4150-2-hjl.tools@gmail.com>
 MIME-Version: 1.0
-References: <20200128072002.79250-1-brendanhiggins@google.com>
- <20200128072002.79250-5-brendanhiggins@google.com> <20200129063836.6C2A62064C@mail.kernel.org>
-In-Reply-To: <20200129063836.6C2A62064C@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 30 Jan 2020 14:50:48 -0800
-Message-ID: <CAFd5g440ENddSAGA=CQhE-RZQAC8Hh1_+EOmfx2oDueB-EZXLw@mail.gmail.com>
-Subject: Re: [PATCH v1 4/7] init: main: add KUnit to kernel init
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>, David Gow <davidgow@google.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Kees Cook <keescook@chromium.org>,
-        Richard Weinberger <richard@nod.at>, rppt@linux.ibm.com,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130224337.4150-2-hjl.tools@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 10:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2020-01-27 23:19:59)
-> > Remove KUnit from init calls entirely, instead call directly from
-> > kernel_init().
-> >
-> > Co-developed-by: Alan Maguire <alan.maguire@oracle.com>
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->
-> Although, why can't it be squashed with the previous patch?
+On Thu, Jan 30, 2020 at 02:43:37PM -0800, H.J. Lu wrote:
+> With the command-line option, -mx86-used-note=yes, the x86 assembler
+> in binutils 2.32 and above generates a program property note in a note
+> section, .note.gnu.property, to encode used x86 ISAs and features.  But
+> kernel linker script only contains a single NOTE segment:
+> 
+> PHDRS {
+>  text PT_LOAD FLAGS(5);
+>  data PT_LOAD FLAGS(6);
+>  percpu PT_LOAD FLAGS(6);
+>  init PT_LOAD FLAGS(7);
+>  note PT_NOTE FLAGS(0);
+> }
+> SECTIONS
+> {
+> ...
+>  .notes : AT(ADDR(.notes) - 0xffffffff80000000) { __start_notes = .; KEEP(*(.not
+> e.*)) __stop_notes = .; } :text :note
+> ...
+> }
+> 
+> The NOTE segment generated by kernel linker script is aligned to 4 bytes.
+> But .note.gnu.property section must be aligned to 8 bytes on x86-64 and
+> we get
+> 
+> [hjl@gnu-skx-1 linux]$ readelf -n vmlinux
+> 
+> Displaying notes found in: .notes
+>   Owner                Data size Description
+>   Xen                  0x00000006 Unknown note type: (0x00000006)
+>    description data: 6c 69 6e 75 78 00
+>   Xen                  0x00000004 Unknown note type: (0x00000007)
+>    description data: 32 2e 36 00
+>   xen-3.0              0x00000005 Unknown note type: (0x006e6558)
+>    description data: 08 00 00 00 03
+> readelf: Warning: note with invalid namesz and/or descsz found at offset 0x50
+> readelf: Warning:  type: 0xffffffff, namesize: 0x006e6558, descsize:
+> 0x80000000, alignment: 8
+> [hjl@gnu-skx-1 linux]$
+> 
+> Since note.gnu.property section in kernel image is never used, this patch
+> discards .note.gnu.property sections in kernel linker script by adding
+> 
+> /DISCARD/ : {
+>   *(.note.gnu.property)
+> }
+> 
+> before kernel NOTE segment in generic NOTES.
+> 
+> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 
-I think that this is pretty much the smallest logical change that
-doesn't touch just KUnit. I figured it might make it easier for people
-not interested in KUnit what changes I am making to init. I assume
-that people don't touch init willy-nilly, right?
+Thanks!
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  include/asm-generic/vmlinux.lds.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index 6b943fb8c5fd..6659a7c07c84 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -818,7 +818,14 @@
+>  #define TRACEDATA
+>  #endif
+>  
+> +/*
+> + * Discard .note.gnu.property sections which are unused and have
+> + * different alignment requirement from kernel note sections.
+> + */
+>  #define NOTES								\
+> +	/DISCARD/ : {							\
+> +		*(.note.gnu.property)					\
+> +	}								\
+>  	.notes : AT(ADDR(.notes) - LOAD_OFFSET) {			\
+>  		__start_notes = .;					\
+>  		KEEP(*(.note.*))					\
+> -- 
+> 2.24.1
+> 
+
+-- 
+Kees Cook
