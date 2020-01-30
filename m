@@ -2,130 +2,77 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA213C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BEBC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE609206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="r75JM9pR"
+	by mail.kernel.org (Postfix) with ESMTP id D3A1C206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgA3Ol6 (ORCPT
+        id S1727234AbgA3Oow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:41:58 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34339 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726902AbgA3Ol5 (ORCPT
+        Thu, 30 Jan 2020 09:44:52 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:15900 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727158AbgA3Oov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:41:57 -0500
-Received: from [IPv6:2001:420:44c1:2577:91db:5aec:4999:a214]
- ([IPv6:2001:420:44c1:2577:91db:5aec:4999:a214])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id xB0wi8DaDn7E5xB10ihO2H; Thu, 30 Jan 2020 15:41:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1580395314; bh=QnPaP0j7tU+614rpIwXLpxlJdA4DU0xJ3ZxN1G79ADQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=r75JM9pRExf82CZ7FTBGlvkFhPkPpCm2DkdDJINO6iJLHjtBlgmFv1Cb74Y4xU1HN
-         5j+JSYi9g1tRZeqf/i7OM7IWlauH0nRLUzf4RRH7Ak064pkFjkAETMb9YMWxqNnerj
-         Xq8asYxF8w2DfV3MM0LpaztPE65XxDhvBLat//JhmNq3OMXhdCrs9c3CdrhNx7nBZr
-         zSnMiyirRNlq6PratqnuLv0kpm1MFxIDyqsrbx03Hppe6Lc60YNP8qriaTUr+vLA3H
-         XBun4lMMYIk4G/Of9cUwzOKulAqDHCVd6ArajwBXxWQ8o/LXYZ7UGjDxnSlmtwaptf
-         +vsndPF+uLtsg==
-Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
-Date:   Thu, 30 Jan 2020 15:41:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 30 Jan 2020 09:44:51 -0500
+X-IronPort-AV: E=Sophos;i="5.70,382,1574118000"; 
+   d="scan'208";a="433740527"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 15:44:49 +0100
+Date:   Thu, 30 Jan 2020 15:44:49 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: julia@hadrien
+To:     Dave Jiang <dave.jiang@intel.com>
+cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: idxd: fix boolconv.cocci warnings
+Message-ID: <alpine.DEB.2.21.2001301543150.7476@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfN+R3ebeiMNb2jJ1P75j291PEX7Nx0Vzuu5rpXhX/cJ38nUz/4cnLiRCfwVJYfJCp/PkuNx0rQWRF/xNAiuZxjbGS1z51MggWPtc4+dtx+wXvGHWJJKu
- cyfZmlbdcWigV2+QEOY+HCeV/V34tI23h763YO8GoG2/NECw0Neg+njWR/4eurtljC2w5qduoYwUDJ4JlT5BCsXEzix3dUiZsqdYgpq15Jr6evsknO11Lc9/
- ZhKgWLbF4iGzuTUG6BqLqGc0F2MlCvBBltw5wI9DSDwcd4m+VQAMibmVIfJrniLo3mRCV+A5Saceg9UlQNa26uTo7q/BVZWJA6WodoTqS/ySvEOfSbjufqUT
- 2mG55hSvr7OJbhx1Y4g8iugiAB4nojbnAKFx7eAKAicO8xqLeO+qWiI/Zk4V44ywXScsZdieB2CA92LkRmjnbC/xJPdzqGk+QTUyYuS7U/Sk6ybPJ/TA1pxb
- 8MWxU5lkx88SLfdOppp29RZAkVnbvNicF38sw5TAiu5TmtLBp4hl397SG8C1xNC0eUE1J9m7YyMpygeCX04Kv00Ns5mEN7cJLTOIghbfUwZP3hDtVC36H0BW
- znA=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
+From: kbuild test robot <lkp@intel.com>
 
-On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
-> This series adds Tegra210 VI and CSI driver for built-in test pattern
-> generator (TPG) capture.
-> 
-> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
-> CSI port is one-to-one mapped to VI channel for video capture.
-> 
-> This series has TPG support only where it creates hard media links
-> between CSI subdevice and VI video device without device graphs.
-> 
-> v4l2-compliance results are available below the patch diff.
-> 
-> [v0]:	Includes,
-> 	- Adds CSI TPG clock to Tegra210 clock driver
-> 	- Host1x video driver with VI and CSI clients.
-> 	- Support for Tegra210 only.
-> 	- VI CSI TPG support with hard media links in driver.
-> 	- Video formats supported by Tegra210 VI
-> 	- CSI TPG supported video formats
+Remove unneeded conversion to bool
 
-I'm trying to compile this patch series using the media_tree master
-branch (https://git.linuxtv.org//media_tree.git), but it fails:
+Generated by: scripts/coccinelle/misc/boolconv.cocci
 
-drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
-drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
-   71 |  unsigned int count = *nbuffers;
-      |               ^~~~~
-drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
-drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
-  518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
-      |                                                       ^
-make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
-drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
-  157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
-      |                                                       ^
-drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
-drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
-drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
-  213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
-      |                                                   ^~
-drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
-  259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
-      |                                                   ^~
-drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
-drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
-  246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
-      |                                                   ^~
-drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
-drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
-  286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
-      |                                                   ^~
+CC: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+---
 
-And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
-have a 'host' field.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+commit: 42d279f9137ab7d5503836baec2739284b278d8f dmaengine: idxd: add char driver to expose submission portal to userland
+:::::: branch date: 11 hours ago
+:::::: commit date: 6 days ago
 
-Does this series depend on another patch that's not yet in mainline?
+Please take the patch only if it's a positive warning. Thanks!
 
-Regards,
+ sysfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Hans
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -66,7 +66,7 @@ static inline bool is_idxd_wq_dmaengine(
+
+ static inline bool is_idxd_wq_cdev(struct idxd_wq *wq)
+ {
+-	return wq->type == IDXD_WQT_USER ? true : false;
++	return wq->type == IDXD_WQT_USER;
+ }
+
+ static int idxd_config_bus_match(struct device *dev,
