@@ -2,54 +2,52 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060A8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBDFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D382521734
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737F4214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409879;
-	bh=8OuebgqwLV2pZs9r42PHayOw/w5zaMYEWWmMvxUg8HA=;
+	s=default; t=1580409882;
+	bh=+4JoOjg9YkisXPPRKAgUTSvATW03i/cdPH6O5FS/hEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCRd+y5F8EW39legQ98F24CvOcicIfRanqgOORkDbkDx4Jg3Mn1DFAIH7KprCj4sR
-	 oGMj+nd+Q26N4WTfeejMrGhfRjzq1ujo+5wK1l9Kx/sMmXUKiooFmpOc3YK+M/F1BK
-	 UQEVqnSDxlaUMmM560nWV6qtrkiYsO3sV7XE80j0=
+	b=zbkMtOntpoR4Zq2GNFqoOPuA2EyfzDpktGGBlTAicnkg1h/Q4+9njIKC7W6HQjhg9
+	 xCSDmt8U70CeZmzejfAUU4rNdwOVk0LnL7wvnfFrkIM5V04UzpI2ijOpCqvWY5DqZa
+	 /7M9NPJ/kBZYX/4edF+XnnZBd6vb13UaMhoxZnJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbgA3Soj (ORCPT
+        id S1730850AbgA3Soh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730840AbgA3Soc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:32 -0500
+        id S1730828AbgA3So1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 187DB21734;
-        Thu, 30 Jan 2020 18:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2A1214DB;
+        Thu, 30 Jan 2020 18:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409871;
-        bh=8OuebgqwLV2pZs9r42PHayOw/w5zaMYEWWmMvxUg8HA=;
+        s=default; t=1580409866;
+        bh=+4JoOjg9YkisXPPRKAgUTSvATW03i/cdPH6O5FS/hEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+Plv1Ekx4CPQy3dWcwe7eJVnUx9/ywa0AB8e1uEAOpvoc2Ht1k9HB+Em3GtlmldE
-         qI1sktvZLtxyQgW/NiwFMC73wR65UAu6Bao7KfYfYJ2Q2c4Mf/7b7zhIR8wJqH2E3A
-         PnAnrqKzPRhHewiiRNct5TzeONgGq+8j7vCscMCM=
+        b=EkSTwpb5JCxTxVY+DKO2nuZ15sRfe1ize0FgnEUsfEH35S2ZlGqh/BVdGyWxtNS0G
+         MiM7++pCa/YbgdlAOQuimYxY0tcjgPWlAeHI2owTC/QYtQSpfHnY7Z8XkObFA/j04/
+         ZAEN0+QvxnKxJwbqHA1kYOpRCuPKNR3B200Zowyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, "wuxu.wu" <wuxu.wu@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/110] drivers/net/b44: Change to non-atomic bit operations on pwol_mask
-Date:   Thu, 30 Jan 2020 19:38:43 +0100
-Message-Id: <20200130183622.595145543@linuxfoundation.org>
+Subject: [PATCH 5.4 065/110] spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
+Date:   Thu, 30 Jan 2020 19:38:41 +0100
+Message-Id: <20200130183622.456789217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -62,64 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu <fenghua.yu@intel.com>
+From: wuxu.wu <wuxu.wu@huawei.com>
 
-[ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
+[ Upstream commit 19b61392c5a852b4e8a0bf35aecb969983c5932d ]
 
-Atomic operations that span cache lines are super-expensive on x86
-(not just to the current processor, but also to other processes as all
-memory operations are blocked until the operation completes). Upcoming
-x86 processors have a switch to cause such operations to generate a #AC
-trap. It is expected that some real time systems will enable this mode
-in BIOS.
+dw_spi_irq() and dw_spi_transfer_one concurrent calls.
 
-In preparation for this, it is necessary to fix code that may execute
-atomic instructions with operands that cross cachelines because the #AC
-trap will crash the kernel.
+I find a panic in dw_writer(): txw = *(u8 *)(dws->tx), when dw->tx==null,
+dw->len==4, and dw->tx_end==1.
 
-Since "pwol_mask" is local and never exposed to concurrency, there is
-no need to set bits in pwol_mask using atomic operations.
+When tpm driver's message overtime dw_spi_irq() and dw_spi_transfer_one
+may concurrent visit dw_spi, so I think dw_spi structure lack of protection.
 
-Directly operate on the byte which contains the bit instead of using
-__set_bit() to avoid any big endian concern due to type cast to
-unsigned long in __set_bit().
+Otherwise dw_spi_transfer_one set dw rx/tx buffer and then open irq,
+store dw rx/tx instructions and other cores handle irq load dw rx/tx
+instructions may out of order.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	[ 1025.321302] Call trace:
+	...
+	[ 1025.321319]  __crash_kexec+0x98/0x148
+	[ 1025.321323]  panic+0x17c/0x314
+	[ 1025.321329]  die+0x29c/0x2e8
+	[ 1025.321334]  die_kernel_fault+0x68/0x78
+	[ 1025.321337]  __do_kernel_fault+0x90/0xb0
+	[ 1025.321346]  do_page_fault+0x88/0x500
+	[ 1025.321347]  do_translation_fault+0xa8/0xb8
+	[ 1025.321349]  do_mem_abort+0x68/0x118
+	[ 1025.321351]  el1_da+0x20/0x8c
+	[ 1025.321362]  dw_writer+0xc8/0xd0
+	[ 1025.321364]  interrupt_transfer+0x60/0x110
+	[ 1025.321365]  dw_spi_irq+0x48/0x70
+	...
+
+Signed-off-by: wuxu.wu <wuxu.wu@huawei.com>
+Link: https://lore.kernel.org/r/1577849981-31489-1-git-send-email-wuxu.wu@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/b44.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/spi/spi-dw.c | 15 ++++++++++++---
+ drivers/spi/spi-dw.h |  1 +
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index 97ab0dd255522..1a7710c399d74 100644
---- a/drivers/net/ethernet/broadcom/b44.c
-+++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -1519,8 +1519,10 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 	int ethaddr_bytes = ETH_ALEN;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 45972056ed8c8..11cac7e106635 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -172,9 +172,11 @@ static inline u32 rx_max(struct dw_spi *dws)
  
- 	memset(ppattern + offset, 0xff, magicsync);
--	for (j = 0; j < magicsync; j++)
--		set_bit(len++, (unsigned long *) pmask);
-+	for (j = 0; j < magicsync; j++) {
-+		pmask[len >> 3] |= BIT(len & 7);
-+		len++;
-+	}
+ static void dw_writer(struct dw_spi *dws)
+ {
+-	u32 max = tx_max(dws);
++	u32 max;
+ 	u16 txw = 0;
  
- 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
- 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-@@ -1532,7 +1534,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 		for (k = 0; k< ethaddr_bytes; k++) {
- 			ppattern[offset + magicsync +
- 				(j * ETH_ALEN) + k] = macaddr[k];
--			set_bit(len++, (unsigned long *) pmask);
-+			pmask[len >> 3] |= BIT(len & 7);
-+			len++;
- 		}
++	spin_lock(&dws->buf_lock);
++	max = tx_max(dws);
+ 	while (max--) {
+ 		/* Set the tx word if the transfer's original "tx" is not null */
+ 		if (dws->tx_end - dws->len) {
+@@ -186,13 +188,16 @@ static void dw_writer(struct dw_spi *dws)
+ 		dw_write_io_reg(dws, DW_SPI_DR, txw);
+ 		dws->tx += dws->n_bytes;
  	}
- 	return len - 1;
++	spin_unlock(&dws->buf_lock);
+ }
+ 
+ static void dw_reader(struct dw_spi *dws)
+ {
+-	u32 max = rx_max(dws);
++	u32 max;
+ 	u16 rxw;
+ 
++	spin_lock(&dws->buf_lock);
++	max = rx_max(dws);
+ 	while (max--) {
+ 		rxw = dw_read_io_reg(dws, DW_SPI_DR);
+ 		/* Care rx only if the transfer's original "rx" is not null */
+@@ -204,6 +209,7 @@ static void dw_reader(struct dw_spi *dws)
+ 		}
+ 		dws->rx += dws->n_bytes;
+ 	}
++	spin_unlock(&dws->buf_lock);
+ }
+ 
+ static void int_error_stop(struct dw_spi *dws, const char *msg)
+@@ -276,18 +282,20 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ {
+ 	struct dw_spi *dws = spi_controller_get_devdata(master);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
++	unsigned long flags;
+ 	u8 imask = 0;
+ 	u16 txlevel = 0;
+ 	u32 cr0;
+ 	int ret;
+ 
+ 	dws->dma_mapped = 0;
+-
++	spin_lock_irqsave(&dws->buf_lock, flags);
+ 	dws->tx = (void *)transfer->tx_buf;
+ 	dws->tx_end = dws->tx + transfer->len;
+ 	dws->rx = transfer->rx_buf;
+ 	dws->rx_end = dws->rx + transfer->len;
+ 	dws->len = transfer->len;
++	spin_unlock_irqrestore(&dws->buf_lock, flags);
+ 
+ 	spi_enable_chip(dws, 0);
+ 
+@@ -471,6 +479,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	dws->type = SSI_MOTO_SPI;
+ 	dws->dma_inited = 0;
+ 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
++	spin_lock_init(&dws->buf_lock);
+ 
+ 	spi_controller_set_devdata(master, dws);
+ 
+diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+index c9c15881e9824..f3a2f157a2b17 100644
+--- a/drivers/spi/spi-dw.h
++++ b/drivers/spi/spi-dw.h
+@@ -120,6 +120,7 @@ struct dw_spi {
+ 	size_t			len;
+ 	void			*tx;
+ 	void			*tx_end;
++	spinlock_t		buf_lock;
+ 	void			*rx;
+ 	void			*rx_end;
+ 	int			dma_mapped;
 -- 
 2.20.1
 
