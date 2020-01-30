@@ -2,130 +2,133 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA6BC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF557C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9D120707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB558206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 17:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgA3RFf (ORCPT
+        id S1727460AbgA3RGc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 12:05:35 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16487 "EHLO mga09.intel.com"
+        Thu, 30 Jan 2020 12:06:32 -0500
+Received: from unicorn.mansr.com ([81.2.72.234]:59262 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbgA3RFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 12:05:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 09:05:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,382,1574150400"; 
-   d="scan'208";a="309759519"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 30 Jan 2020 09:05:13 -0800
-Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
-To:     Vinod Koul <vkoul@kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-References: <20200113084005.849071-1-vkoul@kernel.org>
- <20200121064608.GA2841@vkoul-mobl>
- <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
- <5878067.luYmtVZgP3@debian64> <20200125053237.GG2841@vkoul-mobl>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
-Date:   Thu, 30 Jan 2020 19:07:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727158AbgA3RGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 12:06:31 -0500
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 7B0BB1B0DC; Thu, 30 Jan 2020 17:06:29 +0000 (GMT)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND][PATCH 1/2] dt-bindings: usb: add non-removable-ports hub property
+References: <20200124152504.23411-1-mans@mansr.com>
+        <20200127153506.GA4589@bogus> <yw1xy2tsvnww.fsf@mansr.com>
+        <20200128134745.GA3048749@kroah.com> <yw1xpnf3vchs.fsf@mansr.com>
+        <20200128152818.GB3437093@kroah.com>
+        <20200128165243.GC3666045@kroah.com>
+        <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
+Date:   Thu, 30 Jan 2020 17:06:29 +0000
+In-Reply-To: <CAL_JsqK1fMCrbbMdRPqVjtS0D6p4AhqjcOGoivGbT2aKN7UJWw@mail.gmail.com>
+        (Rob Herring's message of "Tue, 28 Jan 2020 12:21:32 -0600")
+Message-ID: <yw1ximksvppm.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200125053237.GG2841@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.1.2020 7.32, Vinod Koul wrote:
->>>>>>
->>>>>> On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
->>>>>>>
->>>>>>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
->>>>>>> These require firmware to be loaded and in case devices have ROM those can
->>>>>>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
->>>>>>>
->>>>>>> This includes two patches from Christian which supported these controllers
->>>>>>> w/o ROM and later my patches for ROM support and multiple firmware versions,
->>>>>>> debugfs hook for rom erase and export of xhci-pci functions.
->>>>>>>
-...
-> 
-> Mathias, any comments on this series..?
-> 
+Rob Herring <robh@kernel.org> writes:
 
-Hi Vinod
+> n Tue, Jan 28, 2020 at 10:52 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>>
+>> On Tue, Jan 28, 2020 at 04:28:18PM +0100, Greg Kroah-Hartman wrote:
+>> > On Tue, Jan 28, 2020 at 03:15:11PM +0000, Måns Rullgård wrote:
+>> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> > >
+>> > > > On Mon, Jan 27, 2020 at 04:56:15PM +0000, Måns Rullgård wrote:
+>> > > >> Rob Herring <robh@kernel.org> writes:
+>> > > >>
+>> > > >> > On Fri, Jan 24, 2020 at 03:25:03PM +0000, Mans Rullgard wrote:
+>> > > >> >> Add a non-removable-ports property that lists the hardwired downstream
+>> > > >> >> ports of a hub.  Although hubs can provide this information, they are
+>> > > >> >> not always configured correctly.  An alternate means of indicating this
+>> > > >> >> for built-in USB devices is thus useful.
+>> > > >> >>
+>> > > >> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>> > > >> >
+>> > > >> > I reviewed this already, but since you didn't add my reviewed-by, I'm
+>> > > >> > looking at it again and having 2nd thoughts.
+>> > > >> >
+>> > > >> >> ---
+>> > > >> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+>> > > >> >>  1 file changed, 4 insertions(+)
+>> > > >> >>
+>> > > >> >> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> > > >> >> index 036be172b1ae..92d863cc96b6 100644
+>> > > >> >> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+>> > > >> >> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> > > >> >> @@ -66,6 +66,10 @@ Required properties for host-controller nodes with device nodes:
+>> > > >> >>  - #size-cells: shall be 0
+>> > > >> >>
+>> > > >> >>
+>> > > >> >> +Optional properties for hub and host-controller nodes:
+>> > > >> >> +- non-removable-ports: list of hardwired downstream ports
+>> > > >> >
+>> > > >> > If you have a hardwired device and need to know that, doesn't that imply
+>> > > >> > there's some other stuff you need to describe beyond what a standard USB
+>> > > >> > device has. Such as a power supply that's not Vbus from the hub.
+>> > > >>
+>> > > >> I suppose there could be, but there isn't in my actual situation.
+>> > > >>
+>> > > >> > At a minimum, I think this should be a per port property.
+>> > > >>
+>> > > >> That's what I suggested first.  Greg told me to do it like this instead.
+>> > > >
+>> > > > I said that?  I do not remember discussing this at all, when did that
+>> > > > happen?
+>> > >
+>> > > https://lore.kernel.org/lkml/20190228155241.GC12050@kroah.com/
+>> >
+>> > Almost a full year ago!  Hah, I can't remember what I wrote last week.
+>>
+>> Ah, ok, all I said was "do what ACPI does here", as that's a model of
+>> what has already been agreed apon by a whole huge number of people and
+>> standardized.  No need for DT to come up with something totally
+>> different instead, making a mess of things :)
+>>
+>> If this is doing what ACPI does, fine, if not, it should.  It was here
+>> first.
+>
+> That's not always possible as ACPI and DT work in different ways. The
+> DT (Open Firmware) USB binding originated in 1998[1]. While ancient,
+> that is what defines the node structure of USB hubs, ports, and
+> devices that we use today.
+>
+> However, after a quick read of ACPI sec 9.14, I'd say what I suggested
+> is more aligned to ACPI than what's proposed here. Ports are child
+> nodes ("Device" in ACPI terms) and the properties to determine all
+> this are properties of the port node(s). Aligning beyond that isn't
+> really possible. ACPI has a standard thing (not sure what the proper
+> term is) called '_PLD' for describing device location which includes
+> 'user visible' among several other things. There is no such concept in
+> DT to align with. What we have is the 'non-removable' property and IMO
+> that's what we should use here.
 
-Sorry about the delay.
+Can you guys please agree on something or other.  I'm happy to do it
+whichever way you decide, but I'd rather not waste my time making
+patches that will just get rejected.
 
-Maybe a firmware loading driver like this that wraps the xhci pci driver could
-work.
-
-One benefit is that we could skip searching for the right firmware name based
-on PCI ID. Each of these Renesas controllers now have their own pci_device_id
-entry in the pci_ids[] table, and could have the supported firmware name(s)
-in .driver_data. This way we wouldn't need to add the renesas_fw_table[] or
-maybe even the renesas_needs_fw_dl() function in this series.
-
-I realize this can't be easily changed because usb_hcd_pci_probe() takes the
-pci_device_id pointer as an argument, and expects id.driver_data to be a
-HC driver pointer.
-
-So this turns out to be a question for Greg and Alan:
-
-Would it make sense to change usb_hcd_pci_probe() to take a HC driver pointer
-as an argument instead of a pointer to pci_device_id?
-pci_device_id pointer is only used to extract the HC driver handle.
-This way the driver_data could be used for, well, driver data.
-
-Heikki actually suggested this some time ago to me, back then the idea was to
-improve xhci quirks code by using driver_data for quirk flags instead of
-finding and setting them later.
-
-There are a few other opens regarding this series. Mostly because I'm not (yet)
-familiar with all the details, so I'll just just list them here.
-
-- Is it really enough to add the Renesas driver to Makefile before xhci-pci
-   driver to make sure it gets matched and probed based on vendor/device id
-   before xhci-pci driver is matched and probed based on pci class?
-   What if the Renesas driver is a module and xhci-pci compiled in?
-
-- Previously probe didn't return before hcd's were added and everything set up.
-   Now with request_firmware_nowait() probe returns early successfully, and the
-   old xhci_pci_probe() which sets up everything is called later by the request
-   firmware callback. So there could be whole new set of races possible.
-   For example pci remove can be called mid firmware loading, or when the old
-   xhci_pci_probe is still setting up things.
-
-   I understood that a synchronous request_firmware() in probe has its own
-   issues, not sure if there is a good solution for this.
-
-- Before the firmware is written to the controller the firmware version is
-   compared against a hardcoded number in the drivers renesas_fw_table[].
-   This means new firmware versions can't be supported without patching the driver.
-   Is this intentional?
-
-- Mathias
+-- 
+Måns Rullgård
