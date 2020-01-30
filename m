@@ -2,145 +2,96 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DADC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2264C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F64214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ACF2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eDpcAM6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgA3IGp (ORCPT
+        id S1727089AbgA3IHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:06:45 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34024 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgA3IGo (ORCPT
+        Thu, 30 Jan 2020 03:07:07 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55428 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbgA3IHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:06:44 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so2684387oig.1;
-        Thu, 30 Jan 2020 00:06:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UkWpdaCXq06Xmek5bdnoPkC6r56p3tRKd9oAQWdPjs8=;
-        b=a9VCkKGJk5cdCRIUNce5DSptnNS3ZHtXNvIxAdeOwjWmHDFoVa6EN2mWRya52AbD2E
-         ANb24Lk+j+HiGyZamAAxYNVjIKD61TuO0YQctYSYeh+iAipVcmT9Hrg39CRMSVvdIJ9j
-         cNBKgl70Ulolt7uhv5SEq5XY88igTfnSTK7DOeXSs+GZJX2U+TK3u0BNDSEy+wQhHPJg
-         hZiE7on83pBbcW592UvBN30JTd9Hi4xspORJTcVwpN7FcWwTcxQj282yOs/qHoODN4tF
-         qYlKIGrSy3a+U85IlEFRk4ILt3QypqvecvDUwM7Bm76eTAurosKNOSdsRpBULCsc6yxd
-         Extg==
-X-Gm-Message-State: APjAAAWL/sZzFX4FlzmX1gA3W8rXZAi7S8tYk8JDWqGdM5CG2UIeUKNp
-        rzzTJN+i9Qbxl7EH2JwOtUnThNr3o/KZuf9Qek4=
-X-Google-Smtp-Source: APXvYqy7KBwwcoXGafqXm2nVVgNbtEoEPl/CzRYcyJlS4RC4lRs4cfR4mALFYM6+MbR7mSrJUJRvYaRVoMj8QVXBkkU=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr2018628oia.148.1580371603697;
- Thu, 30 Jan 2020 00:06:43 -0800 (PST)
+        Thu, 30 Jan 2020 03:07:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mcACr4W9oLpnOmQRjpf37ACG6Vi7DI3ou3ovZqhIzPk=; b=eDpcAM6DvYInkBWBnBEa23Z1A
+        Rq+cjhagKHCqoYwAOXQBn0YeWUQ8EJh7cRCn6jdmAhfCIFS58O7l+TZkxf4DY1dZT6O795djC03WQ
+        L9nQUBGpDyqYPCJkRpjC39LQ4/ibMP8YTWfFJvpIQ8GgYIhaneI0Ejvh+T7xKVrme1huX+Hlf6toq
+        0o/OSKdwOabnxSjRQXA3FG3FQRgHfbRdSqKLlq/QJ37zHAy/C631PZAbubznE1vIt4Mm9gslVUM0U
+        Cxv2YzQmBQuluV0h0DBHNj3HeN6fy37aKXsVASt89Bj56hI4itCfijfFYw1YFnTg7498/CZvtBj1e
+        x2D/psBuw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ix4qm-00087j-2g; Thu, 30 Jan 2020 08:06:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DFB143011F3;
+        Thu, 30 Jan 2020 09:05:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 141832B78BF24; Thu, 30 Jan 2020 09:06:53 +0100 (CET)
+Date:   Thu, 30 Jan 2020 09:06:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Dave Chinner <david@fromorbit.com>, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
+ stack on the same CPU
+Message-ID: <20200130080653.GV14879@hirez.programming.kicks-ass.net>
+References: <20200127143608.GX3466@techsingularity.net>
+ <20200127223256.GA18610@dread.disaster.area>
+ <20200128011936.GY3466@techsingularity.net>
+ <20200128091012.GZ3466@techsingularity.net>
+ <20200129173852.GP14914@hirez.programming.kicks-ass.net>
+ <20200130004334.GF3466@techsingularity.net>
 MIME-Version: 1.0
-References: <20200107092922.18408-1-ktouil@baylibre.com> <20200107092922.18408-3-ktouil@baylibre.com>
-In-Reply-To: <20200107092922.18408-3-ktouil@baylibre.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 09:06:32 +0100
-Message-ID: <CAMuHMdVv+FRnf6fvjEeu50W5PB-Gh2V8Th1h__vt6guMwk2xNQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] nvmem: add support for the write-protect pin
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130004334.GF3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Khouloud,
+On Thu, Jan 30, 2020 at 12:43:34AM +0000, Mel Gorman wrote:
+> On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
 
-On Tue, Jan 7, 2020 at 10:30 AM Khouloud Touil <ktouil@baylibre.com> wrote:
-> The write-protect pin handling looks like a standard property that
-> could benefit other users if available in the core nvmem framework.
->
-> Instead of modifying all the memory drivers to check this pin, make
-> the NVMEM subsystem check if the write-protect GPIO being passed
-> through the nvmem_config or defined in the device tree and pull it
-> low whenever writing to the memory.
->
-> There was a suggestion for introducing the gpiodesc from pdata, but
-> as pdata is already removed it could be replaced by adding it to
-> nvmem_config.
->
-> Reference: https://lists.96boards.org/pipermail/dev/2018-August/001056.html
->
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > I suppose the fact that it limits it to tasks that were running on the
+> > same CPU limits the impact if we do get it wrong.
+> > 
+> 
+> And it's limited to no other task currently running on the
+> CPU. Now, potentially multiple sleepers are on that CPU waiting for
+> a mutex/rwsem/completion but it's very unlikely and mostly likely due
+> to the machine being saturated in which case searching for an idle CPU
+> will probably fail. It would also be bound by a small window after the
+> first wakeup before the task becomes runnable before the nr_running check
+> mitigages the problem. Besides, if the sleeping task is waiting on the
+> lock, it *is* related to the kworker which is probably finished.
+> 
+> In other words, even this patches worst-case behaviour does not seem
+> that bad.
 
-Thanks for your patch!
+OK; let's just stick it in and see what, if anything, falls over :-)
 
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/nvmem-consumer.h>
->  #include <linux/nvmem-provider.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/of.h>
->  #include <linux/slab.h>
->  #include "nvmem.h"
-> @@ -54,8 +55,14 @@ static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
->  static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
->                            void *val, size_t bytes)
->  {
-> -       if (nvmem->reg_write)
-> -               return nvmem->reg_write(nvmem->priv, offset, val, bytes);
-> +       int ret;
-> +
-> +       if (nvmem->reg_write) {
-> +               gpiod_set_value_cansleep(nvmem->wp_gpio, 0);
-> +               ret = nvmem->reg_write(nvmem->priv, offset, val, bytes);
-> +               gpiod_set_value_cansleep(nvmem->wp_gpio, 1);
-> +               return ret;
-> +       }
->
->         return -EINVAL;
->  }
-> @@ -338,6 +345,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->                 kfree(nvmem);
->                 return ERR_PTR(rval);
->         }
-> +       if (config->wp_gpio)
-> +               nvmem->wp_gpio = config->wp_gpio;
-> +       else
-> +               nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
-> +                                                   GPIOD_OUT_HIGH);
-
-Shouldn't this GPIO be released in nvmem_release(), by calling gpiod_put()?
-
-Once that's implemented, I assume it will be auto-released on registration
-failure by the call to put_device()?
-
-> +       if (IS_ERR(nvmem->wp_gpio))
-> +               return PTR_ERR(nvmem->wp_gpio);
-> +
->
->         kref_init(&nvmem->refcnt);
->         INIT_LIST_HEAD(&nvmem->cells);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I saw there is a v2 out (although I didn't see what changed in a hurry),
+let me queue that one.
