@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C140C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551E0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533C72083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2450D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409942;
-	bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
+	s=default; t=1580409945;
+	bh=g5WpGPKoyfEqCm6F7JEqL0fGq3xpDnVGuTwzVQXbujM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U5koPy+ACSObwc5CjyMsJJSNLFcnmD3c5KpMaQYLwDYp47vMCa5Q7MS+JMMutZCkr
-	 qqU0POAgYZZnFi+H6QI1khW52iEIDgkHfrv0Q4oxOe4N9HQZrh/PAKNF6DXZ/dBxUP
-	 f922htrTJYygzshrIBbB7ofxc9bk3tIKgokm45UM=
+	b=2XxAh90K9KrwjrTHaR/KAbZ4ulTdxzC7AKtDbhBGu3Zs7qGJQAnL3oTjER3w9G8tS
+	 gH0Oh2nsVdgiQmn/4r0Jm4gO3lD9f5NQlXYGrMeg8DgK2YHzRGGfm8LbrSgSrj64ry
+	 AQ+3+HCeoh64uM0/JovZh9aVg66FKTVELXvguj84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgA3Spl (ORCPT
+        id S1731082AbgA3Spo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgA3Spj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:39 -0500
+        id S1728079AbgA3Spm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B3E217BA;
-        Thu, 30 Jan 2020 18:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB933205F4;
+        Thu, 30 Jan 2020 18:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409938;
-        bh=WYPDK5cm9HmuZ3ULm+770FTcNMJYJDWL+36DjqaSXy4=;
+        s=default; t=1580409941;
+        bh=g5WpGPKoyfEqCm6F7JEqL0fGq3xpDnVGuTwzVQXbujM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WuJjH78JTzpNQVH2OLrciLRMhWhIeTA3dR+/W5bo3d38cKps6t1ri7yCmJjYMJLpk
-         8gSO0FfZ0Ug2Xi/oD2ZGByGbeFqJYHk8Vc6UIe5fN8PRZiygyN+nuhottrdCiwZ4FS
-         3TcakazEm64inA8osHkLpoOZ0zwgx8hFF5wI5F+A=
+        b=rbKtaDbXJAcmQDkkr+t3Lq2V+uupaMNSBDNleTFmq8w3oVLmu1+Gdjk3VEk6mreFr
+         jzghaZAd01V3okxw81AJLfN0XdYenCTiH9zcCty8cTxNiM8Er+LvQ1LpgnkA1BLbIN
+         eR4N3xRwOVqSuH+wFfZ4IyTnS393FH/4pOjEtgc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/110] ARM: config: aspeed-g5: Enable 8250_DW quirks
-Date:   Thu, 30 Jan 2020 19:39:06 +0100
-Message-Id: <20200130183624.805590706@linuxfoundation.org>
+Subject: [PATCH 5.4 091/110] ARM: OMAP2+: SmartReflex: add omap_sr_pdata definition
+Date:   Thu, 30 Jan 2020 19:39:07 +0100
+Message-Id: <20200130183624.887010789@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,33 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-[ Upstream commit a5331a7a87ec81d5228b7421acf831b2d0c0de26 ]
+[ Upstream commit 2079fe6ea8cbd2fb2fbadba911f1eca6c362eb9b ]
 
-This driver option is used by the AST2600 A0 boards to work around a
-hardware issue.
+The omap_sr_pdata is not declared but is exported, so add a
+define for it to fix the following warning:
 
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+arch/arm/mach-omap2/pdata-quirks.c:609:36: warning: symbol 'omap_sr_pdata' was not declared. Should it be static?
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/aspeed_g5_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/power/smartreflex.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index 597536cc9573d..b87508c7056c9 100644
---- a/arch/arm/configs/aspeed_g5_defconfig
-+++ b/arch/arm/configs/aspeed_g5_defconfig
-@@ -139,6 +139,7 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=6
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_ASPEED_VUART=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
-+CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_ASPEED_KCS_IPMI_BMC=y
- CONFIG_ASPEED_BT_IPMI_BMC=y
+diff --git a/include/linux/power/smartreflex.h b/include/linux/power/smartreflex.h
+index d0b37e9370372..971c9264179ee 100644
+--- a/include/linux/power/smartreflex.h
++++ b/include/linux/power/smartreflex.h
+@@ -293,6 +293,9 @@ struct omap_sr_data {
+ 	struct voltagedomain		*voltdm;
+ };
+ 
++
++extern struct omap_sr_data omap_sr_pdata[OMAP_SR_NR];
++
+ #ifdef CONFIG_POWER_AVS_OMAP
+ 
+ /* Smartreflex module enable/disable interface */
 -- 
 2.20.1
 
