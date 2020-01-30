@@ -2,71 +2,69 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAF7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9EEC35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36F12083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="owaJOXae"
+	by mail.kernel.org (Postfix) with ESMTP id AF4052083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 11:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgA3Lg2 (ORCPT
+        id S1727158AbgA3LkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 06:36:28 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59164 "EHLO mail.skyhub.de"
+        Thu, 30 Jan 2020 06:40:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:51404 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgA3Lg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 06:36:27 -0500
-Received: from zn.tnic (p200300EC2F0A2D00708CE17CE0236808.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2d00:708c:e17c:e023:6808])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 00E651EC0C35;
-        Thu, 30 Jan 2020 12:36:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1580384186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=H36ykz5naWIQ4dY4VToh2KOl152TyIJxqOH958o/k04=;
-        b=owaJOXaekQ8qGc/B0p3nmoF+8Z1/C5hlv6ncPiuv9/fqRzrwFwGMUhe2EuQyqfRA9Idw99
-        ta/IEBW70DJaiyz9zcN51MR/Qdm8u+s1A0eyZ9ZIOjvYa2PCF+uqscw5Rmm+NgVi9Rp0Xw
-        b/ji/EuCxZDvdhwwMSqwTHPV5OH/Yes=
-Date:   Thu, 30 Jan 2020 12:36:19 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: fix kaslr-enabled build
-Message-ID: <20200130113619.GE6656@zn.tnic>
-References: <20200129162926.1006-1-sergey.senozhatsky@gmail.com>
- <20200130110008.GD6656@zn.tnic>
- <20200130113134.GA498@jagdpanzerIV.localdomain>
+        id S1726873AbgA3LkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 06:40:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DF96328;
+        Thu, 30 Jan 2020 03:40:12 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 734143F67D;
+        Thu, 30 Jan 2020 03:40:09 -0800 (PST)
+Date:   Thu, 30 Jan 2020 11:40:04 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC v3 02/10] cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+Message-ID: <20200130114004.GA56122@bogus>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <20200127200350.24465-3-sibis@codeaurora.org>
+ <20200128204423.GF46072@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200130113134.GA498@jagdpanzerIV.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200128204423.GF46072@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 08:31:34PM +0900, Sergey Senozhatsky wrote:
-> Oh, didn't occur to me that this can be compiler specific.
-> But yes, apparently it is. gcc-9.2 is fine, but not gcc-10
-> release-candidate.
+On Tue, Jan 28, 2020 at 12:44:23PM -0800, Matthias Kaehlcke wrote:
+> On Tue, Jan 28, 2020 at 01:33:42AM +0530, Sibi Sankar wrote:
+> > Add SDM845 to cpufreq-dt-platdev blacklist.
+>
+> nit: you could mention that cpufreq is handled by the
+> 'qcom-cpufreq-hw' driver.
+>
 
-Ah ok, that makes more sense. That's being discussed ATM but it is merge
-window so it'll take a while:
+IIUC, these platforms get the OPP table from the firmware and there shouldn't
+be OPP entries in the DT. If not, why not fix that to avoid more confusion.
+Can we make cpu0_node_has_opp_v2_prop return false in short.
 
-https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Regards,
+Sudeep
