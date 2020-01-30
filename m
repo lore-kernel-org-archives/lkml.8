@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B377CC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52338C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB892173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238562173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409722;
-	bh=N3f/o6OEfEATW92CUQoPs/h5ohxXzCma9kMlBT4/vuc=;
+	s=default; t=1580409725;
+	bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2oefgs0neb+5NBHEkTwjRT2KNUwQhWvN5iy+8rxmViuom5RXwJAh5OtuMR3zHN1DG
-	 VIEv80ZbKMlrvHf3Mx2KSw5F2FCOzNCdgiJyjp22UtPwScI/BMrKwiD9Eh5guI/mD6
-	 8QE1deZNVgP/AHhioO0EN13uaSMeNIEWV5ySTItM=
+	b=V+GIAJ92HPYxgVIkcKP7dibHQ7vyNvYUdWk/cL/TA5Vfasp43i1L49OwUrOzS5nSw
+	 4sphMrguKtq0T/AjWG6iJVIQrJOdx/DECjyeQ2MvJ2PPhG1+z78CmAiafOzAbbdNKY
+	 G8F0RCe26EleD+heLxFRcyV2zirObMIWkLt51Hsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgA3SmB (ORCPT
+        id S1730309AbgA3SmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgA3Sl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:41:58 -0500
+        id S1728028AbgA3SmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C61205F4;
-        Thu, 30 Jan 2020 18:41:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8EDC2083E;
+        Thu, 30 Jan 2020 18:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409717;
-        bh=N3f/o6OEfEATW92CUQoPs/h5ohxXzCma9kMlBT4/vuc=;
+        s=default; t=1580409720;
+        bh=N5y1muu8N21M0FsvptEApXfStVYRWbQEbqqaQyDIb50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khkk7Y0vtS2YfqCzQ//QG7BiQ4wrd42qXO8KAjIDJ7aAXweR75ghdFWbZSS6rJKYC
-         jKQTZlVyUiuh1sbHpMWTg9tRKRcwRQ3kL7gTd0T8tRoNdizPzeb1oYf2BmYy6jJMTn
-         QRCUiM0v07yINWOxWJ4+qOWP/CsrAmxJzun+x65E=
+        b=QxvQjUfnd+w2PvYH++mtQ4gwZ37RCbPF8wrQDqQCFu4zZOkELWCMniEUrhlJnLyz+
+         sB8hISz1j31hAF5JuNJYDuArF3er/ap7bJzKUsl21MAQT8Hsmgs2tDoCbd+XrZbW3+
+         g+t9SGnwAGOLtM8jQU8nGp59pniacGIgeh/s2Wf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 41/56] net: socionext: fix xdp_result initialization in netsec_process_rx
-Date:   Thu, 30 Jan 2020 19:38:58 +0100
-Message-Id: <20200130183616.528818741@linuxfoundation.org>
+Subject: [PATCH 5.5 42/56] udp: segment looped gso packets correctly
+Date:   Thu, 30 Jan 2020 19:38:59 +0100
+Message-Id: <20200130183616.721326806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
 References: <20200130183608.849023566@linuxfoundation.org>
@@ -61,35 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 02758cb6dac31a2b4bd9e535cffbe718acd46404 ]
+[ Upstream commit 6cd021a58c18a1731f7e47f83e172c0c302d65e5 ]
 
-Fix xdp_result initialization in netsec_process_rx in order to not
-increase rx counters if there is no bpf program attached to the xdp hook
-and napi_gro_receive returns GRO_DROP
+Multicast and broadcast packets can be looped from egress to ingress
+pre segmentation with dev_loopback_xmit. That function unconditionally
+sets ip_summed to CHECKSUM_UNNECESSARY.
 
-Fixes: ba2b232108d3c ("net: netsec: add XDP support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+udp_rcv_segment segments gso packets in the udp rx path. Segmentation
+usually executes on egress, and does not expect packets of this type.
+__udp_gso_segment interprets !CHECKSUM_PARTIAL as CHECKSUM_NONE. But
+the offsets are not correct for gso_make_checksum.
+
+UDP GSO packets are of type CHECKSUM_PARTIAL, with their uh->check set
+to the correct pseudo header checksum. Reset ip_summed to this type.
+(CHECKSUM_PARTIAL is allowed on ingress, see comments in skbuff.h)
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: cf329aa42b66 ("udp: cope with UDP GRO packet misdirection")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/socionext/netsec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/udp.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -942,8 +942,8 @@ static int netsec_process_rx(struct nets
- 		struct netsec_de *de = dring->vaddr + (DESC_SZ * idx);
- 		struct netsec_desc *desc = &dring->desc[idx];
- 		struct page *page = virt_to_page(desc->addr);
-+		u32 xdp_result = NETSEC_XDP_PASS;
- 		struct sk_buff *skb = NULL;
--		u32 xdp_result = XDP_PASS;
- 		u16 pkt_len, desc_len;
- 		dma_addr_t dma_handle;
- 		struct xdp_buff xdp;
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -476,6 +476,9 @@ static inline struct sk_buff *udp_rcv_se
+ 	if (!inet_get_convert_csum(sk))
+ 		features |= NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM;
+ 
++	if (skb->pkt_type == PACKET_LOOPBACK)
++		skb->ip_summed = CHECKSUM_PARTIAL;
++
+ 	/* the GSO CB lays after the UDP one, no need to save and restore any
+ 	 * CB fragment
+ 	 */
 
 
