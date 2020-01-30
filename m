@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FECDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6412BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C372464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAA02083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409937;
-	bh=EdaxlxNioT7INiZrUk3Gj5CiZ2MoNSzxkO3BpJhuZm8=;
+	s=default; t=1580409939;
+	bh=krs1E6STY5LR20e9JwyiHDEkwvcPO5sWYrmHL6wEJZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZNY+MXiXp1GBZoIfO1A1w2P4UhYcEFNx1TQfO2ujok0Es8hHakZXdQrOXG+9Idx7
-	 7ytSOLsDQ7IE1iXjNKJ/U9uayIq4kskkdG7huTuKRBYaBEHqOChMD02T89L7ny2QGn
-	 PEVUL2Af11uiwpoDDTdkfptalxchLzEyXHViFlIM=
+	b=qwpHz6eOrXi3wTKWoD6BCNeXgAkb8TkonIYgzqAioytolGV+rm1r20c9GnU89QK6S
+	 h93628q0Q5o0RGF7GPA97yic+lMwPhPUKyUXl/ieeDcnjsQxilLP4ScqKpVjNNCmsc
+	 1wYfqMw2LDqqhecT255aJKoovxqvZbRjfdUFM5Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbgA3Spg (ORCPT
+        id S1731068AbgA3Spi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:45:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55202 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgA3Spd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:45:33 -0500
+        id S1728079AbgA3Spg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:45:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0608B21734;
-        Thu, 30 Jan 2020 18:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB42221734;
+        Thu, 30 Jan 2020 18:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409933;
-        bh=EdaxlxNioT7INiZrUk3Gj5CiZ2MoNSzxkO3BpJhuZm8=;
+        s=default; t=1580409936;
+        bh=krs1E6STY5LR20e9JwyiHDEkwvcPO5sWYrmHL6wEJZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XU1IzcUmSeB6QNU/yohMrBPXTrTEy71W/Zxg/p04e2bsThiXDV/zi7rIw9wmzYK0L
-         s223KmDA4O+V3rfgtqSHlnUNzxNmWLanQ8tKR9X9JxYuvL5ZwIrNUaI8Bkf2/qlo7W
-         sldcmnyTEo/lQW+uDXMWI4ka/2W/Jg5iJyqHJom8=
+        b=NVMPnzAbsY61LLEJvPjSp80a7V637fkktNV7KUSsHpBKQQHoJB6Ml3RWG6VaPcrLO
+         bskDLU+fROofHgH2unyoJv9RHrIBpqc6xpyvAn2VEOMt6TKp1/Sow8zAJXVrrTx1Z4
+         v+oXXohVceMiGFzwRRIclAJDf+zXd/5wqg3nS4B0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Pan Zhang <zhangpan26@huawei.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/110] mfd: intel-lpss: Add Intel Comet Lake PCH-H PCI IDs
-Date:   Thu, 30 Jan 2020 19:39:05 +0100
-Message-Id: <20200130183624.724129396@linuxfoundation.org>
+Subject: [PATCH 5.4 054/110] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+Date:   Thu, 30 Jan 2020 19:38:30 +0100
+Message-Id: <20200130183621.535866519@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -61,51 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Pan Zhang <zhangpan26@huawei.com>
 
-[ Upstream commit dd047dce3a6f5233b98e792e2287cc549da35879 ]
+[ Upstream commit 306d5acbfc66e7cccb4d8f91fc857206b8df80d1 ]
 
-Intel Comet Lake PCH-H has the same LPSS than Intel Cannon Lake.
-Add the new IDs to the list of supported devices.
+1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
+1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
+1004
+1005         if (input_mt_is_active(i_slot) &&
+1006             input_mt_is_used(mt, i_slot))
+1007             return -EAGAIN;
+1008     }
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+We previously assumed 'mt' could be null (see line 1002).
+
+The following situation is similar, so add a judgement.
+
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/hid/hid-multitouch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 1767f30a16761..b33030e3385c7 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -140,7 +140,7 @@ static const struct intel_lpss_platform_info cnl_i2c_info = {
- };
- 
- static const struct pci_device_id intel_lpss_pci_ids[] = {
--	/* CML */
-+	/* CML-LP */
- 	{ PCI_VDEVICE(INTEL, 0x02a8), (kernel_ulong_t)&spt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x02a9), (kernel_ulong_t)&spt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x02aa), (kernel_ulong_t)&spt_info },
-@@ -153,6 +153,17 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x02ea), (kernel_ulong_t)&cnl_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x02eb), (kernel_ulong_t)&cnl_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x02fb), (kernel_ulong_t)&spt_info },
-+	/* CML-H */
-+	{ PCI_VDEVICE(INTEL, 0x06a8), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x06a9), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x06aa), (kernel_ulong_t)&spt_info },
-+	{ PCI_VDEVICE(INTEL, 0x06ab), (kernel_ulong_t)&spt_info },
-+	{ PCI_VDEVICE(INTEL, 0x06c7), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x06e8), (kernel_ulong_t)&cnl_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x06e9), (kernel_ulong_t)&cnl_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x06ea), (kernel_ulong_t)&cnl_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x06eb), (kernel_ulong_t)&cnl_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x06fb), (kernel_ulong_t)&spt_info },
- 	/* BXT A-Step */
- 	{ PCI_VDEVICE(INTEL, 0x0aac), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x0aae), (kernel_ulong_t)&bxt_i2c_info },
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index f0d4172d51319..362805ddf3777 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+ 		tool = MT_TOOL_DIAL;
+ 	else if (unlikely(!confidence_state)) {
+ 		tool = MT_TOOL_PALM;
+-		if (!active &&
++		if (!active && mt &&
+ 		    input_mt_is_active(&mt->slots[slotnum])) {
+ 			/*
+ 			 * The non-confidence was reported for
 -- 
 2.20.1
 
