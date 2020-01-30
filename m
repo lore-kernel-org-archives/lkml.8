@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBDFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502A7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737F4214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB52082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409882;
-	bh=+4JoOjg9YkisXPPRKAgUTSvATW03i/cdPH6O5FS/hEs=;
+	s=default; t=1580409884;
+	bh=D9R14nx92DgiSI7HrKBJtY8GmlzoUhNOx/S3N6SKvzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zbkMtOntpoR4Zq2GNFqoOPuA2EyfzDpktGGBlTAicnkg1h/Q4+9njIKC7W6HQjhg9
-	 xCSDmt8U70CeZmzejfAUU4rNdwOVk0LnL7wvnfFrkIM5V04UzpI2ijOpCqvWY5DqZa
-	 /7M9NPJ/kBZYX/4edF+XnnZBd6vb13UaMhoxZnJ4=
+	b=eIRi8He7wMBhIDmzGlIiC8ocE3wycE+XRu+XaWbm73pwkNYhbx0YGrRk2Brqp54Jp
+	 +y6Uuyaa9P2gSjcS5Plja9vyFB0b8zWtaOSVcwz0HkFRf2R1tOztAlEqDdNfqKlfsL
+	 W7aLJ3nLjBLSqc/wx9bxdCrIRQNpjZXiQURdw7yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbgA3Soh (ORCPT
+        id S1730867AbgA3Son (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:44:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:44:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbgA3So1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:44:27 -0500
+        id S1730563AbgA3Sok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:44:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2A1214DB;
-        Thu, 30 Jan 2020 18:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5C0205F4;
+        Thu, 30 Jan 2020 18:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409866;
-        bh=+4JoOjg9YkisXPPRKAgUTSvATW03i/cdPH6O5FS/hEs=;
+        s=default; t=1580409879;
+        bh=D9R14nx92DgiSI7HrKBJtY8GmlzoUhNOx/S3N6SKvzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EkSTwpb5JCxTxVY+DKO2nuZ15sRfe1ize0FgnEUsfEH35S2ZlGqh/BVdGyWxtNS0G
-         MiM7++pCa/YbgdlAOQuimYxY0tcjgPWlAeHI2owTC/QYtQSpfHnY7Z8XkObFA/j04/
-         ZAEN0+QvxnKxJwbqHA1kYOpRCuPKNR3B200Zowyw=
+        b=cJgS8pS6sbVnaFvCKkc7wprMvPwp0827jcG6tjkdis64dwH/8gRCIV9ClgZAhpOMa
+         jh+WvliZpa+W+HyjHldndeXf4+u6ky5R66ou8hWFotVlzJZfm8zq73Dh8jzZFlIkbv
+         FNywdN5tZHMynD74W1StVrBW/m6Kgs8jKu3TtLyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "wuxu.wu" <wuxu.wu@huawei.com>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/110] spi: spi-dw: Add lock protect dw_spi rx/tx to prevent concurrent calls
-Date:   Thu, 30 Jan 2020 19:38:41 +0100
-Message-Id: <20200130183622.456789217@linuxfoundation.org>
+Subject: [PATCH 5.4 052/110] ASoC: SOF: fix fault at driver unload after failed probe
+Date:   Thu, 30 Jan 2020 19:38:28 +0100
+Message-Id: <20200130183621.303656639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -60,132 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wuxu.wu <wuxu.wu@huawei.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 19b61392c5a852b4e8a0bf35aecb969983c5932d ]
+[ Upstream commit b06e46427f987bf83dcb6a69516b57276eb8ec0c ]
 
-dw_spi_irq() and dw_spi_transfer_one concurrent calls.
+If sof_machine_check() fails during driver probe, the IPC
+state is not initialized and this will lead to a NULL
+dereference at driver unload. Example log is as follows:
 
-I find a panic in dw_writer(): txw = *(u8 *)(dws->tx), when dw->tx==null,
-dw->len==4, and dw->tx_end==1.
+[ 1535.980630] sof-audio-pci 0000:00:1f.3: error: no matching ASoC machine driver found - aborting probe
+[ 1535.980631] sof-audio-pci 0000:00:1f.3: error: failed to get machine info -19
+[ 1535.980632] sof-audio-pci 0000:00:1f.3: error: sof_probe_work failed err: -19
+[ 1550.798373] BUG: kernel NULL pointer dereference, address: 0000000000000008
+...
+[ 1550.798393] Call Trace:
+[ 1550.798397]  snd_sof_ipc_free+0x15/0x30 [snd_sof]
+[ 1550.798399]  snd_sof_device_remove+0x29/0xa0 [snd_sof]
+[ 1550.798400]  sof_pci_remove+0x10/0x30 [snd_sof_pci]
 
-When tpm driver's message overtime dw_spi_irq() and dw_spi_transfer_one
-may concurrent visit dw_spi, so I think dw_spi structure lack of protection.
-
-Otherwise dw_spi_transfer_one set dw rx/tx buffer and then open irq,
-store dw rx/tx instructions and other cores handle irq load dw rx/tx
-instructions may out of order.
-
-	[ 1025.321302] Call trace:
-	...
-	[ 1025.321319]  __crash_kexec+0x98/0x148
-	[ 1025.321323]  panic+0x17c/0x314
-	[ 1025.321329]  die+0x29c/0x2e8
-	[ 1025.321334]  die_kernel_fault+0x68/0x78
-	[ 1025.321337]  __do_kernel_fault+0x90/0xb0
-	[ 1025.321346]  do_page_fault+0x88/0x500
-	[ 1025.321347]  do_translation_fault+0xa8/0xb8
-	[ 1025.321349]  do_mem_abort+0x68/0x118
-	[ 1025.321351]  el1_da+0x20/0x8c
-	[ 1025.321362]  dw_writer+0xc8/0xd0
-	[ 1025.321364]  interrupt_transfer+0x60/0x110
-	[ 1025.321365]  dw_spi_irq+0x48/0x70
-	...
-
-Signed-off-by: wuxu.wu <wuxu.wu@huawei.com>
-Link: https://lore.kernel.org/r/1577849981-31489-1-git-send-email-wuxu.wu@huawei.com
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191218000518.5830-2-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 15 ++++++++++++---
- drivers/spi/spi-dw.h |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ sound/soc/sof/ipc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 45972056ed8c8..11cac7e106635 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -172,9 +172,11 @@ static inline u32 rx_max(struct dw_spi *dws)
- 
- static void dw_writer(struct dw_spi *dws)
+diff --git a/sound/soc/sof/ipc.c b/sound/soc/sof/ipc.c
+index 086eeeab86795..7b6d69783e16a 100644
+--- a/sound/soc/sof/ipc.c
++++ b/sound/soc/sof/ipc.c
+@@ -834,6 +834,9 @@ void snd_sof_ipc_free(struct snd_sof_dev *sdev)
  {
--	u32 max = tx_max(dws);
-+	u32 max;
- 	u16 txw = 0;
+ 	struct snd_sof_ipc *ipc = sdev->ipc;
  
-+	spin_lock(&dws->buf_lock);
-+	max = tx_max(dws);
- 	while (max--) {
- 		/* Set the tx word if the transfer's original "tx" is not null */
- 		if (dws->tx_end - dws->len) {
-@@ -186,13 +188,16 @@ static void dw_writer(struct dw_spi *dws)
- 		dw_write_io_reg(dws, DW_SPI_DR, txw);
- 		dws->tx += dws->n_bytes;
- 	}
-+	spin_unlock(&dws->buf_lock);
- }
- 
- static void dw_reader(struct dw_spi *dws)
- {
--	u32 max = rx_max(dws);
-+	u32 max;
- 	u16 rxw;
- 
-+	spin_lock(&dws->buf_lock);
-+	max = rx_max(dws);
- 	while (max--) {
- 		rxw = dw_read_io_reg(dws, DW_SPI_DR);
- 		/* Care rx only if the transfer's original "rx" is not null */
-@@ -204,6 +209,7 @@ static void dw_reader(struct dw_spi *dws)
- 		}
- 		dws->rx += dws->n_bytes;
- 	}
-+	spin_unlock(&dws->buf_lock);
- }
- 
- static void int_error_stop(struct dw_spi *dws, const char *msg)
-@@ -276,18 +282,20 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- {
- 	struct dw_spi *dws = spi_controller_get_devdata(master);
- 	struct chip_data *chip = spi_get_ctldata(spi);
-+	unsigned long flags;
- 	u8 imask = 0;
- 	u16 txlevel = 0;
- 	u32 cr0;
- 	int ret;
- 
- 	dws->dma_mapped = 0;
--
-+	spin_lock_irqsave(&dws->buf_lock, flags);
- 	dws->tx = (void *)transfer->tx_buf;
- 	dws->tx_end = dws->tx + transfer->len;
- 	dws->rx = transfer->rx_buf;
- 	dws->rx_end = dws->rx + transfer->len;
- 	dws->len = transfer->len;
-+	spin_unlock_irqrestore(&dws->buf_lock, flags);
- 
- 	spi_enable_chip(dws, 0);
- 
-@@ -471,6 +479,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 	dws->type = SSI_MOTO_SPI;
- 	dws->dma_inited = 0;
- 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
-+	spin_lock_init(&dws->buf_lock);
- 
- 	spi_controller_set_devdata(master, dws);
- 
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index c9c15881e9824..f3a2f157a2b17 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -120,6 +120,7 @@ struct dw_spi {
- 	size_t			len;
- 	void			*tx;
- 	void			*tx_end;
-+	spinlock_t		buf_lock;
- 	void			*rx;
- 	void			*rx_end;
- 	int			dma_mapped;
++	if (!ipc)
++		return;
++
+ 	/* disable sending of ipc's */
+ 	mutex_lock(&ipc->tx_mutex);
+ 	ipc->disable_ipc_tx = true;
 -- 
 2.20.1
 
