@@ -6,70 +6,70 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5965BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD167C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B8E20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 03:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DD8206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 04:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X5WxJNIx"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2CM33z3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgA3DtW (ORCPT
+        id S1727006AbgA3EEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 22:49:22 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35417 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgA3DtV (ORCPT
+        Wed, 29 Jan 2020 23:04:12 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46567 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgA3EEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 22:49:21 -0500
-Received: by mail-pj1-f66.google.com with SMTP id q39so754418pjc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 19:49:21 -0800 (PST)
+        Wed, 29 Jan 2020 23:04:12 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so766459pfp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 Jan 2020 20:04:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Mx3OfgZqXsctX/7U2mChFWk0zCA5WCpqANSbySekotA=;
-        b=X5WxJNIxpSC+SU8kzTSE8BPBlHNsC3v2pics92oUneEjfoADck4fpsPjTXSusetKXQ
-         nK4PNWKk8uh9KjelGQEwiMfCiL2qdr/3svDDzNCH1oucd5jhkAmhMYCvh8mfASipTnkF
-         T8RqVUCZ2o/Yl43yiwZblg7Af00qVPSSrPOIm6qsS20UKHhNyWmmiBokPS8vKgB1igQI
-         D9epvWXGqfWMkQ816eZmvCaj1QTDg2k/q5U81u3VC4XQUSY7UyBneATwfsNj688+XnRE
-         CgfuPIeZor4SgKB1iYnw0XDY1J09DhXLO6f2o+e9Jb2atWT5wL6ENBW1GrgUtlD9VdHT
-         wSKg==
+        bh=pvvVT/b95UaLpYd8lIo04uOv4SDYk7PHg7fzm5Afymw=;
+        b=2CM33z3QmNsLGizAUud8ZrRtcS/UOJVh5srO6r0beE7dVVirSjyUJu5uQbG3wAp+1j
+         igd5VCWO6Rh8WcpPgbCzn/iOdFGAqmclnWh0idY9BDEcZvb8O3xACKrJcCrO0OHWMdcq
+         x0gzeZkIYTrIil50MthvcQxlBLvgEaiZS/6VnOfXiADJd/0akppJPB9uEdD6YU2+No8q
+         w/F5aHJsL9e9kGlTGyHtzjzKWqzEdgL1BL/EeyQoGS/lINLfuj0gi33Eyanul2MMl7Dj
+         JIiHVq9Mj5pq+/+5Zh8f3kdl7zJjHAOgGykuowufHJNu87NGEweXdXwHyyMDxiOQI3lb
+         oBbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Mx3OfgZqXsctX/7U2mChFWk0zCA5WCpqANSbySekotA=;
-        b=BCynu6HyDvB5opRXWtuiZWCAySKfZ40o6aaAH+anjOB5Nn82XSLXZ7pfVsp/+pDUUs
-         77pgo7IoP8xL/kogXuJm5KVTVstTwr/R262svE2s/HDkXtR4jMIfLlSr5HPL7dRnfZWU
-         jn0O0mzjCVNS/V5pBc7z6rzgHRQ4n/JQCRVxVP+GAA6E+yh67kHFd2dI6kQwUacFlpIG
-         Hep2i8dxFr1ii8Y7tIJ8d2F3foUA4xJ+yq7Tx1p1H5KCcl8Bw7HkPJHfy6b4wCDv21m3
-         2D4qiPX7aHNNJeqgm/mEvLx+pgn4HItOdNpTVttOER4GFyw8Rq3Yn0a+hVbJzMEMySZe
-         YyhQ==
-X-Gm-Message-State: APjAAAX0rYddosJCBD8AWO+uhw5fMY/oEntoq4f8SA9J5UAfuiKc/A4H
-        Ci1DZHdPEseNUrqnzZW+5FLUYA==
-X-Google-Smtp-Source: APXvYqzLfb+nyZJcIxNwxOwzMRDzIIFuTpHf+Jcuu9CPDAACZJjS4KoRWngbSUk7D98OohGdNUOGRA==
-X-Received: by 2002:a17:902:82c3:: with SMTP id u3mr2615891plz.73.1580356160930;
-        Wed, 29 Jan 2020 19:49:20 -0800 (PST)
+        bh=pvvVT/b95UaLpYd8lIo04uOv4SDYk7PHg7fzm5Afymw=;
+        b=VbesGvRcxPRXr8d/Dl4hB9tlt6u3l65HT6FqxExj82ERMKY61wivJlDamRL1UvwsT5
+         tpetz+o7toKx5HHaGcvN3Ib78N1izvhNEMO/N8g7eJ5Gf5wjzcvLp90ExoBFAFw4zFXH
+         oN674fsjlV7BO3aVAemNnij1jqEsFct0bEo338Xn2+Iq/Z0r+j5dW/xqNeLmi36/p/4o
+         Kykt1q70w/C3LtkQAeTdT8wOjxT76e0EVweJx+dgS/n1tJylCKx9YFNeBTYXUGO53RuI
+         IHaF9j5SSsFot7CnMmKvii0T0CYgWy9nHu7o/2k1NYq0qZqgzG1kofzTscvMlrVI+Kth
+         Ov8Q==
+X-Gm-Message-State: APjAAAUmInUwRe4LstLI1h0rfm7CTx1WdZ4BHX9aoRpz0w4QoBHpE4/m
+        ItBUs73bQgfgS6ZrpBiPDIUt1wbRrpc=
+X-Google-Smtp-Source: APXvYqyYGaaUNWka3uFLfMuBa+lGiX1WFHjW2SY2k8buO6fFUnR0D0ORcRdfeZ5QHe0LDpgZX/ZFlA==
+X-Received: by 2002:a63:78c:: with SMTP id 134mr2473976pgh.279.1580357051523;
+        Wed, 29 Jan 2020 20:04:11 -0800 (PST)
 Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id t23sm4413520pfq.6.2020.01.29.19.49.19
+        by smtp.gmail.com with ESMTPSA id j17sm4483515pfa.28.2020.01.29.20.04.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jan 2020 19:49:20 -0800 (PST)
-Subject: Re: [PATCH] MAINTAINERS: Add Revanth Rajashekar as a SED-Opal
- maintainer
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Scott Bauer <sbauer@plzdonthack.me>,
-        Revanth Rajashekar <revanth.rajashekar@intel.com>
-References: <20200110215646.15930-1-jonathan.derrick@intel.com>
+        Wed, 29 Jan 2020 20:04:11 -0800 (PST)
+Subject: Re: [PATCH] drbd fifo_alloc: use struct_size
+To:     Stephen Kitt <steve@sk2.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        drbd-dev@lists.linbit.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200124200307.1808593-1-steve@sk2.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a9d2ecfd-c6b9-ac0f-ac93-30329d9982b2@kernel.dk>
-Date:   Wed, 29 Jan 2020 20:49:18 -0700
+Message-ID: <a74b5267-5eb5-a050-75ea-e108a5115805@kernel.dk>
+Date:   Wed, 29 Jan 2020 21:04:09 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200110215646.15930-1-jonathan.derrick@intel.com>
+In-Reply-To: <20200124200307.1808593-1-steve@sk2.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,9 +78,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/20 2:56 PM, Jon Derrick wrote:
-> Scott hasn't worked for Intel for some time and has already given us his
-> blessing.
+On 1/24/20 1:03 PM, Stephen Kitt wrote:
+> Switching to struct_size for the allocation in fifo_alloc avoids
+> hard-coding the type of fifo_buffer.values in fifo_alloc. It also
+> provides overflow protection; to avoid pessimistic code being
+> generated by the compiler as a result, this patch also switches
+> fifo_size to unsigned, propagating the change as appropriate.
 
 Applied, thanks.
 
