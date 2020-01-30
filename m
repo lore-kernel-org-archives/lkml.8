@@ -7,228 +7,240 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859DDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EC5C35240
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0C206D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E949206D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 12:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G4V8TrrY"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MW1puIL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgA3MkE (ORCPT
+        id S1727201AbgA3Ml5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 07:40:04 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34747 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgA3MkE (ORCPT
+        Thu, 30 Jan 2020 07:41:57 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:10577 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgA3Ml4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 07:40:04 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200130124001euoutp017da86bfc716c13bef78cbbd22a5b60a6~uqoOJo00a2601326013euoutp01P
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 12:40:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200130124001euoutp017da86bfc716c13bef78cbbd22a5b60a6~uqoOJo00a2601326013euoutp01P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580388001;
-        bh=Jzdor6fDyEnMsChZ027tOaitTynBCI6a43ngD1bmh0o=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=G4V8TrrYGDftuvmy7lSwk8OS7dmash8BRuSalwNmgm19XznE5UE9oI7Jn1sQJNrR+
-         TVrObNHktdSt6W8o0m8/lH3spkpk9ln1KCyZ3qh5mBJQnvhucyej9gtTPSNmgQ3R4F
-         W9eLq52Pf9z6dXeZZwsdMTMq705orMwTmr2luD80=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200130124000eucas1p1aa08fe80f3610b04dfecf70f6c348433~uqoN96rob1361413614eucas1p1-;
-        Thu, 30 Jan 2020 12:40:00 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id C6.69.61286.0AEC23E5; Thu, 30
-        Jan 2020 12:40:00 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200130124000eucas1p137943be0fe3e5e1eb45e705dc5c46431~uqoNuQkB42838028380eucas1p1g;
-        Thu, 30 Jan 2020 12:40:00 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200130124000eusmtrp29bd8676f25fb6eb1b0a30fbf98336b88~uqoNtltLd2643726437eusmtrp2W;
-        Thu, 30 Jan 2020 12:40:00 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-63-5e32cea011e6
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8B.EC.07950.0AEC23E5; Thu, 30
-        Jan 2020 12:40:00 +0000 (GMT)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200130124000eusmtip11b04f02223def1624a661e1cc2f980a8~uqoNjVG7W1920319203eusmtip1c;
-        Thu, 30 Jan 2020 12:40:00 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [RFC PATCH 0/4] boot/loader: Load kernel directly from firmware
-Date:   Thu, 30 Jan 2020 13:39:34 +0100
-Message-Id: <20200130123934.3900-1-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 30 Jan 2020 07:41:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580388115; x=1611924115;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=RYelv+ZOHc2F4o+UOLMQUvM6WVUst1DmQxZ06rGG3Mk=;
+  b=MW1puIL4VprB7eaaABxKj3RMJszHdrNM4u4ScxV24auG8zi6HJLIhbBa
+   GKGRA1s/E7A7Zd0kkzxiLOyZNyUoO/DT5d6a5JaJci6m+ql38Mb4kLUYE
+   5SLX/AgqDtr2r4jtLUhD8C7yPqvi6icquENgw3Y0eP7dvXY8UTszFEjj4
+   k=;
+IronPort-SDR: aeC/5RG4HaCQhPRg1bOmUwtsFtt5qsFjOM17qG7XJcl3e1uuYHAtBphOCE6SfInp3BrcuHiAct
+ mCsRuAL4vdOQ==
+X-IronPort-AV: E=Sophos;i="5.70,381,1574121600"; 
+   d="scan'208";a="13617219"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Jan 2020 12:41:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id BE21AA17BE;
+        Thu, 30 Jan 2020 12:41:42 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Thu, 30 Jan 2020 12:41:42 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.153) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 30 Jan 2020 12:41:35 +0000
+From:   <sjpark@amazon.com>
+To:     Eric Dumazet <edumazet@google.com>
+CC:     <sjpark@amazon.com>, David Miller <davem@davemloft.net>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Martin KaFai Lau" <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        <andriin@fb.com>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        <aams@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <dola@amazon.com>
+Subject: Re: Re: Latency spikes occurs from frequent socket connections
+Date:   Thu, 30 Jan 2020 13:41:21 +0100
+Message-ID: <20200130124121.24587-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CANn89iJOK9UMQspgikPWb-NA6vmo+wQPB5q7hnWpHDSxYrUSnA@mail.gmail.com> (raw)
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduznOd0F54ziDPY8sbS4eWgFo8Wmx9dY
-        LS7vmsNmMeP8PiYHFo/NS+o9+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK2N1y3nGgnn6FVs+
-        nGVvYJyp2sXIySEhYCLx9PYN1i5GLg4hgRWMEj/XTWCCcL4wSjTf+84I4XxmlLj8fwY7TMvs
-        u4ehEssZJS68PsQO4TxnlDi6ZzYLSBWbgKNE/9ITrCC2iEC2xOSPX5hAbGYBe4mJs/6zgdjC
-        Ah4S608/ArNZBFQldq/ax9zFyMHBK2Al8f5wMsQyeYnzvevAFvMKCEqcnPkEbDy/gJbEmqbr
-        LBAj5SWat85mBrlBQuAzm8S8/+dYIZpdJFZua2CEsIUlXh3fAvWBjMT/nfOZQHZJCNRLTJ5k
-        BtHbwyixbc4PFogaa4k7536xgdQwC2hKrN+lD1HuKNG2xAHC5JO48VYQ4gI+iUnbpjNDhHkl
-        OtqEIGaoSKzr3wM1T0qi99UKqFs8JP4tes84gVFxFpK/ZiH5ZRbC2gWMzKsYxVNLi3PTU4sN
-        81LL9YoTc4tL89L1kvNzNzECU8bpf8c/7WD8einpEKMAB6MSD6/HGaM4IdbEsuLK3EOMEhzM
-        SiK8oq6GcUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jRe9jBUSSE8sSc1OTS1ILYLJMnFwSjUw
-        Cm//8f7NX49fByr5hV2//Nty2GjZ1Zzrdbbu32Nt38/QuS30cAvbWreqX8Z7Lmibzoo8XNv+
-        f1lPv96/r7cirhqceD4l8wXPUfslR433e2bPdT/THChX8S/6umHfHcuqFoN1kTzO6yoESoMN
-        LbhFj5xKeWv3Z6PfXIlD8va71xx+m/k427nphRJLcUaioRZzUXEiALtU5BsVAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsVy+t/xu7oLzhnFGdz9rW5x89AKRotNj6+x
-        WlzeNYfNYsb5fUwOLB6bl9R79G1ZxejxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6R
-        iaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsbqlvOMBfP0K7Z8OMvewDhTtYuRk0NCwERi9t3D
-        jF2MXBxCAksZJTac+craxcgBlJCSWDk3HaJGWOLPtS42iJqnjBIX/x9gA0mwCThK9C89wQpi
-        iwjkSlw7dJQdxGYWsJeYOOs/WI2wgIfE+tOPwGwWAVWJ3av2MYPM5xWwknh/OBlivrzE+d51
-        YK28AoISJ2c+YQEpYRZQl1g/TwgkzC+gJbGm6ToLxHR5ieats5knMArMQtIxC6FjFpKqBYzM
-        qxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQIDftuxn1t2MHa9Cz7EKMDBqMTD63HGKE6INbGs
-        uDL3EKMEB7OSCK+oq2GcEG9KYmVValF+fFFpTmrxIUZToG8mMkuJJucDozGvJN7Q1NDcwtLQ
-        3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAMjX/6JY+lNpY9dJ07e7JIx7bv7zf5Z
-        /9TfyR6Lipfp1XQq+TRTstDtRJbqsz9Kbp+erqpfL632cZuJ2UMDyeUyfx79Px0i73fE4P7l
-        hZHxNjLS7xm4QptZP5zTKD0cfaS38tIFrtda7sv8Doc9Slq5wjAj9Kbyhpo10U5J/Ozzrgpu
-        Ewz2rXunxFKckWioxVxUnAgAImLD3Y4CAAA=
-X-CMS-MailID: 20200130124000eucas1p137943be0fe3e5e1eb45e705dc5c46431
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200130124000eucas1p137943be0fe3e5e1eb45e705dc5c46431
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200130124000eucas1p137943be0fe3e5e1eb45e705dc5c46431
-References: <CGME20200130124000eucas1p137943be0fe3e5e1eb45e705dc5c46431@eucas1p1.samsung.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.153]
+X-ClientProxiedBy: EX13D36UWA003.ant.amazon.com (10.43.160.237) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset is a PoC showing, it is possible and advantageous to
-integrate platform setup code in the kernel tree instead of maintaining
-it in a separate bootloader project.
+On Wed, 29 Jan 2020 09:52:43 -0800 Eric Dumazet <edumazet@google.com> wrote:
 
-Bringing up a new ARM platform today requires developing the following
-pieces code in both bootloader and kernel:
+> On Wed, Jan 29, 2020 at 9:14 AM <sjpark@amazon.com> wrote:
+> >
+> > Hello,
+> >
+> >
+> > We found races in the kernel code that incur latency spikes.  We thus would
+> > like to share our investigations and hear your opinions.
+> >
+> >
+> > Problem Reproduce
+> > =================
+> >
+> > You can reproduce the problem by compiling and running source code of
+> > 'server.c' and 'client.c', which I pasted at the end of this mail, as below:
+> >
+> >     $ gcc -o client client.c
+> >     $ gcc -o server server.c
+> >     $ ./server &
+> >     $ ./client
+> >     ...
+> >     port: 45150, lat: 1005320, avg: 229, nr: 1070811
+> >     ...
+> >
+> 
+> Thanks for the repro !
 
-+ platform setup (DRAM, minimal set of clocks and PMICs etc)
-  - minimal setup in bootloader
-  - full setup in kernel
-+ device drivers (storage, network interface, display)
-  - in both bootloader and kernel
+My pleasure :)
 
-We've noticed that most code required in bootloader can be ported from
-Linux. This isn't, however, effortless. We also consider further
-maintenance of two copies of code an unnecessary burden. Making platform
-setup code a part of kernel source tree makes it possible to reuse existing
-Linux drivers in bootloading environment as well as to avoid creating
-and maintainig two different drivers for new devices.
+> 
+[...]
+> > Experimental Fix
+> > ----------------
+> >
+> > We confirmed this is the case by logging and some experiments.  Further,
+> > because the process of RST/ACK packet would stuck in front of the critical
+> > section while the ACK is being processed inside the critical section in most
+> > case, we add one more check of the RST/ACK inside the critical section.  In
+> > detail, it's as below:
+> >
+> >     --- a/net/ipv4/tcp_ipv4.c
+> >     +++ b/net/ipv4/tcp_ipv4.c
+> >     @@ -1912,6 +1912,29 @@ int tcp_v4_rcv(struct sk_buff *skb)
+> >             tcp_segs_in(tcp_sk(sk), skb);
+> >             ret = 0;
+> >             if (!sock_owned_by_user(sk)) {
+> >     +               // While waiting for the socket lock, the sk may have
+> >     +               // transitioned to FIN_WAIT2/TIME_WAIT so lookup the
+> >     +               // twsk and if one is found reprocess the skb
+> >     +               if (unlikely(sk->sk_state == TCP_CLOSE && !th->syn
+> >     +                       && (th->fin || th->rst))) {
+> >     +                       struct sock *sk2 = __inet_lookup_established(
+> >     +                               net, &tcp_hashinfo,
+> >     +                               iph->saddr, th->source,
+> >     +                               iph->daddr, ntohs(th->dest),
+> >     +                               inet_iif(skb), sdif);
+> >     +                       if (sk2) {
+> >     +                               if (sk2 == sk) {
+> >     +                                       sock_put(sk2);
+> >     +                               } else {
+> >     +                                       bh_unlock_sock(sk);
+> >     +                                       tcp_v4_restore_cb(skb);
+> >     +                                       if (refcounted) sock_put(sk);
+> >     +                                       sk = sk2;
+> >     +                                       refcounted = true;
+> >     +                                       goto process;
+> >     +                               }
+> >     +                       }
+> >     +               }
+> 
+> 
+> Here are my comments
+> 
+> 
+> 1) This fixes IPv4 side only, so it can not be a proper fix.
+> 
+> 2) TCP is best effort. You can retry the lookup in ehash tables as
+> many times you want, a race can always happen after your last lookup.
+> 
+>   Normal TCP flows going through a real NIC wont hit this race, since
+> all packets for a given 4-tuple are handled by one cpu (RSS affinity)
+> 
+> Basically, the race here is that 2 packets for the same flow are
+> handled by two cpus.
+> Who wins the race is random, we can not enforce a particular order.
 
-The following patches enables building Linux image that is loadable
-directly by Odroid XU4's firmware (bl2). The goal for such arrangement
-is to use Linux as a boot loader that later runs a full OS using kexec.
+Thank you for the comments!  I personally agree with your opinions.
 
-Hardkernel, the vendor of Odroid XU4, provides signed, and thus,
-cumbersome to replace, platform setup code (bl1 and bl2). We decided not
-to replace them, but rather make the kernel loadable by the bl2 code by
-adding only a tiny amount of code to set up the consol. The kernel
-needs, however, to be small enough to be loaded succesfully (1 MiB).
+> 
+> I would rather try to fix the issue more generically, without adding
+> extra lookups as you did, since they might appear
+> to reduce the race, but not completely fix it.
+> 
+> For example, the fact that the client side ignores the RST and
+> retransmits a SYN after one second might be something that should be
+> fixed.
 
-The patchset also provides hsinit (in tools/hsinit) userland program,
-which is a tiny init program that extracts designated archive to
-initramfs and executes /init. At the moment any initramfs image can be
-used at this stage.
+I also agree with this direction.  It seems detecting this situation and
+adjusting the return value of tcp_timeout_init() to a value much lower than the
+one second would be a straightforward solution.  For a test, I modified the
+function to return 1 (4ms for CONFIG_HZ=250) and confirmed the reproducer be
+silent.  My following question is, how we can detect this situation in kernel?
+However, I'm unsure how we can distinguish this specific case from other cases,
+as everything is working as normal according to the TCP protocol.
 
-Although hsinit can be linked against glibc it makes little sense
-because together with the kernel it wont fit in 1 MiB. Instead it is
-recommended to link hsinit against musl libc. Install musl from your OS
-vendor or follow the upstream instructions. With musl available enter
-tools/hsinit and run the following commands.
+Also, it seems the value is made to be adjustable from the user space using the
+bpf callback, BPF_SOCK_OPS_TIMEOUT_INIT:
 
---8<---------------cut here---------------start------------->8---
-wget -P vendor/ https://libarchive.org/downloads/libarchive-3.3.2.tar.gz
-wget -P vendor/ http://prdownloads.sourceforge.net/libpng/zlib-1.2.11.tar.gz
+    BPF_SOCK_OPS_TIMEOUT_INIT,  /* Should return SYN-RTO value to use or
+    				 * -1 if default value should be used
+    				 */
+ 
+Thus, it sounds like you are suggesting to do the detection and adjustment from
+user space.  Am I understanding your point?  If not, please let me know.
 
-./bootstrap
+> 
+> 
+> 
+> 11:57:14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
+> 2560603644, win 65495, options [mss 65495,sackOK,TS val 953760623 ecr
+> 0,nop,wscale 7], length 0
+> 11:57:14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5,
+> win 512, options [nop,nop,TS val 953760623 ecr 953759375], length 0
+> 11:57:14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq
+> 2541101298, win 0, length 0
+> 11:57:15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq
+> 2560603644, win 65495, options [mss 65495,sackOK,TS val 953761652 ecr
+> 0,nop,wscale 7], length 0
+> 
+> 
+> 
+>                     skb_to_free = sk->sk_rx_skb_cache;
+> >                     sk->sk_rx_skb_cache = NULL;
+> >                     ret = tcp_v4_do_rcv(sk, skb);
+> >
+> > We applied this change to the kernel and confirmed that the latency spikes
+> > disappeared with the reproduce program.
+> >
+> >
+> > More Races
+> > ----------
+> >
+> > Further, the man who found the code path and made the fix found another race
+> > resulted from the commit ec94c2696f0b ("tcp/dccp: avoid one atomic operation
+> > for timewait hashdance").  He believes the 'refcount_set()' should be done
+> > before the 'spin_lock()', as it allows others to see the packet in the list but
+> > ignore as the reference count is zero.  This race seems much rare than the
+> > above one and thus we have no reproducible test for this, yet.
+> 
+> Again, TCP is best effort, seeing the refcount being 0 or not is
+> absolutely fine.
+> 
+> The cpu reading the refcnt can always be faster than the cpu setting
+> the refcount to non zero value, no matter how hard you try.
+> 
+> The rules are more like : we need to ensure all fields have
+> stable/updated values before allowing other cpus to get the object.
+> Therefore, writing a non zero refcount should happen last.
 
-MUSL_DIR=/usr/lib/arm-linux-musleabi/ \
-GCC_CROSS_DIR=/usr/lib/gcc-cross/arm-linux-gnueabi/8/ \
-CPPFLAGS='-nostdinc -isystem /usr/include/arm-linux-musleabi/' \
-CFLAGS='-mthumb -Os -ffunction-sections -fdata-sections' \
-LIBARCHIVE_CPP_FLAGS=-I/usr/include/arm-linux-musleabi/ \
-LIBARCHIVE_C_FLAGS=$CFLAGS \
-ZLIB_C_FLAGS=$CFLAGS \
-LDFLAGS="-nostdlib -L${MUSL_DIR}/ -L${GCC_CROSS_DIR}/ ${MUSL_DIR}/crt1.o  ${MUSL_DIR}/crti.o  ${GCC_CROSS_DIR}/crtbegin.o -Wl,--gc-sections -Wl,--start-group  ${GCC_CROSS_DIR}/libgcc.a  ${GCC_CROSS_DIR}/libgcc_eh.a -Wl,--end-group ${GCC_CROSS_DIR}/crtend.o  ${MUSL_DIR}/crtn.o -s"  \
-LIBS="-lc -lgcc" \
-./configure --enable-local-libraries --host=arm-linux-gnueabi --enable-static
-
-make
---8<---------------cut here---------------end--------------->8---
-
-To build bootImage file that is loadable by Odroid XU4's bl2 the following
-commands need to be issued (CROSS_COMPILE and ARCH ommited)
-
---8<---------------cut here---------------start------------->8---
-make odroidxu4_bootloader_defconfig
-make dtbs
-make bootImage
---8<---------------cut here---------------end--------------->8---
-
-The resulting arch/arm/boot/bootImage should be renamed to u-boot-mmc.bin and
-flashed onto an SD or eMMC card with sd_fusing scritp.
+I personally agree on this, either.
 
 
+Thanks,
+SeongJae Park
 
-
-Łukasz Stelmach (4):
-  scripts/dtc: update fdtget.c to upstream version v1.4.7-57-gf267e674d145
-  scripts: add get_console_base.pl
-  Add tools/hsinit
-  boot/loader: Enable building bootloader replacement for Odroid XU4
-
- arch/arm/Kconfig                              |   8 +
- arch/arm/Makefile                             |   8 +-
- arch/arm/boot/Makefile                        |  17 +
- arch/arm/boot/loader/Kconfig                  |  23 ++
- arch/arm/boot/loader/Makefile                 |  42 +++
- arch/arm/boot/loader/odroid-console.c         | 136 ++++++++
- arch/arm/boot/loader/odroid-crt0.S            |  40 +++
- arch/arm/boot/loader/piggy.S                  |  14 +
- arch/arm/boot/loader/vectors.S                | 112 +++++++
- arch/arm/boot/loader/vmlinux.lds              |  17 +
- .../configs/odroidxu4_bootloader_defconfig    | 127 ++++++++
- scripts/dtc/.gitignore                        |   4 +
- scripts/dtc/Makefile                          |   5 +
- scripts/dtc/fdtget.c                          | 125 ++++----
- scripts/dtc/update-dtc-source.sh              |   4 +-
- scripts/get_console_base.pl                   |  26 ++
- tools/hsinit/Makefile.am                      |  29 ++
- tools/hsinit/README.org                       |  56 ++++
- tools/hsinit/bootstrap                        |   7 +
- tools/hsinit/configure.ac                     | 128 ++++++++
- tools/hsinit/hsinit.c                         | 299 ++++++++++++++++++
- tools/hsinit/vendor/.gitignore                |   5 +
- tools/hsinit/vendor/SHA256SUMS                |   2 +
- 23 files changed, 1177 insertions(+), 57 deletions(-)
- create mode 100644 arch/arm/boot/loader/Kconfig
- create mode 100644 arch/arm/boot/loader/Makefile
- create mode 100644 arch/arm/boot/loader/odroid-console.c
- create mode 100644 arch/arm/boot/loader/odroid-crt0.S
- create mode 100644 arch/arm/boot/loader/piggy.S
- create mode 100644 arch/arm/boot/loader/vectors.S
- create mode 100644 arch/arm/boot/loader/vmlinux.lds
- create mode 100644 arch/arm/configs/odroidxu4_bootloader_defconfig
- create mode 100755 scripts/get_console_base.pl
- create mode 100644 tools/hsinit/Makefile.am
- create mode 100644 tools/hsinit/README.org
- create mode 100755 tools/hsinit/bootstrap
- create mode 100644 tools/hsinit/configure.ac
- create mode 100644 tools/hsinit/hsinit.c
- create mode 100644 tools/hsinit/vendor/.gitignore
- create mode 100644 tools/hsinit/vendor/SHA256SUMS
-
--- 
-2.20.1
-
+> 
+> Thanks.
+[...]
