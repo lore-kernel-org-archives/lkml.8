@@ -2,51 +2,51 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D659EC35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29627C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A610A20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CFB214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 18:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580409742;
-	bh=Uyts+bCz/NHWkyUpy2uc0xejtrqIFr1mu7HfUw+1riM=;
+	s=default; t=1580409747;
+	bh=UNYeffwflkB4nlDCvZj9SMgwFmgILprKumpSGTZkwe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XljA5zcMj3KDIeA1HGRxnIT/KNGHX4w9x5+nJb0VEG4jq1AXy48kFwTfXYTCMueoz
-	 CCGi5+In2Q5JF0S6tUGKZZ0TGTwvt3oUXTdAWt8996QzyNfzTm4FlouuSe2KDUiU8D
-	 ocosHbWZk7J/o+gDJi3C7ktISWw2ugawQRee0Ay8=
+	b=zTByy5UZ0n+d4D2EBC+l1RqJ5WoZEEuxaJHkPenFKPS++TZ36+uJeNwFivRMVptmb
+	 yvpMvM0kko/q9liEQ3sWIKJPJqEmxOZf5T2vM9eFbji+nI9kEGovebjb6jQPedfqPw
+	 0VdkxuKKYyl167L9xE4nG0sQ3q7P/DofUloJ6bRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbgA3SmQ (ORCPT
+        id S1730385AbgA3Sm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 13:42:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 13:42:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgA3SmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 13:42:13 -0500
+        id S1730367AbgA3SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 13:42:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46B6205F4;
-        Thu, 30 Jan 2020 18:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB1F20702;
+        Thu, 30 Jan 2020 18:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580409733;
-        bh=Uyts+bCz/NHWkyUpy2uc0xejtrqIFr1mu7HfUw+1riM=;
+        s=default; t=1580409740;
+        bh=UNYeffwflkB4nlDCvZj9SMgwFmgILprKumpSGTZkwe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m0zMdnsXyri6JoIgBn9E1K3gtCwH2mLzF9tuDYoDq1EbPstwMUwIK5D5XgZFoqy6k
-         bC3SZUfTTH3WjGTN5wDZ2VUasutROGjxJRcIbxFW3ZXabjAgnL8P4BSSHXW1fMYuBA
-         qfDFDTSQ5smhWkwWoiyaimdBVIfslV0+iuXOeeeo=
+        b=HA3IROycZ/53/dc3Ma6CSa1RHJfLp/bhUP5qku8J6GOnQ0S3x3bj32iJAGbLu9/iz
+         gI4e5Rv7rWxupMHGdYUacQMi97B7hV5nxrlbIPLGo16WTIXhoORm2pXoU2if/Gn5lG
+         FbKALHHzR72Yp+Q5XmxFqauH4tfnSUFIywvCbXVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 5.4 004/110] usb: dwc3: pci: add ID for the Intel Comet Lake -V variant
-Date:   Thu, 30 Jan 2020 19:37:40 +0100
-Message-Id: <20200130183614.492520228@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 007/110] USB: serial: ir-usb: fix link-speed handling
+Date:   Thu, 30 Jan 2020 19:37:43 +0100
+Message-Id: <20200130183615.018296729@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
 References: <20200130183613.810054545@linuxfoundation.org>
@@ -59,41 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit f5ae8869095552e3396ee3e404f9586cc6a828f0 upstream.
+commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
 
-There is one more Comet Lake PCH variant, CML-V, that has
-its own PCI ID.
+Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
+IrDA header with common defines, but mistakingly switched to using the
+class-descriptor baud-rate bitmask values for the outbound header.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200117093033.48616-1-heikki.krogerus@linux.intel.com
+This broke link-speed handling for rates above 9600 baud, but a device
+would also be able to operate at the default 9600 baud until a
+link-speed request was issued (e.g. using the TCGETS ioctl).
+
+Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
+Cc: stable <stable@vger.kernel.org>     # 2.6.27
+Cc: Felipe Balbi <balbi@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/dwc3-pci.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/serial/ir-usb.c |   20 ++++++++++----------
+ include/linux/usb/irda.h    |   13 ++++++++++++-
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -34,6 +34,7 @@
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-+#define PCI_DEVICE_ID_INTEL_CNPV		0xa3b0
- #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
- #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
- #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
-@@ -342,6 +343,9 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPH),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -335,34 +335,34 @@ static void ir_set_termios(struct tty_st
  
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPV),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+ 	switch (baud) {
+ 	case 2400:
+-		ir_baud = USB_IRDA_BR_2400;
++		ir_baud = USB_IRDA_LS_2400;
+ 		break;
+ 	case 9600:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		break;
+ 	case 19200:
+-		ir_baud = USB_IRDA_BR_19200;
++		ir_baud = USB_IRDA_LS_19200;
+ 		break;
+ 	case 38400:
+-		ir_baud = USB_IRDA_BR_38400;
++		ir_baud = USB_IRDA_LS_38400;
+ 		break;
+ 	case 57600:
+-		ir_baud = USB_IRDA_BR_57600;
++		ir_baud = USB_IRDA_LS_57600;
+ 		break;
+ 	case 115200:
+-		ir_baud = USB_IRDA_BR_115200;
++		ir_baud = USB_IRDA_LS_115200;
+ 		break;
+ 	case 576000:
+-		ir_baud = USB_IRDA_BR_576000;
++		ir_baud = USB_IRDA_LS_576000;
+ 		break;
+ 	case 1152000:
+-		ir_baud = USB_IRDA_BR_1152000;
++		ir_baud = USB_IRDA_LS_1152000;
+ 		break;
+ 	case 4000000:
+-		ir_baud = USB_IRDA_BR_4000000;
++		ir_baud = USB_IRDA_LS_4000000;
+ 		break;
+ 	default:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		baud = 9600;
+ 	}
+ 
+--- a/include/linux/usb/irda.h
++++ b/include/linux/usb/irda.h
+@@ -119,11 +119,22 @@ struct usb_irda_cs_descriptor {
+  * 6 - 115200 bps
+  * 7 - 576000 bps
+  * 8 - 1.152 Mbps
+- * 9 - 5 mbps
++ * 9 - 4 Mbps
+  * 10..15 - Reserved
+  */
+ #define USB_IRDA_STATUS_LINK_SPEED	0x0f
+ 
++#define USB_IRDA_LS_NO_CHANGE		0
++#define USB_IRDA_LS_2400		1
++#define USB_IRDA_LS_9600		2
++#define USB_IRDA_LS_19200		3
++#define USB_IRDA_LS_38400		4
++#define USB_IRDA_LS_57600		5
++#define USB_IRDA_LS_115200		6
++#define USB_IRDA_LS_576000		7
++#define USB_IRDA_LS_1152000		8
++#define USB_IRDA_LS_4000000		9
 +
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ICLLP),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
- 
+ /* The following is a 4-bit value used only for
+  * outbound header:
+  *
 
 
