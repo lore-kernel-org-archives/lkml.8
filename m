@@ -2,199 +2,127 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6456BC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB5D20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3AE2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 00:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgA3AuT (ORCPT
+        id S1727202AbgA3A4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 Jan 2020 19:50:19 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:52860 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbgA3Atr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 Jan 2020 19:49:47 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49E5520050B;
-        Thu, 30 Jan 2020 01:49:44 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3BF112004BA;
-        Thu, 30 Jan 2020 01:49:44 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D2103204BE;
-        Thu, 30 Jan 2020 01:49:43 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v5 2/9] crypto: caam - refactor ahash_done callbacks
-Date:   Thu, 30 Jan 2020 02:49:17 +0200
-Message-Id: <1580345364-7606-3-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1580345364-7606-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 29 Jan 2020 19:56:45 -0500
+Received: from outbound-smtp44.blacknight.com ([46.22.136.52]:55543 "EHLO
+        outbound-smtp44.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726618AbgA3A4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 Jan 2020 19:56:44 -0500
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Jan 2020 19:56:43 EST
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp44.blacknight.com (Postfix) with ESMTPS id 0D27FF886B
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 00:50:05 +0000 (GMT)
+Received: (qmail 8490 invoked from network); 30 Jan 2020 00:50:04 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Jan 2020 00:50:04 -0000
+Date:   Thu, 30 Jan 2020 00:50:02 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
+ stack on the same CPU
+Message-ID: <20200130005002.GG3466@techsingularity.net>
+References: <20200127143608.GX3466@techsingularity.net>
+ <20200127223256.GA18610@dread.disaster.area>
+ <20200128011936.GY3466@techsingularity.net>
+ <20200128091012.GZ3466@techsingularity.net>
+ <20200129173852.GP14914@hirez.programming.kicks-ass.net>
+ <20200129220021.GN18610@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200129220021.GN18610@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create two common ahash_done_* functions with the dma
-direction as parameter. Then, these 2 are called with
-the proper direction for unmap.
+On Thu, Jan 30, 2020 at 09:00:21AM +1100, Dave Chinner wrote:
+> On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
+> > On Tue, Jan 28, 2020 at 09:10:12AM +0000, Mel Gorman wrote:
+> > > Peter, Ingo and Vincent -- I know the timing is bad due to the merge
+> > > window but do you have any thoughts on allowing select_idle_sibling to
+> > > stack a wakee task on the same CPU as a waker in this specific case?
+> > 
+> > I sort of see, but *groan*...
+> > 
+> > so if the kworker unlocks a contended mutex/rwsem/completion...
+> > 
+> > I suppose the fact that it limits it to tasks that were running on the
+> > same CPU limits the impact if we do get it wrong.
+> > 
+> > Elsewhere you write:
+> > 
+> > > I would prefer the wakeup code did not have to signal that it's a
+> > > synchronous wakeup. Sync wakeups so exist but callers got it wrong many
+> > > times where stacking was allowed and then the waker did not go to sleep.
+> > > While the chain of events are related, they are not related in a very
+> > > obvious way. I think it's much safer to keep this as a scheduler
+> > > heuristic instead of depending on callers to have sufficient knowledge
+> > > of the scheduler implementation.
+> > 
+> > That is true; the existing WF_SYNC has caused many issues for maybe
+> > being too strong.
+> > 
+> > But what if we create a new hint that combines both these ideas? Say
+> > WF_COMPLETE and subject that to these same criteria. This way we can
+> > eliminate wakeups from locks and such (they won't have this set).
+> > 
+> > Or am I just making things complicated again?
+> 
+> I suspect this is making it complicated again, because it requires
+> the people who maintain the code that is using workqueues to
+> understand when they might need to use a special wakeup interface in
+> the work function. And that includes code that currently calls
+> wake_up_all() because there can be hundreds of independent tasks
+> waiting on the IO completion (e.g all the wait queues in the XFS
+> journal code can (and do) have multiple threads waiting on them).
+> 
+> IOWs, requiring a special flag just to optimise this specific case
+> (i.e. single dependent waiter on same CPU as the kworker) when the
+> adverse behaviour is both hardware and workload dependent means it
+> just won't get used correctly or reliably.
+> 
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
----
- drivers/crypto/caam/caamhash.c | 88 +++++++++++-------------------------------
- 1 file changed, 22 insertions(+), 66 deletions(-)
+I agree. Pick any of Rusty's rules from "-2 Read the implementation
+and you'll get it wrong" all the way down to "-10 It's impossible to
+get right.".
 
-diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
-index 8d91434..59881a8 100644
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -565,8 +565,8 @@ static inline void ahash_unmap_ctx(struct device *dev,
- 	ahash_unmap(dev, edesc, req, dst_len);
- }
- 
--static void ahash_done(struct device *jrdev, u32 *desc, u32 err,
--		       void *context)
-+static inline void ahash_done_cpy(struct device *jrdev, u32 *desc, u32 err,
-+				  void *context, enum dma_data_direction dir)
- {
- 	struct ahash_request *req = context;
- 	struct ahash_edesc *edesc;
-@@ -582,7 +582,7 @@ static void ahash_done(struct device *jrdev, u32 *desc, u32 err,
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
- 
--	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
-+	ahash_unmap_ctx(jrdev, edesc, req, digestsize, dir);
- 	memcpy(req->result, state->caam_ctx, digestsize);
- 	kfree(edesc);
- 
-@@ -593,76 +593,20 @@ static void ahash_done(struct device *jrdev, u32 *desc, u32 err,
- 	req->base.complete(&req->base, ecode);
- }
- 
--static void ahash_done_bi(struct device *jrdev, u32 *desc, u32 err,
--			    void *context)
-+static void ahash_done(struct device *jrdev, u32 *desc, u32 err,
-+		       void *context)
- {
--	struct ahash_request *req = context;
--	struct ahash_edesc *edesc;
--	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
--	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
--	struct caam_hash_state *state = ahash_request_ctx(req);
--	int digestsize = crypto_ahash_digestsize(ahash);
--	int ecode = 0;
--
--	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
--
--	edesc = container_of(desc, struct ahash_edesc, hw_desc[0]);
--	if (err)
--		ecode = caam_jr_strstatus(jrdev, err);
--
--	ahash_unmap_ctx(jrdev, edesc, req, ctx->ctx_len, DMA_BIDIRECTIONAL);
--	kfree(edesc);
--
--	scatterwalk_map_and_copy(state->buf, req->src,
--				 req->nbytes - state->next_buflen,
--				 state->next_buflen, 0);
--	state->buflen = state->next_buflen;
--
--	print_hex_dump_debug("buf@" __stringify(__LINE__)": ",
--			     DUMP_PREFIX_ADDRESS, 16, 4, state->buf,
--			     state->buflen, 1);
--
--	print_hex_dump_debug("ctx@"__stringify(__LINE__)": ",
--			     DUMP_PREFIX_ADDRESS, 16, 4, state->caam_ctx,
--			     ctx->ctx_len, 1);
--	if (req->result)
--		print_hex_dump_debug("result@"__stringify(__LINE__)": ",
--				     DUMP_PREFIX_ADDRESS, 16, 4, req->result,
--				     digestsize, 1);
--
--	req->base.complete(&req->base, ecode);
-+	ahash_done_cpy(jrdev, desc, err, context, DMA_FROM_DEVICE);
- }
- 
- static void ahash_done_ctx_src(struct device *jrdev, u32 *desc, u32 err,
- 			       void *context)
- {
--	struct ahash_request *req = context;
--	struct ahash_edesc *edesc;
--	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
--	int digestsize = crypto_ahash_digestsize(ahash);
--	struct caam_hash_state *state = ahash_request_ctx(req);
--	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
--	int ecode = 0;
--
--	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
--
--	edesc = container_of(desc, struct ahash_edesc, hw_desc[0]);
--	if (err)
--		ecode = caam_jr_strstatus(jrdev, err);
--
--	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
--	memcpy(req->result, state->caam_ctx, digestsize);
--	kfree(edesc);
--
--	print_hex_dump_debug("ctx@"__stringify(__LINE__)": ",
--			     DUMP_PREFIX_ADDRESS, 16, 4, state->caam_ctx,
--			     ctx->ctx_len, 1);
--
--	req->base.complete(&req->base, ecode);
-+	ahash_done_cpy(jrdev, desc, err, context, DMA_BIDIRECTIONAL);
- }
- 
--static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
--			       void *context)
-+static inline void ahash_done_switch(struct device *jrdev, u32 *desc, u32 err,
-+				     void *context, enum dma_data_direction dir)
- {
- 	struct ahash_request *req = context;
- 	struct ahash_edesc *edesc;
-@@ -678,7 +622,7 @@ static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
- 
--	ahash_unmap_ctx(jrdev, edesc, req, ctx->ctx_len, DMA_FROM_DEVICE);
-+	ahash_unmap_ctx(jrdev, edesc, req, ctx->ctx_len, dir);
- 	kfree(edesc);
- 
- 	scatterwalk_map_and_copy(state->buf, req->src,
-@@ -701,6 +645,18 @@ static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
- 	req->base.complete(&req->base, ecode);
- }
- 
-+static void ahash_done_bi(struct device *jrdev, u32 *desc, u32 err,
-+			  void *context)
-+{
-+	ahash_done_switch(jrdev, desc, err, context, DMA_BIDIRECTIONAL);
-+}
-+
-+static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
-+			       void *context)
-+{
-+	ahash_done_switch(jrdev, desc, err, context, DMA_FROM_DEVICE);
-+}
-+
- /*
-  * Allocate an enhanced descriptor, which contains the hardware descriptor
-  * and space for hardware scatter table containing sg_num entries.
+> Hence I'd much prefer the kernel detects and dynamically handles
+> this situation at runtime, because this pattern of workqueue usage
+> is already quite common and will only become more widespread as we
+> progress towards async processing of syscalls.
+> 
+
+To be fair, as Peter says, the kernel patch may not detect this
+properly. There are corner cases where it will get it wrong. My thinking is
+that *at the moment* when the heuristic is wrong, it's almost certainly
+because the machine was so over-saturated such that multiple related
+tasks are stacking anyway.
+
+Depending on how async syscalls proceeds, this might get turn out to the
+the wrong heuristic and an API change will be required. At least if that
+happens, we'll have a few use cases to help guide what the API change
+should look like so we do not end up in WF_SYNC hell again.
+
 -- 
-2.1.0
-
+Mel Gorman
+SUSE Labs
