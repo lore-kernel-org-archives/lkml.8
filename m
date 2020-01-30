@@ -2,122 +2,104 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF24C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C54C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C62C20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FA220707
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 15:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580398071;
+	bh=n6HwRjDP3VCe5wjs8wEvgrTbWhzz9GyW+XTqLhafQxg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fYcuYAyJBdRTWYNVO98dzUu165KkSzXOWb6ckWF7cI+8my6LeKzfCJFouTuro/mNE
+	 NU6VkE5f5tpT/xroWQUNxaOgEzEKS6L9oZbnvVs23P3n/paW7Pwf2CQndbtEBWoOHk
+	 rsF1MrU4Q20nfabpqKIWiTW9QTuqg6Z6+G8lvhg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgA3P12 (ORCPT
+        id S1727415AbgA3P1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 10:27:28 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2329 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727186AbgA3P11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 10:27:27 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 193B34E794727836E010;
-        Thu, 30 Jan 2020 15:27:25 +0000 (GMT)
-Received: from fraeml715-chm.china.huawei.com (10.206.15.34) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 Jan 2020 15:27:24 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 Jan 2020 16:27:24 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Thu, 30 Jan 2020 16:27:24 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>, Petr Vorel <pvorel@suse.cz>
-CC:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
- the boot aggregate
-Thread-Topic: [PATCH 1/2] ima: use the IMA configured hash algo to calculate
- the boot aggregate
-Thread-Index: AQHV1SsskZfHgOFdME+uHgUEG6qPTKf+632AgAALuoCAAkpuAIAA8HoAgADpZbA=
-Date:   Thu, 30 Jan 2020 15:27:24 +0000
-Message-ID: <2e3ec5f5a4e748a898baeac8a88487ab@huawei.com>
-References: <1580140919-6127-1-git-send-email-zohar@linux.ibm.com>
-         <20200127204941.2ewman4y5nzvkjqe@cantor>
-         <1580160699.5088.64.camel@linux.ibm.com>
- <20200129083034.GA387@dell5510> <1580338276.4790.8.camel@linux.ibm.com>
-In-Reply-To: <1580338276.4790.8.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 30 Jan 2020 10:27:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34643 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbgA3P1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 10:27:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x7so3831204ljc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:27:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RIdIBH6X8LWl4t/9rSOLUTnHaD3MeTKBV/I/ltFZNME=;
+        b=L8pXy3ZloQYZUId/kbDCDyZfbopAwPQ4xydN+TZuDjcwYCnezY4GEed2xl2w5YNxir
+         WF3nDSLOCTxZIJ5KMI6sxAhtUVcx0cYA7RZKg6O/f0ReXbDbyfsK8k7n0sE0cvpPRVUi
+         aTHxC3U/lV2yylCXPvfszJxX/kDV9duz2PW/g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RIdIBH6X8LWl4t/9rSOLUTnHaD3MeTKBV/I/ltFZNME=;
+        b=kjuYDOiGtMQNOeRyxmAiccnXmJmI31szSTBpUXxlTdY2G3uI8yvjxzhXUULa8kanWz
+         FGs+eqzHol/IZ7vKux0/5phyix+7uTvvKCj8T4KWtI7em9bhuDgJwOKgwGmACDGcOA0A
+         lkxTuL/kraNEu5D6gZ1QwcM/mKTQeClXT1ug8CdZitQyhIY6fJmX/rvv0QIUGH1z+QbE
+         vaXLkSarNrUTKBNcjAhBDPOR8bj2oUCEfrw+2RJPWVSQx3OA5iFX3UC1irrxciGNitgn
+         JId/BuXd01HIFSKNq6nqVzMnRAUYwiHX+JspPdvkWv7qI71lu91rQd5OMHsc22TRh1PM
+         y4nw==
+X-Gm-Message-State: APjAAAVeuojpZZRDQW9prjir0tufFXcizTlkWn/rHvl9NMgix059HPQh
+        OPkReHotXT2n8+oqiBHPPKReuSb8SKw=
+X-Google-Smtp-Source: APXvYqz1DGzla0nvh36CjiF3PB+v6WHmmbNSOoWrSdQ+H3ITXF3NBjagJZcmd/m3RFyze5szEw53Qg==
+X-Received: by 2002:a2e:b5ce:: with SMTP id g14mr2986390ljn.264.1580398066929;
+        Thu, 30 Jan 2020 07:27:46 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id i20sm2978104lfl.79.2020.01.30.07.27.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2020 07:27:45 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id r19so3814808ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 07:27:45 -0800 (PST)
+X-Received: by 2002:a2e:9d92:: with SMTP id c18mr3307956ljj.265.1580398065073;
+ Thu, 30 Jan 2020 07:27:45 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200128165906.GA67781@gmail.com> <CAHk-=wgm+2ac4nnprPST6CnehHXScth=A7-ayrNyhydNC+xG-g@mail.gmail.com>
+ <CAHk-=wi=otQxzhLAofWEvULLMk2X3G3zcWfUWz7e1CFz+xYs2Q@mail.gmail.com>
+ <20200129132618.GA30979@zn.tnic> <20200129170725.GA21265@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wgns2Tvph77XZWN=r_qAtUwxrTzDXNffi8nGKz1mLZNHw@mail.gmail.com>
+ <20200129183404.GB30979@zn.tnic> <CAHk-=wh62anGKKEeey8ubD+-+3qSv059z7zSWZ4J=CoaOo4j_A@mail.gmail.com>
+ <20200130085134.GB6684@zn.tnic>
+In-Reply-To: <20200130085134.GB6684@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 30 Jan 2020 07:27:28 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wje_k92K6j0-=HH4F5Jmr8Fv7vB-ANObqbQeGS_RsikWA@mail.gmail.com>
+Message-ID: <CAHk-=wje_k92K6j0-=HH4F5Jmr8Fv7vB-ANObqbQeGS_RsikWA@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/asm changes for v5.6
+To:     Borislav Petkov <bp@suse.de>
+Cc:     "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
-Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IFdlZG5lc2RheSwg
-SmFudWFyeSAyOSwgMjAyMCAxMTo1MSBQTQ0KPiBUbzogUGV0ciBWb3JlbCA8cHZvcmVsQHN1c2Uu
-Y3o+DQo+IENjOiBKZXJyeSBTbml0c2VsYWFyIDxqc25pdHNlbEByZWRoYXQuY29tPjsgbGludXgt
-aW50ZWdyaXR5QHZnZXIua2VybmVsLm9yZzsNCj4gSmFtZXMgQm90dG9tbGV5IDxKYW1lcy5Cb3R0
-b21sZXlAaGFuc2VucGFydG5lcnNoaXAuY29tPjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCAxLzJdIGltYTogdXNlIHRoZSBJTUEgY29uZmlndXJlZCBoYXNoIGFsZ28g
-dG8gY2FsY3VsYXRlDQo+IHRoZSBib290IGFnZ3JlZ2F0ZQ0KPiANCj4gT24gV2VkLCAyMDIwLTAx
-LTI5IGF0IDA5OjMwICswMTAwLCBQZXRyIFZvcmVsIHdyb3RlOg0KPiA+IEhpIE1pbWksDQo+ID4N
-Cj4gPiBSZXZpZXdlZC1ieTogUGV0ciBWb3JlbCA8cHZvcmVsQHN1c2UuY3o+DQo+ID4NCj4gPiA+
-IFRoZSBvcmlnaW5hbCBMVFAgaW1hX2Jvb3RfYWdncmVnYXRlLmMgdGVzdCBuZWVkZWQgdG8gYmUg
-dXBkYXRlZCB0bw0KPiA+ID4gc3VwcG9ydCBUUE0gMi4wIGJlZm9yZSB0aGlzIGNoYW5nZS4gwqBG
-b3IgVFBNIDIuMCwgdGhlIFBDUnMgYXJlIG5vdA0KPiA+ID4gZXhwb3J0ZWQuIMKgV2l0aCB0aGlz
-IGNoYW5nZSwgdGhlIGtlcm5lbCBjb3VsZCBiZSByZWFkaW5nIFBDUnMgZnJvbSBhDQo+ID4gPiBU
-UE0gYmFuayBvdGhlciB0aGFuIFNIQTEgYW5kIGNhbGN1bGF0aW5nIHRoZSBib290X2FnZ3JlZ2F0
-ZSBiYXNlZCBvbg0KPiBhDQo+ID4gPiBkaWZmZXJlbnQgaGFzaCBhbGdvcml0aG0gYXMgd2VsbC4g
-wqBJJ20gbm90IHN1cmUgaG93IGEgcmVtb3RlIHZlcmlmaWVyDQo+ID4gPiB3b3VsZCBrbm93IHdo
-aWNoIFRQTSBiYW5rIHdhcyByZWFkLCB3aGVuIGNhbGN1bGF0aW5nIHRoZSBib290LQ0KPiA+ID4g
-YWdncmVnYXRlLg0KPiA+IE1pbWksIGRvIHlvdSBwbGFuIHRvIGRvIHVwZGF0ZSBMVFAgdGVzdD8N
-Cj4gDQo+IEluIG9yZGVyIHRvIHRlc3QgUm9iZXJ0bydzIHBhdGNoZXMgdGhhdCBjYWxjdWxhdGVz
-IGFuZCBleHRlbmRzIHRoZQ0KPiBkaWZmZXJlbnQgVFBNIGJhbmtzIHdpdGggdGhlIGFwcHJvcHJp
-YXRlIGhhc2hlcywgd2UnbGwgbmVlZCBzb21lIHRlc3QNCj4gdG8gdmVyaWZ5IHRoYXQgaXQgaXMg
-d29ya2luZyBwcm9wZXJseS4gwqBBcyB0byB3aGV0aGVyIHRoaXMgd2lsbCBiZSBpbg0KPiBMVFAg
-b3IgaW1hLWV2bS11dGlscywgSSdtIG5vdCBzdXJlLg0KDQphdHRlc3QtdG9vbHMgKGh0dHBzOi8v
-Z2l0aHViLmNvbS9ldWxlcm9zL2F0dGVzdC10b29scywgYnJhbmNoIDAuMi1kZXZlbCkgaGFzIHRo
-ZQ0KYWJpbGl0eSB0byBwYXJzZSB0aGUgQklPUyBhbmQgSU1BIGV2ZW50IGxvZ3MsIGFuZCB0byBj
-b21wYXJlIGJvb3RfYWdncmVnYXRlDQp3aXRoIHRoZSBkaWdlc3Qgb2YgZmluYWwgUENSIHZhbHVl
-cyBvYnRhaW5lZCBieSBwZXJmb3JtaW5nIGluIHNvZnR3YXJlIHRoZSBQQ1INCmV4dGVuZCBvcGVy
-YXRpb24gd2l0aCBkaWdlc3RzIGluIHRoZSBCSU9TIGV2ZW50IGxvZy4NCg0KVG8gcGVyZm9ybSB0
-aGUgdGVzdCwgaXQgaXMgbmVjZXNzYXJ5IHRvIGhhdmUgYSBjb21wbGV0ZSBCSU9TIGV2ZW50IGxv
-Zy4NCg0KQ3JlYXRlIHJlcS5qc29uIHdpdGggdGhpcyBjb250ZW50Og0KLS0tDQp7DQogICJyZXFz
-Ijp7DQogICAgImR1bW15fHZlcmlmeSI6IiIsDQogICAgImltYV9ib290X2FnZ3JlZ2F0ZXx2ZXJp
-ZnkiOiIiDQogIH0NCn0NCi0tLQ0KDQpXaXRoIHRoZSByZXF1aXJlbWVudHMgYWJvdmUsIHdlIGFy
-ZSB0ZWxsaW5nIGF0dGVzdC10b29scyB0byB2ZXJpZnkgb25seQ0KYm9vdF9hZ2dyZWdhdGUuIFdp
-dGhvdXQgdGhlIGR1bW15IHJlcXVpcmVtZW50LCB2ZXJpZmljYXRpb24gd291bGQNCmZhaWwgKEJJ
-T1MgYW5kIHJlbWFpbmluZyBJTUEgbWVhc3VyZW1lbnQgZW50cmllcyBhcmUgbm90IHByb2Nlc3Nl
-ZCkuDQoNCk9uIHNlcnZlciBzaWRlIHJ1bjoNCiMgYXR0ZXN0X3JhX3NlcnZlciAtcCAxMCAtciBy
-ZXEuanNvbiAtcyAtaQ0KDQotcyBkaXNhYmxlcyBUUE0gc2lnbmF0dXJlIHZlcmlmaWNhdGlvbg0K
-LWkgYWxsb3dzIElNQSB2aW9sYXRpb25zDQoNClRvIGVuYWJsZSBUUE0gc2lnbmF0dXJlIHZlcmlm
-aWNhdGlvbiBpdCBpcyBuZWNlc3NhcnkgdG8gaGF2ZSBhIHZhbGlkIEFLDQpjZXJ0aWZpY2F0ZS4g
-SXQgY2FuIGJlIG9idGFpbmVkIGJ5IGZvbGxvd2luZyB0aGUgaW5zdHJ1Y3Rpb25zIGF0Og0KDQpo
-dHRwczovL2dpdGh1Yi5jb20vZXVsZXJvcy9hdHRlc3QtdG9vbHMvYmxvYi8wLjItZGV2ZWwvUkVB
-RE1FDQoNCk9uIGNsaWVudCBzaWRlIHJ1bjoNCiMgZWNobyB0ZXN0ID4gYWlrX2NlcnQucGVtDQoj
-IGVjaG8gYWlrX2NlcnQucGVtID4gbGlzdF9wcml2YWN5X2NhDQojIGF0dGVzdF9yYV9jbGllbnQg
-LUENCg0KVGhlIGNvbW1hbmQgYWJvdmUgZ2VuZXJhdGVzIGFuIEFLLg0KDQojIGF0dGVzdF9yYV9j
-bGllbnQgLXMgPHNlcnZlciBJUD4gLXEgLXAgMTAgLVAgPFBDUiBhbGdvPiAtYiAtaQ0KDQpUaGUg
-Y29tbWFuZCBhYm92ZSBzZW5kcyB0aGUgVFBNIHF1b3RlIGFuZCB0aGUgZXZlbnQgbG9ncw0KdG8g
-dGhlIFJBIHNlcnZlciBhbmQgZ2V0cyB0aGUgcmVzcG9uc2UgKHN1Y2Nlc3NmdWwvZmFpbGVkDQp2
-ZXJpZmljYXRpb24pLg0KDQotYiBpbmNsdWRlcyB0aGUgQklPUyBldmVudCBsb2cgZnJvbSBzZWN1
-cml0eWZzDQotaSBpbmNsdWRlcyB0aGUgSU1BIGV2ZW50IGxvZyBmcm9tIHNlY3VyaXR5ZnMNCg0K
-VG8gY2hlY2sgdGhhdCBib290X2FnZ3JlZ2F0ZSBpcyBjYWxjdWxhdGVkIHByb3Blcmx5LCB1c2Ug
-LVAgc2hhMjU2DQppbiBhdHRlc3RfcmFfY2xpZW50IGFuZCBzZXQgaW1hX2hhc2g9c2hhMjU2IGlu
-IHRoZSBrZXJuZWwgY29tbWFuZA0KbGluZS4NCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9H
-SUVTIER1ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBl
-bmcsIExpIEppYW4sIFNoaSBZYW5saQ0K
+On Thu, Jan 30, 2020 at 12:51 AM Borislav Petkov <bp@suse.de> wrote:
+>
+> However, this new version has hit another shortcoming of the
+> alternatives - check this out:
+
+[ Branches not getting fixed up ]
+
+Fair enough. Let's not complicate things just to avoid a few nops.
+
+That does make me wonder about RIP-relative addressing in alternatives
+too. Particularly anything where we let gcc pick addressing modes. I
+guess we don't have any, but maybe this branch issue and possible RIP
+addressing is something that objtool could be taught to warn about?
+
+                  Linus
