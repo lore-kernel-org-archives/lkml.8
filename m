@@ -2,87 +2,63 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C7CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9499C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD302082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AF0206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 08:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgA3IzS (ORCPT
+        id S1727069AbgA3I41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 03:55:18 -0500
-Received: from outbound-smtp46.blacknight.com ([46.22.136.58]:41179 "EHLO
-        outbound-smtp46.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgA3IzS (ORCPT
+        Thu, 30 Jan 2020 03:56:27 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:52364 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbgA3I41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 03:55:18 -0500
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp46.blacknight.com (Postfix) with ESMTPS id B84A7FA87A
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 08:55:15 +0000 (GMT)
-Received: (qmail 3857 invoked from network); 30 Jan 2020 08:55:15 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Jan 2020 08:55:15 -0000
-Date:   Thu, 30 Jan 2020 08:55:13 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Thu, 30 Jan 2020 03:56:27 -0500
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AC35015380172;
+        Thu, 30 Jan 2020 00:56:24 -0800 (PST)
+Date:   Thu, 30 Jan 2020 09:56:19 +0100 (CET)
+Message-Id: <20200130.095619.1080558867331721556.davem@davemloft.net>
+To:     geert@linux-m68k.org
+Cc:     pabeni@redhat.com, fw@strlen.de, cpaasch@apple.com,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        kuba@kernel.org, netdev@vger.kernel.org, mptcp@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched, fair: Allow a per-cpu kthread waking a task to
- stack on the same CPU
-Message-ID: <20200130085513.GH3466@techsingularity.net>
-References: <20200127143608.GX3466@techsingularity.net>
- <20200127223256.GA18610@dread.disaster.area>
- <20200128011936.GY3466@techsingularity.net>
- <20200128091012.GZ3466@techsingularity.net>
- <20200129173852.GP14914@hirez.programming.kicks-ass.net>
- <20200130004334.GF3466@techsingularity.net>
- <20200130080653.GV14879@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200130080653.GV14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: Re: [PATCH] mptcp: Fix incorrect IPV6 dependency check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200129180117.545-1-geert@linux-m68k.org>
+References: <20200129180117.545-1-geert@linux-m68k.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Jan 2020 00:56:26 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 09:06:53AM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 30, 2020 at 12:43:34AM +0000, Mel Gorman wrote:
-> > On Wed, Jan 29, 2020 at 06:38:52PM +0100, Peter Zijlstra wrote:
-> 
-> > > I suppose the fact that it limits it to tasks that were running on the
-> > > same CPU limits the impact if we do get it wrong.
-> > > 
-> > 
-> > And it's limited to no other task currently running on the
-> > CPU. Now, potentially multiple sleepers are on that CPU waiting for
-> > a mutex/rwsem/completion but it's very unlikely and mostly likely due
-> > to the machine being saturated in which case searching for an idle CPU
-> > will probably fail. It would also be bound by a small window after the
-> > first wakeup before the task becomes runnable before the nr_running check
-> > mitigages the problem. Besides, if the sleeping task is waiting on the
-> > lock, it *is* related to the kworker which is probably finished.
-> > 
-> > In other words, even this patches worst-case behaviour does not seem
-> > that bad.
-> 
-> OK; let's just stick it in and see what, if anything, falls over :-)
-> 
-> I saw there is a v2 out (although I didn't see what changed in a hurry),
-> let me queue that one.
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 29 Jan 2020 19:01:17 +0100
 
-Only the changelog and comments changed in light of the discussion
-with Dave.
+> If CONFIG_MPTCP=y, CONFIG_MPTCP_IPV6=n, and CONFIG_IPV6=m:
+> 
+>     net/mptcp/protocol.o: In function `__mptcp_tcp_fallback':
+>     protocol.c:(.text+0x786): undefined reference to `inet6_stream_ops'
+> 
+> Fix this by checking for CONFIG_MPTCP_IPV6 instead of CONFIG_IPV6, like
+> is done in all other places in the mptcp code.
+> 
+> Fixes: 8ab183deb26a3b79 ("mptcp: cope with later TCP fallback")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
--- 
-Mel Gorman
-SUSE Labs
+Applied.
