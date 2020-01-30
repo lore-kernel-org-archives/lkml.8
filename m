@@ -2,320 +2,206 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438E1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416B1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073BC20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D63620658
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 14:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qICZOrjf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gZUm7KU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgA3ONX (ORCPT
+        id S1727391AbgA3OPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 09:13:23 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:30980 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbgA3ONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:13:22 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 487j4Z2bp9z9v2Nx;
-        Thu, 30 Jan 2020 15:13:18 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qICZOrjf; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uOkb5XiF-zPA; Thu, 30 Jan 2020 15:13:18 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 487j4Z13FJz9v2Nw;
-        Thu, 30 Jan 2020 15:13:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580393598; bh=jiy8q+DLF/cyz8x0j+2VD0K/r6LzapCGUAMM8PPwAqg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=qICZOrjfjgKU41D9G6qwOhWQ3f07+KjLwpAHo5DoCMTyruxB3bymqHi8naihrjRrd
-         VNgNmAI2BgWTRJKP0fo15DiJvJYT/IAWdqQGaK6fSFCsfnDbh4zU2Oj9aR7VXIDKWw
-         S5BQleimwSbi1BQRePhLQirIhOLqknAgD+VG9wXI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 606438B875;
-        Thu, 30 Jan 2020 15:13:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id v9YV4qhIXl9S; Thu, 30 Jan 2020 15:13:19 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CC2F68B874;
-        Thu, 30 Jan 2020 15:13:16 +0100 (CET)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <68ed6488-aa25-ab41-8da6-f0ddeb15d52b@c-s.fr>
- <49754f74-53a7-0e4a-bb16-53617f8c902c@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
-Date:   Thu, 30 Jan 2020 15:13:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 30 Jan 2020 09:15:40 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56972 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbgA3OPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 09:15:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gX6hyt20QV23hW9BRxe2F20Xz12H4clKTdo4rjaVKBc=; b=gZUm7KU4jFD/ciDCawzCmQ4Qk
+        BbhLC8I4sZQXvUmlzEilMB1DVfY3XM3xypcYqkiLSIJOeNRHBJLlXy1+SttaI9bOTE4tqilqEUTp3
+        zuwGWZDR4DrnNm2V16/SirM6jMaoTXTqQ/14Fk5HuHvbogzgsSGkEOaDFKhH57y9KJB2N8cd6rIwk
+        4iIlgmchckGeFZjvrlcJJawcO/0Fsb/5KD5oJUSFEUSGEmR8zSn0fU5HGTrvGr87HXpPkOSuywh0q
+        3doHTSTEUH+1o2SRqlk/y4CZyoPo+OTr17xSPuPx2WwmBGflMV3yQxpdmoFuSAPGdlTp8xI1dLMPV
+        Yog7MvofQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33698)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ixAb9-0003h7-6h; Thu, 30 Jan 2020 14:15:11 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ixAb3-0004SG-Mt; Thu, 30 Jan 2020 14:15:05 +0000
+Date:   Thu, 30 Jan 2020 14:15:05 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
+        kirill@shutemov.name, yang.shi@linux.alibaba.com,
+        thellstrom@vmware.com, Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] mm/mremap: use pmd_addr_end to calculate next in
+ move_page_tables()
+Message-ID: <20200130141505.GK25745@shell.armlinux.org.uk>
+References: <20200117232254.2792-1-richardw.yang@linux.intel.com>
+ <20200117232254.2792-4-richardw.yang@linux.intel.com>
+ <7147774a-14e9-4ff3-1548-4565f0d214d5@gmail.com>
+ <20200129094738.GE25745@shell.armlinux.org.uk>
+ <20200129215745.GA20736@richard>
+ <20200129232441.GI25745@shell.armlinux.org.uk>
+ <20200130013000.GA5137@richard>
 MIME-Version: 1.0
-In-Reply-To: <49754f74-53a7-0e4a-bb16-53617f8c902c@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200130013000.GA5137@richard>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 30/01/2020 à 14:04, Anshuman Khandual a écrit :
+On Thu, Jan 30, 2020 at 09:30:00AM +0800, Wei Yang wrote:
+> On Wed, Jan 29, 2020 at 11:24:41PM +0000, Russell King - ARM Linux admin wrote:
+> >On Thu, Jan 30, 2020 at 05:57:45AM +0800, Wei Yang wrote:
+> >> On Wed, Jan 29, 2020 at 09:47:38AM +0000, Russell King - ARM Linux admin wrote:
+> >> >On Sun, Jan 26, 2020 at 05:47:57PM +0300, Dmitry Osipenko wrote:
+> >> >> 18.01.2020 02:22, Wei Yang пишет:
+> >> >> > Use the general helper instead of do it by hand.
+> >> >> > 
+> >> >> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> >> >> > ---
+> >> >> >  mm/mremap.c | 7 ++-----
+> >> >> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> >> >> > 
+> >> >> > diff --git a/mm/mremap.c b/mm/mremap.c
+> >> >> > index c2af8ba4ba43..a258914f3ee1 100644
+> >> >> > --- a/mm/mremap.c
+> >> >> > +++ b/mm/mremap.c
+> >> >> > @@ -253,11 +253,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+> >> >> >  
+> >> >> >  	for (; old_addr < old_end; old_addr += extent, new_addr += extent) {
+> >> >> >  		cond_resched();
+> >> >> > -		next = (old_addr + PMD_SIZE) & PMD_MASK;
+> >> >> > -		/* even if next overflowed, extent below will be ok */
+> >> >> > +		next = pmd_addr_end(old_addr, old_end);
+> >> >> >  		extent = next - old_addr;
+> >> >> > -		if (extent > old_end - old_addr)
+> >> >> > -			extent = old_end - old_addr;
+> >> >> >  		old_pmd = get_old_pmd(vma->vm_mm, old_addr);
+> >> >> >  		if (!old_pmd)
+> >> >> >  			continue;
+> >> >> > @@ -301,7 +298,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+> >> >> >  
+> >> >> >  		if (pte_alloc(new_vma->vm_mm, new_pmd))
+> >> >> >  			break;
+> >> >> > -		next = (new_addr + PMD_SIZE) & PMD_MASK;
+> >> >> > +		next = pmd_addr_end(new_addr, new_addr + len);
+> >> >> >  		if (extent > next - new_addr)
+> >> >> >  			extent = next - new_addr;
+> >> >> >  		move_ptes(vma, old_pmd, old_addr, old_addr + extent, new_vma,
+> >> >> > 
+> >> >> 
+> >> >> Hello Wei,
+> >> >> 
+> >> >> Starting with next-20200122, I'm seeing the following in KMSG on NVIDIA
+> >> >> Tegra (ARM32):
+> >> >> 
+> >> >>   BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:190
+> >> >> 
+> >> >> and eventually kernel hangs.
+> >> >> 
+> >> >> Git's bisection points to this patch and reverting it helps. Please fix,
+> >> >> thanks in advance.
+> >> >
+> >> >The above is definitely wrong - pXX_addr_end() are designed to be used
+> >> >with an address index within the pXX table table and the address index
+> >> >of either the last entry in the same pXX table or the beginning of the
+> >> >_next_ pXX table.  Arbitary end address indicies are not allowed.
+> >> >
+> >> 
+> >> #define pmd_addr_end(addr, end)						\
+> >> ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
+> >> 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> >> })
+> >> 
+> >> If my understanding is correct, the definition here align the addr to next PMD
+> >> boundary or end.
+> >> 
+> >> I don't see the possibility to across another PMD. Do I miss something?
+> >
+> >Look at the definition of p*_addr_end() that are used when page tables
+> >are rolled up.
+> >
 > 
-> On 01/28/2020 10:35 PM, Christophe Leroy wrote:
->>
->>
->> Le 28/01/2020 à 02:27, Anshuman Khandual a écrit :
->>> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
->>> index 0b6c4042942a..fb0e76d254b3 100644
->>> --- a/arch/x86/include/asm/pgtable_64.h
->>> +++ b/arch/x86/include/asm/pgtable_64.h
->>> @@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
->>>      struct mm_struct;
->>>    +#define mm_p4d_folded mm_p4d_folded
->>> +static inline bool mm_p4d_folded(struct mm_struct *mm)
->>> +{
->>> +    return !pgtable_l5_enabled();
->>> +}
->>> +
->>
->> For me this should be part of another patch, it is not directly linked to the tests.
+> Sorry, I don't get your point.
 > 
-> We did discuss about this earlier and Kirril mentioned its not worth
-> a separate patch.
+> What's the meaning of "roll up" here?
 > 
-> https://lore.kernel.org/linux-arm-kernel/20190913091305.rkds4f3fqv3yjhjy@box/
-
-For me it would make sense to not mix this patch which implement tests, 
-and changes that are needed for the test to work (or even build) on the 
-different architectures.
-
-But that's up to you.
-
+> Would you mind giving me an example? I see pmd_addr_end() is not used in many
+> places in core kernel. By glancing those usages, all the places use it like
+> pmd_addr_end(addr, end). Seems no specially handing on the end address.
 > 
->>
->>>    void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
->>>    void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
->>>    diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
->>> index 798ea36a0549..e0b04787e789 100644
->>> --- a/include/asm-generic/pgtable.h
->>> +++ b/include/asm-generic/pgtable.h
->>> @@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
->>>    # define PAGE_KERNEL_EXEC PAGE_KERNEL
->>>    #endif
->>>    +#ifdef CONFIG_DEBUG_VM_PGTABLE
->>
->> Not sure it is a good idea to put that in include/asm-generic/pgtable.h
-> 
-> Logically that is the right place, as it is related to page table but
-> not something platform related.
+> Or you mean the case when pmd_addr_end() is defined to return "end" directly? 
 
-I can't see any debug related features in that file.
+Not all hardware has five levels of page tables.  When hardware does not
+have five levels, it is common to "roll up" some of the page tables into
+others.
 
-> 
->>
->> By doing this you are forcing a rebuild of almost all files, whereas only init/main.o and mm/debug_vm_pgtable.o should be rebuilt when activating this config option.
-> 
-> I agreed but whats the alternative ? We could move these into init/main.c
-> to make things simpler but will that be a right place, given its related
-> to generic page table.
+There are generic ways to implement this, which include using:
 
-What about linux/mmdebug.h instead ? (I have not checked if it would 
-reduce the impact, but that's where things related to CONFIG_DEBUG_VM 
-seems to be).
+include/asm-generic/pgtable-nop4d.h
+include/asm-generic/pgtable-nopud.h
+include/asm-generic/pgtable-nopmd.h
 
-Otherwise, you can just create new file, for instance 
-<linux/mmdebug-pgtable.h> and include that file only in the init/main.c 
-and mm/debug_vm_pgtable.c
+and then there's architecture ways to implement this.  32-bit ARM takes
+its implementation for PMD not from the generic version, which
+post-dates 32-bit ARM, but from how page table roll-up was implemented
+back at the time when the current ARM scheme was devised.  The generic
+scheme is unsuitable for 32-bit ARM since we do more than just roll-up
+page tables, but this is irrelevent for this discussion.
 
+All three of the generic implementations, and 32-bit ARM, define the
+pXX_addr_end() macros thusly:
 
+include/asm-generic/pgtable-nop4d.h:#define p4d_addr_end(addr, end) (end)
+include/asm-generic/pgtable-nopmd.h:#define pmd_addr_end(addr, end) (end)
+include/asm-generic/pgtable-nopud.h:#define pud_addr_end(addr, end) (end)
+arch/arm/include/asm/pgtable-2level.h:#define pmd_addr_end(addr,end) (end)
 
-> 
->>
->>> +extern void debug_vm_pgtable(void);
->>
->> Please don't use the 'extern' keyword, it is useless and not to be used for functions declaration.
-> 
-> Really ? But, there are tons of examples doing the same thing both in
-> generic and platform code as well.
+since, as I stated, pXX_addr_end() expects its "end" argument to be
+the address index of the next entry in the immediately upper page
+table level, or the address index of the last entry we wish to
+process, which ever is smaller.
 
-Yes, but how can we improve if we blindly copy the errors from the past 
-? Having tons of 'extern' doesn't mean we must add more.
+If it's larger than the address index of the next entry in the
+immediately upper page table level, then the effect of all these
+macros will be to walk off the end of the current level of page
+table.
 
-I think checkpatch.pl usually complains when a patch brings a new 
-unreleval extern symbol.
+To see how they _should_ be used, see the loops in free_pgd_range()
+and the free_pXX_range() functions called from there and below.
 
-> 
->>
->>> +#else
->>> +static inline void debug_vm_pgtable(void) { }
->>> +#endif
->>> +
->>>    #endif /* !__ASSEMBLY__ */
->>>      #ifndef io_remap_pfn_range
->>> diff --git a/init/main.c b/init/main.c
->>> index da1bc0b60a7d..5e59e6ac0780 100644
->>> --- a/init/main.c
->>> +++ b/init/main.c
->>> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
->>>        sched_init_smp();
->>>          page_alloc_init_late();
->>> +    debug_vm_pgtable();
->>
->> Wouldn't it be better to call debug_vm_pgtable() in kernel_init() between the call to async_synchronise_full() and ftrace_free_init_mem() ?
-> 
-> IIRC, proposed location is the earliest we could call debug_vm_pgtable().
-> Is there any particular benefit or reason to move it into kernel_init() ?
+In all cases when the pXX_addr_end() macro was introduced, what I state
+above holds true - and I believe still holds true today, until this
+patch that has reportedly caused issues.
 
-It would avoid having it lost in the middle of drivers logs, would be 
-close to the end of init, at a place we can't miss it, close to the 
-result of other tests like CONFIG_DEBUG_RODATA_TEST for instance.
-
-At the moment, you have to look for it to be sure the test is done and 
-what the result is.
-
-> 
->>
->>>        /* Initialize page ext after all struct pages are initialized. */
->>>        page_ext_init();
->>>    diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->>> index 5ffe144c9794..7cceae923c05 100644
->>> --- a/lib/Kconfig.debug
->>> +++ b/lib/Kconfig.debug
->>> @@ -653,6 +653,12 @@ config SCHED_STACK_END_CHECK
->>>          data corruption or a sporadic crash at a later stage once the region
->>>          is examined. The runtime overhead introduced is minimal.
->>>    +config ARCH_HAS_DEBUG_VM_PGTABLE
->>> +    bool
->>> +    help
->>> +      An architecture should select this when it can successfully
->>> +      build and run DEBUG_VM_PGTABLE.
->>> +
->>>    config DEBUG_VM
->>>        bool "Debug VM"
->>>        depends on DEBUG_KERNEL
->>> @@ -688,6 +694,22 @@ config DEBUG_VM_PGFLAGS
->>>            If unsure, say N.
->>>    +config DEBUG_VM_PGTABLE
->>> +    bool "Debug arch page table for semantics compliance"
->>> +    depends on MMU
->>> +    depends on DEBUG_VM
->>
->> Does it really need to depend on DEBUG_VM ?
-> 
-> No. It seemed better to package this test along with DEBUG_VM (although I
-> dont remember the conversation around it) and hence this dependency.
-
-Yes but it perfectly work as standalone. The more easy it is to activate 
-and the more people will use it. DEBUG_VM obliges to rebuild the kernel 
-entirely and could modify the behaviour. Could the helpers we are 
-testing behave differently when DEBUG_VM is not set ? I think it's good 
-the test things as close as possible to final config.
-
-> 
->> I think we could make it standalone and 'default y if DEBUG_VM' instead.
-> 
-> Which will yield the same result like before but in a different way. But
-> yes, this test could go about either way but unless there is a good enough
-> reason why change the current one.
-
-I think if we want people to really use it on other architectures it 
-must be possible to activate it without having to modify Kconfig. 
-Otherwise people won't even know the test exists and the architecture 
-fails the test.
-
-The purpose of a test suite is to detect bugs. If you can't run the test 
-until you have fixed the bugs, I guess nobody will ever detect the bugs 
-and they will never be fixed.
-
-So I think:
-- the test should be 'default y' when ARCH_HAS_DEBUG_VM_PGTABLE is selected
-- the test should be 'default n' when ARCH_HAS_DEBUG_VM_PGTABLE is not 
-selected, and it should be user selectable if EXPERT is selected.
-
-Something like:
-
-config DEBUG_VM_PGTABLE
-     bool "Debug arch page table for semantics compliance" if 
-ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
-     depends on MMU
-     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
-     default 'y' if DEBUG_VM
-
-
-> 
->>
->>> +    depends on ARCH_HAS_DEBUG_VM_PGTABLE
->>> +    default y
->>> +    help
->>> +      This option provides a debug method which can be used to test
->>> +      architecture page table helper functions on various platforms in
->>> +      verifying if they comply with expected generic MM semantics. This
->>> +      will help architecture code in making sure that any changes or
->>> +      new additions of these helpers still conform to expected
->>> +      semantics of the generic MM.
->>> +
->>> +      If unsure, say N.
->>> +
->>
->> Does it make sense to make it 'default y' and say 'If unsure, say N' ?
-> 
-> No it does. Not when it defaults 'y' unconditionally. Will drop the last
-> sentence "If unsure, say N". Nice catch, thank you.
-
-Well I was not asking if 'default y' was making sense but only if 'If 
-unsure say N' was making sense due to the 'default y'. You got it.
-
-Christophe
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
