@@ -2,111 +2,106 @@ Return-Path: <SRS0=4zup=3T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B4C35240
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD66C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8783C20708
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B8020708
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 Jan 2020 23:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEUK2qda"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlIy0Vu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgA3XWQ (ORCPT
+        id S1727610AbgA3X0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 18:22:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35929 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgA3XWQ (ORCPT
+        Thu, 30 Jan 2020 18:26:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32777 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgA3X0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 18:22:16 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r19so5242724ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 15:22:13 -0800 (PST)
+        Thu, 30 Jan 2020 18:26:52 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so4884079otp.0;
+        Thu, 30 Jan 2020 15:26:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N4pLYntMtcNk/QyMGMKvQCVzanZck9/zOb6bpHQ9EQI=;
-        b=lEUK2qdaPMJDOGemYqUp9+l4fajGrH26MZzmOmKwRvhVulg3P4yB7FGm+fA6xHcnrg
-         OmXPbaTxjRxGqphgXuDAxKiaGbhzxCaDTGn97OlZq7rOx9jcXKvKCdoyz/YO6ZS2g0q9
-         kXs8OHU0qWGY3g4TCy3W2+cPIeFpfxgBi6SDAHHl80nS84lSrexIGj4KNGslTtgiffAt
-         +D3IK5MB7DpA/4XHDT+H/85GEnGIKw6/sYNOGpRdt7inkPPh0ke4RC70c0e5CI0YVTW+
-         bfVb4lF5bkE7knJ75b1MSAyjvEu0RYRDrb0nHQIedvptCIfMDsVIOxxldh5PG1iTs2Vm
-         sCXg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uiPnoOAYPt0TxpEOOk3xyCGG2sxkTQwY14DXYCt3mdw=;
+        b=XlIy0Vu/CiLZtlGrJG2TgfCjV1o+mfeLuhhL+eMsuwQxVRfyGWn+5TE9WRAB4Xq+CF
+         wGj16HUb/YW4TQ3G2cAAZ0iEWD7t54L7fE3whumbk2FAgell+92Lotp877b8/JAOuOPp
+         QBQiS16J6/ZGaWHMo9kt7WXTAycbonDuW6OXrQzJ6/6ChsS4XZTf9XgItWbI8Xkdh4J4
+         0m7pwpRRZGmlqdrZ8wWQBvQ5kVJTcPF1fcELzWSTp5qnf/V0ZiLhKy+UCPm6yDRHbQGU
+         xWcxLSfWzDJE3eiri6UV/6UMv+kErLMRGv+Z6RQM0VxEjsNy+vh2zjfxLxFQIu/5aNgy
+         YBOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N4pLYntMtcNk/QyMGMKvQCVzanZck9/zOb6bpHQ9EQI=;
-        b=rOUUXs3OPt04BTkiL8Hvm47WJeAqdQdOVM4LVD8TcE0foL4y4sTF8modRNGflpDLRl
-         KoYB3OeHqNEYtFj1zlbR8kFpP7HKlByx/INfby2U31uZ1yw2IRVWT75F4Dqb8m41w8Bm
-         GWRgnjc/47A0lXhxziQcS8bKVSansHcNznrnlrU3+wMxGigHPenKty5MZEDXUcbVSLHA
-         08yYsliYYTO94LZXtY+5XwOjecl0+2Q1iN0B4uyrYa8vzaEwQF/Qro7c5lxsJaohMWHc
-         t1SwnReb+iCOHRrk47KXnVJAqWGAZa2+ghhj9l8Er5CKK4uk0OLd+/6BOiNaDSO7rpxd
-         TLqw==
-X-Gm-Message-State: APjAAAXpY28Yb3+8xIy1Y28Em91qL4zb6HG2rOLvMjsXqcuvit2GbaC1
-        rnaeS/L+hAy0gDsmZ7z3NtbJBmFd8ZK4/UX7MN4=
-X-Google-Smtp-Source: APXvYqw/YlzAhwTZE6Giqw01b4YrMH0v8eLT4uWRQMvVdJUbTErJPFr5BqmT/vcBe29BoFwYiLzFDDqUJEBXR/set4g=
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr4056104lja.165.1580426532516;
- Thu, 30 Jan 2020 15:22:12 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uiPnoOAYPt0TxpEOOk3xyCGG2sxkTQwY14DXYCt3mdw=;
+        b=BTqAKwLlcU6MwTnsliYJ0kZVlx+jUVniLT0zBTHvLuEuEaR6izDt3UrUo5E9yvAj5u
+         7VJtJiz9fr+3z9iCe2bR/755LSDFeKVRE6ii5BteZuP/jkbyNldQhRcW7kzT/ip4oZG2
+         FDynvi77bo2tBD4u+xNcppSchyeOnylcArT3M2MoGAH6yUey7dvsG2VZJPsWEGUStRXj
+         UfyZftFmnEJLgfzpsaxaeX6+hy2/gKmFhJQhXMo520EAjEtAYPcsfJpgEyobsx9K35Cn
+         LH6AGeBbBOdtTPm24KpcEHYYWaLUdSaWeVGjcz6dXnUA/lRVCaZyKxrCgiidJ71kmz9t
+         6Rpg==
+X-Gm-Message-State: APjAAAWYkdLVa8/iOdeecK02SZx/4omsUuTLqQWE/rhdrx7CdGzdRsa+
+        dxix4c+r+Qw8p/6/CzqSi4R2AXdM
+X-Google-Smtp-Source: APXvYqxZNaW195FQdMEybZTaiz+asOc491aU3TOUXInHWb5YWmTolmZwK1TemcXXstCDfNxqzUK1HQ==
+X-Received: by 2002:a9d:6505:: with SMTP id i5mr5181796otl.121.1580426811624;
+        Thu, 30 Jan 2020 15:26:51 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 96sm2294473otn.29.2020.01.30.15.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 15:26:51 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Petr Machata <petrm@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] mlxsw: spectrum_qdisc: Fix 64-bit division error in mlxsw_sp_qdisc_tbf_rate_kbps
+Date:   Thu, 30 Jan 2020 16:26:41 -0700
+Message-Id: <20200130232641.51095-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20191128135057.20020-1-benjamin.gaignard@st.com>
- <878snsvxzu.fsf@intel.com> <CA+M3ks5WvYoDLSrbvaGBbJg9+nnkX=xyCiD389QD8tSCdNqB+g@mail.gmail.com>
- <CA+M3ks4Y4LemFh=dQds91Z-LGJPK3vHKv=GeUNYHjNhdwz_m2g@mail.gmail.com>
- <CA+M3ks4yEBejzMoXPw_OK_LNP7ag5SNXZjvHqNeuZ8+9r2X-qw@mail.gmail.com>
- <b273036b10d8c2882800d01dcda7392e93b731fa.camel@redhat.com>
- <CA+M3ks5cuC5yJ-e0DCUiY1HtyyeU=mM9z56y4e_UduKaxcbw-A@mail.gmail.com> <08f4b69b1e48a81e90f28e7672da15cc5165969c.camel@redhat.com>
-In-Reply-To: <08f4b69b1e48a81e90f28e7672da15cc5165969c.camel@redhat.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 31 Jan 2020 09:22:00 +1000
-Message-ID: <CAPM=9txafoQNfMFf0Ff1SnBTgq6jYyvjJyjCSJua6-SJVVkScQ@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/dp_mst: Fix W=1 warnings
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > >
-> > > hi-actually yes, we should probably be using this instead of just dropping
-> > > this. Also, I didn't write this code originally I just refactored a bunch
-> > > of
-> > > it - Dave Airlied is the original author, but the original version of this
-> > > code was written ages ago. tbh, I think it's a safe bet to say that they
-> > > probably did mean to use this but forgot to and no one noticed until now.
-> >
-> > Hi,
-> >
-> > Any clue about how to use crc value ? Does it have to be checked
-> > against something else ?
-> > If crc are not matching what should we do of the data copied just before ?
->
-> We should be able to just take the CRC value from the sideband message and
-> then generate our own CRC value using the sideband message contents, and check
-> if the two are equal. If they aren't, something went wrong and we didn't
-> receive the message properly.
->
-> Now as to what we should do when we have CRC mismatches? That's a bit more
-> difficult. If you have access to the DP MST spec, I suppose a place to start
-> figuring that out would be checking if there's a way for us to request that a
-> branch device resend whatever message it sent previously. If there isn't, I
-> guess we should just print an error in dmesg (possibly with a hexdump of the
-> failed message as well) and not forward the message to the driver. Not sure of
-> any better way of handling it then that
+When building arm32 allmodconfig:
 
-Yeah I think this reflects what I wanted to do, I've no memory of a
-retransmit option in the spec, but I've away from it for a while. But
-we'd want to compare the CRC with what we got to make sure the are the
-same.
+ERROR: "__aeabi_uldivmod"
+[drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko] undefined!
 
-Dave.
+rate_bytes_ps has type u64, we need to use a 64-bit division helper to
+avoid a build error.
+
+Fixes: a44f58c41bfb ("mlxsw: spectrum_qdisc: Support offloading of TBF Qdisc")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+index 79a2801d59f6..65e681ef01e8 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+@@ -614,7 +614,7 @@ mlxsw_sp_qdisc_tbf_rate_kbps(struct tc_tbf_qopt_offload_replace_params *p)
+ 	/* TBF interface is in bytes/s, whereas Spectrum ASIC is configured in
+ 	 * Kbits/s.
+ 	 */
+-	return p->rate.rate_bytes_ps / 1000 * 8;
++	return div_u64(p->rate.rate_bytes_ps, 1000 * 8);
+ }
+ 
+ static int
+-- 
+2.25.0
+
