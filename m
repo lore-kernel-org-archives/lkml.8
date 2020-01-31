@@ -2,262 +2,380 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345B1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8065BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA4A2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3497020CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ou3IEnlu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y42wNtuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgAaT3o (ORCPT
+        id S1726959AbgAaTca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:29:44 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39855 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgAaT3n (ORCPT
+        Fri, 31 Jan 2020 14:32:30 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44222 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgAaTca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:29:43 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3120578plp.6;
-        Fri, 31 Jan 2020 11:29:43 -0800 (PST)
+        Fri, 31 Jan 2020 14:32:30 -0500
+Received: by mail-ua1-f65.google.com with SMTP id x16so2990458uao.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N4ThKbovPv/bCJHthuzEJQtxab84c6q9wDs6TOiZV2o=;
-        b=ou3IEnluoBmrDv1Ln0/uB3/HnCkg5tBHSM/xrYrpbtcT0eJLEsrqFzi0RXZutKFm7Q
-         IqKC9ByyFevt0TDe0GTbB5DsCmXm9pINgskoktMb/VIRULnmRLrejoCSt7hL0UfhIKwL
-         gYpJ2Ja1gbidOAPkGlm7twnY9PwXUIGtE8K28kjGNv8nmgiYhBxlHIdTf8rO5ZdQTllu
-         HqbI0NMyy+9Mrsv0XthEsW1DVwsVIg2vsq4FbQ+vhsTmEzt8/vZxNjmWPT9ThC2W7iH4
-         qo/c5582QfsKw9knBqrGNrlB7y/Gb+wYeYvf87BtTUvHINpLHw0YgyxTbdHlRnnppBEr
-         uncA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AtmJu7hXFUNe9U3goH8OgcFhymU6r5KbMZh3chCyp8=;
+        b=Y42wNtuXU4P+de/Vgcp5OnUMD4nNFqiqVgdYLDKU/FTQidGg4kPiTTzI8D6unCgDlW
+         cRSrOjeeXtsMZH6UH3U+QQTa6XgYTE6sgdc4JM6qyisI4VC+P2DdvkbY/pqjavthdmkC
+         SW/yx5sMjogM1mA2XWGieJw1nmxFxRYeTplAE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=N4ThKbovPv/bCJHthuzEJQtxab84c6q9wDs6TOiZV2o=;
-        b=RlSaZhMLYzj/sVWj8knn+XBUySRjygVSeSxZla0oyRGkBRCoWA5k63L8Kq97b3yDuE
-         by4FxiB3kB9QaNzsZ7hN4HJnjT8g05HSIUqgzi0BWoSIpwrD22esJ2DwJuxjtQJqzkKy
-         dpmImxDzZW/D5jGwa2LihMptlO50ZUKe4Pc0glBwy4LhZXZr9bNA9RoRbGREbFtAhkp7
-         8nWBQobmfv5lUKPNLYGIyGIlJz09NuUyuZ7uHGiA4uYBtXid9kBAIUnN6sBUJ8opwjVs
-         T8FXOW62+RHYDe8XzdyyWNcqxaJgSIjz0xT7vTxqx7qxTAjROn1MECjX2A54MPhOtmZQ
-         vh5w==
-X-Gm-Message-State: APjAAAUXUL2mMeQcE5Wa9t0zadhgZFHbF6FBP+lAxjlq7xssgpi+gkEh
-        CK9zK0mGaf38SwifW6GPcPw=
-X-Google-Smtp-Source: APXvYqzkqN1whNESEg0ZCFuz8Yh37fOQj6xSrxFAlPCe+pM/SsQDe1MVN55+3ID4qHa5JufgSY2/5Q==
-X-Received: by 2002:a17:90a:a88d:: with SMTP id h13mr13258388pjq.55.1580498982388;
-        Fri, 31 Jan 2020 11:29:42 -0800 (PST)
-Received: from [10.67.48.234] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k63sm11501219pjb.10.2020.01.31.11.29.41
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AtmJu7hXFUNe9U3goH8OgcFhymU6r5KbMZh3chCyp8=;
+        b=GUvQrKuXi1HIGyZW5+GRkZ42/J/r+9tpkiK37RXANkTNPxKT6NwzadDxx+S+FvrtYQ
+         F6ePl4/+Q8jPDBdNP46Jtc54QZsKkgldmDIrer6AbohiTenWTAI7RFsRjYygH/Qn6NWl
+         PsT5eyHd1GpK5ROoKyaKEyyTyzION9NHQfHGr0UL+PX/Ugt9mW1sx7GCvrkDJ7ublqUH
+         G9/OljIEf+pJ932UH/Wd6QTLu9fRDw2oSvl43x4WX95NXLTksHj/vjOXE4D61RnBDpcq
+         bstTIMaaZmq4npa0LPGe4Wp2Hg87ygAv1wFatNoRRDsjudaTwKjOSbTz1fRJwa2nc/E1
+         nRkg==
+X-Gm-Message-State: APjAAAVTteK7e3hhdlA7/PmIPVHFSDKcWLA42AU9XqlXp2gQIH971r+j
+        5sx7bKW1OEozf3HKUW3sXeyv/+42f7U=
+X-Google-Smtp-Source: APXvYqyBFNWQsum0SM0aQy9mDRsLSvOA50fCnkmm87PXb29zEZaQpFKD49L1NT6624BC/AaG4/7SpQ==
+X-Received: by 2002:ab0:634c:: with SMTP id f12mr7220162uap.48.1580499148089;
+        Fri, 31 Jan 2020 11:32:28 -0800 (PST)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id i65sm2847547vkb.1.2020.01.31.11.32.27
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 11:29:41 -0800 (PST)
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        bunk@kernel.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
- <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
- <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
- <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
-Date:   Fri, 31 Jan 2020 11:29:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 11:32:27 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id 59so2979197uap.12
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:32:27 -0800 (PST)
+X-Received: by 2002:ab0:724c:: with SMTP id d12mr7404736uap.0.1580499146366;
+ Fri, 31 Jan 2020 11:32:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 31 Jan 2020 11:32:14 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XwbHyYSCCqjgHoqQcRAwwekFYZbM-Mh1o=f0z+_W8ukw@mail.gmail.com>
+Message-ID: <CAD=FV=XwbHyYSCCqjgHoqQcRAwwekFYZbM-Mh1o=f0z+_W8ukw@mail.gmail.com>
+Subject: Re: [v4] arm64: dts: sc7180: add display dt nodes
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 11:14 AM, Dan Murphy wrote:
-> Florian
-> 
-> On 1/31/20 12:42 PM, Florian Fainelli wrote:
->> On 1/31/20 10:29 AM, Dan Murphy wrote:
->>> Florian
->>>
->>> On 1/31/20 11:49 AM, Florian Fainelli wrote:
->>>> On 1/31/20 7:11 AM, Dan Murphy wrote:
->>>>> Set the speed optimization bit on the DP83867 PHY.
->>>>> This feature can also be strapped on the 64 pin PHY devices
->>>>> but the 48 pin devices do not have the strap pin available to enable
->>>>> this feature in the hardware.  PHY team suggests to have this bit set.
->>>> OK, but why and how does that optimization work exactly?
->>> I described this in the cover letter.  And it is explained in the data
->>> sheet Section 8.4.6.6
->> Sorry I complete missed that and just focused on the patch, you should
->> consider not providing a cover letter for a single patch, and especially
->> not when the cover letter contains more information than the patch
->> commit message itself.
-> 
-> Sorry I usually give a cover letter to all my network related patches.
-> 
-> Unless I misinterpreted David on his reply to me about cover letters.
-> 
-> https://www.spinics.net/lists/netdev/msg617575.html
+Hi,
 
-This was a 2 patches series, for which a cover letter is mandatory:
+On Tue, Jan 28, 2020 at 5:25 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Add display, DSI hardware DT nodes for sc7180.
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>
+> Changes in v1:
+>         -Added display DT nodes for sc7180
+> Changes in v2:
+>         -Renamed node names
+>         -Corrected code alignments
+>         -Removed extra new line
+>         -Added DISP AHB clock for register access
+>         under display_subsystem node for global settings
+> Changes in v3:
+>         -Modified node names
+>         -Modified hard coded values
+>         -Removed mdss reg entry
+> Changes in v4:
+>         -Reverting mdp node name
+>         -Setting status to disabled in main SOC dtsi file
+>         -Replacing _ to - for node names
+>         -Adding clock dependency patch link
+>         -Splitting idp dt file to a separate patch
+>
+> This patch has dependency on the below series
+> https://lkml.org/lkml/2019/12/27/73
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 128 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3bc3f64..c3883af 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1184,6 +1184,134 @@
+>                         #power-domain-cells = <1>;
+>                 };
+>
+> +               mdss: mdss@ae00000 {
+> +                       compatible = "qcom,sc7180-mdss";
+> +                       reg = <0 0x0ae00000 0 0x1000>;
+> +                       reg-names = "mdss";
+> +
+> +                       power-domains = <&dispcc MDSS_GDSC>;
+> +
+> +                       clocks = <&gcc GCC_DISP_AHB_CLK>,
+> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       clock-names = "iface", "gcc_bus", "ahb", "core";
 
-but for single patches, there really is no need, and having to replicate
-the same information in two places is just error prone.
+The clock "ahb" is not in your bindings.  If it is truly needed,
+please update your bindings.
 
-> 
-> And I seemed to have missed David on the --cc list so I will add him for
-> v2.
-> 
-> I was also asked not to provide the same information in the cover letter
-> and the commit message.
-
-The cover letter is meant to provide some background about choices you
-have made, or how to merge the patches, or their dependencies, and
-describe the changes in a big picture. The patches themselves are
-supposed to be comprehensive.
-
-> 
-> Either way I am ok with not providing a cover letter and updating the
-> commit message with more information.
-> 
-> 
->>>>    Departing from
->>>> the BMSR reads means you possibly are going to introduce bugs and/or
->>>> incomplete information. For instance, you set phydev->pause and
->>>> phydev->asym_pause to 0 now, is there no way to extract what the link
->>>> partner has advertised?
->>> I was using the marvel.c as my template as it appears to have a separate
->>> status register as well.
->>>
->>> Instead of setting those bits in the call back I can call the
->>> genphy_read_status then override the duplex and speed based on the
->>> physts register like below.  This way link status and pause values can
->>> be updated and then we can update the speed and duplex settings.
->>>
->>>        ret = genphy_read_status(phydev);
->>>      if (ret)
->>>          return ret;
->>>
->>>      if (status < 0)
->>>          return status;
->>>
->>>      if (status & DP83867_PHYSTS_DUPLEX)
->>>          phydev->duplex = DUPLEX_FULL;
->>>      else
->>>          phydev->duplex = DUPLEX_HALF;
->>>
->>>      if (status & DP83867_PHYSTS_1000)
->>>          phydev->speed = SPEED_1000;
->>>      else if (status & DP83867_PHYSTS_100)
->>>          phydev->speed = SPEED_100;
->>>      else
->>>          phydev->speed = SPEED_10;
->>>
->> OK, but what if they disagree, are they consistently latched with
->> respect to one another?
-> 
-> Well in parsing through the code for genphy read status when auto
-> negotiation is set the phydev structure appears to be setup per what has
-> been configured.  I did not see any reading of speed or duplex when auto
-> neg is set it is just taking the LPA register. But I am probably not
-> right here.  So we and our customers found that the phy was always
-> reporting a 1Gbps connection when the 4 wire cable connected when using
-> genphy_read_status.  This PHYSTS register provides a single location
-> within the register set for quick access to commonly accessed
-> information.
-
-That is the kind of information that you want to put in the commit
-message, and that sounds like a Fix more than a feature to me. If the
-BMSR is not reflecting the correct speed, clearly something is not quite
-good. You may also consider reflecting whether downshift was in action
-and that led to reducing the speed, something like
-m88e1011_link_change_notify() does.
-
-> 
-> The PHYSTS register from the chip is what the PHY negotiated with the LP.
-> 
-> [   10.404355] dp83867_read_status:STS is 0x6C02  - PHYSTS register
-> reporting a 100Mbps speed with a 4 wire cable
-> [   10.413450] dp83867_read_status:BMCR is 0x1140  - BMCR is configured
-> for a 1Gbps connection with a 4 wire cable.  But the speed should be
-> 100Mbps.
-> [   10.417906] dp83867_read_status:BMSR is 0x796D  - BMSR which just
-> states what the device is capable of doing but does not report the
-> actual speed or duplex mode.
-> 
-> So unless I missed some code in the phy_device or phy_core this is the
-> only way I could see to report the correct negotiated speed and duplex
-> mode.
-> 
-> Dan
-> 
+The clock "gcc_bus" is just called "bus" in the bindings.  Assuming
+this is the same clock, please use the name from the bindings.
 
 
--- 
-Florian
+> +                       assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       assigned-clock-rates = <300000000>;
+> +
+> +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <1>;
+> +
+> +                       iommus = <&apps_smmu 0x800 0x2>;
+> +
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+
+Do we need a:
+  status = "disabled";
+
+I noticed that in sdm845 the top-level mdss node _does_ have that.  If
+someone was building a board with your chip and they had no display at
+all, would they want this node disabled?  If so then it should be
+disabled by default and boards should opt-in.
+
+
+> +                       mdss_mdp: mdp@ae01000 {
+> +                               compatible = "qcom,sc7180-dpu";
+> +                               reg = <0 0x0ae01000 0 0x8f000>,
+> +                                     <0 0x0aeb0000 0 0x2008>,
+> +                                     <0 0x0af03000 0 0x16>;
+> +                               reg-names = "mdp", "vbif", "disp_cc";
+
+Did I already ask why you need the "disp_cc" register space?  If I
+didn't, can I ask now?  This is not in the bindings and I can't think
+of why you'd want it.  Does the code use it?  It doesn't seem to...
+
+
+> +                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_ROT_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_MDP_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+> +                               clock-names = "iface", "rot", "lut", "core",
+> +                                             "vsync";
+
+Your bindings doc says that "bus" is required, yet you don't pass it.
+Should you?
+
+Your bindings doc says nothing about "rot" and "lut".  Presumably
+those should be added if they are actually needed?
+
+
+> +                               assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
+> +                                                 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+> +                               assigned-clock-rates = <300000000>,
+> +                                                      <19200000>;
+> +
+> +                               interrupt-parent = <&mdss>;
+> +                               interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+
+Do we need a:
+  status = "disabled";
+
+I noticed that in sdm845 the mdss_mdp node _does_ have that.  NOTE:
+you'd only want to add it if it ever made sense to turn on the
+top-level mdss node but not this one.  If this should always be
+enabled at the exact same time as the top-level mdss node then there's
+no need to add the 'status = "disabled";'
+
+If you decide that you don't need to add this, maybe you can submit a
+separate patch to remove it from sdm845?
+
+
+> +                               ports {
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +
+> +                                       port@0 {
+> +                                               reg = <0>;
+> +                                               dpu_intf1_out: endpoint {
+> +                                                       remote-endpoint = <&dsi0_in>;
+> +                                               };
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       dsi_controller: dsi-controller@ae94000 {
+
+nit: Though "dsi-controller" is a sensible name, current binding
+examples show "dsi", not "dsi-controller".  The name "dsi" seems
+blessed by Rob Herring since it came from commit a3c463e0961c
+("dt-bindings: msm/dsi: Some binding doc cleanups") which has his Ack,
+so I'd rather go with that.
+
+
+> +                               compatible = "qcom,mdss-dsi-ctrl";
+> +                               reg = <0 0x0ae94000 0 0x400>;
+> +                               reg-names = "dsi_ctrl";
+> +
+> +                               interrupt-parent = <&mdss>;
+> +                               interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +                               clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_ESC0_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                        <&gcc GCC_DISP_HF_AXI_CLK>;
+
+Comparing with sdm845 I notice that the last clock used to come from
+dispcc.  Now you're getting it from gcc.  Did the architecture
+actually change or are you working around a clock that should be
+exported by the dispcc but hasn't been finished yet?
+
+
+> +                               clock-names = "byte",
+> +                                             "byte_intf",
+> +                                             "pixel",
+> +                                             "core",
+> +                                             "iface",
+> +                                             "bus";
+
+Your bindings doc says this about which clocks you need:
+
+- clock-names: the following clocks are required:
+  * "mdp_core"
+  * "iface"
+  * "bus"
+  * "core_mmss"
+  * "byte"
+  * "pixel"
+  * "core"
+  For DSIv2, we need an additional clock:
+   * "src"
+  For DSI6G v2.0 onwards, we need also need the clock:
+   * "byte_intf"
+
+...seems like either the binding is wrong or you're missing a few
+clocks.  Which is it?
+
+
+> +                               phys = <&dsi_phy>;
+> +                               phy-names = "dsi";
+> +
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               status = "disabled";
+> +
+> +                               ports {
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +
+> +                                       port@0 {
+> +                                               reg = <0>;
+> +                                               dsi0_in: endpoint {
+> +                                                       remote-endpoint = <&dpu_intf1_out>;
+> +                                               };
+> +                                       };
+> +
+> +                                       port@1 {
+> +                                               reg = <1>;
+> +                                               dsi0_out: endpoint {
+> +                                               };
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       dsi_phy: dsi-phy@ae94400 {
+> +                               compatible = "qcom,dsi-phy-10nm";
+> +                               reg = <0 0x0ae94400 0 0x200>,
+> +                                     <0 0x0ae94600 0 0x280>,
+> +                                     <0 0x0ae94a00 0 0x1e0>;
+> +                               reg-names = "dsi_phy",
+> +                                           "dsi_phy_lane",
+> +                                           "dsi_pll";
+> +
+> +                               #clock-cells = <1>;
+> +                               #phy-cells = <0>;
+> +
+> +                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
+> +                               clock-names = "iface";
+
+Your bindings say:
+
+- clock-names: the following clocks are required:
+  * "iface"
+  * "ref" (only required for new DTS files/entries)
+
+I think you qualify as a "new" DTS file, so you should be providing "ref".
+
+
+> +                               status = "disabled";
+
+Bindings list "power-domains" as a required property.  Should the
+bindings be updated to make this optional, or should you be adding it?
+
+
+> +                       };
+> +               };
+> +
+>                 pdc: interrupt-controller@b220000 {
+
+nit: your sorting is still slightly off.  I can certainly apply your
+patch atop the dispcc device tree patch [1] now, which is good.  But
+the context clue in your patch that your stuff comes right before the
+'pdc: interrupt-controller@b220000' means that you are being placed
+_after_ 'dispcc: clock-controller@af00000'.  You should be before it
+since ae00000 < af00000.
+
+...this may sound like making a big deal out of nothing, but keeping
+things sorted correctly is the best way to reduce merge conflicts when
+landing patches and that's a big deal.
+
+--
+
+Also, in response to your last patch [2] I said:
+
+> ...speaking of which, can you please change your patch to replace the
+> bogus <0> in the dispcc for the DSI PHY, providing the clocks for
+> "dsi_phy_pll_byte" and "dsi_phy_pll_pixel"?  See
+> <https://crrev.com/c/2017974/3>
+
+It doesn't appear that you've done this.  Can you?
+
+
+NOTE: as you can probably guess, my review was mostly this:
+- Compare your nodes with the nodes in a similar SoC (sdm845).
+- Compare your nodes with the examples in the bindings.
+- Compare your nodes with the text of the bindings.
+
+Those are good things for you to do before you send out future patches
+to help make sure you didn't miss anything.
+
+
+-Doug
+
+[1] https://lore.kernel.org/r/20200130131220.v3.15.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
+[2] https://lore.kernel.org/r/CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com/
