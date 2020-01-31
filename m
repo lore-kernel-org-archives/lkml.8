@@ -2,133 +2,90 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662EB20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLEfgcam"
+	by mail.kernel.org (Postfix) with ESMTP id 9D99020663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgAaA76 (ORCPT
+        id S1727779AbgAaBCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 19:59:58 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37271 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbgAaA76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 19:59:58 -0500
-Received: by mail-qk1-f196.google.com with SMTP id 21so4995871qky.4;
-        Thu, 30 Jan 2020 16:59:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=amgyOvyccdHIcAj+pKAqgwZJU1n1bhRqiRwNFrM8HAw=;
-        b=jLEfgcamsEsjkkxuwqIotuAyzqAcbZjFjCkWAjlCv0yb/xgllO9BiBQt+2x5VUDm2r
-         BIMB+AZwM0GVWTW8nTqKvD2OgKNBuRtVMZq3jQllJnnpzHzki/XMP25sCMiWc90rUioY
-         k8EZqmE1yFqd8Lx6TdT1lMx2TWoH+iUKl6dQNkn9ZRilAFg+CTV8PrOs64LuHCL3xKlE
-         e2gIiyTqc7gOihRPM2Uv9yPD7YJevbRetSa0cdyBaNb2HfWQTDKCIcrORv7G17pji6EJ
-         5IwJl6uOgm5BtzjG+jVOkAkE+XW8rlsKDCjJ9zE6gFo0eSwprU67cMgc9lgXhbavPRPe
-         8qow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=amgyOvyccdHIcAj+pKAqgwZJU1n1bhRqiRwNFrM8HAw=;
-        b=aeF1S+Jj/poxFS/fXs2cR99nH8gxgvImMy09r3Re6i7P+6QehD7hYkcT8Z4rawnX3K
-         f1zqDV0gb8X1bWv9EQ6JOHuXbpNQeNYz6OhBmm5R/PDtBuOMi8lHCFtUn7W3TGbwtlDD
-         EwdRqk0GzpK5aP6iopxetAB6W5OC8hGDgas9Qg1ToXD1EwHkkyjxCW7GGTYY+9lLGuAg
-         aj8+K0rhpKqpYU1yKLwb/2vCzBqKV+G0ccGMWNMEBkIExVTj00twzayLGg8ML6YSTpkb
-         jxqn1jZSI8CPj7DI/K7E/82v1hxt06kgScDXs34eGHyOl2S5rLkF8wsFTrpM/rxTLZbJ
-         DKiQ==
-X-Gm-Message-State: APjAAAXc8BXfObqNT+4b04rpBpLzJyg8p3yX1FkYjLIfbmO+IclIxPMR
-        IU7CVkRf237yExi1AtvUsOmAr3QM
-X-Google-Smtp-Source: APXvYqwAyEwN0C2TrGKUI6BtbJ4hqPYrmWNxVYGGE5ftiVj9BbJ1goQOypEdqUsJqGHsh0+86KSVVQ==
-X-Received: by 2002:ae9:efc5:: with SMTP id d188mr8541052qkg.178.1580432396107;
-        Thu, 30 Jan 2020 16:59:56 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id g21sm3653515qkl.116.2020.01.30.16.59.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2020 16:59:55 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1B0F122460;
-        Thu, 30 Jan 2020 19:59:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 30 Jan 2020 19:59:55 -0500
-X-ME-Sender: <xms:CnwzXraYGLmFL8SWe0wTFA-kTGIjThALuCcVqwhW7Z2h9kHTT7v35A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeelgddvhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
-    dttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhm
-    rghilhdrtghomheqnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhp
-    rghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsg
-    hoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:CnwzXtqR8rgz8DrAy9lrq78BWI0P2tSjh-37uUeL5NedUNyYoeASjg>
-    <xmx:CnwzXnZ5FBhXNlvgRQ3FFCoU8Lgp9L3INgfWIOUQwkhPs9QNPeS23w>
-    <xmx:CnwzXtQ2AV1_jOQZDYp5SR2qgnIyQVu1N-wTHeEmYisVsB58b3ChEg>
-    <xmx:C3wzXmCmBPWXJlnMGgFKTInuzqicevXJCeqUObibPR8QAzFrpqhiHh1qrlI>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3A047328005A;
-        Thu, 30 Jan 2020 19:59:54 -0500 (EST)
-Date:   Fri, 31 Jan 2020 08:59:52 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, jiangshanlai@gmail.com,
-        mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
-        josh@joshtriplett.org, paulmck@kernel.org, rcu@vger.kernel.org
-Subject: Re: [PATCH 2/2] rcu/nocb: Add missing annotation for
- rcu_nocb_bypass_unlock()
-Message-ID: <20200131005952.GD83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <0/2>
- <cover.1580337836.git.jbi.octave@gmail.com>
- <59087bdc398a69ac743ee3e5cfa0bd26495881e3.1580337836.git.jbi.octave@gmail.com>
+        Thu, 30 Jan 2020 20:02:01 -0500
+Received: from mga07.intel.com ([134.134.136.100]:38952 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727614AbgAaBCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 20:02:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 17:02:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,383,1574150400"; 
+   d="scan'208";a="428560074"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2020 17:01:59 -0800
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 30 Jan 2020 17:01:59 -0800
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 30 Jan 2020 17:01:59 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.202]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.97]) with mapi id 14.03.0439.000;
+ Fri, 31 Jan 2020 09:01:57 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     Eduardo Habkost <ehabkost@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Xu, Like" <like.xu@intel.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: RE: [PATCH v8 00/14] Guest LBR Enabling
+Thread-Topic: [PATCH v8 00/14] Guest LBR Enabling
+Thread-Index: AQHV16ndL88cBSX1I02vHdwwHuYoV6gD80yQ
+Date:   Fri, 31 Jan 2020 01:01:56 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E3F9B0D@shsmsx102.ccr.corp.intel.com>
+References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
+ <20200130201411.GF25446@habkost.net>
+In-Reply-To: <20200130201411.GF25446@habkost.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59087bdc398a69ac743ee3e5cfa0bd26495881e3.1580337836.git.jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:30:09AM +0000, Jules Irenge wrote:
-> Sparse reports warning at rcu_nocb_bypass_unlock()
-> 
-> warning: context imbalance in rcu_nocb_bypass_unlock() - unexpected unlock
-> 
-> The root cause is a missing annotation of rcu_nocb_bypass_unlock()
-> which causes the warning.
-> 
-> Add the missing __releases(&rdp->nocb_bypass_lock) annotation.
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
-
-> ---
->  kernel/rcu/tree_plugin.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 9d21cb07d57c..8783d19a58b2 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -1553,6 +1553,7 @@ static bool rcu_nocb_bypass_trylock(struct rcu_data *rdp)
->   * Release the specified rcu_data structure's ->nocb_bypass_lock.
->   */
->  static void rcu_nocb_bypass_unlock(struct rcu_data *rdp)
-> +	__releases(&rdp->nocb_bypass_lock)
->  {
->  	lockdep_assert_irqs_disabled();
->  	raw_spin_unlock(&rdp->nocb_bypass_lock);
-> -- 
-> 2.24.1
-> 
+T24gRnJpZGF5LCBKYW51YXJ5IDMxLCAyMDIwIDQ6MTQgQU0sIEVkdWFyZG8gSGFia29zdCB3cm90
+ZToNCj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDM6MTY6MDBQTSArMDgwMCwgV2VpIFdhbmcg
+d3JvdGU6DQo+ID4gTGFzdCBCcmFuY2ggUmVjb3JkaW5nIChMQlIpIGlzIGEgcGVyZm9ybWFuY2Ug
+bW9uaXRvciB1bml0IChQTVUpDQo+ID4gZmVhdHVyZSBvbiBJbnRlbCBDUFVzIHRoYXQgY2FwdHVy
+ZXMgYnJhbmNoIHJlbGF0ZWQgaW5mby4gVGhpcyBwYXRjaA0KPiA+IHNlcmllcyBlbmFibGVzIHRo
+aXMgZmVhdHVyZSB0byBLVk0gZ3Vlc3RzLg0KPiA+DQo+ID4gRWFjaCBndWVzdCBjYW4gYmUgY29u
+ZmlndXJlZCB0byBleHBvc2UgdGhpcyBMQlIgZmVhdHVyZSB0byB0aGUgZ3Vlc3QNCj4gPiB2aWEg
+dXNlcnNwYWNlIHNldHRpbmcgdGhlIGVuYWJsaW5nIHBhcmFtIGluIEtWTV9DQVBfWDg2X0dVRVNU
+X0xCUg0KPiAocGF0Y2ggMykuDQo+IA0KPiBBcmUgUUVNVSBwYXRjaGVzIGZvciBlbmFibGluZyBL
+Vk1fQ0FQX1g4Nl9HVUVTVF9MQlIgYmVpbmcgcGxhbm5lZD8NCj4gDQpZZXMsIHdlIGhhdmUgYSBj
+b3VwbGUgb2YgcWVtdSBwYXRjaGVzLiBUaGF0J3MgcGxhbm5lZCB0byBiZSByZXZpZXdlZCBhZnRl
+ciB0aGUga2VybmVsIHBhcnQgZ2V0cyBmaW5hbGl6ZWQg8J+Yig0KDQpCZXN0LA0KV2VpDQo=
