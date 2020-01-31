@@ -2,139 +2,176 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E0BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1189FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3988020705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D582F20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KjMBerQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgAaOlz (ORCPT
+        id S1729098AbgAaOmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:41:55 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2341 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729020AbgAaOlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:41:55 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 19BC214B40BF06C324D2;
-        Fri, 31 Jan 2020 14:41:53 +0000 (GMT)
-Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 31 Jan 2020 14:41:52 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 31 Jan 2020 15:41:52 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Fri, 31 Jan 2020 15:41:52 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-CC:     "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 7/8] ima: use ima_hash_algo for collision detection in the
- measurement list
-Thread-Topic: [PATCH 7/8] ima: use ima_hash_algo for collision detection in
- the measurement list
-Thread-Index: AQHV1TQ5RK/5lZCTqEyIMJscykTYuKgDvV6AgAETjcD///eIgIAAEqHw
-Date:   Fri, 31 Jan 2020 14:41:52 +0000
-Message-ID: <e299058034b94143af6fc1da4ae2c708@huawei.com>
-References: <20200127170443.21538-1-roberto.sassu@huawei.com>
-         <20200127170443.21538-8-roberto.sassu@huawei.com>
-         <1580423169.6104.18.camel@linux.ibm.com>
-         <44c1b3f6d3fe414e914317ef8e5c6f8f@huawei.com>
- <1580480525.6104.88.camel@linux.ibm.com>
-In-Reply-To: <1580480525.6104.88.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 31 Jan 2020 09:42:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41665 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728939AbgAaOmX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:42:23 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so7335726ljc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KmAMgO7snmBdaMdDatYopdjy+MP/IMsumQXInEYVh4w=;
+        b=KjMBerQaVAXONzfNRPbs7dngTkES59JtpxJbE+0YYW0Mx/ZKXvrAljR6UR/fyEnNCn
+         w0ec1mTdtkxFhA+91IX4WD+OkYdMMe4bvqpIy2mCRPe6hoHIa0uWs7RCixkwaS3MTm+P
+         WhTdMsXE2tTx4HJq7JQOjKjNQSJKSo7o9y5Qp3O6E2EIPSCRi1i9RZgmf6DkeesfiPZU
+         uJgGW0pYyotjUYWPSIsW8Gye1IZdKFKoCwkT96qBzo8EygcMdDzFD2UorxXYhEgPtFLS
+         j91FHLpkAM54p/TmFoPPkqEml12UNLyZLNEBuEO6jVHgZYNRAgJkzuMCdiso5IjmUm3h
+         okIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KmAMgO7snmBdaMdDatYopdjy+MP/IMsumQXInEYVh4w=;
+        b=DprG1/VPw+sQGsDUXvAC8oYtdNkZ5t71gu54lj8HRu1Ess7on+9NmjxOcpem21/oiF
+         E1V0QVCWZCPnuIunke1K8eIrO0RAHIr5Kv40LZOrEaxPgy6bZkMx1JwNhIoEXsjkBtKD
+         e8F9iwz0FvzEISj+XJwmlmK5ixhhI/W0JBL1Uk/W3ExsEZdS7rZJY/eJfsG7dhyylaBC
+         pjIE7ihel4TvEEiM0rtb5lzBQuEbiKDYOWQ7vL3Wxzl3bjfOvnNJr4TBEe3qrt4A7N6U
+         km3xBe60wHP8bO6AjFgNXgUMirH9t4uwq8mwodPtHyjmIzQoT20cGLvfocSLnTGyGbjg
+         212g==
+X-Gm-Message-State: APjAAAUld0fhgUd1YWc0vyoguZVaODz5yxCF+RbG8FDOT+bOg3/yHzME
+        cMLM4k3IXJJxScLwogbxAbqgQEz1xpe8dud7rgcP6igeUCg=
+X-Google-Smtp-Source: APXvYqzyvw+DF+WQZ3fn+XitjkVnt4aq84KynA0f8nLosrCmUxdjX71Dbjpx0sayQSZOlzM8MxHZObjaZZ3xZrAJyZU=
+X-Received: by 2002:a05:651c:1072:: with SMTP id y18mr6336321ljm.243.1580481740153;
+ Fri, 31 Jan 2020 06:42:20 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200130183613.810054545@linuxfoundation.org>
+In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 31 Jan 2020 20:12:09 +0530
+Message-ID: <CA+G9fYt13PZ+mhhkO39DEztsOzcF7AxfQydqNCd=Gd1C4iYwiQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/110] 5.4.17-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86
-em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDMxLCAyMDIwIDM6
-MjIgUE0NCj4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2VpLmNvbT47DQo+
-IGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb207DQo+IGphbWVzLmJvdHRvbWxleUBoYW5z
-ZW5wYXJ0bmVyc2hpcC5jb207IGxpbnV4LWludGVncml0eUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
-IGxpbnV4LXNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IFNpbHZpdSBWbGFzY2VhbnUgPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2Vp
-LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCA3LzhdIGltYTogdXNlIGltYV9oYXNoX2FsZ28g
-Zm9yIGNvbGxpc2lvbiBkZXRlY3Rpb24gaW4NCj4gdGhlIG1lYXN1cmVtZW50IGxpc3QNCj4gDQo+
-IE9uIEZyaSwgMjAyMC0wMS0zMSBhdCAxNDowMiArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToN
-Cj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBsaW51eC1pbnRl
-Z3JpdHktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiA+
-ID4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgTWltaSBab2hhcg0KPiA+ID4g
-U2VudDogVGh1cnNkYXksIEphbnVhcnkgMzAsIDIwMjAgMTE6MjYgUE0NCj4gPiA+IFRvOiBSb2Jl
-cnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+Ow0KPiA+ID4gamFya2tvLnNha2tp
-bmVuQGxpbnV4LmludGVsLmNvbTsNCj4gPiA+IGphbWVzLmJvdHRvbWxleUBoYW5zZW5wYXJ0bmVy
-c2hpcC5jb207IGxpbnV4LQ0KPiBpbnRlZ3JpdHlAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzog
-bGludXgtc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBTaWx2aXUgVmxhc2NlYW51IDxTaWx2aXUuVmxhc2NlYW51
-QGh1YXdlaS5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDcvOF0gaW1hOiB1c2UgaW1h
-X2hhc2hfYWxnbyBmb3IgY29sbGlzaW9uIGRldGVjdGlvbg0KPiBpbg0KPiA+ID4gdGhlIG1lYXN1
-cmVtZW50IGxpc3QNCj4gPiA+DQo+ID4gPiBPbiBNb24sIDIwMjAtMDEtMjcgYXQgMTg6MDQgKzAx
-MDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPiA+IEJlZm9yZSBjYWxjdWxhdGluZyBhIGRp
-Z2VzdCBmb3IgZWFjaCBQQ1IgYmFuaywgY29sbGlzaW9ucyB3ZXJlIGRldGVjdGVkDQo+ID4gPiA+
-IHdpdGggYSBTSEExIGRpZ2VzdC4gVGhpcyBwYXRjaCBpbmNsdWRlcyBpbWFfaGFzaF9hbGdvIGFt
-b25nIHRoZQ0KPiA+ID4gYWxnb3JpdGhtcw0KPiA+ID4gPiB1c2VkIHRvIGNhbGN1bGF0ZSB0aGUg
-dGVtcGxhdGUgZGlnZXN0IGFuZCBjaGVja3MgY29sbGlzaW9ucyBvbiB0aGF0DQo+IGRpZ2VzdC4N
-Cj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5z
-YXNzdUBodWF3ZWkuY29tPg0KPiA+ID4NCj4gPiA+IERlZmluaXRlbHkgbmVlZGVkIHRvIHByb3Rl
-Y3QgYWdhaW5zdCBhIHNoYTEgY29sbGlzaW9uIGF0dGFjay4NCj4gPiA+DQo+ID4gPiA8c25pcD4N
-Cj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9zZWN1cml0eS9pbnRlZ3JpdHkv
-aW1hL2ltYV9hcGkuYw0KPiA+ID4gYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9hcGkuYw0K
-PiA+ID4gPiBpbmRleCBlYmFmMDA1NjczNWMuLmE5YmI0NWRlNmRiOSAxMDA2NDQNCj4gPiA+ID4g
-LS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBpLmMNCj4gPiA+ID4gKysrIGIvc2Vj
-dXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfYXBpLmMNCj4gPiA+ID4gQEAgLTUxLDcgKzUxLDcgQEAg
-aW50IGltYV9hbGxvY19pbml0X3RlbXBsYXRlKHN0cnVjdA0KPiBpbWFfZXZlbnRfZGF0YQ0KPiA+
-ID4gKmV2ZW50X2RhdGEsDQo+ID4gPiA+ICAJaWYgKCEqZW50cnkpDQo+ID4gPiA+ICAJCXJldHVy
-biAtRU5PTUVNOw0KPiA+ID4gPg0KPiA+ID4gPiAtCSgqZW50cnkpLT5kaWdlc3RzID0ga2NhbGxv
-YyhpbWFfdHBtX2NoaXAtPm5yX2FsbG9jYXRlZF9iYW5rcyArIDEsDQo+ID4gPiA+ICsJKCplbnRy
-eSktPmRpZ2VzdHMgPSBrY2FsbG9jKGltYV90cG1fY2hpcC0+bnJfYWxsb2NhdGVkX2JhbmtzICsg
-MiwNCj4gPiA+ID4gIAkJCQkgICAgc2l6ZW9mKCooKmVudHJ5KS0+ZGlnZXN0cyksIEdGUF9OT0ZT
-KTsNCj4gPiA+ID4gIAlpZiAoISgqZW50cnkpLT5kaWdlc3RzKSB7DQo+ID4gPiA+ICAJCXJlc3Vs
-dCA9IC1FTk9NRU07DQo+ID4gPg0KPiA+ID4gSSB3b3VsZCBwcmVmZXIgbm90IGhhdmluZyB0byBh
-bGxvY2F0ZSBhbmQgdXNlICJucl9hbGxvY2F0ZWRfYmFua3MgKyAxIg0KPiA+ID4gZXZlcnl3aGVy
-ZSwgYnV0IEkgdW5kZXJzdGFuZCB0aGUgbmVlZCBmb3IgaXQuIMKgSSdtIG5vdCBzdXJlIHRoaXMg
-cGF0Y2gNCj4gPiA+IHdhcnJhbnRzIGFsbG9jYXRpbmcgKzIuIMKgUGVyaGFwcywgaWYgYSBUUE0g
-YmFuayBkb2Vzbid0IGV4aXN0IGZvciB0aGUNCj4gPiA+IElNQSBkZWZhdWx0IGhhc2ggYWxnb3Jp
-dGhtLCB1c2UgYSBkaWZmZXJlbnQgYWxnb3JpdGhtIG9yLCB3b3JzdCBjYXNlLA0KPiA+ID4gY29u
-dGludWUgdXNpbmcgdGhlIGltYV9zaGExX2lkeC4NCj4gPg0KPiA+IFdlIGNvdWxkIGludHJvZHVj
-ZSBhIG5ldyBvcHRpb24gY2FsbGVkIGltYV9oYXNoX2FsZ29fdHBtIHRvIHNwZWNpZnkNCj4gPiB0
-aGUgYWxnb3JpdGhtIG9mIGFuIGFsbG9jYXRlZCBiYW5rLiBXZSBjYW4gdXNlIHRoaXMgZm9yIGJv
-b3RfYWdncmVnYXRlDQo+ID4gYW5kIGhhc2ggY29sbGlzaW9uIGRldGVjdGlvbi4NCj4gDQo+IEkg
-ZG9uJ3QgdGhpbmsgdGhhdCB3b3VsZCB3b3JrIGluIHRoZSBjYXNlIHdoZXJlIHRoZSBJTUEgZGVm
-YXVsdCBoYXNoDQo+IGlzIHNldCB0byBzaGEyNTYsIGJ1dCB0aGUgc3lzdGVtIGhhcyBhIFRQTSAx
-LjIgY2hpcC4gwqBXZSB3b3VsZCBiZSBsZWZ0DQo+IHVzaW5nIFNIQTEgZm9yIHRoZSBmaWxlIGhh
-c2ggY29sbGlzaW9uIGRldGVjdGlvbi4NCg0KSSB0aG91Z2h0IHRoYXQgdXNpbmcgYSBzdHJvbmdl
-ciBhbGdvcml0aG0gZm9yIGhhc2ggY29sbGlzaW9uIGRldGVjdGlvbiBidXQNCmRvaW5nIHJlbW90
-ZSBhdHRlc3RhdGlvbiB3aXRoIHRoZSB3ZWFrZXIgd291bGQgbm90IGJyaW5nIGFkZGl0aW9uYWwg
-dmFsdWUuDQoNCklmIHRoZXJlIGlzIGEgaGFzaCBjb2xsaXNpb24gb24gU0hBMSwgYW4gYXR0YWNr
-ZXIgY2FuIHN0aWxsIHJlcGxhY2UgdGhlIGRhdGEgb2YNCm9uZSBvZiB0aGUgdHdvIGVudHJpZXMg
-aW4gdGhlIG1lYXN1cmVtZW50IGxpc3Qgd2l0aCB0aGUgZGF0YSBvZiB0aGUgb3RoZXINCndpdGhv
-dXQgYmVpbmcgZGV0ZWN0ZWQgKHdpdGhvdXQgYWRkaXRpb25hbCBjb3VudGVybWVhc3VyZXMpLg0K
-DQpJZiB0aGUgdmVyaWZpZXIgYWRkaXRpb25hbGx5IGNoZWNrcyBmb3IgZHVwbGljYXRlIHRlbXBs
-YXRlIGRpZ2VzdHMsIGhlIGNvdWxkDQpkZXRlY3QgdGhlIGF0dGFjayAoSU1BIHdvdWxkIG5vdCBh
-ZGQgYSBuZXcgbWVhc3VyZW1lbnQgZW50cnkgd2l0aCB0aGUNCnNhbWUgdGVtcGxhdGUgZGlnZXN0
-IG9mIHByZXZpb3VzIGVudHJpZXMpLg0KDQpPaywgSSB3aWxsIHVzZSBpbWFfaGFzaF9hbGdvIGZv
-ciBoYXNoIGNvbGxpc2lvbiBkZXRlY3Rpb24uDQoNClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xP
-R0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQ
-ZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg==
+On Fri, 31 Jan 2020 at 00:17, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.17 release.
+> There are 110 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.17-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.17-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 1bde1c513887dd7bac46be466f1cd06fe3a64292
+git describe: v5.4.16-111-g1bde1c513887
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.16-111-g1bde1c513887
+
+No regressions (compared to build v5.4.16)
+
+No fixes (compared to build v5.4.16)
+
+Ran 23227 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* libgpiod
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-math-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
