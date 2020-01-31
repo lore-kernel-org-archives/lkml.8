@@ -2,111 +2,127 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC9CC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EFB21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D4020707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HY2h8qXH"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0uZ77XyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgAaPjA (ORCPT
+        id S1729253AbgAaPju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:39:00 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40284 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgAaPjA (ORCPT
+        Fri, 31 Jan 2020 10:39:50 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43777 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgAaPju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:39:00 -0500
-Received: by mail-lj1-f193.google.com with SMTP id n18so7523827ljo.7;
-        Fri, 31 Jan 2020 07:38:58 -0800 (PST)
+        Fri, 31 Jan 2020 10:39:50 -0500
+Received: by mail-il1-f195.google.com with SMTP id o13so6490844ilg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 07:39:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9NPQscGNoa4QIXz4hQhsZPNEmWteEQEWE2lnF9zwH24=;
-        b=HY2h8qXHR+65tHbLBV9R4c9tHZBR6GbAHVfWKrQFLM/T5OcNZzujzh4h7wyxaLOZSw
-         DtPJLapCShNv4r6pa6VPaHjq51f/tLFeFcRtJ7NcTLclpzwfOBa94vMHQl6Y5HO/NLp+
-         Oq9rxnOfqpbInouIdupaA9abu/BKodBdajs8+MsBsiJX6/Xy2p9io6kvVneyr7jDueG0
-         NB4JE12KytkZznQWOAresZeeo5efZmvuSvEBZRaTTEL6tVJEFat8x8y5kTMwsTAw1Qh3
-         JNAXjXVQdajYbUuRbidVUTXYzt1Lmf/EGuut289IrEL/xvNuCBOaUcneJTBJ65yFVeR/
-         1Z/A==
+        bh=sppSJ27WOAOq8bLtj1YH2mlQeo3KTk4dV43H9seuSsk=;
+        b=0uZ77XyQjJrzZ6lHXop39Dcn3D3xJsKbpxm9i9o7khypXNZ0UXMSAlbgU1g1cvpeHk
+         mR5uHjydrEPVgdHY8BJf0Xk2AYg/CDn+fEp/IX1+Kggqr9rdP86PuJch7LaYGKR8bm9O
+         MjOjpzINv1M/+PQTQoP+lumJeskwJPdaewdYdzju4Mse3+9Z0H1mpo3J3jyQemqL/ve2
+         CcU5yO8wXkiWbhl6Ujgs++1spLC7hKJcpGecNQ7qM4wsKSznhTxRviDyhdzRj4t92ve3
+         qkRdTg0Kx3bs7kLHQ1kpAMR30UoH6Q2MYgW0XGZcuyLquxL0tEAEN6a0JoDlndYx9OAT
+         rUog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9NPQscGNoa4QIXz4hQhsZPNEmWteEQEWE2lnF9zwH24=;
-        b=gGoqJ+9M8iWv4qEn6IU5vWXRmMXe8cLtOHh4OjdWIb9mtAopfjUGXv92a3S1DKQ3FJ
-         V/Ss7qMkrVzPyZ+6GL2pmFWTzVuSDBhtxvO/AJ0qtMxpxMroj4OiuO+75KiyDz4OOpmp
-         D52ecka/7pf6cZHNrEpHHOlZtMdBFoVSqjS74d1oue6WZxZ8/t62her7hrT8nAeNqAaL
-         K746zzdIvwN4/dI+sIv0eKNwmuQX8RxQKXkS22ZRj0e+MkeStO5xc824I9x+4dwX0DWO
-         00t8rGLra4iC3n8p5YKKjyUPobc5KmYOpdLBm92jhxnIhFVnOUyYO/mzb46oJYrekD6U
-         hmug==
-X-Gm-Message-State: APjAAAWSM/AptSmonwucVbEWpLXHL7x67xIXdkAJ5jEAlce6ZOIerdGg
-        fD6pcVQP9RkR7xwBf8YXZYgE/spW
-X-Google-Smtp-Source: APXvYqxQpZSCnRWgO07QQjTkLnxT1f+sOw6/HeSxPP+VGu4ipK/vezwcHwADfcg1x2dJ2mXLXhKwOA==
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr6362924ljk.201.1580485137587;
-        Fri, 31 Jan 2020 07:38:57 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a10sm4761180lfr.94.2020.01.31.07.38.56
+        bh=sppSJ27WOAOq8bLtj1YH2mlQeo3KTk4dV43H9seuSsk=;
+        b=GmalxrSSpGijlq1XGhQoO/iNAiY4W4YPFFOvVytGiC9p4MbMFC0wYbRkKFdVVKN3Fy
+         ae9gv8vBrFhs88ZDdQdlQkYTZDvEB/rVbPaUb+h0fnUKvnOKaHXe7d3hddUJZhTiAgdj
+         KsKSuA5OhuhmT1TvsTj+vXNpKegy/1lBFvGR9IDfDRP6Yoxxy+G/qmjIeKpsAxm0COzU
+         Bvc/b7Bo7fjGTcdoGbj3UGssQxXzIwLa77moKpTWTcCLXJPtlsjhQdejPQQS4QxnPDjC
+         swUSpdm0VefCMVF2QsBgI/W+ByO9GfMgqssMLr5Bxpstb5Q+vkqIhGiymovB+n3lMLbf
+         NnOQ==
+X-Gm-Message-State: APjAAAVgVdLGSxd3JDiCIwpuSTWxg+0oCid09T9ZIMnZVxL8XD+TgcxQ
+        igueepH1c/OJit0FCWBk1ikqCW85lWA=
+X-Google-Smtp-Source: APXvYqzJPXA9+M7o11flsX6E8Taexa2QTUIkYHozFJgT/PdrSjqe4SlmV/J/LxeOs/ePruCdWOceUw==
+X-Received: by 2002:a92:cc04:: with SMTP id s4mr3165379ilp.193.1580485188246;
+        Fri, 31 Jan 2020 07:39:48 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f76sm3278848ild.82.2020.01.31.07.39.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 07:38:57 -0800 (PST)
-Subject: Re: [PATCH] Revert "ASoC: tegra: Allow 24bit and 32bit samples"
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200131091901.13014-1-jonathanh@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2bb53d7d-2d36-e16e-5858-24360b19f936@gmail.com>
-Date:   Fri, 31 Jan 2020 18:38:54 +0300
+        Fri, 31 Jan 2020 07:39:47 -0800 (PST)
+Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20200131142943.120459-1-sgarzare@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+Date:   Fri, 31 Jan 2020 08:39:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200131091901.13014-1-jonathanh@nvidia.com>
+In-Reply-To: <20200131142943.120459-1-sgarzare@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.01.2020 12:19, Jon Hunter пишет:
-> Commit f3ee99087c8ca0ecfdd549ef5a94f557c42d5428 ("ASoC: tegra: Allow
-> 24bit and 32bit samples") added 24-bit and 32-bit support for to the
-> Tegra30 I2S driver. However, there are two additional commits that are
-> also needed to get 24-bit and 32-bit support to work correctly. These
-> commits are not yet applied because there are still some review comments
-> that need to be addressed. With only this change applied, 24-bit and
-> 32-bit support is advertised by the I2S driver, but it does not work and
-> the audio is distorted. Therefore, revert this patch for now until the
-> other changes are also ready.
+On 1/31/20 7:29 AM, Stefano Garzarella wrote:
+> Hi Jens,
+> this is a v2 of the epoll test.
 > 
-> Furthermore, a clock issue with 24-bit support has been identified with
-> this change and so if we revert this now, we can also fix that in the
-> updated version.
+> v1 -> v2:
+>     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
+>     - add 2 new tests to test epoll with IORING_FEAT_NODROP
+>     - cleanups
 > 
-> Cc: stable@vger.kernel.org
+> There are 4 sub-tests:
+>     1. test_epoll
+>     2. test_epoll_sqpoll
+>     3. test_epoll_nodrop
+>     4. test_epoll_sqpoll_nodrop
 > 
-> Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
+> In the first 2 tests, I try to avoid to queue more requests than we have room
+> for in the CQ ring. These work fine, I have no faults.
 
-Thanks, Jon!
+Thanks!
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
+> much as I can until I get a -EBUSY, but they often fail in this way:
+> the submitter manages to submit everything, the receiver receives all the
+> submitted bytes, but the cleaner loses completion events (I also tried to put a
+> timeout to epoll_wait() in the cleaner to be sure that it is not related to the
+> patch that I send some weeks ago, but the situation doesn't change, it's like
+> there is still overflow in the CQ).
+> 
+> Next week I'll try to investigate better which is the problem.
 
-Ben, looking forward to have 24bit working in 5.7 :)
+Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
+you just pruned the CQ ring but didn't flush the internal side.
+
+> I hope my test make sense, otherwise let me know what is wrong.
+
+I'll take a look...
+
+> Anyway, when I was exploring the library, I had a doubt:
+> - in the __io_uring_get_cqe() should we call sys_io_uring_enter() also if
+>   submit and wait_nr are zero, but IORING_SQ_NEED_WAKEUP is set in the
+>   sq.kflags?
+
+It's a submission side thing, the completion side shouldn't care. That
+flag is only relevant if you're submitting IO with SQPOLL. Then it tells
+you that the thread needs to get woken up, which you need io_uring_enter()
+to do. But for just reaping completions and not needing to submit
+anything new, we don't care if the thread is sleeping.
+
+-- 
+Jens Axboe
+
