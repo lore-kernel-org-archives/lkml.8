@@ -2,92 +2,115 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0712EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD24C206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDF6206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:25:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VG8389gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgAaPZP convert rfc822-to-8bit (ORCPT
+        id S1729159AbgAaPZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:25:15 -0500
-Received: from mail.fireflyinternet.com ([77.68.26.236]:61171 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728839AbgAaPZO (ORCPT
+        Fri, 31 Jan 2020 10:25:52 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:41954 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728893AbgAaPZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:25:14 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20074443-1500050 
-        for multiple; Fri, 31 Jan 2020 15:24:14 +0000
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <1426784902-125149-10-git-send-email-kirill.shutemov@linux.intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>, Mel Gorman <mgorman@suse.de>,
-        Rik van Riel <riel@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@gentwo.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Steve Capper <steve.capper@linaro.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Jerome Marchand <jmarchan@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <1426784902-125149-1-git-send-email-kirill.shutemov@linux.intel.com>
- <1426784902-125149-10-git-send-email-kirill.shutemov@linux.intel.com>
-Message-ID: <158048425224.2430.4905670949721797624@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH 09/16] page-flags: define PG_reserved behavior on compound pages
-Date:   Fri, 31 Jan 2020 15:24:12 +0000
+        Fri, 31 Jan 2020 10:25:52 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BA005C057A;
+        Fri, 31 Jan 2020 15:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1580484350; bh=lcoAa7VqB7NirC/myBLSakmDMyizo7a5wkGDAM+kf6o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VG8389gwPt2jxUvak4Q/mO0PJL4zFYZ8vps2aU3Fxc0gNehr4yzHohQCQnqpjDzW/
+         Qv1s4O5yezqNsKZhqXMOSCXHxhODPjwNYM/1TZ+zohajwGZJulK5ASGHMPFO1Tfoiy
+         6M3gd3nf7uATlmFCmqoMI/SvVGyTg5RC37x2IbzPn4qmfXh3/CZ6FBfoMrIFUANGw3
+         mMvSE4dbTNXDnxzxwNKB8RZZkHnzYc3nu5YsakhNr4G1KvHK8hWNQuIaR6SKugHrix
+         /aMlACJzvYtk9vqGtyVozc9Mf3WKsVuIqnHpFSiLNyMJM6VXiEZZ9HFn67VEjeHNif
+         RWj/uI+QkfF2Q==
+Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 1D905A0064;
+        Fri, 31 Jan 2020 15:25:40 +0000 (UTC)
+From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Subject: [PATCH] Kernel selftests: tpm2: check for tpm support
+Date:   Fri, 31 Jan 2020 18:25:23 +0300
+Message-Id: <20200131152523.4442-1-Nikita.Sobolev@synopsys.com>
+X-Mailer: git-send-email 2.16.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kirill A. Shutemov (2015-03-19 17:08:15)
-> As far as I can see there's no users of PG_reserved on compound pages.
-> Let's use NO_COMPOUND here.
+tpm2 tests set fails if there is no /dev/tpm0 and /dev/tpmrm0
+supported. Check if these files exist before run and mark test as
+skipped in case of absence.
 
-Much later than you would ever expect, but we just had a user update an
-ancient device and trip over this.
-https://gitlab.freedesktop.org/drm/intel/issues/1027
+Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+---
+ tools/testing/selftests/tpm2/test_smoke.sh | 13 +++++++++++--
+ tools/testing/selftests/tpm2/test_space.sh |  9 ++++++++-
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-In drm_pci_alloc() we allocate a high-order page (for it to be physically
-contiguous) and mark each page as Reserved.
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 8155c2ea7ccb..b630c7b5950a 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,8 +1,17 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++self.flags = flags
+ 
+-python -m unittest -v tpm2_tests.SmokeTest
+-python -m unittest -v tpm2_tests.AsyncTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++
++if [ -f /dev/tpm0 ] ; then
++	python -m unittest -v tpm2_tests.SmokeTest
++	python -m unittest -v tpm2_tests.AsyncTest
++else
++	exit $ksft_skip
++fi
+ 
+ CLEAR_CMD=$(which tpm2_clear)
+ if [ -n $CLEAR_CMD ]; then
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index a6f5e346635e..180b469c53b4 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,4 +1,11 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
+-python -m unittest -v tpm2_tests.SpaceTest
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++if [ -f /dev/tpmrm0 ] ; then
++	python -m unittest -v tpm2_tests.SpaceTest
++else
++	exit $ksft_skip
++fi
+-- 
+2.16.2
 
-        dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size,
-                                         &dmah->busaddr,
-                                         GFP_KERNEL | __GFP_COMP);
-
-        /* XXX - Is virt_to_page() legal for consistent mem? */
-        /* Reserve */
-        for (addr = (unsigned long)dmah->vaddr, sz = size;
-             sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
-                SetPageReserved(virt_to_page((void *)addr));
-        }
-
-It's been doing that since
-
-commit ddf19b973be5a96d77c8467f657fe5bd7d126e0f
-Author: Dave Airlie <airlied@linux.ie>
-Date:   Sun Mar 19 18:56:12 2006 +1100
-
-    drm: fixup PCI DMA support
-
-I haven't found anything to say if we are meant to be reserving the
-pages or not. So I bring it to your attention, asking for help.
-
-Thanks,
--Chris
