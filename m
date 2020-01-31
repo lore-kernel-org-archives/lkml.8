@@ -2,92 +2,101 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2456C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F618C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC37214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F70214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pGR3WMix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgAaQOe (ORCPT
+        id S1729292AbgAaQP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:14:34 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39336 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgAaQOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:14:33 -0500
-Received: by mail-yw1-f67.google.com with SMTP id h126so5200686ywc.6;
-        Fri, 31 Jan 2020 08:14:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ckkf5M0bZXgaGqlYIu11/GGEFF4eIcF87GnyR7xW+c0=;
-        b=cGd43aZbv57vw61B3V6vfMWOQ0mNvESafKj+z9r7ImDRvuY+DkltNfTrvnjkLA1o2r
-         +f5bNiGPda0ubBk/7Yho7UHSGR7fhGeEpaOQI+1jxiPDJyPxGvHptunYoHs+whILJ7EE
-         wA2WsWLwEHbUxkjvgkOSa4IzTyQVDPH4hM8+2U4x50UXmfoIDnT0Oa1LlqZVcahZrlBK
-         8hEgn18X5Gs2klsJDzj9eN4HaO5rkKkxUyAjPjKtN+oDIkxajVHHqDlC4iGduLLL9W+b
-         r3RhohFpcrG0IIvefKmYgKDwZtmejP+8Pmw816I29jze++DsRdmJD+ok5cX3//IQ0XEI
-         H8Cg==
-X-Gm-Message-State: APjAAAWWK6gslHKNke1ocqoOIs1MvQgSNVQg/odkQsBvq0Q5GDOiedFs
-        dDLXHP+Du5GPwYB7sRw/G2m3etZQugfy5QkLDbM=
-X-Google-Smtp-Source: APXvYqzHv7OSupQXVjxZlorlsa6kLoBz0HtstylMdgrlwaBD07wmACPCSgavnPQHHtRYuqpT3DEKP9R6/j1ceut6v1g=
-X-Received: by 2002:a25:c784:: with SMTP id w126mr9036069ybe.14.1580487272811;
- Fri, 31 Jan 2020 08:14:32 -0800 (PST)
+        Fri, 31 Jan 2020 11:15:29 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:1820 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729162AbgAaQP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:15:29 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 488Mkw26tmz9vBmL;
+        Fri, 31 Jan 2020 17:15:20 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=pGR3WMix; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WdDgEsSDAfbI; Fri, 31 Jan 2020 17:15:20 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 488Mkw10dPz9vBmJ;
+        Fri, 31 Jan 2020 17:15:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580487320; bh=o5yWGjXEXWXnjLbutHUQSZ+G5ebY4nbrRZo8BmI5TZc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pGR3WMixkkpS91gWzrasTrWX98G3LrXQa6v5NyT59rI0vfjifEhWnAUX/caZAB9TZ
+         yHdYn12Fdl4/hf0LpABTzyaGcxj9QbMhaQV2kh4LKV9cqMfJOrCAyFrA0LXr/xndfS
+         KpddG7pYFUmX5Oz937DzgbEVVnQAdbvSCNx9xyCw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ADB908B8B9;
+        Fri, 31 Jan 2020 17:15:21 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id SmoWZXSwTTAa; Fri, 31 Jan 2020 17:15:21 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30D9C8B8B4;
+        Fri, 31 Jan 2020 17:15:21 +0100 (CET)
+Subject: Re: [PATCH] powerpc/32s: Don't flush all TLBs when flushing one page
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <e31c57eb5308a5a73a5c8232454c0dd9f65f6175.1580485014.git.christophe.leroy@c-s.fr>
+ <20200131155150.GD22482@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <27cef66b-df5b-0baa-abac-5532e58bd055@c-s.fr>
+Date:   Fri, 31 Jan 2020 17:15:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <1580466455-27288-1-git-send-email-harini.katakam@xilinx.com>
- <1580466455-27288-3-git-send-email-harini.katakam@xilinx.com> <29c67f4f-9dd9-3786-689f-c0b6eeb40f49@microchip.com>
-In-Reply-To: <29c67f4f-9dd9-3786-689f-c0b6eeb40f49@microchip.com>
-From:   Harini Katakam <harinik@xilinx.com>
-Date:   Fri, 31 Jan 2020 21:44:20 +0530
-Message-ID: <CAFcVEC+sg++cQuB-tEzC4DDgYwd1nTHyA=R7CGkrjCOCAbkroQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] net: macb: Limit maximum GEM TX length in TSO
-To:     Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Cc:     Harini Katakam <harini.katakam@xilinx.com>,
-        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200131155150.GD22482@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Claudiu,
 
-On Fri, Jan 31, 2020 at 8:27 PM <Claudiu.Beznea@microchip.com> wrote:
->
->
->
-> On 31.01.2020 12:27, Harini Katakam wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> > GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
-> > TSO with full 14bits of length field in payload descriptor. But an IP
-> > errata causes false amba_error (bit 6 of ISR) when length in payload
-> > descriptors is specified above 16387. The error occurs because the DMA
-> > falsely concludes that there is not enough space in SRAM for incoming
-> > payload. These errors were observed continuously under stress of large
-> > packets using iperf on a version where SRAM was 16K for each queue. This
-> > errata will be documented shortly and affects all versions since TSO
-> > functionality was added. Hence limit the max length to 0x3FC0 (rounded).
-> >
-> > Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-> > ---
-<snip>
-> > -               bp->max_tx_length = GEM_MAX_TX_LEN;
-> > +               bp->max_tx_length = min(GEM_MAX_TX_LEN, GEM_MAX_TX_LEN_ERRATA);
->
-> Isn't this always resolved to GEM_MAX_TX_LEN_ERRATA?
 
-Sorry, yes it does. I accidentally concluded that this was
-version specific. Will just default to 0x3fc0 in v2.
-Thanks for the review.
+Le 31/01/2020 à 16:51, Segher Boessenkool a écrit :
+> On Fri, Jan 31, 2020 at 03:37:34PM +0000, Christophe Leroy wrote:
+>> When the range is a single page, do a page flush instead.
+> 
+>> +	start &= PAGE_MASK;
+>> +	end = (end - 1) | ~PAGE_MASK;
+>>   	if (!Hash) {
+>> -		_tlbia();
+>> +		if (end - start == PAGE_SIZE)
+>> +			_tlbie(start);
+>> +		else
+>> +			_tlbia();
+>>   		return;
+>>   	}
+> 
+> For just one page, you get  end - start == 0  actually?
+> 
+> 
 
-Regards,
-Harini
+Oops, good catch.
+
+Indeed you don't get PAGE_SIZE but (PAGE_SIZE - 1) for just one page.
+
+Christophe
