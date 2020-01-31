@@ -2,206 +2,470 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A72EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895AEC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0429920705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFCD20661
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FzlQGopF"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gLm+8wb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgAaPPh (ORCPT
+        id S1729126AbgAaPQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:15:37 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45318 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728884AbgAaPPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:15:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fUzcLt1w8L5s5llRSy1j27VyWBjiLhyEjBx40n8W3+o=; b=FzlQGopFPJOGf9T46YHaOuddN
-        cE5FFi5V+RCR+2KpCIBUCn4TBTV2Puo9C43lUthvzPpAaVar0u6NH0UhmWGKekRiJjW0Nmhyngm35
-        7QbTZcJnBehM5MCNqM3WDTlv7EDEM9rpD1lkOMKbWw/Hq5Dz4iyl/gHJiRTAAFlvdxbihcdRUCgyf
-        +wohrVKl7MV8E5fp54jcUXnzfpuIMmTZ/ZIJi+vaK6d2ASrZMijt77gBtxdkcFvk7AzNK2I9gbuc2
-        WULf+b6tMpbDgNjXDgUdSioxT/npE1at3tCaTtmK1uix5YnFJz3iyy+WhiUkuXfDVA4JGaIqZ8q3x
-        giOjydUig==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:41666)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ixY0i-0001TG-1j; Fri, 31 Jan 2020 15:15:08 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ixY0a-0005Uz-Qq; Fri, 31 Jan 2020 15:15:00 +0000
-Date:   Fri, 31 Jan 2020 15:15:00 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Message-ID: <20200131151500.GO25745@shell.armlinux.org.uk>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
- <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
- <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
- <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
- <20200131142906.GG9639@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Fri, 31 Jan 2020 10:16:33 -0500
+Received: from mail-eopbgr30080.outbound.protection.outlook.com ([40.107.3.80]:41170
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728971AbgAaPQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 10:16:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R7pj7lcZSjwBMOtJVhDW7u644RIrJTFrSUu4kZEsuQJ7pmCDd9NC16/xJJI9YgAmxALS3erFPrWFNYWgoj0h2CCf+yQjsZNviKJA07tZBzCV0sDqsEoVgQIslSZWDUxJ/kpMfpuAzTeQlBD7cSlpOiGsNPpPWux525YCfakucRvyvtfGPhKbTKDUJjL8gI3FS1HBqmxCSk9lkP0cjIQxVDJ7dIiZyWYJ/c9StLpxjnjQwETISph73W9+6yhyoBSkrZ20jF5JhiHumJhFhzDe/4cuRWkJvVwfDmyDIENtBntPiEXEqhMV43traBoIrB/187fRcb/BgzI0cJtu0pJ4Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZfZ6VzTUNFiOeSWJy8GwKUZOg21u0TjvGwZDZKVbkX8=;
+ b=PSN0VKAWqDLe7+lL3jeyxAsPvZCzfeiR3bTFKJN50WHiwIP+jvsY/LQhmOKaSzd7n2WIiU4B0Doyhrn3HmsmIubwFxKM80yZGGkppoWgn/gJ7F9R/KBSr0NOQ5pBrcptQkUe+2DEmmKkuLlRE6jCAKhCSoEcHEf9dEjGEztn5FLkrBTZPgIv29gzGvNhTFtbB1y0ydbndf6yeKOkZrqF9l8OPN/4uJXkXUtGFHHh9fTEjiyZwW2CQXdXgWVQaRVwO9qxqA52scEldiLtOKrvE1jbXWb7iDsHSRiJl7hgptZ1dBeUqNy5nxaaTzVw+cW44rnW/Ti/OqZ/G+/NH+sJSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZfZ6VzTUNFiOeSWJy8GwKUZOg21u0TjvGwZDZKVbkX8=;
+ b=gLm+8wb76Y4Lew41HRMo/tMNtUIqi3GENQRozM9psqs07CdYwTX7k2UFeVEGoC7KPE7/76TB27mWhgVPpzx5Qkgor04kQzys4NOjFwZBmBpu7TQQaX+O4PAz7zfqyA6G4fhwJoFM+krS+PIYjWMS8+zMu+KDsHhEYuZqPFvqW/w=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5262.eurprd05.prod.outlook.com (20.178.10.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Fri, 31 Jan 2020 15:16:26 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2686.025; Fri, 31 Jan 2020
+ 15:16:26 +0000
+Date:   Fri, 31 Jan 2020 11:16:22 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Message-ID: <20200131151622.GA1392@ziepe.ca>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
-In-Reply-To: <20200131142906.GG9639@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0042.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0042.namprd02.prod.outlook.com (2603:10b6:207:3d::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.26 via Frontend Transport; Fri, 31 Jan 2020 15:16:26 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1ixY1u-000188-IV; Fri, 31 Jan 2020 11:16:22 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5e7c98e1-fbe7-4e10-db05-08d7a6608a36
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5262:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB5262EE8254D7207423AA1C84CF070@VI1PR05MB5262.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:16;
+X-Forefront-PRVS: 029976C540
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(199004)(189003)(5660300002)(21480400003)(86362001)(36756003)(2906002)(8936002)(66946007)(66556008)(66476007)(81156014)(81166006)(44144004)(33964004)(186003)(26005)(30864003)(478600001)(9686003)(33656002)(9786002)(9746002)(66574012)(4326008)(8676002)(1076003)(52116002)(316002)(110136005)(24400500001)(2700100001)(473944003)(414714003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5262;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: B/0S7FM+mH86TrHNlsVgbb8dwZD6dCgeVldZq4YeFGnhz09mFtQtswWxjagOWUZgm42TAQrhv54I0EIjtdxRfN8KLa/C/j4bF7iuFFPjNUggmP9UAGfPKbxqrWbqGokO4BYRlDnE59+ipOX3J99fbrTflcDxACSvOtCaOWuFoBHfFng7M9sbspjMpelpCEaW/uzxFj4v++L2OJr5qSM/8HsgU2RIFq3aUpDH5vS0dzDXtSUAf6GW/K0drvMkuEEK7CX3SeTvotMHZQde0iphCb9W5rphq1DgTPi2kSi6Om7VrMxK+Dy0Fh+7/5icKd7ZzMdLsIHhf6FOFhF5yiGu+sx8qDS/ettWyp7gL0ut6jmPyh/ZHB6QPcscb7edh9Tg8IvVoFKRzO4V7MLc6/42LkO0YlOBNXbKGC+o8UrDsRcDSn71ZWE2XyY38FX6QovxAnZS9EREl2BarqqTVPQEwpwhCb0SOqXDsNr5dTXirz8YmvFWp1aaC/B73ry8EIBtGX50c57UmbHBVQ3g9tnpTBXcvMpprB9fuH4wftzApHuiY2ffhzu+5V/OZgZusE4o7zKN2aHpqgKTGVwoM/+Law==
+X-MS-Exchange-AntiSpam-MessageData: ipaRcEZkmGVlOY9av8wgK00MD5R3AVilTRnjKxK3pvMEuELDwfssTj+K3Axnq8k+MzBr0cEIrcJI1fC4GHKtj+/PBryQGXilqNHG/aKarQzKH9FBCY25FbVlAl6c5b0eIpa+ULk0boiGOH53NOVEqA==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e7c98e1-fbe7-4e10-db05-08d7a6608a36
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2020 15:16:26.5994
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wyeXL6PXMgYbMw9LTUPVM5TRfWl8HPZZWMX4hUcNGFv5OwJr3el/Mqkb3cKCW3zuxQ3eX09tzwhVcyocxTP8xQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5262
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 03:29:06PM +0100, Andrew Lunn wrote:
-> > > But by design SFP, SFP+, and QSFP cages are not fixed function network
-> > > adapters.  They are physical and logical devices that can adapt to
-> > > what is plugged into them.  How the devices are exposed should be
-> > > irrelevant to this conversation it is about the underlying
-> > > connectivity.
-> > 
-> > Apologies - I was under the impression that SFP and friends were a
-> > physical-layer thing and that a MAC in the SoC would still be fixed such
-> > that its DMA and interrupt configuration could be statically described
-> > regardless of what transceiver was plugged in (even if some configurations
-> > might not use every interrupt/stream ID/etc.) If that isn't the case I shall
-> > go and educate myself further.
-> 
-> Hi Robin
-> 
-> It gets interesting with QSFP cages. The Q is quad, there are 4 SERDES
-> lanes. You can use them for 1x 40G link, or you can split them into 4x
-> 10G links. So you either need one MAC or 4 MACs connecting to the
-> cage, and this can change on the fly when a modules is ejected and
-> replaced with another module.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think it's even more complicated than that.  If you have a QSFP+
-fiber module, that can be connected to four fibers which can either
-go to another QSFP+ module, or four separate SFP+ modules.
+Hi Linus,
 
-That means it's a manual configuration decision whether to operate
-the QSFP+ module as a single 40G link, or as four separate 10G links.
+These are the proposed RDMA patches for 5.6.
 
-> There are only one set of control pins
-> for i2c, loss of signal, TX disable, module inserted. So where the
-> interrupt/stream ID/etc are mapped needs some flexibility.
+A very quiet cycle with few notable changes. Mostly the usual list of one or
+two patches to drivers changing something that isn't quite rc worthy. The
+subsystem seems to be seeing a larger number of rework and cleanup style
+patches right now, I feel that several vendors are prepping their drivers f=
+or
+new silicon.
 
-QSFP changes the way the modules are controlled; gone are many of the
-hardware signals, replaced by registers in the I2C space.  The
-remaining hardware signals are:
+Thanks,
+Jason
 
-ModSelL	module select (to enable the I2C bus)
-ResetL	module reset
-SCL/SDA	I2C bus
-ModPrsL	module present
-IntL	interrupt (but not too useful from what I can see!)
-LPMode	low power mode (can be overriden via the I2C bus)
+The following changes since commit b2dfc6765e45a3154800333234e4952b5412d792:
 
-> There is also to some degree a conflict with hiding all this inside
-> firmware. This is complex stuff. It is much better to have one core
-> implementing in Linux plus some per hardware driver support, than
-> having X firmware blobs, generally closed source, each with there own
-> bugs which nobody can fix.
+  net/rds: Use prefetch for On-Demand-Paging MR (2020-01-18 11:48:19 +0200)
 
-QSFP and SFP support is not really part of the DPAA2 firmware.
+are available in the Git repository at:
 
-I have some prototype implementation for driving the QSFP+ cage, but
-I haven't yet worked out how to sensible deal with the "is it 4x 10G
-or 1x 40G" issue you mention above, and how to interface the QSFP+
-driver sensibly with one or four network drivers.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
-I've been concentrating more on the SFP/SFP+ problem on the Honeycomb
-board which is what most people will have, working out how to sensibly
-drive the hardware so that our existing SFP support in the kernel can
-work sensibly.  In the last couple of days, I've managed to get
-something together which works, switching between 1000base-X and SGMII
-on this hardware, using some of the patches I've already pointed to
-over the last few weeks.  This hardware falls into the "split PCS and
-MAC" problem space, so it's relevent to many people - and it's
-important that we don't rush into a solution that works for one
-implementation and not everyone.  This is why I haven't responded to
-Jose's proposal - I'm still working out what is required for others,
-but what I can say is that it isn't what Jose has proposed.  I had
-asked Jose to hold off, but he's understandably eager to solve the
-problem in front of him at the expense of everyone else.
+for you to fetch changes up to 8889f6fa35884d09f24734e10fea0c9ddcbc6429:
 
-What I've found is that any attempt to split the current
-"phylink_mac_ops" interface between the PCS and MAC blocks results, as
-I suspected, in mvneta and mvpp2 suffering very badly; the hardware
-does not split along those functional blocks at all well.
+  RDMA/core: Make the entire API tree static (2020-01-30 16:28:52 -0400)
 
-My current state of play for this is in my "cex7" branch, pushed out
-earlier today.  It's a bit hacky right now, and there's various issues
-that need to be solved, but it is functional with the right board boot
-configuration (basically the DPC file, which is one of the configs for
-the MC firmware.)
+----------------------------------------------------------------
+RDMA subsystem updates for 5.6
 
-I'm planning to look at what's required for the faster speeds; there's
-other PCS PHYs on this platform that support the other speeds (10G, 25G,
-40G, 100G) accessed via Clause 45 cycles.
+- Driver updates and cleanup for qedr, bnxt_re, hns, siw, mlx5, mlx4, rxe,
+  i40iw
 
-As for the DSA issue you've raised with DSA links, I don't see any
-obvious solution for that - the whole "if no fixed-link is specified,
-default to the highest speed" is a real problem; the conversion of DSA
-to phylink for the CPU and DSA ports did not take account of that.
-phylink has _zero_ information in that case to know how the link should
-be configured - there is no PHY, there is no fixed-link specification,
-there is absolutely nothing.  So it's no surprise when phylink tries to
-configure speed=0 duplex=half pause=off on these interfaces when they're
-brought up.  I notice that this work was contributed by NXP - and in my
-mind illustrates that they did not think about what they were doing
-there either.  They certainly never ran phylink with debugging on and
-considered whether the phylink_mac_config() calls contained sensible
-information.  Did they even have all the information necessary to work
-out what was required - I doubt it very much.  Did they realise that the
-fixed-link specification was optional, did they realise that there
-could be a PHY on these links, and did they consider what the behaviour
-would be in those cases?  And now we have something of a headache
-trying to work out how to solve this - one thing is certain, whatever
-the fix is, it isn't going to be nice to be backported to stable trees.
+- Larger series doing cleanup and rework for hns and hfi1.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+- Some general reworking of the CM code to make it a little more
+  understandable
+
+- Unify the different code paths connected to the uverbs FD scheme
+
+- New UAPI ioctls conversions for get context and get async fd
+
+- Trace points for CQ and CM portions of the RDMA stack
+
+- mlx5 driver support for virtio-net formatted rings as RDMA raw ethernet Q=
+Ps
+
+- verbs support for setting the PCI-E relaxed ordering bit on DMA traffic
+  connected to a MR
+
+- A couple of bug fixes that came too late to make rc7
+
+----------------------------------------------------------------
+Aditya Pakki (1):
+      RDMA/srpt: Remove unnecessary assertion in srpt_queue_response
+
+Arnd Bergmann (1):
+      IB/core: Fix build failure without hugepages
+
+Artemy Kovalyov (2):
+      IB/mlx5: Unify ODP MR code paths to allow extra flexibility
+      RDMA/umem: Fix ib_umem_find_best_pgsz()
+
+Avihai Horon (1):
+      IB/mlx5: Expose RoCE accelerator counters
+
+Bernard Metzler (1):
+      RDMA/siw: Simplify QP representation
+
+Chuck Lever (3):
+      RDMA/cma: Add trace points in RDMA Connection Manager
+      RDMA/core: Trace points for diagnosing completion queue issues
+      RDMA/core: Add trace points to follow MR allocation
+
+Danit Goldberg (2):
+      RDMA/cm: Use RCU synchronization mechanism to protect cm_id_private x=
+a_load()
+      IB/mlx5: Return the administrative GUID if exists
+
+Dillon Brock (1):
+      IB/opa_vnic: Spelling correction of 'erorr' to 'error'
+
+Eugene Crosser (1):
+      RDMA/mlx4: Redo TX checksum offload in line with docs
+
+Gal Pressman (4):
+      RDMA/efa: Device definitions documentation updates
+      RDMA/efa: Remove {} brackets from single statement if
+      RDMA/efa: Remove unused ucontext parameter from efa_qp_user_mmap_entr=
+ies_remove
+      RDMA/efa: Mask access flags with the correct optional range
+
+Grzegorz Andrejczuk (3):
+      IB/hfi1: Move common receive IRQ code to function
+      IB/hfi1: Decouple IRQ name from type
+      IB/hfi1: Return void in packet receiving functions
+
+Guoqing Jiang (1):
+      RDMA/core: Remove err in iw_query_port
+
+H=C3=A5kon Bugge (2):
+      RDMA/netlink: Do not always generate an ACK for some netlink operatio=
+ns
+      IB/mlx4: Fix leak in id_map_find_del
+
+Jack Morgenstein (1):
+      IB/mlx4: Fix memory leak in add_gid error flow
+
+Jason Gunthorpe (29):
+      RDMA/core: Fix locking in ib_uverbs_event_read
+      Merge branch 'mlx5_vdpa' into rdma.git for-next
+      RDMA/uverbs: Remove needs_kfree_rcu from uverbs_obj_type_class
+      RDMA/mlx5: Use RCU and direct refcounts to keep memory alive
+      RDMA/core: Simplify destruction of FD uobjects
+      RDMA/mlx5: Simplify devx async commands
+      RDMA/core: Do not allow alloc_commit to fail
+      RDMA/core: Make ib_ucq_object use ib_uevent_object
+      RDMA/core: Do not erase the type of ib_cq.uobject
+      RDMA/core: Do not erase the type of ib_qp.uobject
+      RDMA/core: Do not erase the type of ib_srq.uobject
+      RDMA/core: Do not erase the type of ib_wq.uobject
+      RDMA/core: Simplify type usage for ib_uverbs_async_handler()
+      RDMA/core: Remove the ufile arg from rdma_alloc_begin_uobject
+      RDMA/core: Make ib_uverbs_async_event_file into a uobject
+      RDMA/core: Use READ_ONCE for ib_ufile.async_file
+      Merge branch 'mlx5-next' into rdma.git for-next
+      RDMA/core: Add UVERBS_METHOD_ASYNC_EVENT_ALLOC
+      RDMA/core: Remove ucontext_lock from the uverbs_destry_ufile_hw() path
+      RDMA/uverbs: Add ioctl command to get a device context
+      Merge tag 'rds-odp-for-5.5' into rdma.git for-next
+      RDMA/core: Ensure that rdma_user_mmap_entry_remove() is a fence
+      RDMA/cm: Add accessors for CM_REQ transport_type
+      RDMA/cm: Use IBA functions for simple get/set acessors
+      RDMA/cm: Use IBA functions for swapping get/set acessors
+      RDMA/cm: Use IBA functions for simple structure members
+      RDMA/cm: Use IBA functions for complex structure members
+      RDMA/cm: Remove CM message structs
+      RDMA/core: Make the entire API tree static
+
+Jiaran Zhang (1):
+      RDMA/hns: Add support for extended atomic in userspace
+
+Jiewei Ke (1):
+      RDMA/rxe: Fix error type of mmap_offset
+
+Leon Romanovsky (4):
+      RDMA/cm: Delete unused CM LAP functions
+      RDMA/cm: Delete unused CM ARP functions
+      net/mlx5: Add RoCE accelerator counters
+      RDMA/cm: Add SET/GET implementations to hide IBA wire format
+
+Lijun Ou (7):
+      RDMA/hns: Remove unused function hns_roce_init_eq_table()
+      RDMA/hns: Update the value of qp type
+      RDMA/hns: Delete unnessary parameters in hns_roce_v2_qp_modify()
+      RDMA/hns: Fix coding style issues
+      RDMA/hns: Bugfix for posting a wqe with sge
+      RDMA/hns: Add interfaces to get pf capabilities from firmware
+      RDMA/hns: Get pf capabilities from firmware
+
+Michael Guralnik (7):
+      net/mlx5: Expose relaxed ordering bits
+      RDMA/uverbs: Verify MR access flags
+      RDMA/core: Add optional access flags range
+      RDMA/efa: Allow passing of optional access flags for MR registration
+      RDMA/uverbs: Add new relaxed ordering memory region access flag
+      RDMA/core: Add the core support field to METHOD_GET_CONTEXT
+      RDMA/mlx5: Set relaxed ordering when requested
+
+Michael J. Ruhl (1):
+      IB/hfi1: List all receive contexts from debugfs
+
+Michal Kalderon (1):
+      RDMA/qedr: Add kernel capability flags for dpm enabled mode
+
+Mike Marciniszyn (8):
+      IB/hfi1: Add accessor API routines to access context members
+      IB/rdmavt: Correct comments in rdmavt_qp.h header
+      IB/hfi1: Move chip specific functions to chip.c
+      IB/hfi1: Add fast and slow handlers for receive context
+      IB/hfi1: IB/hfi1: Add an API to handle special case drop
+      IB/hfi1: Create API for auto activate
+      IB/hfi1: Add software counter for ctxt0 seq drop
+      IB/hfi1: Add RcvShortLengthErrCnt to hfi1stats
+
+Nathan Chancellor (1):
+      IB/hfi1: Fix logical condition in msix_request_irq
+
+Parav Pandit (5):
+      IB/mlx5: Do reverse sequence during device removal
+      IB/core: Let IB core distribute cache update events
+      IB/core: Cut down single member ib_cache structure
+      IB/core: Rename event_handler_lock to qp_open_list_lock
+      RDMA/cma: Fix unbalanced cm_id reference count during address resolve
+
+Prabhath Sajeepa (1):
+      IB/mlx5: Fix outstanding_pi index for GSI qps
+
+Rao Shoaib (2):
+      Introduce maximum WQE size to check limits
+      RDMA/rxe: Compute the maximum sges and inline size based on the WQE s=
+ize
+
+Selvin Xavier (1):
+      RDMA/bnxt_re: Report more number of completion vectors
+
+Sergey Gorenko (1):
+      IB/srp: Never use immediate data if it is disabled by a user
+
+Weihang Li (1):
+      RDMA/hns: Remove some redundant variables related to capabilities
+
+Wenpeng Liang (2):
+      RDMA/hns: Avoid printing address of mtt page
+      RDMA/hns: Replace custom macros HNS_ROCE_ALIGN_UP
+
+Xi Wang (1):
+      RDMA/hns: Add support for reporting wc as software mode
+
+Xiyu Yang (1):
+      RDMA/i40iw: fix a potential NULL pointer dereference
+
+Yishai Hadas (5):
+      IB/core: Fix ODP get user pages flow
+      IB/core: Fix ODP with IB_ACCESS_HUGETLB handling
+      IB/mlx5: Extend caps stage to handle VAR capabilities
+      IB/mlx5: Introduce VAR object and its alloc/destroy methods
+      IB/mlx5: Add mmap support for VAR
+
+Yixian Liu (1):
+      RDMA/hns: Simplify the calculation and usage of wqe idx for post verbs
+
+Yixing Liu (1):
+      RDMA/hns: Remove redundant print information
+
+zhengbin (5):
+      RDMA/siw: use true,false for bool variable
+      IB/hfi1: use true,false for bool variable
+      IB/iser: use true,false for bool variable
+      RDMA/mlx4: use true,false for bool variable
+      RDMA/mlx5: use true,false for bool variable
+
+ drivers/infiniband/core/Makefile                   |    9 +-
+ drivers/infiniband/core/addr.c                     |    2 +-
+ drivers/infiniband/core/cache.c                    |  151 +--
+ drivers/infiniband/core/cm.c                       | 1000 ++++++++++------=
+----
+ drivers/infiniband/core/cm_msgs.h                  |  755 +--------------
+ drivers/infiniband/core/cma.c                      |   90 +-
+ drivers/infiniband/core/cma_trace.c                |   16 +
+ drivers/infiniband/core/cma_trace.h                |  391 ++++++++
+ drivers/infiniband/core/core_priv.h                |    3 +-
+ drivers/infiniband/core/cq.c                       |   27 +-
+ drivers/infiniband/core/device.c                   |   42 +-
+ drivers/infiniband/core/ib_core_uverbs.c           |    2 +
+ drivers/infiniband/core/nldev.c                    |    3 +-
+ drivers/infiniband/core/rdma_core.c                |  235 ++---
+ drivers/infiniband/core/rdma_core.h                |   45 +-
+ drivers/infiniband/core/sa_query.c                 |    4 +-
+ drivers/infiniband/core/trace.c                    |   14 +
+ drivers/infiniband/core/umem.c                     |    9 +-
+ drivers/infiniband/core/umem_odp.c                 |   22 +-
+ drivers/infiniband/core/uverbs.h                   |   48 +-
+ drivers/infiniband/core/uverbs_cmd.c               |  320 ++++---
+ drivers/infiniband/core/uverbs_ioctl.c             |   45 +-
+ drivers/infiniband/core/uverbs_main.c              |  301 ++----
+ drivers/infiniband/core/uverbs_std_types.c         |   44 +-
+ .../infiniband/core/uverbs_std_types_async_fd.c    |   52 +
+ drivers/infiniband/core/uverbs_std_types_cq.c      |   19 +-
+ drivers/infiniband/core/uverbs_std_types_device.c  |   38 +
+ drivers/infiniband/core/uverbs_uapi.c              |    7 +-
+ drivers/infiniband/core/verbs.c                    |   55 +-
+ drivers/infiniband/hw/bnxt_re/main.c               |    2 +-
+ drivers/infiniband/hw/efa/efa_admin_cmds_defs.h    |   37 +-
+ drivers/infiniband/hw/efa/efa_verbs.c              |   15 +-
+ drivers/infiniband/hw/hfi1/chip.c                  |  198 +++-
+ drivers/infiniband/hw/hfi1/chip.h                  |    8 +
+ drivers/infiniband/hw/hfi1/chip_registers.h        |    1 +
+ drivers/infiniband/hw/hfi1/common.h                |    3 +
+ drivers/infiniband/hw/hfi1/debugfs.c               |    2 +-
+ drivers/infiniband/hw/hfi1/driver.c                |  237 ++---
+ drivers/infiniband/hw/hfi1/file_ops.c              |   12 +-
+ drivers/infiniband/hw/hfi1/hfi.h                   |  195 +++-
+ drivers/infiniband/hw/hfi1/init.c                  |   87 +-
+ drivers/infiniband/hw/hfi1/msix.c                  |  106 ++-
+ drivers/infiniband/hw/hfi1/msix.h                  |    1 +
+ drivers/infiniband/hw/hfi1/rc.c                    |    2 +-
+ drivers/infiniband/hw/hfi1/trace_ctxts.h           |    2 +-
+ drivers/infiniband/hw/hfi1/trace_rx.h              |   15 +-
+ drivers/infiniband/hw/hfi1/vnic_main.c             |    2 +-
+ drivers/infiniband/hw/hns/hns_roce_cq.c            |    2 +
+ drivers/infiniband/hw/hns/hns_roce_device.h        |   44 +-
+ drivers/infiniband/hw/hns/hns_roce_hw_v1.c         |   51 +-
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c         |  874 +++++++++++------
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h         |  159 +++-
+ drivers/infiniband/hw/hns/hns_roce_main.c          |  106 ++-
+ drivers/infiniband/hw/hns/hns_roce_mr.c            |    4 +-
+ drivers/infiniband/hw/hns/hns_roce_qp.c            |   92 +-
+ drivers/infiniband/hw/i40iw/i40iw_main.c           |    2 +
+ drivers/infiniband/hw/mlx4/cm.c                    |   29 +-
+ drivers/infiniband/hw/mlx4/cq.c                    |   18 +-
+ drivers/infiniband/hw/mlx4/main.c                  |   20 +-
+ drivers/infiniband/hw/mlx4/qp.c                    |    4 +-
+ drivers/infiniband/hw/mlx5/devx.c                  |  159 ++--
+ drivers/infiniband/hw/mlx5/gsi.c                   |    3 +-
+ drivers/infiniband/hw/mlx5/ib_virt.c               |   28 +-
+ drivers/infiniband/hw/mlx5/main.c                  |  224 ++++-
+ drivers/infiniband/hw/mlx5/mem.c                   |   25 -
+ drivers/infiniband/hw/mlx5/mlx5_ib.h               |   38 +-
+ drivers/infiniband/hw/mlx5/mr.c                    |   81 +-
+ drivers/infiniband/hw/mlx5/odp.c                   |   44 +-
+ drivers/infiniband/hw/mlx5/qp.c                    |    4 +-
+ drivers/infiniband/hw/qedr/verbs.c                 |   13 +-
+ drivers/infiniband/sw/rdmavt/rc.c                  |    9 +-
+ drivers/infiniband/sw/rxe/rxe_param.h              |    7 +-
+ drivers/infiniband/sw/rxe/rxe_qp.c                 |   18 +-
+ drivers/infiniband/sw/rxe/rxe_verbs.h              |    2 +-
+ drivers/infiniband/sw/siw/siw.h                    |   26 +-
+ drivers/infiniband/sw/siw/siw_cm.c                 |    2 +-
+ drivers/infiniband/sw/siw/siw_cq.c                 |    2 +-
+ drivers/infiniband/sw/siw/siw_main.c               |    2 +-
+ drivers/infiniband/sw/siw/siw_qp.c                 |   13 +-
+ drivers/infiniband/sw/siw/siw_qp_rx.c              |    6 +-
+ drivers/infiniband/sw/siw/siw_qp_tx.c              |    2 +-
+ drivers/infiniband/sw/siw/siw_verbs.c              |   61 +-
+ drivers/infiniband/ulp/iser/iser_memory.c          |    2 +-
+ drivers/infiniband/ulp/iser/iser_verbs.c           |    2 +-
+ drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h   |    2 +-
+ drivers/infiniband/ulp/srp/ib_srp.c                |    3 +-
+ drivers/infiniband/ulp/srpt/ib_srpt.c              |    2 -
+ include/linux/mlx4/cq.h                            |    5 +
+ include/linux/mlx5/driver.h                        |    5 +
+ include/linux/mlx5/mlx5_ifc.h                      |   24 +-
+ include/rdma/ib_cm.h                               |   34 -
+ include/rdma/ib_verbs.h                            |   42 +-
+ include/rdma/iba.h                                 |  146 +++
+ include/rdma/ibta_vol1_c12.h                       |  213 +++++
+ include/rdma/rdmavt_qp.h                           |   22 +-
+ include/rdma/uverbs_named_ioctl.h                  |    6 +-
+ include/rdma/uverbs_std_types.h                    |   13 +-
+ include/rdma/uverbs_types.h                        |   34 +-
+ include/trace/events/rdma_core.h                   |  394 ++++++++
+ include/uapi/rdma/ib_user_ioctl_cmds.h             |   15 +
+ include/uapi/rdma/ib_user_ioctl_verbs.h            |   12 +
+ include/uapi/rdma/mlx5_user_ioctl_cmds.h           |   17 +
+ include/uapi/rdma/qedr-abi.h                       |   18 +-
+ 103 files changed, 4659 insertions(+), 3200 deletions(-)
+(diffstat from tag for-linus-merged)
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl40RMQACgkQOG33FX4g
+mxrd8A/+MqqUrK4CyZ4jjWFl61lX6986uCeFwh3FhRKzDhI0U3m1mBg7/5Hhrmwu
+7BQcxR0Ih5RgT51TXdFmhHKtldSkMFqCSokDVPAmuVofOrIIXuwxfrAERTfeHMIC
+VEyYYbVUfu4e8uceoSe9mF6+BXBJxENX4nYmjQGJN2H98+D6yRoIFpCdX4xWgWwJ
+zJNF08nbURG7plHIrV3ILN/Qcmg00MwYIYawuAWVYObrtpPs+5TM7QxMAsfC9PWZ
+BWu3vbel8JPOhwivPwBv0ut3ELrfWW9cyrityiMBl5hnOTlKnTa2uVo4YDg+zlq6
+mTGOkTcvDcK4bknYrjm0W7VK3HxZNhkwDL6KHUUeCTxT43vxou2LDzcwcxdqemuc
+BC7ui1egJQqotm3rZDe6fSYuRjXMhxGmcL5ue6Aciqyb2drPLGj5kEzoNjFdBrlt
+bYKIio7nP2jRBgcYAcD60bOHEVPtmbVHeyjXdfx6Sc3xoZMNLzrvkLIaKrED2gHA
+QBeL7x3W3wn9sA/w34iBV5OlbF40wPFCH6MDu6LxN7bZq3CcOt0dCFfY8NZl7TkF
+tj9FFvi48c/4IzabQj/NerMMT/vqV3GDYH9KoN2hkTl6trfM1M5x8HhR0CABQ6QA
+CU+Co64cz2BsTaTYpQ3FcNMYGlCYyMGFN3JVRTyey3yGZrvHBmU=
+=abRo
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
