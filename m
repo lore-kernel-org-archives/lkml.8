@@ -8,192 +8,122 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A528C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53AFC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049D9206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D6721734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AraOrygP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBTQCCZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgAaIc1 (ORCPT
+        id S1728175AbgAaIgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:32:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36255 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbgAaIc1 (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:32:27 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so7603849wru.3
-        for <Linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 00:32:26 -0800 (PST)
+        Fri, 31 Jan 2020 03:36:23 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51688 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgAaIgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 03:36:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so6939416wmi.1;
+        Fri, 31 Jan 2020 00:36:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+qMfTROjHoWeyXe9kiOwtSb5udJw382aKy2z1ykz+mI=;
-        b=AraOrygPgu/RzIW/L2QmuXlu8B+LsXuMZEO2E2UVEZmktB2ZW/G6hNtJ7vnnccKxmS
-         Lr5d6byXxJSQMYUr3FdVQPMsVPz10B77wUs1NxclI70VTNeN9Y2xQh5DRnoFcsZvg51u
-         PljtO9B38/BCV5n3joJDXhNrNeHhnU70Ai9MR0WodChlgOu9e7Z2qcWYxkOQpYyEqIlM
-         f4GCCKEuQLPSLQMkDBrDHAorDnnOo8A9oKjaRGOG0sgbriY33Kq+f8lm1m83pgR3FWL+
-         Wvyq5mMuPHrSaQUDi9MuK73dpsPLE13OcfunIpnf8DC9DnINlTv82gZ2D9wFNc9q/vW+
-         gLCA==
+        bh=r9k5Bfs5SLrPsJzI/LbYVUmLiovQ4hXieUcsFHRvOXU=;
+        b=oBTQCCZl6HplkcZDKbu3+NzYhXLJuNULp1zS6+CwIRvpDg0xYKFBauS6e8MzA2ZI7A
+         i0P21q00Sw9LIbhcI5+7DZ13OmO/1gR99ybGGrjEOBzyoc605fKuYCtXubjy3ENmq+KN
+         zZWCCIczHExJ998WPxskWKkHJayjEPMub9F0jmRRVUd+ysils9+WN77w4H7HMX2Ud3fw
+         5DLDU0FaCCjcFE3V9x3eCbY9fhiBMmmhl+sahtVAGCM13igj3gyV8eV0Tud6Yx0R4d7Y
+         q8kLy8058nALXbUkhsbCWiNz9BfRDIP7JNxp/3NsTfmiLQ3ba5mdRQDvbZ+eARcNMWDG
+         y7JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+qMfTROjHoWeyXe9kiOwtSb5udJw382aKy2z1ykz+mI=;
-        b=Dp2EESHNSkfOTMYaCdc0n9xKxcp3Qu7K4ZxpcD5lrYSIIIX1VEbONUl5aou7GvkB3s
-         TyFEL66Td+QdEMUHMmMxfYxNksl8jxNKW/H6alfV709l5S9Ykc8+AO9nxVzl82EUYc6m
-         1pke/YAN6HlbfF6GKEk64DeI39lA7jCJxaQyBYfyHk0FISljGvYqSzD6OQAeSty8DVfv
-         u0ar0yUUXZSCutf/Y0ktNtlH53rAy9Ps17iqHLP91Z5l20ilSN1Rs1l+IflAAmTqoxTa
-         FHnFi6tXEU0dtsPdTwFSj8sOHx2ioH3pY5jcnYqr9GUMdSWywzR1s36e2/eGwtZumgwh
-         vVtw==
-X-Gm-Message-State: APjAAAWYgs2Wv+botTaH4P1mBePsWcQARikhfzuETVEQvc7pN8iLiSsv
-        UXE5F4D8Ujt1dme70pZJJWCLTWOHjys=
-X-Google-Smtp-Source: APXvYqyRzDYAggdfzuv2AmRPB87twZEKSQBqC6CRnQWGVp9ikhJPZynT4gn0d5Wi8YGXoIGefDVifQ==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr10700133wrv.197.1580459545440;
-        Fri, 31 Jan 2020 00:32:25 -0800 (PST)
+        bh=r9k5Bfs5SLrPsJzI/LbYVUmLiovQ4hXieUcsFHRvOXU=;
+        b=EJ56v2NXgKtf4sGvV7EOvIDmouUB/GODRnPjC6SjiTPmunac5hJb1RYOQjfI8eSmey
+         CNdDkFFZpqkRs2mbLdeSowTuc8t7Le29RtdRBzXfTwCf3F5Ze9Yjgpbm3f0yExWZsfmM
+         tpggF00ZXYdLXj6CKpbZob7rgvy+4RgiJMo08eCTvoPipqGsei/tEtV67CEEeLWsgu3N
+         /t1fx0u5NSRAtICsSz7cWQ2Y//9nsYES4G/d6OaEmq2bPquZWodGPrB0wAvXqXCb8weA
+         lpJKe7dBtchlNASjzrpjMOk1k7JIsekASTaI3zz9MVrfl7K2EAMAoqOS4K4zlNVqwKHD
+         XdJg==
+X-Gm-Message-State: APjAAAUe3qj8j7q41b9Iy7pknC567JE86oxzKaWXWCDxrpE/ETd8vG4y
+        Humd0cqtZ+BAuV1aDCCYPCs=
+X-Google-Smtp-Source: APXvYqyn06/qdNRwbp6v9OznwKKaB4XjqdQ4MBCtVALUWPvoYrd2k6XfESJ5l5yfGK+m6cVK6uaN2w==
+X-Received: by 2002:a1c:df09:: with SMTP id w9mr10106792wmg.143.1580459781168;
+        Fri, 31 Jan 2020 00:36:21 -0800 (PST)
 Received: from quaco.ghostprotocols.net (catv-212-96-54-169.catv.broadband.hu. [212.96.54.169])
-        by smtp.gmail.com with ESMTPSA id l17sm10578777wro.77.2020.01.31.00.32.24
+        by smtp.gmail.com with ESMTPSA id u8sm9931320wmm.15.2020.01.31.00.36.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:32:24 -0800 (PST)
+        Fri, 31 Jan 2020 00:36:20 -0800 (PST)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6499440A7D; Fri, 31 Jan 2020 09:32:23 +0100 (CET)
-Date:   Fri, 31 Jan 2020 09:32:23 +0100
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v5 1/4] perf util: Move block_pair_cmp to block-info
-Message-ID: <20200131083223.GF3841@kernel.org>
-References: <20200128125556.25498-1-yao.jin@linux.intel.com>
- <20200128125556.25498-2-yao.jin@linux.intel.com>
+        id 6E07840A7D; Fri, 31 Jan 2020 09:36:19 +0100 (CET)
+Date:   Fri, 31 Jan 2020 09:36:19 +0100
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v2] perf test: Fix test trace+probe_vfs_getname.sh
+Message-ID: <20200131083619.GG3841@kernel.org>
+References: <20200120132011.64698-1-tmricht@linux.ibm.com>
+ <20200120132011.64698-3-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200128125556.25498-2-yao.jin@linux.intel.com>
+In-Reply-To: <20200120132011.64698-3-tmricht@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jan 28, 2020 at 08:55:53PM +0800, Jin Yao escreveu:
-> block_pair_cmp() is a function which is used to compare
-> two blocks. Moving it from builtin-diff.c to block-info.c
-> to let it can be used by other builtins.
+Em Mon, Jan 20, 2020 at 02:20:11PM +0100, Thomas Richter escreveu:
+> This test places a kprobe to function getname_flags() in the kernel
+> which has the following prototype:
 > 
->  v4/v5:
->  ------
->  No change.
+>   struct filename *
+>   getname_flags(const char __user *filename, int flags, int *empty)
 > 
->  v3:
->  ---
->  Separate it from original patch for good tracking.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/builtin-diff.c    | 17 -----------------
->  tools/perf/util/block-info.c | 17 +++++++++++++++++
->  tools/perf/util/block-info.h |  2 ++
->  3 files changed, 19 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-> index f8b6ae557d8b..5ff1e21082cb 100644
-> --- a/tools/perf/builtin-diff.c
-> +++ b/tools/perf/builtin-diff.c
-> @@ -572,23 +572,6 @@ static void init_block_hist(struct block_hist *bh)
->  	bh->valid = true;
->  }
->  
-> -static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
-> -{
-> -	struct block_info *bi_a = a->block_info;
-> -	struct block_info *bi_b = b->block_info;
-> -	int cmp;
-> -
-> -	if (!bi_a->sym || !bi_b->sym)
-> -		return -1;
-> -
-> -	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
-> -
-> -	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
-> -		return 0;
-> -
-> -	return -1;
-> -}
-> -
->  static struct hist_entry *get_block_pair(struct hist_entry *he,
->  					 struct hists *hists_pair)
->  {
-> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-> index c4b030bf6ec2..f0f38bdd496a 100644
-> --- a/tools/perf/util/block-info.c
-> +++ b/tools/perf/util/block-info.c
-> @@ -475,3 +475,20 @@ float block_info__total_cycles_percent(struct hist_entry *he)
->  
->  	return 0.0;
->  }
-> +
-> +int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
+> Variable filename points to a filename located in user space memory.
+> Looking at
+> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+> the kprobe should indicate that user space memory is accessed.
 
-First thing that came to mind was that hist_entry comparision functions
-had been changed to return int64_t recently, when I went to look at it I
-found this:
-
-tools/perf/util/block-info.c
-
-int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-                        struct hist_entry *left, struct hist_entry *right)
-{
-        struct block_info *bi_l = left->block_info;
-        struct block_info *bi_r = right->block_info;
-        int cmp;
-.
-.
-.
-
-Which look a bit more complete, can you check if that can be used
-instead or explain why my quick analysis of this is b0rken?
-
-Perhaps we can have a __block_info__cmp() that doesn't receive the
-perf_hpp_fmt (that isn't even used above) so that the previous use of
-block_pair_cmp() can be replaced with __block_info__cmp() instead?
-
-Thanks,
+We can't just replace it, right? I.e. this should continue to work with
+older kernels, i.e. the latest userspace tooling version should work
+when installed in an older kernel, i.e. please just add more fallbacks
+to cover the new cases.
 
 - Arnaldo
-
-> +{
-> +	struct block_info *bi_a = a->block_info;
-> +	struct block_info *bi_b = b->block_info;
-> +	int cmp;
-> +
-> +	if (!bi_a->sym || !bi_b->sym)
-> +		return -1;
-> +
-> +	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
-> +
-> +	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
-> +		return 0;
-> +
-> +	return -1;
-> +}
-> diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-> index bef0d75e9819..4fa91eeae92e 100644
-> --- a/tools/perf/util/block-info.h
-> +++ b/tools/perf/util/block-info.h
-> @@ -76,4 +76,6 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+ 
+> Fix this with a patch to specify user space memory access to
+> parameter 'filename' and 'string' is replaced by 'ustring'.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 7cb99b433888..7ecf117651dd 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -13,8 +13,8 @@ add_probe_vfs_getname() {
+>  	local verbose=$1
+>  	if [ $had_vfs_getname -eq 1 ] ; then
+>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+> -		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
+> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
+> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+>  	fi
+>  }
 >  
->  float block_info__total_cycles_percent(struct hist_entry *he);
->  
-> +int block_pair_cmp(struct hist_entry *a, struct hist_entry *b);
-> +
->  #endif /* __PERF_BLOCK_H */
 > -- 
-> 2.17.1
+> 2.21.0
 > 
 
 -- 
