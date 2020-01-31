@@ -2,142 +2,91 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877ABC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9D8C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647E322522
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD90920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgAaLyM (ORCPT
+        id S1728550AbgAaLyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:54:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55706 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgAaLyM (ORCPT
+        Fri, 31 Jan 2020 06:54:21 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20321 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728515AbgAaLyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:54:12 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 27B9E28A964
-Message-ID: <739f60a89646cc92f26e34523cbe8aaab5697351.camel@collabora.com>
-Subject: Re: [PATCH v4 5/6] media: rkvdec: Add the rkvdec driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Fri, 31 Jan 2020 08:53:47 -0300
-In-Reply-To: <20200130171249.3ae0444a@collabora.com>
-References: <20200129195501.8317-1-ezequiel@collabora.com>
-                <20200129195501.8317-6-ezequiel@collabora.com>
-         <20200130171249.3ae0444a@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 31 Jan 2020 06:54:20 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-5-zpWOsHEVPoSZC0YuGcU7Rg-1;
+ Fri, 31 Jan 2020 11:54:14 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 11:54:13 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 31 Jan 2020 11:54:13 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'artem.bityutskiy@linux.intel.com'" 
+        <artem.bityutskiy@linux.intel.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+CC:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        David Box <david.e.box@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: RE: [PATCH 2/2] intel_idle: Introduce 'states_off' module parameter
+Thread-Topic: [PATCH 2/2] intel_idle: Introduce 'states_off' module parameter
+Thread-Index: AQHV13w6Eg2UWHP5m0aqtl9kDKUdz6gEmmHQgAAIoQCAAAUioA==
+Date:   Fri, 31 Jan 2020 11:54:13 +0000
+Message-ID: <6cf71f6964c6433abeaf445847c97611@AcuMS.aculab.com>
+References: <1720216.0Jr2BLnqKp@kreacher> <16995896.bQtfYxEEOs@kreacher>
+         <86fb1cd10e344f76a3e96c4b6c722680@AcuMS.aculab.com>
+ <28a92577c83276baf355dc8de272a79dc854025a.camel@linux.intel.com>
+In-Reply-To: <28a92577c83276baf355dc8de272a79dc854025a.camel@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: zpWOsHEVPoSZC0YuGcU7Rg-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-30 at 17:12 +0100, Boris Brezillon wrote:
-> On Wed, 29 Jan 2020 16:55:00 -0300
-> Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> 
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > 
-> > The rockchip vdec block is a stateless decoder that's able to decode
-> > H264, HEVC and VP9 content. This commit adds the core infrastructure
-> > and the H264 backend. Support for VP9 and HEVS will be added later on.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> > v4:
-> > * Make poc tables const, as suggested by Hans
-> > * Move buffer extra space calculation TRY_FMT, as done on Hantro.
-> > * Get rid of vb2_request_get_buf and open-code
-> >   following Cedrus. We can move it to a helper as a follow-up patch.
-> 
-> Well, we know what that means in practice :-).
-> 
-
-Well, not necesarily. I think we can expect a helper soon,
-but it doesn't have to be part of this series :-)
-
-And perhaps we can find another way to link a media request
-to a vb2 queue, so we don't have to iterate over objects
-like we are doing now?
-
-> > new file mode 100644
-> > index 000000000000..1293b3621364
-> > --- /dev/null
-> > +++ b/drivers/staging/media/rkvdec/rkvdec-regs.h
-> > @@ -0,0 +1,239 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Rockchip VPU codec driver
-> > + *
-> > + * Copyright (C) 2015 Rockchip Electronics Co., Ltd.
-> > + *	Jung Zhao <jung.zhao@rock-chips.com>
-> > + *	Alpha Lin <alpha.lin@rock-chips.com>
-> > + *
-> > + * This software is licensed under the terms of the GNU General Public
-> > + * License version 2, as published by the Free Software Foundation, and
-> > + * may be copied, distributed, and modified under those terms.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> 
-> Oops, looks like I forgot to remove the license text here. Also not
-> entirely sure the copyrights are correct (might be a copy from the
-> hantro driver instead of the rkvdec one).
-> 
-
-Right.
-
-> 
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-> > new file mode 100644
-> > index 000000000000..529ef86510d3
-> > --- /dev/null
-> > +++ b/drivers/staging/media/rkvdec/rkvdec.h
-> > @@ -0,0 +1,124 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Hantro VPU codec driver
-> > + *
-> > + * Copyright 2018 Google LLC.
-> > + *	Tomasz Figa <tfiga@chromium.org>
-> > + *
-> > + * Based on s5p-mfc driver by Samsung Electronics Co., Ltd.
-> > + * Copyright (C) 2011 Samsung Electronics Co., Ltd.
-> > + */
-> 
-> This header has been copied from the hantro driver, so it's most likely
-> wrong.
-> 
-
-Oh, I totally missed this.
-
-Thanks for reviewing!
-Ezequiel
-
-
+RnJvbTogQXJ0ZW0gQml0eXV0c2tpeSA+DQo+IFNlbnQ6IDMxIEphbnVhcnkgMjAyMCAxMToyNA0K
+PiBPbiBGcmksIDIwMjAtMDEtMzEgYXQgMTE6MDcgKzAwMDAsIERhdmlkIExhaWdodCB3cm90ZToN
+Cj4gPiBVbmxlc3MgeW91IGtub3cgZXhhY3RseSB3aGljaCBjcHUgdGFibGUgaXMgYmVpbmcgdXNl
+ZCB0aGUNCj4gPiBvbmx5IGNvbnN0cmFpbnQgYSB1c2VyIGNhbiByZXF1ZXN0IGlzIHRoZSBsYXRl
+bmN5Lg0KPiANCj4gSGkgRGF2aWQsDQo+IA0KPiBpbiBhbGwgbXkgdXNlLWNhc2VzIEkgYWx3YXlz
+IGtub3cgd2hhdCBpcyB0aGUgQ1BVIEkgYW0gZGVhbGluZyB3aXRoIGFuZA0KPiB3aGF0IGFyZSB0
+aGUgQy1zdGF0ZXMuIFNpbXBseSBiZWNhdXNlIGluIG15IHZpZXcgdGhleSBhcmUgYWx3YXlzIENQ
+VS0NCj4gZGVwZW5kZW50IGluIHRlcm1zIG9mIHdoYXQgdGhleSBkbyBhbmQgaG93IGFyZSB0aGV5
+IG5hbWVkLg0KPiANCj4gV2hhdCB5b3Ugc2F5IHNvdW5kcyB0byBtZSBsaWtlIHlvdSB3b3VsZCB3
+YW50IHRvIGRpc2FibGUgc29tZSBDLXN0YXRlcw0KPiB3aXRob3V0IGtub3dpbmcgYW55dGhpbmcg
+KG9yIG11Y2gpIGFib3V0IHRoZSBDUFUgeW91IGFyZSBkZWFsaW5nIHdpdGgNCj4gYW5kIHRoZSBD
+LXN0YXRlIG5hbWVzLg0KPiANCj4gSWYgc28sIGNvdWxkIHlvdSBwbGVhc2Ugc2hhcmUgZXhhbXBs
+ZXMgb2Ygc3VjaCB1c2UtY2FzZXM/DQoNCkR1bm5vLCBidXQgY2xlYXJseSB5b3Ugd2FudCB0byBk
+aXNhYmxlIChzYXkpIEMzIHdoaWxlIGxlYXZpbmcgQzYNCmVuYWJsZWQuDQoNCkkgd2FzIHRyeWlu
+ZyB0byBmaW5kIHdoeSBpdCB3YXMgdGFraW5nIDYwMCt1cyBmb3IgYSBSVCBwcm9jZXNzDQp0byBn
+ZXQgcmVzY2hlZHVsZWQgd2hlbiBpdCBoYWQgb25seSBiZWVuIHNsZWVwaW5nIGZvciBhIGZldyB1
+cy4NCg0KSSBmb3VuZCB3aGVyZSBpdCB3YXMgc2xlZXBpbmcsIGJ1dCB0aGF0IGRpZG4ndCBoZWxw
+IGF0IGFsbC4NClNvbWVvbmUgcG9pbnRlZCBtZSBhdCBhICdyYW5kb20nIHBkZiB0aGF0IHJlZmVy
+cmVkIHRvIC9kZXYvY3B1X2RtYV9sYXRlbmN5Lg0KU2V0dGluZyB0aGF0IHRvIGEgc21hbGwgdmFs
+dWUgKGVnIDIwKSBoZWxwcyBubyBlbmQuDQpCdXQgdGhlcmUgYXJlIG5vIHJlZmVyZW5jZXMgaW4g
+dGhlIGNvZGUgb3IgbWFuIHBhZ2VzIHRvIHRoYXQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVk
+IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
+cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
