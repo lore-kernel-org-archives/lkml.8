@@ -2,166 +2,83 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E351C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E223C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3871420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sf0Ptb03"
+	by mail.kernel.org (Postfix) with ESMTP id ED82B20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580494848;
+	bh=gQno9C8p/R8VNXviQsvTyedgYHZxejFQg8eaD99IcSw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EQL6TAizqaNgmmhrseO8alKerb8HJskLKKEZaEHR8tEc4Lxb6S0P+yuOCs4DqBJhQ
+	 sQdIrLeTx8/76k2gV7XovpKBv+Sisi0VMP+HR5l3JffIVEo+QMOrdaveDZAyjaqPPI
+	 E13uaGlJoCLpJuSFNzeWBHxZ1e4B7l1KtiWUVF3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgAaSTg (ORCPT
+        id S1726199AbgAaSUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:19:36 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36643 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgAaSTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:19:36 -0500
-Received: by mail-io1-f65.google.com with SMTP id d15so9207976iog.3;
-        Fri, 31 Jan 2020 10:19:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c8i1GlKInlXyN29xwVsz2/AwFCxW5o2ypUfu5ITlzRY=;
-        b=Sf0Ptb03U35DGJ7wylQ0dAs6FQUPlkNKMKX4E04EOWICW9PDZP1sV3I+9Mg05AkdMs
-         yoOh6VuWR64rPBSGk6LMEZImeLl80RM1R6FwdXk4WX+mWCWbLPUGdXBxQwMtg/EgvMbR
-         +jfAZJ09295ytpQW6b2ulVgE+c8f3xHB3hK8wrfrVDcC3QYbv0J+Z+GILXtbK3XwiHTJ
-         8jsFQqj/D6/bFkPZRCbYKp9yZeYOxn8zx3s0599ykKBXiVJntPHn5geFpLus6SqDOWni
-         M2StTip5BgKKwJveXYeL+Kz6Ddbw/KlxwEBkVexFDlbEo8VzTGEWrZj+7YkMatcXxULI
-         4Yig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c8i1GlKInlXyN29xwVsz2/AwFCxW5o2ypUfu5ITlzRY=;
-        b=tFxE2gVEkmS3ciDmj07mmEAZGyV7K6fLF5llj/saF+r1jm26lYxM9ZN/NH62YpyPV/
-         RCOplfpeKlEpslQUffem3K+EZaj3omOGWVcS6y1dC/Niofl/9nB/7XVY8x1tBY9hOlDy
-         r3pVbFPnpIbbR2mlP/u/SZP3x06tgok/RuzX8DpAIybus+d4GarNDpyzTJ1vIhFnMz3Z
-         GHZadMKeADYUIxduvn9fSjztHCP0V+a3oi9pJyjM++NNeaADVfIhWrCrPdk/EgZHFuGi
-         xlBTB7q55qPcKbfZaFbDtG+GZMtbSuO39lLgmLdv5arM/1jiulrK+0KtRiAt7LfeZW2j
-         hFAg==
-X-Gm-Message-State: APjAAAVgS2JkTWed3W1ybGO/5YRCGQQg9snnzWip/yT4/OPiBiWmYO2Q
-        HYiEJ7tGDRJK/y3ojQ4NfbetoeHj
-X-Google-Smtp-Source: APXvYqy4Fu0s+h1yZg5wMFoMycKioZaG7S+3BtI06GDfKvNq+GTOzFz3vJ36/F4bq4GlMueNUdnG5A==
-X-Received: by 2002:a65:420d:: with SMTP id c13mr11908567pgq.101.1580494357755;
-        Fri, 31 Jan 2020 10:12:37 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id ev5sm8578011pjb.4.2020.01.31.10.12.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 10:12:36 -0800 (PST)
-Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is
- received
-To:     Neal Cardwell <ncardwell@google.com>, sjpark@amazon.com
-Cc:     Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>, shuah@kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
-        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
-        Yuchung Cheng <ycheng@google.com>
-References: <20200131122421.23286-1-sjpark@amazon.com>
- <20200131122421.23286-3-sjpark@amazon.com>
- <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
-Date:   Fri, 31 Jan 2020 10:12:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 31 Jan 2020 13:20:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbgAaSUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 13:20:46 -0500
+Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB8A20707;
+        Fri, 31 Jan 2020 18:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580494292;
+        bh=gQno9C8p/R8VNXviQsvTyedgYHZxejFQg8eaD99IcSw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gqHXgQ6QYuxFgykHeqKwbiu9BqIB8i++0YkKIbyp8HuV2VvRxhjAZEXOdrTpYAyFb
+         2xa15SknxDnFoJg6pqSN97HzhKDhD2BApDYKOqMjTZIiW5aRBmbJ56KVphXSFJxYB3
+         K9jHLCQHIcgfuo2G9Yw0zK7sdyrpneLkXxtx9VGQ=
+Date:   Fri, 31 Jan 2020 10:11:30 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed
+ optimization feature
+Message-ID: <20200131101130.1b265526@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <6b4bb017-de97-0688-47c5-723ec4c3a339@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+        <20200131151110.31642-2-dmurphy@ti.com>
+        <20200131091004.18d54183@cakuba.hsd1.ca.comcast.net>
+        <6b4bb017-de97-0688-47c5-723ec4c3a339@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/31/20 7:10 AM, Neal Cardwell wrote:
-> On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
->>
->> From: SeongJae Park <sjpark@amazon.de>
->>
->> When closing a connection, the two acks that required to change closing
->> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
->> reverse order.  This is possible in RSS disabled environments such as a
->> connection inside a host.
->>
->> For example, expected state transitions and required packets for the
->> disconnection will be similar to below flow.
->>
->>          00 (Process A)                         (Process B)
->>          01 ESTABLISHED                         ESTABLISHED
->>          02 close()
->>          03 FIN_WAIT_1
->>          04             ---FIN-->
->>          05                                     CLOSE_WAIT
->>          06             <--ACK---
->>          07 FIN_WAIT_2
->>          08             <--FIN/ACK---
->>          09 TIME_WAIT
->>          10             ---ACK-->
->>          11                                     LAST_ACK
->>          12 CLOSED                              CLOSED
+On Fri, 31 Jan 2020 11:14:05 -0600, Dan Murphy wrote:
+> On 1/31/20 11:10 AM, Jakub Kicinski wrote:
+> > While we wait for the PHY folk to take a look, could you please
+> > provide a Fixes tag?  
 > 
-> AFAICT this sequence is not quite what would happen, and that it would
-> be different starting in line 8, and would unfold as follows:
+> Hmm. This is not a bug fix though this is a new feature being added.
 > 
->           08                                     close()
->           09                                     LAST_ACK
->           10             <--FIN/ACK---
->           11 TIME_WAIT
->           12             ---ACK-->
->           13 CLOSED                              CLOSED
-> 
-> 
->> The acks in lines 6 and 8 are the acks.  If the line 8 packet is
->> processed before the line 6 packet, it will be just ignored as it is not
->> a expected packet,
-> 
-> AFAICT that is where the bug starts.
-> 
-> AFAICT, from first principles, when process A receives the FIN/ACK it
-> should move to TIME_WAIT even if it has not received a preceding ACK.
-> That's because ACKs are cumulative. So receiving a later cumulative
-> ACK conveys all the information in the previous ACKs.
-> 
-> Also, consider the de facto standard state transition diagram from
-> "TCP/IP Illustrated, Volume 2: The Implementation", by Wright and
-> Stevens, e.g.:
-> 
->   https://courses.cs.washington.edu/courses/cse461/19sp/lectures/TCPIP_State_Transition_Diagram.pdf
-> 
-> This first-principles analysis agrees with the Wright/Stevens diagram,
-> which says that a connection in FIN_WAIT_1 that receives a FIN/ACK
-> should move to TIME_WAIT.
-> 
-> This seems like a faster and more robust solution than installing
-> special timers.
-> 
-> Thoughts?
+> Not sure what it would be fixing.
 
+I see, you target the patch at net which is for fixes, so I
+misinterpreted this:
 
-This is orthogonal I think.
+> This feature can also be strapped on the 64 pin PHY devices
+> but the 48 pin devices do not have the strap pin available to enable
+> this feature in the hardware.
 
-No matter how hard we fix the other side, we should improve the active side.
+as you fixing 48 devices or such.
 
-Since we send a RST, sending the SYN a few ms after the RST seems way better
-than waiting 1 second as if we received no packet at all.
-
-Receiving this ACK tells us something about networking health, no need
-to be very cautious about the next attempt.
-
-Of course, if you have a fix for the passive side, that would be nice to review !
-
-
-
+So please correct the tree to net-next and since net-next is now closed:
+http://vger.kernel.org/~davem/net-next.html
+only post as RFC until net-next opens back up.
