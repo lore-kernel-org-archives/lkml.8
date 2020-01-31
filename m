@@ -2,178 +2,74 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE22CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CBBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DC5214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D4921734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580489712;
+	bh=mTrY2TnLbSS5HqaZCPPqkko32zM2EGAbWUoxiqWzQMg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SK1GFdxQ4aoKqkU9mXT19XoYak1ofLv08oVWEk9nb+qHgx7HolUif1Wtw7eqiAGb5
+	 eUPrbDPN2DZC1sPZyzpu8B1vhEiTWLGLLqN01ivfJwXo+DcFE7/dI/30oYCVhxk7yD
+	 yzuHLX4l8SzLbcIZ3n+uOTfdtfPtj+9Z5g8dvYD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgAaQyV (ORCPT
+        id S1726912AbgAaQzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:54:21 -0500
-Received: from mga09.intel.com ([134.134.136.24]:23682 "EHLO mga09.intel.com"
+        Fri, 31 Jan 2020 11:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbgAaQyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:54:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 08:54:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
-   d="scan'208";a="377393441"
-Received: from unknown (HELO [134.134.177.86]) ([134.134.177.86])
-  by orsmga004.jf.intel.com with ESMTP; 31 Jan 2020 08:54:19 -0800
-Subject: Re: [Intel PMC TGPIO Driver 1/5] drivers/ptp: Add Enhanced handling
- of reserve fields
-To:     christopher.s.hall@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        mingo@redhat.com, x86@kernel.org, richardcochran@gmail.com,
-        davem@davemloft.net, sean.v.kelley@intel.com
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20191211214852.26317-2-christopher.s.hall@intel.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <0f868a7e-5806-4976-80b5-0185a64b42a0@intel.com>
-Date:   Fri, 31 Jan 2020 08:54:19 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1726330AbgAaQzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:55:11 -0500
+Received: from cakuba.hsd1.ca.comcast.net (unknown [199.201.64.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBA8214D8;
+        Fri, 31 Jan 2020 16:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580489710;
+        bh=mTrY2TnLbSS5HqaZCPPqkko32zM2EGAbWUoxiqWzQMg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n18GKHOXtieLCERotzoM8UcCz0OrdkENMYj6EBRLFvRx+CbnqpI5W3ioQF4xNwXm4
+         fZiorxdNfraW1ZSxrWW8ZK3cOd9cy3fiEbxG261++LMuiNEquPcCeepl0bWKsDgdHV
+         j4SUcyOnF0yRsGb//6yNppAXi/qKgnxodpJYqwEQ=
+Date:   Fri, 31 Jan 2020 08:55:09 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Petr Machata <petrm@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2] mlxsw: spectrum_qdisc: Fix 64-bit division error in
+ mlxsw_sp_qdisc_tbf_rate_kbps
+Message-ID: <20200131085509.199405a9@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20200131015123.55400-1-natechancellor@gmail.com>
+References: <20200130232641.51095-1-natechancellor@gmail.com>
+        <20200131015123.55400-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211214852.26317-2-christopher.s.hall@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 1:48 PM, christopher.s.hall@intel.com wrote:
-> From: Christopher Hall <christopher.s.hall@intel.com>
+On Thu, 30 Jan 2020 18:51:23 -0700, Nathan Chancellor wrote:
+> When building arm32 allmodconfig:
 > 
-> Add functions that parameterize checking and zeroing of reserve fields in
-> ioctl arguments. Eliminates need to change this code when repurposing
-> reserve fields.
+> ERROR: "__aeabi_uldivmod"
+> [drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko] undefined!
 > 
-
-Nice!
-
-> Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
-> ---
->  drivers/ptp/ptp_chardev.c | 60 +++++++++++++++++++++------------------
->  1 file changed, 33 insertions(+), 27 deletions(-)
+> rate_bytes_ps has type u64, we need to use a 64-bit division helper to
+> avoid a build error.
 > 
-> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
-> index 9d72ab593f13..f9ad6df57fa5 100644
-> --- a/drivers/ptp/ptp_chardev.c
-> +++ b/drivers/ptp/ptp_chardev.c
-> @@ -12,6 +12,7 @@
->  #include <linux/timekeeping.h>
->  
->  #include <linux/nospec.h>
-> +#include <linux/string.h>
->  
->  #include "ptp_private.h"
->  
-> @@ -106,6 +107,28 @@ int ptp_open(struct posix_clock *pc, fmode_t fmode)
->  	return 0;
->  }
->  
-> +/* Returns -1 if any reserved fields are non-zero */
-> +static inline int _check_rsv_field(unsigned int *field, size_t size)
-> +{
-> +	unsigned int *iter;
-> +	int ret = 0;
-> +
-> +	for (iter = field; iter < field+size && ret == 0; ++iter)
-> +		ret = *iter == 0 ? 0 : -1;
-> +
-> +	return ret;
-> +}
-> +#define check_rsv_field(field) _check_rsv_field(field, ARRAY_SIZE(field))
-> +
+> Fixes: a44f58c41bfb ("mlxsw: spectrum_qdisc: Support offloading of TBF Qdisc")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-This assumes that reserved fields will always be arrays. Seems like a
-reasonable restriction to me.
+Applied, thank you.
 
-Are the reserved fields always integers? Seems so. Ok.
-
-> +static inline void _zero_rsv_field(unsigned int *field, size_t size)
-> +{
-> +	unsigned int *iter;
-> +
-> +	for (iter = field; iter < field+size; ++iter)
-> +		*iter = 0;
-> +}
-> +#define zero_rsv_field(field) _zero_rsv_field(field, ARRAY_SIZE(field))
-> +
->  long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  {
->  	struct ptp_clock *ptp = container_of(pc, struct ptp_clock, clock);
-> @@ -154,7 +177,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  			req.extts.flags |= PTP_STRICT_FLAGS;
->  			/* Make sure no reserved bit is set. */
->  			if ((req.extts.flags & ~PTP_EXTTS_VALID_FLAGS) ||
-> -			    req.extts.rsv[0] || req.extts.rsv[1]) {
-> +			    check_rsv_field(req.extts.rsv)) {
->  				err = -EINVAL;
->  				break;
->  			}
-> @@ -166,8 +189,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  			}
->  		} else if (cmd == PTP_EXTTS_REQUEST) {
->  			req.extts.flags &= PTP_EXTTS_V1_VALID_FLAGS;
-> -			req.extts.rsv[0] = 0;
-> -			req.extts.rsv[1] = 0;
-> +			zero_rsv_field(req.extts.rsv);
->  		}
->  		if (req.extts.index >= ops->n_ext_ts) {
->  			err = -EINVAL;
-> @@ -188,17 +210,13 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  			break;
->  		}
->  		if (((req.perout.flags & ~PTP_PEROUT_VALID_FLAGS) ||
-> -			req.perout.rsv[0] || req.perout.rsv[1] ||
-> -			req.perout.rsv[2] || req.perout.rsv[3]) &&
-> -			cmd == PTP_PEROUT_REQUEST2) {
-> +		     check_rsv_field(req.perout.rsv)) &&
-> +		    cmd == PTP_PEROUT_REQUEST2) {
->  			err = -EINVAL;
->  			break;
->  		} else if (cmd == PTP_PEROUT_REQUEST) {
->  			req.perout.flags &= PTP_PEROUT_V1_VALID_FLAGS;
-> -			req.perout.rsv[0] = 0;
-> -			req.perout.rsv[1] = 0;
-> -			req.perout.rsv[2] = 0;
-> -			req.perout.rsv[3] = 0;
-> +			zero_rsv_field(req.perout.rsv);
->  		}
->  		if (req.perout.index >= ops->n_per_out) {
->  			err = -EINVAL;
-> @@ -258,7 +276,7 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  			break;
->  		}
->  		if (extoff->n_samples > PTP_MAX_SAMPLES
-> -		    || extoff->rsv[0] || extoff->rsv[1] || extoff->rsv[2]) {
-> +		    || check_rsv_field(extoff->rsv)) {
->  			err = -EINVAL;
->  			break;
->  		}
-> @@ -318,17 +336,11 @@ long ptp_ioctl(struct posix_clock *pc, unsigned int cmd, unsigned long arg)
->  			err = -EFAULT;
->  			break;
->  		}
-> -		if ((pd.rsv[0] || pd.rsv[1] || pd.rsv[2]
-> -				|| pd.rsv[3] || pd.rsv[4])
-> -			&& cmd == PTP_PIN_GETFUNC2) {
-> +		if (check_rsv_field(pd.rsv) && cmd == PTP_PIN_GETFUNC2) {
-
-Not that it's a big deal, but I think this might read more clearly if
-this was "cmd == PTP_PIN_GETFUNC2 && check_rsv_field(pd.rsv)"
-
-Thanks,
-Jake
