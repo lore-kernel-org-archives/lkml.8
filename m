@@ -2,123 +2,164 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13931C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D793920705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D900820CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HY5JHAEq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vccN881p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgAaNlc (ORCPT
+        id S1728804AbgAaNlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:41:32 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:35460 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgAaNlb (ORCPT
+        Fri, 31 Jan 2020 08:41:52 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8994 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728667AbgAaNlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:41:31 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00VDc8Oh018434;
-        Fri, 31 Jan 2020 13:41:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=fRv6nSdD+7TwnjcbDVjABJLy48Vs5zG5zSY2q7qXhMM=;
- b=HY5JHAEqrx0Dq85hL91OO3mRXUHGrqPmtChDkK5sZ7pGfG9UbCYSrnSEVs9NIBNBVr7B
- EvtR+mu96aoyIwHT5HbYvkxRbjluX65gk9SvxMuscoz/7O843EWXexuhVybF6zZ4LTCl
- dqzxW3F+1hRE0Z+pn9Vt2zavcr2gmKMrQAbKeWQsYYZXt3XOKmawPnz5aDjnCgOdRjxv
- OZ/edcQcOgMqql5G2iRwO+w9b+ANBXcxG5yPkGxRHY/9oY/ZDBduHn7501bnc5xXAJAS
- enFvPCw3g8gredgOhFecsptATzUBsbGB9tTVfpKlLycXhDTnpb9o2XbKhA5xH3S0R2kq 5A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xrd3uteyw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 13:41:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00VDcj5p178688;
-        Fri, 31 Jan 2020 13:39:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xv8nr0cpu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 13:39:18 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00VDdGkk020706;
-        Fri, 31 Jan 2020 13:39:16 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jan 2020 05:39:15 -0800
-Date:   Fri, 31 Jan 2020 16:39:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     gregkh@linuxfoundation.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
- syzbot
-Message-ID: <20200131133907.GG11068@kadam>
-References: <00000000000095e1d8059d4675ac@google.com>
- <20200131050651.hlq27kehtir3agf2@kili.mountain>
- <20200131133004.GD10381@localhost>
+        Fri, 31 Jan 2020 08:41:52 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VDbWws016217;
+        Fri, 31 Jan 2020 14:41:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=AxV9vH56OpkskaoqHe+T5VRZT2jdcBi4jBwKkhXoGY0=;
+ b=vccN881pVI4JhpYtbs2DHTzPY1otktC9JzbGzUlt/USyFoW/6+cR3FBJIutK6X7zNJ6v
+ NLAzbo6OD5DMHPfhtVSXzIxXa1sArcqXi6O4ztiiwwpoaI8bKqe3HTQ6i0p64RbXq1Q5
+ bu8dq7yWvspdaFhTITpTBT2vUfDG/4uFLJPc8NY2RPYJY84IdPJbcTiEZG8XJVu6//M1
+ dQh1Lz5xYyuvJpvRukcxsOBRRWEzsidW/II/FYJ8BRRWP86jYEJL1RN/IS8LazGfSQ12
+ NvvpQ56kNJd9sVx5xNEoAyjeSa4roXHbB5dUyrHrZqdCnS0hYsX4jCQk66Oj6k9ceq97 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpbec48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 14:41:36 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF64A100034;
+        Fri, 31 Jan 2020 14:41:35 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CC2732BC7D9;
+        Fri, 31 Jan 2020 14:41:35 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan 2020 14:41:35
+ +0100
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Gerald Baeza <gerald.baeza@st.com>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Clement Peron <peron.clem@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 1/4] ARM: debug: stm32: add UART early console configuration for STM32F4
+Date:   Fri, 31 Jan 2020 14:41:20 +0100
+Message-ID: <20200131134123.27775-2-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200131134123.27775-1-erwan.leray@st.com>
+References: <20200131134123.27775-1-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131133004.GD10381@localhost>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001310118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001310118
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 02:30:04PM +0100, Johan Hovold wrote:
-> > Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> > 
-> >  drivers/usb/core/urb.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
-> > index da923ec17612..0980c1d2253d 100644
-> > --- a/drivers/usb/core/urb.c
-> > +++ b/drivers/usb/core/urb.c
-> > @@ -475,7 +475,7 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
-> >  
-> >  	/* Check that the pipe's type matches the endpoint's type */
-> >  	if (usb_urb_ep_type_check(urb))
-> > -		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
-> > +		dev_err(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
-> >  			usb_pipetype(urb->pipe), pipetypes[xfertype]);
-> >  
-> >  	/* Check against a simple/standard policy */
-> 
-> It seems this change would just be papering over these driver bugs. The
-> dev_WARN() is there in the first place to allow us to catch them.
-> 
-> Even if it takes some work, it should be doable to track down and add
-> the missing sanity checks to the drivers that lack them. Some have
-> already been fixed, and I have some more pending patches to fix or add
-> helpers to simplify fixing the remaining ones.
+Early console is hardcoded on USART1 in current implementation.
+With this patch, default UART instance is USART1, but other UART instances
+can be configured by setting physical and virtual base addresses in
+menuconfig.
 
-Ah, fine.  I misunderstood what the warning message was about.
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-regards,
-dan carpenter
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 8bcbd0cd739b..4f982ef1d0ec 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1201,12 +1201,13 @@ choice
+ 
+ 	config STM32F4_DEBUG_UART
+ 		bool "Use STM32F4 UART for low-level debug"
+-		depends on ARCH_STM32
++		depends on MACH_STM32F429 || MACH_STM32F469
+ 		select DEBUG_STM32_UART
+ 		help
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on STM32F4 based platforms, which default UART is wired on
+-		  USART1.
++		  USART1, but another UART instance can be selected by modifying
++		  CONFIG_DEBUG_UART_PHYS.
+ 
+ 		  If unsure, say N.
+ 
+@@ -1619,6 +1620,7 @@ config DEBUG_UART_PHYS
+ 	default 0x3e000000 if DEBUG_BCM_KONA_UART
+ 	default 0x3f201000 if DEBUG_BCM2836
+ 	default 0x4000e400 if DEBUG_LL_UART_EFM32
++	default 0x40011000 if STM32F4_DEBUG_UART
+ 	default 0x40028000 if DEBUG_AT91_SAMV7_USART1
+ 	default 0x40081000 if DEBUG_LPC18XX_UART0
+ 	default 0x40090000 if DEBUG_LPC32XX
+@@ -1713,7 +1715,7 @@ config DEBUG_UART_PHYS
+ 		DEBUG_S3C64XX_UART || \
+ 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
+ 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
+-		DEBUG_AT91_UART
++		DEBUG_AT91_UART || DEBUG_STM32_UART
+ 
+ config DEBUG_UART_VIRT
+ 	hex "Virtual base address of debug UART"
+@@ -1823,7 +1825,7 @@ config DEBUG_UART_VIRT
+ 		DEBUG_S3C64XX_UART || \
+ 		DEBUG_BCM63XX_UART || DEBUG_ASM9260_UART || \
+ 		DEBUG_SIRFSOC_UART || DEBUG_DIGICOLOR_UA0 || \
+-		DEBUG_AT91_UART
++		DEBUG_AT91_UART || DEBUG_STM32_UART
+ 
+ config DEBUG_UART_8250_SHIFT
+ 	int "Register offset shift for the 8250 debug UART"
+diff --git a/arch/arm/include/debug/stm32.S b/arch/arm/include/debug/stm32.S
+index 1abb32f685fd..b0c7034b33d9 100644
+--- a/arch/arm/include/debug/stm32.S
++++ b/arch/arm/include/debug/stm32.S
+@@ -4,8 +4,6 @@
+  * Author:   Gerald Baeza <gerald.baeza@st.com> for STMicroelectronics.
+  */
+ 
+-#define STM32_UART_BASE			0x40011000	/* USART1 */
+-
+ #ifdef CONFIG_STM32F4_DEBUG_UART
+ #define STM32_USART_SR_OFF		0x00
+ #define STM32_USART_TDR_OFF		0x04
+@@ -20,8 +18,8 @@
+ #define STM32_USART_TXE			(1 << 7)	/* Tx data reg empty */
+ 
+ .macro	addruart, rp, rv, tmp
+-	ldr	\rp,      =STM32_UART_BASE	@ physical base
+-	ldr	\rv,      =STM32_UART_BASE      @ virt base /* NoMMU */
++	ldr	\rp, =CONFIG_DEBUG_UART_PHYS @ physical base
++	ldr	\rv, =CONFIG_DEBUG_UART_VIRT @ virt base
+ .endm
+ 
+ .macro  senduart,rd,rx
+-- 
+2.17.1
 
