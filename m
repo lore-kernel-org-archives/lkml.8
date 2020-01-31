@@ -2,152 +2,134 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1281C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A99C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E3C20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F51215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNCWAHC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgAaOWO (ORCPT
+        id S1728948AbgAaOXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:22:14 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728730AbgAaOWO (ORCPT
+        Fri, 31 Jan 2020 09:23:17 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38202 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728730AbgAaOXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:22:14 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VEGrmI022487
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:22:13 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xvkpaddk6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:22:12 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 31 Jan 2020 14:22:11 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 31 Jan 2020 14:22:07 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VEM61T52559894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 14:22:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9C3DA4040;
-        Fri, 31 Jan 2020 14:22:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F32F7A4057;
-        Fri, 31 Jan 2020 14:22:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.193.32])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 31 Jan 2020 14:22:05 +0000 (GMT)
-Subject: Re: [PATCH 7/8] ima: use ima_hash_algo for collision detection in
- the measurement list
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Cc:     "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Fri, 31 Jan 2020 09:22:05 -0500
-In-Reply-To: <44c1b3f6d3fe414e914317ef8e5c6f8f@huawei.com>
-References: <20200127170443.21538-1-roberto.sassu@huawei.com>
-         <20200127170443.21538-8-roberto.sassu@huawei.com>
-         <1580423169.6104.18.camel@linux.ibm.com>
-         <44c1b3f6d3fe414e914317ef8e5c6f8f@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Fri, 31 Jan 2020 09:23:16 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p23so7954317edr.5;
+        Fri, 31 Jan 2020 06:23:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5v/d9VEU5KVu0UWojc/o6Bq3UTZ8IALs0zvn7lGcGR0=;
+        b=GNCWAHC897q5L4mOmLaEKcJ36kfrbD7nc915n7AYBjv5VVrqM2p0SJV6I1G503IEwI
+         5s3s4e9piyBcCzRrvd0FBux4nDz/3kBTJxhdwPZJ5icNn5+x1/Q/0etbKYSrMgPCGIDR
+         0hy/7nYYFsEccgKaPJrjPsTFJX6WpWqLCyTodIWlVG2lzF9QDYQ9fgmjnPjz8LOWFlil
+         YRetIN3HuLjcmZybdds1l6ldA60nAR8Xzfg6B5HFC1gNW3lVJ29516DgZysK7Q3qVxv8
+         IttTAfJ5kXfSRcx/4gFEQOYVzS80wKpLs7JF0/GQbKaj90nw0jtiG42UgPEZhsYI+Umf
+         q20Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5v/d9VEU5KVu0UWojc/o6Bq3UTZ8IALs0zvn7lGcGR0=;
+        b=KBTvRN0v2+O6k/RgZw0UR2l3bLNRPmrGleRU1PhbFP2YUI8X/F7Fw4fY95X760XEV7
+         3uSwms3DTE/MbYubUqzT3VDK0JMub15d21lBxNVAa4sQ9ShG9kvWX1xgA8MNh6vlJGEr
+         Xr5UnHQ58HxLo422hOz0nn+vNp7Ug1r8f0ufkoYn3p0kCfqtl3so6FUeHv3BpedRKvNy
+         2jyoCxkpSVhbeqx10k0PUin1pRRIi2vqYxD+QcCiygk+01R9mnjOFZJLA/vCnfimvX9m
+         5qGDNNWR4CCurVK3l2K6FB32q6dEnjGR06HCpipcp99y/rI5yHa8kjb//6hxuFDpSACU
+         JZfg==
+X-Gm-Message-State: APjAAAVnKjsKDJ3BAouqo4pTYBuMIpEF9/CNMkReMAMOL5bMP4JiS3Oi
+        vXlbZRof/zxeyjdrlcTw0/KucoVG
+X-Google-Smtp-Source: APXvYqxhihbO1V/ApC6dcntrBYql5ALy0cEUpX+6WD+kmEokCbWvXOksq1JUZbpx7esaU77XJGqG+Q==
+X-Received: by 2002:a17:906:848e:: with SMTP id m14mr8850516ejx.152.1580480594349;
+        Fri, 31 Jan 2020 06:23:14 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c24sm522225eds.40.2020.01.31.06.23.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 06:23:13 -0800 (PST)
+Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200130043804.32243-1-digetx@gmail.com>
+ <20200130043804.32243-12-digetx@gmail.com>
+ <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
+ <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
+ <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
+ <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
+ <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
+Date:   Fri, 31 Jan 2020 17:22:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20013114-0028-0000-0000-000003D6478B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013114-0029-0000-0000-0000249A99D3
-Message-Id: <1580480525.6104.88.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0
- impostorscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1911200001 definitions=main-2001310123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-31 at 14:02 +0000, Roberto Sassu wrote:
-> > -----Original Message-----
-> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
-> > Sent: Thursday, January 30, 2020 11:26 PM
-> > To: Roberto Sassu <roberto.sassu@huawei.com>;
-> > jarkko.sakkinen@linux.intel.com;
-> > james.bottomley@hansenpartnership.com; linux-integrity@vger.kernel.org
-> > Cc: linux-security-module@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-> > Subject: Re: [PATCH 7/8] ima: use ima_hash_algo for collision detection in
-> > the measurement list
-> > 
-> > On Mon, 2020-01-27 at 18:04 +0100, Roberto Sassu wrote:
-> > > Before calculating a digest for each PCR bank, collisions were detected
-> > > with a SHA1 digest. This patch includes ima_hash_algo among the
-> > algorithms
-> > > used to calculate the template digest and checks collisions on that digest.
-> > >
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Definitely needed to protect against a sha1 collision attack.
-> > 
-> > <snip>
-> > 
-> > >
-> > > diff --git a/security/integrity/ima/ima_api.c
-> > b/security/integrity/ima/ima_api.c
-> > > index ebaf0056735c..a9bb45de6db9 100644
-> > > --- a/security/integrity/ima/ima_api.c
-> > > +++ b/security/integrity/ima/ima_api.c
-> > > @@ -51,7 +51,7 @@ int ima_alloc_init_template(struct ima_event_data
-> > *event_data,
-> > >  	if (!*entry)
-> > >  		return -ENOMEM;
-> > >
-> > > -	(*entry)->digests = kcalloc(ima_tpm_chip->nr_allocated_banks + 1,
-> > > +	(*entry)->digests = kcalloc(ima_tpm_chip->nr_allocated_banks + 2,
-> > >  				    sizeof(*(*entry)->digests), GFP_NOFS);
-> > >  	if (!(*entry)->digests) {
-> > >  		result = -ENOMEM;
-> > 
-> > I would prefer not having to allocate and use "nr_allocated_banks + 1"
-> > everywhere, but I understand the need for it.  I'm not sure this patch
-> > warrants allocating +2.  Perhaps, if a TPM bank doesn't exist for the
-> > IMA default hash algorithm, use a different algorithm or, worst case,
-> > continue using the ima_sha1_idx.
+31.01.2020 12:02, Jon Hunter пишет:
 > 
-> We could introduce a new option called ima_hash_algo_tpm to specify
-> the algorithm of an allocated bank. We can use this for boot_aggregate
-> and hash collision detection.
+> On 30/01/2020 20:04, Dmitry Osipenko wrote:
+> 
+> ...
+> 
+>>>> The tegra_dma_stop() should put RPM anyways, which is missed in yours
+>>>> sample. Please see handle_continuous_head_request().
+>>>
+>>> Yes and that is deliberate. The cyclic transfers the transfers *should*
+>>> not stop until terminate_all is called. The tegra_dma_stop in
+>>> handle_continuous_head_request() is an error condition and so I am not
+>>> sure it is actually necessary to call pm_runtime_put() here.
+>>
+>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
+> 
+> True.
+> 
+>>>> I'm also finding the explicit get/put a bit easier to follow in the
+>>>> code, don't you think so?
+>>>
+>>> I can see that, but I was thinking that in the case of cyclic transfers,
+>>> it should only really be necessary to call the get/put at the beginning
+>>> and end. So in my mind there should only be two exit points which are
+>>> the ISR handler for SG and terminate_all for SG and cyclic.
+>>
+>> Alright, I'll update this patch.
+> 
+> Hmmm ... I am wondering if we should not mess with that and leave how
+> you have it.
 
-I don't think that would work in the case where the IMA default hash
-is set to sha256, but the system has a TPM 1.2 chip.  We would be left
-using SHA1 for the file hash collision detection.
+I took another look and seems my current v6 should be more correct because:
 
-With my suggestion of defining an "extra" variable, I kind of back
-tracked here.  There are two problems that I'm trying to address -
-hard coding the number of additional "banks" and unnecessarily
-allocating more memory than necessary.  By pre-walking the list,
-calculating the "extra" banks, you'll resolve both issues.
+1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
+there since tegra_dma_terminate_all() won't put RPM in this case:
 
-Mimi
+	if (!tdc->busy)
+		goto skip_dma_stop;
 
+2. We can't move the "busy" unsetting into the terminate because then
+tegra_dma_stop() will be invoked twice. Although, one option could be to
+remove the tegra_dma_stop() from the error paths of
+handle_continuous_head_request(), but I'm not sure that this is correct
+to do.
