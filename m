@@ -2,232 +2,153 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CB7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8916FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967FE2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4692082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580453013;
+	bh=CZYvrQWyDOYKguyxI15/yjPFCQVOG0t9Fxb6iSoSfqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Hn0e0ys/6wZfDkn1fn9UA7pMzLlb/izulyQJ98l4cxCJ/p4nlYQVgatJHpsKGuq/
+	 GZcxpPriQkCMjNBvi6X33vFXOfR9STQBrJpAMzQXok5VrVo1LMWR8vYGOMQUNE1GWu
+	 Fuhn+uYnA9LdJzwlg1k5b9AC9baKGHs6SKIraghE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAaGkx (ORCPT
+        id S1728027AbgAaGnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 01:40:53 -0500
-Received: from mga02.intel.com ([134.134.136.20]:64035 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgAaGkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 01:40:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 22:40:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,384,1574150400"; 
-   d="scan'208";a="309925522"
-Received: from wtczc53028gn.jf.intel.com (HELO localhost.localdomain) ([10.54.87.17])
-  by orsmga001.jf.intel.com with ESMTP; 30 Jan 2020 22:40:50 -0800
-From:   christopher.s.hall@intel.com
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
-        x86@kernel.org, jacob.e.keller@intel.com, richardcochran@gmail.com,
-        davem@davemloft.net, sean.v.kelley@intel.com
-Cc:     Christopher Hall <christopher.s.hall@intel.com>
-Subject: [Intel PMC TGPIO Driver 4/5] x86/tsc: Add TSC support functions to support ART driven Time-Aware GPIO
-Date:   Wed, 11 Dec 2019 13:48:51 -0800
-Message-Id: <20191211214852.26317-5-christopher.s.hall@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191211214852.26317-1-christopher.s.hall@intel.com>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+        Fri, 31 Jan 2020 01:43:32 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45807 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgAaGnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 01:43:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id a6so7219481wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 22:43:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=8p4qE6ifkN9u5luLlc5PPEhUo7uti+2D6sa+aGx2WPM=;
+        b=ES0f0iW44b3+TMWrymbT4CFWqgLrj/Ku5TfNTpOYQtd7MdHUBoRa9b05JjGcvUwxw3
+         DGI3CtBNONbI29LN7y/gHNUpBikLiMAQQ7iRX79QgRhGN9kx330tiHwRNXi6briwka5u
+         rJgvziykVkV7gsn2vVO/bX46yf0OSiI7Z5jLDoTm4LI9Fb03ZbGBKPZtr+lA+eMgqsFU
+         DMTMcTevp0tPLvlmfiUiKhe9mlxtumWgE9g/Vb5BS3amSouNHVS/D9pECDmX5SWCCDzO
+         MeykeFZqBpTNWroxyEHWw9PRJfb8gBHwJjMILxsnZ5Zq89AWGnWL71LOniphwtS6AuxE
+         wenA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=8p4qE6ifkN9u5luLlc5PPEhUo7uti+2D6sa+aGx2WPM=;
+        b=WkM/5IEkiAAN59hnguVVrzGYw/uExbA5+cVsOyvHuLfpm9dU3hN/TfXVRaYu5HrwJR
+         RjFIhWjc5khdbMWZ70G0kMkrNWh7NCwjrg3jAMdPBgDErSsWiDqHCpjzxmqM0eB32faw
+         TsPU1Jw8ODNvdDp1XJRdxL/irjvH6+/IQOlaPemXEm/OPsTStMwF7q3NSZo28/4KOdLX
+         LT/oUS+gFcN5GkMN6h672hDsCAoyUfJCQODIMVyBekgjT7vY0E49hxWStX5Y6lKATBb2
+         86b36zZg6WURPNJ6/N99o2HWUpdfrUrpwJ2GjHuGyy+mo8JyAXX8MJJRLbiPbNggU+Ax
+         E3dg==
+X-Gm-Message-State: APjAAAVbWLd/8QJUesfMVfft4ex7UfSlJd+HxGoZDDpUkmjN8wTqZB3p
+        Ge+Vxk9YQiaj1/hktDQMp3E=
+X-Google-Smtp-Source: APXvYqx7M24GaSUQMNiexPi/fx9edxK/zBmKjevzdteMfzihXd45RO5/rqMvIP7+Q+TL5iqWN5xccw==
+X-Received: by 2002:adf:ed04:: with SMTP id a4mr9078387wro.76.1580453010295;
+        Thu, 30 Jan 2020 22:43:30 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id f189sm10194177wmf.16.2020.01.30.22.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 22:43:29 -0800 (PST)
+Date:   Fri, 31 Jan 2020 07:43:27 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?iso-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: 5.6-### doesn't boot
+Message-ID: <20200131064327.GB130017@gmail.com>
+References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
+ <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christopher Hall <christopher.s.hall@intel.com>
 
-The PMC Time-Aware GPIO (TGPIO) logic is driven by ART. Several support
-functions are required to translate ART to/from nanoseconds units which
-is required by the PHC clock interface. A function is also added to get
-the current value of ART/TSC using get_cycles() (RDTSC). This avoids
-multiple MMIO reads required to retrieve ART.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Note that rather than ART nanoseconds, TSC nanoseconds are used. These are
-related by TSC = ART * CPUID[15H].EBX/CPUID[15H].EAX + K. The value of
-K is the distinction between between the ART and TSC nanoseconds.
+> On Thu, Jan 30, 2020 at 9:32 AM Jörg Otte <jrg.otte@gmail.com> wrote:
+> >
+> > my notebook doesn't boot with current kernel. Booting stops right after
+> > displaying "loading initial ramdisk..". No further displays.
+> > Also nothing is wriiten to the logs.
+> >
+> > last known good kernel is : vmlinuz-5.5.0-00849-gb0be0eff1a5a
+> > first known bad kernel is : vmlinuz-5.5.0-01154-gc677124e631d
+>
+> It would be lovely if you can bisect a bit. But my merges in that
+> range are all from Ingo:
+> 
+> Ingo Molnar (7):
+>     header cleanup
+>     objtool updates
+>     RCU updates
+>     EFI updates
+>     locking updates
+>     perf updates
+>     scheduler updates
 
-The advantage of using TSC nanoseconds to represent the device clock
-because it can easily be calculated in user-space using only CPUID[15H].
-The value of ART in general can't be since K isn't necessarily known to
-the application.
+If I had to guess then perhaps the EFI changes look the most dangerous 
+ones from these trees - but in principle most of these trees could 
+contain a boot crasher/hang bug.
 
-Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
----
- arch/x86/include/asm/tsc.h |   6 ++
- arch/x86/kernel/tsc.c      | 116 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 120 insertions(+), 2 deletions(-)
+> but not having any messages at all makes it hard to guess where it 
+> would be.
 
-diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
-index 8a0c25c6bf09..f44c92fe3cd5 100644
---- a/arch/x86/include/asm/tsc.h
-+++ b/arch/x86/include/asm/tsc.h
-@@ -32,6 +32,12 @@ static inline cycles_t get_cycles(void)
- 
- extern struct system_counterval_t convert_art_to_tsc(u64 art);
- extern struct system_counterval_t convert_art_ns_to_tsc(u64 art_ns);
-+extern struct timespec64 get_tsc_ns_now(struct system_counterval_t
-+					*system_counter);
-+extern u64 convert_tsc_ns_to_art(struct timespec64 *tsc_ns);
-+extern u64 convert_tsc_ns_to_art_duration(struct timespec64 *tsc_ns);
-+extern struct timespec64 convert_art_to_tsc_ns(u64 art);
-+extern struct timespec64 convert_art_to_tsc_ns_duration(u64 art);
- 
- extern void tsc_early_init(void);
- extern void tsc_init(void);
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 7e322e2daaf5..fb0dc3169e6b 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1215,7 +1215,7 @@ int unsynchronized_tsc(void)
- /*
-  * Convert ART to TSC given numerator/denominator found in detect_art()
-  */
--struct system_counterval_t convert_art_to_tsc(u64 art)
-+static struct system_counterval_t _convert_art_to_tsc(u64 art, bool dur)
- {
- 	u64 tmp, res, rem;
- 
-@@ -1225,13 +1225,125 @@ struct system_counterval_t convert_art_to_tsc(u64 art)
- 	tmp = rem * art_to_tsc_numerator;
- 
- 	do_div(tmp, art_to_tsc_denominator);
--	res += tmp + art_to_tsc_offset;
-+	res += tmp;
-+	if (!dur)
-+		res += art_to_tsc_offset;
- 
- 	return (struct system_counterval_t) {.cs = art_related_clocksource,
- 			.cycles = res};
- }
-+
-+struct system_counterval_t convert_art_to_tsc(u64 art)
-+{
-+	return _convert_art_to_tsc(art, false);
-+}
- EXPORT_SYMBOL(convert_art_to_tsc);
- 
-+static
-+struct timespec64 get_tsc_ns(struct system_counterval_t *system_counter)
-+{
-+	u64 tmp, res, rem;
-+	u64 cycles;
-+
-+	cycles = system_counter->cycles;
-+	rem = do_div(cycles, tsc_khz);
-+
-+	res = cycles * USEC_PER_SEC;
-+	tmp = rem * USEC_PER_SEC;
-+
-+	rem = do_div(tmp, tsc_khz);
-+	tmp += rem > tsc_khz >> 2 ? 1 : 0;
-+	res += tmp;
-+
-+	rem = do_div(res, NSEC_PER_SEC);
-+
-+	return (struct timespec64) {.tv_sec = res, .tv_nsec = rem};
-+}
-+
-+struct timespec64 get_tsc_ns_now(struct system_counterval_t *system_counter)
-+{
-+	struct system_counterval_t counterval;
-+
-+	if (system_counter == NULL)
-+		system_counter = &counterval;
-+
-+	system_counter->cycles = clocksource_tsc.read(NULL);
-+	system_counter->cs = art_related_clocksource;
-+
-+	return get_tsc_ns(system_counter);
-+}
-+EXPORT_SYMBOL(get_tsc_ns_now);
-+
-+struct timespec64 convert_art_to_tsc_ns(u64 art)
-+{
-+	struct system_counterval_t counterval;
-+
-+	counterval = _convert_art_to_tsc(art, false);
-+
-+	return get_tsc_ns(&counterval);
-+}
-+EXPORT_SYMBOL(convert_art_to_tsc_ns);
-+
-+struct timespec64 convert_art_to_tsc_ns_duration(u64 art)
-+{
-+	struct system_counterval_t counterval;
-+
-+	counterval = _convert_art_to_tsc(art, true);
-+
-+	return get_tsc_ns(&counterval);
-+}
-+EXPORT_SYMBOL(convert_art_to_tsc_ns_duration);
-+
-+static u64 convert_tsc_ns_to_tsc(struct timespec64 *tsc_ns)
-+{
-+	u64 tmp, res, rem;
-+	u64 cycles;
-+
-+	cycles = timespec64_to_ns(tsc_ns);
-+
-+	rem = do_div(cycles, USEC_PER_SEC);
-+
-+	res = cycles * tsc_khz;
-+	tmp = rem * tsc_khz;
-+
-+	do_div(tmp, USEC_PER_SEC);
-+
-+	return res + tmp;
-+}
-+
-+
-+static u64 _convert_tsc_ns_to_art(struct timespec64 *tsc_ns, bool dur)
-+{
-+	u64 tmp, res, rem;
-+	u64 cycles;
-+
-+	cycles = convert_tsc_ns_to_tsc(tsc_ns);
-+	if (!dur)
-+		cycles -= art_to_tsc_offset;
-+
-+	rem = do_div(cycles, art_to_tsc_numerator);
-+
-+	res = cycles * art_to_tsc_denominator;
-+	tmp = rem * art_to_tsc_denominator;
-+
-+	rem = do_div(tmp, art_to_tsc_numerator);
-+	tmp += rem > art_to_tsc_numerator >> 2 ? 1 : 0;
-+
-+	return res + tmp;
-+}
-+
-+u64 convert_tsc_ns_to_art(struct timespec64 *tsc_ns)
-+{
-+	return _convert_tsc_ns_to_art(tsc_ns, false);
-+}
-+EXPORT_SYMBOL(convert_tsc_ns_to_art);
-+
-+u64 convert_tsc_ns_to_art_duration(struct timespec64 *tsc_ns)
-+{
-+	return _convert_tsc_ns_to_art(tsc_ns, true);
-+}
-+EXPORT_SYMBOL(convert_tsc_ns_to_art_duration);
-+
- /**
-  * convert_art_ns_to_tsc() - Convert ART in nanoseconds to TSC.
-  * @art_ns: ART (Always Running Timer) in unit of nanoseconds
--- 
-2.21.0
+To improve debug output:
 
+Removing any 'fbcon' options in /boot/grub/grub.cfg and adding this to 
+the boot options might improve the debug output:
+
+  earlyprintk=vga initcall_debug ignore_loglevel debug panic_on_warn 
+
+So for example if the relevant kernel boot entry in grub.cfg looks like 
+this:
+
+  linux   /vmlinuz-5.3.0-26-generic root=UUID=1bcxabe3-0b62-4x04-b456-47cd90c0e6x4 ro  splash $vt_handoff
+
+Then editing it to the following could in principle produce (much) more 
+verbose boot output:
+
+  linux   /vmlinuz-5.3.0-26-generic root=UUID=1bcxabe3-0b62-4x04-b456-47cd90c0e6x4 ro earlyprintk=vga initcall_debug ignore_loglevel debug panic_on_warn $vt_handoff
+
+If this produces more output than just "loading initial ramdisk..' then a 
+photo of the hung screen would be sufficient, no need to transcribe it.
+
+> A few bisect runs would narrow it down a fair amount. Bisecting all the 
+> way would be even better, of course,
+
+Agreed!
+
+If compiling full kernels for bisections takes too long (for example 
+because the .config is from a distro kernel) then running "make 
+localmodconfig" to create a config tailored to the currently active 
+modules will cut down significantly on build time.
+
+Also, a warning: if the normal boot log contains spurious warnings then 
+the new 'panic_on_warn' option will cause additional trouble on good 
+kernels.
+
+Thanks,
+
+	Ingo
