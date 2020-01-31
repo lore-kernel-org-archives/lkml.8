@@ -2,808 +2,497 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CFEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4DEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C292067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FDF206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F4buFhlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgAaCW7 (ORCPT
+        id S1727926AbgAaCXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:22:59 -0500
-Received: from mga07.intel.com ([134.134.136.100]:43652 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgAaCW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:22:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 18:22:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,384,1574150400"; 
-   d="scan'208";a="262395958"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jan 2020 18:22:55 -0800
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     alex.williamson@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH v2 9/9] i40e/vf_migration: vfio-pci vendor driver for VF live migration
-Date:   Thu, 30 Jan 2020 21:13:38 -0500
-Message-Id: <20200131021338.28059-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200131020803.27519-1-yan.y.zhao@intel.com>
-References: <20200131020803.27519-1-yan.y.zhao@intel.com>
+        Thu, 30 Jan 2020 21:23:54 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44376 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAaCXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:23:53 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d9so2093373plo.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 18:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SLxYwA9Uu4oTtCC1U10KKqDE64QrIr9ZELfMN/7Dz6A=;
+        b=F4buFhlfw3Fmag549SUzMEkt5Ms4Ni0tLeraGDwIaLHPgG8Vj/Y58+XbJyNaoGxgxm
+         9cJRjVAcPocSzwTSQ+3WAPx6CaqNEBt+Zna2RJQ4koALntuJ0ISpPMPJF10KZygsXM65
+         +EFZs4mH/9c7DWh3FDDKk77iciigsh3AI46zq66wRnjY8LnN+zpbe7yQQHtNwoJjjNBw
+         DtqrgNLx8Wmm+8pn9K8Ls4adJjH33qWVHUVyBvX4Zcwj9nvwFkoLvatvYG6hNnnALs29
+         fSLFffzhlKu5bwQ8/371NvDfRs/S/nJiyhHoM0zmXp41m0FaWAxQvF3gkpSz8LG/XB1u
+         Tmuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SLxYwA9Uu4oTtCC1U10KKqDE64QrIr9ZELfMN/7Dz6A=;
+        b=W1GjbPm0uB6MX1xyyHBRkhknxq3M70C9gGM5Ok1uRBa9TjZGCF9Yf1+BErvKC8FmHm
+         KyMh803q2GqZIOT33UMuzcAsLcDFZHH8iXE5wp88MaCdhHyvkTJ99Twri8m1KOQHt+Tw
+         v7YB7N8SJvIgLyXxPe05p0Z32MM96zBQKBPDjDw0mP3z1fmffVwB0KHFaYWWaEkMV5D6
+         Z/b3C0arycHRSRA6fwE48vVmgx8GQ4sLIGfVA88Qgv47BOaNeBESegDFlgneTgHNGa8e
+         qLq4tfIJ3gHSpDRz5Bh/PwLzbVm0XykJPyccgcGHLiqmFjoXeJmUm0NFeZEd8DACQDVN
+         SgzQ==
+X-Gm-Message-State: APjAAAU4GrTQ0a0KXjXKOodXvqIWqADhwIXDWl9bvTXV8rxhUEZO6lwW
+        /yQgdC2pVhlCdEH04SXAqe9nubSVGF/hkpRMLIWeCg==
+X-Google-Smtp-Source: APXvYqz0Vwb1KHsWbn8/aDWtdLwZ3rRstu0waCJX8IeICsvi6hiFusWUd29/DRu1D1oCQRFUW8e+wiwJuHJFA8W3Gf0=
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr7934284plq.325.1580437430525;
+ Thu, 30 Jan 2020 18:23:50 -0800 (PST)
+MIME-Version: 1.0
+References: <1579805221-31905-1-git-send-email-alan.maguire@oracle.com> <1579805221-31905-2-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1579805221-31905-2-git-send-email-alan.maguire@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 30 Jan 2020 18:23:39 -0800
+Message-ID: <CAFd5g47qWcmM1-BLoLSwd9pA7nDafzMM-0g54cipRBjXTp2edg@mail.gmail.com>
+Subject: Re: [PATCH v2 kunit-next 1/3] kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results
+ display
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vfio pci operates on regions
-(1) 0 ~ VFIO_PCI_NUM_REGIONS - 1
-(2) VFIO_PCI_NUM_REGIONS ~ VFIO_PCI_NUM_REGIONS + vdev->num_regions -1
+Sorry for taking so long to get to this. It's been a busy couple of weeks.
 
-vf_migration operates on regions
-VFIO_PCI_NUM_REGIONS + vdev->num_regions ~
-VFIO_PCI_NUM_REGIONS + vdev->num_regions + vdev->num_vendor_regions
+On Thu, Jan 23, 2020 at 10:47 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> add debugfs support for displaying kunit test suite results; this is
+> especially useful for module-loaded tests to allow disentangling of
+> test result display from other dmesg events.
+>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>  include/kunit/test.h |  21 ++++++++---
+>  lib/kunit/Makefile   |   3 +-
+>  lib/kunit/debugfs.c  | 104 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  lib/kunit/debugfs.h  |  16 ++++++++
+>  lib/kunit/test.c     |  85 ++++++++++++++++++++++++++++++-----------
+>  5 files changed, 202 insertions(+), 27 deletions(-)
+>  create mode 100644 lib/kunit/debugfs.c
+>  create mode 100644 lib/kunit/debugfs.h
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 2dfb550..37219b8a 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -125,6 +125,8 @@ struct kunit_case {
+>         bool success;
+>  };
+>
+> +#define        kunit_status2str(status)        (status ? "ok" : "not ok")
 
-vf_migration also intercept BAR0 write operation.
+nit: I would prefer kunit_status_to_string. Also, I would prefer this
+as a static inline function.
 
-Cc: Shaopeng He <shaopeng.he@intel.com>
+>  /**
+>   * KUNIT_CASE - A helper for creating a &struct kunit_case
+>   *
+> @@ -157,6 +159,9 @@ struct kunit_suite {
+>         int (*init)(struct kunit *test);
+>         void (*exit)(struct kunit *test);
+>         struct kunit_case *test_cases;
+> +
+> +       /* private - internal use only */
+> +       struct dentry *debugfs;
+>  };
+>
+>  /**
+> @@ -197,6 +202,15 @@ struct kunit {
+>
+>  int kunit_run_tests(struct kunit_suite *suite);
+>
+> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
+> +
+> +unsigned int kunit_test_case_num(struct kunit_suite *suite,
+> +                                struct kunit_case *test_case);
+> +
+> +int __kunit_test_suites_init(struct kunit_suite **suites);
+> +
+> +void __kunit_test_suites_exit(struct kunit_suite **suites);
+> +
+>  /**
+>   * kunit_test_suites() - used to register one or more &struct kunit_suite
+>   *                      with KUnit.
+> @@ -226,15 +240,12 @@ struct kunit {
+>         static struct kunit_suite *suites[] = { __VA_ARGS__, NULL};     \
+>         static int kunit_test_suites_init(void)                         \
+>         {                                                               \
+> -               unsigned int i;                                         \
+> -               for (i = 0; suites[i] != NULL; i++)                     \
+> -                       kunit_run_tests(suites[i]);                     \
+> -               return 0;                                               \
+> +               return __kunit_test_suites_init(suites);                \
+>         }                                                               \
+>         late_initcall(kunit_test_suites_init);                          \
+>         static void __exit kunit_test_suites_exit(void)                 \
+>         {                                                               \
+> -               return;                                                 \
+> +               return __kunit_test_suites_exit(suites);                \
+>         }                                                               \
+>         module_exit(kunit_test_suites_exit)
+>
+> diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> index fab5564..869aab0 100644
+> --- a/lib/kunit/Makefile
+> +++ b/lib/kunit/Makefile
+> @@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=                  kunit.o
+>  kunit-objs +=                          test.o \
+>                                         string-stream.o \
+>                                         assert.o \
+> -                                       try-catch.o
+> +                                       try-catch.o \
+> +                                       debugfs.o
+>
+>  obj-$(CONFIG_KUNIT_TEST) +=            kunit-test.o
+>
+> diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+> new file mode 100644
+> index 0000000..578843c
+> --- /dev/null
+> +++ b/lib/kunit/debugfs.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, Oracle and/or its affiliates.
+> + *    Author: Alan Maguire <alan.maguire@oracle.com>
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +#include <linux/module.h>
+> +
+> +#include <kunit/test.h>
+> +
+> +#include "string-stream.h"
+> +
+> +#define KUNIT_DEBUGFS_ROOT             "kunit"
+> +#define KUNIT_DEBUGFS_RESULTS          "results"
+> +
+> +/*
+> + * Create a debugfs representation of test suites:
+> + *
+> + * Path                                                Semantics
+> + * /sys/kernel/debug/kunit/<testsuite>/results Show results of last run for
+> + *                                             testsuite
+> + *
+> + */
+> +
+> +static struct dentry *debugfs_rootdir;
+> +
+> +void kunit_debugfs_cleanup(void)
+> +{
+> +       debugfs_remove_recursive(debugfs_rootdir);
+> +}
+> +
+> +void kunit_debugfs_init(void)
+> +{
+> +       if (!debugfs_rootdir)
+> +               debugfs_rootdir = debugfs_create_dir(KUNIT_DEBUGFS_ROOT, NULL);
+> +}
+> +
+> +static void debugfs_print_result(struct seq_file *seq,
+> +                                struct kunit_suite *suite,
+> +                                struct kunit_case *test_case)
+> +{
+> +       if (!test_case)
+> +               return;
+> +
+> +       seq_printf(seq, "\t%s %d - %s\n", kunit_status2str(test_case->success),
+> +                  kunit_test_case_num(suite, test_case), test_case->name);
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/net/ethernet/intel/Kconfig            |  10 +
- drivers/net/ethernet/intel/i40e/Makefile      |   2 +
- drivers/net/ethernet/intel/i40e/i40e.h        |   2 +
- .../ethernet/intel/i40e/i40e_vf_migration.c   | 590 ++++++++++++++++++
- .../ethernet/intel/i40e/i40e_vf_migration.h   |  92 +++
- 5 files changed, 696 insertions(+)
- create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
- create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+Do you think we might want to collect info printed to
+kunit_{info|warn|err}? I would think the expectation failure line at
+least would be desirable, no?
 
-diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
-index 154e2e818ec6..fee0e70e6164 100644
---- a/drivers/net/ethernet/intel/Kconfig
-+++ b/drivers/net/ethernet/intel/Kconfig
-@@ -264,6 +264,16 @@ config I40E_DCB
- 
- 	  If unsure, say N.
- 
-+config I40E_VF_MIGRATION
-+	tristate "XL710 Family VF live migration support -- loadable modules only"
-+	depends on I40E && VFIO_PCI && m
-+	help
-+	  Say m if you want to enable live migration of
-+	  Virtual Functions of Intel(R) Ethernet Controller XL710
-+	  Family of devices. It must be a module.
-+	  This module serves as vendor module of module vfio_pci.
-+	  VFs bind to module vfio_pci directly.
-+
- # this is here to allow seamless migration from I40EVF --> IAVF name
- # so that CONFIG_IAVF symbol will always mirror the state of CONFIG_I40EVF
- config IAVF
-diff --git a/drivers/net/ethernet/intel/i40e/Makefile b/drivers/net/ethernet/intel/i40e/Makefile
-index 2f21b3e89fd0..b80c224c2602 100644
---- a/drivers/net/ethernet/intel/i40e/Makefile
-+++ b/drivers/net/ethernet/intel/i40e/Makefile
-@@ -27,3 +27,5 @@ i40e-objs := i40e_main.o \
- 	i40e_xsk.o
- 
- i40e-$(CONFIG_I40E_DCB) += i40e_dcb.o i40e_dcb_nl.o
-+
-+obj-$(CONFIG_I40E_VF_MIGRATION) += i40e_vf_migration.o
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index 2af9f6308f84..0141c94b835f 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -1162,4 +1162,6 @@ int i40e_add_del_cloud_filter(struct i40e_vsi *vsi,
- int i40e_add_del_cloud_filter_big_buf(struct i40e_vsi *vsi,
- 				      struct i40e_cloud_filter *filter,
- 				      bool add);
-+int i40e_vf_migration_register(void);
-+void i40e_vf_migration_unregister(void);
- #endif /* _I40E_H_ */
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
-new file mode 100644
-index 000000000000..786356c51b0f
---- /dev/null
-+++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
-@@ -0,0 +1,590 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2013 - 2019 Intel Corporation. */
-+
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/vfio.h>
-+#include <linux/pci.h>
-+#include <linux/eventfd.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/sysfs.h>
-+#include <linux/file.h>
-+#include <linux/pci.h>
-+
-+#include "i40e.h"
-+#include "i40e_vf_migration.h"
-+
-+#define VERSION_STRING  "0.1"
-+#define DRIVER_AUTHOR   "Intel Corporation"
-+
-+static size_t set_device_state(struct i40e_vf_migration *i40e_vf_dev, u32 state)
-+{
-+	int ret = 0;
-+	struct vfio_device_migration_info *mig_ctl = i40e_vf_dev->mig_ctl;
-+
-+	if (state == mig_ctl->device_state)
-+		return ret;
-+
-+	switch (state) {
-+	case VFIO_DEVICE_STATE_RUNNING:
-+		break;
-+	case VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RUNNING:
-+		// alloc dirty page tracking resources and
-+		// do the first round dirty page scanning
-+		break;
-+	case VFIO_DEVICE_STATE_SAVING:
-+		// do the last round of dirty page scanning
-+		break;
-+	case ~VFIO_DEVICE_STATE_MASK & VFIO_DEVICE_STATE_MASK:
-+		// release dirty page tracking resources
-+		//if (mig_ctl->device_state == VFIO_DEVICE_STATE_SAVING)
-+		//      i40e_release_scan_resources(i40e_vf_dev);
-+		break;
-+	case VFIO_DEVICE_STATE_RESUMING:
-+		break;
-+	default:
-+		ret = -EFAULT;
-+	}
-+
-+	mig_ctl->device_state = state;
-+
-+	return ret;
-+}
-+
-+static
-+ssize_t i40e_vf_region_migration_rw(struct i40e_vf_migration *i40e_vf_dev,
-+				    char __user *buf, size_t count,
-+				    loff_t *ppos, bool iswrite)
-+{
-+#define VDM_OFFSET(x) offsetof(struct vfio_device_migration_info, x)
-+	struct vfio_device_migration_info *mig_ctl = i40e_vf_dev->mig_ctl;
-+	u64 pos = *ppos & VFIO_PCI_OFFSET_MASK;
-+
-+	switch (pos) {
-+	case VDM_OFFSET(device_state):
-+		if (count != sizeof(mig_ctl->device_state))
-+			return -EINVAL;
-+
-+		if (iswrite) {
-+			u32 device_state;
-+
-+			if (copy_from_user(&device_state, buf, count))
-+				return -EFAULT;
-+
-+			set_device_state(i40e_vf_dev, device_state);
-+			return count;
-+		}
-+		return -EFAULT;
-+
-+	case VDM_OFFSET(reserved):
-+		return -EFAULT;
-+
-+	case VDM_OFFSET(pending_bytes):
-+		{
-+		u64 p_bytes = 0;
-+
-+		if (count != sizeof(mig_ctl->pending_bytes))
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return -EFAULT;
-+
-+		return copy_to_user(buf, &p_bytes, count) ? -EFAULT : count;
-+		}
-+
-+	case VDM_OFFSET(data_offset):
-+		{
-+		u64 d_off = DIRTY_BITMAP_OFFSET;
-+
-+		if (count != sizeof(mig_ctl->data_offset))
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return -EFAULT;
-+
-+		/* always return dirty bitmap offset here as we don't support
-+		 * device internal dirty data and our pending_bytes always
-+		 * return 0
-+		 */
-+		return copy_to_user(buf, &d_off, count) ?
-+			-EFAULT : count;
-+		}
-+	case VDM_OFFSET(data_size):
-+		if (count != sizeof(mig_ctl->data_size))
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return copy_from_user(&mig_ctl->data_size, buf, count) ?
-+								-EFAULT : count;
-+		else
-+			return copy_to_user(buf, &mig_ctl->data_size, count) ?
-+								-EFAULT : count;
-+
-+	case VDM_OFFSET(start_pfn):
-+		if (count != sizeof(mig_ctl->start_pfn))
-+			return -EINVAL;
-+		if (iswrite)
-+			return copy_from_user(&mig_ctl->start_pfn, buf, count) ?
-+								-EFAULT : count;
-+		return -EFAULT;
-+
-+	case VDM_OFFSET(page_size):
-+		if (count != sizeof(mig_ctl->page_size))
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return copy_from_user(&mig_ctl->page_size, buf,	count) ?
-+								-EFAULT : count;
-+		return -EFAULT;
-+
-+	case VDM_OFFSET(total_pfns):
-+		if (count != sizeof(mig_ctl->total_pfns))
-+			return -EINVAL;
-+
-+		if (iswrite) {
-+			if (copy_from_user(&mig_ctl->total_pfns, buf, count))
-+				return -EFAULT;
-+			//calc dirty page bitmap
-+			return count;
-+		}
-+
-+		return -EFAULT;
-+
-+	case VDM_OFFSET(copied_pfns):
-+		if (count != sizeof(mig_ctl->copied_pfns))
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return -EFAULT;
-+
-+		return copy_to_user(buf, &mig_ctl->copied_pfns,	count) ?
-+							-EFAULT : count;
-+	case DIRTY_BITMAP_OFFSET:
-+		if (count > MIGRATION_DIRTY_BITMAP_SIZE || count < 0)
-+			return -EINVAL;
-+
-+		if (iswrite)
-+			return -EFAULT;
-+
-+		return copy_to_user(buf, i40e_vf_dev->dirty_bitmap, count) ?
-+							-EFAULT : count;
-+	default:
-+		return -EFAULT;
-+	}
-+}
-+
-+static
-+int i40e_vf_region_migration_add_cap(struct i40e_vf_migration *i40e_vf_dev,
-+				     struct i40e_vf_region *region,
-+				     struct vfio_info_cap *caps)
-+{
-+	struct vfio_region_info_cap_sparse_mmap *sparse;
-+	size_t size;
-+	int nr_areas = 1;
-+
-+	size = sizeof(*sparse) + (nr_areas * sizeof(*sparse->areas));
-+
-+	sparse = kzalloc(size, GFP_KERNEL);
-+	if (!sparse)
-+		return -ENOMEM;
-+
-+	sparse->header.id = VFIO_REGION_INFO_CAP_SPARSE_MMAP;
-+	sparse->header.version = 1;
-+	sparse->nr_areas = nr_areas;
-+
-+	sparse->areas[0].offset = DIRTY_BITMAP_OFFSET;
-+	sparse->areas[0].size = MIGRATION_DIRTY_BITMAP_SIZE;
-+
-+	vfio_info_add_capability(caps, &sparse->header, size);
-+	kfree(sparse);
-+	return 0;
-+}
-+
-+static
-+int i40e_vf_region_migration_mmap(struct i40e_vf_migration *i40e_vf_dev,
-+				  struct i40e_vf_region *region,
-+				  struct vm_area_struct *vma)
-+{
-+	unsigned long pgoff = 0;
-+	void *base;
-+
-+	base = i40e_vf_dev->dirty_bitmap;
-+
-+	if (vma->vm_end < vma->vm_start)
-+		return -EINVAL;
-+
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return -EINVAL;
-+
-+	pgoff = vma->vm_pgoff &
-+		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
-+
-+	if (pgoff != DIRTY_BITMAP_OFFSET / PAGE_SIZE)
-+		return -EINVAL;
-+
-+	return remap_vmalloc_range(vma, base, 0);
-+}
-+
-+static
-+void i40e_vf_region_migration_release(struct i40e_vf_migration *i40e_vf_dev,
-+				      struct i40e_vf_region *region)
-+{
-+	if (i40e_vf_dev->dirty_bitmap) {
-+		vfree(i40e_vf_dev->dirty_bitmap);
-+		i40e_vf_dev->dirty_bitmap = NULL;
-+	}
-+	kfree(i40e_vf_dev->mig_ctl);
-+	i40e_vf_dev->mig_ctl = NULL;
-+}
-+
-+static const struct i40e_vf_region_ops i40e_vf_region_ops_migration = {
-+	.rw		= i40e_vf_region_migration_rw,
-+	.release	= i40e_vf_region_migration_release,
-+	.mmap		= i40e_vf_region_migration_mmap,
-+	.add_cap	= i40e_vf_region_migration_add_cap
-+};
-+
-+static int i40e_vf_register_region(struct i40e_vf_migration *i40e_vf_dev,
-+				   unsigned int type, unsigned int subtype,
-+				   const struct i40e_vf_region_ops *ops,
-+				   size_t size, u32 flags, void *data)
-+{
-+	struct i40e_vf_region *regions;
-+
-+	regions = krealloc(i40e_vf_dev->regions,
-+			   (i40e_vf_dev->num_regions + 1) * sizeof(*regions),
-+			   GFP_KERNEL);
-+	if (!regions)
-+		return -ENOMEM;
-+
-+	i40e_vf_dev->regions = regions;
-+	regions[i40e_vf_dev->num_regions].type = type;
-+	regions[i40e_vf_dev->num_regions].subtype = subtype;
-+	regions[i40e_vf_dev->num_regions].ops = ops;
-+	regions[i40e_vf_dev->num_regions].size = size;
-+	regions[i40e_vf_dev->num_regions].flags = flags;
-+	regions[i40e_vf_dev->num_regions].data = data;
-+	i40e_vf_dev->num_regions++;
-+	return 0;
-+}
-+
-+void *i40e_vf_probe(struct pci_dev *pdev)
-+{
-+	struct i40e_vf_migration *i40e_vf_dev = NULL;
-+	struct pci_dev *pf_dev, *vf_dev;
-+	struct i40e_pf *pf;
-+	struct i40e_vf *vf;
-+	unsigned int vf_devfn, devfn;
-+	int vf_id = -1;
-+	int i;
-+
-+	pf_dev = pdev->physfn;
-+	pf = pci_get_drvdata(pf_dev);
-+	vf_dev = pdev;
-+	vf_devfn = vf_dev->devfn;
-+
-+	for (i = 0; i < pci_num_vf(pf_dev); i++) {
-+		devfn = (pf_dev->devfn + pf_dev->sriov->offset +
-+			 pf_dev->sriov->stride * i) & 0xff;
-+		if (devfn == vf_devfn) {
-+			vf_id = i;
-+			break;
-+		}
-+	}
-+
-+	if (vf_id == -1)
-+		return ERR_PTR(-EINVAL);
-+
-+	i40e_vf_dev = kzalloc(sizeof(*i40e_vf_dev), GFP_KERNEL);
-+
-+	if (!i40e_vf_dev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	i40e_vf_dev->vf_id = vf_id;
-+	i40e_vf_dev->vf_vendor = pdev->vendor;
-+	i40e_vf_dev->vf_device = pdev->device;
-+	i40e_vf_dev->pf_dev = pf_dev;
-+	i40e_vf_dev->vf_dev = vf_dev;
-+	mutex_init(&i40e_vf_dev->reflock);
-+
-+	vf = &pf->vf[vf_id];
-+
-+	return i40e_vf_dev;
-+}
-+
-+static void i40e_vf_remove(void *vendor_data)
-+{
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vendor_data;
-+	kfree(i40e_vf_dev);
-+}
-+
-+static int i40e_vf_open(void *device_data)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+	int ret;
-+	struct vfio_device_migration_info *mig_ctl = NULL;
-+	void *dirty_bitmap_base = NULL;
-+
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
-+	mutex_lock(&i40e_vf_dev->reflock);
-+	if (!i40e_vf_dev->refcnt) {
-+		mig_ctl = kzalloc(sizeof(*mig_ctl), GFP_KERNEL);
-+		if (!mig_ctl) {
-+			module_put(THIS_MODULE);
-+			mutex_unlock(&i40e_vf_dev->reflock);
-+			return -ENOMEM;
-+		}
-+
-+		dirty_bitmap_base = vmalloc_user(MIGRATION_DIRTY_BITMAP_SIZE);
-+		if (!dirty_bitmap_base) {
-+			kfree(mig_ctl);
-+			module_put(THIS_MODULE);
-+			mutex_unlock(&i40e_vf_dev->reflock);
-+			return -ENOMEM;
-+		}
-+
-+		ret = i40e_vf_register_region(i40e_vf_dev,
-+					      VFIO_REGION_TYPE_MIGRATION,
-+					      VFIO_REGION_SUBTYPE_MIGRATION,
-+					      &i40e_vf_region_ops_migration,
-+					      DIRTY_BITMAP_OFFSET +
-+					      MIGRATION_DIRTY_BITMAP_SIZE,
-+					      VFIO_REGION_INFO_FLAG_CAPS |
-+					      VFIO_REGION_INFO_FLAG_READ |
-+					      VFIO_REGION_INFO_FLAG_WRITE |
-+					      VFIO_REGION_INFO_FLAG_MMAP,
-+					      NULL);
-+		if (ret) {
-+			kfree(mig_ctl);
-+			vfree(dirty_bitmap_base);
-+			module_put(THIS_MODULE);
-+			mutex_unlock(&i40e_vf_dev->reflock);
-+			return ret;
-+		}
-+
-+		i40e_vf_dev->dirty_bitmap = dirty_bitmap_base;
-+		i40e_vf_dev->mig_ctl = mig_ctl;
-+		vdev->num_vendor_regions = i40e_vf_dev->num_regions;
-+	}
-+
-+	ret = vfio_pci_open(vdev);
-+	if (ret) {
-+		module_put(THIS_MODULE);
-+		mutex_unlock(&i40e_vf_dev->reflock);
-+		return ret;
-+	}
-+
-+	i40e_vf_dev->refcnt++;
-+	mutex_unlock(&i40e_vf_dev->reflock);
-+	return 0;
-+}
-+
-+void i40e_vf_release(void *device_data)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+
-+	mutex_lock(&i40e_vf_dev->reflock);
-+	if (!--i40e_vf_dev->refcnt) {
-+		int i;
-+
-+		for (i = 0; i < i40e_vf_dev->num_regions; i++)
-+			i40e_vf_dev->regions[i].ops->release(i40e_vf_dev,
-+						&i40e_vf_dev->regions[i]);
-+		i40e_vf_dev->num_regions = 0;
-+		kfree(i40e_vf_dev->regions);
-+		i40e_vf_dev->regions = NULL;
-+		vdev->num_vendor_regions = 0;
-+	}
-+	mutex_unlock(&i40e_vf_dev->reflock);
-+	vfio_pci_release(vdev);
-+	module_put(THIS_MODULE);
-+}
-+
-+static long i40e_vf_ioctl(void *device_data,
-+			  unsigned int cmd, unsigned long arg)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+	unsigned long minsz;
-+
-+	if (cmd == VFIO_DEVICE_GET_REGION_INFO) {
-+		struct vfio_region_info info;
-+		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-+		int index, ret;
-+		struct vfio_region_info_cap_type cap_type = {
-+			.header.id = VFIO_REGION_INFO_CAP_TYPE,
-+			.header.version = 1 };
-+		struct i40e_vf_region *regions;
-+
-+		minsz = offsetofend(struct vfio_region_info, offset);
-+
-+		if (copy_from_user(&info, (void __user *)arg, minsz))
-+			return -EFAULT;
-+		if (info.argsz < minsz)
-+			return -EINVAL;
-+		if (info.index < VFIO_PCI_NUM_REGIONS + vdev->num_regions)
-+			goto default_handle;
-+
-+		index = info.index - VFIO_PCI_NUM_REGIONS - vdev->num_regions;
-+		if (index > i40e_vf_dev->num_regions)
-+			return -EINVAL;
-+
-+		info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
-+		regions = i40e_vf_dev->regions;
-+		info.size = regions[index].size;
-+		info.flags = regions[index].flags;
-+		cap_type.type = regions[index].type;
-+		cap_type.subtype = regions[index].subtype;
-+
-+		ret = vfio_info_add_capability(&caps, &cap_type.header,
-+					       sizeof(cap_type));
-+		if (ret)
-+			return ret;
-+
-+		if (regions[index].ops->add_cap) {
-+			ret = regions[index].ops->add_cap(i40e_vf_dev,
-+						&regions[index], &caps);
-+				if (ret)
-+					return ret;
-+		}
-+
-+		if (caps.size) {
-+			info.flags |= VFIO_REGION_INFO_FLAG_CAPS;
-+			if (info.argsz < sizeof(info) + caps.size) {
-+				info.argsz = sizeof(info) + caps.size;
-+				info.cap_offset = 0;
-+			} else {
-+				vfio_info_cap_shift(&caps, sizeof(info));
-+				if (copy_to_user((void __user *)arg +
-+						  sizeof(info), caps.buf,
-+						  caps.size)) {
-+					kfree(caps.buf);
-+					return -EFAULT;
-+				}
-+				info.cap_offset = sizeof(info);
-+			}
-+
-+			kfree(caps.buf);
-+		}
-+
-+		return copy_to_user((void __user *)arg, &info, minsz) ?
-+			-EFAULT : 0;
-+	}
-+
-+default_handle:
-+	return vfio_pci_ioctl(vdev, cmd, arg);
-+}
-+
-+static ssize_t i40e_vf_read(void *device_data, char __user *buf,
-+			    size_t count, loff_t *ppos)
-+{
-+	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+	struct i40e_vf_region *region;
-+
-+	if (index < VFIO_PCI_NUM_REGIONS + vdev->num_regions)
-+		return vfio_pci_read(vdev, buf, count, ppos);
-+	else if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions +
-+			vdev->num_vendor_regions)
-+		return -EINVAL;
-+
-+	index -= VFIO_PCI_NUM_REGIONS + vdev->num_regions;
-+
-+	region = &i40e_vf_dev->regions[index];
-+	if (!region->ops->rw)
-+		return -EINVAL;
-+
-+	return region->ops->rw(i40e_vf_dev, buf, count, ppos, false);
-+}
-+
-+static ssize_t i40e_vf_write(void *device_data, const char __user *buf,
-+			     size_t count, loff_t *ppos)
-+{
-+	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+	struct i40e_vf_region *region;
-+
-+	if (index == VFIO_PCI_BAR0_REGION_INDEX)
-+		;// scan dirty pages
-+
-+	if (index < VFIO_PCI_NUM_REGIONS + vdev->num_regions)
-+		return vfio_pci_write(vdev, buf, count, ppos);
-+	else if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions +
-+			vdev->num_vendor_regions)
-+		return -EINVAL;
-+
-+	index -= VFIO_PCI_NUM_REGIONS + vdev->num_regions;
-+
-+	region = &i40e_vf_dev->regions[index];
-+
-+	if (!region->ops->rw)
-+		return -EINVAL;
-+
-+	return region->ops->rw(i40e_vf_dev, (char __user *)buf,
-+			       count, ppos, true);
-+}
-+
-+static int i40e_vf_mmap(void *device_data, struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+	struct i40e_vf_migration *i40e_vf_dev =
-+				(struct i40e_vf_migration *)vdev->vendor_data;
-+	unsigned int index;
-+	struct i40e_vf_region *region;
-+
-+	index = vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
-+	if (index < VFIO_PCI_NUM_REGIONS + vdev->num_regions)
-+		return vfio_pci_mmap(vdev, vma);
-+	else if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions +
-+			vdev->num_vendor_regions)
-+		return -EINVAL;
-+
-+	index -= VFIO_PCI_NUM_REGIONS + vdev->num_regions;
-+
-+	region = &i40e_vf_dev->regions[index];
-+	if (!region->ops->mmap)
-+		return -EINVAL;
-+
-+	return region->ops->mmap(i40e_vf_dev, region, vma);
-+}
-+
-+static void i40e_vf_request(void *device_data, unsigned int count)
-+{
-+	struct vfio_pci_device *vdev = device_data;
-+
-+	vfio_pci_request(vdev, count);
-+}
-+
-+static struct vfio_device_ops i40e_vf_device_ops_node = {
-+	.name		= "i40e_vf",
-+	.open		= i40e_vf_open,
-+	.release	= i40e_vf_release,
-+	.ioctl		= i40e_vf_ioctl,
-+	.read		= i40e_vf_read,
-+	.write		= i40e_vf_write,
-+	.mmap		= i40e_vf_mmap,
-+	.request	= i40e_vf_request,
-+};
-+
-+#define i40e_vf_device_ops (&i40e_vf_device_ops_node)
-+module_vfio_pci_register_vendor_handler("I40E VF", i40e_vf_probe,
-+					i40e_vf_remove, i40e_vf_device_ops);
-+
-+MODULE_ALIAS("vfio-pci:8086-154c");
-+MODULE_LICENSE("GPL v2");
-+MODULE_INFO(supported, "Vendor driver of vfio pci to support VF live migration");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-new file mode 100644
-index 000000000000..4d804f8cb032
---- /dev/null
-+++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-@@ -0,0 +1,92 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright(c) 2013 - 2019 Intel Corporation. */
-+
-+#ifndef I40E_MIG_H
-+#define I40E_MIG_H
-+
-+#include <linux/pci.h>
-+#include <linux/vfio.h>
-+#include <linux/mdev.h>
-+
-+#include "i40e.h"
-+#include "i40e_txrx.h"
-+
-+/* helper macros copied from vfio-pci */
-+#define VFIO_PCI_OFFSET_SHIFT   40
-+#define VFIO_PCI_OFFSET_TO_INDEX(off)   ((off) >> VFIO_PCI_OFFSET_SHIFT)
-+#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
-+#define VFIO_PCI_OFFSET_MASK    (((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
-+#define DIRTY_BITMAP_OFFSET \
-+			PAGE_ALIGN(sizeof(struct vfio_device_migration_info))
-+#define MIGRATION_DIRTY_BITMAP_SIZE (64 * 1024UL)
-+
-+/* Single Root I/O Virtualization */
-+struct pci_sriov {
-+	int		pos;		/* Capability position */
-+	int		nres;		/* Number of resources */
-+	u32		cap;		/* SR-IOV Capabilities */
-+	u16		ctrl;		/* SR-IOV Control */
-+	u16		total_VFs;	/* Total VFs associated with the PF */
-+	u16		initial_VFs;	/* Initial VFs associated with the PF */
-+	u16		num_VFs;	/* Number of VFs available */
-+	u16		offset;		/* First VF Routing ID offset */
-+	u16		stride;		/* Following VF stride */
-+	u16		vf_device;	/* VF device ID */
-+	u32		pgsz;		/* Page size for BAR alignment */
-+	u8		link;		/* Function Dependency Link */
-+	u8		max_VF_buses;	/* Max buses consumed by VFs */
-+	u16		driver_max_VFs;	/* Max num VFs driver supports */
-+	struct pci_dev	*dev;		/* Lowest numbered PF */
-+	struct pci_dev	*self;		/* This PF */
-+	u32		cfg_size;	/* VF config space size */
-+	u32		class;		/* VF device */
-+	u8		hdr_type;	/* VF header type */
-+	u16		subsystem_vendor; /* VF subsystem vendor */
-+	u16		subsystem_device; /* VF subsystem device */
-+	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
-+	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
-+};
-+
-+struct i40e_vf_migration {
-+	__u32				vf_vendor;
-+	__u32				vf_device;
-+	__u32				handle;
-+	struct pci_dev			*pf_dev;
-+	struct pci_dev			*vf_dev;
-+	int				vf_id;
-+	int				refcnt;
-+	struct				mutex reflock; /*mutex protect refcnt */
-+
-+	struct vfio_device_migration_info *mig_ctl;
-+	void				*dirty_bitmap;
-+
-+	struct i40e_vf_region		*regions;
-+	int				num_regions;
-+};
-+
-+struct i40e_vf_region;
-+struct i40e_vf_region_ops {
-+	ssize_t	(*rw)(struct i40e_vf_migration *i40e_vf_dev,
-+		      char __user *buf, size_t count,
-+		      loff_t *ppos, bool iswrite);
-+	void	(*release)(struct i40e_vf_migration *i40e_vf_dev,
-+			   struct i40e_vf_region *region);
-+	int	(*mmap)(struct i40e_vf_migration *i40e_vf_dev,
-+			struct i40e_vf_region *region,
-+			struct vm_area_struct *vma);
-+	int	(*add_cap)(struct i40e_vf_migration *i40e_vf_dev,
-+			   struct i40e_vf_region *region,
-+			   struct vfio_info_cap *caps);
-+};
-+
-+struct i40e_vf_region {
-+	u32				type;
-+	u32				subtype;
-+	size_t				size;
-+	u32				flags;
-+	const struct i40e_vf_region_ops	*ops;
-+	void				*data;
-+};
-+
-+#endif /* I40E_MIG_H */
-+
--- 
-2.17.1
+> +}
+> +
+> +/*
+> + * /sys/kernel/debug/kunit/<testsuite>/results shows all results for testsuite.
+> + */
+> +static int debugfs_print_results(struct seq_file *seq, void *v)
+> +{
+> +       struct kunit_suite *suite = (struct kunit_suite *)seq->private;
+> +       struct kunit_case *test_case;
+> +
+> +       if (!suite)
+> +               return 0;
+> +
+> +       seq_printf(seq, "\t# Subtest: %s\n", suite->name);
+> +       seq_printf(seq, "\t1..%zd\n", kunit_suite_num_test_cases(suite));
 
+Is there any way to reuse the format strings/printing from test.c? It
+would be nice if we didn't have to remember to update two printers.
+
+> +
+> +       for (test_case = suite->test_cases; test_case->run_case; test_case++)
+> +               debugfs_print_result(seq, suite, test_case);
+> +
+> +       return 0;
+> +}
+> +
+> +static int debugfs_release(struct inode *inode, struct file *file)
+> +{
+> +       return single_release(inode, file);
+> +}
+> +
+> +static int debugfs_results_open(struct inode *inode, struct file *file)
+> +{
+> +       struct kunit_suite *suite;
+> +
+> +       suite = (struct kunit_suite *)inode->i_private;
+> +
+> +       return single_open(file, debugfs_print_results, suite);
+> +}
+> +
+> +static const struct file_operations debugfs_results_fops = {
+> +       .open = debugfs_results_open,
+> +       .read = seq_read,
+> +       .llseek = seq_lseek,
+> +       .release = debugfs_release,
+> +};
+> +
+> +void kunit_debugfs_create_suite(struct kunit_suite *suite)
+> +{
+> +       /* First add /sys/kernel/debug/kunit/<testsuite> */
+> +       suite->debugfs = debugfs_create_dir(suite->name, debugfs_rootdir);
+> +
+> +       debugfs_create_file(KUNIT_DEBUGFS_RESULTS, S_IFREG | 0444,
+> +                           suite->debugfs,
+> +                           suite, &debugfs_results_fops);
+> +}
+> +
+> +void kunit_debugfs_destroy_suite(struct kunit_suite *suite)
+> +{
+> +       debugfs_remove_recursive(suite->debugfs);
+> +}
+> diff --git a/lib/kunit/debugfs.h b/lib/kunit/debugfs.h
+> new file mode 100644
+> index 0000000..9a92d5e
+> --- /dev/null
+> +++ b/lib/kunit/debugfs.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020, Oracle and/or its affiliates.
+> + */
+> +
+> +#ifndef _KUNIT_DEBUGFS_H
+> +#define _KUNIT_DEBUGFS_H
+> +
+> +#include <kunit/test.h>
+> +
+> +void kunit_debugfs_create_suite(struct kunit_suite *suite);
+> +void kunit_debugfs_destroy_suite(struct kunit_suite *suite);
+> +void kunit_debugfs_init(void);
+> +void kunit_debugfs_cleanup(void);
+> +
+> +#endif /* _KUNIT_DEBUGFS_H */
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 9242f93..07089ca 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched/debug.h>
+>
+> +#include "debugfs.h"
+>  #include "string-stream.h"
+>  #include "try-catch-impl.h"
+>
+> @@ -28,22 +29,24 @@ static void kunit_print_tap_version(void)
+>         }
+>  }
+>
+> -static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
+>  {
+> -       struct kunit_case *test_case;
+> +       struct kunit_case *test_case, *test_cases = suite->test_cases;
+>         size_t len = 0;
+>
+> -       for (test_case = test_cases; test_case->run_case; test_case++)
+> +       for (test_case = test_cases; test_case && test_case->run_case;
+> +            test_case++)
+>                 len++;
+>
+>         return len;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+>
+>  static void kunit_print_subtest_start(struct kunit_suite *suite)
+>  {
+>         kunit_print_tap_version();
+>         pr_info("\t# Subtest: %s\n", suite->name);
+> -       pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
+> +       pr_info("\t1..%zd\n", kunit_suite_num_test_cases(suite));
+>  }
+>
+>  static void kunit_print_ok_not_ok(bool should_indent,
+> @@ -51,19 +54,15 @@ static void kunit_print_ok_not_ok(bool should_indent,
+>                                   size_t test_number,
+>                                   const char *description)
+>  {
+> -       const char *indent, *ok_not_ok;
+> +       const char *indent;
+>
+>         if (should_indent)
+>                 indent = "\t";
+>         else
+>                 indent = "";
+>
+> -       if (is_ok)
+> -               ok_not_ok = "ok";
+> -       else
+> -               ok_not_ok = "not ok";
+> -
+> -       pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
+> +       pr_info("%s%s %zd - %s\n", indent, kunit_status2str(is_ok),
+> +               test_number, description);
+>  }
+>
+>  static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+> @@ -87,14 +86,20 @@ static void kunit_print_subtest_end(struct kunit_suite *suite)
+>                               suite->name);
+>  }
+>
+> -static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> -                                           size_t test_number)
+> +unsigned int kunit_test_case_num(struct kunit_suite *suite,
+> +                                struct kunit_case *test_case)
+>  {
+> -       kunit_print_ok_not_ok(true,
+> -                             test_case->success,
+> -                             test_number,
+> -                             test_case->name);
+> +       struct kunit_case *tc;
+> +       unsigned int i;
+> +
+> +       for (i = 1, tc = suite->test_cases; tc->run_case; tc++, i++) {
+> +               if (tc == test_case)
+> +                       return i;
+> +       }
+> +
+> +       return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_test_case_num);
+>
+>  static void kunit_print_string_stream(struct kunit *test,
+>                                       struct string_stream *stream)
+> @@ -102,6 +107,9 @@ static void kunit_print_string_stream(struct kunit *test,
+>         struct string_stream_fragment *fragment;
+>         char *buf;
+>
+> +       if (string_stream_is_empty(stream))
+> +               return;
+> +
+>         buf = string_stream_get_string(stream);
+>         if (!buf) {
+>                 kunit_err(test,
+> @@ -303,19 +311,20 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+>         kunit_try_catch_run(try_catch, &context);
+>
+>         test_case->success = test.success;
+> +
+> +       kunit_print_ok_not_ok(true, test_case->success,
+> +                             kunit_test_case_num(suite, test_case),
+> +                             test_case->name);
+>  }
+>
+>  int kunit_run_tests(struct kunit_suite *suite)
+>  {
+>         struct kunit_case *test_case;
+> -       size_t test_case_count = 1;
+>
+>         kunit_print_subtest_start(suite);
+>
+> -       for (test_case = suite->test_cases; test_case->run_case; test_case++) {
+> +       for (test_case = suite->test_cases; test_case->run_case; test_case++)
+>                 kunit_run_case_catch_errors(suite, test_case);
+> -               kunit_print_test_case_ok_not_ok(test_case, test_case_count++);
+> -       }
+>
+>         kunit_print_subtest_end(suite);
+>
+> @@ -323,6 +332,37 @@ int kunit_run_tests(struct kunit_suite *suite)
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_run_tests);
+>
+> +static void kunit_init_suite(struct kunit_suite *suite)
+> +{
+> +       kunit_debugfs_create_suite(suite);
+> +}
+
+It looks like this is only called in one place, can we just call
+kunit_debugfs_create_suite directly?
+
+> +
+> +int __kunit_test_suites_init(struct kunit_suite **suites)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i = 0; suites[i] != NULL; i++) {
+> +               kunit_init_suite(suites[i]);
+> +               kunit_run_tests(suites[i]);
+> +       }
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
+> +
+> +static void kunit_exit_suite(struct kunit_suite *suite)
+> +{
+> +       kunit_debugfs_destroy_suite(suite);
+> +}
+> +
+> +void __kunit_test_suites_exit(struct kunit_suite **suites)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i = 0; suites[i] != NULL; i++)
+> +               kunit_exit_suite(suites[i]);
+> +}
+> +EXPORT_SYMBOL_GPL(__kunit_test_suites_exit);
+> +
+>  struct kunit_resource *kunit_alloc_and_get_resource(struct kunit *test,
+>                                                     kunit_resource_init_t init,
+>                                                     kunit_resource_free_t free,
+> @@ -489,12 +529,15 @@ void kunit_cleanup(struct kunit *test)
+>
+>  static int __init kunit_init(void)
+>  {
+> +       kunit_debugfs_init();
+> +
+>         return 0;
+>  }
+>  late_initcall(kunit_init);
+>
+>  static void __exit kunit_exit(void)
+>  {
+> +       kunit_debugfs_cleanup();
+>  }
+>  module_exit(kunit_exit);
+>
+> --
+> 1.8.3.1
+>
