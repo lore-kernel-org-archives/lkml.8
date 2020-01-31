@@ -2,87 +2,105 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8168C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DC6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0E324687
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96ABA2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgAaHRV (ORCPT
+        id S1728117AbgAaHW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:17:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42644 "EHLO mx2.suse.de"
+        Fri, 31 Jan 2020 02:22:57 -0500
+Received: from mga11.intel.com ([192.55.52.93]:41834 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbgAaHRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:17:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D096FAB6D;
-        Fri, 31 Jan 2020 07:17:17 +0000 (UTC)
-Date:   Fri, 31 Jan 2020 08:17:16 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>, nstange@suse.de
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200131071716.GA9569@linux-b0ei>
-References: <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
- <20200122214239.ivnebi7hiabi5tbs@treble>
- <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
- <20200128150014.juaxfgivneiv6lje@treble>
- <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
- <20200128170254.igb72ib5n7lvn3ds@treble>
- <alpine.LSU.2.21.2001291249430.28615@pobox.suse.cz>
- <20200129155951.qvf3tjsv2qvswciw@treble>
- <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
- <20200130141733.krfdmirathscgkkp@treble>
+        id S1728027AbgAaHW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 02:22:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 23:22:56 -0800
+X-IronPort-AV: E=Sophos;i="5.70,385,1574150400"; 
+   d="scan'208";a="223055979"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.169]) ([10.249.168.169])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 30 Jan 2020 23:22:54 -0800
+Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <cf79eeeb-e107-bdff-13a8-c52288d0d123@intel.com>
+ <A2E4B0E3-EDDF-46FD-8CE9-62A2E2E4BF20@amacapital.net>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <3499ee3f-e734-50fd-1b50-f6923d1f4f76@intel.com>
+Date:   Fri, 31 Jan 2020 15:22:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130141733.krfdmirathscgkkp@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <A2E4B0E3-EDDF-46FD-8CE9-62A2E2E4BF20@amacapital.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-01-30 08:17:33, Josh Poimboeuf wrote:
-> On Thu, Jan 30, 2020 at 10:53:46AM +0100, Petr Mladek wrote:
-> > On Wed 2020-01-29 09:59:51, Josh Poimboeuf wrote:
-> > > In retrospect, the prerequisites for merging it should have been:
-> > 
-> > OK, let me do one more move in this game.
-> > 
-> > 
-> > > 1) Document how source-based patches can be safely generated;
-> > 
-> > I agree that the information are really scattered over many files
-> > in Documentation/livepatch/.
+On 1/31/2020 1:16 AM, Andy Lutomirski wrote:
 > 
-> Once again you're blithely ignoring my point and pretending I'm saying
-> something else.  And you did that again further down in the email, but
-> what's the point of arguing if you're not going to listen.
+> 
+>> On Jan 30, 2020, at 8:30 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+>>
+>> ﻿On 1/30/2020 11:18 PM, Andy Lutomirski wrote:
+>>>>> On Jan 30, 2020, at 4:24 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+>>>>
+>>>> ﻿There are two types of #AC can be generated in Intel CPUs:
+>>>> 1. legacy alignment check #AC;
+>>>> 2. split lock #AC;
+>>>>
+>>>> Legacy alignment check #AC can be injected to guest if guest has enabled
+>>>> alignemnet check.
+>>>>
+>>>> When host enables split lock detection, i.e., split_lock_detect!=off,
+>>>> guest will receive an unexpected #AC when there is a split_lock happens in
+>>>> guest since KVM doesn't virtualize this feature to guest.
+>>>>
+>>>> Since the old guests lack split_lock #AC handler and may have split lock
+>>>> buges. To make guest survive from split lock, applying the similar policy
+>>>> as host's split lock detect configuration:
+>>>> - host split lock detect is sld_warn:
+>>>>    warning the split lock happened in guest, and disabling split lock
+>>>>    detect around VM-enter;
+>>>> - host split lock detect is sld_fatal:
+>>>>    forwarding #AC to userspace. (Usually userspace dump the #AC
+>>>>    exception and kill the guest).
+>>> A correct userspace implementation should, with a modern guest kernel, forward the exception. Otherwise you’re introducing a DoS into the guest if the guest kernel is fine but guest userspace is buggy.
+>>
+>> To prevent DoS in guest, the better solution is virtualizing and advertising this feature to guest, so guest can explicitly enable it by setting split_lock_detect=fatal, if it's a latest linux guest.
+>>
+>> However, it's another topic, I'll send out the patches later.
+>>
+> 
+> Can we get a credible description of how this would work? I suggest:
+> 
+> Intel adds and documents a new CPUID bit or core capability bit that means “split lock detection is forced on”.  If this bit is set, the MSR bit controlling split lock detection is still writable, but split lock detection is on regardless of the value.  Operating systems are expected to set the bit to 1 to indicate to a hypervisor, if present, that they understand that split lock detection is on.
+> 
+> This would be an SDM-only change, but it would also be a commitment to certain behavior for future CPUs that don’t implement split locks.
 
-I have exactly the same feeling but the opposite way.
+It sounds a PV solution for virtualization that it doesn't need to be 
+defined in Intel-SDM but in KVM document.
 
-> I would ask that you please put on your upstream hats and stop playing
-> politics.  If the patch creation process is a secret, then by all means,
-> keep it secret.  But then keep your GCC flag to yourself.
+As you suggested, we can define new bit in KVM_CPUID_FEATURES 
+(0x40000001) as KVM_FEATURE_SLD_FORCED and reuse MSR_TEST_CTL or use a 
+new virtualized MSR for guest to tell hypervisor it understand split 
+lock detection is forced on.
 
-The thing is that we do not have any magic secret.
+> Can one of you Intel folks ask the architecture team about this?
+> 
 
-Best Regards,
-Petr
