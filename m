@@ -2,110 +2,137 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DD5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C18C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BB120705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFA020705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VtV9rSnh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JUFWKDQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgAaPJu (ORCPT
+        id S1729290AbgAaPKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:09:50 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:60146 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729071AbgAaPJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:09:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=2diiy8c4y3CQgdL4Lzi01JXwoWYa5nYVCP1kWDev+KA=; b=VtV9rSnhaU0/x3uU0Ks1rPZwoy
-        udAyQG7ZDC0OTihQpPDz/WkVWXMvNN/aqQsxdfKqkoW3c4SQ2yZdFcgUxpNGOvWeOW6fiDxhTMgbr
-        MAw/DzHa16yTES2h6C2kEpkRtp3LtWyVvPX3tDO5U2vDa7SjwSyPDdFS82it+CbcDj1w=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ixXvF-0007n7-4E; Fri, 31 Jan 2020 16:09:29 +0100
-Date:   Fri, 31 Jan 2020 16:09:29 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Message-ID: <20200131150929.GB13902@lunn.ch>
-References: <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
- <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
- <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
- <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
- <20200131142906.GG9639@lunn.ch>
- <20200131144737.GA4948@willie-the-truck>
+        Fri, 31 Jan 2020 10:10:21 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38359 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgAaPKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 10:10:21 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z9so6849451oth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 07:10:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q/xXQBacUD2LT8kSykWMZ7/iwuqhb5D7McardiSYKME=;
+        b=JUFWKDQBUMYZ+0Y15MzGZH1cBQT2UEcvEfM4E0GwkSULZlsWxrkdc7pJzG02OgilmU
+         vdaLyfpR+04czvv95l9J4nzOUDUqm9wFLgK5o3sNq/sW/FlkivfpWsBzyzCE8JNoIZAt
+         IqWiwgC8QoZQbQkpYIf5rI33i+H1jfEz9FyDBIcOO+eQmV7aA5nmdCnnD7GowP4yLloB
+         TZxqlOahpyf1I9Rc008vBmQ48VkwK1+XLR6jAz0q3au80nCO4PBrCjhmOmRYfPnVDpXp
+         tZFeMav43caGNzk+zne9P5gm7wPI3qnG21TpVjNKLX2amGfSOkgvpFcI6bKNmXPTFQwj
+         Jofw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q/xXQBacUD2LT8kSykWMZ7/iwuqhb5D7McardiSYKME=;
+        b=nWOqqNCsrMLUWnYF866WJHyuIl9t9lRpVoQTJLb+M4L6rdc+WPJiN6LCcrjXbsmF+L
+         JRMBa6jUiYMPQNgkju97uzm0clnXPzaSd3FFj7P6VfRPnuNBlpAPWSTaH5awkTNaDSft
+         kdA343I0ZBhc5eJNjXGxcla2oC1bNUolTpzmAI48ajseTLlhlg6tbCeK/yYhG+G//isM
+         9KDroKpYh2bitsZyRM6mhek/iqpHnOq1b3RwK5GHhhw5TSCmxie0aCfnsc8L4AIzLd0E
+         RO7RWj0VG2766Hgw/VJVV/5Vrifu7T1BsFOLfHu0I1KPcxkzuHlaoajEzaGX1lYSNZNV
+         P4eA==
+X-Gm-Message-State: APjAAAWNFbORAKIZkWPZnM9rRuA5QbkgnoecMKjn0jXM7vNr6L2wiMN7
+        EtjTC2VEXaHUI8VkHCacFgMqZupcgun4RlH4xJPK6Q==
+X-Google-Smtp-Source: APXvYqzdUKbLLFfbg0yUNrwjz7Px+wdEBBUAVUZlYOtmTmp4jvGH53EmoZv1kff+Lskv6SBX/aOHDRpmoh9H+TeRGFQ=
+X-Received: by 2002:a9d:7315:: with SMTP id e21mr8319157otk.255.1580483419727;
+ Fri, 31 Jan 2020 07:10:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131144737.GA4948@willie-the-truck>
+References: <20200131122421.23286-1-sjpark@amazon.com> <20200131122421.23286-3-sjpark@amazon.com>
+In-Reply-To: <20200131122421.23286-3-sjpark@amazon.com>
+From:   Neal Cardwell <ncardwell@google.com>
+Date:   Fri, 31 Jan 2020 10:10:03 -0500
+Message-ID: <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
+To:     sjpark@amazon.com
+Cc:     Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>, shuah@kernel.org,
+        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
+        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
+        Yuchung Cheng <ycheng@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Devicetree to the rescue!
+On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
+>
+> From: SeongJae Park <sjpark@amazon.de>
+>
+> When closing a connection, the two acks that required to change closing
+> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
+> reverse order.  This is possible in RSS disabled environments such as a
+> connection inside a host.
+>
+> For example, expected state transitions and required packets for the
+> disconnection will be similar to below flow.
+>
+>          00 (Process A)                         (Process B)
+>          01 ESTABLISHED                         ESTABLISHED
+>          02 close()
+>          03 FIN_WAIT_1
+>          04             ---FIN-->
+>          05                                     CLOSE_WAIT
+>          06             <--ACK---
+>          07 FIN_WAIT_2
+>          08             <--FIN/ACK---
+>          09 TIME_WAIT
+>          10             ---ACK-->
+>          11                                     LAST_ACK
+>          12 CLOSED                              CLOSED
 
-Yes, exactly. We have good, standardised descriptions for most of this
-in device tree. And phylink can handle SFP and SFP+. Nobody has worked
-on QSFP yet, since phylink has mostly been pushed by the embedded
-world and 40G is not yet popular in the embedded world.
+AFAICT this sequence is not quite what would happen, and that it would
+be different starting in line 8, and would unfold as follows:
 
-> Entertaining the use of ACPI without any firmware abstraction for this
-> hardware really feels like a square peg / round hole situation, so I'm
-> assuming somebody's telling you that you need it "FOAR ENTAPRYZE". Who
-> is it and can you tell them to bog off?
+          08                                     close()
+          09                                     LAST_ACK
+          10             <--FIN/ACK---
+          11 TIME_WAIT
+          12             ---ACK-->
+          13 CLOSED                              CLOSED
 
-The issues here is that SFPs are appearing in more and more server
-systems, replacing plain old copper Ethernet. If the boxes use off the
-shelf Mellanox or Intel PCIe cards, it is not an issue. But silicon
-vendors are integrating this into the SoC in the ARM way of doing
-things, memory mapped, spread over a number of controllers, not a
-single PCIe device.
 
-Maybe we need hybrid systems. Plain, old, simple, boring things like
-CPUs, serial ports, SATA, PCIe busses are described in ACPI. Complex
-interesting things are in DT. The hard thing is the interface between
-the two. DT having a phandle to an ACPI object, e.g a GPIO, interrupt
-or an i2c bus.
+> The acks in lines 6 and 8 are the acks.  If the line 8 packet is
+> processed before the line 6 packet, it will be just ignored as it is not
+> a expected packet,
 
-   Andrew
+AFAICT that is where the bug starts.
+
+AFAICT, from first principles, when process A receives the FIN/ACK it
+should move to TIME_WAIT even if it has not received a preceding ACK.
+That's because ACKs are cumulative. So receiving a later cumulative
+ACK conveys all the information in the previous ACKs.
+
+Also, consider the de facto standard state transition diagram from
+"TCP/IP Illustrated, Volume 2: The Implementation", by Wright and
+Stevens, e.g.:
+
+  https://courses.cs.washington.edu/courses/cse461/19sp/lectures/TCPIP_State_Transition_Diagram.pdf
+
+This first-principles analysis agrees with the Wright/Stevens diagram,
+which says that a connection in FIN_WAIT_1 that receives a FIN/ACK
+should move to TIME_WAIT.
+
+This seems like a faster and more robust solution than installing
+special timers.
+
+Thoughts?
+
+neal
