@@ -2,100 +2,242 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE321C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E26C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930A520661
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD08020661
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gn5l/IGF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TjAL1AJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgAaAZ5 (ORCPT
+        id S1727677AbgAaA2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 19:25:57 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39690 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbgAaAZ4 (ORCPT
+        Thu, 30 Jan 2020 19:28:14 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40657 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbgAaA2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 19:25:56 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 84so2359755pfy.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 16:25:56 -0800 (PST)
+        Thu, 30 Jan 2020 19:28:13 -0500
+Received: by mail-il1-f194.google.com with SMTP id i7so4710645ilr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 16:28:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e8xT5Ubn9DukKbcAsd6bGB0RwaMzxXREbkgWWCe0L+g=;
-        b=gn5l/IGF9KykwcBj18LcB42fliuaVC8HE2uZIhiPXHd7vSaKidkWEJDLlwFsu47suQ
-         ChhAoRjB3EA8x8e1vKweoYrUtveNTjevaonAdsXTs/ukEc17iTAM2/Dfbn05WvonNpzj
-         W25OT71K00u1D6/dQdcdyskAWuH6fZhxOZIks8A3cHxxE1bEWL2McEbE2aqZ1My7Iph2
-         lLN9yezgmPlqHo9O9PnbTmmWHllXO/KpOLpWKnOGNcguh4WO1Vg8DIp6nZuzVJGIcX4Q
-         lNQYq3u0FdgJkx47IRYQ/eFMnwiOToO+vMjNW5osyXtgQ4ymm9K6di+vmmnHh37MqvaC
-         pa1g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5ROJG3uYhVm/nO8xbwsGieRNbZvdCR5sey5l7a+PU2Q=;
+        b=TjAL1AJjI9BnZIshIxhWxMDY1DFedMYxFM1FuouAtJ2A0sB6NH1j8jIk1s+ojTWpyv
+         C6s2/7FJTM4u9/vFLHr+Mh1aUmIj5nF0iVUK0FIrKa+TdFKkJ7gOZwc6nMfTGTMB8v4c
+         yVpCpjJ65nHijq2yI29W7o9puxiTQnEP38PdA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e8xT5Ubn9DukKbcAsd6bGB0RwaMzxXREbkgWWCe0L+g=;
-        b=XTHKodWtEe0+kB33MKkOwb6nrSf91h+axMhviDx0kR0M1G2y6M2487gIrzkVo93tKR
-         jsjvV6FoHUkyrldavEdJRCt0dDconNK0qXyVARyGAMu3VqPysH3a3Nts1Og5UUC/yCft
-         cLyLbS9+SqHWPXaxxXixsngmZmCb3AA3lOU5Ik3RCw1Wmd/vU4u5Li9xz97TLSNMNp0h
-         pn0MhTb7kPq1h/Iw7w6Qk/IeZFba24HBUnY4tt+9aHtPm5vFdIn1aE2jPA3unzBgWnxu
-         e9Hxe//TCYhSzn9x2ZuKjfDiEX1ZiaFs4tPSP3mIpVZbOXKjgzqbbeVqiZDG5nQ+WZfU
-         mJ3w==
-X-Gm-Message-State: APjAAAXHGvE3Pvlu6DD6+YxVPkgopGjtr7ChpJ9nVelQj2xjgnMc3Hzi
-        7o3L+L24FODNwYpo9c4/tSDdkDJDyx8=
-X-Google-Smtp-Source: APXvYqxu/vmouCWvTcNoQCm3tuieIQqBPvowtVLmEaSEsTTgeENnXXU90/k+hG41yffYs88+YfpKLw==
-X-Received: by 2002:a62:4d87:: with SMTP id a129mr7607326pfb.116.1580430355699;
-        Thu, 30 Jan 2020 16:25:55 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id y10sm6449165pfq.110.2020.01.30.16.25.54
+        bh=5ROJG3uYhVm/nO8xbwsGieRNbZvdCR5sey5l7a+PU2Q=;
+        b=X9VaJ5Gzk0BRhcktoc0icm7T/kwIplAiCCalZhJImm+lUaigVt/QVnGut2O7ssWFdn
+         7A9M7XvMyqeL4BPKWOD0GgOnkDFKKah44JiMbjDhr/dkgwqnmZFxyujC4+FeBkoUf7ww
+         Qtd032gjXl/Ds++Guec1+iGsdqwT41SRX0iysoktY0MpNKmBQh2GTbq95D3Q+F3h0jiC
+         /YxcSUMHkuNlhHr31ySJNtawonVpC3q5hc0trIiCA7RolV5JHgG+lr4RZSGHPqTZt3hz
+         ZmB89IXBSW1EIRKOBqVF7u19A0rR9B+p5xVu5T1WhuEtfZ0dcgQSBqn4PyRlBrVyjvEj
+         7eIQ==
+X-Gm-Message-State: APjAAAUoqrPYmxDm5SUmsstRXqIhx1jR2iSJMfcdSjNBQQJuHQ5Q11Mt
+        qFVxZRbFxcYGYHnM5oPBUHME157qQcI=
+X-Google-Smtp-Source: APXvYqzlog8EP9AhoM70a7aP2EyToH/eoXoIkRPpgv5HccvB3Ewx1sJYYURkSax3vGrEXphg4ornGA==
+X-Received: by 2002:a92:5d16:: with SMTP id r22mr7199743ilb.230.1580430490830;
+        Thu, 30 Jan 2020 16:28:10 -0800 (PST)
+Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id b12sm2456075iln.62.2020.01.30.16.28.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jan 2020 16:25:55 -0800 (PST)
-Subject: Re: linux-next: build warning after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200131111652.6995fc6d@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d3652266-3e13-9aa8-887e-9f7a69f57285@kernel.dk>
-Date:   Thu, 30 Jan 2020 17:25:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 30 Jan 2020 16:28:10 -0800 (PST)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mattias Nissler <mnissler@chromium.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v4] Add a "nosymfollow" mount option.
+Date:   Thu, 30 Jan 2020 17:27:50 -0700
+Message-Id: <20200131002750.257358-1-zwisler@google.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-In-Reply-To: <20200131111652.6995fc6d@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 5:16 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the block tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
-> 
-> fs/io_uring.c: In function '__io_uring_show_fdinfo':
-> fs/io_uring.c:6558:32: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
->  6558 |   seq_printf(m, "%5u: 0x%llx/%lu\n", i, buf->ubuf, buf->len);
->       |                              ~~^                   ~~~~~~~~
->       |                                |                      |
->       |                                long unsigned int      size_t {aka unsigned int}
->       |                              %u
-> 
-> Introduced by commit
-> 
->   0380f1b6d0c6 ("io_uring: add ->show_fdinfo() for the io_uring file descriptor")
+From: Mattias Nissler <mnissler@chromium.org>
 
-Thanks, did fix that up, forgot to push to for-next... Will rectify that now.
+For mounts that have the new "nosymfollow" option, don't follow
+symlinks when resolving paths. The new option is similar in spirit to
+the existing "nodev", "noexec", and "nosuid" options. Various BSD
+variants have been supporting the "nosymfollow" mount option for a
+long time with equivalent implementations.
 
+Note that symlinks may still be created on file systems mounted with
+the "nosymfollow" option present. readlink() remains functional, so
+user space code that is aware of symlinks can still choose to follow
+them explicitly.
+
+Setting the "nosymfollow" mount option helps prevent privileged
+writers from modifying files unintentionally in case there is an
+unexpected link along the accessed path. The "nosymfollow" option is
+thus useful as a defensive measure for systems that need to deal with
+untrusted file systems in privileged contexts.
+
+Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+
+---
+
+This was previously posted a few years ago:
+
+v2: https://patchwork.kernel.org/patch/9384153/
+v3: https://lore.kernel.org/patchwork/patch/736423/
+
+The problem that this patch solves still exists.  I rebased and retested
+this patch against kernel v5.5.
+
+FreeBSD solves this with an equivalent flag:
+
+https://github.com/freebsd/freebsd/blob/master/sys/kern/vfs_lookup.c#L1040
+https://www.freebsd.org/cgi/man.cgi?mount(8)
+
+And ChromeOS has been solving this with 200+ lines of LSM code:
+
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1334029/
+
+This kernel patch is much shorter (13 lines!) and IMO is a much cleaner
+solution.  Let's reconsider getting this merged.
+
+There is some follow-up work that will need to be done:
+ - Upstream support for the flag to util-linux.  Example CL that I've
+   been testing with:
+   https://github.com/rzwisler/util-linux/commit/e3b8e365492e8cc87c750c4946eb013a486978d2
+ - Update man pages for mount(8) and mount(2).
+ - Update man page for statfs(2).
+ - Add this option to the new fsmount(2) syscall:
+   https://lwn.net/Articles/802096/
+
+I'm happy to take care of these, but wanted to get feedback on the
+kernel patch first.
+---
+ fs/namei.c                 | 3 +++
+ fs/namespace.c             | 2 ++
+ fs/proc_namespace.c        | 1 +
+ fs/statfs.c                | 2 ++
+ include/linux/mount.h      | 3 ++-
+ include/linux/statfs.h     | 1 +
+ include/uapi/linux/mount.h | 1 +
+ 7 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 4fb61e0754ed6..f198a0ea9b1c0 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1059,6 +1059,9 @@ const char *get_link(struct nameidata *nd)
+ 		touch_atime(&last->link);
+ 	}
+ 
++	if (nd->path.mnt->mnt_flags & MNT_NOSYMFOLLOW)
++		return ERR_PTR(-EACCES);
++
+ 	error = security_inode_follow_link(dentry, inode,
+ 					   nd->flags & LOOKUP_RCU);
+ 	if (unlikely(error))
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 5e1bf611a9eb6..240421e02940d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3109,6 +3109,8 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+ 		mnt_flags &= ~(MNT_RELATIME | MNT_NOATIME);
+ 	if (flags & MS_RDONLY)
+ 		mnt_flags |= MNT_READONLY;
++	if (flags & MS_NOSYMFOLLOW)
++		mnt_flags |= MNT_NOSYMFOLLOW;
+ 
+ 	/* The default atime for remount is preservation */
+ 	if ((flags & MS_REMOUNT) &&
+diff --git a/fs/proc_namespace.c b/fs/proc_namespace.c
+index 273ee82d8aa97..91a552f617406 100644
+--- a/fs/proc_namespace.c
++++ b/fs/proc_namespace.c
+@@ -70,6 +70,7 @@ static void show_mnt_opts(struct seq_file *m, struct vfsmount *mnt)
+ 		{ MNT_NOATIME, ",noatime" },
+ 		{ MNT_NODIRATIME, ",nodiratime" },
+ 		{ MNT_RELATIME, ",relatime" },
++		{ MNT_NOSYMFOLLOW, ",nosymfollow" },
+ 		{ 0, NULL }
+ 	};
+ 	const struct proc_fs_info *fs_infop;
+diff --git a/fs/statfs.c b/fs/statfs.c
+index 2616424012ea7..59f33752c1311 100644
+--- a/fs/statfs.c
++++ b/fs/statfs.c
+@@ -29,6 +29,8 @@ static int flags_by_mnt(int mnt_flags)
+ 		flags |= ST_NODIRATIME;
+ 	if (mnt_flags & MNT_RELATIME)
+ 		flags |= ST_RELATIME;
++	if (mnt_flags & MNT_NOSYMFOLLOW)
++		flags |= ST_NOSYMFOLLOW;
+ 	return flags;
+ }
+ 
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index bf8cc4108b8f9..ff2d132c21f5d 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -30,6 +30,7 @@ struct fs_context;
+ #define MNT_NODIRATIME	0x10
+ #define MNT_RELATIME	0x20
+ #define MNT_READONLY	0x40	/* does the user want this to be r/o? */
++#define MNT_NOSYMFOLLOW	0x80
+ 
+ #define MNT_SHRINKABLE	0x100
+ #define MNT_WRITE_HOLD	0x200
+@@ -46,7 +47,7 @@ struct fs_context;
+ #define MNT_SHARED_MASK	(MNT_UNBINDABLE)
+ #define MNT_USER_SETTABLE_MASK  (MNT_NOSUID | MNT_NODEV | MNT_NOEXEC \
+ 				 | MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME \
+-				 | MNT_READONLY)
++				 | MNT_READONLY | MNT_NOSYMFOLLOW)
+ #define MNT_ATIME_MASK (MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME )
+ 
+ #define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL | \
+diff --git a/include/linux/statfs.h b/include/linux/statfs.h
+index 9bc69edb8f188..fac4356ea1bfc 100644
+--- a/include/linux/statfs.h
++++ b/include/linux/statfs.h
+@@ -40,6 +40,7 @@ struct kstatfs {
+ #define ST_NOATIME	0x0400	/* do not update access times */
+ #define ST_NODIRATIME	0x0800	/* do not update directory access times */
+ #define ST_RELATIME	0x1000	/* update atime relative to mtime/ctime */
++#define ST_NOSYMFOLLOW	0x2000	/* do not follow symlinks */
+ 
+ struct dentry;
+ extern int vfs_get_fsid(struct dentry *dentry, __kernel_fsid_t *fsid);
+diff --git a/include/uapi/linux/mount.h b/include/uapi/linux/mount.h
+index 96a0240f23fed..c268ea586dbf4 100644
+--- a/include/uapi/linux/mount.h
++++ b/include/uapi/linux/mount.h
+@@ -34,6 +34,7 @@
+ #define MS_I_VERSION	(1<<23) /* Update inode I_version field */
+ #define MS_STRICTATIME	(1<<24) /* Always perform atime updates */
+ #define MS_LAZYTIME	(1<<25) /* Update the on-disk [acm]times lazily */
++#define MS_NOSYMFOLLOW	(1<<26) /* Do not follow symlinks */
+ 
+ /* These sb flags are internal to the kernel */
+ #define MS_SUBMOUNT     (1<<26)
 -- 
-Jens Axboe
+2.25.0.341.g760bfbb309-goog
 
