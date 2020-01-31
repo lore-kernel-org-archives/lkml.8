@@ -2,93 +2,275 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF8CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA44C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCA720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erOAcbZr"
+	by mail.kernel.org (Postfix) with ESMTP id 703C320705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgAaFSJ (ORCPT
+        id S1726976AbgAaFZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 00:18:09 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33325 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgAaFSJ (ORCPT
+        Fri, 31 Jan 2020 00:25:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50406 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbgAaFZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 00:18:09 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so2858321pgk.0;
-        Thu, 30 Jan 2020 21:18:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ax5JKtShVF4pOcmfNzJ/FPZX/6Hzfw0ryxGY+YWf5AM=;
-        b=erOAcbZrJeQmLWUBvi3Pk4hatMkbOkCzv7+mhJnRXmqbludk8VJXLX60vBP2WnXmta
-         HFhvKK8KfvQu1bj2106MQDN/WozDfYlWt3xdVzZATWl1+isX9d+Lf6538Kf8/kz/g7+E
-         nR3YpQ6Kem10r4R265BQTl8Ze9ebKQuDN7kWx6NhrfwtHMoLKas2XAEL7R6yAlM/d28X
-         g5LIH4jM1ycowB/z8soXQYIzmp8cAyQyWiuZyWScBcX1pUbwKMR/KrsE2bBu6eBr1exl
-         p4iIJ59bt1kAA11TjKwTrS8XCZTkC7PH94m4fMnmQ8JgA0KufPlbTQIV3QFPd0ranXCJ
-         q16Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ax5JKtShVF4pOcmfNzJ/FPZX/6Hzfw0ryxGY+YWf5AM=;
-        b=Ljsenl5j2MF7ytTBTFQrWY3BO9u4RtMb457Y5JORMFQraNf78jOAip1E44QB2VWo7x
-         BtJMP4UloysKA7Dugus+G2Ntgt4USIXUwzVRD8+DsG1xWNDpMLe43p1O7YOy9ySSZKdf
-         Am+6uMTQZRDNLXj3GMuY54HPGbmwoB7XFhB66wZ5JbJbIZHrFjcqwgfo3NjFNMeunOop
-         9D/2Icu2oCz5IvcZ5JJpxCgjJOY2L71/by7jRv8kg8bJ2uiDtcnLgR1CwHAiu1hxwCvh
-         55+i7dq30ZjglN1c5Vf1e2CrqABlcniZspGgDWCFyLW+v2fOKlYzNLhyQXlgdrFmS/f1
-         XNSQ==
-X-Gm-Message-State: APjAAAVNMmuBhhg4XIfhZ2GP+TYJdqsh1+re9RsD1Yklq4CGjVsm6IAH
-        zY1lLeHMRRQTyERFwuiFY2UCKwO2
-X-Google-Smtp-Source: APXvYqxfo7Nt5JvGv2CaooTo3QysX5l94BTj8d0KqmWhYVFBkjz6PfUF5IDImRrAEk7AMS14arsmJg==
-X-Received: by 2002:a62:ee11:: with SMTP id e17mr8969429pfi.48.1580447887224;
-        Thu, 30 Jan 2020 21:18:07 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id h7sm8861596pfq.36.2020.01.30.21.18.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 21:18:06 -0800 (PST)
-Date:   Thu, 30 Jan 2020 21:18:04 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/2] net: mii_timestamper: fix static allocation
- by PHY driver
-Message-ID: <20200131051804.GB1398@localhost>
-References: <20200130174451.17951-1-michael@walle.cc>
- <20200130174451.17951-2-michael@walle.cc>
+        Fri, 31 Jan 2020 00:25:43 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V5P1CM064806
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 00:25:41 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xv7b4ssbc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 00:25:41 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Fri, 31 Jan 2020 05:25:39 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 Jan 2020 05:25:35 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00V5PYCk46399490
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jan 2020 05:25:34 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB3BCA405C;
+        Fri, 31 Jan 2020 05:25:33 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0AA4A405B;
+        Fri, 31 Jan 2020 05:25:31 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.31.123])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 31 Jan 2020 05:25:31 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kjain@linux.ibm.com, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v3] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
+Date:   Fri, 31 Jan 2020 10:55:22 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130174451.17951-2-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013105-0020-0000-0000-000003A5B97C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013105-0021-0000-0000-000021FD71D9
+Message-Id: <20200131052522.7267-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_09:2020-01-30,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 phishscore=0
+ adultscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001310047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 06:44:51PM +0100, Michael Walle wrote:
-> If phydev->mii_ts is set by the PHY driver, it will always be
-> overwritten in of_mdiobus_register_phy(). Fix it. Also make sure, that
-> the unregister() doesn't do anything if the mii_timestamper was provided by
-> the PHY driver.
-> 
-> Fixes: 1dca22b18421 ("net: mdio: of: Register discovered MII time stampers.")
-> Signed-off-by: Michael Walle <michael@walle.cc>
+Commit f01642e4912b ("perf metricgroup: Support multiple
+events for metricgroup") introduced support for multiple events
+in a metric group. But with the current upstream, metric events
+names are not printed properly incase we try to run multiple
+metric groups with overlapping event.
 
-Thanks for the fix.
+With current upstream version, incase of overlapping metric events
+issue is, we always start our comparision logic from start.
+So, the events which already matched with some metric group also
+take part in comparision logic. Because of that when we have overlapping
+events, we end up matching current metric group event with already matched
+one.
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+For example, in skylake machine we have metric event CoreIPC and
+Instructions. Both of them need 'inst_retired.any' event value.
+As events in Instructions is subset of events in CoreIPC, they
+endup in pointing to same 'inst_retired.any' value.
+
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+     1,254,992,790      inst_retired.any          # 1254992790.0
+                                                    Instructions
+                                                  #      1.3 CoreIPC
+       977,172,805      cycles
+     1,254,992,756      inst_retired.any
+
+       1.000802596 seconds time elapsed
+
+command:# sudo ./perf stat -M UPI,IPC sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+           948,650      uops_retired.retire_slots
+           866,182      inst_retired.any          #      0.7 IPC
+           866,182      inst_retired.any
+         1,175,671      cpu_clk_unhalted.thread
+
+Patch fixes the issue by adding a new array 'evlist_used' to keep track of
+events which already matched with some group by setting it true.
+So, we skip all used events in list when we start comparision logic.
+Patch also make some changes in comparision logic, incase we get a match
+miss, we discard the whole match and start again with first event id in
+metric event.
+
+With this patch:
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+         3,348,415      inst_retired.any          #      0.3 CoreIPC
+        11,779,026      cycles
+         3,348,381      inst_retired.any          # 3348381.0
+                                                    Instructions
+
+       1.001649056 seconds time elapsed
+
+command:# ./perf stat -M UPI,IPC sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+         1,023,148      uops_retired.retire_slots #      1.1 UPI
+           924,976      inst_retired.any
+           924,976      inst_retired.any          #      0.6 IPC
+         1,489,414      cpu_clk_unhalted.thread
+
+       1.003064672 seconds time elapsed
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/util/metricgroup.c | 42 +++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+---
+Changelog:
+
+v2 -> v3
+- Add array in place of variable to keep track of matched events.
+  Because incase we miss match in previous approach, all events will
+  be rolled over in next condition. So, rather we add array and set  
+  it incase that variable already match with some group.
+  - Suggested by Jiri Olsa
+
+v1 -> v2
+- Rather then adding static variable in metricgroup.c,
+  add a new variable in evlist itself with name 'evlist_iter'
+---
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 02aee946b6c1..e9d9fbaa2160 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -93,13 +93,16 @@ struct egroup {
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+-				      struct evsel **metric_events)
++				      struct evsel **metric_events,
++				      bool evlist_used[])
+ {
+ 	struct evsel *ev;
+-	int i = 0;
++	int i = 0, j = 0;
+ 	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (evlist_used[j++])
++			continue;
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+@@ -107,22 +110,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			if (i == idnum)
+ 				break;
+ 		} else {
+-			if (i + 1 == idnum) {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
+-			}
+-
+-			if (!strcmp(ev->name, ids[i]))
+-				metric_events[i] = ev;
+-			else {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
++			/* Discard the whole match and start again */
++			i = 0;
++			memset(metric_events, 0,
++				sizeof(struct evsel *) * idnum);
++
++			if (!strcmp(ev->name, ids[i])) {
++				if (!metric_events[i])
++					metric_events[i] = ev;
++				i++;
++				if (i == idnum)
++					break;
+ 			}
+ 		}
+ 	}
+@@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    !strcmp(ev->name, metric_events[i]->name)) {
+ 				ev->metric_leader = metric_events[i];
+ 			}
++			j++;
+ 		}
++		ev = metric_events[i];
++		evlist_used[ev->idx] = true;
+ 	}
+ 
+ 	return metric_events[0];
+@@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	int ret = 0;
+ 	struct egroup *eg;
+ 	struct evsel *evsel;
++	bool evlist_used[perf_evlist->core.nr_entries];
++
++	memset(evlist_used, 0, perf_evlist->core.nr_entries);
+ 
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+@@ -170,7 +174,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events);
++					 metric_events, evlist_used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+-- 
+2.21.0
+
