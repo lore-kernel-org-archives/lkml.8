@@ -2,139 +2,85 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF37C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA325C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8054214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22B2206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgAaLdP (ORCPT
+        id S1728469AbgAaLdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:33:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:34480 "EHLO foss.arm.com"
+        Fri, 31 Jan 2020 06:33:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:34496 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbgAaLdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:33:14 -0500
+        id S1728325AbgAaLdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 06:33:53 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D994C1063;
-        Fri, 31 Jan 2020 03:33:13 -0800 (PST)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3476B3F67D;
-        Fri, 31 Jan 2020 03:33:13 -0800 (PST)
-Date:   Fri, 31 Jan 2020 11:33:08 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: Re: [PATCH] mm/mapping_dirty_helpers: Update huge page-table entry
- callbacks
-Message-ID: <20200131113307.GA34020@arm.com>
-References: <20200131100052.58761-1-thomas_os@shipmail.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B9C2106F;
+        Fri, 31 Jan 2020 03:33:53 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E56053F67D;
+        Fri, 31 Jan 2020 03:33:51 -0800 (PST)
+Subject: Re: [PATCH] dma-debug: dynamic allocation of hash table
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Eric Dumazet <edumazet@google.com>, Christoph Hellwig <hch@lst.de>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200130191049.190569-1-edumazet@google.com>
+ <e0a0ffa9-3721-4bac-1c8f-bcbd53d22ba1@arm.com>
+ <CAMuHMdVSyD62nvRmN-v6CbJ2UyqH=d7xdVeCD8_X5us+mvCXUQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a305bd1f-8142-6557-4228-aae10c5114e1@arm.com>
+Date:   Fri, 31 Jan 2020 11:33:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200131100052.58761-1-thomas_os@shipmail.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdVSyD62nvRmN-v6CbJ2UyqH=d7xdVeCD8_X5us+mvCXUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 10:00:52AM +0000, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
+On 2020-01-31 9:06 am, Geert Uytterhoeven wrote:
+> Hi Robin,
 > 
-> Following the update of pagewalk code
-> commit a07984d48146 ("mm: pagewalk: add p4d_entry() and pgd_entry()")
-> we can modify the mapping_dirty_helpers' huge page-table entry callbacks
-> to avoid splitting when a huge pud or -pmd is encountered.
+> On Fri, Jan 31, 2020 at 12:46 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 2020-01-30 7:10 pm, Eric Dumazet via iommu wrote:
+>>> Increasing the size of dma_entry_hash size by 327680 bytes
+>>> has reached some bootloaders limitations.
+>>
+>> [ That might warrant some further explanation - I don't quite follow how
+>> this would relate to a bootloader specifically :/ ]
 > 
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Cc: Steven Price <steven.price@arm.com>
+> Increasing the size of a static array increases kernel size.
+> Some (all? ;-) bootloaders have limitations on the maximum size of a
+> kernel image they can boot (usually something critical gets overwritten
+> when handling a too large image).  While boot loaders can be fixed and
+> upgraded, this is usually much more cumbersome than updating the
+> kernel.
 
-LGTM
+Ah, OK - I'm all too familiar with bootloaders having image size limits, 
+but I'm also used to implicitly-initialised statics being collected into 
+a runtime-initialised .bss section, so I hadn't realised that there 
+might still be platforms where that space is actually allocated in the 
+image at link-time.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+> Besides, a static array always consumes valuable unswapable memory,
+> even when the feature would not be used (e.g. disabled by a command
+> line option).
 
-> ---
->  mm/mapping_dirty_helpers.c | 42 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 38 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/mapping_dirty_helpers.c b/mm/mapping_dirty_helpers.c
-> index 71070dda9643..2c7d03675903 100644
-> --- a/mm/mapping_dirty_helpers.c
-> +++ b/mm/mapping_dirty_helpers.c
-> @@ -111,26 +111,60 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
->  	return 0;
->  }
->  
-> -/* wp_clean_pmd_entry - The pagewalk pmd callback. */
-> +/*
-> + * wp_clean_pmd_entry - The pagewalk pmd callback.
-> + *
-> + * Dirty-tracking should take place on the PTE level, so
-> + * WARN() if encountering a dirty huge pmd.
-> + * Furthermore, never split huge pmds, since that currently
-> + * causes dirty info loss. The pagefault handler should do
-> + * that if needed.
-> + */
->  static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
->  			      struct mm_walk *walk)
->  {
-> -	/* Dirty-tracking should be handled on the pte level */
->  	pmd_t pmdval = pmd_read_atomic(pmd);
->  
-> +	if (!pmd_trans_unstable(&pmdval))
-> +		return 0;
-> +
-> +	if (pmd_none(pmdval)) {
-> +		walk->action = ACTION_AGAIN;
-> +		return 0;
-> +	}
-> +
-> +	/* Huge pmd, present or migrated */
-> +	walk->action = ACTION_CONTINUE;
->  	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
->  		WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval));
->  
->  	return 0;
->  }
->  
-> -/* wp_clean_pud_entry - The pagewalk pud callback. */
-> +/*
-> + * wp_clean_pud_entry - The pagewalk pud callback.
-> + *
-> + * Dirty-tracking should take place on the PTE level, so
-> + * WARN() if encountering a dirty huge puds.
-> + * Furthermore, never split huge puds, since that currently
-> + * causes dirty info loss. The pagefault handler should do
-> + * that if needed.
-> + */
->  static int wp_clean_pud_entry(pud_t *pud, unsigned long addr, unsigned long end,
->  			      struct mm_walk *walk)
->  {
-> -	/* Dirty-tracking should be handled on the pte level */
->  	pud_t pudval = READ_ONCE(*pud);
->  
-> +	if (!pud_trans_unstable(&pudval))
-> +		return 0;
-> +
-> +	if (pud_none(pudval)) {
-> +		walk->action = ACTION_AGAIN;
-> +		return 0;
-> +	}
-> +
-> +	/* Huge pud */
-> +	walk->action = ACTION_CONTINUE;
->  	if (pud_trans_huge(pudval) || pud_devmap(pudval))
->  		WARN_ON(pud_write(pudval) || pud_dirty(pudval));
->  
-> -- 
-> 2.21.1
-> 
+Indeed, and that alone might have been a reasonable rationale for the 
+patch - I was merely querying the wording of the commit message, not its 
+intent :)
+
+Thanks,
+Robin.
