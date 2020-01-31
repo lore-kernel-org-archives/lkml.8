@@ -2,192 +2,213 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A862C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EDBC33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5229A20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F141B20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pOxSnKeK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5ARJ9CR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgAaNtA (ORCPT
+        id S1728747AbgAaNuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:49:00 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54016 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbgAaNs7 (ORCPT
+        Fri, 31 Jan 2020 08:50:21 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35715 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgAaNuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:48:59 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200131134858euoutp024ca2abbcc4009d67e9ad1e96f79ab819~u-NtTHz_h2562025620euoutp02Q
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:48:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200131134858euoutp024ca2abbcc4009d67e9ad1e96f79ab819~u-NtTHz_h2562025620euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580478538;
-        bh=X1z8ZbkxYMru+Umlcw8xfHUCE3r2G8VQLfhn9gEQmh0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pOxSnKeKdO7nk3kCmnXRgSQZuwKosj01WX2mvd89TZRkPvY6SzWFXa89160pm2jqQ
-         Xmx8OLq4BDs9uZw2Gb08JuXDy7r6Ckcn81UaXat0sno6Lg8/ost6+XPlWsDUkNPpVB
-         w+RNLHScFWwA/M8VklJZxBsqxV+B/MzhS7SGxS3s=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200131134857eucas1p2d036abd7fe1a7e4391b6c252342747ae~u-NtCFQJg3039030390eucas1p2t;
-        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 16.DE.60679.940343E5; Fri, 31
-        Jan 2020 13:48:57 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200131134857eucas1p2a4191e8a63fd1f716a12788e4aa1743a~u-NsxD1JY1663616636eucas1p2O;
-        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200131134857eusmtrp2c5c69fbc2fab49911770856e1fd5bccd~u-NswOmtT0170901709eusmtrp2b;
-        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-c3-5e343049a35b
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id FA.4F.07950.940343E5; Fri, 31
-        Jan 2020 13:48:57 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200131134856eusmtip109eb4eab5b89a4ad9bc7c9fd16f8a9b2~u-Nr2wZmr3226932269eusmtip1E;
-        Fri, 31 Jan 2020 13:48:56 +0000 (GMT)
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model
- framework
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     lukasz.luba@arm.com, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, dietmar.eggemann@arm.com
-Message-ID: <db803418-f263-6660-8e7c-739d137471b2@samsung.com>
-Date:   Fri, 31 Jan 2020 14:48:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 31 Jan 2020 08:50:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so2766012plt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 05:50:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=juqgOO2FL60raSBrCGSqEUGB0rKVEh3eeYHpqpHB/eU=;
+        b=s5ARJ9CROh+uPH+LpnaPq04a3AKX183oEk1aHAqV044nv5oq4gkZP3SJPiaQu6FKEV
+         RY95MNXwujsxWQ1Hs3pUSWPGtKLJj2OPxWlKcMLU36fkCTlxloTvPFuSfz1TZLTYKGfg
+         Uo7TWRmJIHs8dNdw0NA6rcjroWvpgUptSbY2E9DKQ0BpJ5aN5R6SxMQ0UaFIL+xBbOSb
+         PZmr+r5xlURUYBhI3ykB/bWWtRqljNdoC/ACSf8uXvcqJvSoyZ6yAPg7kcpS/amwyB6e
+         I9xvGciuu/O4+ZVmVmwwDuC5vgnZ8Nkwx/+HdDv+12/UCr/wucVqj95fH7BdN9sCW6GH
+         Es0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=juqgOO2FL60raSBrCGSqEUGB0rKVEh3eeYHpqpHB/eU=;
+        b=DiA+z2tdH88vUKV7fAYcncxSXtfx0rz/kDVyUAEOhxhite6y0ExIILobZFYDfIZUN6
+         UEQ+QPa+QH1Oia1sS4/PGCSptGwCrSa9gzzDyWXO++HbJ+heevYrDutJWS/AacN051N/
+         HuxnHKvDTDo7g3iHztm0ytIIIkVr/TIPj2hXngkdpnjqWwPp3NGlxCp996wYlxq9nVQS
+         lew4P09+h2gRTECo+frf/ximnG4MfLBK7ON7GWqqzhAQ0R9JKly7n+/J0cqJt+xjMXcu
+         zEQgyVNQf3Ryewq5pVTQynW806isQ5c4l3uM8TTWKdidCBvJ+rClpXajZdNhFKHPL/ye
+         IJHg==
+X-Gm-Message-State: APjAAAXiffhvWjA5mfm2bI1beNCkKJPfhd3zH8Cuix/XPQiqsc9HYywN
+        5Um1WB1BDp5uJpJ1vpJq+fTd
+X-Google-Smtp-Source: APXvYqw3EYs11DXI0HUsb1OWhGJCrOfXuIxlhqTyTsaQA7mAoTeMiD9UttuANRhz6VzuDOlO3NO1UQ==
+X-Received: by 2002:a17:90a:bd97:: with SMTP id z23mr5184198pjr.19.1580478618523;
+        Fri, 31 Jan 2020 05:50:18 -0800 (PST)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id p3sm10625632pfg.184.2020.01.31.05.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 05:50:17 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 00/16] Add MHI bus support
+Date:   Fri, 31 Jan 2020 19:19:53 +0530
+Message-Id: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <08aff2de-85d5-36b2-13bb-bad6eb5d37eb@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRzl293drtL0bmp+qBTMXgo+M7xZaIHCJEv/MJAgc+VFJTdlVy0l
-        8kGaLsonpEszH6lNUZtv8b2V2mgSmcsUEjQsdQjOMiVXu7tK/nfO73fOd34HPgwR6FAnLEGa
-        Qsqk4kQhx5rd/XZb5xHq7RftvbrjS+g3l1GiWqNDiW9FXQhRuLiKEFNT7Vzifc4al1AtzqDE
-        x/5KDmF8rAFE+dQQi6jJecAlXuo/sIi57CYOkTuo4V6wEbU8bwEilbKAI+qozxQ96VQCkVF1
-        JAK9Zn0+lkxMSCNlXoEx1vHD61Ws5KHDdzuLF0AWeMSXAysM4n6wTj7MlQNrTIA3Afh6oG6P
-        bAJYNqpGGWIEMHtiGtm3NMh3OMyi0WyZ7wUMMQDYMzvKolV2eDhcGSm0YA4eAIsfKgGN7XE3
-        qN/dsjyL4L0IVBTMsukFDw+E4x1VXBqz8eOwqmLHEueAR8GNBfoOWsOHkxVLFr0VHgRN6lLL
-        HMEd4ZelahaDj8IeQyVCB0DcwIVf1R3mZMxMgmH3hC1TwQ6ujHdyGewC//bRXlrfCuBu/vc9
-        cw+AjaUmDqM6B+d1dGnMnOAG2/q9mPFF2Fa7y2bet4GfDXzmBhtY0v0UYcY8mJ8nYNQnYHtD
-        O2c/Vt73CikCQsWBZooDbRQH2ij+574AbCVwJFMpSRxJ+UrJO56UWEKlSuM8byVJVMD8y7Sm
-        8c1e0P/n5hjAMSA8xEt29osWoOI0Kl0yBiCGCO15DiE+0QJerDg9g5Ql3ZClJpLUGHDG2EJH
-        3unaH9cFeJw4hbxNksmkbH/LwqycssDVjPoWlV6qmlNXV1COIZd04T01M2GZU7bolfJTi2sG
-        F/+oZzXrkdqTZaurAxVBUZPHUNm9aT55X+tq1ISvbwf//iVqLWndSNnSLrp7aN7wmvOCO9IC
-        qKiMbfay/6eCwaHQrsifw7mm6cvjrjEjntKIvvizYUTznFLx7ow4jhCyqXixjzsio8T/AJcT
-        JPVhAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsVy+t/xu7qeBiZxBh9OyVpc//Kc1WL+kXOs
-        Fk8nbGW26H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWJhUwu7xdLrF5ks
-        bjeuYLNo3XuE3YHPY828NYwem1Z1snlsXlLv0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrR
-        hhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehn7389lKtgnVrFl4gPGBsZuwS5G
-        Tg4JAROJZV2/2LoYuTiEBJYySlx4cYSli5EDKCEjcXx9GUSNsMSfa11QNa8ZJaa+384MkhAW
-        8JVY8/02mM0mYCUxsX0VI4gtIqApcf3vd1aQBmaBXcwSB95PZYXofsMk0Xr0ETtIFa+AncTx
-        zXPBbBYBVYm5M3+BTRIViJA4vGMWI0SNoMTJmU9YQGxOAXuJf4cns4LYzALqEn/mXWKGsMUl
-        bj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5
-        uZsYgbG77djPLTsYu94FH2IU4GBU4uEtkDaJE2JNLCuuzD3EKMHBrCTCK+pqGCfEm5JYWZVa
-        lB9fVJqTWnyI0RTouYnMUqLJ+cC0klcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1
-        ILUIpo+Jg1OqgVFrjtPm3HT9VQ8q3ExsHSy3lme8qpihODvl56o/jTl/Yk3c7p5fLmlpvG3a
-        no4nfYsvq+1rt38arNSzKOWr1useNtegKIWCw7zM0+1r5N61xDy8ancof6P0thcLTFcErw09
-        ZFbA/i7EbbvKq39lM2bYc/e/6vJYclBP6PXzCO79uevYDk84NE+JpTgj0VCLuag4EQBaUVrc
-        8wIAAA==
-X-CMS-MailID: 20200131134857eucas1p2a4191e8a63fd1f716a12788e4aa1743a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
-        <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
-        <20200127215453.15144-4-lukasz.luba@arm.com>
-        <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
-        <CAJKOXPcZCks1SxwBP-vhpsYzpsrV9MQo91QNU2obgAppxfTiyQ@mail.gmail.com>
-        <08aff2de-85d5-36b2-13bb-bad6eb5d37eb@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 1/31/20 2:47 PM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> On 1/31/20 2:31 PM, Krzysztof Kozlowski wrote:
->> On Fri, 31 Jan 2020 at 14:30, Bartlomiej Zolnierkiewicz
->> <b.zolnierkie@samsung.com> wrote:
->>>
->>>
->>> Hi,
->>>
->>> On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
->>>> From: Lukasz Luba <lukasz.luba@arm.com>
->>>>
->>>> Enable the Energy Model (EM) brings possibility to use Energy Aware
->>>> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
->>>> default. The EAS only works with SchedUtil - a CPUFreq governor which
->>>> handles direct requests from the scheduler for the frequency change. Thus,
->>>> to make EAS working in default, the SchedUtil governor should be
->>>> configured as default CPUFreq governor. Although, the EAS might be enabled
->>>> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
->>>> then set as CPUFreq governor, i.e.:
->>>>
->>>> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
->>>> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
->>>>
->>>> To check if EAS is ready to work, the read output from the command below
->>>> should show '1':
->>>> cat /proc/sys/kernel/sched_energy_aware
->>>>
->>>> To disable EAS in runtime simply 'echo 0' to the file above.
->>>>
->>>> Some test results, which stress the scheduler on Odroid-XU3:
->>>> hackbench -l 500 -s 4096
->>>> With mainline code and with this patch set.
->>>>
->>>> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
->>>> (which is set to =y in default exynos_defconfig)
->>>>
->>>>               |               this patch set                  | mainline
->>>>               |-----------------------------------------------|---------------
->>>>               | performance   | SchedUtil     | SchedUtil     | performance
->>>>               | governor      | governor      | governor      | governor
->>>>               |               | w/o EAS       | w/ EAS        |
->>>> ----------------|---------------|---------------|---------------|---------------
->>>> hackbench w/ PL | 12.7s               | 11.7s         | 12.0s         | 13.0s - 12.2s
->>>> hackbench w/o PL| 9.2s                | 8.1s          | 8.2s          | 9.2s - 8.4s
->>>
->>> Would you happen to have measurements of how much power is
->>> saved by running hackbench using "SchedUtil governor w/ EAS"
->>> instead of "SchedUtil governor w/o EAS"?
->>
->> That's a good point and quite important reason behind enabling (or not) EAS...
-> 
-> IIUC EAS is enabled by default if you use SchedUtil
-> governor and Energy Model is available on you platform.
-> 
-> [ SchedUtil governor is enabled in exynos_defconfig
->   although not enabled by default currently. ]
+This is the second attempt at adding the MHI (Modem Host Interface) bus
+interface to Linux kernel. MHI is a communication protocol used by the
+host processors to control and communicate with modems over a high
+speed peripheral bus or shared memory. The MHI protocol has been
+designed and developed by Qualcomm Innovation Center, Inc., for use
+in their modems.
 
-s/enabled/used/
+The first submission was made by Sujeev Dias of Qualcomm:
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+https://lkml.org/lkml/2018/4/26/1159
+https://lkml.org/lkml/2018/7/9/987
+
+This series addresses most of the review comments by Greg and Arnd for
+the initial patchset. Furthermore, in order to ease the review process
+I've splitted the patches logically and dropped few of them which were
+not required for this initial submission.
+
+Below is the high level changelog:
+
+1. Removed all DT related code
+2. Got rid of pci specific struct members from top level mhi structs
+3. Moved device specific callbacks like ul_xfer() to driver struct. It
+   doesn’t make sense to have callbacks in device struct as suggested by
+   Greg
+4. Used priv data of `struct device` instead of own priv data in
+   `mhi_device` as suggested by Greg. This will allow us to use
+    dev_set{get}_drvdata() APIs in client drivers
+5. Removed all debugfs related code
+6. Changes to the APIs to look uniform
+7. Converted the documentation to .rst and placed in its own subdirectory
+8. Changes to the MHI device naming
+9. Converted all uppercase variable names to appropriate lowercase ones
+10. Removed custom debug code and used the dev_* ones where applicable
+11. Dropped timesync, DTR, UCI, and Qcom controller related codes
+12. Added QRTR client driver patch
+13. Added modalias support for the MHI stack as well as client driver for
+    autoloading of modules (client drivers) by udev once the MHI devices
+    are created
+
+This series includes the MHI stack as well as the QRTR client driver which
+falls under the networking subsystem.
+
+The reference controller implementation is here:
+https://git.linaro.org/people/manivannan.sadhasivam/linux.git/tree/drivers/net/wireless/ath/ath11k/mhi.c?h=ath11k-qca6390-mhi
+It will be submitted later along with ath11k patches.
+
+Following developers deserve explicit acknowledgements for their
+contributions to the MHI code:
+
+Sujeev Dias
+Siddartha Mohanadoss
+Hemant Kumar
+Jeff Hugo
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Added put_device to mhi_dealloc_device
+* Removed unused members from struct mhi_controller
+* Removed the atomicity of dev_wake in struct mhi_device as it is not required
+* Reordered MHI structs to avoid holes
+* Used struct device name for the controller device
+* Marked the required and optional mhi_controller members for helping the
+  controller driver implementation
+* Cleanups to the MHI doc
+* Removed _relaxed variants and used readl/writel
+* Added comments for MHI specific acronyms
+* Removed the usage of bitfields and used bitmasks for mhi_event_ctxt and
+  mhi_chan_ctxt
+* Used __64/__u32 types for structures representing hw states
+* Added Hemant as a co-maintainer of MHI bus. He is from the MHI team of
+  Qualcomm and he will take up reviews and if possible, maintainership
+  in future.
+
+Manivannan Sadhasivam (16):
+  docs: Add documentation for MHI bus
+  bus: mhi: core: Add support for registering MHI controllers
+  bus: mhi: core: Add support for registering MHI client drivers
+  bus: mhi: core: Add support for creating and destroying MHI devices
+  bus: mhi: core: Add support for ringing channel/event ring doorbells
+  bus: mhi: core: Add support for PM state transitions
+  bus: mhi: core: Add support for basic PM operations
+  bus: mhi: core: Add support for downloading firmware over BHIe
+  bus: mhi: core: Add support for downloading RDDM image during panic
+  bus: mhi: core: Add support for processing events from client device
+  bus: mhi: core: Add support for data transfer
+  bus: mhi: core: Add uevent support for module autoloading
+  MAINTAINERS: Add entry for MHI bus
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
+  soc: qcom: Do not depend on ARCH_QCOM for QMI helpers
+
+ Documentation/index.rst           |    1 +
+ Documentation/mhi/index.rst       |   18 +
+ Documentation/mhi/mhi.rst         |  218 ++++
+ Documentation/mhi/topology.rst    |   60 ++
+ MAINTAINERS                       |   10 +
+ drivers/bus/Kconfig               |    1 +
+ drivers/bus/Makefile              |    3 +
+ drivers/bus/mhi/Kconfig           |   14 +
+ drivers/bus/mhi/Makefile          |    2 +
+ drivers/bus/mhi/core/Makefile     |    3 +
+ drivers/bus/mhi/core/boot.c       |  508 ++++++++++
+ drivers/bus/mhi/core/init.c       | 1301 ++++++++++++++++++++++++
+ drivers/bus/mhi/core/internal.h   |  699 +++++++++++++
+ drivers/bus/mhi/core/main.c       | 1576 +++++++++++++++++++++++++++++
+ drivers/bus/mhi/core/pm.c         |  967 ++++++++++++++++++
+ drivers/soc/qcom/Kconfig          |    1 -
+ include/linux/mhi.h               |  661 ++++++++++++
+ include/linux/mod_devicetable.h   |   13 +
+ net/qrtr/Kconfig                  |    8 +-
+ net/qrtr/Makefile                 |    2 +
+ net/qrtr/mhi.c                    |  207 ++++
+ scripts/mod/devicetable-offsets.c |    3 +
+ scripts/mod/file2alias.c          |   10 +
+ 23 files changed, 6284 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/mhi/index.rst
+ create mode 100644 Documentation/mhi/mhi.rst
+ create mode 100644 Documentation/mhi/topology.rst
+ create mode 100644 drivers/bus/mhi/Kconfig
+ create mode 100644 drivers/bus/mhi/Makefile
+ create mode 100644 drivers/bus/mhi/core/Makefile
+ create mode 100644 drivers/bus/mhi/core/boot.c
+ create mode 100644 drivers/bus/mhi/core/init.c
+ create mode 100644 drivers/bus/mhi/core/internal.h
+ create mode 100644 drivers/bus/mhi/core/main.c
+ create mode 100644 drivers/bus/mhi/core/pm.c
+ create mode 100644 include/linux/mhi.h
+ create mode 100644 net/qrtr/mhi.c
+
+-- 
+2.17.1
+
