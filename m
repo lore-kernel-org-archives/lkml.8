@@ -2,110 +2,133 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF741C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FDDC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828F621734
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D32A20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DW2oWkb9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o49HFcRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgAaLDq (ORCPT
+        id S1728413AbgAaLEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:03:46 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10483 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgAaLDp (ORCPT
+        Fri, 31 Jan 2020 06:04:01 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39319 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728268AbgAaLEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:03:45 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3409820000>; Fri, 31 Jan 2020 03:03:30 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jan 2020 03:03:44 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jan 2020 03:03:44 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 11:03:42 +0000
-Subject: Re: [PATCH 5.4 000/110] 5.4.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200130183613.810054545@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <78b8991a-73ab-e28a-5964-2da1c7fbf7ae@nvidia.com>
-Date:   Fri, 31 Jan 2020 11:03:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 06:04:00 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580468639; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=rNOUhYWPTelGWLCs3FtWi8wsKS2uU5eRrCt6VpYAPQ0=; b=o49HFcRHAg5s4DT6qOXOpAf473OaWR0sWnmX6nZbJcy7V0sJV5AYTQYhxf5lbEnZ0IdXmjuJ
+ 1EMuwRfH/WucDQN2cMg+lr/FGA3AVG6eS/XtQMTI/ZwHjwi6ixNoB+vWV/baSmQMUsjlSSeL
+ 8ypYSm7itApO5DGUsIMInw19eZ0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e340999.7efdf0508f48-smtp-out-n03;
+ Fri, 31 Jan 2020 11:03:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D055BC433A2; Fri, 31 Jan 2020 11:03:53 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57225C433A2;
+        Fri, 31 Jan 2020 11:03:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57225C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux\@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+References: <20200130013308.16395-1-natechancellor@gmail.com>
+        <e0fb1ead6dcc4ecc973b3b9b5399ef66@realtek.com>
+Date:   Fri, 31 Jan 2020 13:03:48 +0200
+In-Reply-To: <e0fb1ead6dcc4ecc973b3b9b5399ef66@realtek.com> (Tony Chuang's
+        message of "Fri, 31 Jan 2020 10:23:40 +0000")
+Message-ID: <87mua3c2gb.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580468610; bh=c45/IoICOsEGk/Abk/l8dSCBbuUMahTqgMqkR31rqvk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DW2oWkb9MlXLnjD17JAwvRI8e/jN7N1fY3lnqWowZNA19L/qws5cjZ1duiQB9EfbM
-         bfeDtXLZyvLqUCx9cev7do+tF4f3RTgHRpWaBG7EURq1toz1LL8cD+q/r/WecuqCaW
-         wq8f3XKXKu6VaErW5VxZuFvARX+bYT2EYy2E/Ismye1dF7sYFelJNrTGdZX2j/LKD3
-         Tmk7e9pWm6dTpFqfMaPICTpJLljOND900GCRX8RUuHJFUzzKcnugrmtMj+nyIRnJ6j
-         V9zzxmgoGCV1yCZzWrcD+8wn/MyPfG/+/BFSe4woajpelszTCakmvAkKmYhqRamJot
-         9HR7LQmx+8uoA==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tony Chuang <yhchuang@realtek.com> writes:
 
-On 30/01/2020 18:37, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.17 release.
-> There are 110 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> From: Nathan Chancellor
+>> Subject: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+>> 
+>> Clang warns a few times (trimmed for brevity):
+>> 
+>> ../drivers/net/wireless/realtek/rtw88/wow.c:295:7: warning: variable
+>> 'ret' is used uninitialized whenever 'if' condition is false
+>> [-Wsometimes-uninitialized]
+>> 
+>> Initialize ret to true and change the other assignments to false because
+>> it is a boolean value.
+>> 
+>> Fixes: 44bc17f7f5b3 ("rtw88: support wowlan feature for 8822c")
+>> Link: https://github.com/ClangBuiltLinux/linux/issues/850
+>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>> ---
+>>  drivers/net/wireless/realtek/rtw88/wow.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/net/wireless/realtek/rtw88/wow.c
+>> b/drivers/net/wireless/realtek/rtw88/wow.c
+>> index af5c27e1bb07..5db49802c72c 100644
+>> --- a/drivers/net/wireless/realtek/rtw88/wow.c
+>> +++ b/drivers/net/wireless/realtek/rtw88/wow.c
+>> @@ -283,18 +283,18 @@ static void rtw_wow_rx_dma_start(struct rtw_dev
+>> *rtwdev)
+>> 
+>>  static bool rtw_wow_check_fw_status(struct rtw_dev *rtwdev, bool
+>> wow_enable)
+>>  {
+>> -	bool ret;
+>> +	bool ret = true;
+>> 
+>>  	/* wait 100ms for wow firmware to finish work */
+>>  	msleep(100);
+>> 
+>>  	if (wow_enable) {
+>>  		if (!rtw_read8(rtwdev, REG_WOWLAN_WAKE_REASON))
+>> -			ret = 0;
+>> +			ret = false;
+>>  	} else {
+>>  		if (rtw_read32_mask(rtwdev, REG_FE1IMR, BIT_FS_RXDONE) == 0
+>> &&
+>>  		    rtw_read32_mask(rtwdev, REG_RXPKT_NUM,
+>> BIT_RW_RELEASE) == 0)
+>> -			ret = 0;
+>> +			ret = false;
+>>  	}
+>> 
+>>  	if (ret)
+>> --
+>> 2.25.0
+>
+> NACK.
+>
+> This patch could lead to incorrect behavior of WOW.
+> I will send a new patch to fix it, and change the type to "int".
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    40 tests:	40 pass, 0 fail
-
-Linux version:	5.4.17-rc1-g1bde1c513887
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
+Please send it separately so that I can queue it to v5.6.
 
 -- 
-nvpublic
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
