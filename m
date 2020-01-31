@@ -2,180 +2,191 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36130C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC5BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0297120705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:05:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="koRWvq9j"
+	by mail.kernel.org (Postfix) with ESMTP id 500A220705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgAaLFI (ORCPT
+        id S1728437AbgAaLGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:05:08 -0500
-Received: from mail-eopbgr690080.outbound.protection.outlook.com ([40.107.69.80]:11776
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728268AbgAaLFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:05:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kLH2fVk8kdOp49Ctq/T1A83gr1LlVQsSR5siT3yC87CgsK6cGYZN5Q/3yoAaIehY+QrITCcRNkhMZ+SaMKMRfh9F9BqvuR2Y2ke5uZO1jUb7yO7iR7QnnRC9kJYYMddSCQRr3qA8zhxejwisSoI3wgjeibDWayrXqdN3JwiHYM7VRIBIecklFNmBju5whkUWPWUbWDEZRR7hYhOfFmCPxw5yrb1aZ/tOwsD6DmUZxI3OuihBAjEvIQF5X8XsDEk7LadPV7GBNhVrpD0YaSL2BH2LN+TrUpRGx+kIElwn1wYaCLh5wgMX7GhVtSiMw3LLfkpJEzXapGO2cEPevEXF0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ub5HeTpbX4QPtfuoJmIFkCKnY1miACH3zobzfjZHTM=;
- b=Dv8rDCKYB5mqOGseoTK0ZKl5MGWMdg0ESAvvmsXnJwOzdU6ESPrHj7D33JZdoepF9iZoCLIhR/LwPFHT3tP+06DZyyxZLVUOxSYuo6fxI/Mr6YCCNvb2xGOnPJ+SBEfNn1k+dLF7yELr/g/IKjeepYAzbIbZl/DB5en2t89j1qDLnTMBs+g1LXsULBvWODtf+U6H6X9HopvvI6Lk0wpEmRMb7WqeKM3FARTZcCLiPu0f6hSMvxCcW4ROPfrJfMfFs4IOpKeGGVT85PtdQeCS9whYhW5EjOvQ+XXGgobL7ouJVpMBPzZ1mCmqAtYjG0VpvAT91sRfCEP2izjGWKpb7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ub5HeTpbX4QPtfuoJmIFkCKnY1miACH3zobzfjZHTM=;
- b=koRWvq9j04nifK3ho5wNpxepIpC5CA+yjmTQ/ddgRYTn1IxcGNcxBGPKW9y9LNK2BwqWm1SXSY3tEh0PxmguRQbnuYrSZ3v4r9Uaflsl9lcQRhy4gln7Ee+3XZN3J9E2EIH8IVQEW3q9n2WD1SYd6NrSlDu3hLxm0wjvuaDH5lw=
-Received: from SN4PR0201CA0010.namprd02.prod.outlook.com
- (2603:10b6:803:2b::20) by SN6PR02MB4912.namprd02.prod.outlook.com
- (2603:10b6:805:99::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27; Fri, 31 Jan
- 2020 11:05:04 +0000
-Received: from BL2NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::204) by SN4PR0201CA0010.outlook.office365.com
- (2603:10b6:803:2b::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend
- Transport; Fri, 31 Jan 2020 11:05:04 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT027.mail.protection.outlook.com (10.152.77.160) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
- via Frontend Transport; Fri, 31 Jan 2020 11:05:03 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1ixU6g-00054h-P3; Fri, 31 Jan 2020 03:05:02 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1ixU6b-000425-Tl; Fri, 31 Jan 2020 03:04:57 -0800
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1ixU6T-0003zV-4t; Fri, 31 Jan 2020 03:04:49 -0800
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     linux-serial@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        michal.simek@xilinx.com, linux-kernel@vger.kernel.org,
-        Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH v3] serial: uartps: Add TACTIVE bit in cdns_uart_tx_empty function
-Date:   Fri, 31 Jan 2020 16:34:45 +0530
-Message-Id: <1580468685-11373-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(376002)(136003)(346002)(199004)(189003)(426003)(26005)(8936002)(186003)(8676002)(107886003)(44832011)(9786002)(6666004)(356004)(81166006)(336012)(81156014)(478600001)(4326008)(6916009)(5660300002)(54906003)(316002)(2616005)(36756003)(70586007)(7696005)(70206006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4912;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Fri, 31 Jan 2020 06:06:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:34304 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbgAaLGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 06:06:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0A7231B;
+        Fri, 31 Jan 2020 03:06:18 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 976083F67D;
+        Fri, 31 Jan 2020 03:06:15 -0800 (PST)
+Date:   Fri, 31 Jan 2020 11:06:10 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Makarand Pawagi <makarand.pawagi@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "jon@solid-run.com" <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "stuyoder@gmail.com" <stuyoder@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "shameerali.kolothum.thodi@huawei.com" 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "nleeder@codeaurora.org" <nleeder@codeaurora.org>,
+        Andy Wang <Andy.Wang@arm.com>, Paul Yang <Paul.Yang@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200131110610.GA32701@e121166-lin.cambridge.arm.com>
+References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
+ <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c4099da0-4a4c-48e6-1e2d-08d7a63d6c6f
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4912:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB491293242D0DCF632002F6D3AA070@SN6PR02MB4912.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 029976C540
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +7jinjI7D4jmRKBuSGV+baIpNZFm31aBIh6Ou2321nJmCrvVpCpQ/6np8HIm+NTDJ/Do00S0UkA3W5jsLvIFeISRZ3WC5u00fS/jwHY6zksOkR6zhPWPZv064t37pI8WKV+j4PGuv5b30zE1fdUYpq9nqZo6mmq4J81IMedFbZfujnJdUVgMJ4nKxvpLPFaSaCwimKsAuxss68Cs+htdQPbN5tHdgHE3xLnJ2yLAJVjYlVybC30VdTwcp24cFf9+aqi4Gm070F+QKTEcIPKyzG2lmkt4hjsE5nbTwMOZ+dMKVYEUI/K+dRf+KxNc0RpvtPg0gBIccOVaBXYm1Si/YFC1vnLeLsilxfeAUbMurgYKdpFipr8FcQat4rBC4kQdVc2D+OBq9LZILRUvuAVHYm3FFMw10NoibfFTYS3yWbTF/mmWyIDWRYtXcQTCrN1q
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2020 11:05:03.6880
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4099da0-4a4c-48e6-1e2d-08d7a63d6c6f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4912
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+On Fri, Jan 31, 2020 at 10:35:48AM +0000, Makarand Pawagi wrote:
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: Tuesday, January 28, 2020 4:39 PM
+> > To: Makarand Pawagi <makarand.pawagi@nxp.com>
+> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-acpi@vger.kernel.org; linux@armlinux.org.uk;
+> > jon@solid-run.com; Cristi Sovaiala <cristian.sovaiala@nxp.com>; Laurentiu
+> > Tudor <laurentiu.tudor@nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>;
+> > Varun Sethi <V.Sethi@nxp.com>; Calvin Johnson <calvin.johnson@nxp.com>;
+> > Pankaj Bansal <pankaj.bansal@nxp.com>; guohanjun@huawei.com;
+> > sudeep.holla@arm.com; rjw@rjwysocki.net; lenb@kernel.org;
+> > stuyoder@gmail.com; tglx@linutronix.de; jason@lakedaemon.net;
+> > maz@kernel.org; shameerali.kolothum.thodi@huawei.com; will@kernel.org;
+> > robin.murphy@arm.com; nleeder@codeaurora.org
+> > Subject: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+> > 
+> > Caution: EXT Email
+> > 
+> > On Tue, Jan 28, 2020 at 01:38:45PM +0530, Makarand Pawagi wrote:
+> > > ACPI support is added in the fsl-mc driver. Driver will parse MC DSDT
+> > > table to extract memory and other resorces.
+> > >
+> > > Interrupt (GIC ITS) information will be extracted from MADT table by
+> > > drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
+> > >
+> > > IORT table will be parsed to configure DMA.
+> > >
+> > > Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
+> > > ---
+> > >  drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
+> > >  drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
+> > >  drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
+> > >  drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
+> > >  drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
+> > >  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71
+> > ++++++++++++++++++++++++++++-
+> > >  include/linux/acpi_iort.h                   |  5 ++
+> > >  7 files changed, 174 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> > > index 33f7198..beb9cd5 100644
+> > > --- a/drivers/acpi/arm64/iort.c
+> > > +++ b/drivers/acpi/arm64/iort.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/list.h>
+> > >  #include <linux/pci.h>
+> > > +#include <linux/fsl/mc.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/slab.h>
+> > >
+> > > @@ -622,6 +623,29 @@ static int iort_dev_find_its_id(struct device
+> > > *dev, u32 req_id,  }
+> > >
+> > >  /**
+> > > + * iort_get_fsl_mc_device_domain() - Find MSI domain related to a
+> > > +device
+> > > + * @dev: The device.
+> > > + * @mc_icid: ICID for the fsl_mc device.
+> > > + *
+> > > + * Returns: the MSI domain for this device, NULL otherwise  */ struct
+> > > +irq_domain *iort_get_fsl_mc_device_domain(struct device *dev,
+> > > +                                                     u32 mc_icid) {
+> > > +     struct fwnode_handle *handle;
+> > > +     int its_id;
+> > > +
+> > > +     if (iort_dev_find_its_id(dev, mc_icid, 0, &its_id))
+> > > +             return NULL;
+> > > +
+> > > +     handle = iort_find_domain_token(its_id);
+> > > +     if (!handle)
+> > > +             return NULL;
+> > > +
+> > > +     return irq_find_matching_fwnode(handle, DOMAIN_BUS_FSL_MC_MSI);
+> > > +}
+> > 
+> > NAK
+> > 
+> > I am not willing to take platform specific code in the generic IORT layer.
+> > 
+> > ACPI on ARM64 works on platforms that comply with SBSA/SBBR guidelines:
+> > 
+> > 
+> > https://developer.arm.com/architectures/platform-design/server-systems
+> >
+> > Deviating from those requires butchering ACPI specifications (ie IORT) and
+> > related kernel code which goes totally against what ACPI is meant for on ARM64
+> > systems, so there is no upstream pathway for this code I am afraid.
+> > 
+> Reason of adding this platform specific function in the generic IORT
+> layer is That iort_get_device_domain() only deals with PCI bus
+> (DOMAIN_BUS_PCI_MSI).
+> 
+> fsl-mc objects when probed, need to find irq_domain which is
+> associated with the fsl-mc bus (DOMAIN_BUS_FSL_MC_MSI). It will not be
+> possible to do that if we do not add this function because there are
+> no other suitable APIs exported by IORT layer to do the job.
 
-Make sure that all the bytes are transmitted out of Uart by monitoring
-TACTIVE bit as well.
-Before setting up baud rate in set termios function, do not wait for
-Tx empty as it is taken care by the tty layer if user specified.
+And that's by design.
 
-Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v3:
-removed the wait from the set_termios and added the TACTIVE to cdns_uart_tx_empty
-As suggested by Johan.
+I don't know what the FSL bus is and I don't want to know, what
+I am telling you is that the ACPI code in the mainline is sufficient
+to support SBSA compliant HW and that's what we support with ACPI
+on ARM64.
 
- drivers/tty/serial/xilinx_uartps.c | 22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+We won't hack the kernel (and ACPI tables) up to boot with ACPI on
+non-compliant platforms, I don't know how I can be any clearer than
+that.
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index ed2f325..ebd0a74 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -32,7 +32,6 @@
- #define CDNS_UART_NAME		"xuartps"
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
--#define TX_TIMEOUT		500000
- 
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
-@@ -656,8 +655,9 @@ static unsigned int cdns_uart_tx_empty(struct uart_port *port)
- {
- 	unsigned int status;
- 
--	status = readl(port->membase + CDNS_UART_SR) &
--				CDNS_UART_SR_TXEMPTY;
-+	status = ((readl(port->membase + CDNS_UART_SR) &
-+				(CDNS_UART_SR_TXEMPTY |
-+				CDNS_UART_SR_TACTIVE)) == CDNS_UART_SR_TXEMPTY);
- 	return status ? TIOCSER_TEMT : 0;
- }
- 
-@@ -700,20 +700,8 @@ static void cdns_uart_set_termios(struct uart_port *port,
- 	u32 cval = 0;
- 	unsigned int baud, minbaud, maxbaud;
- 	unsigned long flags;
--	unsigned int ctrl_reg, mode_reg, val;
--	int err;
--
--	/* Wait for the transmit FIFO to empty before making changes */
--	if (!(readl(port->membase + CDNS_UART_CR) &
--				CDNS_UART_CR_TX_DIS)) {
--		err = readl_poll_timeout(port->membase + CDNS_UART_SR,
--					 val, (val & CDNS_UART_SR_TXEMPTY),
--					 1000, TX_TIMEOUT);
--		if (err) {
--			dev_err(port->dev, "timed out waiting for tx empty");
--			return;
--		}
--	}
-+	unsigned int ctrl_reg, mode_reg;
-+
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	/* Disable the TX and RX to set baud rate */
--- 
-2.7.4
+All is needed to configure the (platform dev/PCI->IOMMU->ITS) chain is
+in the ACPI/IORT specifications and again, that's by design, adding
+DSDT objects and hacking the kernel to make it work "like DT" won't
+cut it, you are solving the wrong problem here, boot this platform
+with a device tree, it is a problem that has been solved a long time
+ago and it is supported in the mainline kernel.
 
+Thanks,
+Lorenzo
