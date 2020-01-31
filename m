@@ -2,103 +2,192 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F746C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A862C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E4520705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5229A20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TIEugwB+"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pOxSnKeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgAaNsx (ORCPT
+        id S1728893AbgAaNtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:48:53 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:59948 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgAaNsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:48:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=77heQxkPpR1j313BxRvUk+Ag0IcAcRqZAwmlY8oelSk=; b=TIEugwB+DJLbJVsOL7NvEZ8BQ0
-        kUUqorMqCOHdGJ2OyIPrZvzj8X0hz8byAyuQfmwhlYVwwKrBp3LYPrTiCUxUcmJxzjpLPLJHE8pjj
-        iMso6TTHiNJCyVyz2qk3h3tQwvUbPx8ynzTCZ1gVHjB1FHqXcBWrc+zoBsoxOofPVrQo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ixWfB-0007Nv-Iw; Fri, 31 Jan 2020 14:48:49 +0100
-Date:   Fri, 31 Jan 2020 14:48:49 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anirudha.sarangi@xilinx.com,
-        michal.simek@xilinx.com, gregkh@linuxfoundation.org,
-        mchehab+samsung@kernel.org, john.linn@xilinx.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 -next 4/4] net: emaclite: Fix restricted cast warning
- of sparse
-Message-ID: <20200131134849.GE9639@lunn.ch>
-References: <1580471270-16262-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1580471270-16262-5-git-send-email-radhey.shyam.pandey@xilinx.com>
+        Fri, 31 Jan 2020 08:49:00 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54016 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728696AbgAaNs7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:48:59 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200131134858euoutp024ca2abbcc4009d67e9ad1e96f79ab819~u-NtTHz_h2562025620euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:48:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200131134858euoutp024ca2abbcc4009d67e9ad1e96f79ab819~u-NtTHz_h2562025620euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580478538;
+        bh=X1z8ZbkxYMru+Umlcw8xfHUCE3r2G8VQLfhn9gEQmh0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=pOxSnKeKdO7nk3kCmnXRgSQZuwKosj01WX2mvd89TZRkPvY6SzWFXa89160pm2jqQ
+         Xmx8OLq4BDs9uZw2Gb08JuXDy7r6Ckcn81UaXat0sno6Lg8/ost6+XPlWsDUkNPpVB
+         w+RNLHScFWwA/M8VklJZxBsqxV+B/MzhS7SGxS3s=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200131134857eucas1p2d036abd7fe1a7e4391b6c252342747ae~u-NtCFQJg3039030390eucas1p2t;
+        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 16.DE.60679.940343E5; Fri, 31
+        Jan 2020 13:48:57 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200131134857eucas1p2a4191e8a63fd1f716a12788e4aa1743a~u-NsxD1JY1663616636eucas1p2O;
+        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200131134857eusmtrp2c5c69fbc2fab49911770856e1fd5bccd~u-NswOmtT0170901709eusmtrp2b;
+        Fri, 31 Jan 2020 13:48:57 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-c3-5e343049a35b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id FA.4F.07950.940343E5; Fri, 31
+        Jan 2020 13:48:57 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200131134856eusmtip109eb4eab5b89a4ad9bc7c9fd16f8a9b2~u-Nr2wZmr3226932269eusmtip1E;
+        Fri, 31 Jan 2020 13:48:56 +0000 (GMT)
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model
+ framework
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     lukasz.luba@arm.com, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, dietmar.eggemann@arm.com
+Message-ID: <db803418-f263-6660-8e7c-739d137471b2@samsung.com>
+Date:   Fri, 31 Jan 2020 14:48:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580471270-16262-5-git-send-email-radhey.shyam.pandey@xilinx.com>
+In-Reply-To: <08aff2de-85d5-36b2-13bb-bad6eb5d37eb@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRzl293drtL0bmp+qBTMXgo+M7xZaIHCJEv/MJAgc+VFJTdlVy0l
+        8kGaLsonpEszH6lNUZtv8b2V2mgSmcsUEjQsdQjOMiVXu7tK/nfO73fOd34HPgwR6FAnLEGa
+        Qsqk4kQhx5rd/XZb5xHq7RftvbrjS+g3l1GiWqNDiW9FXQhRuLiKEFNT7Vzifc4al1AtzqDE
+        x/5KDmF8rAFE+dQQi6jJecAlXuo/sIi57CYOkTuo4V6wEbU8bwEilbKAI+qozxQ96VQCkVF1
+        JAK9Zn0+lkxMSCNlXoEx1vHD61Ws5KHDdzuLF0AWeMSXAysM4n6wTj7MlQNrTIA3Afh6oG6P
+        bAJYNqpGGWIEMHtiGtm3NMh3OMyi0WyZ7wUMMQDYMzvKolV2eDhcGSm0YA4eAIsfKgGN7XE3
+        qN/dsjyL4L0IVBTMsukFDw+E4x1VXBqz8eOwqmLHEueAR8GNBfoOWsOHkxVLFr0VHgRN6lLL
+        HMEd4ZelahaDj8IeQyVCB0DcwIVf1R3mZMxMgmH3hC1TwQ6ujHdyGewC//bRXlrfCuBu/vc9
+        cw+AjaUmDqM6B+d1dGnMnOAG2/q9mPFF2Fa7y2bet4GfDXzmBhtY0v0UYcY8mJ8nYNQnYHtD
+        O2c/Vt73CikCQsWBZooDbRQH2ij+574AbCVwJFMpSRxJ+UrJO56UWEKlSuM8byVJVMD8y7Sm
+        8c1e0P/n5hjAMSA8xEt29osWoOI0Kl0yBiCGCO15DiE+0QJerDg9g5Ql3ZClJpLUGHDG2EJH
+        3unaH9cFeJw4hbxNksmkbH/LwqycssDVjPoWlV6qmlNXV1COIZd04T01M2GZU7bolfJTi2sG
+        F/+oZzXrkdqTZaurAxVBUZPHUNm9aT55X+tq1ISvbwf//iVqLWndSNnSLrp7aN7wmvOCO9IC
+        qKiMbfay/6eCwaHQrsifw7mm6cvjrjEjntKIvvizYUTznFLx7ow4jhCyqXixjzsio8T/AJcT
+        JPVhAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsVy+t/xu7qeBiZxBh9OyVpc//Kc1WL+kXOs
+        Fk8nbGW26H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWJhUwu7xdLrF5ks
+        bjeuYLNo3XuE3YHPY828NYwem1Z1snlsXlLv0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrR
+        hhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehn7389lKtgnVrFl4gPGBsZuwS5G
+        Tg4JAROJZV2/2LoYuTiEBJYySlx4cYSli5EDKCEjcXx9GUSNsMSfa11QNa8ZJaa+384MkhAW
+        8JVY8/02mM0mYCUxsX0VI4gtIqApcf3vd1aQBmaBXcwSB95PZYXofsMk0Xr0ETtIFa+AncTx
+        zXPBbBYBVYm5M3+BTRIViJA4vGMWI0SNoMTJmU9YQGxOAXuJf4cns4LYzALqEn/mXWKGsMUl
+        bj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5
+        uZsYgbG77djPLTsYu94FH2IU4GBU4uEtkDaJE2JNLCuuzD3EKMHBrCTCK+pqGCfEm5JYWZVa
+        lB9fVJqTWnyI0RTouYnMUqLJ+cC0klcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1
+        ILUIpo+Jg1OqgVFrjtPm3HT9VQ8q3ExsHSy3lme8qpihODvl56o/jTl/Yk3c7p5fLmlpvG3a
+        no4nfYsvq+1rt38arNSzKOWr1useNtegKIWCw7zM0+1r5N61xDy8ancof6P0thcLTFcErw09
+        ZFbA/i7EbbvKq39lM2bYc/e/6vJYclBP6PXzCO79uevYDk84NE+JpTgj0VCLuag4EQBaUVrc
+        8wIAAA==
+X-CMS-MailID: 20200131134857eucas1p2a4191e8a63fd1f716a12788e4aa1743a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+        <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
+        <20200127215453.15144-4-lukasz.luba@arm.com>
+        <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
+        <CAJKOXPcZCks1SxwBP-vhpsYzpsrV9MQo91QNU2obgAppxfTiyQ@mail.gmail.com>
+        <08aff2de-85d5-36b2-13bb-bad6eb5d37eb@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 05:17:50PM +0530, Radhey Shyam Pandey wrote:
-> Explicitly cast xemaclite_readl return value when it's passed to ntohl.
-> Fixes below reported sparse warnings:
-> 
-> xilinx_emaclite.c:411:24: sparse: sparse: cast to restricted __be32
-> xilinx_emaclite.c:420:36: sparse: sparse: cast to restricted __be32
-> 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
->  drivers/net/ethernet/xilinx/xilinx_emaclite.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-> index 96e9d21..3273d4f 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-> @@ -408,7 +408,8 @@ static u16 xemaclite_recv_data(struct net_local *drvdata, u8 *data, int maxlen)
->  
->  	/* Get the protocol type of the ethernet frame that arrived
->  	 */
-> -	proto_type = ((ntohl(xemaclite_readl(addr + XEL_HEADER_OFFSET +
-> +	proto_type = ((ntohl((__force __be32)xemaclite_readl(addr +
-> +			XEL_HEADER_OFFSET +
->  			XEL_RXBUFF_OFFSET)) >> XEL_HEADER_SHIFT) &
->  			XEL_RPLR_LENGTH_MASK);
->  
-> @@ -417,7 +418,7 @@ static u16 xemaclite_recv_data(struct net_local *drvdata, u8 *data, int maxlen)
->  	 */
->  	if (proto_type > ETH_DATA_LEN) {
->  		if (proto_type == ETH_P_IP) {
-> -			length = ((ntohl(xemaclite_readl(addr +
-> +			length = ((ntohl((__force __be32)xemaclite_readl(addr +
->  					XEL_HEADER_IP_LENGTH_OFFSET +
->  					XEL_RXBUFF_OFFSET)) >>
->  					XEL_HEADER_SHIFT) &
 
-If i understand this code correctly, you need the ntohl because you
-are poking around inside the packet. All the other uses of
-xemaclite_readl() are for descriptors etc.
+On 1/31/20 2:47 PM, Bartlomiej Zolnierkiewicz wrote:
+> 
+> On 1/31/20 2:31 PM, Krzysztof Kozlowski wrote:
+>> On Fri, 31 Jan 2020 at 14:30, Bartlomiej Zolnierkiewicz
+>> <b.zolnierkie@samsung.com> wrote:
+>>>
+>>>
+>>> Hi,
+>>>
+>>> On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
+>>>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>>>
+>>>> Enable the Energy Model (EM) brings possibility to use Energy Aware
+>>>> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
+>>>> default. The EAS only works with SchedUtil - a CPUFreq governor which
+>>>> handles direct requests from the scheduler for the frequency change. Thus,
+>>>> to make EAS working in default, the SchedUtil governor should be
+>>>> configured as default CPUFreq governor. Although, the EAS might be enabled
+>>>> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
+>>>> then set as CPUFreq governor, i.e.:
+>>>>
+>>>> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+>>>> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+>>>>
+>>>> To check if EAS is ready to work, the read output from the command below
+>>>> should show '1':
+>>>> cat /proc/sys/kernel/sched_energy_aware
+>>>>
+>>>> To disable EAS in runtime simply 'echo 0' to the file above.
+>>>>
+>>>> Some test results, which stress the scheduler on Odroid-XU3:
+>>>> hackbench -l 500 -s 4096
+>>>> With mainline code and with this patch set.
+>>>>
+>>>> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
+>>>> (which is set to =y in default exynos_defconfig)
+>>>>
+>>>>               |               this patch set                  | mainline
+>>>>               |-----------------------------------------------|---------------
+>>>>               | performance   | SchedUtil     | SchedUtil     | performance
+>>>>               | governor      | governor      | governor      | governor
+>>>>               |               | w/o EAS       | w/ EAS        |
+>>>> ----------------|---------------|---------------|---------------|---------------
+>>>> hackbench w/ PL | 12.7s               | 11.7s         | 12.0s         | 13.0s - 12.2s
+>>>> hackbench w/o PL| 9.2s                | 8.1s          | 8.2s          | 9.2s - 8.4s
+>>>
+>>> Would you happen to have measurements of how much power is
+>>> saved by running hackbench using "SchedUtil governor w/ EAS"
+>>> instead of "SchedUtil governor w/o EAS"?
+>>
+>> That's a good point and quite important reason behind enabling (or not) EAS...
+> 
+> IIUC EAS is enabled by default if you use SchedUtil
+> governor and Energy Model is available on you platform.
+> 
+> [ SchedUtil governor is enabled in exynos_defconfig
+>   although not enabled by default currently. ]
 
-It would be cleaner if you defined a xemaclite_readlbe32. If you use
-ioread32be() it will do the endinness swap for you, so you don't need
-the ntohl() and the horrible cast.
+s/enabled/used/
 
-    Andrew
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
