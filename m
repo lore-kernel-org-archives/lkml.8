@@ -2,100 +2,155 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CCC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC6FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1C920705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F77206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcVYhGHF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dJfDrIIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgAaHCm (ORCPT
+        id S1728089AbgAaHNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:02:42 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45462 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgAaHCm (ORCPT
+        Fri, 31 Jan 2020 02:13:42 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33138 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgAaHNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:02:42 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so2820596pfg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 23:02:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wOI7hqK3fz5FOatl+JgLstEmzwY5hPCxPwdC6f4htY0=;
-        b=gcVYhGHFtpUbCqyKbhsgy051T79MxaD0OdnjtYqfqze1AvFsz1IsXJQLrWD0Gg4KOX
-         J2DsQGRsQ6WoO3xOmJp2umB2AWLPJ5FR5KkAsAeBptRvLpxCvhvY9RKPjJCI8zskqw00
-         ZunZhSWNWIi9qFAqnip93r1/chopEhiogdWsuG1pCjMYTfbPF4irJTdGs1hC+qQpwGOl
-         MWXzaWUcWmY/mJp4G/UUx/oGmcY0HMQI7ereUN7p4PQ7V15zj2M6k2/bhck2sfgBkC7S
-         d7c2puw/9abml2Z4h87xT3hYJsSYYJa0hUBwmiHfDHwRQs4uUhg0ZT2WqI0XM2p8AqlP
-         nV0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wOI7hqK3fz5FOatl+JgLstEmzwY5hPCxPwdC6f4htY0=;
-        b=RHxJQo7I71q3iaxP52LkjJzMj9M8uJk+5adwWEioHAysHGJTDR9aV4njM3oXcLnE7w
-         ZR9WUVIDbaqN7Lc+DcizgU38lympvqL+HLmCtEHsr5z8bDTi9NEh6/3TQKN4eauc5nDo
-         g/qxuJ5v8C90EsDWpePmTwo6S8McHIcp+tJ/0QhRFd3VBgZNl1pDxvCguCloASN5pRZl
-         VfsZ0Lhs6CycSg8x+z2WiJxgbOamCRm4gA5N3ruSexEYXwpk9+I3VlrwEVKn6r3pxkqW
-         OHrzrToKwxoPEu+VRbdLReKZVLJEI9c4DOstRvymG5FSjYgIQxoKpiI9zfJPzHgc5VI+
-         ZChw==
-X-Gm-Message-State: APjAAAWahD37lwlMg0IzoZuhbFdj+xj6mjR7kZVGKKyQrKljyVEISSR5
-        6/Jg2wGvFcTUDymv0bQH4vE=
-X-Google-Smtp-Source: APXvYqzrf9HXTuJ47vRwuDdXyk6Q7rha2caXtba6GCDo4v9fEuaTCO33fzUk4AwnphPzGbYBjgI/jw==
-X-Received: by 2002:a63:28a:: with SMTP id 132mr8654803pgc.165.1580454161600;
-        Thu, 30 Jan 2020 23:02:41 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id gc1sm8305293pjb.20.2020.01.30.23.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 23:02:40 -0800 (PST)
-Date:   Fri, 31 Jan 2020 16:02:37 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] printk: Convert a use of sprintf to snprintf in
- console_unlock
-Message-ID: <20200131070237.GB240941@google.com>
-References: <20200130221644.2273-1-natechancellor@gmail.com>
+        Fri, 31 Jan 2020 02:13:41 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00V7DZnN057099;
+        Fri, 31 Jan 2020 01:13:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580454815;
+        bh=n7YRRXxTreq+7HAtJOKxQ41+gApgSjQtvS2mF0Li8+U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dJfDrIIzOnBFJQ0rjnMAohy6qhC7OjKOFrPlJwOquaRnDHsmtSkuO8P8IG6drvKmD
+         NhGdhG5ifW18OyQKn9ymgYgoUO8646fS9x3FglMBJAj353yM1dCPO9CG2CriujQNkc
+         4MRippftiJfk9tYiVb90vU9Fk67FPHoD+mBUi6l0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00V7DZD5116750
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 01:13:35 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 01:13:34 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 01:13:35 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00V7DXLg070011;
+        Fri, 31 Jan 2020 01:13:33 -0600
+Subject: Re: [PATCH 1/2] dmaengine: Cleanups for the slave <-> channel symlink
+ support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200130114220.23538-1-peter.ujfalusi@ti.com>
+ <20200130114220.23538-2-peter.ujfalusi@ti.com>
+ <CAMuHMdUdhqRU8NmHrcgKQpiVDsuFosWUykZs47HdF9RRCDv-KA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <fef9eeac-f088-61e8-eecc-a106a6f09224@ti.com>
+Date:   Fri, 31 Jan 2020 09:14:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130221644.2273-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdUdhqRU8NmHrcgKQpiVDsuFosWUykZs47HdF9RRCDv-KA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/30 15:16), Nathan Chancellor wrote:
-> When CONFIG_PRINTK is disabled (e.g. when building allnoconfig), clang
-> warns:
+Hi Geert,
+
+On 30/01/2020 17.20, Geert Uytterhoeven wrote:
+> Hi Peter,
 > 
-> ../kernel/printk/printk.c:2416:10: warning: 'sprintf' will always
-> overflow; destination buffer has size 0, but format string expands to at
-> least 33 [-Wfortify-source]
->                         len = sprintf(text,
->                               ^
-> 1 warning generated.
+> On Thu, Jan 30, 2020 at 12:41 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>> No need to use goto to jump over the
+>> return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>> We can just revert the check and return right there.
+>>
+>> Do not fail the channel request if the chan->name allocation fails, but
+>> print a warning about it.
+>>
+>> Change the dev_err to dev_warn if sysfs_create_link() fails as it is not
+>> fatal.
+>>
+>> Only attempt to remove the DMA_SLAVE_NAME symlink if it is created - or it
+>> was attempted to be created.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > 
-> It is not wrong; text has a zero size when CONFIG_PRINTK is disabled
-> because LOG_LINE_MAX and PREFIX_MAX are both zero. Change to snprintf so
-> that this case is explicitly handled without any risk of overflow.
+> Thanks for your patch!
+> 
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -756,22 +756,24 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>>         }
+>>         mutex_unlock(&dma_list_mutex);
+>>
+>> -       if (!IS_ERR_OR_NULL(chan))
+>> -               goto found;
+>> -
+>> -       return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>> +       if (IS_ERR_OR_NULL(chan))
+>> +               return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>>
+>>  found:
+>> -       chan->slave = dev;
+>>         chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+>> -       if (!chan->name)
+>> -               return ERR_PTR(-ENOMEM);
+>> +       if (!chan->name) {
+>> +               dev_warn(dev,
+>> +                        "Cannot allocate memory for slave symlink name\n");
+> 
+> No need to print a message, as the memory allocator core will have
+> screamed already.
 
-We probably can add a note here that for !CONFIG_PRINTK builds
-logbuf overflow is very unlikely.
+Right, I tend to forget this ;)
 
-Otherwise,
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 
+>> +               return chan;
+>> +       }
+>> +       chan->slave = dev;
+>>
+>>         if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
+>>                               DMA_SLAVE_NAME))
+>> -               dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
+>> +               dev_warn(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
+>>         if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
+>> -               dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
+>> +               dev_warn(dev, "Cannot create DMA %s symlink\n", chan->name);
+>> +
+>>         return chan;
+>>  }
+>>  EXPORT_SYMBOL_GPL(dma_request_chan);
+> 
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-	-ss
+Thanks,
+- Péter
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
