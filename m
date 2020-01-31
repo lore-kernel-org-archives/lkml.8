@@ -2,149 +2,170 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C050C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1715C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB1520CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6B920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PMlJBIxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgAaJia (ORCPT
+        id S1728284AbgAaJkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:38:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:33500 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgAaJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:38:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32552FEC;
-        Fri, 31 Jan 2020 01:38:26 -0800 (PST)
-Received: from [10.37.12.196] (unknown [10.37.12.196])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A8043F68E;
-        Fri, 31 Jan 2020 01:38:22 -0800 (PST)
-Subject: Re: [PATCH 0/1] drivers: devfreq: use DELAYED_WORK in DEVFREQ
- monitoring subsystem
-To:     Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com, Kamil Konieczny <k.konieczny@samsung.com>
-References: <20200127151731.8640-1-lukasz.luba@arm.com>
- <CGME20200130114724epcas1p1b2a9ea756c7d53a2f26b60abbef0ab51@epcas1p1.samsung.com>
- <b4d1624f-4ca8-c985-ff42-f5f677c72fa9@arm.com>
- <6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com>
- <f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <729911b2-434b-fbe5-b556-5bdba8114085@arm.com>
-Date:   Fri, 31 Jan 2020 09:38:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 04:40:03 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37903 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgAaJkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:40:03 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so7805775wrh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 01:40:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ndhvk5LkAqM1xOeMsGz3JzFsEgTy4qIZT1Y3E6tT7KA=;
+        b=PMlJBIxwnd71knVit2QcyGY4fZFJWJh7EZ7NEJFjgAbr/d0Y0QCyg5mealP42n97rE
+         nXwaVd3ZDtVfKT2usxSNqbLngtctFUo8pwO1cv4DmdW7+KHFa0CaBtP9X0g/MAtafnBB
+         isiNhcxaux1yrHVZfUmTvUJusJ9n+ogS7RLPZngZIUS+E+2sMOjn6YMR5Dyu0L82SNCy
+         MNlZEojDJ4xjiy0CdC2gI/wrr7O3opiqyVMVlPulElQkvGgJ+OxPAJzMf4b6IrAf/DcF
+         6/GQpSrD/zWQ6ShmQkoNV2qdb3B3MxEjGw3REWMC37Tgbbm8ekyrdl5pw92jK3Miw0m4
+         VIFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ndhvk5LkAqM1xOeMsGz3JzFsEgTy4qIZT1Y3E6tT7KA=;
+        b=WNmigk/NJ4muVcmQcn/MaWMVj8tBh0P7GWYxgr5wurDlF8IrxnAC0tBHmPj2i/j+Gq
+         gcFS2bJl7H2YI5sf8JGX4GJ8otIvosOiBTzfz/hBhmMvHJEXeCmjXnuMBh2WZkx/6kXE
+         z7Am4kEN9zj4VumLD/+x1osgXxjxHMg1cQjaU2bEzsJfJYMvyTTrq5DjGCb+h1rVYx1L
+         0DGkF+I2RH/zqGRTmMnaBcNMTqwrWvVArokJSRX6oKhYCd9TWPXbVB43G5+j8y8/M2Z1
+         ipB1jUQLgKKBVcROjrtsGC1P5FYoaRXzpV+CcsorbsUM0XQzqeo7GQ7MX6peZ0UlQ7dS
+         nOhQ==
+X-Gm-Message-State: APjAAAXEkNsBkWgz1CS/zRDI38OJlJX6ZErL2JEB6L5MBkGhBmjX/HkM
+        hf8Odm9JgdTI0s4uqqUY4EJdtQ==
+X-Google-Smtp-Source: APXvYqwfR+QHNfdDt7UU5RURef7BACAjn9y0Yqww6MDLw7rr5Mv7l5prwZs7fL9u8XGHYfoEgfxGUw==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr11389511wrv.9.1580463599879;
+        Fri, 31 Jan 2020 01:39:59 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:adb6:efff:339:7c48? ([2a01:e34:ed2f:f020:adb6:efff:339:7c48])
+        by smtp.googlemail.com with ESMTPSA id w22sm9833428wmk.34.2020.01.31.01.39.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 01:39:59 -0800 (PST)
+Subject: Re: linux-next: build failure after merge of the origin tree
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200131151209.37e780f8@canb.auug.org.au>
+ <73f27df0-451f-d274-a7db-293cbf2c7690@infradead.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <c90b72d2-bc7d-1bc0-2507-e8da0f7cd58c@linaro.org>
+Date:   Fri, 31 Jan 2020 10:39:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <73f27df0-451f-d274-a7db-293cbf2c7690@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
-
-On 1/31/20 12:47 AM, Chanwoo Choi wrote:
-> On 1/31/20 9:42 AM, Chanwoo Choi wrote:
->> Hi Lukasz,
+On 31/01/2020 05:17, Randy Dunlap wrote:
+> On 1/30/20 8:12 PM, Stephen Rothwell wrote:
+>> Hi all,
 >>
->> On 1/30/20 8:47 PM, Lukasz Luba wrote:
->>> Hi Chanwoo, MyungJoo,
->>>
->>> Gentle ping. The issue is not only in the devfreq itself,
->>> but also it affects thermal. The devfreq cooling rely on
->>> busy_time and total_time updated by the devfreq monitoring
->>> (in simple_ondemand).
->>> Thermal uses DELAYED_WORK and is more reliable, but uses stale
->>> data from devfreq_dev_stats. It is especially visible when
->>> you have cgroup spanning one cluster. Android uses cgroups
->>> heavily. You can make easily this setup using 'taskset',
->>> run some benchmarks and observe 'devfreq_monitor' traces and
->>> timestamps, i.e. for your exynos-bus.
->>>
->>> The patch is really non-invasive and simple. It can be a good starting
->>> point for testing and proposing other solutions.
+>> [At Michael's suggestion I have started doing htmldocs builds at the
+>> end of linux-next runs.  Unfortunately, this currently fails for Linus'
+>> tree.]
 >>
->> Sorry for late reply. I'm preparing the RFC patch about my approach
->> to support this requirement as following:
+>> In Linus' tree, today's linux-next build (htmldocs) failed like this:
 >>
->> As you knew, DEFERRABLE_WORK with CONFIG_NO_HZ focuses on removing
->> the redundant of power-consumption by preventing the unneeded wakeup
->> from idle state if there are no any interrupts and runnable threads.
+>> docutils.utils.SystemMessage: Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
 >>
->> Finally, I agree the requirement of delaywd_work for devfreq subsystem.
->> But, I would like to support both deferrable_work and delayed_work
->> on devfreq subsystem. It is better to select either deferrable_work
->> or delayed_work by user like Kamil's suggestion[1].
->> [1] https://lore.kernel.org/patchwork/patch/1164317/
->> - [2/4] PM / devfreq: add possibility for delayed work
+>> Caused by commit
 >>
->> But, I want to change the timer type for devfreq device
->> using simple_ondemand governor via sysfs as following:
->>
->> Example:
->>
->> 1.
->> enum work_timer_type {
->> 	DEVFREQ_WORK_TIMER_DEFERRABLE = 0,
->> 	DEVFREQ_WORK_TIMER_DELAYED = 0,
->> };
->>
->> struct devfreq_simple_ondemand_data {
->> 	unsigned int upthreshold;
->> 	unsigned int downdifferential;
->> 	enum work_timer_type timer_type;
->> };
->>
->> The developer of devfreq device driver can choose
->> the default work time type by initializing the 'timer_type of
->> struct devfreq_simple_ondemand_data'.
->>
->> 2. Change the work timer type at the runtime
->> - Change the work timer type from 'deferrable' to 'delayed'
->> $ echo delayed > /sys/class/devfreq/devfreq0/work_timer_type
->> $ cat /sys/class/devfreq/devfreq0/work_timer_type
->> delayed
->>
->> - Change the work timer type from 'delayed' to 'deferrable'
->> $ echo deferrable > /sys/class/devfreq/devfreq0/work_timer_type
->> $ cat /sys/class/devfreq/devfreq0/work_timer_type
->> deferrable
+>>   0a1990a2d1f2 ("thermal/drivers/cpu_cooling: Add idle cooling device documentation")
 >>
 > 
-> And
-> Only show '/sys/class/devfreq/devfreq0/work_timer_type' sysfs attribute,
-> if devfreq device uses the simple_ondemand. Because this 'work_timer_type'
-> sysfs attribute only depends on simple_ondemand governor and are useful.
 > 
-> So, 'work_timer_type' sysfs attribute will be handled
-> at drivers/devfreq/governor_simpleondemand.c.
+> I sent a patch for that on 2020-JAN-20 but no one has replied to the patch:
 > 
-> After posting my suggestion, we can discuss it.
-> 
-> 
->> I'm developing the RFC patch and then I'll send it as soon as possible.
+> https://lore.kernel.org/linux-pm/712c1152-56b5-307f-b3f3-ed03a30b804a@infradead.org/
 
-Good, thank you for the explanation. For the first glance the design
-looks OK, we can discuss it a bit more in you RFC series.
-I would recommend to not make it conditional on simple_ondemand governor
-just add a comment that for i.e. performance or passive governors it has
-less sense to use this setting. There might be some other governors
-loaded as modules, which could benefit from it, or in Android e.g.
-https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-coral-4.14-android10/drivers/devfreq/governor_msm_adreno_tz.c
+Right, sorry for that. I'll pick it and send a PR.
 
-It would be good if it can land in mainline before v5.8-v5.9.
+Thanks for the fix.
 
-Regards,
-Lukasz
 
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
