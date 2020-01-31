@@ -2,222 +2,122 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70856C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307A4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339A220705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:06:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k2tYY3FC"
+	by mail.kernel.org (Postfix) with ESMTP id 0B64620705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgAaKGk (ORCPT
+        id S1728324AbgAaKIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:06:40 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32514 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728160AbgAaKGk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:06:40 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580465199; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=EpGs6eXScqMaP9HENZsJx5BfCs4zweX9ZjwZs/w1/J8=; b=k2tYY3FCvWLhxl/9Ol84A8WW5ylWoSSjlU/q6E3fYjv+6vyOROaFKpfIx9xMhD2dHP6rqVq7
- LLQk8SVho+35KADxGRUF4gnUHZJ4wlM9aB48SBy0dcv336IZXkU5TpaTjelmjnjuosLkvuMa
- 7k3v290NGJgOHSDyhDERbcJrNJE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e33fc2e.7f39c2dfcd18-smtp-out-n01;
- Fri, 31 Jan 2020 10:06:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EF6D2C447A2; Fri, 31 Jan 2020 10:06:37 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 988C1C43383;
-        Fri, 31 Jan 2020 10:06:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 988C1C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Fri, 31 Jan 2020 15:36:29 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20200131100629.GC27398@codeaurora.org>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
+        Fri, 31 Jan 2020 05:08:23 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728267AbgAaKIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 05:08:23 -0500
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id B3DECD5AAAA281B00F0D;
+        Fri, 31 Jan 2020 10:08:20 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 31 Jan 2020 10:08:21 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
+ 2020 10:08:20 +0000
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <chenxiang66@hisilicon.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <liusimin4@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        <tudor.ambarus@microchip.com>,
+        Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, <fengsheng5@huawei.com>
+References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com>
+ <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+ <20200113114256.GH3897@sirena.org.uk>
+ <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+ <20200113140627.GJ3897@sirena.org.uk>
+ <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
+ <20200113142754.GL3897@sirena.org.uk>
+ <20200113143403.GQ32742@smile.fi.intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
+Date:   Fri, 31 Jan 2020 10:08:19 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191009104611.15363-1-qais.yousef@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200113143403.GQ32742@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+On 13/01/2020 14:34, Andy Shevchenko wrote:
+> On Mon, Jan 13, 2020 at 02:27:54PM +0000, Mark Brown wrote:
+>> On Mon, Jan 13, 2020 at 04:17:32PM +0200, Andy Shevchenko wrote:
+>>> On Mon, Jan 13, 2020 at 4:07 PM Mark Brown <broonie@kernel.org> wrote:
+>>>> On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
+>>>>> On 13/01/2020 11:42, Mark Brown wrote:
+>>
+>>>>>> The idiomatic approach appears to be for individual board vendors
+>>>>>> to allocate IDs, you do end up with multiple IDs from multiple
+>>>>>> vendors for the same thing.
+>>
+>>>>> But I am not sure how appropriate that same approach would be for some 3rd
+>>>>> party memory part which we're simply wiring up on our board. Maybe it is.
+>>
+>>>> It seems to be quite common for Intel reference designs to assign
+>>>> Intel IDs to non-Intel parts on the board (which is where I
+>>>> became aware of this practice).
+>>
+>>> Basically vendor of component in question is responsible for ID, but
+>>> it seems they simple don't care.
+>>
+>> AFAICT a lot of the time it seems to be that whoever is writing
+>> the software ends up assigning an ID, that may not be the silicon
+>> vendor.
+> 
+> ...which is effectively abusing the ACPI ID allocation procedure.
+> 
+> (And yes, Intel itself did it in the past — see badly created ACPI IDs
+>   in the drivers)
+> 
 
-On Wed, Oct 09, 2019 at 11:46:11AM +0100, Qais Yousef wrote:
-> Capacity Awareness refers to the fact that on heterogeneous systems
-> (like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
-> when placing tasks we need to be aware of this difference of CPU
-> capacities.
-> 
-> In such scenarios we want to ensure that the selected CPU has enough
-> capacity to meet the requirement of the running task. Enough capacity
-> means here that capacity_orig_of(cpu) >= task.requirement.
-> 
-> The definition of task.requirement is dependent on the scheduling class.
-> 
-> For CFS, utilization is used to select a CPU that has >= capacity value
-> than the cfs_task.util.
-> 
-> 	capacity_orig_of(cpu) >= cfs_task.util
-> 
-> DL isn't capacity aware at the moment but can make use of the bandwidth
-> reservation to implement that in a similar manner CFS uses utilization.
-> The following patchset implements that:
-> 
-> https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
-> 
-> 	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
-> 
-> For RT we don't have a per task utilization signal and we lack any
-> information in general about what performance requirement the RT task
-> needs. But with the introduction of uclamp, RT tasks can now control
-> that by setting uclamp_min to guarantee a minimum performance point.
-> 
-> ATM the uclamp value are only used for frequency selection; but on
-> heterogeneous systems this is not enough and we need to ensure that the
-> capacity of the CPU is >= uclamp_min. Which is what implemented here.
-> 
-> 	capacity_orig_of(cpu) >= rt_task.uclamp_min
-> 
-> Note that by default uclamp.min is 1024, which means that RT tasks will
-> always be biased towards the big CPUs, which make for a better more
-> predictable behavior for the default case.
-> 
-> Must stress that the bias acts as a hint rather than a definite
-> placement strategy. For example, if all big cores are busy executing
-> other RT tasks we can't guarantee that a new RT task will be placed
-> there.
-> 
-> On non-heterogeneous systems the original behavior of RT should be
-> retained. Similarly if uclamp is not selected in the config.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> ---
-> 
-> Changes in v2:
-> 	- Use cpupri_find() to check the fitness of the task instead of
-> 	  sprinkling find_lowest_rq() with several checks of
-> 	  rt_task_fits_capacity().
-> 
-> 	  The selected implementation opted to pass the fitness function as an
-> 	  argument rather than call rt_task_fits_capacity() capacity which is
-> 	  a cleaner to keep the logical separation of the 2 modules; but it
-> 	  means the compiler has less room to optimize rt_task_fits_capacity()
-> 	  out when it's a constant value.
-> 
-> The logic is not perfect. For example if a 'small' task is occupying a big CPU
-> and another big task wakes up; we won't force migrate the small task to clear
-> the big cpu for the big task that woke up.
-> 
-> IOW, the logic is best effort and can't give hard guarantees. But improves the
-> current situation where a task can randomly end up on any CPU regardless of
-> what it needs. ie: without this patch an RT task can wake up on a big or small
-> CPU, but with this it will always wake up on a big CPU (assuming the big CPUs
-> aren't overloaded) - hence provide a consistent performance.
-> 
-> I'm looking at ways to improve this best effort, but this patch should be
-> a good start to discuss our Capacity Awareness requirement. There's a trade-off
-> of complexity to be made here and I'd like to keep things as simple as
-> possible and build on top as needed.
-> 
-> 
->  kernel/sched/cpupri.c | 23 ++++++++++--
->  kernel/sched/cpupri.h |  4 ++-
->  kernel/sched/rt.c     | 81 +++++++++++++++++++++++++++++++++++--------
->  3 files changed, 91 insertions(+), 17 deletions(-)
-> 
-> diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
-> index b7abca987d94..799791c01d60 100644
-> --- a/kernel/sched/cpupri.c
-> +++ b/kernel/sched/cpupri.c
-> @@ -57,7 +57,8 @@ static int convert_prio(int prio)
->   * Return: (int)bool - CPUs were found
->   */
->  int cpupri_find(struct cpupri *cp, struct task_struct *p,
-> -		struct cpumask *lowest_mask)
-> +		struct cpumask *lowest_mask,
-> +		bool (*fitness_fn)(struct task_struct *p, int cpu))
->  {
->  	int idx = 0;
->  	int task_pri = convert_prio(p->prio);
-> @@ -98,6 +99,8 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
->  			continue;
->  
->  		if (lowest_mask) {
-> +			int cpu;
-> +
->  			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
->  
->  			/*
-> @@ -108,7 +111,23 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
->  			 * condition, simply act as though we never hit this
->  			 * priority level and continue on.
->  			 */
-> -			if (cpumask_any(lowest_mask) >= nr_cpu_ids)
-> +			if (cpumask_empty(lowest_mask))
-> +				continue;
-> +
-> +			if (!fitness_fn)
-> +				return 1;
-> +
-> +			/* Ensure the capacity of the CPUs fit the task */
-> +			for_each_cpu(cpu, lowest_mask) {
-> +				if (!fitness_fn(p, cpu))
-> +					cpumask_clear_cpu(cpu, lowest_mask);
-> +			}
-> +
-> +			/*
-> +			 * If no CPU at the current priority can fit the task
-> +			 * continue looking
-> +			 */
-> +			if (cpumask_empty(lowest_mask))
->  				continue;
->  		}
->  
+Hi Mark,
 
-I understand that RT tasks run on BIG cores by default when uclamp is enabled.
-Can you tell what happens when we have more runnable RT tasks than the BIG
-CPUs? Do they get packed on the BIG CPUs or eventually silver CPUs pull those
-tasks? Since rt_task_fits_capacity() is considered during wakeup, push and
-pull, the tasks may get packed on BIG forever. Is my understanding correct?
+About this topic of ACPI having no method to describe device buswidth in 
+the resource descriptor, it may be an idea for me to raise a Tianocore 
+feature request @ https://bugzilla.tianocore.org/
 
-Also what happens for the case where RT tasks are pinned to silver but with
-default uclamp value i.e p.uclamp.min=1024 ? They may all get queued on a
-single silver and other silvers may not help since the task does not fit
-there. In practice, we may not use this setup. Just wanted to know if this
-behavior is intentional or not.
+There seems to be an avenue there for raising new features for the spec. 
+I (or my org) can't participate in AWSG.
+
+I would have no concrete proposal for spec update for now, though. 
+Hopefully others with more expertise could contribute.
+
+In the meantime, I have an RFC for using DMI to quirk support for this 
+on the driver - I can share when ready.
 
 Thanks,
-Pavan
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+John
