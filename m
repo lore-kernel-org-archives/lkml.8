@@ -2,226 +2,147 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337B2C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE30C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E180B214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:02:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mYoMDYgf"
+	by mail.kernel.org (Postfix) with ESMTP id 88A8320707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgAaMCH (ORCPT
+        id S1728520AbgAaMDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:02:07 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34635 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgAaMCG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:02:06 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s144so8654298wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 04:02:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mbDxoFJm2oj+qhmVC/5UqLWBu4cSJFdbmCZh1//SVQ4=;
-        b=mYoMDYgfxsoqJFWW3pc1GvButWs7I+ctO4pZCarC+mZtnIJe0Gdqgy27ddJxZxcrz7
-         SVx7e5lutA81dKlggkTmmmtmSVncGLDGm0cC6fKfjlA0u6DzPGaoLKOEdiEu8oIvwOUT
-         +1x0QGJQD7mIOcsV4HkaPQeHYUxlekwTim81WrJ50UNbhnGtjcOSdsxF8V5n9g7ndF4C
-         74zpfo3MZvg3Z8jbr0DqnZXLAoAU+CLGgVQmrV2UUQaaNtSZy204apfDLTeEZ9JAzQQw
-         pEXULMN0WgEbIONtu00fIhLezf5FgM3nUMS84Vj5W2qW+vA+qYnJE4psO6bRKgt8WDHH
-         9sRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mbDxoFJm2oj+qhmVC/5UqLWBu4cSJFdbmCZh1//SVQ4=;
-        b=p7Sas5ERRlGeyNQ9648rnbkT7SaziaRz8Q/D+WIi48NPjTbKHY7W8CKYyuVqbq8E8i
-         TxOh3u9+/1/7AO1hXFDTrNAthGWPi3HalPs9EqOzchYaUKVWu0+JZwzrdtYl5NaD4mTa
-         BkYD6VSb6kKg9DPcFdo+h/cHE/Yjmf2I49gLHtJddWFoYwz+txfcurZwG5iHhtjsX0kh
-         e+Srt733WZCdA6TxwRh3rKgoAaKzuY3mvNKo4qP60dpTzPwdmcz96nEu7cI6OxQm1qWL
-         MuhRcQ27CnMnnTTDRrkkMT0GxBNJ4D16chtSu337FLAPJKnFroUnl2Kp2LGpQjvf11yz
-         csLA==
-X-Gm-Message-State: APjAAAU0hFeu1Yn5re0j/CQ32Ywza/NV/Nb9GzDcKdWAdvfUAtlhzGpi
-        oyN0p/AlQw+gixsrIp4rKTfK2Zbu9WtJUVxisZyd9w==
-X-Google-Smtp-Source: APXvYqyLtANt7wYq0lzcfnJ4oPim2jg3zsq8GEIuplfKm8PZP6V4fWF6UhT0UKkmPz3Joc4FOM6mQXP4R6uiWrkIJbw=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr11681147wmj.1.1580472123485;
- Fri, 31 Jan 2020 04:02:03 -0800 (PST)
+        Fri, 31 Jan 2020 07:03:23 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2337 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728374AbgAaMDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:03:22 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2C79BC846AEEC4B266A4;
+        Fri, 31 Jan 2020 12:03:21 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 31 Jan 2020 12:03:20 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
+ 2020 12:03:20 +0000
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mark Brown <broonie@kernel.org>, <chenxiang66@hisilicon.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <liusimin4@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        <tudor.ambarus@microchip.com>,
+        Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, <fengsheng5@huawei.com>
+References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com>
+ <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+ <20200113114256.GH3897@sirena.org.uk>
+ <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+ <20200113140627.GJ3897@sirena.org.uk>
+ <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
+ <20200113142754.GL3897@sirena.org.uk>
+ <20200113143403.GQ32742@smile.fi.intel.com>
+ <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
+ <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <136bd652-dcb9-3efa-a92f-2263cbf840ad@huawei.com>
+Date:   Fri, 31 Jan 2020 12:03:19 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com> <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
-In-Reply-To: <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 31 Jan 2020 13:01:51 +0100
-Message-ID: <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>, jon@solid-run.com,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 12:06, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-01-31 10:35, Makarand Pawagi wrote:
-> >> -----Original Message-----
-> >> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> >> Sent: Tuesday, January 28, 2020 4:39 PM
-> >> To: Makarand Pawagi <makarand.pawagi@nxp.com>
-> >> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> >> kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
-> >> linux@armlinux.org.uk;
-> >> jon@solid-run.com; Cristi Sovaiala <cristian.sovaiala@nxp.com>;
-> >> Laurentiu
-> >> Tudor <laurentiu.tudor@nxp.com>; Ioana Ciornei
-> >> <ioana.ciornei@nxp.com>;
-> >> Varun Sethi <V.Sethi@nxp.com>; Calvin Johnson
-> >> <calvin.johnson@nxp.com>;
-> >> Pankaj Bansal <pankaj.bansal@nxp.com>; guohanjun@huawei.com;
-> >> sudeep.holla@arm.com; rjw@rjwysocki.net; lenb@kernel.org;
-> >> stuyoder@gmail.com; tglx@linutronix.de; jason@lakedaemon.net;
-> >> maz@kernel.org; shameerali.kolothum.thodi@huawei.com; will@kernel.org;
-> >> robin.murphy@arm.com; nleeder@codeaurora.org
-> >> Subject: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-> >>
-> >> Caution: EXT Email
-> >>
-> >> On Tue, Jan 28, 2020 at 01:38:45PM +0530, Makarand Pawagi wrote:
-> >> > ACPI support is added in the fsl-mc driver. Driver will parse MC DSDT
-> >> > table to extract memory and other resorces.
-> >> >
-> >> > Interrupt (GIC ITS) information will be extracted from MADT table by
-> >> > drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
-> >> >
-> >> > IORT table will be parsed to configure DMA.
-> >> >
-> >> > Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
-> >> > ---
-> >> >  drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
-> >> >  drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
-> >> >  drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
-> >> >  drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
-> >> >  drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
-> >> >  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71
-> >> ++++++++++++++++++++++++++++-
-> >> >  include/linux/acpi_iort.h                   |  5 ++
-> >> >  7 files changed, 174 insertions(+), 20 deletions(-)
-> >> >
-> >> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> >> > index 33f7198..beb9cd5 100644
-> >> > --- a/drivers/acpi/arm64/iort.c
-> >> > +++ b/drivers/acpi/arm64/iort.c
-> >> > @@ -15,6 +15,7 @@
-> >> >  #include <linux/kernel.h>
-> >> >  #include <linux/list.h>
-> >> >  #include <linux/pci.h>
-> >> > +#include <linux/fsl/mc.h>
-> >> >  #include <linux/platform_device.h>
-> >> >  #include <linux/slab.h>
-> >> >
-> >> > @@ -622,6 +623,29 @@ static int iort_dev_find_its_id(struct device
-> >> > *dev, u32 req_id,  }
-> >> >
-> >> >  /**
-> >> > + * iort_get_fsl_mc_device_domain() - Find MSI domain related to a
-> >> > +device
-> >> > + * @dev: The device.
-> >> > + * @mc_icid: ICID for the fsl_mc device.
-> >> > + *
-> >> > + * Returns: the MSI domain for this device, NULL otherwise  */ struct
-> >> > +irq_domain *iort_get_fsl_mc_device_domain(struct device *dev,
-> >> > +                                                     u32 mc_icid) {
-> >> > +     struct fwnode_handle *handle;
-> >> > +     int its_id;
-> >> > +
-> >> > +     if (iort_dev_find_its_id(dev, mc_icid, 0, &its_id))
-> >> > +             return NULL;
-> >> > +
-> >> > +     handle = iort_find_domain_token(its_id);
-> >> > +     if (!handle)
-> >> > +             return NULL;
-> >> > +
-> >> > +     return irq_find_matching_fwnode(handle, DOMAIN_BUS_FSL_MC_MSI);
-> >> > +}
-> >>
-> >> NAK
-> >>
-> >> I am not willing to take platform specific code in the generic IORT
-> >> layer.
-> >>
-> >> ACPI on ARM64 works on platforms that comply with SBSA/SBBR
-> >> guidelines:
-> >>
-> >>
-> >> https://developer.arm.com/architectures/platform-design/server-systems
-> >>
-> >> Deviating from those requires butchering ACPI specifications (ie IORT)
-> >> and
-> >> related kernel code which goes totally against what ACPI is meant for
-> >> on ARM64
-> >> systems, so there is no upstream pathway for this code I am afraid.
-> >>
-> > Reason of adding this platform specific function in the generic IORT
-> > layer is
-> > That iort_get_device_domain() only deals with PCI bus
-> > (DOMAIN_BUS_PCI_MSI).
-> >
-> > fsl-mc objects when probed, need to find irq_domain which is associated
-> > with
-> > the fsl-mc bus (DOMAIN_BUS_FSL_MC_MSI). It will not be possible to do
-> > that
-> > if we do not add this function because there are no other suitable APIs
-> > exported
-> > by IORT layer to do the job.
->
-> I think we all understood the patch. What both Lorenzo and myself are
-> saying is
-> that we do not want non-PCI support in IORT.
->
+On 31/01/2020 11:39, Andy Shevchenko wrote:
+> On Fri, Jan 31, 2020 at 12:08 PM John Garry <john.garry@huawei.com> wrote:
+>>
+>> On 13/01/2020 14:34, Andy Shevchenko wrote:
+>>> On Mon, Jan 13, 2020 at 02:27:54PM +0000, Mark Brown wrote:
+>>>> On Mon, Jan 13, 2020 at 04:17:32PM +0200, Andy Shevchenko wrote:
+>>>>> On Mon, Jan 13, 2020 at 4:07 PM Mark Brown <broonie@kernel.org> wrote:
+>>>>>> On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
+>>>>>>> On 13/01/2020 11:42, Mark Brown wrote:
+>>>>
+>>>>>>>> The idiomatic approach appears to be for individual board vendors
+>>>>>>>> to allocate IDs, you do end up with multiple IDs from multiple
+>>>>>>>> vendors for the same thing.
+>>>>
+>>>>>>> But I am not sure how appropriate that same approach would be for some 3rd
+>>>>>>> party memory part which we're simply wiring up on our board. Maybe it is.
+>>>>
+>>>>>> It seems to be quite common for Intel reference designs to assign
+>>>>>> Intel IDs to non-Intel parts on the board (which is where I
+>>>>>> became aware of this practice).
+>>>>
+>>>>> Basically vendor of component in question is responsible for ID, but
+>>>>> it seems they simple don't care.
+>>>>
+>>>> AFAICT a lot of the time it seems to be that whoever is writing
+>>>> the software ends up assigning an ID, that may not be the silicon
+>>>> vendor.
+>>>
+>>> ...which is effectively abusing the ACPI ID allocation procedure.
+>>>
+>>> (And yes, Intel itself did it in the past — see badly created ACPI IDs
+>>>    in the drivers)
+>>>
+>>
+>> Hi Mark,
+>>
 
-IORT supports platform devices (aka named components) as well, and
-there is some support for platform MSIs in the GIC layer.
+Hi Andy,
 
-So it may be possible to hide your exotic bus from the OS entirely,
-and make the firmware instantiate a DSDT with device objects and
-associated IORT nodes that describe whatever lives on that bus as
-named components.
+>> About this topic of ACPI having no method to describe device buswidth in
+>> the resource descriptor, it may be an idea for me to raise a Tianocore
+>> feature request @ https://bugzilla.tianocore.org/
+>>
+> 
+> The 19.6.126 describes the SPI resource, in particular:
+> 
+> ---8<---8<---
+> DataBitLength is the size, in bits, of the smallest transfer unit for
+> this connection. _LEN is automatically
+> created to refer to this portion of the resource descriptor.
+> ---8<---8<---
+> 
+> Is it what you are looking for? (As far as I know most of the
+> firmwares simple abuse this field among others)
 
-That way, you will not have to change the OS at all, so your hardware
-will not only be supported in linux v5.7+, it will also be supported
-by OSes that commercial distro vendors are shipping today. *That* is
-the whole point of using ACPI.
+I didn't think so - I thought that there was a distinction between width 
+and length in SPI terms.
 
-If you are going to bother and modify the OS, you lose this advantage,
-and ACPI gives you no benefit over DT at all.
+So how do you find that most firmwares abuse this field? AFAICS, linux 
+kernel doesn't interpret this field at all.
+
+> 
+>> There seems to be an avenue there for raising new features for the spec.
+>> I (or my org) can't participate in AWSG.
+> 
+> But have you read 19.6.126?
+> 
+
+Maybe some clarification at least could be achieved :)
+
+Cheers,
+John
