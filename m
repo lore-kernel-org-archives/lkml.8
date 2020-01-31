@@ -2,289 +2,114 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D1CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6666C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC7320705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="o5YxGTLi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o8YI7DDa"
+	by mail.kernel.org (Postfix) with ESMTP id ACE0C21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgAaGxX (ORCPT
+        id S1728095AbgAaG47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 01:53:23 -0500
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:51507 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgAaGxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 01:53:22 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 17DE77C6;
-        Fri, 31 Jan 2020 01:53:21 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 31 Jan 2020 01:53:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        PK1pmpuptvT5/MkvhBVcvSK+hqg9sA+88hLtr2Io7nw=; b=o5YxGTLi4sIrJXoo
-        ugd2krrWcg64RFmiqJ6tdkiGc+adzeQ5z4ig6QeuAXfutLZu11Bc36G1UXTaOgsw
-        McqAYwaYsI3d31F5bgjRfskD3QNOmNqWiQG1R3ZwWRmBJs9HQ6nxHd+Jr7w9rDwT
-        TsrXMVIwp5ZowfFbIZuI/ZIAMwSyUTu6Ty3Hk+YQsjFZMyjyykhWXH2QHNFuNwxh
-        ESpv/hHIuNWv8FfgrY5OY+iDHNtvScWNLCG1GgKPmNALsiXfqqMf7GaZt8UrwwL/
-        0tXc0BlHl7E8Xao68bTmHg61lA9Do2j7OFxy5OnuBif1zPDj10vQrYeui+CfdelB
-        DdXdbw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=PK1pmpuptvT5/MkvhBVcvSK+hqg9sA+88hLtr2Io7
-        nw=; b=o8YI7DDaHYTjKgapJwAjfU8XvzA5klTJrByUtPe78PgrHGM7HTS1QawvQ
-        16SAxyiDIIyl0S8pefOn24dXAcLIQmfHVr/0CBXKmeSzkZ6lwCUlm63CIFNLEYcT
-        l+OVW2JwxEmXrl04JtL10DqHdt4lHyho8/ADXrmUjmLPYpdIQJoycdswXMM/zV7Z
-        C7soOieAJSFDjaobkbgTqmsgn2WPiVeTIzxwl9Tr0ot62gTb8XiOJjN3fH3faalM
-        bf9EbN4gx7PPYjL/C6eRJp72AGezAybDKYhpuX07yLRNA7vAGRhoUeXxOtcPrRcR
-        gYd7tEpSqRET554+IRCWJLcZiAm3g==
-X-ME-Sender: <xms:384zXrtB6FVk4XR6tDllJEfHkNeAuILY-TgyD1XabzkYj4EgD8cbrg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeelgdeliecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepkffuhffvffgjfhgtfggggfesthekredttder
-    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
-    gvlhhlrdgttgeqnecuffhomhgrihhnpehoiihlrggsshdrohhrghenucfkphepuddvvddr
-    leelrdekvddruddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
-X-ME-Proxy: <xmx:384zXrUlxgQqC9ICJ43oOpsEyI91u7WM6w9FkPnVlVU1xwcw7uAfJg>
-    <xmx:384zXvI3kay4eHerKcbi84FZlTABlOHENxFxZ3GWgeKkZ_piQOvYbg>
-    <xmx:384zXvNGdYwgFVHIqecB5b3VfI2jaVAXmh5bNmoMgvlQXQwl682hHw>
-    <xmx:4M4zXjwODNLVTRcKnDcaIJS-cKYgUuC6EBHlQfgpbo3gkniM8aiF9A>
-Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 54FA230607B0;
-        Fri, 31 Jan 2020 01:53:17 -0500 (EST)
-Message-ID: <0b016861756cbe27e66651b5c21229a06558cb57.camel@russell.cc>
-Subject: Re: [PATCH] lkdtm: Test KUAP directional user access unlocks on
- powerpc
-From:   Russell Currey <ruscur@russell.cc>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, keescook@chromium.org,
-        mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, dja@axtens.net,
-        kernel-hardening@lists.openwall.com, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 31 Jan 2020 17:53:14 +1100
-In-Reply-To: <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
-References: <20200131053157.22463-1-ruscur@russell.cc>
-         <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        Fri, 31 Jan 2020 01:56:59 -0500
+Received: from sauhun.de ([88.99.104.3]:56920 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbgAaG46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 01:56:58 -0500
+Received: from localhost (p54B333AF.dip0.t-ipconnect.de [84.179.51.175])
+        by pokefinder.org (Postfix) with ESMTPSA id 721C42C0830;
+        Fri, 31 Jan 2020 07:56:55 +0100 (CET)
+Date:   Fri, 31 Jan 2020 07:56:55 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 5/6] i2c: i2c-stm32f7: allow controller to be
+ wakeup-source
+Message-ID: <20200131065654.GB1028@ninjato>
+References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
+ <1578317314-17197-6-git-send-email-alain.volmat@st.com>
+ <20200130083927.GH2208@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
+Content-Disposition: inline
+In-Reply-To: <20200130083927.GH2208@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-31 at 07:44 +0100, Christophe Leroy wrote:
-> 
-> Le 31/01/2020 à 06:31, Russell Currey a écrit :
-> > Kernel Userspace Access Prevention (KUAP) on powerpc supports
-> > allowing only one access direction (Read or Write) when allowing
-> > access
-> > to or from user memory.
-> > 
-> > A bug was recently found that showed that these one-way unlocks
-> > never
-> > worked, and allowing Read *or* Write would actually unlock Read
-> > *and*
-> > Write.  We should have a test case for this so we can make sure
-> > this
-> > doesn't happen again.
-> > 
-> > Like ACCESS_USERSPACE, the correct result is for the test to fault.
-> > 
-> > At the time of writing this, the upstream kernel still has this bug
-> > present, so the test will allow both accesses whereas
-> > ACCESS_USERSPACE
-> > will correctly fault.
-> > 
-> > Signed-off-by: Russell Currey <ruscur@russell.cc>
-> > ---
-> >   drivers/misc/lkdtm/core.c  |  3 +++
-> >   drivers/misc/lkdtm/lkdtm.h |  3 +++
-> >   drivers/misc/lkdtm/perms.c | 43
-> > ++++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 49 insertions(+)
-> > 
-> > diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> > index ee0d6e721441..baef3c6f48d6 100644
-> > --- a/drivers/misc/lkdtm/core.c
-> > +++ b/drivers/misc/lkdtm/core.c
-> > @@ -137,6 +137,9 @@ static const struct crashtype crashtypes[] = {
-> >   	CRASHTYPE(EXEC_USERSPACE),
-> >   	CRASHTYPE(EXEC_NULL),
-> >   	CRASHTYPE(ACCESS_USERSPACE),
-> > +#ifdef CONFIG_PPC_KUAP
-> > +	CRASHTYPE(ACCESS_USERSPACE_KUAP),
-> > +#endif
-> 
-> I'm not sure it is a good idea to build this test as a specific test
-> for 
-> powerpc, more comments below.
-> 
-> >   	CRASHTYPE(ACCESS_NULL),
-> >   	CRASHTYPE(WRITE_RO),
-> >   	CRASHTYPE(WRITE_RO_AFTER_INIT),
-> > diff --git a/drivers/misc/lkdtm/lkdtm.h
-> > b/drivers/misc/lkdtm/lkdtm.h
-> > index c56d23e37643..406a3fb32e6f 100644
-> > --- a/drivers/misc/lkdtm/lkdtm.h
-> > +++ b/drivers/misc/lkdtm/lkdtm.h
-> > @@ -57,6 +57,9 @@ void lkdtm_EXEC_RODATA(void);
-> >   void lkdtm_EXEC_USERSPACE(void);
-> >   void lkdtm_EXEC_NULL(void);
-> >   void lkdtm_ACCESS_USERSPACE(void);
-> > +#ifdef CONFIG_PPC_KUAP
-> > +void lkdtm_ACCESS_USERSPACE_KUAP(void);
-> > +#endif
-> >   void lkdtm_ACCESS_NULL(void);
-> >   
-> >   /* lkdtm_refcount.c */
-> > diff --git a/drivers/misc/lkdtm/perms.c
-> > b/drivers/misc/lkdtm/perms.c
-> > index 62f76d506f04..2c9aa0114333 100644
-> > --- a/drivers/misc/lkdtm/perms.c
-> > +++ b/drivers/misc/lkdtm/perms.c
-> > @@ -10,6 +10,9 @@
-> >   #include <linux/mman.h>
-> >   #include <linux/uaccess.h>
-> >   #include <asm/cacheflush.h>
-> > +#ifdef CONFIG_PPC_KUAP
-> > +#include <asm/uaccess.h>
-> > +#endif
-> 
-> asm/uaccess.h is already included by linux/uaccess.h
 
-I should have actually read the other includes rather than assuming I
-needed this, pretty silly
+--kORqDWCi7qDJ0mEj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> >   
-> >   /* Whether or not to fill the target memory area with
-> > do_nothing(). */
-> >   #define CODE_WRITE	true
-> > @@ -200,6 +203,46 @@ void lkdtm_ACCESS_USERSPACE(void)
-> >   	vm_munmap(user_addr, PAGE_SIZE);
-> >   }
-> >   
-> > +/* Test that KUAP's directional user access unlocks work as
-> > intended */
-> > +#ifdef CONFIG_PPC_KUAP
-> > +void lkdtm_ACCESS_USERSPACE_KUAP(void)
-> > +{
-> > +	unsigned long user_addr, tmp = 0;
-> > +	unsigned long *ptr;
-> 
-> Should be a __user ptr because allow_write_to_user() and friends
-> takes 
-> __user pointers.
-> 
-> > +
-> > +	user_addr = vm_mmap(NULL, 0, PAGE_SIZE,
-> > +			    PROT_READ | PROT_WRITE | PROT_EXEC,
-> > +			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
-> > +	if (user_addr >= TASK_SIZE) {
-> 
-> Should use IS_ERR_VALUE() here.
-> 
-> > +		pr_warn("Failed to allocate user memory\n");
-> > +		return;
-> > +	}
-> > +
-> > +	if (copy_to_user((void __user *)user_addr, &tmp, sizeof(tmp)))
-> > {
-> 
-> Should use ptr instead of casted user_addr.
-> 
-> Why using copy_to_user() for writing an unsigned long ? put_user() 
-> should be enough.
-> 
-> > +		pr_warn("copy_to_user failed\n");
-> > +		vm_munmap(user_addr, PAGE_SIZE);
-> > +		return;
-> > +	}
-> > +
-> > +	ptr = (unsigned long *)user_addr;
-> 
-> move before copy_to_user() and use there.
+On Thu, Jan 30, 2020 at 09:39:27AM +0100, Wolfram Sang wrote:
+> On Mon, Jan 06, 2020 at 02:28:33PM +0100, Alain Volmat wrote:
+> > Allow the i2c-stm32f7 controller to become a wakeup-source
+> > of the system. In such case, when a slave is registered to the
+> > I2C controller, receiving a I2C message targeting that registered
+> > slave address wakes up the suspended system.
+> >=20
+> > In order to be able to wake-up, the I2C controller DT node
+> > must have the property wakeup-source defined and a slave
+> > must be registered.
+> >=20
+> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+>=20
+> Applied to for-next, thanks!
 
-All of the above is from the original ACCESS_USERSPACE test, not to
-imply that it's perfect, but I'm not sure it's worth changing in one
-place only
+And I will drop it again because buildbot rightfully complains:
 
-> 
-> > +
-> > +	/* Allowing "write to" should not allow "read from" */
-> > +	allow_write_to_user(ptr, sizeof(unsigned long));
-> 
-> This is powerpc specific. I think we should build this around the 
-> user_access_begin()/user_access_end() generic fonctions.
-> 
-> I'm about to propose an enhancement to this in order to allow
-> unlocking 
-> only read or write. See discussion at 
-> https://patchwork.ozlabs.org/patch/1227926/.
-> 
-> My plan is to propose my enhancement once powerpc implementation of 
-> user_access_begin stuff is merged. I don't know if Michael is still 
-> planning to merge the series for 5.6 
-> (https://patchwork.ozlabs.org/patch/1228801/ - patch 1 of the series
-> has 
-> already been merged by Linus in 5.5)
 
-You're correct, making generic user_access_begin() calls aware of
-direction solves the arch-specific problem, so unless your series
-somehow ends up being unviable (or taking a very long time to get
-merged) we can drop this idea and have a generic implementation
-instead.
+> Reported-by: kbuild test robot <lkp@intel.com>
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+>    drivers/i2c/busses/i2c-stm32f7.c: In function 'stm32f7_i2c_suspend':
+> >> drivers/i2c/busses/i2c-stm32f7.c:2199:44: error: 'struct dev_pm_info' =
+has no member named 'wakeup_path'
+>      if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
+>                                                ^
+>    drivers/i2c/busses/i2c-stm32f7.c: In function 'stm32f7_i2c_resume':
+>    drivers/i2c/busses/i2c-stm32f7.c:2218:44: error: 'struct dev_pm_info' =
+has no member named 'wakeup_path'
+>      if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
+>                                                ^
 
-> 
-> 
-> > +	pr_info("attempting bad read at %px with write allowed\n",
-> > ptr);
-> > +	tmp = *ptr;
-> > +	tmp += 0xc0dec0de;
-> > +	prevent_write_to_user(ptr, sizeof(unsigned long));
-> 
-> Does it work ? I would have thought that if the read fails the
-> process 
-> will die and the following test won't be performed.
+wakeup_path is only there if CONFIG_PM. Please fix and send a new
+version.
 
-Correct, the ACCESS_USERSPACE test does the same thing.  Splitting this
-into separate R and W tests makes sense, even if it is unlikely that
-one would be broken without the other.
 
-- Russell
+--kORqDWCi7qDJ0mEj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> > +
-> > +	/* Allowing "read from" should not allow "write to" */
-> > +	allow_read_from_user(ptr, sizeof(unsigned long));
-> > +	pr_info("attempting bad write at %px with read allowed\n",
-> > ptr);
-> > +	*ptr = tmp;
-> > +	prevent_read_from_user(ptr, sizeof(unsigned long));
-> > +
-> > +	vm_munmap(user_addr, PAGE_SIZE);
-> > +}
-> > +#endif
-> > +
-> >   void lkdtm_ACCESS_NULL(void)
-> >   {
-> >   	unsigned long tmp;
-> > 
-> 
-> Christophe
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4zz7YACgkQFA3kzBSg
+KbaWShAAsD5Gaj6lEFcuVH415Va4PzT6S2H3CUZIfq7iTBdNKWV8nvABcAaS18FA
+WY9qmpili5WRVugYU+1X4rxzEnSPiO6Sx5s9HGZHPefRlr2B99BknwPRCRkwWb6g
+vGNROAZh+qQuTayJ2UH33dSGtjXQ09KH4uDrIeRBoxWRuOlhxOe1FBmwudzEC4UM
+g3nCUq94rccym19fNkWxATy1RCwd2LZF4RRjj2CQLW+o41hUa/Vtb953oxjKPZHo
+p6lNncLSls4myb0yyqLEfnyFgOaopM7kOaTsgZAElto7WptLPtrcv0M6pCuZGeQx
+jFEqtZqSGNQsnlv4kZIei/Cnwp/zP1wgsHblLH20w1AuKAwq0G91kysEIH6OYak/
+HUL09BSJ25ZVEKDOonq/bIVPlxSvO5C0SYkq+YjgY5ojSCWWLF8ThkUCayynCEu1
+qsLn6oY7bB/8qqpiqPb+rx6M5ZuLLz3RKQmv28WuV2Oyl/KPgjtBXQ4KDG8l5fxI
+bUGHLyMdiyGFoK64lppvjAWp3WSsN8IvcVfRrl7HfTgZ+iGONbCs+ZYVQ9Y3i1gw
+APQl4R/vack7OumxG6wFjRvEpPDfwDvaR6A4yxpi62mp+YwP9NZ93pduvhqrF/DB
+XMvJqyy4aMLZFDC1ioWldHX8FuFEXLqc2BULX/o0S92ZKSRYVc4=
+=wM4/
+-----END PGP SIGNATURE-----
+
+--kORqDWCi7qDJ0mEj--
