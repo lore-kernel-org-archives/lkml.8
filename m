@@ -2,115 +2,105 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE33EC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A7C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B554120CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LPsGGNWM"
+	by mail.kernel.org (Postfix) with ESMTP id 2110F20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580440597;
+	bh=+P4Q8vL/zkYVTL0+cGeW7SHzjvTfCjmEe8DI+bOOliI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aekYO746T0kwGr3mOwS3++Do++GwhMt3v+y6xYHtNOrDZ70SjUNHGsRnHaLbz8Ntx
+	 krtZXLGwDi3lRvyDHXrG9PQucJd4RcmjGb8+cqaDt3CHIdamMm5ew1Wi9rQqyfDJbu
+	 K5rOOKFN9XHs9Xg7qZItjYe2iRD90vaE7yeeK7u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgAaDNN (ORCPT
+        id S1727924AbgAaDQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:13:13 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37865 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgAaDNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:13:12 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4882NP4zkQz9sRQ;
-        Fri, 31 Jan 2020 14:13:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580440390;
-        bh=7+oFhpfJcKAa/cg7HkSmh/uwwIAoXTHrh15BH7ElmnE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LPsGGNWMribUDsegdRBec2ikWuQNH1HKdw53dBwtWjaIBlWAX6E7LcorAlUztYlH/
-         qolATHTWrW+tbjqkuNrGJfNJGtEp2tueynzaYniRI7wRtd3M3fu49SxNtmlTmnl7ut
-         ui+M7v2SCVW/iG/NzkklUKQx0kSAEyj/976W/I/c9eI/LA+HCI95JRxGm9u3dUXXGT
-         /F58+hRLG/WA+4cW49M/6bVIcK0NtoR1e0kigmffhyiHeP4/dAjTDzb4b0S8YMOspP
-         cLVlWl4qnhG1U2Blqqp0EuD1nUhsDyC9KarAiTmFA+JgCqPbE5FBK9044F06dm2b0I
-         9Y82eNF1U6HOg==
-Date:   Fri, 31 Jan 2020 14:13:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200131141309.367c9d8b@canb.auug.org.au>
+        Thu, 30 Jan 2020 22:16:36 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:19289 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgAaDQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 22:16:36 -0500
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 00V3GRaf027939;
+        Fri, 31 Jan 2020 12:16:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00V3GRaf027939
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580440588;
+        bh=zUagY7zkaT5fHUquSXsnCtBmp3feRvS5rxxXqEGW+bs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GgUuosGpQ8zy1B4VqtQuotif5JGWV0XFzLVWPzZBrSRDSvyRqLs7QvOvkrvVQvrBz
+         I+hWZTGIJm13pZYFm2jFvLd8lAjG51/3aTX1zf+88H2bhBFEGsk28k+dgONLLfEpl5
+         eahTO+XpBTYcJehTL69ILIeVjyA+wxdMICvnrcxRRvtEun96x6+DrZvGyWk8ySLrHt
+         IhWaGEHCQCnHP6xhIvvemqkO30riWK+bbp1Ak0wJtnJVz+QAsnk4pdNpSetR2Rp6f4
+         rl+WRYYatnXRYmgMggTnft8v+hpfWZTQYlFwupiUi1/WdNVPwH+3MpRcyezjK9GI3h
+         NI+nLga3/GcXQ==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id g15so3543582vsf.1;
+        Thu, 30 Jan 2020 19:16:27 -0800 (PST)
+X-Gm-Message-State: APjAAAXJyzibTYZ1EEYQUA/Z7XJEgTqPgeoAC65WObGrYy1ND8IQ7Itg
+        HCluSn+du/drwQtygSVtSBRIxBeX+W0+JnSBM2c=
+X-Google-Smtp-Source: APXvYqzYIMt8w3M1BG9hsElPnnvs7pUlXxMEa6yuo7U3dDHxmNV8RIuJPu4veWuyX4j//fDyzJjvQkrdLKu3BCO8xHo=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr5401332vsh.179.1580440585640;
+ Thu, 30 Jan 2020 19:16:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/swC23b23Fpgdr+7W/kiPX+k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200130122221.30029e32@gandalf.local.home> <CAK7LNAR1AJFDahD6cB_MryBd-79N_T5O9WV3CMEA+HOCDXZEig@mail.gmail.com>
+ <20200130143941.23a0e217@gandalf.local.home> <CAK7LNATryPUSTm8wPTFHO=E5f=sVPM4T0UxT=BF2qeyVehsH6Q@mail.gmail.com>
+ <20200130214100.57b8239b@rorschach.local.home>
+In-Reply-To: <20200130214100.57b8239b@rorschach.local.home>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 31 Jan 2020 12:15:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQGpyK=06qU9EZCeDkjUHC0+TUE-L=PkbMwUCrZqwvWkA@mail.gmail.com>
+Message-ID: <CAK7LNAQGpyK=06qU9EZCeDkjUHC0+TUE-L=PkbMwUCrZqwvWkA@mail.gmail.com>
+Subject: Re: [GIT PULL] kconfig: localmodconfig: Minor clean ups to streamline_config.pl
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/swC23b23Fpgdr+7W/kiPX+k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Steven,
 
-Hi all,
+On Fri, Jan 31, 2020 at 11:41 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 31 Jan 2020 11:08:59 +0900
+> Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > OK, I see.  I will also try my best to send a notice email.
+> > I want to avoid a situation where two people
+> > are picking up the same patches without noticing each other.
+>
+> BTW, I'm fine with changes to the localmodconfig code going through
+> your tree. Just let me give them acks. And if I end up having changes,
+> I'll send them to you.
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Yes, that will make things clearer.
+I will ask you to give acks as needed,
+and apply patches to my tree.
 
-net/sunrpc/auth_gss/svcauth_gss.c: In function 'gss_proxy_save_rsc':
-net/sunrpc/auth_gss/svcauth_gss.c:1251:19: error: storage size of 'boot' is=
-n't known
- 1251 |   struct timespec boot;
-      |                   ^~~~
-net/sunrpc/auth_gss/svcauth_gss.c:1273:3: error: implicit declaration of fu=
-nction 'getboottime'; did you mean 'getboottime64'? [-Werror=3Dimplicit-fun=
-ction-declaration]
- 1273 |   getboottime(&boot);
-      |   ^~~~~~~~~~~
-      |   getboottime64
-net/sunrpc/auth_gss/svcauth_gss.c:1251:19: warning: unused variable 'boot' =
-[-Wunused-variable]
- 1251 |   struct timespec boot;
-      |                   ^~~~
+This file is seldom updated, so this will be not
+burden any way.
 
-Caused by commit
 
-  a415f20a18c9 ("sunrpc: expiry_time should be seconds not timeval")
 
-from the nfsd tree interacting with commits
+> Thanks!
+>
+> -- Steve
 
-  de371b6c7b73 ("y2038: remove unused time32 interfaces")
-  aa7ff200a719 ("y2038: hide timeval/timespec/itimerval/itimerspec types")
 
-from the akpm-current tree.
 
-I have reverted the nfsd commit for today.  A better solution is requested.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/swC23b23Fpgdr+7W/kiPX+k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4zm0UACgkQAVBC80lX
-0GzFGQf/UM6iAIpd1C68ZnNQJ18P0ss3uj7g3qTMzUSyF/buW9DhY9UCdm2hI38z
-T/9I6FqL2AI7IeknsL02zJhs/g3s1UH4POV8C+/pWENhn4AiE0nmWkP5ijDPmHmU
-23BH0CDsA15fe7PlV5eGm6fd6dxo4qRGYdX8BgxfQANJ+JPlQFLzU5GNDaNhDYsr
-8RONj3Nkjdot5JdJnSZH9dSBKs7ZPvGNG5X5cZ6CxmntdypU2Wyk15qeCqzfxRSd
-4FKNPWJBFV03Pk4FhHRJ+bJZux4OMxhRc6jhEW0SnpgkVB6Wn3E9k/6O2bB0b2s2
-97PE0NVt7yChOSie7rjflP+TEfCiOA==
-=fMf/
------END PGP SIGNATURE-----
-
---Sig_/swC23b23Fpgdr+7W/kiPX+k--
+--
+Best Regards
+Masahiro Yamada
