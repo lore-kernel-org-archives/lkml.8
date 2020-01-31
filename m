@@ -2,140 +2,152 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BA220705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRpXut7V"
+	by mail.kernel.org (Postfix) with ESMTP id 7C09A20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbgAaNBp (ORCPT
+        id S1728620AbgAaNEg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:01:45 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33770 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgAaNBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:01:44 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so7032995lji.0;
-        Fri, 31 Jan 2020 05:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=91NDgBxMOUQX+FZ1BTJVVc6qCU+Cj8++hqqh0GnmSfM=;
-        b=nRpXut7VNzzYjKTPl/iBVkARA1nKKVM2JLhHDU6YEEmxvCw+80Dwl5xODlKBFKjHAB
-         CUsx1vVxYWyG2VTJdeKVLBCPn2qEv8o2mOlJMAiTPMpOUjxTTYJGf4g7DlsoIDZb1dKh
-         e9ybWVTkHB2JKVFao2EeOL/eKD1voyl6aCIVgdgQepoBkXqVrhlzZIZM6zcN8LBWqa/L
-         fRV9PdIdhm+jfSSWv2niorSh3N0IxpcUt0Zu/lham/DwECpLPVGT5fjTgnW3lxp9AhuS
-         bCz7c1d0EyDiPLUu5iEoymetjYYbhwNFRsbq1T6ntHgBt1bLeH0roMA97LCS7QhJmTH3
-         F4cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=91NDgBxMOUQX+FZ1BTJVVc6qCU+Cj8++hqqh0GnmSfM=;
-        b=H8PVV6C4cNc+LmFxrLtdcZ74VVbBpvQMxe+Nt3d/I/Zcvc1VHBwZuXEEvCKPtf3BFr
-         /1M4XA56LSO70MGIOMBaS1z5fDboNg4pQToZ6YW8r3wOQNo+sIQHtjluXahaPd2BJge9
-         0KNb8xVQjf42QCj8ygmiM95yBjjRAFRLlw/EXm2HttKANH8PYo9LnaVUmX/es5l7RIOF
-         PheL/59aaUhQF4KalSguAEGcxKLzLBx+OpMujXcApVZjkkEX1YTFWbZBMJGUk20j6k62
-         fDo4yNNcrZy1R7cWNnEZXcgB4Gu0jnSu/xSrLQroP4gd/U15F2b3YqIGbZcsAi9+U/DW
-         lWsg==
-X-Gm-Message-State: APjAAAV6NKmWU1PGhXfXG/2UpQa0Oc10QC49Xi/+ol+4oIDqiihW15L4
-        DFT9gLjU80XaUu8PcxyoRcmWl9G55fs=
-X-Google-Smtp-Source: APXvYqxa6ny9Hj92Ow3m4QBwi5HVWBuTJM/cFloRyJixABbPoSnn/IRUdm7Q0Xpdu2uwPGjHzHXNgg==
-X-Received: by 2002:a2e:9e03:: with SMTP id e3mr5870631ljk.186.1580475702053;
-        Fri, 31 Jan 2020 05:01:42 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id w71sm5430896lff.0.2020.01.31.05.01.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 05:01:41 -0800 (PST)
-Subject: Re: [PATCH v2] fs: optimise kiocb_set_rw_flags()
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>, willy@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
- <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
-Message-ID: <14929e52-9437-e856-7eff-4e5b45968f89@gmail.com>
-Date:   Fri, 31 Jan 2020 16:01:40 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 31 Jan 2020 08:04:36 -0500
+Received: from mga17.intel.com ([192.55.52.151]:56888 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728514AbgAaNEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:04:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 05:04:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,385,1574150400"; 
+   d="scan'208";a="402650842"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga005.jf.intel.com with ESMTP; 31 Jan 2020 05:04:35 -0800
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 31 Jan 2020 05:04:34 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.97]) with mapi id 14.03.0439.000;
+ Fri, 31 Jan 2020 21:04:12 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC v3 4/8] vfio/type1: Add VFIO_NESTING_GET_IOMMU_UAPI_VERSION
+Thread-Topic: [RFC v3 4/8] vfio/type1: Add
+ VFIO_NESTING_GET_IOMMU_UAPI_VERSION
+Thread-Index: AQHV1pyVzTVYYyC090Ow388f+bA35qgBzDSAgALuTFA=
+Date:   Fri, 31 Jan 2020 13:04:11 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A1994A2@SHSMSX104.ccr.corp.intel.com>
+References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
+        <1580299912-86084-5-git-send-email-yi.l.liu@intel.com>
+ <20200129165649.43008300@w520.home>
+In-Reply-To: <20200129165649.43008300@w520.home>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTgxNzM5ZWQtYTU3Mi00MjE4LThlNjQtYzE3YmQ3NmRiZGU1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaXE0Skp3bEs4ZGJhdmNWd0dYY3F2VWdpamZjN1FNcHpvZ2pMM2JYZzkxSzR3VVBkSjJpc1Z5TXNOcFBCZ1crSyJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/2020 4:32 AM, Pavel Begunkov wrote:
-> kiocb_set_rw_flags() generates a poor code with several memory writes
-> and a lot of jumps. Help compilers to optimise it.
-> 
-> Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
-> plain code without jumps accumulating in a register before a memory
-> write.
+Hi Alex,
 
-Humble ping
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Thursday, January 30, 2020 7:57 AM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [RFC v3 4/8] vfio/type1: Add
+> VFIO_NESTING_GET_IOMMU_UAPI_VERSION
+> 
+> On Wed, 29 Jan 2020 04:11:48 -0800
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > From: Liu Yi L <yi.l.liu@intel.com>
+> >
+> > In Linux Kernel, the IOMMU nesting translation (a.k.a. IOMMU dual stage
+> > translation capability) is abstracted in uapi/iommu.h, in which the uAPIs
+> > like bind_gpasid/iommu_cache_invalidate/fault_report/pgreq_resp are defined.
+> >
+> > VFIO_TYPE1_NESTING_IOMMU stands for the vfio iommu type which is backed by
+> > IOMMU nesting translation capability. VFIO exposes the nesting capability
+> > to userspace and also exposes uAPIs (will be added in later patches) to user
+> > space for setting up nesting translation from userspace. Thus applications
+> > like QEMU could support vIOMMU for pass-through devices with IOMMU nesting
+> > translation capability.
+> >
+> > As VFIO expose the nesting IOMMU programming to userspace, it also needs to
+> > provide an API for the uapi/iommu.h version check to ensure compatibility.
+> > This patch reports the iommu uapi version to userspace. Applications could
+> > use this API to do version check before further using the nesting uAPIs.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/vfio.c       |  3 +++
+> >  include/uapi/linux/vfio.h | 10 ++++++++++
+> >  2 files changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> > index 425d60a..9087ad4 100644
+> > --- a/drivers/vfio/vfio.c
+> > +++ b/drivers/vfio/vfio.c
+> > @@ -1170,6 +1170,9 @@ static long vfio_fops_unl_ioctl(struct file *filep,
+> >  	case VFIO_GET_API_VERSION:
+> >  		ret = VFIO_API_VERSION;
+> >  		break;
+> > +	case VFIO_NESTING_GET_IOMMU_UAPI_VERSION:
+> > +		ret = iommu_get_uapi_version();
+> > +		break;
+> 
+> Shouldn't the type1 backend report this?  It doesn't make much sense
+> that the spapr backend reports a version for something it doesn't
+> support.  Better yet, provide this info gratuitously in the
+> VFIO_IOMMU_GET_INFO ioctl return like you do with nesting in the next
+> patch, then it can help the user figure out if this support is present.
 
-> 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
-> 
-> v2: check for 0 flags in advance (Matthew Wilcox)
-> 
->  include/linux/fs.h | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 98e0349adb52..22b46fc8fdfa 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3402,22 +3402,28 @@ static inline int iocb_flags(struct file *file)
->  
->  static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->  {
-> +	int kiocb_flags = 0;
-> +
-> +	if (!flags)
-> +		return 0;
->  	if (unlikely(flags & ~RWF_SUPPORTED))
->  		return -EOPNOTSUPP;
->  
->  	if (flags & RWF_NOWAIT) {
->  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
->  			return -EOPNOTSUPP;
-> -		ki->ki_flags |= IOCB_NOWAIT;
-> +		kiocb_flags |= IOCB_NOWAIT;
->  	}
->  	if (flags & RWF_HIPRI)
-> -		ki->ki_flags |= IOCB_HIPRI;
-> +		kiocb_flags |= IOCB_HIPRI;
->  	if (flags & RWF_DSYNC)
-> -		ki->ki_flags |= IOCB_DSYNC;
-> +		kiocb_flags |= IOCB_DSYNC;
->  	if (flags & RWF_SYNC)
-> -		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-> +		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
->  	if (flags & RWF_APPEND)
-> -		ki->ki_flags |= IOCB_APPEND;
-> +		kiocb_flags |= IOCB_APPEND;
-> +
-> +	ki->ki_flags |= kiocb_flags;
->  	return 0;
->  }
->  
-> 
+yeah, it would be better to report it by type1 backed. However,
+it is kind of issue when QEMU using it.
 
--- 
-Pavel Begunkov
+My series "hooks" vSVA supports on VFIO_TYPE1_NESTING_IOMMU type.
+[RFC v3 09/25] vfio: check VFIO_TYPE1_NESTING_IOMMU support
+https://www.spinics.net/lists/kvm/msg205197.html
+
+In QEMU, it will determine the iommu type firstly and then invoke
+VFIO_SET_IOMMU. I think before selecting VFIO_TYPE1_NESTING_IOMMU,
+QEMU needs to check the IOMMU uAPI version. If IOMMU uAPI is incompatible,
+QEMU should not use VFIO_TYPE1_NESTING_IOMMU type. If
+VFIO_NESTING_GET_IOMMU_UAPI_VERSION is available after set iommu, then it
+may be an issue. That's why this series reports the version in vfio layer
+instead of type1 backend.
+
+Regards,
+Yi Liu
