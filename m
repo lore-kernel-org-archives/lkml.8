@@ -2,131 +2,148 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA4DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48638206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580436592;
-	bh=PGz1r9+lWfncFUpQbnEeir6R6szGaJwxWsTu1UMa8pQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DCALH6puMhvcTZ32TW0q1iimIDr2SLIXDmYovXAKX7JxKUil0qWjVvonPyHk7u9hU
-	 xOmbZMqcQb2UylfF2nIWCZkyH5E3dlGnPmYetF21WpHsddWieXG5Jw33fFwNUPozSZ
-	 OGS6gL06Kl8sOMUnuYF1GcNMWnJr4kWdma8z5O+g=
+	by mail.kernel.org (Postfix) with ESMTP id AF8B6206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pF5+CXBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgAaCJt (ORCPT
+        id S1727798AbgAaCME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:09:49 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:34011 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAaCJs (ORCPT
+        Thu, 30 Jan 2020 21:12:04 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34222 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727749AbgAaCMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:09:48 -0500
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 00V29a5f030104;
-        Fri, 31 Jan 2020 11:09:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00V29a5f030104
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580436577;
-        bh=1ml7WK63dNBM7MHoN9Z9msiF/YNQtLKjJ8iQrEqO4mg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Wu4frIsLmTiGVqxzf+hfs35hXsedrDOhCMDyBOeOWWfMcXNdIUrLQDnWdOJV3Ogii
-         k8FNrtXxmHBPGHxz+Tz84EW44Hc3lky8Op7V/6FxlLlKy61DCeLJzHSzbhM8f613Ab
-         c1qm8Icor9MygJhZf+wi/kc3VFb/svN8CQMsZi9vLBrqPpWz5V96C9gcW6y6s/k3JO
-         Hm5zE12friJfgFDgWygobiw9vgXwyqLVVr24AENz+AiXMp1VjN7H/MplrqKhz0Az6z
-         D9T+3cYd7E5L2b48I+cKXW3yDC3uwzgedlme73sJn/odwdEDjMYXjIh9l8dQX0xZ3u
-         okmF6vdbi2aBA==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id c129so1656838vkh.7;
-        Thu, 30 Jan 2020 18:09:37 -0800 (PST)
-X-Gm-Message-State: APjAAAX9ar1dAKUZvL3H/YfrspDBgwfqswhkfJHGPvGOKBy8AF0YDR0l
-        Et/Gh3o55mWvSXfAaaG0TsH67MOfp+Rr3xwLBhI=
-X-Google-Smtp-Source: APXvYqwdA+Fex+HuhRymUnLjk7XdUW2IH0faVNX5Ii7SGIr3HF5wsVwXxXeG08q+In5n+9NDH3H9d+sdY9soiVEJV7I=
-X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr5026562vkf.73.1580436575822;
- Thu, 30 Jan 2020 18:09:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200130122221.30029e32@gandalf.local.home> <CAK7LNAR1AJFDahD6cB_MryBd-79N_T5O9WV3CMEA+HOCDXZEig@mail.gmail.com>
- <20200130143941.23a0e217@gandalf.local.home>
-In-Reply-To: <20200130143941.23a0e217@gandalf.local.home>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 31 Jan 2020 11:08:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATryPUSTm8wPTFHO=E5f=sVPM4T0UxT=BF2qeyVehsH6Q@mail.gmail.com>
-Message-ID: <CAK7LNATryPUSTm8wPTFHO=E5f=sVPM4T0UxT=BF2qeyVehsH6Q@mail.gmail.com>
-Subject: Re: [GIT PULL] kconfig: localmodconfig: Minor clean ups to streamline_config.pl
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jan 2020 21:12:03 -0500
+Received: by mail-yw1-f65.google.com with SMTP id b186so3238549ywc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 18:12:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=Huel3zFKgNIhqpbw2Xk27XJrJ68skwtEJsm+LSUkbX8=;
+        b=pF5+CXBCyELbrWbAjEiWE+iO5Sp8EwimN3IRJWeXlaFSEPPs1Up5Jjlqhr43/0saRf
+         bh7omFofTHTKPYA6cUtmv6OexLG+yLnwjOLCaOQox78m9yHhfArmopWhjqNMKadAy5Iq
+         udC4I/4vOUwBIc4iEy7wxrjTuYTIYlJTvyeV5o/wF6WCb+vRGctiHA8Ff1rqrSxMa+cF
+         vU5xPBXK+6wK2ICIa5T56LzdkKk1e6jBCUdhRxeE6+1Ha10SRWagULLhdwIIFpsBZywp
+         fu8At9Cd2KT2xMLRJs1JlqYX+u7pbHLFbNUF/0g+YWwXQPAhK56cSDyEK85c7sa+pQJd
+         WSJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=Huel3zFKgNIhqpbw2Xk27XJrJ68skwtEJsm+LSUkbX8=;
+        b=keXnC58rBvG6YMYal1WWoqfuxSKLE2FZ3PaZ2pH5aK79/gri3BT5jzbgHl9oZ4TxnU
+         g40duwbVEwgj8QShEBIVXUGJwQlgvcCyBXR/9azJjCLuSdph0+2cqNNB0AsPYR71kD7T
+         N9WM4xa9nLUNjgBj6xWRVs8vK39dIufZge2gqYWiFnZ00dW01Wd+vZB325wdflK/5cDi
+         Gxarg4h4G6B0dQ9HcSoOGNHfB4Jtb6nGhMS7hqEHnHIqHIpDeu/BraDpEtKwLoxKv5wj
+         /2dat5KIwpPZ5EOktpNVwUT28LKJlwsooO9u9cRgdSWZYryvDpOXcFCpLT+6CMNaqs7c
+         s5xw==
+X-Gm-Message-State: APjAAAUuv+tlrhj5+LgypYFCWFUWFrBJHyv5LUFoGnmGd/Wy3/HnE7HE
+        NW7p2ASrGBUMBa7oT71DrsI=
+X-Google-Smtp-Source: APXvYqx+bdlF25sone00aZxJdABrs8lY0EG9CsH4rUgzJuPW4fRAqqn9WndwryRJCKj3CRrNk5ZJkQ==
+X-Received: by 2002:a81:4e0f:: with SMTP id c15mr5839406ywb.131.1580436722780;
+        Thu, 30 Jan 2020 18:12:02 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o189sm3523524ywe.15.2020.01.30.18.12.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 Jan 2020 18:12:02 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] x86: Fix static memory detection
+Date:   Thu, 30 Jan 2020 18:11:59 -0800
+Message-Id: <20200131021159.9178-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 4:39 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 31 Jan 2020 03:30:37 +0900
-> Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> >
-> > I know you are the author of streamline_config,
-> > but actually did not know you were collecting
-> > patches for this particular file.
-> >
-> >
-> > I did not receive a notice email from you,
-> > nor did these commits appear in linux-next at all.
-> > Could you send a notice email when
-> > you pick up a patch next time?
-> > (Sorry, I also forgot to send a email.
-> > I will drop them from my tree.)
-> >
->
->
-> It's my fault. I was looking through my inbox (actually my local
-> patchwork that reads my inbox) and saw these patches from back in
-> December. I then went to my "kconfig" development git repo, and saw I
-> pulled them in, but never actually pushed them anywhere (not even to my
-> "staging" machine where I stage my pushes to kernel.org).
->
-> This being the merge window, I rushed to get them in as they were very
-> trivial changes. This isn't my normal flow, it was more "Oh crap! I
-> forgot about these, let me get them in now".
->
-> If you have them in your tree, I'm fine with them getting in from there.
-> I should have looked in next (I only looked to see if Linus already had
-> them).
->
-> Note, since this file hasn't been updated in years, my kconfig
-> 'for-next' branch has been removed from linux-next :-/
->
+When booting x86 images in qemu, the following warning is seen
+randomly if DEBUG_LOCKDEP is enabled.
 
+WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:1119
+	lockdep_register_key+0xc0/0x100
 
-Steven,
+static_obj() returns true if an address is between _stext and _end.
+On x86, this includes the brk memory space. Problem is that this
+memory block is not static on x86; its unused portions are released
+after init and can be allocated. This results in the observed warning
+if a lockdep object is allocated from this memory.
 
-OK, I see.  I will also try my best to send a notice email.
-I want to avoid a situation where two people
-are picking up the same patches without noticing each other.
+Solve the problem by implementing arch_is_kernel_initmem_freed()
+for x86 and have it return true if an address is within the released
+memory range.
 
+The same problem was solved for s390 with commit 7a5da02de8d6e
+("locking/lockdep: check for freed initmem in static_obj()"), which
+introduced arch_is_kernel_initmem_freed().
 
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ arch/x86/include/asm/sections.h | 20 ++++++++++++++++++++
+ arch/x86/kernel/setup.c         |  1 -
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-Linus,
-
-If you have not pulled this one yet,
-could you ignore it?
-
-
-I will soon send pull requests for Kbuild + Kconfig,
-which includes the same patches.
-
-
-
+diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+index 036c360910c5..a6e8373a5170 100644
+--- a/arch/x86/include/asm/sections.h
++++ b/arch/x86/include/asm/sections.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_SECTIONS_H
+ #define _ASM_X86_SECTIONS_H
+ 
++#define arch_is_kernel_initmem_freed arch_is_kernel_initmem_freed
++
+ #include <asm-generic/sections.h>
+ #include <asm/extable.h>
+ 
+@@ -14,4 +16,22 @@ extern char __end_rodata_hpage_align[];
+ 
+ extern char __end_of_kernel_reserve[];
+ 
++extern unsigned long _brk_start, _brk_end;
++
++static inline bool arch_is_kernel_initmem_freed(unsigned long addr)
++{
++	/*
++	 * If _brk_start has not been cleared, brk allocation is incomplete,
++	 * and we can not make assumptions about its use.
++	 */
++	if (_brk_start)
++		return 0;
++
++	/*
++	 * After brk allocation is complete, space between _brk_end and _end
++	 * is available for allocation.
++	 */
++	return addr >= _brk_end && addr < (unsigned long)&_end;
++}
++
+ #endif	/* _ASM_X86_SECTIONS_H */
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 1e4c20a1efec..08f5ceed70e0 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -64,7 +64,6 @@ RESERVE_BRK(dmi_alloc, 65536);
+  * at link time, with RESERVE_BRK*() facility reserving additional
+  * chunks.
+  */
+-static __initdata
+ unsigned long _brk_start = (unsigned long)__brk_base;
+ unsigned long _brk_end   = (unsigned long)__brk_base;
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
