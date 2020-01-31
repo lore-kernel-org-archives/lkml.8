@@ -2,205 +2,108 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC9C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF90C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AF92082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580445753;
-	bh=tc8PQxhVfKJfQcbTG/KVfgOoLmbQ/ZhkxfIbKyRJClI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iYa3H6mja86Q+dmVlipfPG2Yt+xv3Dlw43AbxJLfe3p0Y3Me7GkmDr03V/Lp5ZRzL
-	 xwK24/4+6UUsANCNNnV5msiUFMcNLKqcCsx5TDy0WBe+u8u9uGAU1Mg8LK1uTk88+6
-	 tleTwNZrkvcQOmHO87XQ8uqfesAOjCBB0RZjtvkU=
+	by mail.kernel.org (Postfix) with ESMTP id D54342082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kBN2T6XT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgAaEmc (ORCPT
+        id S1728056AbgAaEnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 23:42:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgAaEmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 23:42:32 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 30 Jan 2020 23:43:49 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:50802 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727981AbgAaEnt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 23:43:49 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580445828; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Ll0wcKc1k7IzcI6Q0ZHQPG6BHe+VN/nY0QZPu5GmLGY=; b=kBN2T6XTaIW43e+mNE5Nb4494r4H7yZAzewy5zVaiqrpWcNW+zVDUOER97ZiRXe0wtuCqLsk
+ tVbzXJLaR7yo82Tn2lBGhjrnYgW8yW0ZBNWu+lMzx49XJaTZrD4HUZ6dDU449Fr5msieIfOa
+ BgwMad295hRXN2e4eJ5W8Rar2M4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e33b082.7f8d58e4b180-smtp-out-n02;
+ Fri, 31 Jan 2020 04:43:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7A2DC433A2; Fri, 31 Jan 2020 04:43:46 +0000 (UTC)
+Received: from akdwived-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85D12082E;
-        Fri, 31 Jan 2020 04:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580445750;
-        bh=tc8PQxhVfKJfQcbTG/KVfgOoLmbQ/ZhkxfIbKyRJClI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ws65Cw8vqHXxmgx/LrHV0jnY6y+W/njbgykt2jklMrNNoZIAKz1qrjRNZGcXbMNSh
-         U1i11F6nU1fTEKK+Mmkmq3ewgNgu2jH36/V8RANO93wSFq5s0d/BnGckSBWApbRYmp
-         FPt0mHyWP9fnZeN39g12gs5xS4bFsnLFpRqazyWw=
-Date:   Thu, 30 Jan 2020 20:42:29 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: drop valid_start/valid_end from
- test_pages_in_a_zone()
-Message-Id: <20200130204229.c305b86ab9082062516b9995@linux-foundation.org>
-In-Reply-To: <20200110183308.11849-1-david@redhat.com>
-References: <20200110183308.11849-1-david@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C87ADC43383;
+        Fri, 31 Jan 2020 04:43:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C87ADC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+From:   Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ckadabi@codeaurora.org,
+        tsoni@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org, rnayak@codeaurora.org,
+        satyap@codeaurora.org, pheragu@codeaurora.org,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: [PATCH v4 0/2] Add Embedded USB Debugger (EUD) driver
+Date:   Fri, 31 Jan 2020 10:13:29 +0530
+Message-Id: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 19:33:08 +0100 David Hildenbrand <david@redhat.com> wrote:
+This is a series of patches that implements a driver for the control
+peripheral, EUD (Embedded USB Debugger). The EUD is a mini-USB hub 
+implemented on chip to support the USB-based debug and trace capabilities.
+Apart from debug capabilities, EUD has a control peripheral. Control 
+Peripheral is on when EUD is on and gets signals like USB attach, pet EUD,
+charge phone etc. EUD driver listens to events like USB attach or detach 
+and charger enable or disable and then notifies the USB driver or PMIC 
+driver respectively about these events via EXTCON. At regular intervals, 
+the EUD driver receives an interrupt to pet the driver indicating that 
+the software is functional.
 
-> The callers are only interested in the actual zone, they don't care
-> about boundaries. Return the zone instead to simplify.
-> 
+Changes since v3:
+- Remove power supply type check in the enable path of EUD
+- Use default attribute group to create sysfs attribute
+- Updated the dt-binding
+Changes since v2:
+- Remove module_param and add sysfs support instead
+- Simplify if-else condition
+- Change if-elseif to switch case
+- Return -ENOMEM
+- Got rid of unnecessary checks in sysfs store function
+- Updated the dt-binding
+Changes since v1:
+- Remove EUD_NR as it is an unused macro
+Changes since v0:
+- Remove select SERIAL_CORE from Kconfig as this patch doesn't involve
+  anything related to serial console
+- Changed the dt-bindings to remove extcon and replace it with graphs
+  to represent a connection with client
 
-Any reviewers for this one?
+Avaneesh Kumar Dwivedi (2):
+  dt-bindings: Documentation for qcom,eud
+  Embedded USB Debugger (EUD) driver
 
-From: David Hildenbrand <david@redhat.com>
-Subject: mm/memory_hotplug: drop valid_start/valid_end from test_pages_in_a_zone()
+ Documentation/ABI/stable/sysfs-driver-msm-eud      |   5 +
+ .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  |  43 +++
+ drivers/soc/qcom/Kconfig                           |  12 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/eud.c                             | 329 +++++++++++++++++++++
+ 5 files changed, 390 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-msm-eud
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+ create mode 100644 drivers/soc/qcom/eud.c
 
-The callers are only interested in the actual zone, they don't care about
-boundaries.  Return the zone instead to simplify.
-
-Link: http://lkml.kernel.org/r/20200110183308.11849-1-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- drivers/base/memory.c          |    9 ++++-----
- include/linux/memory_hotplug.h |    4 ++--
- mm/memory_hotplug.c            |   31 +++++++++----------------------
- 3 files changed, 15 insertions(+), 29 deletions(-)
-
---- a/drivers/base/memory.c~mm-memory_hotplug-drop-valid_start-valid_end-from-test_pages_in_a_zone
-+++ a/drivers/base/memory.c
-@@ -376,7 +376,6 @@ static ssize_t valid_zones_show(struct d
- 	struct memory_block *mem = to_memory_block(dev);
- 	unsigned long start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
--	unsigned long valid_start_pfn, valid_end_pfn;
- 	struct zone *default_zone;
- 	int nid;
- 
-@@ -389,11 +388,11 @@ static ssize_t valid_zones_show(struct d
- 		 * The block contains more than one zone can not be offlined.
- 		 * This can happen e.g. for ZONE_DMA and ZONE_DMA32
- 		 */
--		if (!test_pages_in_a_zone(start_pfn, start_pfn + nr_pages,
--					  &valid_start_pfn, &valid_end_pfn))
-+		default_zone = test_pages_in_a_zone(start_pfn,
-+						    start_pfn + nr_pages);
-+		if (!default_zone)
- 			return sprintf(buf, "none\n");
--		start_pfn = valid_start_pfn;
--		strcat(buf, page_zone(pfn_to_page(start_pfn))->name);
-+		strcat(buf, default_zone->name);
- 		goto out;
- 	}
- 
---- a/include/linux/memory_hotplug.h~mm-memory_hotplug-drop-valid_start-valid_end-from-test_pages_in_a_zone
-+++ a/include/linux/memory_hotplug.h
-@@ -95,8 +95,8 @@ extern int zone_grow_waitqueues(struct z
- extern int add_one_highpage(struct page *page, int pfn, int bad_ppro);
- /* VM interface that may be used by firmware interface */
- extern int online_pages(unsigned long, unsigned long, int);
--extern int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
--	unsigned long *valid_start, unsigned long *valid_end);
-+extern struct zone *test_pages_in_a_zone(unsigned long start_pfn,
-+					 unsigned long end_pfn);
- extern unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 						unsigned long end_pfn);
- 
---- a/mm/memory_hotplug.c~mm-memory_hotplug-drop-valid_start-valid_end-from-test_pages_in_a_zone
-+++ a/mm/memory_hotplug.c
-@@ -1206,14 +1206,13 @@ bool is_mem_section_removable(unsigned l
- }
- 
- /*
-- * Confirm all pages in a range [start, end) belong to the same zone.
-- * When true, return its valid [start, end).
-+ * Confirm all pages in a range [start, end) belong to the same zone (skipping
-+ * memory holes). When true, return the zone.
-  */
--int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
--			 unsigned long *valid_start, unsigned long *valid_end)
-+struct zone *test_pages_in_a_zone(unsigned long start_pfn,
-+				  unsigned long end_pfn)
- {
- 	unsigned long pfn, sec_end_pfn;
--	unsigned long start, end;
- 	struct zone *zone = NULL;
- 	struct page *page;
- 	int i;
-@@ -1234,24 +1233,15 @@ int test_pages_in_a_zone(unsigned long s
- 				continue;
- 			/* Check if we got outside of the zone */
- 			if (zone && !zone_spans_pfn(zone, pfn + i))
--				return 0;
-+				return NULL;
- 			page = pfn_to_page(pfn + i);
- 			if (zone && page_zone(page) != zone)
--				return 0;
--			if (!zone)
--				start = pfn + i;
-+				return NULL;
- 			zone = page_zone(page);
--			end = pfn + MAX_ORDER_NR_PAGES;
- 		}
- 	}
- 
--	if (zone) {
--		*valid_start = start;
--		*valid_end = min(end, end_pfn);
--		return 1;
--	} else {
--		return 0;
--	}
-+	return zone;
- }
- 
- /*
-@@ -1496,7 +1486,6 @@ static int __ref __offline_pages(unsigne
- 	unsigned long offlined_pages = 0;
- 	int ret, node, nr_isolate_pageblock;
- 	unsigned long flags;
--	unsigned long valid_start, valid_end;
- 	struct zone *zone;
- 	struct memory_notify arg;
- 	char *reason;
-@@ -1521,14 +1510,12 @@ static int __ref __offline_pages(unsigne
- 
- 	/* This makes hotplug much easier...and readable.
- 	   we assume this for now. .*/
--	if (!test_pages_in_a_zone(start_pfn, end_pfn, &valid_start,
--				  &valid_end)) {
-+	zone = test_pages_in_a_zone(start_pfn, end_pfn);
-+	if (!zone) {
- 		ret = -EINVAL;
- 		reason = "multizone range";
- 		goto failed_removal;
- 	}
--
--	zone = page_zone(pfn_to_page(valid_start));
- 	node = zone_to_nid(zone);
- 
- 	/* set above range as isolated */
-_
-
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
