@@ -2,207 +2,100 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9BBC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED8AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9AC2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C482082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arSSi6Xt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LR+NMSKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgAaSmO (ORCPT
+        id S1726199AbgAaSn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:42:14 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36597 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgAaSmO (ORCPT
+        Fri, 31 Jan 2020 13:43:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60324 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgAaSn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:42:14 -0500
-Received: by mail-ed1-f68.google.com with SMTP id j17so8870376edp.3;
-        Fri, 31 Jan 2020 10:42:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6BBdKpD2/d2DntApFESCHY7dAIic1HxQ83WKhIFyhjg=;
-        b=arSSi6Xtbctnf1WiUfdaL2EodTsgJl2UZMGwWsklnwLC01nAEAqHK2OifLxvd/cmhZ
-         ePH/OJJy6dQFoCy8YdZV/nJe2epfYDpKyw4sxNSlVGECuwvNzkDliBuy/6IAzeESv45N
-         AgCGP066wK8ktLuFIG1LhsJnRg/IpGF0s2EXg0iM6suGdJBf6zy5Tmjk82ICnG3JDV78
-         RBy38SKP75odJzw0TwNHM8W/iCGX92MB+1AtFEj7y+GGSml6zkXdBjmLMSMq3oSw9oIw
-         8VZNyvkaCtno795LGadmWTSrS1zTp88Bi123uEJgqxfK0h0NjHMCd4gnNqAD9MRM3ASr
-         PR+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6BBdKpD2/d2DntApFESCHY7dAIic1HxQ83WKhIFyhjg=;
-        b=igFZbC4Px0Z3/iqu2xl8AFpeifUY66oRpmTEtNDil+OlVdOmZtLzyr0rjZEjgzDjvO
-         qRzMzMYEh+a2TH+eci6kS7n4OPw+wazRCaHejVvnP2rEhbZi1TvjG4M/tJRkKGf2G4pY
-         lRmLvEX9806EegyY36w2GeXt78uEsNJBOsRsb45WZ7lW8EBr5RqmYAL3vbfoUd5nMfLn
-         zV0KHbUxCXmyeyYZ0EiE8SmL3uNg6g/13fTM5utVb+cf/wu0mRedqQVULS/uS6Pkr4vQ
-         O5Bi/tie6ZyiQhQLKB2DI5JDHSH2vj37KUzl9EXYvZHmKPJRRVQw0iufDzSNC7o22goy
-         IC4A==
-X-Gm-Message-State: APjAAAUCwfBKOPz3+1Y6QfLnMnnGr8qXZmpwo6a5xeBYmVvq+4NB5/hq
-        LcgZOzJyuvR0izGbsZX9/dY=
-X-Google-Smtp-Source: APXvYqwZ7tXzZOaZNHN+CcbuxKnMqYQN1MZviDKZLVBKNM4NnirS45TV8KypzXhv5fXQmag3Fz3Mrw==
-X-Received: by 2002:a17:906:c7d5:: with SMTP id dc21mr10437125ejb.316.1580496129953;
-        Fri, 31 Jan 2020 10:42:09 -0800 (PST)
-Received: from [10.67.48.234] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g31sm517800edd.53.2020.01.31.10.42.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 10:42:08 -0800 (PST)
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
-        bunk@kernel.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
- <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
-Date:   Fri, 31 Jan 2020 10:42:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 13:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=slwH4YBF+8XdLOEIEFAeY6Th3gu6ZlAMUAGcyNVOTFQ=; b=LR+NMSKhSXm99rkO+NKrNhoyX
+        fqzoGbEslkDTEsm3f5yo8TSt5+femkI3FSPYROwUkvlZVGcfOGq4ESMJo+wn8ntieYOI/oB4r1opF
+        9/lcH+TQqQtquw0juBsCRiVCRbRz/9cyetI8+7S6W/jOwO7tzFpPqbztlMgmKVUXVQ9Tk1fS/0sgM
+        V+vTFSct+MiMeiEgZb3oczlUZHmqAtA2Gtrqi+729iicwQ22H5vKeSrjLQoxdS31CfTvpBNLI2+5Y
+        GIxd84pnQ1Zd8BuoqnYUhPz5wB0A4xO8/3rh1IR9dr88JbGLqn3rJ9jrbnQubDvI/XbNBsIRPzjL8
+        UbpLFaqeQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixbGF-0002oD-0G; Fri, 31 Jan 2020 18:43:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 90B97980E50; Fri, 31 Jan 2020 19:43:22 +0100 (CET)
+Date:   Fri, 31 Jan 2020 19:43:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: Re: Confused about hlist_unhashed_lockless()
+Message-ID: <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 10:29 AM, Dan Murphy wrote:
-> Florian
-> 
-> On 1/31/20 11:49 AM, Florian Fainelli wrote:
->> On 1/31/20 7:11 AM, Dan Murphy wrote:
->>> Set the speed optimization bit on the DP83867 PHY.
->>> This feature can also be strapped on the 64 pin PHY devices
->>> but the 48 pin devices do not have the strap pin available to enable
->>> this feature in the hardware.  PHY team suggests to have this bit set.
->> OK, but why and how does that optimization work exactly?
-> 
-> I described this in the cover letter.  And it is explained in the data
-> sheet Section 8.4.6.6
+On Fri, Jan 31, 2020 at 08:48:05AM -0800, Eric Dumazet wrote:
+>     BUG: KCSAN: data-race in del_timer / detach_if_pending
 
-Sorry I complete missed that and just focused on the patch, you should
-consider not providing a cover letter for a single patch, and especially
-not when the cover letter contains more information than the patch
-commit message itself.
+> diff --git a/include/linux/timer.h b/include/linux/timer.h
+> index 1e6650ed066d5d28251b0bd385fc37ef94c96532..0dc19a8c39c9e49a7cde3d34bfa4be8871cbc1c2
+> 100644
+> --- a/include/linux/timer.h
+> +++ b/include/linux/timer.h
+> @@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct
+> timer_list *timer) { }
+>   */
+>  static inline int timer_pending(const struct timer_list * timer)
+>  {
+> - return timer->entry.pprev != NULL;
+> + return !hlist_unhashed_lockless(&timer->entry);
+>  }
 
-> 
->>   Departing from
->> the BMSR reads means you possibly are going to introduce bugs and/or
->> incomplete information. For instance, you set phydev->pause and
->> phydev->asym_pause to 0 now, is there no way to extract what the link
->> partner has advertised?
-> 
-> I was using the marvel.c as my template as it appears to have a separate
-> status register as well.
-> 
-> Instead of setting those bits in the call back I can call the
-> genphy_read_status then override the duplex and speed based on the
-> physts register like below.  This way link status and pause values can
-> be updated and then we can update the speed and duplex settings.
-> 
->       ret = genphy_read_status(phydev);
->     if (ret)
->         return ret;
-> 
->     if (status < 0)
->         return status;
-> 
->     if (status & DP83867_PHYSTS_DUPLEX)
->         phydev->duplex = DUPLEX_FULL;
->     else
->         phydev->duplex = DUPLEX_HALF;
-> 
->     if (status & DP83867_PHYSTS_1000)
->         phydev->speed = SPEED_1000;
->     else if (status & DP83867_PHYSTS_100)
->         phydev->speed = SPEED_100;
->     else
->         phydev->speed = SPEED_10;
-> 
+That's just completely wrong.
 
-OK, but what if they disagree, are they consistently latched with
-respect to one another?
+Aside from any memory barrier issues that might or might not be there
+(I'm waaaay to tired atm to tell), the above code is perfectly fine.
 
-> 
->>> With this bit set the PHY will auto negotiate and report the link
->>> parameters in the PHYSTS register and not in the BMCR.
->> That should be BMSR, the BMCR is about control, not status.
-> 
-> OK.
-> 
-> Dan
-> 
+In fact, this is a KCSAN compiler infrastructure 'bug'.
 
+Any load that is only compared to zero is immune to load-tearing issues.
 
--- 
-Florian
+The correct thing to do here is something like:
+
+static inline int timer_pending(const struct timer_list *timer)
+{
+	/*
+	 * KCSAN compiler infrastructure is insuffiently clever to
+	 * realize that a 'load compared to zero' is immune to
+	 * load-tearing.
+	 */
+	return data_race(timer->entry.pprev != NULL);
+}
