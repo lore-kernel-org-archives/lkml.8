@@ -2,104 +2,99 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91528C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9265AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F19E20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A64220707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580497418;
+	bh=FZtrXSUq54YseBjL3Heq3iDC0oP9DCIjuSPz9tmHKfo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N0w1RY84zHlXVo55qNBBPEGsZTFGiS6AIvfy8yneaSC/WluSC4tfHiPKCV3Ar0WZq
+	 j5sUgO/a8WTkrIiBc11wDs0KuqpddNFwOt3rJiZO/GfYEAVfOu+Wb45EGcqBn/vNpK
+	 v+cXQ0WtID+Q32xB+rsyd4SFQaP8ojuMPNVgtlWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgAaS7D (ORCPT
+        id S1726139AbgAaTDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:59:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56561 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgAaS7D (ORCPT
+        Fri, 31 Jan 2020 14:03:37 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36564 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgAaTDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:59:03 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ixbVH-00045g-FQ; Fri, 31 Jan 2020 19:58:55 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C2E821C1D5A;
-        Fri, 31 Jan 2020 19:58:54 +0100 (CET)
-Date:   Fri, 31 Jan 2020 18:58:54 -0000
-From:   "tip-bot2 for Steven Clarkson" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot: Handle malformed SRAT tables during early
- ACPI parsing
-Cc:     Steven Clarkson <sc@lambdal.com>, Borislav Petkov <bp@suse.de>,
-        linux-acpi@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
-References: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
+        Fri, 31 Jan 2020 14:03:37 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so8211677ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:03:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4VxK/MMCQW+dDkX8QecLocFy8dYcEu2g9dKlDlJzkls=;
+        b=Q9Evdpky0V2PYOXzxUeE+Z0wqX2lKAGCp3nVViRW/lRXQ5YgmyuYZxzqoAY8Wyhmwm
+         dQUvSnIuv5+2JkLzQBDvrI9/mHezfih4rZs5oNUSWIgveXLWll3Xv8Ze288fwOVtZRfN
+         97QULoaV14HQwzYfA78+hJCh/lzyKFL4WmevU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4VxK/MMCQW+dDkX8QecLocFy8dYcEu2g9dKlDlJzkls=;
+        b=Z/izaE2iIdtFuVw6okrrLYuPx56tAWSGjzlNfurk5dGEhQhycYaYRkjcUyjOd6Y4v+
+         HfPWaW3nbHc+NOMzO2wlwRMUi6cGGdKwPyCwMR2dB1XKHg1TGsZVUPiIhptzrTaVPqEU
+         G40BBSa8iUwcaX1gp4QK4fm+Sa1ZaE+7wp4TEM4L1oxJQ/kx4y/uAgX3tNvz35g17UM/
+         dBsq3KppGzOAaHWebZKWQnSOzTzRYJ2Hiy8faRIbgoF3XCv5ONVqO5z097icgby3MTeI
+         G+1tedgGduis6sToyTYbAWTeJ4f3tjIdLBsxeix1tlPMSAfCpo+HTwEvdN8NOJA4GJMG
+         HsiQ==
+X-Gm-Message-State: APjAAAUuiEvPqVhLpq3fjYiEIcMijQrq4teKwW9RvnYfNV6uTFVXZoP9
+        N3W3dvHCKcH/6Ytf6/jcLEZ+tha+diU=
+X-Google-Smtp-Source: APXvYqy+GRzUDdeeoR2dKozCknJoDC0gulkS1gJ5IqHoL1Jddc2TnA9YsCotCnNhbHsXnsceMZdhFQ==
+X-Received: by 2002:a2e:9e43:: with SMTP id g3mr6855200ljk.37.1580497414468;
+        Fri, 31 Jan 2020 11:03:34 -0800 (PST)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id m13sm5059048lfo.40.2020.01.31.11.03.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 11:03:33 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id d10so8162909ljl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:03:33 -0800 (PST)
+X-Received: by 2002:a2e:461a:: with SMTP id t26mr6842099lja.204.1580497413314;
+ Fri, 31 Jan 2020 11:03:33 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158049713455.396.18295937467351025626.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1580408442-23916-1-git-send-email-pbonzini@redhat.com>
+ <CAHk-=wjZTUq8u0HZUJ1mKZjb-haBFhX+mKcUv3Kdh9LQb8rg4g@mail.gmail.com> <20200131185341.GA18946@linux.intel.com>
+In-Reply-To: <20200131185341.GA18946@linux.intel.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 31 Jan 2020 11:03:17 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjoLqJ+zQQq2S3EmoAjOsY700GAPTCkna-RUG0T+4wYqA@mail.gmail.com>
+Message-ID: <CAHk-=wjoLqJ+zQQq2S3EmoAjOsY700GAPTCkna-RUG0T+4wYqA@mail.gmail.com>
+Subject: Re: [GIT PULL] First batch of KVM changes for 5.6 merge window
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, Jan 31, 2020 at 10:53 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> I assume the easiest thing would be send a cleanup patch for vmxfeatures.h
+> and route it through the KVM tree?
 
-Commit-ID:     32ea5bc7ab8344600e87acf68cd6981c845d6edc
-Gitweb:        https://git.kernel.org/tip/32ea5bc7ab8344600e87acf68cd6981c845d6edc
-Author:        Steven Clarkson <sc@lambdal.com>
-AuthorDate:    Thu, 30 Jan 2020 16:48:16 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 31 Jan 2020 19:54:35 +01:00
+Probably. The KVM side is the only thing that seems to use the
+defines, so any names changes should impact only them (we do have that
+mkcapflags.sh script, but that should react automatically to any
+changes in the #define names)
 
-x86/boot: Handle malformed SRAT tables during early ACPI parsing
+And this is obviously not a big deal, I just noticed the discrepancies
+when doing that resolution.
 
-Break an infinite loop when early parsing of the SRAT table is caused
-by a subtable with zero length. Known to affect the ASUS WS X299 SAGE
-motherboard with firmware version 1201 which has a large block of
-zeros in its SRAT table. The kernel could boot successfully on this
-board/firmware prior to the introduction of early parsing this table or
-after a BIOS update.
-
- [ bp: Fixup whitespace damage and commit message. ]
-
-Fixes: 02a3e3cdb7f1 ("x86/boot: Parse SRAT table and count immovable memory regions")
-Signed-off-by: Steven Clarkson <sc@lambdal.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: linux-acpi@vger.kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206343
-Link: https://lkml.kernel.org/r/CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com
----
- arch/x86/boot/compressed/acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 25019d4..ef2ad72 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -393,7 +393,13 @@ int count_immovable_mem_regions(void)
- 	table = table_addr + sizeof(struct acpi_table_srat);
- 
- 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
-+
- 		sub_table = (struct acpi_subtable_header *)table;
-+		if (!sub_table->length) {
-+			debug_putstr("Invalid zero length SRAT subtable.\n");
-+			return 0;
-+		}
-+
- 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
- 			struct acpi_srat_mem_affinity *ma;
- 
+                    Linus
