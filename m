@@ -2,126 +2,130 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A1CC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889CBC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A64420CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A25220705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DyboAuvv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C3B+OFol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgAaDTe (ORCPT
+        id S1727956AbgAaDU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:19:34 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6618 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgAaDTd (ORCPT
+        Thu, 30 Jan 2020 22:20:59 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8581 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgAaDU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:19:33 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e339c8e0000>; Thu, 30 Jan 2020 19:18:38 -0800
+        Thu, 30 Jan 2020 22:20:59 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e339d0b0000>; Thu, 30 Jan 2020 19:20:43 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 19:19:31 -0800
+  Thu, 30 Jan 2020 19:20:58 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 19:19:31 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 19:20:58 -0800
+Received: from [10.25.73.84] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 03:19:31 +0000
-Subject: Re: [PATCH v2 4/8] mm/gup: track FOLL_PIN pages
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200129032417.3085670-1-jhubbard@nvidia.com>
- <20200129032417.3085670-5-jhubbard@nvidia.com>
- <20200129135153.knie7ptvsxcgube6@box>
- <0be743df-e9af-6da9-c593-9e25ab194acf@nvidia.com>
- <20200130113126.5ftq4gd5k7o7tipj@box>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <1037b514-30e7-c128-38c1-9c98488be337@nvidia.com>
-Date:   Thu, 30 Jan 2020 19:19:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ 2020 03:20:55 +0000
+CC:     <spujar@nvidia.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: rt5659: add S32_LE format
+To:     Oder Chiou <oder_chiou@realtek.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "perex@perex.cz" <perex@perex.cz>
+References: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
+ <74a42452-f19c-1175-9928-da12ccad621d@nvidia.com>
+ <c700f22c-a053-7f39-dddf-41abe52cad77@nvidia.com>
+ <67328e51035e4eb5a6a78c3156e5d11f@realtek.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <d99e7cc4-f69b-55a2-a9e9-623ad11d6312@nvidia.com>
+Date:   Fri, 31 Jan 2020 08:50:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200130113126.5ftq4gd5k7o7tipj@box>
+In-Reply-To: <67328e51035e4eb5a6a78c3156e5d11f@realtek.com>
 X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580440719; bh=9n3GVRH7rJT8PUMEqe1BMiXjCWR5u2839yBFWtobbC8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DyboAuvvbnzLHMEIag1fx4ad2eQQcY8Jsk0DPogA1Xd5f6sbkghXewV7YQM2/iusj
-         B4T31MmPGDxl8HYQEgTzwTjtC7aXYSsBqhReBchu4rQ3x2Tg9oKG30YhyaXyxX1zNJ
-         mQXxsLzBUV1RQ6IAEVYKzDedk9H7zC8YcXryZqWQmOBJN6TCbJzzlnCBXNPqKb3tHz
-         gb7xzJ5ZNfj8tLSN3LebvHbUjchA/wB6wHtGy1YqbyoHTg/Hy4dFqQ3WNC6LGHaugE
-         phaII7jurRZGdzUGIVeJaTPP7ZEu9NHyZD6tjX5kAaACjvJbQ8wCOySgAH5vXtg5+O
-         50R/K9o+IjDKA==
+        t=1580440843; bh=WmI/B6AsuQiNTGM7yM8QllMGfzZ7qHsDpaBdPWuw/4g=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=C3B+OFolt+pEfYtV7JECEFIFpfqBUdvQJKlv4iFaTHkDWjn1amJPzfW4U6Ln/q6W6
+         jqjJc/J8JqAnFRCdL5sBWWXVtlkFGqM0f/4m22fo2t+roFd7sndrLQ6RvRxOZB2zYy
+         tu+1o4+WNdoXA7qBMGWn9doOHZuuUa3vpunL1viukXUwMxBhwLSF8namDJ/1ZtyxyS
+         w+fT7CTV5Yc8BPH7L1m1n9yRY26hDzjLEfjR6msgFW0RRHkhH12SAVs6VkKr53uuJj
+         eA19eHOoVMioZG8f2YuBgQvQ74iUYRX+X7QuUWm5inwcXoRyYYHXjLYrgAjUrRn3d+
+         pEUdMMhOk9rxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 3:31 AM, Kirill A. Shutemov wrote:
-...
->>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>>> index 0a55dec68925..b1079aaa6f24 100644
->>>> --- a/mm/huge_memory.c
->>>> +++ b/mm/huge_memory.c
->>>> @@ -958,6 +958,11 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
->>>>   	 */
->>>>   	WARN_ONCE(flags & FOLL_COW, "mm: In follow_devmap_pmd with FOLL_COW set");
->>>> +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->>>> +	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
->>>> +			 (FOLL_PIN | FOLL_GET)))
->>>
->>> Too many parentheses.
+
+
+On 1/30/2020 10:00 AM, Oder Chiou wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Acked-by: Oder Chiou <oder_chiou@realtek.com>
+
+Request maintainers to consider this patch for approval. Thanks in advance.
+
+. . .
+>>>> ALC5659 supports maximum data length of 24-bit. Currently driver
+>>>> supports
+>>>> S24_LE which is a 32-bit container with valid data in [23:0] and 0s
+>>>> in MSB.
+>>>> S24_3LE is not commonly used and is hard to find audio streams with this
+>>>> format. Also many SoC HW do not support S24_LE and S32_LE is used in
+>>>> general. The 24-bit data can be represented in S32_LE [31:8] and 0s are
+>>>> padded in LSB.
+>>>>
+>>>> This patch adds S32_LE to ALC5659 driver and data length for this is set
+>>>> to 24 as per codec's maximum data length support. This helps to play
+>>>> 24-bit audio, packed in S32_LE, on HW which do not support S24_LE.
+>>>>
+>>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>>>> ---
+>>>>    sound/soc/codecs/rt5659.c | 4 +++-
+>>>>    1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
+>>>> index fc74dd63..f910ddf 100644
+>>>> --- a/sound/soc/codecs/rt5659.c
+>>>> +++ b/sound/soc/codecs/rt5659.c
+>>>> @@ -3339,6 +3339,7 @@ static int rt5659_hw_params(struct
+>>>> snd_pcm_substream *substream,
+>>>>            val_len |= RT5659_I2S_DL_20;
+>>>>            break;
+>>>>        case 24:
+>>>> +    case 32:
+>>>>            val_len |= RT5659_I2S_DL_24;
+>>>>            break;
+>>>>        case 8:
+>>>> @@ -3733,7 +3734,8 @@ static int rt5659_resume(struct
+>>>> snd_soc_component *component)
+>>>>      #define RT5659_STEREO_RATES SNDRV_PCM_RATE_8000_192000
+>>>>    #define RT5659_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |
+>>>> SNDRV_PCM_FMTBIT_S20_3LE | \
+>>>> -        SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
+>>>> +        SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE | \
+>>>> +        SNDRV_PCM_FMTBIT_S8)
+>>>>      static const struct snd_soc_dai_ops rt5659_aif_dai_ops = {
+>>>>        .hw_params = rt5659_hw_params,
 >>
->>
->> OK, I'll remove at least one. :)
-> 
-> I see two.
+>> ------Please consider the environment before printing this e-mail.
 
-ah, correction: actually, the original statement has exactly the right number of parentheses.
-The relevant C precedence order is:
-	==
-	&
-	|
-
-...which means that both "&" and "|" operations need parentheses protection from the higher
-precedence "==" operation.
-
-(There are other places in the kernel that have this exact pattern, too, with the same
-pattern of parentheses that I'm using, of course.)
-
-thanks,
--- 
-John Hubbard
-NVIDIA
- 
