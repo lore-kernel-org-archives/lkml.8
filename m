@@ -2,138 +2,133 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C385EC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A2720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662EB20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YtIFHFD4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLEfgcam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgAaAxJ (ORCPT
+        id S1727749AbgAaA76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 19:53:09 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34397 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbgAaAxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 19:53:08 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 487zGn5383z9sPJ;
-        Fri, 31 Jan 2020 11:53:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580431985;
-        bh=tQpCwkuTsBT6GX2RXLpR6mTgUiYzF/1t2PDjxgVBBUw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YtIFHFD4ijouM5KgWvPoY9hTWlP7Ea972yTMRB2y1N0O3wTDiJqFNNgpmrmvItVmv
-         b2MgAYly507OhhwrPiH1ydbR3+yTOazAT4oN1ySCG/27ufSYas/Khbh2/IgOXRR/7C
-         x5px6qol24XipIyyfcKv1jnn7sOSyiPcno048YhCxXK0xFYoyy8IXfD4FvWXxwoJUR
-         y1zF7Zn3XN0LWczlxVbUPGbHbBCu+hdG/txo5vJyd3AANQcP/+0yExEwX04DRjYKTE
-         M3hD5PXMN39NWatSTFLY9Ub93tHuL9h4jmKVSyFpc5RhFM4605FyXqO5xhk2kh/qmd
-         drT/Ps7ksKtSQ==
-Date:   Fri, 31 Jan 2020 11:53:05 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Kars de Jong <jongk@linux-m68k.org>
-Subject: Re: linux-next: manual merge of the pidfd tree with the m68k, vfs
- and keys trees
-Message-ID: <20200131115305.2e3bf8b1@canb.auug.org.au>
-In-Reply-To: <20200131113422.12e4aabd@canb.auug.org.au>
-References: <20200113160252.7003c102@canb.auug.org.au>
-        <20200131113422.12e4aabd@canb.auug.org.au>
+        Thu, 30 Jan 2020 19:59:58 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37271 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbgAaA76 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 19:59:58 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 21so4995871qky.4;
+        Thu, 30 Jan 2020 16:59:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=amgyOvyccdHIcAj+pKAqgwZJU1n1bhRqiRwNFrM8HAw=;
+        b=jLEfgcamsEsjkkxuwqIotuAyzqAcbZjFjCkWAjlCv0yb/xgllO9BiBQt+2x5VUDm2r
+         BIMB+AZwM0GVWTW8nTqKvD2OgKNBuRtVMZq3jQllJnnpzHzki/XMP25sCMiWc90rUioY
+         k8EZqmE1yFqd8Lx6TdT1lMx2TWoH+iUKl6dQNkn9ZRilAFg+CTV8PrOs64LuHCL3xKlE
+         e2gIiyTqc7gOihRPM2Uv9yPD7YJevbRetSa0cdyBaNb2HfWQTDKCIcrORv7G17pji6EJ
+         5IwJl6uOgm5BtzjG+jVOkAkE+XW8rlsKDCjJ9zE6gFo0eSwprU67cMgc9lgXhbavPRPe
+         8qow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=amgyOvyccdHIcAj+pKAqgwZJU1n1bhRqiRwNFrM8HAw=;
+        b=aeF1S+Jj/poxFS/fXs2cR99nH8gxgvImMy09r3Re6i7P+6QehD7hYkcT8Z4rawnX3K
+         f1zqDV0gb8X1bWv9EQ6JOHuXbpNQeNYz6OhBmm5R/PDtBuOMi8lHCFtUn7W3TGbwtlDD
+         EwdRqk0GzpK5aP6iopxetAB6W5OC8hGDgas9Qg1ToXD1EwHkkyjxCW7GGTYY+9lLGuAg
+         aj8+K0rhpKqpYU1yKLwb/2vCzBqKV+G0ccGMWNMEBkIExVTj00twzayLGg8ML6YSTpkb
+         jxqn1jZSI8CPj7DI/K7E/82v1hxt06kgScDXs34eGHyOl2S5rLkF8wsFTrpM/rxTLZbJ
+         DKiQ==
+X-Gm-Message-State: APjAAAXc8BXfObqNT+4b04rpBpLzJyg8p3yX1FkYjLIfbmO+IclIxPMR
+        IU7CVkRf237yExi1AtvUsOmAr3QM
+X-Google-Smtp-Source: APXvYqwAyEwN0C2TrGKUI6BtbJ4hqPYrmWNxVYGGE5ftiVj9BbJ1goQOypEdqUsJqGHsh0+86KSVVQ==
+X-Received: by 2002:ae9:efc5:: with SMTP id d188mr8541052qkg.178.1580432396107;
+        Thu, 30 Jan 2020 16:59:56 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id g21sm3653515qkl.116.2020.01.30.16.59.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jan 2020 16:59:55 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 1B0F122460;
+        Thu, 30 Jan 2020 19:59:55 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 30 Jan 2020 19:59:55 -0500
+X-ME-Sender: <xms:CnwzXraYGLmFL8SWe0wTFA-kTGIjThALuCcVqwhW7Z2h9kHTT7v35A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeelgddvhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttdertd
+    dttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhm
+    rghilhdrtghomheqnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsg
+    hoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:CnwzXtqR8rgz8DrAy9lrq78BWI0P2tSjh-37uUeL5NedUNyYoeASjg>
+    <xmx:CnwzXnZ5FBhXNlvgRQ3FFCoU8Lgp9L3INgfWIOUQwkhPs9QNPeS23w>
+    <xmx:CnwzXtQ2AV1_jOQZDYp5SR2qgnIyQVu1N-wTHeEmYisVsB58b3ChEg>
+    <xmx:C3wzXmCmBPWXJlnMGgFKTInuzqicevXJCeqUObibPR8QAzFrpqhiHh1qrlI>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3A047328005A;
+        Thu, 30 Jan 2020 19:59:54 -0500 (EST)
+Date:   Fri, 31 Jan 2020 08:59:52 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, jiangshanlai@gmail.com,
+        mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
+        josh@joshtriplett.org, paulmck@kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH 2/2] rcu/nocb: Add missing annotation for
+ rcu_nocb_bypass_unlock()
+Message-ID: <20200131005952.GD83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <0/2>
+ <cover.1580337836.git.jbi.octave@gmail.com>
+ <59087bdc398a69ac743ee3e5cfa0bd26495881e3.1580337836.git.jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KhTAWzuyVcpAAXHynZEi1G2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59087bdc398a69ac743ee3e5cfa0bd26495881e3.1580337836.git.jbi.octave@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KhTAWzuyVcpAAXHynZEi1G2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 30, 2020 at 12:30:09AM +0000, Jules Irenge wrote:
+> Sparse reports warning at rcu_nocb_bypass_unlock()
+> 
+> warning: context imbalance in rcu_nocb_bypass_unlock() - unexpected unlock
+> 
+> The root cause is a missing annotation of rcu_nocb_bypass_unlock()
+> which causes the warning.
+> 
+> Add the missing __releases(&rdp->nocb_bypass_lock) annotation.
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-Hi all,
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 
-On Fri, 31 Jan 2020 11:34:22 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> On Mon, 13 Jan 2020 16:02:52 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > Today's linux-next merge of the pidfd tree got conflicts in:
-> >=20
-> >   arch/alpha/kernel/syscalls/syscall.tbl
-> >   arch/arm/tools/syscall.tbl
-> >   arch/arm64/include/asm/unistd.h
-> >   arch/arm64/include/asm/unistd32.h
-> >   arch/ia64/kernel/syscalls/syscall.tbl
-> >   arch/m68k/kernel/syscalls/syscall.tbl
-> >   arch/microblaze/kernel/syscalls/syscall.tbl
-> >   arch/mips/kernel/syscalls/syscall_n32.tbl
-> >   arch/mips/kernel/syscalls/syscall_n64.tbl
-> >   arch/mips/kernel/syscalls/syscall_o32.tbl
-> >   arch/parisc/kernel/syscalls/syscall.tbl
-> >   arch/powerpc/kernel/syscalls/syscall.tbl
-> >   arch/s390/kernel/syscalls/syscall.tbl
-> >   arch/sh/kernel/syscalls/syscall.tbl
-> >   arch/sparc/kernel/syscalls/syscall.tbl
-> >   arch/x86/entry/syscalls/syscall_32.tbl
-> >   arch/x86/entry/syscalls/syscall_64.tbl
-> >   arch/xtensa/kernel/syscalls/syscall.tbl
-> >   include/linux/syscalls.h
-> >   include/uapi/asm-generic/unistd.h
-> >=20
-> > between commits:
-> >=20
-> >   e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
-> >   0a51692d49ec ("open: introduce openat2(2) syscall")
-> >   3a92c6e49c47 ("Add a general, global device notification watch list")
-> >=20
-> > from the m68k, vfs and keys trees and commit:
-> >=20
-> >   27063d9f5fbf ("arch: wire up pidfd_getfd syscall")
-> >=20
-> > from the pidfd tree.
-> >=20
->=20
-> This is now a conflict between the vfs, keys and Linus' tree.
-
-Actually, this is just a conflict between the keys tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KhTAWzuyVcpAAXHynZEi1G2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4zenEACgkQAVBC80lX
-0GwhbggAnPBJUFb/m0DyhFu+creq2+XC5IEcNYBncEMpFulSmryRIgUgbTUDa38A
-dCN1+7bi//VOkspqYQwcpfJkL/gKSW/dKa6lsm6ij33DcA9CwOpcKDde337WulMZ
-KY/F+iZzz+ZCkPxjU7dQBYa+Bq43gOcI0ywJC6P+bzpqzbhRpL1uBsiueVcblRiE
-aPwePSp1lqlQBXnlkb1DgXbmKYvHZmLXJhaGzp9qQvyaUyvxYdsXbvjAGCfE8OXs
-hBUWyoNhc8DjCzFJ2bgK/hnMkbx4/d2qiuCH3kEMdbVKBRU18r3fagf89Byb6Z9h
-hG77geIwgFjBmIwHx2tsROzIUW4H/Q==
-=zy3I
------END PGP SIGNATURE-----
-
---Sig_/KhTAWzuyVcpAAXHynZEi1G2--
+> ---
+>  kernel/rcu/tree_plugin.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 9d21cb07d57c..8783d19a58b2 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -1553,6 +1553,7 @@ static bool rcu_nocb_bypass_trylock(struct rcu_data *rdp)
+>   * Release the specified rcu_data structure's ->nocb_bypass_lock.
+>   */
+>  static void rcu_nocb_bypass_unlock(struct rcu_data *rdp)
+> +	__releases(&rdp->nocb_bypass_lock)
+>  {
+>  	lockdep_assert_irqs_disabled();
+>  	raw_spin_unlock(&rdp->nocb_bypass_lock);
+> -- 
+> 2.24.1
+> 
