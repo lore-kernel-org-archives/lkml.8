@@ -1,152 +1,140 @@
 Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC467C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F74C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989282067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7382067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:22:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZAGlDzEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgAaCWA (ORCPT
+        id S1727981AbgAaCWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:22:00 -0500
-Received: from mga03.intel.com ([134.134.136.65]:17541 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgAaCV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:21:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 18:21:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,384,1574150400"; 
-   d="scan'208";a="262395768"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jan 2020 18:21:56 -0800
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     alex.williamson@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH v2 6/9] vfio/pci: export vfio_pci_setup_barmap
-Date:   Thu, 30 Jan 2020 21:12:39 -0500
-Message-Id: <20200131021239.27886-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200131020803.27519-1-yan.y.zhao@intel.com>
-References: <20200131020803.27519-1-yan.y.zhao@intel.com>
+        Thu, 30 Jan 2020 21:22:08 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40008 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbgAaCWI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:22:08 -0500
+Received: by mail-qk1-f194.google.com with SMTP id t204so5127013qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 18:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WL0FLgSacIAqtCGMkthh4uOIeyhw7X/ubIyKLP7UcMQ=;
+        b=ZAGlDzEgoEB6R7NedCVOXEjZKZzovnmhhKhJX7mrctCT0WxPjz2pT7AYk70aYaUSXV
+         YOLsGZRFqCjyLeHfBbb+3oTJ5bhG+C5v9YugT1VlbFlVKRIJizIsRgHHbVX8zl+Yo1nK
+         TGkAjNH48Wtqm+0e4kmJN+vtnce23YuHP0G4rns0WRLERVJhRs6UOLYeeBrBzVv16ftN
+         DP0JQkV0BkkFYMpHG9+WC11jTS7Aq+t7RJmkoMrrlVOQdREPeYQfbbk0L22wmclJIUrt
+         1HnmuAsOqFI1dzq24676j4PRVcC/32mqTtjhlKJQgsWQd7VG4tsbDqzqPvFCYsQ0GsLQ
+         U2FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WL0FLgSacIAqtCGMkthh4uOIeyhw7X/ubIyKLP7UcMQ=;
+        b=BUGAgSDWgiann1izzvK7fYrsFvE5K0Ls/9IMOVL3AIvSMPcn3RUTNKMZC7iePk0EGX
+         tHLVvMNmlgmrL8MZzza8Qbp+7PW7yOUwyCtE6Ye0nyzdyG8bcghjiwt4Q5z9SnQehyFF
+         xUx/necEOU+0OWVHbQYvn8XySXswCvTzVuS8oihq2Z7h0HbhJ9jwtZ7GHNghnLog+CUa
+         XczHGoVTnEyRJ2+FqWLOQ2Ukmrm7ubGfncZ4OgJpaKz+bskuCqGulxbcD8i8L35nJ/SM
+         Iua4EspBNU0pY8IF1e9WOh6dqF+pHy3oFCcK/enyIzYadw/6X275PIlWAg8ojJI9j2AN
+         VJjw==
+X-Gm-Message-State: APjAAAVHnOM9190oj9iPvag6Quwx+eOg7Og28IEYpvXswOIz6CYCMxJz
+        fG+yB1OZOcQL9AdDJ4hExoD2BA==
+X-Google-Smtp-Source: APXvYqx8JQk+90y2rl6YQE+bmI4aQ+EhMYsBcxfyUMLozcHF1DtPAe1VuWEJhRflwNMVLcMDnCXtYA==
+X-Received: by 2002:a37:308:: with SMTP id 8mr8346060qkd.98.1580437326892;
+        Thu, 30 Jan 2020 18:22:06 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x3sm3934273qts.35.2020.01.30.18.22.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jan 2020 18:22:06 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] mm/util: fix a data race in __vm_enough_memory()
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200130181834.633c201c7d0a2638aacbc7ba@linux-foundation.org>
+Date:   Thu, 30 Jan 2020 21:22:05 -0500
+Cc:     Marco Elver <elver@google.com>,
+        Matthew Wilcox <willy@infradead.org>, dennis@kernel.org,
+        tj@kernel.org, Christoph Lameter <cl@linux.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9B86F7FF-C892-4F58-A24E-E0728D2637BC@lca.pw>
+References: <20200130042011.GI6615@bombadil.infradead.org>
+ <1135BD67-4CCB-4700-8150-44E7E323D385@lca.pw>
+ <CANpmjNNr_Kq6Do+UYrR-3aF0sO3++psUfN7Ppt8mmgcF5ynzrA@mail.gmail.com>
+ <20200130181834.633c201c7d0a2638aacbc7ba@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows vendor driver to read/write to bars directly, which is useful
-in security checking condition.
-E.g. if a value is invalid, vendor driver can modify the value before
-writing to hardware; if a value is valid, vendor driver calls default
-vfio_pci_write().
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/vfio/pci/vfio_pci_rdwr.c | 26 +++++++++++++-------------
- include/linux/vfio.h             |  2 ++
- 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
-index d68e860a2603..c50f2c80ede3 100644
---- a/drivers/vfio/pci/vfio_pci_rdwr.c
-+++ b/drivers/vfio/pci/vfio_pci_rdwr.c
-@@ -129,29 +129,30 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
- 	return done;
- }
- 
--static int vfio_pci_setup_barmap(struct vfio_pci_device *vdev, int bar)
-+void __iomem *vfio_pci_setup_barmap(struct vfio_pci_device *vdev, int bar)
- {
- 	struct pci_dev *pdev = vdev->pdev;
- 	int ret;
- 	void __iomem *io;
- 
- 	if (vdev->priv->barmap[bar])
--		return 0;
-+		return vdev->priv->barmap[bar];
- 
- 	ret = pci_request_selected_regions(pdev, 1 << bar, "vfio");
- 	if (ret)
--		return ret;
-+		return NULL;
- 
- 	io = pci_iomap(pdev, bar, 0);
- 	if (!io) {
- 		pci_release_selected_regions(pdev, 1 << bar);
--		return -ENOMEM;
-+		return NULL;
- 	}
- 
- 	vdev->priv->barmap[bar] = io;
- 
--	return 0;
-+	return io;
- }
-+EXPORT_SYMBOL_GPL(vfio_pci_setup_barmap);
- 
- ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
- 			size_t count, loff_t *ppos, bool iswrite)
-@@ -188,11 +189,9 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
- 			return -ENOMEM;
- 		x_end = end;
- 	} else {
--		int ret = vfio_pci_setup_barmap(vdev, bar);
--		if (ret)
--			return ret;
--
--		io = vdev->priv->barmap[bar];
-+		io = vfio_pci_setup_barmap(vdev, bar);
-+		if (!io)
-+			return -EFAULT;
- 	}
- 
- 	if (bar == vdev->priv->msix_bar) {
-@@ -305,6 +304,7 @@ long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
- 	loff_t pos = offset & VFIO_PCI_OFFSET_MASK;
- 	int ret, bar = VFIO_PCI_OFFSET_TO_INDEX(offset);
- 	struct vfio_pci_ioeventfd *ioeventfd;
-+	void __iomem *io;
- 
- 	/* Only support ioeventfds into BARs */
- 	if (bar > VFIO_PCI_BAR5_REGION_INDEX)
-@@ -324,9 +324,9 @@ long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
- 		return -EINVAL;
- #endif
- 
--	ret = vfio_pci_setup_barmap(vdev, bar);
--	if (ret)
--		return ret;
-+	io = vfio_pci_setup_barmap(vdev, bar);
-+	if (!io)
-+		return -EFAULT;
- 
- 	mutex_lock(&vdev->priv->ioeventfds_lock);
- 
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 4bb101ac3fff..1dcafde951ec 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -227,6 +227,8 @@ extern int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma);
- extern void vfio_pci_request(void *device_data, unsigned int count);
- extern int vfio_pci_open(void *device_data);
- extern void vfio_pci_release(void *device_data);
-+extern void __iomem *vfio_pci_setup_barmap(struct vfio_pci_device *vdev,
-+					   int bar);
- 
- #define vfio_pci_register_vendor_driver(__name, __probe, __remove,	\
- 					__device_ops)			\
--- 
-2.17.1
+> On Jan 30, 2020, at 9:18 PM, Andrew Morton <akpm@linux-foundation.org> =
+wrote:
+>=20
+> On Thu, 30 Jan 2020 13:35:18 +0100 Marco Elver <elver@google.com> =
+wrote:
+>=20
+>> On Thu, 30 Jan 2020 at 12:50, Qian Cai <cai@lca.pw> wrote:
+>>>=20
+>>>> On Jan 29, 2020, at 11:20 PM, Matthew Wilcox <willy@infradead.org> =
+wrote:
+>>>>=20
+>>>> I'm really not a fan of exposing the internals of a percpu_counter =
+outside
+>>>> the percpu_counter.h file.  Why shouldn't this be fixed by putting =
+the
+>>>> READ_ONCE() inside percpu_counter_read()?
+>>>=20
+>>> It is because not all places suffer from a data race. For example, =
+in __wb_update_bandwidth(), it was protected by a lock. I was a bit =
+worry about blindly adding READ_ONCE() inside percpu_counter_read() =
+might has unexpected side-effect. For example, it is unnecessary to have =
+READ_ONCE() for a volatile variable. So, I thought just to keep the =
+change minimal with a trade off by exposing a bit internal details as =
+you mentioned.
+>>>=20
+>>> However, I had also copied the percpu maintainers to see if they =
+have any preferences?
+>>=20
+>> I would not add READ_ONCE to percpu_counter_read(), given the writes
+>> (increments) are not atomic either, so not much is gained.
+>>=20
+>> Notice that this is inside a WARN_ONCE, so you may argue that a data
+>> race here doesn't matter to the correct behaviour of the system
+>> (except if you have panic_on_warn on).
+>>=20
+>> For the warning to trigger, vm_committed_as must decrease. Assume =
+that
+>> a data race (assuming bad compiler optimizations) can somehow
+>> accomplish this, then the load or write must cause a transient value
+>> to somehow be less than a stable value. My hypothesis is this is very
+>> unlikely.
+>>=20
+>> Given the fact this is a WARN_ONCE, and the fact that a transient
+>> decrease in the value is unlikely, you may consider
+>> 'VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as)) <
+>> ...)'. That way you won't modify percpu_counter_read and still catch
+>> unintended races elsewhere.
+>>=20
+>=20
+> That, or add an alternative version of per_cpu_counter_read() to the
+> percpu API.  A very carefully commented version!
 
+ I send a patch to use data_race() which should be sufficient,
+
+https://lore.kernel.org/linux-mm/20200130145649.1240-1-cai@lca.pw/=
