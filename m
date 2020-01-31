@@ -2,174 +2,132 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFBAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3740C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4AE220705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A686214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AHTCOOW9"
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="zM91B167"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgAaPOj (ORCPT
+        id S1729166AbgAaPPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:14:39 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40128 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgAaPOg (ORCPT
+        Fri, 31 Jan 2020 10:15:33 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:41846 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbgAaPPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:14:36 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VFEUgT050952;
-        Fri, 31 Jan 2020 09:14:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580483670;
-        bh=yg2sSIG6On/6b8axJNdbwxWrQCuSRBjvO2ZcRGpU8qE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AHTCOOW9iHtgukmcZRvod3d/5YMDZNwTV6As+1HO8qDXf93lr8CzO3Sc9ZowLQNSf
-         4K195sFjwQP3Cep1FnZ7zqnBBHgCnIHcrKAl0JUJ/BEfyhPbKlOpQiH5v6mX9lKPTF
-         JIbEDOQqkKE3DAQIwxeq1fzhSIKSuPFIxYnRsIrc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VFEUlC086558
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 09:14:30 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 09:14:30 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 09:14:30 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VFET0W031051;
-        Fri, 31 Jan 2020 09:14:30 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization feature
-Date:   Fri, 31 Jan 2020 09:11:10 -0600
-Message-ID: <20200131151110.31642-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200131151110.31642-1-dmurphy@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
+        Fri, 31 Jan 2020 10:15:32 -0500
+Received: by mail-yw1-f67.google.com with SMTP id l22so4977803ywc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 07:15:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKqqlpA+EkYjXixe2TS2xK7+DyD3uNKJKEB0gcN7Kss=;
+        b=zM91B1671UUjUt7B4XhWH0jKv4TzeL2OGkjsxZr6YetTM6KnFw900Ukel/cRquX0U6
+         /s2JfZpPbKUq/hyBOchczdnZP5oy6LHCnqrOZHmBiurBK22nhFbHBa0kNR9a7mmo7Ooy
+         uXyyJl8Sw6q2bVInAbUXGqW1AXzLWuOuP7wcwOH0a406Qljft7LX0O9wfukjwAudPtZP
+         NXoNfOkGncX1sLCF6A2cABmwx2anxLMJJj+k5cQQtCy9BdKCV+MVJFeKCh5ER4Mc2zJz
+         wa+9WuxuAWSoLKZimoK3BKKytP0yZHM7LdE34XG08cOSXqyxkEWSXLPQyK9sCOJc/9ct
+         zBrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKqqlpA+EkYjXixe2TS2xK7+DyD3uNKJKEB0gcN7Kss=;
+        b=qXgidPDyLfuA+5PI6wzoi8bdtZR0dXpCZaks3mNl7+Wj22itf+FhGjt9/rcsAJpeaS
+         MJ/lCJGV9Y9nFP5LvSeGzXjt5lEZKaET84C6JuHlCQvKDuaEG5gBX6HfPAhE9jw4aBoZ
+         mRZAS+qlycpmrk/gVQxvZsKVLq0JReLdvVnt3fuyctS5jR4tVn21LI69STBCCPUXFHmY
+         B25qhMkWd84PRnPBSnaqM3ReqbIenK9QC5rmLrSSP8N8n3XplyHdQcXSqvV7Gk/f1VBq
+         gu7ypes2yuleB2R2lGOdR6jFpIALedaNwJQHFZh0hbAOZj/Le8yC7YhfDk7Pza8jsFXf
+         Nr3Q==
+X-Gm-Message-State: APjAAAVULXTuH+v21vLNiy/apRxq8w6EyClNzWeLNL8YyvzQaEBA8jmQ
+        Hemd/Df97TRDnFEJtdfAWak/wffIRBUYhBMzjA8dzw==
+X-Google-Smtp-Source: APXvYqwsAGpGy6tic5rDdkc84xGCO6z1ubMWeOs7PNuXCUuhqHHO+HdXDIU+E2oTbdCyqF+X9ln5AxdumM3moQc/u34=
+X-Received: by 2002:a25:e790:: with SMTP id e138mr822292ybh.120.1580483731154;
+ Fri, 31 Jan 2020 07:15:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200128110916.GA491@e121166-lin.cambridge.arm.com>
+ <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org> <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
+ <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com> <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
+ <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com> <20200131142906.GG9639@lunn.ch>
+ <20200131144737.GA4948@willie-the-truck> <20200131150929.GB13902@lunn.ch>
+In-Reply-To: <20200131150929.GB13902@lunn.ch>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Fri, 31 Jan 2020 16:14:55 +0100
+Message-ID: <CABdtJHs5zdS=unviHX3=Gsbf=q9ooS0sYMUAbtvaZT0D0ORNkw@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the speed optimization bit on the DP83867 PHY.
-This feature can also be strapped on the 64 pin PHY devices
-but the 48 pin devices do not have the strap pin available to enable
-this feature in the hardware.  PHY team suggests to have this bit set.
+On Fri, Jan 31, 2020 at 4:09 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > Devicetree to the rescue!
+>
+> Yes, exactly. We have good, standardised descriptions for most of this
+> in device tree. And phylink can handle SFP and SFP+. Nobody has worked
+> on QSFP yet, since phylink has mostly been pushed by the embedded
+> world and 40G is not yet popular in the embedded world.
+>
+> > Entertaining the use of ACPI without any firmware abstraction for this
+> > hardware really feels like a square peg / round hole situation, so I'm
+> > assuming somebody's telling you that you need it "FOAR ENTAPRYZE". Who
+> > is it and can you tell them to bog off?
+>
+> The issues here is that SFPs are appearing in more and more server
+> systems, replacing plain old copper Ethernet. If the boxes use off the
+> shelf Mellanox or Intel PCIe cards, it is not an issue. But silicon
+> vendors are integrating this into the SoC in the ARM way of doing
+> things, memory mapped, spread over a number of controllers, not a
+> single PCIe device.
+>
+> Maybe we need hybrid systems. Plain, old, simple, boring things like
+> CPUs, serial ports, SATA, PCIe busses are described in ACPI. Complex
+> interesting things are in DT. The hard thing is the interface between
+> the two. DT having a phandle to an ACPI object, e.g a GPIO, interrupt
+> or an i2c bus.
+>
+>    Andrew
 
-With this bit set the PHY will auto negotiate and report the link
-parameters in the PHYSTS register and not in the BMCR.  So we need to
-over ride the genphy_read_status with a DP83867 specific read status.
+Just as a review reference, I have found an old attempted
+implementation documented here.
+https://github.com/CumulusNetworks/apd-tools/wiki
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 967f57ed0b65..695aaf4f942f 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -21,6 +21,7 @@
- #define DP83867_DEVADDR		0x1f
- 
- #define MII_DP83867_PHYCTRL	0x10
-+#define MII_DP83867_PHYSTS	0x11
- #define MII_DP83867_MICR	0x12
- #define MII_DP83867_ISR		0x13
- #define DP83867_CFG2		0x14
-@@ -118,6 +119,15 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* PHY STS bits */
-+#define DP83867_PHYSTS_1000			BIT(15)
-+#define DP83867_PHYSTS_100			BIT(14)
-+#define DP83867_PHYSTS_DUPLEX			BIT(13)
-+#define DP83867_PHYSTS_LINK			BIT(10)
-+
-+/* CFG2 bits */
-+#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
-+
- /* CFG3 bits */
- #define DP83867_CFG3_INT_OE			BIT(7)
- #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-@@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83867_MICR, micr_status);
- }
- 
-+static int dp83867_read_status(struct phy_device *phydev)
-+{
-+	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-+
-+	if (status < 0)
-+		return status;
-+
-+	if (status & DP83867_PHYSTS_DUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	if (status & DP83867_PHYSTS_1000)
-+		phydev->speed = SPEED_1000;
-+	else if (status & DP83867_PHYSTS_100)
-+		phydev->speed = SPEED_100;
-+	else
-+		phydev->speed = SPEED_10;
-+
-+	if (status & DP83867_PHYSTS_LINK)
-+		phydev->link = 1;
-+	else
-+		phydev->link = 0;
-+
-+	phydev->pause = 0;
-+	phydev->asym_pause = 0;
-+
-+	return 0;
-+}
-+
- static int dp83867_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83867_private *dp83867 =
-@@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
- 	int ret, val, bs;
- 	u16 delay;
- 
-+	/* Force speed optimization for the PHY even if it strapped */
-+	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
-+			 DP83867_SPEED_OPTIMIZED_EN);
-+	if (ret)
-+		return ret;
-+
- 	ret = dp83867_verify_rgmii_cfg(phydev);
- 	if (ret)
- 		return ret;
-@@ -655,6 +701,8 @@ static struct phy_driver dp83867_driver[] = {
- 		.config_init	= dp83867_config_init,
- 		.soft_reset	= dp83867_phy_reset,
- 
-+		.read_status	= dp83867_read_status,
-+
- 		.get_wol	= dp83867_get_wol,
- 		.set_wol	= dp83867_set_wol,
- 
--- 
-2.25.0
-
+-Jon
