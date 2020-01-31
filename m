@@ -2,150 +2,109 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF604C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26864C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CEB214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC450214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OBjuH0le"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="M+YcKaeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgAaQMY (ORCPT
+        id S1729313AbgAaQNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:12:24 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:54212 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgAaQMX (ORCPT
+        Fri, 31 Jan 2020 11:13:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29552 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729162AbgAaQNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:12:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1580487143; x=1612023143;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=haMvOsyZc78AVx3AOqC58ELvTFvW3Ug/nhb6F0XmDZ8=;
-  b=OBjuH0leZzo9+07WS9tfrKtYa+MIC3IXoToIKQCG27laXRAnSXndDSeJ
-   JZhZJ/fYkuTEE5339sHr5rwLbuPMGb6YSQnsXMcmMLgrqByVwWOyKmqbc
-   LqFBDpuVjLdU5AHI/xqpvQQCnmSdD+Vnh8guZUEyqlMEHBSdS3S5mocic
-   w=;
-IronPort-SDR: vyo7DKfoJqzBftCArd4OozalyrQLXy5tcIabPnObduFsX93IRKN3fwCGMyGMiYp2as5jzCLpZc
- NfqLafiDGrIA==
-X-IronPort-AV: E=Sophos;i="5.70,386,1574121600"; 
-   d="scan'208";a="14203199"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 31 Jan 2020 16:12:20 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id BB43AA2303;
-        Fri, 31 Jan 2020 16:12:19 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Fri, 31 Jan 2020 16:12:19 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.249) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 Jan 2020 16:12:14 +0000
-From:   <sjpark@amazon.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     <sjpark@amazon.com>, David Miller <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>, netdev <netdev@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
-        <aams@amazon.com>, SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
-Date:   Fri, 31 Jan 2020 17:12:00 +0100
-Message-ID: <20200131161200.8852-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CANn89i+rKfAhUjYLoEhyYj8OsRBtHC+ukPcE6CuTAJjb183GRQ@mail.gmail.com> (raw)
+        Fri, 31 Jan 2020 11:13:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VG8Ufu012526;
+        Fri, 31 Jan 2020 17:13:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=HUDBBixwA13IQ1SSxhBd1lmaKx9dqoz2nLZDQib/1NY=;
+ b=M+YcKaeJ2bnVCl5PayaMJx+tFQAQGf39itcySN6HFpedQJV60UeyQR+C3dnWO5cUftet
+ GbGDnNSjoRvGb9p5bocMIOMMVwwq6udnrw3lR1x5yiYRmZ1YDuGEt2eXJNuD+ssGRoYx
+ DjnZc2l2lbGzI7hEmfHpDQSH0dYvYPFdkMCxSkvSBI/IvDSKrIvzxHaLm2ARDTIwEYTc
+ BYlmU1xUEQVqRMpTLmrVAQC3dHPdMcbckmJMZvJe+QMnLRdD24sLLFwULK9Avg3kl0JA
+ 6pgph/GNCKKc7UGzCSmm2hWL1nyDuQWkHvTU2pEuyecFki1KCmFXRjOvMEDRpx3H4opv oQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrc13pvvx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 17:13:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC12810002A;
+        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A0DEE2D3796;
+        Fri, 31 Jan 2020 17:13:26 +0100 (CET)
+Received: from lmecxl0995.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan
+ 2020 17:13:25 +0100
+Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
+ SoCs USB OTG HS and FS
+To:     Felipe Balbi <balbi@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+References: <20200124084131.23749-1-amelie.delaunay@st.com>
+ <20200124084131.23749-2-amelie.delaunay@st.com> <87imkr7nou.fsf@kernel.org>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <c29867bd-8056-a82f-2273-101470395e78@st.com>
+Date:   Fri, 31 Jan 2020 17:13:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.249]
-X-ClientProxiedBy: EX13D03UWC003.ant.amazon.com (10.43.162.79) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <87imkr7nou.fsf@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_04:2020-01-31,2020-01-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 07:01:21 -0800 Eric Dumazet <edumazet@google.com> wrote:
+Hi,
 
-> On Fri, Jan 31, 2020 at 4:25 AM <sjpark@amazon.com> wrote:
+On 1/31/20 2:36 PM, Felipe Balbi wrote:
+> Hi,
 > 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  net/ipv4/tcp_input.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > index 2a976f57f7e7..b168e29e1ad1 100644
-> > --- a/net/ipv4/tcp_input.c
-> > +++ b/net/ipv4/tcp_input.c
-> > @@ -5893,8 +5893,12 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
-> >                  *        the segment and return)"
-> >                  */
-> >                 if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
-> > -                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
-> > +                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
-> > +                       /* Previous FIN/ACK or RST/ACK might be ignore. */
-> > +                       inet_csk_reset_xmit_timer(sk, ICSK_TIME_RETRANS,
-> > +                                                 TCP_ATO_MIN, TCP_RTO_MAX);
+> Amelie Delaunay <amelie.delaunay@st.com> writes:
 > 
-> This is not what I suggested.
+>> Add the specific compatible string for the DWC2 IP found in the STM32MP15
+>> SoCs.
+>> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
+>> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
+>> sensing comparators.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 > 
-> I suggested implementing a strategy where only the _first_ retransmit
-> would be done earlier.
-> 
-> So you need to look at the current counter of retransmit attempts,
-> then reset the timer if this SYN_SENT
-> socket never resent a SYN.
-> 
-> We do not want to trigger packet storms, if for some reason the remote
-> peer constantly sends
-> us the same packet.
+> This doesn't apply. dwc2 bindings is still in .txt format. I have taken
+> patch 2, though.
+>
 
-You're right, I missed the important point, thank you for pointing it.  Among
-retransmission related fields of 'tcp_sock', I think '->total_retrans' would
-fit for this check.  How about below change?
+Thanks for taking driver patch.
 
-```
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 2a976f57f7e7..29fc0e4da931 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -5893,8 +5893,14 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
-                 *        the segment and return)"
-                 */
-                if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
--                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
-+                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
-+                       /* Previous FIN/ACK or RST/ACK might be ignored. */
-+                       if (tp->total_retrans == 0)
-+                               inet_csk_reset_xmit_timer(sk,
-+                                               ICSK_TIME_RETRANS, TCP_ATO_MIN,
-+                                               TCP_RTO_MAX);
-                        goto reset_and_undo;
-+               }
+Rob, would you mind to take patch 1 (Yaml binding update) in your tree ?
 
-                if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
-                    !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
-```
+Regards,
+Amelie
 
-Thanks,
-SeongJae Park
-
-> 
-> Thanks.
-> 
-> >                         goto reset_and_undo;
-> > +               }
-> >
-> >                 if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
-> >                     !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
-> > --
-> > 2.17.1
-> >
-> 
