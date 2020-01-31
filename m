@@ -2,195 +2,125 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97477C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B103C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD68214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mS4cuAoR"
+	by mail.kernel.org (Postfix) with ESMTP id 279C3214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580504265;
+	bh=xSaADny3VeFeTtHG/1htvc3v34drLqjFKsbK6AuXjHk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gTEwN9cZI4EuTZ6pa0kCuKwuQXSZXxKEeqvedgsmBovnvCZspnU4TkTmwE3r5pTMv
+	 O4+T6j30WvzXqRug6SMAjCzcGh6Tx4OIkeq7qqRyQbGqMAPLHuq1TWM8rC5JuoEOYW
+	 PhCAEsp6NsD9mXbY/iQTLZds8tDGvjrelohgYrsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgAaU4h (ORCPT
+        id S1726593AbgAaU5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:56:37 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44124 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgAaU4g (ORCPT
+        Fri, 31 Jan 2020 15:57:44 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37119 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgAaU5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:56:36 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so10217119wrx.11;
-        Fri, 31 Jan 2020 12:56:35 -0800 (PST)
+        Fri, 31 Jan 2020 15:57:43 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b15so5831697lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:57:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pDSC9P7JGdB1vjktr1qRbOtvxNmLiv67d/n70snEkzA=;
-        b=mS4cuAoRl6iBYW+3nU2NHaxoshadxv/bNXyiCAovrHuDRI92WpUVNzg4BhG6aty6Lb
-         bDbhCtMeaq34gtVVNFDHNhe+NKrXkawz6vZrz2jpQjqeyqKecbiDT7kpw341sdyQoj5p
-         sxiXLlgdnxxtmtWlRmCUjyVlbBthFOwbFF46hW7FlVQB0yf8/Qq4mnry+DCDWEVy51r3
-         3sM/t/tsb1a0CR7Ipn1G22goD3K9l5UqR8dKhdDjgrYEVNLh/4BL7/NjLIDSURaoFmI9
-         vkymwh8AuOVu18WB1Q6gu9IL6pGPS1C502GijuO6ne/iVcYLF0Dxg87y46dkYQ4Bq9MK
-         CwvA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yIy8jX/bIqNLPn135lJfh03fB0J5DTm/sQQubpuwpIc=;
+        b=T9YJkCW9JbP3I/VrV8Kj+Sqgh32TFui6J89dvvzFWNF4uNBBlwLYLIiloGbloeGdEn
+         +WhsCFna2qbBsj24mHwTYrLs7jNN597VW/cYfZ14T/ucXOrbAuhgBHDPx8ZibV3JpYUn
+         SIOsaSvx7SY3ycO1LVDx3/u1kmOYO3RuQI1m4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pDSC9P7JGdB1vjktr1qRbOtvxNmLiv67d/n70snEkzA=;
-        b=D1NEzlLpXwkPlho2VogCBI//6hNeuvUct+yAdiv1npo0GJzdn4mBiUXZlayyB4wrdg
-         l2gnbOmllRFjfJ0H2f+mxz2JCzKXOryTa+yekSOCbIZVTOjhjEnPVDXODrPgPpeWRi+S
-         CXN6KtCKtq5KSIo5hW7K0h/qXNTp0ZbGXm03oDTpNRjCWAelDU3IGudzYY0oxh0h1YSv
-         VXgCvwRHdr6cUPHxQluFI5j+FinIJSH5yYURRWRxiwOiTbI0SqSdKk/S94fnA2bhNj+2
-         2GYw5EM7qpgU4yzh4pO4oyedZ2i7Tav3Z4gYYCsg1bd6wwe/jMKwyM09D5amp0vvnx0h
-         Qykg==
-X-Gm-Message-State: APjAAAWMA+Z8BCRt1+bUw+7BDQqrZQrxPNVBoWi5NXco5ZxlM9Y3le2V
-        QUfZoSM3H3nYN8ozIhCtjlk=
-X-Google-Smtp-Source: APXvYqwywSqz6hsbDgFgEs50YGI4+lySVourtilE3SCqpEFvwIuXF25wuMhw1DJi2UGB+ddzAvl+xA==
-X-Received: by 2002:adf:eb8e:: with SMTP id t14mr255288wrn.384.1580504194450;
-        Fri, 31 Jan 2020 12:56:34 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:8922:4c51:f8d2:7862? (p200300EA8F29600089224C51F8D27862.dip0.t-ipconnect.de. [2003:ea:8f29:6000:8922:4c51:f8d2:7862])
-        by smtp.googlemail.com with ESMTPSA id a22sm12430161wmd.20.2020.01.31.12.56.33
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yIy8jX/bIqNLPn135lJfh03fB0J5DTm/sQQubpuwpIc=;
+        b=GjzcFmxHZTN9Q+gM4XB2I1+CpRkNO0cuu4P2pjuIw7zh6nRk/tSPgN8eoAewqSKNWb
+         /QEiagxCSLuxiVMRez170zUjFtbiGVeRyqS3XgMfPDtH+KXcSAeQ3NQ92k24DvxahoF6
+         I5yf7dXhPVLVSxCyJcDj/MpjZViKwrKXEbRzTRkM/OqJiPQw7CrfMkc+mmbKQmDl8hLn
+         ZcN6qBCFm5dG2Jl3RDEB/rlEM8Agqistx7ztU/zYB5YqzEVXomoufTH7CPMylJ3F6+PJ
+         izHUxfjVeVd0VdaSvvykmsuafnwbG3XOji9iN0kNMpWuGGawVzn8j3PH/SSu3CFkguGI
+         4SBA==
+X-Gm-Message-State: APjAAAXC6c9txju2Tl8ipTw+006WakJftihGLBYsVykbqld/l5L+GfWL
+        nV9lr0x+Zr3AFdC4OXk2J25EGRSNRHg=
+X-Google-Smtp-Source: APXvYqz5ETIZml1hntPtulKwo/AO/4d5AXaTVNarGWc15d5PfHPwR42eus5g2Dvzz2fRnPQgh9OPIw==
+X-Received: by 2002:ac2:5e29:: with SMTP id o9mr6447519lfg.81.1580504260849;
+        Fri, 31 Jan 2020 12:57:40 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id w1sm4974124lfe.96.2020.01.31.12.57.39
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 12:56:33 -0800 (PST)
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com,
-        bunk@kernel.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
-Date:   Fri, 31 Jan 2020 21:56:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 31 Jan 2020 12:57:39 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id a13so8476079ljm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:57:39 -0800 (PST)
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr7089308ljk.201.1580504259100;
+ Fri, 31 Jan 2020 12:57:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200131151110.31642-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000dd68d0059c74a1db@google.com> <000000000000ed3a48059d17277e@google.com>
+In-Reply-To: <000000000000ed3a48059d17277e@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 31 Jan 2020 12:57:23 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgNo-3FuNWSj+pRqJEG3phVnpcEi+NNq7f_VMWeTugFDA@mail.gmail.com>
+Message-ID: <CAHk-=wgNo-3FuNWSj+pRqJEG3phVnpcEi+NNq7f_VMWeTugFDA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_ip_add
+To:     Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc:     coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Marco Elver <elver@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        jeremy@azazel.net, Kate Stewart <kstewart@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Netdev <netdev@vger.kernel.org>, netfilter-devel@vger.kernel.org,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.01.2020 16:11, Dan Murphy wrote:
-> Set the speed optimization bit on the DP83867 PHY.
-> This feature can also be strapped on the 64 pin PHY devices
-> but the 48 pin devices do not have the strap pin available to enable
-> this feature in the hardware.  PHY team suggests to have this bit set.
-> 
-It's ok to enable downshift by default, however it would be good to
-make it configurable. Best implement the downshift tunable, you can
-use the Marvell PHY driver as reference.
-Can the number of attempts until downshifts happens be configured?
+On Sun, Jan 26, 2020 at 8:01 PM syzbot
+<syzbot+f3e96783d74ee8ea9aa3@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
 
+Ok, the bisection is obviously bogus - it just points to where the
+KASAN support was added to _notice_ the problem.
 
-> With this bit set the PHY will auto negotiate and report the link
-> parameters in the PHYSTS register and not in the BMCR.  So we need to
-> over ride the genphy_read_status with a DP83867 specific read status.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 967f57ed0b65..695aaf4f942f 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -21,6 +21,7 @@
->  #define DP83867_DEVADDR		0x1f
->  
->  #define MII_DP83867_PHYCTRL	0x10
-> +#define MII_DP83867_PHYSTS	0x11
->  #define MII_DP83867_MICR	0x12
->  #define MII_DP83867_ISR		0x13
->  #define DP83867_CFG2		0x14
-> @@ -118,6 +119,15 @@
->  #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
->  #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
->  
-> +/* PHY STS bits */
-> +#define DP83867_PHYSTS_1000			BIT(15)
-> +#define DP83867_PHYSTS_100			BIT(14)
-> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
-> +#define DP83867_PHYSTS_LINK			BIT(10)
-> +
-> +/* CFG2 bits */
-> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
-> +
->  /* CFG3 bits */
->  #define DP83867_CFG3_INT_OE			BIT(7)
->  #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-> @@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
->  	return phy_write(phydev, MII_DP83867_MICR, micr_status);
->  }
->  
-> +static int dp83867_read_status(struct phy_device *phydev)
-> +{
-> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
-> +
-> +	if (status < 0)
-> +		return status;
-> +
-> +	if (status & DP83867_PHYSTS_DUPLEX)
-> +		phydev->duplex = DUPLEX_FULL;
-> +	else
-> +		phydev->duplex = DUPLEX_HALF;
-> +
-> +	if (status & DP83867_PHYSTS_1000)
-> +		phydev->speed = SPEED_1000;
-> +	else if (status & DP83867_PHYSTS_100)
-> +		phydev->speed = SPEED_100;
-> +	else
-> +		phydev->speed = SPEED_10;
-> +
-> +	if (status & DP83867_PHYSTS_LINK)
-> +		phydev->link = 1;
-> +	else
-> +		phydev->link = 0;
-> +
-> +	phydev->pause = 0;
-> +	phydev->asym_pause = 0;
-> +
-> +	return 0;
-> +}
-> +
->  static int dp83867_config_port_mirroring(struct phy_device *phydev)
->  {
->  	struct dp83867_private *dp83867 =
-> @@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
->  	int ret, val, bs;
->  	u16 delay;
->  
-> +	/* Force speed optimization for the PHY even if it strapped */
-> +	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
-> +			 DP83867_SPEED_OPTIMIZED_EN);
+But is somebody looking at the actual KASAN report itself?
 
-Here phy_set_bits() would be easier.
+  https://syzkaller.appspot.com/bug?extid=f3e96783d74ee8ea9aa3
 
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = dp83867_verify_rgmii_cfg(phydev);
->  	if (ret)
->  		return ret;
-> @@ -655,6 +701,8 @@ static struct phy_driver dp83867_driver[] = {
->  		.config_init	= dp83867_config_init,
->  		.soft_reset	= dp83867_phy_reset,
->  
-> +		.read_status	= dp83867_read_status,
-> +
->  		.get_wol	= dp83867_get_wol,
->  		.set_wol	= dp83867_set_wol,
->  
-> 
+It does look like nfnetlink_rcv_msg() ends up looking at a bit:
 
+ bitmap_ip_do_add net/netfilter/ipset/ip_set_bitmap_ip.c:83 [inline]
+ bitmap_ip_add+0xef/0xe60 net/netfilter/ipset/ip_set_bitmap_gen.h:136
+ bitmap_ip_uadt+0x73e/0xa10 net/netfilter/ipset/ip_set_bitmap_ip.c:186
+ call_ad+0x1a0/0x5a0 net/netfilter/ipset/ip_set_core.c:1716
+ ip_set_ad.isra.0+0x572/0xb20 net/netfilter/ipset/ip_set_core.c:1804
+ ip_set_uadd+0x37/0x50 net/netfilter/ipset/ip_set_core.c:1829
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+
+that is past the allocation:
+
+ ip_set_alloc+0x38/0x5e net/netfilter/ipset/ip_set_core.c:255
+ init_map_ip net/netfilter/ipset/ip_set_bitmap_ip.c:223 [inline]
+ bitmap_ip_create+0x6ec/0xc20 net/netfilter/ipset/ip_set_bitmap_ip.c:327
+ ip_set_create+0x6f1/0x1500 net/netfilter/ipset/ip_set_core.c:1111
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+
+Maybe this has already been fixed, but I'm just trying to follow-up on
+the syzbot report..
+
+           Linus
