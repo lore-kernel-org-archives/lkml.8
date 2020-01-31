@@ -2,189 +2,195 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91250C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97477C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54584214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD68214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDQ766h0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mS4cuAoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgAaU4C (ORCPT
+        id S1726747AbgAaU4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:56:02 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40573 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgAaU4C (ORCPT
+        Fri, 31 Jan 2020 15:56:37 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44124 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgAaU4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:56:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580504160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ut6romTePPKAlxPx0bm/6CAtIIIuPyUqVjspVOVMDwY=;
-        b=BDQ766h0X3aUWc4pw1WoO8oyxPUjcEKmC4rRCpBWddxPKAYhs5R49bN/BzVJxyFU4C7Qdd
-        ksOKqWz106gQbiTS/Y50CcNNJET3mNAystiR0OT++GAsE69+BgEtCXAQqLU/6alRrz+a/j
-        fGUN7O1sdcFIP6AITMixBwh/3ysmFAI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-URuX97YNM9qMlyiN_w-QWg-1; Fri, 31 Jan 2020 15:55:53 -0500
-X-MC-Unique: URuX97YNM9qMlyiN_w-QWg-1
-Received: by mail-qv1-f69.google.com with SMTP id c1so5197660qvw.17
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:55:53 -0800 (PST)
+        Fri, 31 Jan 2020 15:56:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so10217119wrx.11;
+        Fri, 31 Jan 2020 12:56:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pDSC9P7JGdB1vjktr1qRbOtvxNmLiv67d/n70snEkzA=;
+        b=mS4cuAoRl6iBYW+3nU2NHaxoshadxv/bNXyiCAovrHuDRI92WpUVNzg4BhG6aty6Lb
+         bDbhCtMeaq34gtVVNFDHNhe+NKrXkawz6vZrz2jpQjqeyqKecbiDT7kpw341sdyQoj5p
+         sxiXLlgdnxxtmtWlRmCUjyVlbBthFOwbFF46hW7FlVQB0yf8/Qq4mnry+DCDWEVy51r3
+         3sM/t/tsb1a0CR7Ipn1G22goD3K9l5UqR8dKhdDjgrYEVNLh/4BL7/NjLIDSURaoFmI9
+         vkymwh8AuOVu18WB1Q6gu9IL6pGPS1C502GijuO6ne/iVcYLF0Dxg87y46dkYQ4Bq9MK
+         CwvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ut6romTePPKAlxPx0bm/6CAtIIIuPyUqVjspVOVMDwY=;
-        b=TxyYgWYNedlZftx7jnl2lQm+Xyoh3l6IxTQ+cxt3UeLjqC32Lg28KR+9pTvGSKzqs/
-         4vgDgVjT/OExKP09HT4XMpEaYwS54DOx36V6wxUr8z9jmhdejEd2ou8EHLdoV9Vvr9R7
-         JuGgI//jPuq1uKlKHVHqd5JI87OJqFt42/YmQmU3StgW0xO/w0mknLKe1el77s1IXYwJ
-         FeSCZUgBy0zK4m8kmRzE30JaqRz/aBKQG8BH3dAVRDWktz302jWgQnhocc2UlWTcp8HA
-         Otugbe73CeUj+ca5T3xEn4Z5BVayZJ2M3BiBxtBTUU/vvcahJzk9hdo347w6TD+j0SFm
-         c9SQ==
-X-Gm-Message-State: APjAAAWphu1p4gFv01YnqSxjNJ7HF3TZwfh7BxMJ7O0cUoLvxT6LOYnx
-        Fs+xsoXGSSxTKLZw1POeU38KfZ5G+fEVYouzSDuxxBgvWHH8xo7oISE9Q0O8ODQ2WxKhz4bO1GG
-        I5Eoq6cbUz9A9jEKKAuOH62tM
-X-Received: by 2002:ac8:2afb:: with SMTP id c56mr13088639qta.112.1580504153160;
-        Fri, 31 Jan 2020 12:55:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyaA7bAFg1JFtB0SyHo7ynkFLIiM6zJ2BC1R4vbGlAt1l1DTroAhqPEKc24L2YMfsbwGA0UAw==
-X-Received: by 2002:ac8:2afb:: with SMTP id c56mr13088615qta.112.1580504152755;
-        Fri, 31 Jan 2020 12:55:52 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id b9sm5049656qkh.83.2020.01.31.12.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 12:55:52 -0800 (PST)
-Date:   Fri, 31 Jan 2020 15:55:50 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200131205550.GB7063@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
- <20200128182402.GA18652@linux.intel.com>
- <20200131150832.GA740148@xz-x1>
- <20200131193301.GC18946@linux.intel.com>
- <20200131202824.GA7063@xz-x1>
- <20200131203622.GF18946@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pDSC9P7JGdB1vjktr1qRbOtvxNmLiv67d/n70snEkzA=;
+        b=D1NEzlLpXwkPlho2VogCBI//6hNeuvUct+yAdiv1npo0GJzdn4mBiUXZlayyB4wrdg
+         l2gnbOmllRFjfJ0H2f+mxz2JCzKXOryTa+yekSOCbIZVTOjhjEnPVDXODrPgPpeWRi+S
+         CXN6KtCKtq5KSIo5hW7K0h/qXNTp0ZbGXm03oDTpNRjCWAelDU3IGudzYY0oxh0h1YSv
+         VXgCvwRHdr6cUPHxQluFI5j+FinIJSH5yYURRWRxiwOiTbI0SqSdKk/S94fnA2bhNj+2
+         2GYw5EM7qpgU4yzh4pO4oyedZ2i7Tav3Z4gYYCsg1bd6wwe/jMKwyM09D5amp0vvnx0h
+         Qykg==
+X-Gm-Message-State: APjAAAWMA+Z8BCRt1+bUw+7BDQqrZQrxPNVBoWi5NXco5ZxlM9Y3le2V
+        QUfZoSM3H3nYN8ozIhCtjlk=
+X-Google-Smtp-Source: APXvYqwywSqz6hsbDgFgEs50YGI4+lySVourtilE3SCqpEFvwIuXF25wuMhw1DJi2UGB+ddzAvl+xA==
+X-Received: by 2002:adf:eb8e:: with SMTP id t14mr255288wrn.384.1580504194450;
+        Fri, 31 Jan 2020 12:56:34 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:8922:4c51:f8d2:7862? (p200300EA8F29600089224C51F8D27862.dip0.t-ipconnect.de. [2003:ea:8f29:6000:8922:4c51:f8d2:7862])
+        by smtp.googlemail.com with ESMTPSA id a22sm12430161wmd.20.2020.01.31.12.56.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 12:56:33 -0800 (PST)
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com,
+        bunk@kernel.org
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
+Date:   Fri, 31 Jan 2020 21:56:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <20200131151110.31642-2-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200131203622.GF18946@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 12:36:22PM -0800, Sean Christopherson wrote:
-> On Fri, Jan 31, 2020 at 03:28:24PM -0500, Peter Xu wrote:
-> > On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
-> > > For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
-> > > still has to use copy_{to,from}_user().
-> > > 
-> > > In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
-> > > would be provided the hva of the memory region.  Since slots_lock and SRCU
-> > > only protect gfn->hva, why would KVM take slots_lock since it already has
-> > > the hva?
-> > 
-> > OK so you're suggesting to unlock the lock earlier to not cover
-> > init_rmode_tss() rather than dropping the whole lock...  Yes it looks
-> > good to me.  I think that's the major confusion I got.
+On 31.01.2020 16:11, Dan Murphy wrote:
+> Set the speed optimization bit on the DP83867 PHY.
+> This feature can also be strapped on the 64 pin PHY devices
+> but the 48 pin devices do not have the strap pin available to enable
+> this feature in the hardware.  PHY team suggests to have this bit set.
 > 
-> Ya.  And I missed where the -EEXIST was coming from.  I think we're on the
-> same page.
+It's ok to enable downshift by default, however it would be good to
+make it configurable. Best implement the downshift tunable, you can
+use the Marvell PHY driver as reference.
+Can the number of attempts until downshifts happens be configured?
 
-Good to know.  Btw, for me I would still prefer to keep the lock be
-after the __copy_to_user()s because "HVA is valid without lock" is
-only true for these private memslots.  After all this is super slow
-path so I wouldn't mind to take the lock for some time longer.  Or
-otherwise if you really like the unlock() to be earlier I can comment
-above the unlock:
 
-  /*
-   * We can unlock before using the HVA only because this KVM private
-   * memory slot will never change until the end of VM lifecycle.
-   */
+> With this bit set the PHY will auto negotiate and report the link
+> parameters in the PHYSTS register and not in the BMCR.  So we need to
+> over ride the genphy_read_status with a DP83867 specific read status.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 967f57ed0b65..695aaf4f942f 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -21,6 +21,7 @@
+>  #define DP83867_DEVADDR		0x1f
+>  
+>  #define MII_DP83867_PHYCTRL	0x10
+> +#define MII_DP83867_PHYSTS	0x11
+>  #define MII_DP83867_MICR	0x12
+>  #define MII_DP83867_ISR		0x13
+>  #define DP83867_CFG2		0x14
+> @@ -118,6 +119,15 @@
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+>  #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+>  
+> +/* PHY STS bits */
+> +#define DP83867_PHYSTS_1000			BIT(15)
+> +#define DP83867_PHYSTS_100			BIT(14)
+> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
+> +#define DP83867_PHYSTS_LINK			BIT(10)
+> +
+> +/* CFG2 bits */
+> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
+> +
+>  /* CFG3 bits */
+>  #define DP83867_CFG3_INT_OE			BIT(7)
+>  #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+> @@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
+>  	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>  }
+>  
+> +static int dp83867_read_status(struct phy_device *phydev)
+> +{
+> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
+> +
+> +	if (status < 0)
+> +		return status;
+> +
+> +	if (status & DP83867_PHYSTS_DUPLEX)
+> +		phydev->duplex = DUPLEX_FULL;
+> +	else
+> +		phydev->duplex = DUPLEX_HALF;
+> +
+> +	if (status & DP83867_PHYSTS_1000)
+> +		phydev->speed = SPEED_1000;
+> +	else if (status & DP83867_PHYSTS_100)
+> +		phydev->speed = SPEED_100;
+> +	else
+> +		phydev->speed = SPEED_10;
+> +
+> +	if (status & DP83867_PHYSTS_LINK)
+> +		phydev->link = 1;
+> +	else
+> +		phydev->link = 0;
+> +
+> +	phydev->pause = 0;
+> +	phydev->asym_pause = 0;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dp83867_config_port_mirroring(struct phy_device *phydev)
+>  {
+>  	struct dp83867_private *dp83867 =
+> @@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
+>  	int ret, val, bs;
+>  	u16 delay;
+>  
+> +	/* Force speed optimization for the PHY even if it strapped */
+> +	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
+> +			 DP83867_SPEED_OPTIMIZED_EN);
 
-> 
-> > > Returning -EEXIST is an ABI change, e.g. userspace can currently call
-> > > KVM_SET_TSS_ADDR any number of times, it just needs to ensure proper
-> > > serialization between calls.
-> > > 
-> > > If you want to change the ABI, then submit a patch to do exactly that.
-> > > But don't bury an ABI change under the pretense that it's a bug fix.
-> > 
-> > Could you explain what do you mean by "ABI change"?
-> > 
-> > I was talking about the original code, not after applying the
-> > patchset.  To be explicit, I mean [a] below:
-> > 
-> > int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size,
-> > 			    unsigned long *uaddr)
-> > {
-> > 	int i, r;
-> > 	unsigned long hva;
-> > 	struct kvm_memslots *slots = kvm_memslots(kvm);
-> > 	struct kvm_memory_slot *slot, old;
-> > 
-> > 	/* Called with kvm->slots_lock held.  */
-> > 	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
-> > 		return -EINVAL;
-> > 
-> > 	slot = id_to_memslot(slots, id);
-> > 	if (size) {
-> > 		if (slot->npages)
-> > 			return -EEXIST;  <------------------------ [a]
-> >         }
-> >         ...
-> > }
-> 
-> Doh, I completely forgot that the second __x86_set_memory_region() would
-> fail.  Sorry :-(
-> 
-> > > > Yes, but as I mentioned, I don't think it's an issue to be considered
-> > > > by KVM, otherwise we should have the same issue all over the places
-> > > > when we fetch the cached userspace_addr from any user slots.
-> > > 
-> > > Huh?  Of course it's an issue that needs to be considered by KVM, e.g.
-> > > kvm_{read,write}_guest_cached() aren't using __copy_{to,}from_user() for
-> > > giggles.
-> > 
-> > The cache is for the GPA->HVA translation (struct gfn_to_hva_cache),
-> > we still use __copy_{to,}from_user() upon the HVAs, no?
-> 
-> I'm still lost on this one.  I'm pretty sure I'm incorrectly interpreting:
->   
->   I don't think it's an issue to be considered by KVM, otherwise we should
->   have the same issue all over the places when we fetch the cached
->   userspace_addr from any user slots.
-> 
-> What is the issue to which you are referring?
+Here phy_set_bits() would be easier.
 
-The issue I was referring to is "HVA can be unmapped by the userspace
-without KVM's notice".  I think actually we're on the same page too
-here, my follow-up question is really a pure question for when you say
-"kvm_{read,write}_guest_cached() aren't using __copy_{to,}from_user()"
-above - because that's against my understanding.
-
--- 
-Peter Xu
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = dp83867_verify_rgmii_cfg(phydev);
+>  	if (ret)
+>  		return ret;
+> @@ -655,6 +701,8 @@ static struct phy_driver dp83867_driver[] = {
+>  		.config_init	= dp83867_config_init,
+>  		.soft_reset	= dp83867_phy_reset,
+>  
+> +		.read_status	= dp83867_read_status,
+> +
+>  		.get_wol	= dp83867_get_wol,
+>  		.set_wol	= dp83867_set_wol,
+>  
+> 
 
