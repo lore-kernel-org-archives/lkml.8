@@ -2,148 +2,96 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA4DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52A8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8B6206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pF5+CXBC"
+	by mail.kernel.org (Postfix) with ESMTP id A855720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580436975;
+	bh=tyJKzLA16be5mNz2EBj3faXgdYPo6KX3V43I+YCflTI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KfJQB0uNOTn+ZeO4pHnQgNH/kdVhFeYdYbQnsyPsB5AEC5DNXkjh1CrA97Iz/MtRL
+	 KPim+kJCfjGgedeROFwx+yCIh8V82PKZnpMrXPwLJgLp7ke8+xFoQSAsRl2XTn5Mff
+	 Ay+ISkWi/UFgcgHncmlWVIZZIMc9FkM6cMQNkr8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgAaCME (ORCPT
+        id S1727831AbgAaCQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:12:04 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34222 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727749AbgAaCMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:12:03 -0500
-Received: by mail-yw1-f65.google.com with SMTP id b186so3238549ywc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 18:12:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=Huel3zFKgNIhqpbw2Xk27XJrJ68skwtEJsm+LSUkbX8=;
-        b=pF5+CXBCyELbrWbAjEiWE+iO5Sp8EwimN3IRJWeXlaFSEPPs1Up5Jjlqhr43/0saRf
-         bh7omFofTHTKPYA6cUtmv6OexLG+yLnwjOLCaOQox78m9yHhfArmopWhjqNMKadAy5Iq
-         udC4I/4vOUwBIc4iEy7wxrjTuYTIYlJTvyeV5o/wF6WCb+vRGctiHA8Ff1rqrSxMa+cF
-         vU5xPBXK+6wK2ICIa5T56LzdkKk1e6jBCUdhRxeE6+1Ha10SRWagULLhdwIIFpsBZywp
-         fu8At9Cd2KT2xMLRJs1JlqYX+u7pbHLFbNUF/0g+YWwXQPAhK56cSDyEK85c7sa+pQJd
-         WSJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=Huel3zFKgNIhqpbw2Xk27XJrJ68skwtEJsm+LSUkbX8=;
-        b=keXnC58rBvG6YMYal1WWoqfuxSKLE2FZ3PaZ2pH5aK79/gri3BT5jzbgHl9oZ4TxnU
-         g40duwbVEwgj8QShEBIVXUGJwQlgvcCyBXR/9azJjCLuSdph0+2cqNNB0AsPYR71kD7T
-         N9WM4xa9nLUNjgBj6xWRVs8vK39dIufZge2gqYWiFnZ00dW01Wd+vZB325wdflK/5cDi
-         Gxarg4h4G6B0dQ9HcSoOGNHfB4Jtb6nGhMS7hqEHnHIqHIpDeu/BraDpEtKwLoxKv5wj
-         /2dat5KIwpPZ5EOktpNVwUT28LKJlwsooO9u9cRgdSWZYryvDpOXcFCpLT+6CMNaqs7c
-         s5xw==
-X-Gm-Message-State: APjAAAUuv+tlrhj5+LgypYFCWFUWFrBJHyv5LUFoGnmGd/Wy3/HnE7HE
-        NW7p2ASrGBUMBa7oT71DrsI=
-X-Google-Smtp-Source: APXvYqx+bdlF25sone00aZxJdABrs8lY0EG9CsH4rUgzJuPW4fRAqqn9WndwryRJCKj3CRrNk5ZJkQ==
-X-Received: by 2002:a81:4e0f:: with SMTP id c15mr5839406ywb.131.1580436722780;
-        Thu, 30 Jan 2020 18:12:02 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o189sm3523524ywe.15.2020.01.30.18.12.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jan 2020 18:12:02 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] x86: Fix static memory detection
-Date:   Thu, 30 Jan 2020 18:11:59 -0800
-Message-Id: <20200131021159.9178-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 Jan 2020 21:16:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727779AbgAaCQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:16:14 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E66206F0;
+        Fri, 31 Jan 2020 02:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580436974;
+        bh=tyJKzLA16be5mNz2EBj3faXgdYPo6KX3V43I+YCflTI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=naQx0E8TmVLVXc/yB0+otsJ3q2KIhHCnxBgDTYtppdT5Y26k7wkvZykakj9qBy608
+         g2ovdKkyHPtcL2CzV5Ue0H58FpBp6X7DhhCv8iVr8JTITI5ba7U+7mBY/SB8LjC3TI
+         32/VezsBlEl54vLgzoFT4LRgjVRBHlK8PnH/PgPs=
+Date:   Thu, 30 Jan 2020 18:16:13 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v4 2/2] kasan: add test for invalid size in memmove
+Message-Id: <20200130181613.1bfb8df8e73a280512cab8ef@linux-foundation.org>
+In-Reply-To: <1580355838.11126.5.camel@mtksdccf07>
+References: <20191112065313.7060-1-walter-zh.wu@mediatek.com>
+        <619b898f-f9c2-1185-5ea7-b9bf21924942@virtuozzo.com>
+        <1580355838.11126.5.camel@mtksdccf07>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting x86 images in qemu, the following warning is seen
-randomly if DEBUG_LOCKDEP is enabled.
+On Thu, 30 Jan 2020 11:43:58 +0800 Walter Wu <walter-zh.wu@mediatek.com> wrote:
 
-WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:1119
-	lockdep_register_key+0xc0/0x100
+> On Fri, 2019-11-22 at 06:21 +0800, Andrey Ryabinin wrote:
+> > 
+> > On 11/12/19 9:53 AM, Walter Wu wrote:
+> > > Test negative size in memmove in order to verify whether it correctly
+> > > get KASAN report.
+> > > 
+> > > Casting negative numbers to size_t would indeed turn up as a large
+> > > size_t, so it will have out-of-bounds bug and be detected by KASAN.
+> > > 
+> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > 
+> > Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> 
+> Hi Andrey, Dmitry, Andrew,
+> 
+> Would you tell me why this patch-sets don't merge into linux-next tree?
+> We lost something?
+> 
 
-static_obj() returns true if an address is between _stext and _end.
-On x86, this includes the brk memory space. Problem is that this
-memory block is not static on x86; its unused portions are released
-after init and can be allocated. This results in the observed warning
-if a lockdep object is allocated from this memory.
-
-Solve the problem by implementing arch_is_kernel_initmem_freed()
-for x86 and have it return true if an address is within the released
-memory range.
-
-The same problem was solved for s390 with commit 7a5da02de8d6e
-("locking/lockdep: check for freed initmem in static_obj()"), which
-introduced arch_is_kernel_initmem_freed().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/x86/include/asm/sections.h | 20 ++++++++++++++++++++
- arch/x86/kernel/setup.c         |  1 -
- 2 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
-index 036c360910c5..a6e8373a5170 100644
---- a/arch/x86/include/asm/sections.h
-+++ b/arch/x86/include/asm/sections.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_SECTIONS_H
- #define _ASM_X86_SECTIONS_H
- 
-+#define arch_is_kernel_initmem_freed arch_is_kernel_initmem_freed
-+
- #include <asm-generic/sections.h>
- #include <asm/extable.h>
- 
-@@ -14,4 +16,22 @@ extern char __end_rodata_hpage_align[];
- 
- extern char __end_of_kernel_reserve[];
- 
-+extern unsigned long _brk_start, _brk_end;
-+
-+static inline bool arch_is_kernel_initmem_freed(unsigned long addr)
-+{
-+	/*
-+	 * If _brk_start has not been cleared, brk allocation is incomplete,
-+	 * and we can not make assumptions about its use.
-+	 */
-+	if (_brk_start)
-+		return 0;
-+
-+	/*
-+	 * After brk allocation is complete, space between _brk_end and _end
-+	 * is available for allocation.
-+	 */
-+	return addr >= _brk_end && addr < (unsigned long)&_end;
-+}
-+
- #endif	/* _ASM_X86_SECTIONS_H */
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 1e4c20a1efec..08f5ceed70e0 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -64,7 +64,6 @@ RESERVE_BRK(dmi_alloc, 65536);
-  * at link time, with RESERVE_BRK*() facility reserving additional
-  * chunks.
-  */
--static __initdata
- unsigned long _brk_start = (unsigned long)__brk_base;
- unsigned long _brk_end   = (unsigned long)__brk_base;
- 
--- 
-2.17.1
+In response to [1/2] Andrey said "So let's keep this code as this" and
+you said "I will send a new v5 patch tomorrow".  So we're awaiting a v5
+patchset?
 
