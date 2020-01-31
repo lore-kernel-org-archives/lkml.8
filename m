@@ -2,94 +2,148 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF2C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4893DC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74989206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADA4206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gv34zOU5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GoYqswts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgAaJ67 (ORCPT
+        id S1728291AbgAaKBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:58:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20708 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728271AbgAaJ66 (ORCPT
+        Fri, 31 Jan 2020 05:01:13 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:56100 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgAaKBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:58:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580464737;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=pM0c0LfCmKVDajSmt5fafYF9h1wpifXzFg1uGepQ6zc=;
-        b=gv34zOU5LvA6Cm0FBUSE8PRDJBTVkPEFRlAezmC4+99P9atJSJ9p9InahGgmdhLI7xxPcd
-        88S5N1JYUmOWlmbpVKJkJjgjEC8WeOjOTIv798eAjj8JWWaLCHLec0YQSiB3CLBXjL2dne
-        xcj0uKH5pq2nXNv3SSVjnf7/rJgg6oQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-gcltkZgOPJKRkg8LHAmksw-1; Fri, 31 Jan 2020 04:58:50 -0500
-X-MC-Unique: gcltkZgOPJKRkg8LHAmksw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B72D9A0CBF;
-        Fri, 31 Jan 2020 09:58:49 +0000 (UTC)
-Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C18C45D9E5;
-        Fri, 31 Jan 2020 09:58:48 +0000 (UTC)
-Date:   Fri, 31 Jan 2020 10:58:46 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.35.1
-Message-ID: <20200131095846.ogjtqrs7ai774tka@ws.net.home>
+        Fri, 31 Jan 2020 05:01:12 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id C790F3FD13;
+        Fri, 31 Jan 2020 11:01:09 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GoYqswts;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SHs2n_T6gOEa; Fri, 31 Jan 2020 11:01:08 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 243553FC05;
+        Fri, 31 Jan 2020 11:01:07 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 714F1360093;
+        Fri, 31 Jan 2020 11:01:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1580464867; bh=fAsEaB9XUES6Qvb9+NO+aU7Kv7uOMIgjlqELbkBztfo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GoYqswts+r1eIgAFejbB8049UuZsWY2tUAMf9kM07OHNyvFVEGxt3Ctq+W35kN3rz
+         uiEc4fxS9GEx4D3NH1HhU8Bl+LSwE+enaE0OB/2jFRn7Q67ppqn2HlUggXj5prsv8V
+         YKI37tidhdfb5a+kRPd9Rg4fhD5zQXaWuqgWcHRE=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Steven Price <steven.price@arm.com>
+Subject: [PATCH] mm/mapping_dirty_helpers: Update huge page-table entry callbacks
+Date:   Fri, 31 Jan 2020 11:00:52 +0100
+Message-Id: <20200131100052.58761-1-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-The util-linux stable release v2.35.1 is available at:
-            
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.35/
+Following the update of pagewalk code
+commit a07984d48146 ("mm: pagewalk: add p4d_entry() and pgd_entry()")
+we can modify the mapping_dirty_helpers' huge page-table entry callbacks
+to avoid splitting when a huge pud or -pmd is encountered.
+
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Cc: Steven Price <steven.price@arm.com>
+---
+ mm/mapping_dirty_helpers.c | 42 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
+
+diff --git a/mm/mapping_dirty_helpers.c b/mm/mapping_dirty_helpers.c
+index 71070dda9643..2c7d03675903 100644
+--- a/mm/mapping_dirty_helpers.c
++++ b/mm/mapping_dirty_helpers.c
+@@ -111,26 +111,60 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
+ 	return 0;
+ }
  
-Feedback and bug reports, as always, are welcomed.
+-/* wp_clean_pmd_entry - The pagewalk pmd callback. */
++/*
++ * wp_clean_pmd_entry - The pagewalk pmd callback.
++ *
++ * Dirty-tracking should take place on the PTE level, so
++ * WARN() if encountering a dirty huge pmd.
++ * Furthermore, never split huge pmds, since that currently
++ * causes dirty info loss. The pagefault handler should do
++ * that if needed.
++ */
+ static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			      struct mm_walk *walk)
+ {
+-	/* Dirty-tracking should be handled on the pte level */
+ 	pmd_t pmdval = pmd_read_atomic(pmd);
  
-  Karel
-
-
-
-util-linux 2.35.1 Release Notes
-===============================
-
-build-sys:
-   - add --disable-hwclock-gplv3  [Karel Zak]
-chrt:
-   - Use sched_setscheduler system call directly  [jonnyh64]
-lib/randutils:
-   - use explicit data types for bit ops  [Karel Zak]
-libfdisk:
-   - fix __copy_partition()  [Karel Zak]
-   - make sure we use NULL after free  [Karel Zak]
-libmount:
-   - fix x- options use for non-root users  [Karel Zak]
-po:
-   - update uk.po (from translationproject.org)  [Yuri Chornoivan]
-sfdisk:
-   - make sure we do not overlap on --move  [Karel Zak]
-   - remove broken step alignment for --move  [Karel Zak]
-
++	if (!pmd_trans_unstable(&pmdval))
++		return 0;
++
++	if (pmd_none(pmdval)) {
++		walk->action = ACTION_AGAIN;
++		return 0;
++	}
++
++	/* Huge pmd, present or migrated */
++	walk->action = ACTION_CONTINUE;
+ 	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
+ 		WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval));
+ 
+ 	return 0;
+ }
+ 
+-/* wp_clean_pud_entry - The pagewalk pud callback. */
++/*
++ * wp_clean_pud_entry - The pagewalk pud callback.
++ *
++ * Dirty-tracking should take place on the PTE level, so
++ * WARN() if encountering a dirty huge puds.
++ * Furthermore, never split huge puds, since that currently
++ * causes dirty info loss. The pagefault handler should do
++ * that if needed.
++ */
+ static int wp_clean_pud_entry(pud_t *pud, unsigned long addr, unsigned long end,
+ 			      struct mm_walk *walk)
+ {
+-	/* Dirty-tracking should be handled on the pte level */
+ 	pud_t pudval = READ_ONCE(*pud);
+ 
++	if (!pud_trans_unstable(&pudval))
++		return 0;
++
++	if (pud_none(pudval)) {
++		walk->action = ACTION_AGAIN;
++		return 0;
++	}
++
++	/* Huge pud */
++	walk->action = ACTION_CONTINUE;
+ 	if (pud_trans_huge(pudval) || pud_devmap(pudval))
+ 		WARN_ON(pud_write(pudval) || pud_dirty(pudval));
+ 
 -- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+2.21.1
 
