@@ -2,107 +2,162 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BAEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEBFC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA8121734
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E558A2465B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="mBhwEQHD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LlE3h6by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgAaJSc (ORCPT
+        id S1728264AbgAaJTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:18:32 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54641 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgAaJSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:18:31 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 488BTw54LNz9sRR;
-        Fri, 31 Jan 2020 20:18:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580462309;
-        bh=cCI4WreJl9TPaQKBLWhchJurIy1jFBvqbedUEJxwYO0=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=mBhwEQHDz1XN3CYCwbbKhv0GeXIMwF6PpEKmhsU6baEkq/O5znNz1kxwO04DdH2cV
-         cQHk2ukvWfkffBL51JWySB3i6n7Xl7+K7RF1CR+iQJlUb4nIovevkPsf/8IiWcXORj
-         GnpcWStMenr/9iLqB+KmRYUxsIRmXjpWUw5hp3ZUkzSpP5jJKbtBG4k1xfmDmVRV+b
-         DxTrd/E5w6IIfyo7oKOaCcXqhx0VhKUuGDld1R6qNtw50PBEprXULq816EfAofOTaJ
-         iSMjmoBQSKBOxBN5hak7fA5eN3jYxhDXL/fQxIQu/+805iAC1oUuQmmADCj4gw1uOq
-         PWLBEBWRkYeDw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Alex Ghiti <alex@ghiti.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: Re: [PATCH v2] powerpc: Do not consider weak unresolved symbol relocations as bad
-In-Reply-To: <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
-References: <20200118170335.21440-1-alex@ghiti.fr> <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
-Date:   Fri, 31 Jan 2020 20:18:25 +1100
-Message-ID: <87wo98f0gu.fsf@mpe.ellerman.id.au>
+        Fri, 31 Jan 2020 04:19:08 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5733 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgAaJTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:19:07 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e33f0fc0000>; Fri, 31 Jan 2020 01:18:52 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 31 Jan 2020 01:19:06 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 31 Jan 2020 01:19:06 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
+ 2020 09:19:05 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jan 2020 09:19:06 +0000
+Received: from localhost.localdomain (Not Verified[10.21.133.51]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e33f1070000>; Fri, 31 Jan 2020 01:19:06 -0800
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
+Subject: [PATCH] Revert "ASoC: tegra: Allow 24bit and 32bit samples"
+Date:   Fri, 31 Jan 2020 09:19:01 +0000
+Message-ID: <20200131091901.13014-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580462332; bh=tiU1SfpaStOkJ6bQ2E30mw6f5GTzwb+oM/IkptsdS5k=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=LlE3h6byVFYfwkT5fY0SHwQMoZLsEXCO9SfRIsLT/dS4D1vvvSozqeBst/zTE/6Og
+         Z2oacZ6c9tyJg1bCfyoBih1xyX8x1tjRExAPhi47HzTbhtZLA0wgm5+I3rNI6oYcL0
+         d9d2c2ds1R2fBHbtF02i8ro2/7aNYWTn9K+Z6swwnybwMbIFNrZ17/WbKsCGIbAi43
+         wzGLTj1sUvaYGDb07oR5GnoDg7b+1Gm+M7UQjmG7jhlu871jQ9eIsEFevnmq0eZgZM
+         gxzl/c2VQtql1d7bFipw7TqPAcrItpz9Kvy57LwvMqp0IexMU4hoXbltHu5ZU60Qtm
+         isWSyMpaK20NQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex Ghiti <alex@ghiti.fr> writes:
-> On 1/18/20 12:03 PM, Alexandre Ghiti wrote:
->> Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
->> symbols that may be unresolved at link time which result in an absolute
->> relocation to 0. relocs_check.sh emits the following warning:
->>
->> "WARNING: 2 bad relocations
->> c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
->> c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
->>
->> whereas those relocations are legitimate even for a relocatable kernel
->> compiled with -pie option.
->>
->> relocs_check.sh already excluded some weak unresolved symbols explicitly:
->> remove those hardcoded symbols and add some logic that parses the symbols
->> using nm, retrieves all the weak unresolved symbols and excludes those from
->> the list of the potential bad relocations.
->>
->> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> ---
->>
->> Changes in v2:
->> - Follow Stephen advice of using grep -F instead of looping over weak symbols
->>    using read, patch is way smaller and cleaner.
->> - Add missing nm in comment
->>
->>   arch/powerpc/Makefile.postlink     |  4 ++--
->>   arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
->>   2 files changed, 14 insertions(+), 10 deletions(-)
->>
-...
->
-> Hi guys,
->
->
-> Any thought about that ?
->
-> I do think this patch makes the whole check about absolute relocations 
-> clearer.
-> And in the future, it will avoid anyone to spend some time on those 
-> "bad" relocations
-> which actually aren't.
+Commit f3ee99087c8ca0ecfdd549ef5a94f557c42d5428 ("ASoC: tegra: Allow
+24bit and 32bit samples") added 24-bit and 32-bit support for to the
+Tegra30 I2S driver. However, there are two additional commits that are
+also needed to get 24-bit and 32-bit support to work correctly. These
+commits are not yet applied because there are still some review comments
+that need to be addressed. With only this change applied, 24-bit and
+32-bit support is advertised by the I2S driver, but it does not work and
+the audio is distorted. Therefore, revert this patch for now until the
+other changes are also ready.
 
-Sorry I missed the v2. Will pick it up.
+Furthermore, a clock issue with 24-bit support has been identified with
+this change and so if we revert this now, we can also fix that in the
+updated version.
 
-cheers
+Cc: stable@vger.kernel.org
+
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ sound/soc/tegra/tegra30_i2s.c | 25 +++++--------------------
+ 1 file changed, 5 insertions(+), 20 deletions(-)
+
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index dbed3c5408e7..d59882ec48f1 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -127,7 +127,7 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	struct device *dev = dai->dev;
+ 	struct tegra30_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+ 	unsigned int mask, val, reg;
+-	int ret, sample_size, srate, i2sclock, bitcnt, audio_bits;
++	int ret, sample_size, srate, i2sclock, bitcnt;
+ 	struct tegra30_ahub_cif_conf cif_conf;
+ 
+ 	if (params_channels(params) != 2)
+@@ -137,19 +137,8 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	switch (params_format(params)) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
+ 		val = TEGRA30_I2S_CTRL_BIT_SIZE_16;
+-		audio_bits = TEGRA30_AUDIOCIF_BITS_16;
+ 		sample_size = 16;
+ 		break;
+-	case SNDRV_PCM_FORMAT_S24_LE:
+-		val = TEGRA30_I2S_CTRL_BIT_SIZE_24;
+-		audio_bits = TEGRA30_AUDIOCIF_BITS_24;
+-		sample_size = 24;
+-		break;
+-	case SNDRV_PCM_FORMAT_S32_LE:
+-		val = TEGRA30_I2S_CTRL_BIT_SIZE_32;
+-		audio_bits = TEGRA30_AUDIOCIF_BITS_32;
+-		sample_size = 32;
+-		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -181,8 +170,8 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	cif_conf.threshold = 0;
+ 	cif_conf.audio_channels = 2;
+ 	cif_conf.client_channels = 2;
+-	cif_conf.audio_bits = audio_bits;
+-	cif_conf.client_bits = audio_bits;
++	cif_conf.audio_bits = TEGRA30_AUDIOCIF_BITS_16;
++	cif_conf.client_bits = TEGRA30_AUDIOCIF_BITS_16;
+ 	cif_conf.expand = 0;
+ 	cif_conf.stereo_conv = 0;
+ 	cif_conf.replicate = 0;
+@@ -317,18 +306,14 @@ static const struct snd_soc_dai_driver tegra30_i2s_dai_template = {
+ 		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_96000,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE |
+-			   SNDRV_PCM_FMTBIT_S24_LE |
+-			   SNDRV_PCM_FMTBIT_S16_LE,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+ 	.capture = {
+ 		.stream_name = "Capture",
+ 		.channels_min = 2,
+ 		.channels_max = 2,
+ 		.rates = SNDRV_PCM_RATE_8000_96000,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE |
+-			   SNDRV_PCM_FMTBIT_S24_LE |
+-			   SNDRV_PCM_FMTBIT_S16_LE,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+ 	.ops = &tegra30_i2s_dai_ops,
+ 	.symmetric_rates = 1,
+-- 
+2.17.1
+
