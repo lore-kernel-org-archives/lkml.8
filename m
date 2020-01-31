@@ -2,75 +2,125 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9985C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9C3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD17920707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A494420CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgAaSzf (ORCPT
+        id S1726604AbgAaSzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:55:35 -0500
-Received: from mga18.intel.com ([134.134.136.126]:30623 "EHLO mga18.intel.com"
+        Fri, 31 Jan 2020 13:55:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32912 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgAaSze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:55:34 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 10:55:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
-   d="scan'208";a="253419672"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 31 Jan 2020 10:55:32 -0800
-Date:   Fri, 31 Jan 2020 10:55:32 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] KVM: x86: Set kvm_x86_ops only after
- ->hardware_setup() completes
-Message-ID: <20200131185531.GB18946@linux.intel.com>
-References: <20200130001023.24339-1-sean.j.christopherson@intel.com>
- <20200130001023.24339-6-sean.j.christopherson@intel.com>
- <44e0c550-7dcc-bfed-07c4-907e61d476a1@redhat.com>
+        id S1725939AbgAaSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 13:55:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 06371AC5F;
+        Fri, 31 Jan 2020 18:55:45 +0000 (UTC)
+Date:   Fri, 31 Jan 2020 19:55:31 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Steven Clarkson <sc@lambdal.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: Handle malformed SRAT tables during early ACPI
+ parsing
+Message-ID: <20200131185531.GC14851@zn.tnic>
+References: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <44e0c550-7dcc-bfed-07c4-907e61d476a1@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 06:44:09AM +0100, Paolo Bonzini wrote:
-> On 30/01/20 01:10, Sean Christopherson wrote:
-> > Set kvm_x86_ops with the vendor's ops only after ->hardware_setup()
-> > completes to "prevent" using kvm_x86_ops before they are ready, i.e. to
-> > generate a null pointer fault instead of silently consuming unconfigured
-> > state.
+On Thu, Jan 30, 2020 at 04:48:16PM -0800, Steven Clarkson wrote:
+> Break an infinite loop when early parsing SRAT caused by a subtable with
+> zero length. Known to affect the ASUS WS X299 SAGE motherboard with
+> firmware version 1201, which has a large block of zeros in its SRAT table.
+> The kernel could boot successfully on this board/firmware prior to the
+> introduction of early parsing this table.
 > 
-> What about even copying kvm_x86_ops by value, so that they can be
-> accessed with "kvm_x86_ops.callback()" and save one memory access?
+> Fixes: 02a3e3cdb7f1 ("x86/boot: Parse SRAT table and count immovable
+> memory regions")
+> Signed-off-by: Steven Clarkson <sc@lambdal.com>
+> ---
+>  arch/x86/boot/compressed/acpi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> index 25019d42ae93..1a4479c5edfc 100644
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -394,6 +394,12 @@ int count_immovable_mem_regions(void)
+> 
+>         while (table + sizeof(struct acpi_subtable_header) < table_end) {
+>                 sub_table = (struct acpi_subtable_header *)table;
+> +
+> +               if (!sub_table->length) {
+> +                       debug_putstr("Invalid zero length SRAT subtable.\n");
+> +                       break;
+> +               }
+> +
+>                 if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
+>                         struct acpi_srat_mem_affinity *ma;
+> 
+> -- 
 
-Oooh, I like that idea.  And {svm,vmx}_x86_ops could be marked __initdata
-to save a few bytes and force all the runtime stuff through kvm_x86_ops.
+Only in case you want to send patches in the future, see below.
+scripts/checkpatch.pl can do that checking for you before you send. I'll
+fix it up now.
+
+ERROR: code indent should use tabs where possible
+#37: FILE: arch/x86/boot/compressed/acpi.c:398:
++               if (!sub_table->length) {$
+
+WARNING: please, no spaces at the start of a line
+#37: FILE: arch/x86/boot/compressed/acpi.c:398:
++               if (!sub_table->length) {$
+
+WARNING: suspect code indent for conditional statements (15, 23)
+#37: FILE: arch/x86/boot/compressed/acpi.c:398:
++               if (!sub_table->length) {
++                       debug_putstr("Invalid zero length SRAT subtable.\n");
+
+ERROR: code indent should use tabs where possible
+#38: FILE: arch/x86/boot/compressed/acpi.c:399:
++                       debug_putstr("Invalid zero length SRAT subtable.\n");$
+
+WARNING: please, no spaces at the start of a line
+#38: FILE: arch/x86/boot/compressed/acpi.c:399:
++                       debug_putstr("Invalid zero length SRAT subtable.\n");$
+
+ERROR: code indent should use tabs where possible
+#39: FILE: arch/x86/boot/compressed/acpi.c:400:
++                       break;$
+
+WARNING: please, no spaces at the start of a line
+#39: FILE: arch/x86/boot/compressed/acpi.c:400:
++                       break;$
+
+ERROR: code indent should use tabs where possible
+#40: FILE: arch/x86/boot/compressed/acpi.c:401:
++               }$
+
+WARNING: please, no spaces at the start of a line
+#40: FILE: arch/x86/boot/compressed/acpi.c:401:
++               }$
+
+total: 4 errors, 5 warnings, 12 lines checked
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
