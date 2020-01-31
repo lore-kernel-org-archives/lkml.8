@@ -2,119 +2,125 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5D9C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FA3C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AC020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tFa2xXLP"
+	by mail.kernel.org (Postfix) with ESMTP id 4A6F5215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgAaJwd (ORCPT
+        id S1728296AbgAaJyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:52:33 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40447 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgAaJwd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:52:33 -0500
-Received: by mail-lf1-f68.google.com with SMTP id c23so4430903lfi.7;
-        Fri, 31 Jan 2020 01:52:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2zLinx65kFK53ILK1AcLmmd59Fu+8auTjozCt4FuyXc=;
-        b=tFa2xXLPMfbQa4Lg+mSI8s/TlT4TEzvbjICetoMKNxdwsGqzYXd99yW1obFpVYoOS4
-         f8Gbz5MIV2/PXrL+s/pjZtrbShpOtC2tKv+BLM5WSbYiBfTxAXxn5fa9/SyBtl5oHAdE
-         OSnzwoFVXEhFweNJQ0O0/gS3uMzcAgcfrEOJ5Czh3qv4KSoxVWzGDiNr/QV1Ne4UJ+n8
-         1WSiDCeF31WdwWWjWg9C1Q9fYze+ZMMgpDo1L3z0c/izJuNZw6VnInN3LoxbA8yeEWMp
-         RTIt6xMq7wgtger92/GnJMXCeje8Cv1s+uiRxVEaDF/U2VIWd0T1AzS667H57mwt6iwn
-         VrnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2zLinx65kFK53ILK1AcLmmd59Fu+8auTjozCt4FuyXc=;
-        b=Bynxe7cbs/20JuuUp/Bv7LvTnz6LOS+Z+YSR04hwl5gQSi1uDI3vIsocRiBZK2nfUK
-         a/2nKKLzb/xlwlFQKmhZqSJw0uW96ITbWZQ/58FbXFkT/c7K3YU4gx3sM/sHPeQaQoE8
-         bR+7lqg0teRZE8XTpKy4Bd44Ae0SdtzhHcd6Wh3lu9be1OhnIwySoXJ6kyuJgK92uHvU
-         wD/xqzA/fFcq6TYnAbjDZnj6qi6J4CwEMEStbONUfWt3N9/Y2gXY0a9ute6qc2OPacZi
-         LF7xW05e0LTG0WmPqE/IZGC0ChDgeWRymxYBSJJNQ8RtRtEYUo94Y8AY4SJZtRJw0AkX
-         Vv+Q==
-X-Gm-Message-State: APjAAAXiWlKvqW5C1yQKi6GQjmuZioaj3Lu9kjAXsBBUO9Nt4RX0+oeh
-        /dIHt9dmCxTKC+8eVFklCBilCMdUmfo=
-X-Google-Smtp-Source: APXvYqzYXjb3R9IBvegkSpqNYMQIIrmty+2pa0JXh83XjZcPtPYUYfTGQjgzU3IyYAFO0mtvD25YyA==
-X-Received: by 2002:a19:9d0:: with SMTP id 199mr5092184lfj.110.1580464349406;
-        Fri, 31 Jan 2020 01:52:29 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id p9sm4380158ljg.55.2020.01.31.01.52.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 01:52:28 -0800 (PST)
-Subject: Re: [PATCH] splice: direct call for default_file_splice*()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <12375b7baa741f0596d54eafc6b1cfd2489dd65a.1579553271.git.asml.silence@gmail.com>
- <20200130165425.GA8872@infradead.org>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <239aacf6-5f8b-39f4-b4f0-e22de4c46b88@gmail.com>
-Date:   Fri, 31 Jan 2020 12:52:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 31 Jan 2020 04:54:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:33594 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbgAaJyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:54:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21ACA31B;
+        Fri, 31 Jan 2020 01:54:14 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.81])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B88FC3F68E;
+        Fri, 31 Jan 2020 01:54:13 -0800 (PST)
+Date:   Fri, 31 Jan 2020 09:54:12 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, sudeep.holla@arm.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
+        vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 4/6] Documentation: arm64: document support for the
+ AMU extension
+Message-ID: <20200131095412.GA17655@arm.com>
+References: <20191218182607.21607-1-ionela.voinescu@arm.com>
+ <20191218182607.21607-5-ionela.voinescu@arm.com>
+ <c9f80a08-7f0d-59e9-eb90-466b1314e1f1@arm.com>
+ <20200130164542.GC5208@arm.com>
+ <20200130182653.GA123407@ewhatever.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200130165425.GA8872@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130182653.GA123407@ewhatever.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/2020 7:54 PM, Christoph Hellwig wrote:
-> On Mon, Jan 20, 2020 at 11:49:46PM +0300, Pavel Begunkov wrote:
->> Indirect calls could be very expensive nowadays, so try to use direct calls
->> whenever possible.
+On Thursday 30 Jan 2020 at 18:26:53 (+0000), Suzuki K Poulose wrote:
+[..]
+> > > > +Firmware (code running at higher exception levels, e.g. arm-tf) support is
+> > > > +needed to:
+> > > > + - Enable access for lower exception levels (EL2 and EL1) to the AMU
+> > > > +   registers.
+> > > > + - Enable the counters. If not enabled these will read as 0.
+> > > > + - Save/restore the counters before/after the CPU is being put/brought up
+> > > > +   from the 'off' power state.
+> > > > +
+> > > > +When using kernels that have this configuration enabled but boot with
+> > > > +broken firmware the user may experience panics or lockups when accessing
+> > > > +the counter registers. Even if these symptoms are not observed, the
+> > > > +values returned by the register reads might not correctly reflect reality.
+> > > > +Most commonly, the counters will read as 0, indicating that they are not
+> > > > +enabled. If proper support is not provided in firmware it's best to disable
+> > > > +CONFIG_ARM64_AMU_EXTN.
+> > > 
+> > > For the sake of one kernel runs everywhere, do we need some other
+> > > mechanism to disable the AMU. e.g kernel parameter to disable amu
+> > > at runtime ?
+> > >
+> > 
+> > The reason I've not added this is twofold:
+> >  - Even if we add this, it should be in order to disable the use of the
+> >    counters for a certain purpose, in this case  frequency invariance.
+> >    On its own AMU provides the counters but it does not mandate their
+> >    use.
+> >  - I could add something to disable the use of the core and cycle
+> >    counters for frequency invariance at runtime, but I doubt that
+> >    anyone would use it. Logically it makes sense to use the counters
+> >    order to have a more accurate view of the performance that the CPUs
+> >    are actually providing. Therefore, until anyone asks for this, I
+> >    thought it's better to keep it simple and not add extra switches,
+> >    until there is a use for them.
+> > 
+> > Does it make sense?
 > 
-> ... and independent of that your new version is much shorter and easier
-> to read.  But it could be improved a tiny little bit further:
+> The comment is about addressing someone who must run an "AMU" enabled
+> kernel ("one kernel") on a system with potentially "broken firmware",
+> where there is no option to use the system as you mention above,
+> the firmware could panic. How common is the "broken firmware" ?
+> Right now there is no way to ensure "firmware" is sane and if
+> someone detects that firmware is broken, there is no way to
+> disable the AMU if they are running a standard distro kernel.
+> A kernel parameter could prevent the AMU capability from
+> being detected on a broken system and thus make it usable
+> (without the AMU of course). Now, if the "broken firmware"
+> is extremely rare, we could simply ignore this case and
+> ignore the suggestion.
 > 
->>  	if (out->f_op->splice_write)
->> -		splice_write = out->f_op->splice_write;
->> +		return out->f_op->splice_write(pipe, out, ppos, len, flags);
->>  	else
->> -		splice_write = default_file_splice_write;
->> -
->> -	return splice_write(pipe, out, ppos, len, flags);
->> +		return default_file_splice_write(pipe, out, ppos, len, flags);
+> Suzuki
 > 
-> No need for the else after an return.
+>
 
-It generates identical binary. For this to not look sloppy, I'd add new
-line between, so the same 4 lines. And this looks better for me, but
-that's rather subjective.
+Sorry Suzuki, I initially interpreted the question independently from
+the context and only thought about cases where they are working
+correctly but users might want to disable the use of them.
 
-I don't think it's worth of changing. What's the benefit?
+In this case, I don't see any harm in adding a command line parameter
+to disable the use of the unit, even if it's only to support firmware
+that does not support AMU at all, rather than the implementation being
+broken.
 
-> 
->>  	if (in->f_op->splice_read)
->> -		splice_read = in->f_op->splice_read;
->> +		return in->f_op->splice_read(in, ppos, pipe, len, flags);
->>  	else
->> -		splice_read = default_file_splice_read;
->> -
->> -	return splice_read(in, ppos, pipe, len, flags);
->> +		return default_file_splice_read(in, ppos, pipe, len, flags);
-> 
-> Same here.
-> 
+I'm not really sure how common bad firmware would be. I suppose that
+firmware as bad as to cause firmware panics and lockups would be quite
+rare, but scenarios where firmware might not properly support AMU and
+result in kernel lockups could be more often, and this would handle
+both.
 
--- 
-Pavel Begunkov
+Thank you,
+Ionela.
