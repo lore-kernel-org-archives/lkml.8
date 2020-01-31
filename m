@@ -2,87 +2,106 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A01C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC13C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6E320705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56A92082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580445659;
-	bh=Bbr++OnXBXhqhAyAZhPj/qZKB5lXnDFMudS/JAsHFzE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=V8++QJlqv2CDbyi4I7/Dfec5Iw90kGZDvzlX+u1Od/oDUz/CPTp4MtM8/BZ6xLCwV
-	 V6RkU4Rl+TEMgZB7c48py7RV3qLOOXxn/S6/GsrF6pRyMKvnX+yU10IEIk/5687TXp
-	 D2m2zgKhWAFIt8E4bRjf6Y9AwG/Vz3Ma+nqM+RE0=
+	s=default; t=1580445743;
+	bh=vrX3/6pwu1fAAx+7ajC/iDE0rq9jlf4ifOVKqF5c5jw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=t1GV/4j6SBVsBVHt7umuWFgJqgagGpGm/psu7tUxVZELFTxHRyoJQVAHB94pmvzah
+	 xJ1rSzT4bNZgoi1FTzybs/49OkQzjvWhUNsdTyvMzJ5SQiVGrmWDQpxy9WjSWpk+l3
+	 ymMI/Wqw2d0AZOVc0nsb0Gc/b2vY5W5fzQ2QkwVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgAaEk6 (ORCPT
+        id S1728060AbgAaEmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 23:40:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 23:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgAaEk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 23:40:58 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727987AbgAaEmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 23:42:22 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77E9320678;
-        Fri, 31 Jan 2020 04:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E2620705;
+        Fri, 31 Jan 2020 04:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580445657;
-        bh=Bbr++OnXBXhqhAyAZhPj/qZKB5lXnDFMudS/JAsHFzE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Gt15OhJjqxDRJHlLUMzWF547KFgBRGGF7BJAmEF2ePijeLvdfFncJ9nO520i7+HOx
-         LtBmZw4J5xUI9y47NACSkkgQWdhXwHmBDUX8Q4nbQQunnZQjPlkrlowNQ1yv45gDqq
-         QmqaHJzOeZH9f4tiL3NLQqo0+ZAFAE0bY/pKhrl4=
-Subject: Re: [PATCH 4.19 00/55] 4.19.101-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200130183608.563083888@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f117c42c-bb11-e006-01ba-cbf3099eb177@kernel.org>
-Date:   Thu, 30 Jan 2020 21:40:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        s=default; t=1580445742;
+        bh=vrX3/6pwu1fAAx+7ajC/iDE0rq9jlf4ifOVKqF5c5jw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=lwIbH048z9e6sY/ayc2ASfw0Wd7frbTi30V5UKrUdKj0zv+olj7kg7mgLrGgzZJT5
+         tJlTjr5OWbHUh7gLSws93FvQjpEP7bVzZIj9MxJ9E9ZuulILEwk44YVye/dcK8CZ84
+         4zopYZKcxjAmg3sQAjGpR4mgiJZHggT4MvGow9aA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AF9303521386; Thu, 30 Jan 2020 20:42:21 -0800 (PST)
+Date:   Thu, 30 Jan 2020 20:42:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Jules Irenge <jbi.octave@gmail.com>, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        jiangshanlai@gmail.com, mathieu.desnoyers@efficios.com,
+        rostedt@goodmis.org, josh@joshtriplett.org, rcu@vger.kernel.org
+Subject: Re: [PATCH 2/2] rcu/nocb: Add missing annotation for
+ rcu_nocb_bypass_unlock()
+Message-ID: <20200131044221.GN2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <0/2>
+ <cover.1580337836.git.jbi.octave@gmail.com>
+ <59087bdc398a69ac743ee3e5cfa0bd26495881e3.1580337836.git.jbi.octave@gmail.com>
+ <20200131005952.GD83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131005952.GD83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 11:38 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.101 release.
-> There are 55 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jan 31, 2020 at 08:59:52AM +0800, Boqun Feng wrote:
+> On Thu, Jan 30, 2020 at 12:30:09AM +0000, Jules Irenge wrote:
+> > Sparse reports warning at rcu_nocb_bypass_unlock()
+> > 
+> > warning: context imbalance in rcu_nocb_bypass_unlock() - unexpected unlock
+> > 
+> > The root cause is a missing annotation of rcu_nocb_bypass_unlock()
+> > which causes the warning.
+> > 
+> > Add the missing __releases(&rdp->nocb_bypass_lock) annotation.
+> > 
+> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > 
-> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.101-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Acked-by: Boqun Feng <boqun.feng@gmail.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+Applied, thank you both!
 
-thanks,
--- Shuah
+							Thanx, Paul
+
+> > ---
+> >  kernel/rcu/tree_plugin.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 9d21cb07d57c..8783d19a58b2 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -1553,6 +1553,7 @@ static bool rcu_nocb_bypass_trylock(struct rcu_data *rdp)
+> >   * Release the specified rcu_data structure's ->nocb_bypass_lock.
+> >   */
+> >  static void rcu_nocb_bypass_unlock(struct rcu_data *rdp)
+> > +	__releases(&rdp->nocb_bypass_lock)
+> >  {
+> >  	lockdep_assert_irqs_disabled();
+> >  	raw_spin_unlock(&rdp->nocb_bypass_lock);
+> > -- 
+> > 2.24.1
+> > 
