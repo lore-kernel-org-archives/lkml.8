@@ -2,148 +2,98 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E112AC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3E4C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C187824681
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79252206D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580486517;
+	bh=zJ3whwCOn2Fu/3s7uy/4141lvnl61qc5tjHNWTZ0weM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XdN4WoP7dxfvjxg8IhXZ7FQWyO4qVj4nfgR1JfRbJ/j6yAGYW4qjVezshFK0uJlau
+	 Zr4F3/SGCsusyjeV1VsbF3fFaZ4f1X3Jx1c3okKx9b0irwRx5/VeVh7ve96QCl++wY
+	 jCzJGESju4QbEtToYs6RQGnxqHf8AV9BALyeMK4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgAaP74 (ORCPT
+        id S1729222AbgAaQB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:59:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:37102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbgAaP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:59:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA5FDFEC;
-        Fri, 31 Jan 2020 07:59:54 -0800 (PST)
-Received: from [10.37.12.54] (unknown [10.37.12.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45BF73F68E;
-        Fri, 31 Jan 2020 07:59:47 -0800 (PST)
-Subject: Re: [PATCH 1/3] ARM: exynos_defconfig: Enable SCHED_MC
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
- <20200127215453.15144-2-lukasz.luba@arm.com>
- <CAJKOXPedRc3ag6DDUAXSbHk8JcAZbug5HSss9wb8YyLkP7MLaw@mail.gmail.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <ae021317-8fda-2bb2-2080-1304fda1420c@arm.com>
-Date:   Fri, 31 Jan 2020 15:59:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 11:01:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35748 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728846AbgAaQB4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:01:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g17so9268158wro.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:01:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8hfD+a+L2dxb7XwM4BrTUPq0v1gyUGRH/2kK3KgUx3U=;
+        b=fnPnbB/ARfrFiNxpo509AXL6qFppPiF3BYstlb8VSE1mbFaQn0x+g0fzYbmnHdBINR
+         ymrTya+bCnUuMwErQZV4r+QbOOYQjpB8rCpNmntZoB+fZHq7adF2u8e7TGGgSMFPrlcA
+         hxsoKNp8bgvNDFIJeHJ/+S5dskflb3lg1lxhwurCVlFMTV2xZ+Zca1Ie/eFBrRjwjCBg
+         kf9yQHV/+JBAXvD0tz8ccy23VHzJtkwt3ZhKH8f7dAXPSzFhkLdhN6WMaAbp2NDDVOEs
+         MalgjCa417wFchciJ72yy0ZQFII34G1baAbz0IQv0c1ZVfps+SAuU2+zfDigiiiQaA3V
+         MMRA==
+X-Gm-Message-State: APjAAAXXl3qc89xywHm7fkJMFp4vjtwZac2/XMN4xy1mdwL0juuVpUCN
+        +dvmPx98UP8moM4OtRW55jo=
+X-Google-Smtp-Source: APXvYqwmnZwvGFTziucXbfEgzg/Yf/xRwiRsszjeLcoGlAbiusYEE8q3z+TQJFkFc2ZyPjcYRe5S8w==
+X-Received: by 2002:adf:dfcf:: with SMTP id q15mr12712122wrn.404.1580486513732;
+        Fri, 31 Jan 2020 08:01:53 -0800 (PST)
+Received: from localhost (ip-37-188-238-177.eurotel.cz. [37.188.238.177])
+        by smtp.gmail.com with ESMTPSA id s8sm11591855wrt.57.2020.01.31.08.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 08:01:52 -0800 (PST)
+Date:   Fri, 31 Jan 2020 17:01:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        hannes@cmpxchg.org, shakeelb@google.com, vdavydov.dev@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: Allocate shrinker_map on appropriate NUMA node
+Message-ID: <20200131160151.GB4520@dhcp22.suse.cz>
+References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
+ <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com>
+ <5f3fc9a9-9a22-ccc3-5971-9783b60807bc@virtuozzo.com>
+ <20200131154735.GA4520@dhcp22.suse.cz>
+ <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPedRc3ag6DDUAXSbHk8JcAZbug5HSss9wb8YyLkP7MLaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-
-Thank you for your review, please see my comments below.
-
-On 1/31/20 12:47 PM, Krzysztof Kozlowski wrote:
-> On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
->>
->> From: Lukasz Luba <lukasz.luba@arm.com>
->>
->> Since the 'capacities-dmips-mhz' are present in the CPU nodes, make use of
->> this knowledge in smarter decisions during scheduling.
->>
->> The values in 'capacities-dmips-mhz' are normilized, this means that i.e.
->> when CPU0's capacities-dmips-mhz=100 and CPU1's 'capacities-dmips-mhz'=50,
->> cpu0 is twice fast as CPU1, at the same frequency. The proper hirarchy
->> in sched_domain topology could exploit the SoC architecture advantages
->> like big.LITTLE.
+On Fri 31-01-20 18:49:24, Kirill Tkhai wrote:
+> On 31.01.2020 18:47, Michal Hocko wrote:
+> > On Fri 31-01-20 18:00:51, Kirill Tkhai wrote:
+> > [...]
+> >> @@ -333,8 +333,9 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
+> >>  		/* Not yet online memcg */
+> >>  		if (!old)
+> >>  			return 0;
+> >> -
+> >> -		new = kvmalloc(sizeof(*new) + size, GFP_KERNEL);
+> >> +		/* See comment in alloc_mem_cgroup_per_node_info()*/
+> >> +		tmp = node_state(nid, N_NORMAL_MEMORY) ? nid : NUMA_NO_NODE;
+> >> +		new = kvmalloc_node(sizeof(*new) + size, GFP_KERNEL, tmp);
+> >>  		if (!new)
+> >>  			return -ENOMEM;
+> > 
+> > I do not think this is a good pattern to copy. Why cannot you simply use
+> > kvmalloc_node with the given node? The allocator should fallback to the
+> > closest node if the given one doesn't have any memory.
 > 
-> I do not quite get how this is related to rationale behind changing defconfig...
+> Hm, why isn't the same scheme used in alloc_mem_cgroup_per_node_info() then?
 
-It is not strictly about EAS, it is useful in general for big.LITTLE
-platform with clusters.
-
-> 
->> Enabling the SCHED_MC will create two levels in
->> sched_domain hierarchy, which might be observed in:
-> 
-> This is looks more convincing... but still what is the need? To work with EAS?
-
-It is not only for EAS, but in general for the scheduler (load balance,
-task's wake-up path, etc). The scheduler algorithms iterate CPUs in the
-sched groups. To make better decisions, the information about MC domain
-is needed. More about the scheduler domains and i.e. load_balance()
-you can find here:
-
-https://www.kernel.org/doc/html/latest/scheduler/sched-domains.html
-
-
-> 
->> grep . /proc/sys/kernel/sched_domain/cpu*/domain*/{name,flags}
->> /proc/sys/kernel/sched_domain/cpu0/domain0/name:MC
->> /proc/sys/kernel/sched_domain/cpu0/domain1/name:DIE
->> ...
->> /proc/sys/kernel/sched_domain/cpu0/domain0/flags:575
->> /proc/sys/kernel/sched_domain/cpu0/domain1/flags:4223
-> 
-> Not related to defconfig change and not visible after this commit.
-
-Without this patch there is only one domain: 'domain0' -> 'DIE'
-cat /proc/sys/kernel/sched_domain/cpu0/domain0/name
-DIE
-
-When you apply this patch you will get two: 'domain0, 'domain1'
-grep . /proc/sys/kernel/sched_domain/cpu0/domain?/name 
-
-/proc/sys/kernel/sched_domain/cpu0/domain0/name:MC
-/proc/sys/kernel/sched_domain/cpu0/domain1/name:DIE
-
-I can remove it this information, but it is the most important
-to spot this difference out.
-
-This is also the main reason I haven't merge the patch 1 + 3.
-
-Regards,
-Lukasz
-
-> 
-> Best regards,
-> Krzysztof
-> 
->>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
->>   arch/arm/configs/exynos_defconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
->> index e7e4bb5ad8d5..1db857056992 100644
->> --- a/arch/arm/configs/exynos_defconfig
->> +++ b/arch/arm/configs/exynos_defconfig
->> @@ -8,6 +8,7 @@ CONFIG_PERF_EVENTS=y
->>   CONFIG_ARCH_EXYNOS=y
->>   CONFIG_CPU_ICACHE_MISMATCH_WORKAROUND=y
->>   CONFIG_SMP=y
->> +CONFIG_SCHED_MC=y
->>   CONFIG_BIG_LITTLE=y
->>   CONFIG_NR_CPUS=8
->>   CONFIG_HIGHMEM=y
->> --
->> 2.17.1
->>
+Dunno, it's an old code. Probably worth cleaning up.
+-- 
+Michal Hocko
+SUSE Labs
