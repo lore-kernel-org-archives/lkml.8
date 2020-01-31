@@ -1,114 +1,200 @@
 Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE52C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF74C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8166A206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3340B206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="At7oNete"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gj+D0AFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgAaTzc (ORCPT
+        id S1726295AbgAaT52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:55:32 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36736 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgAaTzc (ORCPT
+        Fri, 31 Jan 2020 14:57:28 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57064 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgAaT51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:55:32 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so9092771edp.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:55:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cMM4l2AcsKr13k50NYp+NWAp7EWfl4QYfFE3hRDEQAE=;
-        b=At7oNeteomf3wB5fyZHm2CWn9mFXRDBhTwh+PUhh5j6de7UIKumKV+jituI0gZxoc8
-         byjKzHn3S59DR0+O/1HSZ+TBmFrnpSk8GXxA+Sj0oFQbMvF5+miDEiGaArrwjgbLm8wK
-         du2K4KReYZQvBN5lVGwkBxrCTh9zZppkIkkm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cMM4l2AcsKr13k50NYp+NWAp7EWfl4QYfFE3hRDEQAE=;
-        b=H4do/f5tlpMGB6jatZXkqZi8DmpfiDkB+S183nT8333BW9pLasCU+/vqXa/wE4l/Tr
-         QCjDceEdxW4z8TlChQDe15+bOlmnKvkE+S6zktMFg3dzfJpYH24/h80O2A7qe29NNC36
-         rjv4bt49KPHHzGNfXE/mnq+tsdX+hY227OJW0e02uD1S6kTVcTuZHOgnZkvkuSRTlw6J
-         Fcq/qsdgjasdmkSNBsoNzMV9/cOXpSmvuxzuEMj6JGPj6OtrYsaYObsd15ibcnK2aAKX
-         5jgM0iKfC1K8WoEl7FVw/Nn/ArUyG+JsVj57kfCoNlYvKIZ1XzBH+oIZUDSSr4ntjzzv
-         GvoQ==
-X-Gm-Message-State: APjAAAWyvwo25qgaLz5AWHKOxtreIyscw4nb313B5rk+99oCM9ceo9Sd
-        KOQNqnmrnhWxHpWg2q5VJ8/DT2dMJE4=
-X-Google-Smtp-Source: APXvYqwt9HcZY81TL3H4qxJWrQQ31Aq18vlRhZVWos8oRzhGxjiGMGrQMRqGredSciEiTC5jYT0sFA==
-X-Received: by 2002:a50:fd93:: with SMTP id o19mr2004875edt.28.1580500530217;
-        Fri, 31 Jan 2020 11:55:30 -0800 (PST)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id i11sm534607eds.23.2020.01.31.11.55.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 11:55:28 -0800 (PST)
-Received: by mail-ed1-f49.google.com with SMTP id dc19so9027050edb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:55:28 -0800 (PST)
-X-Received: by 2002:a17:906:7d5:: with SMTP id m21mr10793134ejc.356.1580500527743;
- Fri, 31 Jan 2020 11:55:27 -0800 (PST)
+        Fri, 31 Jan 2020 14:57:27 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvN6m083311;
+        Fri, 31 Jan 2020 13:57:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580500643;
+        bh=aKowKe42ihGou9BZv9xiLNDP/sParsGV17KSoR247LQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gj+D0AFE/W8Z1nTAgJa+J/leeSZHLH52eL7OyBUSPlWn1P40o8H70It5fpaHF3hhx
+         mSw5JfG/ypw/8fYKVO8DRW0RuE6oNSffQqNI7zyTp+GdTz+hvjKs72obdElTbTYHeJ
+         qJefTnLOc+wcuQVsrYIOKvY+Wi1ycoJ7q2Gvc+fM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VJvNs2051034
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 13:57:23 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 13:57:22 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 13:57:22 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvMZJ044834;
+        Fri, 31 Jan 2020 13:57:22 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+ <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
+ <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
+ <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
+ <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <07701542-2a94-7333-6682-a8e8986ea6d4@ti.com>
+Date:   Fri, 31 Jan 2020 13:54:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200131002750.257358-1-zwisler@google.com> <20200131004558.GA6699@bombadil.infradead.org>
-In-Reply-To: <20200131004558.GA6699@bombadil.infradead.org>
-From:   Ross Zwisler <zwisler@chromium.org>
-Date:   Fri, 31 Jan 2020 12:55:16 -0700
-X-Gmail-Original-Message-ID: <CAGRrVHytokoWWok8uz3vVHuEn3bOkedc5pS1Lk3k4UtUvwPZig@mail.gmail.com>
-Message-ID: <CAGRrVHytokoWWok8uz3vVHuEn3bOkedc5pS1Lk3k4UtUvwPZig@mail.gmail.com>
-Subject: Re: [PATCH v4] Add a "nosymfollow" mount option.
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Mattias Nissler <mnissler@chromium.org>,
-        Benjamin Gordon <bmgordon@google.com>,
-        Raul Rangel <rrangel@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 5:46 PM Matthew Wilcox <willy@infradead.org> wrote:
-> On Thu, Jan 30, 2020 at 05:27:50PM -0700, Ross Zwisler wrote:
-> > For mounts that have the new "nosymfollow" option, don't follow
-> > symlinks when resolving paths. The new option is similar in spirit to
-> > the existing "nodev", "noexec", and "nosuid" options. Various BSD
-> > variants have been supporting the "nosymfollow" mount option for a
-> > long time with equivalent implementations.
-> >
-> > Note that symlinks may still be created on file systems mounted with
-> > the "nosymfollow" option present. readlink() remains functional, so
-> > user space code that is aware of symlinks can still choose to follow
-> > them explicitly.
-> >
-> > Setting the "nosymfollow" mount option helps prevent privileged
-> > writers from modifying files unintentionally in case there is an
-> > unexpected link along the accessed path. The "nosymfollow" option is
-> > thus useful as a defensive measure for systems that need to deal with
-> > untrusted file systems in privileged contexts.
->
-> The openat2 series was just merged yesterday which includes a
-> LOOKUP_NO_SYMLINKS option.  Is this enough for your needs, or do you
-> need the mount option?
->
-> https://lore.kernel.org/linux-fsdevel/20200129142709.GX23230@ZenIV.linux.org.uk/
+Florian
 
-Thank you for the pointer.  No, I don't think that this really meets
-our needs because it requires code to be modified to use the new
-openat2 system call.  Our goal is to be able to place restrictions on
-untrusted user supplied filesystems so that legacy programs will be
-protected from malicious symlinks.
+On 1/31/20 1:29 PM, Florian Fainelli wrote:
+> On 1/31/20 11:14 AM, Dan Murphy wrote:
+>> Florian
+>>
+>> On 1/31/20 12:42 PM, Florian Fainelli wrote:
+>>> On 1/31/20 10:29 AM, Dan Murphy wrote:
+>>>> Florian
+>>>>
+>>>> On 1/31/20 11:49 AM, Florian Fainelli wrote:
+>>>>> On 1/31/20 7:11 AM, Dan Murphy wrote:
+>>>>>> Set the speed optimization bit on the DP83867 PHY.
+>>>>>> This feature can also be strapped on the 64 pin PHY devices
+>>>>>> but the 48 pin devices do not have the strap pin available to enable
+>>>>>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>>>> OK, but why and how does that optimization work exactly?
+>>>> I described this in the cover letter.  And it is explained in the data
+>>>> sheet Section 8.4.6.6
+>>> Sorry I complete missed that and just focused on the patch, you should
+>>> consider not providing a cover letter for a single patch, and especially
+>>> not when the cover letter contains more information than the patch
+>>> commit message itself.
+>> Sorry I usually give a cover letter to all my network related patches.
+>>
+>> Unless I misinterpreted David on his reply to me about cover letters.
+>>
+>> https://www.spinics.net/lists/netdev/msg617575.html
+> This was a 2 patches series, for which a cover letter is mandatory:
+>
+> but for single patches, there really is no need, and having to replicate
+> the same information in two places is just error prone.
+>
+>> And I seemed to have missed David on the --cc list so I will add him for
+>> v2.
+>>
+>> I was also asked not to provide the same information in the cover letter
+>> and the commit message.
+> The cover letter is meant to provide some background about choices you
+> have made, or how to merge the patches, or their dependencies, and
+> describe the changes in a big picture. The patches themselves are
+> supposed to be comprehensive.
+
+As always thank you for the guidance.  I will update the commit with 
+better information and remove the cover letter.
+
+
+>
+>> Either way I am ok with not providing a cover letter and updating the
+>> commit message with more information.
+>>
+>>
+>>>>>     Departing from
+>>>>> the BMSR reads means you possibly are going to introduce bugs and/or
+>>>>> incomplete information. For instance, you set phydev->pause and
+>>>>> phydev->asym_pause to 0 now, is there no way to extract what the link
+>>>>> partner has advertised?
+>>>> I was using the marvel.c as my template as it appears to have a separate
+>>>> status register as well.
+>>>>
+>>>> Instead of setting those bits in the call back I can call the
+>>>> genphy_read_status then override the duplex and speed based on the
+>>>> physts register like below.  This way link status and pause values can
+>>>> be updated and then we can update the speed and duplex settings.
+>>>>
+>>>>         ret = genphy_read_status(phydev);
+>>>>       if (ret)
+>>>>           return ret;
+>>>>
+>>>>       if (status < 0)
+>>>>           return status;
+>>>>
+>>>>       if (status & DP83867_PHYSTS_DUPLEX)
+>>>>           phydev->duplex = DUPLEX_FULL;
+>>>>       else
+>>>>           phydev->duplex = DUPLEX_HALF;
+>>>>
+>>>>       if (status & DP83867_PHYSTS_1000)
+>>>>           phydev->speed = SPEED_1000;
+>>>>       else if (status & DP83867_PHYSTS_100)
+>>>>           phydev->speed = SPEED_100;
+>>>>       else
+>>>>           phydev->speed = SPEED_10;
+>>>>
+>>> OK, but what if they disagree, are they consistently latched with
+>>> respect to one another?
+>> Well in parsing through the code for genphy read status when auto
+>> negotiation is set the phydev structure appears to be setup per what has
+>> been configured.  I did not see any reading of speed or duplex when auto
+>> neg is set it is just taking the LPA register. But I am probably not
+>> right here.  So we and our customers found that the phy was always
+>> reporting a 1Gbps connection when the 4 wire cable connected when using
+>> genphy_read_status.  This PHYSTS register provides a single location
+>> within the register set for quick access to commonly accessed
+>> information.
+> That is the kind of information that you want to put in the commit
+> message, and that sounds like a Fix more than a feature to me. If the
+> BMSR is not reflecting the correct speed, clearly something is not quite
+> good. You may also consider reflecting whether downshift was in action
+> and that led to reducing the speed, something like
+> m88e1011_link_change_notify() does.
+
+But what is it fixing?  When the driver was originally submitted it was 
+meant to be a Giga bit PHY.  No requirement for any connection less then 
+1Gbps. Now we have a customer who wants to use this feature and they 
+want it upstreamed.  (YAY for them pushing upstream).
+
+Do I reference my original commit?  Because I am actually flipping the 
+bits to turn it on as well only way this was a fix is if the user had 
+the feature strapped to on.  But to date we have not had any requests 
+for this support.
+
+So then it would be ok to do a genphy_read_status and then override the 
+speed and duplex mode from the PHYSTS register?
+
+I don't think that the link change notification is needed.  The speed 
+should not change once the cable is plugged in and the speed is negotiated.
+
+Dan
+
+
