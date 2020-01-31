@@ -2,147 +2,105 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE30C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E447C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A8320707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DDA22522
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580472233;
+	bh=HqpET/J/MD20LaDgPuTRS5n8V9jD3XdrrukQnBqfyM4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mesoTF9lnhK8j1O7T8b+QWci7Ijl23rTJT79tEQ4V7HgNd+DZGJFKByrxxo6HGGK0
+	 bAoA5Y0e7oT0lzjZKkbQ4qh89clAwSknJvl0d0/z+zt0iw2a7UHOgT3Xrb936aCv3E
+	 aqodEzP/sHQcmifPVIEHmbkdQ/x2GsrTwpM1OlRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgAaMDX (ORCPT
+        id S1728537AbgAaMDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:03:23 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2337 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728374AbgAaMDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:03:22 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2C79BC846AEEC4B266A4;
-        Fri, 31 Jan 2020 12:03:21 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 31 Jan 2020 12:03:20 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
- 2020 12:03:20 +0000
-Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Mark Brown <broonie@kernel.org>, <chenxiang66@hisilicon.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <liusimin4@huawei.com>, Linuxarm <linuxarm@huawei.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        <tudor.ambarus@microchip.com>,
-        Jiancheng Xue <xuejiancheng@hisilicon.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>, <fengsheng5@huawei.com>
-References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
- <20200110140726.GB5889@sirena.org.uk>
- <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
- <20200110193119.GI32742@smile.fi.intel.com>
- <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
- <20200113114256.GH3897@sirena.org.uk>
- <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
- <20200113140627.GJ3897@sirena.org.uk>
- <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
- <20200113142754.GL3897@sirena.org.uk>
- <20200113143403.GQ32742@smile.fi.intel.com>
- <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
- <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <136bd652-dcb9-3efa-a92f-2263cbf840ad@huawei.com>
-Date:   Fri, 31 Jan 2020 12:03:19 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 31 Jan 2020 07:03:52 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40077 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728408AbgAaMDw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:03:52 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i6so6311381otr.7;
+        Fri, 31 Jan 2020 04:03:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HqpET/J/MD20LaDgPuTRS5n8V9jD3XdrrukQnBqfyM4=;
+        b=AP9QRkV/MnARxZfM7GWa1FizijRkVAZFh4wOJGFKRVbNueicbp8nrJj2Jua1rCQKjV
+         lb95oCe2ZL3Jx9RRaF+prjgyrMUfi48MK5s8Bnt7ywnYhi3shnN6kcdgcrqmpV2IQCTh
+         C8klCRPn55wgD8pkqyPg6Bc5FLho14rphHl4Yl7Q+iXLnxWLlJd5XWR/Q8j0oTIzD8Yv
+         xT1vU4bOyuIl/zkWATUJr7708e4J10PeRq/8qgbZ4EEhcS85g7as0roRrHx1Z68uTVtt
+         UsFGjPLEeA8NfqUCgqLT33/BsCHP6F8zNmadsNeUR0U73+CaCkeOnyowAM9XwKkfK0iz
+         /ZWQ==
+X-Gm-Message-State: APjAAAVQiSU83xReG1vYqEPWqmj7Ajv10pwlLunkqSKoDYpGzSa6Szon
+        j/uOrewEC3aMG7y7x3iGaFLMJlBttyQ2ifyrRAs=
+X-Google-Smtp-Source: APXvYqxT9W9aXcls0rTQrVm3MU+/BRRmIFYQzIWVLkdswfzn5wYstiWi45Z/4WGuoyhvxrq/TuDXhAg9vPWUdVdbPEE=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr7434450otd.266.1580472231259;
+ Fri, 31 Jan 2020 04:03:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <1720216.0Jr2BLnqKp@kreacher> <16995896.bQtfYxEEOs@kreacher>
+ <86fb1cd10e344f76a3e96c4b6c722680@AcuMS.aculab.com> <28a92577c83276baf355dc8de272a79dc854025a.camel@linux.intel.com>
+ <6cf71f6964c6433abeaf445847c97611@AcuMS.aculab.com>
+In-Reply-To: <6cf71f6964c6433abeaf445847c97611@AcuMS.aculab.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 31 Jan 2020 13:03:40 +0100
+Message-ID: <CAJZ5v0hT9=2S9fMNQYHC5sy3b3Z_pT304Mr2=QCQY_jxi2cozg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] intel_idle: Introduce 'states_off' module parameter
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        David Box <david.e.box@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/01/2020 11:39, Andy Shevchenko wrote:
-> On Fri, Jan 31, 2020 at 12:08 PM John Garry <john.garry@huawei.com> wrote:
->>
->> On 13/01/2020 14:34, Andy Shevchenko wrote:
->>> On Mon, Jan 13, 2020 at 02:27:54PM +0000, Mark Brown wrote:
->>>> On Mon, Jan 13, 2020 at 04:17:32PM +0200, Andy Shevchenko wrote:
->>>>> On Mon, Jan 13, 2020 at 4:07 PM Mark Brown <broonie@kernel.org> wrote:
->>>>>> On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
->>>>>>> On 13/01/2020 11:42, Mark Brown wrote:
->>>>
->>>>>>>> The idiomatic approach appears to be for individual board vendors
->>>>>>>> to allocate IDs, you do end up with multiple IDs from multiple
->>>>>>>> vendors for the same thing.
->>>>
->>>>>>> But I am not sure how appropriate that same approach would be for some 3rd
->>>>>>> party memory part which we're simply wiring up on our board. Maybe it is.
->>>>
->>>>>> It seems to be quite common for Intel reference designs to assign
->>>>>> Intel IDs to non-Intel parts on the board (which is where I
->>>>>> became aware of this practice).
->>>>
->>>>> Basically vendor of component in question is responsible for ID, but
->>>>> it seems they simple don't care.
->>>>
->>>> AFAICT a lot of the time it seems to be that whoever is writing
->>>> the software ends up assigning an ID, that may not be the silicon
->>>> vendor.
->>>
->>> ...which is effectively abusing the ACPI ID allocation procedure.
->>>
->>> (And yes, Intel itself did it in the past — see badly created ACPI IDs
->>>    in the drivers)
->>>
->>
->> Hi Mark,
->>
+On Fri, Jan 31, 2020 at 12:54 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Artem Bityutskiy >
+> > Sent: 31 January 2020 11:24
+> > On Fri, 2020-01-31 at 11:07 +0000, David Laight wrote:
+> > > Unless you know exactly which cpu table is being used the
+> > > only constraint a user can request is the latency.
+> >
+> > Hi David,
+> >
+> > in all my use-cases I always know what is the CPU I am dealing with and
+> > what are the C-states. Simply because in my view they are always CPU-
+> > dependent in terms of what they do and how are they named.
+> >
+> > What you say sounds to me like you would want to disable some C-states
+> > without knowing anything (or much) about the CPU you are dealing with
+> > and the C-state names.
+> >
+> > If so, could you please share examples of such use-cases?
+>
+> Dunno, but clearly you want to disable (say) C3 while leaving C6
+> enabled.
+>
+> I was trying to find why it was taking 600+us for a RT process
+> to get rescheduled when it had only been sleeping for a few us.
+>
+> I found where it was sleeping, but that didn't help at all.
+> Someone pointed me at a 'random' pdf that referred to /dev/cpu_dma_latency.
+> Setting that to a small value (eg 20) helps no end.
+> But there are no references in the code or man pages to that.
 
-Hi Andy,
+There is a piece of kernel documentation regarding it, however:
 
->> About this topic of ACPI having no method to describe device buswidth in
->> the resource descriptor, it may be an idea for me to raise a Tianocore
->> feature request @ https://bugzilla.tianocore.org/
->>
-> 
-> The 19.6.126 describes the SPI resource, in particular:
-> 
-> ---8<---8<---
-> DataBitLength is the size, in bits, of the smallest transfer unit for
-> this connection. _LEN is automatically
-> created to refer to this portion of the resource descriptor.
-> ---8<---8<---
-> 
-> Is it what you are looking for? (As far as I know most of the
-> firmwares simple abuse this field among others)
-
-I didn't think so - I thought that there was a distinction between width 
-and length in SPI terms.
-
-So how do you find that most firmwares abuse this field? AFAICS, linux 
-kernel doesn't interpret this field at all.
-
-> 
->> There seems to be an avenue there for raising new features for the spec.
->> I (or my org) can't participate in AWSG.
-> 
-> But have you read 19.6.126?
-> 
-
-Maybe some clarification at least could be achieved :)
-
-Cheers,
-John
+https://www.kernel.org/doc/html/latest/admin-guide/pm/cpuidle.html#cpu-pm-qos
