@@ -2,143 +2,149 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99568C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C050C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBEF20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XW6VOONy"
+	by mail.kernel.org (Postfix) with ESMTP id 4CB1520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgAaJi0 (ORCPT
+        id S1728333AbgAaJia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:38:26 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49868 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbgAaJiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:38:23 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00V9cEHa094778;
-        Fri, 31 Jan 2020 03:38:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580463494;
-        bh=ReMGt/DSeBN+XI+/pirRZxAFHoWdvXSVqCSKrKt1Fvk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XW6VOONynztS0wldIPlEf5yYr56TEPmkb6CazDQ7utz0nlaQ+ijsC/4LHigg+oO7S
-         HLFMK7Cqe7LjEteHfXjMCDGnxzUtAkS3rJnCO2r8EbAiorDYTFx6/Z2Uch9OY17juM
-         oeCSQfkdbvQMZFPIyADfcA9KtaefMcz/eSVzLQtA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00V9cE7Q069223
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 03:38:14 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 03:38:14 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 03:38:14 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00V9cAGk054689;
-        Fri, 31 Jan 2020 03:38:12 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-Subject: [PATCH v2 1/2] dmaengine: Cleanups for the slave <-> channel symlink support
-Date:   Fri, 31 Jan 2020 11:38:58 +0200
-Message-ID: <20200131093859.3311-2-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200131093859.3311-1-peter.ujfalusi@ti.com>
-References: <20200131093859.3311-1-peter.ujfalusi@ti.com>
+        Fri, 31 Jan 2020 04:38:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:33500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728324AbgAaJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:38:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32552FEC;
+        Fri, 31 Jan 2020 01:38:26 -0800 (PST)
+Received: from [10.37.12.196] (unknown [10.37.12.196])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A8043F68E;
+        Fri, 31 Jan 2020 01:38:22 -0800 (PST)
+Subject: Re: [PATCH 0/1] drivers: devfreq: use DELAYED_WORK in DEVFREQ
+ monitoring subsystem
+To:     Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, Kamil Konieczny <k.konieczny@samsung.com>
+References: <20200127151731.8640-1-lukasz.luba@arm.com>
+ <CGME20200130114724epcas1p1b2a9ea756c7d53a2f26b60abbef0ab51@epcas1p1.samsung.com>
+ <b4d1624f-4ca8-c985-ff42-f5f677c72fa9@arm.com>
+ <6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com>
+ <f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <729911b2-434b-fbe5-b556-5bdba8114085@arm.com>
+Date:   Fri, 31 Jan 2020 09:38:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to use goto to jump over the
-return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-We can just revert the check and return right there.
+Hi Chanwoo,
 
-Do not fail the channel request if the chan->name allocation fails, but
-print a warning about it.
+On 1/31/20 12:47 AM, Chanwoo Choi wrote:
+> On 1/31/20 9:42 AM, Chanwoo Choi wrote:
+>> Hi Lukasz,
+>>
+>> On 1/30/20 8:47 PM, Lukasz Luba wrote:
+>>> Hi Chanwoo, MyungJoo,
+>>>
+>>> Gentle ping. The issue is not only in the devfreq itself,
+>>> but also it affects thermal. The devfreq cooling rely on
+>>> busy_time and total_time updated by the devfreq monitoring
+>>> (in simple_ondemand).
+>>> Thermal uses DELAYED_WORK and is more reliable, but uses stale
+>>> data from devfreq_dev_stats. It is especially visible when
+>>> you have cgroup spanning one cluster. Android uses cgroups
+>>> heavily. You can make easily this setup using 'taskset',
+>>> run some benchmarks and observe 'devfreq_monitor' traces and
+>>> timestamps, i.e. for your exynos-bus.
+>>>
+>>> The patch is really non-invasive and simple. It can be a good starting
+>>> point for testing and proposing other solutions.
+>>
+>> Sorry for late reply. I'm preparing the RFC patch about my approach
+>> to support this requirement as following:
+>>
+>> As you knew, DEFERRABLE_WORK with CONFIG_NO_HZ focuses on removing
+>> the redundant of power-consumption by preventing the unneeded wakeup
+>> from idle state if there are no any interrupts and runnable threads.
+>>
+>> Finally, I agree the requirement of delaywd_work for devfreq subsystem.
+>> But, I would like to support both deferrable_work and delayed_work
+>> on devfreq subsystem. It is better to select either deferrable_work
+>> or delayed_work by user like Kamil's suggestion[1].
+>> [1] https://lore.kernel.org/patchwork/patch/1164317/
+>> - [2/4] PM / devfreq: add possibility for delayed work
+>>
+>> But, I want to change the timer type for devfreq device
+>> using simple_ondemand governor via sysfs as following:
+>>
+>> Example:
+>>
+>> 1.
+>> enum work_timer_type {
+>> 	DEVFREQ_WORK_TIMER_DEFERRABLE = 0,
+>> 	DEVFREQ_WORK_TIMER_DELAYED = 0,
+>> };
+>>
+>> struct devfreq_simple_ondemand_data {
+>> 	unsigned int upthreshold;
+>> 	unsigned int downdifferential;
+>> 	enum work_timer_type timer_type;
+>> };
+>>
+>> The developer of devfreq device driver can choose
+>> the default work time type by initializing the 'timer_type of
+>> struct devfreq_simple_ondemand_data'.
+>>
+>> 2. Change the work timer type at the runtime
+>> - Change the work timer type from 'deferrable' to 'delayed'
+>> $ echo delayed > /sys/class/devfreq/devfreq0/work_timer_type
+>> $ cat /sys/class/devfreq/devfreq0/work_timer_type
+>> delayed
+>>
+>> - Change the work timer type from 'delayed' to 'deferrable'
+>> $ echo deferrable > /sys/class/devfreq/devfreq0/work_timer_type
+>> $ cat /sys/class/devfreq/devfreq0/work_timer_type
+>> deferrable
+>>
+> 
+> And
+> Only show '/sys/class/devfreq/devfreq0/work_timer_type' sysfs attribute,
+> if devfreq device uses the simple_ondemand. Because this 'work_timer_type'
+> sysfs attribute only depends on simple_ondemand governor and are useful.
+> 
+> So, 'work_timer_type' sysfs attribute will be handled
+> at drivers/devfreq/governor_simpleondemand.c.
+> 
+> After posting my suggestion, we can discuss it.
+> 
+> 
+>> I'm developing the RFC patch and then I'll send it as soon as possible.
 
-Change the dev_err to dev_warn if sysfs_create_link() fails as it is not
-fatal.
+Good, thank you for the explanation. For the first glance the design
+looks OK, we can discuss it a bit more in you RFC series.
+I would recommend to not make it conditional on simple_ondemand governor
+just add a comment that for i.e. performance or passive governors it has
+less sense to use this setting. There might be some other governors
+loaded as modules, which could benefit from it, or in Android e.g.
+https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-coral-4.14-android10/drivers/devfreq/governor_msm_adreno_tz.c
 
-Only attempt to remove the DMA_SLAVE_NAME symlink if it is created - or it
-was attempted to be created.
+It would be good if it can land in mainline before v5.8-v5.9.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/dma/dmaengine.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Regards,
+Lukasz
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 7b1cefc3213a..342d23132fca 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -756,22 +756,21 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
- 	}
- 	mutex_unlock(&dma_list_mutex);
- 
--	if (!IS_ERR_OR_NULL(chan))
--		goto found;
--
--	return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-+	if (IS_ERR_OR_NULL(chan))
-+		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
- 
- found:
--	chan->slave = dev;
- 	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
- 	if (!chan->name)
--		return ERR_PTR(-ENOMEM);
-+		return chan;
-+	chan->slave = dev;
- 
- 	if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
- 			      DMA_SLAVE_NAME))
--		dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
-+		dev_warn(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
- 	if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
--		dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
-+		dev_warn(dev, "Cannot create DMA %s symlink\n", chan->name);
-+
- 	return chan;
- }
- EXPORT_SYMBOL_GPL(dma_request_chan);
-@@ -830,13 +829,14 @@ void dma_release_channel(struct dma_chan *chan)
- 	/* drop PRIVATE cap enabled by __dma_request_channel() */
- 	if (--chan->device->privatecnt == 0)
- 		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
-+
- 	if (chan->slave) {
-+		sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
- 		sysfs_remove_link(&chan->slave->kobj, chan->name);
- 		kfree(chan->name);
- 		chan->name = NULL;
- 		chan->slave = NULL;
- 	}
--	sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
- 	mutex_unlock(&dma_list_mutex);
- }
- EXPORT_SYMBOL_GPL(dma_release_channel);
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
