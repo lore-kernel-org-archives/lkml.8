@@ -2,89 +2,123 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0EC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A16C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A5A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8E2215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580479937;
-	bh=HfWBjLNte2X3JVYpxGFX1H9fFWZJ4RTRPHrm2f6bk+I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BbtDA9w+ayUI+H6HggkNwcBLHqzDFZFcRxedQGfUpu6jcBBd5WDFExZNC0D5PUesg
-	 2glBGPUuTfXYpsg3cwi8l5RXc+fwm0MmlJfqycLtwd3rYeCSrxJW3UNqW7bt4sbOhs
-	 rjavVjuauSdSVf/jgAvZCfBxKJ1508kl/+Sy09fA=
+	s=default; t=1580480315;
+	bh=UVLWZxIDBYWd9H73LXBOM30bLjJwyxsxii3y/RGdWnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=arV27FUvIXqo69Hah/e/x4FeBvLAbXmvITKOzkCfOoO37bVqpxte97GG2+Pt4AWBf
+	 EoCXojlPRxFLTb+REhV6+TrVhQEiNvvJ/VF/tZOukoEsw5Qo5SguRa5rEmNJTHX5UW
+	 +LYGTUAnXTWBbVj+K1v4ntlvSAUhAbL6K+ZRGtw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgAaOMQ (ORCPT
+        id S1728846AbgAaOSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:12:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728659AbgAaOMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:12:16 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1162173E;
-        Fri, 31 Jan 2020 14:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580479935;
-        bh=HfWBjLNte2X3JVYpxGFX1H9fFWZJ4RTRPHrm2f6bk+I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=omIVpZ1/ygOrpZeS9FcNJS03c6J3B/23chS3RgaTQC7LE5mAwJAhKBS2CY1W3QHYL
-         ylpgnBA9aE07DXWkWqta/RqOHb5XY9KCeYJZZxq6PKHlJ+ntCRvKXTWcGDQjCBch/7
-         TTDUY8SHr60FqhpRtaS8/v5zQYSLyY6ntm4GmylQ=
-Received: by mail-qk1-f175.google.com with SMTP id h23so6677444qkh.0;
-        Fri, 31 Jan 2020 06:12:15 -0800 (PST)
-X-Gm-Message-State: APjAAAW8xI213AIFV7ec2OPxlktrZtfWV4gyWNTrKEn9oHyjF/dbeQHW
-        +6YAwDzIsbTJaRwBgXEz5vCyIAuXWwhdTW5MYw==
-X-Google-Smtp-Source: APXvYqzP0vBMKxSW2Fs0L9a6K7gjQMP7QKfy0dyd+4vzzIDPqbXCB5JOkUuGgXS5/WDRGFnvTwpg4lrfI5M0k4tTocY=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr10924573qkg.152.1580479934910;
- Fri, 31 Jan 2020 06:12:14 -0800 (PST)
+        Fri, 31 Jan 2020 09:18:34 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41966 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728659AbgAaOSe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:18:34 -0500
+Received: by mail-lf1-f67.google.com with SMTP id m30so4970052lfp.8;
+        Fri, 31 Jan 2020 06:18:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RRvjvKaIDcznORWD7pzM9Yuu5rDxm6DZTIai7ItMTCY=;
+        b=T6jG415nP1mUBd8wNeHqU+QhT6oZqvkSw/eXeNsmYrbshiseOUc1RGqBUTl6/uxiuj
+         W/MV0BNqFPe2HU44C/nv+vBF+EPlVgGK3K9bF11acTq0y1CrISeOUXYiBAKAI72edYRq
+         aYXeaW12Mn6L+Rceg6BnOYEnMAOjWYa1mBrbyXu1w8Zc2HM57qY6aoemus1Y6PcSwzxx
+         XBA03yNuJOcI6JMIpl8c+Pf2aV9lJhPoRonaCvNNpFwe/CQ9LlRN6eAInQDmuywZx7BU
+         TkL3cqTQQfrqig/6qAZ3tLbOzHVDpfeI8E4ePmaCPMQ9jr59j1+xzfK8w3gNuqzhWhpH
+         3q8w==
+X-Gm-Message-State: APjAAAWN7x9uFf9spSka204+Kzt0cQo4sJ38F0D076KLmDiaMu8HIA5r
+        z/1mUkv/LqhANKbei2GZNXA=
+X-Google-Smtp-Source: APXvYqxnvLsKIRH3WqGThPnejZYGMBJX+rv6HYVpfUZ7Q2ZmOLujCeAvS4hyk1B0JqSnn8ZMEo7/ow==
+X-Received: by 2002:ac2:5499:: with SMTP id t25mr5514058lfk.194.1580480311842;
+        Fri, 31 Jan 2020 06:18:31 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id g25sm4679595ljn.107.2020.01.31.06.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 06:18:31 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ixX80-0005ok-51; Fri, 31 Jan 2020 15:18:36 +0100
+Date:   Fri, 31 Jan 2020 15:18:36 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc:     linux-serial@vger.kernel.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, michal.simek@xilinx.com,
+        linux-kernel@vger.kernel.org,
+        Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Subject: Re: [PATCH v3] serial: uartps: Add TACTIVE bit in cdns_uart_tx_empty
+ function
+Message-ID: <20200131141836.GG10381@localhost>
+References: <1580468685-11373-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
-References: <20200131023433.12133-1-chris.packham@alliedtelesis.co.nz> <20200131023433.12133-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200131023433.12133-2-chris.packham@alliedtelesis.co.nz>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 31 Jan 2020 08:12:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLO4DT1s-q_5n23pLJw7PgnVNC6W3aAwkLFB_QdtV721w@mail.gmail.com>
-Message-ID: <CAL_JsqLO4DT1s-q_5n23pLJw7PgnVNC6W3aAwkLFB_QdtV721w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580468685-11373-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 8:34 PM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Add binding documentation for the spi-mux driver. This allows a generic
-> multiplexer to be used to provide access to multiple SPI devices.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->     Changes in v3:
->     - make dt_binding_check clean (properly this time)
->
->     Changes in v2:
->     - update license
->     - make dt_binding_check clean
->
->  .../devicetree/bindings/spi/spi-mux.yaml      | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
+On Fri, Jan 31, 2020 at 04:34:45PM +0530, Shubhrajyoti Datta wrote:
+> From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+> 
+> Make sure that all the bytes are transmitted out of Uart by monitoring
+> TACTIVE bit as well.
+> Before setting up baud rate in set termios function, do not wait for
+> Tx empty as it is taken care by the tty layer if user specified.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Since this is two logical changes I suggest you split it in two patches;
+the first removing the wait from set_termios, and the second adding the
+TCACTIVE check.
+
+> Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+> v3:
+> removed the wait from the set_termios and added the TACTIVE to cdns_uart_tx_empty
+> As suggested by Johan.
+> 
+>  drivers/tty/serial/xilinx_uartps.c | 22 +++++-----------------
+>  1 file changed, 5 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+> index ed2f325..ebd0a74 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -32,7 +32,6 @@
+>  #define CDNS_UART_NAME		"xuartps"
+>  #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
+>  #define CDNS_UART_REGISTER_SPACE	0x1000
+> -#define TX_TIMEOUT		500000
+>  
+>  /* Rx Trigger level */
+>  static int rx_trigger_level = 56;
+> @@ -656,8 +655,9 @@ static unsigned int cdns_uart_tx_empty(struct uart_port *port)
+>  {
+>  	unsigned int status;
+>  
+> -	status = readl(port->membase + CDNS_UART_SR) &
+> -				CDNS_UART_SR_TXEMPTY;
+> +	status = ((readl(port->membase + CDNS_UART_SR) &
+> +				(CDNS_UART_SR_TXEMPTY |
+> +				CDNS_UART_SR_TACTIVE)) == CDNS_UART_SR_TXEMPTY);
+>  	return status ? TIOCSER_TEMT : 0;
+
+Please rewrite this to avoid some of the line breaks (e.g. split readl()
+from the test).
+
+Johan
