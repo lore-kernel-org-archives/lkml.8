@@ -2,92 +2,241 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2EEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52965C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8E520707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9A820707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="r9fnEh+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgAaNd7 (ORCPT
+        id S1728730AbgAaNew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:33:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728646AbgAaNd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:33:58 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VDU6Q4086694
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:33:58 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xueh8fej3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:33:56 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 31 Jan 2020 13:33:52 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 31 Jan 2020 13:33:49 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VDXmcx34144474
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 13:33:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB1C0A4064;
-        Fri, 31 Jan 2020 13:33:48 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4CA8A405F;
-        Fri, 31 Jan 2020 13:33:47 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.193.32])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 31 Jan 2020 13:33:47 +0000 (GMT)
-Subject: Re: [PATCH 2/8] ima: evaluate error in init_ima()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        jarkko.sakkinen@linux.intel.com,
-        james.bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Fri, 31 Jan 2020 08:33:46 -0500
-In-Reply-To: <20200127170443.21538-3-roberto.sassu@huawei.com>
-References: <20200127170443.21538-1-roberto.sassu@huawei.com>
-         <20200127170443.21538-3-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20013113-0028-0000-0000-000003D64449
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013113-0029-0000-0000-0000249A9672
-Message-Id: <1580477626.6104.63.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- clxscore=1015 lowpriorityscore=0 suspectscore=0 impostorscore=0
- adultscore=0 malwarescore=0 bulkscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=781 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001310117
+        Fri, 31 Jan 2020 08:34:52 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:13131 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728566AbgAaNev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:34:51 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 488J9h34hLz9vCRj;
+        Fri, 31 Jan 2020 14:34:48 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=r9fnEh+E; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pK71aHW6bdoa; Fri, 31 Jan 2020 14:34:48 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 488J9h1sFVz9vCRQ;
+        Fri, 31 Jan 2020 14:34:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580477688; bh=0GVLbwhgWrQll+nMyleiz2tV3H81Ve5iFhb2AKQrvIo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=r9fnEh+E1reOH09ShTyRt0il/RuQM00HwHRGiNjYNyJRSC6NRP5MwzTSpXN8RVHqj
+         2yNtUBheyo8ogzV08A91B3Kgrg9E/1qJJaVLl6OY8A9/5Xs8Fw7KSzGfLuO9CwFswN
+         AnuSNlEmEX0GxdST6AVQ+AG1wze7xXl6hLckwxwU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D93B8B8AA;
+        Fri, 31 Jan 2020 14:34:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id t-zHJjyrAIsu; Fri, 31 Jan 2020 14:34:49 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 636508B8A2;
+        Fri, 31 Jan 2020 14:34:49 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 416F865288; Fri, 31 Jan 2020 13:34:49 +0000 (UTC)
+Message-Id: <84be5ad6a996adf5693260749dcb4d8c69182073.1580477672.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 1/7] powerpc/mm: Implement set_memory() routines
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 31 Jan 2020 13:34:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-27 at 18:04 +0100, Roberto Sassu wrote:
-> Evaluate error in init_ima() before register_blocking_lsm_notifier() and
-> return if not zero.
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+The set_memory_{ro/rw/nx/x}() functions are required for STRICT_MODULE_RWX,
+and are generally useful primitives to have.  This implementation is
+designed to be completely generic across powerpc's many MMUs.
 
-Thanks.  Please include a "Fixes" tag.
+It's possible that this could be optimised to be faster for specific
+MMUs, but the focus is on having a generic and safe implementation for
+now.
 
-Mimi
+This implementation does not handle cases where the caller is attempting
+to change the mapping of the page it is executing from, or if another
+CPU is concurrently using the page being altered.  These cases likely
+shouldn't happen, but a more complex implementation with MMU-specific code
+could safely handle them, so that is left as a TODO for now.
+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v2:
+- use integers instead of pointers for action
+- drop action check, nobody should call change_memory_attr() directly.
+Should it happen, the function will just do nothing.
+- Renamed confusing 'pte_val' var to 'pte' as pte_val() is already a function.
+---
+ arch/powerpc/Kconfig                  |  1 +
+ arch/powerpc/include/asm/set_memory.h | 32 ++++++++++++
+ arch/powerpc/mm/Makefile              |  1 +
+ arch/powerpc/mm/pageattr.c            | 74 +++++++++++++++++++++++++++
+ 4 files changed, 108 insertions(+)
+ create mode 100644 arch/powerpc/include/asm/set_memory.h
+ create mode 100644 arch/powerpc/mm/pageattr.c
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index a8fdb36a841e..ae6a27d07406 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -129,6 +129,7 @@ config PPC
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
++	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
+diff --git a/arch/powerpc/include/asm/set_memory.h b/arch/powerpc/include/asm/set_memory.h
+new file mode 100644
+index 000000000000..c3621030a3fb
+--- /dev/null
++++ b/arch/powerpc/include/asm/set_memory.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_POWERPC_SET_MEMORY_H
++#define _ASM_POWERPC_SET_MEMORY_H
++
++#define SET_MEMORY_RO	0
++#define SET_MEMORY_RW	1
++#define SET_MEMORY_NX	2
++#define SET_MEMORY_X	3
++
++int change_memory_attr(unsigned long addr, int numpages, int action);
++
++static inline int set_memory_ro(unsigned long addr, int numpages)
++{
++	return change_memory_attr(addr, numpages, SET_MEMORY_RO);
++}
++
++static inline int set_memory_rw(unsigned long addr, int numpages)
++{
++	return change_memory_attr(addr, numpages, SET_MEMORY_RW);
++}
++
++static inline int set_memory_nx(unsigned long addr, int numpages)
++{
++	return change_memory_attr(addr, numpages, SET_MEMORY_NX);
++}
++
++static inline int set_memory_x(unsigned long addr, int numpages)
++{
++	return change_memory_attr(addr, numpages, SET_MEMORY_X);
++}
++
++#endif
+diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
+index 5e147986400d..d0a0bcbc9289 100644
+--- a/arch/powerpc/mm/Makefile
++++ b/arch/powerpc/mm/Makefile
+@@ -20,3 +20,4 @@ obj-$(CONFIG_HIGHMEM)		+= highmem.o
+ obj-$(CONFIG_PPC_COPRO_BASE)	+= copro_fault.o
+ obj-$(CONFIG_PPC_PTDUMP)	+= ptdump/
+ obj-$(CONFIG_KASAN)		+= kasan/
++obj-$(CONFIG_ARCH_HAS_SET_MEMORY) += pageattr.o
+diff --git a/arch/powerpc/mm/pageattr.c b/arch/powerpc/mm/pageattr.c
+new file mode 100644
+index 000000000000..0cb5294732b7
+--- /dev/null
++++ b/arch/powerpc/mm/pageattr.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * MMU-generic set_memory implementation for powerpc
++ *
++ * Copyright 2019, IBM Corporation.
++ */
++
++#include <linux/mm.h>
++#include <linux/set_memory.h>
++
++#include <asm/mmu.h>
++#include <asm/page.h>
++#include <asm/pgtable.h>
++
++
++/*
++ * Updates the attributes of a page in three steps:
++ *
++ * 1. invalidate the page table entry
++ * 2. flush the TLB
++ * 3. install the new entry with the updated attributes
++ *
++ * This is unsafe if the caller is attempting to change the mapping of the
++ * page it is executing from, or if another CPU is concurrently using the
++ * page being altered.
++ *
++ * TODO make the implementation resistant to this.
++ */
++static int change_page_attr(pte_t *ptep, unsigned long addr, void *data)
++{
++	int action = (int)data;
++	pte_t pte;
++
++	spin_lock(&init_mm.page_table_lock);
++
++	/* invalidate the PTE so it's safe to modify */
++	pte = ptep_get_and_clear(&init_mm, addr, ptep);
++	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
++
++	/* modify the PTE bits as desired, then apply */
++	switch (action) {
++	case SET_MEMORY_RO:
++		pte = pte_wrprotect(pte);
++		break;
++	case SET_MEMORY_RW:
++		pte = pte_mkwrite(pte);
++		break;
++	case SET_MEMORY_NX:
++		pte = pte_exprotect(pte);
++		break;
++	case SET_MEMORY_X:
++		pte = pte_mkexec(pte);
++		break;
++	default:
++		break;
++	}
++
++	set_pte_at(&init_mm, addr, ptep, pte);
++	spin_unlock(&init_mm.page_table_lock);
++
++	return 0;
++}
++
++int change_memory_attr(unsigned long addr, int numpages, int action)
++{
++	unsigned long start = ALIGN_DOWN(addr, PAGE_SIZE);
++	unsigned long sz = numpages * PAGE_SIZE;
++
++	if (!numpages)
++		return 0;
++
++	return apply_to_page_range(&init_mm, start, sz, change_page_attr, (void *)action);
++}
+-- 
+2.25.0
 
