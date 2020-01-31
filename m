@@ -2,122 +2,188 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0481C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA24C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A9620707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580477405;
-	bh=lyIY/MCqxwXTLaQPrczbKavK+sCmU8VVDmFaUG+1hAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qgmfd2W0559Ok/lVq5SEirb/zwrihElTzPyjMIDQH841uVVASjDjB2BTDT5RGG7Q4
-	 9c2+ljyV+jlsV452SxldRbT1TlgJTU9UNG1NCnr4BawuISeyJNjvLaPvMt9s6uQQcg
-	 FK178EJITnXGlPzjZScGXrstrRkrmnUbaoR0gAZM=
+	by mail.kernel.org (Postfix) with ESMTP id CA60720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GW3i3YYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgAaNaE (ORCPT
+        id S1728916AbgAaNaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:30:04 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43089 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgAaNaD (ORCPT
+        Fri, 31 Jan 2020 08:30:18 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47535 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbgAaNaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:30:03 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a13so7073122ljm.10;
-        Fri, 31 Jan 2020 05:30:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k3ofS0LU2j4KZSTG1ARNb3S7n9ZGoR5Ws7eg6uLZtiw=;
-        b=bfc2OE+C4Aef4P4Ai3j0AHQOtkyAOd4/UjenmzzrPtVKPdN2JmgHZW6m3PNHB4fszS
-         CNsBCpnFkeJX+1akXdZxx6TsdrOEmTQBSmviG/Ea/kkGhUFsY7R0n0NRzQjhAokNBuUI
-         Hz+BAAaZpCgjv8GoEBVI28fHHbFIMx7TI8kLsyijRd9K3/OsYi2jcNwHEK0IBXBtXdpc
-         tD1rYdGuMEk7ZaH32Ygt2MzHybi62vPdKR1JTWnj5CvTP6ZCuFK+UHYR/siTRjHPtxzO
-         RWt9NC242JojaNQVSIUqKW0BJUeGT3L7TF71qY0mm1H4FNciK36yLOaM2dauDFx/3p1T
-         sr5Q==
-X-Gm-Message-State: APjAAAWEfwwIY36p763+56vK44pRSzNrxHTbLhJWTexrz7TP5RNqyrC0
-        BS4VyIqkGScTsVvajEOGm5Y=
-X-Google-Smtp-Source: APXvYqwSHLUzboH/GEd0OnUNJ0P78aZbrS4iXiwn3JjobMobPwafTTxVY+k3PAOWpJi9QmVflcQM6w==
-X-Received: by 2002:a2e:8544:: with SMTP id u4mr5868233ljj.31.1580477400572;
-        Fri, 31 Jan 2020 05:30:00 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id q14sm4604833lfc.60.2020.01.31.05.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 05:29:59 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ixWN2-0005aX-Dn; Fri, 31 Jan 2020 14:30:04 +0100
-Date:   Fri, 31 Jan 2020 14:30:04 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
- syzbot
-Message-ID: <20200131133004.GD10381@localhost>
-References: <00000000000095e1d8059d4675ac@google.com>
- <20200131050651.hlq27kehtir3agf2@kili.mountain>
+        Fri, 31 Jan 2020 08:30:17 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200131133015euoutp02fa5de53d40bbe3fb683fb84223e9cb99~u_9Xk-7DP1318513185euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:30:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200131133015euoutp02fa5de53d40bbe3fb683fb84223e9cb99~u_9Xk-7DP1318513185euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1580477415;
+        bh=g13mPe4nf3idGfvJQ2ydGWAXeGHLTZ8oPYtzoeqs5LY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=GW3i3YYEJ50DA+0PVExSi8C5hE/6o1fxI8z+Ir2hbJl4vzRs7oUB0ChYNvOrSNUtL
+         0QLkBXuRJtdeCMtPgVf7oPbVSiBoVSIk96jPpJl2WROMM3KNTy5Zbi31D8ER1P3XWE
+         BJ/QVaGng2y0PIMu5cAcYyfDmwgSEkTGZcwveXT8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200131133015eucas1p1dd95266c4d8994df5020a79c3e0d1097~u_9XX1ksG2448924489eucas1p1M;
+        Fri, 31 Jan 2020 13:30:15 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id C5.5C.60679.7EB243E5; Fri, 31
+        Jan 2020 13:30:15 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200131133014eucas1p2cf8535b64a82ba502c0a6fcedbce917d~u_9XBPE3P3081530815eucas1p2r;
+        Fri, 31 Jan 2020 13:30:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200131133014eusmtrp25b641f1be51f837f7f828f2bae03fb20~u_9XAcZvI2149521495eusmtrp2L;
+        Fri, 31 Jan 2020 13:30:14 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-6a-5e342be7ca6e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3E.DC.07950.6EB243E5; Fri, 31
+        Jan 2020 13:30:14 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200131133014eusmtip29a5eb72927f4750e0f92b9b7aa874d74~u_9WZt2xT1363513635eusmtip2e;
+        Fri, 31 Jan 2020 13:30:14 +0000 (GMT)
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model
+ framework
+To:     lukasz.luba@arm.com
+Cc:     kgene@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        dietmar.eggemann@arm.com
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
+Date:   Fri, 31 Jan 2020 14:30:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131050651.hlq27kehtir3agf2@kili.mountain>
+In-Reply-To: <20200127215453.15144-4-lukasz.luba@arm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH973nxz2s43Hc7jNM6xpTza/44ylNtdV2pi3rx2ZIXXmGOHSH
+        6I/IKMlFSvRkyBJuFl3HhSW/ljW/Zi1KZuVHV3J/+LE2hDwelv9en+/n/Xl/Pu/tS2HSPsKR
+        iolPYjXxqjgFaY03vV8a8DAf8Ivw1n0nmJFFM8GUdw8QzHRBI8bkT/7GmMHBBjHTnzkrZgyT
+        wwTzsaWUZBZ03YgpGWwTMc8ys8RM1ciQiPl6q4Zkst92i4/ZKOvK6pDSoL9LKl8/T1feN+qR
+        csHgEkyEWh+JZONiUliNV8Al6+hio1mUyMlSOzpNWAZqs8tFVhTQfjD8p4zIRdaUlK5BkLvS
+        vlUsIsizrONCsYDA9LgIbY+Y5zmCZyldjaBMFySILAjWs1tFfMOePg0z7fmb7EDLoYAz4jxj
+        9KgIajvceSbpw/Dgjn7TVEIHQFth/6Yep12huKlezLOMDoH5b12EoLGDD0+mNn2s6ENgKJkX
+        CZ5yGJ0q3+LdYLKUYvxBQFvEMP3l08YCaqM4AfVdrkIAe5jpMYoFdob1Zn6W179EsJrzc2vY
+        hKD64RopqPxhbGCZ5I0weh/Ut3gJz8ehvnIVF/xt4LPFTrjBBgqbijHhWQI5t6WC2g0aXjSQ
+        22tzm2uxAqTgdiTjdqThdqTh/u+tQLgeydlkrTqK1R6MZ697alVqbXJ8lOeVBLUBbfyx3rWe
+        xTeo5e/lTkRTSLFLkujkFyElVCnaNHUnAgpTOEhkJ30ipJJIVdoNVpNwUZMcx2o7kROFK+QS
+        38pfF6R0lCqJjWXZRFaz3RVRVo4ZCCNNaSKW5cLrMrNePV05Ndp8L6W36geE2gZXuHjrxoKO
+        VuqyzYF7roWwRARz1udc8EBfWLFTQEha/1zgo7nYm55uQ7YeRY029g6T4VzU07ChEvzM+nhe
+        Yar8asi4r3q5F2vLm3fWi12XZmOTJ1R7fdzT/SlwfzfRKpOcNy4rcG20ymc/ptGq/gHQIDF7
+        XwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7rPtE3iDCZ9V7O4/uU5q8X8I+dY
+        LZ5O2Mps0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XCphZ2i6XXLzJZ
+        3G5cwWbRuvcIuwOfx5p5axg9Nq3qZPPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWi
+        DS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DKmb3nOVDBLtOLgoe3MDYz7BLsY
+        OTkkBEwknn+axdrFyMUhJLCUUaLnRjNjFyMHUEJG4vj6MogaYYk/17rYQGwhgdeMEid+1oLY
+        wgK+Emu+32YGsUUExCUmzNrCAjKHWeAWk8THSe3sEEN3M0ocev+CEaSKTcBKYmL7KjCbV8BO
+        Yt+ks0wgNouAqsT0bevZQWxRgQiJwztmQdUISpyc+YQFxOYUsJTYNOMTWD2zgLrEn3mXmCFs
+        cYlbT+ZDxeUltr+dwzyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k
+        /NxNjMDI3Xbs55YdjF3vgg8xCnAwKvHwFkibxAmxJpYVV+YeYpTgYFYS4RV1NYwT4k1JrKxK
+        LcqPLyrNSS0+xGgK9NxEZinR5HxgUskriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2a
+        WpBaBNPHxMEp1cC4+XZPkTOz7Z8n+Ua5XuoM4iKL3s3mYA1lPTW7bcOs6U2Xs54kSvvtO+6U
+        xpw36dZ2u6rXQvc2a23tZcjO17jJftWKLVg7Nyibz3/xi2VX5liZH6h2Srljbvt0Vm/mM885
+        ka+S/Cd+qklLquN7u2zdtOsPKu8tmH9yhcTSzVur6pVMup3PPjFVYinOSDTUYi4qTgQA5IpC
+        //ICAAA=
+X-CMS-MailID: 20200131133014eucas1p2cf8535b64a82ba502c0a6fcedbce917d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+        <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
+        <20200127215453.15144-4-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:06:52AM +0300, Dan Carpenter wrote:
-> We changed this from dev_err() to dev_WARN() in commit 0cb54a3e47cb
-> ("USB: debugging code shouldn't alter control flow").
->
-> The difference between dev_WARN() and dev_err() is that dev_WARN()
-> prints a stack trace and if you have panic on OOPS enabled then it leads
-> to a panic.  The dev_err() function just prints the error message.
+
+Hi,
+
+On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
+> From: Lukasz Luba <lukasz.luba@arm.com>
 > 
-> Back in the day we didn't have usb emulators fuzz testing the kernel
-> so dev_WARN() didn't cause a problem for anyone, but these days the
-> dev_WARN() interferes with syzbot so let's change this to a dev_err().
+> Enable the Energy Model (EM) brings possibility to use Energy Aware
+> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
+> default. The EAS only works with SchedUtil - a CPUFreq governor which
+> handles direct requests from the scheduler for the frequency change. Thus,
+> to make EAS working in default, the SchedUtil governor should be
+> configured as default CPUFreq governor. Although, the EAS might be enabled
+> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
+> then set as CPUFreq governor, i.e.:
+> 
+> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+> 
+> To check if EAS is ready to work, the read output from the command below
+> should show '1':
+> cat /proc/sys/kernel/sched_energy_aware
+> 
+> To disable EAS in runtime simply 'echo 0' to the file above.
+> 
+> Some test results, which stress the scheduler on Odroid-XU3:
+> hackbench -l 500 -s 4096
+> With mainline code and with this patch set.
+> 
+> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
+> (which is set to =y in default exynos_defconfig)
+> 
+> 		|		this patch set			| mainline
+> 		|-----------------------------------------------|---------------
+> 		| performance	| SchedUtil	| SchedUtil	| performance
+> 		| governor	| governor	| governor	| governor
+> 		|		| w/o EAS	| w/ EAS	|
+> ----------------|---------------|---------------|---------------|---------------
+> hackbench w/ PL | 12.7s		| 11.7s		| 12.0s		| 13.0s - 12.2s
+> hackbench w/o PL| 9.2s		| 8.1s		| 8.2s		| 9.2s - 8.4s
 
-The commit you refer to did more than just change dev_err() to
-dev_WARN(); it also stopped returning an error in case a driver
-submitted an URB for an endpoint of the wrong type. At that point in
-time all this was dependent on CONFIG_USB_DEBUG however.
+Would you happen to have measurements of how much power is
+saved by running hackbench using "SchedUtil governor w/ EAS"
+instead of "SchedUtil governor w/o EAS"?
 
-> Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 > ---
+>  arch/arm/configs/exynos_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  drivers/usb/core/urb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
-> index da923ec17612..0980c1d2253d 100644
-> --- a/drivers/usb/core/urb.c
-> +++ b/drivers/usb/core/urb.c
-> @@ -475,7 +475,7 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
->  
->  	/* Check that the pipe's type matches the endpoint's type */
->  	if (usb_urb_ep_type_check(urb))
-> -		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
-> +		dev_err(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
->  			usb_pipetype(urb->pipe), pipetypes[xfertype]);
->  
->  	/* Check against a simple/standard policy */
-
-It seems this change would just be papering over these driver bugs. The
-dev_WARN() is there in the first place to allow us to catch them.
-
-Even if it takes some work, it should be doable to track down and add
-the missing sanity checks to the drivers that lack them. Some have
-already been fixed, and I have some more pending patches to fix or add
-helpers to simplify fixing the remaining ones.
-
-Johan
+> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+> index 1db857056992..c0f8ecabc607 100644
+> --- a/arch/arm/configs/exynos_defconfig
+> +++ b/arch/arm/configs/exynos_defconfig
+> @@ -18,6 +18,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
+>  CONFIG_ARM_APPENDED_DTB=y
+>  CONFIG_ARM_ATAG_DTB_COMPAT=y
+>  CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc mem=256M"
+> +CONFIG_ENERGY_MODEL=y
+>  CONFIG_CPU_FREQ=y
+>  CONFIG_CPU_FREQ_STAT=y
+>  CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
