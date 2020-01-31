@@ -2,94 +2,118 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2586C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F7A20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RfdjNZQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 8A2E720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580491404;
+	bh=XPildtQFTVpy65iEB7yl2hAOgkHxHac/v8CsGQ18TNY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=gdZ/DL/k86rj1vmuHQQa9I12J1dgmmTOeMrJC3KBUi5GwT1LPxC+yxYU956IdYgjf
+	 PbaXe5YjY+mBjyt6n9YTWWzWaWr2lwU8nd6lQ8PZ3aH0RFji0WDo2u2j47CPoSuknD
+	 un3km45XcMzW+IOq/gZctH5Y6hPev7WedoS1HY/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgAaRXI (ORCPT
+        id S1727035AbgAaRXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:23:08 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46816 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgAaRXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:23:08 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g64so7228373otb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:23:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i3eHMCz/DL6XKCObRC8HT/xmU629kDpPS8BllHn4ZIY=;
-        b=RfdjNZQ8bvVaoDW2tBkd8ObQ3Df9woPqcG7rD/P+yVDUgwHYVdnqTf4wS4vGpje/oC
-         52ZUxHE8y1eWjgokzZYU5XyHdbFpYVeaRdRV563u/ybcsOLHxvX2BCbHswAXRSSNQDR9
-         tWA3HIDcws9ikr3dLiqNxpTZBgowoMcAThnMmpzS6zSbTO5VEIBYBr1Jad9GM4hwOg3I
-         DMYgKPOLMOH3+LKOVMgUewrLau/1PnSh76EwG0Mz0zSt8T/lBsDUVK9WAy3SXX2tuW2+
-         oXnXx1JsfIw60HJW8QNnBt2Nt2IshNfYLAMoCxPm66143Rh2iLzmTAv+SwRmWam6KxfT
-         qTkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i3eHMCz/DL6XKCObRC8HT/xmU629kDpPS8BllHn4ZIY=;
-        b=TJMN68out+vUUYoiFuLcOVBwx6TjQOrV7DTRI53dJ/ub0esBghxDJ6YYmKnC5ObfWr
-         7LQY+w6vUV39TiQb4/rB5ySWlq5IBaH6k9ogg6nDu1uby4JdytUTUmcAaPmk6qNBx6sb
-         y5SYqneMidJRwnjnnkmhTADl3iwNikV+g7fJJh+VYDJCYXiCxv9MExGmzDZH8oSZ0aez
-         65Lt+f5vkw8+tL807CgjU1UiFQqlDECMzxwXsVzgDt7g99NHGlDz/OF5B/XHCT+DFFRE
-         e6k6Kz2GnOhyhOQDnw96JF9HtpUR5cAC0pxTC+5XdyAs7yAFMeexr7xJYkoqLu03A64r
-         zcAg==
-X-Gm-Message-State: APjAAAVi8VRm545hKwL6Dlur/tH0Va1VCsdMJ7a/UJW2lasDIYQv+qC9
-        4AFGZnH6PWGS+Y72fBCQVzzVtCW/0oGBhHPl+cah6Q==
-X-Google-Smtp-Source: APXvYqztAPaGUr9zCgUHGpLpgenSB+fGB0gVHJN1+1lSaDoBA4wWnW6i/5S0y4QNkI/2168d8JE9oH99Yij15pqQkcg=
-X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr8900368oto.30.1580491386018;
- Fri, 31 Jan 2020 09:23:06 -0800 (PST)
+        Fri, 31 Jan 2020 12:23:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgAaRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:23:23 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 431DC20663;
+        Fri, 31 Jan 2020 17:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580491403;
+        bh=XPildtQFTVpy65iEB7yl2hAOgkHxHac/v8CsGQ18TNY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JO6M4f5ZEeLSJSgF8N5MPSM3UthwfbjyBMLxGt2TJsZdHAYEAlxU6u17BCEydPHZQ
+         w7GgjxsMtSlE7m9had15XeysWkOwtqzl/Wd/AfND/Xdc0k6JNh4bNkGtphK2JUe6m7
+         Fylpm+hF0MBrLtMBtcNSzynd2snYa7UrV/49EzsI=
+Date:   Fri, 31 Jan 2020 18:23:19 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Modules updates for v5.6
+Message-ID: <20200131172319.GA16783@linux-8ccs>
 MIME-Version: 1.0
-References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
- <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com> <5f3fc9a9-9a22-ccc3-5971-9783b60807bc@virtuozzo.com>
- <20200131154735.GA4520@dhcp22.suse.cz> <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
- <20200131160151.GB4520@dhcp22.suse.cz> <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
-In-Reply-To: <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 31 Jan 2020 09:22:55 -0800
-Message-ID: <CALvZod6H4thR6_Ky9Qhj4+U2S7i94ed6adpTXorPgZawkiAcGA@mail.gmail.com>
-Subject: Re: [PATCH v3] mm: Allocate shrinker_map on appropriate NUMA node
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 8:09 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->
-> mm: Allocate shrinker_map on appropriate NUMA node
->
-> From: Kirill Tkhai <ktkhai@virtuozzo.com>
->
-> Despite shrinker_map may be touched from any cpu
-> (e.g., a bit there may be set by a task running
-> everywhere); kswapd is always bound to specific
-> node. So, we will allocate shrinker_map from
-> related NUMA node to respect its NUMA locality.
-> Also, this follows generic way we use for allocation
-> memcg's per-node data.
->
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Hi Linus,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Please pull below to receive modules updates for the 5.6 merge window.
+Details can be found in the signed tag.
+
+Thanks,
+
+Jessica
+
+---
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.6
+
+for you to fetch changes up to 6080d608eeff7cb5090a2ddbaf723bfb0ff133fc:
+
+  module.h: Annotate mod_kallsyms with __rcu (2020-01-23 18:19:48 +0100)
+
+----------------------------------------------------------------
+Modules updates for v5.6
+
+Summary of modules changes for the 5.6 merge window:
+
+- Add "MS" (SHF_MERGE|SHF_STRINGS) section flags to __ksymtab_strings to
+  indicate to the linker that it can perform string deduplication (i.e.,
+  duplicate strings are reduced to a single copy in the string table).
+  This means any repeated namespace string would be merged to just one
+  entry in __ksymtab_strings.
+
+- Various code cleanups and small fixes (fix small memleak in error path,
+  improve moduleparam docs, silence rcu warnings, improve error logging)
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+----------------------------------------------------------------
+Fabien Dessenne (1):
+      moduleparam: fix kerneldoc
+
+Jessica Yu (3):
+      export.h: reduce __ksymtab_strings string duplication by using "MS" section flags
+      modsign: print module name along with error message
+      module: avoid setting info->name early in case we can fall back to info->mod->name
+
+Madhuparna Bhowmik (1):
+      module.h: Annotate mod_kallsyms with __rcu
+
+Masami Hiramatsu (1):
+      modules: lockdep: Suppress suspicious RCU usage warning
+
+YueHaibing (1):
+      kernel/module: Fix memleak in module_add_modinfo_attrs()
+
+ include/asm-generic/export.h |  8 +++--
+ include/linux/export.h       | 33 ++++++++++++------
+ include/linux/module.h       |  2 +-
+ include/linux/moduleparam.h  | 82 +++++++++++++++++++++++++++++++++++++++++---
+ kernel/module.c              | 22 +++++++-----
+ 5 files changed, 119 insertions(+), 28 deletions(-)
