@@ -2,93 +2,112 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73804C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC53C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332CE20708
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A232067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Jf3jwIJN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgwRbCld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgAaDoJ (ORCPT
+        id S1727979AbgAaDst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:44:09 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38873 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbgAaDoJ (ORCPT
+        Thu, 30 Jan 2020 22:48:49 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42819 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbgAaDst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:44:09 -0500
-Received: by mail-qk1-f193.google.com with SMTP id k6so5279720qki.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 19:44:08 -0800 (PST)
+        Thu, 30 Jan 2020 22:48:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id s64so2724966pgb.9;
+        Thu, 30 Jan 2020 19:48:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gnZ43qN7S1q4zZHme5V7oQ52yf1PnubAtyieKw4/fVY=;
-        b=Jf3jwIJN6NmDEE5rHTH3bi4JBCItLuv4Z8GzrYcknpWQQ5kCZURSEcOUtxHYCcQ5eK
-         rCg0uTFwevnnkGt785cjEtT+QPDAOFP1a5TzYfTETRSjUDZskAM/97VoZYjWatRYnYQz
-         c7f6jh9skAy62+AXe7jyQE/Y6J/IYqqaExXZk=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lw805ccpp52QxN2MgYdVoxrp8refimhileg/aigHHME=;
+        b=qgwRbCldkfdnA0agxUY6g9ytOOxSr5YJpr2efwpYgJ/Jwskok/iitcR1RQoYvj6YaJ
+         pUlZi8R9EAIXelDxPEpO7rnXqcFryLBDUzWd5VkZXhQ1wfIzp8RQkl4RmIuC0/LmbD8/
+         ao6oeFALCPjA0hAh8gapLJsst6bj/8LMyiz/Qxww+or4Kv4XL/bpyLgWEO54VeEeDie0
+         40NsVcUgUQGdgKOLvUURJXzoOSNwpaDTLBl77rY6QmDVvUwgL1pd290OB6aUU74vbKms
+         xfbsysZbewjKXSkJwpv1kChz51aO8V8pZezASsKBXyvLGzyrfRmmNpUkv9LjrTFeSk0o
+         aCJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gnZ43qN7S1q4zZHme5V7oQ52yf1PnubAtyieKw4/fVY=;
-        b=V2eK2E2SpFOdlnS/5btMDfvrK0fp+zYEdRG8pEPct3mp6RHUCmJZzkHXOmB8MIErWg
-         iYKtp0AvuaobGCRLkMe+3tC/DMYDivTrOmhVrGD5xoYL2HSXYts3+g+aIuFxVQigtxdJ
-         1EwYQqHezWVCefHkzfCIw3pdFtoJLR0G9Io3oexH94PBGCqnVy/eF55Iew47PaNMSZor
-         Y2qNBaLyhQbHMTOiDCMmwmNYbIW4Ci6s+mw6MNMQCvBRmNkPeyUwU+UyWb3C6KNz1wDI
-         ZIY6BG+UG3SBjSA+Cg0hRes/CV6jDYbPcyr0AOd/IAgoej8BHXA4lBe74QuqegufZb7B
-         4iig==
-X-Gm-Message-State: APjAAAVdRY1MiUYzST5YyadiViVkCfng8eqC82tgpaBx7Vj5qkTmzlrN
-        Gej9MoCVonCrCLJDC7hFufvEuWPi7BiB/kbYgvvXEA==
-X-Google-Smtp-Source: APXvYqwD62nlQsAFr4t2VRsUvR/xF3QgSUs3f8+MA8JJi/UqziVen3riJEm4PChAbEVcrDuYZozUpVA7fDtvclfVkKg=
-X-Received: by 2002:a37:d14:: with SMTP id 20mr8922868qkn.330.1580442248103;
- Thu, 30 Jan 2020 19:44:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com>
- <20191211192742.95699-8-brendanhiggins@google.com> <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
- <CAFd5g45MFYMK-eZWPC5fhm2OkynUXKfArUVhbanYVH+qKRUwPg@mail.gmail.com> <CAFd5g454tX9zxRAq5T_pDGzcWt7u5r119wjo-BCGVq+=Ej4bGQ@mail.gmail.com>
-In-Reply-To: <CAFd5g454tX9zxRAq5T_pDGzcWt7u5r119wjo-BCGVq+=Ej4bGQ@mail.gmail.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=lw805ccpp52QxN2MgYdVoxrp8refimhileg/aigHHME=;
+        b=naS7RKeEsaYhTfHAo1Vd2K/M9X/sZoMmClrJW5WtF7t4JafM6krx35BpV2fG0274X1
+         sz6vtVZI4Pmcgm2v4OSc5WMgL3I7EXnIAaAJGuDRy/hj0yvwZTJBgzNnIny68adr0NCQ
+         LS4WgYdhO7ubUfQ13nK1vGHW4zxGntXX3v13DxyluSKDlJR627dHgAuxUi+2dvIsTLkt
+         hHthcy+CdtnZVVx9LobTryHDUhOOX12J+kB/NxAsc4rgw7TsuaMHGEgfiP8YjwHJm7pL
+         kQGZUzRo97j5sZYS45O6LwT4VpLTHMXSrTD1uJd1Q33X9cr2SrE6o0AZcGyBZp1517q0
+         gs9A==
+X-Gm-Message-State: APjAAAW+SC3HMYpnXGR0kvzFYrYIhalnjENETAeHi5Dr7vDef/8VHja6
+        ZwUDKPJ++dPOOxNDR+hAgkU=
+X-Google-Smtp-Source: APXvYqyv+p0ZglaMSsbYR8fP6AjKovu4neIpvLenTX8hgjcdQnNcGR8c7B7A2Fk1ZXNv/v5+GWoDSA==
+X-Received: by 2002:a63:ed01:: with SMTP id d1mr7469703pgi.95.1580442527163;
+        Thu, 30 Jan 2020 19:48:47 -0800 (PST)
+Received: from localhost.localdomain ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id a185sm8115951pge.15.2020.01.30.19.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 19:48:46 -0800 (PST)
 From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 31 Jan 2020 03:43:56 +0000
-Message-ID: <CACPK8XddCV6QnvRSS7WcyoN7W3yuUSbyT67on=EMhV7jWDExUg@mail.gmail.com>
-Subject: Re: [PATCH v1 7/7] fsi: aspeed: add unspecified HAS_IOMEM dependency
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>, linux-fsi@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        linux-fsi@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] fsi: aspeed: add unspecified HAS_IOMEM dependency
+Date:   Fri, 31 Jan 2020 14:18:32 +1030
+Message-Id: <20200131034832.294268-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 at 09:46, Brendan Higgins <brendanhiggins@google.com> wrote:
+From: Brendan Higgins <brendanhiggins@google.com>
 
-> > > Do you want to get this in a fix for 5.5?
-> >
-> > Preferably, yes.
-> >
-> > > Acked-by: Joel Stanley <joel@jms.id.au>
->
-> Hey, I know I owe you a reply about debugging your kunitconfig (I'll
-> try to get to that this week); nevertheless, it looks like this patch
-> didn't make it into 5.5. Can you make sure it gets into 5.6? It
-> shouldn't depend on anything else.
+Currently CONFIG_FSI_MASTER_ASPEED=y implicitly depends on
+CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+the following build error:
 
-Sure, thanks for the reminder.
+ld: drivers/fsi/fsi-master-aspeed.o: in function `fsi_master_aspeed_probe':
+drivers/fsi/fsi-master-aspeed.c:436: undefined reference to `devm_ioremap_resource'
 
-Cheers,
+Fix the build error by adding the unspecified dependency.
 
-Joel
+Fixes: 606397d67f41 ("fsi: Add ast2600 master driver")
+Cc: stable@vger.kernel.org
+Reported-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+Greg, can you please pick this one up. Brendan has asked it be included
+in 5.6.
+
+ drivers/fsi/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
+index 92ce6d85802c..4cc0e630ab79 100644
+--- a/drivers/fsi/Kconfig
++++ b/drivers/fsi/Kconfig
+@@ -55,6 +55,7 @@ config FSI_MASTER_AST_CF
+ 
+ config FSI_MASTER_ASPEED
+ 	tristate "FSI ASPEED master"
++	depends on HAS_IOMEM
+ 	help
+ 	 This option enables a FSI master that is present behind an OPB bridge
+ 	 in the AST2600.
+-- 
+2.24.1
+
