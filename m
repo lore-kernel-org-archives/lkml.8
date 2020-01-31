@@ -2,169 +2,216 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4838C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C383C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E772206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9462082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgAaQkk (ORCPT
+        id S1726825AbgAaQma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:40:40 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:50769 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgAaQkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:40:39 -0500
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mw9oq-1jnL3A47W8-00s4Pb; Fri, 31 Jan 2020 17:40:37 +0100
-Received: by mail-qk1-f177.google.com with SMTP id q15so7120854qke.9;
-        Fri, 31 Jan 2020 08:40:36 -0800 (PST)
-X-Gm-Message-State: APjAAAWgKjb21gIzs8vuRVFSUf6VWr2sV7yWIVVaAkMZkIA23qdo6WnT
-        RFgmnjs7xUrvXgMKo2Qb2Fe4DyK1aZqt6/q68Sk=
-X-Google-Smtp-Source: APXvYqyT9YBAi/mdhIxEPIRzlxWQrbWCq6Vcu0q5xXx1/TnrmK3BdTbK/eqLHNRbpZOgku8jc0z7LFT+Zf0XU4cbmCk=
-X-Received: by 2002:a37:84a:: with SMTP id 71mr11360557qki.138.1580488835744;
- Fri, 31 Jan 2020 08:40:35 -0800 (PST)
+        Fri, 31 Jan 2020 11:42:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:37410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgAaQma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:42:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E032FEC;
+        Fri, 31 Jan 2020 08:42:29 -0800 (PST)
+Received: from [10.37.12.54] (unknown [10.37.12.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D8D23F68E;
+        Fri, 31 Jan 2020 08:42:11 -0800 (PST)
+Subject: Re: [PATCH 2/3] ARM: dts: exynos: Add Exynos5422 CPU
+ dynamic-power-coefficient information
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-3-lukasz.luba@arm.com>
+ <CAJKOXPcgC1xE2=-=_hqvqrBCBzQF4113+wez=3Lqp71=yv8gZw@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7c405b02-060c-3fbc-f6a8-2b4180753ad0@arm.com>
+Date:   Fri, 31 Jan 2020 16:42:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CADxRZqy3LNu=DW2Mn8G6E-Ewrg2Q4gDXbxFqJXyfcDom4YW_oQ@mail.gmail.com>
-In-Reply-To: <CADxRZqy3LNu=DW2Mn8G6E-Ewrg2Q4gDXbxFqJXyfcDom4YW_oQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 31 Jan 2020 17:40:19 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0eqbczcNJhNf9hXPBhUoscZD51d9PSs=vwH564u=7XSQ@mail.gmail.com>
-Message-ID: <CAK8P3a0eqbczcNJhNf9hXPBhUoscZD51d9PSs=vwH564u=7XSQ@mail.gmail.com>
-Subject: Re: [sparc64] stall on CPU with current git master
-To:     Anatoly Pugachev <matorola@gmail.com>
-Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000a0657b059d723bc8"
-X-Provags-ID: V03:K1:NnJ41ZWdEdILHdMHeyjYMw3ZCEleTuUlfce45+581HWCDhBKX7+
- ac+Rrhz4kxZowJ5fcyBXiF9pK9b9qaBz26HsecPpttSYapIBUDe9486jzxXZ1O53WkdNyqH
- qph8pqoqZlBO1UY1+4c4aWoSYg+AG2BIg7Rm7WWYyfpaPYduAEBjNHT1LDHsjAa5lqOYhZr
- aRYUtueQ5c+2pee2fs/rg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9RHtMX888AI=:Un0usu1jBh78Q4mdEoSjJZ
- eGwOgP1u3zf/B+ID4YVn/sadOXFhKvTqWPUVDJLAbgD1MgU1IeyFTcTz2j8Kxnx74fVk/4RzO
- 4FQeWgigcQGks5n9OqLZX6oElJSeQuR2Cbe7XHL4h59LfcdpqGR+gtggOK8ULSfUTWKO2NrCY
- ACmKmP5D4WlJVpqh8Drn/24Rgcdrtf5RfvgFHYP1EQztxVOSzIKvN78cz0fDJbidVwbxig+Jb
- dEBl9qWrDDvippTXd9EjGV/36Uy9W1qvXfB9EASG+eoCVHxgi5+y5nM8EnEUVqO9ktnYsLKsu
- MVcW7E91zeXDJwUnmgah7IO4rMD3WGcSBsywrzCKgaYX6XACgIxMrUI+rAikbJ7hE4Mzw5mw6
- 3/6X//mYNHrbhOcE+pPpJ+bOw3dQnKGlWsOwlAnmftLZ2Vzz9WfNm6APyo0h9r5BjX2ay/fla
- dvwmhwp5S6gdizwQO3IRhManEXGOh/i2435g1zlVNIQ/2uDqgb3RvIYa8Os7uwV1P329hPVOo
- oZxtR6Go2ypWKApYmEpDI4nZ8VXT3oXuMezg/g4qWwKI6v7CuZ+Hy5O9TqjDrDYJuoXO3qbdO
- yR85+43RjsGQ/6rBki8h8x1j6oow3h9QOkz/CSa6mUedPE6HrzA38fTC/soBbkMWoa4r4JWCA
- /Xy6azv9qK6hbRClgJQDiF1b7R1d0Q+pxzpX3EsjSyhGylIJzQEpa6NNbtir0IrSMwBFx0ZWA
- Djzc/OhsrAJZDAWUKPliFElK1ZFIDzt3dol8YrvZ/+rC/ca+bNI4FWeEuopSQeKMo8Dtl88PL
- eDWwy6LeIoAohrpQGgBl1iTMxuXsazlMvDUQ0eSnQDBE7cdGRI=
+In-Reply-To: <CAJKOXPcgC1xE2=-=_hqvqrBCBzQF4113+wez=3Lqp71=yv8gZw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000a0657b059d723bc8
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 31, 2020 at 4:07 PM Anatoly Pugachev <matorola@gmail.com> wrote:
->
-> Hello!
->
-> Current git master branch (at the time of writing
-> 5.5.0-07763-gccaaaf6fe5a5 ) started to hang on my sparc64 ldom.
-> Bisected "stall on CPU" (which occasionally leads to machine hang) to
-> this patch:
->
-> $ git bisect bad
-> 251ec1c159e4874fbede0c3c586e317e177c0c9b is the first bad commit
-> commit 251ec1c159e4874fbede0c3c586e317e177c0c9b
-> Author: Arnd Bergmann <arnd@arndb.de>
-> Date:   Wed Dec 11 21:07:23 2019 +0100
->
->     y2038: sparc: remove use of struct timex
->
->     'struct timex' is one of the last users of 'struct timeval' and is
->     only referenced in one place in the kernel any more, to convert the
->     user space timex into the kernel-internal version on sparc64, with a
->     different tv_usec member type.
->
->     As a preparation for hiding the time_t definition and everything
->     using that in the kernel, change the implementation once more
->     to only convert the timeval member, and then enclose the
->     struct definition in an #ifdef.
->
->     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
->  arch/sparc/kernel/sys_sparc_64.c | 33 +++++++++++++++++----------------
->  include/uapi/linux/timex.h       |  2 ++
->  2 files changed, 19 insertions(+), 16 deletions(-)
->
-> $ git desc 251ec1c159e4874fbede0c3c586e317e177c0c9b
-> v5.5-rc1-19-g251ec1c159e4
->
-> kernel 5.5.0-rc1-00018-g4f9fbd893fe8 - works perfectly (i.e. does not
-> hang or produce "stall on CPU" )
->
-> current master with the patch reverted -
-> 5.5.0-07763-gccaaaf6fe5a5-dirty - works perfectly
->
-> current master 5.5.0-07763-gccaaaf6fe5a5 - stalls, hangs
->
->
-> Can someone look what is wrong with it and/or probably revert it ?!
-> Thanks.
 
-Thanks for the report, I think I found the problem! Can you try this patch?
+On 1/31/20 1:05 PM, Krzysztof Kozlowski wrote:
+> On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
+>>
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Add dynamic power coefficient into CPU nodes which let CPUFreq subsystem
+>> register the Energy Model (EM) for the CPUs.
+>>
+>> The 'dynamic-power-coefficient' is used for calculating the dynamic power
+>> according to the equation in documentation [1].  The Energy Model (EM)
+>> framework relies on calculated power and cost for each OPP. The OPP power
+>> values come from CPUFreq driver, which registered required callback
+>> function. The simple implementation of a CPUFREQ driver, like cpufreq-dt,
+>> uses 'dev_pm_opp_of_register_em()' which relay on
+>> 'dynamic-power-coefficient' to calculate the power of requested OPP for the
+>> EM [2].
+>>
+>> The calculated values might be checked in
+>> /sys/kernel/debug/energy_model/pd*/
+>>
+>> $ grep . /sys/kernel/debug/energy_model/pd1/cs*/*
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/power:310
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/frequency:1100000
+>> /sys/kernel/debug/energy_model/pd1/cs:1100000/power:341
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/cost:558
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/frequency:1200000
+>> /sys/kernel/debug/energy_model/pd1/cs:1200000/power:372
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/cost:674
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/frequency:1300000
+>> /sys/kernel/debug/energy_model/pd1/cs:1300000/power:487
+>> /sys/kernel/debug/energy_model/pd1/cs:1400000/cost:675 ...
+>>
+>> $ grep . /sys/kernel/debug/energy_model/pd0/cs*/*
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/cost:200
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/power:154
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/frequency:1100000
+>> /sys/kernel/debug/energy_model/pd0/cs:1100000/power:220
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/frequency:1200000
+>> /sys/kernel/debug/energy_model/pd0/cs:1200000/power:240
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/cost:260
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/frequency:1300000
+>> /sys/kernel/debug/energy_model/pd0/cs:1300000/power:260
+>> /sys/kernel/debug/energy_model/pd0/cs:200000/cost:130 ...
+> 
+> Please, do not describe entire Energy Model in commit message touching
+> DTS. It brings too much information which look unrelated and therefore
+> it makes difficult to spot real rationale behind the change. Just
+> mention:
+> 1. Why you are doing it?
+> 2. What are you doing?
+> 3. How did you figure out magic constants here (details of "what")?
 
-      Arnd
+OK, I will clean this up.
 
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index 34917617f258..6b92fadb6ec7 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -551,7 +551,7 @@ SYSCALL_DEFINE2(getdomainname, char __user *,
-name, int, len)
- SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
- {
-        struct __kernel_timex txc;
--       struct __kernel_old_timeval *tv = (void *)&txc_p->time;
-+       struct __kernel_old_timeval *tv = (void *)&txc.time;
-        int ret;
+> 
+>> To provide a proper value of the 'dynamic-power-coefficient' the real power
+>> can be measured using a dedicated hardware, i.e. INA2xx. The Odroid-XU3
+>> hwmon sensors have been used to capture the power value during a sysbench
+>> test running on single core and at each possible OPP.
+> 
+> Since you mention the values, post them. That's the only thing which
+> reader cannot get on his own. All other values posted in commit
+> message will be seen after running tests...
 
-        /* Copy the user data space into the kernel copy
-@@ -576,7 +576,7 @@ SYSCALL_DEFINE2(sparc_clock_adjtime, const
-clockid_t, which_clock,
-                struct __kernel_timex __user *, txc_p)
- {
-        struct __kernel_timex txc;
--       struct __kernel_old_timeval *tv = (void *)&txc_p->time;
-+       struct __kernel_old_timeval *tv = (void *)&txc.time;
-        int ret;
+Makes sense, but as you spotted it can vary probably due to ASV, so I
+will skip to put values in commit message.
 
-        if (!IS_ENABLED(CONFIG_POSIX_TIMERS)) {
+> 
+>> The measured values
+>> were divided by 2, since the dynamic power is typically half of the
+>> consumed power (the second half is static power). Next, the approximation
+>> was made and the power model derived, showing the 'C' value of routhly X.
+> 
+> s/routhly/roughly/
+> 
+> What is X?
 
---000000000000a0657b059d723bc8
-Content-Type: text/x-patch; charset="US-ASCII"; name="sparc64-timex-fix.patch"
-Content-Disposition: attachment; filename="sparc64-timex-fix.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k62e6sd80>
-X-Attachment-Id: f_k62e6sd80
+The 'X' is <128> or <310>
 
-ZGlmZiAtLWdpdCBhL2FyY2gvc3BhcmMva2VybmVsL3N5c19zcGFyY182NC5jIGIvYXJjaC9zcGFy
-Yy9rZXJuZWwvc3lzX3NwYXJjXzY0LmMKaW5kZXggMzQ5MTc2MTdmMjU4Li42YjkyZmFkYjZlYzcg
-MTAwNjQ0Ci0tLSBhL2FyY2gvc3BhcmMva2VybmVsL3N5c19zcGFyY182NC5jCisrKyBiL2FyY2gv
-c3BhcmMva2VybmVsL3N5c19zcGFyY182NC5jCkBAIC01NTEsNyArNTUxLDcgQEAgU1lTQ0FMTF9E
-RUZJTkUyKGdldGRvbWFpbm5hbWUsIGNoYXIgX191c2VyICosIG5hbWUsIGludCwgbGVuKQogU1lT
-Q0FMTF9ERUZJTkUxKHNwYXJjX2FkanRpbWV4LCBzdHJ1Y3QgX19rZXJuZWxfdGltZXggX191c2Vy
-ICosIHR4Y19wKQogewogCXN0cnVjdCBfX2tlcm5lbF90aW1leCB0eGM7Ci0Jc3RydWN0IF9fa2Vy
-bmVsX29sZF90aW1ldmFsICp0diA9ICh2b2lkICopJnR4Y19wLT50aW1lOworCXN0cnVjdCBfX2tl
-cm5lbF9vbGRfdGltZXZhbCAqdHYgPSAodm9pZCAqKSZ0eGMudGltZTsKIAlpbnQgcmV0OwogCiAJ
-LyogQ29weSB0aGUgdXNlciBkYXRhIHNwYWNlIGludG8gdGhlIGtlcm5lbCBjb3B5CkBAIC01NzYs
-NyArNTc2LDcgQEAgU1lTQ0FMTF9ERUZJTkUyKHNwYXJjX2Nsb2NrX2FkanRpbWUsIGNvbnN0IGNs
-b2NraWRfdCwgd2hpY2hfY2xvY2ssCiAJCXN0cnVjdCBfX2tlcm5lbF90aW1leCBfX3VzZXIgKiwg
-dHhjX3ApCiB7CiAJc3RydWN0IF9fa2VybmVsX3RpbWV4IHR4YzsKLQlzdHJ1Y3QgX19rZXJuZWxf
-b2xkX3RpbWV2YWwgKnR2ID0gKHZvaWQgKikmdHhjX3AtPnRpbWU7CisJc3RydWN0IF9fa2VybmVs
-X29sZF90aW1ldmFsICp0diA9ICh2b2lkICopJnR4Yy50aW1lOwogCWludCByZXQ7CiAKIAlpZiAo
-IUlTX0VOQUJMRUQoQ09ORklHX1BPU0lYX1RJTUVSUykpIHsK
---000000000000a0657b059d723bc8--
+> 
+>> Check the example equations in drivers/opp/of.c [2].
+>> Thus, i.e. the power = 1.0Watt at 1GHz => 0.5W dynamic power =>
+>> dynamic-power-coefficient = 400
+>>
+>> Using this simple technique we can provide and needed coefficient.  The
+> 
+> s/and/the/ ?
+
+correct
+
+> 
+>> approximation does not have to be super precised. The proportion is
+>> important and the difference between power consumed by different CPUs
+>> running at the same frequency, which is then used in Energy Aware Scheduler
+>> algorithms. An example power values on Odroid-XU3:
+>>
+>> (LITTLE CPU)
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd0/cs:1000000/power:154
+> 
+> For A7, 1V and 1 GHz this gives 142, not 154. Is it correct? What ASV
+> are you using?
+
+Good question, it may vary depending on ASV. Would it vary also due to
+bootloader?
+This one is quite old:
+U-Boot 2012.07 (Aug 11 2014 - 18:33:44) for Exynos5422
+
+Odroid-xu3 rev0.2 20140529 ASV regs dump:
+EXYNOS_CHIPID_REG_PKG_ID=0x320c832a
+EXYNOS_CHIPID_REG_AUX_INFO=0x4f
+
+Odroid-xu4 rev0.1 20180912 ASV regs dump:
+EXYNOS_CHIPID_REG_PKG_ID=0x3b0e832a
+EXYNOS_CHIPID_REG_AUX_INFO=0x100c004f
+
+> 
+>> (big CPU)
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/frequency:1000000
+>> /sys/kernel/debug/energy_model/pd1/cs:1000000/power:310
+>>
+>> In Odroid-XU3 case the derived coefficient value for 'big' CPU has:
+>> dynamic-power-coefficient = <310>;
+>> while the 'LITTLE':
+>> dynamic-power-coefficient = <128>;
+> 
+> Make it all compact. First, you mention power values which are the
+> same as in the beginning of this commit message. Why repeating? Then
+> you mention the power coefficient in 4 lines instead of simple:
+> For Odroid XU3, the derived power coefficient is then 128 for an A7
+> CPU and 310 for an A15 CPU. Or something similar.
+
+OK, I will keep simple, as you have commented.
+
+> 
+>>
+>> [1] Documentation/devicetree/bindings/arm/cpus.yaml
+>> [2] https://elixir.bootlin.com/linux/v5.4/source/drivers/opp/of.c#L1044
+> 
+> Refer to path inside, no external sources unless needed.
+
+OK
+
+Regards,
+Lukasz
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
