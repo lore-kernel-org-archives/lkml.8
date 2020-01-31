@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D6CC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA498C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED94C2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F542067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w2hVTTa9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YI3YebB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgAaF2Y (ORCPT
+        id S1728049AbgAaF21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 00:28:24 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:32857 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgAaF2X (ORCPT
+        Fri, 31 Jan 2020 00:28:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37887 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgAaF20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 00:28:23 -0500
-Received: by mail-pl1-f195.google.com with SMTP id ay11so2270635plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 21:28:22 -0800 (PST)
+        Fri, 31 Jan 2020 00:28:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so2719379pfn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 21:28:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5O9dRwTmAfTdhR0RTimUtT1UQf2+T/KS73D+N+uxWxw=;
-        b=w2hVTTa9jV41L9X8+VI9lgCG0sikVjC0VKQQhwZ45dJYTylRt1/bpb3Nn4MK8k1AuC
-         lPF/7cBMG+d5Tg9APK4s1ooCILZdOtp5FEroxAyGalEcAICcKa8r6wZO2DWyhQa93lHx
-         oF72ZGrpOpSbxrl8wYhq80uDxbDqjaEdxmrlX3XpSQu5JnhnsiAI+jM4GO//DStj6iOx
-         Q/lyusherTK1Z80dgkNGgptdj4SufDpNTkmtoHaHnXCDJTyqs4rqfFja7fAv4bZVvF/6
-         t7unsdJNEc57m5cQDFBuCMe+8Y9SUrtqIYI8eNFddXntxL5Ll1gB5WEAorHdXfQLRP2x
-         Nl6A==
+        bh=DxgxLw1nnPY/CgfeiMFFCg6vQUHvoQpIfG4OaW4fgW0=;
+        b=YI3YebB6HSLQ7pebDbgDP1p5gfABhA/3/u87vRsUet2WPvg0mURPloomP/N60o1MzM
+         i1cUl0XUJj8QAZfgCCPTbsUg4yEKjt2D+K+v3eW7116tEWMqM6M9jdhSy2qtspzDDzvN
+         FdNNajOIhmxHZqDB5u7M85rIYvIHObYGLE2t/RJLZJ2w5+kFwWolxEw2SDjRgaLwFeJ8
+         UuNz6qfNrisR+TXS+UooEuMz8HO94pAt8sgO1eR0daK++L98j2TdVjzyEWA/v56YbTOV
+         nXrqNG4ZxS7w/oP4iZRBk7wRfMl/8/1ti4jHaIgR8hkZdeOFkKqE7IUpAWRPsr/7FuSB
+         C/dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5O9dRwTmAfTdhR0RTimUtT1UQf2+T/KS73D+N+uxWxw=;
-        b=ttrNQ9LpI15xeggR9oAE8xrnT2UDP8lRsft8WhV5i8Jmnwo4V2Dz2yxaPZse5oXqU6
-         vCG8wgIMHK8ym3GpB383s5UTEgUuh19pQAQXnM+U9PpD8YkyqkLN0R3zwT+m3DaFemFk
-         gQLKIPEIsXefFn6eA9t02ND7ucMXzTwvVC61kJROr7n8GslELiWOFPUGviTou3VmQJ9U
-         8/4nGjPmFEXmB9tPxNZ5k9Y4a7E5Fs+XHgHTZ/e1GW5LNgf+pMaRP6k2g/UuxVv0OCrB
-         8N5qyK9hjJWofZXpilZaLAO9WqrS65Cf83RRaXhI88LV82eKHyOkeha0kSFcTGPZmsn3
-         S3XQ==
-X-Gm-Message-State: APjAAAVmeuSUcuWYeuW7sIq0m5CmcqJ4KCayLJ1lKJxPD91dmh3jAMo7
-        i2TCqG/v3RyeUrGWvgdHbC4RLA==
-X-Google-Smtp-Source: APXvYqxKJQkEsMprpBon3acfXN0/i9RqjCadeEkPMtXCEMGBgxYe7Qp0IMV/cARWwYTIPIDAh7lioA==
-X-Received: by 2002:a17:90a:9f83:: with SMTP id o3mr10309975pjp.95.1580448502479;
-        Thu, 30 Jan 2020 21:28:22 -0800 (PST)
+        bh=DxgxLw1nnPY/CgfeiMFFCg6vQUHvoQpIfG4OaW4fgW0=;
+        b=EncXUnn5NZDv4GQT+kE2HzVYc5eRxk3P/y48gCBL9CADVo/szS47NNqlT2hIr/ucVe
+         u6s4bNVxWGA+YeERj+lbgFbXsya/wRsrsnMs0QtLZzAT4UNc7ek0Mz61M+GKF6nY9dzj
+         FJpTNW5sksTiIAdqnqauAjn9GuFdmOfrushK93WHuNyXOgz0rPot53ZtB4H8Kl0IX13J
+         BHn1JGtL2Mtwas+E6jRe10AlQsPN2GIbTb/PfnTa9nVeprleMmr/EVMWuszgPNruEw0l
+         LnFBrp4XTOyu+Z1TKupxxfuoHk8wwDXpSVFa9k3EkM1mcKJyjEQT8LhgaCC/zcPzKYeR
+         CTcQ==
+X-Gm-Message-State: APjAAAUvTV4oNsdF5kwSBobLRAbPIQisF3BRN70gO9D5PJaDnBy+n8dJ
+        CjQF2Q+6jAsbXI+wTuBwJ6DmHw==
+X-Google-Smtp-Source: APXvYqyxrPWuHU5s/+tNr3ypkUHKblSmVAbtWVe7/168BQU+asPnSNYY3ohaGm6un7M6L78u/pBVYw==
+X-Received: by 2002:aa7:82ce:: with SMTP id f14mr8901575pfn.167.1580448505501;
+        Thu, 30 Jan 2020 21:28:25 -0800 (PST)
 Received: from localhost ([122.172.141.204])
-        by smtp.gmail.com with ESMTPSA id b12sm8762269pfr.26.2020.01.30.21.28.21
+        by smtp.gmail.com with ESMTPSA id x197sm8552703pfc.1.2020.01.30.21.28.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jan 2020 21:28:21 -0800 (PST)
+        Thu, 30 Jan 2020 21:28:25 -0800 (PST)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     arnd@arndb.de, Sudeep Holla <sudeep.holla@arm.com>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>, jassisinghbrar@gmail.com,
@@ -63,9 +63,9 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>, jassisinghbrar@gmail.com,
         peter.hilber@opensynergy.com,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V6 1/3] firmware: arm_scmi: Update doc style comments
-Date:   Fri, 31 Jan 2020 10:58:11 +0530
-Message-Id: <1bff7c0d1ad2c8b6eeff9660421f414f8c612eb2.1580448239.git.viresh.kumar@linaro.org>
+Subject: [PATCH V6 2/3] firmware: arm_scmi: Move macros and helpers to common.h
+Date:   Fri, 31 Jan 2020 10:58:12 +0530
+Message-Id: <6615db480370719b0a0241447a5f3feb8eea421f.1580448239.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 In-Reply-To: <cover.1580448239.git.viresh.kumar@linaro.org>
 References: <cover.1580448239.git.viresh.kumar@linaro.org>
@@ -76,52 +76,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix minor formatting issues with the doc style comments.
+Move message header specific macros and helper routines to common.h as
+they will be used outside of driver.c in a later commit.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/firmware/arm_scmi/common.h | 4 ++--
- drivers/firmware/arm_scmi/driver.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/arm_scmi/common.h | 40 ++++++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/driver.c | 40 ------------------------------
+ 2 files changed, 40 insertions(+), 40 deletions(-)
 
 diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index df35358ff324..227934871929 100644
+index 227934871929..934b5a23f10b 100644
 --- a/drivers/firmware/arm_scmi/common.h
 +++ b/drivers/firmware/arm_scmi/common.h
-@@ -33,8 +33,8 @@ enum scmi_common_cmd {
+@@ -47,6 +47,19 @@ struct scmi_msg_resp_prot_version {
+ 	__le16 major_version;
+ };
+ 
++#define MSG_ID_MASK		GENMASK(7, 0)
++#define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
++#define MSG_TYPE_MASK		GENMASK(9, 8)
++#define MSG_XTRACT_TYPE(hdr)	FIELD_GET(MSG_TYPE_MASK, (hdr))
++#define MSG_TYPE_COMMAND	0
++#define MSG_TYPE_DELAYED_RESP	2
++#define MSG_TYPE_NOTIFICATION	3
++#define MSG_PROTOCOL_ID_MASK	GENMASK(17, 10)
++#define MSG_XTRACT_PROT_ID(hdr)	FIELD_GET(MSG_PROTOCOL_ID_MASK, (hdr))
++#define MSG_TOKEN_ID_MASK	GENMASK(27, 18)
++#define MSG_XTRACT_TOKEN(hdr)	FIELD_GET(MSG_TOKEN_ID_MASK, (hdr))
++#define MSG_TOKEN_MAX		(MSG_XTRACT_TOKEN(MSG_TOKEN_ID_MASK) + 1)
++
  /**
-  * struct scmi_msg_resp_prot_version - Response for a message
+  * struct scmi_msg_hdr - Message(Tx/Rx) header
   *
-- * @major_version: Major version of the ABI that firmware supports
-  * @minor_version: Minor version of the ABI that firmware supports
-+ * @major_version: Major version of the ABI that firmware supports
+@@ -67,6 +80,33 @@ struct scmi_msg_hdr {
+ 	bool poll_completion;
+ };
+ 
++/**
++ * pack_scmi_header() - packs and returns 32-bit header
++ *
++ * @hdr: pointer to header containing all the information on message id,
++ *	protocol id and sequence id.
++ *
++ * Return: 32-bit packed message header to be sent to the platform.
++ */
++static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
++{
++	return FIELD_PREP(MSG_ID_MASK, hdr->id) |
++		FIELD_PREP(MSG_TOKEN_ID_MASK, hdr->seq) |
++		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
++}
++
++/**
++ * unpack_scmi_header() - unpacks and records message and protocol id
++ *
++ * @msg_hdr: 32-bit packed message header sent from the platform
++ * @hdr: pointer to header to fetch message and protocol id.
++ */
++static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
++{
++	hdr->id = MSG_XTRACT_ID(msg_hdr);
++	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
++}
++
+ /**
+  * struct scmi_msg - Message(Tx/Rx) structure
   *
-  * In general, ABI version changes follow the rule that minor version increments
-  * are backward compatible. Major revision changes in ABI may not be
-@@ -88,7 +88,7 @@ struct scmi_msg {
-  *	message. If request-ACK protocol is used, we can reuse the same
-  *	buffer for the rx path as we use for the tx path.
-  * @done: command message transmit completion event
-- * @async: pointer to delayed response message received event completion
-+ * @async_done: pointer to delayed response message received event completion
-  */
- struct scmi_xfer {
- 	int transfer_id;
 diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 2c96f6b5a7d8..978eafb53471 100644
+index 978eafb53471..716423063b14 100644
 --- a/drivers/firmware/arm_scmi/driver.c
 +++ b/drivers/firmware/arm_scmi/driver.c
-@@ -119,9 +119,9 @@ struct scmi_chan_info {
+@@ -32,19 +32,6 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/scmi.h>
+ 
+-#define MSG_ID_MASK		GENMASK(7, 0)
+-#define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
+-#define MSG_TYPE_MASK		GENMASK(9, 8)
+-#define MSG_XTRACT_TYPE(hdr)	FIELD_GET(MSG_TYPE_MASK, (hdr))
+-#define MSG_TYPE_COMMAND	0
+-#define MSG_TYPE_DELAYED_RESP	2
+-#define MSG_TYPE_NOTIFICATION	3
+-#define MSG_PROTOCOL_ID_MASK	GENMASK(17, 10)
+-#define MSG_XTRACT_PROT_ID(hdr)	FIELD_GET(MSG_PROTOCOL_ID_MASK, (hdr))
+-#define MSG_TOKEN_ID_MASK	GENMASK(27, 18)
+-#define MSG_XTRACT_TOKEN(hdr)	FIELD_GET(MSG_TOKEN_ID_MASK, (hdr))
+-#define MSG_TOKEN_MAX		(MSG_XTRACT_TOKEN(MSG_TOKEN_ID_MASK) + 1)
+-
+ enum scmi_error_codes {
+ 	SCMI_SUCCESS = 0,	/* Success */
+ 	SCMI_ERR_SUPPORT = -1,	/* Not supported */
+@@ -210,33 +197,6 @@ static void scmi_fetch_response(struct scmi_xfer *xfer,
+ 	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
+ }
+ 
+-/**
+- * pack_scmi_header() - packs and returns 32-bit header
+- *
+- * @hdr: pointer to header containing all the information on message id,
+- *	protocol id and sequence id.
+- *
+- * Return: 32-bit packed message header to be sent to the platform.
+- */
+-static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
+-{
+-	return FIELD_PREP(MSG_ID_MASK, hdr->id) |
+-		FIELD_PREP(MSG_TOKEN_ID_MASK, hdr->seq) |
+-		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
+-}
+-
+-/**
+- * unpack_scmi_header() - unpacks and records message and protocol id
+- *
+- * @msg_hdr: 32-bit packed message header sent from the platform
+- * @hdr: pointer to header to fetch message and protocol id.
+- */
+-static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
+-{
+-	hdr->id = MSG_XTRACT_ID(msg_hdr);
+-	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
+-}
+-
+ /**
+  * scmi_tx_prepare() - mailbox client callback to prepare for the transfer
   *
-  * @dev: Device pointer
-  * @desc: SoC description for this instance
-- * @handle: Instance of SCMI handle to send to clients
-  * @version: SCMI revision information containing protocol version,
-  *	implementation version and (sub-)vendor identification.
-+ * @handle: Instance of SCMI handle to send to clients
-  * @tx_minfo: Universal Transmit Message management info
-  * @tx_idr: IDR object to map protocol id to Tx channel info pointer
-  * @rx_idr: IDR object to map protocol id to Rx channel info pointer
 -- 
 2.21.0.rc0.269.g1a574e7a288b
 
