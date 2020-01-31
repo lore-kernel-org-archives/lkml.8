@@ -2,78 +2,123 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3FCC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B0B21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580506239;
-	bh=7rm5QBIBcquRskYlwTK6rpmwJGMsnsxrqoFtI+gWoIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xw2ohEuCnI7/ha+VI1undXg7NNQngA2dxExDmWH57DNhhgMemDf1OxHIcR8hqlzZ9
-	 603deQj9vxPTTjLUaexsoJlZVsAPFWU081eypZtZPRYwfPIamynd/ZPT0LkKr1c4iI
-	 VzIDCF2RNg/HycUTRDFdGWD1o6FgXWTwVJxZU/Oo=
+	by mail.kernel.org (Postfix) with ESMTP id BF37F215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="DB34FYS0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgAaVai (ORCPT
+        id S1726443AbgAaVdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:30:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgAaVai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:30:38 -0500
-Received: from localhost (unknown [83.216.75.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E38B20CC7;
-        Fri, 31 Jan 2020 21:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580506237;
-        bh=7rm5QBIBcquRskYlwTK6rpmwJGMsnsxrqoFtI+gWoIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YiQWYv5PTd92ROUjNUK+Q0s3ZDxpKui9HON7BBjcXWiwBNzwtAPsrsHGpaAoaqYHT
-         YxSFKDmKVxF3DtjphxAfJ+1XxkGgPXVlrwYZjQG7ICIX0uUUkZH2qeh7cH+p0WzFXt
-         ls7G7HtHL8NcMzD52mG5vk1rKjx8iaZqaxGOdEnM=
-Date:   Fri, 31 Jan 2020 22:30:29 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/55] 4.19.101-stable review
-Message-ID: <20200131213029.GF2278356@kroah.com>
-References: <20200130183608.563083888@linuxfoundation.org>
- <20200131131223.GA13686@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131131223.GA13686@duo.ucw.cz>
+        Fri, 31 Jan 2020 16:33:23 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35747 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgAaVdW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 16:33:22 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so3262744plt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=v0cY8r600PZeMMg003zbfyKoArFu5BkniPYK/6FLwIM=;
+        b=DB34FYS0GbdREz9MgbfN6GuhgdDTZlKITxD0isHLtPED+4N8iQRLPGGtlunQ0K4Ob+
+         NWPbi9TxN1YqENBQKIifltqOpSzi4F+U6/mEVXYtuKxZlh0U/eL6omVSAS9R98bOTolz
+         yg0XC8KBPGgb6NZcpOiEpVi/9NALs3R97S4//yxss0Lnb/6RPxcy4a14Hv0R/Crsxhg+
+         Fma29ZkKatlSvg/biTbuUo/sPAvkwG8Xm0NHuhbDEZDzRoOXXkYMtshnPho8eF7fyuRy
+         r824XGik5cjUwfxU/DsZkZGwtO98sb30s8v3UprW8aUPV/HQud1sPFWrAmQHjlPbnMoP
+         J/XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=v0cY8r600PZeMMg003zbfyKoArFu5BkniPYK/6FLwIM=;
+        b=hKCECc8kh+wTyGky3i8wXfB6+3ik8D4bolYJvhqFbA3iD0k1cYzUDH63MvCopdTLGT
+         vAjIv1aYfglamM9b4pXM3+G5m9KyhfSpIcd8OxrRX0nEYvnAiLROH6D0ex5XGw/7zc8L
+         +i1TZOl4wcYdOkLvn92kbbTyhjWSAw60KLtA/nMHQ8n6nAzK1SdYQYY4xwP0ibbiu+tV
+         x898BUPvAcJvamwdriMHuTZDh27aXiyKnS8XQXamO/aROsCLcApGUAWNVwRT0BeiiSVa
+         WdrJckz6l6mnhJf+IN9Tdfloggij2QmVHJ7vns+TbiYLOEm7tgPCLaRDT0lGf0Rgg7oG
+         D+ig==
+X-Gm-Message-State: APjAAAXHhyHueO5kpp1r/jp9wYcHiwZRsj2BH200FDi4KS7tHNnioVEH
+        OxYk8REwlFgr6U6NvWjLD4zC7g==
+X-Google-Smtp-Source: APXvYqxUZPWDZetpRBZGKWvETiPTJY3F2228m8xWzfN+cNxLwgMODZHx1RESWs9RO0c/orFHJv/Dkg==
+X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr12159154pls.34.1580506402075;
+        Fri, 31 Jan 2020 13:33:22 -0800 (PST)
+Received: from ?IPv6:2600:1010:b010:9631:69c2:3ecc:ab84:f45c? ([2600:1010:b010:9631:69c2:3ecc:ab84:f45c])
+        by smtp.gmail.com with ESMTPSA id m22sm12003610pgn.8.2020.01.31.13.33.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 13:33:21 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
+Date:   Fri, 31 Jan 2020 13:33:17 -0800
+Message-Id: <E1F9CE39-7D61-43E1-B871-6D4BFA4B6D66@amacapital.net>
+References: <20200131210424.GG18946@linux.intel.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <20200131210424.GG18946@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 02:12:23PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > This is the start of the stable review cycle for the 4.19.101 release.
-> > There are 55 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> > Anything received after that time might be too late.
-> 
-> No problems detected in CIP compile/boot tests:
-> 
-> https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/commit/bb5fd2ed7f74648a46141afdad5902a3a7cf2c00
 
-Thanks for testing and letting me know.
 
-greg k-h
+> On Jan 31, 2020, at 1:04 PM, Sean Christopherson <sean.j.christopherson@in=
+tel.com> wrote:
+>=20
+> =EF=BB=BFOn Fri, Jan 31, 2020 at 12:57:51PM -0800, Andy Lutomirski wrote:
+>>=20
+>>>> On Jan 31, 2020, at 12:18 PM, Sean Christopherson <sean.j.christopherso=
+n@intel.com> wrote:
+>>>=20
+>>> This is essentially what I proposed a while back.  KVM would allow enabl=
+ing
+>>> split-lock #AC in the guest if and only if SMT is disabled or the enable=
+ bit
+>>> is per-thread, *or* the host is in "warn" mode (can live with split-lock=
+ #AC
+>>> being randomly disabled/enabled) and userspace has communicated to KVM t=
+hat
+>>> it is pinning vCPUs.
+>>=20
+>> How about covering the actual sensible case: host is set to fatal?  In th=
+is
+>> mode, the guest gets split lock detection whether it wants it or not. How=
+ do
+>> we communicate this to the guest?
+>=20
+> KVM doesn't advertise split-lock #AC to the guest and returns -EFAULT to t=
+he
+> userspace VMM if the guest triggers a split-lock #AC.
+>=20
+> Effectively the same behavior as any other userspace process, just that KV=
+M
+> explicitly returns -EFAULT instead of the process getting a SIGBUS.
+
+
+Which helps how if the guest is actually SLD-aware?
+
+I suppose we could make the argument that, if an SLD-aware guest gets #AC at=
+ CPL0, it=E2=80=99s a bug, but it still seems rather nicer to forward the #A=
+C to the guest instead of summarily killing it.
+
+ISTM, on an SLD-fatal host with an SLD-aware guest, the host should tell the=
+ guest =E2=80=9Chey, you may not do split locks =E2=80=94 SLD is forced on=E2=
+=80=9D and the guest should somehow acknowledge it so that it sees the archi=
+tectural behavior instead of something we made up.  Hence my suggestion.=
