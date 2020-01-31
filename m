@@ -2,96 +2,125 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52A8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B049C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A855720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580436975;
-	bh=tyJKzLA16be5mNz2EBj3faXgdYPo6KX3V43I+YCflTI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KfJQB0uNOTn+ZeO4pHnQgNH/kdVhFeYdYbQnsyPsB5AEC5DNXkjh1CrA97Iz/MtRL
-	 KPim+kJCfjGgedeROFwx+yCIh8V82PKZnpMrXPwLJgLp7ke8+xFoQSAsRl2XTn5Mff
-	 Ay+ISkWi/UFgcgHncmlWVIZZIMc9FkM6cMQNkr8w=
+	by mail.kernel.org (Postfix) with ESMTP id EFF94206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgAaCQO (ORCPT
+        id S1727861AbgAaCRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:16:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbgAaCQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:16:14 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E66206F0;
-        Fri, 31 Jan 2020 02:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580436974;
-        bh=tyJKzLA16be5mNz2EBj3faXgdYPo6KX3V43I+YCflTI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=naQx0E8TmVLVXc/yB0+otsJ3q2KIhHCnxBgDTYtppdT5Y26k7wkvZykakj9qBy608
-         g2ovdKkyHPtcL2CzV5Ue0H58FpBp6X7DhhCv8iVr8JTITI5ba7U+7mBY/SB8LjC3TI
-         32/VezsBlEl54vLgzoFT4LRgjVRBHlK8PnH/PgPs=
-Date:   Thu, 30 Jan 2020 18:16:13 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH v4 2/2] kasan: add test for invalid size in memmove
-Message-Id: <20200130181613.1bfb8df8e73a280512cab8ef@linux-foundation.org>
-In-Reply-To: <1580355838.11126.5.camel@mtksdccf07>
-References: <20191112065313.7060-1-walter-zh.wu@mediatek.com>
-        <619b898f-f9c2-1185-5ea7-b9bf21924942@virtuozzo.com>
-        <1580355838.11126.5.camel@mtksdccf07>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Jan 2020 21:17:07 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38268 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727741AbgAaCRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:17:06 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 936E23A2BDF;
+        Fri, 31 Jan 2020 13:17:02 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ixLrh-0006P1-9m; Fri, 31 Jan 2020 13:17:01 +1100
+Date:   Fri, 31 Jan 2020 13:17:01 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 06/12] btrfs: Convert from readpages to readahead
+Message-ID: <20200131021701.GB18575@dread.disaster.area>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-7-willy@infradead.org>
+ <20200129004609.GI18610@dread.disaster.area>
+ <20200130080939.GL6615@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130080939.GL6615@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=-ZxxmdGvqcmE25f44t8A:9
+        a=WA9dXB9HyJ0bNApb:21 a=s0uptFhnqMGzMIq5:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 11:43:58 +0800 Walter Wu <walter-zh.wu@mediatek.com> wrote:
-
-> On Fri, 2019-11-22 at 06:21 +0800, Andrey Ryabinin wrote:
-> > 
-> > On 11/12/19 9:53 AM, Walter Wu wrote:
-> > > Test negative size in memmove in order to verify whether it correctly
-> > > get KASAN report.
+On Thu, Jan 30, 2020 at 12:09:39AM -0800, Matthew Wilcox wrote:
+> On Wed, Jan 29, 2020 at 11:46:09AM +1100, Dave Chinner wrote:
+> > On Fri, Jan 24, 2020 at 05:35:47PM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > > > 
-> > > Casting negative numbers to size_t would indeed turn up as a large
-> > > size_t, so it will have out-of-bounds bug and be detected by KASAN.
+> > > Use the new readahead operation in btrfs
 > > > 
-> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > > Cc: linux-btrfs@vger.kernel.org
+> > > ---
+> > >  fs/btrfs/extent_io.c | 15 ++++-----------
+> > >  fs/btrfs/extent_io.h |  2 +-
+> > >  fs/btrfs/inode.c     | 18 +++++++++---------
+> > >  3 files changed, 14 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > > index 2f4802f405a2..b1e2acbec165 100644
+> > > --- a/fs/btrfs/extent_io.c
+> > > +++ b/fs/btrfs/extent_io.c
+> > > @@ -4283,7 +4283,7 @@ int extent_writepages(struct address_space *mapping,
+> > >  	return ret;
+> > >  }
+> > >  
+> > > -int extent_readpages(struct address_space *mapping, struct list_head *pages,
+> > > +unsigned extent_readahead(struct address_space *mapping, pgoff_t start,
+> > >  		     unsigned nr_pages)
+> > >  {
+> > >  	struct bio *bio = NULL;
+> > > @@ -4294,20 +4294,13 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
+> > >  	int nr = 0;
+> > >  	u64 prev_em_start = (u64)-1;
+> > >  
+> > > -	while (!list_empty(pages)) {
+> > > +	while (nr_pages) {
+> > >  		u64 contig_end = 0;
+> > >  
+> > > -		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
+> > > -			struct page *page = lru_to_page(pages);
+> > > +		for (nr = 0; nr < ARRAY_SIZE(pagepool) && nr_pages--;) {
 > > 
-> > Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> > What is stopping nr_pages from going negative here, and then looping
+> > forever on the outer nr_pages loop? Perhaps "while(nr_pages > 0) {"
+> > would be better there?
 > 
-> Hi Andrey, Dmitry, Andrew,
+> Ugh, nr_pages is unsigned, so that's no good.  Maybe make this a more
+> conventional loop ...
 > 
-> Would you tell me why this patch-sets don't merge into linux-next tree?
-> We lost something?
+>         while (nr_pages) {
+>                 u64 contig_end = 0;
 > 
+>                 for (nr = 0; nr < ARRAY_SIZE(pagepool); nr++) {
+>                         struct page *page = readahead_page(mapping, start++);
+> 
+>                         prefetchw(&page->flags);
+>                         pagepool[nr] = page;
+>                         contig_end = page_offset(page) + PAGE_SIZE - 1;
+>                         if (--nr_pages == 0)
+>                                 break;
+>                 }
 
-In response to [1/2] Andrey said "So let's keep this code as this" and
-you said "I will send a new v5 patch tomorrow".  So we're awaiting a v5
-patchset?
+Looks like it solves the problem :)
 
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
