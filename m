@@ -2,87 +2,86 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3340C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA422C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743DC20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OdbyEJ7e"
+	by mail.kernel.org (Postfix) with ESMTP id CA408206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAaPS1 (ORCPT
+        id S1729030AbgAaPVu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:18:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50142 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbgAaPSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:18:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qdQ72X8eJDUegByfpEinwuR80lTNXL8pwZViVX83mfE=; b=OdbyEJ7ed8QFDLDOsIXw4wXSCa
-        gpQugNCHyN5wXQJLRlLF+LXJn1lc0P04BUQS/ljpy6yyW8MM8NSzGw6bRlSvuYBlOGmYtgstqc8ey
-        8mTn1fiqqhnKQYm+GhqInJZO6WFEX7aMQZyzccuP+N5iMNDazqvn75jcQfIcFdPMyU/eAycrgMabw
-        CkFo5Kp5wN8oiwAuBYMc9x6wObplBbOcvfw1lavFP8wtRVHmzNdiZvrt08FR6Ox5F2VaDmUCJFnxs
-        t5ILk5dXjEfy7fSw34XZXasWGj+OuMLxWAz4gKEMEuDBU+F9TfUmVg09wiMwKkBykeAxL2ql2XmQu
-        XDT4LraA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixY3W-00045c-VQ; Fri, 31 Jan 2020 15:18:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6DAD3306BE4;
-        Fri, 31 Jan 2020 16:16:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id C85A32B64DB7C; Fri, 31 Jan 2020 16:17:58 +0100 (CET)
-Message-Id: <20200131151540.269115130@infradead.org>
-User-Agent: quilt/0.65
-Date:   Fri, 31 Jan 2020 16:07:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     peterz@infradead.org, mingo@kernel.org, will@kernel.org
-Cc:     oleg@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, longman@redhat.com, dave@stgolabs.net,
-        jack@suse.com, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH -v2 7/7] locking/percpu-rwsem: Add might_sleep() for writer locking
-References: <20200131150703.194229898@infradead.org>
+        Fri, 31 Jan 2020 10:21:50 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728860AbgAaPVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 10:21:49 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5C4899BEC3CCF11B7645;
+        Fri, 31 Jan 2020 15:21:47 +0000 (GMT)
+Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 31 Jan 2020 15:21:47 +0000
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Fri, 31 Jan 2020 16:21:46 +0100
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
+ Fri, 31 Jan 2020 16:21:46 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+CC:     "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH 8/8] ima: switch to ima_hash_algo for boot aggregate
+Thread-Topic: [PATCH 8/8] ima: switch to ima_hash_algo for boot aggregate
+Thread-Index: AQHV1TQ/cbv5dz78j0O1U+btlk5ShagE6FxQ
+Date:   Fri, 31 Jan 2020 15:21:46 +0000
+Message-ID: <acb84e249d524ee5a6feddfacc674531@huawei.com>
+References: <20200127170443.21538-1-roberto.sassu@huawei.com>
+ <20200127170443.21538-9-roberto.sassu@huawei.com>
+In-Reply-To: <20200127170443.21538-9-roberto.sassu@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davidlohr Bueso <dave@stgolabs.net>
+> -----Original Message-----
+> From: Roberto Sassu
+> Sent: Monday, January 27, 2020 6:05 PM
+> To: zohar@linux.ibm.com; jarkko.sakkinen@linux.intel.com;
+> james.bottomley@hansenpartnership.com; linux-integrity@vger.kernel.org
+> Cc: linux-security-module@vger.kernel.org; linux-kernel@vger.kernel.org;
+> Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>; Roberto Sassu
+> <roberto.sassu@huawei.com>
+> Subject: [PATCH 8/8] ima: switch to ima_hash_algo for boot aggregate
 
-We are missing this annotation in percpu_down_write(). Correct
-this.
+I will remove this patch from the patch set.
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200108013305.7732-1-dave@stgolabs.net
----
- kernel/locking/percpu-rwsem.c |    1 +
- 1 file changed, 1 insertion(+)
+[PATCH v3 1/2] ima: support calculating the boot aggregate based on non-SHA1 algorithms
+[PATCH v3 2/2] ima: support calculating the boot_aggregate based on different TPM banks
 
---- a/kernel/locking/percpu-rwsem.c
-+++ b/kernel/locking/percpu-rwsem.c
-@@ -212,6 +212,7 @@ static bool readers_active_check(struct
- 
- void percpu_down_write(struct percpu_rw_semaphore *sem)
- {
-+	might_sleep();
- 	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
- 
- 	/* Notify readers to take the slow path. */
+by Mimi will provide similar functionality.
 
+Roberto
 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
