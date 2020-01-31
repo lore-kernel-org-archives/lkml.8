@@ -2,175 +2,174 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA7BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B565AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECA72082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875702082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FnZtPmTy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJToakrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgAaWLx (ORCPT
+        id S1726163AbgAaWQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:11:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43072 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgAaWLw (ORCPT
+        Fri, 31 Jan 2020 17:16:43 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34086 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726180AbgAaWQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:11:52 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so8059927oth.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 14:11:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IUtHl3dHVrCGChHJNZz7f2YCmBuydJiAM0b18mQZtvE=;
-        b=FnZtPmTyFfflSLT9ix9U7l7Vj5iAxGPg3HBrILk6HczJIYDrF+Md+5uvL5vskeKMNh
-         KLJaeZzxn3bmCOeARi+yfni1PSa6xXvwsqcGg8ecxx78m2AoMiKclqLwj2A2iMNXlX2m
-         SKVm9XOytZVDUDz7XfRPS3DcoHi/0csh4YPhNTOgLFSTq5x+ITwOQhAXXX5WZZDhBhGr
-         cI9bQeEK3oroUJvX+u5LCLP6rMJwov5aWLITMiqbQFXYMbZiONEC9WXSIYxPSpOg2018
-         t266ngesJIRxy09r++8k7Rf7Nq+BBI4jnntHyeor9luWLP9auf5V8fKBG5tcovZE+pWy
-         nDiA==
+        Fri, 31 Jan 2020 17:16:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580509002;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vNWAMFUjo2BxvgCqYLA09WvnKRsNZUCV/NyH0B71vPw=;
+        b=cJToakrMoYYh4Y/qTnKLvU1c70LxnQWG9aaDAVeIOctQReXHaXPKpVCdauUkNVGEchL8Yg
+        AR9NDF0PsfX/yhCgiHtD9jnm4NJjOIXv99pcKDAMDo/FeBsq5ViRjJNxFNWpcEvW9DWsLQ
+        mzZkv2oNf+j0Zu7zIKMqDfQhofx2/Ls=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-332-lqCLY4KUPA29G1Pecx6SSg-1; Fri, 31 Jan 2020 17:16:40 -0500
+X-MC-Unique: lqCLY4KUPA29G1Pecx6SSg-1
+Received: by mail-qv1-f71.google.com with SMTP id cn2so5374468qvb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 14:16:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IUtHl3dHVrCGChHJNZz7f2YCmBuydJiAM0b18mQZtvE=;
-        b=hnhX0y5YlbJmKMNKMc3O5FWWqsq2zu7AnM6jS4QbiOHqdJEO28Qq7+ImhtrteROIKN
-         NfOmfmnW3Jddzq8weoTMam2DQ0Lt9Z20xnfaAJ0/CyNLmQb/9Am6I67f6YWmkocdVfiV
-         9gQGi7x8YGRuE4GPqTZhmR4tNhkCcoSola9FV1JNDlLXuWa91T+DCnrRoopZJqLHkpWR
-         PlENKHUjE1Qlli6xZIUW3ZGK3TlFLZIL5gyhoBk5L5WCQLay3io5kwkSmP/3XDLvufWg
-         ZDke9wh8LGWIR8QGcWy1e4XBBvuaq/SP1UuBLlh7TOffHJPW3rZxGII/onWOrgF1jSiw
-         072A==
-X-Gm-Message-State: APjAAAWw2k2Bk354ivp9Ik2WByfD4niLvg60lIqKbjWeVcvIyuJ6eXEs
-        KXjr9k5a34YV2EqEuz70IwcwiwDa7ogdZ17sY68izw==
-X-Google-Smtp-Source: APXvYqxCHqTZlB1Qipe0jkHRe9ADzTppHbzjeQja0KvVRfyddr2gvbtzAIkqqWEM3zRJnGZ79ZP/BT50aR69S2Wtt9k=
-X-Received: by 2002:a9d:7b51:: with SMTP id f17mr9025707oto.302.1580508711413;
- Fri, 31 Jan 2020 14:11:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vNWAMFUjo2BxvgCqYLA09WvnKRsNZUCV/NyH0B71vPw=;
+        b=cjgfGzP7fmDDacJvsxvZhi5ycpTNBxgyeqDLLK8q7sjfXbCz/U/GT9MeScco6b0S1T
+         vhuPVZz2myhL19PZo3hMW1ulhxBDo9nYUdFFfXRMCGBF2j/xYtJyhxSzrpmHz9YOxc9Y
+         mTNW/6xU+yaB5ZNdy66qOvJkYygINHBfelEWkjoJEs0eCNX/33T5OryJ5Sb3//nP6K+b
+         P/1Lx0eRonBBVJ9T6f6e4+ldVAGRQE/x66A7SzwJPcSNhDq/GvkhteFRs7mq99LPq/mA
+         dI7BzNCShiU3sRWGye3fS6Q1B97ogDnY/giMBMXZylnrCcwUzeds2of1TdF9PU7PnY6E
+         7AIA==
+X-Gm-Message-State: APjAAAXz6vlJoPMgxKZGNuxU1UoNPzeZqwq7vZ9dqQjLo5LeHy9IW5nx
+        noH1tmSfs+owaZEkuHtwEWsbJ0L3fxx5ZmmNutUSUoM2dZuqFw+kV1Odh9CzvpMe6rcPCsfHH6V
+        FqPb0lMP58HBodAWLj+PX2FCH
+X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr12995303qky.41.1580508999714;
+        Fri, 31 Jan 2020 14:16:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyFBEIl/LpAFBCeYudTZUb4k/rDVnIohho0H6H5nDgOCPBmQQeP0I4pvYuc2vcz1diZHlcEEw==
+X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr12995274qky.41.1580508999416;
+        Fri, 31 Jan 2020 14:16:39 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id u24sm5247491qkm.40.2020.01.31.14.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 14:16:38 -0800 (PST)
+Date:   Fri, 31 Jan 2020 17:16:37 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200131221637.GC7063@xz-x1>
+References: <20200109145729.32898-10-peterx@redhat.com>
+ <20200121155657.GA7923@linux.intel.com>
+ <20200128055005.GB662081@xz-x1>
+ <20200128182402.GA18652@linux.intel.com>
+ <20200131150832.GA740148@xz-x1>
+ <20200131193301.GC18946@linux.intel.com>
+ <20200131202824.GA7063@xz-x1>
+ <20200131203622.GF18946@linux.intel.com>
+ <20200131205550.GB7063@xz-x1>
+ <20200131212928.GH18946@linux.intel.com>
 MIME-Version: 1.0
-References: <20200131122421.23286-1-sjpark@amazon.com> <20200131122421.23286-3-sjpark@amazon.com>
- <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com> <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
-In-Reply-To: <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
-From:   Neal Cardwell <ncardwell@google.com>
-Date:   Fri, 31 Jan 2020 17:11:35 -0500
-Message-ID: <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     sjpark@amazon.com, Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>, shuah@kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
-        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
-        Yuchung Cheng <ycheng@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200131212928.GH18946@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 1:12 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 1/31/20 7:10 AM, Neal Cardwell wrote:
-> > On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
-> >>
-> >> From: SeongJae Park <sjpark@amazon.de>
-> >>
-> >> When closing a connection, the two acks that required to change closing
-> >> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
-> >> reverse order.  This is possible in RSS disabled environments such as a
-> >> connection inside a host.
-> >>
-> >> For example, expected state transitions and required packets for the
-> >> disconnection will be similar to below flow.
-> >>
-> >>          00 (Process A)                         (Process B)
-> >>          01 ESTABLISHED                         ESTABLISHED
-> >>          02 close()
-> >>          03 FIN_WAIT_1
-> >>          04             ---FIN-->
-> >>          05                                     CLOSE_WAIT
-> >>          06             <--ACK---
-> >>          07 FIN_WAIT_2
-> >>          08             <--FIN/ACK---
-> >>          09 TIME_WAIT
-> >>          10             ---ACK-->
-> >>          11                                     LAST_ACK
-> >>          12 CLOSED                              CLOSED
-> >
-> > AFAICT this sequence is not quite what would happen, and that it would
-> > be different starting in line 8, and would unfold as follows:
-> >
-> >           08                                     close()
-> >           09                                     LAST_ACK
-> >           10             <--FIN/ACK---
-> >           11 TIME_WAIT
-> >           12             ---ACK-->
-> >           13 CLOSED                              CLOSED
-> >
-> >
-> >> The acks in lines 6 and 8 are the acks.  If the line 8 packet is
-> >> processed before the line 6 packet, it will be just ignored as it is not
-> >> a expected packet,
-> >
-> > AFAICT that is where the bug starts.
-> >
-> > AFAICT, from first principles, when process A receives the FIN/ACK it
-> > should move to TIME_WAIT even if it has not received a preceding ACK.
-> > That's because ACKs are cumulative. So receiving a later cumulative
-> > ACK conveys all the information in the previous ACKs.
-> >
-> > Also, consider the de facto standard state transition diagram from
-> > "TCP/IP Illustrated, Volume 2: The Implementation", by Wright and
-> > Stevens, e.g.:
-> >
-> >   https://courses.cs.washington.edu/courses/cse461/19sp/lectures/TCPIP_State_Transition_Diagram.pdf
-> >
-> > This first-principles analysis agrees with the Wright/Stevens diagram,
-> > which says that a connection in FIN_WAIT_1 that receives a FIN/ACK
-> > should move to TIME_WAIT.
-> >
-> > This seems like a faster and more robust solution than installing
-> > special timers.
-> >
-> > Thoughts?
->
->
-> This is orthogonal I think.
->
-> No matter how hard we fix the other side, we should improve the active side.
->
-> Since we send a RST, sending the SYN a few ms after the RST seems way better
-> than waiting 1 second as if we received no packet at all.
->
-> Receiving this ACK tells us something about networking health, no need
-> to be very cautious about the next attempt.
+On Fri, Jan 31, 2020 at 01:29:28PM -0800, Sean Christopherson wrote:
+> On Fri, Jan 31, 2020 at 03:55:50PM -0500, Peter Xu wrote:
+> > On Fri, Jan 31, 2020 at 12:36:22PM -0800, Sean Christopherson wrote:
+> > > On Fri, Jan 31, 2020 at 03:28:24PM -0500, Peter Xu wrote:
+> > > > On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
+> > > > > For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
+> > > > > still has to use copy_{to,from}_user().
+> > > > > 
+> > > > > In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
+> > > > > would be provided the hva of the memory region.  Since slots_lock and SRCU
+> > > > > only protect gfn->hva, why would KVM take slots_lock since it already has
+> > > > > the hva?
+> > > > 
+> > > > OK so you're suggesting to unlock the lock earlier to not cover
+> > > > init_rmode_tss() rather than dropping the whole lock...  Yes it looks
+> > > > good to me.  I think that's the major confusion I got.
+> > > 
+> > > Ya.  And I missed where the -EEXIST was coming from.  I think we're on the
+> > > same page.
+> > 
+> > Good to know.  Btw, for me I would still prefer to keep the lock be
+> > after the __copy_to_user()s because "HVA is valid without lock" is
+> > only true for these private memslots.
+> 
+> No.  From KVM's perspective, the HVA is *never* valid.  Even if you rewrote
+> this statement to say "the gfn->hva translation is valid without lock" it
+> would still be incorrect. 
+> 
+> KVM is *always* using HVAs without holding lock, e.g. every time it enters
+> the guest it is deferencing a memslot because the translations stored in
+> the TLB are effectively gfn->hva->hpa.  Obviously KVM ensures that it won't
+> dereference a memslot that has been deleted/moved, but it's a lot more
+> subtle than simply holding a lock.
+> 
+> > After all this is super slow path so I wouldn't mind to take the lock
+> > for some time longer.
+> 
+> Holding the lock doesn't affect this super slow vmx_set_tss_addr(), it
+> affects everything else that wants slots_lock.  Now, admittedly it's
+> extremely unlikely userspace is going to do KVM_SET_USER_MEMORY_REGION in
+> parallel, but that's not the point and it's not why I'm objecting to
+> holding the lock.
+> 
+> Holding the lock implies protection that is *not* provided.  You and I know
+> it's not needed for copy_{to,from}_user(), but look how long it's taken us
+> to get on the same page.  A future KVM developer comes along, sees this
+> code, and thinks "oh, I need to hold slots_lock to dereference a gfn", and
+> propagates the unnecessary locking to some other code.
 
-Yes, all good points. Thanks!
+At least for a user memory slot, we "need to hold slots_lock to
+dereference a gfn" (or srcu), right?
 
-> Of course, if you have a fix for the passive side, that would be nice to review !
+You know I'm suffering from a jetlag today, I thought I was still
+fine, now I start to doubt it. :-)
 
-I looked into fixing this, but my quick reading of the Linux
-tcp_rcv_state_process() code is that it should behave correctly and
-that a connection in FIN_WAIT_1 that receives a FIN/ACK should move to
-TIME_WAIT.
+> 
+> > Or otherwise if you really like the unlock() to
+> > be earlier I can comment above the unlock:
+> > 
+> >   /*
+> >    * We can unlock before using the HVA only because this KVM private
+> >    * memory slot will never change until the end of VM lifecycle.
+> >    */
+> 
+> How about:
+> 
+> 	/*
+> 	 * No need to hold slots_lock while filling the TSS, the TSS private
+> 	 * memslot is guaranteed to be valid until the VM is destroyed, i.e.
+> 	 * there is no danger of corrupting guest memory by consuming a stale
+> 	 * gfn->hva lookup.
+> 	 */
 
-SeongJae, do you happen to have a tcpdump trace of the problematic
-sequence where the "process A" ends up in FIN_WAIT_2 when it should be
-in TIME_WAIT?
+Sure for this.
 
-If I have time I will try to construct a packetdrill case to verify
-the behavior in this case.
+-- 
+Peter Xu
 
-thanks,
-neal
-
->
->
->
