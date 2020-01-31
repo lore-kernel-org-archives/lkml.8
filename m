@@ -2,175 +2,140 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB83C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ADAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41052082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:20:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IE0cKTjE"
+	by mail.kernel.org (Postfix) with ESMTP id F073821734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbgAaQUm (ORCPT
+        id S1726322AbgAaQ0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:20:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45406 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727327AbgAaQUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:20:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580487640;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=oCfJSiRBS7CX+hzrgUnu506bCj8J+Pf2Lxc9fuGccjA=;
-        b=IE0cKTjEWFwJj1PRyYunPmHowiV2nDHnfAOuhrg3PFUeJecXuPrj1k3/Ut3XWMbEC+xJ72
-        r0XnOgnpB2YeahkKaLX7/zYvWbT783/ePsKzj82eIKPXDMyxu+QyBeuo7X6BM9/xW46+u0
-        iA0X9YDWHSaqZV/QTMZ1MI+rxA+0OX8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-y0McHUZKN2CtHwiu2X9TpQ-1; Fri, 31 Jan 2020 11:20:35 -0500
-X-MC-Unique: y0McHUZKN2CtHwiu2X9TpQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1002C8018C0;
-        Fri, 31 Jan 2020 16:20:34 +0000 (UTC)
-Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 526E85DC18;
-        Fri, 31 Jan 2020 16:20:31 +0000 (UTC)
-Subject: Re: [PATCH v3] mm: Allocate shrinker_map on appropriate NUMA node
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org, shakeelb@google.com,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
- <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com>
- <5f3fc9a9-9a22-ccc3-5971-9783b60807bc@virtuozzo.com>
- <20200131154735.GA4520@dhcp22.suse.cz>
- <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
- <20200131160151.GB4520@dhcp22.suse.cz>
- <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <1d272ca7-2bc7-c566-bde8-34e7b6510fb4@redhat.com>
-Date:   Fri, 31 Jan 2020 17:20:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 31 Jan 2020 11:26:51 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2343 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726114AbgAaQ0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:26:50 -0500
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BC5B4EA82E605F00057D;
+        Fri, 31 Jan 2020 16:26:48 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 31 Jan 2020 16:26:48 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 31 Jan
+ 2020 16:26:47 +0000
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        <chenxiang66@hisilicon.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <tudor.ambarus@microchip.com>, Linuxarm <linuxarm@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        <liusimin4@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, <fengsheng5@huawei.com>
+References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com>
+ <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+ <20200113114256.GH3897@sirena.org.uk>
+ <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+ <20200113140627.GJ3897@sirena.org.uk>
+ <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
+ <20200113142754.GL3897@sirena.org.uk>
+ <20200113143403.GQ32742@smile.fi.intel.com>
+ <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
+ <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
+ <136bd652-dcb9-3efa-a92f-2263cbf840ad@huawei.com>
+ <CAHp75Vd=TY0tPfSHMSLTh1Pgg-E7MCP5Gym1yjpLgH0Tx-2xSg@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <c5cfb189-797e-11c4-f77a-61ec35395b15@huawei.com>
+Date:   Fri, 31 Jan 2020 16:26:46 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAHp75Vd=TY0tPfSHMSLTh1Pgg-E7MCP5Gym1yjpLgH0Tx-2xSg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.01.20 17:08, Kirill Tkhai wrote:
-> mm: Allocate shrinker_map on appropriate NUMA node
+On 31/01/2020 15:46, Andy Shevchenko wrote:
+> On Fri, Jan 31, 2020 at 2:03 PM John Garry <john.garry@huawei.com> wrote:
+>> On 31/01/2020 11:39, Andy Shevchenko wrote:
+>>> On Fri, Jan 31, 2020 at 12:08 PM John Garry <john.garry@huawei.com> wrote:
+>>>> On 13/01/2020 14:34, Andy Shevchenko wrote:
 > 
-> From: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ...
 > 
-> Despite shrinker_map may be touched from any cpu
-> (e.g., a bit there may be set by a task running
-> everywhere); kswapd is always bound to specific
-> node. So, we will allocate shrinker_map from
-> related NUMA node to respect its NUMA locality.
-> Also, this follows generic way we use for allocation
-> memcg's per-node data.
+>>>> About this topic of ACPI having no method to describe device buswidth in
+>>>> the resource descriptor, it may be an idea for me to raise a Tianocore
+>>>> feature request @ https://bugzilla.tianocore.org/
+>>>>
+>>>
+>>> The 19.6.126 describes the SPI resource, in particular:
+>>>
+>>> ---8<---8<---
+>>> DataBitLength is the size, in bits, of the smallest transfer unit for
+>>> this connection. _LEN is automatically
+>>> created to refer to this portion of the resource descriptor.
+>>> ---8<---8<---
+>>>
 
-You can go up to 72 characters in your patch description :)
+Hi Andy,
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
+>>> Is it what you are looking for? (As far as I know most of the
+>>> firmwares simple abuse this field among others)
+>>
+>> I didn't think so - I thought that there was a distinction between width
+>> and length in SPI terms.
 > 
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> My interpretation of this field is a data width of the slave.
+> Basically what we have as transfer->size inside SPI in the Linux
+> kernel.
 > 
-> v3: Remove node_state() patterns.
-> v2: Use NUMA_NO_NODE instead of -1.
-> ---
->  mm/memcontrol.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>> So how do you find that most firmwares abuse this field? AFAICS, linux
+>> kernel doesn't interpret this field at all.
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 6f6dc8712e39..c37382f5a43c 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -334,7 +334,7 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
->  		if (!old)
->  			return 0;
->  
-> -		new = kvmalloc(sizeof(*new) + size, GFP_KERNEL);
-> +		new = kvmalloc_node(sizeof(*new) + size, GFP_KERNEL, nid);
->  		if (!new)
->  			return -ENOMEM;
->  
-> @@ -378,7 +378,7 @@ static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
->  	mutex_lock(&memcg_shrinker_map_mutex);
->  	size = memcg_shrinker_map_size;
->  	for_each_node(nid) {
-> -		map = kvzalloc(sizeof(*map) + size, GFP_KERNEL);
-> +		map = kvzalloc_node(sizeof(*map) + size, GFP_KERNEL, nid);
->  		if (!map) {
->  			memcg_free_shrinker_maps(memcg);
->  			ret = -ENOMEM;
+>>From all tables I have this is the result of appearance (some of the
+> tables are like 10x times present in my data base, but nevertheless)
+> 
+>      140 SpiSerialBusV2(0x0000,PolarityHigh,FourWireMode,0x08,
+>     411 SpiSerialBusV2(0x0000,PolarityLow,FourWireMode,0x08,
+>       1 SpiSerialBusV2(0x0000,PolarityLow,FourWireMode,0x08,
+>      36 SpiSerialBusV2(0x0000,PolarityLow,FourWireMode,0x10,
+>      35 SpiSerialBusV2(0x0000,PolarityLow,FourWireMode,0x18,
+>      35 SpiSerialBusV2(0x0000,PolarityLow,FourWireMode,0x20,
+>       1 SpiSerialBusV2(0x0000,PolarityLow,ThreeWireMode,0x10,
+>       8 SpiSerialBusV2(0x0001,PolarityLow,FourWireMode,0x08,
+>       1 SpiSerialBusV2(0x0001,PolarityLow,FourWireMode,0x10,
+> 
+> So, it seems I stand corrected, the field is in right use, although
+> cases like 0x10 and 0x20 should be carefully checked.
+> 
+> We may teach kernel to get something meaningful out of it.
 > 
 
+It seems that someone already had a go at that:
+https://lore.kernel.org/lkml/20170317212143.bogj6efzyvvf24yd@sirena.org.uk/
 
--- 
 Thanks,
-
-David / dhildenb
+John
 
