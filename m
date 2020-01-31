@@ -1,141 +1,186 @@
 Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B511C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13559C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5F720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B24215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580463412;
-	bh=kKkl7IIdkI45Xq+BxUMl2TT+5Wgp8VCsHvXb8zf/eV4=;
+	s=default; t=1580463499;
+	bh=Mhj0fBlajapmVh3d62cDZEVlHdcrZHghvIGjV7p6Qsw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EaQuJMFkCAJU6Fir+lGrvHNIMLuLOfcXF6tMqrjWprHD6ZVue/h7ypnz5XAdKRZDm
-	 KsnRZyjPlSsgw8p07wJ8fnyXhTXPFkoohyL06n8HbVfPdYcIpVd0QXlYeOS3kRm8Xr
-	 ggwxEDZMwmjsGDUV2B6T3ENRTOnUUpifGQJvHQm4=
+	b=EMAVyyHPWUIuGMqZ7mNKsdJ15OK70+UpKV6V0xNU2CZerYt09Lu3iznUcHgoYzPW2
+	 DHsBoZYLkPjorjvzt6bGJdLFL3o+nomKh8uoKMJ1YlNShO06P4JOX/gjQ9mqcpdq0R
+	 Q+8e4bs/ABIxsSkFI9KLaXQ8MDHO5fOEz53XBVd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgAaJgv (ORCPT
+        id S1728281AbgAaJiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:36:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 04:38:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728231AbgAaJgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:36:51 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728231AbgAaJiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:38:18 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E37E20707;
-        Fri, 31 Jan 2020 09:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F095E20707;
+        Fri, 31 Jan 2020 09:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580463408;
-        bh=kKkl7IIdkI45Xq+BxUMl2TT+5Wgp8VCsHvXb8zf/eV4=;
+        s=default; t=1580463497;
+        bh=Mhj0fBlajapmVh3d62cDZEVlHdcrZHghvIGjV7p6Qsw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jI5GJpZLenzLyhKfww2wcwTl8g9WY5wtHDwCm1LOK7DK1rQ11N3u4zgVi7ZJHDm4z
-         jgm+p2j6DXzOdQjVmfhv/y5objkwk7vC8ugEwQnINUavbvAtukxYnYL2ENTlUU3xZr
-         rfGUApsMb+eRMv3LWV3zKfUMoFyqpuoyJGzvSGEM=
-Date:   Fri, 31 Jan 2020 10:36:46 +0100
-From:   'Greg KH' <gregkh@linuxfoundation.org>
-To:     Rajan Vaja <RAJANV@xilinx.com>
-Cc:     Jolly Shah <JOLLYS@xilinx.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-Message-ID: <20200131093646.GA2271937@kroah.com>
-References: <1578527663-10243-1-git-send-email-jolly.shah@xilinx.com>
- <1578527663-10243-2-git-send-email-jolly.shah@xilinx.com>
- <20200114145257.GA1910108@kroah.com>
- <BYAPR02MB5992FC37E0D2AD9946414417B80F0@BYAPR02MB5992.namprd02.prod.outlook.com>
- <20200124060339.GB2906795@kroah.com>
- <2D4B924A-D10C-4A90-A8E6-507BF6C30654@xilinx.com>
- <20200128062814.GA2097606@kroah.com>
- <4EF659A1-2844-46B9-9ED6-5A6A20401D9D@xilinx.com>
- <20200131061038.GA2180358@kroah.com>
- <BYAPR02MB40559D6B62C4532C0EAD0281B7070@BYAPR02MB4055.namprd02.prod.outlook.com>
+        b=I9+ySDNGxannFkqHJGEurUGPlInvH9u1OO8LHJnwBTPtIH0LUxRYR3rOFHJfjDH+5
+         hixK/TYkRo696FZPKQ80Vylbkyuvt3cNUcXbydPkomDUK9P+ki6SdcZrkUHsPOZ9vo
+         JWDO/NUVnJpw4TbsiCRkzBfVubit03to882MgEys=
+Date:   Fri, 31 Jan 2020 09:38:13 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
+Message-ID: <20200131093813.GA3938@willie-the-truck>
+References: <20200129103941.304769381@infradead.org>
+ <8a81e075-d3bd-80c1-d869-9935fdd73162@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR02MB40559D6B62C4532C0EAD0281B7070@BYAPR02MB4055.namprd02.prod.outlook.com>
+In-Reply-To: <8a81e075-d3bd-80c1-d869-9935fdd73162@linux-m68k.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 09:05:15AM +0000, Rajan Vaja wrote:
-> Hi Greg,
-> 
-> > -----Original Message-----
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Sent: 31 January 2020 11:41 AM
-> > To: Jolly Shah <JOLLYS@xilinx.com>
-> > Cc: ard.biesheuvel@linaro.org; mingo@kernel.org; matt@codeblueprint.co.uk;
-> > sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
-> > dmitry.torokhov@gmail.com; Michal Simek <michals@xilinx.com>; Rajan Vaja
-> > <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-> > 
-> > EXTERNAL EMAIL
-> > 
-> > On Thu, Jan 30, 2020 at 11:59:03PM +0000, Jolly Shah wrote:
-> > > Hi Greg,
-> > >
-> > > ﻿On 1/27/20, 10:28 PM, "linux-kernel-owner@vger.kernel.org on behalf of Greg
-> > KH" <linux-kernel-owner@vger.kernel.org on behalf of
-> > gregkh@linuxfoundation.org> wrote:
-> > >
-> > >     On Mon, Jan 27, 2020 at 11:01:27PM +0000, Jolly Shah wrote:
-> > >     >     > > > +     ret = kstrtol(tok, 16, &value);
-> > >     >     > > > +     if (ret) {
-> > >     >     > > > +             ret = -EFAULT;
-> > >     >     > > > +             goto err;
-> > >     >     > > > +     }
-> > >     >     > > > +
-> > >     >     > > > +     ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
-> > >     >     > >
-> > >     >     > > This feels "tricky", if you tie this to the device you have your driver
-> > >     >     > > bound to, will this make it easier instead of having to go through the
-> > >     >     > > ioctl callback?
-> > >     >     > >
-> > >     >     >
-> > >     >     > GGS(general global storage) registers are in PMU space and linux
-> > doesn't have access to it
-> > >     >     > Hence ioctl is used.
-> > >     >
-> > >     >     Why not just a "real" call to the driver to make this type of reading?
-> > >     >     You don't have ioctls within the kernel for other drivers to call,
-> > >     >     that's not needed at all.
-> > >     >
-> > >     > these registers are for users  and for special needs where users wants
-> > >     > to retain values over resets. but as they belong to PMU address space,
-> > >     > these interface APIs are provided. They don’t allow access to any
-> > >     > other registers.
-> > >
-> > >     That's not the issue here.  The issue is you are using an "internal"
-> > >     ioctl, instead just make a "real" call.
-> > >
-> > > Sorry I am not clear. Do you mean that we should use linux standard
-> > > ioctl interface instead of internal ioctl by mentioning "real" ?
-> > 
-> > No, you should just make a "real" function call to the exact thing you
-> > want to do.  Not have an internal multi-plexor ioctl() call that others
-> > then call.  This isn't a microkernel :)
-> [Rajan] Sorry for multiple back and forth but as I understand, you are suggesting to create a new API for
-> Read/write of GGS register instead of using PM_IOCTL API (eemi_ops->ioctl) for multiple purpose. Is my understanding correct?
+Hi Greg,
 
-That is correct.
+On Fri, Jan 31, 2020 at 04:31:48PM +1000, Greg Ungerer wrote:
+> On 29/1/20 8:39 pm, Peter Zijlstra wrote:
+> > In order to faciliate Will's READ_ONCE() patches:
+> > 
+> >    https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
+> > 
+> > we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
+> > are tested using ARAnyM/68040.
+> > 
+> > It would be very good if someone can either test or tell us what emulator to
+> > use for 020/030.
+> 
+> This series breaks compilation for the ColdFire (with MMU) variant of
+> the m68k family:
+
+[...]
+
+> Easy to reproduce. Build for the m5475evb_defconfig.
+
+I've hacked up a fix below, but I don't know how to test whether it actually
+works (it does fix the build). However, I also notice that building for
+m5475evb_defconfig with vanilla v5.5 triggers this scary looking warning
+due to a mismatch between the pgd size and the (8k!) page size:
+
+
+  | In function 'pgd_alloc.isra.111',
+  |     inlined from 'mm_alloc_pgd' at kernel/fork.c:634:12,
+  |     inlined from 'mm_init.isra.112' at kernel/fork.c:1043:6:
+  | ./arch/m68k/include/asm/string.h:72:25: warning: '__builtin_memcpy' forming offset [4097, 8192] is out of the bounds [0, 4096] of object 'kernel_pg_dir' with type 'pgd_t[1024]' {aka 'struct <anonymous>[1024]'} [-Warray-bounds]
+  |  #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
+  |                          ^~~~~~~~~~~~~~~~~~~~~~~~~
+  | ./arch/m68k/include/asm/mcf_pgalloc.h:93:2: note: in expansion of macro 'memcpy'
+  |   memcpy(new_pgd, swapper_pg_dir, PAGE_SIZE);
+  |   ^~~~~~
+
+
+I think the correct fix is to add this:
+
+
+diff --git a/arch/m68k/include/asm/mcf_pgalloc.h b/arch/m68k/include/asm/mcf_pgalloc.h
+index 82ec54c2eaa4..c335e6a381a1 100644
+--- a/arch/m68k/include/asm/mcf_pgalloc.h
++++ b/arch/m68k/include/asm/mcf_pgalloc.h
+@@ -90,7 +90,7 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
+ 	new_pgd = (pgd_t *)__get_free_page(GFP_DMA | __GFP_NOWARN);
+ 	if (!new_pgd)
+ 		return NULL;
+-	memcpy(new_pgd, swapper_pg_dir, PAGE_SIZE);
++	memcpy(new_pgd, swapper_pg_dir, PTRS_PER_PGD * sizeof(pgd_t));
+ 	memset(new_pgd, 0, PAGE_OFFSET >> PGDIR_SHIFT);
+ 	return new_pgd;
+ }
+
+
+but maybe it should be done as a separate patch give that it's not caused
+by the rework we've been doing.
+
+Will
+
+--->8
+
+diff --git a/arch/m68k/include/asm/mcf_pgalloc.h b/arch/m68k/include/asm/mcf_pgalloc.h
+index 82ec54c2eaa4..955d54a6e973 100644
+--- a/arch/m68k/include/asm/mcf_pgalloc.h
++++ b/arch/m68k/include/asm/mcf_pgalloc.h
+@@ -28,21 +28,22 @@ extern inline pmd_t *pmd_alloc_kernel(pgd_t *pgd, unsigned long address)
+ 	return (pmd_t *) pgd;
+ }
+ 
+-#define pmd_populate(mm, pmd, page) (pmd_val(*pmd) = \
+-	(unsigned long)(page_address(page)))
++#define pmd_populate(mm, pmd, pte) (pmd_val(*pmd) = (unsigned long)(pte))
+ 
+-#define pmd_populate_kernel(mm, pmd, pte) (pmd_val(*pmd) = (unsigned long)(pte))
++#define pmd_populate_kernel pmd_populate
+ 
+-#define pmd_pgtable(pmd) pmd_page(pmd)
++#define pmd_pgtable(pmd) pfn_to_virt(pmd_val(pmd) >> PAGE_SHIFT)
+ 
+-static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t page,
++static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pgtable,
+ 				  unsigned long address)
+ {
++	struct page *page = virt_to_page(pgtable);
++
+ 	pgtable_pte_page_dtor(page);
+ 	__free_page(page);
+ }
+ 
+-static inline struct page *pte_alloc_one(struct mm_struct *mm)
++static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+ {
+ 	struct page *page = alloc_pages(GFP_DMA, 0);
+ 	pte_t *pte;
+@@ -54,20 +55,19 @@ static inline struct page *pte_alloc_one(struct mm_struct *mm)
+ 		return NULL;
+ 	}
+ 
+-	pte = kmap(page);
+-	if (pte) {
+-		clear_page(pte);
+-		__flush_page_to_ram(pte);
+-		flush_tlb_kernel_page(pte);
+-		nocache_page(pte);
+-	}
+-	kunmap(page);
++	pte = page_address(page);
++	clear_page(pte);
++	__flush_page_to_ram(pte);
++	flush_tlb_kernel_page(pte);
++	nocache_page(pte);
+ 
+-	return page;
++	return pte;
+ }
+ 
+-static inline void pte_free(struct mm_struct *mm, struct page *page)
++static inline void pte_free(struct mm_struct *mm, pgtable_t pgtable)
+ {
++	struct page *page = virt_to_page(pgtable);
++
+ 	pgtable_pte_page_dtor(page);
+ 	__free_page(page);
+ }
