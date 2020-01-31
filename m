@@ -2,344 +2,100 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0368CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258DDC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A9C20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E753E20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bkzfrPgw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ui7hbxTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgAaJWE (ORCPT
+        id S1728254AbgAaJY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:22:04 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33046 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728209AbgAaJWE (ORCPT
+        Fri, 31 Jan 2020 04:24:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40542 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbgAaJY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:22:04 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V9IkTY032507;
-        Fri, 31 Jan 2020 10:21:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=C0Udf40gju7kySCbmq3FPOBzpyJNDU///ikc7Ctm0u4=;
- b=bkzfrPgwN4UkwYBkFw3XlpDYeW6SpPQVhepmPzcOOUnoanMSmDBHdOp/nBezteQOUCeg
- iERvVz8jvPoOpbzCu2RVsXJCqchGcCQxIEQRqNwUOTEkBX7EjaWYaOFYmGnKWBJA5Y4x
- O5mPx5riyf/b9/i3jvA+oqi7/CP2rVi2D7Kg/BeVtB95zaBPjHGqxNHQUMocbO9f+wa7
- HehJY3+6XtBhmArbw66+7OSLvG/MqYpuJGPW9CYYOzu84HyJm2YLGvCOOh9n+pKrhX89
- 6XF2GLvnpNb8+/3iWuaBenZob4VTg/t6DjH26x4OVd1CUgrHnpbvtOZmBRMJrsuKbFXa /w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xrdekvx63-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jan 2020 10:21:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 026A5100039;
-        Fri, 31 Jan 2020 10:21:49 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC9D62A4D6F;
-        Fri, 31 Jan 2020 10:21:49 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 10:21:48
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] gpu: drm: context: Clean up documentation
-Date:   Fri, 31 Jan 2020 10:21:47 +0100
-Message-ID: <20200131092147.32063-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 31 Jan 2020 04:24:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so7827139wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 01:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSXbMxnOg8YIX/3kR6+7l+XVNm8PvjjA37JEVs4qXJA=;
+        b=ui7hbxTOZhC0wBm4XNnnM0Qrgnmx1S1n0GrL/Laudw0hYYdsR1GLIa9vOUBxjFZlHz
+         HhUqsfWj+95bLSa2fDIqoAy2Sju/2K+fz2mPXDywWxSV9lAQNBE+sibovuiLHGDn2Prc
+         ts8yBm+V8hKRLucF6mM+5eGEnjgbMResPLnLf/15pN9uHZtj/qWPBth7G5O0cFI62R1Q
+         rPrruQnZ0uu+PVy+Lx2pwT4PKKZcD3H/USUe5xcWlKF+KPCBZ78CkF8gtcKU0r32MACG
+         ZVt+ZjVbWcZ5MHz/pAqB1m1kSJWBdYp4SL6FZcgsZMg868zQsB2SMjufSaUHf2HvDowP
+         s0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSXbMxnOg8YIX/3kR6+7l+XVNm8PvjjA37JEVs4qXJA=;
+        b=a+GKuvU4zEf906rpStjVpkhoa2s+dCQjZAtJKX5oiGfPVNrCw667VYXON9czwF4mbi
+         8tBol6wNqux2xmTpAevCFRTy+bguDUGizNcR5T9yxFyyuiHW6/PPqWz2sAiwwo/i17Zh
+         +Ga5mmTI3aoCOpCEu935DIW9fHZxUMGl7ycHQF/rxUDUsW0JE88tDHyHX0At3J+mMUTl
+         ZRrkgtul6ycJke6dul8fa6/xX+jYU+Wx54qo7DuYip2EtmqllVH4AVy1+qno3n8sAWLD
+         999do4PvEhrIjtYCg7gDhGO5PdoTLSWlEe8ECsS5eDvFlmOgVUFzPskq109uT0mfbdI/
+         kC1w==
+X-Gm-Message-State: APjAAAVsRMZaF7H5TQ/52Jn5xREgO8gAW09heM3POMr1zz8vA1lwJNLp
+        1rh7MbBvPIbj4JhzWYELLHdFXA==
+X-Google-Smtp-Source: APXvYqwIzUPuurz2q/j3XhmwutPdbx25t66VPpjsBDm8EXvsA9RKUuu8D/EHwhxi1yQ72R9rcNqNdA==
+X-Received: by 2002:a1c:7c11:: with SMTP id x17mr11703127wmc.168.1580462695648;
+        Fri, 31 Jan 2020 01:24:55 -0800 (PST)
+Received: from localhost.localdomain (88-147-73-186.dyn.eolo.it. [88.147.73.186])
+        by smtp.gmail.com with ESMTPSA id 16sm10144364wmi.0.2020.01.31.01.24.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 31 Jan 2020 01:24:54 -0800 (PST)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        patdung100@gmail.com, cevich@redhat.com,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX 0/6] block, bfq: series of fixes, and not only, for some recently reported issues
+Date:   Fri, 31 Jan 2020 10:24:03 +0100
+Message-Id: <20200131092409.10867-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-31_02:2020-01-30,2020-01-31 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kernel doc comments to avoid warnings when compiling with W=1.
+Hi Jens,
+these patches are mostly fixes for the issues reported in [1, 2]. All
+patches have been publicly tested in the dev version of BFQ.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/gpu/drm/drm_context.c | 145 ++++++++++++++++++------------------------
- 1 file changed, 61 insertions(+), 84 deletions(-)
+Thanks,
+Paolo
 
-diff --git a/drivers/gpu/drm/drm_context.c b/drivers/gpu/drm/drm_context.c
-index 1f802d8e5681..54e64d612a2b 100644
---- a/drivers/gpu/drm/drm_context.c
-+++ b/drivers/gpu/drm/drm_context.c
-@@ -43,15 +43,11 @@ struct drm_ctx_list {
- 	struct drm_file *tag;
- };
- 
--/******************************************************************/
--/** \name Context bitmap support */
--/*@{*/
--
- /**
-- * Free a handle from the context bitmap.
-+ * drm_legacy_ctxbitmap_free() - Free a handle from the context bitmap.
-  *
-- * \param dev DRM device.
-- * \param ctx_handle context handle.
-+ * @dev: DRM device.
-+ * @ctx_handle: context handle.
-  *
-  * Clears the bit specified by \p ctx_handle in drm_device::ctx_bitmap and the entry
-  * in drm_device::ctx_idr, while holding the drm_device::struct_mutex
-@@ -69,10 +65,10 @@ void drm_legacy_ctxbitmap_free(struct drm_device * dev, int ctx_handle)
- }
- 
- /**
-- * Context bitmap allocation.
-+ * drm_legacy_ctxbitmap_next() - Context bitmap allocation.
-  *
-- * \param dev DRM device.
-- * \return (non-negative) context handle on success or a negative number on failure.
-+ * @dev: DRM device.
-+ * Return: (non-negative) context handle on success or a negative number on failure.
-  *
-  * Allocate a new idr from drm_device::ctx_idr while holding the
-  * drm_device::struct_mutex lock.
-@@ -89,9 +85,9 @@ static int drm_legacy_ctxbitmap_next(struct drm_device * dev)
- }
- 
- /**
-- * Context bitmap initialization.
-+ * drm_legacy_ctxbitmap_init() - Context bitmap initialization.
-  *
-- * \param dev DRM device.
-+ * @dev: DRM device.
-  *
-  * Initialise the drm_device::ctx_idr
-  */
-@@ -105,9 +101,9 @@ void drm_legacy_ctxbitmap_init(struct drm_device * dev)
- }
- 
- /**
-- * Context bitmap cleanup.
-+ * drm_legacy_ctxbitmap_cleanup() - bitmap cleanup.
-  *
-- * \param dev DRM device.
-+ * @dev: DRM device.
-  *
-  * Free all idr members using drm_ctx_sarea_free helper function
-  * while holding the drm_device::struct_mutex lock.
-@@ -157,20 +153,13 @@ void drm_legacy_ctxbitmap_flush(struct drm_device *dev, struct drm_file *file)
- 	mutex_unlock(&dev->ctxlist_mutex);
- }
- 
--/*@}*/
--
--/******************************************************************/
--/** \name Per Context SAREA Support */
--/*@{*/
--
- /**
-- * Get per-context SAREA.
-+ * drm_legacy_getsareactx() - Get per-context SAREA.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx_priv_map structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return:  zero on success or a negative number on failure.
-  *
-  * Gets the map from drm_device::ctx_idr with the handle specified and
-  * returns its handle.
-@@ -212,13 +201,12 @@ int drm_legacy_getsareactx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * Set per-context SAREA.
-+ * drm_legacy_setsareactx() - Set per-context SAREA.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx_priv_map structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * Searches the mapping specified in \p arg and update the entry in
-  * drm_device::ctx_idr with it.
-@@ -257,19 +245,13 @@ int drm_legacy_setsareactx(struct drm_device *dev, void *data,
- 	return 0;
- }
- 
--/*@}*/
--
--/******************************************************************/
--/** \name The actual DRM context handling routines */
--/*@{*/
--
- /**
-- * Switch context.
-+ * drm_context_switch() - Switch context.
-  *
-- * \param dev DRM device.
-- * \param old old context handle.
-- * \param new new context handle.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device.
-+ * @old: old context handle.
-+ * @new: new context handle.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * Attempt to set drm_device::context_flag.
-  */
-@@ -291,11 +273,12 @@ static int drm_context_switch(struct drm_device * dev, int old, int new)
- }
- 
- /**
-- * Complete context switch.
-+ * drm_context_switch_complete() - Complete context switch.
-  *
-- * \param dev DRM device.
-- * \param new new context handle.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device.
-+ * @file_priv: DRM file private.
-+ * @new: new context handle.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * Updates drm_device::last_context and drm_device::last_switch. Verifies the
-  * hardware lock is held, clears the drm_device::context_flag and wakes up
-@@ -319,13 +302,13 @@ static int drm_context_switch_complete(struct drm_device *dev,
- }
- 
- /**
-- * Reserve contexts.
-+ * drm_legacy_resctx() - Reserve contexts.
-+ *
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx_res structure.
-- * \return zero on success or a negative number on failure.
-+ * Return: zero on success or a negative number on failure.
-  */
- int drm_legacy_resctx(struct drm_device *dev, void *data,
- 		      struct drm_file *file_priv)
-@@ -352,15 +335,13 @@ int drm_legacy_resctx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * Add context.
-+ * drm_legacy_addctx() - Add context.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-  *
-- * Get a new handle for the context and copy to userspace.
-+ * Return: zero on success or a negative number on failure.
-  */
- int drm_legacy_addctx(struct drm_device *dev, void *data,
- 		      struct drm_file *file_priv)
-@@ -405,13 +386,12 @@ int drm_legacy_addctx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * Get context.
-+ * drm_legacy_getctx() - Get context.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return: zero on success or a negative number on failure.
-  */
- int drm_legacy_getctx(struct drm_device *dev, void *data,
- 		      struct drm_file *file_priv)
-@@ -429,13 +409,12 @@ int drm_legacy_getctx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * Switch context.
-+ * drm_legacy_switchctx() - Switch context.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * Calls context_switch().
-  */
-@@ -453,13 +432,12 @@ int drm_legacy_switchctx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * New context.
-+ * drm_legacy_newctx() - New context.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * Calls context_switch_complete().
-  */
-@@ -479,13 +457,12 @@ int drm_legacy_newctx(struct drm_device *dev, void *data,
- }
- 
- /**
-- * Remove context.
-+ * drm_legacy_rmctx() - Remove context.
-  *
-- * \param inode device inode.
-- * \param file_priv DRM file private.
-- * \param cmd command.
-- * \param arg user argument pointing to a drm_ctx structure.
-- * \return zero on success or a negative number on failure.
-+ * @dev: DRM device to operate on
-+ * @data: request data
-+ * @file_priv: DRM file private.
-+ * Return: zero on success or a negative number on failure.
-  *
-  * If not the special kernel context, calls ctxbitmap_free() to free the specified context.
-  */
--- 
-2.15.0
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1767539
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=205447
 
+Paolo Valente (6):
+  block, bfq: do not plug I/O for bfq_queues with no proc refs
+  block, bfq: do not insert oom queue into position tree
+  block, bfq: get extra ref to prevent a queue from being freed during a
+    group move
+  block, bfq: extend incomplete name of field on_st
+  block, bfq: get a ref to a group when adding it to a service tree
+  block, bfq: clarify the goal of bfq_split_bfqq()
+
+ block/bfq-cgroup.c  | 12 ++++++++++--
+ block/bfq-iosched.c | 20 +++++++++++++++++++-
+ block/bfq-iosched.h |  3 ++-
+ block/bfq-wf2q.c    | 27 ++++++++++++++++++++++-----
+ 4 files changed, 53 insertions(+), 9 deletions(-)
+
+--
+2.20.1
