@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D456AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB7C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA10D206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2195206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YbQjNRcE"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fD1UVeyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgAaLsT (ORCPT
+        id S1728493AbgAaLsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:48:19 -0500
-Received: from mail-co1nam11on2082.outbound.protection.outlook.com ([40.107.220.82]:14701
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Fri, 31 Jan 2020 06:48:16 -0500
+Received: from mail-bn7nam10on2040.outbound.protection.outlook.com ([40.107.92.40]:6142
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728446AbgAaLsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:48:17 -0500
+        id S1728408AbgAaLsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 06:48:16 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YJULE1fbDDj+sLykdALDxBeWW3yZhAKXcA2MB/gIrXfOls/3BLH4GhzGEG1S2D8RcdJkCxCCSv/pMelhshDpFq0N5whzcqNmxEKyvb3gfGKVXBul8s9yXPoYouURzmpfzb4cSJNGX18Gq4sJ1rLhwxb/+sY/XXMXVjtj1sguaoSxlQMvQM6PjFTzm7O2gUIS1kyhiMXim5h7cNn4UsQgKERAtBoCbd3YuZ7xjCR6XGR7SeNym38qbRe1HhoIOIl93AQOkbSgpbRjaz62T7K+gLg5TeOpXNNEOcKfIkRxK/VIjN6Ziaibd3CEVEUwWCnRl8s634bE91rphKFisG5wqQ==
+ b=cDzkYzZQqhaVOEGxFWAIEsu+6CA7rAimFupKyj/alns08sfi7y1gC/hBQvdipLjZu8pXvuLFNqxOiLY5yfgfjxmSPg2yIiCSLtoKajDqxQ4aRGKxRw8kYqZnaB00+H86VVqT+Wu4YvKHZLN+u76bN9QYnTUOqOip2GQcLNfaOCaW3Z5jsXgh1cX3SoVXSSM+JSuoFujErRg1lwHIoIObBETb6go1LUJ3cx3sSIqKqR35hjx875UW1UZJdlhsYpTDh0WqaEUvQMbPt89SLqRGMXy5kl2qcFLXkkq7isr2uCEAmLJebotlAN7ch8QZiqvmkwp2x07OGWLiePzxiFENRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zm1zHOufKb9+3ANaZrnrp9VGdpYdYquLI2mcr2QZY4Y=;
- b=oW7Vo0rSGm6k7fgL6cyvM+oq6fbN2KOzREqva6cAG0p3c7Mvy/PvNK6SKTGvzdOIlBYVrq8SVbkwMHAlsyMPSrz0q2n80JSRuh3QmHUFeCKmyC80YyPF7izpQMvHNGl/wd64Gf4ijUm48K2uemhIOO4k3mGAIcd9f3DiBJCntryTbLFJ0hDfDgct1lnv1f6DQgivbx7DjyJX2XYIZdNGM5f1kOsl8WmFs2uya8f0KqCezP988BHzacjxLzK6+8+UV5Sj2tQ8bjvCyX8YKCU3+jPzEMA+tTLGpzrux43X8UnQ8PpPHDYMwR7El1K5DoaLu5Kyi/g/AQAzUqgXX2UIDw==
+ bh=r86wrFN6jnIdDEGeOWWlI2LRDqGN5bheUkemUa7JVLw=;
+ b=mvgm2rgxfy5LXr/bne/GU3lfQ1wmRe1tOemsYcZ7lmL6W4QlCLN8Kse8WLZOcM/YxDEMzqb2J2jSEqQtEnWPH4io5zM9NOVVEDhQ3WYe9moMTglGO7gJMTcaE1eIL0Xo36WEfC8QCr0rmqUOFvBaayCan6GMmkq7/wVo5+lDn3rpWfKOZuNw2WYctmjTbuQcbobAfB0FqF/c2ybACZsGzcqj/F+G5hPI16v0F16hoNbWIZGRFQa2bKp+bLCJw+DkkYh6mFNR5/Um1u/Xye6CBcBbhS4W2WoQ3ETJfsU0cP8L9iGJ5s31NqqPER8jUEIHi2AMdjdysLgHmjVLxo1dLw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org
  smtp.mailfrom=xhdpunnaia40.localdomain; dmarc=none action=none
@@ -37,17 +37,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zm1zHOufKb9+3ANaZrnrp9VGdpYdYquLI2mcr2QZY4Y=;
- b=YbQjNRcEva0oJFteWXclllSi1LOCQMZ2M/g3+76FAuiANQB6Wy5fEWjrR9VhOe41wGwQTFw2zFnQNGvp2HFtB8kwnCvyrw6YZfqKWQC6sQA9czPt0H2DayBuByhpUIg7io+a4H0w71Ytl+nGu240HJI7J7rcKUshyDCr2UwZxGQ=
-Received: from CY4PR02CA0044.namprd02.prod.outlook.com (2603:10b6:903:117::30)
- by BY5PR02MB6641.namprd02.prod.outlook.com (2603:10b6:a03:200::20) with
+ bh=r86wrFN6jnIdDEGeOWWlI2LRDqGN5bheUkemUa7JVLw=;
+ b=fD1UVeyK/7NInNbwaIPgwvGCiRax5Ua2K5/FRJs4VnLL4Dw7bA0fqs1UNmx2tEY0jmkuVACe/4YNaXNJaLhFdNDasIyxWuuuXH/RH8pGeXfd+44wh+r4BaTjoP4PBn0mOl6NCJJJ9DpF3bS28bRXeCFCvm4XF0c1nb6il4/epmg=
+Received: from BYAPR02CA0055.namprd02.prod.outlook.com (2603:10b6:a03:54::32)
+ by BL0PR02MB5473.namprd02.prod.outlook.com (2603:10b6:208:8b::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27; Fri, 31 Jan
- 2020 11:48:12 +0000
-Received: from SN1NAM02FT048.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by CY4PR02CA0044.outlook.office365.com
- (2603:10b6:903:117::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.19; Fri, 31 Jan
+ 2020 11:48:13 +0000
+Received: from CY1NAM02FT033.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::200) by BYAPR02CA0055.outlook.office365.com
+ (2603:10b6:a03:54::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.25 via Frontend
  Transport; Fri, 31 Jan 2020 11:48:12 +0000
 Authentication-Results: spf=none (sender IP is 149.199.60.83)
  smtp.mailfrom=xhdpunnaia40.localdomain; vger.kernel.org; dkim=none (message
@@ -56,26 +56,26 @@ Authentication-Results: spf=none (sender IP is 149.199.60.83)
 Received-SPF: None (protection.outlook.com: xhdpunnaia40.localdomain does not
  designate permitted sender hosts)
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT048.mail.protection.outlook.com (10.152.72.202) with Microsoft SMTP
+ CY1NAM02FT033.mail.protection.outlook.com (10.152.75.179) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
  via Frontend Transport; Fri, 31 Jan 2020 11:48:12 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ixUmR-0006bL-V7; Fri, 31 Jan 2020 03:48:11 -0800
+        id 1ixUmS-0006bP-2O; Fri, 31 Jan 2020 03:48:12 -0800
 Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ixUmM-0004pr-Qz; Fri, 31 Jan 2020 03:48:06 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00VBm50B012174;
-        Fri, 31 Jan 2020 03:48:06 -0800
+        id 1ixUmM-0004pn-Tp; Fri, 31 Jan 2020 03:48:06 -0800
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00VBm5I8012168;
+        Fri, 31 Jan 2020 03:48:05 -0800
 Received: from [10.140.184.180] (helo=xhdpunnaia40.localdomain)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <radheys@xhdpunnaia40.localdomain>)
-        id 1ixUmL-0004om-CT; Fri, 31 Jan 2020 03:48:05 -0800
+        id 1ixUmL-0004op-E5; Fri, 31 Jan 2020 03:48:05 -0800
 Received: by xhdpunnaia40.localdomain (Postfix, from userid 13245)
-        id 8A021FF8A9; Fri, 31 Jan 2020 17:18:04 +0530 (IST)
+        id 9F068100114; Fri, 31 Jan 2020 17:18:04 +0530 (IST)
 From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 To:     davem@davemloft.net, netdev@vger.kernel.org
 Cc:     michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
@@ -83,221 +83,160 @@ Cc:     michal.simek@xilinx.com, anirudha.sarangi@xilinx.com,
         gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH v3 -next 1/4] net: emaclite: Fix coding style
-Date:   Fri, 31 Jan 2020 17:17:47 +0530
-Message-Id: <1580471270-16262-2-git-send-email-radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH v3 -next 3/4] net: emaclite: Fix arm64 compilation warnings
+Date:   Fri, 31 Jan 2020 17:17:49 +0530
+Message-Id: <1580471270-16262-4-git-send-email-radhey.shyam.pandey@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580471270-16262-1-git-send-email-radhey.shyam.pandey@xilinx.com>
 References: <1580471270-16262-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--2.387-7.0-31-1
-X-imss-scan-details: No--2.387-7.0-31-1;No--2.387-5.0-31-1
+X-TM-AS-Result: No-1.563-7.0-31-1
+X-imss-scan-details: No-1.563-7.0-31-1;No-1.563-5.0-31-1
 X-TM-AS-User-Approved-Sender: No;No
 X-TM-AS-Result-Xfilter: Match text exemption rules:No
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(428003)(249900001)(189003)(199004)(450100002)(70586007)(356004)(498600001)(26005)(336012)(70206006)(42882007)(2616005)(316002)(42186006)(6666004)(107886003)(2906002)(8936002)(6266002)(82310400001)(36756003)(5660300002)(4326008)(81156014)(8676002)(81166006)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6641;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;MX:0;A:0;
-MIME-Version: 1.0
-Content-Type: text/plain
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(346002)(39850400004)(428003)(249900001)(199004)(189003)(2616005)(4326008)(6266002)(107886003)(498600001)(82310400001)(36756003)(6666004)(356004)(316002)(42186006)(81166006)(2906002)(70206006)(8936002)(26005)(70586007)(42882007)(5660300002)(8676002)(450100002)(81156014)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB5473;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;A:0;MX:0;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1623106c-9cbe-4a47-d7cd-08d7a643735c
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6641:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6641A7C6531E8BF6C0DFA513D5070@BY5PR02MB6641.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 265ceccf-a178-4135-e1b2-08d7a643736f
+X-MS-TrafficTypeDiagnostic: BL0PR02MB5473:
+X-Microsoft-Antispam-PRVS: <BL0PR02MB54732CE408D2DBFB35C03E9AD5070@BL0PR02MB5473.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Oob-TLC-OOBClassifiers: OLM:167;
 X-Forefront-PRVS: 029976C540
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6wgRKPy/dgixv1MrlYMbumj3wFJwBIQZEvflaNHXbSZJkMRSuH3tzoQdivsP8ChnXtuXIShCR7oHZyLCPBSKw7EWQ9iQdmXyWByVitwjHDmov80CkLOeE/UHhmxCfKyRv7QTcSzXpDhC6WKRWbw9RwsyjNSpxtBlbixEIzJMdAdZ1nbecqpB1Nil35/PvrPaxF+LSjtOsg6vZJV7cM890Dz8UFLK460pBhiR7H6JQC4M3L+VUvsMFPlamngkL5sYs8X37mbXlEW/WyxQRflKM/STBYd/Z7RPulYMS0TS7J8BSYOddphQAVzndBng4Fdn0wm6qnUokrzk2BNq26cX/ZlzB/sTyDq00re9o+ciFy5Ou5OttKMGoTgdvsO6ZtfJvzHl+51zNVuaYIBgwmT18MEAkM7HMC0ftH9E0+3LJHwg+iQALt3y6J63ijaM7H94kkqdj2FavT9pBefbC7cwbZgjEd4D7kU4Ah69XW+sjCE/UooTFKln7RRhCdiw5CLg
+X-Microsoft-Antispam-Message-Info: fbA5TN6fgEXxPwW3LapmvF8g+RPJml9wN5Kbv9uwrNlVrhmG/ZtIfDqSohQpoCyWfcD5B0fRmdv5CKsL2aQZ/M1J00iWfpPY6WiSRIGc7RVRxKIPlN5pfMAbcDyx9V6xmw4VPyeO5nYKjnKBrDHJSL2r65cLwPPuI8zz8KLKvd/ePJYVjHYkerdQLQ2LI/fBZ8tV5Tw6ygRmoXkw5VPDakZHCK0f5xUb0Td/9ht6pj5sAwROJBiMpHXKI52i2GzDYk+FZ0qyvGxLnDrgkHmRTSOq+UcNLVTMV6K7eQS2ZQSHJw9n/8YBY4kejAjUJdG3Z4WAcCdHLxx6AWZMrDwHjhNHHoGBka8XMfgNrgAAKOZ6FfxeIG268mkWS3nAO9ol5Vi+2x5XSb9aVVSssD5m6hvcbC/4sSOMq9zG9HdtKzIJGlj7k377I7w3Q6YvBTfR
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2020 11:48:12.3567
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2020 11:48:12.4995
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1623106c-9cbe-4a47-d7cd-08d7a643735c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 265ceccf-a178-4135-e1b2-08d7a643736f
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6641
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB5473
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make coding style changes to fix checkpatch script warnings.
-There is no functional change. Fixes below check and warnings-
+From: Michal Simek <michal.simek@xilinx.com>
 
-CHECK: Blank lines aren't necessary after an open brace '{'
-CHECK: spinlock_t definition without comment
-CHECK: Please don't use multiple blank lines
-WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-CHECK: braces {} should be used on all arms of this statement
-CHECK: Unbalanced braces around else statement
-CHECK: Alignment should match open parenthesis
-WARNING: Missing a blank line after declarations
+Recast pointers with ulong instead of u32 for arm64.
+This patch fixes these compilation warnings:
 
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:
+In function =E2=80=98xemaclite_send_data=E2=80=99:
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:335:35:
+warning: cast from pointer to integer of different size [-Wpointer-to-int=
+-cast]
+   addr =3D (void __iomem __force *)((u32 __force)addr ^
+                                   ^
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:335:10:
+warning: cast to pointer from integer of different size [-Wint-to-pointer=
+-cast]
+   addr =3D (void __iomem __force *)((u32 __force)addr ^
+          ^
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:
+In function =E2=80=98xemaclite_recv_data=E2=80=99:
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:397:36:
+warning: cast from pointer to integer of different size [-Wpointer-to-int=
+-cast]
+    addr =3D (void __iomem __force *)((u32 __force)addr ^
+                                    ^
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:397:11:
+warning: cast to pointer from integer of different size [-Wint-to-pointer=
+-cast]
+    addr =3D (void __iomem __force *)((u32 __force)addr ^
+           ^
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:
+In function =E2=80=98xemaclite_rx_handler=E2=80=99:
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:97:42:
+warning: cast from pointer to integer of different size [-Wpointer-to-int=
+-cast]
+ #define BUFFER_ALIGN(adr) ((ALIGNMENT - ((u32)adr)) % ALIGNMENT)
+                                          ^
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:612:10:
+note: in expansion of macro =E2=80=98BUFFER_ALIGN=E2=80=99
+  align =3D BUFFER_ALIGN(skb->data);
+          ^~~~~~~~~~~~
+In file included from ./include/linux/dma-mapping.h:7,
+                 from ./include/linux/skbuff.h:31,
+                 from ./include/linux/if_ether.h:19,
+                 from ./include/uapi/linux/ethtool.h:19,
+                 from ./include/linux/ethtool.h:18,
+                 from ./include/linux/netdevice.h:37,
+                 from drivers/net/ethernet/xilinx/xilinx_emaclite.c:12:
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:
+In function =E2=80=98xemaclite_of_probe=E2=80=99:
+drivers/net/ethernet/xilinx/xilinx_emaclite.c:1191:4:
+warning: cast from pointer to integer of different size [-Wpointer-to-int=
+-cast]
+    (unsigned int __force)lp->base_addr, ndev->irq);
+    ^
+./include/linux/device.h:1780:33: note: in definition of macro =E2=80=98d=
+ev_info=E2=80=99
+  _dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
+                                 ^~~~~~~~~~~
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 ---
- drivers/net/ethernet/xilinx/xilinx_emaclite.c | 37 ++++++++++++---------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/xilinx/xilinx_emaclite.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-index 0c26f5b..7f98728 100644
+diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/=
+ethernet/xilinx/xilinx_emaclite.c
+index 7f98728..96e9d21 100644
 --- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
 +++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Xilinx EmacLite Linux driver for the Xilinx Ethernet MAC Lite device.
-+/* Xilinx EmacLite Linux driver for the Xilinx Ethernet MAC Lite device.
-  *
-  * This is a new flat driver which is based on the original emac_lite
-  * driver from John Williams <john.williams@xilinx.com>.
-@@ -91,8 +90,6 @@
- #define XEL_ARP_PACKET_SIZE		28	/* Max ARP packet size */
- #define XEL_HEADER_IP_LENGTH_OFFSET	16	/* IP Length Offset */
- 
--
--
- #define TX_TIMEOUT		(60 * HZ)	/* Tx timeout is 60 seconds. */
+@@ -94,7 +94,7 @@
  #define ALIGNMENT		4
- 
-@@ -115,7 +112,7 @@
-  * @next_tx_buf_to_use:	next Tx buffer to write to
-  * @next_rx_buf_to_use:	next Rx buffer to read from
-  * @base_addr:		base address of the Emaclite device
-- * @reset_lock:		lock used for synchronization
-+ * @reset_lock:		lock to serialize xmit and tx_timeout execution
-  * @deferred_skb:	holds an skb (for transmission at a later time) when the
-  *			Tx buffer is not free
-  * @phy_dev:		pointer to the PHY device
-@@ -124,7 +121,6 @@
-  * @last_link:		last link status
-  */
- struct net_local {
--
- 	struct net_device *ndev;
- 
- 	bool tx_ping_pong;
-@@ -133,7 +129,7 @@ struct net_local {
- 	u32 next_rx_buf_to_use;
- 	void __iomem *base_addr;
- 
--	spinlock_t reset_lock;
-+	spinlock_t reset_lock; /* serialize xmit and tx_timeout execution */
- 	struct sk_buff *deferred_skb;
- 
- 	struct phy_device *phy_dev;
-@@ -144,7 +140,6 @@ struct net_local {
- 	int last_link;
- };
- 
--
- /*************************/
- /* EmacLite driver calls */
- /*************************/
-@@ -207,7 +202,7 @@ static void xemaclite_disable_interrupts(struct net_local *drvdata)
-  * address in the EmacLite device.
-  */
- static void xemaclite_aligned_write(void *src_ptr, u32 *dest_ptr,
--				    unsigned length)
-+				    unsigned int length)
- {
- 	u32 align_buffer;
- 	u32 *to_u32_ptr;
-@@ -264,7 +259,7 @@ static void xemaclite_aligned_write(void *src_ptr, u32 *dest_ptr,
-  * to a 16-bit aligned buffer.
-  */
- static void xemaclite_aligned_read(u32 *src_ptr, u8 *dest_ptr,
--				   unsigned length)
-+				   unsigned int length)
- {
- 	u16 *to_u16_ptr, *from_u16_ptr;
- 	u32 *from_u32_ptr;
-@@ -329,7 +324,6 @@ static int xemaclite_send_data(struct net_local *drvdata, u8 *data,
- 	reg_data = xemaclite_readl(addr + XEL_TSR_OFFSET);
- 	if ((reg_data & (XEL_TSR_XMIT_BUSY_MASK |
- 	     XEL_TSR_XMIT_ACTIVE_MASK)) == 0) {
--
- 		/* Switch to next buffer if configured */
- 		if (drvdata->tx_ping_pong != 0)
- 			drvdata->next_tx_buf_to_use ^= XEL_BUFFER_OFFSET;
-@@ -345,8 +339,9 @@ static int xemaclite_send_data(struct net_local *drvdata, u8 *data,
- 		if ((reg_data & (XEL_TSR_XMIT_BUSY_MASK |
- 		     XEL_TSR_XMIT_ACTIVE_MASK)) != 0)
- 			return -1; /* Buffers were full, return failure */
--	} else
-+	} else {
- 		return -1; /* Buffer was full, return failure */
-+	}
- 
- 	/* Write the frame to the buffer */
- 	xemaclite_aligned_write(data, (u32 __force *)addr, byte_count);
-@@ -421,7 +416,6 @@ static u16 xemaclite_recv_data(struct net_local *drvdata, u8 *data, int maxlen)
- 	 * or an IP packet or an ARP packet
- 	 */
- 	if (proto_type > ETH_DATA_LEN) {
--
- 		if (proto_type == ETH_P_IP) {
- 			length = ((ntohl(xemaclite_readl(addr +
- 					XEL_HEADER_IP_LENGTH_OFFSET +
-@@ -431,23 +425,25 @@ static u16 xemaclite_recv_data(struct net_local *drvdata, u8 *data, int maxlen)
- 			length = min_t(u16, length, ETH_DATA_LEN);
- 			length += ETH_HLEN + ETH_FCS_LEN;
- 
--		} else if (proto_type == ETH_P_ARP)
-+		} else if (proto_type == ETH_P_ARP) {
- 			length = XEL_ARP_PACKET_SIZE + ETH_HLEN + ETH_FCS_LEN;
--		else
-+		} else {
- 			/* Field contains type other than IP or ARP, use max
- 			 * frame size and let user parse it
- 			 */
- 			length = ETH_FRAME_LEN + ETH_FCS_LEN;
--	} else
-+		}
-+	} else {
- 		/* Use the length in the frame, plus the header and trailer */
- 		length = proto_type + ETH_HLEN + ETH_FCS_LEN;
-+	}
- 
- 	if (WARN_ON(length > maxlen))
- 		length = maxlen;
- 
- 	/* Read from the EmacLite device */
- 	xemaclite_aligned_read((u32 __force *)(addr + XEL_RXBUFF_OFFSET),
--				data, length);
-+			       data, length);
- 
- 	/* Acknowledge the frame */
- 	reg_data = xemaclite_readl(addr + XEL_RSR_OFFSET);
-@@ -668,8 +664,7 @@ static irqreturn_t xemaclite_interrupt(int irq, void *dev_id)
- 	/* Check if the Transmission for the first buffer is completed */
- 	tx_status = xemaclite_readl(base_addr + XEL_TSR_OFFSET);
- 	if (((tx_status & XEL_TSR_XMIT_BUSY_MASK) == 0) &&
--		(tx_status & XEL_TSR_XMIT_ACTIVE_MASK) != 0) {
--
-+	    (tx_status & XEL_TSR_XMIT_ACTIVE_MASK) != 0) {
- 		tx_status &= ~XEL_TSR_XMIT_ACTIVE_MASK;
- 		xemaclite_writel(tx_status, base_addr + XEL_TSR_OFFSET);
- 
-@@ -679,8 +674,7 @@ static irqreturn_t xemaclite_interrupt(int irq, void *dev_id)
- 	/* Check if the Transmission for the second buffer is completed */
- 	tx_status = xemaclite_readl(base_addr + XEL_BUFFER_OFFSET + XEL_TSR_OFFSET);
- 	if (((tx_status & XEL_TSR_XMIT_BUSY_MASK) == 0) &&
--		(tx_status & XEL_TSR_XMIT_ACTIVE_MASK) != 0) {
--
-+	    (tx_status & XEL_TSR_XMIT_ACTIVE_MASK) != 0) {
- 		tx_status &= ~XEL_TSR_XMIT_ACTIVE_MASK;
- 		xemaclite_writel(tx_status, base_addr + XEL_BUFFER_OFFSET +
- 				 XEL_TSR_OFFSET);
-@@ -837,6 +831,7 @@ static int xemaclite_mdio_setup(struct net_local *lp, struct device *dev)
- 	of_address_to_resource(npp, 0, &res);
- 	if (lp->ndev->mem_start != res.start) {
- 		struct phy_device *phydev;
-+
- 		phydev = of_phy_find_device(lp->phy_node);
- 		if (!phydev)
- 			dev_info(dev,
--- 
+=20
+ /* BUFFER_ALIGN(adr) calculates the number of bytes to the next alignmen=
+t. */
+-#define BUFFER_ALIGN(adr) ((ALIGNMENT - ((u32)adr)) % ALIGNMENT)
++#define BUFFER_ALIGN(adr) ((ALIGNMENT - ((ulong)adr)) % ALIGNMENT)
+=20
+ #ifdef __BIG_ENDIAN
+ #define xemaclite_readl		ioread32be
+@@ -332,7 +332,7 @@ static int xemaclite_send_data(struct net_local *drvd=
+ata, u8 *data,
+ 		 * if it is configured in HW
+ 		 */
+=20
+-		addr =3D (void __iomem __force *)((u32 __force)addr ^
++		addr =3D (void __iomem __force *)((ulong __force)addr ^
+ 						 XEL_BUFFER_OFFSET);
+ 		reg_data =3D xemaclite_readl(addr + XEL_TSR_OFFSET);
+=20
+@@ -394,7 +394,7 @@ static u16 xemaclite_recv_data(struct net_local *drvd=
+ata, u8 *data, int maxlen)
+ 		 * will correct on subsequent calls
+ 		 */
+ 		if (drvdata->rx_ping_pong !=3D 0)
+-			addr =3D (void __iomem __force *)((u32 __force)addr ^
++			addr =3D (void __iomem __force *)((ulong __force)addr ^
+ 							 XEL_BUFFER_OFFSET);
+ 		else
+ 			return 0;	/* No data was available */
+@@ -1186,9 +1186,9 @@ static int xemaclite_of_probe(struct platform_devic=
+e *ofdev)
+ 	}
+=20
+ 	dev_info(dev,
+-		 "Xilinx EmacLite at 0x%08X mapped to 0x%08X, irq=3D%d\n",
++		 "Xilinx EmacLite at 0x%08X mapped to 0x%08lX, irq=3D%d\n",
+ 		 (unsigned int __force)ndev->mem_start,
+-		 (unsigned int __force)lp->base_addr, ndev->irq);
++		 (unsigned long __force)lp->base_addr, ndev->irq);
+ 	return 0;
+=20
+ error:
+--=20
 2.7.4
 
