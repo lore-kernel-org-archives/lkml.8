@@ -2,61 +2,130 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC1DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B7CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B9920707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C80D215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MdA9bJwQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FNOhNJEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgAaMEx (ORCPT
+        id S1728525AbgAaMGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:04:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgAaMEx (ORCPT
+        Fri, 31 Jan 2020 07:06:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52966 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728479AbgAaMGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:04:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LmGDQNqTKZx9Fhue8Qo2e0s5I/QBmtbZevvhKn8XPLk=; b=MdA9bJwQGCBCEK1/ha1URQahL
-        sbzwN/3aXZXjCREEIN532/FdEqwhRbLLEY8D/fKvVr+jqC8rSWfhZuBsYN/mA8/mo4NnMPfhPDmUJ
-        sPZQvRlpC5DqghEqqoEDFD2q9d2aOVy+gp/G8la/MqHiAlwirLn3ThNgqWLXlvejMtmhav5RmbPlw
-        hD1XXN6frY8PxKbKsP2AGr7sMA5srghkQF4r1CViiJjDD6qEaxIQDnwUOIlYI/RS/yctwDQ7/vEJQ
-        Rrz8yfzHADmnmTNKYaCqhMkgHWOUnGCCchym7xUrvW1BDBy8KN7ddGZ6QiSvyqV5SURwrhiR0M0y4
-        HjTvXAooQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixV2R-0007vq-Bh; Fri, 31 Jan 2020 12:04:43 +0000
-Date:   Fri, 31 Jan 2020 04:04:43 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/ida: remove abandoned macros
-Message-ID: <20200131120443.GC4437@bombadil.infradead.org>
-References: <1579595645-251250-1-git-send-email-alex.shi@linux.alibaba.com>
+        Fri, 31 Jan 2020 07:06:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580472401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O8Za+S+RT8N2UwLMl2kq7dZ6BHikmL9Pgno023mZKr8=;
+        b=FNOhNJEBcvCYTW3H9XXRq3pr0djOxSNGvOyyLHA7HQl5CWyIwtje7m+w4lOCskh0UwxqeN
+        g58/76vBqQtcSql6Vy0Dc9zbzFWF8k/rlj50Eu2poAoEdXGw2d1/hiP3XlElnT5jVH8uXo
+        Kly5JkzQo463fmWRY/cQV+Jvt8pAvwg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-136-Ih36PAVQOHGA5sgccpxLOw-1; Fri, 31 Jan 2020 07:06:36 -0500
+X-MC-Unique: Ih36PAVQOHGA5sgccpxLOw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 738599275B;
+        Fri, 31 Jan 2020 12:06:33 +0000 (UTC)
+Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46DCC5C3FA;
+        Fri, 31 Jan 2020 12:06:18 +0000 (UTC)
+Date:   Fri, 31 Jan 2020 13:06:15 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] KVM: Pass kvm_init()'s opaque param to additional
+ arch funcs
+Message-ID: <20200131130615.3b21b28d.cohuck@redhat.com>
+In-Reply-To: <20200130001023.24339-2-sean.j.christopherson@intel.com>
+References: <20200130001023.24339-1-sean.j.christopherson@intel.com>
+        <20200130001023.24339-2-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579595645-251250-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:34:05PM +0800, Alex Shi wrote:
-> 3 IDA_ started macros aren't used from commit f32f004cddf8 ("ida: Convert
-> to XArray"). so better to remove them.
+On Wed, 29 Jan 2020 16:10:19 -0800
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Thanks, applied.
+> Pass @opaque to kvm_arch_hardware_setup() and
+> kvm_arch_check_processor_compat() to allow architecture specific code to
+> reference @opaque without having to stash it away in a temporary global
+> variable.  This will enable x86 to separate its vendor specific callback
+> ops, which are passed via @opaque, into "init" and "runtime" ops without
+> having to stash away the "init" ops.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/mips/kvm/mips.c       |  4 ++--
+>  arch/powerpc/kvm/powerpc.c |  4 ++--
+>  arch/s390/kvm/kvm-s390.c   |  4 ++--
+>  arch/x86/kvm/x86.c         |  4 ++--
+>  include/linux/kvm_host.h   |  4 ++--
+>  virt/kvm/arm/arm.c         |  4 ++--
+>  virt/kvm/kvm_main.c        | 18 ++++++++++++++----
+>  7 files changed, 26 insertions(+), 16 deletions(-)
+
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index eb3709d55139..5ad252defa54 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -4345,14 +4345,22 @@ struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
+>          return &kvm_running_vcpu;
+>  }
+>  
+> -static void check_processor_compat(void *rtn)
+> +struct kvm_cpu_compat_check {
+> +	void *opaque;
+> +	int *ret;
+> +};
+> +
+> +static void check_processor_compat(void *data)
+>  {
+> -	*(int *)rtn = kvm_arch_check_processor_compat();
+> +	struct kvm_cpu_compat_check *c = data;
+> +
+> +	*c->ret = kvm_arch_check_processor_compat(c->opaque);
+>  }
+
+This function also looks better now :)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Tested-by: Cornelia Huck <cohuck@redhat.com> #s390
+
