@@ -2,106 +2,108 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA44C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7474AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF6E214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RioywwgQ"
+	by mail.kernel.org (Postfix) with ESMTP id 43F3C214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgAaUOO (ORCPT
+        id S1726466AbgAaUSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:14:14 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44080 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgAaUON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:14:13 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VKE94v126115;
-        Fri, 31 Jan 2020 14:14:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580501649;
-        bh=3NWxZM5OP6M2Ss+5LeyFGu7KEdF6VUD+PUYkKi/SwVo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RioywwgQwN+kIApN6zzx9GopBz/txa7KZYhzRW7izvqF0zYFl3ICL/XE3xcOiJM4A
-         MwOf3odx0oFS9+qFJPxriqaiuwsXFuAz381UoDMXRCad8vr3OjsghkKRXCnBl6gM7F
-         K1Tgy1X6qR3qR5TJwm7uPuCRFER/svXw3tnne9S0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VKE9st010091
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 14:14:09 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 14:14:09 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 14:14:08 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VKE8DV048162;
-        Fri, 31 Jan 2020 14:14:08 -0600
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
- <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
- <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
- <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
- <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
- <07701542-2a94-7333-6682-a8e8986ea6d4@ti.com>
- <d194f979-ca6e-b33f-b18c-f8f238b66897@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <01797864-5a63-c3a0-d1d2-99dfff3a0aa1@ti.com>
-Date:   Fri, 31 Jan 2020 14:10:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 15:18:24 -0500
+Received: from mga17.intel.com ([192.55.52.151]:24198 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726086AbgAaUSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 15:18:24 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 12:18:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
+   d="scan'208";a="233556708"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 31 Jan 2020 12:18:23 -0800
+Date:   Fri, 31 Jan 2020 12:17:43 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
+Message-ID: <20200131201743.GE18946@linux.intel.com>
+References: <3499ee3f-e734-50fd-1b50-f6923d1f4f76@intel.com>
+ <5D1CAD6E-7D40-48C6-8D21-203BDC3D0B63@amacapital.net>
+ <df8f7580-9e7d-bc49-30c0-eca517f8db44@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <d194f979-ca6e-b33f-b18c-f8f238b66897@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <df8f7580-9e7d-bc49-30c0-eca517f8db44@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+On Sat, Feb 01, 2020 at 01:47:10AM +0800, Xiaoyao Li wrote:
+> On 1/31/2020 11:37 PM, Andy Lutomirski wrote:
+> >
+> >>On Jan 30, 2020, at 11:22 PM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+> >>
+> >> On 1/31/2020 1:16 AM, Andy Lutomirski wrote:
 
-On 1/31/20 2:02 PM, Florian Fainelli wrote:
-> On 1/31/20 11:54 AM, Dan Murphy wrote:
-> <snip>
->> So then it would be ok to do a genphy_read_status and then override the
->> speed and duplex mode from the PHYSTS register?
-> I would think so yes, especially if that is needed for reporting the
-> actual link speed that ended up being negotiated, and not the one that
-> the link was initially trained at. That assumes I understand that the
-> problem is that you advertise and want Gigabit, but because of a 4-wire
-> cable being plugged in, you ended up at 100Mbits/sec.
+...
 
-Exactly.
+> >>>Can we get a credible description of how this would work? I suggest: Intel
+> >>>adds and documents a new CPUID bit or core capability bit that means
+> >>>“split lock detection is forced on”.  If this bit is set, the MSR bit
+> >>>controlling split lock detection is still writable, but split lock
+> >>>detection is on regardless of the value.  Operating systems are expected
+> >>>to set the bit to 1 to indicate to a hypervisor, if present, that they
+> >>>understand that split lock detection is on.  This would be an SDM-only
+> >>>change, but it would also be a commitment to certain behavior for future
+> >>>CPUs that don’t implement split locks.
+> >>
+> >>It sounds a PV solution for virtualization that it doesn't need to be
+> >>defined in Intel-SDM but in KVM document.
+> >>
+> >>As you suggested, we can define new bit in KVM_CPUID_FEATURES (0x40000001)
+> >>as KVM_FEATURE_SLD_FORCED and reuse MSR_TEST_CTL or use a new virtualized
+> >>MSR for guest to tell hypervisor it understand split lock detection is
+> >>forced on.
+> >
+> >Of course KVM can do this. But this missed the point. Intel added a new CPU
+> >feature, complete with an enumeration mechanism, that cannot be correctly
+> >used if a hypervisor is present.
+> 
+> Why it cannot be correctly used if a hypervisor is present? Because it needs
+> to disable split lock detection when running a vcpu for guest as this patch
+> wants to do?
 
->> I don't think that the link change notification is needed.  The speed
->> should not change once the cable is plugged in and the speed is negotiated.
-> The link change notification is just to signal to the user that the
-> speed may have been reduced due to downshifting, which would/could
-> happen with 4-wires instead of the expected 8-wires. Certainly not
-> strictly necessary right now, I agree.
+Because SMT.  Unless vCPUs are pinned 1:1 with pCPUs, and the guest is
+given an accurate topology, disabling/enabling split-lock #AC may (or may
+not) also disable/enable split-lock #AC on a random vCPU in the guest.
 
-Ack
+> >As it stands, without specific hypervisor and guest support of a non-Intel
+> >interface, it is *impossible* to give architecturally correct behavior to a
+> >guest. If KVM implements your suggestion, *Windows* guests will still
+> >malfunction on Linux.
+> 
+> Actually, KVM don't need to implement my suggestion. It can just virtualize
+> and expose this feature (MSR_IA32_CORE_CAPABILITIES and MSR_TEST_CTRL) to
+> guest, (but it may have some requirement that HT is disabled and host is
+> sld_off) then guest can use it architecturally.
 
-Dan
-
+This is essentially what I proposed a while back.  KVM would allow enabling
+split-lock #AC in the guest if and only if SMT is disabled or the enable bit
+is per-thread, *or* the host is in "warn" mode (can live with split-lock #AC
+being randomly disabled/enabled) and userspace has communicated to KVM that
+it is pinning vCPUs.
