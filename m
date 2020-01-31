@@ -2,91 +2,289 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C8C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C20C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B051C2071A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:00:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vpLl3arb"
+	by mail.kernel.org (Postfix) with ESMTP id 7E2652071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580511638;
+	bh=5BQec15fI5BnSDKDMUTsd+XF8G5rUgn4XWkFuvTm3z8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=hl1VWnm5lc/qd6lC9fo1dbZRAIykkOlJ9Kyfsi5JKQtx053DfINE/4ISVjxnjS1Nb
+	 NY0DemS/jRB2mMtMtsNpZ4tLHS0K/6MR1+YGKY2ZqV1ZS6n2/bkO06/GXLdH/dAxry
+	 PbA3eY9X1vDYB8T9MaNjfg7f9tm6/UbOi8Nsiy4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgAaXAf (ORCPT
+        id S1726743AbgAaXAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 31 Jan 2020 18:00:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgAaXAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 31 Jan 2020 18:00:35 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21971 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726264AbgAaXAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 18:00:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580511634; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=i3PwaHsN67/54M0kZuRccV6gcxHouSS2QlRHmHVgiq8=; b=vpLl3arbncTzJFjt1EE/v8aikA5KX1CvztYAtwEj1syhvrYkbKBS+pTmTaDcEVQTTjzehpTO
- G1A4joXSXSmFbKCsVw5iYVqice+PP417jk5asNDoATjCTJMid3VmrUbeSGctzqpHx9TZepFR
- ZD/B2ed8bOcSoqaziAxkDGvDQfQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e34b186.7f3e2a97c378-smtp-out-n01;
- Fri, 31 Jan 2020 23:00:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EE445C447A1; Fri, 31 Jan 2020 23:00:20 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B74EFC433A2;
-        Fri, 31 Jan 2020 23:00:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B74EFC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 03/16] bus: mhi: core: Add support for registering MHI
- client drivers
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-4-manivannan.sadhasivam@linaro.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <0af134d9-6df6-e79b-cab2-1f96b16323c4@codeaurora.org>
-Date:   Fri, 31 Jan 2020 16:00:18 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200131135009.31477-4-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F93820707;
+        Fri, 31 Jan 2020 23:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580511634;
+        bh=5BQec15fI5BnSDKDMUTsd+XF8G5rUgn4XWkFuvTm3z8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=1/tgV1D8Q0ktKONxi+pLnRRpasxvJ0CF1rXBAmza3iKVCYtiQzWpk7dG8pRoQd3ts
+         1QEQYDFHKvOT+r+QmIFCom6z3q9DID4l1x9lOduCCdDGeUHfHGZazvPSkq5/AGMYI6
+         bzoj1ix7DgQTsJrMaHS3eFwQwRhw+9gUgLumAS7I=
+Message-ID: <1580511632.5607.3.camel@kernel.org>
+Subject: Re: [PATCH 1/4] tracing: Consolidate some synth_event_trace code
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Fri, 31 Jan 2020 17:00:32 -0600
+In-Reply-To: <20200131174344.5606d154@gandalf.local.home>
+References: <cover.1580506712.git.zanussi@kernel.org>
+         <d1c8d8ad124a653b7543afe801d38c199ca5c20e.1580506712.git.zanussi@kernel.org>
+         <20200131174344.5606d154@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 6:49 AM, Manivannan Sadhasivam wrote:
-> This commit adds support for registering MHI client drivers with the
-> MHI stack. MHI client drivers binds to one or more MHI devices inorder
-> to sends and receive the upper-layer protocol packets like IP packets,
-> modem control messages, and diagnostics messages over MHI bus.
+On Fri, 2020-01-31 at 17:43 -0500, Steven Rostedt wrote:
+> On Fri, 31 Jan 2020 15:55:31 -0600
+> Tom Zanussi <zanussi@kernel.org> wrote:
 > 
-> This is based on the patch submitted by Sujeev Dias:
-> https://lkml.org/lkml/2018/7/9/987
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -2053,24 +2053,72 @@ int synth_event_trace_start(struct
+> > trace_event_file *file,
+> >  }
+> >  EXPORT_SYMBOL_GPL(synth_event_trace_start);
+> >  
+> > -static int save_synth_val(struct synth_field *field, u64 val,
+> > +int __synth_event_add_val(const char *field_name, u64 val,
 > 
-> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> [mani: splitted and cleaned up for upstream]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Hmm, shouldn't __synth_event_add_val() still be static?
+> 
+> -- Steve
+> 
+> >  			  struct synth_event_trace_state
+> > *trace_state)
+> >  {
+> > -	struct synth_trace_event *entry = trace_state->entry;
+> > +	struct synth_field *field = NULL;
+> > +	struct synth_trace_event *entry;
+> > +	struct synth_event *event;
+> > +	int i, ret = 0;
+> > +
 
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Here's the patch with __synth_event_add_val() made static.  Let me know
+if you want me to just do a v2 of this series..
 
+Thanks,
+
+Tom
+
+[PATCH] tracing: Consolidate some synth_event_trace code
+
+The synth_event trace code contains some almost identical functions
+and some small functions that are called only once - consolidate the
+common code into single functions and fold in the small functions to
+simplify the code overall.
+
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+---
+ kernel/trace/trace_events_hist.c | 141 ++++++++++++++++-----------------------
+ 1 file changed, 57 insertions(+), 84 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 5b4e04780411..42058a1b5146 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2053,24 +2053,72 @@ int synth_event_trace_start(struct trace_event_file *file,
+ }
+ EXPORT_SYMBOL_GPL(synth_event_trace_start);
+ 
+-static int save_synth_val(struct synth_field *field, u64 val,
+-			  struct synth_event_trace_state *trace_state)
++static int __synth_event_add_val(const char *field_name, u64 val,
++				 struct synth_event_trace_state *trace_state)
+ {
+-	struct synth_trace_event *entry = trace_state->entry;
++	struct synth_field *field = NULL;
++	struct synth_trace_event *entry;
++	struct synth_event *event;
++	int i, ret = 0;
++
++	if (!trace_state) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* can't mix add_next_synth_val() with add_synth_val() */
++	if (field_name) {
++		if (trace_state->add_next) {
++			ret = -EINVAL;
++			goto out;
++		}
++		trace_state->add_name = true;
++	} else {
++		if (trace_state->add_name) {
++			ret = -EINVAL;
++			goto out;
++		}
++		trace_state->add_next = true;
++	}
++
++	if (!trace_state->enabled)
++		goto out;
++
++	event = trace_state->event;
++	if (trace_state->add_name) {
++		for (i = 0; i < event->n_fields; i++) {
++			field = event->fields[i];
++			if (strcmp(field->name, field_name) == 0)
++				break;
++		}
++		if (!field) {
++			ret = -EINVAL;
++			goto out;
++		}
++	} else {
++		if (trace_state->cur_field >= event->n_fields) {
++			ret = -EINVAL;
++			goto out;
++		}
++		field = event->fields[trace_state->cur_field++];
++	}
+ 
++	entry = trace_state->entry;
+ 	if (field->is_string) {
+ 		char *str_val = (char *)(long)val;
+ 		char *str_field;
+ 
+-		if (!str_val)
+-			return -EINVAL;
++		if (!str_val) {
++			ret = -EINVAL;
++			goto out;
++		}
+ 
+ 		str_field = (char *)&entry->fields[field->offset];
+ 		strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+ 	} else
+ 		entry->fields[field->offset] = val;
+-
+-	return 0;
++ out:
++	return ret;
+ }
+ 
+ /**
+@@ -2104,54 +2152,10 @@ static int save_synth_val(struct synth_field *field, u64 val,
+ int synth_event_add_next_val(u64 val,
+ 			     struct synth_event_trace_state *trace_state)
+ {
+-	struct synth_field *field;
+-	struct synth_event *event;
+-	int ret = 0;
+-
+-	if (!trace_state) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	/* can't mix add_next_synth_val() with add_synth_val() */
+-	if (trace_state->add_name) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-	trace_state->add_next = true;
+-
+-	if (!trace_state->enabled)
+-		goto out;
+-
+-	event = trace_state->event;
+-
+-	if (trace_state->cur_field >= event->n_fields) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	field = event->fields[trace_state->cur_field++];
+-	ret = save_synth_val(field, val, trace_state);
+- out:
+-	return ret;
++	return __synth_event_add_val(NULL, val, trace_state);
+ }
+ EXPORT_SYMBOL_GPL(synth_event_add_next_val);
+ 
+-static struct synth_field *find_synth_field(struct synth_event *event,
+-					    const char *field_name)
+-{
+-	struct synth_field *field = NULL;
+-	unsigned int i;
+-
+-	for (i = 0; i < event->n_fields; i++) {
+-		field = event->fields[i];
+-		if (strcmp(field->name, field_name) == 0)
+-			return field;
+-	}
+-
+-	return NULL;
+-}
+-
+ /**
+  * synth_event_add_val - Add a named field's value to an open synth trace
+  * @field_name: The name of the synthetic event field value to set
+@@ -2183,38 +2187,7 @@ static struct synth_field *find_synth_field(struct synth_event *event,
+ int synth_event_add_val(const char *field_name, u64 val,
+ 			struct synth_event_trace_state *trace_state)
+ {
+-	struct synth_trace_event *entry;
+-	struct synth_event *event;
+-	struct synth_field *field;
+-	int ret = 0;
+-
+-	if (!trace_state) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	/* can't mix add_next_synth_val() with add_synth_val() */
+-	if (trace_state->add_next) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-	trace_state->add_name = true;
+-
+-	if (!trace_state->enabled)
+-		goto out;
+-
+-	event = trace_state->event;
+-	entry = trace_state->entry;
+-
+-	field = find_synth_field(event, field_name);
+-	if (!field) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	ret = save_synth_val(field, val, trace_state);
+- out:
+-	return ret;
++	return __synth_event_add_val(field_name, val, trace_state);
+ }
+ EXPORT_SYMBOL_GPL(synth_event_add_val);
+ 
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.14.1
+
