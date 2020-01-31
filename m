@@ -2,154 +2,87 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB13AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8168C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8AC206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="FjZFhdVl"
+	by mail.kernel.org (Postfix) with ESMTP id AE0E324687
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgAaHRR (ORCPT
+        id S1728128AbgAaHRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:17:17 -0500
-Received: from dvalin.narfation.org ([213.160.73.56]:50542 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727525AbgAaHRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:17:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1580455033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=262ZcO9nGFIaHjYtWQmk/Eq3eRhsSEhvvzLlMTVZhgY=;
-        b=FjZFhdVlICftOoiLbHemtSAy0XBE3r+42d6JOwo//ijPAlEUJX+SV0rnYBhkW9n5ZqvcEP
-        vBrlbfVrkXMYAC7c7Essy9zyIhRaTigK7RfYYWqF3PI9JO3Z2rgy8fadByAxLZ940L8WDj
-        P5Um687AdLKfLRALbkt72RYd4I9HAaI=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     syzbot <syzbot+24458cef7d37351dd0c3@syzkaller.appspotmail.com>
-Cc:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com,
-        Arvid Brodin <arvid.brodin@alten.se>
-Subject: Re: KMSAN: uninit-value in batadv_interface_tx (2)
-Date:   Fri, 31 Jan 2020 08:17:05 +0100
-Message-ID: <2402337.3Z8xRsGYif@bentobox>
-In-Reply-To: <00000000000038fa02059d614893@google.com>
-References: <00000000000038fa02059d614893@google.com>
+        Fri, 31 Jan 2020 02:17:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42644 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbgAaHRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 02:17:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D096FAB6D;
+        Fri, 31 Jan 2020 07:17:17 +0000 (UTC)
+Date:   Fri, 31 Jan 2020 08:17:16 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>, nstange@suse.de
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20200131071716.GA9569@linux-b0ei>
+References: <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
+ <20200122214239.ivnebi7hiabi5tbs@treble>
+ <alpine.LSU.2.21.2001281014280.14030@pobox.suse.cz>
+ <20200128150014.juaxfgivneiv6lje@treble>
+ <20200128154046.trkpkdaz7qeovhii@pathway.suse.cz>
+ <20200128170254.igb72ib5n7lvn3ds@treble>
+ <alpine.LSU.2.21.2001291249430.28615@pobox.suse.cz>
+ <20200129155951.qvf3tjsv2qvswciw@treble>
+ <20200130095346.6buhb3reehijbamz@pathway.suse.cz>
+ <20200130141733.krfdmirathscgkkp@treble>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2318064.iM8dZQ9v1p"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130141733.krfdmirathscgkkp@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart2318064.iM8dZQ9v1p
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Thursday, 30 January 2020 21:27:12 CET syzbot wrote:
-[...]
-> dashboard link: https://syzkaller.appspot.com/bug?extid=24458cef7d37351dd0c3
-[...]
-> Reported-by: syzbot+24458cef7d37351dd0c3@syzkaller.appspotmail.com
-[...]
-> =====================================================
-> BUG: KMSAN: uninit-value in batadv_interface_tx+0x10cf/0x2450 net/batman-adv/soft-interface.c:264
-
-This line is just comparing the eth_hdr(skb)->h_dest with the STP address 
-(static const buffer). 
-
-Is there some situation when hsr would not initialize offset for eth_hdr() 
-correctly or where h_dest is not initialized from a correctly initialized 
-value? At least the comparisons with eth_hdr(skb)->h_source didn't cause this 
-error.
-
-Regarding my assupmtion: it seems like the hsr_xmit is only initializing the 
-h_source in master mode. And there even more conditions (see
-hsr_addr_subst_dest) for initializing the h_dest in master mode.
-
-Btw. the code in hsr which "stored this" was
-
-	if (skb_put_padto(skb, ETH_ZLEN + HSR_HLEN))
-		return;
-
-
-[...]
->  batadv_interface_tx+0x10cf/0x2450 net/batman-adv/soft-interface.c:264
->  __netdev_start_xmit include/linux/netdevice.h:4447 [inline]
->  netdev_start_xmit include/linux/netdevice.h:4461 [inline]
->  xmit_one net/core/dev.c:3420 [inline]
->  dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3436
->  __dev_queue_xmit+0x37de/0x4220 net/core/dev.c:4013
->  dev_queue_xmit+0x4b/0x60 net/core/dev.c:4046
->  hsr_xmit net/hsr/hsr_forward.c:228 [inline]
->  hsr_forward_do net/hsr/hsr_forward.c:285 [inline]
->  hsr_forward_skb+0x2614/0x30d0 net/hsr/hsr_forward.c:361
->  hsr_handle_frame+0x385/0x4b0 net/hsr/hsr_slave.c:43
->  __netif_receive_skb_core+0x21de/0x5840 net/core/dev.c:5051
->  __netif_receive_skb_one_core net/core/dev.c:5148 [inline]
->  __netif_receive_skb net/core/dev.c:5264 [inline]
->  process_backlog+0x936/0x1410 net/core/dev.c:6095
->  napi_poll net/core/dev.c:6532 [inline]
->  net_rx_action+0x786/0x1ab0 net/core/dev.c:6600
->  __do_softirq+0x311/0x83d kernel/softirq.c:293
->  run_ksoftirqd+0x25/0x40 kernel/softirq.c:607
->  smpboot_thread_fn+0x493/0x980 kernel/smpboot.c:165
->  kthread+0x4b5/0x4f0 kernel/kthread.c:256
->  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
+On Thu 2020-01-30 08:17:33, Josh Poimboeuf wrote:
+> On Thu, Jan 30, 2020 at 10:53:46AM +0100, Petr Mladek wrote:
+> > On Wed 2020-01-29 09:59:51, Josh Poimboeuf wrote:
+> > > In retrospect, the prerequisites for merging it should have been:
+> > 
+> > OK, let me do one more move in this game.
+> > 
+> > 
+> > > 1) Document how source-based patches can be safely generated;
+> > 
+> > I agree that the information are really scattered over many files
+> > in Documentation/livepatch/.
 > 
-> Uninit was stored to memory at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
->  kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
->  kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
->  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
->  __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
->  pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1637
->  __skb_pad+0x47f/0x900 net/core/skbuff.c:1805
->  __skb_put_padto include/linux/skbuff.h:3193 [inline]
->  skb_put_padto include/linux/skbuff.h:3212 [inline]
->  send_hsr_supervision_frame+0x122d/0x1500 net/hsr/hsr_device.c:310
->  hsr_announce+0x1e2/0x370 net/hsr/hsr_device.c:341
->  call_timer_fn+0x218/0x510 kernel/time/timer.c:1404
->  expire_timers kernel/time/timer.c:1449 [inline]
->  __run_timers+0xcff/0x1210 kernel/time/timer.c:1773
->  run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
->  __do_softirq+0x311/0x83d kernel/softirq.c:293
+> Once again you're blithely ignoring my point and pretending I'm saying
+> something else.  And you did that again further down in the email, but
+> what's the point of arguing if you're not going to listen.
 
+I have exactly the same feeling but the opposite way.
 
-Kind regards,
-	Sven
---nextPart2318064.iM8dZQ9v1p
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> I would ask that you please put on your upstream hats and stop playing
+> politics.  If the patch creation process is a secret, then by all means,
+> keep it secret.  But then keep your GCC flag to yourself.
 
------BEGIN PGP SIGNATURE-----
+The thing is that we do not have any magic secret.
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl4z1HEACgkQXYcKB8Em
-e0ZO0Q/9HNGZvABsLfWxI93iMpHwWUH4pakoQ7Grba5VxXvEhQiGRUwYuY8DHAHO
-V2uHFRAaldEZebz7Q3YMOD/Ysj6IyGROaUSFHKhC4vs9VlEKH/ojanzpE4SPS50L
-lXfQ83UiDH+Tz83Ur5pk2CPJ/CQ3B8g8My1+uqrLgs4s216tLWYdfHvp7KEtfp1y
-jNYCL/f9BxV9D93Djxv0qVtWEfYPQYipVq9iPgsIG8FRUbCbXiY841eogk/idFNe
-0uoOPzMBwfV7ODnAszvi7J0Rg0fa5yunULu4v3yh/SGizu6GIsICa0w9kt5wVWKJ
-hzNtAtw2L+RClZnrukDs8NY19QoFBtFNBXi0E6/Y/loEoa9FIGdRx2hcOplrCmhC
-siEMhxfWwYlMl+kRas/YTt4jMBilT1Fp89b2prn2YcW8I64QSwyCacTwhZIhvkGy
-FCudRlfjBEPbd9uti/37/NXXcv3Nq3ecbdBcALeIaNL+R9CYuemXOfJVkRpgcCs/
-otUv3ZKFMeVkML4g+dn4DMcL+UnUlo3ehjKuObJXOdfTnZ4eBQkbIaZA34PQ+zRg
-vNxDwM/e2qg6VjvQ2LzoIqPQ5FEb7lPNPBsXQN2kPFJGHwnSocohyJK0aa7FGIB/
-RhIMVpyKiR8Zg/r5wUwGhrtGX+lrLp9xRWzWBZ5eyAmdPpOxS70=
-=e1ZJ
------END PGP SIGNATURE-----
-
---nextPart2318064.iM8dZQ9v1p--
-
-
-
+Best Regards,
+Petr
