@@ -2,179 +2,289 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD4BC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D1CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0473120705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC7320705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="m9enIdGG"
+	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="o5YxGTLi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o8YI7DDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgAaGxO (ORCPT
+        id S1728089AbgAaGxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 01:53:14 -0500
-Received: from mail-eopbgr770089.outbound.protection.outlook.com ([40.107.77.89]:55105
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726127AbgAaGxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 01:53:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XEcpRTzqAu4EzZpmTTNuBD8J/AE2oNRqyHCjvzcYa+iS/gvhjwbIUZ36QQs2AwsrDVCohQIvhT787JNDxO3oIQ0Du6sH9J8cUixECkZzc9jHMosVYO6GPD4xc7HP820ZkVuD4bp0dgVf5vkKsADOmVI8xOfNxsU8+RxeZXI97/ajMonPi4CGblCuvwFsMbjmm8rw6OpnQ2ULRi2VVtFzLagKQB1MGExCIKB9mTh/fzfoXIiWy3ucXOJz5WNRp/uMcaxmg1ZN2HWEd+NqIQdW7wSLNHL+SJ2OXxf5lJFPLTAzJ20wJs7S9xw0UX7WQmoSqsqN5AEgk2BZzjC0WauRRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKGmfEFVVTA4GppOpbRRAvFXjZBdQ/99pPP4amGciKU=;
- b=AzoOjUtflFltJaQmKgRrKSojuoAl/FlP6A5YROO+XXlEwavSjlgUCk4z3vvYOE/BHFZukGlLMDv0iImgApr5R1CRGTH5XH4cDRSesP1MOofc8h5AMKgrN0/2VRLbAYLARyWLEtpDnTeeToVBe8FpXFzoTZ3wSlbM/G26NFMwHqMb2ovfo3W2bcCHiWeliSdjYh8Z+RDQM3+GQlaqwZJ90DyBciS1EhD6vPRGlgJgYm16f1uOerPszPuwgfyZvpw3Pkwz9TPgalkARdV+FEKAm9TgZZwyJc6s8Trn0gV7wRiOESQcRFTDew8CszAdspWKU7h39Q6JCELfMpxBBD3VMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKGmfEFVVTA4GppOpbRRAvFXjZBdQ/99pPP4amGciKU=;
- b=m9enIdGG8KM618wB+LWMWuM7xIUvjMFKTx15V9Y6dwHcLJ3/z2+anRkv1UZyp8HN1mCMS7A55SoUTL10YYHCzDsbA7ZVi09sq8GpQkhMMlXjBh2dwhEAsdu1dXRBUeriBFI+4BwSmtrRA9WQyksrGzP4Ha8NYMHJMgZzFhDeirA=
-Received: from DM6PR12MB4137.namprd12.prod.outlook.com (10.141.186.21) by
- DM6PR12MB3388.namprd12.prod.outlook.com (20.178.30.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Fri, 31 Jan 2020 06:52:32 +0000
-Received: from DM6PR12MB4137.namprd12.prod.outlook.com
- ([fe80::cd1d:def3:d2df:3882]) by DM6PR12MB4137.namprd12.prod.outlook.com
- ([fe80::cd1d:def3:d2df:3882%7]) with mapi id 15.20.2686.028; Fri, 31 Jan 2020
- 06:52:32 +0000
-From:   "Lin, Wayne" <Wayne.Lin@amd.com>
-To:     Lyude Paul <lyude@redhat.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm/dp_mst: Convert
- drm_dp_mst_topology_mgr.is_waiting_for_dwn_reply to bitfield
-Thread-Topic: [PATCH] drm/dp_mst: Convert
- drm_dp_mst_topology_mgr.is_waiting_for_dwn_reply to bitfield
-Thread-Index: AQHV0Vz/lTSU5ZZbzkearP0fAkbEEagEYIwg
-Date:   Fri, 31 Jan 2020 06:52:31 +0000
-Message-ID: <DM6PR12MB41370FD3ACA84114B26E20AEFC070@DM6PR12MB4137.namprd12.prod.outlook.com>
-References: <20200122194846.16025-1-lyude@redhat.com>
-In-Reply-To: <20200122194846.16025-1-lyude@redhat.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Enabled=true;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SetDate=2020-01-31T06:42:47Z;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Method=Privileged;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Name=Public_0;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ActionId=b6468822-e034-49ef-ba8b-00006071610b;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ContentBits=1
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_enabled: true
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_setdate: 2020-01-31T06:52:28Z
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_method: Privileged
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_name: Public_0
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_actionid: d74e6f03-1f34-4652-92a9-0000ba605691
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_contentbits: 0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Wayne.Lin@amd.com; 
-x-originating-ip: [165.204.134.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 84a657bd-5bf1-4bcb-84d3-08d7a61a253f
-x-ms-traffictypediagnostic: DM6PR12MB3388:
-x-microsoft-antispam-prvs: <DM6PR12MB3388501AEEA3D27B7478D7C7FC070@DM6PR12MB3388.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 029976C540
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(199004)(189003)(186003)(52536014)(2906002)(26005)(86362001)(5660300002)(66476007)(76116006)(33656002)(66446008)(53546011)(4326008)(81156014)(54906003)(478600001)(6506007)(110136005)(55016002)(66946007)(316002)(9686003)(81166006)(7696005)(71200400001)(8936002)(66556008)(8676002)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3388;H:DM6PR12MB4137.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 76x8vwH50yqxce1APBlzgH2esPdUhHslQ9m1idFDInhxd6GnJ/DPKiqRf9v3GcwbdLi2aetukwL0Spgg4ulomGuHbuq8LyyFzJ6hqeQlevYvyVq7uoCw+fJGoRedlm3YaDoRaUZOTb8d26pG0jdnBtMm54FChgLDGi78nJ2XXFFDIusl8DnjjA6er/r11yGjYKwUcRyl1QcuXGtT2TAzqSB2XMZjDW0fVJxfM1YrJG3mwPSw8Oln0S9WOZ5QCq5BdCKzyaIbu7wWwD7lMD+jq+zl0+3Eu/LBOF0JA78uVFeVkLip27muyRw9lPBp9OVL7SwLxmz6/mtMybp7RSmQSSPfxI+uloedn91Be+ODAI1thQGyPa39wJ+ndvXmKIT5+1LP6iNI1d0jMqPTDl2oAPNVk94tzZHNiMMpHuz1h2htA8jM0kkHQU7ccvptJoKi
-x-ms-exchange-antispam-messagedata: mAQzgwbDwDnwNB3YRSOPCjc3UX5llFu9fY7VJbj0i+K1zlpJBRW9YChMshj+B2jdSWCEYtorbqLd1oExllOF3raXpRjpUMka25xTlyqcJitMkD8GmeZ4VPO5lTRvfeNzuNNOt7voCywB2QLBFrsZ5Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 31 Jan 2020 01:53:23 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:51507 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbgAaGxW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 01:53:22 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 17DE77C6;
+        Fri, 31 Jan 2020 01:53:21 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 31 Jan 2020 01:53:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
+        PK1pmpuptvT5/MkvhBVcvSK+hqg9sA+88hLtr2Io7nw=; b=o5YxGTLi4sIrJXoo
+        ugd2krrWcg64RFmiqJ6tdkiGc+adzeQ5z4ig6QeuAXfutLZu11Bc36G1UXTaOgsw
+        McqAYwaYsI3d31F5bgjRfskD3QNOmNqWiQG1R3ZwWRmBJs9HQ6nxHd+Jr7w9rDwT
+        TsrXMVIwp5ZowfFbIZuI/ZIAMwSyUTu6Ty3Hk+YQsjFZMyjyykhWXH2QHNFuNwxh
+        ESpv/hHIuNWv8FfgrY5OY+iDHNtvScWNLCG1GgKPmNALsiXfqqMf7GaZt8UrwwL/
+        0tXc0BlHl7E8Xao68bTmHg61lA9Do2j7OFxy5OnuBif1zPDj10vQrYeui+CfdelB
+        DdXdbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=PK1pmpuptvT5/MkvhBVcvSK+hqg9sA+88hLtr2Io7
+        nw=; b=o8YI7DDaHYTjKgapJwAjfU8XvzA5klTJrByUtPe78PgrHGM7HTS1QawvQ
+        16SAxyiDIIyl0S8pefOn24dXAcLIQmfHVr/0CBXKmeSzkZ6lwCUlm63CIFNLEYcT
+        l+OVW2JwxEmXrl04JtL10DqHdt4lHyho8/ADXrmUjmLPYpdIQJoycdswXMM/zV7Z
+        C7soOieAJSFDjaobkbgTqmsgn2WPiVeTIzxwl9Tr0ot62gTb8XiOJjN3fH3faalM
+        bf9EbN4gx7PPYjL/C6eRJp72AGezAybDKYhpuX07yLRNA7vAGRhoUeXxOtcPrRcR
+        gYd7tEpSqRET554+IRCWJLcZiAm3g==
+X-ME-Sender: <xms:384zXrtB6FVk4XR6tDllJEfHkNeAuILY-TgyD1XabzkYj4EgD8cbrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeelgdeliecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepkffuhffvffgjfhgtfggggfesthekredttder
+    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
+    gvlhhlrdgttgeqnecuffhomhgrihhnpehoiihlrggsshdrohhrghenucfkphepuddvvddr
+    leelrdekvddruddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
+X-ME-Proxy: <xmx:384zXrUlxgQqC9ICJ43oOpsEyI91u7WM6w9FkPnVlVU1xwcw7uAfJg>
+    <xmx:384zXvI3kay4eHerKcbi84FZlTABlOHENxFxZ3GWgeKkZ_piQOvYbg>
+    <xmx:384zXvNGdYwgFVHIqecB5b3VfI2jaVAXmh5bNmoMgvlQXQwl682hHw>
+    <xmx:4M4zXjwODNLVTRcKnDcaIJS-cKYgUuC6EBHlQfgpbo3gkniM8aiF9A>
+Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 54FA230607B0;
+        Fri, 31 Jan 2020 01:53:17 -0500 (EST)
+Message-ID: <0b016861756cbe27e66651b5c21229a06558cb57.camel@russell.cc>
+Subject: Re: [PATCH] lkdtm: Test KUAP directional user access unlocks on
+ powerpc
+From:   Russell Currey <ruscur@russell.cc>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, keescook@chromium.org,
+        mpe@ellerman.id.au
+Cc:     linux-kernel@vger.kernel.org, dja@axtens.net,
+        kernel-hardening@lists.openwall.com, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 31 Jan 2020 17:53:14 +1100
+In-Reply-To: <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
+References: <20200131053157.22463-1-ruscur@russell.cc>
+         <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84a657bd-5bf1-4bcb-84d3-08d7a61a253f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2020 06:52:31.7199
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wRygC6qtkLTIFemjFolQqu+TLKV4zm6oRN9Xe1TMq4smDj4Ten2Al53ThxXHP1rWHiDZUavyYu8YsEKEUqNJow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3388
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[AMD Public Use]
+On Fri, 2020-01-31 at 07:44 +0100, Christophe Leroy wrote:
+> 
+> Le 31/01/2020 à 06:31, Russell Currey a écrit :
+> > Kernel Userspace Access Prevention (KUAP) on powerpc supports
+> > allowing only one access direction (Read or Write) when allowing
+> > access
+> > to or from user memory.
+> > 
+> > A bug was recently found that showed that these one-way unlocks
+> > never
+> > worked, and allowing Read *or* Write would actually unlock Read
+> > *and*
+> > Write.  We should have a test case for this so we can make sure
+> > this
+> > doesn't happen again.
+> > 
+> > Like ACCESS_USERSPACE, the correct result is for the test to fault.
+> > 
+> > At the time of writing this, the upstream kernel still has this bug
+> > present, so the test will allow both accesses whereas
+> > ACCESS_USERSPACE
+> > will correctly fault.
+> > 
+> > Signed-off-by: Russell Currey <ruscur@russell.cc>
+> > ---
+> >   drivers/misc/lkdtm/core.c  |  3 +++
+> >   drivers/misc/lkdtm/lkdtm.h |  3 +++
+> >   drivers/misc/lkdtm/perms.c | 43
+> > ++++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 49 insertions(+)
+> > 
+> > diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> > index ee0d6e721441..baef3c6f48d6 100644
+> > --- a/drivers/misc/lkdtm/core.c
+> > +++ b/drivers/misc/lkdtm/core.c
+> > @@ -137,6 +137,9 @@ static const struct crashtype crashtypes[] = {
+> >   	CRASHTYPE(EXEC_USERSPACE),
+> >   	CRASHTYPE(EXEC_NULL),
+> >   	CRASHTYPE(ACCESS_USERSPACE),
+> > +#ifdef CONFIG_PPC_KUAP
+> > +	CRASHTYPE(ACCESS_USERSPACE_KUAP),
+> > +#endif
+> 
+> I'm not sure it is a good idea to build this test as a specific test
+> for 
+> powerpc, more comments below.
+> 
+> >   	CRASHTYPE(ACCESS_NULL),
+> >   	CRASHTYPE(WRITE_RO),
+> >   	CRASHTYPE(WRITE_RO_AFTER_INIT),
+> > diff --git a/drivers/misc/lkdtm/lkdtm.h
+> > b/drivers/misc/lkdtm/lkdtm.h
+> > index c56d23e37643..406a3fb32e6f 100644
+> > --- a/drivers/misc/lkdtm/lkdtm.h
+> > +++ b/drivers/misc/lkdtm/lkdtm.h
+> > @@ -57,6 +57,9 @@ void lkdtm_EXEC_RODATA(void);
+> >   void lkdtm_EXEC_USERSPACE(void);
+> >   void lkdtm_EXEC_NULL(void);
+> >   void lkdtm_ACCESS_USERSPACE(void);
+> > +#ifdef CONFIG_PPC_KUAP
+> > +void lkdtm_ACCESS_USERSPACE_KUAP(void);
+> > +#endif
+> >   void lkdtm_ACCESS_NULL(void);
+> >   
+> >   /* lkdtm_refcount.c */
+> > diff --git a/drivers/misc/lkdtm/perms.c
+> > b/drivers/misc/lkdtm/perms.c
+> > index 62f76d506f04..2c9aa0114333 100644
+> > --- a/drivers/misc/lkdtm/perms.c
+> > +++ b/drivers/misc/lkdtm/perms.c
+> > @@ -10,6 +10,9 @@
+> >   #include <linux/mman.h>
+> >   #include <linux/uaccess.h>
+> >   #include <asm/cacheflush.h>
+> > +#ifdef CONFIG_PPC_KUAP
+> > +#include <asm/uaccess.h>
+> > +#endif
+> 
+> asm/uaccess.h is already included by linux/uaccess.h
 
-Reviewed-by: Wayne Lin <Wayne.Lin@amd.com>
+I should have actually read the other includes rather than assuming I
+needed this, pretty silly
 
-Thanks!
+> 
+> >   
+> >   /* Whether or not to fill the target memory area with
+> > do_nothing(). */
+> >   #define CODE_WRITE	true
+> > @@ -200,6 +203,46 @@ void lkdtm_ACCESS_USERSPACE(void)
+> >   	vm_munmap(user_addr, PAGE_SIZE);
+> >   }
+> >   
+> > +/* Test that KUAP's directional user access unlocks work as
+> > intended */
+> > +#ifdef CONFIG_PPC_KUAP
+> > +void lkdtm_ACCESS_USERSPACE_KUAP(void)
+> > +{
+> > +	unsigned long user_addr, tmp = 0;
+> > +	unsigned long *ptr;
+> 
+> Should be a __user ptr because allow_write_to_user() and friends
+> takes 
+> __user pointers.
+> 
+> > +
+> > +	user_addr = vm_mmap(NULL, 0, PAGE_SIZE,
+> > +			    PROT_READ | PROT_WRITE | PROT_EXEC,
+> > +			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+> > +	if (user_addr >= TASK_SIZE) {
+> 
+> Should use IS_ERR_VALUE() here.
+> 
+> > +		pr_warn("Failed to allocate user memory\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (copy_to_user((void __user *)user_addr, &tmp, sizeof(tmp)))
+> > {
+> 
+> Should use ptr instead of casted user_addr.
+> 
+> Why using copy_to_user() for writing an unsigned long ? put_user() 
+> should be enough.
+> 
+> > +		pr_warn("copy_to_user failed\n");
+> > +		vm_munmap(user_addr, PAGE_SIZE);
+> > +		return;
+> > +	}
+> > +
+> > +	ptr = (unsigned long *)user_addr;
+> 
+> move before copy_to_user() and use there.
 
-> -----Original Message-----
-> From: Lyude Paul <lyude@redhat.com>
-> Sent: Thursday, January 23, 2020 3:49 AM
-> To: dri-devel@lists.freedesktop.org
-> Cc: Lin, Wayne <Wayne.Lin@amd.com>; Maarten Lankhorst
-> <maarten.lankhorst@linux.intel.com>; Maxime Ripard <mripard@kernel.org>;
-> David Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH] drm/dp_mst: Convert
-> drm_dp_mst_topology_mgr.is_waiting_for_dwn_reply to bitfield
->=20
-> Small nitpick that I noticed a second ago - we can save some space in the
-> struct by making this a bitfield and sticking it with the rest of the bit=
-fields. Also,
-> some small cleanup to the kdocs for this member.
->=20
-> There should be no functional changes in this patch.
->=20
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Wayne Lin <Wayne.Lin@amd.com>
-> ---
->  include/drm/drm_dp_mst_helper.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/include/drm/drm_dp_mst_helper.h
-> b/include/drm/drm_dp_mst_helper.h index bcb39da9adb4..58bbab3684b5
-> 100644
-> --- a/include/drm/drm_dp_mst_helper.h
-> +++ b/include/drm/drm_dp_mst_helper.h
-> @@ -590,6 +590,11 @@ struct drm_dp_mst_topology_mgr {
->  	 */
->  	bool payload_id_table_cleared : 1;
->=20
-> +	/**
-> +	 * @is_waiting_for_dwn_reply: whether we're waiting for a down reply.
-> +	 */
-> +	bool is_waiting_for_dwn_reply : 1;
-> +
->  	/**
->  	 * @mst_primary: Pointer to the primary/first branch device.
->  	 */
-> @@ -619,11 +624,6 @@ struct drm_dp_mst_topology_mgr {
->  	 */
->  	struct mutex qlock;
->=20
-> -	/**
-> -	 * @is_waiting_for_dwn_reply: indicate whether is waiting for down
-> reply
-> -	 */
-> -	bool is_waiting_for_dwn_reply;
-> -
->  	/**
->  	 * @tx_msg_downq: List of pending down replies.
->  	 */
-> --
-> 2.24.1
+All of the above is from the original ACCESS_USERSPACE test, not to
+imply that it's perfect, but I'm not sure it's worth changing in one
+place only
+
+> 
+> > +
+> > +	/* Allowing "write to" should not allow "read from" */
+> > +	allow_write_to_user(ptr, sizeof(unsigned long));
+> 
+> This is powerpc specific. I think we should build this around the 
+> user_access_begin()/user_access_end() generic fonctions.
+> 
+> I'm about to propose an enhancement to this in order to allow
+> unlocking 
+> only read or write. See discussion at 
+> https://patchwork.ozlabs.org/patch/1227926/.
+> 
+> My plan is to propose my enhancement once powerpc implementation of 
+> user_access_begin stuff is merged. I don't know if Michael is still 
+> planning to merge the series for 5.6 
+> (https://patchwork.ozlabs.org/patch/1228801/ - patch 1 of the series
+> has 
+> already been merged by Linus in 5.5)
+
+You're correct, making generic user_access_begin() calls aware of
+direction solves the arch-specific problem, so unless your series
+somehow ends up being unviable (or taking a very long time to get
+merged) we can drop this idea and have a generic implementation
+instead.
+
+> 
+> 
+> > +	pr_info("attempting bad read at %px with write allowed\n",
+> > ptr);
+> > +	tmp = *ptr;
+> > +	tmp += 0xc0dec0de;
+> > +	prevent_write_to_user(ptr, sizeof(unsigned long));
+> 
+> Does it work ? I would have thought that if the read fails the
+> process 
+> will die and the following test won't be performed.
+
+Correct, the ACCESS_USERSPACE test does the same thing.  Splitting this
+into separate R and W tests makes sense, even if it is unlikely that
+one would be broken without the other.
+
+- Russell
+
+> 
+> > +
+> > +	/* Allowing "read from" should not allow "write to" */
+> > +	allow_read_from_user(ptr, sizeof(unsigned long));
+> > +	pr_info("attempting bad write at %px with read allowed\n",
+> > ptr);
+> > +	*ptr = tmp;
+> > +	prevent_read_from_user(ptr, sizeof(unsigned long));
+> > +
+> > +	vm_munmap(user_addr, PAGE_SIZE);
+> > +}
+> > +#endif
+> > +
+> >   void lkdtm_ACCESS_NULL(void)
+> >   {
+> >   	unsigned long tmp;
+> > 
+> 
+> Christophe
+
