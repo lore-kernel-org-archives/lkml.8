@@ -2,107 +2,137 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB734C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D764C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3CE206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CxlznEqw"
+	by mail.kernel.org (Postfix) with ESMTP id 0DA7D214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgAaAC6 (ORCPT
+        id S1727720AbgAaADN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 19:02:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35620 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgAaAC6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 19:02:58 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so6458294wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 16:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=uvb7UjEoJ5QUo55mMIeV2X7P8y9RLioRyMnghzSVrBk=;
-        b=CxlznEqw9in4pGeFI7tiEkzvUBjjWH4ADeBPph8G4+G9QoHFQIJpjSfkOWvoW8WmES
-         bO53NJg/itV1GXV6G1yDZaoJifzMxdIbQ0wmIZIrxg+0qfokN/yScPANJDpTfiYXHCP0
-         VfNqWMyA5ZH6AI7fP9FDpdvUrFP1BlPUqjKbnX7z4kOScVC9S2PYgtG0SZdLk1zt4mlZ
-         qbbFtJUU7oesuCNJ1/a/WEQhVtZmiHwYOpaZQyxhOMQQvZPIOyUem+cP6jJRZVfZ7pqa
-         v8E1I660ZqgFJlEUdtNXhUzypivyNkoXWANhh9KC2NBUAXZeuegEtQCG+n3497o2pVyA
-         iIWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=uvb7UjEoJ5QUo55mMIeV2X7P8y9RLioRyMnghzSVrBk=;
-        b=RdNPea8joCxgs4NbbRQmchgj1dLgpu2ESHcBsZ9WMPaQNiq+DAGV2CH3GxJKysJpUn
-         7gkWF8eNmyLasalU8dlMQ/SFZM4qxocr/TAoz9eNpBAUR5d5qOAKYB94iU9oQTHotleE
-         AYled2CG5RJgopzC9GqrHIpqpHx9nmZk7cSI6J7IsW5XPJz8rXagHuZh/0tK9WOla93v
-         p2UJXibOgu3hxAFby/uDl/JAwQlGj/KirV33Ik0D4GY0QczkuKU0W5ByfOse/b5xswC6
-         Q9xW1vwDWNLEE5ovCmcDPc8ckvKrkGD0SwHT9Gsfn7x/09H0rsDyw++9q6Y9EIXqz8bx
-         wgXw==
-X-Gm-Message-State: APjAAAXUWJRhVelwCfQiUeIm/xKb+EoNDFFWRd3pW03LIwzw99dxHH3W
-        URSPmnsYEWVQbqkHU0v6FO0L8w==
-X-Google-Smtp-Source: APXvYqwPQPgXUHuMLzMgsVSYsqPcB8oArAwwWFAqxt/Aw9EdJlzgNWxKIbSrHog58z2yHs7ryG8BfQ==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr7812645wrw.289.1580428976708;
-        Thu, 30 Jan 2020 16:02:56 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id g2sm9292932wrw.76.2020.01.30.16.02.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Jan 2020 16:02:56 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH] power: avs: qcom-cpr: Avoid clang -Wsometimes-uninitialized in cpr_scale
-In-Reply-To: <20200130014130.51313-1-natechancellor@gmail.com>
-References: <20200130014130.51313-1-natechancellor@gmail.com>
-Date:   Thu, 30 Jan 2020 16:02:53 -0800
-Message-ID: <7hk158xzki.fsf@baylibre.com>
+        Thu, 30 Jan 2020 19:03:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbgAaADN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 19:03:13 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27CE120CC7;
+        Fri, 31 Jan 2020 00:03:12 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 19:03:10 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, john.koepi@gmail.com
+Subject: [PATCH] tools lib traceevent: Handle gcc __attribute__(()) in
+ fields
+Message-ID: <20200130190310.640ba01c@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Chancellor <natechancellor@gmail.com> writes:
 
-> Clang warns (trimmed for brevity):
->
-> ../drivers/power/avs/qcom-cpr.c:570:13: warning: variable 'reg_mask' is
-> used uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
->
-> ../drivers/power/avs/qcom-cpr.c:520:13: warning: variable 'new_uV' is
-> used uninitialized whenever 'if' condition is false
-> [-Wsometimes-uninitialized]
->
-> Due to the fact that Clang's static analysis happens before any
-> optimization passes are taken into account, it cannot see that both
-> branches in the if statement must be taken because dir cannot be
-> something other than UP or DOWN due to the check at the top of this
-> function. Change the else if condition to else to fix this false
-> positive.
->
-> Fixes: bf6910abf548 ("power: avs: Add support for CPR (Core Power Reduction)")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/840
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Acked-by: Kevin Hilman <khilman@baylibre.com>
+When CONFIG_STURCTLEAK and gcc plugins are enabled, then some macros become
+expanded and displayed as part of the format fields in the event format
+files. For example, the __user macro expands to __attribute__((user)) and
+the field buf for the syscall trace event sys_enter_write has it added:
 
-Rafael, feel free to queue directly.
+ # cat /sys/kernel/tracing/events/syscalls/sys_enter_write/format
+name: sys_enter_write
+ID: 680
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3; size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
 
-Kevin
+        field:int __syscall_nr; offset:8;       size:4; signed:1;
+        field:unsigned int fd;  offset:16;      size:8; signed:0;
+        field:const char __attribute__((user)) * buf;   offset:24; size:8; signed:0;
+        field:size_t count;     offset:32;      size:8; signed:0;
+
+The "__attribute__((user))" breaks the parsing of the event. This needs to
+also be handled.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205857
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+
+Arnaldo,
+
+Hold off on applying this, I want to hear back from the reporter (in
+the bugzilla) to make sure this solves the issue for him.
+
+-- Steve
+
+ tools/lib/traceevent/event-parse.c | 41 ++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index beaa8b8c08ff..ffba056772d5 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -1477,6 +1477,47 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 		/* read the rest of the type */
+ 		for (;;) {
+ 			type = read_token(&token);
++
++			/* On some configs, gcc __attribute((*)) may appear. */
++			if (type == TEP_EVENT_DELIM && strcmp(token, "(") == 0 &&
++			    last_token && strcmp(last_token, "__attribute__") == 0) {
++				char *new_token;
++
++				breakpoint();
++				if (read_expected(TEP_EVENT_DELIM, "(") < 0) {
++					free(last_token);
++					goto fail;
++				}
++				free(token);
++				if (read_expect_type(TEP_EVENT_ITEM, &token) < 0) {
++					free(last_token);
++					goto fail;
++				}
++				new_token = realloc(last_token,
++						    strlen(last_token) +
++						    strlen(token) + 5);
++				if (!new_token) {
++					free(last_token);
++					goto fail;
++				}
++				last_token = new_token;
++				strcat(last_token, "((");
++				strcat(last_token, token);
++				strcat(last_token, "))");
++				free(token);
++				token = NULL;
++
++				if (read_expected(TEP_EVENT_DELIM, ")") < 0) {
++					free(last_token);
++					goto fail;
++				}
++				if (read_expected(TEP_EVENT_DELIM, ")") < 0) {
++					free(last_token);
++					goto fail;
++				}
++				continue;
++			}
++
+ 			if (type == TEP_EVENT_ITEM ||
+ 			    (type == TEP_EVENT_OP && strcmp(token, "*") == 0) ||
+ 			    /*
+-- 
+2.20.1
+
