@@ -2,97 +2,107 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34B8C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BAEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A243B214D8
+	by mail.kernel.org (Postfix) with ESMTP id EFA8121734
 	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:18:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="mBhwEQHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgAaJQd (ORCPT
+        id S1728247AbgAaJSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:16:33 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39718 "EHLO relay.sw.ru"
+        Fri, 31 Jan 2020 04:18:32 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54641 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgAaJQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:16:33 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ixSOT-0007Vt-8L; Fri, 31 Jan 2020 12:15:17 +0300
-Subject: Re: [PATCH block v2 2/3] block: Add support for REQ_NOZERO flag
-To:     Christoph Hellwig <hch@infradead.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
- <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
- <yq14kwpibf6.fsf@oracle.com> <20200131062343.GA6267@infradead.org>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <683bb62a-9667-d2c7-0437-7a6343819382@virtuozzo.com>
-Date:   Fri, 31 Jan 2020 12:15:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1728159AbgAaJSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:18:31 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 488BTw54LNz9sRR;
+        Fri, 31 Jan 2020 20:18:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580462309;
+        bh=cCI4WreJl9TPaQKBLWhchJurIy1jFBvqbedUEJxwYO0=;
+        h=From:To:Subject:In-Reply-To:References:Date:From;
+        b=mBhwEQHDz1XN3CYCwbbKhv0GeXIMwF6PpEKmhsU6baEkq/O5znNz1kxwO04DdH2cV
+         cQHk2ukvWfkffBL51JWySB3i6n7Xl7+K7RF1CR+iQJlUb4nIovevkPsf/8IiWcXORj
+         GnpcWStMenr/9iLqB+KmRYUxsIRmXjpWUw5hp3ZUkzSpP5jJKbtBG4k1xfmDmVRV+b
+         DxTrd/E5w6IIfyo7oKOaCcXqhx0VhKUuGDld1R6qNtw50PBEprXULq816EfAofOTaJ
+         iSMjmoBQSKBOxBN5hak7fA5eN3jYxhDXL/fQxIQu/+805iAC1oUuQmmADCj4gw1uOq
+         PWLBEBWRkYeDw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Alex Ghiti <alex@ghiti.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: Re: [PATCH v2] powerpc: Do not consider weak unresolved symbol relocations as bad
+In-Reply-To: <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
+References: <20200118170335.21440-1-alex@ghiti.fr> <8a8d45c6-4ad2-c682-abfb-3d97188d0d45@ghiti.fr>
+Date:   Fri, 31 Jan 2020 20:18:25 +1100
+Message-ID: <87wo98f0gu.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200131062343.GA6267@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Christoph,
-
-On 31.01.2020 09:23, Christoph Hellwig wrote:
-> On Tue, Jan 21, 2020 at 01:14:05AM -0500, Martin K. Petersen wrote:
->> I find there is some dissonance between using BLKDEV_ZERO_ALLOCATE to
->> describe this operation in one case and REQ_NOZERO in the other.
+Alex Ghiti <alex@ghiti.fr> writes:
+> On 1/18/20 12:03 PM, Alexandre Ghiti wrote:
+>> Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
+>> symbols that may be unresolved at link time which result in an absolute
+>> relocation to 0. relocs_check.sh emits the following warning:
 >>
->> I understand why not zeroing is important in your case. However, I think
->> the allocation aspect is semantically more important. Also, in the case
->> of SCSI, the allocated blocks will typically appear zeroed. So from that
->> perspective REQ_NOZERO doesn't really make sense. I would really prefer
->> to use REQ_ALLOCATE to describe this operation. I agree that "do not
->> write every block" is important too. I just don't have a good suggestion
->> for how to express that as an additional qualifier to REQ_ALLOCATE_?.
-> 
-> Agreed.  Nevermind the problem of a REQ_OP_WRITE_ZEROES operations with
-> a NOZERO flag causing a massive confusion to the reader.
-> 
->> Also, adding to the confusion: In the context of SCSI, ANCHOR requires
->> UNMAP. So my head hurts a bit when I read REQ_NOZERO|REQ_NOUNMAP and
->> have to translate that into ANCHOR|UNMAP.
+>> "WARNING: 2 bad relocations
+>> c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
+>> c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
 >>
->> Longer term, I think we should consider introducing REQ_OP_SINGLE_RANGE
->> or something like that as an umbrella operation that can be used to
->> describe zeroing, allocating, and other things that operate on a single
->> LBA range with no payload. Thus removing both the writiness and the
->> zeroness from the existing REQ_OP_WRITE_ZEROES conduit.
-> 
-> What is the benefit of a multipler there?  Given all this flags
-> confusion I'm almost tempted to just split up REQ_OP_WRITE_ZEROES into
-> REQ_OP_ALLOCATE ("cheap") and REQ_OP_WRITE_ZEROES ("potentially
-> expensive") and just let the caller handle the difference.  Everytime
-> we try to encode semantic differences into flags we're eventually
-> running into trouble.  Sais the person that added REQ_UNMAP..
+>> whereas those relocations are legitimate even for a relocatable kernel
+>> compiled with -pie option.
+>>
+>> relocs_check.sh already excluded some weak unresolved symbols explicitly:
+>> remove those hardcoded symbols and add some logic that parses the symbols
+>> using nm, retrieves all the weak unresolved symbols and excludes those from
+>> the list of the potential bad relocations.
+>>
+>> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>> ---
+>>
+>> Changes in v2:
+>> - Follow Stephen advice of using grep -F instead of looping over weak symbols
+>>    using read, patch is way smaller and cleaner.
+>> - Add missing nm in comment
+>>
+>>   arch/powerpc/Makefile.postlink     |  4 ++--
+>>   arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
+>>   2 files changed, 14 insertions(+), 10 deletions(-)
+>>
+...
+>
+> Hi guys,
+>
+>
+> Any thought about that ?
+>
+> I do think this patch makes the whole check about absolute relocations 
+> clearer.
+> And in the future, it will avoid anyone to spend some time on those 
+> "bad" relocations
+> which actually aren't.
 
-We started from separated REQ_OP_ASSIGN_RANGE in v1, but then we decided
-to use a modifier because this looks better and scatters less over
-I/O stack. See "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
-to reflect extents allocation in block device internals" series for the details.
-(https://lkml.org/lkml/2020/1/7/1616 and neighbouring messages).
+Sorry I missed the v2. Will pick it up.
 
-Last version of the patchset is v5 and it's here: https://lkml.org/lkml/2020/1/22/643
-
-Kirill
+cheers
