@@ -2,98 +2,104 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F9C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A20C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA962467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC3C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580507742;
+	bh=viAoTCaO1m1Vo5Q7sqWuitqv5fTLllyjBX3fssC4RdA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qdPEblCVmZ2mpdf3In2p2z882NkIDt7U0JNxb9oCYgEjb0M+YtTZ14718D1FVk4OA
+	 NVugYDFDoG+2V/vuhv9mYQiiVX4zxs7Pg2v4diCrSHaZAd4UuK1tkFx/d4WpcO0zcz
+	 p9loxJKFinSU6CSgMcsddVvPJatTu17APj2C2vSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgAaVpp (ORCPT
+        id S1726295AbgAaVzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:45:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56684 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgAaVpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:45:44 -0500
-Received: from 51.26-246-81.adsl-static.isp.belgacom.be ([81.246.26.51] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ixe6f-0005eR-6Z; Fri, 31 Jan 2020 22:45:41 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BE110105BDC; Fri, 31 Jan 2020 22:45:35 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH V2] x86/apic/msi: Plug non-maskable MSI affinity race
-In-Reply-To: <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
- <87y2tytv5i.fsf@nanos.tec.linutronix.de>
- <87eevqkpgn.fsf@nanos.tec.linutronix.de>
- <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
- <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
- <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
- <87d0b82a9o.fsf@nanos.tec.linutronix.de>
- <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
- <878slwmpu9.fsf@nanos.tec.linutronix.de>
- <87imkv63yf.fsf@nanos.tec.linutronix.de>
- <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
- <87pnf342pr.fsf@nanos.tec.linutronix.de>
- <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
- <877e1a2d11.fsf@nanos.tec.linutronix.de>
- <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
- <874kwd3lbn.fsf@nanos.tec.linutronix.de>
- <CAE=gft52iBTJyyvDTXeHdEYnpSSROvrQsweuXjd6OuaLO47ACw@mail.gmail.com>
- <87lfpn50id.fsf@nanos.tec.linutronix.de>
- <87imkr4s7n.fsf@nanos.tec.linutronix.de>
- <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
-Date:   Fri, 31 Jan 2020 22:45:35 +0100
-Message-ID: <87d0azuwow.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 31 Jan 2020 16:55:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgAaVzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 16:55:41 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630FF20705;
+        Fri, 31 Jan 2020 21:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580507740;
+        bh=viAoTCaO1m1Vo5Q7sqWuitqv5fTLllyjBX3fssC4RdA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wMFTLciLpsYEXBipuTJBv1Oww9EdprlwI64E9qzQSCrqPxP56U47INM16eMMxgXHn
+         qSfcw1JNb08O1CIkZeLAONrKiBAaqyxM7QU01GexnuBBL+T2bvoPRESAtxmgFwzFYp
+         TWAKwDhYH87GmR0Rivpct1QTYTolpmK78e2UmKr4=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [PATCH 0/4] tracing: Updates to dynamic event API
+Date:   Fri, 31 Jan 2020 15:55:30 -0600
+Message-Id: <cover.1580506712.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan Green <evgreen@chromium.org> writes:
-> On Fri, Jan 31, 2020 at 6:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> #1 is uninteresting and has no unintended side effects. #2 and #3 might
->> expose issues in device driver interrupt handlers which are not prepared to
->> handle a spurious interrupt correctly. This not a regression, it's just
->> exposing something which was already broken as spurious interrupts can
->> happen for a lot of reasons and all driver handlers need to be able to deal
->> with them.
->>
->> Reported-by: Evan Green <evgreen@chromium.org>
->> Debugged-by: Evan Green <evgreen@chromium.org>                                                                                        Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->
-> Heh, thanks for the credit.
+Hi Steve,
 
-Thanks for the detective work and the persistance to convince me!
+This patchset adds some updates to the 'tracing: Add support for
+in-kernel dynamic event API', on top of ftrace/core, addressing the
+comments from v4 of that:
 
-> Something weird happened on this line with your signoff, though.
+  - Consolidate the very similar functions
+    synth_event_add_val/next_val() and inline find_synth_field(), as
+    suggested by Steve
 
-Yeah. No idea how I fatfingered that.
+  - Replace the command-building code in dynevent_cmd with equivalent
+    seq_buf functionality, as suggested by Steve
 
-> I've been running this on my system for a few hours with no issues
-> (normal repro in <1 minute). So,
->
-> Tested-by: Evan Green <evgreen@chromium.org>
+  - Move the check_arg callbacks from the arg objects and explicitly
+    pass them to the add functions, as suggested by Masami
 
-Thanks for confirmation!
+  - Get rid of a useless bit of code in dynevent_add_arg_pair() as
+    suggested by Masami
 
-       tglx
+With these changes the dynamic event test modules work fine and the
+trigger selftests all pass.
+
+Thanks,
+
+Tom
+
+
+The following changes since commit d380dcde9a07ca5de4805dee11f58a98ec0ad6ff:
+
+  tracing: Fix now invalid var_ref_vals assumption in trace action (2020-01-31 12:59:26 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-updates-v1
+
+Tom Zanussi (4):
+  tracing: Consolidate some synth_event_trace code
+  tracing: Remove check_arg() callbacks from dynevent args
+  tracing: Remove useless code in dynevent_arg_pair_add()
+  tracing: Use seq_buf for building dynevent_cmd string
+
+ include/linux/trace_events.h     |   4 +-
+ kernel/trace/trace_dynevent.c    | 110 ++++++++++-----------------
+ kernel/trace/trace_dynevent.h    |  11 ++-
+ kernel/trace/trace_events_hist.c | 157 ++++++++++++++++-----------------------
+ kernel/trace/trace_kprobe.c      |  12 +--
+ 5 files changed, 118 insertions(+), 176 deletions(-)
+
+-- 
+2.14.1
+
