@@ -2,134 +2,112 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A99C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08902C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F51215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:23:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNCWAHC8"
+	by mail.kernel.org (Postfix) with ESMTP id D43F720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580480673;
+	bh=01OiUaOmY+OZ1VWkw/b8aNyIKzh1feqlCBQuBWIQN+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g9NRLPaQvYmlbWjLkbm2FWYhT4Nwf+79BB7bg/DZNKLQ8cxSx0KdYduQd+gzOqRht
+	 xy4HRsCWMLpdnCVbDCAfQqikzMrVGQZRA2ngF7TDlbct2PQvyEEGD10LrjB5dA6db1
+	 BcPpydTN4GmWhMPcA0OyhJrIgpOn/sDsaxIhDAIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgAaOXR (ORCPT
+        id S1728958AbgAaOYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:23:17 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38202 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgAaOXQ (ORCPT
+        Fri, 31 Jan 2020 09:24:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46789 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728730AbgAaOYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:23:16 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p23so7954317edr.5;
-        Fri, 31 Jan 2020 06:23:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5v/d9VEU5KVu0UWojc/o6Bq3UTZ8IALs0zvn7lGcGR0=;
-        b=GNCWAHC897q5L4mOmLaEKcJ36kfrbD7nc915n7AYBjv5VVrqM2p0SJV6I1G503IEwI
-         5s3s4e9piyBcCzRrvd0FBux4nDz/3kBTJxhdwPZJ5icNn5+x1/Q/0etbKYSrMgPCGIDR
-         0hy/7nYYFsEccgKaPJrjPsTFJX6WpWqLCyTodIWlVG2lzF9QDYQ9fgmjnPjz8LOWFlil
-         YRetIN3HuLjcmZybdds1l6ldA60nAR8Xzfg6B5HFC1gNW3lVJ29516DgZysK7Q3qVxv8
-         IttTAfJ5kXfSRcx/4gFEQOYVzS80wKpLs7JF0/GQbKaj90nw0jtiG42UgPEZhsYI+Umf
-         q20Q==
+        Fri, 31 Jan 2020 09:24:33 -0500
+Received: by mail-ot1-f67.google.com with SMTP id g64so6648164otb.13;
+        Fri, 31 Jan 2020 06:24:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5v/d9VEU5KVu0UWojc/o6Bq3UTZ8IALs0zvn7lGcGR0=;
-        b=KBTvRN0v2+O6k/RgZw0UR2l3bLNRPmrGleRU1PhbFP2YUI8X/F7Fw4fY95X760XEV7
-         3uSwms3DTE/MbYubUqzT3VDK0JMub15d21lBxNVAa4sQ9ShG9kvWX1xgA8MNh6vlJGEr
-         Xr5UnHQ58HxLo422hOz0nn+vNp7Ug1r8f0ufkoYn3p0kCfqtl3so6FUeHv3BpedRKvNy
-         2jyoCxkpSVhbeqx10k0PUin1pRRIi2vqYxD+QcCiygk+01R9mnjOFZJLA/vCnfimvX9m
-         5qGDNNWR4CCurVK3l2K6FB32q6dEnjGR06HCpipcp99y/rI5yHa8kjb//6hxuFDpSACU
-         JZfg==
-X-Gm-Message-State: APjAAAVnKjsKDJ3BAouqo4pTYBuMIpEF9/CNMkReMAMOL5bMP4JiS3Oi
-        vXlbZRof/zxeyjdrlcTw0/KucoVG
-X-Google-Smtp-Source: APXvYqxhihbO1V/ApC6dcntrBYql5ALy0cEUpX+6WD+kmEokCbWvXOksq1JUZbpx7esaU77XJGqG+Q==
-X-Received: by 2002:a17:906:848e:: with SMTP id m14mr8850516ejx.152.1580480594349;
-        Fri, 31 Jan 2020 06:23:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id c24sm522225eds.40.2020.01.31.06.23.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 06:23:13 -0800 (PST)
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
- <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
- <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
- <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
-Date:   Fri, 31 Jan 2020 17:22:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uuOjFG9xzi/UCtL9OZpkiDb03tcQtH0JcN37yDUJ4M8=;
+        b=r13E1IeuTeLq0/bEUVaeLF+rS9dAzx7FeLSSrix7uFH5JIlbWDfJfOLGv7RpwRd/N6
+         yupm5NpJD/xlEY5eY0ho3WzuIA3ulm7cnpDahiHrLN9wRK+s4DfWj5TOtaIs36S+MGPW
+         qUzWCCpl2161GLrdPtzSCDFLzB3HEEnYicyfy27f9m/dbegVv7jgreBQhkV5Z60ZXjya
+         4NUeu93NHiRoeS7kf2Stgh4jDFnBb46Oa0Aoiuixx3BHz8PX9nX0UQOMxdeCGOiaT6Rb
+         PI/SV2CDMxEA3mtTCVjpb1vOCksm+0VZ89waUB2RDHjAW0rOtoOHPVSw0JAKD63PkItz
+         yKmw==
+X-Gm-Message-State: APjAAAWtBk4hsMvJd0WaRsYu2taZMzsjmepFGD7k09p6I961i/KCCl3P
+        +uFyV3/OGT/1iFzMfvRdCA==
+X-Google-Smtp-Source: APXvYqw1PGBub02UGDuqudnzKJy1HY8sizU4AhKy/SeKQ9FJhf2gfnVy/TBaUTwmPAfTgya8WLaYVA==
+X-Received: by 2002:a9d:6a90:: with SMTP id l16mr7377981otq.353.1580480670866;
+        Fri, 31 Jan 2020 06:24:30 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y6sm3045689oti.44.2020.01.31.06.24.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 06:24:30 -0800 (PST)
+Received: (nullmailer pid 6089 invoked by uid 1000);
+        Fri, 31 Jan 2020 14:24:29 -0000
+Date:   Fri, 31 Jan 2020 08:24:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, c_skakit@codeaurora.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: Re: [PATCH V3] dt-bindings: geni-se: Convert QUP geni-se bindings to
+ YAML
+Message-ID: <20200131142429.GA5642@bogus>
+References: <1580378322-32729-1-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580378322-32729-1-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.01.2020 12:02, Jon Hunter пишет:
+On Thu, 30 Jan 2020 15:28:42 +0530, Akash Asthana wrote:
+> Convert QUP geni-se bindings to DT schema format using json-schema.
 > 
-> On 30/01/2020 20:04, Dmitry Osipenko wrote:
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Stephen's comment corrected defintion of interrupts for UART node.
+>    Any valid UART node must contain atleast 1 interrupts.
 > 
-> ...
+> Changes in V3:
+>  - As per Rob's comment, added number of reg entries for reg property.
+>  - As per Rob's comment, corrected unit address to hex.
+>  - As per Rob's comment, created a pattern which matches everything common
+>    to geni based I2C, SPI and UART controller and then one pattern  for each.
+>  - As per Rob's comment, restored original example.
 > 
->>>> The tegra_dma_stop() should put RPM anyways, which is missed in yours
->>>> sample. Please see handle_continuous_head_request().
->>>
->>> Yes and that is deliberate. The cyclic transfers the transfers *should*
->>> not stop until terminate_all is called. The tegra_dma_stop in
->>> handle_continuous_head_request() is an error condition and so I am not
->>> sure it is actually necessary to call pm_runtime_put() here.
->>
->> But then tegra_dma_stop() shouldn't unset the "busy" mark.
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ---------
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 211 +++++++++++++++++++++
+>  2 files changed, 211 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
 > 
-> True.
-> 
->>>> I'm also finding the explicit get/put a bit easier to follow in the
->>>> code, don't you think so?
->>>
->>> I can see that, but I was thinking that in the case of cyclic transfers,
->>> it should only really be necessary to call the get/put at the beginning
->>> and end. So in my mind there should only be two exit points which are
->>> the ISR handler for SG and terminate_all for SG and cyclic.
->>
->> Alright, I'll update this patch.
-> 
-> Hmmm ... I am wondering if we should not mess with that and leave how
-> you have it.
 
-I took another look and seems my current v6 should be more correct because:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
-there since tegra_dma_terminate_all() won't put RPM in this case:
+warning: no schema found in file: Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml: ignoring, error in schema: properties: clocks: minItems
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml: properties:clocks:minItems: False schema does not allow 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml: properties:clocks:maxItems: False schema does not allow 2
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-	if (!tdc->busy)
-		goto skip_dma_stop;
-
-2. We can't move the "busy" unsetting into the terminate because then
-tegra_dma_stop() will be invoked twice. Although, one option could be to
-remove the tegra_dma_stop() from the error paths of
-handle_continuous_head_request(), but I'm not sure that this is correct
-to do.
+See https://patchwork.ozlabs.org/patch/1231351
+Please check and re-submit.
