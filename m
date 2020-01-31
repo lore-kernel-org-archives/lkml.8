@@ -2,123 +2,100 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34493C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CCC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F7320705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1C920705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="WUnP55PU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eWMqdOV0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcVYhGHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgAaHBj (ORCPT
+        id S1728105AbgAaHCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:01:39 -0500
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:51655 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgAaHBi (ORCPT
+        Fri, 31 Jan 2020 02:02:42 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45462 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAaHCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:01:38 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id B98E372C;
-        Fri, 31 Jan 2020 02:01:37 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 31 Jan 2020 02:01:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        t/GpK6YsM5srRFf7eFpXme57d41WlX9+o+qAquTPbfY=; b=WUnP55PUGNZUnNgg
-        nCC6+Xby2ixN1VG0TnMXE0MGmvManZHvl4QjoRSIWlWn501h0A97hT86h/W3Vv0d
-        /SyDesb9JQeXveIte5GJuz+jHsDasy459cDE+iAskHk1r1qnVNSZeMoNwU3K1hhR
-        75g9mWhEQXTLd91Md+saO87sl9mnSkrPcM1+GGxzlhmL2gRIEn7fAy+GdqBPQv0n
-        Y6ppTNw5CCLL2NQaOcrVVL48LW3MeoY1Li8UzZSTRwmppBv42rXqoMF5sspgfvBF
-        5agO1T+IDNV+BnFtE4sy62gRy5DvPvTYcTMiZbQSrlSMJlD8BEOoEXxMNO1FYOyz
-        iqlLwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=t/GpK6YsM5srRFf7eFpXme57d41WlX9+o+qAquTPb
-        fY=; b=eWMqdOV0wHgRiduKdiglB1u/pBpJaQMLLyYLQ1mA2ovG2/QAoJ18iTR+c
-        z2q5mVR5mdF3stI2oRU658zN3PMKmC0hMkhHEwbhvgwxCjHFCRdqlql55RwC1ADa
-        l5ODIF4jsBWsiUslco2kQgWJN8xsHV0EMNuySn9cMf+Cz36HsXWo13JoeYCdStk8
-        r8NmqBlFp93DSeApXK4zmj600vjkOR2jpT7Us2nEu43PEuomXlei7PMjYs7U/lYc
-        r04jLCxy3xbG4jUDfJuXJ4S1n4Z/1Y6GaNSTTyU2pe8KlORAIcWkJwSeqNmSk4JS
-        ecuXaUuHMgY5U/w/khTGLLmo2oivg==
-X-ME-Sender: <xms:0NAzXqGzS9sO_L0E_NiIJt5SU0J2TR67rtnar_Yr_vDaq4yo1l64Wg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrfeelgdeljecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepkffuhffvffgjfhgtfggggfesthekredttder
-    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
-    gvlhhlrdgttgeqnecukfhppeduvddvrdelledrkedvrddutdenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehruhhstghurhesrhhushhsvghllh
-    drtggt
-X-ME-Proxy: <xmx:0NAzXnYqT8QLiIlSkd5nmOajtCbm_lecNG9Ec6XF5MsF33FGiW57Ww>
-    <xmx:0NAzXqHSQcXlNGODJm_uaD8wtvvWalJTXVQAv9dUJoGE0ZLJyxZO6Q>
-    <xmx:0NAzXlBiAeGTCGIsyf9Cyn9yrL4OXtPQl43bxAt1R08nA_r5hpM6nA>
-    <xmx:0dAzXjG8XyG67mG2BYnamOPEQ07UDA6GdP2sDeTAd0jX-r2WLqnc_Q>
-Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 403D53060A08;
-        Fri, 31 Jan 2020 02:01:34 -0500 (EST)
-Message-ID: <9edd517d0238dc3319788a23d708b68102cdbc2f.camel@russell.cc>
-Subject: Re: [PATCH] lkdtm: Test KUAP directional user access unlocks on
- powerpc
-From:   Russell Currey <ruscur@russell.cc>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, keescook@chromium.org,
-        mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, dja@axtens.net,
-        kernel-hardening@lists.openwall.com, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 31 Jan 2020 18:01:32 +1100
-In-Reply-To: <c05a4327-0c81-0e3e-d93a-9d62183b146c@c-s.fr>
-References: <20200131053157.22463-1-ruscur@russell.cc>
-         <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
-         <0b016861756cbe27e66651b5c21229a06558cb57.camel@russell.cc>
-         <c05a4327-0c81-0e3e-d93a-9d62183b146c@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        Fri, 31 Jan 2020 02:02:42 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so2820596pfg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 23:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wOI7hqK3fz5FOatl+JgLstEmzwY5hPCxPwdC6f4htY0=;
+        b=gcVYhGHFtpUbCqyKbhsgy051T79MxaD0OdnjtYqfqze1AvFsz1IsXJQLrWD0Gg4KOX
+         J2DsQGRsQ6WoO3xOmJp2umB2AWLPJ5FR5KkAsAeBptRvLpxCvhvY9RKPjJCI8zskqw00
+         ZunZhSWNWIi9qFAqnip93r1/chopEhiogdWsuG1pCjMYTfbPF4irJTdGs1hC+qQpwGOl
+         MWXzaWUcWmY/mJp4G/UUx/oGmcY0HMQI7ereUN7p4PQ7V15zj2M6k2/bhck2sfgBkC7S
+         d7c2puw/9abml2Z4h87xT3hYJsSYYJa0hUBwmiHfDHwRQs4uUhg0ZT2WqI0XM2p8AqlP
+         nV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wOI7hqK3fz5FOatl+JgLstEmzwY5hPCxPwdC6f4htY0=;
+        b=RHxJQo7I71q3iaxP52LkjJzMj9M8uJk+5adwWEioHAysHGJTDR9aV4njM3oXcLnE7w
+         ZR9WUVIDbaqN7Lc+DcizgU38lympvqL+HLmCtEHsr5z8bDTi9NEh6/3TQKN4eauc5nDo
+         g/qxuJ5v8C90EsDWpePmTwo6S8McHIcp+tJ/0QhRFd3VBgZNl1pDxvCguCloASN5pRZl
+         VfsZ0Lhs6CycSg8x+z2WiJxgbOamCRm4gA5N3ruSexEYXwpk9+I3VlrwEVKn6r3pxkqW
+         OHrzrToKwxoPEu+VRbdLReKZVLJEI9c4DOstRvymG5FSjYgIQxoKpiI9zfJPzHgc5VI+
+         ZChw==
+X-Gm-Message-State: APjAAAWahD37lwlMg0IzoZuhbFdj+xj6mjR7kZVGKKyQrKljyVEISSR5
+        6/Jg2wGvFcTUDymv0bQH4vE=
+X-Google-Smtp-Source: APXvYqzrf9HXTuJ47vRwuDdXyk6Q7rha2caXtba6GCDo4v9fEuaTCO33fzUk4AwnphPzGbYBjgI/jw==
+X-Received: by 2002:a63:28a:: with SMTP id 132mr8654803pgc.165.1580454161600;
+        Thu, 30 Jan 2020 23:02:41 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id gc1sm8305293pjb.20.2020.01.30.23.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 23:02:40 -0800 (PST)
+Date:   Fri, 31 Jan 2020 16:02:37 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] printk: Convert a use of sprintf to snprintf in
+ console_unlock
+Message-ID: <20200131070237.GB240941@google.com>
+References: <20200130221644.2273-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130221644.2273-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-31 at 07:58 +0100, Christophe Leroy wrote:
+On (20/01/30 15:16), Nathan Chancellor wrote:
+> When CONFIG_PRINTK is disabled (e.g. when building allnoconfig), clang
+> warns:
 > 
-> Le 31/01/2020 à 07:53, Russell Currey a écrit :
-> > On Fri, 2020-01-31 at 07:44 +0100, Christophe Leroy wrote:
-> > > Le 31/01/2020 à 06:31, Russell Currey a écrit :
-> > > > +	pr_info("attempting bad read at %px with write
-> > > > allowed\n",
-> > > > ptr);
-> > > > +	tmp = *ptr;
-> > > > +	tmp += 0xc0dec0de;
-> > > > +	prevent_write_to_user(ptr, sizeof(unsigned long));
-> > > 
-> > > Does it work ? I would have thought that if the read fails the
-> > > process
-> > > will die and the following test won't be performed.
-> > 
-> > Correct, the ACCESS_USERSPACE test does the same thing.  Splitting
-> > this
-> > into separate R and W tests makes sense, even if it is unlikely
-> > that
-> > one would be broken without the other.
-> > 
+> ../kernel/printk/printk.c:2416:10: warning: 'sprintf' will always
+> overflow; destination buffer has size 0, but format string expands to at
+> least 33 [-Wfortify-source]
+>                         len = sprintf(text,
+>                               ^
+> 1 warning generated.
 > 
-> Or once we are using user_access_begin() stuff, we can use 
-> unsafe_put_user() and unsafe_get_user() which should return an error 
-> instead of killing the caller.
+> It is not wrong; text has a zero size when CONFIG_PRINTK is disabled
+> because LOG_LINE_MAX and PREFIX_MAX are both zero. Change to snprintf so
+> that this case is explicitly handled without any risk of overflow.
 
-Even better, and thanks for your work on all this stuff.
+We probably can add a note here that for !CONFIG_PRINTK builds
+logbuf overflow is very unlikely.
 
-- Russell
+Otherwise,
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-> 
-> Christophe
-
+	-ss
