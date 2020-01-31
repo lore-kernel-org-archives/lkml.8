@@ -2,162 +2,166 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40090C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E351C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134D8215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3871420CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jeDt22Y7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sf0Ptb03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgAaSS5 (ORCPT
+        id S1726385AbgAaSTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:18:57 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36097 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgAaSS4 (ORCPT
+        Fri, 31 Jan 2020 13:19:36 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36643 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgAaSTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:18:56 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f24so5544618lfh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:18:53 -0800 (PST)
+        Fri, 31 Jan 2020 13:19:36 -0500
+Received: by mail-io1-f65.google.com with SMTP id d15so9207976iog.3;
+        Fri, 31 Jan 2020 10:19:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQB69rHX1wLUOB6ckxnewaTIywwOUniSjsLx2ZdmZVU=;
-        b=jeDt22Y76Yhwn3Q8wYjH9uJcoKEH0QuY429dXNFN7HruLwWlRqVzXUK751j8JOdxjq
-         FULXCK2DPDMD9GR+VdOs4vb/InZZFXbIn0Y73jMsCQBUw7xAQd1SkBJu2EwklkEOxiS6
-         0USCMPOp279Gx/SIRygdYahxOnYgQuJqKQthJwCpA/S0Ut4VeHIr5/WrT9o9OQprpORe
-         xvfqMAcldi7yr298nGsS9k0ykRUMQSUO57pZwZ78QXiR6+6BSTCvE6Xxau6WzzcN/2UD
-         6y+X9NEM5Z/eaynqJL6QbY4sQN5sJ43ZQ4BOe/ZqUspMnrtQZJNJlhlFTMDfeKCP2/+H
-         d7Zg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c8i1GlKInlXyN29xwVsz2/AwFCxW5o2ypUfu5ITlzRY=;
+        b=Sf0Ptb03U35DGJ7wylQ0dAs6FQUPlkNKMKX4E04EOWICW9PDZP1sV3I+9Mg05AkdMs
+         yoOh6VuWR64rPBSGk6LMEZImeLl80RM1R6FwdXk4WX+mWCWbLPUGdXBxQwMtg/EgvMbR
+         +jfAZJ09295ytpQW6b2ulVgE+c8f3xHB3hK8wrfrVDcC3QYbv0J+Z+GILXtbK3XwiHTJ
+         8jsFQqj/D6/bFkPZRCbYKp9yZeYOxn8zx3s0599ykKBXiVJntPHn5geFpLus6SqDOWni
+         M2StTip5BgKKwJveXYeL+Kz6Ddbw/KlxwEBkVexFDlbEo8VzTGEWrZj+7YkMatcXxULI
+         4Yig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQB69rHX1wLUOB6ckxnewaTIywwOUniSjsLx2ZdmZVU=;
-        b=Cj2QrchkBQw2MddRZzq4FUCB36pP7mxXHLdE0cK32FklgtL9Dej1Q78y1swftFjcHL
-         8MiOed1UU/tic+10Xi/F0wUFA/Yz3dVUoaBxerdIcKg1SPLLotav1/KfrU15G1TRGqBA
-         h9pnx60jMuyyvDwHZhI+RX/kJYCuwOE7AhTSnC//jlozaZnYv31qKgDhOm52Ok5i1VX+
-         omt3GCli/mkc6a04JeE9HVCIk4XgI9FTpZFCnHjuzQF4RCtGsgvdZh/l4XdV6GwqI1Lm
-         fBEES64FUpIKm1Z4kfGIdXbvZTrcmri1XOL15j3eyuwpIXhtdIghTPQ7mjn+neZryMJE
-         Biew==
-X-Gm-Message-State: APjAAAVlwOHdsJH98hBKNz5dXmhpiu+pEzwGFPUU+IlFp1kzHgePi47x
-        HWdCdBwyKZfEXMk3/As4EU81tEARbGtRdI+n9hCFLvSBCoiF5A==
-X-Google-Smtp-Source: APXvYqyq/YfoE0oFSPYzEyKRSgA8t1DxpbDmSXNnWAWmVKZvjNNBuUx80heTPOUQbSjAkXy16oEV7Acsq2nO+E63ABI=
-X-Received: by 2002:a5d:6692:: with SMTP id l18mr12918211wru.382.1580494315839;
- Fri, 31 Jan 2020 10:11:55 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c8i1GlKInlXyN29xwVsz2/AwFCxW5o2ypUfu5ITlzRY=;
+        b=tFxE2gVEkmS3ciDmj07mmEAZGyV7K6fLF5llj/saF+r1jm26lYxM9ZN/NH62YpyPV/
+         RCOplfpeKlEpslQUffem3K+EZaj3omOGWVcS6y1dC/Niofl/9nB/7XVY8x1tBY9hOlDy
+         r3pVbFPnpIbbR2mlP/u/SZP3x06tgok/RuzX8DpAIybus+d4GarNDpyzTJ1vIhFnMz3Z
+         GHZadMKeADYUIxduvn9fSjztHCP0V+a3oi9pJyjM++NNeaADVfIhWrCrPdk/EgZHFuGi
+         xlBTB7q55qPcKbfZaFbDtG+GZMtbSuO39lLgmLdv5arM/1jiulrK+0KtRiAt7LfeZW2j
+         hFAg==
+X-Gm-Message-State: APjAAAVgS2JkTWed3W1ybGO/5YRCGQQg9snnzWip/yT4/OPiBiWmYO2Q
+        HYiEJ7tGDRJK/y3ojQ4NfbetoeHj
+X-Google-Smtp-Source: APXvYqy4Fu0s+h1yZg5wMFoMycKioZaG7S+3BtI06GDfKvNq+GTOzFz3vJ36/F4bq4GlMueNUdnG5A==
+X-Received: by 2002:a65:420d:: with SMTP id c13mr11908567pgq.101.1580494357755;
+        Fri, 31 Jan 2020 10:12:37 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id ev5sm8578011pjb.4.2020.01.31.10.12.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 10:12:36 -0800 (PST)
+Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is
+ received
+To:     Neal Cardwell <ncardwell@google.com>, sjpark@amazon.com
+Cc:     Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>, shuah@kernel.org,
+        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
+        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
+        Yuchung Cheng <ycheng@google.com>
+References: <20200131122421.23286-1-sjpark@amazon.com>
+ <20200131122421.23286-3-sjpark@amazon.com>
+ <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
+Date:   Fri, 31 Jan 2020 10:12:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200130064430.17198-1-walter-zh.wu@mediatek.com>
- <CAG_fn=X_jSUJXD932z9oN5hBa--n3Qct4zrjzGaPtb2MwJye7A@mail.gmail.com> <1580436306.11126.16.camel@mtksdccf07>
-In-Reply-To: <1580436306.11126.16.camel@mtksdccf07>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Fri, 31 Jan 2020 19:11:44 +0100
-Message-ID: <CAG_fn=X2V0nL=+s38bDbS3UXf2_i61tSevd8vzkV-ZKY=7MHvw@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/stackdepot: Fix global out-of-bounds in stackdepot
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 3:05 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> On Thu, 2020-01-30 at 13:03 +0100, Alexander Potapenko wrote:
-> > On Thu, Jan 30, 2020 at 7:44 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > Hi Walter,
-> >
-> > > If the depot_index = STACK_ALLOC_MAX_SLABS - 2 and next_slab_inited = 0,
-> > > then it will cause array out-of-bounds access, so that we should modify
-> > > the detection to avoid this array out-of-bounds bug.
-> > >
-> > > Assume depot_index = STACK_ALLOC_MAX_SLABS - 3
-> > > Consider following call flow sequence:
-> > >
-> > > stack_depot_save()
-> > >    depot_alloc_stack()
-> > >       if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) //pass
-> > >       depot_index++  //depot_index = STACK_ALLOC_MAX_SLABS - 2
-> > >       if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) //enter
-> > >          smp_store_release(&next_slab_inited, 0); //next_slab_inited = 0
-> > >       init_stack_slab()
-> > >          if (stack_slabs[depot_index] == NULL) //enter and exit
-> > >
-> > > stack_depot_save()
-> > >    depot_alloc_stack()
-> > >       if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) //pass
-> > >       depot_index++  //depot_index = STACK_ALLOC_MAX_SLABS - 1
-> > >       init_stack_slab(&prealloc)
-> > >          stack_slabs[depot_index + 1]  //here get global out-of-bounds
-> > >
-> > > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Alexander Potapenko <glider@google.com>
-> > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > ---
-> > > changes in v2:
-> > > modify call flow sequence and preconditon
-> > >
-> > > changes in v3:
-> > > add some reviewers
-> > > ---
-> > >  lib/stackdepot.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> > > index ed717dd08ff3..7e8a15e41600 100644
-> > > --- a/lib/stackdepot.c
-> > > +++ b/lib/stackdepot.c
-> > > @@ -106,7 +106,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
-> > >         required_size = ALIGN(required_size, 1 << STACK_ALLOC_ALIGN);
-> > >
-> > >         if (unlikely(depot_offset + required_size > STACK_ALLOC_SIZE)) {
-> > > -               if (unlikely(depot_index + 1 >= STACK_ALLOC_MAX_SLABS)) {
-> > > +               if (unlikely(depot_index + 2 >= STACK_ALLOC_MAX_SLABS)) {
 
-This again means stack_slabs[STACK_ALLOC_MAX_SLABS - 2] gets
-initialized, but stack_slabs[STACK_ALLOC_MAX_SLABS - 1] doesn't,
-because we'll be bailing out from init_stack_slab() from now on.
-Does this patch actually fix the problem (do you have a reliable reproducer?)
-This addition of 2 is also counterintuitive, I don't think further
-readers will understand the logic behind it.
 
-What if we just check that depot_index + 1 is a valid index before accessing it?
+On 1/31/20 7:10 AM, Neal Cardwell wrote:
+> On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
+>>
+>> From: SeongJae Park <sjpark@amazon.de>
+>>
+>> When closing a connection, the two acks that required to change closing
+>> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
+>> reverse order.  This is possible in RSS disabled environments such as a
+>> connection inside a host.
+>>
+>> For example, expected state transitions and required packets for the
+>> disconnection will be similar to below flow.
+>>
+>>          00 (Process A)                         (Process B)
+>>          01 ESTABLISHED                         ESTABLISHED
+>>          02 close()
+>>          03 FIN_WAIT_1
+>>          04             ---FIN-->
+>>          05                                     CLOSE_WAIT
+>>          06             <--ACK---
+>>          07 FIN_WAIT_2
+>>          08             <--FIN/ACK---
+>>          09 TIME_WAIT
+>>          10             ---ACK-->
+>>          11                                     LAST_ACK
+>>          12 CLOSED                              CLOSED
+> 
+> AFAICT this sequence is not quite what would happen, and that it would
+> be different starting in line 8, and would unfold as follows:
+> 
+>           08                                     close()
+>           09                                     LAST_ACK
+>           10             <--FIN/ACK---
+>           11 TIME_WAIT
+>           12             ---ACK-->
+>           13 CLOSED                              CLOSED
+> 
+> 
+>> The acks in lines 6 and 8 are the acks.  If the line 8 packet is
+>> processed before the line 6 packet, it will be just ignored as it is not
+>> a expected packet,
+> 
+> AFAICT that is where the bug starts.
+> 
+> AFAICT, from first principles, when process A receives the FIN/ACK it
+> should move to TIME_WAIT even if it has not received a preceding ACK.
+> That's because ACKs are cumulative. So receiving a later cumulative
+> ACK conveys all the information in the previous ACKs.
+> 
+> Also, consider the de facto standard state transition diagram from
+> "TCP/IP Illustrated, Volume 2: The Implementation", by Wright and
+> Stevens, e.g.:
+> 
+>   https://courses.cs.washington.edu/courses/cse461/19sp/lectures/TCPIP_State_Transition_Diagram.pdf
+> 
+> This first-principles analysis agrees with the Wright/Stevens diagram,
+> which says that a connection in FIN_WAIT_1 that receives a FIN/ACK
+> should move to TIME_WAIT.
+> 
+> This seems like a faster and more robust solution than installing
+> special timers.
+> 
+> Thoughts?
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 2e7d2232ed3c..c2e6ff18d716 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -106,7 +106,9 @@ static bool init_stack_slab(void **prealloc)
-        if (stack_slabs[depot_index] == NULL) {
-                stack_slabs[depot_index] = *prealloc;
-        } else {
--               stack_slabs[depot_index + 1] = *prealloc;
-+               /* If this is the last depot slab, do not touch the next one. */
-+               if (depot_index + 1 < STACK_ALLOC_MAX_SLABS)
-+                       stack_slabs[depot_index + 1] = *prealloc;
-                /*
-                 * This smp_store_release pairs with smp_load_acquire() from
-                 * |next_slab_inited| above and in stack_depot_save().
+
+This is orthogonal I think.
+
+No matter how hard we fix the other side, we should improve the active side.
+
+Since we send a RST, sending the SYN a few ms after the RST seems way better
+than waiting 1 second as if we received no packet at all.
+
+Receiving this ACK tells us something about networking health, no need
+to be very cautious about the next attempt.
+
+Of course, if you have a fix for the passive side, that would be nice to review !
+
+
+
