@@ -2,111 +2,121 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A73C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB6AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFD320707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k/JTHwA+"
+	by mail.kernel.org (Postfix) with ESMTP id 44A5A20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580461614;
+	bh=V7vDxMmmNX8/A1ufnjJg7tEfNXHbzelUW1ofiI0bxCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ykg1Y16iKsHPIYuz7fSk//fNyQhqIZE4Om10Nla+tqIrao/ZoyMqL6UUZu5bljjJw
+	 Zgb2ppFKij1DdElalyY41fqV3IdClPWku8zVuPEEKNwsOc6OczQi5JXZzJyCtKp6oR
+	 BN/Z9fVqNh04+RspMfbJxWA+/13pHnwIjcO8GK78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgAaJFr (ORCPT
+        id S1728235AbgAaJGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:05:47 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3813 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAaJFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:05:47 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e33edd50001>; Fri, 31 Jan 2020 01:05:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jan 2020 01:05:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jan 2020 01:05:46 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 09:05:43 +0000
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1b7dd052-20f0-7b38-9578-44967eca1770@nvidia.com>
-Date:   Fri, 31 Jan 2020 09:05:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 04:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728151AbgAaJGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:06:53 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551E5206F0;
+        Fri, 31 Jan 2020 09:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580461612;
+        bh=V7vDxMmmNX8/A1ufnjJg7tEfNXHbzelUW1ofiI0bxCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y0OJFeMQhpY0sXS4zKX09ro+1I0G5B1zntn688rrb6fejMrX5MpTjefojd56PxR47
+         Cw8hOA8PzmnyJwKYIJsmrolmv4wa4yXRi1RiuZB+V1u8IvySYxMHUYNUwqG+E6s6vt
+         txWo1RkgBOlq4TGaf3Vn9xq5d6tPdnJj/B5jv60c=
+Date:   Fri, 31 Jan 2020 10:06:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkml@metux.net" <lkml@metux.net>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/7] bus: Introduce firewall controller framework
+Message-ID: <20200131090650.GA2267325@kroah.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128153806.7780-3-benjamin.gaignard@st.com>
+ <20200128155243.GC3438643@kroah.com>
+ <0dd9dc95-1329-0ad4-d03d-99899ea4f574@st.com>
+ <20200128165712.GA3667596@kroah.com>
+ <62b38576-0e1a-e30e-a954-a8b6a7d8d897@st.com>
+ <CACRpkdY427EzpAt7f5wwqHpRS_SHM8Fvm+cFrwY8op0E_J+D9Q@mail.gmail.com>
+ <20200129095240.GA3852081@kroah.com>
+ <20200129111717.GA3928@sirena.org.uk>
+ <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200130043804.32243-12-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580461525; bh=BuOEIlbunk7DCg4cTZ3hlSTaa7xG8buVShKe71iVBmQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k/JTHwA+ZPbXyAPIaXapcZO+zRym95tsMi+ep9eF4W9lfzOG8Y06NARftq85MOHVP
-         Lr6IyrwUWnGPWk6hcySr55nBl+xo5E0DxYNYl5lcqsvtDMi7Pyp5NPZLSFdShVwy/J
-         ikNQgBb0HASbDZwN+8FIXiXULXt5SpotCdZRYGF4v9MrMrSVkgdaoG05xLdlHYAlM4
-         o+dtJOQfxMdutQLJoVsx8YDu3F7eFlX09gHJLwwQqiMegRxNQp9zeOCmGbFvy69zpD
-         LAkrbDqiAdPy4eYuoXvBYojxIM+XRrvpY2AKM/424qEnzYo79Kr5KAw7gH7watJZRj
-         TYtMakNWvDvtg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b109c05-24cf-a1c4-6072-9af8a61f45b2@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 30/01/2020 04:37, Dmitry Osipenko wrote:
-> It's a bit impractical to enable hardware's clock at the time of DMA
-> channel's allocation because most of DMA client drivers allocate DMA
-> channel at the time of the driver's probing, and thus, DMA clock is kept
-> always-enabled in practice, defeating the whole purpose of runtime PM.
+On Fri, Jan 31, 2020 at 08:37:27AM +0000, Benjamin GAIGNARD wrote:
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
->  1 file changed, 32 insertions(+), 15 deletions(-)
+> On 1/29/20 12:17 PM, Mark Brown wrote:
+> > On Wed, Jan 29, 2020 at 10:52:40AM +0100, Greg KH wrote:
+> >
+> >> It just needs to be part of the bus logic for the specific bus that this
+> >> "firewall" is on.  Just like we do the same thing for USB or thunderbolt
+> >> devices.  Put this in the bus-specific code please.
+> > I'd expect that this is going to affect at least platform and AMBA
+> > buses.
 > 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 22b88ccff05d..0ee28d8e3c96 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
->  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
->  	}
->  	tdc->busy = false;
-> +
-> +	pm_runtime_put(tdc->tdma->dev);
+> Correct me if I'm wrong but creating a new type of bus would mean
+> that all the drivers living on this bus must be changed to register 
+> themselves on this bus ?
 
-There are only 3 places where tegra_dma_stop is called, does it simplify
-the code if we move the pm_runtime_put() outside of tegra_dma_stop? In
-other words, everywhere there is a tegra_dma_stop, afterwards we then
-call pm_runtime_put?
+Yes.
 
-This would allow us to get rid of the extra pm_runtime_get in
-terminate_all.
+> Or does a solution exist to let them live on the platform bus and call 
+> firewalled bus before been probed ?
 
-Jon
+Why do people want to abuse the platform bus so much?  If a device is on
+a bus that can have such a controller, then it is on a real bus, use it!
 
--- 
-nvpublic
+> All the impacted drivers could work on the existing bus with or without 
+> the firewall so I don't want to break
+
+break what?
+
+> 
+> that.
+
+Odd line-break :)
+
+Just register the driver on both busses, no big deal.
+
+Stop abusing the platform bus code for things that it is not for.
+
+thanks,
+
+greg k-h
