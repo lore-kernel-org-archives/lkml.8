@@ -2,159 +2,132 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE1BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC6FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19AD206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="BhOwnxf2"
+	by mail.kernel.org (Postfix) with ESMTP id 4F8512082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgAaRhS (ORCPT
+        id S1727152AbgAaRi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:37:18 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:42169 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726759AbgAaRhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:37:17 -0500
-Received: from [192.168.2.10] ([62.249.185.68])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id xaEAiEmm5n7E5xaEDiorbF; Fri, 31 Jan 2020 18:37:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1580492234; bh=3WQbJddM8Wz+twSqqvze0oENBZRmCkzWSKCDCsxgq4M=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=BhOwnxf2oL/bWm9aFheqdw1CDkYwNjDOcxg/8z+mIyU9sViTJYPkGQm11V67+MPop
-         XGEGAyzpQbIRFYjmFehrEYal0CzM185zCo62SJTPrGpHxsJbD8uBHU0wjo1aJW+rWq
-         yhj5LGbXR7FfyPFE7tUvbjHlZpglaIOsJLTrBYDsL3uq5QjvjtJQMMwWczpRrV7qDF
-         GsjwP/+XYePAnzHEIB1tN/hGghoZsaGAZdG/Qc7edA6B8l09HYE+Gd4fLagqezZ6/4
-         FBrA6jrE6oDs9ISLasEKLH6PF8pUnE+WtgUgsdW/0j/hzc9A1b00/jP6AHvHD6tTo7
-         0RAVGSmLjKIJA==
-Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
- <20200130154246.GA2904678@ulmo>
- <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
- <20200131170351.GA3444092@ulmo>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <173dfa3f-a87f-c5dd-1966-558d6edafc3d@xs4all.nl>
-Date:   Fri, 31 Jan 2020 18:37:10 +0100
+        Fri, 31 Jan 2020 12:38:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:37840 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726759AbgAaRi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:38:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE826FEC;
+        Fri, 31 Jan 2020 09:38:27 -0800 (PST)
+Received: from [10.37.12.54] (unknown [10.37.12.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 188C23F68E;
+        Fri, 31 Jan 2020 09:38:18 -0800 (PST)
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     kgene@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        dietmar.eggemann@arm.com
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
+ <20200127215453.15144-4-lukasz.luba@arm.com>
+ <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <ce51e025-edd5-fdfa-9e2a-9270cacf8660@arm.com>
+Date:   Fri, 31 Jan 2020 17:38:09 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200131170351.GA3444092@ulmo>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfICY9nU5Aw2e/pUvfHfElLJ918rnjLBM2YDNSd7fIVE/4KrbiXVew3jVnrQW4C5m90MLS3pRlNxls2f4W5G+gdhKQZqjo+ux09hp+lHVwOq/XDg/jHXt
- 9J1ltt/YHaXxedhW9o5kXFYiLz57dLi71ZnofgkQFE6gffc+RGEj3xia6StUAMSKGW6IdF6UmpOJ0tPQU9e7cx2Xdg0RFZGKyhyrMp5Z1T777IzSRWGn54dP
- peSrTk6Uwx4wUm/3VFbo68UV/VqyHxQ6b2UkMBrH/7didpbNi7uWkUU9qDCU0srX5rcauMRip5VBlnFI/d+pK9KNesMLUHuyAzR/+2C1nyS3g6QLMOrpqSUy
- Gbn1Hk9hEaD8rjiHE9eTjOVa7OvSVpKDDuoIDlIQortq3fUmooNEf2e/laH03xEHhSHp+PuRayIwfSZwdi7ptC/8AvDG6CPzJotBYvkF9OIhgQkK0kuO2zh1
- NKp6GKBoQRKZUWx7
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 6:03 PM, Thierry Reding wrote:
-> On Fri, Jan 31, 2020 at 03:29:52PM +0100, Hans Verkuil wrote:
->> On 1/30/20 4:42 PM, Thierry Reding wrote:
->>> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
->>>> Hi Sowjanya,
->>>>
->>>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
->>>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
->>>>> generator (TPG) capture.
->>>>>
->>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->>>>> CSI port is one-to-one mapped to VI channel for video capture.
->>>>>
->>>>> This series has TPG support only where it creates hard media links
->>>>> between CSI subdevice and VI video device without device graphs.
->>>>>
->>>>> v4l2-compliance results are available below the patch diff.
->>>>>
->>>>> [v0]:	Includes,
->>>>> 	- Adds CSI TPG clock to Tegra210 clock driver
->>>>> 	- Host1x video driver with VI and CSI clients.
->>>>> 	- Support for Tegra210 only.
->>>>> 	- VI CSI TPG support with hard media links in driver.
->>>>> 	- Video formats supported by Tegra210 VI
->>>>> 	- CSI TPG supported video formats
->>>>
->>>> I'm trying to compile this patch series using the media_tree master
->>>> branch (https://git.linuxtv.org//media_tree.git), but it fails:
->>>>
->>>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
->>>> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
->>>>    71 |  unsigned int count = *nbuffers;
->>>>       |               ^~~~~
->>>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
->>>> drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
->>>>       |                                                       ^
->>>> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
->>>> make[4]: *** Waiting for unfinished jobs....
->>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
->>>> drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
->>>>       |                                                       ^
->>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
->>>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
->>>> drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>>>       |                                                   ^~
->>>> drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>>>       |                                                   ^~
->>>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
->>>> drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>>>       |                                                   ^~
->>>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
->>>> drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
->>>>   286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>>>       |                                                   ^~
->>>>
->>>> And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
->>>> have a 'host' field.
->>>>
->>>> Does this series depend on another patch that's not yet in mainline?
->>>
->>> Sowjanya's been working on top of linux-next, so, yes, this patch
->>> depends on a change that's been merged into the DRM tree for v5.6-rc1.
->>>
->>> Thierry
->>>
->>
->> Is there a specific linux-next tag that works? I tried next-20200131 but that
->> failed to boot. Same problem with the mainline repo since the host1x patches
->> were merged yesterday. It compiles fine, but the boot just stops. Or am I
->> missing some kernel config that is now important to have?
-> 
-> linux-next and mainline are currently regressing on Tegra210 (and some
-> Tegra124) boards. I just sent out a series that fixes the regression for
-> me:
-> 
-> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=156215
-> 
-> Please test if this works for you. If so, I'll send this to Dave as soon
-> as possible.
+Hi Bartek,
 
-I'll try it on Tuesday as I don't have access to the Jetson TX1 until then. It
-looks promising since I think that the last message I saw was a PM message.
+On 1/31/20 1:30 PM, Bartlomiej Zolnierkiewicz wrote:
+> 
+> Hi,
+> 
+> On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Enable the Energy Model (EM) brings possibility to use Energy Aware
+>> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
+>> default. The EAS only works with SchedUtil - a CPUFreq governor which
+>> handles direct requests from the scheduler for the frequency change. Thus,
+>> to make EAS working in default, the SchedUtil governor should be
+>> configured as default CPUFreq governor. Although, the EAS might be enabled
+>> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
+>> then set as CPUFreq governor, i.e.:
+>>
+>> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+>> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+>>
+>> To check if EAS is ready to work, the read output from the command below
+>> should show '1':
+>> cat /proc/sys/kernel/sched_energy_aware
+>>
+>> To disable EAS in runtime simply 'echo 0' to the file above.
+>>
+>> Some test results, which stress the scheduler on Odroid-XU3:
+>> hackbench -l 500 -s 4096
+>> With mainline code and with this patch set.
+>>
+>> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
+>> (which is set to =y in default exynos_defconfig)
+>>
+>> 		|		this patch set			| mainline
+>> 		|-----------------------------------------------|---------------
+>> 		| performance	| SchedUtil	| SchedUtil	| performance
+>> 		| governor	| governor	| governor	| governor
+>> 		|		| w/o EAS	| w/ EAS	|
+>> ----------------|---------------|---------------|---------------|---------------
+>> hackbench w/ PL | 12.7s		| 11.7s		| 12.0s		| 13.0s - 12.2s
+>> hackbench w/o PL| 9.2s		| 8.1s		| 8.2s		| 9.2s - 8.4s
+> 
+> Would you happen to have measurements of how much power is
+> saved by running hackbench using "SchedUtil governor w/ EAS"
+> instead of "SchedUtil governor w/o EAS"?
+
+I need to check if this xu3 ina2xx can aggregate energy or
+it's only drained-current-at-that-moment value.
 
 Regards,
+Lukasz
 
-	Hans
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+>>   arch/arm/configs/exynos_defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+>> index 1db857056992..c0f8ecabc607 100644
+>> --- a/arch/arm/configs/exynos_defconfig
+>> +++ b/arch/arm/configs/exynos_defconfig
+>> @@ -18,6 +18,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
+>>   CONFIG_ARM_APPENDED_DTB=y
+>>   CONFIG_ARM_ATAG_DTB_COMPAT=y
+>>   CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc mem=256M"
+>> +CONFIG_ENERGY_MODEL=y
+>>   CONFIG_CPU_FREQ=y
+>>   CONFIG_CPU_FREQ_STAT=y
+>>   CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
