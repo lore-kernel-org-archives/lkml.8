@@ -2,92 +2,142 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CE3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D19C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72113206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E2E206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="j0zR+NYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgAaQJA (ORCPT
+        id S1729325AbgAaQJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:09:00 -0500
-Received: from relay.sw.ru ([185.231.240.75]:54864 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbgAaQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:09:00 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ixYqf-00030w-Uk; Fri, 31 Jan 2020 19:08:50 +0300
-Subject: [PATCH v3] mm: Allocate shrinker_map on appropriate NUMA node
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-        hannes@cmpxchg.org, shakeelb@google.com, vdavydov.dev@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
- <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com>
- <5f3fc9a9-9a22-ccc3-5971-9783b60807bc@virtuozzo.com>
- <20200131154735.GA4520@dhcp22.suse.cz>
- <a03cb815-8f80-03db-c1bd-39af960db601@virtuozzo.com>
- <20200131160151.GB4520@dhcp22.suse.cz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com>
-Date:   Fri, 31 Jan 2020 19:08:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 31 Jan 2020 11:09:04 -0500
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:35184 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729138AbgAaQJD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:09:03 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id D0ED82E0DE7;
+        Fri, 31 Jan 2020 19:08:59 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id DeVJb1ljZs-8x3iNtbA;
+        Fri, 31 Jan 2020 19:08:59 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1580486939; bh=1aXLT5+SB/bptNKZjWrCoUNjRiU5JKNMQljh6/ZDiZg=;
+        h=Message-ID:Date:To:From:Subject;
+        b=j0zR+NYAvo8uz4XMmqY24v0RRVslqWZ9uba/9qhqxtGnZcfCmW/l25rCkW2iYQPRx
+         0D2m7vi7eaZm9mc849fbP4vxqjZ0xjiVKQOe364wUbCF5hRIXmKzxa7lKKWHvcKPBe
+         WXenWty/RcXii9IqV7gEKV5u7e0r0Ox/PxKLRYag=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id H9uLvClZpc-8xXCGoQc;
+        Fri, 31 Jan 2020 19:08:59 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] clocksource: fix double add_timer_on() for watchdog_timer
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 31 Jan 2020 19:08:59 +0300
+Message-ID: <158048693917.4378.13823603769948933793.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20200131160151.GB4520@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm: Allocate shrinker_map on appropriate NUMA node
+I've got couple reports about kernel 4.19 crashes inside QEMU/KVM:
 
-From: Kirill Tkhai <ktkhai@virtuozzo.com>
+kernel BUG at kernel/time/timer.c:1154!
+BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
 
-Despite shrinker_map may be touched from any cpu
-(e.g., a bit there may be set by a task running
-everywhere); kswapd is always bound to specific
-node. So, we will allocate shrinker_map from
-related NUMA node to respect its NUMA locality.
-Also, this follows generic way we use for allocation
-memcg's per-node data.
+At the same time another cpu got:
+general protection fault: 0000 [#1] SMP PTI
+of poinson pointer 0xdead000000000200 in:
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+__hlist_del at include/linux/list.h:681
+(inlined by) detach_timer at kernel/time/timer.c:818
+(inlined by) expire_timers at kernel/time/timer.c:1355
+(inlined by) __run_timers at kernel/time/timer.c:1686
+(inlined by) run_timer_softirq at kernel/time/timer.c:1699
 
-v3: Remove node_state() patterns.
-v2: Use NUMA_NO_NODE instead of -1.
+Unfortunately kernel logs are badly scrambled, stacktraces are lost.
+
+Printing timer->function before BUG_ON pointed to clocksource_watchdog().
+
+It looks execution of clocksource_watchdog() theoretically could race with
+pair clocksource_stop_watchdog() .. clocksource_start_watchdog():
+
+expire_timers()
+ detach_timer(timer, true);
+  timer->entry.pprev = NULL;
+ raw_spin_unlock_irq(&base->lock);
+ call_timer_fn
+  clocksource_watchdog()
+
+					clocksource_watchdog_kthread() or
+					clocksource_unbind()
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_stop_watchdog();
+					 del_timer(&watchdog_timer);
+					 watchdog_running = 0;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_start_watchdog();
+					 add_timer_on(&watchdog_timer, ...);
+					 watchdog_running = 1;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+  spin_lock(&watchdog_lock);
+  add_timer_on(&watchdog_timer, ...);
+   BUG_ON(timer_pending(timer) || !timer->function);
+    timer_pending() -> true
+    BUG()
+
+I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+
+This patch simply checks timer_pending() before calling add_timer_on().
+All operations are synchronized by watchdog_lock.
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- mm/memcontrol.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/time/clocksource.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 6f6dc8712e39..c37382f5a43c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -334,7 +334,7 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
- 		if (!old)
- 			return 0;
- 
--		new = kvmalloc(sizeof(*new) + size, GFP_KERNEL);
-+		new = kvmalloc_node(sizeof(*new) + size, GFP_KERNEL, nid);
- 		if (!new)
- 			return -ENOMEM;
- 
-@@ -378,7 +378,7 @@ static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
- 	mutex_lock(&memcg_shrinker_map_mutex);
- 	size = memcg_shrinker_map_size;
- 	for_each_node(nid) {
--		map = kvzalloc(sizeof(*map) + size, GFP_KERNEL);
-+		map = kvzalloc_node(sizeof(*map) + size, GFP_KERNEL, nid);
- 		if (!map) {
- 			memcg_free_shrinker_maps(memcg);
- 			ret = -ENOMEM;
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index fff5f64981c6..428beb69426a 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct timer_list *unused)
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
++
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
++	}
+ out:
+ 	spin_unlock(&watchdog_lock);
+ }
+
