@@ -2,130 +2,103 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B7CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D62CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C80D215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:06:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FNOhNJEB"
+	by mail.kernel.org (Postfix) with ESMTP id 6E51920705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgAaMGn (ORCPT
+        id S1728495AbgAaMJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:06:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52966 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728479AbgAaMGm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:06:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580472401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O8Za+S+RT8N2UwLMl2kq7dZ6BHikmL9Pgno023mZKr8=;
-        b=FNOhNJEBcvCYTW3H9XXRq3pr0djOxSNGvOyyLHA7HQl5CWyIwtje7m+w4lOCskh0UwxqeN
-        g58/76vBqQtcSql6Vy0Dc9zbzFWF8k/rlj50Eu2poAoEdXGw2d1/hiP3XlElnT5jVH8uXo
-        Kly5JkzQo463fmWRY/cQV+Jvt8pAvwg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-Ih36PAVQOHGA5sgccpxLOw-1; Fri, 31 Jan 2020 07:06:36 -0500
-X-MC-Unique: Ih36PAVQOHGA5sgccpxLOw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 738599275B;
-        Fri, 31 Jan 2020 12:06:33 +0000 (UTC)
-Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46DCC5C3FA;
-        Fri, 31 Jan 2020 12:06:18 +0000 (UTC)
-Date:   Fri, 31 Jan 2020 13:06:15 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] KVM: Pass kvm_init()'s opaque param to additional
- arch funcs
-Message-ID: <20200131130615.3b21b28d.cohuck@redhat.com>
-In-Reply-To: <20200130001023.24339-2-sean.j.christopherson@intel.com>
-References: <20200130001023.24339-1-sean.j.christopherson@intel.com>
-        <20200130001023.24339-2-sean.j.christopherson@intel.com>
-Organization: Red Hat GmbH
+        Fri, 31 Jan 2020 07:09:47 -0500
+Received: from relay.sw.ru ([185.231.240.75]:45418 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728400AbgAaMJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:09:47 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ixV76-0000Sj-VH; Fri, 31 Jan 2020 15:09:33 +0300
+Subject: [PATCH] mm: Allocate shrinker_map on appropriate NUMA node
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     akpm@linux-foundation.org, mhocko@kernel.org, hannes@cmpxchg.org,
+        shakeelb@google.com, vdavydov.dev@gmail.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ktkhai@virtuozzo.com
+Date:   Fri, 31 Jan 2020 15:09:32 +0300
+Message-ID: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:10:19 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+Despite shrinker_map may be touched from any cpu
+(e.g., a bit there may be set by a task running
+everywhere); kswapd is always bound to specific
+node. So, we will allocate shrinker_map from
+related NUMA node to respect its NUMA locality.
+Also, this follows generic way we use for allocation
+memcg's per-node data.
 
-> Pass @opaque to kvm_arch_hardware_setup() and
-> kvm_arch_check_processor_compat() to allow architecture specific code to
-> reference @opaque without having to stash it away in a temporary global
-> variable.  This will enable x86 to separate its vendor specific callback
-> ops, which are passed via @opaque, into "init" and "runtime" ops without
-> having to stash away the "init" ops.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/mips/kvm/mips.c       |  4 ++--
->  arch/powerpc/kvm/powerpc.c |  4 ++--
->  arch/s390/kvm/kvm-s390.c   |  4 ++--
->  arch/x86/kvm/x86.c         |  4 ++--
->  include/linux/kvm_host.h   |  4 ++--
->  virt/kvm/arm/arm.c         |  4 ++--
->  virt/kvm/kvm_main.c        | 18 ++++++++++++++----
->  7 files changed, 26 insertions(+), 16 deletions(-)
+Two hunks node_state() patterns are borrowed from
+alloc_mem_cgroup_per_node_info().
 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index eb3709d55139..5ad252defa54 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4345,14 +4345,22 @@ struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
->          return &kvm_running_vcpu;
->  }
->  
-> -static void check_processor_compat(void *rtn)
-> +struct kvm_cpu_compat_check {
-> +	void *opaque;
-> +	int *ret;
-> +};
-> +
-> +static void check_processor_compat(void *data)
->  {
-> -	*(int *)rtn = kvm_arch_check_processor_compat();
-> +	struct kvm_cpu_compat_check *c = data;
-> +
-> +	*c->ret = kvm_arch_check_processor_compat(c->opaque);
->  }
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ mm/memcontrol.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-This function also looks better now :)
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 6f6dc8712e39..8ccc8ceb1b17 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -323,7 +323,7 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
+ 					 int size, int old_size)
+ {
+ 	struct memcg_shrinker_map *new, *old;
+-	int nid;
++	int nid, tmp;
+ 
+ 	lockdep_assert_held(&memcg_shrinker_map_mutex);
+ 
+@@ -333,8 +333,9 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
+ 		/* Not yet online memcg */
+ 		if (!old)
+ 			return 0;
+-
+-		new = kvmalloc(sizeof(*new) + size, GFP_KERNEL);
++		/* See comment in alloc_mem_cgroup_per_node_info()*/
++		tmp = node_state(nid, N_NORMAL_MEMORY) ? nid : - 1;
++		new = kvmalloc_node(sizeof(*new) + size, GFP_KERNEL, tmp);
+ 		if (!new)
+ 			return -ENOMEM;
+ 
+@@ -370,7 +371,7 @@ static void memcg_free_shrinker_maps(struct mem_cgroup *memcg)
+ static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
+ {
+ 	struct memcg_shrinker_map *map;
+-	int nid, size, ret = 0;
++	int nid, size, tmp, ret = 0;
+ 
+ 	if (mem_cgroup_is_root(memcg))
+ 		return 0;
+@@ -378,7 +379,9 @@ static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
+ 	mutex_lock(&memcg_shrinker_map_mutex);
+ 	size = memcg_shrinker_map_size;
+ 	for_each_node(nid) {
+-		map = kvzalloc(sizeof(*map) + size, GFP_KERNEL);
++		/* See comment in alloc_mem_cgroup_per_node_info()*/
++		tmp = node_state(nid, N_NORMAL_MEMORY) ? nid : - 1;
++		map = kvzalloc_node(sizeof(*map) + size, GFP_KERNEL, tmp);
+ 		if (!map) {
+ 			memcg_free_shrinker_maps(memcg);
+ 			ret = -ENOMEM;
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Tested-by: Cornelia Huck <cohuck@redhat.com> #s390
 
