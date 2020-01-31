@@ -2,103 +2,117 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906EAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438E6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEBE20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA28220705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hdbfVVhb"
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="eFZRubqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgAaKUi (ORCPT
+        id S1728344AbgAaKVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:20:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47652 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728289AbgAaKUi (ORCPT
+        Fri, 31 Jan 2020 05:21:04 -0500
+Received: from vulcan.natalenko.name ([104.207.131.136]:38352 "EHLO
+        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728284AbgAaKVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:20:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580466037;
+        Fri, 31 Jan 2020 05:21:03 -0500
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id F0DCE6AE285;
+        Fri, 31 Jan 2020 11:20:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1580466060;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9Rvip+9gEMjJ6H84OHoQUknXeHPGXzmy72y0DuVzxqY=;
-        b=hdbfVVhbnrTdV/DBYBjxYhjjKXuzhKygdYWxtIUNy3nk4nagKbDH/DARq/r0rJGU6xNcC/
-        zUNltzFBdClP0pcXbVnY9/mRju29LmwjXY9MyUiZOb8yteXrg4dymhN9ypx+QiUSimWnoc
-        T357e2fcnsjOQH2+55db1i1Nsd5srag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-degvaMcmNIy88Nk77AIFyA-1; Fri, 31 Jan 2020 05:20:28 -0500
-X-MC-Unique: degvaMcmNIy88Nk77AIFyA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1549107ACC4;
-        Fri, 31 Jan 2020 10:20:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E46F5DA75;
-        Fri, 31 Jan 2020 10:20:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com>
-References: <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com> <20200123153341.19947-1-will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Will Deacon <will@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
+        bh=JyCL1AIFRsZZJc5TqF/kQuvXxI+4j7HIOhnVeMP3yZ4=;
+        b=eFZRubqsAd6wKnBlDqS8xYSyzrE/OXUhl4kBSTrY0qR+h8rh3JnjwATOfPykZwc6CTQoSL
+        2JrWVkPumzGpxxX08aMeH/Jg6vIfNXjCEwhM4w/r/hHMRvcQaV+vyZTgsvmA9VaIldE/oE
+        cTEqSU/csPYUPXaf8360TPtmDbVoMTA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7435.1580466021.1@warthog.procyon.org.uk>
-Date:   Fri, 31 Jan 2020 10:20:21 +0000
-Message-ID: <7436.1580466021@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 31 Jan 2020 11:20:59 +0100
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bfq-iosched@googlegroups.com,
+        patdung100@gmail.com, cevich@redhat.com
+Subject: Re: [PATCH BUGFIX 3/6] block, bfq: get extra ref to prevent a queue
+ from being freed during a group move
+In-Reply-To: <20200131092409.10867-4-paolo.valente@linaro.org>
+References: <20200131092409.10867-1-paolo.valente@linaro.org>
+ <20200131092409.10867-4-paolo.valente@linaro.org>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <784c55c0f37a1a448c31e73e28bef6f8@natalenko.name>
+X-Sender: oleksandr@natalenko.name
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Of course, if you're feeling adventurous and willing to at least entertain the
-mere speculation of switching the kernel source to C++, we could then use
-inline template functions:
+Hello.
 
-	template <typename T>
-	static inline T __READ_ONCE(T &var)
-	{
-		T val = *(const volatile T *)&var;
-		return val;
-	}
+On 31.01.2020 10:24, Paolo Valente wrote:
+> In bfq_bfqq_move(), the bfq_queue, say Q, to be moved to a new group
+> may happen to be deactivated in the scheduling data structures of the
+> source group (and then activated in the destination group). If Q is
+> referred only by the data structures in the source group when the
+> deactivation happens, then Q is freed upon the deactivation.
+> 
+> This commit addresses this issue by getting an extra reference before
+> the possible deactivation, and releasing this extra reference after Q
+> has been moved.
+> 
+> Tested-by: Chris Evich <cevich@redhat.com>
+> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+> ---
+>  block/bfq-cgroup.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+> index e1419edde2ec..8ab7f18ff8cb 100644
+> --- a/block/bfq-cgroup.c
+> +++ b/block/bfq-cgroup.c
+> @@ -651,6 +651,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct
+> bfq_queue *bfqq,
+>  		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
+>  				false, BFQQE_PREEMPTED);
+> 
+> +	/*
+> +	 * get extra reference to prevent bfqq from being freed in
+> +	 * next possible deactivate
+> +	 */
+> +	bfqq->ref++;
 
-	template <typename T>
-	static inline T READ_ONCE(T &var)
-	{
-		T val;
-		compiletime_assert_rwonce_type(var);
-		val = __READ_ONCE(var);
-		smp_read_barrier_depends();
-		return val;
-	}
+Shouldn't this be hidden under some macro (bfq_get_queue_ref(), for 
+instance) and also converted from int into refcount_t?
 
-Of course, that would mean using C++...
+> +
+>  	if (bfq_bfqq_busy(bfqq))
+>  		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
+>  	else if (entity->on_st)
+> @@ -670,6 +676,8 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct
+> bfq_queue *bfqq,
+> 
+>  	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
+>  		bfq_schedule_dispatch(bfqd);
+> +	/* release extra ref taken above */
+> +	bfq_put_queue(bfqq);
+>  }
+> 
+>  /**
 
-David
-
+-- 
+   Oleksandr Natalenko (post-factum)
