@@ -2,154 +2,111 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC661C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C085DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A8520663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983162063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M4gREsBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgAaRbB (ORCPT
+        id S1727090AbgAaRbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:31:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:37754 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgAaRbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:31:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 003FCFEC;
-        Fri, 31 Jan 2020 09:31:01 -0800 (PST)
-Received: from [10.37.12.54] (unknown [10.37.12.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E9723F68E;
-        Fri, 31 Jan 2020 09:30:49 -0800 (PST)
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
- <20200127215453.15144-4-lukasz.luba@arm.com>
- <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
-Date:   Fri, 31 Jan 2020 17:30:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 12:31:12 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55844 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgAaRbL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:31:11 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VHV36s087335;
+        Fri, 31 Jan 2020 11:31:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580491863;
+        bh=Gt5dd7XOIRcUxh6uvWBlZM+92xMNDI0LZYHC+I8v0Yc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=M4gREsBxtBTZzWFlbEJzezhFWLdaORzgSPq+7+d08L2iDdkdonMyzrF2XDxXWcq1J
+         VbBBh3wXz0AWxkGag23GOKlr3Vhig1fvjsTxg3qL7Py70/JONWvb19yxwkvMIxrlgo
+         phE5EXxmjYPV3AQPHMi7GieUayWb+rNJ8uaLJ8bg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VHV3HD096950
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 11:31:03 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 11:31:03 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 11:31:03 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VHV3pe063654;
+        Fri, 31 Jan 2020 11:31:03 -0600
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191210163204.28225-1-dmurphy@ti.com>
+ <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <db84cce8-925e-0b31-e196-6543359e6ea5@ti.com>
+Date:   Fri, 31 Jan 2020 11:27:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Marc
 
-On 1/31/20 1:16 PM, Krzysztof Kozlowski wrote:
-> On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
->>
->> From: Lukasz Luba <lukasz.luba@arm.com>
->>
->> Enable the Energy Model (EM) brings possibility to use Energy Aware
->> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
->> default. The EAS only works with SchedUtil - a CPUFreq governor which
->> handles direct requests from the scheduler for the frequency change. Thus,
->> to make EAS working in default, the SchedUtil governor should be
->> configured as default CPUFreq governor.
-> 
-> Full stop. That's enough of needed explanation of schedutil.
+On 1/2/20 6:38 AM, Marc Kleine-Budde wrote:
+> On 12/10/19 5:32 PM, Dan Murphy wrote:
+>> The parse config function now performs action on the device either
+>> reading or writing and a reset.  If the regulator is managed it needs
+>> to be turned on.  So turn on the regulator if available if the parsing
+>> fails then turn off the regulator.
+> Another BTW:
+> Consider converting the switching of the vsup to runtime_pm.
+>
+> Yet another one:
+> Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
+> but never enable them?
+>
+>> out_clk:
+>> 	if (!IS_ERR(mcan_class->cclk)) {
+>> 		clk_disable_unprepare(mcan_class->cclk);
+>> 		clk_disable_unprepare(mcan_class->hclk);
+>> 	}
+> - please move the clock handling from the m_can.c to the individual
+>    driver
+> - please move the clock handling to runtime_pm in the individual driver
+> - remove the obsolete m_can_class_get_clocks()
+> - make runtime_pm mandatory
+>
+> regards,
+> Marc
+>
+I have separate the clock calls into pm runtime calls and moved the 
+clock init into the respective children of the framework.
 
-OK
+Did you want me to submit 1 patch with all the changes or would you like 
+3 separate patches?  First 2 patches will abstract the clocks away into 
+the children and the 3rd patch would be to remove the clocks API from 
+the framework
 
-> 
->> Although, the EAS might be enabled
->> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
->> then set as CPUFreq governor, i.e.:
->>
->> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
->> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
->>
->> To check if EAS is ready to work, the read output from the command below
->> should show '1':
->> cat /proc/sys/kernel/sched_energy_aware
->>
->> To disable EAS in runtime simply 'echo 0' to the file above.
-> 
-> Not related to this commit. If you were implemeting here
-> schedutil/EAS, then it makes sense to post all this. However what's
-> the point to describe it in every defconfig change?
+Dan
 
-I will drop it.
-
-> 
->> Some test results, which stress the scheduler on Odroid-XU3:
->> hackbench -l 500 -s 4096
->> With mainline code and with this patch set.
-> 
-> Skip the last sentence - duplicated information.
-
-OK
-
-> 
->>
->> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
->> (which is set to =y in default exynos_defconfig)
->>
->>                  |               this patch set                  | mainline
-> 
-> The commit will be applied on its own branch so the meaning of "this
-> patch set" will be lost. Maybe just "before/after"?
-
-OK
-
-> 
->>                  |-----------------------------------------------|---------------
->>                  | performance   | SchedUtil     | SchedUtil     | performance
->>                  | governor      | governor      | governor      | governor
->>                  |               | w/o EAS       | w/ EAS        |
->> ----------------|---------------|---------------|---------------|---------------
->> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
->> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
-> 
-> Why does the performance different before and after this patch?
-
-Probably due to better locality and cache utilization. I can see that
-there is ~700k context switches vs ~450k and ~160k migrations vs ~50k.
-If you need to communicate two threads in different clusters, it will go
-through CCI.
-
-> 
-> Mention - lower better (?). Space between number and unit... or better
-> mention [s] in column title.
-
-OK
-
-> 
-> And last but not least:
-> Why this patch is separate from 1/3? I don't get the need of splitting them.
-
-As mentioned in response to patch 1/3. The fist patch would create MC
-domain, something different than Energy Model or EAS. The decisions in
-the scheduler would be different.
-
-I can merge 1/3 and 3/3 if you like, though.
-
-Regards,
-Lukasz
-
-> 
-> Best regards,
-> Krzysztof
-> 
