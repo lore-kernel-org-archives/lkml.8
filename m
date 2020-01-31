@@ -2,112 +2,141 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A29C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928E7C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBC520707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D40214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AynFvpk3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VZmZkAoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgAaLPD (ORCPT
+        id S1728417AbgAaLPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:15:03 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58100 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbgAaLPD (ORCPT
+        Fri, 31 Jan 2020 06:15:24 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58452 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgAaLPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:15:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5OfgyaE20AJ017aVKU8rBOO0ddIOPKVfUp8Sgc1aLVg=; b=AynFvpk3cnMGqU5HpJhMwGbmW
-        jljQKytJ7d9x9lLifRy+zW8YGdg+9W+DGyk0FN24JuLWl898qdNl/pzRxqvk/tE211SPowK7GR8lH
-        526X0Oib8F8ckCLbrDNSvVxaNrBBEkpIea+Co8/JdNV98cNihh0Yjy59LMhIkKqD5rK545Y2fDxTa
-        o9gEJMoJMlMvk8epgGDl7E0veCVFIKY8+qBYzFBHvUry09L9kwbczFnUcMKDJSJfFc4taikjM6CR9
-        75S8FE6GB7HlfDKtgpz5QC0A2FqigZSSObAeO136BuEUYfmNO+ED4vVO11oiwSBFDgVtzHwype9dz
-        l1cANlcBA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixUGL-00062y-Iv; Fri, 31 Jan 2020 11:15:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9CCBE3007F2;
-        Fri, 31 Jan 2020 12:13:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5061A2014711C; Fri, 31 Jan 2020 12:14:59 +0100 (CET)
-Date:   Fri, 31 Jan 2020 12:14:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
-Message-ID: <20200131111459.GO14946@hirez.programming.kicks-ass.net>
-References: <20200129103941.304769381@infradead.org>
- <8a81e075-d3bd-80c1-d869-9935fdd73162@linux-m68k.org>
- <20200131093813.GA3938@willie-the-truck>
- <20200131102239.GB14914@hirez.programming.kicks-ass.net>
+        Fri, 31 Jan 2020 06:15:24 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF8H6116300;
+        Fri, 31 Jan 2020 05:15:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580469308;
+        bh=TjGJ1NftSvs3cwiS/cwU0Elwon6VuzHoGrqYjFUfHlo=;
+        h=From:To:CC:Subject:Date;
+        b=VZmZkAoTbF9MRPwbHOyOnTEMEvOy3nqEhYxSUjthuA+PXbQpKQn4kMGNWp4o/0rWO
+         xOJnue66jb7Iw7f+rAcynt3EJ2NF43+q0nMIxb+6R94/KQaap2xc7tZ6kbUNWMM03l
+         kUey9/PDRwRhWwfX5Ss6SYffH2dR07Varnm6aYT8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF8PJ005715;
+        Fri, 31 Jan 2020 05:15:08 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 05:15:08 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 05:15:07 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VBF4Ei026862;
+        Fri, 31 Jan 2020 05:15:05 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>
+CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+Subject: [PATCH v4 0/2] drm/bridge: Support for Toshiba tc358768 RGB to DSI bridge
+Date:   Fri, 31 Jan 2020 13:15:51 +0200
+Message-ID: <20200131111553.472-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131102239.GB14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 11:22:39AM +0100, Peter Zijlstra wrote:
-> On Fri, Jan 31, 2020 at 09:38:13AM +0000, Will Deacon wrote:
-> 
-> > > This series breaks compilation for the ColdFire (with MMU) variant of
-> > > the m68k family:
-> 
-> That's like the same I had reported by the build robots for sun3, which
-> I fixed by frobbing pgtable_t. That said, this is probably a more
-> consistent change.
-> 
-> One note below:
-> 
-> 
-> > -static inline struct page *pte_alloc_one(struct mm_struct *mm)
-> > +static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
-> >  {
-> >  	struct page *page = alloc_pages(GFP_DMA, 0);
-> >  	pte_t *pte;
-> > @@ -54,20 +55,19 @@ static inline struct page *pte_alloc_one(struct mm_struct *mm)
-> >  		return NULL;
-> >  	}
-> >  
-> > -	pte = kmap(page);
-> > -	if (pte) {
-> > -		clear_page(pte);
-> > -		__flush_page_to_ram(pte);
-> > -		flush_tlb_kernel_page(pte);
-> > -		nocache_page(pte);
-> > -	}
-> > -	kunmap(page);
-> > +	pte = page_address(page);
-> > +	clear_page(pte);
-> > +	__flush_page_to_ram(pte);
-> > +	flush_tlb_kernel_page(pte);
-> > +	nocache_page(pte);
-> 
-> See how it does the nocache dance ^
+Hi,
 
-> So either, alloc_one() shouldn't either, or it's all buggered.
+Changes since v3:
+- bindings/example: Fixed the node name
+- bindings/example: Added include for GPIO_ACTIVE_LOW and fixed up the gpio
+		    binding
+- driver: Moved the label for goto in tc358768_calc_pll()
+- driver: Replaced the refcounting of enabled with a simple bool as hw_enable()
+  is only called from one place (tc358768_bridge_pre_enable)
+- driver: Added Reviewed-by from Andrzej
 
-Damn, we weren't going to touch coldfire! :-))
+Changes since v2:
+- Implement pre_enable and post_disbale callbacks and move code from enable and
+  disable callbacks.
+- hw_enable/disable is removed from tc358768_dsi_host_transfer()
+- Defines for DSI_CONFW accesses
+- breakout from the loops  (the check for it) is moved one level up in
+  tc358768_calc_pll()
 
-So now I found the coldfire docs, and it looks like this thing is a
-software tlb-miss arch, so there is no reason what so ever for this to
-be nocache. I'll 'fix' that.
+Changes since v1:
+DT bindings document:
+- Removed MaxItems for the regulators
+- additionalProperties: false added to port@1
+
+Driver:
+- Year is now 2020
+- Includes shorted
+- The three letter members of the private struct documented 0 they are named as
+  in the datasheet
+- Error handling for the IO functions is following what sil-sii8620.c does
+- regmap regcache is disabled along with refcache_sync() and volatile callback
+  for regmap
+- The hw enable and disable functions got separated
+- Taken the suggested simplifactions from Andrzej for tc358768_calc_pll() and
+  tc358768_dsi_host_transfer()
+- The driver no longer stores the drm_display_mode, it relies on
+  priv->bridge.encoder->crtc->state->adjusted_mode where it needs it
+- tc358768_calc_pll() can be used for verification only to not modify the state
+- refcounting added for hw enable state as a dsi transfer was shutting down the
+  bridge when it was already enabled.
+
+Tested on top of drm-next + LED backlight patches + DT patches on dra7-evm with
+osd101t2045 (panel-simple) and osd101t2587 panel drivers.
+
+Cover letter from v1:
+TC358768 is a parallel RGB to MIPI DSI bridge.
+
+The initial driver supports MIPI_DSI_MODE_VIDEO, MIPI_DSI_FMT_RGB888 and
+only write is implemented for mipi_dsi_host_ops.transfer due to lack of hardware
+where other modes can be tested.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dt-bindings: display: bridge: Add documentation for Toshiba tc358768
+  drm/bridge: Add tc358768 driver
+
+ .../display/bridge/toshiba,tc358768.yaml      |  159 +++
+ drivers/gpu/drm/bridge/Kconfig                |   10 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/tc358768.c             | 1044 +++++++++++++++++
+ 4 files changed, 1214 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+ create mode 100644 drivers/gpu/drm/bridge/tc358768.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
