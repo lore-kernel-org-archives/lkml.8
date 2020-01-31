@@ -2,126 +2,132 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46120C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4661CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2C32253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580464899;
-	bh=tdpZw90OlcMR9qptYpQXr49gembLC0/+7MzgPnwKOTg=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=UPLccshIPJ79PBskTCBYP+/DgMntZFm2Mm/vkhli5FfLN60/7DYd5UX+rrWyKkIxp
-	 g3SMpZgytatTuBduVR4z79ULbk412lq+uAOP2VcZ7VQMJ8PUZKbzd6P60u0VmCJhz0
-	 XPaqc9/uRwSOSW9LsYF8OmyXplU2KVOJTSqAY3RM=
+	by mail.kernel.org (Postfix) with ESMTP id 22648206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgAaKBi (ORCPT
+        id S1728338AbgAaKBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:01:38 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45358 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgAaKBi (ORCPT
+        Fri, 31 Jan 2020 05:01:45 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55343 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgAaKBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:01:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v19so6662016oic.12;
-        Fri, 31 Jan 2020 02:01:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=qn10BmEuDVjkBqOHdzIV8xNrO2BJH8fDrRakRfgRhPU=;
-        b=ChJQ9MRWVP/MeX0ZO97TzkVYz/YT/8qQMpMGGRlh/cowuwvw3O2TsqebIJJnvNFgzK
-         JddZkuvQ/LSZ9uJGxdNBwLurytx0esakkWJNQdjrYgKhwZSDSh7buAaCLw1Ngn002Zf9
-         HGey+y0qXSN9QOeevOmG7p3666TRnKwedZyZjQsC98T3nc5IsJLDG4RDWluhkUn/gSZ6
-         4ubZLiGGL/5YDCRnYIftLXi9BCCdWzwOhV4LX4hheJKh0zViaQxrZCwDcTpuC5QL5iUk
-         HIcGZpCvGPGxzmXXriCDnHaNU44Ub1ArWHwwyxsaYSZsQE5Y0PmDg2RGSG77ENuC4ZYX
-         hBvw==
-X-Gm-Message-State: APjAAAWBT3/odmoInbNQHPHwChLzDjs+Ho2R604If3UZ1b1/nspDCUK+
-        DwtOYPDL14OKfLx+p92BHfBrC32TWi/WW+VdYp332drf
-X-Google-Smtp-Source: APXvYqxnchmpm4Ho6//yi2eeApqlgYCPq+/GzJ3WxRUWOnyDTeXsh1w+u/YhJVdhwBi7AaasTYNiR40/j9zKHJCjcpw=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr5971134oig.103.1580464897490;
- Fri, 31 Jan 2020 02:01:37 -0800 (PST)
+        Fri, 31 Jan 2020 05:01:44 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ixT7O-0002rj-2e; Fri, 31 Jan 2020 10:01:42 +0000
+To:     Ariel Elior <aelior@marvell.com>, GR-everest-linux-l2@marvell.com,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Michal Kalderon <michal.kalderon@marvell.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: re: qed: FW 8.42.2.0 debug features
+Message-ID: <149f65ab-4d15-4b03-1620-a956cff10388@canonical.com>
+Date:   Fri, 31 Jan 2020 10:01:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 31 Jan 2020 11:01:26 +0100
-Message-ID: <CAJZ5v0h7igCZU43nqcZytEgXsQ4vHYs9CBbGr-uSruj8pwoA+g@mail.gmail.com>
-Subject: [GIT PULL] More power management updates for v5.6-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-Please pull from the tag
+Static analysis with Coverity detected an issue in the following commit:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.6-rc1-2
+commit 2d22bc8354b15abe413dff76cfe0f7aeb88ef9aa
+Author: Michal Kalderon <michal.kalderon@marvell.com>
+Date:   Mon Jan 27 15:26:19 2020 +0200
 
-with top-most commit 82b2c6ffd399c9fcd542fd681bb8c6d41f035c7e
+    qed: FW 8.42.2.0 debug features
 
- Merge branches 'pm-cpufreq' and 'pm-core'
+Specifically, DBG_STATUS_NO_MATCHING_FRAMING_MODE was added to the enum
+dbg_status in drivers/net/ethernet/qlogic/qed/qed_hsi.h
+however the matching error message string was not added to array
+s_status_str in drivers/net/ethernet/qlogic/qed/qed_debug.c causing an
+out-of-bounds read on the array:
 
-on top of commit 6d277aca488fdf0a1e67cd14b5a58869f66197c9
+7088 const char *qed_dbg_get_status_str(enum dbg_status status)
+7089 {
 
- Merge tag 'pm-5.6-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+    1. Condition status < MAX_DBG_STATUS, taking true branch.
+    2. cond_at_most: Checking status < MAX_DBG_STATUS implies that
+status may be up to 58 on the true branch.
+    Out-of-bounds read (OVERRUN)
+    3. overrun-local: Overrunning array s_status_str of 58 8-byte
+elements at element index 58 (byte offset 471) using index status (which
+evaluates to 58).
 
-to receive additional power management updates for 5.6-rc1.
+7090        return (status <
+7091                MAX_DBG_STATUS) ? s_status_str[status] : "Invalid
+debug status";
+7092 }
 
-These prevent cpufreq from creating excessively large stack frames
-and fix the handling of devices deleted during system-wide resume in
-the PM core (Rafael Wysocki), revert a problematic commit affecting
-the cpupower utility and correct its man page (Thomas Renninger,
-Brahadambal Srinivasan), and improve the intel_pstate_tracer utility
-(Doug Smythies).
+The array needs DBG_STATUS_NO_MATCHING_FRAMING_MODE added:
 
-Thanks!
+        /* DBG_STATUS_INVALID_FILTER_TRIGGER_DWORDS */
+        "The filter/trigger constraint dword offsets are not enabled for
+recording",
 
+        /* Missing DBG_STATUS_NO_MATCHING_FRAMING_MODE text goes here */
 
----------------
+        /* DBG_STATUS_VFC_READ_ERROR */
+        "Error reading from VFC",
 
-Brahadambal Srinivasan (1):
-      Correction to manpage of cpupower
-
-Doug Smythies (2):
-      tools/power/x86/intel_pstate_tracer: changes for python 3 compatibility
-      tools/power/x86/intel_pstate_tracer: change several graphs to
-autoscale y-axis
-
-Rafael J. Wysocki (2):
-      PM: core: Fix handling of devices deleted during system-wide resume
-      cpufreq: Avoid creating excessively large stack frames
-
-Thomas Renninger (1):
-      cpupower: Revert library ABI changes from commit ae2917093fb60bdc1ed3e
-
----------------
-
- drivers/base/power/main.c                          |  42 +++++-
- drivers/cpufreq/cppc_cpufreq.c                     |   2 +-
- drivers/cpufreq/cpufreq-nforce2.c                  |   2 +-
- drivers/cpufreq/cpufreq.c                          | 147 ++++++++++-----------
- drivers/cpufreq/freq_table.c                       |   4 +-
- drivers/cpufreq/gx-suspmod.c                       |   2 +-
- drivers/cpufreq/intel_pstate.c                     |  38 +++---
- drivers/cpufreq/longrun.c                          |   6 +-
- drivers/cpufreq/pcc-cpufreq.c                      |   2 +-
- drivers/cpufreq/sh-cpufreq.c                       |   2 +-
- drivers/cpufreq/unicore2-cpufreq.c                 |   2 +-
- include/linux/cpufreq.h                            |  32 +++--
- tools/power/cpupower/lib/cpufreq.c                 |  78 +++++++++--
- tools/power/cpupower/lib/cpufreq.h                 |  20 ++-
- tools/power/cpupower/man/cpupower.1                |   6 +-
- tools/power/cpupower/utils/cpufreq-info.c          |  12 +-
- .../x86/intel_pstate_tracer/intel_pstate_tracer.py |  38 +++---
- 17 files changed, 264 insertions(+), 171 deletions(-)
+Colin
