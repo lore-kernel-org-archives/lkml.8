@@ -2,135 +2,151 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E7FC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17C3C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C68C215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C402820705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="clm+XzCS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOAbXq94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgAaLe6 (ORCPT
+        id S1728446AbgAaLj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:34:58 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:44434 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgAaLe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:34:57 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 488FWL525lz9vC1X;
-        Fri, 31 Jan 2020 12:34:54 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=clm+XzCS; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id jNDoE3A0nZUQ; Fri, 31 Jan 2020 12:34:54 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 488FWL3lsdz9vBmg;
-        Fri, 31 Jan 2020 12:34:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580470494; bh=wgA/1ZcqwSEzUHK1JtMA0psJaDNeimySFc6/6RjLVLc=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=clm+XzCSi/3KYcuFK9rMoOWP/NH2C6asEeFiNaZTK8J5vQz0PUp6Z5gMOdOHOcPsv
-         nXOOsrHjMEkqofNzbDR1aCg6duMEIPwCz1IiLUTKrRi0mcWpuIZleOiUn9lru30v24
-         9xDny7GAX2ZuTiIS3RXil7ZbCL5B4DTnqXhyB/Vo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B99C08B89E;
-        Fri, 31 Jan 2020 12:34:55 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gqSnyzvlypkv; Fri, 31 Jan 2020 12:34:55 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 994FE8B890;
-        Fri, 31 Jan 2020 12:34:55 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 979D365288; Fri, 31 Jan 2020 11:34:55 +0000 (UTC)
-Message-Id: <b94c3bc03bac9431fec2dadb686384c481889422.1580470483.git.christophe.leroy@c-s.fr>
-In-Reply-To: <8ee3bdbbdfdfc64ca7001e90c43b2aee6f333578.1580470482.git.christophe.leroy@c-s.fr>
-References: <8ee3bdbbdfdfc64ca7001e90c43b2aee6f333578.1580470482.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 2/2] powerpc: Don't user thread struct for saving SRR0/1 on
- syscall.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 31 Jan 2020 11:34:55 +0000 (UTC)
+        Fri, 31 Jan 2020 06:39:29 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37358 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgAaLj2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 06:39:28 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so2713932pjb.2;
+        Fri, 31 Jan 2020 03:39:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WmrfKAtR6rlTIfiY5AkUEXZDNoeTvIvDZR49xG7X0iM=;
+        b=oOAbXq94h9YRyz91+sD53WjDW5+ZTgL4fU3l4NGlBC34eguYDGLrLljKAcBtUe9dWG
+         Na9LB3tCn5njql68CWeLjEQsAs+tOD0MNTyirMjslz7cvY42+Rx5FYhzhYcQEBEqTAA2
+         tryYjvxrcGIZd1J9/ctgSwG9LwAMspXDNxIsW+uV9oam70ILayFwgxIsrUsYNEfsB1qX
+         QzxHovB1fotXB3Fmr2QDheJzL0DdKwo2F+q4d27NDLGH77HfqC4cbPvJO9kF5wwTfiEc
+         dJher5NP8RB0cmHj2rUg+7tttDDy31Eog8MZvbG4orkQ1FTqIeo2YhPbVAJtbgYgkxF9
+         I3Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WmrfKAtR6rlTIfiY5AkUEXZDNoeTvIvDZR49xG7X0iM=;
+        b=H9kGy+7W+3Jf3D18XiCfVMxsWjGlJZ8vixUS4KWA/cJdg7REnSyLjYtSBXOT62556H
+         Z2VLtM6JHf717Vw3I49eRwAvPGZpiMi9uXmua6qgh9f911oid2lMGuxdq9P6jtdv6BId
+         +EOHv3YccYJRs6NDfStaAm7s9oAJa72elF55Oc1m6+waBaceEtd2ZKAimCaR1HGc1QeU
+         Y+iQEmxxyUPlMrJz3LsIuaVWvyJ/rL91A999hnAbXkKQ9uRKADLLQIarc0IduYEu8f1E
+         uSEvZ6ocfzqbhnL7gybh/JMBeLFd//TeZIzKguUvJ1SdCBOjU74A+12WE8EhGCe1Q9jj
+         fS9g==
+X-Gm-Message-State: APjAAAWMwRev6L8WtZkS0zfNLENc1Zomh842nRgfov+XRVemxdtaR4aa
+        IZ8KfyPq4d4AhAIfacY+/RqIN7rPsDJ59MorbKX1QkbaGHhUdg==
+X-Google-Smtp-Source: APXvYqxuTmsJhpjXYt1mZREUpJKBkFxJkHMZdboNze2B6ebKELDLMxrXGF0WRVRt8pH69iyQQgLvjPT1IjciSQu9PFw=
+X-Received: by 2002:a17:902:b116:: with SMTP id q22mr9561021plr.255.1580470767774;
+ Fri, 31 Jan 2020 03:39:27 -0800 (PST)
+MIME-Version: 1.0
+References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk> <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com> <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+ <20200113114256.GH3897@sirena.org.uk> <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+ <20200113140627.GJ3897@sirena.org.uk> <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
+ <20200113142754.GL3897@sirena.org.uk> <20200113143403.GQ32742@smile.fi.intel.com>
+ <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
+In-Reply-To: <0252a76d-7e2b-2c70-8b1b-0d041d972098@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jan 2020 13:39:19 +0200
+Message-ID: <CAHp75Ve=ZwJe2XV8Y1UN6sMe1ZHOBwUtRUD=aGqhR4Gc7BNUcg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller driver
+To:     John Garry <john.garry@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>, chenxiang66@hisilicon.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        liusimin4@huawei.com, Linuxarm <linuxarm@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        tudor.ambarus@microchip.com,
+        Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, fengsheng5@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CR0 can be saved later, and CTR can also be used for saving.
+On Fri, Jan 31, 2020 at 12:08 PM John Garry <john.garry@huawei.com> wrote:
+>
+> On 13/01/2020 14:34, Andy Shevchenko wrote:
+> > On Mon, Jan 13, 2020 at 02:27:54PM +0000, Mark Brown wrote:
+> >> On Mon, Jan 13, 2020 at 04:17:32PM +0200, Andy Shevchenko wrote:
+> >>> On Mon, Jan 13, 2020 at 4:07 PM Mark Brown <broonie@kernel.org> wrote=
+:
+> >>>> On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
+> >>>>> On 13/01/2020 11:42, Mark Brown wrote:
+> >>
+> >>>>>> The idiomatic approach appears to be for individual board vendors
+> >>>>>> to allocate IDs, you do end up with multiple IDs from multiple
+> >>>>>> vendors for the same thing.
+> >>
+> >>>>> But I am not sure how appropriate that same approach would be for s=
+ome 3rd
+> >>>>> party memory part which we're simply wiring up on our board. Maybe =
+it is.
+> >>
+> >>>> It seems to be quite common for Intel reference designs to assign
+> >>>> Intel IDs to non-Intel parts on the board (which is where I
+> >>>> became aware of this practice).
+> >>
+> >>> Basically vendor of component in question is responsible for ID, but
+> >>> it seems they simple don't care.
+> >>
+> >> AFAICT a lot of the time it seems to be that whoever is writing
+> >> the software ends up assigning an ID, that may not be the silicon
+> >> vendor.
+> >
+> > ...which is effectively abusing the ACPI ID allocation procedure.
+> >
+> > (And yes, Intel itself did it in the past =E2=80=94 see badly created A=
+CPI IDs
+> >   in the drivers)
+> >
+>
+> Hi Mark,
+>
+> About this topic of ACPI having no method to describe device buswidth in
+> the resource descriptor, it may be an idea for me to raise a Tianocore
+> feature request @ https://bugzilla.tianocore.org/
+>
 
-Keep SRR1 in r9 and stash SRR0 in CTR, this avoids using
-thread_struct in memory for that.
+The 19.6.126 describes the SPI resource, in particular:
 
-Saves 3 cycles (ie 1%) in null_syscall selftest on 8xx.
+---8<---8<---
+DataBitLength is the size, in bits, of the smallest transfer unit for
+this connection. _LEN is automatically
+created to refer to this portion of the resource descriptor.
+---8<---8<---
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v3: New
----
- arch/powerpc/kernel/head_32.h | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+Is it what you are looking for? (As far as I know most of the
+firmwares simple abuse this field among others)
 
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index 0e7bf28fe53a..4a1faeded069 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -114,28 +114,23 @@
- 	mfspr	r9, SPRN_SRR1
- #ifdef CONFIG_VMAP_STACK
- 	mfspr	r11, SPRN_SRR0
--	stw	r11, SRR0(r12)
--	stw	r9, SRR1(r12)
-+	mtctr	r11
- #endif
--	mfcr	r10
- 	andi.	r11, r9, MSR_PR
- 	lwz	r11,TASK_STACK-THREAD(r12)
- 	beq-	99f
--	rlwinm	r10,r10,0,4,2	/* Clear SO bit in CR */
- 	addi	r11, r11, THREAD_SIZE - INT_FRAME_SIZE
- #ifdef CONFIG_VMAP_STACK
--	li	r9, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
--	mtmsr	r9
-+	li	r10, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
-+	mtmsr	r10
- 	isync
- #endif
- 	tovirt_vmstack r12, r12
- 	tophys_novmstack r11, r11
--	stw	r10,_CCR(r11)		/* save registers */
- 	mflr	r10
- 	stw	r10, _LINK(r11)
- #ifdef CONFIG_VMAP_STACK
--	lwz	r10, SRR0(r12)
--	lwz	r9, SRR1(r12)
-+	mfctr	r10
- #else
- 	mfspr	r10,SPRN_SRR0
- #endif
-@@ -143,6 +138,9 @@
- 	stw	r1,0(r11)
- 	tovirt_novmstack r1, r11	/* set new kernel sp */
- 	stw	r10,_NIP(r11)
-+	mfcr	r10
-+	rlwinm	r10,r10,0,4,2	/* Clear SO bit in CR */
-+	stw	r10,_CCR(r11)		/* save registers */
- #ifdef CONFIG_40x
- 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
- #else
--- 
-2.25.0
+> There seems to be an avenue there for raising new features for the spec.
+> I (or my org) can't participate in AWSG.
 
+But have you read 19.6.126?
+
+> I would have no concrete proposal for spec update for now, though.
+> Hopefully others with more expertise could contribute.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
