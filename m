@@ -2,115 +2,158 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAFEC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C2DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98CF20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:43:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzWaT5aw"
+	by mail.kernel.org (Postfix) with ESMTP id 90826206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAaNnq (ORCPT
+        id S1728837AbgAaNpq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:43:46 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37196 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbgAaNnp (ORCPT
+        Fri, 31 Jan 2020 08:45:46 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:22319 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728786AbgAaNpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:43:45 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so8732615wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 05:43:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+Z/QqKPZRNPOFz7Xr+UvMoQ/x/R9CxVbSeJizVEab2M=;
-        b=fzWaT5awKSTprWGNFjvI5CWYnpVIrcnpr/AbZvBQFVBcyiGG+bYBV2uAED78hSAEz0
-         7zsFtBxH85RtgleESDclo/phjJl0zeCBDiIqdBdt/oDG636i/yRAF9NlJVHdUemRVUy6
-         vC+sSqdEcIgsBUtMrVwGouKeiHl//FBWO1Ln3kPU6kgmjlyo4w2yQzhCLbWSkMMS+K68
-         +ixaKPMOyhESZQw4ZJWuPLJaVEhp/KetXJBZKLrHAMXkGY/3LQktbA1oIoL8nNdoWdyM
-         l6zu1UeE01BWgm8s5Xnw22cGgb7DrvNxpuTfTXMdjPGN/k4oj/XEp+RQRAN5+N+mQVTh
-         TfCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Z/QqKPZRNPOFz7Xr+UvMoQ/x/R9CxVbSeJizVEab2M=;
-        b=n0+BXjA5gpE3vBbpZz5UhWSXtMCamnoO2XvjNvbOLN+NwDqCeEG3bPweLWuQyyrjlu
-         8ajEyVLM7ALTM9z0h7S2qvFe5CP69GKbh/PxibBlyXEul9sumyuf/ZFz/Fl12/nFVnSK
-         MvuQFVYlkQEp32dMSW/oFsvSxOu2q1DzjGMurfpdvBfVsyViAxg6PSf3RY8iBtdiLoHJ
-         4Eo9xj+pIg581LK+2yrn5e6cZ1Nffzfb6D1jcSU8J4NotDKsI+DB6vd3Bi73RoHB5xtT
-         ZQypRtq6O5Us8J4LYopNjhPWA2rJZpUcVJ9DR4L7HmiaxnlpN/1574xqpVbWgBv/xe50
-         8pvg==
-X-Gm-Message-State: APjAAAU8iWLK8Bj0WPP94v9MRcAeQOp1TQrKeqI/IPguZt6dRfrabJaW
-        QnrTkqNj3CrgrZqLqdFopLfMKg==
-X-Google-Smtp-Source: APXvYqzt/Q19RKB5qlDxzHOJGecKCDHb2QXQ847rq1x4DycbKl05VzkB6sXzwu8DxSWkFSpV18idNA==
-X-Received: by 2002:a1c:2358:: with SMTP id j85mr12487076wmj.28.1580478223062;
-        Fri, 31 Jan 2020 05:43:43 -0800 (PST)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id g25sm16185615wmh.3.2020.01.31.05.43.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 05:43:42 -0800 (PST)
-Subject: Re: [PATCH v3 10/19] usb: dwc3: Add support for
- role-switch-default-mode binding
-To:     Felipe Balbi <balbi@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
-        jackp@codeaurora.org, bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
- <20200122185610.131930-11-bryan.odonoghue@linaro.org>
- <87o8uj7nzj.fsf@kernel.org>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <9b95478d-5ac7-3dfa-a70e-1dd881bd5b2c@linaro.org>
-Date:   Fri, 31 Jan 2020 13:43:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <87o8uj7nzj.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 31 Jan 2020 08:45:45 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-227-V3iOMSX-MNqGoZYj_aXz5g-1; Fri, 31 Jan 2020 13:45:41 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 13:45:40 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 31 Jan 2020 13:45:40 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Pavel Machek' <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: RE: [PATCH 4.19 36/55] drivers/net/b44: Change to non-atomic bit
+ operations on pwol_mask
+Thread-Topic: [PATCH 4.19 36/55] drivers/net/b44: Change to non-atomic bit
+ operations on pwol_mask
+Thread-Index: AQHV2DYMVY2qrJP3VEav5dxVBo5ZUKgExoPA
+Date:   Fri, 31 Jan 2020 13:45:40 +0000
+Message-ID: <6c9a600f3ec14bbcb4877a89fa7d205a@AcuMS.aculab.com>
+References: <20200130183608.563083888@linuxfoundation.org>
+ <20200130183615.120752961@linuxfoundation.org>
+ <20200131125730.GA20888@duo.ucw.cz>
+In-Reply-To: <20200131125730.GA20888@duo.ucw.cz>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: V3iOMSX-MNqGoZYj_aXz5g-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/01/2020 13:29, Felipe Balbi wrote:
+From: Pavel Machek
+> Sent: 31 January 2020 12:58
 > 
-> Hi,
+> On Thu 2020-01-30 19:39:17, Greg Kroah-Hartman wrote:
+> > From: Fenghua Yu <fenghua.yu@intel.com>
+> >
+> > [ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
 > 
-> Bryan O'Donoghue <bryan.odonoghue@linaro.org> writes:
->> From: John Stultz <john.stultz@linaro.org>
->>
->> Support the new role-switch-default-mode binding for configuring
->> the default role the controller assumes as when the usb role is
->> USB_ROLE_NONE
+> This is not suitable for stable. It does not fix anything. It prepares
+> for theoretical bug that author claims might be introduced to BIOS in
+> future... I doubt it, even BIOS authors boot their machines from time
+> to time.
 > 
-> per specification, device is supposed to be the default role. Why isn't
-> that working for you?
+> > Atomic operations that span cache lines are super-expensive on x86
+> > (not just to the current processor, but also to other processes as all
+> > memory operations are blocked until the operation completes). Upcoming
+> > x86 processors have a switch to cause such operations to generate a #AC
+> > trap. It is expected that some real time systems will enable this mode
+> > in BIOS.
 > 
+> And I wonder if this is even good idea for mainline. x86 architecture
+> is here for long time, and I doubt Intel is going to break it like
+> this. Do you have documentation pointer?
 
-Speaking for myself - its only the role-switch logic I need. This patch 
-seemed to go along with the the role-switch stuff but, now that you ask, 
-this series can probably do without it.
+The fact that locked operations that cross cache line boundaries work
+at all is because of compatibility with very old processors (which
+always locked the bus).
 
----
-bod
+> > In preparation for this, it is necessary to fix code that may execute
+> > atomic instructions with operands that cross cachelines because the #AC
+> > trap will crash the kernel.
+> 
+> How does single bit operation "cross cacheline"? How is this going to
+> impact non-x86 architectures?
+
+The cpu 'bit' instructions used always access a full 'word' of memory
+at a 'word' offset from the specified base address'
+With a 64bit bit offset the 'word' is 64 bits, so if the base address
+of the array isn't 8 byte aligned the cpu does a misaligned RMW cycle.
+
+Non-x86 architectures probably either:
+1) Fault on the mis-aligned transfer.
+2) Ignore the 'lock'.
+3) Use a software 'array of mutex' to emulate locked bit updates.
+4) Any random combination of the above.
+
+> > Since "pwol_mask" is local and never exposed to concurrency, there is
+> > no need to set bits in pwol_mask using atomic operations.
+> >
+> > Directly operate on the byte which contains the bit instead of using
+> > __set_bit() to avoid any big endian concern due to type cast to
+> > unsigned long in __set_bit().
+> 
+> What concerns? Is __set_bit() now useless and are we going to open-code
+> it everywhere? Is set_bit() now unusable on x86?
+
+Both set_bit() and __set_bit() are defined to work on bitmaps
+that are defined as 'long[]'.
+They are not there because people are too lazy to write foo |= 1 << n.
+
+...
+> >  	memset(ppattern + offset, 0xff, magicsync);
+> > -	for (j = 0; j < magicsync; j++)
+> > -		set_bit(len++, (unsigned long *) pmask);
+> > +	for (j = 0; j < magicsync; j++) {
+> > +		pmask[len >> 3] |= BIT(len & 7);
+> > +		len++;
+> > +	}
+> >
+> >  	for (j = 0; j < B44_MAX_PATTERNS; j++) {
+> >  		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
+> > @@ -1532,7 +1534,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+> >  		for (k = 0; k< ethaddr_bytes; k++) {
+> >  			ppattern[offset + magicsync +
+> >  				(j * ETH_ALEN) + k] = macaddr[k];
+> > -			set_bit(len++, (unsigned long *) pmask);
+> > +			pmask[len >> 3] |= BIT(len & 7);
+
+In this case I believe the pmask[] is passed to hardware.
+It is very much an array of bytes initialised in a specific way.
+
+set_bit() (and __set_bit()) would do completely the wrong thing
+on BE systems.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
