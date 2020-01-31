@@ -2,88 +2,144 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FA3C47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D14C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55234215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580432816;
-	bh=jsJEjfvvosoNzF+1nP8nbj7092fwdtBhOz2X+N5rSYc=;
-	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
-	b=JyoCUL78qMwo3oDtiyc99gLIEOioRA1BRGLki+IOCD/LgVhc5KU8tOv8btZlpX4e4
-	 xs+yh7C6cLgc9+A0QlCN1v8SxFpeAIZylPZ6/aZrmjmBKQIBdmZtI7d3rCKHMTK6IE
-	 4eKyjnmzVqZO+qeg0uAd+ugcbYb0LBleTzzvxuZM=
+	by mail.kernel.org (Postfix) with ESMTP id DEEDD206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:32:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCmk4rO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgAaBGz (ORCPT
+        id S1727739AbgAaBb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 20:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727648AbgAaBGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 20:06:55 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3336320678;
-        Fri, 31 Jan 2020 01:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580432814;
-        bh=jsJEjfvvosoNzF+1nP8nbj7092fwdtBhOz2X+N5rSYc=;
-        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
-        b=EAVQXk1uO5WynQ7Wtd1arSl2mIu7+KTMUvTyGUtP+CBTahefWsrjBU/w5+WVG5pbJ
-         6oeJf0VKlrt/bX9mb5sNu4yXZTeLRu/m8+rnihFdYrPqyT+y1zbbhNQrvRbDOAHQvT
-         kM55lR9ogO4s8yk5mrgvNveWr+uooWYXRl/S1ipM=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 Jan 2020 20:31:58 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38471 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727677AbgAaBb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 20:31:58 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so2595937pgm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 17:31:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U2x5dj+83wXzm4VqGaoW0lyT3PBQZww/cM9e5d5k+tk=;
+        b=BCmk4rO9h/X2WMI+bVjsIxvvmFsYojMNZVHIRUuhW9VXixd/bE3Qo3d5txWxxPJq71
+         oLGqnE4pgsMKmY37JoOpsGHOjkPHqU7DTvtypm0a44k+mw7X8iaj5vhMgsLpJt23F3ad
+         hSaOGdjVjr8rKFAQvSbNLyO9uKowaAAGP6QNmuWWTZveLQ9/kEoxk0zHZVekpG5slYPk
+         dWrTaxeb+mh8FS9peKZ95/oZ+Fb5HimFDaBVXVtbfGZjF7SITCQOR4WMkZp3Tiby8aZf
+         YihxkQ0e+qSY8aT8XetXhkXwAYKMia1ygr2y4PoTj3TkyWsrQiar3Wziczb4uLlmmwQ+
+         hi2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U2x5dj+83wXzm4VqGaoW0lyT3PBQZww/cM9e5d5k+tk=;
+        b=UNgLAnyN5yUDxT0fbF6+ZmZvlMfPl0y7g0zMmpP+olNgZ1/SUUevH3jCP5QHkuiw8p
+         gxZfhCEMtuEuHstykmE6Ew3bKvm1AoD66yWKpcpq0R67+se1PcTMmsRVCjY66YBqj4CR
+         kE0avTZjYJbr4oi+FwkBy/VTvBm/ea9dqvzw2rXjzbxKpZqiIPtm2OhYYmVN4Gos38OW
+         v3Zf+eaXqrWO00tgihxZ+e9wFLOX5c0iIvvpSzME/idDB1TQ2iEoYXyAFkrAsUlAXpXP
+         NaOIsIY/6j0PtKyNzZUFrsuNMa5O9/JQ2+sCncwYA6gn5mp8iQ9B+4BtbdSn7udVEzFd
+         CEiQ==
+X-Gm-Message-State: APjAAAXiDblGVxaLpNPVdpBhASBOGlZslaKiosYRxPdDg6e/zvxroCjv
+        Qm59SjfK+vpGCnJt31YBH5r2F/MP
+X-Google-Smtp-Source: APXvYqxstfUd3VCQgGh7nQVX5ClZySt3J6nKgJD5BwYURM7/ioR5FM51xsVrZAViiyrX8khMsyOH2Q==
+X-Received: by 2002:a63:6fca:: with SMTP id k193mr8077308pgc.416.1580434317399;
+        Thu, 30 Jan 2020 17:31:57 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id b188sm6246599pfb.56.2020.01.30.17.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2020 17:31:56 -0800 (PST)
+Date:   Fri, 31 Jan 2020 10:31:54 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] console: Introduce ->exit() callback
+Message-ID: <20200131013154.GH115889@google.com>
+References: <20200130152558.51839-1-andriy.shevchenko@linux.intel.com>
+ <20200130152558.51839-5-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191209195749.868-1-tiny.windzz@gmail.com>
-References: <20191209195749.868-1-tiny.windzz@gmail.com>
-Subject: Re: [PATCH 01/17] clk: sunxi: sunxi-ng: convert to devm_platform_ioremap_resource
-To:     Eugeniy.Paltsev@synopsys.com, Yangtao Li <tiny.windzz@gmail.com>,
-        afaerber@suse.de, agross@kernel.org, aisheng.dong@nxp.com,
-        allison@lohutok.net, chunhui.dai@mediatek.com,
-        cw00.choi@samsung.com, daniel.baluta@nxp.com, dinguyen@kernel.org,
-        emilio@elopez.com.ar, festevam@gmail.com, geert+renesas@glider.be,
-        gregkh@linuxfoundation.org, heiko@sntech.de, jcmvbkbc@gmail.com,
-        john@phrozen.org, jonathanh@nvidia.com, kernel@pengutronix.de,
-        kgene@kernel.org, krzk@kernel.org, kstewart@linuxfoundation.org,
-        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
-        matthias.bgg@gmail.com, miquel.raynal@bootlin.com,
-        mripard@kernel.org, mturquette@baylibre.com, nsekhar@ti.com,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, rfontana@redhat.com,
-        robh@kernel.org, s.hauer@pengutronix.de, s.nawrocki@samsung.com,
-        shawnguo@kernel.org, swinslow@gmail.com, t-kristo@ti.com,
-        tglx@linutronix.de, thierry.reding@gmail.com,
-        tomasz.figa@gmail.com, wangyan.wang@mediatek.com,
-        weiyongjun1@huawei.com, wens@csie.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 30 Jan 2020 17:06:53 -0800
-Message-Id: <20200131010654.3336320678@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130152558.51839-5-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Yangtao Li (2019-12-09 11:57:33)
-> Use devm_platform_ioremap_resource() to simplify code.
->=20
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+On (20/01/30 17:25), Andy Shevchenko wrote:
+[..]
+> diff --git a/include/linux/console.h b/include/linux/console.h
+> index f33016b3a401..54759ad0c36b 100644
+> --- a/include/linux/console.h
+> +++ b/include/linux/console.h
+> @@ -148,6 +148,7 @@ struct console {
+>  	struct tty_driver *(*device)(struct console *, int *);
+>  	void	(*unblank)(void);
+>  	int	(*setup)(struct console *, char *);
+> +	void	(*exit)(struct console *);
 
-Please add a cover letter, resend this series picking up any acks and
-dropping any patches that were rejected by maintainers of the drivers.
-There was significant discussion on one patch that was rejected, so I'll
-only pick up patches for the next cycle that are acked/reviewed-by
-relevant folks.
+Should console ->exit() be able to return an error code?
 
+>  	int	(*match)(struct console *, char *name, int idx, char *options);
+>  	short	flags;
+>  	short	index;
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 932345e6cd71..0117d4d92a8e 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2850,6 +2850,10 @@ int unregister_console(struct console *console)
+>  	console->flags &= ~CON_ENABLED;
+>  	console_unlock();
+>  	console_sysfs_notify();
+> +
+> +	if (!res && console->exit)
+> +		console->exit(console);
+> +
+>  	return res;
+>  }
+
+I would probably push it a bit further (I posted this snippet in another
+thread). If console is not on the list then there is nothing for us to do
+and sysfs notify is pointless.
+
+---
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 0117d4d92a8e..7116e421210b 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2837,7 +2837,13 @@ int unregister_console(struct console *console)
+ 		}
+ 	}
+ 
+-	if (!res && (console->flags & CON_EXTENDED))
++	if (res) {
++		console->flags &= ~CON_ENABLED;
++		console_unlock();
++		return res;
++	}
++
++	if (console->flags & CON_EXTENDED)
+ 		nr_ext_console_drivers--;
+ 
+ 	/*
+@@ -2851,7 +2857,7 @@ int unregister_console(struct console *console)
+ 	console_unlock();
+ 	console_sysfs_notify();
+ 
+-	if (!res && console->exit)
++	if (console->exit)
+ 		console->exit(console);
+ 
+ 	return res;
