@@ -2,121 +2,175 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8150BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566C32082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04742082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mc157TVX"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="R9auyalW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgAaSsg (ORCPT
+        id S1726322AbgAaSs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:48:36 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:46158 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgAaSsg (ORCPT
+        Fri, 31 Jan 2020 13:48:56 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42329 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgAaSs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:48:36 -0500
-Received: by mail-yw1-f65.google.com with SMTP id z141so5218174ywd.13
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:48:34 -0800 (PST)
+        Fri, 31 Jan 2020 13:48:56 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j132so8220174oih.9
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WHbT6Ac2Utt1izmtrGIgoXBCRv+tY8YJ9GCZjdZfzQo=;
-        b=mc157TVXVtIe6dTeKX8LhWZSj5dMOIA0rjVjZHdgcrgnCAfxLlqP47EwwosUL0PNal
-         COnniRVCIBHM1euzHZzBAZ2v1ccekc/L1D30FxLXJGcZw2WdSU9wh5L6iJYjqyygQ2p0
-         5eXBbAChHMmqjloHAt3j4hL+UoRmbsg4yGI0iUGWCvQK+WhLMW8hKguIuSzt/0SB1suf
-         Nt2GaQ3VlYJvYBKuY70w6bQhQ6uDtgCmbeXNH+/7RLujzHJqB5yX8saYQG/7IaDVfTQ+
-         XdVfuBxOqKwVDIhU5bARRzVtL19R3uUqTa4/4DGMsDO+9tmkKDfxrlnJLGfEtWbal/bh
-         5vIw==
+         :cc:content-transfer-encoding;
+        bh=fLcaF8ntvZPal3qbid9CNAGwD4mOTDkCEUjIwpYd2Xo=;
+        b=R9auyalWygTfn6g/yWz839IELezhpT2kdQxHXU5NMqxDhPcHX1skUIywXOCVN7LJEi
+         Nwo39uLr8IVAmNBzLdBbbsFEOmaiZUHAtLkUQnL8uYUJZlbJrrtPMCbfy4ljGM6WaogP
+         Fd6P327IMubILIRZ2ceVA8l2iyrqN99Ly0jqbTpcAK1NduJldMAau03igSZQWtdP+tfI
+         i1ZnueCDHg+cviJ0msLi68C/lNxY3H5O3qOZp/9rRzgesDlsbVF5eIoWWmAI9VMltj8K
+         vvrigOHxSQ+CPDx606QgEotW83bKPlilM3JggN4mZGrrRHHxnZsgyZr9xgfvs78JG568
+         nH2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WHbT6Ac2Utt1izmtrGIgoXBCRv+tY8YJ9GCZjdZfzQo=;
-        b=ZFHgW2G2ID2QXD+GYz3fTPMIpUfyTBgDaO7juva8KUOB3t6v7dj5SSSsqfY6IRiWDM
-         B7lrB3MEw96sGuvyFDzUhplxY2FDS9/YCAmR+jY4p+OGVMvaJJGwQS9n4inEKmarMchH
-         TTWupNCpECv+XzYj81RE7iyiBO2tgWociMsgwvInmsK67UKjYBF1oV/vTRZxbrp4liVf
-         4O1CXdrKWLK4MfLelj32AYl5MmlvIZGhpMBikay1LNNhXrbNM+iAmMh8oAGqLQoGzN04
-         synbpf4Y900iMLaW/5g4TFRzIuCzdnKVPer9frGoI022iFv4MjpTSJ/bgJjjPl27O3ro
-         jnlQ==
-X-Gm-Message-State: APjAAAV167ue4BAvyvIBGIIz/zV3lFsp5fGwoFD0VNdAXC/sWE/rIrBk
-        Gin9Nw6rnVAiDrEazFuWfzgre3i9xZ0E8zUTPFNhbg==
-X-Google-Smtp-Source: APXvYqxNvI5T9I3zwCPBLxgf/2yHo0wwyGAczs4eQSWLQQ3Hd4Zk+NJxIZQQcjzOsAWjUonAxXp/tvIuy9oC0PjbEuM=
-X-Received: by 2002:a81:3a06:: with SMTP id h6mr8801695ywa.170.1580496513329;
- Fri, 31 Jan 2020 10:48:33 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fLcaF8ntvZPal3qbid9CNAGwD4mOTDkCEUjIwpYd2Xo=;
+        b=bf6SEMbFA83gNzIV5QI1CfvYXCPPL3dxrIFwzTr6T7YG9tFjxR5WDoNzd0vHK3Sxx7
+         tSW9pONBS97F9H+27XnO2AkeuU3ZrttJrnR6UfNndWQd4ULyXSeCL7GBDFBe1KY6RHIt
+         QTtGmPw5maaWTlahIzDhUJ6FOqDr3+Y4WO3RbUde8J960ihsjY5Zf1j4Fdxk7m/L/mNq
+         A6kM/1gtWnOwOkyEyy6g9qpfzXTQ2r+TfewwBCqT/A5dDNKqXZBTSMIV454hFNaD47Kr
+         6fhzht4Jh3b99u3liNgm3js1NWwsJTXs0U84IqdzZbX719GRAqHATBd1sQftjGUlJmFU
+         39Ew==
+X-Gm-Message-State: APjAAAUN47A9V4dVTJ5aeMRG6+gqvAOXUgooxMi/0iPMfw4Ytv05u6Iv
+        pWH2yHHyfnDTrlp0XxBNbXpKo7dT8VuKtPmlYeZ9Xu3L0gU=
+X-Google-Smtp-Source: APXvYqw5oOxHa4qbJTSbp8mQDGvtgH12KQrwz6kSdFhnTsySKmDt9m5LmkM5cYmGLHx8m+w2jLsy1hdyyNytbajNiHA=
+X-Received: by 2002:a54:4791:: with SMTP id o17mr6940609oic.70.1580496535560;
+ Fri, 31 Jan 2020 10:48:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20200131164308.GA5175@willie-the-truck> <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
- <20200131184322.GA11457@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200131184322.GA11457@worktop.programming.kicks-ass.net>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 31 Jan 2020 10:48:21 -0800
-Message-ID: <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
-Subject: Re: Confused about hlist_unhashed_lockless()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
+ <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
+ <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
+ <20200131183658.GA71555@gmail.com>
+In-Reply-To: <20200131183658.GA71555@gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 31 Jan 2020 10:48:44 -0800
+Message-ID: <CAPcyv4iYSptWo42p1Lnbr4NWRiWG2sat+f3t8Q0kPeiiXHx3fg@mail.gmail.com>
+Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
+To:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>
+        Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 10:43 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, Jan 31, 2020 at 10:37 AM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On Fri, Jan 31, 2020 at 08:48:05AM -0800, Eric Dumazet wrote:
-> >     BUG: KCSAN: data-race in del_timer / detach_if_pending
 >
-> > diff --git a/include/linux/timer.h b/include/linux/timer.h
-> > index 1e6650ed066d5d28251b0bd385fc37ef94c96532..0dc19a8c39c9e49a7cde3d34bfa4be8871cbc1c2
-> > 100644
-> > --- a/include/linux/timer.h
-> > +++ b/include/linux/timer.h
-> > @@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct
-> > timer_list *timer) { }
-> >   */
-> >  static inline int timer_pending(const struct timer_list * timer)
-> >  {
-> > - return timer->entry.pprev != NULL;
-> > + return !hlist_unhashed_lockless(&timer->entry);
-> >  }
+> (Cc:ed Dan and Ard)
 >
-> That's just completely wrong.
+> * J=C3=B6rg Otte <jrg.otte@gmail.com> wrote:
 >
-> Aside from any memory barrier issues that might or might not be there
-> (I'm waaaay to tired atm to tell), the above code is perfectly fine.
+> > Am Fr., 31. Jan. 2020 um 07:43 Uhr schrieb Ingo Molnar <mingo@kernel.or=
+g>:
+> > >
+> > >
+> > > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > >
+> > > > On Thu, Jan 30, 2020 at 9:32 AM J=C3=B6rg Otte <jrg.otte@gmail.com>=
+ wrote:
+> > > > >
+> > > > > my notebook doesn't boot with current kernel. Booting stops right=
+ after
+> > > > > displaying "loading initial ramdisk..". No further displays.
+> > > > > Also nothing is wriiten to the logs.
+> > > > >
+> > > > > last known good kernel is : vmlinuz-5.5.0-00849-gb0be0eff1a5a
+> > > > > first known bad kernel is : vmlinuz-5.5.0-01154-gc677124e631d
+> > > >
+> > > > It would be lovely if you can bisect a bit. But my merges in that
+> > > > range are all from Ingo:
+> > > >
+> > > > Ingo Molnar (7):
+> > > >     header cleanup
+> > > >     objtool updates
+> > > >     RCU updates
+> > > >     EFI updates
+> > > >     locking updates
+> > > >     perf updates
+> > > >     scheduler updates
+> > >
+> > > If I had to guess then perhaps the EFI changes look the most dangerou=
+s
+> > > ones from these trees - but in principle most of these trees could
+> > > contain a boot crasher/hang bug.
+> > >
+> > > > but not having any messages at all makes it hard to guess where it
+> > > > would be.
+> > >
+> > > To improve debug output:
+> > >
+> > > Removing any 'fbcon' options in /boot/grub/grub.cfg and adding this t=
+o
+> > > the boot options might improve the debug output:
+> > >
+> > >   earlyprintk=3Dvga initcall_debug ignore_loglevel debug panic_on_war=
+n
+> > >
+> > > So for example if the relevant kernel boot entry in grub.cfg looks li=
+ke
+> > > this:
+> > >
+> > >   linux   /vmlinuz-5.3.0-26-generic root=3DUUID=3D1bcxabe3-0b62-4x04-=
+b456-47cd90c0e6x4 ro  splash $vt_handoff
+> > >
+> > > Then editing it to the following could in principle produce (much) mo=
+re
+> > > verbose boot output:
+> > >
+> > >   linux   /vmlinuz-5.3.0-26-generic root=3DUUID=3D1bcxabe3-0b62-4x04-=
+b456-47cd90c0e6x4 ro earlyprintk=3Dvga initcall_debug ignore_loglevel debug=
+ panic_on_warn $vt_handoff
+> > >
+> > > If this produces more output than just "loading initial ramdisk..' th=
+en a
+> > > photo of the hung screen would be sufficient, no need to transcribe i=
+t.
+> > >
+> > > > A few bisect runs would narrow it down a fair amount. Bisecting all=
+ the
+> > > > way would be even better, of course,
+> > >
+> > > Agreed!
+> > >
+> > > If compiling full kernels for bisections takes too long (for example
+> > > because the .config is from a distro kernel) then running "make
+> > > localmodconfig" to create a config tailored to the currently active
+> > > modules will cut down significantly on build time.
+> > >
+> > > Also, a warning: if the normal boot log contains spurious warnings th=
+en
+> > > the new 'panic_on_warn' option will cause additional trouble on good
+> > > kernels.
+> >
+> > It's bisected.
+> > The first bad commit is :
+> > 1db91035d01aa8bfa2350c00ccb63d629b4041ad
+> > efi: Add tracking for dynamically allocated memmaps
 >
-> In fact, this is a KCSAN compiler infrastructure 'bug'.
+> Thanks a ton, that's very useful!
 >
-> Any load that is only compared to zero is immune to load-tearing issues.
->
-> The correct thing to do here is something like:
->
-> static inline int timer_pending(const struct timer_list *timer)
-> {
->         /*
->          * KCSAN compiler infrastructure is insuffiently clever to
->          * realize that a 'load compared to zero' is immune to
->          * load-tearing.
->          */
->         return data_race(timer->entry.pprev != NULL);
-> }
+> I've Cc:-ed the EFI gents who are developing this code, maybe they'll
+> spot the bug.
 
-
-This is nice, now with have data_race()
-
-Remember these patches were sent 2 months ago, at a time we were
-trying to sort out things.
-
-data_race() was merged a few days ago.
+I'll take a look. J=C3=B6rg, can you paste a full dmesg from a good boot?
