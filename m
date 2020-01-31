@@ -2,362 +2,231 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1E2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE335C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AAA0206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79353217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUNamtYj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC/s3Jlh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgAaU2c (ORCPT
+        id S1726322AbgAaUbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:28:32 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29596 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgAaU2c (ORCPT
+        Fri, 31 Jan 2020 15:31:33 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54830 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAaUbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:28:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580502510;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=REszSO1YAaaLseea7FUG/A0oEFNNhe7uN3QZenLehqQ=;
-        b=OUNamtYjKvptJUIdmcOknOVN3KC2BWZf11kyi5Pi0zut3roxZePOerx+4WMQJu27xgLL6+
-        rMXpE1zVMAuyMN6y88etIrR/tg7jWkHZHKus6Nd5LFsmleQ2QRCxxF9+tbmEuW5Lf7iJiO
-        wXPsIje/zIWNd+vJF2NyTWGnGsdjliE=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-XFUoPNkeN6qvuP2CkyMSDw-1; Fri, 31 Jan 2020 15:28:28 -0500
-X-MC-Unique: XFUoPNkeN6qvuP2CkyMSDw-1
-Received: by mail-qv1-f72.google.com with SMTP id c1so5154032qvw.17
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:28:28 -0800 (PST)
+        Fri, 31 Jan 2020 15:31:33 -0500
+Received: by mail-wm1-f65.google.com with SMTP id g1so9374488wmh.4;
+        Fri, 31 Jan 2020 12:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rXOjIgLKMcS/rpvOcjjPy6Ti8Ik2MqTM5puLhDaf+2M=;
+        b=AC/s3JlhTammh7DuDj+dq5D4FIz2PyNfWUpQSzudQIEQEj0L/zV/UnSbyd+pqnQgq3
+         cNOfpuBJimYlJwyDz07T3ZccRR1+wvcFD1hfx7CMxH0cHRR2ZRs1ieiLBNddkJoatJL7
+         HfmGDwAgRaotmSopgrdtk0OwAxa3WHc77wNnyf7BOneWj/iAUnbHc6sC1CsTdrEs0P/G
+         W47WQ7U3LxjVOgqdq1eNgPdnn6qC5Au95Fn7PfzIf6GrsTYdESGAO0kfJd+p0JNa0dIN
+         sSEzkpst+UKeCmLaO23s+EXcjR7RvUweynFyyjJsw8si/Qwopa9zZWnhcf2FgBzhNvQh
+         DfwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=REszSO1YAaaLseea7FUG/A0oEFNNhe7uN3QZenLehqQ=;
-        b=kbgHR4aIbYCvc7LbXz7K2C9GDuMEDSYLvDwrI+2oLRluovN0yDKat1XQTv5ajGpUSF
-         DSI4PhEdTHh1u8NteMIUy38D5XF1xyenaYlZ8ejCihXg8h6YlQMKYaoyeFV0BzEWy/FW
-         jMpHR3iHiRg6zFCQuai3qeMIlb/LoQVpH1P8VhW5FyPZDQ1i+LV7huFYiBGtyACCMEYA
-         Zskdjb/54PMl1DsEwsn7eskIGR64OWAvJhkOHdVjjeMdrMO33YeAuAeff6Zn4+zc2VL6
-         LOEUa2BA9FfukzQy3VWKv32Kh6Bm3YK5YXQ5+VKFPs1RGsYLFxDPrshxt8bnYKBs3MVu
-         OdjA==
-X-Gm-Message-State: APjAAAWDmzLhTIP7y1u5QWHgvp4JwkxfuEgn5xBlMqxx4C84YK1CWIc5
-        s8ZSR/fwhuoU3fX4d5Zq/W/IazODL0eQK6+9e54jMG9tRmsCbVtWSdiHXfoRZ0qrn2fYzHPMD5E
-        sSaOgiDEn0/eJ70M9aoNU2pYG
-X-Received: by 2002:aed:2e02:: with SMTP id j2mr12273701qtd.370.1580502508104;
-        Fri, 31 Jan 2020 12:28:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx8n6AwJyBPRXQDJzG1PcplFJ92kk76/IL2PQ7U9ulOJNGzn+jVHTF/n35vGVW+g+m9ee7m8A==
-X-Received: by 2002:aed:2e02:: with SMTP id j2mr12273665qtd.370.1580502507617;
-        Fri, 31 Jan 2020 12:28:27 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id d22sm5501176qtp.37.2020.01.31.12.28.25
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rXOjIgLKMcS/rpvOcjjPy6Ti8Ik2MqTM5puLhDaf+2M=;
+        b=D3kXyhOGmVtNY1ME+WWWXPttGdRlYNp/iSurjGdjfs6b8FqdRQYj8ziEjpaELuDMpm
+         LZcR10DaKCM0fUMgeolM87rIY0gsfUpLs1pJx8pIvQSgXXq8N4fNdbn8GCw1ndJb6U7v
+         uYXKJUZ+LDML5wFqv+hk9itwAnIbzpsQgmBRS+lm8nXU5WbNysoCkcWQXKaXUSnCAu1m
+         Cn7GZWze+p+ZI8ZnNwUuuNoZSKxoyjPxHOuOE/97jmDANiUGPT1ZwBSTdehXjz4H4sg8
+         b/lWNtin0tjnMV8wLUjG+P0GzB6ZGBZgaUiEj6I0lfhAZKs8pi+/txJAfocc38lPGEum
+         unlw==
+X-Gm-Message-State: APjAAAVUHipIb5Gsupqhxjszc/vYgmc/WkYYS10480ZkNWd+QYCcU/XQ
+        bK5dfojgibWc1hyFoB2vdJw=
+X-Google-Smtp-Source: APXvYqzgqNaT0xwI2rZs4vQxGOlXPQIGM3VlVv3wDKFwF2l3FOVK1slW8HIJhIvAh/YlgH0d3T0GYw==
+X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr13850420wmg.34.1580502689536;
+        Fri, 31 Jan 2020 12:31:29 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id w7sm11549502wmi.9.2020.01.31.12.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 12:28:26 -0800 (PST)
-Date:   Fri, 31 Jan 2020 15:28:24 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200131202824.GA7063@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
- <20200128182402.GA18652@linux.intel.com>
- <20200131150832.GA740148@xz-x1>
- <20200131193301.GC18946@linux.intel.com>
+        Fri, 31 Jan 2020 12:31:26 -0800 (PST)
+Date:   Fri, 31 Jan 2020 21:31:25 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        frankc@nvidia.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+Message-ID: <20200131203125.GB3444092@ulmo>
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+ <20200130154246.GA2904678@ulmo>
+ <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
+ <20200131170351.GA3444092@ulmo>
+ <173dfa3f-a87f-c5dd-1966-558d6edafc3d@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
 Content-Disposition: inline
-In-Reply-To: <20200131193301.GC18946@linux.intel.com>
+In-Reply-To: <173dfa3f-a87f-c5dd-1966-558d6edafc3d@xs4all.nl>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
-> On Fri, Jan 31, 2020 at 10:08:32AM -0500, Peter Xu wrote:
-> > On Tue, Jan 28, 2020 at 10:24:03AM -0800, Sean Christopherson wrote:
-> > > On Tue, Jan 28, 2020 at 01:50:05PM +0800, Peter Xu wrote:
-> > > > On Tue, Jan 21, 2020 at 07:56:57AM -0800, Sean Christopherson wrote:
-> > > > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > > > index c4d3972dcd14..ff97782b3919 100644
-> > > > > > --- a/arch/x86/kvm/x86.c
-> > > > > > +++ b/arch/x86/kvm/x86.c
-> > > > > > @@ -9584,7 +9584,15 @@ void kvm_arch_sync_events(struct kvm *kvm)
-> > > > > >  	kvm_free_pit(kvm);
-> > > > > >  }
-> > > > > >  
-> > > > > > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > > > > > +/*
-> > > > > > + * If `uaddr' is specified, `*uaddr' will be returned with the
-> > > > > > + * userspace address that was just allocated.  `uaddr' is only
-> > > > > > + * meaningful if the function returns zero, and `uaddr' will only be
-> > > > > > + * valid when with either the slots_lock or with the SRCU read lock
-> > > > > > + * held.  After we release the lock, the returned `uaddr' will be invalid.
-> > > > > 
-> > > > > This is all incorrect.  Neither of those locks has any bearing on the
-> > > > > validity of the hva.  slots_lock does as the name suggests and prevents
-> > > > > concurrent writes to the memslots.  The SRCU lock ensures the implicit
-> > > > > memslots lookup in kvm_clear_guest_page() won't result in a use-after-free
-> > > > > due to derefencing old memslots.
-> > > > > 
-> > > > > Neither of those has anything to do with the userspace address, they're
-> > > > > both fully tied to KVM's gfn->hva lookup.  As Paolo pointed out, KVM's
-> > > > > mapping is instead tied to the lifecycle of the VM.  Note, even *that* has
-> > > > > no bearing on the validity of the mapping or address as KVM only increments
-> > > > > mm_count, not mm_users, i.e. guarantees the mm struct itself won't be freed
-> > > > > but doesn't ensure the vmas or associated pages tables are valid.
-> > > > > 
-> > > > > Which is the entire point of using __copy_{to,from}_user(), as they
-> > > > > gracefully handle the scenario where the process has not valid mapping
-> > > > > and/or translation for the address.
-> > > > 
-> > > > Sorry I don't understand.
-> > > > 
-> > > > I do think either the slots_lock or SRCU would protect at least the
-> > > > existing kvm.memslots, and if so at least the previous vm_mmap()
-> > > > return value should still be valid.
-> > > 
-> > > Nope.  kvm->slots_lock only protects gfn->hva lookups, e.g. userspace can
-> > > munmap() the range at any time.
-> > 
-> > Do we need to consider that?  If the userspace did this then it'll
-> > corrupt itself, and imho private memory slot is not anything special
-> > here comparing to the user memory slots.  For example, the userspace
-> > can unmap any region after KVM_SET_USER_MEMORY_REGION ioctl even if
-> > the region is filled into some of the userspace_addr of
-> > kvm_userspace_memory_region, so the cached userspace_addr can be
-> > invalid, then kvm_write_guest_page() can fail too with the same
-> > reason.  IMHO kvm only need to make sure it handles the failure path
-> > then it's perfectly fine.
-> 
-> Yes?  No?  My point is that your original comment's assertion that "'uaddr'
-> will only be valid when with either the slots_lock or with the SRCU read
-> lock held." is wrong and misleading.
 
-Yes I'll fix that.
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > > > I agree that __copy_to_user() will protect us from many cases from process
-> > > > mm pov (which allows page faults inside), but again if the kvm.memslots is
-> > > > changed underneath us then it's another story, IMHO, and that's why we need
-> > > > either the lock or SRCU.
-> > > 
-> > > No, again, slots_lock and SRCU only protect gfn->hva lookups.
-> > 
-> > Yes, then could you further explain why do you think we don't need the
-> > slot lock?  
-> 
-> For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
-> still has to use copy_{to,from}_user().
-> 
-> In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
-> would be provided the hva of the memory region.  Since slots_lock and SRCU
-> only protect gfn->hva, why would KVM take slots_lock since it already has
-> the hva?
+On Fri, Jan 31, 2020 at 06:37:10PM +0100, Hans Verkuil wrote:
+> On 1/31/20 6:03 PM, Thierry Reding wrote:
+> > On Fri, Jan 31, 2020 at 03:29:52PM +0100, Hans Verkuil wrote:
+> >> On 1/30/20 4:42 PM, Thierry Reding wrote:
+> >>> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
+> >>>> Hi Sowjanya,
+> >>>>
+> >>>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+> >>>>> This series adds Tegra210 VI and CSI driver for built-in test patte=
+rn
+> >>>>> generator (TPG) capture.
+> >>>>>
+> >>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+> >>>>> CSI port is one-to-one mapped to VI channel for video capture.
+> >>>>>
+> >>>>> This series has TPG support only where it creates hard media links
+> >>>>> between CSI subdevice and VI video device without device graphs.
+> >>>>>
+> >>>>> v4l2-compliance results are available below the patch diff.
+> >>>>>
+> >>>>> [v0]:	Includes,
+> >>>>> 	- Adds CSI TPG clock to Tegra210 clock driver
+> >>>>> 	- Host1x video driver with VI and CSI clients.
+> >>>>> 	- Support for Tegra210 only.
+> >>>>> 	- VI CSI TPG support with hard media links in driver.
+> >>>>> 	- Video formats supported by Tegra210 VI
+> >>>>> 	- CSI TPG supported video formats
+> >>>>
+> >>>> I'm trying to compile this patch series using the media_tree master
+> >>>> branch (https://git.linuxtv.org//media_tree.git), but it fails:
+> >>>>
+> >>>> drivers/staging/media/tegra/tegra-channel.c: In function =E2=80=98te=
+gra_channel_queue_setup=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused v=
+ariable =E2=80=98count=E2=80=99 [-Wunused-variable]
+> >>>>    71 |  unsigned int count =3D *nbuffers;
+> >>>>       |               ^~~~~
+> >>>> drivers/staging/media/tegra/tegra-channel.c: In function =E2=80=98te=
+gra_channel_init=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-channel.c:518:55: error: =E2=80=98=
+struct host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   518 |  struct tegra_camera *cam =3D dev_get_drvdata(vi->client.hos=
+t);
+> >>>>       |                                                       ^
+> >>>> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegr=
+a/tegra-channel.o] Error 1
+> >>>> make[4]: *** Waiting for unfinished jobs....
+> >>>> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_v=
+i_tpg_graph_init=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-vi.c:157:55: error: =E2=80=98struc=
+t host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   157 |  struct tegra_camera *cam =3D dev_get_drvdata(vi->client.hos=
+t);
+> >>>>       |                                                       ^
+> >>>> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_v=
+i_init=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-csi.c: In function =E2=80=98tegra_=
+csi_init=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-vi.c:213:51: error: =E2=80=98struc=
+t host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   213 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
+> >>>>       |                                                   ^~
+> >>>> drivers/staging/media/tegra/tegra-csi.c:259:51: error: =E2=80=98stru=
+ct host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   259 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
+> >>>>       |                                                   ^~
+> >>>> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_v=
+i_exit=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-vi.c:246:51: error: =E2=80=98struc=
+t host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   246 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
+> >>>>       |                                                   ^~
+> >>>> drivers/staging/media/tegra/tegra-csi.c: In function =E2=80=98tegra_=
+csi_exit=E2=80=99:
+> >>>> drivers/staging/media/tegra/tegra-csi.c:286:51: error: =E2=80=98stru=
+ct host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
+> >>>>   286 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
+> >>>>       |                                                   ^~
+> >>>>
+> >>>> And indeed, struct host1x_client as defined in include/linux/host1x.=
+h doesn't
+> >>>> have a 'host' field.
+> >>>>
+> >>>> Does this series depend on another patch that's not yet in mainline?
+> >>>
+> >>> Sowjanya's been working on top of linux-next, so, yes, this patch
+> >>> depends on a change that's been merged into the DRM tree for v5.6-rc1.
+> >>>
+> >>> Thierry
+> >>>
+> >>
+> >> Is there a specific linux-next tag that works? I tried next-20200131 b=
+ut that
+> >> failed to boot. Same problem with the mainline repo since the host1x p=
+atches
+> >> were merged yesterday. It compiles fine, but the boot just stops. Or a=
+m I
+> >> missing some kernel config that is now important to have?
+> >=20
+> > linux-next and mainline are currently regressing on Tegra210 (and some
+> > Tegra124) boards. I just sent out a series that fixes the regression for
+> > me:
+> >=20
+> > 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=3D156215
+> >=20
+> > Please test if this works for you. If so, I'll send this to Dave as soon
+> > as possible.
+>=20
+> I'll try it on Tuesday as I don't have access to the Jetson TX1 until the=
+n. It
+> looks promising since I think that the last message I saw was a PM messag=
+e.
 
-OK so you're suggesting to unlock the lock earlier to not cover
-init_rmode_tss() rather than dropping the whole lock...  Yes it looks
-good to me.  I think that's the major confusion I got.
+Great. My local testing on Jetson Nano confirms that this fixes boot on
+top of linux-next and I've also run it through our internal test farm
+with success. I'll push this to my drm/tegra/for-next branch, so it
+should show up in linux-next on Monday.
 
-> 
-> > > > Or are you assuming that (1) __x86_set_memory_region() is only for the
-> > > > 3 private kvm memslots, 
-> > > 
-> > > It's not an assumption, the entire purpose of __x86_set_memory_region()
-> > > is to provide support for private KVM memslots.
-> > > 
-> > > > and (2) currently the kvm private memory slots will never change after VM
-> > > > is created and before VM is destroyed?
-> > > 
-> > > No, I'm not assuming the private memslots are constant, e.g. the flow in
-> > > question, vmx_set_tss_addr() is directly tied to an unprotected ioctl().
-> > 
-> > Why it's unprotected?
-> 
-> Because it doesn't need to be protected.
-> 
-> > Now vmx_set_tss_add() is protected by the slots lock so concurrent operation
-> > is safe, also it'll return -EEXIST if called for more than once.
-> 
-> Returning -EEXIST is an ABI change, e.g. userspace can currently call
-> KVM_SET_TSS_ADDR any number of times, it just needs to ensure proper
-> serialization between calls.
-> 
-> If you want to change the ABI, then submit a patch to do exactly that.
-> But don't bury an ABI change under the pretense that it's a bug fix.
+Thierry
 
-Could you explain what do you mean by "ABI change"?
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I was talking about the original code, not after applying the
-patchset.  To be explicit, I mean [a] below:
+-----BEGIN PGP SIGNATURE-----
 
-int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size,
-			    unsigned long *uaddr)
-{
-	int i, r;
-	unsigned long hva;
-	struct kvm_memslots *slots = kvm_memslots(kvm);
-	struct kvm_memory_slot *slot, old;
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl40jpoACgkQ3SOs138+
+s6GsKw/9GmS3lkoUnVWigejDV9uq911ocqLUjYnzIP3fGxFJ1thUuG+omcIgI0mi
+xwC2iw2wtxPMW65pQa2+rFSkHq3ExeaiYH310qkVZGesyvIbU+TIX/+fHflgG36J
+Bnyv4MTo1YpciOhwMh/bdfCJJarnPC50SD1yWoEBwYqe+jtZVVMAa6RfNuHebn7+
+i4rad8NkoOqBmsPpvw5q3Bod0QJRnWI56CVxC6aamZdfsnBcUDFIheueybK17kAm
+7biKjP/MERe1upvsLHXud/r6H4Gx6UqENVSB24x6XMUdk4T7GlC546kUI/7B0YSh
+cTpmQmDtkWV7j7QWM/sGkvP2nlYZlKYG4onM8ihIpab1D+r1AWgaJTkYkknG+7Te
+tfdHcvsoTCwTtWkyN1xwcgXznmOJuv0aHAB5bCJ1cr/D617z/AjRabNBZsAMQMV9
+oLBMkkS0R7g9j3QQI/LmKXk29FGmr/yCprp1LpGSX8akiiLyCUHNbz2EmMgN9wm7
+LewBOUmgVicCwRSh0pByvSFbh5brvOoWyniOf8vLsWf3R4jULYRj5bFrynhYHHjJ
+hk4wOacB0TysyZ8Ggr+rAT0aVzBvCrAxXvwA6eVShPpkNhHHOC8QoqNuO3hs2jaV
+FiHXB0xTUsMcMnOnvCfNkmQE692LOt7PUvb5AzBYHSZzyyOZGIQ=
+=i3Ml
+-----END PGP SIGNATURE-----
 
-	/* Called with kvm->slots_lock held.  */
-	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
-		return -EINVAL;
-
-	slot = id_to_memslot(slots, id);
-	if (size) {
-		if (slot->npages)
-			return -EEXIST;  <------------------------ [a]
-        }
-        ...
-}
-
-> 
-> > [1]
-> > 
-> > > 
-> > > KVM's sole responsible for vmx_set_tss_addr() is to not crash the kernel.
-> > > Userspace is responsible for ensuring it doesn't break its guests, e.g.
-> > > that multiple calls to KVM_SET_TSS_ADDR are properly serialized.
-> > > 
-> > > In the existing code, KVM ensures it doesn't crash by holding the SRCU lock
-> > > for the duration of init_rmode_tss() so that the gfn->hva lookups in
-> > > kvm_clear_guest_page() don't dereference a stale memslots array.
-> > 
-> > Here in the current master branch we have both the RCU lock and the
-> > slot lock held, that's why I think we can safely remove the RCU lock
-> > as long as we're still holding the slots lock.  We can't do the
-> > reverse because otherwise multiple KVM_SET_TSS_ADDR could race.
-> 
-> Your wording is all messed up.  "we have both the RCU lock and the slot
-> lock held" is wrong.
-
-I did mess up with 2a5755bb21ee2.  We didn't take both lock here,
-sorry.
-
-> KVM holds slot_lock around __x86_set_memory_region(),
-> because changing the memslots must be mutually exclusive.  It then *drops*
-> slots_lock because it's done writing the memslots and grabs the SRCU lock
-> in order to protect the gfn->hva lookups done by init_rmode_tss().  It
-> *intentionally* drops slots_lock because writing init_rmode_tss() does not
-> need to be a mutually exclusive operation, per KVM's existing ABI.
-> 
-> If KVM held both slots_lock and SRCU then __x86_set_memory_region() would
-> deadlock on synchronize_srcu().
-> 
-> > > In no way
-> > > does that ensure the validity of the resulting hva,
-> > 
-> > Yes, but as I mentioned, I don't think it's an issue to be considered
-> > by KVM, otherwise we should have the same issue all over the places
-> > when we fetch the cached userspace_addr from any user slots.
-> 
-> Huh?  Of course it's an issue that needs to be considered by KVM, e.g.
-> kvm_{read,write}_guest_cached() aren't using __copy_{to,}from_user() for
-> giggles.
-
-The cache is for the GPA->HVA translation (struct gfn_to_hva_cache),
-we still use __copy_{to,}from_user() upon the HVAs, no?
-
-> 
-> > > e.g. multiple calls to
-> > > KVM_SET_TSS_ADDR would race to set vmx->tss_addr and so init_rmode_tss()
-> > > could be operating on a stale gpa.
-> > 
-> > Please refer to [1].
-> > 
-> > I just want to double-confirm on what we're discussing now. Are you
-> > sure you're suggesting that we should remove the slot lock in
-> > init_rmode_tss()?  Asked because you discussed quite a bit on how the
-> > slot lock should protect GPA->HVA, about concurrency and so on, then
-> > I'm even more comfused...
-> 
-> Yes, if init_rmode_tss() is provided the hva then it does not need to
-> grab srcu_read_lock(&kvm->srcu) because it can directly call
-> __copy_{to,from}_user() instead of bouncing through the KVM helpers that
-> translate a gfn to hva.
-> 
-> The code can look like this.  That being said, I've completely lost track
-> of why __x86_set_memory_region() needs to provide the hva, i.e. have no
-> idea if we *should* do this, or it would be better to keep the current
-> code, which would be slower, but less custom.
-> 
-> static int init_rmode_tss(void __user *hva)
-> {
-> 	const void *zero_page = (const void *)__va(page_to_phys(ZERO_PAGE(0)));
-> 	u16 data = TSS_BASE_SIZE + TSS_REDIRECTION_SIZE;
-> 	int r;
-> 
-> 	r = __copy_to_user(hva, zero_page, PAGE_SIZE);
-> 	if (r)
-> 		return -EFAULT;
-> 
-> 	r = __copy_to_user(hva + TSS_IOPB_BASE_OFFSET, &data, sizeof(u16))
-> 	if (r)
-> 		return -EFAULT;
-> 
-> 	hva += PAGE_SIZE;
-> 	r = __copy_to_user(hva + PAGE_SIZE, zero_page, PAGE_SIZE);
-> 	if (r)
-> 		return -EFAULT;
-> 
-> 	hva += PAGE_SIZE;
-> 	r = __copy_to_user(hva + PAGE_SIZE, zero_page, PAGE_SIZE);
-> 	if (r)
-> 		return -EFAULT;
-> 
-> 	data = ~0;
-> 	hva += RMODE_TSS_SIZE - 2 * PAGE_SIZE - 1;
-> 	r = __copy_to_user(hva, &data, sizeof(u16))
-> 	if (r)
-> 		return -EFAULT;
-> }
-> 
-> static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
-> {
-> 	void __user *hva;
-> 
-> 	if (enable_unrestricted_guest)
-> 		return 0;
-> 
-> 	mutex_lock(&kvm->slots_lock);
-> 	hva = __x86_set_memory_region(kvm, TSS_PRIVATE_MEMSLOT, addr,
-> 				      PAGE_SIZE * 3);
-> 	mutex_unlock(&kvm->slots_lock);
-> 
-> 	if (IS_ERR(hva))
-> 		return PTR_ERR(hva);
-> 
-> 	to_kvm_vmx(kvm)->tss_addr = addr;
-> 	return init_rmode_tss(hva);
-> }
-> 
-> Yes, userspace can corrupt its VM by invoking KVM_SET_TSS_ADDR multiple
-> times without serializing the calls, but that's already true today.
-
-But I still don't see why we have any problem here.  Only the first
-thread will get the slots_lock here and succeed this ioctl.  The rest
-threads will fail with -EEXIST, no?
-
--- 
-Peter Xu
-
+--OwLcNYc0lM97+oe1--
