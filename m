@@ -2,241 +2,152 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1F4C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2DEC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453E120707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFDCA20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="pOsaZU+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgAaMsw (ORCPT
+        id S1728606AbgAaMvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:48:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:35040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgAaMsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:48:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D63991063;
-        Fri, 31 Jan 2020 04:48:50 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A9573F67D;
-        Fri, 31 Jan 2020 04:48:46 -0800 (PST)
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-To:     Jon Nettleton <jon@solid-run.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Fri, 31 Jan 2020 07:51:45 -0500
+Received: from mail-eopbgr680076.outbound.protection.outlook.com ([40.107.68.76]:13934
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728500AbgAaMvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:51:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cQe3vsTruoi8AYkCkK0BT/YZwIN2a2WWkIXGLQG/lFIRt+pGaNefrqS5u4xxht95xxMYe7SLcdgipOpsBf/KG57NCjHvik30MHApb1gyZh6H/rqxJTzEsNrnHkMdNToWysxJF0DR4LQ9qgIFxIAaHbjaRK9U5SGxM0wzXiDk3kyE9rKhAmi+K19OF9iZX4BrKIfoGn75DN9v9xtxiyHnYFofsk1v6kLgTIbGLI7stWaL20RwOLz7SokqGHW7MCCxIm7+biNMQTW6KrrUMa5nKa8p7zZC/kaGT5zaKQSXCea49SOEtmdBYDnIT2LQ0GcJTlTqBRDfcZ34gcM2zgOqhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yjE6cx8W8UpWF3l3bociv9BX+TfQSN3QXcXnTjs5vyQ=;
+ b=XznQ+1x1+wVJcgv5bcEzszrkgqaIl31Nealc1kvTFOkFCjCzXPBeACTju+rLbgYisNNcRfy+Bew9rSuaIWLyDtJNFdxvmnlGZ0Hyas2am0CqCKEVlTIysuKCXFxhJU51APLw4sUixFVYfGbILD5yz2aKPiE1hAbbxge+5T5BkLdTEJNDNchkwDqEIIm0U8z4YiKU5uQazfnRKK3fV64RJBoWA/Qx5L/QMWUCfYC8onmVBAEHuyV3MNoN/zGQfgj60QGvLD0FKjxDFt5XoWKXn+AxeYFK3G0MiSnAhrtbT/QRnqNU3fDMhC2icviBfjFEhC99lhqvSs+tL7HxEN4iyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yjE6cx8W8UpWF3l3bociv9BX+TfQSN3QXcXnTjs5vyQ=;
+ b=pOsaZU+wnIKbeJ55e3RPePSiNtBhJ3x7+JFLMZCS/KJsPzBdN1AagOgXhrscdbiI+kQrzM8Fq6e57D1VWLaCOtkNaVwyHQYNUSCXJlGyVrAWxoPe8Dub0DWyKQH2/LzQ4yXNaRRRMu9a6D6AMCtWlUtkXvjSGebF8AG2q1aTNJ0=
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
+ MN2PR05MB6893.namprd05.prod.outlook.com (52.135.38.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.12; Fri, 31 Jan 2020 12:51:36 +0000
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::ed0d:9029:720c:1459]) by MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::ed0d:9029:720c:1459%2]) with mapi id 15.20.2686.025; Fri, 31 Jan 2020
+ 12:51:36 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "mszeredi@redhat.com" <mszeredi@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srinidhi Rao <srinidhir@vmware.com>,
+        Vikash Bansal <bvikas@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Steven Rostedt <srostedt@vmware.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
-Date:   Fri, 31 Jan 2020 12:48:48 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+Thread-Topic: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+Thread-Index: AQHVtA8fuh6znFRRV0qqDxHv/b6uMqe8uqWAgAAHRQCAAASqgIAAF2sAgAAQAgCASHBJgA==
+Date:   Fri, 31 Jan 2020 12:51:35 +0000
+Message-ID: <9755E757-3A63-4001-84BA-ECDF4D0337C8@vmware.com>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+ <1576529149-14269-9-git-send-email-akaher@vmware.com>
+ <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+ <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+ <20191216134725.GE2827@hirez.programming.kicks-ass.net>
+ <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
+ <87immg9rsv.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87immg9rsv.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=akaher@vmware.com; 
+x-originating-ip: [103.19.212.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7224ae4b-28e4-4525-5a70-08d7a64c4e84
+x-ms-traffictypediagnostic: MN2PR05MB6893:|MN2PR05MB6893:|MN2PR05MB6893:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR05MB6893C504FEEFEF0077CF9033BB070@MN2PR05MB6893.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 029976C540
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(199004)(189003)(36756003)(81166006)(33656002)(966005)(86362001)(110136005)(54906003)(186003)(26005)(316002)(6506007)(8676002)(5660300002)(2616005)(478600001)(81156014)(64756008)(4326008)(66946007)(66446008)(66476007)(66556008)(8936002)(91956017)(2906002)(76116006)(6486002)(6512007)(71200400001)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6893;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oxT3cjTc0Ught+qfXr5jJTAhsXe9QVGPIS+k+k6aCD9t4AjcSv+D4S8q28aYbFF7AbTdkgpoSWtwTGh6RnaYxKWfp+WPioyML9EKrveNaWpeh7PhHui2aFPc1MKQXfZ3KsQMixQxKycIwAH2YSnngBM42LHSnLEhnBrtdKX22ILkcOsK2poh5bMT4OJY10qjI/qI+x8Liek94PUVlvdV0XFqrllHbo40A2+tK2Ch/YUMUapkrj2qNWplrYIRqBueomigXWIgP0pwVmimIWqUS0/BoR0iuI3CevjJ9DOXWNGIWIPmZNgyODtRkiRBjjp/+FyG2mV/hnZheU9f0aJkHK+jQHOxdgs2Wp7/wna14nAi82gEnGC3jzTGpYdwzU3+n4+IA6NjDnO4WFMdkVd1gKDJ3cEoJRDv2PxQCUQaXKZrSZMX66uqwth7IFmt6AJFb1gnLj3xPk9CuxpPxWvLCJSxQEcN5rAg3bggEBfOm6X4tVeJKXqbWnyFDYUBqgefK8Z7c4XRwNNQXfvwggyF/g==
+x-ms-exchange-antispam-messagedata: UVfcG6XZoZo9KH5qDr37tFnNMZvpYC88RAzGX+kxavmy29BTQ6qcVJS20AnK4ZzAdnfcFCmnca4bmuIuNPm4E3b4n1B7+VfSaIzCQAX4A9XdEpJZ5V/n3XJFPbw9j343gRuDJU32cNT9cNST6f02yw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A99E06A6DE06A8468971147B46950FAC@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7224ae4b-28e4-4525-5a70-08d7a64c4e84
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2020 12:51:35.8158
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UkofGULSVttWg1Wm/MNHBilmVqxwnvYWAVhp8c4pm/AYccdVbjADi0wYo38QsAzHBlaI3R7nVTK6mOhgIGSQfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6893
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-31 12:28 pm, Jon Nettleton wrote:
-> On Fri, Jan 31, 2020 at 1:02 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->>
->> On Fri, 31 Jan 2020 at 12:06, Marc Zyngier <maz@kernel.org> wrote:
->>>
->>> On 2020-01-31 10:35, Makarand Pawagi wrote:
->>>>> -----Original Message-----
->>>>> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->>>>> Sent: Tuesday, January 28, 2020 4:39 PM
->>>>> To: Makarand Pawagi <makarand.pawagi@nxp.com>
->>>>> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
->>>>> kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
->>>>> linux@armlinux.org.uk;
->>>>> jon@solid-run.com; Cristi Sovaiala <cristian.sovaiala@nxp.com>;
->>>>> Laurentiu
->>>>> Tudor <laurentiu.tudor@nxp.com>; Ioana Ciornei
->>>>> <ioana.ciornei@nxp.com>;
->>>>> Varun Sethi <V.Sethi@nxp.com>; Calvin Johnson
->>>>> <calvin.johnson@nxp.com>;
->>>>> Pankaj Bansal <pankaj.bansal@nxp.com>; guohanjun@huawei.com;
->>>>> sudeep.holla@arm.com; rjw@rjwysocki.net; lenb@kernel.org;
->>>>> stuyoder@gmail.com; tglx@linutronix.de; jason@lakedaemon.net;
->>>>> maz@kernel.org; shameerali.kolothum.thodi@huawei.com; will@kernel.org;
->>>>> robin.murphy@arm.com; nleeder@codeaurora.org
->>>>> Subject: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
->>>>>
->>>>> Caution: EXT Email
->>>>>
->>>>> On Tue, Jan 28, 2020 at 01:38:45PM +0530, Makarand Pawagi wrote:
->>>>>> ACPI support is added in the fsl-mc driver. Driver will parse MC DSDT
->>>>>> table to extract memory and other resorces.
->>>>>>
->>>>>> Interrupt (GIC ITS) information will be extracted from MADT table by
->>>>>> drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
->>>>>>
->>>>>> IORT table will be parsed to configure DMA.
->>>>>>
->>>>>> Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
->>>>>> ---
->>>>>>   drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
->>>>>>   drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
->>>>>>   drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
->>>>>>   drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
->>>>>>   drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
->>>>>>   drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71
->>>>> ++++++++++++++++++++++++++++-
->>>>>>   include/linux/acpi_iort.h                   |  5 ++
->>>>>>   7 files changed, 174 insertions(+), 20 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
->>>>>> index 33f7198..beb9cd5 100644
->>>>>> --- a/drivers/acpi/arm64/iort.c
->>>>>> +++ b/drivers/acpi/arm64/iort.c
->>>>>> @@ -15,6 +15,7 @@
->>>>>>   #include <linux/kernel.h>
->>>>>>   #include <linux/list.h>
->>>>>>   #include <linux/pci.h>
->>>>>> +#include <linux/fsl/mc.h>
->>>>>>   #include <linux/platform_device.h>
->>>>>>   #include <linux/slab.h>
->>>>>>
->>>>>> @@ -622,6 +623,29 @@ static int iort_dev_find_its_id(struct device
->>>>>> *dev, u32 req_id,  }
->>>>>>
->>>>>>   /**
->>>>>> + * iort_get_fsl_mc_device_domain() - Find MSI domain related to a
->>>>>> +device
->>>>>> + * @dev: The device.
->>>>>> + * @mc_icid: ICID for the fsl_mc device.
->>>>>> + *
->>>>>> + * Returns: the MSI domain for this device, NULL otherwise  */ struct
->>>>>> +irq_domain *iort_get_fsl_mc_device_domain(struct device *dev,
->>>>>> +                                                     u32 mc_icid) {
->>>>>> +     struct fwnode_handle *handle;
->>>>>> +     int its_id;
->>>>>> +
->>>>>> +     if (iort_dev_find_its_id(dev, mc_icid, 0, &its_id))
->>>>>> +             return NULL;
->>>>>> +
->>>>>> +     handle = iort_find_domain_token(its_id);
->>>>>> +     if (!handle)
->>>>>> +             return NULL;
->>>>>> +
->>>>>> +     return irq_find_matching_fwnode(handle, DOMAIN_BUS_FSL_MC_MSI);
->>>>>> +}
->>>>>
->>>>> NAK
->>>>>
->>>>> I am not willing to take platform specific code in the generic IORT
->>>>> layer.
->>>>>
->>>>> ACPI on ARM64 works on platforms that comply with SBSA/SBBR
->>>>> guidelines:
->>>>>
->>>>>
->>>>> https://developer.arm.com/architectures/platform-design/server-systems
->>>>>
->>>>> Deviating from those requires butchering ACPI specifications (ie IORT)
->>>>> and
->>>>> related kernel code which goes totally against what ACPI is meant for
->>>>> on ARM64
->>>>> systems, so there is no upstream pathway for this code I am afraid.
->>>>>
->>>> Reason of adding this platform specific function in the generic IORT
->>>> layer is
->>>> That iort_get_device_domain() only deals with PCI bus
->>>> (DOMAIN_BUS_PCI_MSI).
->>>>
->>>> fsl-mc objects when probed, need to find irq_domain which is associated
->>>> with
->>>> the fsl-mc bus (DOMAIN_BUS_FSL_MC_MSI). It will not be possible to do
->>>> that
->>>> if we do not add this function because there are no other suitable APIs
->>>> exported
->>>> by IORT layer to do the job.
->>>
->>> I think we all understood the patch. What both Lorenzo and myself are
->>> saying is
->>> that we do not want non-PCI support in IORT.
->>>
->>
->> IORT supports platform devices (aka named components) as well, and
->> there is some support for platform MSIs in the GIC layer.
->>
->> So it may be possible to hide your exotic bus from the OS entirely,
->> and make the firmware instantiate a DSDT with device objects and
->> associated IORT nodes that describe whatever lives on that bus as
->> named components.
->>
->> That way, you will not have to change the OS at all, so your hardware
->> will not only be supported in linux v5.7+, it will also be supported
->> by OSes that commercial distro vendors are shipping today. *That* is
->> the whole point of using ACPI.
->>
->> If you are going to bother and modify the OS, you lose this advantage,
->> and ACPI gives you no benefit over DT at all.
-> 
-> You beat me to it, but thanks for the clarification Ard.  No where in
-> the SBSA spec that I have read does it state that only PCIe devices
-> are supported by the SMMU.  It uses PCIe devices as an example, but
-> the SMMU section is very generic in term and only says "devices".
-> 
-> I feel the SBSA omission of SerDes best practices is an oversight in
-> the standard and something that probably needs to be revisited.
-> Forcing high speed networking interfaces to be hung off a bus just for
-> the sake of having a "standard" PCIe interface seems like a step
-> backward in this regard.  I would much rather have the Spec include a
-> common standard that could be exposed in a consistent manner.  But
-> this is a conversation for a different place.
-
-Just to clarify further, it's not about serdes or high-speed networking 
-per se - describing a fixed-function network adapter as a named 
-component is entirely within scope. The issue is when the hardware is 
-merely a pool of accelerator components that can be dynamically 
-configured at runtime into something that looks like one or more 
-'virtual' network adapters - there is no standard interface for *that* 
-for SBSA to consider.
-
-Robin.
-
-> 
-> I will work with NXP and find a better way to implement this.
-> 
-> -Jon
-> 
+DQoNCu+7v09uIDE2LzEyLzE5LCA5OjM4IFBNLCAiVml0YWx5IEt1em5ldHNvdiIgPHZrdXpuZXRz
+QHJlZGhhdC5jb20+IHdyb3RlOg0KDQo+PiAoSSBhbHNvIGRpc2xpa2UgcmVjZWl2aW5nIG9ubHkg
+dGhpcyBwYXRjaCBvZiB0aGUgc2VyaWVzLCBuZXh0IHRpbWUNCj4+IHBsZWFzZSBzZW5kIHRoZSB3
+aG9sZSB0aGluZywgaXQncyBvbmx5IDggcGF0Y2hlcywgb3VyIG1haWxmb2xkZXJzIHdpbGwNCj4+
+IHN1cnZpdmUgdGhhdCkNCj4NCj4gVGhhbmtzIGZvciBwb2ludGluZyB0aGlzLCBJIHdpbGwgdGFr
+ZSBjYXJlLiANCj4NCj4+IEknbSBub3Qgc3VyZSB3aGljaCBzdGFibGUga2VybmVsIHlvdSdyZSB0
+YXJnZXRpbmcgKGFuZCBpZiB5b3UgYWRkcmVzc2VkIHRoaXMNCj4+IHdpdGggb3RoZXIgcGF0Y2hl
+cyBpbiB0aGUgc2VyaWVzLCBpZiB0aGlzIGlzIG5lZWRlZCwuLi4pIHNvIEpGWUkuDQo+DQo+IFRo
+aXMgc2VyaWVzIGlzIGZvciA0LjQueSwgcGxlYXNlIHJlZmVyIGZvbGxvd2luZyBsaW5rIGZvciBj
+b21wbGV0ZSBzZXJpZXM6DQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3N0YWJsZS8xNTc2NTI5
+MTQ5LTE0MjY5LTEtZ2l0LXNlbmQtZW1haWwtYWthaGVyQHZtd2FyZS5jb20vDQo+DQo+IFllcywg
+dGhpcyAnUGF0Y2ggdjMgOC84JyBjb3VsZCBiZSBtZXJnZWQgc2VwYXJhdGVseSwgaWYgaXQncyB1
+bnNhZmUgdG8gbWVyZ2UgYXQgdGhpcyBtb3ZlbWVudC4gIA0KPg0KPiAtIEFqYXkNCg0KR3JlZywg
+bGFzdCBtb250aCBJIHBvc3RlZCB0aGlzIHNlcmllcyBbMV0gZm9yIHY0LjQueSAoaW5jbHVkaW5n
+IFZsYXN0aW1pbCdzIGNoYW5nZSkuDQoNClRoZXJlIHdlcmUgc29tZSBkaXNjdXNzaW9uIGZvciBb
+UEFUQ0ggdjMgOC84XSBbMl0gYW5kIG5vIGZ1cnRoZXIgZGlzY3Vzc2lvbiBvbmNlIEkgc3BlY2lm
+aWVkIGl0J3MgZm9yIDQuNC55Lg0KUGxlYXNlIHN1Z2dlc3QsIGlmIEkgbmVlZCB0byByZXBvc3Qg
+dGhpcyBzZXJpZXMgYWdhaW4uDQoNCi0gQWpheQ0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvc3RhYmxlLzE1NzY1MjkxNDktMTQyNjktMS1naXQtc2VuZC1lbWFpbC1ha2FoZXJAdm13YXJl
+LmNvbS8NClsyXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9zdGFibGUvMTU3NjUyOTE0OS0xNDI2
+OS05LWdpdC1zZW5kLWVtYWlsLWFrYWhlckB2bXdhcmUuY29tLw0KDQoNCiAgICANCg0K
