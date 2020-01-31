@@ -2,155 +2,109 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53ACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E211C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F6E206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021F92082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nR79PYoh"
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="Y1wkZ6At"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgAaTUb (ORCPT
+        id S1726139AbgAaTXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:20:31 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33181 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgAaTUa (ORCPT
+        Fri, 31 Jan 2020 14:23:04 -0500
+Received: from dvalin.narfation.org ([213.160.73.56]:37490 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgAaTXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:20:30 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so7667510otp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T8WeVLJFFFH8djnVi87maSBmRCBApkHIBoZpRfNccoA=;
-        b=nR79PYohsTzCz5cNfXYRIt+l41EBsbUtCbXHzZjbEV5q1HUmVDODMN5msNQWs0oZh3
-         HiIoaNVPyw7sto/w6aKrfxjhLbLqp361cl9yA4/nFOsUCOqd8SOEp1DLhfnK6p/67OJf
-         w69BApYbgyJhvL+lKOn2r1C5hYqJmmbsIjYYnJYlHfp4SAUNDVJObo6YOFrIcS0vi7AO
-         0FNcc0+6u5dW/1KW+MoxjqMp8kcJTaOomCgGqsHzSJCtHvFHpt/SDIANe8hJ+hXzYJDs
-         Y+gJjKNjku4VTleEsmHEoTynXe57gx22LRi+h95L+TyfhFxcGhc7MlntWITpVu2Ra9mq
-         ry0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T8WeVLJFFFH8djnVi87maSBmRCBApkHIBoZpRfNccoA=;
-        b=oKKUfijss/JTQB9J9LdGzHykxZCcmmmUwtZneaQ1URpw0dusqAroZ5Lb67E+gBwxH8
-         TF8t4GdL9revzKiEJoB/gyei96yXXC4/bAXMB09uO81Bu6fXZ9oyo6rIYND0T3VW4sC9
-         6R3/OTJS235vdg1xd1OchgZ5ZiG3xJo+XsusAR7mGcMuECV4qL/7qPKYUuDbwPZTrFsY
-         6sMEbwH+YuWM+SWP/v7sQmM+kmEW0naj4jzH5SUN45WidSRCxNzb8yCMPAzbXJ2zDp0A
-         0gUIEULOfO3Ic8TetSr3OGqI/I5M6itaxfm5urfh2Q6CUrieS9qnOo7kdgM/nysPRnnM
-         yCuA==
-X-Gm-Message-State: APjAAAWpiRK8Mbheh+L5/0o6HtgQ8iFr4m+q0PJFL74Ex8P4l11PQiEz
-        e2wjZwlYuncoRkmtWOY7UsdhZV9OPeyDH5pf2l6swg==
-X-Google-Smtp-Source: APXvYqyLD9SmHKsx9hJOeVrwFaMJ4AuOhEOcW5R9F69KGJpPU72g4f9ctu6rfU5Ke5ARd/RN+59l7xRoo9qUpdfbqZ4=
-X-Received: by 2002:a9d:7410:: with SMTP id n16mr9027520otk.23.1580498429740;
- Fri, 31 Jan 2020 11:20:29 -0800 (PST)
+        Fri, 31 Jan 2020 14:23:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1580498581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=475KMUwh+W/5/54fUMNMhVrEiGEgG0BkyP5o/poCjIk=;
+        b=Y1wkZ6At5ZQ1bhcC6hZKYluFT+vJPz6yK7Ljag2xjl8U4ZAujGX6rx+W8OlSQrIfAhXCaQ
+        yO+11tdDhDi08PgkU/0ig1SLo0K6F70Yqg/1/9+ela2yPYDyuiKjCbIwt4kulktZZ8BgRK
+        0K54wdA1O+ZlJo1HJ7XxIwmuEWATVN4=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     syzbot <syzbot+37bad4f9cb2033876f32@syzkaller.appspotmail.com>
+Cc:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KMSAN: uninit-value in batadv_bla_tx
+Date:   Fri, 31 Jan 2020 20:22:48 +0100
+Message-ID: <2584399.6Er73V5Qae@sven-edge>
+In-Reply-To: <0000000000004701a9059d7351dd@google.com>
+References: <0000000000004701a9059d7351dd@google.com>
 MIME-Version: 1.0
-References: <20200131164308.GA5175@willie-the-truck> <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
- <20200131184322.GA11457@worktop.programming.kicks-ass.net> <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
-In-Reply-To: <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 31 Jan 2020 20:20:17 +0100
-Message-ID: <CANpmjNPb8vsNd=P3f0xASWf4i6d_9KHGWGGWGD2p+GViubQDPA@mail.gmail.com>
-Subject: Re: Confused about hlist_unhashed_lockless()
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart5323429.oYtFQFovjn"; micalg="pgp-sha512"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 19:48, Eric Dumazet <edumazet@google.com> wrote:
->
-> On Fri, Jan 31, 2020 at 10:43 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Jan 31, 2020 at 08:48:05AM -0800, Eric Dumazet wrote:
-> > >     BUG: KCSAN: data-race in del_timer / detach_if_pending
-> >
-> > > diff --git a/include/linux/timer.h b/include/linux/timer.h
-> > > index 1e6650ed066d5d28251b0bd385fc37ef94c96532..0dc19a8c39c9e49a7cde3d34bfa4be8871cbc1c2
-> > > 100644
-> > > --- a/include/linux/timer.h
-> > > +++ b/include/linux/timer.h
-> > > @@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct
-> > > timer_list *timer) { }
-> > >   */
-> > >  static inline int timer_pending(const struct timer_list * timer)
-> > >  {
-> > > - return timer->entry.pprev != NULL;
-> > > + return !hlist_unhashed_lockless(&timer->entry);
-> > >  }
-> >
-> > That's just completely wrong.
-> >
-> > Aside from any memory barrier issues that might or might not be there
-> > (I'm waaaay to tired atm to tell), the above code is perfectly fine.
-> >
-> > In fact, this is a KCSAN compiler infrastructure 'bug'.
-> >
-> > Any load that is only compared to zero is immune to load-tearing issues.
+--nextPart5323429.oYtFQFovjn
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-We're not just fighting load-tearing, but also other compiler
-optimizations. Eric pointed out the loop case:
+On Friday, 31 January 2020 18:58:13 CET syzbot wrote:
+[...]
+> HEAD commit:    686a4f77 kmsan: don't compile memmove
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10b1da4ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e10654781bc1f11c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=37bad4f9cb2033876f32
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=102be0a1e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123105a5e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+37bad4f9cb2033876f32@syzkaller.appspotmail.com
+> 
+> =====================================================
+> BUG: KMSAN: uninit-value in batadv_bla_tx+0x2675/0x3730 net/batman-adv/bridge_loop_avoidance.c:1960
+> CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.5.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+[...]
 
-while (!timer_pending(..)) { }
+Looks like the same problem in HSR as 
+ https://syzkaller.appspot.com/bug?extid=24458cef7d37351dd0c3
 
-Without a READ_ONCE, the compiler can turn this into:
+#syz dup: KMSAN: uninit-value in batadv_interface_tx (2)
 
-if (!timer_pending(..)) {
-  while (true) { }
-}
+Kind regards,
+	Sven
+--nextPart5323429.oYtFQFovjn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-So, unless we can enumerate all possible cases in which a compare to 0
-data race can occur, and prove they're all safe for all compiler
-optimizations, could we plase not claim it's a general KCSAN compiler
-infrastructure bug.
+-----BEGIN PGP SIGNATURE-----
 
-This also makes me second-guess if the osq_lock case is safe (looking
-at it, I think it's still safe, but only because the surrounding ops
-imply compiler barriers and the compiler then won't mess up the loop).
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl40fokACgkQXYcKB8Em
+e0YVug/+Lq5g6TG+P5pDoP29Gwz/VR393Sy1CVg08+qKhg4xaXgYCd/N+qdrhHFL
+9nF44JbNEcTr56+hwr382xo9Er5dwmPt2bdWqQfmg7p3gcdgNunW6E2fepA8gbrK
+Xs4FQC2nmLhIS0xFPEOq39RsaCg+fuwvqufInXiG65FjasecPqqmHL8bJjsxmWK0
+OJKqANFKtmLc47bvDhY8iln3snvRdqVCoT35QKkGYaCmHmOSR6029idnAXpU/4Mm
+8feJ1z6oN3InoX41CHbeonATimjUvTwNuQ7w6BcrixzIACh/dM+xFEoeeaoXeFYb
+ym6WH5v2e4LjrI5HkoHNqvsPAIeh/VTdvTLNEmzqhISzLZjhX4SJKE9wjIZzP7qI
+ifpcRFI4a5rzedS+HzOAP417UIqXcLwVqWEWmN8F/VljEWI/ZR3LCzeNFDSzujBh
+Dy+0p/te5IpWgBhAtEDfkcME1PjFIZrQSQo8DwTEE2ZrBc7rID0kmsc3m2xDcoHZ
+44pdVRptM6IzSfqqdKyODB2/Q+6rusCWNFLhO9dVshacYN1MOvQzbtqQ63+TpbAe
+0RqtaQGYRRhnM54tO5Ms7AzayWftal2zra2ftyFWtsok6THqNxRvYNCXiB8NGFch
+VJl/HZFnh+RbgP6DnCqT0GxXpd9dEnrr/VXSq3XRsTf7rk5OR+A=
+=fZ5+
+-----END PGP SIGNATURE-----
 
-> > The correct thing to do here is something like:
-> >
-> > static inline int timer_pending(const struct timer_list *timer)
-> > {
-> >         /*
-> >          * KCSAN compiler infrastructure is insuffiently clever to
-> >          * realize that a 'load compared to zero' is immune to
-> >          * load-tearing.
-> >          */
+--nextPart5323429.oYtFQFovjn--
 
-I could agree with this if we knew the context in which this is used.
-Unfortunately we do not know the context (unlike osq_lock), and for
-all we know it could be used in a loop.
 
-> >         return data_race(timer->entry.pprev != NULL);
-> > }
->
->
-> This is nice, now with have data_race()
 
-Again, if you use 'data_race()' you'll have to prove that it'll be
-safe in all cases, for all compiler versions current and present. The
-READ_ONCE would take that burden from you.
-
-Thanks,
--- Marco
-
-> Remember these patches were sent 2 months ago, at a time we were
-> trying to sort out things.
->
-> data_race() was merged a few days ago.
