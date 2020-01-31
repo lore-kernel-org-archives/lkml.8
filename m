@@ -2,173 +2,121 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B007BC35246
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E3C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845DF2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F682082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9njLTaN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os6JbUIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgAaWQy (ORCPT
+        id S1726567AbgAaWSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:16:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46072 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgAaWQt (ORCPT
+        Fri, 31 Jan 2020 17:18:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55324 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgAaWSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:16:49 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a6so10376647wrx.12;
-        Fri, 31 Jan 2020 14:16:48 -0800 (PST)
+        Fri, 31 Jan 2020 17:18:06 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so9715376wmj.5;
+        Fri, 31 Jan 2020 14:18:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=qnyUc6ol87k8+efpVeEpe7PR5Szno0jpYJYIrJc5/NI=;
-        b=g9njLTaNFaO0QIt4QHgnSwDWvQgubQIAU6zPZVqvO+0FzmKIfflLHNmYUO+lr9mNfU
-         pUVCFVhPTeyZys15k54WaJn7IOuk14M4NF37ZqLdZsAR8kHpH4QpqMbN7qaXCy8qkA+C
-         I2HnAMjI6gwPDdCwmYTyOc3A0nt0+E/EjgCdx0AkDodQAVxUsT0sqRYuT6c2/jdQRXV7
-         aH3vTnLmhro6eD2VSDOlXaHCXmNr87LQCwcp/IWh3GpuXgA7YvpPvuaWTAK6QeJYc2Ja
-         x4oDrZX3LqDnVhf0v5jyMuhma4pShQdZ3NbdOUD5n0HNJLB5UTNzSKngsjnOmsMhqeJx
-         GjeA==
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=iqoYY1hW3kdx2QTMgrt5T8EFx7fh9shlLkm6TPn+Nq8=;
+        b=Os6JbUIjHXfaXBEu9c9EqSpZ96YN7SS0b3HdKsSGYY07ObLpQBrrdatpCjN2SRobYS
+         7MNbPX6Xt9WQbnPSQfvz38HRv1y9lt5rAq0ShYXiqbG21WI4+G4UUIGeFtOLuUlaFYI4
+         lZ3xs5yDj0rFFEIyRzQIOrmksKIDwQtmWnfXsWTk9eeRFjgDhiiJ5ee+8Qe0bs/uD7om
+         P1LcR6U2YTW2pqNX7fTW9PcfWP7XIzww3EOkMcVO2ZDuBdhHBPjcUEWHPv4raZ06YYTr
+         Z5LcE7kYkroOzE8NwasYOmy1MVpEk58WGeTYoDSuG/ObaRNu/BYXbqTm+CyRUbpa4ASc
+         CZVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qnyUc6ol87k8+efpVeEpe7PR5Szno0jpYJYIrJc5/NI=;
-        b=IeTInHWyWROrxkXfSHm/1ZIPtk8D7Sb2O6hb53OH/J2aczdW4yPBYgrVOcAmR3Wygt
-         D1WOQwwbNQtPt2UWt24eVBEjMkBvm3uDrncGRTk/YVvyApI5UwCTd7L3z+kx62a5L4RG
-         rtjfcZamhno0kT0OjsCbYQQGLpGWShofheJEYmsWPcntOMleG6waOWcWwYuhuOd/Lg97
-         u34gs3Vfdftc/pvhb+lO8m7jpHm0Cc1f4LgF/PoB8+ra6vxEnPq0xYht7sk7UamzUg7b
-         SQvLOvFkvzDTVRkHhEMW2U2hnF0YjBQMp4mfNR/SrQw2ceS8rhdtjSZgAUSC8FDsW02v
-         uaZg==
-X-Gm-Message-State: APjAAAUrze8Abcmxu+ZtsqDdDd/L7xqpCf2dMCbGVbsFbHNYnCGwMblm
-        MnDQkNd3eCOHP+rV0lqzZaI=
-X-Google-Smtp-Source: APXvYqw63tAwR5aBfC2d8a73AYspsQaLn7Job68gOmGLNLRZB/3SXQ+kUH1rp8lIqmG/QcanDykJbg==
-X-Received: by 2002:adf:d4c7:: with SMTP id w7mr117403wrk.101.1580509008279;
-        Fri, 31 Jan 2020 14:16:48 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id e6sm12328001wme.3.2020.01.31.14.16.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=iqoYY1hW3kdx2QTMgrt5T8EFx7fh9shlLkm6TPn+Nq8=;
+        b=O3hqcCeeSCrtoM4lKFwk2U9HPdjYzf9nIqQ4gAPZMMIEL5JVRrqYTrNaL4uM23+UWX
+         SxUDcDX+GMi71k5FoVpfErYDCFRPGhDQHFXRyR3TamJIsrpuJRCForGXSg7frTGyTi44
+         v0ghL8VBIv+Ea1bRlOy127dpT6HybXseZcf/0+H8dIQrP61pDyFmUJftS/bOSFPi1ioG
+         5iSQiJqBuEOZBzhKCEm+bgKpyevv4CGuabU9YxuAQyedHSRh/FvYw8FxKS+oh4Nd0dzJ
+         lOWW1yRN9eQN3nHnhj3pNKQwZEOMWy8sojGcm9/9IV5wnme3QBpXnYjnadJfjHdE4d5Q
+         B5nA==
+X-Gm-Message-State: APjAAAWZJeir1tgFs8rp7DbFZO0GguK9FP69bk8P1c2E+9WmWFRgQwrf
+        MaqTOFgpryX/Om+mrM+ejy4=
+X-Google-Smtp-Source: APXvYqwrG3rZV6UDSX/Z7ca/bTaf+lU6ATSKe+xRWTbHjL7pQYUeRdmIBwZo72yMufMP+kIoZzO4hA==
+X-Received: by 2002:a7b:c416:: with SMTP id k22mr14769649wmi.10.1580509083399;
+        Fri, 31 Jan 2020 14:18:03 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:bcd7:b36c:40fc:d163])
+        by smtp.gmail.com with ESMTPSA id g15sm6053391wro.65.2020.01.31.14.18.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 14:16:47 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] io_uring: move ring_fd into io_submit_state
-Date:   Sat,  1 Feb 2020 01:15:52 +0300
-Message-Id: <b5f01a0c66b53f5bdc503fb0fbda848dbd6d3ece.1580508735.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1580508735.git.asml.silence@gmail.com>
-References: <cover.1580508735.git.asml.silence@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jan 2020 14:18:02 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Neal Cardwell <ncardwell@google.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>, sjpark@amazon.com,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>, shuah@kernel.org,
+        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
+        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
+        Yuchung Cheng <ycheng@google.com>
+Subject: Re: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
+Date:   Fri, 31 Jan 2020 23:17:55 +0100
+Message-Id: <20200131221755.3874-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ring_fd and ring_file are set per submission, so move them into
-the submission state.
+On Fri, 31 Jan 2020 17:11:35 -0500 Neal Cardwell <ncardwell@google.com> wrote:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+> On Fri, Jan 31, 2020 at 1:12 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >
+> >
+> >
+> > On 1/31/20 7:10 AM, Neal Cardwell wrote:
+> > > On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
+> > >>
+> > >> From: SeongJae Park <sjpark@amazon.de>
+> > >>
+> > >> When closing a connection, the two acks that required to change closing
+> > >> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
+> > >> reverse order.  This is possible in RSS disabled environments such as a
+> > >> connection inside a host.
+[...]
+> 
+> I looked into fixing this, but my quick reading of the Linux
+> tcp_rcv_state_process() code is that it should behave correctly and
+> that a connection in FIN_WAIT_1 that receives a FIN/ACK should move to
+> TIME_WAIT.
+> 
+> SeongJae, do you happen to have a tcpdump trace of the problematic
+> sequence where the "process A" ends up in FIN_WAIT_2 when it should be
+> in TIME_WAIT?
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 6109969709ff..725e852e22c5 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -216,6 +216,9 @@ struct io_submit_state {
- 	unsigned int		has_refs;
- 	unsigned int		used_refs;
- 	unsigned int		ios_left;
-+
-+	struct file		*ring_file;
-+	int			ring_fd;
- };
- 
- struct io_ring_ctx {
-@@ -274,8 +277,6 @@ struct io_ring_ctx {
- 	 */
- 	struct fixed_file_data	*file_data;
- 	unsigned		nr_user_files;
--	int 			ring_fd;
--	struct file 		*ring_file;
- 
- 	/* if used, fixed mapped user buffers */
- 	unsigned		nr_user_bufs;
-@@ -2822,7 +2823,7 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 
- 	req->close.fd = READ_ONCE(sqe->fd);
- 	if (req->file->f_op == &io_uring_fops ||
--	    req->close.fd == req->ctx->ring_fd)
-+	    req->close.fd == req->ctx->submit_state.ring_fd)
- 		return -EBADF;
- 
- 	return 0;
-@@ -4517,10 +4518,11 @@ static int io_grab_files(struct io_kiocb *req)
- {
- 	int ret = -EBADF;
- 	struct io_ring_ctx *ctx = req->ctx;
-+	struct io_submit_state *state = &ctx->submit_state;
- 
- 	if (req->work.files)
- 		return 0;
--	if (!ctx->ring_file)
-+	if (!state->ring_file)
- 		return -EBADF;
- 
- 	rcu_read_lock();
-@@ -4531,7 +4533,7 @@ static int io_grab_files(struct io_kiocb *req)
- 	 * the fd has changed since we started down this path, and disallow
- 	 * this operation if it has.
- 	 */
--	if (fcheck(ctx->ring_fd) == ctx->ring_file) {
-+	if (fcheck(state->ring_fd) == state->ring_file) {
- 		list_add(&req->inflight_entry, &ctx->inflight_list);
- 		req->flags |= REQ_F_INFLIGHT;
- 		req->work.files = current->files;
-@@ -4839,13 +4841,17 @@ static void io_submit_end(struct io_ring_ctx *ctx)
- /*
-  * Start submission side cache.
-  */
--static void io_submit_start(struct io_ring_ctx *ctx, unsigned int max_ios)
-+static void io_submit_start(struct io_ring_ctx *ctx, unsigned int max_ios,
-+			    struct file *ring_file, int ring_fd)
- {
- 	struct io_submit_state *state = &ctx->submit_state;
- 
- 	state->free_reqs = 0;
- 	state->file = NULL;
- 	state->ios_left = max_ios;
-+
-+	state->ring_file = ring_file;
-+	state->ring_fd = ring_fd;
- }
- 
- static void io_commit_sqring(struct io_ring_ctx *ctx)
-@@ -4926,13 +4932,10 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	if (!percpu_ref_tryget_many(&ctx->refs, nr))
- 		return -EAGAIN;
- 
--	io_submit_start(ctx, nr);
-+	io_submit_start(ctx, nr, ring_file, ring_fd);
- 	if (nr > IO_PLUG_THRESHOLD)
- 		blk_start_plug(&plug);
- 
--	ctx->ring_fd = ring_fd;
--	ctx->ring_file = ring_file;
--
- 	for (i = 0; i < nr; i++) {
- 		const struct io_uring_sqe *sqe;
- 		struct io_kiocb *req;
--- 
-2.24.0
+Hi Neal,
 
+
+Yes, I have.  You can get it from the previous discussion for this patchset
+(https://lore.kernel.org/bpf/20200129171403.3926-1-sjpark@amazon.com/).  As it
+also has a reproducer program and how I got the tcpdump trace, I believe you
+could get your own trace, too.  If you have any question or need help, feel
+free to let me know. :)
+
+
+Thanks,
+SeongJae Park
+
+> 
+> If I have time I will try to construct a packetdrill case to verify
+> the behavior in this case.
+> 
+> thanks,
+> neal
+> 
+> >
