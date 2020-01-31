@@ -2,163 +2,176 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0BEC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E434C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B99B206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lhEzQqYW";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CSOVluFq"
+	by mail.kernel.org (Postfix) with ESMTP id 7112D206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgAaSXB (ORCPT
+        id S1726104AbgAaSZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:23:01 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:11226 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725907AbgAaSXA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:23:00 -0500
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VIMkCE027561;
-        Fri, 31 Jan 2020 10:22:49 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Xiaz9/LlFg3C06Ys+0TRMc4V7B558jix6tavvkbw840=;
- b=lhEzQqYW3necwpN5aNVv0LZ85DPZ6Y2/0QUs2UxAihD8XG0g0zH+sYLu+nI89IqvhBiP
- uEWZqf7Hm3JEbVJKRnQoztjiN55uA2hSl891wgS3aDUgNJAEgSeDBXxHto9sVU2FLBm/
- MdO9cfPP7F4UaA88D4dZxp4aoowtZrtC29U= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xvrt1870q-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 31 Jan 2020 10:22:49 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 31 Jan 2020 10:22:48 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NYSokK9V3U/Fl6RCKgLNDdEgPbrGDjl0Yo42DATf1HUSm2BDt5McWN6jAmrqcWlzh/7AOgqZSJospPxCk9K7rLheO4BuiRbs6cv9ptm6JH6txXqLyZ4MIF2UErqosYTAJt0Ev2Uct65dSBuLmv/KTgFqFcQuXAy+ESzquI5iT+7AKo9yKX66HzbRmFJ66Zp7LHWWRJ7xD5i2vW3oNjhMggKyaTh2cwxOona3kYEzBOrKvefA+GbrEV5ElqAV9/Zf23UeOCdgTAs9DF1mNQD10vbcm+WK1g3W6dQse2smW/PZ3z5FNreFs0ZeJZ0R2zM6/3CFLc3mK76ZMYbesF0IBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xiaz9/LlFg3C06Ys+0TRMc4V7B558jix6tavvkbw840=;
- b=KPWsDT59fj33a0kMskUYnMBS01ogEGiNkUZMKkJrCHfGkeO13JmKj4LtQnj1ZekSkto8LOMsFuyhb/rygF+XskirYjzAZEy0HnKsQZRANh7x4S14pVGwY3XKDL9HBwrvBuHgWgiwskRArbAFRtvGP3kVFM5IJ6a4gGdgr7kfNr12V7dic9j8EkIh5F6jnocwmMZMA3lhTQn/VQmVtH4j5qgzncNSu1u2QK3xoZ/vDILz6ZBMFND8T3AvvJSmBovjR1YjNX6yLdTb0qvLtkmSp7d92/xnTAnVOAMlSUmQTyEkmZt8y727ngJLQFsBuTRg5G0Gw5Cj/cNPY0bkkEGL1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xiaz9/LlFg3C06Ys+0TRMc4V7B558jix6tavvkbw840=;
- b=CSOVluFqU3XW6rE/zS+C7VHEdMycgdNWF5s7mlOtuXYky0fxWqeOkbAjM23Uq8DkbKa2uU+MXRjThHimkXfgDCaTzFScsACn7X0wAiFSLX2DDzEYEVfuSxqmbgSXEHzsvI3Ix9TcQVwc+PZYdIrFgfFGu3ADSIvo7HO5iXVka+w=
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
- MWHPR15MB1790.namprd15.prod.outlook.com (10.174.97.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Fri, 31 Jan 2020 18:22:47 +0000
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2%8]) with mapi id 15.20.2665.027; Fri, 31 Jan 2020
- 18:22:47 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Joel Stanley <joel@jms.id.au>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: tiogapass: Add IPMB device
-Thread-Topic: [PATCH] ARM: dts: aspeed: tiogapass: Add IPMB device
-Thread-Index: AQHV1XjWQiejjW2+wkaLhJtkMVfWlqgEKdkAgABr9wA=
-Date:   Fri, 31 Jan 2020 18:22:47 +0000
-Message-ID: <65448810-933F-4954-A24E-645A32A85E96@fb.com>
-References: <20200128011728.4092945-1-vijaykhemka@fb.com>
- <CACPK8Xc6TbHLgWO3p7YXJf+jfzNhiGzGsdDwQsQ56ix8sUQGzg@mail.gmail.com>
-In-Reply-To: <CACPK8Xc6TbHLgWO3p7YXJf+jfzNhiGzGsdDwQsQ56ix8sUQGzg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::3:652d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2cb094c-44c2-4802-cfbc-08d7a67a92ce
-x-ms-traffictypediagnostic: MWHPR15MB1790:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB1790BCCDB15A23F7E9B0040FDD070@MWHPR15MB1790.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 029976C540
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(136003)(396003)(346002)(376002)(199004)(189003)(71200400001)(86362001)(2906002)(2616005)(6512007)(5660300002)(186003)(6916009)(36756003)(54906003)(316002)(6506007)(66556008)(8676002)(76116006)(66946007)(66476007)(66446008)(64756008)(8936002)(81166006)(81156014)(33656002)(478600001)(6486002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1790;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZKBtpzhSqg6LGwM9FGwZ6TouwOQZ8vHZKonHFX6/LwMUpucOqAGz3ky9wvaMVVwrhDRSpn/ItQFG+3RCIOiTIimO0rn5KO3uaECi4BxZnRVbQAng9nBRJyQgCWk1LhbRENjWU0fl2xlP/3d5b7TZMbY89vVdqc/iNXrpH/sFrGX5NxzIa5zeL3bqSs4SBSuo11xL9evZJvv4wgy/zmd3jfnu1U4nTFNQl9ZQ0VetG5Ktxv0RROQZsIeLK8Q0YtKSL76TR8yR89Wl+dLucoCxMX8xmqAv5lQQJH8QMKAOESHOvZzlA8tCQhQ/NzdDCc/VBWCoJXQ7eDLJZYB1YpDSR67WVEcNH4qYi6VDCT7fQeXgSX3j1AvRM1SK6s/OuAnZqYQ+r9ETWodn6wMYKM8M9l/d70CRX6ireUJ01esJ6Ee755xqF0VB/lLPBg4k31io
-x-ms-exchange-antispam-messagedata: h+lVsTaG640vFQmM2QHP8xvyU2y/S6yjhsyrm5e2RigVm0S58tlETs349EcZWI040Vhn1Wewu/KWFk7SxEkfSN3zUl3TBw3YcbjNDQ0iw0Fgyuj2L+vZS+gLdtMmGKenbTyRMd7a/wcX5jNywJSnkp2aAtCohNcqN4WB3rRooik6AuWoDvesGaTw8AmkEBm+
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2978FF1FEE44D94C8106BB5351E2AF81@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 31 Jan 2020 13:25:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:38206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgAaSZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 13:25:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0E97FEC;
+        Fri, 31 Jan 2020 10:25:12 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BB963F68E;
+        Fri, 31 Jan 2020 10:25:10 -0800 (PST)
+Subject: Re: [PATCH v2 0/7] Introduce bus firewall controller framework
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>,
+        "lkml@metux.net" <lkml@metux.net>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "system-dt@lists.openampproject.org" 
+        <system-dt@lists.openampproject.org>,
+        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20200128153806.7780-1-benjamin.gaignard@st.com>
+ <20200128163628.GB30489@bogus> <7f54ec36-8022-a57a-c634-45257f4c6984@st.com>
+ <20200128171639.GA36496@bogus> <26eb1fde-5408-43f0-ccba-f0c81e791f54@st.com>
+ <6a6ba7ff-7ed9-e573-63ca-66fca609075b@arm.com>
+ <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3624ec3e-b06a-907d-ebfa-8516b14cb306@arm.com>
+Date:   Fri, 31 Jan 2020 18:25:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2cb094c-44c2-4802-cfbc-08d7a67a92ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2020 18:22:47.4533
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 41RIDzLvOokwBa55VryXy94IoQpPW4jGF3RrzAqqooJHIw7EM7ovaueBU4PGCUvyp0yBYP23Jq1kqGzPjWCtVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1790
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-31_05:2020-01-31,2020-01-31 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001310151
-X-FB-Internal: deliver
+In-Reply-To: <c4d5c46a-7f90-ff2b-9496-26102114c5e6@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDEvMzAvMjAsIDc6NTYgUE0sICJKb2VsIFN0YW5sZXkiIDxqb2VsQGptcy5pZC5h
-dT4gd3JvdGU6DQoNCiAgICBPbiBUdWUsIDI4IEphbiAyMDIwIGF0IDAxOjE3LCBWaWpheSBLaGVt
-a2EgPHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQogICAgPg0KICAgID4gQWRkaW5nIElQTUIg
-ZGV2aWNlcyBmb3IgZmFjZWJvb2sgdGlvZ2FwYXNzIHBsYXRmb3JtLg0KICAgID4NCiAgICA+IFNp
-Z25lZC1vZmYtYnk6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgIA0KICAg
-IFJldmlld2VkLWJ5OiBKb2VsIFN0YW5sZXkgPGpvZWxAam1zLmlkLmF1Pg0KICAgIA0KICAgIEkg
-d2lsbCBtZXJnZSB0aGlzIHRocm91Z2ggdGhlIGFzcGVlZCB0cmVlIGZvciA1LjcuDQoNClRoYW5r
-cyBKb2VsLg0KICAgIA0KICAgIENoZWVycywNCiAgICANCiAgICBKb2VsDQogICAgDQogICAgPiAt
-LS0NCiAgICA+ICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFz
-cy5kdHMgfCAxMSArKysrKysrKysrKw0KICAgID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
-b25zKCspDQogICAgPg0KICAgID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVl
-ZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1i
-bWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgID4gaW5kZXggZmI3ZjAzNGQ1ZGIyLi43MTlj
-MTMwYTE5OGMgMTAwNjQ0DQogICAgPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1j
-LWZhY2Vib29rLXRpb2dhcGFzcy5kdHMNCiAgICA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Fz
-cGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgID4gQEAgLTUsNiArNSw3IEBADQog
-ICAgPg0KICAgID4gICNpbmNsdWRlICJhc3BlZWQtZzUuZHRzaSINCiAgICA+ICAjaW5jbHVkZSA8
-ZHQtYmluZGluZ3MvZ3Bpby9hc3BlZWQtZ3Bpby5oPg0KICAgID4gKyNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9pMmMvaTJjLmg+DQogICAgPg0KICAgID4gIC8gew0KICAgID4gICAgICAgICBtb2RlbCA9
-ICJGYWNlYm9vayBUaW9nYVBhc3MgQk1DIjsNCiAgICA+IEBAIC00MjgsNiArNDI5LDExIEBADQog
-ICAgPiAgJmkyYzQgew0KICAgID4gICAgICAgICBzdGF0dXMgPSAib2theSI7DQogICAgPiAgICAg
-ICAgIC8vIEJNQyBEZWJ1ZyBIZWFkZXINCiAgICA+ICsgICAgICAgaXBtYjBAMTAgew0KICAgID4g
-KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiaXBtYi1kZXYiOw0KICAgID4gKyAgICAgICAg
-ICAgICAgIHJlZyA9IDwoMHgxMCB8IEkyQ19PV05fU0xBVkVfQUREUkVTUyk+Ow0KICAgID4gKyAg
-ICAgICAgICAgICAgIGkyYy1wcm90b2NvbDsNCiAgICA+ICsgICAgICAgfTsNCiAgICA+ICB9Ow0K
-ICAgID4NCiAgICA+ICAmaTJjNSB7DQogICAgPiBAQCAtNTA5LDYgKzUxNSwxMSBAQA0KICAgID4g
-ICZpMmM5IHsNCiAgICA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KICAgID4gICAgICAgICAv
-L1VTQiBEZWJ1ZyBDb25uZWN0b3INCiAgICA+ICsgICAgICAgaXBtYjBAMTAgew0KICAgID4gKyAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiaXBtYi1kZXYiOw0KICAgID4gKyAgICAgICAgICAg
-ICAgIHJlZyA9IDwoMHgxMCB8IEkyQ19PV05fU0xBVkVfQUREUkVTUyk+Ow0KICAgID4gKyAgICAg
-ICAgICAgICAgIGkyYy1wcm90b2NvbDsNCiAgICA+ICsgICAgICAgfTsNCiAgICA+ICB9Ow0KICAg
-ID4NCiAgICA+ICAmcHdtX3RhY2hvIHsNCiAgICA+IC0tDQogICAgPiAyLjE3LjENCiAgICA+DQog
-ICAgDQoNCg==
+On 29/01/2020 1:40 pm, Benjamin GAIGNARD wrote:
+> 
+> On 1/28/20 11:06 PM, Robin Murphy wrote:
+>> On 2020-01-28 8:06 pm, Benjamin GAIGNARD wrote:
+>>>
+>>> On 1/28/20 6:17 PM, Sudeep Holla wrote:
+>>>> On Tue, Jan 28, 2020 at 04:46:41PM +0000, Benjamin GAIGNARD wrote:
+>>>>> On 1/28/20 5:36 PM, Sudeep Holla wrote:
+>>>>>> On Tue, Jan 28, 2020 at 04:37:59PM +0100, Benjamin Gaignard wrote:
+>>>>>>> Bus firewall framework aims to provide a kernel API to set the
+>>>>>>> configuration
+>>>>>>> of the harware blocks in charge of busses access control.
+>>>>>>>
+>>>>>>> Framework architecture is inspirated by pinctrl framework:
+>>>>>>> - a default configuration could be applied before bind the driver.
+>>>>>>>       If a configuration could not be applied the driver is not bind
+>>>>>>>       to avoid doing accesses on prohibited regions.
+>>>>>>> - configurations could be apllied dynamically by drivers.
+>>>>>>> - device node provides the bus firewall configurations.
+>>>>>>>
+>>>>>>> An example of bus firewall controller is STM32 ETZPC hardware block
+>>>>>>> which got 3 possible configurations:
+>>>>>>> - trust: hardware blocks are only accessible by software running
+>>>>>>> on trust
+>>>>>>>       zone (i.e op-tee firmware).
+>>>>>>> - non-secure: hardware blocks are accessible by non-secure
+>>>>>>> software (i.e.
+>>>>>>>       linux kernel).
+>>>>>>> - coprocessor: hardware blocks are only accessible by the
+>>>>>>> coprocessor.
+>>>>>>> Up to 94 hardware blocks of the soc could be managed by ETZPC.
+>>>>>>>
+>>>>>> /me confused. Is ETZPC accessible from the non-secure kernel space to
+>>>>>> begin with ? If so, is it allowed to configure hardware blocks as
+>>>>>> secure
+>>>>>> or trusted ? I am failing to understand the overall design of a
+>>>>>> system
+>>>>>> with ETZPC controller.
+>>>>> Non-secure kernel could read the values set in ETZPC, if it doesn't
+>>>>> match
+>>>>> with what is required by the device node the driver won't be probed.
+>>>>>
+>>>> OK, but I was under the impression that it was made clear that Linux is
+>>>> not firmware validation suite. The firmware need to ensure all the
+>>>> devices
+>>>> that are not accessible in the Linux kernel are marked as disabled and
+>>>> this needs to happen before entering the kernel. So if this is what
+>>>> this
+>>>> patch series achieves, then there is no need for it. Please stop
+>>>> pursuing
+>>>> this any further or provide any other reasons(if any) to have it. Until
+>>>> you have other reasons, NACK for this series.
+>>>
+>>> No it doesn't disable the nodes.
+>>>
+>>> When the firmware disable a node before the kernel that means it change
+>>>
+>>> the DTB and that is a problem when you want to sign it. With my proposal
+>>>
+>>> the DTB remains the same.
+>>
+>> ???
+>>
+>> :/
+>>
+>> The DTB is used to pass the kernel command line, memory reservations,
+>> random seeds, and all manner of other things dynamically generated by
+>> firmware at boot-time. Apologies for being blunt but if "changing the
+>> DTB" is considered a problem then I can't help but think you're doing
+>> it wrong.
+> 
+> Yes but I would like to limit the number of cases where a firmware has
+> to change the DTB.
+
+Sure, but unless you can limit that number to strictly zero, then 
+presumably the firmware must have the general capability to verify, 
+modify, and re-sign a DTB. At that point having it also tweak the status 
+of nodes that it wants for itself doesn't seem like a particularly big ask.
+
+> With this proposal nodes remain the same and embedded the firewall
+> configuration(s).
+> 
+> Until now firewall configuration is "static", the firmware disable (or
+> remove) the nodes not accessible from Linux.
+> 
+> If Linux can rely on node's firewall information it could allow switch
+> dynamically an hardware block from Linux to a coprocessor.
+> 
+> For example Linux could manage the display pipe configuration and when
+> going to suspend handover the display hardware block to a coprocessor in
+> charge a refreshing only some pixels.
+
+And like I'm sure I said before, the interface between Linux and the 
+Secure environment to ultimately achieve that will almost certainly make 
+inspecting a passive status bit in a register redundant anyway.
+
+In the interest of being productive, though, there is another way of 
+looking at this. If we drop the pretence that it's in any way generic or 
+ever going to be relevant beyond certain configurations of certain 
+STMicro SoCs, then in plain terms it's just some block of MMIO registers 
+that have *something* to do with various other devices. At that point, 
+the answer is just to treat it as a syscon and make the relevant drivers 
+for those SoCs aware of it. I'm most familiar with the "General Register 
+File" on Rockchip SoCs as a prime example of "bunch of registers that 
+relate to the integration of various IP blocks", which manages to be 
+supported just fine without invasive hooks in the driver core.
+
+Robin.
