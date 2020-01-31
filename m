@@ -2,132 +2,374 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4661CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C71C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22648206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C45206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FxgmDRkh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgAaKBp (ORCPT
+        id S1728347AbgAaKCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:01:45 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55343 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgAaKBo (ORCPT
+        Fri, 31 Jan 2020 05:02:18 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44302 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728160AbgAaKCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:01:44 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ixT7O-0002rj-2e; Fri, 31 Jan 2020 10:01:42 +0000
-To:     Ariel Elior <aelior@marvell.com>, GR-everest-linux-l2@marvell.com,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Michal Kalderon <michal.kalderon@marvell.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: qed: FW 8.42.2.0 debug features
-Message-ID: <149f65ab-4d15-4b03-1620-a956cff10388@canonical.com>
-Date:   Fri, 31 Jan 2020 10:01:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 05:02:17 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V9rRHf027923;
+        Fri, 31 Jan 2020 11:02:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=shAlB5Zq6pf7bSoaz6Q42GCr4lfBiw4RfT9RTeJfkx0=;
+ b=FxgmDRkhdFK5Mqacalo1PPlsCoUzqB5h7U3dM0Yr9vdTiyfoIJBebK5IaIH8uIgBpChK
+ EqPDq6IvkL9l9JR0MOKCYc9iVn/B37F+chmxLvRLaNlf/1cc9ZKcMJ8NYP8w4hmROnbh
+ 85db5qZOJkM9L0hJHWFT+skwSJZB4NGIe7yEBosNHnlUW/PgF+EPzt+hH7rZ3ZIVFL1T
+ 56FU5oMAEf8dX+iPR+fLp+q0IJ0fx6GL+z/FZGGbtA3iBrKLUABx3+bKHBxw3mVvCmvM
+ EIK1qFMwYkV22z630axDwoaud9SIOeSpIyupl4vV7h6jUjoNU0c6upSjB+Bz8j01aJhC Cw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdekw4qw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 11:02:03 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A8E84100040;
+        Fri, 31 Jan 2020 11:01:34 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5B4A52A598A;
+        Fri, 31 Jan 2020 11:01:33 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 11:01:32
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <jani.nikula@linux.intel.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <lyude@redhat.com>
+Subject: [PATCH v5] drm/dp_mst: Fix W=1 warnings
+Date:   Fri, 31 Jan 2020 11:01:28 +0100
+Message-ID: <20200131100128.3927-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_02:2020-01-30,2020-01-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix the warnings that show up with W=1.
+They are all about unused but set variables.
+If functions returns are not used anymore make them void.
 
-Static analysis with Coverity detected an issue in the following commit:
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 5:
+- fix indentation
+  
+version 4:
+- do not touch crc4 unused variable in this patch
+CC: lyude@redhat.com
+CC: airlied@linux.ie
+CC: jani.nikula@linux.intel.com
 
-commit 2d22bc8354b15abe413dff76cfe0f7aeb88ef9aa
-Author: Michal Kalderon <michal.kalderon@marvell.com>
-Date:   Mon Jan 27 15:26:19 2020 +0200
+ drivers/gpu/drm/drm_dp_mst_topology.c | 92 +++++++++++++++--------------------
+ 1 file changed, 40 insertions(+), 52 deletions(-)
 
-    qed: FW 8.42.2.0 debug features
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 4104f15f4594..822d2f177f90 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -1034,7 +1034,8 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
+ 	}
+ }
+ 
+-static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
++static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg,
++			     u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -1044,17 +1045,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+ 	req.u.dpcd_write.num_bytes = num_bytes;
+ 	req.u.dpcd_write.bytes = bytes;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-
+-	return 0;
+ }
+ 
+-static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
++static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+ 	req.req_type = DP_LINK_ADDRESS;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-	return 0;
+ }
+ 
+ static int build_clear_payload_id_table(struct drm_dp_sideband_msg_tx *msg)
+@@ -1066,7 +1064,8 @@ static int build_clear_payload_id_table(struct drm_dp_sideband_msg_tx *msg)
+ 	return 0;
+ }
+ 
+-static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int port_num)
++static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg,
++				     int port_num)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -1077,10 +1076,11 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
+ 	return 0;
+ }
+ 
+-static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
+-				  u8 vcpi, uint16_t pbn,
+-				  u8 number_sdp_streams,
+-				  u8 *sdp_stream_sink)
++static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg,
++				   int port_num,
++				   u8 vcpi, uint16_t pbn,
++				   u8 number_sdp_streams,
++				   u8 *sdp_stream_sink)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 	memset(&req, 0, sizeof(req));
+@@ -1093,11 +1093,10 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
+ 		   number_sdp_streams);
+ 	drm_dp_encode_sideband_req(&req, msg);
+ 	msg->path_msg = true;
+-	return 0;
+ }
+ 
+-static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+-				  int port_num, bool power_up)
++static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
++				   int port_num, bool power_up)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -1109,7 +1108,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
+ 	req.u.port_num.port_number = port_num;
+ 	drm_dp_encode_sideband_req(&req, msg);
+ 	msg->path_msg = true;
+-	return 0;
+ }
+ 
+ static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
+@@ -2054,25 +2052,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
+ 
+ static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
+ {
+-	int ret;
+-
+ 	memcpy(mstb->guid, guid, 16);
+ 
+ 	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
+ 		if (mstb->port_parent) {
+-			ret = drm_dp_send_dpcd_write(
+-					mstb->mgr,
+-					mstb->port_parent,
+-					DP_GUID,
+-					16,
+-					mstb->guid);
++			drm_dp_send_dpcd_write(mstb->mgr,
++					       mstb->port_parent,
++					       DP_GUID,
++					       16,
++					       mstb->guid);
+ 		} else {
+-
+-			ret = drm_dp_dpcd_write(
+-					mstb->mgr->aux,
+-					DP_GUID,
+-					mstb->guid,
+-					16);
++			drm_dp_dpcd_write(mstb->mgr->aux,
++					  DP_GUID,
++					  mstb->guid,
++					  16);
+ 		}
+ 	}
+ }
+@@ -2595,7 +2588,8 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
+ 	return false;
+ }
+ 
+-static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
++static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg,
++			    u8 port_num, u32 offset, u8 num_bytes)
+ {
+ 	struct drm_dp_sideband_msg_req_body req;
+ 
+@@ -2604,8 +2598,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
+ 	req.u.dpcd_read.dpcd_address = offset;
+ 	req.u.dpcd_read.num_bytes = num_bytes;
+ 	drm_dp_encode_sideband_req(&req, msg);
+-
+-	return 0;
+ }
+ 
+ static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
+@@ -2828,7 +2820,7 @@ static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_link_address_ack_reply *reply;
+ 	struct drm_dp_mst_port *port, *tmp;
+-	int i, len, ret, port_mask = 0;
++	int i, ret, port_mask = 0;
+ 	bool changed = false;
+ 
+ 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+@@ -2836,7 +2828,7 @@ static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
+ 		return -ENOMEM;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_link_address(txmsg);
++	build_link_address(txmsg);
+ 
+ 	mstb->link_address_sent = true;
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -2898,14 +2890,14 @@ void drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
+ 					struct drm_dp_mst_branch *mstb)
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+-	int len, ret;
++	int ret;
+ 
+ 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+ 	if (!txmsg)
+ 		return;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_clear_payload_id_table(txmsg);
++	build_clear_payload_id_table(txmsg);
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+@@ -2923,7 +2915,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+ {
+ 	struct drm_dp_enum_path_resources_ack_reply *path_res;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+-	int len;
+ 	int ret;
+ 
+ 	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
+@@ -2931,7 +2922,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+ 		return -ENOMEM;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_enum_path_resources(txmsg, port->port_num);
++	build_enum_path_resources(txmsg, port->port_num);
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+@@ -3014,7 +3005,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+-	int len, ret, port_num;
++	int ret, port_num;
+ 	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
+ 	int i;
+ 
+@@ -3039,9 +3030,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
+ 		sinks[i] = i;
+ 
+ 	txmsg->dst = mstb;
+-	len = build_allocate_payload(txmsg, port_num,
+-				     id,
+-				     pbn, port->num_sdp_streams, sinks);
++	build_allocate_payload(txmsg, port_num,
++			       id,
++			       pbn, port->num_sdp_streams, sinks);
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+@@ -3070,7 +3061,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+ 				 struct drm_dp_mst_port *port, bool power_up)
+ {
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+-	int len, ret;
++	int ret;
+ 
+ 	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+ 	if (!port)
+@@ -3083,7 +3074,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
+ 	}
+ 
+ 	txmsg->dst = port->parent;
+-	len = build_power_updown_phy(txmsg, port->port_num, power_up);
++	build_power_updown_phy(txmsg, port->port_num, power_up);
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+ 
+ 	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
+@@ -3305,7 +3296,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+ 				 struct drm_dp_mst_port *port,
+ 				 int offset, int size, u8 *bytes)
+ {
+-	int len;
+ 	int ret = 0;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+@@ -3320,7 +3310,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
+ 		goto fail_put;
+ 	}
+ 
+-	len = build_dpcd_read(txmsg, port->port_num, offset, size);
++	build_dpcd_read(txmsg, port->port_num, offset, size);
+ 	txmsg->dst = port->parent;
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -3358,7 +3348,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+ 				  struct drm_dp_mst_port *port,
+ 				  int offset, int size, u8 *bytes)
+ {
+-	int len;
+ 	int ret;
+ 	struct drm_dp_sideband_msg_tx *txmsg;
+ 	struct drm_dp_mst_branch *mstb;
+@@ -3373,7 +3362,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
+ 		goto fail_put;
+ 	}
+ 
+-	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
++	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
+ 	txmsg->dst = mstb;
+ 
+ 	drm_dp_queue_down_tx(mgr, txmsg);
+@@ -4529,17 +4518,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
+ 	mutex_lock(&mgr->lock);
+ 	if (mgr->mst_primary) {
+ 		u8 buf[DP_PAYLOAD_TABLE_SIZE];
+-		int ret;
+ 
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
++		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
+ 		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
++		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
+ 		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
++		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
+ 		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
+ 
+ 		/* dump the standard OUI branch header */
+-		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
++		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
+ 		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
+ 		for (i = 0x3; i < 0x8 && buf[i]; i++)
+ 			seq_printf(m, "%c", buf[i]);
+-- 
+2.15.0
 
-Specifically, DBG_STATUS_NO_MATCHING_FRAMING_MODE was added to the enum
-dbg_status in drivers/net/ethernet/qlogic/qed/qed_hsi.h
-however the matching error message string was not added to array
-s_status_str in drivers/net/ethernet/qlogic/qed/qed_debug.c causing an
-out-of-bounds read on the array:
-
-7088 const char *qed_dbg_get_status_str(enum dbg_status status)
-7089 {
-
-    1. Condition status < MAX_DBG_STATUS, taking true branch.
-    2. cond_at_most: Checking status < MAX_DBG_STATUS implies that
-status may be up to 58 on the true branch.
-    Out-of-bounds read (OVERRUN)
-    3. overrun-local: Overrunning array s_status_str of 58 8-byte
-elements at element index 58 (byte offset 471) using index status (which
-evaluates to 58).
-
-7090        return (status <
-7091                MAX_DBG_STATUS) ? s_status_str[status] : "Invalid
-debug status";
-7092 }
-
-The array needs DBG_STATUS_NO_MATCHING_FRAMING_MODE added:
-
-        /* DBG_STATUS_INVALID_FILTER_TRIGGER_DWORDS */
-        "The filter/trigger constraint dword offsets are not enabled for
-recording",
-
-        /* Missing DBG_STATUS_NO_MATCHING_FRAMING_MODE text goes here */
-
-        /* DBG_STATUS_VFC_READ_ERROR */
-        "Error reading from VFC",
-
-Colin
