@@ -2,86 +2,68 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005BC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A64CC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508AA20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:17:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oeJKTlRO"
+	by mail.kernel.org (Postfix) with ESMTP id 71DEE2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580445063;
+	bh=uZiWpwqhJJIFoOh6oOyrVhIO6+ps2kiDc/pFktYcI74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aq4XK/lhkwpq6rGPNaX0wzHxex2Xgp/dDd5u2ir9giIvI19Nt/7HyHxUPwTfAo1gj
+	 tamX1AiJHeTFvuT3FqICRS0HkNmsX/FHYbsa0CfVTuD3zMI5nHXhJ8uFkXwnU7ZFCi
+	 TJK0m1XrECSi/m7EupjFY7ZIQrQueT9ZJtBfPUwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgAaERb (ORCPT
+        id S1728012AbgAaEbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 23:17:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38320 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgAaERb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 23:17:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GOXsueAz7MAGYj/tGaoCm1DRnieLB+/5Y9oR3WcxDO8=; b=oeJKTlRO6Y1HQOBzE9oO9nU6N
-        bJXX6gWzm/J1QIgPDHlSDLiqjqnmUJ+YDyCj2tBuwkVVcY8Ei2+r8nF2UolmkRUHNzXDL2KaQiZdL
-        aPZogUr0BU5RIfDtgRd0qGmuK922+kW0oIJ7jP2O3miyDfOm5QSCxNYxYEWlEnFUapJXApRu3VaH7
-        DwdPS+5Bb660bkOcR3fi1TwyFfxaduvkKoKmVMJF7d9CmcA5xqvZjt8nYhPrCGQErOEBkfg7ewAzG
-        FbwQK/s0Ptj1xM5Xgrpi8gcovUVnPcXwAH2iUIgbnq6WoW+vStbBnv77OMvh2Cpo650+A4s4HqdmZ
-        uu28Ea5XQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixNkI-0001Ar-0F; Fri, 31 Jan 2020 04:17:30 +0000
-Subject: Re: linux-next: build failure after merge of the origin tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200131151209.37e780f8@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <73f27df0-451f-d274-a7db-293cbf2c7690@infradead.org>
-Date:   Thu, 30 Jan 2020 20:17:28 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200131151209.37e780f8@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Thu, 30 Jan 2020 23:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727448AbgAaEbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 23:31:02 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1A9D2063A;
+        Fri, 31 Jan 2020 04:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580445060;
+        bh=uZiWpwqhJJIFoOh6oOyrVhIO6+ps2kiDc/pFktYcI74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g1ia/UUV3GOxmpxdGkHgkzKuoKrrAdkMFIURLpFGuzYyF29UdBvSL13o8lSLUd2ob
+         Ud1vo4HGjgXitj5QOkXrx6ptgMfb7i0usRDdFRh+povAp9c09UyOLA0AUW4qNCc9Cq
+         62jADYgFGn+av/WzqtOmTCEvRVYCnxBo/0jtooFU=
+Date:   Thu, 30 Jan 2020 20:30:59 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>
+Subject: Re: [PATCH v1 0/2] mm/page_alloc: memmap_init_zone() cleanups
+Message-Id: <20200130203059.32b48bb73bf0c8e9ee8470db@linux-foundation.org>
+In-Reply-To: <20200113144035.10848-1-david@redhat.com>
+References: <20200113144035.10848-1-david@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 8:12 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> [At Michael's suggestion I have started doing htmldocs builds at the
-> end of linux-next runs.  Unfortunately, this currently fails for Linus'
-> tree.]
-> 
-> In Linus' tree, today's linux-next build (htmldocs) failed like this:
-> 
-> docutils.utils.SystemMessage: Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
-> 
-> Caused by commit
-> 
->   0a1990a2d1f2 ("thermal/drivers/cpu_cooling: Add idle cooling device documentation")
+On Mon, 13 Jan 2020 15:40:33 +0100 David Hildenbrand <david@redhat.com> wrote:
+
+> Two cleanups for "[PATCH] mm/page_alloc: Skip non present sections on zone
+> initialization" [1], whereby one cleanup seems to also be a fix for a
+> (theoretial?) kernelcore=mirror case - unless I am messing something up :)
 > 
 
-
-I sent a patch for that on 2020-JAN-20 but no one has replied to the patch:
-
-https://lore.kernel.org/linux-pm/712c1152-56b5-307f-b3f3-ed03a30b804a@infradead.org/
-
-
--- 
-~Randy
-
+I'm not seeing any acks or reviewed-by's on these two?
