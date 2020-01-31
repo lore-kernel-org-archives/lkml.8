@@ -2,213 +2,169 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1316C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D889206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCBA206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l32bXeBl"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="unrLJr1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgAaREA (ORCPT
+        id S1726912AbgAaRFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:04:00 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37281 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgAaRD7 (ORCPT
+        Fri, 31 Jan 2020 12:05:42 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:17033 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgAaRFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:03:59 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so9541264wmf.2;
-        Fri, 31 Jan 2020 09:03:55 -0800 (PST)
+        Fri, 31 Jan 2020 12:05:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=58F7zyT4Gt8Jv+HIWHjnYuoDy/DyWZFGCw8VU7lvAUI=;
-        b=l32bXeBl3PPZjg3H/2Ky2j/j4vSJ9lz/G9I8SI76KfLLU3PWEC4FZRy1XjQ0F+jmEx
-         S8DAzO9koGaDWoUNUdv9FJ5sxEHb+7BpBU4vX3QvmDFvpagykw5UEO26F6rL5HDcUexy
-         yjHyFCoomOgJvGDVxacccLRIyrpB07mtO2njMUYrZAYcA1yKAP0NPLFBswpVChpyqHXL
-         HO0CBpHww3WRHeaG+4UcF2c39BmKJWoscB4KVptCHL/0OJSSZX/DrPgCuW5ldlc+Kk1S
-         Rg4/2Xn7Y4ryg+lq8C5ga1kkpCPLUfTkPBeqXy03+kHzzTcy8G4doKb+P9+UG4x62bqJ
-         +y5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=58F7zyT4Gt8Jv+HIWHjnYuoDy/DyWZFGCw8VU7lvAUI=;
-        b=Q5GOVW1oaolkBxsPmJGPeGHCbGjN/2HhlLo6DU/RNmNfTfQrwk0tH7Ar1dbhCE4uty
-         JwaJwMKFMJGFxiKcEp2tPyap1ODuBMcadWN7hYD1NlQTk1xSNcrd7Hf3OHBa4Nbff/Ws
-         Cq/Lx6YVFPxX+Yslc43HYlfgZK9eCE6fR2ifMmVL2xvr11rMwRI4BEVToFAdNPhUtny1
-         jOai7azw7Ac4Ujo8k8gdBXgv5GGKfczZBJlSWr+/nX82uz4AYBXjUqHudiMz46bhPwIE
-         72vuUXzQVCXnGqOFyB8cbUXEpmEEqSFVO6EJ738KmDsd2rwHCtK/IiswCGOKd6kEMwUb
-         e53A==
-X-Gm-Message-State: APjAAAWPOp++FCFcuMs7Nl+CN/HLAOkRYvEBD6DtN9oL1sTg/5DF3Kwz
-        gtrhwBvgPSI+zKi2lzWXdMlT9f0m
-X-Google-Smtp-Source: APXvYqy+KseS2b2EjbjXlyeRAfgSRMvISe6YqiG8AORffphYfX9BHb+/oyqC2D2eyQhH1ZOhER+AOw==
-X-Received: by 2002:a05:600c:299:: with SMTP id 25mr4007414wmk.68.1580490234575;
-        Fri, 31 Jan 2020 09:03:54 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id n1sm12324520wrw.52.2020.01.31.09.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 09:03:52 -0800 (PST)
-Date:   Fri, 31 Jan 2020 18:03:51 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
-Message-ID: <20200131170351.GA3444092@ulmo>
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
- <20200130154246.GA2904678@ulmo>
- <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1580490342; x=1612026342;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=Lp308P1N7kGC/rh/RrKm6hjiPc5fQG13jwWaLGsBMuc=;
+  b=unrLJr1JaaaLLLMi1EOr1ONSP3AOW+h/uiP6aNpw/gArQtveVMyGhLWR
+   JK9bu2XnbuHWeFK0MvqC8V8Kl/cTztoz8kkpYq4e2jkJ+TFIAmY/wHdOR
+   iXcSN2arLrtp5JuDz82281z75OY6oDIDGNtEet0Co0uaAm1/LGI3Z6A1+
+   s=;
+IronPort-SDR: hJOb1UZ9E4WP7nS7CRBi6GSs6l46cEbFUcWmYWKn1QHr4cDgWAU08NBVz4WIvmLvdoGz6yIOZ8
+ 0coMk6GYblHA==
+X-IronPort-AV: E=Sophos;i="5.70,386,1574121600"; 
+   d="scan'208";a="23645832"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 31 Jan 2020 17:05:30 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id BA1D7A060B;
+        Fri, 31 Jan 2020 17:05:26 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Fri, 31 Jan 2020 17:05:26 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.50) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 31 Jan 2020 17:05:21 +0000
+From:   <sjpark@amazon.com>
+To:     Eric Dumazet <edumazet@google.com>
+CC:     <sjpark@amazon.com>, David Miller <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>, netdev <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
+        <aams@amazon.com>, SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
+Date:   Fri, 31 Jan 2020 18:05:08 +0100
+Message-ID: <20200131170508.21323-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CANn89iJjZdoTKnnHNAByp7euDWo0aW9bL8ngw78vx4z7pwBJiw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Content-Disposition: inline
-In-Reply-To: <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.50]
+X-ClientProxiedBy: EX13D35UWC002.ant.amazon.com (10.43.162.218) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On   Fri, 31 Jan 2020 08:55:08 -0800   Eric Dumazet <edumazet@google.com> wrote:
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Jan 31, 2020 at 8:12 AM <sjpark@amazon.com> wrote:
+> >
+> > On Fri, 31 Jan 2020 07:01:21 -0800 Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > > On Fri, Jan 31, 2020 at 4:25 AM <sjpark@amazon.com> wrote:
+> > >
+> > > > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > > > ---
+> > > >  net/ipv4/tcp_input.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > > index 2a976f57f7e7..b168e29e1ad1 100644
+> > > > --- a/net/ipv4/tcp_input.c
+> > > > +++ b/net/ipv4/tcp_input.c
+> > > > @@ -5893,8 +5893,12 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
+> > > >                  *        the segment and return)"
+> > > >                  */
+> > > >                 if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
+> > > > -                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
+> > > > +                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
+> > > > +                       /* Previous FIN/ACK or RST/ACK might be ignore. */
+> > > > +                       inet_csk_reset_xmit_timer(sk, ICSK_TIME_RETRANS,
+> > > > +                                                 TCP_ATO_MIN, TCP_RTO_MAX);
+> > >
+> > > This is not what I suggested.
+> > >
+> > > I suggested implementing a strategy where only the _first_ retransmit
+> > > would be done earlier.
+> > >
+> > > So you need to look at the current counter of retransmit attempts,
+> > > then reset the timer if this SYN_SENT
+> > > socket never resent a SYN.
+> > >
+> > > We do not want to trigger packet storms, if for some reason the remote
+> > > peer constantly sends
+> > > us the same packet.
+> >
+> > You're right, I missed the important point, thank you for pointing it.  Among
+> > retransmission related fields of 'tcp_sock', I think '->total_retrans' would
+> > fit for this check.  How about below change?
+> >
+> > ```
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index 2a976f57f7e7..29fc0e4da931 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -5893,8 +5893,14 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
+> >                  *        the segment and return)"
+> >                  */
+> >                 if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
+> > -                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
+> > +                   after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
+> > +                       /* Previous FIN/ACK or RST/ACK might be ignored. */
+> > +                       if (tp->total_retrans == 0)
+> 
+> canonical fied would be icsk->icsk_retransmits (look in net/ipv4/tcp_timer.c )
+> 
+> AFAIK, it seems we forget to clear tp->total_retrans in tcp_disconnect()
+> I will send a patch for this tp->total_retrans thing.
 
-On Fri, Jan 31, 2020 at 03:29:52PM +0100, Hans Verkuil wrote:
-> On 1/30/20 4:42 PM, Thierry Reding wrote:
-> > On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
-> >> Hi Sowjanya,
-> >>
-> >> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
-> >>> This series adds Tegra210 VI and CSI driver for built-in test pattern
-> >>> generator (TPG) capture.
-> >>>
-> >>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
-> >>> CSI port is one-to-one mapped to VI channel for video capture.
-> >>>
-> >>> This series has TPG support only where it creates hard media links
-> >>> between CSI subdevice and VI video device without device graphs.
-> >>>
-> >>> v4l2-compliance results are available below the patch diff.
-> >>>
-> >>> [v0]:	Includes,
-> >>> 	- Adds CSI TPG clock to Tegra210 clock driver
-> >>> 	- Host1x video driver with VI and CSI clients.
-> >>> 	- Support for Tegra210 only.
-> >>> 	- VI CSI TPG support with hard media links in driver.
-> >>> 	- Video formats supported by Tegra210 VI
-> >>> 	- CSI TPG supported video formats
-> >>
-> >> I'm trying to compile this patch series using the media_tree master
-> >> branch (https://git.linuxtv.org//media_tree.git), but it fails:
-> >>
-> >> drivers/staging/media/tegra/tegra-channel.c: In function =E2=80=98tegr=
-a_channel_queue_setup=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused var=
-iable =E2=80=98count=E2=80=99 [-Wunused-variable]
-> >>    71 |  unsigned int count =3D *nbuffers;
-> >>       |               ^~~~~
-> >> drivers/staging/media/tegra/tegra-channel.c: In function =E2=80=98tegr=
-a_channel_init=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-channel.c:518:55: error: =E2=80=98st=
-ruct host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   518 |  struct tegra_camera *cam =3D dev_get_drvdata(vi->client.host);
-> >>       |                                                       ^
-> >> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/=
-tegra-channel.o] Error 1
-> >> make[4]: *** Waiting for unfinished jobs....
-> >> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_vi_=
-tpg_graph_init=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-vi.c:157:55: error: =E2=80=98struct =
-host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   157 |  struct tegra_camera *cam =3D dev_get_drvdata(vi->client.host);
-> >>       |                                                       ^
-> >> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_vi_=
-init=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-csi.c: In function =E2=80=98tegra_cs=
-i_init=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-vi.c:213:51: error: =E2=80=98struct =
-host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   213 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
-> >>       |                                                   ^~
-> >> drivers/staging/media/tegra/tegra-csi.c:259:51: error: =E2=80=98struct=
- host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   259 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
-> >>       |                                                   ^~
-> >> drivers/staging/media/tegra/tegra-vi.c: In function =E2=80=98tegra_vi_=
-exit=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-vi.c:246:51: error: =E2=80=98struct =
-host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   246 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
-> >>       |                                                   ^~
-> >> drivers/staging/media/tegra/tegra-csi.c: In function =E2=80=98tegra_cs=
-i_exit=E2=80=99:
-> >> drivers/staging/media/tegra/tegra-csi.c:286:51: error: =E2=80=98struct=
- host1x_client=E2=80=99 has no member named =E2=80=98host=E2=80=99
-> >>   286 |  struct tegra_camera *cam =3D dev_get_drvdata(client->host);
-> >>       |                                                   ^~
-> >>
-> >> And indeed, struct host1x_client as defined in include/linux/host1x.h =
-doesn't
-> >> have a 'host' field.
-> >>
-> >> Does this series depend on another patch that's not yet in mainline?
-> >=20
-> > Sowjanya's been working on top of linux-next, so, yes, this patch
-> > depends on a change that's been merged into the DRM tree for v5.6-rc1.
-> >=20
-> > Thierry
-> >=20
->=20
-> Is there a specific linux-next tag that works? I tried next-20200131 but =
-that
-> failed to boot. Same problem with the mainline repo since the host1x patc=
-hes
-> were merged yesterday. It compiles fine, but the boot just stops. Or am I
-> missing some kernel config that is now important to have?
+Oh, then I will use 'tcsk->icsk_retransmits' instead of 'tp->total_retrans', in
+next spin.  May I also ask you to Cc me for your 'tp->total_retrans' fix patch?
 
-linux-next and mainline are currently regressing on Tegra210 (and some
-Tegra124) boards. I just sent out a series that fixes the regression for
-me:
 
-	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=3D156215
+Thanks,
+SeongJae Park
 
-Please test if this works for you. If so, I'll send this to Dave as soon
-as possible.
-
-Thierry
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl40XfcACgkQ3SOs138+
-s6GDmRAAgJOr7xCKB+TlGwZKa3pkGAekUaHfnLt4Dck14FCS4/nKcKtnfl2BhC6S
-vDFUljkoNey/1GrYDgW7CXJqkHce4E88HAO9kevpUOp77WYIQ6POh11X4Bvra/KT
-tGqjepiQ2MTVZP6J0XDD8XOYevyNmjbQxG8jEBwrHetZ3S8+ptCVEbFm29MHTcSI
-A4VHFRBObnxiuk3ITVx0UX98TbMy/2PElfD8OaCEq/r6qgl11WzukKxk1VMd8DAb
-lT6zg2ndwDwq2uK7lIIPg3hSPyRg5bxa5MVpUlb9UA+pwGD04x5P2lxvYIOFs/wl
-+FLMEiM352WunWcOOJBIYLokppzNPHN9ItKDMTZS6nDQi87EV6vqAY/NvOOhK3QL
-8Inuj+EHMtxajemhBFmqN1KU2gGGy+SDmYjbWXqLmLcrSbY48fNn5L6n/FdtSWGa
-UTDePIgG7u1tAJVnpySXc3GM9ch4JAgt37ww3Z8Z8orIdo7BowD/yko+VcIVJuH5
-lvvfu6zcNZOUhBTeSHd45an+twZdpdSIPdaXHNDcQUSWNIE+42lSeXFBMNMN/qGe
-AK3axSiGjfCsD/CAT/wBtlUftBxTFenfstGd82HMpxxfG//E8FpD/t/vzE2WM3z6
-75Ns1wysRwLAR9Rc9uY+zgSQT8iDv8OHDkVIpN16F+L9bKkFk4Y=
-=VUdt
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+> 
+> > +                               inet_csk_reset_xmit_timer(sk,
+> > +                                               ICSK_TIME_RETRANS, TCP_ATO_MIN,
+> > +                                               TCP_RTO_MAX);
+> >                         goto reset_and_undo;
+> > +               }
+> >
+> >                 if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
+> >                     !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
+> > ```
+> >
+> > Thanks,
+> > SeongJae Park
+> >
+> > >
+> > > Thanks.
+> > >
+> > > >                         goto reset_and_undo;
+> > > > +               }
+> > > >
+> > > >                 if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
+> > > >                     !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> 
