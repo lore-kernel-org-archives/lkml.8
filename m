@@ -2,199 +2,118 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF74C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F74FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3340B206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gj+D0AFE"
+	by mail.kernel.org (Postfix) with ESMTP id 66CE6215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgAaT52 (ORCPT
+        id S1726202AbgAaUBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:57:28 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57064 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgAaT51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:57:27 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvN6m083311;
-        Fri, 31 Jan 2020 13:57:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580500643;
-        bh=aKowKe42ihGou9BZv9xiLNDP/sParsGV17KSoR247LQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gj+D0AFE/W8Z1nTAgJa+J/leeSZHLH52eL7OyBUSPlWn1P40o8H70It5fpaHF3hhx
-         mSw5JfG/ypw/8fYKVO8DRW0RuE6oNSffQqNI7zyTp+GdTz+hvjKs72obdElTbTYHeJ
-         qJefTnLOc+wcuQVsrYIOKvY+Wi1ycoJ7q2Gvc+fM=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VJvNs2051034
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 13:57:23 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 13:57:22 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 13:57:22 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VJvMZJ044834;
-        Fri, 31 Jan 2020 13:57:22 -0600
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
- <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
- <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
- <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
- <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <07701542-2a94-7333-6682-a8e8986ea6d4@ti.com>
-Date:   Fri, 31 Jan 2020 13:54:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 15:01:35 -0500
+Received: from mga11.intel.com ([192.55.52.93]:39358 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbgAaUBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 15:01:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 12:01:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
+   d="scan'208";a="262661544"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 31 Jan 2020 12:01:34 -0800
+Date:   Fri, 31 Jan 2020 12:01:34 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 1/2] KVM: x86: Emulate split-lock access as a write
+Message-ID: <20200131200134.GD18946@linux.intel.com>
+References: <db3b854fd03745738f46cfce451d9c98@AcuMS.aculab.com>
+ <777C5046-B9DE-4F8C-B04F-28A546AE4A3F@amacapital.net>
 MIME-Version: 1.0
-In-Reply-To: <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <777C5046-B9DE-4F8C-B04F-28A546AE4A3F@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+On Thu, Jan 30, 2020 at 07:16:24AM -0800, Andy Lutomirski wrote:
+> 
+> > On Jan 30, 2020, at 4:31 AM, David Laight <David.Laight@aculab.com> wrote:
+> > 
+> >> If split lock detect is enabled (warn/fatal), #AC handler calls die()
+> >> when split lock happens in kernel.
+> >> 
+> >> A sane guest should never tigger emulation on a split-lock access, but
+> >> it cannot prevent malicous guest from doing this. So just emulating the
+> >> access as a write if it's a split-lock access to avoid malicous guest
+> >> polluting the kernel log.
+> > 
+> > That doesn't seem right if, for example, the locked access is addx.
+> > ISTM it would be better to force an immediate fatal error of some
+> > kind than just corrupt the guest memory.
+> 
+> The existing page-spanning case is just as wrong.
 
-On 1/31/20 1:29 PM, Florian Fainelli wrote:
-> On 1/31/20 11:14 AM, Dan Murphy wrote:
->> Florian
->>
->> On 1/31/20 12:42 PM, Florian Fainelli wrote:
->>> On 1/31/20 10:29 AM, Dan Murphy wrote:
->>>> Florian
->>>>
->>>> On 1/31/20 11:49 AM, Florian Fainelli wrote:
->>>>> On 1/31/20 7:11 AM, Dan Murphy wrote:
->>>>>> Set the speed optimization bit on the DP83867 PHY.
->>>>>> This feature can also be strapped on the 64 pin PHY devices
->>>>>> but the 48 pin devices do not have the strap pin available to enable
->>>>>> this feature in the hardware.  PHY team suggests to have this bit set.
->>>>> OK, but why and how does that optimization work exactly?
->>>> I described this in the cover letter.  And it is explained in the data
->>>> sheet Section 8.4.6.6
->>> Sorry I complete missed that and just focused on the patch, you should
->>> consider not providing a cover letter for a single patch, and especially
->>> not when the cover letter contains more information than the patch
->>> commit message itself.
->> Sorry I usually give a cover letter to all my network related patches.
->>
->> Unless I misinterpreted David on his reply to me about cover letters.
->>
->> https://www.spinics.net/lists/netdev/msg617575.html
-> This was a 2 patches series, for which a cover letter is mandatory:
->
-> but for single patches, there really is no need, and having to replicate
-> the same information in two places is just error prone.
->
->> And I seemed to have missed David on the --cc list so I will add him for
->> v2.
->>
->> I was also asked not to provide the same information in the cover letter
->> and the commit message.
-> The cover letter is meant to provide some background about choices you
-> have made, or how to merge the patches, or their dependencies, and
-> describe the changes in a big picture. The patches themselves are
-> supposed to be comprehensive.
+Yes, it's a deliberate shortcut to handle a corner case that no real world
+workload will ever trigger[*].  The split-lock #AC case is the same.
+Actually, it's significantly less likely than the page-split case.
 
-As always thank you for the guidance.  I will update the commit with 
-better information and remove the cover letter.
+With a sane, non-malicious guest, the emulator code in question only gets
+triggered if unrestricted guest is supported.  Without unrestricted guest,
+there are certain modes, e.g. Big Real Mode, where VM-Enter will fail, in
+which case KVM needs to emulate the entire guest code stream until the
+guest transitions back to a valid mode (from VMX perspective).  When
+unrestricted guest is enabled, the emulator is only invoked for MMIO,
+I/O strings, and for some instructions that are emulated on #UD to allow
+migrating VMs between hosts without heterogenous CPU capabilities.
 
+Unrestricted guest is supported on all Intel CPUs since Westmere, and will
+be supported on all CPUs that support split-lock #AC and VMX.  Except for
+a few esoteric use cases where using shadow paging is more performant than
+using EPT, there is zero benefit to disabling unrestricted guest, whereas
+enabling unrestricted guest provides additional performance and security.
 
->
->> Either way I am ok with not providing a cover letter and updating the
->> commit message with more information.
->>
->>
->>>>>     Departing from
->>>>> the BMSR reads means you possibly are going to introduce bugs and/or
->>>>> incomplete information. For instance, you set phydev->pause and
->>>>> phydev->asym_pause to 0 now, is there no way to extract what the link
->>>>> partner has advertised?
->>>> I was using the marvel.c as my template as it appears to have a separate
->>>> status register as well.
->>>>
->>>> Instead of setting those bits in the call back I can call the
->>>> genphy_read_status then override the duplex and speed based on the
->>>> physts register like below.  This way link status and pause values can
->>>> be updated and then we can update the speed and duplex settings.
->>>>
->>>>         ret = genphy_read_status(phydev);
->>>>       if (ret)
->>>>           return ret;
->>>>
->>>>       if (status < 0)
->>>>           return status;
->>>>
->>>>       if (status & DP83867_PHYSTS_DUPLEX)
->>>>           phydev->duplex = DUPLEX_FULL;
->>>>       else
->>>>           phydev->duplex = DUPLEX_HALF;
->>>>
->>>>       if (status & DP83867_PHYSTS_1000)
->>>>           phydev->speed = SPEED_1000;
->>>>       else if (status & DP83867_PHYSTS_100)
->>>>           phydev->speed = SPEED_100;
->>>>       else
->>>>           phydev->speed = SPEED_10;
->>>>
->>> OK, but what if they disagree, are they consistently latched with
->>> respect to one another?
->> Well in parsing through the code for genphy read status when auto
->> negotiation is set the phydev structure appears to be setup per what has
->> been configured.  I did not see any reading of speed or duplex when auto
->> neg is set it is just taking the LPA register. But I am probably not
->> right here.  So we and our customers found that the phy was always
->> reporting a 1Gbps connection when the 4 wire cable connected when using
->> genphy_read_status.  This PHYSTS register provides a single location
->> within the register set for quick access to commonly accessed
->> information.
-> That is the kind of information that you want to put in the commit
-> message, and that sounds like a Fix more than a feature to me. If the
-> BMSR is not reflecting the correct speed, clearly something is not quite
-> good. You may also consider reflecting whether downshift was in action
-> and that led to reducing the speed, something like
-> m88e1011_link_change_notify() does.
+In other words, the odds of a sane, non-malicious guest executing a split-
+lock instruction that needs to be emulated by KVM are basically zilch.
 
-But what is it fixing?  When the driver was originally submitted it was 
-meant to be a Giga bit PHY.  No requirement for any connection less then 
-1Gbps. Now we have a customer who wants to use this feature and they 
-want it upstreamed.  (YAY for them pushing upstream).
+The reason the emulator needs to handle this case at all is because a
+malicious guest could play TLB games to trick KVM into emulating a split-
+lock instruction, e.g. get the guest's translation for RIP pointing at a
+string I/O instruction to trigger VM-Exit, but have the host translation
+point at a completely different instruction.  With split-lock #AC enable
+in the host, that would cause a kernel split-lock #AC and panic the whole
+system.
 
-Do I reference my original commit?  Because I am actually flipping the 
-bits to turn it on as well only way this was a fix is if the user had 
-the feature strapped to on.  But to date we have not had any requests 
-for this support.
+Exiting to host userspace with "emulation failed" is the other reasonable
+alternative, but that's basically the same as killing the guest.  We're
+arguing that, in the extremely unlikely event that there is a workload out
+there that hits this, it's preferable to *maybe* corrupt guest memory and
+log the anomaly in the kernel log, as opposed to outright killing the guest
+with a generic "emulation failed".
 
-So then it would be ok to do a genphy_read_status and then override the 
-speed and duplex mode from the PHYSTS register?
+Looking forward, the other reason for taking this shortcut is to easily
+handle the case where KVM adds support for exposing split-lock #AC to the
+guest.  With this approach, we don't have to teach the emulator how to
+query for split-lock #AC enabling in the guest.  Again, in the interest of
+not adding code to the emulator that is effectively useless.
 
-I don't think that the link change notification is needed.  The speed 
-should not change once the cable is plugged in and the speed is negotiated.
-
-Dan
-
-
+[*] https://lkml.kernel.org/r/c8b2219b-53d5-38d2-3407-2476b45500eb@redhat.com
