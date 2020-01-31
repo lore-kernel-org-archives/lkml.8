@@ -2,114 +2,116 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB53CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C32C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB8820CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D0720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGei6Lyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgAaSPO (ORCPT
+        id S1726154AbgAaSSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:15:14 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41261 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgAaSPN (ORCPT
+        Fri, 31 Jan 2020 13:18:34 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37720 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgAaSSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:15:13 -0500
-Received: by mail-io1-f72.google.com with SMTP id z201so4702716iof.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:15:12 -0800 (PST)
+        Fri, 31 Jan 2020 13:18:34 -0500
+Received: by mail-yw1-f66.google.com with SMTP id l5so5621390ywd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:18:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=4VYyzzGXvpkoeXPD6VYi8iy20yoxe+qDPS3ZbJdgxSw=;
+        b=AGei6LyyPbL/uS3xnhgCFxDlX8FD9ZLRHfuc2U2PwbDRurtaUx4dQiSMRQ9jPQ6LfJ
+         4/QcpR9QdvlN2irxJcd6/SepI3rNFHDWBlVM4QYqBOIQH5ky7mXuNbOiKQbMjY1fgvED
+         9UszIyqchT/Y7Tf1v4/nWRJ5C15HURAJiRJ5lwnx1XOI7RwsHjLfg6LpXr0IH3ff0nT1
+         +nv264uCbz0jkfnDPbzbAl/lNAVHrL4tezJyQKAswTLYK6ui2opfY/uddMz3gGpJScJK
+         ByO5uHCpavsKvp4wfgUXznB89PuXEG/bkTDk6V1UVNvbNNL4hktgEP6yUeoXhcmfFu/j
+         GWGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=EtfgqjvamVcUzscAKz2pX3HiHwy6oEdFj5wF22iueeo=;
-        b=RRL1vXT2c4BH8dDfWFA6NIiGBJKeZknh94nQLJNg8NuQALBlYD9DDaDgDwEfaQ9CkL
-         I3nydO8l6n4Z5E4CDVpO4gKlEwB2RhOSSHLK8X3WWSbMUrKpEQQ9jRosGE3JNZ53VvUl
-         /E1SyaPzPPk/58rwrTD6ERAdlyXMoKAL/FbZZ1csUB2sUPZi3Pw13bp2IABwaB082+la
-         cLt7ivWbJCsRqzmYbz8Ywl3HpC1Ch8SkOMTFN8vq5lUat14z7CVe5TMHdsTKYc+3/sxW
-         2M/Y7guiZ8IO587H5H7Ki64gDvopTIaCTDQ4MXdtoumLd989RbTs/GOmduaNHW3ItnQb
-         4RqA==
-X-Gm-Message-State: APjAAAXQlviHjyO8IzjHKCbtNTaEwE+DV9xjv7/50yRWuLC10vfAczMm
-        Oe1mCdQLjOgUYgs5yr+9AkqN8HyaETYpEiLMPlUGoMgsXvPQ
-X-Google-Smtp-Source: APXvYqwaXOQNtr9ntbGLV2ag144bWsaUaXz+272JZZFU6/7J/VJj73WxByvVe3kCFiQ7AoxsKxn9ngH83fMOiIR2pZZGi5pJ1tK8
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=4VYyzzGXvpkoeXPD6VYi8iy20yoxe+qDPS3ZbJdgxSw=;
+        b=Wff5sjWQR1VzWTQljkv2VUHKTSG5Uj5/BissdwZOUD9hod5g/P22qMvrzE/yLDqTwO
+         Xki89XBVJ3pfb8fzXBRpBOJn62yfzCsvpJpjDUkvJmh6pmLvMeoCbG6kSousmzDaqBVb
+         lZo054XBCCjlljjbQVS7/tQNA1XkORxXgPjAVpBgVtqE3eIcGvKjddCeFcaGSJ98uTdG
+         3JOu5Y74KlaMPkzDIoZal3qJ2jRuxEIms+QYx/MC61lxQHwWaIt/olikvfLqiH2gu6TZ
+         WJrD1JNlE/dyIaMN8Bfma+o4dSwyaJ5Z3tZxnQ2JPdSkJDYzpNF8uU9PWx/vjw+yI+5s
+         8GIw==
+X-Gm-Message-State: APjAAAVDi5FAuKVP6L9cQqfM+/D215znbcWKo8UnGJbyj8hcNcCLl+Vb
+        OkXGR15LbqV3/w2obgw47AJ09no9ibY=
+X-Google-Smtp-Source: APXvYqxJGnO1O/rmfQQK1Pc08HE1l2lGIxEBybFDZnB55yHsQoULJyrYbjVS/xdfaTfdSDgBmEopew==
+X-Received: by 2002:a25:9c01:: with SMTP id c1mr9362229ybo.200.1580494284802;
+        Fri, 31 Jan 2020 10:11:24 -0800 (PST)
+Received: from gmail.com ([2601:240:e300:b5b:329c:23ff:fea3:d48c])
+        by smtp.gmail.com with ESMTPSA id p62sm4438951ywc.44.2020.01.31.10.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 10:11:24 -0800 (PST)
+From:   Sam Lunt <samueljlunt@gmail.com>
+X-Google-Original-From: Sam Lunt <samuel.j.lunt@gmail.com>
+Date:   Fri, 31 Jan 2020 12:11:23 -0600
+To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, trivial@kernel.org
+Subject: [PATCH] perf: Support Python 3.8+ in Makefile
+Message-ID: <20200131181123.tmamivhq4b7uqasr@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8448:: with SMTP id w8mr9699271ior.161.1580494512649;
- Fri, 31 Jan 2020 10:15:12 -0800 (PST)
-Date:   Fri, 31 Jan 2020 10:15:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fef96d059d738dae@google.com>
-Subject: WARNING: ODEBUG bug in process_one_work
-From:   syzbot <syzbot+9affe13ceff50439d1be@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Python 3.8 changed the output of 'python-config --ldflags' to no longer
+include the '-lpythonX.Y' flag (this apparently fixed an issue loading
+modules with a statically linked Python executable).  The libpython
+feature check in linux/build/feature fails if the Python library is not
+included in FEATURE_CHECK_LDFLAGS-libpython variable.
 
-syzbot found the following crash on:
+This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
+the '--embed' flag and passes that flag alongside '--ldflags' if so.
 
-HEAD commit:    39bed42d Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11f498d9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2646535f8818ae25
-dashboard link: https://syzkaller.appspot.com/bug?extid=9affe13ceff50439d1be
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+tools/perf is the only place the libpython feature check is used.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9affe13ceff50439d1be@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint: xprt_init_autodisconnect+0x0/0x160 net/sunrpc/xprt.c:1311
-WARNING: CPU: 0 PID: 3067 at lib/debugobjects.c:485 debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 3067 Comm: kworker/0:57 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events kfree_rcu_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:176 [inline]
- fixup_bug arch/x86/kernel/traps.c:171 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:269
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:288
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Code: dd c0 74 91 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48 8b 14 dd c0 74 91 88 48 c7 c7 20 6a 91 88 e8 17 ed a3 fd <0f> 0b 83 05 93 05 02 07 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffffc90008c1fbe0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815e9806 RDI: fffff52001183f6e
-RBP: ffffc90008c1fc20 R08: ffff88809e54c000 R09: ffffed1015d045c9
-R10: ffffed1015d045c8 R11: ffff8880ae822e43 R12: 0000000000000001
-R13: ffffffff89bb6760 R14: ffffffff816474a0 R15: ffff8880a839b9a0
- __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
- debug_check_no_obj_freed+0x2d6/0x441 lib/debugobjects.c:998
- kfree+0xf8/0x2c0 mm/slab.c:3756
- kfree_rcu_work+0x145/0x230 kernel/rcu/tree.c:2761
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/perf/Makefile.config | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index c90f4146e5a2..ccf99351f058 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+
+ PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+
++# Python 3.8 changed the output of `python-config --ldflags` to not include the
++# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
++# libpython fails if that flag is not included in LDFLAGS
++ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
++  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
++else
++  PYTHON_CONFIG_LDFLAGS := --ldflags
++endif
++
+ ifdef PYTHON_CONFIG
+-  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
++  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
+   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
+   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
+   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --includes 2>/dev/null)
+
+base-commit: d5d359b0ac3ffc319ca93c46a4cfd87093759ad6
+-- 
+2.25.0
