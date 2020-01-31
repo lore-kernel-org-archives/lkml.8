@@ -2,94 +2,115 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978E4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D0C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7335B20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4DD920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDvPIqs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgAaIN7 (ORCPT
+        id S1728175AbgAaIP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:13:59 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39850 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbgAaIN7 (ORCPT
+        Fri, 31 Jan 2020 03:15:27 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36283 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgAaIP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:13:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id z2so6454064oih.6
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 00:13:58 -0800 (PST)
+        Fri, 31 Jan 2020 03:15:26 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so3057064pgc.3;
+        Fri, 31 Jan 2020 00:15:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Y/URflAN0egTNKiFFMYLQYMJ9wMyROzssZLeoHgDcA=;
+        b=bDvPIqs7zk+6Ua13LmwPSUxJHYoP3sz8dXzrXUCY11vG2q89ymnvF9KOeRMwUirtgO
+         WhyUtcVQPAnzhKrKITFqvSYkxlT9ISAcAWsYUN+KrpW0FCHyu+ZluN9d0tj4O4L669Xl
+         2lPXBX7A9ppfx8G8cJPmJPdkjkLVNJvFVuhlBD9SJleQXfC/Tqo5TZuncxblMoLotnGK
+         Ib83dfWkfHcjCYYEuWSvqtZNns38l/X/5LdjmvUkkdqJjDw/KKgoqrjFMG2JYHJbJtGo
+         Hwmntfvq8q/lf8F4I/zJ0W6jIKekE15B6f/Dz4JvKJXfdrWECkV2PUL2Ir7vthKG/b/Q
+         h+yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=whAXdHdznYjIr0eEK/ikQOAsAYBnA7TNWNtods2FE2c=;
-        b=aAhdhNpNAKMIPM9WM7XMji1dR8CxJ42lNqzLr/1esvQROKqEeiQtNlZpurb0A6WDNk
-         auInN7dKbtLPKvxOgYNcTsUGbQ98mMS/Ildc2AW+D9AMu9Lcxjl9RyO8+TekezSuz52P
-         wBNbotVmL3Mg3Oytjz74yxw+zrNa2JjItrVfqD25wR4EzzZbT0IB8slryUFZqrob3iqZ
-         X4hqTO29xIrBZM0E+AHGuOAegAZfSJR9iGsLHKoZ676KrStFZAu6XOxx6S98IXcJvvVD
-         Y1erWKhneHNQK5oLwgAQopahotTv7pEMnj8xJbX797tkIfErIY0JhR2dfO2590dhuUg6
-         5cJQ==
-X-Gm-Message-State: APjAAAXry/Z9eL4gb7oqQOTssGCMy8MkMCSmNvieef01/cJjAcUAlH4d
-        K5o9LGZB18hg/z0YUuKaUy2j6apY0DjEVtMdgD0=
-X-Google-Smtp-Source: APXvYqxVsELFIbYc2E/Dk5r14mT05UKx5Y5iElcBd1BjTk4T4kMv0zIzqRCoNBGqWWZoA1rxpFFIVrR1UIOSbIHgmLQ=
-X-Received: by 2002:a54:4707:: with SMTP id k7mr5313336oik.153.1580458438520;
- Fri, 31 Jan 2020 00:13:58 -0800 (PST)
+        bh=0Y/URflAN0egTNKiFFMYLQYMJ9wMyROzssZLeoHgDcA=;
+        b=e6KZ2edjpT7KJDN3hWGg+T5FQmpg6J26Dci8OwgVDEKAIS7qd7NhzNXO0HbLn9Is29
+         QE2cLK0J1rHRnBq1HKWSQsfMsn/dLprbhaDzJbN/x1O6XDgQK3uibC3ebPti/I1lgc2q
+         +kikTtuxp8IZR/DBzTz9sePd2pYJJz3H05XNlbu+EgkRClLTZd1GdrCy4wE8e3jDyJi6
+         nEPuFcYR99/c9SGUmqBCCHD3tloev8UX8vwPoPg/40o6+nXmT7emPiKvJJ0o7n3pyTeW
+         eA0WRe81A25hpaGmBK0hhkaQ9rjx/oSdYDbSia10nRXRaww9YS0tEopgYp9JHAKXDKtW
+         u17Q==
+X-Gm-Message-State: APjAAAVISfE3ran20DdOA430w07mSJi6WAsS/j9Jw5e7OhssAfAtgt6i
+        Yv69ECcVEyqbzrNiKDjjVO/mBQCu7Giiy8SeDyc=
+X-Google-Smtp-Source: APXvYqwboAwjQDtVTg7bEoGRHsUXs8ZLkrvGg15+8RVjrgNqc260m2Rt7Sk+vi/Git2Gv4dOVb64A1UzzyTlsxidGbE=
+X-Received: by 2002:a65:4685:: with SMTP id h5mr9486059pgr.203.1580458525958;
+ Fri, 31 Jan 2020 00:15:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20200121103413.1337-1-geert+renesas@glider.be>
- <20200121103722.1781-1-geert+renesas@glider.be> <20200121103722.1781-4-geert+renesas@glider.be>
- <78f934a3-ec7a-479e-9f63-4df7c4428ae5@www.fastmail.com> <CACPK8XfUG08CmxK7_V=PGp1SBO2UE6CSyKPSi9Hiwz2td4Lq1w@mail.gmail.com>
-In-Reply-To: <CACPK8XfUG08CmxK7_V=PGp1SBO2UE6CSyKPSi9Hiwz2td4Lq1w@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 31 Jan 2020 09:13:47 +0100
-Message-ID: <CAMuHMdXK0_5VbUe2Zo364YNx0kQzt+ESr2GcVSYZc_VW2tn36g@mail.gmail.com>
-Subject: Re: [PATCH 04/20] ARM: aspeed: Drop unneeded select of HAVE_SMP
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
+In-Reply-To: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jan 2020 10:15:14 +0200
+Message-ID: <CAHp75Vc7eudHy=05nHKB2==QJM1f23E1jZw=7yFKHA1nq0qBqA@mail.gmail.com>
+Subject: Re: [PATCH net] device property: change device_get_phy_mode() to
+ prevent signedess bugs
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
-
-On Fri, Jan 31, 2020 at 4:50 AM Joel Stanley <joel@jms.id.au> wrote:
-> On Tue, 28 Jan 2020 at 01:05, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > On Tue, 21 Jan 2020, at 21:07, Geert Uytterhoeven wrote:
-> > > Support for the 6th generation Aspeed SoCs depends on ARCH_MULTI_V7.
-> > > As the latter selects HAVE_SMP, there is no need for MACH_ASPEED_G6 to
-> > > select HAVE_SMP.
-> > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Cc: Joel Stanley <joel@jms.id.au>
-> > > Cc: Andrew Jeffery <andrew@aj.id.au>
-> >
-> > Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+On Fri, Jan 31, 2020 at 7:03 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> Acked-by: Joel Stanley <joel@jms.id.au>
+> The device_get_phy_mode() was returning negative error codes on
+> failure and positive phy_interface_t values on success.  The problem is
+> that the phy_interface_t type is an enum which GCC treats as unsigned.
+> This lead to recurring signedness bugs where we check "if (phy_mode < 0)"
+> and "phy_mode" is unsigned.
 >
-> Geert, did you intend for these to be picked up by Arnd and Olof?
+> In the commit 0c65b2b90d13 ("net: of_get_phy_mode: Change API to solve
+> int/unit warnings") we updated of_get_phy_mode() take a pointer to
+> phy_mode and only return zero on success and negatives on failure.  This
+> patch does the same thing for device_get_phy_mode().  Plus it's just
+> nice for the API to be the same in both places.
 
-Feel free to pick it up.
-I'll resend the remaining patches to the arm-soc maintainers later.
 
-Gr{oetje,eeting}s,
+> +       err = device_get_phy_mode(dev, &config->phy_interface);
 
-                        Geert
+> +       if (err)
+> +               config->phy_interface = PHY_INTERFACE_MODE_NA;
+
+Do you need these? It seems the default settings when error appears.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
