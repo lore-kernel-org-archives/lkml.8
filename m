@@ -2,128 +2,142 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C540C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877ABC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A0B20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580471585;
-	bh=sk6Vyukx5ndsd3eN3CYB8iEtq6T0bAEoJZtAqSsLY7U=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wkPRMq3PRkTY+VoZsIToN1ZlhrtQGC/3w9Ngbm+tdQ67LMG0HccIFwZLZG+3mlaph
-	 kBb83ySYA/aMuXEcCHlXcB+6NKzBkgf4ip7/yz0dAgBTJHdFEOrQ+eBkK0V27EZgNY
-	 gzrLYmFwsDqjtFcaQRqqf1LDOwwmr6ykja+Pisuk=
+	by mail.kernel.org (Postfix) with ESMTP id 647E322522
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgAaLxE (ORCPT
+        id S1728501AbgAaLyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:53:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53313 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgAaLxE (ORCPT
+        Fri, 31 Jan 2020 06:54:12 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55706 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728423AbgAaLyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:53:04 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so7564607wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 03:53:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tq9+oZKrlV5RWut1xN84D3VSDmerEK8R8REdRN6WTDM=;
-        b=eY2O5NVbb0wUahMtQC7RlbeWByrjy1v/UZ4znmxO4DY2i96XnBa/5G1IOjclQwFJ1O
-         OQ/mXQ+TLQw/lQziNhH/WlYn+0WxiP1c43ePVCLNtfr3hM4ndAXZc4Uux0/cRZ0wHH5C
-         sl1Tz6I5QdB0tqLhvBcus5Gu7i+/cq8a8HMdbSn48Csy49W/1MIPt4YTd9kpewYRsbjP
-         g2KBULnZtm7CR7EtuN4VxTXHLIkFZw/meo48fMR+J/Wp4Iek3x+dnVHormvM6M7uOCVR
-         hNPv6eJvaceLJR4W1DMjZVm2Q6rU1fbSbHgXg5gzP9PpDBDvyOsmTiEM9o9q4phn3dfB
-         IVlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=tq9+oZKrlV5RWut1xN84D3VSDmerEK8R8REdRN6WTDM=;
-        b=OxiEI+LvnW++Pxhwrw+SjUn6E23yqyFnIHjYOHF5NKJq7WcMjuHJOboo7rKhOookTT
-         klNKg8WOpDhim/DKAUOXMv8IM4/kuHojUNGIgpBnqyJCRSplRpvBrLHQS+nx6QHlqJi6
-         qZF8jLUkes0xf4LSWC44DqrJZvQgFPn3CMA1o1EH3Bc/pehWo2vInRptpUW+S7r3OLde
-         YHETNI1JfSeGm63exO6XUjfIAds7klqfaGQWbs+PeZJ/dyRR5dzYjNkmaAzbZ7rI1sn+
-         pdSl3CRTdUhqcnHY3E4t/4ARfzyaJeBbGJgUHRAABqPV8KT1v2o2vTxl/fzUoh4Eoxht
-         1Edw==
-X-Gm-Message-State: APjAAAVAPz7GYVNDlPJmhl5CECoqQn5x7FWWi0XxDis7sGj7VrUZDDgb
-        qEbJFnF/ZJtWztQZUpGCJWwnPxQe
-X-Google-Smtp-Source: APXvYqzjFB7jitdTtm3Z/YBiXCG2/Phcz6J3hXNi+whbAnTBsm2y4vXYF2xjnuO6hufZ0zvrICtXPQ==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr11682561wml.88.1580471581922;
-        Fri, 31 Jan 2020 03:53:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i10sm12005564wru.16.2020.01.31.03.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 03:53:01 -0800 (PST)
-Date:   Fri, 31 Jan 2020 12:52:59 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86 fixes
-Message-ID: <20200131115259.GA91121@gmail.com>
+        Fri, 31 Jan 2020 06:54:12 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 27B9E28A964
+Message-ID: <739f60a89646cc92f26e34523cbe8aaab5697351.camel@collabora.com>
+Subject: Re: [PATCH v4 5/6] media: rkvdec: Add the rkvdec driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Date:   Fri, 31 Jan 2020 08:53:47 -0300
+In-Reply-To: <20200130171249.3ae0444a@collabora.com>
+References: <20200129195501.8317-1-ezequiel@collabora.com>
+                <20200129195501.8317-6-ezequiel@collabora.com>
+         <20200130171249.3ae0444a@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, 2020-01-30 at 17:12 +0100, Boris Brezillon wrote:
+> On Wed, 29 Jan 2020 16:55:00 -0300
+> Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> 
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > 
+> > The rockchip vdec block is a stateless decoder that's able to decode
+> > H264, HEVC and VP9 content. This commit adds the core infrastructure
+> > and the H264 backend. Support for VP9 and HEVS will be added later on.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> > v4:
+> > * Make poc tables const, as suggested by Hans
+> > * Move buffer extra space calculation TRY_FMT, as done on Hantro.
+> > * Get rid of vb2_request_get_buf and open-code
+> >   following Cedrus. We can move it to a helper as a follow-up patch.
+> 
+> Well, we know what that means in practice :-).
+> 
 
-Please pull the latest x86-urgent-for-linus git tree from:
+Well, not necesarily. I think we can expect a helper soon,
+but it doesn't have to be part of this series :-)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+And perhaps we can find another way to link a media request
+to a vb2 queue, so we don't have to iterate over objects
+like we are doing now?
 
-   # HEAD: 6bd3357b6181bd38c1a757168a8842e09ec6f3fb Merge branches 'x86/hyperv', 'x86/kdump' and 'x86/misc' into x86/urgent, to pick up single-commit branches
+> > new file mode 100644
+> > index 000000000000..1293b3621364
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rkvdec/rkvdec-regs.h
+> > @@ -0,0 +1,239 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Rockchip VPU codec driver
+> > + *
+> > + * Copyright (C) 2015 Rockchip Electronics Co., Ltd.
+> > + *	Jung Zhao <jung.zhao@rock-chips.com>
+> > + *	Alpha Lin <alpha.lin@rock-chips.com>
+> > + *
+> > + * This software is licensed under the terms of the GNU General Public
+> > + * License version 2, as published by the Free Software Foundation, and
+> > + * may be copied, distributed, and modified under those terms.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> 
+> Oops, looks like I forgot to remove the license text here. Also not
+> entirely sure the copyrights are correct (might be a copy from the
+> hantro driver instead of the rkvdec one).
+> 
 
-Misc fixes:
+Right.
 
- - three fixes and a cleanup for the resctrl code,
- - a HyperV fix,
- - a fix to /proc/kcore contents in live debugging sessions,
- - a fix for the x86 decoder opcode map.
+> 
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+> > new file mode 100644
+> > index 000000000000..529ef86510d3
+> > --- /dev/null
+> > +++ b/drivers/staging/media/rkvdec/rkvdec.h
+> > @@ -0,0 +1,124 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Hantro VPU codec driver
+> > + *
+> > + * Copyright 2018 Google LLC.
+> > + *	Tomasz Figa <tfiga@chromium.org>
+> > + *
+> > + * Based on s5p-mfc driver by Samsung Electronics Co., Ltd.
+> > + * Copyright (C) 2011 Samsung Electronics Co., Ltd.
+> > + */
+> 
+> This header has been copied from the hantro driver, so it's most likely
+> wrong.
+> 
 
- Thanks,
+Oh, I totally missed this.
 
-	Ingo
-
------------------->
-Masami Hiramatsu (1):
-      x86/decoder: Add TEST opcode to Group3-2
-
-Omar Sandoval (1):
-      x86/crash: Define arch_crash_save_vmcoreinfo() if CONFIG_CRASH_CORE=y
-
-Wei Liu (1):
-      x86/hyper-v: Add "polling" bit to hv_synic_sint
-
-Xiaochen Shen (4):
-      x86/resctrl: Fix use-after-free when deleting resource groups
-      x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
-      x86/resctrl: Fix a deadlock due to inaccurate reference
-      x86/resctrl: Clean up unused function parameter in mkdir path
+Thanks for reviewing!
+Ezequiel
 
 
- arch/x86/include/asm/hyperv-tlfs.h     |  3 ++-
- arch/x86/kernel/Makefile               |  1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 48 ++++++++++++++++++----------------
- arch/x86/kernel/crash_core_32.c        | 17 ++++++++++++
- arch/x86/kernel/crash_core_64.c        | 24 +++++++++++++++++
- arch/x86/kernel/machine_kexec_32.c     | 12 ---------
- arch/x86/kernel/machine_kexec_64.c     | 19 --------------
- arch/x86/lib/x86-opcode-map.txt        |  2 +-
- tools/arch/x86/lib/x86-opcode-map.txt  |  2 +-
- 9 files changed, 71 insertions(+), 57 deletions(-)
- create mode 100644 arch/x86/kernel/crash_core_32.c
- create mode 100644 arch/x86/kernel/crash_core_64.c
+
