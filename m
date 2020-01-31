@@ -2,95 +2,138 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B658FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E333C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8427D20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AQOn2fyb"
+	by mail.kernel.org (Postfix) with ESMTP id 5E8922063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAaN6M (ORCPT
+        id S1728938AbgAaN6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:58:12 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:60002 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgAaN6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:58:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=M1F71jvBqrpDNfAxNP559L2v7vOR6DOGsr1UJQiyE0E=; b=AQOn2fybqbDTF0u5okJfCrxC6z
-        5g8Wyei/0tS7qnYFWdLg5ZpWmKOUaVwF//RM6mbKQfZzYeDv7d6np87N5VvOavsAQWgijt+vD6IKP
-        Dx5EI3JKfG7LoNltgG/F4XYL0TFjRN76iXfrUfTrFM0kX5BgRJw0uHXl5UrCcYWOqC3A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ixWnq-0007SO-NR; Fri, 31 Jan 2020 14:57:46 +0100
-Date:   Fri, 31 Jan 2020 14:57:46 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ajay Gupta <ajayg@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Steve Glendinning <steve.glendinning@shawell.net>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net] device property: change device_get_phy_mode() to
- prevent signedess bugs
-Message-ID: <20200131135746.GF9639@lunn.ch>
-References: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
+        Fri, 31 Jan 2020 08:58:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728500AbgAaN6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:58:37 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VDtf95032950
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:58:36 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xv7e2ubuq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:58:35 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 31 Jan 2020 13:58:33 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 Jan 2020 13:58:30 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VDvbgW32440784
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jan 2020 13:57:37 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7413152050;
+        Fri, 31 Jan 2020 13:58:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.193.32])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 91D605204F;
+        Fri, 31 Jan 2020 13:58:28 +0000 (GMT)
+Subject: Re: [PATCH 5/8] ima: allocate and initialize tfm for each PCR bank
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Fri, 31 Jan 2020 08:58:28 -0500
+In-Reply-To: <17b00b78aa2249f19ba376c7613cfb38@huawei.com>
+References: <20200127170443.21538-1-roberto.sassu@huawei.com>
+         <20200127170443.21538-6-roberto.sassu@huawei.com>
+         <1580473133.6104.48.camel@linux.ibm.com>
+         <17b00b78aa2249f19ba376c7613cfb38@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013113-0008-0000-0000-0000034E933D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013113-0009-0000-0000-00004A6F175D
+Message-Id: <1580479108.6104.73.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001310120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/drivers/net/ethernet/apm/xgene-v2/main.c b/drivers/net/ethernet/apm/xgene-v2/main.c
-> index c48f60996761..706602918dd1 100644
-> --- a/drivers/net/ethernet/apm/xgene-v2/main.c
-> +++ b/drivers/net/ethernet/apm/xgene-v2/main.c
-> @@ -15,7 +15,7 @@ static int xge_get_resources(struct xge_pdata *pdata)
->  {
->  	struct platform_device *pdev;
->  	struct net_device *ndev;
-> -	int phy_mode, ret = 0;
-> +	int ret = 0;
->  	struct resource *res;
->  	struct device *dev;
+On Fri, 2020-01-31 at 13:42 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Friday, January 31, 2020 1:19 PM
+> > To: Roberto Sassu <roberto.sassu@huawei.com>;
+> > jarkko.sakkinen@linux.intel.com;
+> > james.bottomley@hansenpartnership.com; linux-integrity@vger.kernel.org
+> > Cc: linux-security-module@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+> > Subject: Re: [PATCH 5/8] ima: allocate and initialize tfm for each PCR bank
+> > 
+> > On Mon, 2020-01-27 at 18:04 +0100, Roberto Sassu wrote:
+> > > This patch creates a crypto_shash structure for each allocated PCR bank
+> > and
+> > > for SHA1 if a bank with that algorithm is not currently allocated.
+> > >
+> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > <snip>
+> > 
+> > > +int __init ima_init_crypto(void)
+> > > +{
+> > > +	enum hash_algo algo;
+> > > +	long rc;
+> > > +	int i;
+> > > +
+> > > +	rc = ima_init_ima_crypto();
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +	ima_algo_array = kmalloc_array(ima_tpm_chip-
+> > >nr_allocated_banks + 1,
+> > > +				       sizeof(*ima_algo_array), GFP_KERNEL);
+> > 
+> > Perhaps instead of hard coding "nr_allocated_banks + 1", create a
+> > variable for storing the number of "extra" banks.  Walk the banks
+> > setting ima_sha1_idx and, later, in a subsequent patch set
+> > ima_hash_algo_idx.
+> 
+> I could store the indexes in an array and add ARRAY_SIZE of that array.
 
-Hi Dan
+Your current patches are straight forward and easy to review.  I
+really like that.  What I'm proposing is a minor change, at least I
+think it is a minor change.  I trust whatever change you decide to
+make will be just as easy to review.
 
-DaveM likes reverse christmas tree. So you need to move ret later to
-keep the tree.
+Before re-posting, please define ima_sha1_idx and ima_hash_algo_idx as
+__ro_after_init.
 
-Apart from that:
+thanks,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Mimi
 
