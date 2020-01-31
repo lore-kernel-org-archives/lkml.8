@@ -2,133 +2,108 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7293C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16702C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E58206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:25:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g4IJM3qs"
+	by mail.kernel.org (Postfix) with ESMTP id CA04F20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580459323;
+	bh=FxoY6cZlXPjXsWVnIRhDIqdynt4r+rtbZulaa2ymBiA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LMbEDsUcpUHHvCr8G3/myxwYoFTZaBf/2AiA+uLhEEneprEtqE9y7qRx/znmgsGrf
+	 j6Anf6rOlyhwe51qlRnlr7uMMmVStMZLqoglPBNGqyglBVc30JUAYtgBkdFhEUIDoj
+	 g3nd/2e4xeuMePDlrZqpmatr5zRRPA+xtaqXP2Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgAaIZ4 (ORCPT
+        id S1728179AbgAaI2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:25:56 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:59190 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbgAaIZ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:25:56 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00V8NIiR125627;
-        Fri, 31 Jan 2020 08:25:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=9HJDg4ebV+36JCqgzBLlPd7SgnrdxJDhGJ/uJ+JFH5w=;
- b=g4IJM3qs4GwjlL9VCYQgNkQp2YhlDOd+SEZceV9za8UGvo9EhsNs5FvkHCaCFT+gea+l
- WA82aQYc5m5DZk/p7J9LBevmYm6HI+mF0sW4WMlnYCk7um1wisMTJpAPmlCNXi5Ve3F4
- EH3V3yG6Po9VVIyLg0NRjN+1Ih8zYFhD7EGqXlszWrLf3saKZ9cFpeMDHqn6OFoGWaaU
- 2ma2AvsVhNaQJCS1FK5UGjZFzzCrjPH65HGS3pml7oucbHx+9YVVdhxr1gREHrHKo/Co
- lPDLF+YvKZdL+64fX9RNt9+dNhWbU9lqVjJEAalWqnEQL6p/oVcMwxw9P+wqxh8pnabm aw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xrearrppq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 08:25:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00V8NFU0123097;
-        Fri, 31 Jan 2020 08:25:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xva6q2yh0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 08:25:24 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00V8PLea003983;
-        Fri, 31 Jan 2020 08:25:21 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jan 2020 00:25:20 -0800
-Date:   Fri, 31 Jan 2020 11:24:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ajay Gupta <ajayg@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Steve Glendinning <steve.glendinning@shawell.net>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net] device property: change device_get_phy_mode() to
- prevent signedess bugs
-Message-ID: <20200131082451.GD11068@kadam>
-References: <20200131045953.wbj66jkvijnmf5s2@kili.mountain>
- <CAHp75Vc7eudHy=05nHKB2==QJM1f23E1jZw=7yFKHA1nq0qBqA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc7eudHy=05nHKB2==QJM1f23E1jZw=7yFKHA1nq0qBqA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001310074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001310074
+        Fri, 31 Jan 2020 03:28:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728099AbgAaI2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 03:28:43 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D13206F0;
+        Fri, 31 Jan 2020 08:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580459322;
+        bh=FxoY6cZlXPjXsWVnIRhDIqdynt4r+rtbZulaa2ymBiA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UgEiJpBxDVZN3XmGLXFX0cx8hR7aE8nGxdHprEqMN2cBfhuyaOVkrD4HW5Fc0jeNq
+         VwoDUHXUYGi4vnI/CLQrEh7GKCLjJ7GXJzM4Lv98OcmMSReHEOoKcznuvJp2MQuLym
+         o1xVlAP21HhTSsZF1hpVTtCTIXyLiEVEn3w5BBBs=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        openrisc@lists.librecores.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v2] openrisc: configs: Cleanup CONFIG_CROSS_COMPILE
+Date:   Fri, 31 Jan 2020 09:28:33 +0100
+Message-Id: <1580459313-16926-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 10:15:14AM +0200, Andy Shevchenko wrote:
-> On Fri, Jan 31, 2020 at 7:03 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > The device_get_phy_mode() was returning negative error codes on
-> > failure and positive phy_interface_t values on success.  The problem is
-> > that the phy_interface_t type is an enum which GCC treats as unsigned.
-> > This lead to recurring signedness bugs where we check "if (phy_mode < 0)"
-> > and "phy_mode" is unsigned.
-> >
-> > In the commit 0c65b2b90d13 ("net: of_get_phy_mode: Change API to solve
-> > int/unit warnings") we updated of_get_phy_mode() take a pointer to
-> > phy_mode and only return zero on success and negatives on failure.  This
-> > patch does the same thing for device_get_phy_mode().  Plus it's just
-> > nice for the API to be the same in both places.
-> 
-> 
-> > +       err = device_get_phy_mode(dev, &config->phy_interface);
-> 
-> > +       if (err)
-> > +               config->phy_interface = PHY_INTERFACE_MODE_NA;
-> 
-> Do you need these? It seems the default settings when error appears.
-> 
+CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+CONFIG_CROSS_COMPILE support").
 
-We don't need it, but I thought it made things more readable.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-regards,
-dan carpenter
+---
+
+Changes since v1:
+1. Update also docs.
+---
+ Documentation/openrisc/openrisc_port.rst   | 4 ++--
+ arch/openrisc/configs/or1ksim_defconfig    | 1 -
+ arch/openrisc/configs/simple_smp_defconfig | 1 -
+ 3 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/openrisc/openrisc_port.rst b/Documentation/openrisc/openrisc_port.rst
+index a18747a8d191..4b2c437942a0 100644
+--- a/Documentation/openrisc/openrisc_port.rst
++++ b/Documentation/openrisc/openrisc_port.rst
+@@ -37,8 +37,8 @@ or Stafford's toolchain build and release scripts.
+ 
+ Build the Linux kernel as usual::
+ 
+-	make ARCH=openrisc defconfig
+-	make ARCH=openrisc
++	make ARCH=openrisc CROSS_COMPILE="or1k-linux-" defconfig
++	make ARCH=openrisc CROSS_COMPILE="or1k-linux-"
+ 
+ 3) Running on FPGA (optional)
+ 
+diff --git a/arch/openrisc/configs/or1ksim_defconfig b/arch/openrisc/configs/or1ksim_defconfig
+index d8ff4f8ffb88..75f2da324d0e 100644
+--- a/arch/openrisc/configs/or1ksim_defconfig
++++ b/arch/openrisc/configs/or1ksim_defconfig
+@@ -1,4 +1,3 @@
+-CONFIG_CROSS_COMPILE="or1k-linux-"
+ CONFIG_NO_HZ=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_BLK_DEV_INITRD=y
+diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
+index 64278992df9c..ff49d868e040 100644
+--- a/arch/openrisc/configs/simple_smp_defconfig
++++ b/arch/openrisc/configs/simple_smp_defconfig
+@@ -1,4 +1,3 @@
+-CONFIG_CROSS_COMPILE="or1k-linux-"
+ CONFIG_LOCALVERSION="-simple-smp"
+ CONFIG_NO_HZ=y
+ CONFIG_LOG_BUF_SHIFT=14
+-- 
+2.7.4
 
