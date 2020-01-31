@@ -2,93 +2,92 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D205C35246
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201CEC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A9B20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14CD20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vSU/a8Td"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXxZk9X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgAaPNe (ORCPT
+        id S1729099AbgAaPOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:13:34 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:33739 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728846AbgAaPNe (ORCPT
+        Fri, 31 Jan 2020 10:14:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53538 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgAaPOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:13:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1580483613; x=1612019613;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=/LNOzaMe/3JZolWTvP9IVpSTbmeTWa8BUCvny72YYxY=;
-  b=vSU/a8TdIL3WfKPkFbhL0fV1fVGlaiNxAujzM5V31a9GE9jSf0wHney4
-   bNonC+kIGzmNoLOgE1sN0jQiuH2MXqr97U+rbHKLtVuhTHWVqykJbe/3k
-   xrWjEJigQ8jsnSuv381aTR59HDxcFiT9USEa10i/jzjI3tmvMhhJnEDMp
-   U=;
-IronPort-SDR: KVYn3WWRFZcf3tBkHpyDu7mmLFvMRWRoxr8gDHFHRpJ7/4LVKKqIClS8gp9SN7t9eoYm0+9Rda
- Ar54+gtUYhcA==
-X-IronPort-AV: E=Sophos;i="5.70,386,1574121600"; 
-   d="scan'208";a="13861159"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 31 Jan 2020 15:13:22 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id BB7CCA230C;
-        Fri, 31 Jan 2020 15:13:21 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Fri, 31 Jan 2020 15:13:21 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.249) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 31 Jan 2020 15:13:16 +0000
-From:   <sjpark@amazon.com>
-To:     Eric Dumazet <edumazet@google.com>
-CC:     <sjpark@amazon.com>, David Miller <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>, netdev <netdev@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
-        <aams@amazon.com>, SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH 3/3] selftests: net: Add FIN_ACK processing order related latency spike test
-Date:   Fri, 31 Jan 2020 16:13:02 +0100
-Message-ID: <20200131151302.28040-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CANn89iJrwVuEUHFqH1iCJd3nwTWAuXCdEJozwz6gzDV5Snm3Ug@mail.gmail.com> (raw)
+        Fri, 31 Jan 2020 10:14:36 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VFEUSS042071;
+        Fri, 31 Jan 2020 09:14:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580483670;
+        bh=oGFn7FCda5lV95p7QFBd+eBDB4foT+y/egIAbRIGLYc=;
+        h=From:To:CC:Subject:Date;
+        b=LXxZk9X+REmReSOpHtvghDrZMqxEri6/hwsykvS4WgD+Nxsz1VSZKEo19BxeK5Jym
+         zHtp+7t311Ole9CTosX1a5w4ueiCCUhyHjR1+vIuMs8urYZSZyT+khTAuB8a9I3bnq
+         YXI6pYp3ZhvdiP9JJHmgzxgD1ZeoOyAlazDbj+RU=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VFEUmL060081
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 09:14:30 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 09:14:29 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 09:14:29 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VFETJ8117450;
+        Fri, 31 Jan 2020 09:14:29 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-master 0/1] DP83867 Speed optimization feature
+Date:   Fri, 31 Jan 2020 09:11:09 -0600
+Message-ID: <20200131151110.31642-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.43.162.249]
-X-ClientProxiedBy: EX13D17UWB001.ant.amazon.com (10.43.161.252) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 06:56:13 -0800 Eric Dumazet <edumazet@google.com> wrote:
+Hello
 
-> On Fri, Jan 31, 2020 at 4:25 AM <sjpark@amazon.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > This commit adds a test for FIN_ACK process races related reconnection
-> > latency spike issues.  The issue has described and solved by the
-> > previous commit ("tcp: Reduce SYN resend delay if a suspicous ACK is
-> > received").
-> >
-> 
-> I do not know for other tests, but using a hard coded port (4242) is
-> going to be flakky, since the port might be already used.
-> 
-> Please make sure to run tests on a separate namespace.
+Speed optimization, also known as link downshift, enables fallback to 100M
+operation after multiple consecutive failed attempts at Gigabit link
+establishment. Such a case could occur if cabling with only four wires
+were connected instead of the standard cabling with eight wires.
+Speed optimization also supports fallback to 10M if link establishment fails
+in Gigabit and in 100M mode.
 
-Agreed, will do so in next spin.
+Speed optimization can be enabled via strap or via register configuration.
+The 48 pin devices do not have the ability to strap this feature and the PHY
+team suggested to enable this bit for all use cases.
 
+Dan
 
-Thanks,
-SeongJae Park
+Dan Murphy (1):
+  net: phy: dp83867: Add speed optimization feature
+
+ drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+-- 
+2.25.0
+
