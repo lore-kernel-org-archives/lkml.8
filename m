@@ -2,145 +2,175 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F6C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5D7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A142467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ug0sxkYC"
+	by mail.kernel.org (Postfix) with ESMTP id EFC2820CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580481282;
+	bh=WlSIsk5A6pLgzFa4M28LUtzecDF3hv06eJXJq7g3Ep8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KCcfrtdxRHO9NNxyJLa1X3B6k5Y1cOcg9RDm3NQ6ZaUfk+PDOuUC9oTz2MZSnux/Q
+	 Y+VNVtCl1rD0Yr8pXTkNdfjIyaS8fyWg4PvW6jNy+XE0hhDPq6oMgkzN80FSNyJncE
+	 NZetJWNHwWkVF9Wggwk1FfPdvPFKdJ3PWgrmvvKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgAaOaB (ORCPT
+        id S1728992AbgAaOel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:30:01 -0500
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45115 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729070AbgAaOaA (ORCPT
+        Fri, 31 Jan 2020 09:34:41 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46437 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbgAaOek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:30:00 -0500
-Received: from [IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968]
- ([IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id xXIviyHzaVuxOxXIyiw9vz; Fri, 31 Jan 2020 15:29:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1580480997; bh=KR7EznYBMkt354xhu7C0+6DgiIJTm+VmPaNCZY9hKD8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ug0sxkYChv6BTu1xkP0sC0xCUcrgwta+q9ucrbSgk0PrmR+LfKQE0mmNl+3GAczVV
-         pthR10z9nEwxw8Ai29INnVY+6nf+7Wx524SPlil7t9JaPJ1U/FDJQDcmZEmbS1kRcp
-         EkTXRXCn61e2ATxi643jb805dj/imUgzPdfhkeMIxiwHoXvwiKPj2sLPjN1leQLKQS
-         Xh/4hHrOD8bNDhJ2RJogp5VR2vS5pn7d1Yuo3xAQyCcoVhH1rTR/akRAx4xTY0QNCq
-         b3F3SiietFgU/WkFKmI/IZHdz2BXIRsnLtpLKoOFFwI+YjkQawucLlBK/+G8Y0eFcj
-         OdjFizMdjMGWg==
-Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
- <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
- <20200130154246.GA2904678@ulmo>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
-Date:   Fri, 31 Jan 2020 15:29:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 09:34:40 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a22so7365654oid.13;
+        Fri, 31 Jan 2020 06:34:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nUmVi0dCs2wXilhUIhqJM4VFYVQi4xYLdV662gLZZsc=;
+        b=Him9Vg71a6QMq4Y9bOnTrV3C+GRcf1HjOtz7c+mUPz5l4JFk2sXBO6sLg6D65G3HCt
+         b10NuuxxiRXA+FLN/dEDXBBDXhdTN8MR58G1cDm8CUx0FsJumZooqxzXDIvx8qleM9fG
+         g0suDq2O910D/ufk3rkQ5PlsjYERMeEYlVhqbiQtNxcfXnpViC/dK/cGWhSAZRzbdf+i
+         QrMm0EIvedcEQmx5dMrsWwSjjxQuEVUpQzsfs/RRL3+2QZGQXJj4pqFxGpTAZRgxfL3T
+         850n6zq9CUOFpsBZqU63ElSO8RHCZmhGuQ2YlnjgBORGiFnjvy6iNufIo6TzKlxqZE8u
+         pPcA==
+X-Gm-Message-State: APjAAAXVpm6PuYVyK97pLN7PEcUdowPeMgSfgD51kQzk9dndnp3/G2a6
+        spVXY2Xo6IRn7TCJJoaTZQ==
+X-Google-Smtp-Source: APXvYqy8VwYNzZmHWifR0Z5mOD0hqHLj921igIvd3l/xX7k/2B1jQYUlt8F3Pvynzbe1zOljBO1ThQ==
+X-Received: by 2002:aca:ad11:: with SMTP id w17mr6767138oie.85.1580481278589;
+        Fri, 31 Jan 2020 06:34:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e6sm3063147otl.12.2020.01.31.06.34.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 06:34:37 -0800 (PST)
+Received: (nullmailer pid 23045 invoked by uid 1000);
+        Fri, 31 Jan 2020 14:34:36 -0000
+Date:   Fri, 31 Jan 2020 08:34:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: soc: qcom: apr: Add protection
+ domain bindings
+Message-ID: <20200131143436.GA14822@bogus>
+References: <20191230050008.8143-1-sibis@codeaurora.org>
+ <20191230050008.8143-3-sibis@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200130154246.GA2904678@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfCqH4Rqa5JScrU5yccR0hxnJW9qBhh+i+yk9NqKcTkbucS1a1ztOTwwyQU2g42qAcwbOjCwjsnGgGdArXN8npjWWmuGBZNbmQhFoft5Za35hhLgqZXVg
- I9gd/W0c7H4ZfjoTL54sEB5r0Ft/X2Vzi0Ql75hrGg6PiK6D2cAxhcky2SEluJk0sK91n2G4vyMPX3E+Zuiz3jTpD+4jfPzqAB5mzYpYYLZW4HOhcOrvM8lj
- XZZyg4mYXik+rnJLRxX0MOIH1QNMpMOHofoD8vaDtHBqKEIeZYlvLoUwBCn4g3DVTYtFjjSq/3OmCJcmfwd2PUNk1EOxPZUWCVNvisiC6RAnv8XKRoEPJuj2
- 3LUPN6jfwo8NZMZDfV+/PmkguyFpwbfjj9QnVwCo0jFdX94ryOWetxrmZQYqM3O2H0YwkRuscB3GquDEubL7I5RA9azASuHmbo5QGaJ/jXV+Uc9sHquRj9+7
- DrP5Th9LSmkp7iF7TXVvO8KR8shvQPfraBnlI67rO38aEFbhBENqkJr02MQqpWkvwxA45WUa7AtIXz9jmiSN7tu7dhHJ/vCIHeXwotOIDUtfUPJmi2jn/MC4
- U/Y=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230050008.8143-3-sibis@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 4:42 PM, Thierry Reding wrote:
-> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
->> Hi Sowjanya,
->>
->> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
->>> This series adds Tegra210 VI and CSI driver for built-in test pattern
->>> generator (TPG) capture.
->>>
->>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->>> CSI port is one-to-one mapped to VI channel for video capture.
->>>
->>> This series has TPG support only where it creates hard media links
->>> between CSI subdevice and VI video device without device graphs.
->>>
->>> v4l2-compliance results are available below the patch diff.
->>>
->>> [v0]:	Includes,
->>> 	- Adds CSI TPG clock to Tegra210 clock driver
->>> 	- Host1x video driver with VI and CSI clients.
->>> 	- Support for Tegra210 only.
->>> 	- VI CSI TPG support with hard media links in driver.
->>> 	- Video formats supported by Tegra210 VI
->>> 	- CSI TPG supported video formats
->>
->> I'm trying to compile this patch series using the media_tree master
->> branch (https://git.linuxtv.org//media_tree.git), but it fails:
->>
->> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
->> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
->>    71 |  unsigned int count = *nbuffers;
->>       |               ^~~~~
->> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
->> drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
->>   518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
->>       |                                                       ^
->> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
->> make[4]: *** Waiting for unfinished jobs....
->> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
->> drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
->>   157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
->>       |                                                       ^
->> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
->> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
->> drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
->>   213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>       |                                                   ^~
->> drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
->>   259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>       |                                                   ^~
->> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
->> drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
->>   246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>       |                                                   ^~
->> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
->> drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
->>   286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
->>       |                                                   ^~
->>
->> And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
->> have a 'host' field.
->>
->> Does this series depend on another patch that's not yet in mainline?
-> 
-> Sowjanya's been working on top of linux-next, so, yes, this patch
-> depends on a change that's been merged into the DRM tree for v5.6-rc1.
-> 
-> Thierry
-> 
+On Mon, Dec 30, 2019 at 10:30:07AM +0530, Sibi Sankar wrote:
+> Add optional "qcom,protection-domain" bindings for APR services. This
+> helps to capture the dependencies between APR services and the PD on
+> which each apr service run.
 
-Is there a specific linux-next tag that works? I tried next-20200131 but that
-failed to boot. Same problem with the mainline repo since the host1x patches
-were merged yesterday. It compiles fine, but the boot just stops. Or am I
-missing some kernel config that is now important to have?
+This is meaningless to me...
 
-Regards,
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> index db501269f47b8..f87c0b2a48de4 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
+>  			12 - Ultrasound stream manager.
+>  			13 - Listen stream manager.
+>  
+> +- qcom,protection-domain
+> +	Usage: optional
+> +	Value type: <stringlist>
+> +	Definition: Must list the protection domain service name and path
+> +		    that the particular apr service has a dependency on.
 
-	Hans
+How many strings can there be and can you enumerate the possible 
+strings?
+
+> +
+>  = EXAMPLE
+>  The following example represents a QDSP based sound card on a MSM8996 device
+>  which uses apr as communication between Apps and QDSP.
+> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
+>  			...
+>  		};
+>  	};
+> +
+> += EXAMPLE 2
+> +The following example represents a QDSP based sound card on SDM845 device.
+> +Here the apr services are dependent on "avs/audio" service running on AUDIO
+> +Protection Domain hosted on ADSP remote processor.
+> +
+> +	apr {
+> +		compatible = "qcom,apr-v2";
+> +		qcom,glink-channels = "apr_audio_svc";
+> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+> +
+> +		q6core {
+> +			compatible = "qcom,q6core";
+> +			reg = <APR_SVC_ADSP_CORE>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +		};
+> +
+> +		q6afe: q6afe {
+> +			compatible = "qcom,q6afe";
+> +			reg = <APR_SVC_AFE>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +			q6afedai: dais {
+> +				compatible = "qcom,q6afe-dais";
+> +				#sound-dai-cells = <1>;
+> +
+> +				qi2s@22 {
+> +					reg = <22>;
+> +					qcom,sd-lines = <3>;
+> +				};
+> +			};
+> +		};
+> +
+> +		q6asm: q6asm {
+> +			compatible = "qcom,q6asm";
+> +			reg = <APR_SVC_ASM>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +			q6asmdai: dais {
+> +				compatible = "qcom,q6asm-dais";
+> +				#sound-dai-cells = <1>;
+> +				iommus = <&apps_smmu 0x1821 0x0>;
+> +			};
+> +		};
+> +
+> +		q6adm: q6adm {
+> +			compatible = "qcom,q6adm";
+> +			reg = <APR_SVC_ADM>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+
+Perhaps an example where not everything is the same. The example shows 
+me this isn't needed in DT.
+
+> +			q6routing: routing {
+> +				compatible = "qcom,q6adm-routing";
+> +				#sound-dai-cells = <0>;
+> +			};
+> +		};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
