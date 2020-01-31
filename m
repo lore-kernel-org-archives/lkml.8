@@ -2,335 +2,149 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1D3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE2C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5301F206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA8B206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RkOB+zXP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hsbzerpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgAaSer (ORCPT
+        id S1726239AbgAaSfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:34:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39670 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgAaSer (ORCPT
+        Fri, 31 Jan 2020 13:35:05 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52109 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgAaSfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:34:47 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00VIXnLU048194;
-        Fri, 31 Jan 2020 18:33:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=P2nZoqcfNGldK9P/dZq23Tu+F7jBb92VgkLDVWfhseI=;
- b=RkOB+zXPcOMe/TzVMBmZWBg0/fmy2xQDHQnkEnZZrVssmKa2LjtgNSfZw4BdUyRj27I3
- NxtdZHOzA0YwS+qsPKRs2ZdxDZ3IdPlSNndj+WXQ9Wm8p1iVrQu5316A54UXgAM9tQDk
- tPteAvxngkK1cDm5h9O6ir6usq8kfCyFyG4eCrg7fbSHPps0kySCBcDMUErr9j8tTPXH
- KXNhmKbQkDdGN2MT1wB3cWnc/Ob9BtjAWbLSDOF5TDZGT/dqtYaBaE1LuZuUDwGWKg/e
- w3lz2uZJKGR0/KqrbmgubqVpPIMaDtrd1MAaXuJikdVETsMJfsG4wgvIAa8GPy/CVIDH 3A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xrdmr491d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 18:33:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00VIE1mh039787;
-        Fri, 31 Jan 2020 18:33:27 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xv8nrhqtk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 18:33:27 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00VIXC5D029013;
-        Fri, 31 Jan 2020 18:33:12 GMT
-Received: from [10.39.253.182] (/10.39.253.182)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 31 Jan 2020 10:33:12 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v7 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20200131133543.GD14914@hirez.programming.kicks-ass.net>
-Date:   Fri, 31 Jan 2020 13:33:09 -0500
-Cc:     linux@armlinux.org.uk, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E32F90E2-F00B-423B-A851-336004EF6593@oracle.com>
-References: <20191125210709.10293-1-alex.kogan@oracle.com>
- <20191125210709.10293-4-alex.kogan@oracle.com>
- <20200121202919.GM11457@worktop.programming.kicks-ass.net>
- <20200122095127.GC14946@hirez.programming.kicks-ass.net>
- <20200122170456.GY14879@hirez.programming.kicks-ass.net>
- <D6ED40A0-E96D-41F6-AA74-0901C2C37476@oracle.com>
- <20200131133543.GD14914@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001310151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001310152
+        Fri, 31 Jan 2020 13:35:04 -0500
+Received: by mail-pj1-f66.google.com with SMTP id fa20so3211002pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:35:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FNldGpprrIjAxOHYn2QBdh/3vnfJwPKJIrrflsH8ktk=;
+        b=hsbzerptORvwH0vpSsI3aT6WnhSyW8eB5UvTOaunMXUeuAp4A1xIR9LkZ1+7Ff7gOX
+         607Whk+GQ7HxkakQbJkadYinX9feSnm1U+WUG/mRx0TXTfqaPw5Pq7CUyU77WOxZAyiI
+         giISpPx79c3tD9tCHcycdtEPH8vWiHIe4mCXi1nvwoG9PZlC4aOKEsZ6eSRX/rgpALA1
+         m+6gCkDgb98dw4tJyGGs6Lg2Q7oWI2bxCrzwhPyd3kqyuR5p1FygStRosbAnzNCgvBq7
+         iDDUFwsokfSAC8WHurV7KDZcmRrYsDR0eln7nqnDtQ9THJSyHndGlCuQWYlIytQc1cIp
+         annA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FNldGpprrIjAxOHYn2QBdh/3vnfJwPKJIrrflsH8ktk=;
+        b=AOFjQlSHUsjXbFQ/MUQbmO8lLWj8tK0QW0Q/ZtU0W5HwTqmDPxSmivGNrNTnADn2ni
+         XisCpdg0h9x0+/k+hC8yOf/UIuPnwxRxaQtFnZ5nRlRO7q+LwuT8Z3+iv/p9w3hnzNKK
+         bC3P4x+vzbbowNA/l07Nis5OpC+0qtx7qSMzSkClV2KsXf1A1nalyugUH/ZF2ml+c2hh
+         ujCgSbtvXDGvFLJ0yaQKzzn/c1Stt6XXORkqxVwrup2XRTKJhB5fuNQRsKRkFdF0+k9Z
+         wVXDscN/0goNDHcNDM4qrioaC9Af0GKxn7RbzAcifAo9bAb6qWLdzfDc5wRLZ+/teMhz
+         CUvw==
+X-Gm-Message-State: APjAAAXVv1GVlhMYBnBKE3Q91rRlgDx+n0cWSh5EgmvJOgjDT/HFwSwV
+        R2OaXc66sD9dadTb8ZNj1FFyPg==
+X-Google-Smtp-Source: APXvYqwdPLF365VxzERHRMC1i3RDJSmVpWgBA4ceh3RyvNjCl6YYI7K25p/FD6eAG4B1uvL5w0OKlA==
+X-Received: by 2002:a17:902:8a8e:: with SMTP id p14mr11480948plo.28.1580495703649;
+        Fri, 31 Jan 2020 10:35:03 -0800 (PST)
+Received: from smuckle.san.corp.google.com ([2620:15c:2d:3:8fbe:ee3b:c81d:238d])
+        by smtp.gmail.com with ESMTPSA id t65sm10882061pgb.17.2020.01.31.10.35.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 10:35:03 -0800 (PST)
+Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
+From:   Steve Muckle <smuckle@google.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        kernel-team@android.com
+References: <20191106194625.116692-1-smuckle@google.com>
+ <20191106231923.GK8309@piout.net>
+ <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
+ <20191115133627.GT3572@piout.net>
+ <e43fd369-f0ad-f8bb-be8a-1a3ca038af44@google.com>
+Message-ID: <6c4296e2-b3ab-1aad-6708-78833d24df58@google.com>
+Date:   Fri, 31 Jan 2020 10:35:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <e43fd369-f0ad-f8bb-be8a-1a3ca038af44@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/27/19 12:26 PM, Steve Muckle wrote:
+> On 11/15/19 5:36 AM, Alexandre Belloni wrote:
+>> On 06/11/2019 15:37:49-0800, Steve Muckle wrote:
+>>> On 11/6/19 3:19 PM, Alexandre Belloni wrote:
+>>>> On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
+>>>>> Due to distribution constraints it may not be possible to statically
+>>>>> compile the required RTC driver into the kernel.
+>>>>>
+>>>>> Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
+>>>>> or not) by checking at the end of RTC device registration whether the
+>>>>> time should be synced.
+>>>>>
+>>>>
+>>>> This does not really help distributions because most of them will still
+>>>> have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
+>>>
+>>> Just for my own edification, why is that? Is rtc0 normally useless on PC for
+>>> some reason?
+>>>
+>>
+>> On PC, rtc0 is probably fine which is not the case for other
+>> architectures where rtc0 is the SoC RTC and is often not battery backed.
+>>
+>>> On the platforms I'm working with I believe it can be assured that rtc0 will
+>>> be the correct rtc. That doesn't help typical distributions though.
+>>>
+>>> What about a kernel parameter to optionally override the rtc hctosys device
+>>> at runtime?
+>>>
+>>
+>> What about keeping that in userspace instead which is way easier than
+>> messing with kernel parameters?
+> 
+> This should ideally happen before file systems are mounted so I don't
+> see many alternatives for communicating which RTC should be used.
+> Android uses the kernel command line for userspace parameters as well
+> and that's an option but that defeats part of the value of doing it in
+> userspace IMO. There's also device tree but I'm not sure this belongs there.
+> 
+> Hctosys is also saving and restoring the system time on suspend/resume.
+> It seems more efficient to me to do this (which happens very frequently
+> on an Android device) in the kernel as opposed to in userspace.
+> 
+> If I set the initial system time from the rtc in userspace but continue
+> to rely on the hctosys suspend/resume code, as it stands there will be a
+> window after the rtc driver is loaded but before the system time is set
+> where if suspend is entered, the correct time in the rtc will be lost.
+ >
+>>>> Can't you move away from HCTOSYS and do the correct thing in userspace
+>>>> instead of the crap hctosys is doing?
+>>>
+>>> Yes, I just figured it's a small change, and if hctosys can be made to work
+>>> might as well use that.
+>>
+>> The fact is that hctosys is more related to time keeping than it is to
+>> the RTC subsytem. It also does a very poor job setting the system time
+>> because adding 0.5s is not the smartest thing to do. The rtc granularity
+>> is indeed 1 second but is can be very precisely set.
+ >
+> No argument with that, but millions of devices successfully rely on it
+> today. AFAICT this simple patch doesn't make anything worse. Together
+> with a change to support a kernel parameter for runtime rtc selection,
+> it should allow RTC drivers to be modularized on many systems. Can it be
+> adopted as a stopgap measure?
 
->>> + *
->>> + * Returns 0 if a matching node is found; otherwise return the =
-encoded pointer
->>> + * to the last element inspected (such that a subsequent scan can =
-continue there).
->>> + *
->>> + * The worst case complexity of the scan is O(n), where n is the =
-number
->>> + * of current waiters. However, the amortized complexity is close =
-to O(1),
->>> + * as the immediate successor is likely to be running on the same =
-node once
->>> + * threads from other nodes are moved to the secondary queue.
->>> + *
->>> + * XXX does not compute; given equal contention it should average =
-to O(nr_nodes).
->> Let me try to convince you. Under contention, the immediate waiter =
-would be
->> a local one. So the scan would typically take O(1) steps. We need to =
-consider
->> the extra work/steps we take to move nodes to the secondary queue. =
-The
->> number of such nodes is O(n) (to be more precise, it is O(n-m), where =
-m
->> is nr_cpus_per_node), and we spend a constant amount of work, per =
-node,=20
->> to scan those nodes and move them to the secondary queue. So in =
-2^thresholds
->> lock handovers, we scan 2^thresholds x 1 + n-m nodes. Assuming=20
->> 2^thresholds > n, the amortized complexity of this function then is =
-O(1).
->=20
-> There is no threshold in this patch.
-This does not change the analysis, though.
-
-> That's the next patch, and
-> I've been procrastinating on that one, mostly also because of the
-> 'reasonable' claim without data.
->=20
-> But Ah!, I think I see, after nr_cpus tries, all remote waiters are on
-> the secondary queue and only local waiters will remain. That will =
-indeed
-> depress the average a lot.
-Ok, cool.
-
-< snip >
-
->=20
->>> +{
->>> +	struct mcs_spinlock *head_2nd, *tail_2nd;
->>> +
->>> +	tail_2nd =3D decode_tail(node->locked);
->>> +	head_2nd =3D tail_2nd->next;
->> I understand that you are trying to avoid repeating those two lines
->> in both places this function is called from, but you do it at the =
-cost
->> of adding the following unnecessary if-statement, and in general this =
-function
->> looks clunky.
->=20
-> Let me show you the current form:
->=20
-> /*
-> * cna_splice_head -- splice the entire secondary queue onto the head =
-of the
-> * primary queue.
-> *
-> * Returns the new primary head node or NULL on failure.
-Maybe explain here why failure can happen? Eg., =E2=80=9CThe latter can =
-happen
-due to a race with a waiter joining an empty primary queue."
-
-> */
-> static struct mcs_spinlock *
-> cna_splice_head(struct qspinlock *lock, u32 val,
-> 		struct mcs_spinlock *node, struct mcs_spinlock *next)
-> {
-> 	struct mcs_spinlock *head_2nd, *tail_2nd;
-> 	u32 new;
->=20
-> 	tail_2nd =3D decode_tail(node->locked);
-> 	head_2nd =3D tail_2nd->next;
->=20
-> 	if (!next) {
-> 		/*
-> 		 * When the primary queue is empty; our tail becomes the =
-primary tail.
-> 		 */
->=20
-> 		/*
-> 		 * Speculatively break the secondary queue's circular =
-link; such that when
-> 		 * the secondary tail becomes the primary tail it all =
-works out.
-> 		 */
-> 		tail_2nd->next =3D NULL;
->=20
-> 		/*
-> 		 * tail_2nd->next =3D NULL		xchg_tail(lock, =
-tail)
-> 		 *
-> 		 * cmpxchg_release(&lock, val, new)	=
-WRITE_ONCE(prev->next, node);
-> 		 *
-> 		 * Such that if the cmpxchg() succeeds, our stores won't =
-collide.
-> 		 */
-> 		new =3D ((struct cna_node *)tail_2nd)->encoded_tail | =
-_Q_LOCKED_VAL;
-> 		if (!atomic_try_cmpxchg_release(&lock->val, &val, new)) =
-{
-> 			/*
-> 			 * Note; when this cmpxchg fails due to =
-concurrent
-> 			 * queueing of a new waiter, then we'll try =
-again in
-> 			 * cna_pass_lock() if required.
-> 			 *
-> 			 * Restore the secondary queue's circular link.
-> 			 */
-> 			tail_2nd->next =3D head_2nd;
-> 			return NULL;
-> 		}
->=20
-> 	} else {
-> 		/*
-> 		 * If the primary queue is not empty; the primary tail =
-doesn't need
-> 		 * to change and we can simply link our tail to the old =
-head.
-> 		 */
-> 		tail_2nd->next =3D next;
-> 	}
->=20
-> 	/* That which was the secondary queue head, is now the primary =
-queue head */
-Rephrase the comment?
-
-> 	return head_2nd;
-> }
->=20
-> The function as a whole is self-contained and consistent, it deals =
-with
-> the splice 2nd to 1st queue, for all possible cases. You only have to
-> think about the list splice in one place, here, instead of two places.
->=20
-> I don't think it will actually result in more branches emitted; the
-> compiler should be able to use value propagation to eliminate stuff.
-Ok, I can see your point.
-
->=20
->>> +static inline bool cna_try_clear_tail(struct qspinlock *lock, u32 =
-val,
->>> +				      struct mcs_spinlock *node)
->>> +{
->>> +	struct mcs_spinlock *next;
->>> +
->>> +	/*
->>> +	 * We're here because the primary queue is empty; check the =
-secondary
->>> +	 * queue for remote waiters.
->>> +	 */
->>> +	if (node->locked > 1) {
->>> +		/*
->>> +		 * When there are waiters on the secondary queue move =
-them back
->>> +		 * onto the primary queue and let them rip.
->>> +		 */
->>> +		next =3D cna_splice_head(lock, val, node, NULL);
->>> +		if (next) {
->> And, again, this if-statement is here only because you moved the rest =
-of the code
->> into cna_splice_head(). Perhaps, with cna_extract_2dary_head_tail() =
-you can
->> bring that code back?
->=20
-> I don't see the objection, you already had a branch there, from the
-> cmpxchg(), this is the same branch, the compiler should fold the lot.
-Now you have the branch from cmpxchg(), and another one from "if =
-(next)=E2=80=9D.
-But you are right that the compiler is likely to optimize out the =
-latter.
-
-> We can add an __always_inline if you're worried.
-Let=E2=80=99s do that.
-
-< snip >
-
->>> +static inline void cna_pass_lock(struct mcs_spinlock *node,
->>> +				 struct mcs_spinlock *next)
->>> +{
->>> +	struct cna_node *cn =3D (struct cna_node *)node;
->>> +	u32 partial_order =3D cn->partial_order;
->>> +	u32 val =3D _Q_LOCKED_VAL;
->>> +
->>> +	/* cna_wait_head_or_lock() left work for us. */
->>> +	if (partial_order) {
->>> +		partial_order =3D cna_order_queue(node, =
-decode_tail(partial_order));
->>> +
->>> +	if (!partial_order) {
->>> +		/*
->>> +		 * We found a local waiter; reload @next in case we =
-called
->>> +		 * cna_order_queue() above.
->>> +		 */
->>> +		next =3D node->next;
->>> +		val |=3D node->locked;	/* preseve secondary queue */
->> This is wrong. node->locked can be 0, 1 or an encoded tail at this =
-point, and
->> the latter case will be handled incorrectly.
->>=20
->> Should be=20
->> 		  if (node->locked) val =3D node->locked;
->> instead.
->=20
-> I'm confused, who cares about the locked bit when it has an encoded =
-tail on?
->=20
-> The generic code only cares about it being !0, and the cna code always
-> checks if it has a tail (>1 , <=3D1) first.
-Ah, that may actually work, but not sure if this was your intention.
-
-The code above sets val to 1 or encoded tail + 1 (rather than encoded =
-tail),
-decode_tail(tail) does not care about LSB, and will do its calculation =
-correctly.
-IOW, decode_tail( tail ) is the same as decode_tail( tail + 1 ).
-
-I think this is a bit fragile and depends on the implementation of=20
-decode_tail(), but if you are fine with that, no objections here.
-
-Regards,
-=E2=80=94 Alex
-
+Hi Alexandre, ping...
