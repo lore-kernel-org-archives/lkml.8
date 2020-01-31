@@ -2,214 +2,261 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECEAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7998DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C719F217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1RNrkco"
+	by mail.kernel.org (Postfix) with ESMTP id 514402253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580488585;
+	bh=Fs/FAawPdYJuq52mxS/wqXFtjT4M8et3Ikr/1M6FIic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bZ9qT45y10T38T+Zv3qlt61mH1731qjGX684RluK/zbANS/hNl4i5hqrqNa7BHgil
+	 GMQuWguOuOryYFV6nWwGf/mO3d2jWdnvAsOea92BXzNhJkirgycl3XTpr7jyOBsHfw
+	 OOz9s0h68BcIe8f3LycTaAHL3fzl1XuARogzfkus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgAaQeV (ORCPT
+        id S1726708AbgAaQgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:34:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44808 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgAaQeU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:34:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id q8so7704920ljj.11;
-        Fri, 31 Jan 2020 08:34:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rVk7M4gYPu86cgQ1So8LoJbxA77sG+PGy1cjE43BUxw=;
-        b=Q1RNrkco8oJmb4qm8h8JK+tx2kOBaKVwC4ENwcuBF9leg9BALyybP+jSbSGTh0pH+W
-         fwi5a4jxwU5b7GdJhKOksn93GT8i/SqGWyhyi9A2ol3KkOxS1RT9OnZ2l+IENHPcbOOf
-         Asd3UhH4jkSHvjKb2WSztjSEOtGO1T6/EKVpgFr09tzufmdhl7ZgBeHYhI5R9oPL2G4p
-         O0XXlU2hX77unIK13NQ32BIpyVI4RjpPTHWc2bYqpm9oyCy2tfF1pTTJFGLVS9SywHH5
-         d/6j3FbCWy1BRGu74TMMzA9TpQF7JU35bKzKazmXm1sRkfDQRV/Cnzwfd23mgqP2VUuh
-         gnFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rVk7M4gYPu86cgQ1So8LoJbxA77sG+PGy1cjE43BUxw=;
-        b=QHzL3PYlPULTbqm8nuCmTK9rKmOmy3EgJmGrxMLagBY9Qi2Zp5a3KzlUYWPjzL0ZBT
-         7+pMzKzKqVfSis2RmpTmdZ30o3ng/de7rwh4ofIQQ/NhmKOUEB5l06swtnNHH6c/hJLt
-         sUAfK8JGEaXrWZOxtus9mLZ0rWvIIO2ckgN6EagScqyGtAvdh5Jj52F1Cq3UMAMemsqC
-         l+ljZTuVyHToZt6NBEqm/yOJoziuNw2tkuFsm1pjxkKhXApdqGk3E3TBzwKwPfnxhq17
-         ATUCMT+kfupMnYa6vLXRj3UT+FEVKiDSzX7G42cDvYCdkyJO2yTr1AoHTbYe/rSIcxnI
-         1tvw==
-X-Gm-Message-State: APjAAAVDnmmDTtTtawLQSR5IU+Kr0vf5xjnnl4dSHqhmbFaTV+241e1w
-        IeYxJMwXwkcioLfOS9vmJf+9EC27t4eKhiqrNm9jAGhy
-X-Google-Smtp-Source: APXvYqyQM7lg4jmHwHYH6zJL6QogrN9+0F9lGLdiR/nKZk9ErDODUTx34W5medZl0f3g9PAzFqJnqDTB1vAxF3MRcTo=
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr6264141lji.167.1580488457582;
- Fri, 31 Jan 2020 08:34:17 -0800 (PST)
+        Fri, 31 Jan 2020 11:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgAaQgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:36:24 -0500
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39B972082E;
+        Fri, 31 Jan 2020 16:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580488583;
+        bh=Fs/FAawPdYJuq52mxS/wqXFtjT4M8et3Ikr/1M6FIic=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0vTVadZyhl18ZX2cB2ZszEp/pmLdOqd3Wb9g9oMn2WouCnQPQzkOnfSz7Mz2kdQ66
+         mUTxp//K97YBKg5YuFxeHpHO487+Ba5g72MrxSkC8bNeSoTXR7lE2iRMWHlHpIIQbq
+         8bihIsGKNz6axIaeu9XVyoIWYCzY/uSF9bnvcg80=
+Received: by mail-qt1-f181.google.com with SMTP id v25so5848754qto.7;
+        Fri, 31 Jan 2020 08:36:23 -0800 (PST)
+X-Gm-Message-State: APjAAAXlf0R37utORTR9WCYlqlmKO19AbLjPT0UIh/jWJMkPNmVD6pcr
+        5s/MKUZ+FJc03m7P0X6z0gnIeqYpFaoSCNTrAg==
+X-Google-Smtp-Source: APXvYqxvfr9BW//7wSw4AQYOawlaBPSl3VOxQmUJxzMOB7suHBwIa8Z/SVB+GdRGRPXiNdGoCKMUZF8+LjvD3ZM7EhY=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr11714482qtj.300.1580488582310;
+ Fri, 31 Jan 2020 08:36:22 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHhAz+ijB_SNqRiC1Fn0Uw3OpiS7go4dPPYm6YZckaQ0fuq=QQ@mail.gmail.com>
- <20200130190040.GA96992@google.com>
-In-Reply-To: <20200130190040.GA96992@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Fri, 31 Jan 2020 22:04:05 +0530
-Message-ID: <CAHhAz+i4HVymeCzyPFRe+1E0R8_nD4LHmHApD2BrLfoWRKSJFA@mail.gmail.com>
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200130211231.224656-1-dianders@chromium.org> <20200130131220.v3.11.I27bbd90045f38cd3218c259526409d52a48efb35@changeid>
+In-Reply-To: <20200130131220.v3.11.I27bbd90045f38cd3218c259526409d52a48efb35@changeid>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 31 Jan 2020 10:36:10 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+_2E-bAbP9F6VYkWRp0crEyRGa5peuwP58-PZniVny7w@mail.gmail.com>
+Message-ID: <CAL_Jsq+_2E-bAbP9F6VYkWRp0crEyRGa5peuwP58-PZniVny7w@mail.gmail.com>
+Subject: Re: [PATCH v3 11/15] dt-bindings: clock: Cleanup qcom,videocc
+ bindings for sdm845/sc7180
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 12:30 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Jan 30, 2020 at 3:13 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> On Thu, Jan 30, 2020 at 09:37:48PM +0530, Muni Sekhar wrote:
-> > On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrot=
-e:
-> > >
-> > > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
-> > > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
-> > > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > > > > > parallel I/O and interfaces them to the Host CPU via PCI Expres=
-s bus.
-> > > > > > I see that my system freezes without capturing the crash dump f=
-or
-> > > > > > certain tests. I debugged this issue and it was tracked down to=
- the
-> > > > > > below mentioned interrupt handler code.
-> > > > > >
-> > > > > >
-> > > > > > In ISR, first reads the Interrupt Status register using =E2=80=
-=98readl()=E2=80=99 as
-> > > > > > given below.
-> > > > > >     status =3D readl(ctrl->reg + INT_STATUS);
-> > > > > >
-> > > > > >
-> > > > > > And then clears the pending interrupts using =E2=80=98writel()=
-=E2=80=99 as given blow.
-> > > > > >         writel(status, ctrl->reg + INT_STATUS);
-> > > > > >
-> > > > > >
-> > > > > > I've noticed a kernel hang if INT_STATUS register read again af=
-ter
-> > > > > > clearing the pending interrupts.
-> > > > > >
-> > > > > > Can someone clarify me why the kernel hangs without crash dump =
-incase
-> > > > > > if I read the INT_STATUS register using readl() after clearing =
-the
-> > > > > > pending bits?
-> > > > > >
-> > > > > > Can readl() block?
-> > > > >
-> > > > > readl() should not block in software.  Obviously at the hardware =
-CPU
-> > > > > instruction level, the read instruction has to wait for the resul=
-t of
-> > > > > the read.  Since that data is provided by the device, i.e., your =
-FPGA,
-> > > > > it's possible there's a problem there.
-> > > >
-> > > > Thank you very much for your reply.
-> > > > Where can I find the details about what is protocol for reading the
-> > > > =E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful =
-links..
-> > > > I tried locate the exact point of the kernel code where CPU waits f=
-or
-> > > > read instruction as given below.
-> > > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)a=
-dd
-> > > > Do I need to check for the assembly instructions, here?
-> > >
-> > > The C pointer dereference, e.g., "*address", will be some sort of a
-> > > "load" instruction in assembly.  The CPU wait isn't explicit; it's
-> > > just that when you load a value, the CPU waits for the value.
-> > >
-> > > > > Can you tell whether the FPGA has received the Memory Read for
-> > > > > INT_STATUS and sent the completion?
-> > > >
-> > > > Is there a way to know this with the help of software debugging(eit=
-her
-> > > > enabling dynamic debugging or adding new debug prints)? Can you ple=
-ase
-> > > > point some tools\hw needed to find this?
-> > >
-> > > You could learn this either via a PCIe analyzer (expensive piece of
-> > > hardware) or possibly some logic in the FPGA that would log PCIe
-> > > transactions in a buffer and make them accessible via some other
-> > > interface (you mentioned it had parallel and other interfaces).
-> > >
-> > > > > On the architectures I'm familiar with, if a device doesn't respo=
-nd,
-> > > > > something would eventually time out so the CPU doesn't wait forev=
-er.
-> > > >
-> > > > What is timeout here? I mean how long CPU waits for completion? Sin=
-ce
-> > > > this code runs from interrupt context, does it causes the system to
-> > > > freeze if timeout is more?
-> > >
-> > > The Root Port should have a Completion Timeout.  This is required by
-> > > the PCIe spec.  The *reporting* of the timeout is somewhat
-> > > implementation-specific since the reporting is outside the PCIe
-> > > domain.  I don't know the duration of the timeout, but it certainly
-> > > shouldn't be long enough to look like a "system freeze".
-> > Does kernel writes to PCIe configuration space register =E2=80=98Device
-> > Control 2 Register=E2=80=99 (Offset 0x28)? When I tried to read this re=
-gister,
-> > I noticed bit 4 is set (which disables completion timeouts) and rest
-> > all other bits are zero. So, Completion Timeout detection mechanism is
-> > disabled, right? If so what could be the reason for this?
+> This makes the qcom,videocc bindings match the recent changes to the
+> dispcc and gpucc.
 >
-> To my knowledge Linux doesn't set PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
-> except for one powerpc case.  You can check yourself by using cscope
-> or grep to look for PCI_EXP_DEVCTL2_COMP_TMOUT_DIS or PCI_EXP_DEVCTL2.
+> 1. Switched to using "bi_tcxo" instead of "xo".
 >
-> If you're seeing bit 4 (PCI_EXP_DEVCTL2_COMP_TMOUT_DIS) set, it's
-> likely because firmware set it.  You can try booting with
-> "pci=3Dearlydump" to see what's there before Linux starts changing
-> things.
-
-[    0.000000] pci 0000:01:00.0 config space:
-
-                 00: 56 15 55 55 07 00 10 00 00 00 00 05 10 00 00 00
-                 10: 00 00 40 d0 00 00 00 00 00 00 00 00 00 00 00 00
-                 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00
-                 30: 00 00 00 00 40 00 00 00 00 00 00 00 0b 01 00 00
-                 40: 01 48 03 00 08 00 00 00 05 60 00 00 00 00 00 00
-                 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 60: 10 00 02 00 c2 8f 00 00 00 28 01 00 21 f4 03 00
-                 70: 01 00 21 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 80: 00 00 00 00 02 00 00 00 10 00 00 00 00 00 00 00
-                 90: 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                 f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-
-Device Control 2" is located @offset 0x28 in PCI Express Capability
-Structure. But where does 'PCI Express Capability Structure' located
-in the above mentioned 'PCI Express Configuration Space'?
+> 2. Adds a description for the XO clock.  Not terribly important but
+>    nice if it cleanly matches its cousins.
 >
-> Bjorn
+> 3. Updates the example to use the symbolic name for the RPMH clock and
+>    also show that the real devices are currently using 2 address cells
+>    / size cells and fixes the spacing on the closing brace.
+>
+> 4. Split into 2 files.  In this case they could probably share one
+>    file, but let's be consistent.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v3:
+> - Added include file to description.
+> - Split videocc bindings into 2 files.
+> - Unlike in v2, use internal name instead of purist name.
+>
+> Changes in v2:
+> - Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+>
+>  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 +++++++++++++++++++
+>  ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++++----
+>  2 files changed, 77 insertions(+), 13 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+>  rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (60%)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+> new file mode 100644
+> index 000000000000..f12ec56737e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-videocc.yaml#
 
+'bindings/' should be removed here. I just found my check on this was
+inadequate. The clock bindings seem to have the most copy-n-paste of
+this.
 
+Otherwise,
 
---=20
-Thanks,
-Sekhar
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Video Clock & Reset Controller Binding for SC7180
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm video clock control module which supports the clocks, resets and
+> +  power domains on SC7180.
+> +
+> +  See also dt-bindings/clock/qcom,videocc-sc7180.h.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sc7180-videocc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bi_tcxo
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#reset-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#reset-cells'
+> +  - '#power-domain-cells'
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    clock-controller@ab00000 {
+> +      compatible = "qcom,sc7180-videocc";
+> +      reg = <0 0x0ab00000 0 0x10000>;
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +      clock-names = "bi_tcxo";
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> similarity index 60%
+> rename from Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> rename to Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> index 43cfc893a8d1..60300f5ab307 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
+> @@ -1,30 +1,31 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/bindings/clock/qcom,videocc.yaml#
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sdm845-videocc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+> -title: Qualcomm Video Clock & Reset Controller Binding
+> +title: Qualcomm Video Clock & Reset Controller Binding for SDM845
+>
+>  maintainers:
+>    - Taniya Das <tdas@codeaurora.org>
+>
+>  description: |
+>    Qualcomm video clock control module which supports the clocks, resets and
+> -  power domains.
+> +  power domains on SDM845.
+> +
+> +  See also dt-bindings/clock/qcom,videocc-sdm845.h.
+>
+>  properties:
+>    compatible:
+> -    enum:
+> -      - qcom,sc7180-videocc
+> -      - qcom,sdm845-videocc
+> +    const: qcom,sdm845-videocc
+>
+>    clocks:
+> -    maxItems: 1
+> +    items:
+> +      - description: Board XO source
+>
+>    clock-names:
+>      items:
+> -      - const: xo
+> +      - const: bi_tcxo
+>
+>    '#clock-cells':
+>      const: 1
+> @@ -48,15 +49,15 @@ required:
+>    - '#power-domain-cells'
+>
+>  examples:
+> -  # Example of VIDEOCC with clock node properties for SDM845:
+>    - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+>      clock-controller@ab00000 {
+>        compatible = "qcom,sdm845-videocc";
+> -      reg = <0xab00000 0x10000>;
+> -      clocks = <&rpmhcc 0>;
+> -      clock-names = "xo";
+> +      reg = <0 0x0ab00000 0 0x10000>;
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +      clock-names = "bi_tcxo";
+>        #clock-cells = <1>;
+>        #reset-cells = <1>;
+>        #power-domain-cells = <1>;
+> -     };
+> +    };
+>  ...
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
