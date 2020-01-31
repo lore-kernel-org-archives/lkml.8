@@ -2,163 +2,134 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C7CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBFAC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3090205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qTWgpBB/"
+	by mail.kernel.org (Postfix) with ESMTP id 8524024682
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580476610;
+	bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z3zubPKYwY9++iPIiaSISYuIWUAhYKqe6kT9Ex8lyuXffd+CiO+6/3pNzyb6GWhau
+	 PraUwQbketI+sY0O/O+GUgv77MaW1wWf6ZqGih4QqXi3yq9+d1FbmoU/iZbNPBWjN9
+	 waFDqy9mxAwh9havJNoBF3wyEVo0U92jbJ7EwX9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgAaNPN (ORCPT
+        id S1728662AbgAaNQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:15:13 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42038 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbgAaNPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:15:12 -0500
-Received: by mail-wr1-f67.google.com with SMTP id k11so8536134wrd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 05:15:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pMGTkZejcRbIEhm2Fn/SJPdUwbiAKkh35s6KFA9Xsfc=;
-        b=qTWgpBB//UBaXqSy1KCaPJm3JRr8VTZAggnZ65FCrQvJlKu+0+Bi5mvlq9DAa6CdKV
-         ff2IQffeB5LC4ayEaBByrsHIRuplJMMM0hFhpAg6dzRxWUm93X9F5yk6Nm1hmChUYBxj
-         /pQralfyEIgACFznJA0cucQmE7eOl3WS41WZ1QpuMEYenS+jwYP1QSN7KzCtntd5V6hN
-         A6/BELU+d/IA8hVP/UPG3/6mDCU1p9EYjVjmCTy96WvA1XF6gZZAL1TY2p78s91t/+73
-         qFtj09OUOUy3ciHpEeaNFdMp41wzM3UX6Rn6KCBTBHe9dFN+UbIibTOGlMAEaqAbUXma
-         9dAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pMGTkZejcRbIEhm2Fn/SJPdUwbiAKkh35s6KFA9Xsfc=;
-        b=DE0G26Yo1g3VvIwi91ZSqX+t6QmSZNBUkeBJKowE1IMHuplHJWjS8FtpbmF1JXVS+C
-         D0xFnN9lVpVq4L3bYlJYqKsymXZScyClX/wIVSVEOUbp3vx1s5/dT5sAgnY4nnDSr2yZ
-         iwsZF/AMiPXWETHpDkxmjf8b1WfROMWSEu0wIQzXHXa6D9JLdauw3HV1HK7z1E/iBEg+
-         jv3cYlalbbsSNiLStCdbZr2l7rzVVxRhlGL4xC93WNZE6XPVYk0vCEG+n74Dqz6heMtt
-         sro1ymZRGV2qghhBDON02teIV9V5ILk+7/w6va+PxzXNMYg0pxQH5iEeKfrF7JoIPS9h
-         Cakg==
-X-Gm-Message-State: APjAAAVD7iSgMv2xsTlfngdEBqSJPBcHOucIV2I2CwxMlx3FQhmcM8BL
-        QbfelabloF98M1dM7yUkOmwEMw==
-X-Google-Smtp-Source: APXvYqza3VJEYJdQsvtDfjodgx6fnJIGuz4s4bY1cHROAVO1TCq3QQ7h5PXi7tRAgNOEV6DLEzywug==
-X-Received: by 2002:adf:9c92:: with SMTP id d18mr579870wre.82.1580476509291;
-        Fri, 31 Jan 2020 05:15:09 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id s65sm11218013wmf.48.2020.01.31.05.15.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 05:15:08 -0800 (PST)
-Date:   Fri, 31 Jan 2020 13:15:08 +0000
-From:   Matthias Maennich <maennich@google.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     masahiroy@kernel.org, nico@fluxnic.net,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        kernel-team@android.com, jeyu@kernel.org
-Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYMS
-Message-ID: <20200131131508.GH102066@google.com>
-References: <20200129181541.105335-1-qperret@google.com>
+        Fri, 31 Jan 2020 08:16:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728579AbgAaNQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:16:49 -0500
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B841B214D8;
+        Fri, 31 Jan 2020 13:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580476608;
+        bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=REGgpnatP7syvTAN13b3NhETyEXsZVzYCcZ9RyVO+h3jGNo2hxi6rsL2y7DhCXW+P
+         mIhffXNpcPqw0cDM8/aAidmUwrV74NLYpT/HbvC/aJ/VMjlj3LVZ3L/dPH/2LouKwL
+         gi8QvC5LlnYvhbaq/HyIyjLsGtixlWTnrjD3rFrU=
+Received: by mail-lj1-f175.google.com with SMTP id v17so7055928ljg.4;
+        Fri, 31 Jan 2020 05:16:47 -0800 (PST)
+X-Gm-Message-State: APjAAAUTSQoDCZzBRvrHafCY+0Sfn0dJgs/zLicFSuuKVFpoub5zO1nB
+        J2dfipeRMA+4KbF1icQWsBGC5/jJLA39OtJQg5I=
+X-Google-Smtp-Source: APXvYqyHH1mBNjzJnIDT8ozGRMEfl14lXQUHfdq30KTGdoctW1gTxpv8Cq9HZwZufM6lRyIvRwc5SSMGxFrcr40jDYU=
+X-Received: by 2002:a2e:9c85:: with SMTP id x5mr6044390lji.50.1580476605934;
+ Fri, 31 Jan 2020 05:16:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200129181541.105335-1-qperret@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200127215453.15144-1-lukasz.luba@arm.com> <20200127215453.15144-4-lukasz.luba@arm.com>
+In-Reply-To: <20200127215453.15144-4-lukasz.luba@arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 31 Jan 2020 14:16:34 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     lukasz.luba@arm.com
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 06:15:41PM +0000, Quentin Perret wrote:
->CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
->from ksymtab. This works really well when using in-tree drivers, but
->cannot be used in its current form if some of them are out-of-tree.
+On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
 >
->Indeed, even if the list of symbols required by out-of-tree drivers is
->known at compile time, the only solution today to guarantee these don't
->get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
->space, but also makes it difficult to control the ABI usable by vendor
->modules in distribution kernels such as Android. Being able to control
->the kernel ABI surface is particularly useful to ship a unique Generic
->Kernel Image (GKI) for all vendors.
+> From: Lukasz Luba <lukasz.luba@arm.com>
 >
->As such, attempt to improve the situation by enabling users to specify a
->symbol 'whitelist' at compile time. Any symbol specified in this
->whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
->even if it has no in-tree user. The whitelist is defined as a simple
->text file, listing symbols, one per line.
+> Enable the Energy Model (EM) brings possibility to use Energy Aware
+> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
+> default. The EAS only works with SchedUtil - a CPUFreq governor which
+> handles direct requests from the scheduler for the frequency change. Thus,
+> to make EAS working in default, the SchedUtil governor should be
+> configured as default CPUFreq governor.
 
-Thank you for working on this! I like the idea!
+Full stop. That's enough of needed explanation of schedutil.
+
+> Although, the EAS might be enabled
+> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
+> then set as CPUFreq governor, i.e.:
+>
+> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+>
+> To check if EAS is ready to work, the read output from the command below
+> should show '1':
+> cat /proc/sys/kernel/sched_energy_aware
+>
+> To disable EAS in runtime simply 'echo 0' to the file above.
+
+Not related to this commit. If you were implemeting here
+schedutil/EAS, then it makes sense to post all this. However what's
+the point to describe it in every defconfig change?
+
+> Some test results, which stress the scheduler on Odroid-XU3:
+> hackbench -l 500 -s 4096
+> With mainline code and with this patch set.
+
+Skip the last sentence - duplicated information.
 
 >
->Signed-off-by: Quentin Perret <qperret@google.com>
+> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
+> (which is set to =y in default exynos_defconfig)
 >
->---
->v2: make sure to quote the whitelist path properly (Nicolas)
->---
-> init/Kconfig                | 12 ++++++++++++
-> scripts/adjust_autoksyms.sh |  1 +
-> 2 files changed, 13 insertions(+)
->
->diff --git a/init/Kconfig b/init/Kconfig
->index a34064a031a5..d9c977ef7de5 100644
->--- a/init/Kconfig
->+++ b/init/Kconfig
->@@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
->
-> 	  If unsure, or if you need to build out-of-tree modules, say N.
->
->+config UNUSED_KSYMS_WHITELIST
->+	string "Whitelist of symbols to keep in ksymtab"
->+	depends on TRIM_UNUSED_KSYMS
->+	help
->+	  By default, all unused exported symbols will be trimmed from the
->+	  build when TRIM_UNUSED_KSYMS is selected.
->+
->+	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
->+	  exported at all times, even in absence of in-tree users. The value to
->+	  set here is the path to a text file containing the list of symbols,
->+	  one per line.
->+
-> endif # MODULES
->
-> config MODULES_TREE_LOOKUP
->diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
->index a904bf1f5e67..8e1b7f70e800 100755
->--- a/scripts/adjust_autoksyms.sh
->+++ b/scripts/adjust_autoksyms.sh
->@@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
-> EOT
-> sed 's/ko$/mod/' modules.order |
-> xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
->+cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+>                 |               this patch set                  | mainline
 
-This handles absolute paths very well. I wonder whether we can make this
-more useful for folks that want to maintain such a whitelist in their
-copy of the tree. Lets say, I have in my sources
-arch/x86/configs/x86_64_symbol_whitelist and in my config I have
-CONFIG_UNUSED_KSYMS_WHITELIST="arch/x86/configs/x86_64_symbol_whitelist".
+The commit will be applied on its own branch so the meaning of "this
+patch set" will be lost. Maybe just "before/after"?
 
-If I see it correctly, UNUSED_KSYMS_WHITELIST is currently either an
-absolute path or a relative path to the current build directory. I would
-prefer if relative paths would be relative to the source directory to
-support the above use case. (Note, that scenario above works if I build
-directly in the sources, but fails if I build O=/somewhere/else.)
+>                 |-----------------------------------------------|---------------
+>                 | performance   | SchedUtil     | SchedUtil     | performance
+>                 | governor      | governor      | governor      | governor
+>                 |               | w/o EAS       | w/ EAS        |
+> ----------------|---------------|---------------|---------------|---------------
+> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
+> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
 
-Cheers,
-Matthias
+Why does the performance different before and after this patch?
 
-> sort -u |
-> sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
->
->-- 
->2.25.0.341.g760bfbb309-goog
->
+Mention - lower better (?). Space between number and unit... or better
+mention [s] in column title.
+
+And last but not least:
+Why this patch is separate from 1/3? I don't get the need of splitting them.
+
+Best regards,
+Krzysztof
