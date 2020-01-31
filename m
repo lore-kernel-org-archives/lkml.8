@@ -2,155 +2,140 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE999C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D4C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7EE20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BA220705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRpXut7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgAaM5s (ORCPT
+        id S1728603AbgAaNBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:57:48 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48040 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgAaM5r (ORCPT
+        Fri, 31 Jan 2020 08:01:45 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33770 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgAaNBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:57:47 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 930C61C228F; Fri, 31 Jan 2020 13:57:46 +0100 (CET)
-Date:   Fri, 31 Jan 2020 13:57:31 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 36/55] drivers/net/b44: Change to non-atomic bit
- operations on pwol_mask
-Message-ID: <20200131125730.GA20888@duo.ucw.cz>
-References: <20200130183608.563083888@linuxfoundation.org>
- <20200130183615.120752961@linuxfoundation.org>
+        Fri, 31 Jan 2020 08:01:44 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so7032995lji.0;
+        Fri, 31 Jan 2020 05:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=91NDgBxMOUQX+FZ1BTJVVc6qCU+Cj8++hqqh0GnmSfM=;
+        b=nRpXut7VNzzYjKTPl/iBVkARA1nKKVM2JLhHDU6YEEmxvCw+80Dwl5xODlKBFKjHAB
+         CUsx1vVxYWyG2VTJdeKVLBCPn2qEv8o2mOlJMAiTPMpOUjxTTYJGf4g7DlsoIDZb1dKh
+         e9ybWVTkHB2JKVFao2EeOL/eKD1voyl6aCIVgdgQepoBkXqVrhlzZIZM6zcN8LBWqa/L
+         fRV9PdIdhm+jfSSWv2niorSh3N0IxpcUt0Zu/lham/DwECpLPVGT5fjTgnW3lxp9AhuS
+         bCz7c1d0EyDiPLUu5iEoymetjYYbhwNFRsbq1T6ntHgBt1bLeH0roMA97LCS7QhJmTH3
+         F4cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=91NDgBxMOUQX+FZ1BTJVVc6qCU+Cj8++hqqh0GnmSfM=;
+        b=H8PVV6C4cNc+LmFxrLtdcZ74VVbBpvQMxe+Nt3d/I/Zcvc1VHBwZuXEEvCKPtf3BFr
+         /1M4XA56LSO70MGIOMBaS1z5fDboNg4pQToZ6YW8r3wOQNo+sIQHtjluXahaPd2BJge9
+         0KNb8xVQjf42QCj8ygmiM95yBjjRAFRLlw/EXm2HttKANH8PYo9LnaVUmX/es5l7RIOF
+         PheL/59aaUhQF4KalSguAEGcxKLzLBx+OpMujXcApVZjkkEX1YTFWbZBMJGUk20j6k62
+         fDo4yNNcrZy1R7cWNnEZXcgB4Gu0jnSu/xSrLQroP4gd/U15F2b3YqIGbZcsAi9+U/DW
+         lWsg==
+X-Gm-Message-State: APjAAAV6NKmWU1PGhXfXG/2UpQa0Oc10QC49Xi/+ol+4oIDqiihW15L4
+        DFT9gLjU80XaUu8PcxyoRcmWl9G55fs=
+X-Google-Smtp-Source: APXvYqxa6ny9Hj92Ow3m4QBwi5HVWBuTJM/cFloRyJixABbPoSnn/IRUdm7Q0Xpdu2uwPGjHzHXNgg==
+X-Received: by 2002:a2e:9e03:: with SMTP id e3mr5870631ljk.186.1580475702053;
+        Fri, 31 Jan 2020 05:01:42 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id w71sm5430896lff.0.2020.01.31.05.01.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 05:01:41 -0800 (PST)
+Subject: Re: [PATCH v2] fs: optimise kiocb_set_rw_flags()
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>, willy@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
+ <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
+Message-ID: <14929e52-9437-e856-7eff-4e5b45968f89@gmail.com>
+Date:   Fri, 31 Jan 2020 16:01:40 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <20200130183615.120752961@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/17/2020 4:32 AM, Pavel Begunkov wrote:
+> kiocb_set_rw_flags() generates a poor code with several memory writes
+> and a lot of jumps. Help compilers to optimise it.
+> 
+> Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
+> plain code without jumps accumulating in a register before a memory
+> write.
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Humble ping
 
-On Thu 2020-01-30 19:39:17, Greg Kroah-Hartman wrote:
-> From: Fenghua Yu <fenghua.yu@intel.com>
->=20
-> [ Upstream commit f11421ba4af706cb4f5703de34fa77fba8472776 ]
-
-This is not suitable for stable. It does not fix anything. It prepares
-for theoretical bug that author claims might be introduced to BIOS in
-future... I doubt it, even BIOS authors boot their machines from time
-to time.
-
-> Atomic operations that span cache lines are super-expensive on x86
-> (not just to the current processor, but also to other processes as all
-> memory operations are blocked until the operation completes). Upcoming
-> x86 processors have a switch to cause such operations to generate a #AC
-> trap. It is expected that some real time systems will enable this mode
-> in BIOS.
-
-And I wonder if this is even good idea for mainline. x86 architecture
-is here for long time, and I doubt Intel is going to break it like
-this. Do you have documentation pointer?=20
-
-> In preparation for this, it is necessary to fix code that may execute
-> atomic instructions with operands that cross cachelines because the #AC
-> trap will crash the kernel.
-
-How does single bit operation "cross cacheline"? How is this going to
-impact non-x86 architectures?
-
-> Since "pwol_mask" is local and never exposed to concurrency, there is
-> no need to set bits in pwol_mask using atomic operations.
->=20
-> Directly operate on the byte which contains the bit instead of using
-> __set_bit() to avoid any big endian concern due to type cast to
-> unsigned long in __set_bit().
-
-What concerns? Is __set_bit() now useless and are we going to open-code
-it everywhere? Is set_bit() now unusable on x86?
-							=09
-								Pavel
-							=09
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 > ---
->  drivers/net/ethernet/broadcom/b44.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/b=
-roadcom/b44.c
-> index e445ab724827f..88f8d31e4c833 100644
-> --- a/drivers/net/ethernet/broadcom/b44.c
-> +++ b/drivers/net/ethernet/broadcom/b44.c
-> @@ -1519,8 +1519,10 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppat=
-tern, u8 *pmask, int offset)
->  	int ethaddr_bytes =3D ETH_ALEN;
-> =20
->  	memset(ppattern + offset, 0xff, magicsync);
-> -	for (j =3D 0; j < magicsync; j++)
-> -		set_bit(len++, (unsigned long *) pmask);
-> +	for (j =3D 0; j < magicsync; j++) {
-> +		pmask[len >> 3] |=3D BIT(len & 7);
-> +		len++;
-> +	}
-> =20
->  	for (j =3D 0; j < B44_MAX_PATTERNS; j++) {
->  		if ((B44_PATTERN_SIZE - len) >=3D ETH_ALEN)
-> @@ -1532,7 +1534,8 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppatt=
-ern, u8 *pmask, int offset)
->  		for (k =3D 0; k< ethaddr_bytes; k++) {
->  			ppattern[offset + magicsync +
->  				(j * ETH_ALEN) + k] =3D macaddr[k];
-> -			set_bit(len++, (unsigned long *) pmask);
-> +			pmask[len >> 3] |=3D BIT(len & 7);
-> +			len++;
->  		}
+> 
+> v2: check for 0 flags in advance (Matthew Wilcox)
+> 
+>  include/linux/fs.h | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 98e0349adb52..22b46fc8fdfa 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3402,22 +3402,28 @@ static inline int iocb_flags(struct file *file)
+>  
+>  static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>  {
+> +	int kiocb_flags = 0;
+> +
+> +	if (!flags)
+> +		return 0;
+>  	if (unlikely(flags & ~RWF_SUPPORTED))
+>  		return -EOPNOTSUPP;
+>  
+>  	if (flags & RWF_NOWAIT) {
+>  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+>  			return -EOPNOTSUPP;
+> -		ki->ki_flags |= IOCB_NOWAIT;
+> +		kiocb_flags |= IOCB_NOWAIT;
 >  	}
->  	return len - 1;
-> --=20
-> 2.20.1
->=20
->=20
+>  	if (flags & RWF_HIPRI)
+> -		ki->ki_flags |= IOCB_HIPRI;
+> +		kiocb_flags |= IOCB_HIPRI;
+>  	if (flags & RWF_DSYNC)
+> -		ki->ki_flags |= IOCB_DSYNC;
+> +		kiocb_flags |= IOCB_DSYNC;
+>  	if (flags & RWF_SYNC)
+> -		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+> +		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>  	if (flags & RWF_APPEND)
+> -		ki->ki_flags |= IOCB_APPEND;
+> +		kiocb_flags |= IOCB_APPEND;
+> +
+> +	ki->ki_flags |= kiocb_flags;
+>  	return 0;
+>  }
+>  
+> 
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXjQkOgAKCRAw5/Bqldv6
-8sEXAKDEBaLFMfGhZMoUFbXvMi75isxPaQCePgdIxpXSVK7wV2W2gywre2XfJso=
-=7k6g
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+-- 
+Pavel Begunkov
