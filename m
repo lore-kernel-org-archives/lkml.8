@@ -2,162 +2,344 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEBFC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0368CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E558A2465B
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A9C20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LlE3h6by"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bkzfrPgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgAaJTI (ORCPT
+        id S1728257AbgAaJWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:19:08 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5733 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgAaJTH (ORCPT
+        Fri, 31 Jan 2020 04:22:04 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33046 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728209AbgAaJWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:19:07 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e33f0fc0000>; Fri, 31 Jan 2020 01:18:52 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 31 Jan 2020 01:19:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 31 Jan 2020 01:19:06 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 09:19:05 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jan 2020 09:19:06 +0000
-Received: from localhost.localdomain (Not Verified[10.21.133.51]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e33f1070000>; Fri, 31 Jan 2020 01:19:06 -0800
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>, <stable@vger.kernel.org>
-Subject: [PATCH] Revert "ASoC: tegra: Allow 24bit and 32bit samples"
-Date:   Fri, 31 Jan 2020 09:19:01 +0000
-Message-ID: <20200131091901.13014-1-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        Fri, 31 Jan 2020 04:22:04 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V9IkTY032507;
+        Fri, 31 Jan 2020 10:21:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=C0Udf40gju7kySCbmq3FPOBzpyJNDU///ikc7Ctm0u4=;
+ b=bkzfrPgwN4UkwYBkFw3XlpDYeW6SpPQVhepmPzcOOUnoanMSmDBHdOp/nBezteQOUCeg
+ iERvVz8jvPoOpbzCu2RVsXJCqchGcCQxIEQRqNwUOTEkBX7EjaWYaOFYmGnKWBJA5Y4x
+ O5mPx5riyf/b9/i3jvA+oqi7/CP2rVi2D7Kg/BeVtB95zaBPjHGqxNHQUMocbO9f+wa7
+ HehJY3+6XtBhmArbw66+7OSLvG/MqYpuJGPW9CYYOzu84HyJm2YLGvCOOh9n+pKrhX89
+ 6XF2GLvnpNb8+/3iWuaBenZob4VTg/t6DjH26x4OVd1CUgrHnpbvtOZmBRMJrsuKbFXa /w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrdekvx63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 10:21:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 026A5100039;
+        Fri, 31 Jan 2020 10:21:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC9D62A4D6F;
+        Fri, 31 Jan 2020 10:21:49 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 10:21:48
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] gpu: drm: context: Clean up documentation
+Date:   Fri, 31 Jan 2020 10:21:47 +0100
+Message-ID: <20200131092147.32063-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580462332; bh=tiU1SfpaStOkJ6bQ2E30mw6f5GTzwb+oM/IkptsdS5k=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=LlE3h6byVFYfwkT5fY0SHwQMoZLsEXCO9SfRIsLT/dS4D1vvvSozqeBst/zTE/6Og
-         Z2oacZ6c9tyJg1bCfyoBih1xyX8x1tjRExAPhi47HzTbhtZLA0wgm5+I3rNI6oYcL0
-         d9d2c2ds1R2fBHbtF02i8ro2/7aNYWTn9K+Z6swwnybwMbIFNrZ17/WbKsCGIbAi43
-         wzGLTj1sUvaYGDb07oR5GnoDg7b+1Gm+M7UQjmG7jhlu871jQ9eIsEFevnmq0eZgZM
-         gxzl/c2VQtql1d7bFipw7TqPAcrItpz9Kvy57LwvMqp0IexMU4hoXbltHu5ZU60Qtm
-         isWSyMpaK20NQ==
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_02:2020-01-30,2020-01-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f3ee99087c8ca0ecfdd549ef5a94f557c42d5428 ("ASoC: tegra: Allow
-24bit and 32bit samples") added 24-bit and 32-bit support for to the
-Tegra30 I2S driver. However, there are two additional commits that are
-also needed to get 24-bit and 32-bit support to work correctly. These
-commits are not yet applied because there are still some review comments
-that need to be addressed. With only this change applied, 24-bit and
-32-bit support is advertised by the I2S driver, but it does not work and
-the audio is distorted. Therefore, revert this patch for now until the
-other changes are also ready.
+Fix kernel doc comments to avoid warnings when compiling with W=1.
 
-Furthermore, a clock issue with 24-bit support has been identified with
-this change and so if we revert this now, we can also fix that in the
-updated version.
-
-Cc: stable@vger.kernel.org
-
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- sound/soc/tegra/tegra30_i2s.c | 25 +++++--------------------
- 1 file changed, 5 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/drm_context.c | 145 ++++++++++++++++++------------------------
+ 1 file changed, 61 insertions(+), 84 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-index dbed3c5408e7..d59882ec48f1 100644
---- a/sound/soc/tegra/tegra30_i2s.c
-+++ b/sound/soc/tegra/tegra30_i2s.c
-@@ -127,7 +127,7 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
- 	struct device *dev = dai->dev;
- 	struct tegra30_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 	unsigned int mask, val, reg;
--	int ret, sample_size, srate, i2sclock, bitcnt, audio_bits;
-+	int ret, sample_size, srate, i2sclock, bitcnt;
- 	struct tegra30_ahub_cif_conf cif_conf;
+diff --git a/drivers/gpu/drm/drm_context.c b/drivers/gpu/drm/drm_context.c
+index 1f802d8e5681..54e64d612a2b 100644
+--- a/drivers/gpu/drm/drm_context.c
++++ b/drivers/gpu/drm/drm_context.c
+@@ -43,15 +43,11 @@ struct drm_ctx_list {
+ 	struct drm_file *tag;
+ };
  
- 	if (params_channels(params) != 2)
-@@ -137,19 +137,8 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S16_LE:
- 		val = TEGRA30_I2S_CTRL_BIT_SIZE_16;
--		audio_bits = TEGRA30_AUDIOCIF_BITS_16;
- 		sample_size = 16;
- 		break;
--	case SNDRV_PCM_FORMAT_S24_LE:
--		val = TEGRA30_I2S_CTRL_BIT_SIZE_24;
--		audio_bits = TEGRA30_AUDIOCIF_BITS_24;
--		sample_size = 24;
--		break;
--	case SNDRV_PCM_FORMAT_S32_LE:
--		val = TEGRA30_I2S_CTRL_BIT_SIZE_32;
--		audio_bits = TEGRA30_AUDIOCIF_BITS_32;
--		sample_size = 32;
--		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -181,8 +170,8 @@ static int tegra30_i2s_hw_params(struct snd_pcm_substream *substream,
- 	cif_conf.threshold = 0;
- 	cif_conf.audio_channels = 2;
- 	cif_conf.client_channels = 2;
--	cif_conf.audio_bits = audio_bits;
--	cif_conf.client_bits = audio_bits;
-+	cif_conf.audio_bits = TEGRA30_AUDIOCIF_BITS_16;
-+	cif_conf.client_bits = TEGRA30_AUDIOCIF_BITS_16;
- 	cif_conf.expand = 0;
- 	cif_conf.stereo_conv = 0;
- 	cif_conf.replicate = 0;
-@@ -317,18 +306,14 @@ static const struct snd_soc_dai_driver tegra30_i2s_dai_template = {
- 		.channels_min = 2,
- 		.channels_max = 2,
- 		.rates = SNDRV_PCM_RATE_8000_96000,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE |
--			   SNDRV_PCM_FMTBIT_S24_LE |
--			   SNDRV_PCM_FMTBIT_S16_LE,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 	},
- 	.capture = {
- 		.stream_name = "Capture",
- 		.channels_min = 2,
- 		.channels_max = 2,
- 		.rates = SNDRV_PCM_RATE_8000_96000,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE |
--			   SNDRV_PCM_FMTBIT_S24_LE |
--			   SNDRV_PCM_FMTBIT_S16_LE,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 	},
- 	.ops = &tegra30_i2s_dai_ops,
- 	.symmetric_rates = 1,
+-/******************************************************************/
+-/** \name Context bitmap support */
+-/*@{*/
+-
+ /**
+- * Free a handle from the context bitmap.
++ * drm_legacy_ctxbitmap_free() - Free a handle from the context bitmap.
+  *
+- * \param dev DRM device.
+- * \param ctx_handle context handle.
++ * @dev: DRM device.
++ * @ctx_handle: context handle.
+  *
+  * Clears the bit specified by \p ctx_handle in drm_device::ctx_bitmap and the entry
+  * in drm_device::ctx_idr, while holding the drm_device::struct_mutex
+@@ -69,10 +65,10 @@ void drm_legacy_ctxbitmap_free(struct drm_device * dev, int ctx_handle)
+ }
+ 
+ /**
+- * Context bitmap allocation.
++ * drm_legacy_ctxbitmap_next() - Context bitmap allocation.
+  *
+- * \param dev DRM device.
+- * \return (non-negative) context handle on success or a negative number on failure.
++ * @dev: DRM device.
++ * Return: (non-negative) context handle on success or a negative number on failure.
+  *
+  * Allocate a new idr from drm_device::ctx_idr while holding the
+  * drm_device::struct_mutex lock.
+@@ -89,9 +85,9 @@ static int drm_legacy_ctxbitmap_next(struct drm_device * dev)
+ }
+ 
+ /**
+- * Context bitmap initialization.
++ * drm_legacy_ctxbitmap_init() - Context bitmap initialization.
+  *
+- * \param dev DRM device.
++ * @dev: DRM device.
+  *
+  * Initialise the drm_device::ctx_idr
+  */
+@@ -105,9 +101,9 @@ void drm_legacy_ctxbitmap_init(struct drm_device * dev)
+ }
+ 
+ /**
+- * Context bitmap cleanup.
++ * drm_legacy_ctxbitmap_cleanup() - bitmap cleanup.
+  *
+- * \param dev DRM device.
++ * @dev: DRM device.
+  *
+  * Free all idr members using drm_ctx_sarea_free helper function
+  * while holding the drm_device::struct_mutex lock.
+@@ -157,20 +153,13 @@ void drm_legacy_ctxbitmap_flush(struct drm_device *dev, struct drm_file *file)
+ 	mutex_unlock(&dev->ctxlist_mutex);
+ }
+ 
+-/*@}*/
+-
+-/******************************************************************/
+-/** \name Per Context SAREA Support */
+-/*@{*/
+-
+ /**
+- * Get per-context SAREA.
++ * drm_legacy_getsareactx() - Get per-context SAREA.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx_priv_map structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return:  zero on success or a negative number on failure.
+  *
+  * Gets the map from drm_device::ctx_idr with the handle specified and
+  * returns its handle.
+@@ -212,13 +201,12 @@ int drm_legacy_getsareactx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * Set per-context SAREA.
++ * drm_legacy_setsareactx() - Set per-context SAREA.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx_priv_map structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return: zero on success or a negative number on failure.
+  *
+  * Searches the mapping specified in \p arg and update the entry in
+  * drm_device::ctx_idr with it.
+@@ -257,19 +245,13 @@ int drm_legacy_setsareactx(struct drm_device *dev, void *data,
+ 	return 0;
+ }
+ 
+-/*@}*/
+-
+-/******************************************************************/
+-/** \name The actual DRM context handling routines */
+-/*@{*/
+-
+ /**
+- * Switch context.
++ * drm_context_switch() - Switch context.
+  *
+- * \param dev DRM device.
+- * \param old old context handle.
+- * \param new new context handle.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device.
++ * @old: old context handle.
++ * @new: new context handle.
++ * Return: zero on success or a negative number on failure.
+  *
+  * Attempt to set drm_device::context_flag.
+  */
+@@ -291,11 +273,12 @@ static int drm_context_switch(struct drm_device * dev, int old, int new)
+ }
+ 
+ /**
+- * Complete context switch.
++ * drm_context_switch_complete() - Complete context switch.
+  *
+- * \param dev DRM device.
+- * \param new new context handle.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device.
++ * @file_priv: DRM file private.
++ * @new: new context handle.
++ * Return: zero on success or a negative number on failure.
+  *
+  * Updates drm_device::last_context and drm_device::last_switch. Verifies the
+  * hardware lock is held, clears the drm_device::context_flag and wakes up
+@@ -319,13 +302,13 @@ static int drm_context_switch_complete(struct drm_device *dev,
+ }
+ 
+ /**
+- * Reserve contexts.
++ * drm_legacy_resctx() - Reserve contexts.
++ *
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx_res structure.
+- * \return zero on success or a negative number on failure.
++ * Return: zero on success or a negative number on failure.
+  */
+ int drm_legacy_resctx(struct drm_device *dev, void *data,
+ 		      struct drm_file *file_priv)
+@@ -352,15 +335,13 @@ int drm_legacy_resctx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * Add context.
++ * drm_legacy_addctx() - Add context.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
+  *
+- * Get a new handle for the context and copy to userspace.
++ * Return: zero on success or a negative number on failure.
+  */
+ int drm_legacy_addctx(struct drm_device *dev, void *data,
+ 		      struct drm_file *file_priv)
+@@ -405,13 +386,12 @@ int drm_legacy_addctx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * Get context.
++ * drm_legacy_getctx() - Get context.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return: zero on success or a negative number on failure.
+  */
+ int drm_legacy_getctx(struct drm_device *dev, void *data,
+ 		      struct drm_file *file_priv)
+@@ -429,13 +409,12 @@ int drm_legacy_getctx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * Switch context.
++ * drm_legacy_switchctx() - Switch context.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return: zero on success or a negative number on failure.
+  *
+  * Calls context_switch().
+  */
+@@ -453,13 +432,12 @@ int drm_legacy_switchctx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * New context.
++ * drm_legacy_newctx() - New context.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return: zero on success or a negative number on failure.
+  *
+  * Calls context_switch_complete().
+  */
+@@ -479,13 +457,12 @@ int drm_legacy_newctx(struct drm_device *dev, void *data,
+ }
+ 
+ /**
+- * Remove context.
++ * drm_legacy_rmctx() - Remove context.
+  *
+- * \param inode device inode.
+- * \param file_priv DRM file private.
+- * \param cmd command.
+- * \param arg user argument pointing to a drm_ctx structure.
+- * \return zero on success or a negative number on failure.
++ * @dev: DRM device to operate on
++ * @data: request data
++ * @file_priv: DRM file private.
++ * Return: zero on success or a negative number on failure.
+  *
+  * If not the special kernel context, calls ctxbitmap_free() to free the specified context.
+  */
 -- 
-2.17.1
+2.15.0
 
