@@ -2,107 +2,106 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08425C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA44C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD643206D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580501206;
-	bh=IJRpLDeEom8c7cwnqSA4ppHiw1UZ/m4ysK42mpZhHaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LJNoarpAGHJRif7hmZEHEbyCnUod8/XNIO2bHGOd+TWvK+KiJNZp4QXe6HXp5NI1M
-	 SsNbf84WVJtq3+wqTvzE8pZnWXltlzaZWWFiA+Ou5ERUyU8OfZzpkZRD6f0b/5PEVP
-	 Q+NGVaAX9HlDekCiIOW/TcOTEdagA2j8pNNryBtk=
+	by mail.kernel.org (Postfix) with ESMTP id 7AF6E214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RioywwgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgAaUGq (ORCPT
+        id S1726246AbgAaUOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:06:46 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33483 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgAaUGp (ORCPT
+        Fri, 31 Jan 2020 15:14:14 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44080 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgAaUON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:06:45 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so7797425otp.0;
-        Fri, 31 Jan 2020 12:06:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AbO+gon8QEJiqD6b6PW0TmWlbcPnG39Yyju/1Ptva7A=;
-        b=CSFqi4tWPaGCbRL0rt5X2fhm9yGQMfmvSL6nWVICdsp2h/l96m1f8GJ2T96+toxDDv
-         VMoaAGvZasdDKkHS61oc3FyOW0c6hTNagf1Wwiuzti12QKXwqqNEli2vroYN6YoGjbqc
-         MJ/MLULi4S/RteItU7U0vI5rfewj/15Shd1wgwHU4qRpmYsPZDKRRDsayLyuem3ijCtL
-         Kvm5Wxau/giI3DpMdNoV070ei21PYqbw6RmCgI6+bOc7sB0hVxKdMhGW67EqD+bjnVOP
-         i7TVjX4EW7TgThcbtcSfIIbenaKbi4W7wdkquaEeWixNgzH8c9nDuU7gCDPajcddApFE
-         PIrw==
-X-Gm-Message-State: APjAAAXxrdE20HqQ8nNplB5tYdORDxjoTT1Hd7M7JuwGnbb5TfF6/zom
-        SYXawu7CSZAiVQRKdYnB4g==
-X-Google-Smtp-Source: APXvYqypW7CmmlNjveScb/uhps8dAYhHTYKvur2n/FPc2Yr0pzCb4xGJ80xks8YoGnMim8R/3fHxsg==
-X-Received: by 2002:a9d:1706:: with SMTP id i6mr9325576ota.151.1580501203331;
-        Fri, 31 Jan 2020 12:06:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w201sm2978724oif.29.2020.01.31.12.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 12:06:42 -0800 (PST)
-Received: (nullmailer pid 26745 invoked by uid 1000);
-        Fri, 31 Jan 2020 20:06:41 -0000
-Date:   Fri, 31 Jan 2020 14:06:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
- SoCs USB OTG HS and FS
-Message-ID: <20200131200641.GA24534@bogus>
-References: <20200124084131.23749-1-amelie.delaunay@st.com>
- <20200124084131.23749-2-amelie.delaunay@st.com>
- <87imkr7nou.fsf@kernel.org>
- <c29867bd-8056-a82f-2273-101470395e78@st.com>
+        Fri, 31 Jan 2020 15:14:13 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VKE94v126115;
+        Fri, 31 Jan 2020 14:14:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580501649;
+        bh=3NWxZM5OP6M2Ss+5LeyFGu7KEdF6VUD+PUYkKi/SwVo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RioywwgQwN+kIApN6zzx9GopBz/txa7KZYhzRW7izvqF0zYFl3ICL/XE3xcOiJM4A
+         MwOf3odx0oFS9+qFJPxriqaiuwsXFuAz381UoDMXRCad8vr3OjsghkKRXCnBl6gM7F
+         K1Tgy1X6qR3qR5TJwm7uPuCRFER/svXw3tnne9S0=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VKE9st010091
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 14:14:09 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 14:14:09 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 14:14:08 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VKE8DV048162;
+        Fri, 31 Jan 2020 14:14:08 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+ <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
+ <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
+ <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
+ <77b55164-5fc3-6022-be72-4d58ef897019@gmail.com>
+ <07701542-2a94-7333-6682-a8e8986ea6d4@ti.com>
+ <d194f979-ca6e-b33f-b18c-f8f238b66897@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <01797864-5a63-c3a0-d1d2-99dfff3a0aa1@ti.com>
+Date:   Fri, 31 Jan 2020 14:10:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c29867bd-8056-a82f-2273-101470395e78@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d194f979-ca6e-b33f-b18c-f8f238b66897@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 05:13:25PM +0100, Amelie DELAUNAY wrote:
-> Hi,
-> 
-> On 1/31/20 2:36 PM, Felipe Balbi wrote:
-> > Hi,
-> > 
-> > Amelie Delaunay <amelie.delaunay@st.com> writes:
-> > 
-> > > Add the specific compatible string for the DWC2 IP found in the STM32MP15
-> > > SoCs.
-> > > STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
-> > > ID pin state. usb33d-supply described the regulator supplying Vbus and ID
-> > > sensing comparators.
-> > > 
-> > > Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> > 
-> > This doesn't apply. dwc2 bindings is still in .txt format. I have taken
-> > patch 2, though.
-> > 
-> 
-> Thanks for taking driver patch.
-> 
-> Rob, would you mind to take patch 1 (Yaml binding update) in your tree ?
+Florian
 
-Done.
+On 1/31/20 2:02 PM, Florian Fainelli wrote:
+> On 1/31/20 11:54 AM, Dan Murphy wrote:
+> <snip>
+>> So then it would be ok to do a genphy_read_status and then override the
+>> speed and duplex mode from the PHYSTS register?
+> I would think so yes, especially if that is needed for reporting the
+> actual link speed that ended up being negotiated, and not the one that
+> the link was initially trained at. That assumes I understand that the
+> problem is that you advertise and want Gigabit, but because of a 4-wire
+> cable being plugged in, you ended up at 100Mbits/sec.
 
-Rob
+Exactly.
+
+>> I don't think that the link change notification is needed.  The speed
+>> should not change once the cable is plugged in and the speed is negotiated.
+> The link change notification is just to signal to the user that the
+> speed may have been reduced due to downshifting, which would/could
+> happen with 4-wires instead of the expected 8-wires. Certainly not
+> strictly necessary right now, I agree.
+
+Ack
+
+Dan
+
