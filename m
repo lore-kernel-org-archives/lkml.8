@@ -2,123 +2,109 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C72C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC4CC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B58A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/xVxMAG"
+	by mail.kernel.org (Postfix) with ESMTP id 1640A214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgAaIns (ORCPT
+        id S1728160AbgAaIrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:43:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37452 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbgAaIns (ORCPT
+        Fri, 31 Jan 2020 03:47:04 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39416 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgAaIrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:43:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so7622120wru.4;
-        Fri, 31 Jan 2020 00:43:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DcqGyKAvtPPkJuQZbjaeO7NbZl/Jo6mcF1VsF4v5ARU=;
-        b=H/xVxMAGPsPyCmZ6lXmBKhopujuJONsH7Ir+DpwOmuUGB5BrAsftBaHYOzXeeLtC33
-         831n6cHeRyQxQuIO7z6njBEea/MWtZMdj3uXv9vSpAtfHSFWURuCrB14Ymijck3S6nJX
-         l3ZiuyqB96+E75MXUhT7q+poNzlYhsdZOydwUIqWo6UL7uIsfwTelsL1vOmov2ol5Fsp
-         vx89rJxMOS6OCMeY6f5pZapN9i6h/ZpGAznb8tO38d+nr96CuI0MfKSEj+Q8Vea652am
-         WJyF1+ar9jCli2FXdl+pe3qhuNsbY4lenJvOda3EifsdNiMvvOt4xkjHeLimoTIHW7sF
-         lEUw==
+        Fri, 31 Jan 2020 03:47:04 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m13so6962201edb.6;
+        Fri, 31 Jan 2020 00:47:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DcqGyKAvtPPkJuQZbjaeO7NbZl/Jo6mcF1VsF4v5ARU=;
-        b=h0QAGopWqakbf72KJULnzzRI9cZ+FDqlMYKi2vwz7Ni20OMZ9MJzypA0k7kHHHoS2N
-         s9E0brN5HAHKRcTMnZ14kbyvOZ+eDpSfS+/VcIqt4iB+8GjbseSkjvQ5B8gO0kvyLFpM
-         CRJYNPwKLLrkc8DfBYSE2rx7aTleDLjbP46vMET78xzb6oxmimpMRu+mWAzQghd0TTXp
-         qRuyrQcQUvdPKNBJ1i6B96WVGhahxrEsY+JujiwjdywMY8bZ4GyRdViUbPgnzeYyw9uT
-         8TFThUCzbNYxjEWSciaTihbg1KKNNUNoUVFNOCKURtOSKSpQRzDWy+pE3ndT4bwKD435
-         OgcQ==
-X-Gm-Message-State: APjAAAVtcuiKn7ZZc09H7XoWQc51+57NwE/YbHaPsDu++k9jJ8A4s+D6
-        fHNhEEMtCIre48GXSdLkW9EtNWOpfdw=
-X-Google-Smtp-Source: APXvYqy0U/xqqHXFTb/9QWAoWsBEHdhyHRZcs1prV15T/CGFgpARF/ycN6LOPQULSVyNOJLgdnIG3Q==
-X-Received: by 2002:a05:6000:118d:: with SMTP id g13mr10334756wrx.141.1580460225648;
-        Fri, 31 Jan 2020 00:43:45 -0800 (PST)
-Received: from quaco.ghostprotocols.net (catv-212-96-54-169.catv.broadband.hu. [212.96.54.169])
-        by smtp.gmail.com with ESMTPSA id z25sm9705197wmf.14.2020.01.31.00.43.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a4whMVybYrFM/VJAJPt+RDbk4EyD/C4nT92WrUXXMMQ=;
+        b=NMnzy3wUlMymGlB7XruknFGb0FsFvwCkFYwpouYevIrG1sSPqgw+6NpuRZfEXcoeRF
+         UdFzzQh7/2gGIP6BXKnW/jICZRJBrwKKo+n8ZsCtet3vHytDeQj+KsavtX/ta7rhbtDg
+         NzBR4JrlIhMs8pRvQAXF3t/j+K9X/7T1NG3J7kr3mtDAb+CXbDDjJIm0loXIo6WaO9Gx
+         II5QNdRxfESLC07ngffpMCotsqpP8SBshNGzV9Z5J44+yHavw/dqdoAv4IHF9zkLX5Y5
+         leM8Tez2tt+c4nGQ1T9FXWRiiJbhLS0ai0Nkb2ZO0/hsw1z/A/gDx+f7ARNeNXS5+5j+
+         Ss/g==
+X-Gm-Message-State: APjAAAUDRZAPga6q3TAW4H4S1GBA7MRtLaoWXlGOPMtSdMXEehmHcCQk
+        jtKQgNQcqM73Xcv8+OSNMrfbDvsMM5Y=
+X-Google-Smtp-Source: APXvYqwVssG86O2ErBa6n9RNwfEo2zbOuBOpqzLbdB2yNiTtwkz3BXzSwlTSq0J98OUyvSyrwBqSug==
+X-Received: by 2002:adf:e483:: with SMTP id i3mr10556484wrm.215.1580460113362;
+        Fri, 31 Jan 2020 00:41:53 -0800 (PST)
+Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id x7sm11034302wrq.41.2020.01.31.00.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:43:44 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 97ACF40A7D; Fri, 31 Jan 2020 09:43:43 +0100 (CET)
-Date:   Fri, 31 Jan 2020 09:43:43 +0100
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] tools: perf: add missing unlock to maps__insert error
- case
-Message-ID: <20200131084343.GI3841@kernel.org>
-References: <20200120141553.23934-1-cengiz@kernel.wtf>
- <20200131083858.GH3841@kernel.org>
+        Fri, 31 Jan 2020 00:41:52 -0800 (PST)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Ilya Ledvich <ilya@compulab.co.il>,
+        Igor Grinberg <grinberg@compulab.co.il>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 04/12] ARM: dts: imx7d: cl-som-imx7: add emmicro,em3027 RTC
+Date:   Fri, 31 Jan 2020 08:36:30 +0000
+Message-Id: <20200131083638.6118-4-git@andred.net>
+X-Mailer: git-send-email 2.23.0.rc1
+In-Reply-To: <20200131083638.6118-1-git@andred.net>
+References: <20200131083638.6118-1-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131083858.GH3841@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jan 31, 2020 at 09:38:58AM +0100, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Jan 20, 2020 at 05:15:54PM +0300, Cengiz Can escreveu:
-> > Please tell me if the `__maps__free_maps_by_name` frees the
-> > `rw_semaphore`. If that's the case, should we change the order to unlock and free?
-> 
-> No it doesn't free the rw_semaphore, that is in 'struct maps', what is
-> being freed is just something protected by rw_semaphore,
-> maps->maps_by_name, so your patch is right and I'm applying it, thanks.
+add/enable RTC support using the on-board EM3027 real time
+clock on i2c2.
 
-BTW, you forgot to add:
+Signed-off-by: André Draszik <git@andred.net>
+Cc: Ilya Ledvich <ilya@compulab.co.il>
+Cc: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Fixes: a7c2b572e217 ("perf map_groups: Auto sort maps by name, if needed")
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index ec82f4738c4f..481bd3971c55 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -181,6 +181,11 @@
+ 		reg = <0x50>;
+ 		pagesize = <16>;
+ 	};
++
++	rtc@56 {
++		compatible = "emmicro,em3027";
++		reg = <0x56>;
++	};
+ };
+ 
+ &uart1 {
+-- 
+2.23.0.rc1
 
-Which I did, and next time please CC the perf tools reviewers, as noted
-in MAINTAINERS, the lines starting with R:.
-
-- Arnaldo
-
-[acme@quaco perf]$ grep -A21 "PERFORMANCE EVENTS SUBSYSTEM$" MAINTAINERS
-PERFORMANCE EVENTS SUBSYSTEM
-M:	Peter Zijlstra <peterz@infradead.org>
-M:	Ingo Molnar <mingo@redhat.com>
-M:	Arnaldo Carvalho de Melo <acme@kernel.org>
-R:	Mark Rutland <mark.rutland@arm.com>
-R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-R:	Jiri Olsa <jolsa@redhat.com>
-R:	Namhyung Kim <namhyung@kernel.org>
-L:	linux-kernel@vger.kernel.org
-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-S:	Supported
-F:	kernel/events/*
-F:	include/linux/perf_event.h
-F:	include/uapi/linux/perf_event.h
-F:	arch/*/kernel/perf_event*.c
-F:	arch/*/kernel/*/perf_event*.c
-F:	arch/*/kernel/*/*/perf_event*.c
-F:	arch/*/include/asm/perf_event.h
-F:	arch/*/kernel/perf_callchain.c
-F:	arch/*/events/*
-F:	arch/*/events/*/*
-F:	tools/perf/
-[acme@quaco perf]$
