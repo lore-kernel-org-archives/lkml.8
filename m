@@ -2,277 +2,159 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2A5C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B74C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EB52173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:55:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ceYLltBT"
+	by mail.kernel.org (Postfix) with ESMTP id 6E5462082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgAaEzk (ORCPT
+        id S1728081AbgAaE5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 23:55:40 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39536 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgAaEzj (ORCPT
+        Thu, 30 Jan 2020 23:57:50 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727933AbgAaE5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 23:55:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so7155986wme.4;
-        Thu, 30 Jan 2020 20:55:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=JJuf6F98cQcfxJlNtiuDW2HYjFK+PJrivUzpewMfPgU=;
-        b=ceYLltBTxb0XYd0zWy2MHICx0O2XIPkPhWeH80EX07feujkgtZ7/VLV5E8ATzNceM4
-         6W3R7VyCll2TdWX2ePqs/rIOiWrIbZulaHI/7jGewSgWcKvLEU1tdDiE52WD3HMVX2sa
-         4AdOPiOxmpaqSVi0K2Me2/6747Ag0XjDb62t7gLX4DHGQpo6yjpTmFpCEL5ovHW0VhYA
-         4b4I1uo5L7/2S7+j7MRc1LeD7k/jJ31+y8svpLMfun+Cn50ZMsUzui3AhU2nrKaMrIJf
-         cVeQdW+NAaX8UCAGxJggs6LVJZvPtrYeWSnRlSqrxqcdiFpIZqDybjgQmUp2FcwGyUR3
-         +fTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=JJuf6F98cQcfxJlNtiuDW2HYjFK+PJrivUzpewMfPgU=;
-        b=DhsiB2U/vT7t+U3oYxEVAC6sEkjIsn0k164G3D5fk/vPt5/OINJnktMFusl6aA25My
-         1MGsK7X/vD+TrWUus4HMtrmNnjKne8Q2A7wJusdyOsH6q5nd+O7HvsoOwvYVo4wldHgi
-         +gR+s2SpYRV22FuVv2Pg1daM4trnYxDoqFXGNnBtr6ev/4eX70+Qwf6rbfdkC3PNuzfh
-         CrJhX8GagLKZHaZZXjWA1wwokzHH0u3d+cgbYgs68lGT6IJoNWAKQsACht7XrBLn9GBQ
-         vYFj8cJH3WhvNMwLLqjJTeJ12uX5C6bZtUsBdjPHjDf3wx9FQWUp6pnfyDADcRLMO1kT
-         y90A==
-X-Gm-Message-State: APjAAAV30eBpegHXSUbQaow4tJaIoL1WwMQIms3q7SdNWY2IXAafO7Pp
-        uMizVUwtx5ClKy+lepB/m48=
-X-Google-Smtp-Source: APXvYqzkPpQM1jPO+h3W9539omwWZjIjyOv76n4yquRe7JRdKHdJQky2cjgMuvejzeqvkbR5Hw2gAw==
-X-Received: by 2002:a1c:ba83:: with SMTP id k125mr9535980wmf.106.1580446536649;
-        Thu, 30 Jan 2020 20:55:36 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:9e5:a83e:83e7:3809])
-        by smtp.gmail.com with ESMTPSA id z133sm9711346wmb.7.2020.01.30.20.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2020 20:55:35 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     SeongJae Park <sjpark@amazon.com>,
+        Thu, 30 Jan 2020 23:57:50 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00V4t1k3085248
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 23:57:49 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xv7b4rxu8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 23:57:48 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 31 Jan 2020 04:57:46 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 Jan 2020 04:57:39 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00V4vcsS46661796
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jan 2020 04:57:38 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 139B7A4051;
+        Fri, 31 Jan 2020 04:57:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0C1BA404D;
+        Fri, 31 Jan 2020 04:57:37 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 31 Jan 2020 04:57:37 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B2E26A0388;
+        Fri, 31 Jan 2020 15:57:33 +1100 (AEDT)
+Subject: Re: [PATCH 09/10] powerpc: Enable OpenCAPI Storage Class Memory
+ driver on bare metal
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Oscar Salvador <osalvador@suse.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Keith Busch <keith.busch@intel.com>, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
+        Qian Cai <cai@lca.pw>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        SeongJae Park <sj38.park@gmail.com>, acme@kernel.org,
-        amit@kernel.org, brendan.d.gregg@gmail.com,
-        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
-        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
-        kirill@shutemov.name, colin.king@canonical.com, minchan@kernel.org,
-        vdavydov.dev@gmail.com, vdavydov@parallels.com, linux-mm@kvack.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v2 8/9] mm/damon: Add kunit tests
-Date:   Fri, 31 Jan 2020 05:55:27 +0100
-Message-Id: <20200131045527.30320-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAFd5g47R_Cma_fi_rA1_9+Ns0dQPFRJ=zy9kq5vuMOGdzPHNKw@mail.gmail.com>
+        linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 31 Jan 2020 15:56:58 +1100
+In-Reply-To: <3ba57ce6-9135-0d83-b99d-1c5b0c744855@linux.ibm.com>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+         <20191025044721.16617-10-alastair@au1.ibm.com>
+         <3ba57ce6-9135-0d83-b99d-1c5b0c744855@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013104-4275-0000-0000-0000039CA981
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013104-4276-0000-0000-000038B0C919
+Message-Id: <df24e47c2bd9472c7be06c6c266b2a250c30068f.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-30_09:2020-01-30,2020-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 malwarescore=0 clxscore=1011 priorityscore=1501
+ mlxlogscore=912 bulkscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001310042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 16:14:45 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
-
-> On Tue, Jan 28, 2020 at 1:01 AM <sjpark@amazon.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > This commit adds kunit based unit tests for DAMON.
-> >
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On Fri, 2019-11-08 at 08:10 +0100, Frederic Barrat wrote:
+> 
+> Le 25/10/2019 à 06:47, Alastair D'Silva a écrit :
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Enable OpenCAPI Storage Class Memory driver on bare metal
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > > ---
-> >  MAINTAINERS     |   1 +
-> >  mm/Kconfig      |  11 +
-> >  mm/damon-test.h | 571 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  mm/damon.c      |   2 +
-> >  4 files changed, 585 insertions(+)
-> >  create mode 100644 mm/damon-test.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5c8a0c4e69b8..cb091bee16c7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4616,6 +4616,7 @@ M:        SeongJae Park <sjpark@amazon.de>
-> >  L:     linux-mm@kvack.org
-> >  S:     Maintained
-> >  F:     mm/damon.c
-> > +F:     mm/damon-test.h
-> >  F:     tools/damon/*
-> >  F:     Documentation/admin-guide/mm/data_access_monitor.rst
-> >
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index 144fb916aa8b..8b34711c6ee1 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -751,4 +751,15 @@ config DAMON
-> >           be 1) accurate enough to be useful for performance-centric domains,
-> >           and 2) sufficiently light-weight so that it can be applied online.
-> >
-> > +config DAMON_KUNIT_TEST
-> > +       bool "Test for damon"
-> > +       depends on DAMON && KUNIT
-> > +       help
-> > +         This builds the DAMON Kunit test suite.
-> > +
-> > +         For more information on KUnit and unit tests in general, please refer
-> > +         to the KUnit documentation.
-> > +
-> > +         If unsure, say N.
-> > +
-> >  endmenu
-> > diff --git a/mm/damon-test.h b/mm/damon-test.h
-> > new file mode 100644
-> > index 000000000000..3d92548058a7
-> > --- /dev/null
-> > +++ b/mm/damon-test.h
-> [...]
-> > +/*
-> > + * Test damon_three_regions_in_vmas() function
-> > + *
-> > + * DAMON converts the complex and dynamic memory mappings of each target task
-> > + * to three discontiguous regions which cover every mapped areas.  The two gaps
-> > + * between the areas is two biggest unmapped areas in the original mapping.
-> > + * 'damon_three_regions_in_vmas() receives an address space of a process.  It
-> > + * first identifies the start of mappings, end of mappings, and the two biggest
-> > + * unmapped areas.  After that, based on the information, it constructs the
-> > + * three regions and returns.  For more detail, refer to the comment of
-> > + * 'damon_init_regions_of()' function definition in 'mm/damon.c' file.
-> > + *
-> > + * For example, suppose virtual address ranges of 10-20, 20-25, 200-210,
-> > + * 210-220, 300-305, and 307-330 (Other comments represent this mappings in
-> > + * more short form: 10-20-25, 200-210-220, 300-305, 307-330) of a process are
-> > + * mapped.  To cover every mappings, the three regions should start with 10,
-> > + * and end with 305.
+> >   arch/powerpc/configs/powernv_defconfig | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/configs/powernv_defconfig
+> > b/arch/powerpc/configs/powernv_defconfig
+> > index 6658cceb928c..45c0eff94964 100644
+> > --- a/arch/powerpc/configs/powernv_defconfig
+> > +++ b/arch/powerpc/configs/powernv_defconfig
+> > @@ -352,3 +352,7 @@ CONFIG_KVM_BOOK3S_64=m
+> >   CONFIG_KVM_BOOK3S_64_HV=m
+> >   CONFIG_VHOST_NET=m
+> >   CONFIG_PRINTK_TIME=y
+> > +CONFIG_OCXL_SCM=m
+> > +CONFIG_DEV_DAX=y
+> > +CONFIG_DEV_DAX_PMEM=y
+> > +CONFIG_FS_DAX=y
 > 
-> Why? What's special about those numbers? Don't you need 10 to 330 to
-> cover all the mappings?
-
-No big special, I just wanted to show whether the function really identify the
-two biggest gaps in given regions and convert to the three regions.
-
-I'm not using onlt 10 to 330 because the two biggest unmapped area are usually
-the gap between 1) heap and the mmap()-ed area, and 2) the mmap()-ed area and
-stack, which is so huge.  Therefore I wanted to test the gap existing case.  If
-you have any different opinion, please let me know.
-
-Will document this point more in next spin.
-
-[...]
-> > +
-> > +static void damon_test_write_rbuf(struct kunit *test)
-> > +{
-> > +       char *data;
-> > +
-> > +       data = "hello";
-> > +       damon_write_rbuf(data, strnlen(data, 256));
-> > +       KUNIT_EXPECT_EQ(test, damon_rbuf_offset, 5u);
-> > +
-> > +       damon_write_rbuf(data, 0);
-> > +       KUNIT_EXPECT_EQ(test, damon_rbuf_offset, 5u);
-> > +
-> > +       KUNIT_EXPECT_STREQ(test, (char *)damon_rbuf, data);
-> > +}
-> > +
-> > +/*
-> > + * Test 'damon_apply_three_regions()'
-> > + *
-> > + * test                        kunit object
-> > + * regions             an array containing start/end addresses of current
-> > + *                     monitoring target regions
-> > + * nr_regions          the number of the addresses in 'regions'
-> > + * three_regions       The three regions that need to be applied now
-> > + * expected            start/end addresses of monitoring target regions that
-> > + *                     'three_regions' are applied
-> > + * nr_expected         the number of addresses in 'expected'
-> > + *
-> > + * The memory mapping of the target processes changes dynamically.  To follow
-> > + * the change, DAMON periodically reads the mappings, simplifies it to the
-> > + * three regions, and updates the monitoring target regions to fit in the three
-> > + * regions.  The update of current target regions is the role of
-> > + * 'damon_apply_three_regions()'.
-> > + *
-> > + * This test passes the given target regions and the new three regions that
-> > + * need to be applied to the function and check whether it updates the regions
-> > + * as expected.
-> > + */
-> > +static void damon_do_test_apply_three_regions(struct kunit *test,
-> > +                               unsigned long *regions, int nr_regions,
-> > +                               struct region *three_regions,
-> > +                               unsigned long *expected, int nr_expected)
-> > +{
-> > +       struct damon_task *t;
-> > +       struct damon_region *r;
-> > +       int i;
-> > +
-> > +       t = damon_new_task(42);
-> > +       for (i = 0; i < nr_regions / 2; i++) {
-> > +               r = damon_new_region(regions[i * 2], regions[i * 2 + 1]);
-> > +               damon_add_region_tail(r, t);
-> > +       }
-> > +       damon_add_task_tail(t);
-> > +
-> > +       damon_apply_three_regions(t, three_regions);
-> > +
-> > +       for (i = 0; i < nr_expected / 2; i++) {
-> > +               r = damon_nth_region_of(t, i);
-> > +               KUNIT_EXPECT_EQ(test, r->vm_start, expected[i * 2]);
-> > +               KUNIT_EXPECT_EQ(test, r->vm_end, expected[i * 2 + 1]);
-> > +       }
-> > +
-> > +       damon_cleanup_global_state();
-> > +}
-> > +
-> > +/* below 4 functions test differnt inputs for 'damon_apply_three_regions()' */
+> If this really the intent or do we want to activate DAX only if 
+> CONFIG_OCXL_SCM is enabled?
 > 
-> Spelling. Also, I think this comment doesn't really say anything that
-> you cannot get from reading the code. Maybe provide some more details?
-> Maybe add why you picked the inputs that you did?
+>    Fred
 
-Good point.  Will add more comments your points in next spin.
+We had a bit of a play around with reworking this the other day.
 
-> 
-> > +static void damon_test_apply_three_regions1(struct kunit *test)
-> > +{
-> > +       /* 10-20-30, 50-55-57-59, 70-80-90-100 */
-> > +       unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
-> > +                               70, 80, 80, 90, 90, 100};
-> > +       /* 5-27, 45-55, 73-104 */
-> > +       struct region new_three_regions[3] = {
-> > +               (struct region){.start = 5, .end = 27},
-> > +               (struct region){.start = 45, .end = 55},
-> > +               (struct region){.start = 73, .end = 104} };
-> > +       /* 5-20-27, 45-55, 73-80-90-104 */
-> > +       unsigned long expected[] = {5, 20, 20, 27, 45, 55,
-> > +                               73, 80, 80, 90, 90, 104};
-> > +
-> > +       damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
-> > +                       new_three_regions, expected, ARRAY_SIZE(expected));
-> > +}
-[...]
-> > +
-> > +static void damon_test_kdamond_need_stop(struct kunit *test)
-> > +{
-> > +       KUNIT_EXPECT_TRUE(test, kdamond_need_stop());
-> 
-> This doesn't look like a useful test, or a useful function. Why even
-> check if the function always returns true? And if it doesn't always
-> return true, then this test is not hermetic which is bad unit testing
-> practice.
+Putting them in as depends didn't make sense, as they are "soft"
+dependancies - the driver works and you can do some things without DAX.
 
-You're right, will remove the test code in next spin.
+Adding them as selects was rejected as selecting symbols that can also
+be manually select is discouraged.
 
-Thank you so much for your reviews!
+We ended up going full circle and adding them back to the defconfig.
 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
-Thanks,
-SeongJae Park
-
-> 
-[...] 
