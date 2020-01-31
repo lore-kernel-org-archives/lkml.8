@@ -2,93 +2,107 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F4C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92780C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7421B215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580506005;
-	bh=wWHXwG6EPfQuosReD4yUbSXQpH38g5vu2/y4wbYryiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bZaK4JPXDNN0/u9mfb4zP60e5nR/OFdp5ydatrLYcfScy8eJoBEvVj8qsHr0RgFXa
-	 D7tTWGumMN+hNvOuST0slzdBIG/7lMKgYDUOT0/V3w/j7dTyGskryKd9IS229xB9QP
-	 nieuqUhlshQZv5Mc98jfhfSd9i7WL/Va3wAk7D2U=
+	by mail.kernel.org (Postfix) with ESMTP id 6679C214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P2ypfFLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgAaV0p (ORCPT
+        id S1726561AbgAaV1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:26:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgAaV0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:26:44 -0500
-Received: from localhost (unknown [83.216.75.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E53CA20CC7;
-        Fri, 31 Jan 2020 21:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580506003;
-        bh=wWHXwG6EPfQuosReD4yUbSXQpH38g5vu2/y4wbYryiQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tdwnnd3hhsrgynPOeYP3Q/99s344QcTOwOnrEDbbhGKx6YpldG1qJE4w599QBvuTV
-         eki/If1OtN1oTlbCQRn4/+gylje7tEo4fetYJh4X1nvNEDEiwOdhV+Vzv/olLXQJ/F
-         sZ1bkOXe9Hn3ah/3fZFPjs/T9uzPivyV/fNvSiCk=
-Date:   Fri, 31 Jan 2020 22:26:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.5 00/56] 5.5.1-stable review
-Message-ID: <20200131212640.GD2278356@kroah.com>
-References: <20200130183608.849023566@linuxfoundation.org>
- <CA+G9fYsFgp483JYaVj7NZszd_Wh9JOE6t3Tzfikdwsu_xpfaGQ@mail.gmail.com>
+        Fri, 31 Jan 2020 16:27:34 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45507 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726154AbgAaV1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 16:27:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580506052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FU2nxODLdOz7Yi+32+hHI/RXv+nZoblPZOI/rmsa0cA=;
+        b=P2ypfFLqk1lw11BlnG/iuI5LWyVQibZOnIQbkkUKLHW4v9/V8KDpRhaZ/VbQdAsn06GO+c
+        KwxRVtp/uX2qqtI0GlIh8tW8nGn69VyXZv8XO1vv/z4j5Rsm8lYjiUILmNq9qvOUnTSczp
+        Kq0do7DtG95tcF4VdDG3fi5lYtJbdko=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-MHrwNeVjO_eTwG2xGMwzLg-1; Fri, 31 Jan 2020 16:27:28 -0500
+X-MC-Unique: MHrwNeVjO_eTwG2xGMwzLg-1
+Received: by mail-wm1-f69.google.com with SMTP id n17so3392961wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:27:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FU2nxODLdOz7Yi+32+hHI/RXv+nZoblPZOI/rmsa0cA=;
+        b=PSoULau9ouHkYe2il+zBxb8rkUJ4hZJjbwqXaeF0psstpQfKOKdM3mS9nZ+nAYw4n5
+         TFPXHt82TGP+hqoMB6mqGsY7sCRqqdz9dB72kr2RB1v9VKFjNJdQHAeKSDG3DRE24DXJ
+         17mfzHFF+2iDsnW3OEWgJJTpGqwHUOTUNrVjyEFMNRPEOMcX5u/WtVe72/pmJVJh4Rvz
+         33V6i1okwPhyP2ge5XFXLSl/Cw69k9QbPiu3R4SeoRKHpWSiJKVUX/Il3/hnm54ZT5lT
+         GQAsEKVlkTfpqUQhDwxVpHGogKRz0pOk0m0MswNCOIAwhtMt8m6UeiV6qSd8qodNq7LM
+         Q4AA==
+X-Gm-Message-State: APjAAAWFo1+XHtQUUpaFAQJHVKIsvA6ok3erJVhazo3s80OpgMM006sU
+        42WR1k4u+N1k0O8szb0jk2SPqpwnjiVaEUbO3+ckaVFUew2qmAK3JiDoXpJM+KFN/24ApxVfMpM
+        QX8RVS1lzvX0nA02ah2MYaTap
+X-Received: by 2002:a1c:9e89:: with SMTP id h131mr13985468wme.161.1580506047670;
+        Fri, 31 Jan 2020 13:27:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzDuT1Hr2oALN/34Ebj0g8Dpq0xQbqotT/kxpAEYNH3SraZ1fzxVmsS+FAPdBhXC0oAT3CUXQ==
+X-Received: by 2002:a1c:9e89:: with SMTP id h131mr13985457wme.161.1580506047457;
+        Fri, 31 Jan 2020 13:27:27 -0800 (PST)
+Received: from [192.168.42.35] (93-33-8-199.ip42.fastwebnet.it. [93.33.8.199])
+        by smtp.gmail.com with ESMTPSA id s8sm12589059wrt.57.2020.01.31.13.27.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 13:27:27 -0800 (PST)
+Subject: Re: [GIT PULL] First batch of KVM changes for 5.6 merge window
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>
+References: <1580408442-23916-1-git-send-email-pbonzini@redhat.com>
+ <CAHk-=wjZTUq8u0HZUJ1mKZjb-haBFhX+mKcUv3Kdh9LQb8rg4g@mail.gmail.com>
+ <a7038958-bbab-4c53-72f0-ece46dc99b4d@redhat.com>
+ <20200131212404.GD14851@zn.tnic>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d0e15553-e8b6-0624-3978-d2ac02a4d06f@redhat.com>
+Date:   Fri, 31 Jan 2020 22:27:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20200131212404.GD14851@zn.tnic>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsFgp483JYaVj7NZszd_Wh9JOE6t3Tzfikdwsu_xpfaGQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:24:39PM +0530, Naresh Kamboju wrote:
-> On Fri, 31 Jan 2020 at 00:11, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.5.1 release.
-> > There are 56 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.1-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+On 31/01/20 22:24, Borislav Petkov wrote:
+>> I was supposed to get a topic branch and fix everything up so that both
+>> CPU_BASED_ and VMX_FEATURE_ constants would get the new naming.  When
+>> Boris alerted me of the conflict and I said "thanks I'll sort it out",
+>> he probably interpreted it as me not needing the topic branch anymore.
+>> I then forgot to remind him, and here we are.
+>
+> Damn, that was a misunderstanding. I actually had a topic branch:
+> tip:x86/cpu and was assuming that you'll see it from the tip-bot
+> notifications. But they went to lkml and you weren't CCed. And
+> regardless, I should've told you explicitly which one it is, sorry about
+> that. I'll be more explicit next time.
 
-Thanks for testing all 3 of these and letting me know.
+No problem, it's fair to say that we both did our best to mess this up. :)
 
-greg k-h
+Paolo
+
