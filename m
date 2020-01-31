@@ -2,81 +2,98 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A2AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F9C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACB2215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA962467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgAaVoV (ORCPT
+        id S1726373AbgAaVpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:44:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60613 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgAaVoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:44:21 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 13:44:21 -0800
-X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
-   d="scan'208";a="377464364"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 13:44:20 -0800
-Date:   Fri, 31 Jan 2020 13:44:19 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 36/55] drivers/net/b44: Change to non-atomic bit
- operations on pwol_mask
-Message-ID: <20200131214419.GA19569@agluck-desk2.amr.corp.intel.com>
-References: <20200130183608.563083888@linuxfoundation.org>
- <20200130183615.120752961@linuxfoundation.org>
- <20200131125730.GA20888@duo.ucw.cz>
+        Fri, 31 Jan 2020 16:45:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56684 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgAaVpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 16:45:44 -0500
+Received: from 51.26-246-81.adsl-static.isp.belgacom.be ([81.246.26.51] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ixe6f-0005eR-6Z; Fri, 31 Jan 2020 22:45:41 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BE110105BDC; Fri, 31 Jan 2020 22:45:35 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH V2] x86/apic/msi: Plug non-maskable MSI affinity race
+In-Reply-To: <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+ <87y2tytv5i.fsf@nanos.tec.linutronix.de>
+ <87eevqkpgn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
+ <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
+ <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
+ <87d0b82a9o.fsf@nanos.tec.linutronix.de>
+ <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
+ <878slwmpu9.fsf@nanos.tec.linutronix.de>
+ <87imkv63yf.fsf@nanos.tec.linutronix.de>
+ <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
+ <87pnf342pr.fsf@nanos.tec.linutronix.de>
+ <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
+ <877e1a2d11.fsf@nanos.tec.linutronix.de>
+ <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
+ <874kwd3lbn.fsf@nanos.tec.linutronix.de>
+ <CAE=gft52iBTJyyvDTXeHdEYnpSSROvrQsweuXjd6OuaLO47ACw@mail.gmail.com>
+ <87lfpn50id.fsf@nanos.tec.linutronix.de>
+ <87imkr4s7n.fsf@nanos.tec.linutronix.de>
+ <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
+Date:   Fri, 31 Jan 2020 22:45:35 +0100
+Message-ID: <87d0azuwow.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131125730.GA20888@duo.ucw.cz>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 01:57:31PM +0100, Pavel Machek wrote:
-> And I wonder if this is even good idea for mainline. x86 architecture
-> is here for long time, and I doubt Intel is going to break it like
-> this. Do you have documentation pointer? 
+Evan Green <evgreen@chromium.org> writes:
+> On Fri, Jan 31, 2020 at 6:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> #1 is uninteresting and has no unintended side effects. #2 and #3 might
+>> expose issues in device driver interrupt handlers which are not prepared to
+>> handle a spurious interrupt correctly. This not a regression, it's just
+>> exposing something which was already broken as spurious interrupts can
+>> happen for a lot of reasons and all driver handlers need to be able to deal
+>> with them.
+>>
+>> Reported-by: Evan Green <evgreen@chromium.org>
+>> Debugged-by: Evan Green <evgreen@chromium.org>                                                                                        Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> Heh, thanks for the credit.
 
-Intel isn't breaking this legacy behaviour. But it is building h/w that
-allows s/w to opt-in to a mode that will generate an #AC trap for
-a split lock.  One such processor ("Icelake") is already shipping.
+Thanks for the detective work and the persistance to convince me!
 
-Some Linux use cases (real-time) really, really want to avoid the cost
-of a split-lock.  There's a patch in TIP that will enable this #AC on
-split-lock mode on processors that support it.
+> Something weird happened on this line with your signoff, though.
 
-Thus it's a good idea to clean up any places in the kernel that will
-cause #AC when that mode is enabled. I think mainline should be
-taking any patches for split lock cleanup.
+Yeah. No idea how I fatfingered that.
 
-Stable is a different question.  The patch to enable the #AC should
-not be backported to stable. So the only way an old kernel would hit
-this would be if the BIOS enabled the #AC. Really that should only
-happen on a system where the developers have validated that the
-entire software stack has been checked for split locks.
+> I've been running this on my system for a few hours with no issues
+> (normal repro in <1 minute). So,
+>
+> Tested-by: Evan Green <evgreen@chromium.org>
 
-Is net/b44 a device that is still being included on current systems?
-Or is it a legacy device that has been superceeded by something else?
-If there isn't going to be a b44 on an Icelake or newer system, then
-perhaps we should not worry so much about fixing the driver.
+Thanks for confirmation!
 
--Tony
+       tglx
