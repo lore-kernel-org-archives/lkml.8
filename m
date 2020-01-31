@@ -2,127 +2,108 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B41C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D4020707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73D12082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0uZ77XyQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nlO5iYKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAaPju (ORCPT
+        id S1729291AbgAaPkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:39:50 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43777 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgAaPju (ORCPT
+        Fri, 31 Jan 2020 10:40:01 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:45698 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbgAaPkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:39:50 -0500
-Received: by mail-il1-f195.google.com with SMTP id o13so6490844ilg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 07:39:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sppSJ27WOAOq8bLtj1YH2mlQeo3KTk4dV43H9seuSsk=;
-        b=0uZ77XyQjJrzZ6lHXop39Dcn3D3xJsKbpxm9i9o7khypXNZ0UXMSAlbgU1g1cvpeHk
-         mR5uHjydrEPVgdHY8BJf0Xk2AYg/CDn+fEp/IX1+Kggqr9rdP86PuJch7LaYGKR8bm9O
-         MjOjpzINv1M/+PQTQoP+lumJeskwJPdaewdYdzju4Mse3+9Z0H1mpo3J3jyQemqL/ve2
-         CcU5yO8wXkiWbhl6Ujgs++1spLC7hKJcpGecNQ7qM4wsKSznhTxRviDyhdzRj4t92ve3
-         qkRdTg0Kx3bs7kLHQ1kpAMR30UoH6Q2MYgW0XGZcuyLquxL0tEAEN6a0JoDlndYx9OAT
-         rUog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sppSJ27WOAOq8bLtj1YH2mlQeo3KTk4dV43H9seuSsk=;
-        b=GmalxrSSpGijlq1XGhQoO/iNAiY4W4YPFFOvVytGiC9p4MbMFC0wYbRkKFdVVKN3Fy
-         ae9gv8vBrFhs88ZDdQdlQkYTZDvEB/rVbPaUb+h0fnUKvnOKaHXe7d3hddUJZhTiAgdj
-         KsKSuA5OhuhmT1TvsTj+vXNpKegy/1lBFvGR9IDfDRP6Yoxxy+G/qmjIeKpsAxm0COzU
-         Bvc/b7Bo7fjGTcdoGbj3UGssQxXzIwLa77moKpTWTcCLXJPtlsjhQdejPQQS4QxnPDjC
-         swUSpdm0VefCMVF2QsBgI/W+ByO9GfMgqssMLr5Bxpstb5Q+vkqIhGiymovB+n3lMLbf
-         NnOQ==
-X-Gm-Message-State: APjAAAVgVdLGSxd3JDiCIwpuSTWxg+0oCid09T9ZIMnZVxL8XD+TgcxQ
-        igueepH1c/OJit0FCWBk1ikqCW85lWA=
-X-Google-Smtp-Source: APXvYqzJPXA9+M7o11flsX6E8Taexa2QTUIkYHozFJgT/PdrSjqe4SlmV/J/LxeOs/ePruCdWOceUw==
-X-Received: by 2002:a92:cc04:: with SMTP id s4mr3165379ilp.193.1580485188246;
-        Fri, 31 Jan 2020 07:39:48 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f76sm3278848ild.82.2020.01.31.07.39.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 07:39:47 -0800 (PST)
-Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20200131142943.120459-1-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
-Date:   Fri, 31 Jan 2020 08:39:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 10:40:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N4e1IlRTcR/cWdEmSvMEu/ZvSyKU7DT7I7Dgvs6lFnY=; b=nlO5iYKINdDyWxjQ9d0yXVoKE
+        GWCL7SdUiY47LuCh3ddWUPXlA5ye7GI0FSP+/MNT0PvAR7qk5uZVLkGUG/01IxRt55wMxfyNnGFJw
+        NCbJbc47B5uH1B+0e6sVj3HkRTirYZtFieGQn1zW7joseysNrx0iYs3cnQwU5g0DaOFHI/R1c5rXn
+        ccVWqjqI6OtqU+QbYYJeBq4f3uifwQdnRV/vR6rdvUWntgEfLtiulcSw7H0kGBUewU8aLc0fv3NlA
+        Rt0bmRYl8Rkd5T358olJqXgjy9CNhaqJHtYTYcdYb/veKfHh9j+x+7tZv0keddxyRfIKheYdeGxNr
+        KHSuQrA9Q==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:41668)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ixYOS-0001bW-Oe; Fri, 31 Jan 2020 15:39:40 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ixYOQ-0005W5-Ji; Fri, 31 Jan 2020 15:39:38 +0000
+Date:   Fri, 31 Jan 2020 15:39:38 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200131153938.GP25745@shell.armlinux.org.uk>
+References: <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
+ <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
+ <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
+ <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+ <20200131142906.GG9639@lunn.ch>
+ <20200131144737.GA4948@willie-the-truck>
+ <20200131150929.GB13902@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20200131142943.120459-1-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131150929.GB13902@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 7:29 AM, Stefano Garzarella wrote:
-> Hi Jens,
-> this is a v2 of the epoll test.
+On Fri, Jan 31, 2020 at 04:09:29PM +0100, Andrew Lunn wrote:
+> > Devicetree to the rescue!
 > 
-> v1 -> v2:
->     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
->     - add 2 new tests to test epoll with IORING_FEAT_NODROP
->     - cleanups
-> 
-> There are 4 sub-tests:
->     1. test_epoll
->     2. test_epoll_sqpoll
->     3. test_epoll_nodrop
->     4. test_epoll_sqpoll_nodrop
-> 
-> In the first 2 tests, I try to avoid to queue more requests than we have room
-> for in the CQ ring. These work fine, I have no faults.
+> Yes, exactly. We have good, standardised descriptions for most of this
+> in device tree. And phylink can handle SFP and SFP+. Nobody has worked
+> on QSFP yet, since phylink has mostly been pushed by the embedded
+> world and 40G is not yet popular in the embedded world.
 
-Thanks!
-
-> In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
-> much as I can until I get a -EBUSY, but they often fail in this way:
-> the submitter manages to submit everything, the receiver receives all the
-> submitted bytes, but the cleaner loses completion events (I also tried to put a
-> timeout to epoll_wait() in the cleaner to be sure that it is not related to the
-> patch that I send some weeks ago, but the situation doesn't change, it's like
-> there is still overflow in the CQ).
-> 
-> Next week I'll try to investigate better which is the problem.
-
-Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
-you just pruned the CQ ring but didn't flush the internal side.
-
-> I hope my test make sense, otherwise let me know what is wrong.
-
-I'll take a look...
-
-> Anyway, when I was exploring the library, I had a doubt:
-> - in the __io_uring_get_cqe() should we call sys_io_uring_enter() also if
->   submit and wait_nr are zero, but IORING_SQ_NEED_WAKEUP is set in the
->   sq.kflags?
-
-It's a submission side thing, the completion side shouldn't care. That
-flag is only relevant if you're submitting IO with SQPOLL. Then it tells
-you that the thread needs to get woken up, which you need io_uring_enter()
-to do. But for just reaping completions and not needing to submit
-anything new, we don't care if the thread is sleeping.
+That's incorrect (if you read my previous reply.)  It shouldn't come
+as any surprise that I have some experimental QSFP code.
 
 -- 
-Jens Axboe
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
