@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06FAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4BEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DABC206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9481215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgAaKjP (ORCPT
+        id S1728522AbgAaKjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:39:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57070 "EHLO mx2.suse.de"
+        Fri, 31 Jan 2020 05:39:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57168 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgAaKjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:39:13 -0500
+        id S1728499AbgAaKjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 05:39:16 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6DE1CAFFC;
-        Fri, 31 Jan 2020 10:39:12 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id B09BEAF2D;
+        Fri, 31 Jan 2020 10:39:14 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH v2 10/21] staging: vc04_services: Get rid of vchiq_platform_handle_timeout()
-Date:   Fri, 31 Jan 2020 11:38:26 +0100
-Message-Id: <20200131103836.14312-11-nsaenzjulienne@suse.de>
+Subject: [PATCH v2 13/21] staging: vc04_services: Get rid of vchiq_check_resume()
+Date:   Fri, 31 Jan 2020 11:38:29 +0100
+Message-Id: <20200131103836.14312-14-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200131103836.14312-1-nsaenzjulienne@suse.de>
 References: <20200131103836.14312-1-nsaenzjulienne@suse.de>
@@ -42,61 +42,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function does nothing.
+Nobody calls this function.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../vc04_services/interface/vchiq_arm/vchiq_2835_arm.c       | 5 -----
- .../staging/vc04_services/interface/vchiq_arm/vchiq_core.c   | 5 -----
- .../staging/vc04_services/interface/vchiq_arm/vchiq_core.h   | 3 ---
- 3 files changed, 13 deletions(-)
+ .../interface/vchiq_arm/vchiq_arm.c           | 23 -------------------
+ .../interface/vchiq_arm/vchiq_arm.h           |  3 ---
+ 2 files changed, 26 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index a7f72dba2e20..c18c6ca0b6c0 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -257,11 +257,6 @@ int vchiq_dump_platform_state(void *dump_context)
- 	return vchiq_dump(dump_context, buf, len + 1);
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index a33f0fb5d45f..a26f9f6311a6 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -2521,29 +2521,6 @@ vchiq_platform_check_suspend(struct vchiq_state *state)
+ 	return;
  }
  
--void
--vchiq_platform_handle_timeout(struct vchiq_state *state)
+-/* This function should be called with the write lock held */
+-int
+-vchiq_check_resume(struct vchiq_state *state)
 -{
--	(void)state;
--}
- /*
-  * Local functions
-  */
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index ef8340ab8a52..f135d55b29e5 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -1911,11 +1911,6 @@ slot_handler_func(void *v)
- 						"message");
- 				}
- 				break;
+-	struct vchiq_arm_state *arm_state = vchiq_platform_get_arm_state(state);
+-	int resume = 0;
 -
--			case VCHIQ_CONNSTATE_PAUSE_TIMEOUT:
--			case VCHIQ_CONNSTATE_RESUME_TIMEOUT:
--				vchiq_platform_handle_timeout(state);
--				break;
- 			default:
- 				break;
- 			}
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-index 535a67cc68ed..11037a499408 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-@@ -638,9 +638,6 @@ vchiq_platform_conn_state_changed(struct vchiq_state *state,
- 				  enum vchiq_connstate oldstate,
- 				  enum vchiq_connstate newstate);
+-	if (!arm_state)
+-		goto out;
+-
+-	vchiq_log_trace(vchiq_susp_log_level, "%s", __func__);
+-
+-	if (need_resume(state)) {
+-		set_resume_state(arm_state, VC_RESUME_REQUESTED);
+-		request_poll(state, NULL, 0);
+-		resume = 1;
+-	}
+-
+-out:
+-	vchiq_log_trace(vchiq_susp_log_level, "%s exit", __func__);
+-	return resume;
+-}
+-
+ enum vchiq_status
+ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
+ 		   enum USE_TYPE_E use_type)
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+index 606a519dd3db..676b1cb6f332 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+@@ -95,9 +95,6 @@ extern enum vchiq_status
+ vchiq_arm_init_state(struct vchiq_state *state,
+ 		     struct vchiq_arm_state *arm_state);
  
--extern void
--vchiq_platform_handle_timeout(struct vchiq_state *state);
+-extern int
+-vchiq_check_resume(struct vchiq_state *state);
 -
  extern void
- vchiq_set_conn_state(struct vchiq_state *state, enum vchiq_connstate newstate);
- 
+ vchiq_check_suspend(struct vchiq_state *state);
+ enum vchiq_status
 -- 
 2.25.0
 
