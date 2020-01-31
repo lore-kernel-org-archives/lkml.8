@@ -2,192 +2,158 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCED0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9612C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D5620CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X6f8OU6k"
+	by mail.kernel.org (Postfix) with ESMTP id 7F164215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580502811;
+	bh=D4fMpEyYzygfNFw1EBf3BjAq1k35iRUN+0PRaOLZ1Y4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v/It62IfeGaS75zZxdnVXVWPhg8z2vE9flkA3FkCkJiWtmifq/kgcljDh5qYf0Pau
+	 Mc6f8Iw6XK5LMmf2gg1r4ybiA4ZFVd/+MBZkPmUupTNXuW5Q3QaL8r3afaAc6NgbtO
+	 DoxpWrFePxoG4V/7cZOB5LNks9EhYoqkD4RX5fxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgAaUdS (ORCPT
+        id S1726466AbgAaUdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:33:18 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34820 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgAaUdS (ORCPT
+        Fri, 31 Jan 2020 15:33:31 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37178 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgAaUda (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:33:18 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so8455283ljb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:33:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/H8kLH2v9jt9+oV/BTdgW+V7p3YELEgt+i45cxuZ9vE=;
-        b=X6f8OU6k/Or52a60fPVQDww5Ni1iSrGpR0eC4eNSpLj+TYB1kspe42WeoZBaaA1AA6
-         e0ayrN9lnGLpEnDT8OZ6UOtmry7e2qMKXiT+QLw/gskL7WSkgMDOvQt7OMWWH7eNhOql
-         JwhHDRPs43e2tpAHNY7uAoxS5+xWIKBK1jF9E=
+        Fri, 31 Jan 2020 15:33:30 -0500
+Received: by mail-ed1-f66.google.com with SMTP id cy15so9200808edb.4;
+        Fri, 31 Jan 2020 12:33:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/H8kLH2v9jt9+oV/BTdgW+V7p3YELEgt+i45cxuZ9vE=;
-        b=qGEzNeS4yz1yGjgYaPHxNUQO+2hkaCc4PYJBGpEDjwxzuerv0DX4mhDlOlTvUi1Z/T
-         j27tmnNQ6ryaXxO91phAE/pjhZcLUOMSwqHOxSuSldDsrI2tdly64VSGh51hFIjz8KfF
-         ek+9miX2YrlPe/YXo87BcCf/HcCgND3DVR23Tu9tNsgQGmGt4nC/91NbUzRPgG8pZjMe
-         er+0IRNffJ2qN1UPVg50sfh35zScywiXuPLeZn0dpk6/SVQjV4P9RX4K9IfdsrXviLOS
-         h3i7SJ1Pq95TTAjax7W0aPaFPivFABSkq0my1a/RGHrjpBK9SoAesGyE59zQ4XSFR+RI
-         KapA==
-X-Gm-Message-State: APjAAAVpgKWdloLZSr5IT9r6zjBMxNRd5+H0dAFmOC1N+YL7vSSE3CL2
-        /5VFGXCk9z3iL02xeiaRmHEvjWJOPPg=
-X-Google-Smtp-Source: APXvYqx4u/WnM/0z3oF34qMSCPGGb7eb9b+e4B0/FfunXivgpXeypS0uYHMwmHLDMo4/8VghMatBTA==
-X-Received: by 2002:a2e:88d6:: with SMTP id a22mr6507356ljk.163.1580502795730;
-        Fri, 31 Jan 2020 12:33:15 -0800 (PST)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id e17sm5412389ljg.101.2020.01.31.12.33.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 12:33:15 -0800 (PST)
-Received: by mail-lj1-f178.google.com with SMTP id a13so8416952ljm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 12:33:14 -0800 (PST)
-X-Received: by 2002:a2e:3e10:: with SMTP id l16mr6784769lja.286.1580502794229;
- Fri, 31 Jan 2020 12:33:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vm34AiZw5tCki8C0c1qoxvq76BQ0W8VtlZxc0vtOTH0=;
+        b=VdfZ99Zy05WREBkYa00GkzNjqC2C2E2XaZRx0UyWFEPg8QV1bPd9C+6Lg704CetnpS
+         OO1IcV19CbicT0H2icmJ2xGSKIjrMSe+zSKT6bw+lzvAU+C7eVR9/vG35bPqCsHUXefu
+         Mq35QW3LrRyeHJZzOCexcm7RTPftcxU0bXL7M4wifxdNYot7Cy81/rUrz+IQwvZqKqZQ
+         q0iXWx0aclNo8ILBOyR2MKVivjoOr1bHpUFaDsrFB2scAxKdJWv2icPXYAVtykUxbC0X
+         B1M0EUd7Cf5Ke7HEu0SkquLHh/UzI25wp6kxm3R2H90vnMLcANjnDIqqeT9nQnje1qiO
+         Wimg==
+X-Gm-Message-State: APjAAAUY13UTHG1ph3HhIDi+zFOwbA9W1vJOIzOUvTLXdtoqflb6ETjD
+        EuQey0MeUG6/cdjXsRs4c4w=
+X-Google-Smtp-Source: APXvYqzv6M4GBZtTnnXC472c44tOGVPioARY22z+lobm6CZoDXuGFlo7P3GwK8JnhnshAtlVrV+7Uw==
+X-Received: by 2002:a17:907:104e:: with SMTP id oy14mr10544242ejb.82.1580502808030;
+        Fri, 31 Jan 2020 12:33:28 -0800 (PST)
+Received: from kozik-lap ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id g9sm651960ejd.66.2020.01.31.12.33.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 12:33:27 -0800 (PST)
+Date:   Fri, 31 Jan 2020 21:33:24 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+Subject: Re: [PATCH 1/3] ARM: exynos_defconfig: Enable SCHED_MC
+Message-ID: <20200131203324.GA27510@kozik-lap>
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-2-lukasz.luba@arm.com>
+ <CAJKOXPedRc3ag6DDUAXSbHk8JcAZbug5HSss9wb8YyLkP7MLaw@mail.gmail.com>
+ <ae021317-8fda-2bb2-2080-1304fda1420c@arm.com>
 MIME-Version: 1.0
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
- <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
- <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
- <87y2tytv5i.fsf@nanos.tec.linutronix.de> <87eevqkpgn.fsf@nanos.tec.linutronix.de>
- <CAE=gft6YiM5S1A7iJYJTd5zmaAa8=nhLE3B94JtWa+XW-qVSqQ@mail.gmail.com>
- <CAE=gft5xta4XCJtctWe=R3w=kVr598JCbk9VSRue04nzKAk3CQ@mail.gmail.com>
- <CAE=gft7MqQ3Mej5oCT=gw6ZLMSTHoSyMGOFz=-hae-eRZvXLxA@mail.gmail.com>
- <87d0b82a9o.fsf@nanos.tec.linutronix.de> <CAE=gft7C5HTmcTLsXqXbCtcYDeKG6bCJ0gmgwVNc0PDHLJ5y_A@mail.gmail.com>
- <878slwmpu9.fsf@nanos.tec.linutronix.de> <87imkv63yf.fsf@nanos.tec.linutronix.de>
- <CAE=gft7Gu0ah4qcbsEB1X+kUMagCzPR+cdCfn2caofcGV+tBjA@mail.gmail.com>
- <87pnf342pr.fsf@nanos.tec.linutronix.de> <CAE=gft69hQcbmT46b1T8eLdPFyb9Pp-sDYd5JfPsZ2JWL4PXqQ@mail.gmail.com>
- <877e1a2d11.fsf@nanos.tec.linutronix.de> <CAE=gft7mLAU3G+f8gi_etRSpUijoCh7_6ni9Ob2JqjW7Q1n3yQ@mail.gmail.com>
- <874kwd3lbn.fsf@nanos.tec.linutronix.de> <CAE=gft52iBTJyyvDTXeHdEYnpSSROvrQsweuXjd6OuaLO47ACw@mail.gmail.com>
- <87lfpn50id.fsf@nanos.tec.linutronix.de> <87imkr4s7n.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87imkr4s7n.fsf@nanos.tec.linutronix.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 31 Jan 2020 12:32:37 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
-Message-ID: <CAE=gft4cGYL7jHLqcGCU9J_efHs5dd+QyP8NfW5iSZCoi-SVOg@mail.gmail.com>
-Subject: Re: [PATCH V2] x86/apic/msi: Plug non-maskable MSI affinity race
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org, Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ae021317-8fda-2bb2-2080-1304fda1420c@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 6:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Thomas Gleixner <tglx@linutronix.de> writes:
->
-> Evan tracked down a subtle race between the update of the MSI message and
-> the device raising an interrupt internally on PCI devices which do not
-> support MSI masking. The update of the MSI message is non-atomic and
-> consists of either 2 or 3 sequential 32bit wide writes to the PCI config
-> space.
->
->    - Write address low 32bits
->    - Write address high 32bits (If supported by device)
->    - Write data
->
-> When an interrupt is migrated then both address and data might change, so
-> the kernel attempts to mask the MSI interrupt first. But for MSI masking is
-> optional, so there exist devices which do not provide it. That means that
-> if the device raises an interrupt internally between the writes and MSI
-> message is sent built from half updated state.
->
-> On x86 this can lead to spurious interrupts on the wrong interrupt
-> vector when the affinity setting changes both address and data. As a
-> consequence the device interrupt can be lost causing the device to
-> become stuck or malfunctioning.
->
-> Evan tried to handle that by disabling MSI accross an MSI message
-> update. That's not feasible because disabling MSI has issues on its own:
->
->  If MSI is disabled the PCI device is routing an interrupt to the legacy
->  INTx mechanism. The INTx delivery can be disabled, but the disablement is
->  not working on all devices.
->
->  Some devices lose interrupts when both MSI and INTx delivery are disabled.
->
-> Another way to solve this would be to enforce the allocation of the same
-> vector on all CPUs in the system for this kind of screwed devices. That
-> could be done, but it would bring back the vector space exhaustion problems
-> which got solved a few years ago.
->
-> Fortunately the high address (if supported by the device) is only relevant
-> when X2APIC is enabled which implies interrupt remapping. In the interrupt
-> remapping case the affinity setting is happening at the interrupt remapping
-> unit and the PCI MSI message is programmed only once when the PCI device is
-> initialized.
->
-> That makes it possible to solve it with a two step update:
->
->   1) Target the MSI msg to the new vector on the current target CPU
->
->   2) Target the MSI msg to the new vector on the new target CPU
->
-> In both cases writing the MSI message is only changing a single 32bit word
-> which prevents the issue of inconsistency.
->
-> After writing the final destination it is necessary to check whether the
-> device issued an interrupt while the intermediate state #1 (new vector,
-> current CPU) was in effect.
->
-> This is possible because the affinity change is always happening on the
-> current target CPU. The code runs with interrupts disabled, so the
-> interrupt can be detected by checking the IRR of the local APIC. If the
-> vector is pending in the IRR then the interrupt is retriggered on the new
-> target CPU by sending an IPI for the associated vector on the target CPU.
->
-> This can cause spurious interrupts on both the local and the new target
-> CPU.
->
->  1) If the new vector is not in use on the local CPU and the device
->     affected by the affinity change raised an interrupt during the
->     transitional state (step #1 above) then interrupt entry code will
->     ignore that spurious interrupt. The vector is marked so that the
->     'No irq handler for vector' warning is supressed once.
->
->  2) If the new vector is in use already on the local CPU then the IRR check
->     might see an pending interrupt from the device which is using this
->     vector. The IPI to the new target CPU will then invoke the handler of
->     the device, which got the affinity change, even if that device did not
->     issue an interrupt
->
->  3) If the new vector is in use already on the local CPU and the device
->     affected by the affinity change raised an interrupt during the
->     transitional state (step #1 above) then the handler of the device which
->     uses that vector on the local CPU will be invoked.
->
-> #1 is uninteresting and has no unintended side effects. #2 and #3 might
-> expose issues in device driver interrupt handlers which are not prepared to
-> handle a spurious interrupt correctly. This not a regression, it's just
-> exposing something which was already broken as spurious interrupts can
-> happen for a lot of reasons and all driver handlers need to be able to deal
-> with them.
->
-> Reported-by: Evan Green <evgreen@chromium.org>
-> Debugged-by: Evan Green <evgreen@chromium.org>                                                                                        Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Jan 31, 2020 at 03:59:30PM +0000, Lukasz Luba wrote:
+> Hi Krzysztof,
+> 
+> Thank you for your review, please see my comments below.
+> 
+> On 1/31/20 12:47 PM, Krzysztof Kozlowski wrote:
+> > On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
+> > > 
+> > > From: Lukasz Luba <lukasz.luba@arm.com>
+> > > 
+> > > Since the 'capacities-dmips-mhz' are present in the CPU nodes, make use of
+> > > this knowledge in smarter decisions during scheduling.
+> > > 
+> > > The values in 'capacities-dmips-mhz' are normilized, this means that i.e.
+> > > when CPU0's capacities-dmips-mhz=100 and CPU1's 'capacities-dmips-mhz'=50,
+> > > cpu0 is twice fast as CPU1, at the same frequency. The proper hirarchy
+> > > in sched_domain topology could exploit the SoC architecture advantages
+> > > like big.LITTLE.
+> > 
+> > I do not quite get how this is related to rationale behind changing defconfig...
+> 
+> It is not strictly about EAS, it is useful in general for big.LITTLE
+> platform with clusters.
+> 
+> > 
+> > > Enabling the SCHED_MC will create two levels in
+> > > sched_domain hierarchy, which might be observed in:
+> > 
+> > This is looks more convincing... but still what is the need? To work with EAS?
+> 
+> It is not only for EAS, but in general for the scheduler (load balance,
+> task's wake-up path, etc). The scheduler algorithms iterate CPUs in the
+> sched groups. To make better decisions, the information about MC domain
+> is needed. More about the scheduler domains and i.e. load_balance()
+> you can find here:
+> 
+> https://www.kernel.org/doc/html/latest/scheduler/sched-domains.html
 
-Heh, thanks for the credit. Something weird happened on this line with
-your signoff, though.
-I've been running this on my system for a few hours with no issues
-(normal repro in <1 minute). So,
+Ahhh, I see, it's independent of later patches. Somehow I had impression
+it is a prerequisite...
 
-Tested-by: Evan Green <evgreen@chromium.org>
+> 
+> > 
+> > > grep . /proc/sys/kernel/sched_domain/cpu*/domain*/{name,flags}
+> > > /proc/sys/kernel/sched_domain/cpu0/domain0/name:MC
+> > > /proc/sys/kernel/sched_domain/cpu0/domain1/name:DIE
+> > > ...
+> > > /proc/sys/kernel/sched_domain/cpu0/domain0/flags:575
+> > > /proc/sys/kernel/sched_domain/cpu0/domain1/flags:4223
+> > 
+> > Not related to defconfig change and not visible after this commit.
+> 
+> Without this patch there is only one domain: 'domain0' -> 'DIE'
+> cat /proc/sys/kernel/sched_domain/cpu0/domain0/name
+> DIE
+> 
+> When you apply this patch you will get two: 'domain0, 'domain1'
+> grep . /proc/sys/kernel/sched_domain/cpu0/domain?/name
+> 
+> /proc/sys/kernel/sched_domain/cpu0/domain0/name:MC
+> /proc/sys/kernel/sched_domain/cpu0/domain1/name:DIE
+> 
+> I can remove it this information, but it is the most important
+> to spot this difference out.
+> 
+> This is also the main reason I haven't merge the patch 1 + 3.
+
+Indeed. I thought that these will pop up at the end of the patchset, my
+bad.
+
+I do not see big benefits of adding these outputs as proofs of working
+SCHED_MC because they are kind of obvious. It is not a measurement but
+report of current system state. However they don't harm neither, so I am
+fine with it.
+
+However please us in commit msg also the name of turned on option, next
+or instead of SCHED_MC.  The options might be sometimes cryptic or too
+vague and the name actually easily expresses what you want enable.
+
