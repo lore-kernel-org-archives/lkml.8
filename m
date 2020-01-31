@@ -2,200 +2,325 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9060C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2B720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:33:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMuL6ZWs"
+	by mail.kernel.org (Postfix) with ESMTP id 4A62122522
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580510052;
+	bh=FO3EBR0Qmuy+VdMsgwG+8OivuDlJpCjiJx5i0UgxeMA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=cgkRyVV2XnuzrYUmIs3LbbYCo9hgISefawH2iPvXPWpgDnpdxEXxLrlbOSvEAqJi1
+	 P7fkFu0SK72AQ6i3/6+6q4UfnCLgYMwCRNmUqT9WyCcBN6ZoKpxCfeF0l3AFezyBow
+	 1+HddFZHhGm2iFo506ALR0SZkMb0JohbXLCpANS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgAaWdI (ORCPT
+        id S1726484AbgAaWeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:33:08 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45016 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgAaWdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:33:07 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so10441463wrx.11;
-        Fri, 31 Jan 2020 14:33:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=TiAWf9D3maXDz8lCmzRbc51wjVLzMk0o0bYijacbOAU=;
-        b=sMuL6ZWsd9Qx3ERfJzsJy8wpb8Z8p7V0CYlRdDdrSrsY/ywNuQ83Vj6Nzf4ymTaYpW
-         fKml8aPrLGCAqrzkmnOCV5TONeWJo+hAb6EDQRck8sWsgy3mWlskzNgy7Ka8CAmRW8xD
-         EtteVue1I/LTjo7j9O15DBJvpH2kyfKyF79uOaRgHBlfVy/l67F+Zn1VYaetTe5l4bce
-         uiW4VNCswike2nnEdHkQ6AVr6p5iM8iyhshSkZmwTOWGYHUIq8kk0log/axDdyaPtXN9
-         xuhh7Kl2bSuO/aYwg9sez3xvrmF5S7jO86BPnFeTuyVIOHCH0hSNzfU9/1EAC7/oIprj
-         29vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=TiAWf9D3maXDz8lCmzRbc51wjVLzMk0o0bYijacbOAU=;
-        b=fSsPI/wkgTzx/AQcwkT3NwU8w9O/LNibgLnbL+PNJONUjKUllLUWxAuB0rMNeVcVJr
-         RXFIWE1AXEC/yvm30M5rkY8Ph/IdkKDGCVETZV/v+9zLzptdJdMSStEAtbe7vGrw5U9e
-         lUdrAGm0OZxhBGgYWCWCUsKVsvL8M1mQXhp6dS+T8eDoMcCRuVaRhzjDHPj4r8p7c/dh
-         ohPvtfTlNbmBPRSrSytlwS834g/yZK5fISd7uOg/S70MN5/qBvXyUvuuZorocwn36eDO
-         +stkPmDw3f7i9s7qoNUSIRbSvq49LDqEo740fwIfuICaBZasSPgYoJg/IeOs5muvGSB6
-         uLYA==
-X-Gm-Message-State: APjAAAVZ/y29vW3y9lnzjEc5T4IWGb4u7IVudxPvmv1K1TXJlHdcozg9
-        6GxpoXWZZ0nstg4LuiOuUMqod7Uu
-X-Google-Smtp-Source: APXvYqzOOtjtrlntj5qTSRh2y/hcpZ9o7udghIDhZdNCzZZOOVv5SzlFamjRCfKNCZ/qXKuP+39kGQ==
-X-Received: by 2002:adf:df0f:: with SMTP id y15mr569788wrl.26.1580509984146;
-        Fri, 31 Jan 2020 14:33:04 -0800 (PST)
-Received: from [192.168.43.140] ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id t81sm12367112wmg.6.2020.01.31.14.33.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 14:33:03 -0800 (PST)
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1580508735.git.asml.silence@gmail.com>
- <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH v3 0/6] add persistent submission state
-Message-ID: <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
-Date:   Sat, 1 Feb 2020 01:32:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 31 Jan 2020 17:34:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgAaWeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 17:34:11 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4981520707;
+        Fri, 31 Jan 2020 22:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580510049;
+        bh=FO3EBR0Qmuy+VdMsgwG+8OivuDlJpCjiJx5i0UgxeMA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1A1YogOATqtHC1rPi8vbqBH/jfMliUnVBzprfzIGINHrGFoEQ8rzE/LYW0AVkNptC
+         4miPpv/EyV4UHf62oY+El4w8nab3Wb7WTH4naYPnuCUQAyQviCWtK7JbnTIg1NcIYK
+         Xyd/q9cBJOvl6OI5BCS4vogBhgcIX1h2BrrBdkdQ=
+Date:   Fri, 31 Jan 2020 16:34:07 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] PCI changes for v5.6
+Message-ID: <20200131223407.GA105848@google.com>
 MIME-Version: 1.0
-In-Reply-To: <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="zFbuuAtZIDTsd9td9PgiX1fYWVRlYecC2"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---zFbuuAtZIDTsd9td9PgiX1fYWVRlYecC2
-Content-Type: multipart/mixed; boundary="ZcQARdBLy99D7KSL9BSGJCwAyRXUqPUay";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
-Subject: Re: [PATCH v3 0/6] add persistent submission state
-References: <cover.1580508735.git.asml.silence@gmail.com>
- <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
-In-Reply-To: <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
---ZcQARdBLy99D7KSL9BSGJCwAyRXUqPUay
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-On 01/02/2020 01:22, Jens Axboe wrote:
-> On 1/31/20 3:15 PM, Pavel Begunkov wrote:
->> Apart from unrelated first patch, this persues two goals:
->>
->> 1. start preparing io_uring to move resources handling into
->> opcode specific functions
->>
->> 2. make the first step towards long-standing optimisation ideas
->>
->> Basically, it makes struct io_submit_state embedded into ctx, so
->> easily accessible and persistent, and then plays a bit around that.
->=20
-> Do you have any perf/latency numbers for this? Just curious if we
-> see any improvements on that front, cross submit persistence of
-> alloc caches should be a nice sync win, for example, or even
-> for peak iops by not having to replenish the pool for each batch.
->=20
-> I can try and run some here too.
->=20
+are available in the Git repository at:
 
-I tested the first version, but my drive is too slow, so it was only nops=
- and
-hence no offloading. Honestly, there waren't statistically significant re=
-sults.
-I'll rerun anyway.
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git 01b810ed7187
 
-I have a plan to reuse it for a tricky optimisation, but thinking twice, =
-I can
-just stash it until everything is done. That's not the first thing in TOD=
-O and
-will take a while.
+for you to fetch changes up to 01b810ed71878785d189d01e4d7425a11203d7a8:
 
+  Merge branch 'remotes/lorenzo/pci/uniphier' (2020-01-29 17:00:08 -0600)
 
---=20
-Pavel Begunkov
+----------------------------------------------------------------
 
+Resource management:
 
---ZcQARdBLy99D7KSL9BSGJCwAyRXUqPUay--
+  - Improve resource assignment for hot-added nested bridges, e.g.,
+    Thunderbolt (Nicholas Johnson)
 
---zFbuuAtZIDTsd9td9PgiX1fYWVRlYecC2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Power management:
 
------BEGIN PGP SIGNATURE-----
+  - Optionally print config space of devices before suspend (Chen Yu)
 
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl40qvoACgkQWt5b1Glr
-+6Wy8hAAtFfLAfTBY+AYB8/mkvlQfZkKt3Cbz/kwwEVnQ2GON/RwE+0WtpelM+ZW
-U61TE8zYjn7DE9XNCoIhXfSkC2uE81TvgW4LDTmGVgylQ+AXrthYP8pQaWHl9CIE
-WE1OrP6wdWeMIX/xJVI51gqX6o/zS+PI2ARNyKcfc52bGernIHYii4nRX8Gg1q/0
-AWl+dfxBJyCcT3br/a/hzGUi7tXIztDmE9sy5JwByjNMuZyjmYFCVM8Fh1l8igJm
-hno7oYvU+VenALpUr14iqSSRJkGWgA0+gBwzMQa57xTsmcyLcltpoyBDEvjVrysM
-Eju7MCRJ7hB3JSFXM+BLELQZ5gyqJBJ7CGh266AnOvLLTXjHHKW1CB3VBNxOkX5A
-Ycc4KWc70p7+Fvr4I9715mPD82+hyPUW7m18+7YpULWRBQICvdORLYs8E/KG+spH
-RvsWIwdRA3RmkC2Q4BaVnOsk2bPDxw5vr5niFJZUso+0kGDe9eZ5pjgT0jVS2BxE
-jfsvN9yDVFa9qmuz/l9G/T2I9vhjwXCXKklZ6F6qdLme3n9FYWEVYRxoQbdZdl3X
-IBDCGwuAX6vjsQdycEPBgumQtUfdLTkEOw/omcpGoyxhHgyCL+63RRNo0XmGmo4a
-WJ9+ZF6vRIUDraBswIByYSaP8A/BT9zEYlYgxyWlELUjEzMNL14=
-=py59
------END PGP SIGNATURE-----
+  - Increase D3 delay for AMD Ryzen5/7 XHCI controllers (Daniel Drake)
 
---zFbuuAtZIDTsd9td9PgiX1fYWVRlYecC2--
+Virtualization:
+
+  - Generalize DMA alias quirks (James Sewart)
+
+  - Add DMA alias quirk for PLX PEX NTB (James Sewart)
+
+  - Fix IOV memory leak (Navid Emamdoost)
+
+AER:
+
+  - Log which device prevents error recovery (Yicong Yang)
+
+Peer-to-peer DMA:
+
+  - Whitelist Intel SkyLake-E (Armen Baloyan)
+
+Broadcom iProc host bridge driver:
+
+  - Apply PAXC quirk whether driver is built-in or module (Wei Liu)
+
+Broadcom STB host bridge driver:
+
+  - Add Broadcom STB PCIe host controller driver (Jim Quinlan)
+
+Intel Gateway SoC host bridge driver:
+
+  - Add driver for Intel Gateway SoC (Dilip Kota)
+
+Intel VMD host bridge driver:
+
+  - Add support for DMA aliases on other buses (Jon Derrick)
+
+  - Remove dma_map_ops overrides (Jon Derrick)
+
+  - Remove now-unused X86_DEV_DMA_OPS (Christoph Hellwig)
+
+NVIDIA Tegra host bridge driver:
+
+  - Fix Tegra30 afi_pex2_ctrl register offset (Marcel Ziswiler)
+
+Panasonic UniPhier host bridge driver:
+
+  - Remove module code since driver can't be built as a module (Masahiro
+    Yamada)
+
+Qualcomm host bridge driver:
+
+  - Add support for SDM845 PCIe controller (Bjorn Andersson)
+
+TI Keystone host bridge driver:
+
+  - Fix "num-viewport" DT property error handling (Kishon Vijay Abraham I)
+
+  - Fix link training retries initiation (Yurii Monakov)
+
+  - Fix outbound region mapping (Yurii Monakov)
+
+Misc:
+
+  - Add Switchtec Gen4 support (Kelvin Cao)
+
+  - Add Switchtec Intercomm Notify and Upstream Error Containment support
+    (Logan Gunthorpe)
+
+  - Use dma_set_mask_and_coherent() since Switchtec supports 64-bit
+    addressing (Wesley Sheng)
+
+----------------------------------------------------------------
+Andrew Murray (1):
+      MAINTAINERS: Update my email address
+
+Armen Baloyan (1):
+      PCI/P2PDMA: Add Intel SkyLake-E to the whitelist
+
+Bjorn Andersson (2):
+      dt-bindings: PCI: qcom: Add support for SDM845 PCIe
+      PCI: qcom: Add support for SDM845 PCIe controller
+
+Bjorn Helgaas (16):
+      PCI/AER: Factor message prefixes with dev_fmt()
+      Merge branch 'pci/aer'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/p2pdma'
+      Merge branch 'pci/pm'
+      Merge branch 'pci/resource'
+      Merge branch 'pci/switchtec'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/host-vmd'
+      Merge branch 'remotes/lorenzo/pci/brcmstb'
+      Merge branch 'remotes/lorenzo/pci/dwc'
+      Merge branch 'remotes/lorenzo/pci/keystone'
+      Merge branch 'remotes/lorenzo/pci/misc'
+      Merge branch 'remotes/lorenzo/pci/qcom'
+      Merge branch 'remotes/lorenzo/pci/tegra'
+      Merge branch 'remotes/lorenzo/pci/uniphier'
+
+Chen Yu (1):
+      PCI/PM: Print config space of devices before suspend
+
+Christoph Hellwig (2):
+      x86/PCI: Add to_pci_sysdata() helper
+      x86/PCI: Remove X86_DEV_DMA_OPS
+
+Daniel Drake (2):
+      PCI: Add generic quirk for increasing D3hot delay
+      PCI: Increase D3 delay for AMD Ryzen5/7 XHCI controllers
+
+David Engraf (1):
+      PCI: tegra: Fix return value check of pm_runtime_get_sync()
+
+Dilip Kota (3):
+      dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+      PCI: dwc: intel: PCIe RC controller driver
+      PCI: artpec6: Configure FTS with dwc helper function
+
+Dongdong Liu (1):
+      PCI/AER: Initialize aer_fifo
+
+James Sewart (3):
+      PCI: Fix pci_add_dma_alias() bitmask size
+      PCI: Add nr_devfns parameter to pci_add_dma_alias()
+      PCI: Add DMA alias quirk for PLX PEX NTB
+
+Jim Quinlan (3):
+      dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+      PCI: brcmstb: Add Broadcom STB PCIe host controller driver
+      PCI: brcmstb: Add MSI support
+
+Jon Derrick (5):
+      x86/PCI: Expose VMD's pci_dev in struct pci_sysdata
+      PCI: Introduce pci_real_dma_dev()
+      iommu/vt-d: Use pci_real_dma_dev() for mapping
+      iommu/vt-d: Remove VMD child device sanity check
+      PCI: vmd: Remove dma_map_ops overrides
+
+Kelvin Cao (3):
+      PCI/switchtec: Add Gen4 flash information interface support
+      PCI/switchtec: Add Gen4 MRPC GAS access permission check
+      PCI/switchtec: Add Gen4 device IDs
+
+Kishon Vijay Abraham I (1):
+      PCI: keystone: Fix error handling when "num-viewport" DT property is not populated
+
+Krzysztof Kozlowski (1):
+      PCI: exynos: Rename Exynos to lowercase
+
+Logan Gunthorpe (8):
+      PCI/switchtec: Fix vep_vector_number ioread width
+      PCI: Don't disable bridge BARs when assigning bus resources
+      PCI/switchtec: Add support for Intercomm Notify and Upstream Error Containment
+      PCI/switchtec: Rename generation-specific constants
+      PCI/switchtec: Add 'generation' variable
+      PCI/switchtec: Factor out Gen3 ioctl_flash_part_info()
+      PCI/switchtec: Separate Gen3 register structures into unions
+      PCI/switchtec: Add Gen4 system info register support
+
+Marcel Ziswiler (1):
+      PCI: tegra: Fix afi_pex2_ctrl reg offset for Tegra30
+
+Masahiro Yamada (1):
+      PCI: uniphier: remove module code from built-in driver
+
+Navid Emamdoost (1):
+      PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+
+Nicholas Johnson (9):
+      PCI: Remove unnecessary braces
+      PCI: Rename variables
+      PCI: Pass size + alignment to pci_bus_distribute_available_resources()
+      PCI: Remove local variable usage in pci_bus_distribute_available_resources()
+      PCI: Consider alignment of hot-added bridges when assigning resources
+      PCI: Rename extend_bridge_window() parameter
+      PCI: Rename extend_bridge_window() to adjust_bridge_window()
+      PCI: Set resource size directly in adjust_bridge_window()
+      PCI: Allow adjust_bridge_window() to shrink resource if necessary
+
+Sushma Kalakota (1):
+      PCI: vmd: Add two VMD Device IDs
+
+Wei Liu (1):
+      PCI: iproc: Apply quirk_paxc_bridge() for module as well as built-in
+
+Wesley Sheng (3):
+      PCI/switchtec: Use dma_set_mask_and_coherent()
+      PCI/switchtec: Remove redundant valid PFF number count
+      PCI/switchtec: Move check event ID from mask_event() to switchtec_event_isr()
+
+Yicong Yang (1):
+      PCI/AER: Log which device prevents error recovery
+
+Yurii Monakov (2):
+      PCI: keystone: Fix link training retries initiation
+      PCI: keystone: Fix outbound region mapping
+
+Zenghui Yu (1):
+      Documentation: PCI: Fix pci_alloc_irq_vectors() function name typo
+
+ .mailmap                                           |    2 +
+ Documentation/PCI/msi-howto.rst                    |    2 +-
+ .../devicetree/bindings/pci/brcm,stb-pcie.yaml     |   97 ++
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml     |  138 +++
+ .../devicetree/bindings/pci/qcom,pcie.txt          |   19 +
+ MAINTAINERS                                        |    2 +-
+ arch/x86/Kconfig                                   |    3 -
+ arch/x86/include/asm/device.h                      |   10 -
+ arch/x86/include/asm/pci.h                         |   31 +-
+ arch/x86/pci/common.c                              |   48 +-
+ drivers/iommu/amd_iommu.c                          |    7 +-
+ drivers/iommu/intel-iommu.c                        |   11 +-
+ drivers/pci/controller/Kconfig                     |   10 +-
+ drivers/pci/controller/Makefile                    |    1 +
+ drivers/pci/controller/dwc/Kconfig                 |   11 +
+ drivers/pci/controller/dwc/Makefile                |    1 +
+ drivers/pci/controller/dwc/pci-exynos.c            |    2 +-
+ drivers/pci/controller/dwc/pci-keystone.c          |    6 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c          |    8 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   56 ++
+ drivers/pci/controller/dwc/pcie-designware.h       |   12 +
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |  545 +++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             |  150 +++
+ drivers/pci/controller/dwc/pcie-uniphier.c         |   31 +-
+ drivers/pci/controller/pci-tegra.c                 |    4 +-
+ drivers/pci/controller/pcie-brcmstb.c              | 1015 ++++++++++++++++++++
+ drivers/pci/controller/pcie-iproc.c                |   24 +
+ drivers/pci/controller/vmd.c                       |  156 +--
+ drivers/pci/iov.c                                  |    9 +-
+ drivers/pci/p2pdma.c                               |    3 +
+ drivers/pci/pci.c                                  |   48 +-
+ drivers/pci/pci.h                                  |    3 +
+ drivers/pci/pcie/aer.c                             |    1 +
+ drivers/pci/pcie/err.c                             |   12 +-
+ drivers/pci/quirks.c                               |  117 ++-
+ drivers/pci/search.c                               |   10 +-
+ drivers/pci/setup-bus.c                            |  163 ++--
+ drivers/pci/switch/switchtec.c                     |  370 +++++--
+ include/linux/pci.h                                |    3 +-
+ include/linux/switchtec.h                          |  160 ++-
+ include/uapi/linux/pci_regs.h                      |    1 +
+ include/uapi/linux/switchtec_ioctl.h               |   17 +-
+ 42 files changed, 2800 insertions(+), 519 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+ create mode 100644 drivers/pci/controller/pcie-brcmstb.c
