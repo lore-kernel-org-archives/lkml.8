@@ -2,125 +2,111 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A73CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674ACC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2841C2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF0220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DatComwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgAaWUz (ORCPT
+        id S1726484AbgAaWWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:20:55 -0500
-Received: from mga09.intel.com ([134.134.136.24]:55797 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgAaWUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:20:55 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 14:20:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
-   d="scan'208";a="223281824"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 31 Jan 2020 14:20:53 -0800
-Date:   Fri, 31 Jan 2020 14:20:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200131222053.GI18946@linux.intel.com>
-References: <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
- <20200128182402.GA18652@linux.intel.com>
- <20200131150832.GA740148@xz-x1>
- <20200131193301.GC18946@linux.intel.com>
- <20200131202824.GA7063@xz-x1>
- <20200131203622.GF18946@linux.intel.com>
- <20200131205550.GB7063@xz-x1>
- <20200131212928.GH18946@linux.intel.com>
- <20200131221637.GC7063@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131221637.GC7063@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 31 Jan 2020 17:22:09 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44509 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgAaWWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 17:22:09 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so4218885pgl.11;
+        Fri, 31 Jan 2020 14:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/HFcoQMFwoF5gwXFjCOgMWeMPSstLjSDHZ4Dum+BpLY=;
+        b=DatComwmXGtiPYRomdkOy0XFknlTGW4jw8cqnPXUs3c1PayQQ01hJkqNdNRCG8/3as
+         pZ/HWMofmFNsf38uGdGoFb3KtxSkVedmPKnu1jwNA2VWD0/4lpfh7rRv7HJc7BHC4AJa
+         O02dRGqtmspUgZGqsDhaanNF5EdARykMjcLg8SgyQktv9O3aCgdAdKUh2t+uFNq/6oBb
+         9tKZ9w8vkAtdC8LszUYhH4MUge04bpiWX+0BGuCp8I892FKG/uCFih4C0Sz3kVIhKEqk
+         IM6KyEzpAP0RXQ1QsP0P5JnzqdRzaJdfvyMe4Y6yG5V9RDGEL7j/Dw0JyZdCWhnGly0V
+         pSSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/HFcoQMFwoF5gwXFjCOgMWeMPSstLjSDHZ4Dum+BpLY=;
+        b=rMaHTIZKmrRTJ+Z4TuawucBLdRtbxzHaUI4oLWn45kGp6bwxcIqkQJh9Xbc40NPFCK
+         RVyYIWoZozaiMl3YDSex7mjhcS16tBtA68yC23Jq0gZFtiRJqpccVBgH5zhl/1ADO/u6
+         DYhfFu2TVCTdunlsQHkeV1Yy8jpQsbP84+Q2EmiSRYiFy7Igb7hjvv/wm5TR5P20vk9J
+         bylwZiOjnu7WvQTqNE5/JFjbRYWtIYnFV1fQEdANDAoFngYyAFt3y94siud5e31X+d26
+         QaMFGDBBSLXpgXA9cPo7DC+hgOJksdDmbEzZtckK/PNsoYXrdkg5wqMnsoO/vcMzm83E
+         IC9Q==
+X-Gm-Message-State: APjAAAWKmuXW2jpQNhY+qrnvwYGlZ17bnul31l9GHQZs+6MQjOW3Zmnl
+        Y0g2kJsns65HVuQst4zd/Ss=
+X-Google-Smtp-Source: APXvYqx7oLNYYYIoBn05Sgk8HxhcExQrlyg5hCf0aIq/sj8/mwAJ8Vjgu7X4e0+MgzPbAFocAsrZ6Q==
+X-Received: by 2002:a62:ddd0:: with SMTP id w199mr12425962pff.1.1580509327790;
+        Fri, 31 Jan 2020 14:22:07 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::1:a521])
+        by smtp.gmail.com with ESMTPSA id v8sm11201515pff.151.2020.01.31.14.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 14:22:07 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH 0/3] aspeed-g6: enable usb support
+Date:   Fri, 31 Jan 2020 14:21:54 -0800
+Message-Id: <20200131222157.20849-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 05:16:37PM -0500, Peter Xu wrote:
-> On Fri, Jan 31, 2020 at 01:29:28PM -0800, Sean Christopherson wrote:
-> > On Fri, Jan 31, 2020 at 03:55:50PM -0500, Peter Xu wrote:
-> > > On Fri, Jan 31, 2020 at 12:36:22PM -0800, Sean Christopherson wrote:
-> > > > On Fri, Jan 31, 2020 at 03:28:24PM -0500, Peter Xu wrote:
-> > > > > On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
-> > > > > > For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
-> > > > > > still has to use copy_{to,from}_user().
-> > > > > > 
-> > > > > > In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
-> > > > > > would be provided the hva of the memory region.  Since slots_lock and SRCU
-> > > > > > only protect gfn->hva, why would KVM take slots_lock since it already has
-> > > > > > the hva?
-> > > > > 
-> > > > > OK so you're suggesting to unlock the lock earlier to not cover
-> > > > > init_rmode_tss() rather than dropping the whole lock...  Yes it looks
-> > > > > good to me.  I think that's the major confusion I got.
-> > > > 
-> > > > Ya.  And I missed where the -EEXIST was coming from.  I think we're on the
-> > > > same page.
-> > > 
-> > > Good to know.  Btw, for me I would still prefer to keep the lock be
-> > > after the __copy_to_user()s because "HVA is valid without lock" is
-> > > only true for these private memslots.
-> > 
-> > No.  From KVM's perspective, the HVA is *never* valid.  Even if you rewrote
-> > this statement to say "the gfn->hva translation is valid without lock" it
-> > would still be incorrect. 
-> > 
-> > KVM is *always* using HVAs without holding lock, e.g. every time it enters
-> > the guest it is deferencing a memslot because the translations stored in
-> > the TLB are effectively gfn->hva->hpa.  Obviously KVM ensures that it won't
-> > dereference a memslot that has been deleted/moved, but it's a lot more
-> > subtle than simply holding a lock.
-> > 
-> > > After all this is super slow path so I wouldn't mind to take the lock
-> > > for some time longer.
-> > 
-> > Holding the lock doesn't affect this super slow vmx_set_tss_addr(), it
-> > affects everything else that wants slots_lock.  Now, admittedly it's
-> > extremely unlikely userspace is going to do KVM_SET_USER_MEMORY_REGION in
-> > parallel, but that's not the point and it's not why I'm objecting to
-> > holding the lock.
-> > 
-> > Holding the lock implies protection that is *not* provided.  You and I know
-> > it's not needed for copy_{to,from}_user(), but look how long it's taken us
-> > to get on the same page.  A future KVM developer comes along, sees this
-> > code, and thinks "oh, I need to hold slots_lock to dereference a gfn", and
-> > propagates the unnecessary locking to some other code.
-> 
-> At least for a user memory slot, we "need to hold slots_lock to
-> dereference a gfn" (or srcu), right?
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Gah, that was supposed to be "dereference a hva".  Yes, a gfn->hva lookup
-requires slots_lock or SRCU read lock.
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-> You know I'm suffering from a jetlag today, I thought I was still
-> fine, now I start to doubt it. :-)
+Patch #1 moves hardcoded vhub attributes (number of downstream ports and
+endpoints) to "struct ast_hub_config" which is then attached to "struct
+of_device_id". By doing this, it will be easier to enable ast2600 vhub
+which supports more ports and endpoints.
 
-Unintentional gaslighting.  Or was it?  :-D
+Patch #2 enables AST2600 support in aspeed-vhub gadget driver.
+
+Patch #3 adds USB devices and according pin groups in aspeed-g6 dtsi.
+
+Tao Ren (3):
+  usb: gadget: aspeed: read vhub config from of_device_id
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
+
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi   |  25 +++++
+ arch/arm/boot/dts/aspeed-g6.dtsi           |  43 ++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig |   4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c  | 109 ++++++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c   |  30 ++++--
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c   |   4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c   |  26 +++--
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h  |  23 ++---
+ 8 files changed, 191 insertions(+), 73 deletions(-)
+
+-- 
+2.17.1
+
