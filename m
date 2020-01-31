@@ -2,184 +2,175 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9A6C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB82C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18624217BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5295020707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJ40guHs"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="BMKkkMJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgAaO5T (ORCPT
+        id S1729184AbgAaO5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:57:19 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53635 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728825AbgAaO5S (ORCPT
+        Fri, 31 Jan 2020 09:57:48 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:8001 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbgAaO5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:57:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580482637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=wYxTMN92UJeGxuOee9xVnQbx5leK71A77m0OcSn85Ew=;
-        b=JJ40guHsDEPg5mrBQPrsLHMbQc7g2+RvPrYqxvZweUCvIOQbCXJdgEkcGTicvE53O5+oR0
-        pVIy4q1eYqnfikx305f1Hu5ZyQ/sr//WqY0xphgpgFXi44XHOcRJNjweQIjTDXJeSE4WQn
-        xN/aAvB8hpZkEX49C//kjr3SuxApcWo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-8XSaAa0ANhqvNMq5Ig3NGQ-1; Fri, 31 Jan 2020 09:57:12 -0500
-X-MC-Unique: 8XSaAa0ANhqvNMq5Ig3NGQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A12B5800D48;
-        Fri, 31 Jan 2020 14:57:10 +0000 (UTC)
-Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E3BD811E3;
-        Fri, 31 Jan 2020 14:57:08 +0000 (UTC)
-Subject: Re: [PATCH] mm: Allocate shrinker_map on appropriate NUMA node
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>, akpm@linux-foundation.org,
-        mhocko@kernel.org, hannes@cmpxchg.org, shakeelb@google.com,
-        vdavydov.dev@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <ebe1c944-2e0f-136d-dd09-0bb37d500fe2@redhat.com>
-Date:   Fri, 31 Jan 2020 15:57:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <158047248934.390127.5043060848569612747.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
+        Fri, 31 Jan 2020 09:57:48 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Xpl2MSD9QH5o9sWt6hVoH6knzsCIJUUPHIhvSyPqJ0vuOd4tEEKnQyMkO805Kl4qA5K77Mm3Su
+ 3T0p9YxjcRm+y8VlqNYruwj5H11rLJqvlNQY2dWlC2ZwEA4jRw51WUBp5LxjHxQCHboVl/IjwG
+ LyGoVS7gTx8Rf8PW8XSy8mMqssbluSD9zx1HnSfzfAnfT5KC/9W+DFrZDzDU+vD1c/3LAsgHuj
+ PjihAOd1tM1eNO/S6V5AZI32q3C8525NwrT1LnoKFf+eJtwdJJ2BDKcWF7pkNLTvqW59WfHJDI
+ wic=
+X-IronPort-AV: E=Sophos;i="5.70,386,1574146800"; 
+   d="scan'208";a="62784928"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jan 2020 07:57:46 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 31 Jan 2020 07:57:45 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 31 Jan 2020 07:57:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GDWVJb85Zq9btI6TqK8AHifyJcEJpzYf2S2R5ER5GPzZDZBpeEijllr2CCLAINN++d+OgBRX3baXApULHVOjdQpEoruKqWWseQhY8lKFjOIR2WWY9wFw4y+9wulwmakLk0HBhBTEMXeNqkaQKFJjyumc+2lOJY5822kjtG6yRTGPeGz2LothdsQdCbIPCTWljb4ShwrxX7Xw5+aoW67u79OZkCgo2ULWbtEhSiZYVmrxFtjlsCrVq7veKtUewSnR+4q9G0LsNhqBRk2hzMilZmcB5uQVzwonTEthoEJjSntIZ1Q6x3mAgorhnYQzWCBk/fSMTi+HrbpXyVh1RGulLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7bySpHrufQ3JG1CbEj3vRKLtxSJGlvMAmH1Uki1FoZc=;
+ b=RlSq6ivJnpw6ZW3C9WEpqQH4Tnpk+bGwPlJjjHYRCpKIxz9cGnYc9/TN/eh/gZE2p09z2XXVgcOQx3zObahdziaNpVfiJjDQmWrUOkW78Kw8gfib8HdFlcFDjpht0rgKVF6XzDkiKqC9Azx7rc74BhyakHQZopDxK3lKmRULeOxr0IJLDr2FC9SOO2qYH0n2QaS4/GGtBDE5xmD7NzzQ4fIfjUlZeKhE/wwPLVy4rJw7WX3vrzLZOcTSlNuHBAy0tEjUOHPcNigrOlsI7lOXKjyiGn4LTvMV+0CR99PbXht1nU32wNGomgs8A0JPDWICwcfE8j25JZPrOT2qGz81xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7bySpHrufQ3JG1CbEj3vRKLtxSJGlvMAmH1Uki1FoZc=;
+ b=BMKkkMJ2lp4afsNfyVVpT6cluSj1p8VmRTcnlr7KsupJdSKrPvH00V/xS1Vnbdtt7LSyMGCCp/0VP0u4aEkieVZZA/RppIulmkVdhd/sXDhPTENbl6+JHNBraxmit2occChI8AqoWoL5wZQxV6aB7W4CtwO3ssPBm1JzkXqs/ss=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.224) by
+ DM6PR11MB4348.namprd11.prod.outlook.com (52.132.249.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.23; Fri, 31 Jan 2020 14:57:44 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::dc6b:1191:3a76:8b6a]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::dc6b:1191:3a76:8b6a%7]) with mapi id 15.20.2686.028; Fri, 31 Jan 2020
+ 14:57:44 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <harini.katakam@xilinx.com>, <Nicolas.Ferre@microchip.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <michal.simek@xilinx.com>, <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH 2/2] net: macb: Limit maximum GEM TX length in TSO
+Thread-Topic: [PATCH 2/2] net: macb: Limit maximum GEM TX length in TSO
+Thread-Index: AQHV2EbLgASEFAVb4k6q8m7g4OpRNQ==
+Date:   Fri, 31 Jan 2020 14:57:44 +0000
+Message-ID: <29c67f4f-9dd9-3786-689f-c0b6eeb40f49@microchip.com>
+References: <1580466455-27288-1-git-send-email-harini.katakam@xilinx.com>
+ <1580466455-27288-3-git-send-email-harini.katakam@xilinx.com>
+In-Reply-To: <1580466455-27288-3-git-send-email-harini.katakam@xilinx.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28bd5c78-cdc3-4e3d-4e12-08d7a65dedb5
+x-ms-traffictypediagnostic: DM6PR11MB4348:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB43481CDE6B9F753AC135621387070@DM6PR11MB4348.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 029976C540
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(366004)(136003)(346002)(189003)(199004)(86362001)(478600001)(64756008)(53546011)(6506007)(31696002)(66446008)(66476007)(6486002)(66556008)(4326008)(81156014)(2906002)(2616005)(316002)(8676002)(31686004)(81166006)(6512007)(66946007)(36756003)(54906003)(26005)(8936002)(186003)(5660300002)(71200400001)(110136005)(76116006)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB4348;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VlwhHcdqh5ngkQokAgRSgSpfIS4I0Z1lqreXNRWsuzpxP+jGrzmx5C2TKbT8STTnAwjQ0SCRA3YuszfM0xqbp/1kxe40M/cqBKKQQt105SOkNktFzI7QbukZ1sFRt0SkJH96gQaPyYO7u8Pl541wi0U05UmxO1Q8xTpUK+TPSYQm6ApRZfIk6bKrh2bKZcPLXfUXQBa47XI7ym4GIhttePutiR2pLFGDHblfIFFF8YgFB8J9lAVoBtF9bOom/Z6ovRLCeVwhavOYdYnTZXgYzP/cC2YumULvuEYJJNKSiffWIiTqDs6pmcsB7brluOkvTMVFfJRDYeHPUfluslAYIwLb13XXwE4hXDwOOWWG9k5uXesIFtwnJyVgiW3E9kFCr9BD61pAlqWFHHm7jffV7ng41XfTigTyMRUJ9W3wmXVavvHqomnWgkXUtdajcKHL
+x-ms-exchange-antispam-messagedata: IbYaR7SNV6FoxxvUGWLEGG/0p9nEenovjKbOE9mg4cJuEVHGL96bHZw6rqcSmskFHTccbzSTONe6vcZ26l3MBUP9Ys3FpbLVNglxirR7GfyGC73i9P0OUuQqpcW46kqaWoVH3++39ArrDNCuTUA6Gw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C7D2FA09BCEF5B4ABE64E99F9830A283@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28bd5c78-cdc3-4e3d-4e12-08d7a65dedb5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2020 14:57:44.4237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +zMHqtd7c/5heFN/Ous0LZFfNzjtbX6Rk8GlQXnZlfBDl4+4LIT+77olvMPsVQUhQDJV96h591YtQKxXyqdm6runsYYMVBwxQpN2QLviVWE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4348
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.01.20 13:09, Kirill Tkhai wrote:
-> Despite shrinker_map may be touched from any cpu
-> (e.g., a bit there may be set by a task running
-> everywhere); kswapd is always bound to specific
-> node. So, we will allocate shrinker_map from
-> related NUMA node to respect its NUMA locality.
-> Also, this follows generic way we use for allocation
-> memcg's per-node data.
-> 
-> Two hunks node_state() patterns are borrowed from
-> alloc_mem_cgroup_per_node_info().
-> 
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> ---
->  mm/memcontrol.c |   13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 6f6dc8712e39..8ccc8ceb1b17 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -323,7 +323,7 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
->  					 int size, int old_size)
->  {
->  	struct memcg_shrinker_map *new, *old;
-> -	int nid;
-> +	int nid, tmp;
->  
->  	lockdep_assert_held(&memcg_shrinker_map_mutex);
->  
-> @@ -333,8 +333,9 @@ static int memcg_expand_one_shrinker_map(struct mem_cgroup *memcg,
->  		/* Not yet online memcg */
->  		if (!old)
->  			return 0;
-> -
-> -		new = kvmalloc(sizeof(*new) + size, GFP_KERNEL);
-> +		/* See comment in alloc_mem_cgroup_per_node_info()*/
-> +		tmp = node_state(nid, N_NORMAL_MEMORY) ? nid : - 1;
-> +		new = kvmalloc_node(sizeof(*new) + size, GFP_KERNEL, tmp);
->  		if (!new)
->  			return -ENOMEM;
->  
-> @@ -370,7 +371,7 @@ static void memcg_free_shrinker_maps(struct mem_cgroup *memcg)
->  static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
->  {
->  	struct memcg_shrinker_map *map;
-> -	int nid, size, ret = 0;
-> +	int nid, size, tmp, ret = 0;
->  
->  	if (mem_cgroup_is_root(memcg))
->  		return 0;
-> @@ -378,7 +379,9 @@ static int memcg_alloc_shrinker_maps(struct mem_cgroup *memcg)
->  	mutex_lock(&memcg_shrinker_map_mutex);
->  	size = memcg_shrinker_map_size;
->  	for_each_node(nid) {
-> -		map = kvzalloc(sizeof(*map) + size, GFP_KERNEL);
-> +		/* See comment in alloc_mem_cgroup_per_node_info()*/
-> +		tmp = node_state(nid, N_NORMAL_MEMORY) ? nid : - 1;
-> +		map = kvzalloc_node(sizeof(*map) + size, GFP_KERNEL, tmp);
->  		if (!map) {
->  			memcg_free_shrinker_maps(memcg);
->  			ret = -ENOMEM;
-> 
-
-I think it is preferred to use NUMA_NO_NODE instead of -1.
-
-
--- 
-Thanks,
-
-David / dhildenb
-
+DQoNCk9uIDMxLjAxLjIwMjAgMTI6MjcsIEhhcmluaSBLYXRha2FtIHdyb3RlOg0KPiBFWFRFUk5B
+TCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlv
+dSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IEdFTV9NQVhfVFhfTEVOIGN1cnJlbnRs
+eSByZXNvbHZlcyB0byAweDNGRjggZm9yIGFueSBJUCB2ZXJzaW9uIHN1cHBvcnRpbmcNCj4gVFNP
+IHdpdGggZnVsbCAxNGJpdHMgb2YgbGVuZ3RoIGZpZWxkIGluIHBheWxvYWQgZGVzY3JpcHRvci4g
+QnV0IGFuIElQDQo+IGVycmF0YSBjYXVzZXMgZmFsc2UgYW1iYV9lcnJvciAoYml0IDYgb2YgSVNS
+KSB3aGVuIGxlbmd0aCBpbiBwYXlsb2FkDQo+IGRlc2NyaXB0b3JzIGlzIHNwZWNpZmllZCBhYm92
+ZSAxNjM4Ny4gVGhlIGVycm9yIG9jY3VycyBiZWNhdXNlIHRoZSBETUENCj4gZmFsc2VseSBjb25j
+bHVkZXMgdGhhdCB0aGVyZSBpcyBub3QgZW5vdWdoIHNwYWNlIGluIFNSQU0gZm9yIGluY29taW5n
+DQo+IHBheWxvYWQuIFRoZXNlIGVycm9ycyB3ZXJlIG9ic2VydmVkIGNvbnRpbnVvdXNseSB1bmRl
+ciBzdHJlc3Mgb2YgbGFyZ2UNCj4gcGFja2V0cyB1c2luZyBpcGVyZiBvbiBhIHZlcnNpb24gd2hl
+cmUgU1JBTSB3YXMgMTZLIGZvciBlYWNoIHF1ZXVlLiBUaGlzDQo+IGVycmF0YSB3aWxsIGJlIGRv
+Y3VtZW50ZWQgc2hvcnRseSBhbmQgYWZmZWN0cyBhbGwgdmVyc2lvbnMgc2luY2UgVFNPDQo+IGZ1
+bmN0aW9uYWxpdHkgd2FzIGFkZGVkLiBIZW5jZSBsaW1pdCB0aGUgbWF4IGxlbmd0aCB0byAweDNG
+QzAgKHJvdW5kZWQpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSGFyaW5pIEthdGFrYW0gPGhhcmlu
+aS5rYXRha2FtQHhpbGlueC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvY2Fk
+ZW5jZS9tYWNiX21haW4uYyB8IDMgKystDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
+KCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvY2FkZW5jZS9tYWNiX21haW4uYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFj
+Yl9tYWluLmMNCj4gaW5kZXggMmU0MThiOC4uOTk0ZmU2NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0KPiArKysgYi9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IEBAIC03NCw2ICs3NCw3IEBAIHN0cnVjdCBz
+aWZpdmVfZnU1NDBfbWFjYl9tZ210IHsNCj4gICNkZWZpbmUgTUFDQl9UWF9MRU5fQUxJR04gICAg
+ICA4DQo+ICAjZGVmaW5lIE1BQ0JfTUFYX1RYX0xFTiAgICAgICAgICAgICAgICAoKHVuc2lnbmVk
+IGludCkoKDEgPDwgTUFDQl9UWF9GUk1MRU5fU0laRSkgLSAxKSAmIH4oKHVuc2lnbmVkIGludCko
+TUFDQl9UWF9MRU5fQUxJR04gLSAxKSkpDQo+ICAjZGVmaW5lIEdFTV9NQVhfVFhfTEVOICAgICAg
+ICAgKCh1bnNpZ25lZCBpbnQpKCgxIDw8IEdFTV9UWF9GUk1MRU5fU0laRSkgLSAxKSAmIH4oKHVu
+c2lnbmVkIGludCkoTUFDQl9UWF9MRU5fQUxJR04gLSAxKSkpDQo+ICsjZGVmaW5lIEdFTV9NQVhf
+VFhfTEVOX0VSUkFUQSAgKHVuc2lnbmVkIGludCkoMHgzRkMwKQ0KPiANCj4gICNkZWZpbmUgR0VN
+X01UVV9NSU5fU0laRSAgICAgICBFVEhfTUlOX01UVQ0KPiAgI2RlZmluZSBNQUNCX05FVElGX0xT
+TyAgICAgICAgIE5FVElGX0ZfVFNPDQo+IEBAIC0zNjQwLDcgKzM2NDEsNyBAQCBzdGF0aWMgaW50
+IG1hY2JfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiANCj4gICAgICAgICAv
+KiBzZXR1cCBhcHByb3ByaWF0ZWQgcm91dGluZXMgYWNjb3JkaW5nIHRvIGFkYXB0ZXIgdHlwZSAq
+Lw0KPiAgICAgICAgIGlmIChtYWNiX2lzX2dlbShicCkpIHsNCj4gLSAgICAgICAgICAgICAgIGJw
+LT5tYXhfdHhfbGVuZ3RoID0gR0VNX01BWF9UWF9MRU47DQo+ICsgICAgICAgICAgICAgICBicC0+
+bWF4X3R4X2xlbmd0aCA9IG1pbihHRU1fTUFYX1RYX0xFTiwgR0VNX01BWF9UWF9MRU5fRVJSQVRB
+KTsNCg0KSXNuJ3QgdGhpcyBhbHdheXMgcmVzb2x2ZWQgdG8gR0VNX01BWF9UWF9MRU5fRVJSQVRB
+Pw0KDQo+ICAgICAgICAgICAgICAgICBicC0+bWFjYmdlbV9vcHMubW9nX2FsbG9jX3J4X2J1ZmZl
+cnMgPSBnZW1fYWxsb2NfcnhfYnVmZmVyczsNCj4gICAgICAgICAgICAgICAgIGJwLT5tYWNiZ2Vt
+X29wcy5tb2dfZnJlZV9yeF9idWZmZXJzID0gZ2VtX2ZyZWVfcnhfYnVmZmVyczsNCj4gICAgICAg
+ICAgICAgICAgIGJwLT5tYWNiZ2VtX29wcy5tb2dfaW5pdF9yaW5ncyA9IGdlbV9pbml0X3Jpbmdz
+Ow0KPiAtLQ0KPiAyLjcuNA0KPiANCj4g
