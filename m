@@ -1,334 +1,92 @@
 Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CFEC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E05C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B47B20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6372820CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 09:44:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C0/qqOzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgAaJmA (ORCPT
+        id S1728274AbgAaJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 04:42:00 -0500
-Received: from mga14.intel.com ([192.55.52.115]:45589 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgAaJl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 04:41:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 01:41:59 -0800
-X-IronPort-AV: E=Sophos;i="5.70,385,1574150400"; 
-   d="scan'208";a="223088972"
-Received: from bbiernac-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.51.157])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 01:41:55 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>, lyude@redhat.com
-Subject: Re: [PATCH v4] drm/dp_mst: Fix W=1 warnings
-In-Reply-To: <20200131093142.2074-1-benjamin.gaignard@st.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200131093142.2074-1-benjamin.gaignard@st.com>
-Date:   Fri, 31 Jan 2020 11:42:03 +0200
-Message-ID: <87v9os7yj8.fsf@intel.com>
+        Fri, 31 Jan 2020 04:44:19 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34332 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgAaJoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 04:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=F9/A+3g1zfrcOEwdCjm6sHlblNrDMZRWN4eoaSrrx98=; b=C0/qqOzKkzrS2n578TfHr0J3p
+        rX+knv8n+W4vD5rToqeieVwGaLN7TApcccjLa8V8jmitkjzuIoh8HT27Ed/Bwsas3xm00ruRLi8R3
+        1JNiUcZTuAPREzo1hfAZoh6w45vIWdOz/7ZyP4x16LZ41N9QrcE15LxwIGjApX3lHqMPwj2kaErHx
+        IIybWv/gyKlBVYNeWFUh+CqxMPpyMYT95rUs7v8EbTHmY+TYvJGBTRXqP4QTPbkQsPHKHV43Ezl+L
+        fJaC1uIREy0XxK/dVq75XYpY+gJ5KwTSH7L2RFT79xY1XMpgtpyJyel/zLLy6AaeT2oDMLILw4tZZ
+        a1L9tH53A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixSqY-0002pW-4l; Fri, 31 Jan 2020 09:44:18 +0000
+Date:   Fri, 31 Jan 2020 01:44:18 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 12/12] iomap: Convert from readpages to readahead
+Message-ID: <20200131094418.GA4437@bombadil.infradead.org>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-13-willy@infradead.org>
+ <20200129013839.GL18610@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200129013839.GL18610@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020, Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
-> Fix the warnings that show up with W=1.
-> They are all about unused but set variables.
-> If functions returns are not used anymore make them void.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 4:
-> - do not touch crc4 unused variable in this patch
-> CC: lyude@redhat.com
-> CC: airlied@linux.ie
->  drivers/gpu/drm/drm_dp_mst_topology.c | 78 ++++++++++++++---------------------
->  1 file changed, 31 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 4104f15f4594..44a8731665e4 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -1034,7 +1034,7 @@ static bool drm_dp_sideband_parse_req(struct drm_dp_sideband_msg_rx *raw,
->  	}
->  }
->  
-> -static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
-> +static void build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes, u8 *bytes)
->  {
->  	struct drm_dp_sideband_msg_req_body req;
->  
-> @@ -1044,17 +1044,14 @@ static int build_dpcd_write(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
->  	req.u.dpcd_write.num_bytes = num_bytes;
->  	req.u.dpcd_write.bytes = bytes;
->  	drm_dp_encode_sideband_req(&req, msg);
-> -
-> -	return 0;
->  }
->  
-> -static int build_link_address(struct drm_dp_sideband_msg_tx *msg)
-> +static void build_link_address(struct drm_dp_sideband_msg_tx *msg)
->  {
->  	struct drm_dp_sideband_msg_req_body req;
->  
->  	req.req_type = DP_LINK_ADDRESS;
->  	drm_dp_encode_sideband_req(&req, msg);
-> -	return 0;
->  }
->  
->  static int build_clear_payload_id_table(struct drm_dp_sideband_msg_tx *msg)
-> @@ -1077,7 +1074,7 @@ static int build_enum_path_resources(struct drm_dp_sideband_msg_tx *msg, int por
->  	return 0;
->  }
->  
-> -static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
-> +static void build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_num,
->  				  u8 vcpi, uint16_t pbn,
->  				  u8 number_sdp_streams,
->  				  u8 *sdp_stream_sink)
+On Wed, Jan 29, 2020 at 12:38:39PM +1100, Dave Chinner wrote:
+> On Fri, Jan 24, 2020 at 05:35:53PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > Use the new readahead operation in XFS and iomap.
+> > +	if (ctx.cur_page && ctx.cur_page_in_bio)
+> >  		put_page(ctx.cur_page);
+> > -	}
+> >  
+> > -	/*
+> > -	 * Check that we didn't lose a page due to the arcance calling
+> > -	 * conventions..
+> > -	 */
+> > -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+> > -	return ret;
+> > +	return length / PAGE_SIZE;
+> 
+> Took me quite some time to get my head around whether this was
+> correct or not.
 
-W=1 warning cleared, checkpatch warning on indentation introduced...?
+Yes.  Unfortunately, this is the most complex of the conversions ;-(
 
-BR,
-Jani.
+> I'm still not certain in the cases where block size != page size and
+> we've got an extent boundary in the middle of the page and had a
+> read error on the second extent in the page. In this case,
+> ctx.cur_page_in_bio is true so we drop the readahead reference to
+> the page. Also, length is not a multiple of page size, and so the
+> nr_pages value returned includes the partial page that we have IO
+> underway on.
+> 
+> That, I think, leads to both a double unlock and a double put_page()
+> of the partial page in question.
 
-
-> @@ -1093,10 +1090,9 @@ static int build_allocate_payload(struct drm_dp_sideband_msg_tx *msg, int port_n
->  		   number_sdp_streams);
->  	drm_dp_encode_sideband_req(&req, msg);
->  	msg->path_msg = true;
-> -	return 0;
->  }
->  
-> -static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
-> +static void build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
->  				  int port_num, bool power_up)
->  {
->  	struct drm_dp_sideband_msg_req_body req;
-> @@ -1109,7 +1105,6 @@ static int build_power_updown_phy(struct drm_dp_sideband_msg_tx *msg,
->  	req.u.port_num.port_number = port_num;
->  	drm_dp_encode_sideband_req(&req, msg);
->  	msg->path_msg = true;
-> -	return 0;
->  }
->  
->  static int drm_dp_mst_assign_payload_id(struct drm_dp_mst_topology_mgr *mgr,
-> @@ -2054,25 +2049,20 @@ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
->  
->  static void drm_dp_check_mstb_guid(struct drm_dp_mst_branch *mstb, u8 *guid)
->  {
-> -	int ret;
-> -
->  	memcpy(mstb->guid, guid, 16);
->  
->  	if (!drm_dp_validate_guid(mstb->mgr, mstb->guid)) {
->  		if (mstb->port_parent) {
-> -			ret = drm_dp_send_dpcd_write(
-> -					mstb->mgr,
-> -					mstb->port_parent,
-> -					DP_GUID,
-> -					16,
-> -					mstb->guid);
-> +			drm_dp_send_dpcd_write(mstb->mgr,
-> +					       mstb->port_parent,
-> +					       DP_GUID,
-> +					       16,
-> +					       mstb->guid);
->  		} else {
-> -
-> -			ret = drm_dp_dpcd_write(
-> -					mstb->mgr->aux,
-> -					DP_GUID,
-> -					mstb->guid,
-> -					16);
-> +			drm_dp_dpcd_write(mstb->mgr->aux,
-> +					  DP_GUID,
-> +					  mstb->guid,
-> +					  16);
->  		}
->  	}
->  }
-> @@ -2595,7 +2585,7 @@ static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
->  	return false;
->  }
->  
-> -static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
-> +static void build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32 offset, u8 num_bytes)
->  {
->  	struct drm_dp_sideband_msg_req_body req;
->  
-> @@ -2604,8 +2594,6 @@ static int build_dpcd_read(struct drm_dp_sideband_msg_tx *msg, u8 port_num, u32
->  	req.u.dpcd_read.dpcd_address = offset;
->  	req.u.dpcd_read.num_bytes = num_bytes;
->  	drm_dp_encode_sideband_req(&req, msg);
-> -
-> -	return 0;
->  }
->  
->  static int drm_dp_send_sideband_msg(struct drm_dp_mst_topology_mgr *mgr,
-> @@ -2828,7 +2816,7 @@ static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_link_address_ack_reply *reply;
->  	struct drm_dp_mst_port *port, *tmp;
-> -	int i, len, ret, port_mask = 0;
-> +	int i, ret, port_mask = 0;
->  	bool changed = false;
->  
->  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-> @@ -2836,7 +2824,7 @@ static int drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  		return -ENOMEM;
->  
->  	txmsg->dst = mstb;
-> -	len = build_link_address(txmsg);
-> +	build_link_address(txmsg);
->  
->  	mstb->link_address_sent = true;
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -2898,14 +2886,14 @@ void drm_dp_send_clear_payload_id_table(struct drm_dp_mst_topology_mgr *mgr,
->  					struct drm_dp_mst_branch *mstb)
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
-> -	int len, ret;
-> +	int ret;
->  
->  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
->  	if (!txmsg)
->  		return;
->  
->  	txmsg->dst = mstb;
-> -	len = build_clear_payload_id_table(txmsg);
-> +	build_clear_payload_id_table(txmsg);
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
-> @@ -2923,7 +2911,6 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  {
->  	struct drm_dp_enum_path_resources_ack_reply *path_res;
->  	struct drm_dp_sideband_msg_tx *txmsg;
-> -	int len;
->  	int ret;
->  
->  	txmsg = kzalloc(sizeof(*txmsg), GFP_KERNEL);
-> @@ -2931,7 +2918,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
->  		return -ENOMEM;
->  
->  	txmsg->dst = mstb;
-> -	len = build_enum_path_resources(txmsg, port->port_num);
-> +	build_enum_path_resources(txmsg, port->port_num);
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
-> @@ -3014,7 +3001,7 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> -	int len, ret, port_num;
-> +	int ret, port_num;
->  	u8 sinks[DRM_DP_MAX_SDP_STREAMS];
->  	int i;
->  
-> @@ -3039,9 +3026,9 @@ static int drm_dp_payload_send_msg(struct drm_dp_mst_topology_mgr *mgr,
->  		sinks[i] = i;
->  
->  	txmsg->dst = mstb;
-> -	len = build_allocate_payload(txmsg, port_num,
-> -				     id,
-> -				     pbn, port->num_sdp_streams, sinks);
-> +	build_allocate_payload(txmsg, port_num,
-> +			       id,
-> +			       pbn, port->num_sdp_streams, sinks);
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
-> @@ -3070,7 +3057,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
->  				 struct drm_dp_mst_port *port, bool power_up)
->  {
->  	struct drm_dp_sideband_msg_tx *txmsg;
-> -	int len, ret;
-> +	int ret;
->  
->  	port = drm_dp_mst_topology_get_port_validated(mgr, port);
->  	if (!port)
-> @@ -3083,7 +3070,7 @@ int drm_dp_send_power_updown_phy(struct drm_dp_mst_topology_mgr *mgr,
->  	}
->  
->  	txmsg->dst = port->parent;
-> -	len = build_power_updown_phy(txmsg, port->port_num, power_up);
-> +	build_power_updown_phy(txmsg, port->port_num, power_up);
->  	drm_dp_queue_down_tx(mgr, txmsg);
->  
->  	ret = drm_dp_mst_wait_tx_reply(port->parent, txmsg);
-> @@ -3305,7 +3292,6 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
->  				 struct drm_dp_mst_port *port,
->  				 int offset, int size, u8 *bytes)
->  {
-> -	int len;
->  	int ret = 0;
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> @@ -3320,7 +3306,7 @@ static int drm_dp_send_dpcd_read(struct drm_dp_mst_topology_mgr *mgr,
->  		goto fail_put;
->  	}
->  
-> -	len = build_dpcd_read(txmsg, port->port_num, offset, size);
-> +	build_dpcd_read(txmsg, port->port_num, offset, size);
->  	txmsg->dst = port->parent;
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -3358,7 +3344,6 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->  				  struct drm_dp_mst_port *port,
->  				  int offset, int size, u8 *bytes)
->  {
-> -	int len;
->  	int ret;
->  	struct drm_dp_sideband_msg_tx *txmsg;
->  	struct drm_dp_mst_branch *mstb;
-> @@ -3373,7 +3358,7 @@ static int drm_dp_send_dpcd_write(struct drm_dp_mst_topology_mgr *mgr,
->  		goto fail_put;
->  	}
->  
-> -	len = build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
-> +	build_dpcd_write(txmsg, port->port_num, offset, size, bytes);
->  	txmsg->dst = mstb;
->  
->  	drm_dp_queue_down_tx(mgr, txmsg);
-> @@ -4529,17 +4514,16 @@ void drm_dp_mst_dump_topology(struct seq_file *m,
->  	mutex_lock(&mgr->lock);
->  	if (mgr->mst_primary) {
->  		u8 buf[DP_PAYLOAD_TABLE_SIZE];
-> -		int ret;
->  
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
-> +		drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, buf, DP_RECEIVER_CAP_SIZE);
->  		seq_printf(m, "dpcd: %*ph\n", DP_RECEIVER_CAP_SIZE, buf);
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
-> +		drm_dp_dpcd_read(mgr->aux, DP_FAUX_CAP, buf, 2);
->  		seq_printf(m, "faux/mst: %*ph\n", 2, buf);
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
-> +		drm_dp_dpcd_read(mgr->aux, DP_MSTM_CTRL, buf, 1);
->  		seq_printf(m, "mst ctrl: %*ph\n", 1, buf);
->  
->  		/* dump the standard OUI branch header */
-> -		ret = drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
-> +		drm_dp_dpcd_read(mgr->aux, DP_BRANCH_OUI, buf, DP_BRANCH_OUI_HEADER_SIZE);
->  		seq_printf(m, "branch oui: %*phN devid: ", 3, buf);
->  		for (i = 0x3; i < 0x8 && buf[i]; i++)
->  			seq_printf(m, "%c", buf[i]);
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+But C division rounds down.  So we neither unlock, nor put_page() the
+page which was in the bio ... do we?
