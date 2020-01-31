@@ -6,119 +6,74 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F5C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F57C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E4120707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AA720707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgAaTil (ORCPT
+        id S1726677AbgAaTjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:38:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59674 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgAaTik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:38:40 -0500
-Received: from [IPv6:2003:cb:8716:6a00:1956:2e0:5d2c:ff7c] (p200300CB87166A00195602E05D2CFF7C.dip0.t-ipconnect.de [IPv6:2003:cb:8716:6a00:1956:2e0:5d2c:ff7c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4D99026068C;
-        Fri, 31 Jan 2020 19:38:37 +0000 (GMT)
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
-        ezequiel@collabora.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>,
-        Dafna Hirschfeld <dafna3@gmail.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <20190808091406.GQ21370@paasikivi.fi.intel.com>
- <da6c1d01-e3f6-ad73-db55-145d7832a665@collabora.com>
- <20190815082422.GM6133@paasikivi.fi.intel.com>
- <20190815131748.GS6133@paasikivi.fi.intel.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <78856358-1afd-31a7-86dd-22f7d6d7fb05@collabora.com>
-Date:   Fri, 31 Jan 2020 20:38:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20190815131748.GS6133@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 31 Jan 2020 14:39:03 -0500
+Received: from gate.crashing.org ([63.228.1.57]:58945 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgAaTjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 14:39:03 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00VJcZbS006329;
+        Fri, 31 Jan 2020 13:38:35 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00VJcXRI006321;
+        Fri, 31 Jan 2020 13:38:33 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 31 Jan 2020 13:38:33 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/32s: Don't flush all TLBs when flushing one page
+Message-ID: <20200131193833.GF22482@gate.crashing.org>
+References: <e31c57eb5308a5a73a5c8232454c0dd9f65f6175.1580485014.git.christophe.leroy@c-s.fr> <20200131155150.GD22482@gate.crashing.org> <27cef66b-df5b-0baa-abac-5532e58bd055@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <27cef66b-df5b-0baa-abac-5532e58bd055@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I (Dafna Hirschfeld) will work in following months with Helen Koike to fix the issues
-in the TODO file of this driver: drivers/staging/media/rkisp1/TODO
-
-On 15.08.19 15:17, Sakari Ailus wrote:
-> On Thu, Aug 15, 2019 at 11:24:22AM +0300, Sakari Ailus wrote:
->> Hi Helen,
->>
->> On Wed, Aug 14, 2019 at 09:58:05PM -0300, Helen Koike wrote:
->>
->> ...
->>
->>>>> +static int rkisp1_isp_sd_set_fmt(struct v4l2_subdev *sd,
->>>>> +				 struct v4l2_subdev_pad_config *cfg,
->>>>> +				 struct v4l2_subdev_format *fmt)
->>>>> +{
->>>>> +	struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
->>>>> +	struct rkisp1_isp_subdev *isp_sd = &isp_dev->isp_sdev;
->>>>> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
->>>>> +
->>>>
->>>> Note that for sub-device nodes, the driver is itself responsible for
->>>> serialising the access to its data structures.
->>>
->>> But looking at subdev_do_ioctl_lock(), it seems that it serializes the
->>> ioctl calls for subdevs, no? Or I'm misunderstanding something (which is
->>> most probably) ?
->>
->> Good question. I had missed this change --- subdev_do_ioctl_lock() is
->> relatively new. But setting that lock is still not possible as the struct
-
-'the struct' - do you mean the 'vdev' struct allocated in
-'v4l2_device_register_subdev_nodes' ?
-
->> is allocated in the framework and the device is registered before the
-
->> driver gets hold of it. It's a good idea to provide the same serialisation
->> for subdevs as well.
->>
->> I'll get back to this later.
+On Fri, Jan 31, 2020 at 05:15:20PM +0100, Christophe Leroy wrote:
+> Le 31/01/2020 à 16:51, Segher Boessenkool a écrit :
+> >On Fri, Jan 31, 2020 at 03:37:34PM +0000, Christophe Leroy wrote:
+> >>When the range is a single page, do a page flush instead.
+> >
+> >>+	start &= PAGE_MASK;
+> >>+	end = (end - 1) | ~PAGE_MASK;
+> >>  	if (!Hash) {
+> >>-		_tlbia();
+> >>+		if (end - start == PAGE_SIZE)
+> >>+			_tlbie(start);
+> >>+		else
+> >>+			_tlbia();
+> >>  		return;
+> >>  	}
+> >
+> >For just one page, you get  end - start == 0  actually?
 > 
-> The main reason is actually that these ops are also called through the
-> sub-device kAPI, not only through the uAPI, and the locks are only taken
-> through the calls via uAPI.
-
-actually it seems that although 'subdev_do_ioctl_lock' exit, I wonder if
-any subdevice uses that vdev->lock in  subdev_do_ioctl_lock.
-It is not initialized in v4l2_device_register_subdev_nodes where the vdev is allocated
-and I wonder if any subdevice actually initialize it somewhere else. For example it is null in this
-driver and in vimc.
-
+> Oops, good catch.
 > 
-> So adding the locks to uAPI calls alone would not address the issue.
+> Indeed you don't get PAGE_SIZE but (PAGE_SIZE - 1) for just one page.
 
-What I can do is add a mutex to every struct of a subdevice and lock it
-at the beginning of each subdevice operation.
-Is this an acceptable solution?
+You have all low bits masked off in both start and end, so you get zero.
+You could make the condion read "if (start == end)?
 
-Thanks,
-Dafna
-> 
+Maybe a nicer way to describe what you do is "if start and end are on the
+same memory page, flush that page."
+
+
+Segher
