@@ -2,124 +2,126 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEABC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC65C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473FC214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wW0CuviR"
+	by mail.kernel.org (Postfix) with ESMTP id 9462C20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgAaKWp (ORCPT
+        id S1728351AbgAaKXx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:22:45 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33084 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgAaKWp (ORCPT
+        Fri, 31 Jan 2020 05:23:53 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:35106 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgAaKXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:22:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=91AMxLljo6V/7OqP2TOzkIcpGrjx29tvuETRIfnVXtQ=; b=wW0CuviRHijQfoPaBF8aalYIT
-        7VA+ZMOXIIs88C182aS4sJoCpybKT7h4CSvd0DefGVuLK30WvOyW50qk4A1ub5fDCa5CJGqGBnhwA
-        UOVfL/BdlIqaH3rVin4Y4pt3QgYQa0iKAzF05zWUtTzEH1NnhxGXJh0twJCH6kSbh4NVkXWwVvZ7h
-        /YZ+0zq8UuqVZLMubOMUpxg2xiTQ+JQ5EGesjgee2oppfCuiJQ0VrW10V2QO2JnEL2UKLhXbxXnrN
-        hKix8zHwpUC7j1I6HAt/UEkXVy2ZQbpVYqyeZFbgMeJuGd5BVjE7ILZzwrAVo+SQoB6LJeQRfDKkC
-        O2Ev+UIow==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixTRi-0001Ws-7Z; Fri, 31 Jan 2020 10:22:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB3453007F2;
-        Fri, 31 Jan 2020 11:20:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 691CE201E6BC5; Fri, 31 Jan 2020 11:22:39 +0100 (CET)
-Date:   Fri, 31 Jan 2020 11:22:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Rewrite Motorola MMU page-table layout
-Message-ID: <20200131102239.GB14914@hirez.programming.kicks-ass.net>
-References: <20200129103941.304769381@infradead.org>
- <8a81e075-d3bd-80c1-d869-9935fdd73162@linux-m68k.org>
- <20200131093813.GA3938@willie-the-truck>
+        Fri, 31 Jan 2020 05:23:53 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00VANfqG016275, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00VANfqG016275
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jan 2020 18:23:41 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 31 Jan 2020 18:23:41 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 31 Jan 2020 18:23:40 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Fri, 31 Jan 2020 18:23:40 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: RE: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+Thread-Topic: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+Thread-Index: AQHV1w0+cQfBiHwgKkKd8alOOCYKsqgEkmQA
+Date:   Fri, 31 Jan 2020 10:23:40 +0000
+Message-ID: <e0fb1ead6dcc4ecc973b3b9b5399ef66@realtek.com>
+References: <20200130013308.16395-1-natechancellor@gmail.com>
+In-Reply-To: <20200130013308.16395-1-natechancellor@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.175]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131093813.GA3938@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 09:38:13AM +0000, Will Deacon wrote:
-
-> > This series breaks compilation for the ColdFire (with MMU) variant of
-> > the m68k family:
-
-That's like the same I had reported by the build robots for sun3, which
-I fixed by frobbing pgtable_t. That said, this is probably a more
-consistent change.
-
-One note below:
-
-
-> -static inline struct page *pte_alloc_one(struct mm_struct *mm)
-> +static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+From: Nathan Chancellor
+> Subject: [PATCH] rtw88: Initialize ret in rtw_wow_check_fw_status
+> 
+> Clang warns a few times (trimmed for brevity):
+> 
+> ../drivers/net/wireless/realtek/rtw88/wow.c:295:7: warning: variable
+> 'ret' is used uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+> 
+> Initialize ret to true and change the other assignments to false because
+> it is a boolean value.
+> 
+> Fixes: 44bc17f7f5b3 ("rtw88: support wowlan feature for 8822c")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/850
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/wow.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/wow.c
+> b/drivers/net/wireless/realtek/rtw88/wow.c
+> index af5c27e1bb07..5db49802c72c 100644
+> --- a/drivers/net/wireless/realtek/rtw88/wow.c
+> +++ b/drivers/net/wireless/realtek/rtw88/wow.c
+> @@ -283,18 +283,18 @@ static void rtw_wow_rx_dma_start(struct rtw_dev
+> *rtwdev)
+> 
+>  static bool rtw_wow_check_fw_status(struct rtw_dev *rtwdev, bool
+> wow_enable)
 >  {
->  	struct page *page = alloc_pages(GFP_DMA, 0);
->  	pte_t *pte;
-> @@ -54,20 +55,19 @@ static inline struct page *pte_alloc_one(struct mm_struct *mm)
->  		return NULL;
+> -	bool ret;
+> +	bool ret = true;
+> 
+>  	/* wait 100ms for wow firmware to finish work */
+>  	msleep(100);
+> 
+>  	if (wow_enable) {
+>  		if (!rtw_read8(rtwdev, REG_WOWLAN_WAKE_REASON))
+> -			ret = 0;
+> +			ret = false;
+>  	} else {
+>  		if (rtw_read32_mask(rtwdev, REG_FE1IMR, BIT_FS_RXDONE) == 0
+> &&
+>  		    rtw_read32_mask(rtwdev, REG_RXPKT_NUM,
+> BIT_RW_RELEASE) == 0)
+> -			ret = 0;
+> +			ret = false;
 >  	}
->  
-> -	pte = kmap(page);
-> -	if (pte) {
-> -		clear_page(pte);
-> -		__flush_page_to_ram(pte);
-> -		flush_tlb_kernel_page(pte);
-> -		nocache_page(pte);
-> -	}
-> -	kunmap(page);
-> +	pte = page_address(page);
-> +	clear_page(pte);
-> +	__flush_page_to_ram(pte);
-> +	flush_tlb_kernel_page(pte);
-> +	nocache_page(pte);
+> 
+>  	if (ret)
+> --
+> 2.25.0
 
-See how it does the nocache dance ^
+NACK.
 
->  
-> -	return page;
-> +	return pte;
->  }
->  
-> -static inline void pte_free(struct mm_struct *mm, struct page *page)
-> +static inline void pte_free(struct mm_struct *mm, pgtable_t pgtable)
->  {
-> +	struct page *page = virt_to_page(pgtable);
-> +
+This patch could lead to incorrect behavior of WOW.
+I will send a new patch to fix it, and change the type to "int".
 
-but never sets it cached again!
-
->  	pgtable_pte_page_dtor(page);
->  	__free_page(page);
->  }
-
-Also, the alloc_one_kernel() also suspicioudly doesn't do the nocache
-thing.
-
-So either, alloc_one() shouldn't either, or it's all buggered.
+Yan-Hsuan
