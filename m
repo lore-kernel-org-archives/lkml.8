@@ -2,130 +2,123 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889CBC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488CBC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A25220705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDD22082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C3B+OFol"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Cs7/HSdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgAaDU7 (ORCPT
+        id S1727949AbgAaDV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:20:59 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8581 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgAaDU7 (ORCPT
+        Thu, 30 Jan 2020 22:21:59 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:16508 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727739AbgAaDV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:20:59 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e339d0b0000>; Thu, 30 Jan 2020 19:20:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 19:20:58 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 19:20:58 -0800
-Received: from [10.25.73.84] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 03:20:55 +0000
-CC:     <spujar@nvidia.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: rt5659: add S32_LE format
-To:     Oder Chiou <oder_chiou@realtek.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "perex@perex.cz" <perex@perex.cz>
-References: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
- <74a42452-f19c-1175-9928-da12ccad621d@nvidia.com>
- <c700f22c-a053-7f39-dddf-41abe52cad77@nvidia.com>
- <67328e51035e4eb5a6a78c3156e5d11f@realtek.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <d99e7cc4-f69b-55a2-a9e9-623ad11d6312@nvidia.com>
-Date:   Fri, 31 Jan 2020 08:50:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <67328e51035e4eb5a6a78c3156e5d11f@realtek.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580440843; bh=WmI/B6AsuQiNTGM7yM8QllMGfzZ7qHsDpaBdPWuw/4g=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=C3B+OFolt+pEfYtV7JECEFIFpfqBUdvQJKlv4iFaTHkDWjn1amJPzfW4U6Ln/q6W6
-         jqjJc/J8JqAnFRCdL5sBWWXVtlkFGqM0f/4m22fo2t+roFd7sndrLQ6RvRxOZB2zYy
-         tu+1o4+WNdoXA7qBMGWn9doOHZuuUa3vpunL1viukXUwMxBhwLSF8namDJ/1ZtyxyS
-         w+fT7CTV5Yc8BPH7L1m1n9yRY26hDzjLEfjR6msgFW0RRHkhH12SAVs6VkKr53uuJj
-         eA19eHOoVMioZG8f2YuBgQvQ74iUYRX+X7QuUWm5inwcXoRyYYHXjLYrgAjUrRn3d+
-         pEUdMMhOk9rxQ==
+        Thu, 30 Jan 2020 22:21:58 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 00V3KKVL029358;
+        Fri, 31 Jan 2020 12:20:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00V3KKVL029358
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580440821;
+        bh=eFZjQTAM4Jf1Oa2IWLxB9egp2D2IZfHWDyrvqr4Dwn4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Cs7/HSdC+LIgm0BDF2g8TX8jiYT6gfaJtaun9myEL7xlAEzcURyseputtFPBE1EGf
+         giECg1mlGgAnBUnwLvm9MwGIMFd7LrKuyVX74nF0D6qyUXtgheAHlVQO1aUnTglSOh
+         2cuPKeAfpM0cyQUIPQcEmuvsgbR0dDweWB2kSojefnX7AienVQdQ7TSVQi0meQC6N4
+         v2L/YlPIDnz69YrVYyONd1uRojZNrj6i0kZwMt/DurWbGA7nfG3FHXhqG5uc79axN8
+         cFKQmG93HdcTk1E53Ok9yUZCdmRjxFMgaMM8gKxShyUQ1m6WNsPIVwvMwZcUXlzBJ4
+         CICiplJVFqjxw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Zachary Hays <zhays@lexmark.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: make ext_csd dump more human-readable
+Date:   Fri, 31 Jan 2020 12:20:08 +0900
+Message-Id: <20200131032008.21354-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current ext_csd in the debugfs shows 1024 chars in one line,
+which is unreadable at least for humans (but perhaps it could be
+handier if somebody is processing it by a tool).
 
+This commit makes the output format more human-readable; shows 8 byte
+in each line, with address in the left-most column:
 
-On 1/30/2020 10:00 AM, Oder Chiou wrote:
-> External email: Use caution opening links or attachments
->
->
-> Acked-by: Oder Chiou <oder_chiou@realtek.com>
+  0: 00 00 00 00 00 00 00 00
+  8: 00 00 00 00 00 00 00 00
+ 16: 01 01 00 c0 6a 02 00 00
+ 24: 00 00 00 00 00 00 00 00
+ 32: 00 01 01 00 00 00 00 00
+     <snip>
+496: 05 00 03 01 20 3c 01 01
+504: 01 00 00 00 00 00 00 00
 
-Request maintainers to consider this patch for approval. Thanks in advance.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-. . .
->>>> ALC5659 supports maximum data length of 24-bit. Currently driver
->>>> supports
->>>> S24_LE which is a 32-bit container with valid data in [23:0] and 0s
->>>> in MSB.
->>>> S24_3LE is not commonly used and is hard to find audio streams with this
->>>> format. Also many SoC HW do not support S24_LE and S32_LE is used in
->>>> general. The 24-bit data can be represented in S32_LE [31:8] and 0s are
->>>> padded in LSB.
->>>>
->>>> This patch adds S32_LE to ALC5659 driver and data length for this is set
->>>> to 24 as per codec's maximum data length support. This helps to play
->>>> 24-bit audio, packed in S32_LE, on HW which do not support S24_LE.
->>>>
->>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>>> ---
->>>>    sound/soc/codecs/rt5659.c | 4 +++-
->>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
->>>> index fc74dd63..f910ddf 100644
->>>> --- a/sound/soc/codecs/rt5659.c
->>>> +++ b/sound/soc/codecs/rt5659.c
->>>> @@ -3339,6 +3339,7 @@ static int rt5659_hw_params(struct
->>>> snd_pcm_substream *substream,
->>>>            val_len |= RT5659_I2S_DL_20;
->>>>            break;
->>>>        case 24:
->>>> +    case 32:
->>>>            val_len |= RT5659_I2S_DL_24;
->>>>            break;
->>>>        case 8:
->>>> @@ -3733,7 +3734,8 @@ static int rt5659_resume(struct
->>>> snd_soc_component *component)
->>>>      #define RT5659_STEREO_RATES SNDRV_PCM_RATE_8000_192000
->>>>    #define RT5659_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |
->>>> SNDRV_PCM_FMTBIT_S20_3LE | \
->>>> -        SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
->>>> +        SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE | \
->>>> +        SNDRV_PCM_FMTBIT_S8)
->>>>      static const struct snd_soc_dai_ops rt5659_aif_dai_ops = {
->>>>        .hw_params = rt5659_hw_params,
->>
->> ------Please consider the environment before printing this e-mail.
+ drivers/mmc/core/block.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 663d87924e5e..79044b3cbd84 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -2728,8 +2728,8 @@ static int mmc_dbg_card_status_get(void *data, u64 *val)
+ DEFINE_DEBUGFS_ATTRIBUTE(mmc_dbg_card_status_fops, mmc_dbg_card_status_get,
+ 			 NULL, "%08llx\n");
+ 
+-/* That is two digits * 512 + 1 for newline */
+-#define EXT_CSD_STR_LEN 1025
++/* 3 chars (2 digits + space) for each byte, 5 additional chars for each line */
++#define EXT_CSD_STR_LEN		(512 * 3 + 512 / 8 * 5)
+ 
+ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
+ {
+@@ -2740,7 +2740,7 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
+ 	char *buf;
+ 	ssize_t n = 0;
+ 	u8 *ext_csd;
+-	int err, i;
++	int err, i, j;
+ 
+ 	buf = kmalloc(EXT_CSD_STR_LEN + 1, GFP_KERNEL);
+ 	if (!buf)
+@@ -2762,9 +2762,12 @@ static int mmc_ext_csd_open(struct inode *inode, struct file *filp)
+ 		goto out_free;
+ 	}
+ 
+-	for (i = 0; i < 512; i++)
+-		n += sprintf(buf + n, "%02x", ext_csd[i]);
+-	n += sprintf(buf + n, "\n");
++	for (i = 0; i < 512; i += 8) {
++		n += sprintf(buf + n, "%3d:", i);
++		for (j = i; j < i + 8; j++)
++			n += sprintf(buf + n, " %02x", ext_csd[j]);
++		n += sprintf(buf + n, "\n");
++	}
+ 
+ 	if (n != EXT_CSD_STR_LEN) {
+ 		err = -EINVAL;
+-- 
+2.17.1
 
