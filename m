@@ -2,535 +2,145 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB23BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F6C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47DD2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A142467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iMUwxsrP"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ug0sxkYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbgAaO34 (ORCPT
+        id S1729089AbgAaOaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:29:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51216 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728827AbgAaO3z (ORCPT
+        Fri, 31 Jan 2020 09:30:01 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45115 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729070AbgAaOaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:29:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580480993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dx3pOpClielJWDHHM+g3P4+R03HEUdyYBqWMUnj0RkQ=;
-        b=iMUwxsrPfOBSxQNhymy86QduTedCT3yDjO0CYTX9vi+nWY0HSe0tgEMtAs3ioVZYtwlDEy
-        SBIIjBVLZvZ1fGfNZz2a3mH2QTtkqfZTye6wSO8xVbxJhmHRNFUgtzz/vgGvtGdiIzXR+4
-        3+qoMNH4QgYtwhfUS/EvuK87quNZHnY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-CKIyJVOEPHijh17IH_GLOw-1; Fri, 31 Jan 2020 09:29:48 -0500
-X-MC-Unique: CKIyJVOEPHijh17IH_GLOw-1
-Received: by mail-wr1-f69.google.com with SMTP id d8so3415840wrq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:29:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Dx3pOpClielJWDHHM+g3P4+R03HEUdyYBqWMUnj0RkQ=;
-        b=qrr8yih2BjhZ3IhNS5KWMGq1fuErnWJ4h3JFIcQHSZi0XW2Jo/Oc1qBnC7rmqSO1DC
-         mNQj7sLAfN87cnGNdTcWeaLYVJmaDizEJPDdiCGqCMLd204Kuw15D6OnhwXAjkDw4DjQ
-         U3KfbN8qJV8i5ZDa3DAyKL9PWWlKYsh+Wgz6mhSAPq8BowU9FeAj6R2lQRd173PVy3YY
-         RZiHONRHur4JhQqcROv98/tCM5NdLxwOc5vAuEhd8F2vxUc2vMGVpGOOJDTNQxwam6CA
-         EdIHvERaO+UzZmrW5BEsYdT3DVfOJMgnSO2RVlGAnJktcoit8XkF5mh/sx15HpvUKhrh
-         8Sag==
-X-Gm-Message-State: APjAAAWTgHufe6GwAuJ7hPodZpZAdXYXcVYyC89EIn7bZJoOP8laKquX
-        2ggqx8MyK5OLEGsLTM/GyST6wWwvywS9Uo+Ks6hh/3J0D003UuIqF7f5bnPur8646F31MGh42T/
-        0OMMvJWxQgGs/2WBzUxPvbHm0
-X-Received: by 2002:a5d:5263:: with SMTP id l3mr12309806wrc.405.1580480987249;
-        Fri, 31 Jan 2020 06:29:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw9Rnon9P6cIW0QNPpgWs2Wcdhl2kvBPDaYuKe01StSY16YedxLLGSmxLDXOsdrpjavVTxJKQ==
-X-Received: by 2002:a5d:5263:: with SMTP id l3mr12309782wrc.405.1580480986888;
-        Fri, 31 Jan 2020 06:29:46 -0800 (PST)
-Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id z19sm10394558wmi.43.2020.01.31.06.29.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 06:29:45 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH liburing v2 1/1] test: add epoll test case
-Date:   Fri, 31 Jan 2020 15:29:43 +0100
-Message-Id: <20200131142943.120459-2-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200131142943.120459-1-sgarzare@redhat.com>
-References: <20200131142943.120459-1-sgarzare@redhat.com>
+        Fri, 31 Jan 2020 09:30:00 -0500
+Received: from [IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968]
+ ([IPv6:2001:420:44c1:2577:a04f:7995:3c9:b968])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id xXIviyHzaVuxOxXIyiw9vz; Fri, 31 Jan 2020 15:29:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1580480997; bh=KR7EznYBMkt354xhu7C0+6DgiIJTm+VmPaNCZY9hKD8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ug0sxkYChv6BTu1xkP0sC0xCUcrgwta+q9ucrbSgk0PrmR+LfKQE0mmNl+3GAczVV
+         pthR10z9nEwxw8Ai29INnVY+6nf+7Wx524SPlil7t9JaPJ1U/FDJQDcmZEmbS1kRcp
+         EkTXRXCn61e2ATxi643jb805dj/imUgzPdfhkeMIxiwHoXvwiKPj2sLPjN1leQLKQS
+         Xh/4hHrOD8bNDhJ2RJogp5VR2vS5pn7d1Yuo3xAQyCcoVhH1rTR/akRAx4xTY0QNCq
+         b3F3SiietFgU/WkFKmI/IZHdz2BXIRsnLtpLKoOFFwI+YjkQawucLlBK/+G8Y0eFcj
+         OdjFizMdjMGWg==
+Subject: Re: [RFC PATCH v1 0/5] Add Tegra driver for video capture
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        frankc@nvidia.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1580235801-4129-1-git-send-email-skomatineni@nvidia.com>
+ <a6512e1b-ad0e-3f59-e775-418db4865994@xs4all.nl>
+ <20200130154246.GA2904678@ulmo>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8654e6fd-c403-6e68-e5cf-09297b5d8b5d@xs4all.nl>
+Date:   Fri, 31 Jan 2020 15:29:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200130154246.GA2904678@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCqH4Rqa5JScrU5yccR0hxnJW9qBhh+i+yk9NqKcTkbucS1a1ztOTwwyQU2g42qAcwbOjCwjsnGgGdArXN8npjWWmuGBZNbmQhFoft5Za35hhLgqZXVg
+ I9gd/W0c7H4ZfjoTL54sEB5r0Ft/X2Vzi0Ql75hrGg6PiK6D2cAxhcky2SEluJk0sK91n2G4vyMPX3E+Zuiz3jTpD+4jfPzqAB5mzYpYYLZW4HOhcOrvM8lj
+ XZZyg4mYXik+rnJLRxX0MOIH1QNMpMOHofoD8vaDtHBqKEIeZYlvLoUwBCn4g3DVTYtFjjSq/3OmCJcmfwd2PUNk1EOxPZUWCVNvisiC6RAnv8XKRoEPJuj2
+ 3LUPN6jfwo8NZMZDfV+/PmkguyFpwbfjj9QnVwCo0jFdX94ryOWetxrmZQYqM3O2H0YwkRuscB3GquDEubL7I5RA9azASuHmbo5QGaJ/jXV+Uc9sHquRj9+7
+ DrP5Th9LSmkp7iF7TXVvO8KR8shvQPfraBnlI67rO38aEFbhBENqkJr02MQqpWkvwxA45WUa7AtIXz9jmiSN7tu7dhHJ/vCIHeXwotOIDUtfUPJmi2jn/MC4
+ U/Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add the epoll test case that has four sub-tests:
-- test_epoll
-- test_epoll_sqpoll
-- test_epoll_nodrop
-- test_epoll_sqpoll_nodrop
+On 1/30/20 4:42 PM, Thierry Reding wrote:
+> On Thu, Jan 30, 2020 at 03:41:50PM +0100, Hans Verkuil wrote:
+>> Hi Sowjanya,
+>>
+>> On 1/28/20 7:23 PM, Sowjanya Komatineni wrote:
+>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>> generator (TPG) capture.
+>>>
+>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>
+>>> This series has TPG support only where it creates hard media links
+>>> between CSI subdevice and VI video device without device graphs.
+>>>
+>>> v4l2-compliance results are available below the patch diff.
+>>>
+>>> [v0]:	Includes,
+>>> 	- Adds CSI TPG clock to Tegra210 clock driver
+>>> 	- Host1x video driver with VI and CSI clients.
+>>> 	- Support for Tegra210 only.
+>>> 	- VI CSI TPG support with hard media links in driver.
+>>> 	- Video formats supported by Tegra210 VI
+>>> 	- CSI TPG supported video formats
+>>
+>> I'm trying to compile this patch series using the media_tree master
+>> branch (https://git.linuxtv.org//media_tree.git), but it fails:
+>>
+>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_queue_setup’:
+>> drivers/staging/media/tegra/tegra-channel.c:71:15: warning: unused variable ‘count’ [-Wunused-variable]
+>>    71 |  unsigned int count = *nbuffers;
+>>       |               ^~~~~
+>> drivers/staging/media/tegra/tegra-channel.c: In function ‘tegra_channel_init’:
+>> drivers/staging/media/tegra/tegra-channel.c:518:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>   518 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>       |                                                       ^
+>> make[4]: *** [scripts/Makefile.build:265: drivers/staging/media/tegra/tegra-channel.o] Error 1
+>> make[4]: *** Waiting for unfinished jobs....
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_tpg_graph_init’:
+>> drivers/staging/media/tegra/tegra-vi.c:157:55: error: ‘struct host1x_client’ has no member named ‘host’
+>>   157 |  struct tegra_camera *cam = dev_get_drvdata(vi->client.host);
+>>       |                                                       ^
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_init’:
+>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_init’:
+>> drivers/staging/media/tegra/tegra-vi.c:213:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   213 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-csi.c:259:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   259 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-vi.c: In function ‘tegra_vi_exit’:
+>> drivers/staging/media/tegra/tegra-vi.c:246:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   246 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>> drivers/staging/media/tegra/tegra-csi.c: In function ‘tegra_csi_exit’:
+>> drivers/staging/media/tegra/tegra-csi.c:286:51: error: ‘struct host1x_client’ has no member named ‘host’
+>>   286 |  struct tegra_camera *cam = dev_get_drvdata(client->host);
+>>       |                                                   ^~
+>>
+>> And indeed, struct host1x_client as defined in include/linux/host1x.h doesn't
+>> have a 'host' field.
+>>
+>> Does this series depend on another patch that's not yet in mainline?
+> 
+> Sowjanya's been working on top of linux-next, so, yes, this patch
+> depends on a change that's been merged into the DRM tree for v5.6-rc1.
+> 
+> Thierry
+> 
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v1 -> v2:
-    - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
-    - add 2 new tests to test epoll with IORING_FEAT_NODROP
-    - cleanups
----
- .gitignore    |   1 +
- test/Makefile |   5 +-
- test/epoll.c  | 386 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 390 insertions(+), 2 deletions(-)
- create mode 100644 test/epoll.c
+Is there a specific linux-next tag that works? I tried next-20200131 but that
+failed to boot. Same problem with the mainline repo since the host1x patches
+were merged yesterday. It compiles fine, but the boot just stops. Or am I
+missing some kernel config that is now important to have?
 
-diff --git a/.gitignore b/.gitignore
-index bdff558..49903ca 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -37,6 +37,7 @@
- /test/d77a67ed5f27-test
- /test/defer
- /test/eeed8b54e0df-test
-+/test/epoll
- /test/fadvise
- /test/fallocate
- /test/fc2a85cb02ef-test
-diff --git a/test/Makefile b/test/Makefile
-index a975999..3f1d2f6 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -19,7 +19,7 @@ all_targets += poll poll-cancel ring-leak fsync io_uring_setup io_uring_register
- 		poll-many b5837bd5311d-test accept-test d77a67ed5f27-test \
- 		connect 7ad0e4b2f83c-test submit-reuse fallocate open-close \
- 		file-update statx accept-reuse poll-v-poll fadvise madvise \
--		short-read openat2 probe shared-wq personality
-+		short-read openat2 probe shared-wq personality epoll
- 
- include ../Makefile.quiet
- 
-@@ -46,7 +46,7 @@ test_srcs := poll.c poll-cancel.c ring-leak.c fsync.c io_uring_setup.c \
- 	7ad0e4b2f83c-test.c submit-reuse.c fallocate.c open-close.c \
- 	file-update.c statx.c accept-reuse.c poll-v-poll.c fadvise.c \
- 	madvise.c short-read.c openat2.c probe.c shared-wq.c \
--	personality.c
-+	personality.c epoll.c
- 
- test_objs := $(patsubst %.c,%.ol,$(test_srcs))
- 
-@@ -57,6 +57,7 @@ poll-link: XCFLAGS = -lpthread
- accept-link: XCFLAGS = -lpthread
- submit-reuse: XCFLAGS = -lpthread
- poll-v-poll: XCFLAGS = -lpthread
-+epoll: XCFLAGS = -lpthread
- 
- install: $(all_targets) runtests.sh runtests-loop.sh
- 	$(INSTALL) -D -d -m 755 $(datadir)/liburing-test/
-diff --git a/test/epoll.c b/test/epoll.c
-new file mode 100644
-index 0000000..610820a
---- /dev/null
-+++ b/test/epoll.c
-@@ -0,0 +1,386 @@
-+/*
-+ * Description: test io_uring poll handling using a pipe
-+ *
-+ *              Three threads involved:
-+ *              - producer: fills SQ with write requests for the pipe
-+ *              - cleaner: consumes CQ, freeing the buffers that producer
-+ *                         allocates
-+ *              - consumer: read() blocking on the pipe
-+ *
-+ */
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <pthread.h>
-+#include <stdbool.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <sys/poll.h>
-+#include <sys/wait.h>
-+#include <sys/epoll.h>
-+
-+#include "liburing.h"
-+
-+#define TIMEOUT         10
-+#define ITERATIONS      100
-+#define RING_ENTRIES    2
-+#define BUF_SIZE        2048
-+#define PIPE_SIZE       4096 /* pipe capacity below the page size are silently
-+			      * rounded up to the page size
-+			      */
-+
-+enum {
-+	TEST_OK = 0,
-+	TEST_SKIPPED = 1,
-+	TEST_FAILED = 2,
-+};
-+
-+struct thread_data {
-+	struct io_uring *ring;
-+
-+	volatile uint32_t submitted;
-+	volatile uint32_t freed;
-+	uint32_t entries;
-+	int pipe_read;
-+	int pipe_write;
-+	bool sqpoll;
-+	bool nodrop;
-+};
-+
-+static void sig_alrm(int sig)
-+{
-+	fprintf(stderr, "Timed out!\n");
-+	exit(1);
-+}
-+
-+static struct iovec *alloc_vec(void)
-+{
-+	struct iovec *vec;
-+
-+	vec = malloc(sizeof(struct iovec));
-+	if (!vec) {
-+		perror("malloc iovec");
-+		exit(1);
-+	}
-+	vec->iov_base = malloc(BUF_SIZE);
-+	if (!vec->iov_base) {
-+		perror("malloc buffer");
-+		exit(1);
-+	}
-+	vec->iov_len = BUF_SIZE;
-+
-+	return vec;
-+}
-+
-+static void free_vec(struct iovec *vec)
-+{
-+	free(vec->iov_base);
-+	free(vec);
-+}
-+
-+static void *do_test_epoll_produce(void *data)
-+{
-+	struct thread_data *td = data;
-+	struct io_uring_sqe *sqe;
-+	struct epoll_event ev;
-+	void *th_ret = (void *)1;
-+	int fd, ret;
-+
-+	fd = epoll_create1(0);
-+	if (fd < 0) {
-+		perror("epoll_create");
-+		return th_ret;
-+	}
-+
-+	ev.events = EPOLLOUT;
-+	ev.data.fd = td->ring->ring_fd;
-+
-+	if (epoll_ctl(fd, EPOLL_CTL_ADD, td->ring->ring_fd, &ev) < 0) {
-+		perror("epoll_ctrl");
-+		goto ret;
-+	}
-+
-+	while (td->submitted < ITERATIONS) {
-+		bool submit = false;
-+
-+		ret = epoll_wait(fd, &ev, 1, -1);
-+		if (ret < 0) {
-+			perror("epoll_wait");
-+			goto ret;
-+		}
-+
-+		while (td->submitted < ITERATIONS) {
-+			struct iovec *vec;
-+
-+			/*
-+			 * If IORING_FEAT_NODROP is not supported, we want to
-+			 * avoid the drop of completion event.
-+			 */
-+			if (!td->nodrop &&
-+			    (td->submitted - td->freed >= td->entries))
-+				break;
-+
-+			sqe = io_uring_get_sqe(td->ring);
-+			if (!sqe)
-+				break;
-+
-+			vec = alloc_vec();
-+			io_uring_prep_writev(sqe, td->pipe_write, vec, 1, 0);
-+
-+			if (td->sqpoll)
-+				sqe->flags |= IOSQE_FIXED_FILE;
-+
-+			io_uring_sqe_set_data(sqe, vec);
-+			td->submitted++;
-+			submit = true;
-+		}
-+
-+		if (!submit)
-+			continue;
-+
-+		ret = io_uring_submit(td->ring);
-+		while (td->nodrop && ret == -EBUSY) {
-+			usleep(10000);
-+			ret = io_uring_submit(td->ring);
-+		}
-+		if (ret <= 0) {
-+			fprintf(stderr, "io_uring_submit failed - ret: %d\n",
-+				ret);
-+			goto ret;
-+		}
-+	}
-+
-+	printf("Successfully submitted %d requests\n", td->submitted);
-+
-+	th_ret = 0;
-+ret:
-+	close(fd);
-+	return th_ret;
-+}
-+
-+static void *do_test_epoll_free(void *data)
-+{
-+	struct thread_data *td = data;
-+	struct io_uring_cqe *cqe;
-+	struct epoll_event ev;
-+	int fd, ret;
-+	void *th_ret = (void *)1;
-+
-+	fd = epoll_create1(0);
-+	if (fd < 0) {
-+		perror("epoll_create");
-+		return th_ret;
-+	}
-+
-+	ev.events = EPOLLIN;
-+	ev.data.fd = td->ring->ring_fd;
-+
-+	if (epoll_ctl(fd, EPOLL_CTL_ADD, td->ring->ring_fd, &ev) < 0) {
-+		perror("epoll_ctrl");
-+		goto ret;
-+	}
-+
-+	while (td->freed < ITERATIONS) {
-+		ret = epoll_wait(fd, &ev, 1, -1);
-+		if (ret < 0) {
-+			perror("epoll_wait");
-+			goto ret;
-+		}
-+
-+		while (td->freed < ITERATIONS) {
-+			struct iovec *vec;
-+
-+			ret = io_uring_peek_cqe(td->ring, &cqe);
-+			if (!cqe || ret) {
-+				if (ret == -EAGAIN)
-+					break;
-+				fprintf(stderr,
-+					"io_uring_peek_cqe failed - ret: %d\n",
-+					ret);
-+				goto ret;
-+			}
-+
-+			vec = io_uring_cqe_get_data(cqe);
-+			io_uring_cqe_seen(td->ring, cqe);
-+			free_vec(vec);
-+			td->freed++;
-+		}
-+	}
-+
-+	printf("Successfully completed %d requests\n", td->freed);
-+
-+	th_ret = 0;
-+ret:
-+	close(fd);
-+	return th_ret;
-+}
-+
-+
-+static void *do_test_epoll_consume(void *data)
-+{
-+	struct thread_data *td = data;
-+	static uint8_t buf[BUF_SIZE];
-+	int ret, iter = 0;
-+	void *th_ret = (void *)1;
-+
-+	while (iter < ITERATIONS) {
-+		errno = 0;
-+		ret = read(td->pipe_read, &buf, BUF_SIZE);
-+		if (ret != BUF_SIZE)
-+			break;
-+		iter++;
-+	};
-+
-+	if (ret < 0) {
-+		perror("read");
-+		goto ret;
-+	}
-+
-+	if (iter != ITERATIONS) {
-+		fprintf(stderr, "Wrong iterations: %d [expected %d]\n",
-+			iter, ITERATIONS);
-+		goto ret;
-+	}
-+
-+	printf("Successfully received %d messages\n", iter);
-+
-+	th_ret = 0;
-+ret:
-+	return th_ret;
-+}
-+
-+static int do_test_epoll(bool sqpoll, bool nodrop)
-+{
-+	int ret = 0, pipe1[2];
-+	struct io_uring_params param;
-+	struct thread_data td;
-+	pthread_t threads[3];
-+	struct io_uring ring;
-+	void *ret_th[3];
-+
-+	if (geteuid() && sqpoll) {
-+		fprintf(stderr, "sqpoll requires root!\n");
-+		return TEST_SKIPPED;
-+	}
-+
-+	if (pipe(pipe1) != 0) {
-+		perror("pipe");
-+		return TEST_FAILED;
-+	}
-+
-+	ret = fcntl(pipe1[0], F_SETPIPE_SZ, PIPE_SIZE);
-+	if (ret < 0) {
-+		perror("fcntl");
-+		ret = TEST_FAILED;
-+		goto err_pipe;
-+	}
-+
-+	memset(&param, 0, sizeof(param));
-+	memset(&td, 0, sizeof(td));
-+
-+	td.sqpoll = sqpoll;
-+	td.nodrop = nodrop;
-+	td.pipe_read = pipe1[0];
-+	td.pipe_write = pipe1[1];
-+	td.entries = RING_ENTRIES;
-+
-+	if (td.sqpoll)
-+		param.flags |= IORING_SETUP_SQPOLL;
-+
-+	ret = io_uring_queue_init_params(td.entries, &ring, &param);
-+	if (ret) {
-+		fprintf(stderr, "ring setup failed\n");
-+		ret = TEST_FAILED;
-+	}
-+
-+	if (nodrop && !(param.features & IORING_FEAT_NODROP)) {
-+		fprintf(stderr, "IORING_FEAT_NODROP not supported!\n");
-+		ret = TEST_SKIPPED;
-+		goto err_pipe;
-+	}
-+
-+	td.ring = &ring;
-+
-+	if (td.sqpoll) {
-+		ret = io_uring_register_files(&ring, &td.pipe_write, 1);
-+		if (ret) {
-+			fprintf(stderr, "file reg failed: %d\n", ret);
-+			ret = TEST_FAILED;
-+			goto err_uring;
-+		}
-+
-+		td.pipe_write = 0;
-+	}
-+
-+	pthread_create(&threads[0], NULL, do_test_epoll_produce, &td);
-+	pthread_create(&threads[1], NULL, do_test_epoll_free, &td);
-+	pthread_create(&threads[2], NULL, do_test_epoll_consume, &td);
-+
-+	pthread_join(threads[0], &ret_th[0]);
-+	pthread_join(threads[1], &ret_th[1]);
-+	pthread_join(threads[2], &ret_th[2]);
-+
-+	if (ret_th[0] || ret_th[1] || ret_th[2]) {
-+		fprintf(stderr, "threads ended with errors\n");
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+	}
-+
-+	ret = TEST_OK;
-+
-+err_uring:
-+	io_uring_queue_exit(&ring);
-+err_pipe:
-+	close(pipe1[0]);
-+	close(pipe1[1]);
-+
-+	return ret;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct sigaction act;
-+	int ret;
-+
-+	memset(&act, 0, sizeof(act));
-+	act.sa_handler = sig_alrm;
-+	act.sa_flags = SA_RESTART;
-+	sigaction(SIGALRM, &act, NULL);
-+	alarm(TIMEOUT);
-+
-+	ret = do_test_epoll(false, false);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_epoll: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_epoll failed\n");
-+		return ret;
-+	}
-+
-+	ret = do_test_epoll(true, false);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_epoll_sqpoll: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_epoll_sqpoll failed\n");
-+		return ret;
-+	}
-+
-+	ret = do_test_epoll(false, true);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_epoll_nodrop: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_epoll_nodrop failed\n");
-+		return ret;
-+	}
-+
-+	ret = do_test_epoll(true, true);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_epoll_sqpoll_nodrop: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_epoll_sqpoll_nodrop failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
--- 
-2.24.1
+Regards,
 
+	Hans
