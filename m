@@ -2,108 +2,82 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7474AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F3C214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E0F20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgAaUSY (ORCPT
+        id S1726163AbgAaUXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:18:24 -0500
-Received: from mga17.intel.com ([192.55.52.151]:24198 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbgAaUSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:18:24 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 12:18:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
-   d="scan'208";a="233556708"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 31 Jan 2020 12:18:23 -0800
-Date:   Fri, 31 Jan 2020 12:17:43 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-Message-ID: <20200131201743.GE18946@linux.intel.com>
-References: <3499ee3f-e734-50fd-1b50-f6923d1f4f76@intel.com>
- <5D1CAD6E-7D40-48C6-8D21-203BDC3D0B63@amacapital.net>
- <df8f7580-9e7d-bc49-30c0-eca517f8db44@intel.com>
+        Fri, 31 Jan 2020 15:23:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56626 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgAaUXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 15:23:14 -0500
+Received: from 51.26-246-81.adsl-static.isp.belgacom.be ([81.246.26.51] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ixcol-0004uw-36; Fri, 31 Jan 2020 21:23:07 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BBC1A105BDC; Fri, 31 Jan 2020 21:23:01 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/rtmutex: remove unused cmpxchg_relaxed
+In-Reply-To: <20200131173922.hjvugxuybrn2wbsn@linux-p48b>
+References: <1579595686-251535-1-git-send-email-alex.shi@linux.alibaba.com> <20200131173922.hjvugxuybrn2wbsn@linux-p48b>
+Date:   Fri, 31 Jan 2020 21:23:01 +0100
+Message-ID: <87r1zfxtne.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <df8f7580-9e7d-bc49-30c0-eca517f8db44@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 01:47:10AM +0800, Xiaoyao Li wrote:
-> On 1/31/2020 11:37 PM, Andy Lutomirski wrote:
-> >
-> >>On Jan 30, 2020, at 11:22 PM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
-> >>
-> >> On 1/31/2020 1:16 AM, Andy Lutomirski wrote:
+Davidlohr Bueso <dave@stgolabs.net> writes:
+> On Tue, 21 Jan 2020, Alex Shi wrote:
 
-...
+  Subject: locking/rtmutex: remove unused cmpxchg_relaxed
 
-> >>>Can we get a credible description of how this would work? I suggest: Intel
-> >>>adds and documents a new CPUID bit or core capability bit that means
-> >>>“split lock detection is forced on”.  If this bit is set, the MSR bit
-> >>>controlling split lock detection is still writable, but split lock
-> >>>detection is on regardless of the value.  Operating systems are expected
-> >>>to set the bit to 1 to indicate to a hypervisor, if present, that they
-> >>>understand that split lock detection is on.  This would be an SDM-only
-> >>>change, but it would also be a commitment to certain behavior for future
-> >>>CPUs that don’t implement split locks.
-> >>
-> >>It sounds a PV solution for virtualization that it doesn't need to be
-> >>defined in Intel-SDM but in KVM document.
-> >>
-> >>As you suggested, we can define new bit in KVM_CPUID_FEATURES (0x40000001)
-> >>as KVM_FEATURE_SLD_FORCED and reuse MSR_TEST_CTL or use a new virtualized
-> >>MSR for guest to tell hypervisor it understand split lock detection is
-> >>forced on.
-> >
-> >Of course KVM can do this. But this missed the point. Intel added a new CPU
-> >feature, complete with an enumeration mechanism, that cannot be correctly
-> >used if a hypervisor is present.
-> 
-> Why it cannot be correctly used if a hypervisor is present? Because it needs
-> to disable split lock detection when running a vcpu for guest as this patch
-> wants to do?
+should be
 
-Because SMT.  Unless vCPUs are pinned 1:1 with pCPUs, and the guest is
-given an accurate topology, disabling/enabling split-lock #AC may (or may
-not) also disable/enable split-lock #AC on a random vCPU in the guest.
+  Subject: locking/rtmutex: Remove unused rt_mutex_cmpxchg_relaxed()
 
-> >As it stands, without specific hypervisor and guest support of a non-Intel
-> >interface, it is *impossible* to give architecturally correct behavior to a
-> >guest. If KVM implements your suggestion, *Windows* guests will still
-> >malfunction on Linux.
-> 
-> Actually, KVM don't need to implement my suggestion. It can just virtualize
-> and expose this feature (MSR_IA32_CORE_CAPABILITIES and MSR_TEST_CTRL) to
-> guest, (but it may have some requirement that HT is disabled and host is
-> sld_off) then guest can use it architecturally.
+You're not removing cmpxchg_relaxed, right?
 
-This is essentially what I proposed a while back.  KVM would allow enabling
-split-lock #AC in the guest if and only if SMT is disabled or the enable bit
-is per-thread, *or* the host is in "warn" mode (can live with split-lock #AC
-being randomly disabled/enabled) and userspace has communicated to KVM that
-it is pinning vCPUs.
+>> No one use this macro after it was introduced. Better to remove it?
+
+Please make that factual.
+
+ The macro was never used at all. Remove it.
+
+> You also need to remove it for the CONFIG_DEBUG_RT_MUTEXES=y case.
+
+Yes.
+
+> Hmm unrelated, but do we want CCAS for rtmutex fastpath? Ie:
+>
+>      (l->owner == c && cmpxchg_acquire(&l->owner, c, n) == c)
+>
+> That would optimize for the contended case and avoid the cmpxchg - it would
+> also help if we ever do the top-waiter spin thing.
+
+Not sure if it buys much, but it kinda makes sense.
+
+Thanks,
+
+        tglx
