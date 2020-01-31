@@ -2,103 +2,222 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8919C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ABCC33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A0F20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C15206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJUjLewx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgAaOsB (ORCPT
+        id S1729090AbgAaOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:48:01 -0500
-Received: from mga06.intel.com ([134.134.136.31]:50390 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729090AbgAaOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:48:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 06:47:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
-   d="scan'208";a="310020734"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 31 Jan 2020 06:47:56 -0800
-Subject: Re: [PATCH] xhci-mtk: Fix NULL pointer dereference with xhci_irq()
- for shared_hcd
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Sriharsha Allenki <sallenki@codeaurora.org>
-References: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <08f69bab-2ada-d6ab-7bf7-d960e9f148a0@linux.intel.com>
-Date:   Fri, 31 Jan 2020 16:50:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 09:50:33 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53050 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729004AbgAaOuc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:50:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580482231;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G5qtNmF55up9PuW19M9ztod4mbJlD+L5BOsXwBxDWkA=;
+        b=cJUjLewxVpBBYh91cuC5QDV/rqi9SuuH562XkAhFB/wG8FSsjQucGfFR5nhEkPRluLQBYy
+        es8mr7oHQQBiADKfJiYv5KcMqdx0NzUzEmsVTKYh1g97kGg0CtfkhhSGY67a6g43y9zmNx
+        SF7zhfbQVtynfh8Da3XNGcWLMkgjGk0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-I55GL5ZpPoKvKnwr-qcgbg-1; Fri, 31 Jan 2020 09:50:23 -0500
+X-MC-Unique: I55GL5ZpPoKvKnwr-qcgbg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFCB118C35A0;
+        Fri, 31 Jan 2020 14:50:20 +0000 (UTC)
+Received: from x2.localnet (ovpn-117-67.phx2.redhat.com [10.3.117.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B23C55C54A;
+        Fri, 31 Jan 2020 14:50:09 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
+Date:   Fri, 31 Jan 2020 09:50:08 -0500
+Message-ID: <5238532.OiMyN8JqPO@x2>
+Organization: Red Hat
+In-Reply-To: <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
+References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com> <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.1.2020 9.41, Macpaul Lin wrote:
-> According to NULL pointer fix: https://tinyurl.com/uqft5ra
-> xhci: Fix NULL pointer dereference with xhci_irq() for shared_hcd
-> The similar issue has also been found in QC activities in Mediatek.
+On Wednesday, January 22, 2020 4:29:12 PM EST Paul Moore wrote:
+> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Track the parent container of a container to be able to filter and
+> > report nesting.
+> > 
+> > Now that we have a way to track and check the parent container of a
+> > container, modify the contid field format to be able to report that
+> > nesting using a carrat ("^") separator to indicate nesting.  The
+> > original field format was "contid=<contid>" for task-associated records
+> > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
+> > records.  The new field format is
+> > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
 > 
-> Here quote the description from the referenced patch as follows.
-> "Commit ("f068090426ea xhci: Fix leaking USB3 shared_hcd
-> at xhci removal") sets xhci_shared_hcd to NULL without
-> stopping xhci host. This results into a race condition
-> where shared_hcd (super speed roothub) related interrupts
-> are being handled with xhci_irq happens when the
-> xhci_plat_remove is called and shared_hcd is set to NULL.
-> Fix this by setting the shared_hcd to NULL only after the
-> controller is halted and no interrupts are generated."
+> Let's make sure we always use a comma as a separator, even when
+> recording the parent information, for example:
+> "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
 > 
-> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->   drivers/usb/host/xhci-mtk.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> > 
+> >  include/linux/audit.h |  1 +
+> >  kernel/audit.c        | 53
+> >  +++++++++++++++++++++++++++++++++++++++++++-------- kernel/audit.h     
+> >    |  1 +
+> >  kernel/auditfilter.c  | 17 ++++++++++++++++-
+> >  kernel/auditsc.c      |  2 +-
+> >  5 files changed, 64 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index b18a6baef204..c227c67f5dc5 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -593,11 +593,11 @@ static int xhci_mtk_remove(struct platform_device *dev)
->   	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
->   
->   	usb_remove_hcd(shared_hcd);
-> -	xhci->shared_hcd = NULL;
->   	device_init_wakeup(&dev->dev, false);
->   
->   	usb_remove_hcd(hcd);
->   	usb_put_hcd(shared_hcd);
-> +	xhci->shared_hcd = NULL;
->   	usb_put_hcd(hcd);
->   	xhci_mtk_sch_exit(mtk);
->   	xhci_mtk_clks_disable(mtk);
+> ...
 > 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index ef8e07524c46..68be59d1a89b 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > 
+> > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns,
+> > struct task_struct *p)> 
+> >                 audit_netns_contid_add(new->net_ns, contid);
+> >  
+> >  }
+> > 
+> > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
+> 
+> If we need a forward declaration, might as well just move it up near
+> the top of the file with the rest of the declarations.
+> 
+> > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
+> > +{
+> > +       struct audit_contobj *cont = NULL, *prcont = NULL;
+> > +       int h;
+> 
+> It seems safer to pass the audit container ID object and not the u64.
+> 
+> > +       if (!audit_contid_valid(contid)) {
+> > +               audit_log_format(ab, "%llu", contid);
+> 
+> Do we really want to print (u64)-1 here?  Since this is a known
+> invalid number, would "?" be a better choice?
 
-Could you share details of the NULL pointer dereference, (backtrace).
+The established pattern is that we print -1 when its unset and "?" when its 
+totalling missing. So, how could this be invalid? It should be set or not. 
+That is unless its totally missing just like when we do not run with selinux 
+enabled and a context just doesn't exist.
 
-The USB3 hcd is already removed when xhci->shared_hcd is set to NULL.
-We might want to add some checks to make sure we are not using the removed
-hcd anymore in that codepath anymore.
+-Steve
 
--Mathias
+
+> > +               return;
+> > +       }
+> > +       h = audit_hash_contid(contid);
+> > +       rcu_read_lock();
+> > +       list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> > +               if (cont->id == contid) {
+> > +                       prcont = cont;
+> 
+> Why not just pull the code below into the body of this if statement?
+> It all needs to be done under the RCU read lock anyway and the code
+> would read much better this way.
+> 
+> > +                       break;
+> > +               }
+> > +       if (!prcont) {
+> > +               audit_log_format(ab, "%llu", contid);
+> > +               goto out;
+> > +       }
+> > +       while (prcont) {
+> > +               audit_log_format(ab, "%llu", prcont->id);
+> > +               prcont = prcont->parent;
+> > +               if (prcont)
+> > +                       audit_log_format(ab, "^");
+> 
+> In the interest of limiting the number of calls to audit_log_format(),
+> how about something like the following:
+> 
+>   audit_log_format("%llu", cont);
+>   iter = cont->parent;
+>   while (iter) {
+>     if (iter->parent)
+>       audit_log_format("^%llu,", iter);
+>     else
+>       audit_log_format("^%llu", iter);
+>     iter = iter->parent;
+>   }
+> 
+> > +       }
+> > +out:
+> > +       rcu_read_unlock();
+> > +}
+> > +
+> > 
+> >  /*
+> >  
+> >   * audit_log_container_id - report container info
+> >   * @context: task or local context for record
+> 
+> ...
+> 
+> > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64
+> > contid)> 
+> >         if (!ab)
+> >         
+> >                 return rc;
+> > 
+> > -       audit_log_format(ab,
+> > -                        "op=set opid=%d contid=%llu old-contid=%llu",
+> > -                        task_tgid_nr(task), contid, oldcontid);
+> > +       audit_log_format(ab, "op=set opid=%d contid=",
+> > task_tgid_nr(task)); +       audit_log_contid(ab, contid);
+> > +       audit_log_format(ab, " old-contid=");
+> > +       audit_log_contid(ab, oldcontid);
+> 
+> This is an interesting case where contid and old-contid are going to
+> be largely the same, only the first (current) ID is going to be
+> different; do we want to duplicate all of those IDs?
+> 
+> >         audit_log_end(ab);
+> >         return rc;
+> >  
+> >  }
+> > 
+> > @@ -2723,9 +2760,9 @@ void audit_log_container_drop(void)
+> 
+> --
+> paul moore
+> www.paul-moore.com
+
+
+
+
