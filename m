@@ -2,49 +2,59 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DC6C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35573C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96ABA2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CB62082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dSE512e1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgAaHW5 (ORCPT
+        id S1728109AbgAaH1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:22:57 -0500
-Received: from mga11.intel.com ([192.55.52.93]:41834 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbgAaHW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:22:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 23:22:56 -0800
-X-IronPort-AV: E=Sophos;i="5.70,385,1574150400"; 
-   d="scan'208";a="223055979"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.169]) ([10.249.168.169])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 30 Jan 2020 23:22:54 -0800
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <cf79eeeb-e107-bdff-13a8-c52288d0d123@intel.com>
- <A2E4B0E3-EDDF-46FD-8CE9-62A2E2E4BF20@amacapital.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <3499ee3f-e734-50fd-1b50-f6923d1f4f76@intel.com>
-Date:   Fri, 31 Jan 2020 15:22:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Fri, 31 Jan 2020 02:27:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58664 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbgAaH1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 02:27:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OV/p4y3YLF/I+G4fS8IrHQYiFOxdPLgiy0K6txXzDY8=; b=dSE512e1LHxS1dMPjUmjnrf8Z
+        q2ssZVGtoRy07aoanuJfmpNvzkl4G8rwYM1vNsoRZSuOtiLqAXRflrqaGARPw06jTnRZM32PQab3I
+        c7ohWKRhx/CzX2pgQ4jU2HWqFvWIcWXIF9NRLW+x6E5dT2OS7ARTCnjYeWmCi0ZlV+gP3hP+EziZn
+        TWguo1jrQ81GyuIIy2gqnCaiaauPHXHZeslr4TzXWWtjxycJYa2Emoe+XFQxLBTBYqKUZBIAOduOK
+        IOkmnhdMooTcXnVoAwQnI+jEpkRSVMnFnCet6nRi2t9Yl74T+svO95DtfCcFSrfVJNiM0ds6NO9CR
+        UzdST+yMA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixQiK-00079w-QQ; Fri, 31 Jan 2020 07:27:40 +0000
+Subject: Re: linux-next: Tree for Jan 31 (drivers/watchdog/da9062_wdt.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        S Twiss <stwiss.opensource@diasemi.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+References: <20200131150606.34caeb7c@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ac797eb0-9b0a-d2d3-3a40-3fbd0a8b5ee0@infradead.org>
+Date:   Thu, 30 Jan 2020 23:27:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <A2E4B0E3-EDDF-46FD-8CE9-62A2E2E4BF20@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200131150606.34caeb7c@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,55 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 1:16 AM, Andy Lutomirski wrote:
+On 1/30/20 8:06 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
+> Please do not add any v5.7 material to your linux-next included
+> branches until after v5.6-rc1 has been released.
 > 
->> On Jan 30, 2020, at 8:30 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>
->> ï»¿On 1/30/2020 11:18 PM, Andy Lutomirski wrote:
->>>>> On Jan 30, 2020, at 4:24 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>>>
->>>> ï»¿There are two types of #AC can be generated in Intel CPUs:
->>>> 1. legacy alignment check #AC;
->>>> 2. split lock #AC;
->>>>
->>>> Legacy alignment check #AC can be injected to guest if guest has enabled
->>>> alignemnet check.
->>>>
->>>> When host enables split lock detection, i.e., split_lock_detect!=off,
->>>> guest will receive an unexpected #AC when there is a split_lock happens in
->>>> guest since KVM doesn't virtualize this feature to guest.
->>>>
->>>> Since the old guests lack split_lock #AC handler and may have split lock
->>>> buges. To make guest survive from split lock, applying the similar policy
->>>> as host's split lock detect configuration:
->>>> - host split lock detect is sld_warn:
->>>>    warning the split lock happened in guest, and disabling split lock
->>>>    detect around VM-enter;
->>>> - host split lock detect is sld_fatal:
->>>>    forwarding #AC to userspace. (Usually userspace dump the #AC
->>>>    exception and kill the guest).
->>> A correct userspace implementation should, with a modern guest kernel, forward the exception. Otherwise youâ€™re introducing a DoS into the guest if the guest kernel is fine but guest userspace is buggy.
->>
->> To prevent DoS in guest, the better solution is virtualizing and advertising this feature to guest, so guest can explicitly enable it by setting split_lock_detect=fatal, if it's a latest linux guest.
->>
->> However, it's another topic, I'll send out the patches later.
->>
+> I am experimenting with a "make htmldocs" build at
+> the end of the day, but it currently has an error:
 > 
-> Can we get a credible description of how this would work? I suggest:
-> 
-> Intel adds and documents a new CPUID bit or core capability bit that means â€œsplit lock detection is forced onâ€.  If this bit is set, the MSR bit controlling split lock detection is still writable, but split lock detection is on regardless of the value.  Operating systems are expected to set the bit to 1 to indicate to a hypervisor, if present, that they understand that split lock detection is on.
-> 
-> This would be an SDM-only change, but it would also be a commitment to certain behavior for future CPUs that donâ€™t implement split locks.
+> docutils.utils.SystemMessage: Documentation/driver-api/thermal/cpu-idle-cooling.rst:95: (SEVERE/4) Unexpected section title.
 
-It sounds a PV solution for virtualization that it doesn't need to be 
-defined in Intel-SDM but in KVM document.
+I sent a patch for that on 2020-JAN-20 but no one has replied to the patch:
 
-As you suggested, we can define new bit in KVM_CPUID_FEATURES 
-(0x40000001) as KVM_FEATURE_SLD_FORCED and reuse MSR_TEST_CTL or use a 
-new virtualized MSR for guest to tell hypervisor it understand split 
-lock detection is forced on.
+https://lore.kernel.org/linux-pm/712c1152-56b5-307f-b3f3-ed03a30b804a@infradead.org/
 
-> Can one of you Intel folks ask the architecture team about this?
+
+
+> Changes since 20200130:
 > 
 
+
+on i386:
+when CONFIG_I2C is not set/enabled:
+
+../drivers/watchdog/da9062_wdt.c: In function ‘da9062_wdt_restart’:
+../drivers/watchdog/da9062_wdt.c:155:8: error: implicit declaration of function ‘i2c_smbus_write_byte_data’; did you mean ‘i2c_set_clientdata’? [-Werror=implicit-function-declaration]
+  ret = i2c_smbus_write_byte_data(client, DA9062AA_CONTROL_F,
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+        i2c_set_clientdata
+cc1: some warnings being treated as errors
+make[3]: *** [../scripts/Makefile.build:265: drivers/watchdog/da9062_wdt.o] Error 1
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
