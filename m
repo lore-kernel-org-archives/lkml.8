@@ -2,247 +2,188 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B743C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2ECC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DB6206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="BoYR89EZ"
+	by mail.kernel.org (Postfix) with ESMTP id E9E03206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgAaM3I (ORCPT
+        id S1728566AbgAaMao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:29:08 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40462 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728530AbgAaM3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:29:08 -0500
-Received: by mail-yw1-f67.google.com with SMTP id i126so4458480ywe.7
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 04:29:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xxrGkQA52/NJfqxe3kfKwhan3TmXw33/Mb0FwFqbql4=;
-        b=BoYR89EZk/UoRGsNfbopZM2RldayH6BpcXVQA/+J9Z9FwOpXt9o4GJeQJIfWyTLvyA
-         +1m8+2cMVWrg2IPLuvHOSFTrq1hkFTYkENvXdQiVdQdQ3OLcBGk1UpByIZaqyRdp84o5
-         SjCal57HWIxK6l6blOrSCEDgC7k93StYqejQd18Khd9dRdIKUI5NOw9a2DmjyOvtxOYJ
-         Wq7/5dU4zmzMjkFFvBfVGqfyLr2+u3VHadTZofYmTICRX9umSRbgeCbBBiUulYF0oAD0
-         CT4AUqwTgyPtIzNFIz8nEyoax1N6p+fweQ7s4TF+NrudEIJFS+eaOhCl2K8YNfnYYaB3
-         gJtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xxrGkQA52/NJfqxe3kfKwhan3TmXw33/Mb0FwFqbql4=;
-        b=B1nGpBBo7b04pFxTfqjMAXI5CvbnYDd7xDAqWT7qRWPdpKOMuSGlpMO3/n8RmVAkaA
-         hMFl6C1/qYl6vDDGRWeYL8RvUuToM86O5g7Xgtc1lkPlgW0a0lZh60efOJLsHQnljQLy
-         4QgE7L2Iof+PDsb4wMsHW6wGxY1JXPQvcBZ/TjShD+1XBphGfrLLR+DtaaIZhRhMs8Aq
-         9o+bobJ2BokPigLbO/yQmbw6U/TdiDSEqs6wqlyUvDtlLZ/dw/cam8eaZ75F4LE6ql0p
-         Gosr4nj1TSTrSFvHw7bGqJGwFzjK1UN7V8R5CBOadI3XU+kdOisW9/IYvLqTqS5Ucw4+
-         nIUg==
-X-Gm-Message-State: APjAAAWlft/zqLVNsxOE57SEkbca4vszPlkUMnT90vnhuC2H+QLrS4Ul
-        8vkTECiXHyyX06vFw1Eye0nxJajmawlD1N5jm8nPFg==
-X-Google-Smtp-Source: APXvYqxzimUmH80s/yDnckKWKhHla3StDkh/GW6HZBlYZHAG5vkheOko5Lv3abngM1TMARttFFHpz3mabve9NUpLPVo=
-X-Received: by 2002:a25:ab65:: with SMTP id u92mr8720063ybi.472.1580473746644;
- Fri, 31 Jan 2020 04:29:06 -0800 (PST)
+        Fri, 31 Jan 2020 07:30:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:34938 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728479AbgAaMan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:30:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D42EF1063;
+        Fri, 31 Jan 2020 04:30:42 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7D5B3F67D;
+        Fri, 31 Jan 2020 04:30:41 -0800 (PST)
+Subject: Re: [PATCH] dma-debug: dynamic allocation of hash table
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200130191049.190569-1-edumazet@google.com>
+ <e0a0ffa9-3721-4bac-1c8f-bcbd53d22ba1@arm.com>
+ <CANn89i+fRqeSAz9eH8f2ujzBWSLUXw0eTT=tK=eNj8hL71MiFQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f870ae85-995f-7866-ebbd-95b89ca28dc5@arm.com>
+Date:   Fri, 31 Jan 2020 12:30:42 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com> <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org> <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
-From:   Jon Nettleton <jon@solid-run.com>
-Date:   Fri, 31 Jan 2020 13:28:30 +0100
-Message-ID: <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANn89i+fRqeSAz9eH8f2ujzBWSLUXw0eTT=tK=eNj8hL71MiFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 1:02 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Fri, 31 Jan 2020 at 12:06, Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On 2020-01-31 10:35, Makarand Pawagi wrote:
-> > >> -----Original Message-----
-> > >> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > >> Sent: Tuesday, January 28, 2020 4:39 PM
-> > >> To: Makarand Pawagi <makarand.pawagi@nxp.com>
-> > >> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> > >> kernel@lists.infradead.org; linux-acpi@vger.kernel.org;
-> > >> linux@armlinux.org.uk;
-> > >> jon@solid-run.com; Cristi Sovaiala <cristian.sovaiala@nxp.com>;
-> > >> Laurentiu
-> > >> Tudor <laurentiu.tudor@nxp.com>; Ioana Ciornei
-> > >> <ioana.ciornei@nxp.com>;
-> > >> Varun Sethi <V.Sethi@nxp.com>; Calvin Johnson
-> > >> <calvin.johnson@nxp.com>;
-> > >> Pankaj Bansal <pankaj.bansal@nxp.com>; guohanjun@huawei.com;
-> > >> sudeep.holla@arm.com; rjw@rjwysocki.net; lenb@kernel.org;
-> > >> stuyoder@gmail.com; tglx@linutronix.de; jason@lakedaemon.net;
-> > >> maz@kernel.org; shameerali.kolothum.thodi@huawei.com; will@kernel.org;
-> > >> robin.murphy@arm.com; nleeder@codeaurora.org
-> > >> Subject: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-> > >>
-> > >> Caution: EXT Email
-> > >>
-> > >> On Tue, Jan 28, 2020 at 01:38:45PM +0530, Makarand Pawagi wrote:
-> > >> > ACPI support is added in the fsl-mc driver. Driver will parse MC DSDT
-> > >> > table to extract memory and other resorces.
-> > >> >
-> > >> > Interrupt (GIC ITS) information will be extracted from MADT table by
-> > >> > drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
-> > >> >
-> > >> > IORT table will be parsed to configure DMA.
-> > >> >
-> > >> > Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
-> > >> > ---
-> > >> >  drivers/acpi/arm64/iort.c                   | 53 +++++++++++++++++++++
-> > >> >  drivers/bus/fsl-mc/dprc-driver.c            |  3 +-
-> > >> >  drivers/bus/fsl-mc/fsl-mc-bus.c             | 48 +++++++++++++------
-> > >> >  drivers/bus/fsl-mc/fsl-mc-msi.c             | 10 +++-
-> > >> >  drivers/bus/fsl-mc/fsl-mc-private.h         |  4 +-
-> > >> >  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 71
-> > >> ++++++++++++++++++++++++++++-
-> > >> >  include/linux/acpi_iort.h                   |  5 ++
-> > >> >  7 files changed, 174 insertions(+), 20 deletions(-)
-> > >> >
-> > >> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > >> > index 33f7198..beb9cd5 100644
-> > >> > --- a/drivers/acpi/arm64/iort.c
-> > >> > +++ b/drivers/acpi/arm64/iort.c
-> > >> > @@ -15,6 +15,7 @@
-> > >> >  #include <linux/kernel.h>
-> > >> >  #include <linux/list.h>
-> > >> >  #include <linux/pci.h>
-> > >> > +#include <linux/fsl/mc.h>
-> > >> >  #include <linux/platform_device.h>
-> > >> >  #include <linux/slab.h>
-> > >> >
-> > >> > @@ -622,6 +623,29 @@ static int iort_dev_find_its_id(struct device
-> > >> > *dev, u32 req_id,  }
-> > >> >
-> > >> >  /**
-> > >> > + * iort_get_fsl_mc_device_domain() - Find MSI domain related to a
-> > >> > +device
-> > >> > + * @dev: The device.
-> > >> > + * @mc_icid: ICID for the fsl_mc device.
-> > >> > + *
-> > >> > + * Returns: the MSI domain for this device, NULL otherwise  */ struct
-> > >> > +irq_domain *iort_get_fsl_mc_device_domain(struct device *dev,
-> > >> > +                                                     u32 mc_icid) {
-> > >> > +     struct fwnode_handle *handle;
-> > >> > +     int its_id;
-> > >> > +
-> > >> > +     if (iort_dev_find_its_id(dev, mc_icid, 0, &its_id))
-> > >> > +             return NULL;
-> > >> > +
-> > >> > +     handle = iort_find_domain_token(its_id);
-> > >> > +     if (!handle)
-> > >> > +             return NULL;
-> > >> > +
-> > >> > +     return irq_find_matching_fwnode(handle, DOMAIN_BUS_FSL_MC_MSI);
-> > >> > +}
-> > >>
-> > >> NAK
-> > >>
-> > >> I am not willing to take platform specific code in the generic IORT
-> > >> layer.
-> > >>
-> > >> ACPI on ARM64 works on platforms that comply with SBSA/SBBR
-> > >> guidelines:
-> > >>
-> > >>
-> > >> https://developer.arm.com/architectures/platform-design/server-systems
-> > >>
-> > >> Deviating from those requires butchering ACPI specifications (ie IORT)
-> > >> and
-> > >> related kernel code which goes totally against what ACPI is meant for
-> > >> on ARM64
-> > >> systems, so there is no upstream pathway for this code I am afraid.
-> > >>
-> > > Reason of adding this platform specific function in the generic IORT
-> > > layer is
-> > > That iort_get_device_domain() only deals with PCI bus
-> > > (DOMAIN_BUS_PCI_MSI).
-> > >
-> > > fsl-mc objects when probed, need to find irq_domain which is associated
-> > > with
-> > > the fsl-mc bus (DOMAIN_BUS_FSL_MC_MSI). It will not be possible to do
-> > > that
-> > > if we do not add this function because there are no other suitable APIs
-> > > exported
-> > > by IORT layer to do the job.
-> >
-> > I think we all understood the patch. What both Lorenzo and myself are
-> > saying is
-> > that we do not want non-PCI support in IORT.
-> >
->
-> IORT supports platform devices (aka named components) as well, and
-> there is some support for platform MSIs in the GIC layer.
->
-> So it may be possible to hide your exotic bus from the OS entirely,
-> and make the firmware instantiate a DSDT with device objects and
-> associated IORT nodes that describe whatever lives on that bus as
-> named components.
->
-> That way, you will not have to change the OS at all, so your hardware
-> will not only be supported in linux v5.7+, it will also be supported
-> by OSes that commercial distro vendors are shipping today. *That* is
-> the whole point of using ACPI.
->
-> If you are going to bother and modify the OS, you lose this advantage,
-> and ACPI gives you no benefit over DT at all.
+On 2020-01-31 12:17 am, Eric Dumazet wrote:
+> On Thu, Jan 30, 2020 at 3:46 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> Hi Eric,
+>>
+>> On 2020-01-30 7:10 pm, Eric Dumazet via iommu wrote:
+>>> Increasing the size of dma_entry_hash size by 327680 bytes
+>>> has reached some bootloaders limitations.
+>>
+>> [ That might warrant some further explanation - I don't quite follow how
+>> this would relate to a bootloader specifically :/ ]
+> 
+> I had no details, please look at the prior thread where this has been discussed.
+> 
+> https://www.spinics.net/lists/linux-renesas-soc/msg46157.html
 
-You beat me to it, but thanks for the clarification Ard.  No where in
-the SBSA spec that I have read does it state that only PCIe devices
-are supported by the SMMU.  It uses PCIe devices as an example, but
-the SMMU section is very generic in term and only says "devices".
+Thanks for the pointer - that had passed me by as it doesn't seem to 
+have been CCed to the IOMMU list or me as a reviewer.
 
-I feel the SBSA omission of SerDes best practices is an oversight in
-the standard and something that probably needs to be revisited.
-Forcing high speed networking interfaces to be hung off a bus just for
-the sake of having a "standard" PCIe interface seems like a step
-backward in this regard.  I would much rather have the Spec include a
-common standard that could be exposed in a consistent manner.  But
-this is a conversation for a different place.
+>>> Simply use dynamic allocations instead, and take
+>>> this opportunity to increase the hash table to 65536
+>>> buckets. Finally my 40Gbit mlx4 NIC can sustain
+>>> line rate with CONFIG_DMA_API_DEBUG=y.
+>>
+>> That's pretty cool, but I can't help but wonder if making the table
+>> bigger caused a problem in the first place, whether making it bigger yet
+>> again in the name of a fix is really the wisest move. How might this
+>> impact DMA debugging on 32-bit embedded systems with limited vmalloc
+>> space and even less RAM, for instance? More to the point, does vmalloc()
+>> even work for !CONFIG_MMU builds? Obviously we don't want things to be
+>> *needlessly* slow if avoidable, but is there a genuine justification for
+>> needing to optimise what is fundamentally an invasive heavyweight
+>> correctness check - e.g. has it helped expose race conditions that were
+>> otherwise masked?
+> 
+> Not sure what you are saying.
+> 
+> vmalloc() _is_ supported by all arches, even !CONFIG_MMU
 
-I will work with NXP and find a better way to implement this.
+OK, that's good - I wasn't sure off-hand, and I was on the wrong machine 
+to go digging into the source.
 
--Jon
+> I can not test all platforms, and this is a debugging
+> feature no one uses in production.
+
+...which is exactly why I'd prefer to see a stronger justification for 
+making a change which only benefits performance on large systems, while 
+potentially impacting usability on small ones.
+
+>> That said, by moving to dynamic allocation maybe there's room to be
+>> cleverer and make HASH_SIZE scale with, say, system memory size? (I
+>> assume from the context it's not something we can expand on-demand like
+>> we did for the dma_debug_entry pool)
+>>
+> 
+> How memory size can serve as a proxy of the number of entries ?
+> Current 10Gbit NIC need about 256,000 entries in the table.
+> Needless to say, the prior hash size was unusable.
+
+Because it's actually a reasonable proxy for "system size" in this 
+context - there aren't many good reasons for a driver to maintain 
+hundreds of mappings of the *same* buffer, so in general the maximum 
+number of live mappings is effectively going to scale with the total 
+amount of memory, particularly at the smaller end. Consider it a pretty 
+safe assumption that an embedded system with RAM measured in megabytes 
+won't ever be running anything like an MLX4, let alone in a debug 
+situation. If those 256,000 mappings each represent a typical network 
+packet, that implies well over 300MB of data alone, not to mention the 
+size of the queues themselves, the actual DMA debug entries, and the 
+whole rest of the kernel beyond that one driver - I doubt it's 
+physically possible to 'need' 64K hash buckets without at very least 1GB 
+of total RAM, quite likely much more.
+
+> As I suggested one month ago, HASH_SIZE can be tuned by a developper
+> eager to use this facility.
+> 
+> 65536 slots are 768 KB on 32bit platforms.
+
+...and when that represents ~5% of the total system RAM it is a *lot* 
+less reasonable than even 12KB. As I said, it's great to make a debug 
+option more efficient such that what it observes is more representative 
+of the non-debug behaviour, but it mustn't come at the cost of making 
+the entire option unworkable for other users.
+
+Robin.
+
+>>> Fixes: 5e76f564572b ("dma-debug: increase HASH_SIZE")
+>>> Signed-off-by: Eric Dumazet <edumazet@google.com>
+>>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> Cc: Christoph Hellwig <hch@lst.de>
+>>> ---
+>>>    kernel/dma/debug.c | 10 ++++++++--
+>>>    1 file changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+>>> index 2031ed1ad7fa109bb8a8c290bbbc5f825362baba..a310dbb1515e92c081f8f3f9a7290dd5e53fc889 100644
+>>> --- a/kernel/dma/debug.c
+>>> +++ b/kernel/dma/debug.c
+>>> @@ -27,7 +27,7 @@
+>>>
+>>>    #include <asm/sections.h>
+>>>
+>>> -#define HASH_SIZE       16384ULL
+>>> +#define HASH_SIZE       65536ULL
+>>>    #define HASH_FN_SHIFT   13
+>>>    #define HASH_FN_MASK    (HASH_SIZE - 1)
+>>>
+>>> @@ -90,7 +90,8 @@ struct hash_bucket {
+>>>    };
+>>>
+>>>    /* Hash list to save the allocated dma addresses */
+>>> -static struct hash_bucket dma_entry_hash[HASH_SIZE];
+>>> +static struct hash_bucket *dma_entry_hash __read_mostly;
+>>> +
+>>>    /* List of pre-allocated dma_debug_entry's */
+>>>    static LIST_HEAD(free_entries);
+>>>    /* Lock for the list above */
+>>> @@ -934,6 +935,10 @@ static int dma_debug_init(void)
+>>>        if (global_disable)
+>>>                return 0;
+>>>
+>>> +     dma_entry_hash = vmalloc(HASH_SIZE * sizeof(*dma_entry_hash));
+>>> +     if (!dma_entry_hash)
+>>> +             goto err;
+>>> +
+>>>        for (i = 0; i < HASH_SIZE; ++i) {
+>>>                INIT_LIST_HEAD(&dma_entry_hash[i].list);
+>>>                spin_lock_init(&dma_entry_hash[i].lock);
+>>> @@ -950,6 +955,7 @@ static int dma_debug_init(void)
+>>>                pr_warn("%d debug entries requested but only %d allocated\n",
+>>>                        nr_prealloc_entries, nr_total_entries);
+>>>        } else {
+>>> +err:
+>>>                pr_err("debugging out of memory error - disabled\n");
+>>>                global_disable = true;
+>>>
+>>>
