@@ -2,118 +2,154 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC661C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2E720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580491404;
-	bh=XPildtQFTVpy65iEB7yl2hAOgkHxHac/v8CsGQ18TNY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gdZ/DL/k86rj1vmuHQQa9I12J1dgmmTOeMrJC3KBUi5GwT1LPxC+yxYU956IdYgjf
-	 PbaXe5YjY+mBjyt6n9YTWWzWaWr2lwU8nd6lQ8PZ3aH0RFji0WDo2u2j47CPoSuknD
-	 un3km45XcMzW+IOq/gZctH5Y6hPev7WedoS1HY/8=
+	by mail.kernel.org (Postfix) with ESMTP id A2A8520663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgAaRXX (ORCPT
+        id S1726969AbgAaRbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:23:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 12:31:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:37754 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgAaRXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:23:23 -0500
-Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 431DC20663;
-        Fri, 31 Jan 2020 17:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580491403;
-        bh=XPildtQFTVpy65iEB7yl2hAOgkHxHac/v8CsGQ18TNY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JO6M4f5ZEeLSJSgF8N5MPSM3UthwfbjyBMLxGt2TJsZdHAYEAlxU6u17BCEydPHZQ
-         w7GgjxsMtSlE7m9had15XeysWkOwtqzl/Wd/AfND/Xdc0k6JNh4bNkGtphK2JUe6m7
-         Fylpm+hF0MBrLtMBtcNSzynd2snYa7UrV/49EzsI=
-Date:   Fri, 31 Jan 2020 18:23:19 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Modules updates for v5.6
-Message-ID: <20200131172319.GA16783@linux-8ccs>
+        id S1726139AbgAaRbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:31:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 003FCFEC;
+        Fri, 31 Jan 2020 09:31:01 -0800 (PST)
+Received: from [10.37.12.54] (unknown [10.37.12.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E9723F68E;
+        Fri, 31 Jan 2020 09:30:49 -0800 (PST)
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-4-lukasz.luba@arm.com>
+ <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
+Date:   Fri, 31 Jan 2020 17:30:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Krzysztof,
 
-Please pull below to receive modules updates for the 5.6 merge window.
-Details can be found in the signed tag.
+On 1/31/20 1:16 PM, Krzysztof Kozlowski wrote:
+> On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
+>>
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Enable the Energy Model (EM) brings possibility to use Energy Aware
+>> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
+>> default. The EAS only works with SchedUtil - a CPUFreq governor which
+>> handles direct requests from the scheduler for the frequency change. Thus,
+>> to make EAS working in default, the SchedUtil governor should be
+>> configured as default CPUFreq governor.
+> 
+> Full stop. That's enough of needed explanation of schedutil.
 
-Thanks,
+OK
 
-Jessica
+> 
+>> Although, the EAS might be enabled
+>> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
+>> then set as CPUFreq governor, i.e.:
+>>
+>> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+>> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+>>
+>> To check if EAS is ready to work, the read output from the command below
+>> should show '1':
+>> cat /proc/sys/kernel/sched_energy_aware
+>>
+>> To disable EAS in runtime simply 'echo 0' to the file above.
+> 
+> Not related to this commit. If you were implemeting here
+> schedutil/EAS, then it makes sense to post all this. However what's
+> the point to describe it in every defconfig change?
 
----
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+I will drop it.
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> 
+>> Some test results, which stress the scheduler on Odroid-XU3:
+>> hackbench -l 500 -s 4096
+>> With mainline code and with this patch set.
+> 
+> Skip the last sentence - duplicated information.
 
-are available in the Git repository at:
+OK
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git tags/modules-for-v5.6
+> 
+>>
+>> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
+>> (which is set to =y in default exynos_defconfig)
+>>
+>>                  |               this patch set                  | mainline
+> 
+> The commit will be applied on its own branch so the meaning of "this
+> patch set" will be lost. Maybe just "before/after"?
 
-for you to fetch changes up to 6080d608eeff7cb5090a2ddbaf723bfb0ff133fc:
+OK
 
-  module.h: Annotate mod_kallsyms with __rcu (2020-01-23 18:19:48 +0100)
+> 
+>>                  |-----------------------------------------------|---------------
+>>                  | performance   | SchedUtil     | SchedUtil     | performance
+>>                  | governor      | governor      | governor      | governor
+>>                  |               | w/o EAS       | w/ EAS        |
+>> ----------------|---------------|---------------|---------------|---------------
+>> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
+>> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
+> 
+> Why does the performance different before and after this patch?
 
-----------------------------------------------------------------
-Modules updates for v5.6
+Probably due to better locality and cache utilization. I can see that
+there is ~700k context switches vs ~450k and ~160k migrations vs ~50k.
+If you need to communicate two threads in different clusters, it will go
+through CCI.
 
-Summary of modules changes for the 5.6 merge window:
+> 
+> Mention - lower better (?). Space between number and unit... or better
+> mention [s] in column title.
 
-- Add "MS" (SHF_MERGE|SHF_STRINGS) section flags to __ksymtab_strings to
-  indicate to the linker that it can perform string deduplication (i.e.,
-  duplicate strings are reduced to a single copy in the string table).
-  This means any repeated namespace string would be merged to just one
-  entry in __ksymtab_strings.
+OK
 
-- Various code cleanups and small fixes (fix small memleak in error path,
-  improve moduleparam docs, silence rcu warnings, improve error logging)
+> 
+> And last but not least:
+> Why this patch is separate from 1/3? I don't get the need of splitting them.
 
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+As mentioned in response to patch 1/3. The fist patch would create MC
+domain, something different than Energy Model or EAS. The decisions in
+the scheduler would be different.
 
-----------------------------------------------------------------
-Fabien Dessenne (1):
-      moduleparam: fix kerneldoc
+I can merge 1/3 and 3/3 if you like, though.
 
-Jessica Yu (3):
-      export.h: reduce __ksymtab_strings string duplication by using "MS" section flags
-      modsign: print module name along with error message
-      module: avoid setting info->name early in case we can fall back to info->mod->name
+Regards,
+Lukasz
 
-Madhuparna Bhowmik (1):
-      module.h: Annotate mod_kallsyms with __rcu
-
-Masami Hiramatsu (1):
-      modules: lockdep: Suppress suspicious RCU usage warning
-
-YueHaibing (1):
-      kernel/module: Fix memleak in module_add_modinfo_attrs()
-
- include/asm-generic/export.h |  8 +++--
- include/linux/export.h       | 33 ++++++++++++------
- include/linux/module.h       |  2 +-
- include/linux/moduleparam.h  | 82 +++++++++++++++++++++++++++++++++++++++++---
- kernel/module.c              | 22 +++++++-----
- 5 files changed, 119 insertions(+), 28 deletions(-)
+> 
+> Best regards,
+> Krzysztof
+> 
