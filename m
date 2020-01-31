@@ -2,69 +2,58 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3649BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65692C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080DB214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580512232;
-	bh=fDOostFsatkqK1b+xjApDcmLIHm+xKEww0/e5l+uQZA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VaKcGlK/GbnOgKAuDIbeTdzR3nbDdTjLf90XYEuzCjNJTbT5dKp25Xi79tdU8Ek3T
-	 raZBScq+4FEk49WcVhMbhIii+vwZyzVvgQi4lf3Qf1kLvevCLT3QNooypk4DJa6UWc
-	 dklGxVJxNt19yM0KCJhxdoOYjP5wzpz7Y/oZYBH4=
+	by mail.kernel.org (Postfix) with ESMTP id 4123D20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 23:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgAaXKS (ORCPT
+        id S1726687AbgAaXdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 18:10:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46406 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 18:33:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgAaXKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 18:10:16 -0500
-Subject: Re: [GIT PULL] More ACPI updates for v5.6-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580512216;
-        bh=fDOostFsatkqK1b+xjApDcmLIHm+xKEww0/e5l+uQZA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Jh5VTfpkpr5rEmpn7+94Ot6DCO7vC8y+RXK3PesePde+sMS+kVdiixRFjdffvrpjK
-         Bvnzs7KT4kso7bJnutB1BnbMmOvKjJ9ZZKBpMJIfsonbXPnXgx6cVshbFq0Ko0OJIZ
-         35JZVmoH18Z6g6UAHd41B4QsMRfPcEjH7dtAZc6Q=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0iL0Qd9aDzkeidpngyPUcqSxYc++cqbqTFq93S+Tt7XiA@mail.gmail.com>
-References: <CAJZ5v0iL0Qd9aDzkeidpngyPUcqSxYc++cqbqTFq93S+Tt7XiA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0iL0Qd9aDzkeidpngyPUcqSxYc++cqbqTFq93S+Tt7XiA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- acpi-5.6-rc1-2
-X-PR-Tracked-Commit-Id: d8639f0d6c230d4c632cbf8ed1f3b9456f338ca0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ffda81b69fce50f2543be99ef2d7c77dffc1ebc1
-Message-Id: <158051221636.10603.14417455265371328112.pr-tracker-bot@kernel.org>
-Date:   Fri, 31 Jan 2020 23:10:16 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1726239AbgAaXdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 18:33:10 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D6120663;
+        Fri, 31 Jan 2020 23:33:09 +0000 (UTC)
+Date:   Fri, 31 Jan 2020 18:33:07 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] tracing: Consolidate some synth_event_trace code
+Message-ID: <20200131183307.4c23f5d3@gandalf.local.home>
+In-Reply-To: <1580511632.5607.3.camel@kernel.org>
+References: <cover.1580506712.git.zanussi@kernel.org>
+        <d1c8d8ad124a653b7543afe801d38c199ca5c20e.1580506712.git.zanussi@kernel.org>
+        <20200131174344.5606d154@gandalf.local.home>
+        <1580511632.5607.3.camel@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 31 Jan 2020 11:02:24 +0100:
+On Fri, 31 Jan 2020 17:00:32 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> Here's the patch with __synth_event_add_val() made static.  Let me know
+> if you want me to just do a v2 of this series..
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.6-rc1-2
+No, I'll just pull this in over the other one and start testing it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ffda81b69fce50f2543be99ef2d7c77dffc1ebc1
+Thanks a lot for getting this done today!
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+-- Steve
