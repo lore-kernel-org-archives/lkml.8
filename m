@@ -2,148 +2,126 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4893DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46120C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADA4206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GoYqswts"
+	by mail.kernel.org (Postfix) with ESMTP id 1B2C32253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580464899;
+	bh=tdpZw90OlcMR9qptYpQXr49gembLC0/+7MzgPnwKOTg=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=UPLccshIPJ79PBskTCBYP+/DgMntZFm2Mm/vkhli5FfLN60/7DYd5UX+rrWyKkIxp
+	 g3SMpZgytatTuBduVR4z79ULbk412lq+uAOP2VcZ7VQMJ8PUZKbzd6P60u0VmCJhz0
+	 XPaqc9/uRwSOSW9LsYF8OmyXplU2KVOJTSqAY3RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgAaKBN (ORCPT
+        id S1728319AbgAaKBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:01:13 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:56100 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgAaKBM (ORCPT
+        Fri, 31 Jan 2020 05:01:38 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45358 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgAaKBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:01:12 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id C790F3FD13;
-        Fri, 31 Jan 2020 11:01:09 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GoYqswts;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SHs2n_T6gOEa; Fri, 31 Jan 2020 11:01:08 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 243553FC05;
-        Fri, 31 Jan 2020 11:01:07 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 714F1360093;
-        Fri, 31 Jan 2020 11:01:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1580464867; bh=fAsEaB9XUES6Qvb9+NO+aU7Kv7uOMIgjlqELbkBztfo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GoYqswts+r1eIgAFejbB8049UuZsWY2tUAMf9kM07OHNyvFVEGxt3Ctq+W35kN3rz
-         uiEc4fxS9GEx4D3NH1HhU8Bl+LSwE+enaE0OB/2jFRn7Q67ppqn2HlUggXj5prsv8V
-         YKI37tidhdfb5a+kRPd9Rg4fhD5zQXaWuqgWcHRE=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] mm/mapping_dirty_helpers: Update huge page-table entry callbacks
-Date:   Fri, 31 Jan 2020 11:00:52 +0100
-Message-Id: <20200131100052.58761-1-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.1
+        Fri, 31 Jan 2020 05:01:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so6662016oic.12;
+        Fri, 31 Jan 2020 02:01:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=qn10BmEuDVjkBqOHdzIV8xNrO2BJH8fDrRakRfgRhPU=;
+        b=ChJQ9MRWVP/MeX0ZO97TzkVYz/YT/8qQMpMGGRlh/cowuwvw3O2TsqebIJJnvNFgzK
+         JddZkuvQ/LSZ9uJGxdNBwLurytx0esakkWJNQdjrYgKhwZSDSh7buAaCLw1Ngn002Zf9
+         HGey+y0qXSN9QOeevOmG7p3666TRnKwedZyZjQsC98T3nc5IsJLDG4RDWluhkUn/gSZ6
+         4ubZLiGGL/5YDCRnYIftLXi9BCCdWzwOhV4LX4hheJKh0zViaQxrZCwDcTpuC5QL5iUk
+         HIcGZpCvGPGxzmXXriCDnHaNU44Ub1ArWHwwyxsaYSZsQE5Y0PmDg2RGSG77ENuC4ZYX
+         hBvw==
+X-Gm-Message-State: APjAAAWBT3/odmoInbNQHPHwChLzDjs+Ho2R604If3UZ1b1/nspDCUK+
+        DwtOYPDL14OKfLx+p92BHfBrC32TWi/WW+VdYp332drf
+X-Google-Smtp-Source: APXvYqxnchmpm4Ho6//yi2eeApqlgYCPq+/GzJ3WxRUWOnyDTeXsh1w+u/YhJVdhwBi7AaasTYNiR40/j9zKHJCjcpw=
+X-Received: by 2002:aca:d6c8:: with SMTP id n191mr5971134oig.103.1580464897490;
+ Fri, 31 Jan 2020 02:01:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 31 Jan 2020 11:01:26 +0100
+Message-ID: <CAJZ5v0h7igCZU43nqcZytEgXsQ4vHYs9CBbGr-uSruj8pwoA+g@mail.gmail.com>
+Subject: [GIT PULL] More power management updates for v5.6-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+Hi Linus,
 
-Following the update of pagewalk code
-commit a07984d48146 ("mm: pagewalk: add p4d_entry() and pgd_entry()")
-we can modify the mapping_dirty_helpers' huge page-table entry callbacks
-to avoid splitting when a huge pud or -pmd is encountered.
+Please pull from the tag
 
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Cc: Steven Price <steven.price@arm.com>
----
- mm/mapping_dirty_helpers.c | 42 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 4 deletions(-)
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.6-rc1-2
 
-diff --git a/mm/mapping_dirty_helpers.c b/mm/mapping_dirty_helpers.c
-index 71070dda9643..2c7d03675903 100644
---- a/mm/mapping_dirty_helpers.c
-+++ b/mm/mapping_dirty_helpers.c
-@@ -111,26 +111,60 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
- 	return 0;
- }
- 
--/* wp_clean_pmd_entry - The pagewalk pmd callback. */
-+/*
-+ * wp_clean_pmd_entry - The pagewalk pmd callback.
-+ *
-+ * Dirty-tracking should take place on the PTE level, so
-+ * WARN() if encountering a dirty huge pmd.
-+ * Furthermore, never split huge pmds, since that currently
-+ * causes dirty info loss. The pagefault handler should do
-+ * that if needed.
-+ */
- static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
- 			      struct mm_walk *walk)
- {
--	/* Dirty-tracking should be handled on the pte level */
- 	pmd_t pmdval = pmd_read_atomic(pmd);
- 
-+	if (!pmd_trans_unstable(&pmdval))
-+		return 0;
-+
-+	if (pmd_none(pmdval)) {
-+		walk->action = ACTION_AGAIN;
-+		return 0;
-+	}
-+
-+	/* Huge pmd, present or migrated */
-+	walk->action = ACTION_CONTINUE;
- 	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
- 		WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval));
- 
- 	return 0;
- }
- 
--/* wp_clean_pud_entry - The pagewalk pud callback. */
-+/*
-+ * wp_clean_pud_entry - The pagewalk pud callback.
-+ *
-+ * Dirty-tracking should take place on the PTE level, so
-+ * WARN() if encountering a dirty huge puds.
-+ * Furthermore, never split huge puds, since that currently
-+ * causes dirty info loss. The pagefault handler should do
-+ * that if needed.
-+ */
- static int wp_clean_pud_entry(pud_t *pud, unsigned long addr, unsigned long end,
- 			      struct mm_walk *walk)
- {
--	/* Dirty-tracking should be handled on the pte level */
- 	pud_t pudval = READ_ONCE(*pud);
- 
-+	if (!pud_trans_unstable(&pudval))
-+		return 0;
-+
-+	if (pud_none(pudval)) {
-+		walk->action = ACTION_AGAIN;
-+		return 0;
-+	}
-+
-+	/* Huge pud */
-+	walk->action = ACTION_CONTINUE;
- 	if (pud_trans_huge(pudval) || pud_devmap(pudval))
- 		WARN_ON(pud_write(pudval) || pud_dirty(pudval));
- 
--- 
-2.21.1
+with top-most commit 82b2c6ffd399c9fcd542fd681bb8c6d41f035c7e
 
+ Merge branches 'pm-cpufreq' and 'pm-core'
+
+on top of commit 6d277aca488fdf0a1e67cd14b5a58869f66197c9
+
+ Merge tag 'pm-5.6-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive additional power management updates for 5.6-rc1.
+
+These prevent cpufreq from creating excessively large stack frames
+and fix the handling of devices deleted during system-wide resume in
+the PM core (Rafael Wysocki), revert a problematic commit affecting
+the cpupower utility and correct its man page (Thomas Renninger,
+Brahadambal Srinivasan), and improve the intel_pstate_tracer utility
+(Doug Smythies).
+
+Thanks!
+
+
+---------------
+
+Brahadambal Srinivasan (1):
+      Correction to manpage of cpupower
+
+Doug Smythies (2):
+      tools/power/x86/intel_pstate_tracer: changes for python 3 compatibility
+      tools/power/x86/intel_pstate_tracer: change several graphs to
+autoscale y-axis
+
+Rafael J. Wysocki (2):
+      PM: core: Fix handling of devices deleted during system-wide resume
+      cpufreq: Avoid creating excessively large stack frames
+
+Thomas Renninger (1):
+      cpupower: Revert library ABI changes from commit ae2917093fb60bdc1ed3e
+
+---------------
+
+ drivers/base/power/main.c                          |  42 +++++-
+ drivers/cpufreq/cppc_cpufreq.c                     |   2 +-
+ drivers/cpufreq/cpufreq-nforce2.c                  |   2 +-
+ drivers/cpufreq/cpufreq.c                          | 147 ++++++++++-----------
+ drivers/cpufreq/freq_table.c                       |   4 +-
+ drivers/cpufreq/gx-suspmod.c                       |   2 +-
+ drivers/cpufreq/intel_pstate.c                     |  38 +++---
+ drivers/cpufreq/longrun.c                          |   6 +-
+ drivers/cpufreq/pcc-cpufreq.c                      |   2 +-
+ drivers/cpufreq/sh-cpufreq.c                       |   2 +-
+ drivers/cpufreq/unicore2-cpufreq.c                 |   2 +-
+ include/linux/cpufreq.h                            |  32 +++--
+ tools/power/cpupower/lib/cpufreq.c                 |  78 +++++++++--
+ tools/power/cpupower/lib/cpufreq.h                 |  20 ++-
+ tools/power/cpupower/man/cpupower.1                |   6 +-
+ tools/power/cpupower/utils/cpufreq-info.c          |  12 +-
+ .../x86/intel_pstate_tracer/intel_pstate_tracer.py |  38 +++---
+ 17 files changed, 264 insertions(+), 171 deletions(-)
