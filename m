@@ -2,84 +2,66 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957A0C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3E120707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7512071A
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:57:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOOJ0Umn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TXJHOaL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgAaWxt (ORCPT
+        id S1726475AbgAaW5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:53:49 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36453 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgAaWxt (ORCPT
+        Fri, 31 Jan 2020 17:57:20 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55590 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726206AbgAaW5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:53:49 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so3595545pjb.1;
-        Fri, 31 Jan 2020 14:53:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O64ZrPgfOSQfg7giHCwyJ23cxOCbiT2C1hToXNCQpWY=;
-        b=BOOJ0Umnh+z2fup1+C6AYpqK8dw/9bii6hztTW4wh+y+LkZJF2CKGz/18Fm825U1Dj
-         WFyhP237naoFQ8e+VIMnumKLEHmoRKvvUnjzMygt+DKP+p0Ql+p/TsTjByl0yYiI3iQ4
-         DovBBDFVI/DC0AnHmJt89Ggra1beaiBH2OUbG5RWTesrXGFIBv5hNfGfLYXHCZ9ZgS+l
-         UxgknH2OodFR0xNk4NuQ7EfqLQMHtagYyh9tFB8XW0oTD5tcyb9liWUlAnzjA461jneW
-         vHcUaDPVeYRkXyBlMlxkMnNNSxU+eBROYVgjmDAEvm6zTTGS3aJ5giXxxI7DxrUM0Xq1
-         PvRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O64ZrPgfOSQfg7giHCwyJ23cxOCbiT2C1hToXNCQpWY=;
-        b=CY/el1qbIBCzWAGYK34Cw0kidcfUp2ChqxjBUYaeq6NjFcImMv9acjDzDGvtqrzDHK
-         fawjS/HcDsbbbnC74YCIdpAuZc9Vpp8Y423w/PdmpTO5Qbq+p8QWUuqqLi3b94aJS0jq
-         e9y8jQxUNaQOSbscKzpmCLcoIYvkv3uMWRoaJmrZva03RrJrJNHrK3tPPKU0xofkrN4H
-         KMQipqIzVeD1Z/99KtlFAVZ3dbk7ie5egd95lep3XE0zbikXxin5VE1BTdu1Vkw8ja41
-         YKhzONIybnGAtpd96e6x10R89zcnQuGqe06yyySJ2Kn4foLyfs7krMbvMsK1mvlhHJvp
-         d0sw==
-X-Gm-Message-State: APjAAAXvJ04Va4Ggn80cTCLZW06ddjI/j3jTWvpeEuzfh6xKnyBN+m+n
-        o3c1eIoiXE+k181CXvHvCCo=
-X-Google-Smtp-Source: APXvYqzToYKFMEvzvWEdWk6mTmkSMmNSEEJM3PIkpoZY38eIfpy8Ev8fJPhmwggC6n+nHu4XY3wsyA==
-X-Received: by 2002:a17:902:8d94:: with SMTP id v20mr2737008plo.259.1580511227385;
-        Fri, 31 Jan 2020 14:53:47 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id r26sm10876261pga.55.2020.01.31.14.53.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 14:53:46 -0800 (PST)
-Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is
- received
-To:     Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     sjpark@amazon.com, Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>, shuah@kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
-        aams@amazon.com, SeongJae Park <sjpark@amazon.de>,
-        Yuchung Cheng <ycheng@google.com>
-References: <20200131122421.23286-1-sjpark@amazon.com>
- <20200131122421.23286-3-sjpark@amazon.com>
- <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
- <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
- <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <7d36a817-5519-8496-17cf-00eda5ed4ec7@gmail.com>
-Date:   Fri, 31 Jan 2020 14:53:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 31 Jan 2020 17:57:20 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580511439; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=f2CFdUt4gFRsZm7h25+8fWm95PAolBBAPWPipRoQPSk=; b=TXJHOaL1OaUcf5totwdVCtT1d+REwpaRiy/BOdzL2y6xWS8xa6agurllbc+b16+rFQgeDwiw
+ /2krm9P5OlOvY1kFTj0eL0g9Sp2WB5OO1agZwV+IgVLczz1OQ28cYAO2IDrKCOUZAqKnmIkM
+ yjIkJCcVKiRQuLMf+68qJNphfFU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e34b0cc.7fbe274d7fb8-smtp-out-n02;
+ Fri, 31 Jan 2020 22:57:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18D08C433CB; Fri, 31 Jan 2020 22:57:15 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9663AC43383;
+        Fri, 31 Jan 2020 22:57:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9663AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 01/16] docs: Add documentation for MHI bus
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
+ <20200131135009.31477-2-manivannan.sadhasivam@linaro.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <570d0ea8-8c3d-ea41-20e3-8f1652065e60@codeaurora.org>
+Date:   Fri, 31 Jan 2020 15:57:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200131135009.31477-2-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,22 +69,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/31/20 2:11 PM, Neal Cardwell wrote:
-
-> I looked into fixing this, but my quick reading of the Linux
-> tcp_rcv_state_process() code is that it should behave correctly and
-> that a connection in FIN_WAIT_1 that receives a FIN/ACK should move to
-> TIME_WAIT.
+On 1/31/2020 6:49 AM, Manivannan Sadhasivam wrote:
+> MHI (Modem Host Interface) is a communication protocol used by the
+> host processors to control and communicate with modems over a high
+> speed peripheral bus or shared memory. The MHI protocol has been
+> designed and developed by Qualcomm Innovation Center, Inc., for use
+> in their modems. This commit adds the documentation for the bus and
+> the implementation in Linux kernel.
 > 
-> SeongJae, do you happen to have a tcpdump trace of the problematic
-> sequence where the "process A" ends up in FIN_WAIT_2 when it should be
-> in TIME_WAIT?
+> This is based on the patch submitted by Sujeev Dias:
+> https://lkml.org/lkml/2018/7/9/987
 > 
-> If I have time I will try to construct a packetdrill case to verify
-> the behavior in this case.
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> [mani: converted to .rst and splitted the patch]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Unfortunately you wont be able to reproduce the issue with packetdrill,
-since it involved packets being processed at the same time (race window)
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
