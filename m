@@ -2,59 +2,60 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0943FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220B5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05CD20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6592082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="db44KCjW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zz+aL6Eg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgAaSiI (ORCPT
+        id S1726530AbgAaSiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:38:08 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49248 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgAaSiH (ORCPT
+        Fri, 31 Jan 2020 13:38:10 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45648 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgAaSiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:38:07 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrPi064181;
-        Fri, 31 Jan 2020 12:37:53 -0600
+        Fri, 31 Jan 2020 13:38:08 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbsdc054227;
+        Fri, 31 Jan 2020 12:37:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580495873;
-        bh=1CLE5t35I9JOObXscYgWNJZH4eruW4hlu6p3toaDm7U=;
+        s=ti-com-17Q1; t=1580495874;
+        bh=tP7sKFItqn9QuWrX3jgTW2QkwA1dUezZOkXCs9W7nsg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=db44KCjWi6bQpAf1rYr94vLvAwQ413tzA4St51wj9QiXio85oT+KcYoR3XuMEcyc/
-         ri4mmODgiztq8FiDt8TPxSJiw5R4y+1T0fBqNogJT4ty/kLims5chn7zyhkvtN9c8Z
-         DGNLG0Xa+nyuFAn77PJ8nHjXVlM0tEz6XRg6AzQU=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrgH103823;
-        Fri, 31 Jan 2020 12:37:53 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        b=Zz+aL6EgZDALGWIhTLQ/Eop+8FToKXM5K19zQXngYf+LkWkS/uJmMupg0foL3f1GD
+         7ar9SYtqG5T40bA89OCTkKAEywweYuu/cwnTHx/T40GKYVVfWmt3CcPmb3QQc7NzTX
+         CSXTr+cQilDPuMN436F87cfYWvOnasfgm8b01Z18=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VIbsDx101533
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 12:37:54 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
  Jan 2020 12:37:53 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
  Frontend Transport; Fri, 31 Jan 2020 12:37:53 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrLE055578;
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrHW038928;
         Fri, 31 Jan 2020 12:37:53 -0600
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <linux-kernel@vger.kernel.org>, <mkl@pengutronix.de>,
         <linux-can@vger.kernel.org>, <wg@grandegger.com>,
         <sriram.dash@samsung.com>
 CC:     <davem@davemloft.net>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH linux-master 1/3] can: tcan4x5x: Move clock init to TCAN driver
-Date:   Fri, 31 Jan 2020 12:34:31 -0600
-Message-ID: <20200131183433.11041-2-dmurphy@ti.com>
+Subject: [PATCH linux-master 3/3] can: m_can: Remove unused clock function from the framework
+Date:   Fri, 31 Jan 2020 12:34:33 -0600
+Message-ID: <20200131183433.11041-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200131183433.11041-1-dmurphy@ti.com>
 References: <20200131183433.11041-1-dmurphy@ti.com>
@@ -67,145 +68,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the clock discovery and initialization from the m_can framework to
-the registrar.  This allows for registrars to have unique clock
-initialization.  The TCAN device only needs the CAN clock reference.
+Remove the unused clock function from the framework as the clock
+discovery, initilaization and management are all within the registrars
+code.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/net/can/m_can/tcan4x5x.c | 78 ++++++++++++++++++++++++--------
- 1 file changed, 59 insertions(+), 19 deletions(-)
+ drivers/net/can/m_can/m_can.c | 16 ----------------
+ drivers/net/can/m_can/m_can.h |  3 ---
+ 2 files changed, 19 deletions(-)
 
-diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-index eacd428e07e9..9821babef55e 100644
---- a/drivers/net/can/m_can/tcan4x5x.c
-+++ b/drivers/net/can/m_can/tcan4x5x.c
-@@ -124,6 +124,8 @@ struct tcan4x5x_priv {
- 	struct gpio_desc *device_state_gpio;
- 	struct regulator *power;
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 02c5795b7393..5794be1ef3ef 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -1751,22 +1751,6 @@ void m_can_init_ram(struct m_can_classdev *cdev)
+ }
+ EXPORT_SYMBOL_GPL(m_can_init_ram);
  
-+	struct clk *cclk;
-+
- 	/* Register based ip */
- 	int mram_start;
- 	int reg_offset;
-@@ -429,6 +431,27 @@ static struct m_can_ops tcan4x5x_ops = {
- 	.clear_interrupts = tcan4x5x_clear_interrupts,
- };
- 
-+static int tcan4x5x_get_clock(struct tcan4x5x_priv *priv,
-+			      struct m_can_classdev *m_can_dev)
-+{
-+	int freq;
-+
-+	priv->cclk = devm_clk_get(m_can_dev->dev, "cclk");
-+	if (IS_ERR(priv->cclk)) {
-+		dev_err(m_can_dev->dev, "no CAN clock source defined\n");
-+		freq = TCAN4X5X_EXT_CLK_DEF;
-+		priv->cclk = NULL;
-+
-+	} else {
-+		freq = clk_get_rate(priv->cclk);
-+		/* Sanity check */
-+		if (freq < 20000000 || freq > TCAN4X5X_EXT_CLK_DEF)
-+			return -ERANGE;
-+	}
-+
-+	return freq;
-+}
-+
- static int tcan4x5x_can_probe(struct spi_device *spi)
+-int m_can_class_get_clocks(struct m_can_classdev *m_can_dev)
+-{
+-	int ret = 0;
+-
+-	m_can_dev->hclk = devm_clk_get(m_can_dev->dev, "hclk");
+-	m_can_dev->cclk = devm_clk_get(m_can_dev->dev, "cclk");
+-
+-	if (IS_ERR(m_can_dev->cclk)) {
+-		dev_err(m_can_dev->dev, "no clock found\n");
+-		ret = -ENODEV;
+-	}
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(m_can_class_get_clocks);
+-
+ struct m_can_classdev *m_can_class_allocate_dev(struct device *dev)
  {
- 	struct tcan4x5x_priv *priv;
-@@ -451,17 +474,9 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	struct m_can_classdev *class_dev = NULL;
+diff --git a/drivers/net/can/m_can/m_can.h b/drivers/net/can/m_can/m_can.h
+index 49f42b50627a..c20a716b14cc 100644
+--- a/drivers/net/can/m_can/m_can.h
++++ b/drivers/net/can/m_can/m_can.h
+@@ -74,8 +74,6 @@ struct m_can_classdev {
+ 	struct napi_struct napi;
+ 	struct net_device *net;
+ 	struct device *dev;
+-	struct clk *hclk;
+-	struct clk *cclk;
  
- 	mcan_class->device_data = priv;
+ 	struct workqueue_struct *tx_wq;
+ 	struct work_struct tx_work;
+@@ -101,7 +99,6 @@ struct m_can_classdev {
+ struct m_can_classdev *m_can_class_allocate_dev(struct device *dev);
+ int m_can_class_register(struct m_can_classdev *cdev);
+ void m_can_class_unregister(struct m_can_classdev *cdev);
+-int m_can_class_get_clocks(struct m_can_classdev *cdev);
+ void m_can_init_ram(struct m_can_classdev *priv);
+ void m_can_config_endisable(struct m_can_classdev *priv, bool enable);
  
--	m_can_class_get_clocks(mcan_class);
--	if (IS_ERR(mcan_class->cclk)) {
--		dev_err(&spi->dev, "no CAN clock source defined\n");
--		freq = TCAN4X5X_EXT_CLK_DEF;
--	} else {
--		freq = clk_get_rate(mcan_class->cclk);
--	}
--
--	/* Sanity check */
--	if (freq < 20000000 || freq > TCAN4X5X_EXT_CLK_DEF)
--		return -ERANGE;
-+	freq = tcan4x5x_get_clock(priv, mcan_class);
-+	if (freq < 0)
-+		return freq;
- 
- 	priv->reg_offset = TCAN4X5X_MCAN_OFFSET;
- 	priv->mram_start = TCAN4X5X_MRAM_START;
-@@ -483,14 +498,14 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 	spi->bits_per_word = 32;
- 	ret = spi_setup(spi);
- 	if (ret)
--		goto out_clk;
-+		return ret;
- 
- 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
- 					&spi->dev, &tcan4x5x_regmap);
- 
- 	ret = tcan4x5x_power_enable(priv->power, 1);
- 	if (ret)
--		goto out_clk;
-+		return ret;
- 
- 	ret = tcan4x5x_parse_config(mcan_class);
- 	if (ret)
-@@ -509,12 +524,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
- 
- out_power:
- 	tcan4x5x_power_enable(priv->power, 0);
--out_clk:
--	if (!IS_ERR(mcan_class->cclk)) {
--		clk_disable_unprepare(mcan_class->cclk);
--		clk_disable_unprepare(mcan_class->hclk);
--	}
--
- 	dev_err(&spi->dev, "Probe failed, err=%d\n", ret);
- 	return ret;
- }
-@@ -530,6 +539,37 @@ static int tcan4x5x_can_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static int __maybe_unused tcan4x5x_runtime_suspend(struct device *dev)
-+{
-+	struct net_device *ndev = dev_get_drvdata(dev);
-+	struct m_can_classdev *mcan_class = netdev_priv(ndev);
-+	struct tcan4x5x_priv *priv = mcan_class->device_data;
-+
-+	m_can_class_suspend(dev);
-+
-+	if (priv->cclk)
-+		clk_disable_unprepare(priv->cclk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused tcan4x5x_runtime_resume(struct device *dev)
-+{
-+	struct net_device *ndev = dev_get_drvdata(dev);
-+	struct m_can_classdev *mcan_class = netdev_priv(ndev);
-+	struct tcan4x5x_priv *priv = mcan_class->device_data;
-+
-+	if (priv->cclk)
-+		return clk_prepare_enable(priv->cclk);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops m_can_pmops = {
-+	SET_RUNTIME_PM_OPS(tcan4x5x_runtime_suspend,
-+			   tcan4x5x_runtime_resume, NULL)
-+};
-+
- static const struct of_device_id tcan4x5x_of_match[] = {
- 	{ .compatible = "ti,tcan4x5x", },
- 	{ }
 -- 
 2.25.0
 
