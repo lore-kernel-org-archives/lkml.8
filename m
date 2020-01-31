@@ -1,100 +1,94 @@
 Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0167CC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C9AC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98E6214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580437118;
-	bh=pZJmJTyhSz18bLrQ2/dhn2g7VLznLenFg9l2cjRSjBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AzT12XXr2BdtOi2lP2N6Vjk2L3Y2XZUQd/AwErJgx5oMOs1aV5se+PzDbWldHy2Cd
-	 Tq0OUL0vDHfrmXgBFzzawTsdwp08ZOm5tjAeziPsvtjwxTSpoxIlbfmSkvo/XX1Kfj
-	 oNo1NgNGRPdgMkhFsR/s4jZH9WIN3BJ5ZsdQ08/s=
+	by mail.kernel.org (Postfix) with ESMTP id E0C1420CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgAaCSi (ORCPT
+        id S1727901AbgAaCTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbgAaCSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:18:37 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E478206F0;
-        Fri, 31 Jan 2020 02:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580437115;
-        bh=pZJmJTyhSz18bLrQ2/dhn2g7VLznLenFg9l2cjRSjBM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eae+eNxY53/34/Xj41ogh1eNWzPt3CuS3icd2Nnz4wsszfgQfFIHkZgGlqlGnlRiV
-         jfJ+fgE+ng/iNr0jgOoDzmUhwbRp9MRk4ypKv1emeGlge5LUq4OwwNZJT52M7WCYGp
-         x60f2KmIEGy8npPLiemBH9VcUgSAeWQNFIaC9JR4=
-Date:   Thu, 30 Jan 2020 18:18:34 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Qian Cai <cai@lca.pw>, Matthew Wilcox <willy@infradead.org>,
-        dennis@kernel.org, tj@kernel.org, Christoph Lameter <cl@linux.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/util: fix a data race in __vm_enough_memory()
-Message-Id: <20200130181834.633c201c7d0a2638aacbc7ba@linux-foundation.org>
-In-Reply-To: <CANpmjNNr_Kq6Do+UYrR-3aF0sO3++psUfN7Ppt8mmgcF5ynzrA@mail.gmail.com>
-References: <20200130042011.GI6615@bombadil.infradead.org>
-        <1135BD67-4CCB-4700-8150-44E7E323D385@lca.pw>
-        <CANpmjNNr_Kq6Do+UYrR-3aF0sO3++psUfN7Ppt8mmgcF5ynzrA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 30 Jan 2020 21:19:13 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52634 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727749AbgAaCTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:19:12 -0500
+Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 78756820118;
+        Fri, 31 Jan 2020 13:19:10 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ixLtl-0006PJ-WF; Fri, 31 Jan 2020 13:19:10 +1100
+Date:   Fri, 31 Jan 2020 13:19:09 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] fuse: Convert from readpages to readahead
+Message-ID: <20200131021909.GC18575@dread.disaster.area>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-12-willy@infradead.org>
+ <20200129010829.GK18610@dread.disaster.area>
+ <20200130213533.GN6615@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130213533.GN6615@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=6Pvhz1k-dUzALmsgqCgA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 13:35:18 +0100 Marco Elver <elver@google.com> wrote:
+On Thu, Jan 30, 2020 at 01:35:33PM -0800, Matthew Wilcox wrote:
+> On Wed, Jan 29, 2020 at 12:08:29PM +1100, Dave Chinner wrote:
+> > On Fri, Jan 24, 2020 at 05:35:52PM -0800, Matthew Wilcox wrote:
+> > > +	while (nr_pages--) {
+> > > +		struct page *page = readahead_page(mapping, start++);
+> > > +		int err = fuse_readpages_fill(&data, page);
+> > > +
+> > > +		if (!err)
+> > > +			continue;
+> > > +		nr_pages++;
+> > > +		goto out;
+> > >  	}
+> > 
+> > That's some pretty convoluted logic. Perhaps:
+> > 
+> > 	for (; nr_pages > 0 ; nr_pages--) {
+> > 		struct page *page = readahead_page(mapping, start++);
+> > 
+> > 		if (fuse_readpages_fill(&data, page))
+> > 			goto out;
+> > 	}
+> 
+> I have a bit of an aversion to that style of for loop ... I like this
+> instead:
+> 
+>         while (nr_pages) {
+>                 struct page *page = readahead_page(mapping, start++);
+> 
+>                 if (fuse_readpages_fill(&data, page) != 0)
+>                         goto out;
+>                 nr_pages--;
+>         }
 
-> On Thu, 30 Jan 2020 at 12:50, Qian Cai <cai@lca.pw> wrote:
-> >
-> > > On Jan 29, 2020, at 11:20 PM, Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > I'm really not a fan of exposing the internals of a percpu_counter outside
-> > > the percpu_counter.h file.  Why shouldn't this be fixed by putting the
-> > > READ_ONCE() inside percpu_counter_read()?
-> >
-> > It is because not all places suffer from a data race. For example, in __wb_update_bandwidth(), it was protected by a lock. I was a bit worry about blindly adding READ_ONCE() inside percpu_counter_read() might has unexpected side-effect. For example, it is unnecessary to have READ_ONCE() for a volatile variable. So, I thought just to keep the change minimal with a trade off by exposing a bit internal details as you mentioned.
-> >
-> > However, I had also copied the percpu maintainers to see if they have any preferences?
-> 
-> I would not add READ_ONCE to percpu_counter_read(), given the writes
-> (increments) are not atomic either, so not much is gained.
-> 
-> Notice that this is inside a WARN_ONCE, so you may argue that a data
-> race here doesn't matter to the correct behaviour of the system
-> (except if you have panic_on_warn on).
-> 
-> For the warning to trigger, vm_committed_as must decrease. Assume that
-> a data race (assuming bad compiler optimizations) can somehow
-> accomplish this, then the load or write must cause a transient value
-> to somehow be less than a stable value. My hypothesis is this is very
-> unlikely.
-> 
-> Given the fact this is a WARN_ONCE, and the fact that a transient
-> decrease in the value is unlikely, you may consider
-> 'VM_WARN_ONCE(data_race(percpu_counter_read(&vm_committed_as)) <
-> ...)'. That way you won't modify percpu_counter_read and still catch
-> unintended races elsewhere.
-> 
+yup, that's also fine.
 
-That, or add an alternative version of per_cpu_counter_read() to the
-percpu API.  A very carefully commented version!
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
