@@ -2,222 +2,108 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ABCC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2A5C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C15206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJUjLewx"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4F6206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgAaOud (ORCPT
+        id S1729140AbgAaOun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:50:33 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53050 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729004AbgAaOuc (ORCPT
+        Fri, 31 Jan 2020 09:50:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35378 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729128AbgAaOum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:50:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580482231;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G5qtNmF55up9PuW19M9ztod4mbJlD+L5BOsXwBxDWkA=;
-        b=cJUjLewxVpBBYh91cuC5QDV/rqi9SuuH562XkAhFB/wG8FSsjQucGfFR5nhEkPRluLQBYy
-        es8mr7oHQQBiADKfJiYv5KcMqdx0NzUzEmsVTKYh1g97kGg0CtfkhhSGY67a6g43y9zmNx
-        SF7zhfbQVtynfh8Da3XNGcWLMkgjGk0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-I55GL5ZpPoKvKnwr-qcgbg-1; Fri, 31 Jan 2020 09:50:23 -0500
-X-MC-Unique: I55GL5ZpPoKvKnwr-qcgbg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFCB118C35A0;
-        Fri, 31 Jan 2020 14:50:20 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-67.phx2.redhat.com [10.3.117.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B23C55C54A;
-        Fri, 31 Jan 2020 14:50:09 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V8 13/16] audit: track container nesting
-Date:   Fri, 31 Jan 2020 09:50:08 -0500
-Message-ID: <5238532.OiMyN8JqPO@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
-References: <cover.1577736799.git.rgb@redhat.com> <6452955c1e038227a5cd169f689f3fd3db27513f.1577736799.git.rgb@redhat.com> <CAHC9VhRkH=YEjAY6dJJHSp934grHnf=O4RiqLu3U8DzdVQOZkg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Fri, 31 Jan 2020 09:50:42 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VEj2pi045281
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:50:41 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xvbehsn1s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:50:41 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 31 Jan 2020 14:50:39 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 Jan 2020 14:50:36 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VEnh0Z41615722
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jan 2020 14:49:43 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB3BC11C04A;
+        Fri, 31 Jan 2020 14:50:35 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E76FD11C052;
+        Fri, 31 Jan 2020 14:50:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.193.32])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 31 Jan 2020 14:50:34 +0000 (GMT)
+Subject: Re: [PATCH 7/8] ima: use ima_hash_algo for collision detection in
+ the measurement list
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Fri, 31 Jan 2020 09:50:34 -0500
+In-Reply-To: <e299058034b94143af6fc1da4ae2c708@huawei.com>
+References: <20200127170443.21538-1-roberto.sassu@huawei.com>
+         <20200127170443.21538-8-roberto.sassu@huawei.com>
+         <1580423169.6104.18.camel@linux.ibm.com>
+         <44c1b3f6d3fe414e914317ef8e5c6f8f@huawei.com>
+         <1580480525.6104.88.camel@linux.ibm.com>
+         <e299058034b94143af6fc1da4ae2c708@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013114-0028-0000-0000-000003D64945
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013114-0029-0000-0000-0000249A9BA2
+Message-Id: <1580482234.6104.92.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 clxscore=1015 mlxscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1911200001 definitions=main-2001310125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, January 22, 2020 4:29:12 PM EST Paul Moore wrote:
-> On Tue, Dec 31, 2019 at 2:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Track the parent container of a container to be able to filter and
-> > report nesting.
-> > 
-> > Now that we have a way to track and check the parent container of a
-> > container, modify the contid field format to be able to report that
-> > nesting using a carrat ("^") separator to indicate nesting.  The
-> > original field format was "contid=<contid>" for task-associated records
-> > and "contid=<contid>[,<contid>[...]]" for network-namespace-associated
-> > records.  The new field format is
-> > "contid=<contid>[^<contid>[...]][,<contid>[...]]".
+On Fri, 2020-01-31 at 14:41 +0000, Roberto Sassu wrote:
+> I thought that using a stronger algorithm for hash collision detection but
+> doing remote attestation with the weaker would not bring additional value.
 > 
-> Let's make sure we always use a comma as a separator, even when
-> recording the parent information, for example:
-> "contid=<contid>[,^<contid>[...]][,<contid>[...]]"
+> If there is a hash collision on SHA1, an attacker can still replace the data of
+> one of the two entries in the measurement list with the data of the other
+> without being detected (without additional countermeasures).
 > 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > 
-> >  include/linux/audit.h |  1 +
-> >  kernel/audit.c        | 53
-> >  +++++++++++++++++++++++++++++++++++++++++++-------- kernel/audit.h     
-> >    |  1 +
-> >  kernel/auditfilter.c  | 17 ++++++++++++++++-
-> >  kernel/auditsc.c      |  2 +-
-> >  5 files changed, 64 insertions(+), 10 deletions(-)
+> If the verifier additionally checks for duplicate template digests, he could
+> detect the attack (IMA would not add a new measurement entry with the
+> same template digest of previous entries).
 > 
-> ...
-> 
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index ef8e07524c46..68be59d1a89b 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > 
-> > @@ -492,6 +493,7 @@ void audit_switch_task_namespaces(struct nsproxy *ns,
-> > struct task_struct *p)> 
-> >                 audit_netns_contid_add(new->net_ns, contid);
-> >  
-> >  }
-> > 
-> > +void audit_log_contid(struct audit_buffer *ab, u64 contid);
-> 
-> If we need a forward declaration, might as well just move it up near
-> the top of the file with the rest of the declarations.
-> 
-> > +void audit_log_contid(struct audit_buffer *ab, u64 contid)
-> > +{
-> > +       struct audit_contobj *cont = NULL, *prcont = NULL;
-> > +       int h;
-> 
-> It seems safer to pass the audit container ID object and not the u64.
-> 
-> > +       if (!audit_contid_valid(contid)) {
-> > +               audit_log_format(ab, "%llu", contid);
-> 
-> Do we really want to print (u64)-1 here?  Since this is a known
-> invalid number, would "?" be a better choice?
+> Ok, I will use ima_hash_algo for hash collision detection.
 
-The established pattern is that we print -1 when its unset and "?" when its 
-totalling missing. So, how could this be invalid? It should be set or not. 
-That is unless its totally missing just like when we do not run with selinux 
-enabled and a context just doesn't exist.
+Thanks!
 
--Steve
-
-
-> > +               return;
-> > +       }
-> > +       h = audit_hash_contid(contid);
-> > +       rcu_read_lock();
-> > +       list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
-> > +               if (cont->id == contid) {
-> > +                       prcont = cont;
-> 
-> Why not just pull the code below into the body of this if statement?
-> It all needs to be done under the RCU read lock anyway and the code
-> would read much better this way.
-> 
-> > +                       break;
-> > +               }
-> > +       if (!prcont) {
-> > +               audit_log_format(ab, "%llu", contid);
-> > +               goto out;
-> > +       }
-> > +       while (prcont) {
-> > +               audit_log_format(ab, "%llu", prcont->id);
-> > +               prcont = prcont->parent;
-> > +               if (prcont)
-> > +                       audit_log_format(ab, "^");
-> 
-> In the interest of limiting the number of calls to audit_log_format(),
-> how about something like the following:
-> 
->   audit_log_format("%llu", cont);
->   iter = cont->parent;
->   while (iter) {
->     if (iter->parent)
->       audit_log_format("^%llu,", iter);
->     else
->       audit_log_format("^%llu", iter);
->     iter = iter->parent;
->   }
-> 
-> > +       }
-> > +out:
-> > +       rcu_read_unlock();
-> > +}
-> > +
-> > 
-> >  /*
-> >  
-> >   * audit_log_container_id - report container info
-> >   * @context: task or local context for record
-> 
-> ...
-> 
-> > @@ -2705,9 +2741,10 @@ int audit_set_contid(struct task_struct *task, u64
-> > contid)> 
-> >         if (!ab)
-> >         
-> >                 return rc;
-> > 
-> > -       audit_log_format(ab,
-> > -                        "op=set opid=%d contid=%llu old-contid=%llu",
-> > -                        task_tgid_nr(task), contid, oldcontid);
-> > +       audit_log_format(ab, "op=set opid=%d contid=",
-> > task_tgid_nr(task)); +       audit_log_contid(ab, contid);
-> > +       audit_log_format(ab, " old-contid=");
-> > +       audit_log_contid(ab, oldcontid);
-> 
-> This is an interesting case where contid and old-contid are going to
-> be largely the same, only the first (current) ID is going to be
-> different; do we want to duplicate all of those IDs?
-> 
-> >         audit_log_end(ab);
-> >         return rc;
-> >  
-> >  }
-> > 
-> > @@ -2723,9 +2760,9 @@ void audit_log_container_drop(void)
-> 
-> --
-> paul moore
-> www.paul-moore.com
-
-
-
+Mimi
 
