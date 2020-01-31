@@ -2,100 +2,184 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D0C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4C0214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UFqfczXo"
+	by mail.kernel.org (Postfix) with ESMTP id 1748420707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgAaVga (ORCPT
+        id S1726262AbgAaVl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:36:30 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37108 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgAaVg3 (ORCPT
+        Fri, 31 Jan 2020 16:41:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56679 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgAaVl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:36:29 -0500
-Received: by mail-lj1-f193.google.com with SMTP id v17so8601458ljg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:36:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tPp4CE2TXss+Iqg1JyzdT3AoBMysWvmpqcl+5tL7wfM=;
-        b=UFqfczXofGowOc/1d9Jw/A37caNSorQt1frX6+nTQmuT76g0i6gIKLAHxwJewlH+l9
-         IGrJg1etsGOvaN8ZKYm66P/904XHwcbCr0qT4p1L/wP/MhQZx4Lx2YwF9GmPXZX7vkX8
-         LmWpQZH6FkjbDoMHGjw3AvhYWsDQiu2AkMkEWKg/09My08fRFAtuBoC0Y4Yiqb0hq58D
-         ARSU1Ey73Bnth/YIGBqVb0PhaihCAKyiUA0BT5uw2qLytabhK57lp2ol8ez5wkamI8C8
-         cqwsdkcxkeITkI3xnTKYHrufuq9hjxaoFvqA5+t+X4hkVyM4ZC6Pym69Nsc4ibhT2LTf
-         8Rmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tPp4CE2TXss+Iqg1JyzdT3AoBMysWvmpqcl+5tL7wfM=;
-        b=DZUNbJQFcYJQpjsMkQsoYXbM29JsKwEgivjSWzLvh3MJFQV8i26mdzVEJJ26a5VrQ6
-         V1qRv+W2J76DSWZmwIWCvLNcxv+uxKePMMOsuFS3J7hgKwdxVaumngws88hWCpvhSyjh
-         QuRS1i3MhdqUKy0WngyyVyLKV1CNTUSu+ANYwUn57JnPNCjCKzPL+BfHIIsqL7SXP3Ga
-         tvmD7X7z6o+nxM8jR4ZLaWB8VRFLdJe6Zd1FuX8dQInPfRjA0PNp2LndQxoRkMidfb0n
-         7vq7a7zIyFiYq+d5gaXAiC9gEIlLFmNPtFG+p0yvZLZyyygsRvoSEaoeC8nFDo/jrGCp
-         LuUA==
-X-Gm-Message-State: APjAAAU7uEaXazeJZuckX+AgvNZeU3B5EVhUg36pGv8hIOX3cRMEQcny
-        bvk3V+DB/mHXGKO+X3+Saby0q0sAO8n2gTa1LoAmoQ==
-X-Google-Smtp-Source: APXvYqyt/2uWbr7uISs4LADoAJ7mFl38eOmZqrUOoScK9Xl/jliht9jHg5OxSyMaVzZ4S/+E8Ii5bMdspbN94RNqBe4=
-X-Received: by 2002:a2e:85ce:: with SMTP id h14mr7134662ljj.41.1580506587808;
- Fri, 31 Jan 2020 13:36:27 -0800 (PST)
+        Fri, 31 Jan 2020 16:41:28 -0500
+Received: from 51.26-246-81.adsl-static.isp.belgacom.be ([81.246.26.51] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ixe2P-0005ad-Te; Fri, 31 Jan 2020 22:41:18 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 91A2A105BDC; Fri, 31 Jan 2020 22:41:12 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        chenxiang <chenxiang66@hisilicon.com>
+Subject: Re: About irq_create_affinity_masks() for a platform device driver
+In-Reply-To: <19dc0422-5536-5565-e29f-ccfbcb8525d3@huawei.com>
+References: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com> <87o8uveoye.fsf@nanos.tec.linutronix.de> <4b447127-737e-a729-4dc7-82fc8b68af77@huawei.com> <19dc0422-5536-5565-e29f-ccfbcb8525d3@huawei.com>
+Date:   Fri, 31 Jan 2020 22:41:12 +0100
+Message-ID: <87ftfvuww7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
-In-Reply-To: <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
-From:   Evan Green <evgreen@google.com>
-Date:   Fri, 31 Jan 2020 13:35:51 -0800
-Message-ID: <CAE=gft7GDtQCYy8UqpVRK18eXQLTD8q19=Sfq-iitekQCS1FMA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
->
-> Redefine the Network-on-Chip devices to more accurately describe
-> the interconnect topology on Qualcomm's SDM845 platform. Each
-> interconnect device can communicate with different instances of the
-> RPMh hardware which are described as RSCs(Resource State Coordinators).
->
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
->  .../bindings/interconnect/qcom,sdm845.yaml         | 49 ++++++++++++++++++----
->  1 file changed, 40 insertions(+), 9 deletions(-)
->
+John!
 
-This patch doesn't seem to apply cleanly on top of patch 1 because of
-whitespace context differences.
+John Garry <john.garry@huawei.com> writes:
+> So I'd figure that an API like this would be required:
+>
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -11,6 +11,7 @@
+>   #define _PLATFORM_DEVICE_H_
+>
+>   #include <linux/device.h>
+> +#include <linux/interrupt.h>
+>
+>   #define PLATFORM_DEVID_NONE	(-1)
+>   #define PLATFORM_DEVID_AUTO	(-2)
+> @@ -27,6 +28,7 @@ struct platform_device {
+>   	u64		dma_mask;
+>   	u32		num_resources;
+>   	struct resource	*resource;
+> +	struct irq_affinity_desc *desc;
+>
+> and in platform.c, adding:
+>
+> /**
+>   * platform_get_irqs_affinity - get all IRQs for a device with affinity
+>   * @dev: platform device
+>   * @affd: Affinity descriptor
+>   * @count: pointer to count of IRQS
+>   * @irqs: pointer holder for irqs numbers
+>   *
+>   * Gets a full set of IRQs for a platform device
+>   *
+>   * Return: 0 on success, negative error number on failure.
+>   */
+> int platform_get_irqs_affinity(struct platform_device *dev, struct 
+> irq_affinity *affd, unsigned int *count, int **irqs)
+> {
+> 	int i;
+> 	int *pirqs;
+>
+> 	if (ACPI_COMPANION(&dev->dev)) {
+> 		*count = acpi_irq_get_count(ACPI_HANDLE(&dev->dev));
+> 	} else {
+> 		// TODO
+> 	}
+>
+> 	pirqs = kzalloc(*count * sizeof(int), GFP_KERNEL);
+> 	if (!pirqs)
+> 		return -ENOMEM;
+>
+> 	dev->desc = irq_create_affinity_masks(*count, affd);
+> 	if (!dev->desc) {
+> 		kfree(irqs);
 
-I'll use this as an opportunity to plug the "patman" tool, which lives
-(weirdly) in the u-boot repository, but is an excellent way to manage
-and spin upstream submissions.
+pirqs I assume and this also leaks the affinity masks and the pointer in
+dev.
 
--Evan
+> 		return -ENOMEM;
+> 	}
+>
+> 	for (i = 0; i < *count; i++) {
+> 		pirqs[i] = platform_get_irq(dev, i);
+> 		if (irqs[i] < 0) {
+> 			kfree(dev->desc);
+> 			kfree(irqs);
+> 			return -ENOMEM;
+
+That's obviously broken as well :)
+
+> 		}
+> 	}
+>
+> 	*irqs = pirqs;
+>
+> 	return 0;
+> }
+> EXPORT_SYMBOL_GPL(platform_get_irqs_affinity);
+>
+> Here we pass the affinity descriptor and allocate all IRQs for a device.
+>
+> So this is less than a half-baked solution. We only create the affinity 
+> masks but do nothing with them, and the actual irq_desc 's generated 
+> would not would have their affinity mask set and would not be managed. 
+> Only the platform device driver itself would access the masks, to set 
+> the irq affinity hint, etc.
+>
+> To achieve the proper result, we would somehow need to pass the
+> per-IRQ affinity descriptor all the way down through
+> platform_get_irq()->acpi_irq_get()->irq_create_fwspec_mapping()->irq_domain_alloc_irqs(),
+> which could involve disruptive changes in different subsystems - not
+> welcome, I'd say.
+>
+> I could take the alt approach to generate the interrupt affinity masks 
+> in my LLDD instead. Considering I know some of the CPU and numa node 
+> properties of the device host, I could generate the masks in the LLDD 
+> itself simply, but I still would rather avoid this if possible and use 
+> standard APIs.
+>
+> So if there are any better ideas on this, then it would be good to hear 
+> them.
+
+I wouldn't mind to expose a function which allows you to switch the
+allocated interrupts to managed. The reason why we do it in one go in
+the PCI code is that we get automatically the irq descriptors allocated
+on the correct node. So if the node aware allocation is not a
+showstopper for this then your function would do:
+
+	...
+	for (i = 0; i < count; i++) {
+		pirqs[i] = platform_get_irq(dev, i);
+
+                irq_update_affinity_desc(pirqs[i], affdescs + i);
+
+        }
+
+int irq_update_affinity_desc(unsigned int irq, irq_affinity_desc *affinity)
+{
+	unsigned long flags;
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
+
+        if (!desc)
+        	return -EINVAL;
+
+        if (affinity->is_managed) {
+        	irqd_set(&desc->irq_data, IRQD_IRQ_DISABLED);
+	        irqd_set(&desc->irq_data, IRQD_IRQ_MASKED);
+        }
+        cpumask_copy(desc->irq_common_data.affinity, affinity);
+        return 0;
+}
+
+That should just work.
+
+Thanks,
+
+        tglx
