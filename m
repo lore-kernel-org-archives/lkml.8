@@ -2,106 +2,90 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EC3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF430C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20BB206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9857215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 10:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Rti07r8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgAaKjG (ORCPT
+        id S1728466AbgAaKkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 05:39:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56998 "EHLO mx2.suse.de"
+        Fri, 31 Jan 2020 05:40:24 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51609 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgAaKjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 05:39:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 886E3AFF6;
-        Fri, 31 Jan 2020 10:39:04 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH v2 00/21] staging: vc04_services: suspend/resume cleanup
-Date:   Fri, 31 Jan 2020 11:38:16 +0100
-Message-Id: <20200131103836.14312-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.0
+        id S1728368AbgAaKkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 05:40:21 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 488DJL5K8vz9sSP;
+        Fri, 31 Jan 2020 21:40:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580467218;
+        bh=NpDbQvQ6a1gVpANE05CiJvGMkImEaOzhU76R7vlCsyM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Rti07r8wsEq5Cv2Oll1n+7tK55v/64zehHtajY+SpSJnAkMxgHfhLqY+HDr6VcpLS
+         8GUBZZQXne2NFCa3W1n7IiZmmOPgIg1pd2M/blkyTI8Drd/eqCh0OexnldSyBoWAeH
+         SJlXSM1rAlKhvco/yHCRsXmQq6yVKFauxYBbAHMMLqNS0Ya/PRDsOjD6NK1Kr8vPyF
+         xtknii2clX37PXMKAssNCLCMwtOLIEtWdt13YEyv5xtr+7YZLUQixrz65ZPrFIyE0D
+         VN3gvs/J48BWFxpdiIRy0/b6Xl8CfC6mfgW9uxqAnAMn9tm/u8+uw0rR6mHly/IxeY
+         9HsYkw22XFWSg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Rob Herring <robh@kernel.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hch@lst.de, ulf.hansson@linaro.org,
+        chzigotzky@xenosoft.de, linuxppc-dev@ozlabs.org
+Subject: Re: [PATCH] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
+In-Reply-To: <20200128142646.GA17341@bogus>
+References: <20200126115247.13402-1-mpe@ellerman.id.au> <20200128142646.GA17341@bogus>
+Date:   Fri, 31 Jan 2020 21:40:17 +1100
+Message-ID: <87k157gb8u.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While in the process of preparing vchiq to support the Raspberry Pi 4, I
-stumbled upon a bunch of dead code in it. Which this series deletes.
+Rob Herring <robh@kernel.org> writes:
+> On Sun, 26 Jan 2020 22:52:47 +1100, Michael Ellerman wrote:
+>> There's an OF helper called of_dma_is_coherent(), which checks if a
+>> device has a "dma-coherent" property to see if the device is coherent
+>> for DMA.
+>> 
+>> But on some platforms devices are coherent by default, and on some
+>> platforms it's not possible to update existing device trees to add the
+>> "dma-coherent" property.
+>> 
+>> So add a Kconfig symbol to allow arch code to tell
+>> of_dma_is_coherent() that devices are coherent by default, regardless
+>> of the presence of the property.
+>> 
+>> Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+>> when the system has a coherent cache.
+>> 
+>> Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+>> Cc: stable@vger.kernel.org # v3.16+
+>> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+>> Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+>> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> ---
+>>  arch/powerpc/Kconfig | 1 +
+>>  drivers/of/Kconfig   | 4 ++++
+>>  drivers/of/address.c | 6 +++++-
+>>  3 files changed, 10 insertions(+), 1 deletion(-)
+>> 
+>
+> Applied, thanks.
 
-Ultimately the idea is to clean up vchiq_bcm2835_arm.c up to a point
-where it'll be easy to join it with vchiq_arm.c, which IIRC the TODO
-file states, should be the sole responsible for platform code.
+Thanks.
 
-With this we'll be able to introduce RPi4's functionality in a cleaner
-way.
-
-Overall it's a 500 line clean up, I tried to keep the patches as small and
-manageable as possible, but I'd be happy to squash them if you prefer it
-that way.
-
-This was tested on a RPi3-B using the camera and HDMI audio and
-vchiq_test app.
-
----
-
-Changes since v1:
- - Reordered patches so as to have all of the suspend/resume state
-   deletion together
- - Fix bug found by kbuild test robot
- - move "staging: vc04_services: Get rid of vc_suspend_state in struct
-   vchiq_arm_state" into "staging: vc04_services: Get rid of unused
-   suspend/resume states"
-
-Nicolas Saenz Julienne (21):
-  staging: vc04_services: Remove unused variables in struct
-    vchiq_arm_state
-  staging: vc04_services: Get rid of resume_blocked in struct
-    vchiq_arm_state
-  staging: vc04_services: Get rid of resume_blocker completion in struct
-    vchiq_arm_state
-  staging: vc04_services: get rid of blocked_blocker completion in
-    struct vchiq_arm_state
-  staging: vc04_services: Delete blocked_count in struct vchiq_arm_state
-  staging: vc04_services: get rid of vchiq_platform_use_suspend_timer()
-  staging: vc04_services: Get rid of vchiq_platform_paused/resumed()
-  staging: vc04_services: Get rid of vchiq_platform_suspend/resume()
-  staging: vc04_services: Get rid of vchiq_platform_videocore_wanted()
-  staging: vc04_services: Get rid of vchiq_platform_handle_timeout()
-  staging: vc04_services: Get rid of vchiq_on_remote_use_active()
-  staging: vc04_services: Get rid of vchiq_arm_vcsuspend()
-  staging: vc04_services: Get rid of vchiq_check_resume()
-  staging: vc04_services: Delete vc_suspend_complete completion
-  staging: vc04_services: Get rid of unused suspend/resume states
-  staging: vc04_services: Get of even more suspend/resume states
-  staging: vc04_services: Get rid of the rest of suspend/resume state
-    handling
-  staging: vc04_services: Get rid of USE_TYPE_SERVICE_NO_RESUME
-  staging: vc04_services: Delete vchiq_platform_check_suspend()
-  staging: vc04_services: Get rid of vchiq_arm_vcresume()'s signature
-  staging: vc04_services: vchiq_arm: Get rid of unused defines
-
- .../interface/vchiq_arm/vchiq_2835_arm.c      |  43 --
- .../interface/vchiq_arm/vchiq_arm.c           | 495 +-----------------
- .../interface/vchiq_arm/vchiq_arm.h           |  76 ---
- .../interface/vchiq_arm/vchiq_core.c          |  16 -
- .../interface/vchiq_arm/vchiq_core.h          |  15 -
- 5 files changed, 9 insertions(+), 636 deletions(-)
-
--- 
-2.25.0
-
+cheers
