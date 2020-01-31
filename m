@@ -4,72 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C10AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1DAC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7B82063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FE920707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580476870;
-	bh=EVZ7gvWnAO8ObBd60YbtUt6FN90G7Un0YuJYzA17AjA=;
+	s=default; t=1580476974;
+	bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=hSrXdwJ2AplUFl+2oWloUshPT2e1SfKkNFAfJALZu8gtVef0fElgKt2nEJpyC441y
-	 2yyzcWDHOD+e25s6uxrSdXx0cIaUCECRgf5iS0ljVTnn69HILeE89LvXSJRLrv+nKs
-	 GycdByTQ028s0PBYt7WNqvi3vvCLx6OIL0/VySxM=
+	b=KuDK7gx+2W0VO39mD8rxff5ECofSpbkPBsAemxn/Z6wwb7fY3KCjZJV8HT4WVjYgr
+	 3iXS/pwBqYn+a/S475JnKXxrOzVgQwa/D40PxDFhkaiGOTMBfHXN1T4nZ15bUNo6Sz
+	 PNhHFbKo1SFpiHKB8eQ5mMowr5lpWR4TqoJQKXvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgAaNVJ (ORCPT
+        id S1728673AbgAaNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:21:09 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38775 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbgAaNVJ (ORCPT
+        Fri, 31 Jan 2020 08:22:53 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35099 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgAaNWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:21:09 -0500
-Received: by mail-lf1-f67.google.com with SMTP id r14so4862309lfm.5;
-        Fri, 31 Jan 2020 05:21:07 -0800 (PST)
+        Fri, 31 Jan 2020 08:22:53 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z18so4871300lfe.2;
+        Fri, 31 Jan 2020 05:22:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=EVZ7gvWnAO8ObBd60YbtUt6FN90G7Un0YuJYzA17AjA=;
-        b=P7rEeoZ9bR6Z1oevGGptf7dLFbr/FFg+dClLOSl1ViCZNRXrMaNhrdwBBbKz6HMDxP
-         KIX/oiLqGpQrUhq3nK2YqEcCTd3YJEoNBMZMlDJGsipMMq2R3ieY/Z4+fqElGYqda8+s
-         NNkCS3SgoQORZLnbCUHrK5pXauBS0Ao6ejdKflLCR21JowFtjjc9XXNXjqmo7W9hF0CV
-         uvFOjMyhHSQN+eR15+WzApJAj44aU5fX1jsEc4mdW35OwP2E7B5tGm5QNc3bolaUmlhq
-         n3R7Mts4oztgX/p26Dg1Jw+GuMedWGL8FgrZTgAi8YX9sgkUwj6auKn4evPiGKQU7pWx
-         S9Qg==
+        bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
+        b=pIaT0b9Qd+4jkE1fkwMkX4pZO0yQhKJOO71b2et3q1rT1iC/jQjRwWfwU/AXqWwB3p
+         ENbCxggJF2BGfFYIpwRDYUm1bGTiWPbvrsaEpYZmpDEQB4zOIFPsxngQ/6H6M2USTVtf
+         Vve+M/a+QXj9ZHXDq0iQXpLrsy1bkhIKW91in13kumaND7ifTb2VIjQRfD8vT+Mda02I
+         XLQWhJ6v/rI8gZmlPw9/viYAdoUB6EeAn5qw5JLd+WNaoQTLSjKeuz9ULalWUglV8Zba
+         f2+8HvwfV/XW0XZEeotpLoBjkKuCZpUYFljUlZm2OiN7ZNtF74No0tJpuoYnHnRgXqne
+         Nfaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
          :date:message-id:mime-version;
-        bh=EVZ7gvWnAO8ObBd60YbtUt6FN90G7Un0YuJYzA17AjA=;
-        b=aX4I8HJHV3VHNYL//I/lzM6ug6zOXVZHYGp4BLsGHrQR0BCoWi0+oVctsrVGC87htE
-         /tF7boiIYxviVz9uX9O5fkpCRdR6MDxnAuzuEbQBqEO//l3pE7mVtPL1DDuuTvKfqkWF
-         Y6E+t536orjX9/ChKshwV5c2Eo0MF9zVx7JbtX2rRaYNGeGWLfPwWdirqyyylQ5QENIK
-         XV2Ft+SV4A6gjU1VU4a2R/BHpzsfwzQFfjqvrqjdtsu0dtY1if0tfyD9u5pRfPC+xGTl
-         wdnCWMbtCsLN5nmeYWGUgi6C46UQ9EIj8h/PN9ikVg3f5S6mFTAgsAwLisi6cRQWxapr
-         tWEw==
-X-Gm-Message-State: APjAAAW0Nvil5kesWX8XDd8uwy7Gq7pJpcQcRte1/kxi7iBYhLNCy/ZO
-        Oe5CvuvHchQWL+bJ4qnd/Etn8MGDSTaBIQ==
-X-Google-Smtp-Source: APXvYqxBwHBS8TL1hwso4HWmWDKFsziwoBeFHuoemign5Ohv5V3P0+2btm7+7Z8BI/vEKzkAYZGW2g==
-X-Received: by 2002:a19:4cc6:: with SMTP id z189mr5302555lfa.171.1580476866627;
-        Fri, 31 Jan 2020 05:21:06 -0800 (PST)
+        bh=R/r0MkhJmy8WKxVLMV0Jvzi1Aq0WoGmSqQ5lRPedXO4=;
+        b=JHV+bV9El2QOETV5Zrc8Iu1te/4Z1IJpyCthKH6FAF5fVnJi3rCcoSn79CQMm9a9/m
+         klFmfsmVYhR18MkNHZsv+vHHhVRAIwqlYba9fpyBHe1RNwukWD3T/pBOZ6OKDXYbbH9h
+         CgV9qmKuCGeGvJmn2gesiAmIruMYSftaDEYgYY0WS2Pmx3MlxD++YPh8SJp2FjJjZMnO
+         sLIMhyC9li8L95Rze/kHGt1nBSx4AHImXToE0/0UZ/YAgm1bwNQ7pNpOVV7OourpkZb6
+         VgfNcuiiTogHuWElmaU3vfH8NoH7H2o1Be/rOrQVkhF/1JwX9HbEnFjmUDFMmf8lSPaH
+         dYEw==
+X-Gm-Message-State: APjAAAV25EeMAj8sxfL8RhDK7+m2XCO4bLMs1Bu/o7hukL76a9HQWQ7g
+        mglGrIeCu8ybWd7Zbu7dJEof31r+MYz/Ng==
+X-Google-Smtp-Source: APXvYqzWwcCbOKCFh1HsdRYKRkmzRO5iaW1wDQodZvRcZcxHxE/w0zpfSzIX/lAO18wKHHtdYGphEQ==
+X-Received: by 2002:a19:dc14:: with SMTP id t20mr5415708lfg.47.1580476970640;
+        Fri, 31 Jan 2020 05:22:50 -0800 (PST)
 Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id u13sm4628454lfq.19.2020.01.31.05.21.05
+        by smtp.gmail.com with ESMTPSA id d22sm4593737lfi.49.2020.01.31.05.22.48
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 Jan 2020 05:21:05 -0800 (PST)
+        Fri, 31 Jan 2020 05:22:49 -0800 (PST)
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Dejin Zheng <zhengdejin5@gmail.com>, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: Re: [PATCH] usb: phy: tegra: make the code simple by devm_platform_ioremap_resource()
-In-Reply-To: <20200127135841.17935-1-zhengdejin5@gmail.com>
-References: <20200127135841.17935-1-zhengdejin5@gmail.com>
-Date:   Fri, 31 Jan 2020 15:21:01 +0200
-Message-ID: <874kwb92yq.fsf@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 06/19] dt-bindings: usb: dwc3: Add a gpio-usb-connector description
+In-Reply-To: <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+References: <20200122185610.131930-1-bryan.odonoghue@linaro.org> <20200122185610.131930-7-bryan.odonoghue@linaro.org>
+Date:   Fri, 31 Jan 2020 15:22:44 +0200
+Message-ID: <87zhe37obf.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -85,20 +89,33 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Dejin Zheng <zhengdejin5@gmail.com> writes:
+Bryan O'Donoghue <bryan.odonoghue@linaro.org> writes:
 
-> make the code simple by use devm_platform_ioremap_resource() function
-> to replace platform_get_resource() and devm_ioremap().
+> A USB connector should be a child node of the USB controller
+> connector/usb-connector.txt. This patch adds a property
+> "gpio_usb_connector" which declares a connector child device. Code in the
+> DWC3 driver will then
 >
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> - Search for "gpio_usb_controller"
+> - Do an of_platform_populate() if found
+>
+> This will have the effect of making the declared node a child of the USB
+> controller and will make sure that USB role-switch events detected with t=
+he
+> gpio_usb_controller driver propagate into the DWC3 controller code
+> appropriately.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-checking file drivers/usb/phy/phy-tegra-usb.c
-Hunk #1 FAILED at 944.
-Hunk #2 FAILED at 1054.
-Hunk #3 FAILED at 1071.
-3 out of 3 hunks FAILED
+I'm assuming this will go together with the rest of the series:
 
-unfortunately, it doesn't apply.
+Acked-by: Felipe Balbi <balbi@kernel.org>
 
 =2D-=20
 balbi
@@ -108,18 +125,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40Kb0ACgkQzL64meEa
-mQa9oQ/+N8kMk+Fj6NEXBzM8cCr8usoHA7A7qOqstj20pLW3cE8yLXehv64Brcio
-QromC9dq9QqoFEQmvK7VkZYAMu1rZJxZysZNTO/bNpVdA3mF1/yqKME92oJCg7X5
-5+ouEFUQNGvyxNuWX5Uo7SycH66xZm8/vyPwK3dUNA64Ex/gqoDMJomSpdhI7PiS
-VUf3Fr+BQNAJ9w5Z+IEsQj/E6dQpVITr17gt426oEQmmhzHmwHX5viypc+jys/Dn
-y02SCHcx8IbzBBzNnH31pFFQ+COtT7NbBjTbkeqs0BOGaLSWpFROp/80Jnn2/4l/
-d2QNytRnoy9uXpqo3zLAVAJcFakqofr6mgqoEO6FOJ3o+B0uXI3u2JHUkenAUM+v
-V/ugEbWI3LHtCCGsWIZHmNtfPxQtxKXyGVEOq7KSvHFMjoVExln+kI7TOrtgZdkM
-fpqvqr8uUZiDxSXr2ScF0vtlkZW5ECZPZ74aRl+iznIyYaPHy0ma6vxm12K40HGV
-Xdwhdn9D/VD2Zn01rBusPn1wJoZI/E6nhEpe/6XqEEWCghusWP3UpI6u+pTGNyrY
-T80o58Ay/F4vGx57vpX5iLWvwFItX3IIfVVbyoV1SlQeLLMChVfX5GaQIzLNJVdi
-6naoDsgqekY33RmJ3YqRupMO/gJUu9diGEYyiow1WabipwFNz68=
-=doA5
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40KiQACgkQzL64meEa
+mQYVaBAAx9WmHAADAAgq27OlaDx5snDPwLIuAOLo7kYBkfcIatnvmX3XLlgEk2+T
+92MrgOmZVnbwpdtEManQBiY9UvQQ61VT7ixFNRbODPcruGlszZWsKWts4Ejr3LF6
+7Nc6IIe/Xjkzw+aYR+8mugwLFc+/jMi/4cLBD4bCviLJMF1y0+aMhrqvPtwtuwm2
+WcTcSByy706oswRV32NwB8jUPcNHKEs9QodVF4e7QVPgscl5pIqfe+jA6L19/HQ+
+NqB8jFvFT3ZQmvhAU8PRLd0R3+XNpDHek4RS4StzDzeyF5YiJJx7JmuQv8r+ddtJ
+OGKN5q5Q7eH89m91d5YUU9TDvI9DA0vtjDXPn6skjtXajq8boXg8fNMXrJU//f7S
+lkbwCiOYQ7rsIWf0e/LWc+aPE4wogqKQf64fmZCZSV82uQf3bVdyGp6R2iArKLLA
+B8nQNe6sWdZy8DG004QW+AV+OCvxiqNhUGyqqRNQWxZyg3FRtuXBri9yTFUBUUPE
+8O7R9Sj2Bjqbs3isf2TQ6e2h/GfHfIE/otHSSnEPfdKu7wVfZlukskyjU4C5sXBR
+LkpRupe6gzbS2qts4lPthcExdjMR76HWmsBWhINXOUxCj+p3WqEoliR7/riGbYnx
+Y1Q1HP8oc8AtJC7ekoq5UJx2yxuQZsJIHuSUSU6xsTlAQf6uQGU=
+=UWt1
 -----END PGP SIGNATURE-----
 --=-=-=--
