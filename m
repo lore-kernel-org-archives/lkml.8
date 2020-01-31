@@ -2,129 +2,99 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BA9C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95047C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5D520705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6475B20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580477786;
-	bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Se5WKUNyXopgZXcdYlNUfwEOCPkL0VJg+CcqlLuNj2XMkNcTknTU0Y2GXFAjt0wKt
-	 JMU8OvtItwf41lI5ketjVzIdv5Tv4AYow3YLHxNbgCkQV4aGwgGnfZddTYLWXu7nVH
-	 V8O2JTNOAEMas53kDJqdOaj9bcKvJz+m54S+IoOQ=
+	s=default; t=1580477845;
+	bh=KqKKJ7/yhRZmAEh2+ibnaTqsXl65EgR8PZ9zxyx3Enk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T5gAYBxRe6esZ1TQwEZlZ5+zXpCJWpfWfcDHoSUHTaeTAbcLx9smhjNP7VFUmdgak
+	 rYVPeEcId07fYKEtqDeSYuEcTz3He5oWkZU68/p59pM8ujqYblPl94hGlL2mVtsZfl
+	 5aRrVgMFEXIIebb6rIF93PkqQqyo+QR24kXKCYCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgAaNg0 (ORCPT
+        id S1728727AbgAaNhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:36:26 -0500
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:40707 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgAaNgZ (ORCPT
+        Fri, 31 Jan 2020 08:37:24 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46314 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgAaNhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:36:25 -0500
-Received: by mail-lj1-f172.google.com with SMTP id n18so7093384ljo.7;
-        Fri, 31 Jan 2020 05:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-        b=aCgWyI54FFxymXQIxylsUJxHwJOzcvMk/eK3kXkaRxQUbLwqy7aA51PXmRG0vrmNdu
-         K93Oz5gIeIiopw3F/E+0VjM54ZstePlZNcnLw5mhD+Y7bcSsalgiyiuO4Zfx9I/Iv/Lw
-         a+O57/lv01X6ZXtROOF4NiOQeIILLCnBdgOx/pAfG4crT0ZFffiutPawQwfh3HtrPodJ
-         SW/lIw+B+PPgALXnR0QiV1SuODqPAr4b6h7BNk0VWA9JkV2elmr6Rj5slkO8H9bQfANc
-         YfXePRTFJ2YqY/Nx30dr12Td1rMCPS1DWMTrmFciMVCfm5Sv9rzi20sy57Fnv7OasVLa
-         ttTQ==
+        Fri, 31 Jan 2020 08:37:24 -0500
+Received: by mail-lj1-f194.google.com with SMTP id x14so7060817ljd.13;
+        Fri, 31 Jan 2020 05:37:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=36im6bznVr3VlhITe091kW2o8aBJr7dAtawFyqiBVVc=;
-        b=mUFA+5VyBWppgAB5tQVixEZlYd3DLdJqUNG18nL79IKRBAZBPx15vNO8kAFwnWT+ea
-         scWZHDU6Ne/G+SVm5ui3U4LqoTMElbfov0oBLgbSi+zIvXWPStz/CJZFbZlKmE5dY9J6
-         dlFg8KwzjWN5qnRhgutJ3OizQlQAOFaaFrM4dYqhcrotYLJywiM55Q7MrVaPIktg4VhY
-         ELEs6WEJrFG0JFcEgFwnDv8BtLeUzC32nWeRSKoG96UFHYLJ9LfzQIKNPryMosY6NJiT
-         lrcOOZ4E+zhjEuSca8uNvByXHlIYFDGo1K+agPbbeRiiDdWbzzNWhL+HqchwT5HYoodk
-         pzQg==
-X-Gm-Message-State: APjAAAVPyN5W1IXlJX/x0Pdr+TSKD2BQ89EOhplKFMIiAtA+1Y1mpnZy
-        3LgZJHh7/8QV+5TV2+C1VTk=
-X-Google-Smtp-Source: APXvYqy9SXfc4Ak9UEw8yYRMtjd1zHNdFzILr7FF5HWU+feIs3Zgjdp34mjDT2MiG1qbVqC08wXeEA==
-X-Received: by 2002:a2e:8944:: with SMTP id b4mr6106832ljk.90.1580477783171;
-        Fri, 31 Jan 2020 05:36:23 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id f21sm2901282ljc.30.2020.01.31.05.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 Jan 2020 05:36:22 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/KmFerTMrLQTt2owFkJV50/D5+cJT9X+Wd/6C7uz3Ec=;
+        b=bRRmAK9ZfpdBVFKcUBnoQye4cfhiPjwR2BAEEKodDRqQTcSnzTPUXknMU/p+W9zLAd
+         COXUIhRrDhWgLaUv8VmZG8lR3gqzh9AWP+zzQwlanFEAwce3EDYN/YwyEbiwLOXNG2YC
+         JLGdQ5e/qVux4iQewc1kZA78j+EEZm1ayOHubAkcPPrbJLOOB+8kMeE4zvyV2rEY5sl0
+         fuW678gvn0nJCI+Ykl0K04gw3+ANpa5aCwwzN924sGuCYFZxFTm4hykTwDRKUB7D17WS
+         umFyDt5kOcl9CHTXBxBE3H6QVIfjZNyAeeVs7L2KXoxmTxjWXZuyzMQGsxB1qi86h72h
+         D5PQ==
+X-Gm-Message-State: APjAAAV+eH/e3mSz+PSBVT1L1EScYrphSbJe6ksoqn5BHz50Q6speELd
+        XRFfSJAeN2FvQzaLstd3RWI=
+X-Google-Smtp-Source: APXvYqxOCliooekvLeL52WUPxjK2FtRWB9QFwu7qunXvZLWFKp1TSq8LfW0dNc9qdr/aRPTNJkM+NA==
+X-Received: by 2002:a2e:3609:: with SMTP id d9mr6069080lja.188.1580477842351;
+        Fri, 31 Jan 2020 05:37:22 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id h19sm4736692ljl.57.2020.01.31.05.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 05:37:21 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ixWUA-0005cm-DW; Fri, 31 Jan 2020 14:37:26 +0100
+Date:   Fri, 31 Jan 2020 14:37:26 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Hillf Danton <hdanton@sina.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: dwc2: add support for STM32MP15 SoCs USB OTG HS and FS
-In-Reply-To: <20200124084131.23749-2-amelie.delaunay@st.com>
-References: <20200124084131.23749-1-amelie.delaunay@st.com> <20200124084131.23749-2-amelie.delaunay@st.com>
-Date:   Fri, 31 Jan 2020 15:36:17 +0200
-Message-ID: <87imkr7nou.fsf@kernel.org>
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        ingrassia@epigenesys.com, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
+ syzbot
+Message-ID: <20200131133726.GE10381@localhost>
+References: <00000000000095e1d8059d4675ac@google.com>
+ <20200131090510.7112-1-hdanton@sina.com>
+ <20200131101644.GE11068@kadam>
+ <CACT4Y+YmUBUzZQNrHZtCV-LDxvmgoJtaoPYYP9OgRpAa59qF-g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YmUBUzZQNrHZtCV-LDxvmgoJtaoPYYP9OgRpAa59qF-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 31, 2020 at 12:19:39PM +0100, Dmitry Vyukov wrote:
+ 
+> I see lots of people also mention panic_on_warn in the context of
+> these reports. panic_on_warn here is only a red herring. It really
+> does not change anything. We could remove it, but still report
+> WARNINGs. But syzkaller also reports some things that don't panic
+> anyway. This is really about the criteria for kernel bug vs non-bug
+> (something that needs to be reported or not).
 
+Mentioning panic_on_warn is relevant to determine whether a fix needs to
+be backported or not. Some of the bugs in question are mostly benign in
+the sense that they are unlikely to crash your machine, but we'd still
+want them in in stable due to panic_on_warn and automatic testing.
 
-Hi,
-
-Amelie Delaunay <amelie.delaunay@st.com> writes:
-
-> Add the specific compatible string for the DWC2 IP found in the STM32MP15
-> SoCs.
-> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
-> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
-> sensing comparators.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-
-This doesn't apply. dwc2 bindings is still in .txt format. I have taken
-patch 2, though.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40LVEACgkQzL64meEa
-mQZIPQ/+PCvVhKhlTWv/YRoBCIDmZrvMR7z4BnhSOWmy8BihbEU5X7F+qo3P+VyY
-Gw/us6ppE93yom8f5mljaKlLrB1nWhVa8EU3wq3kFSDgIcMZ1HV8zBWDhqDClcN7
-SG/fImL0IxTTf9SDhPiNU+Kj+MfUMuwMmoIcvqDfoWtM9lR/9JDWOPfzTHYWl6Qv
-5zkxOrMuTA4z+/yYQpwXsmQxUQnywhhgN8AHmFCeXtnO+AsdutFJHM52Pp8XXW7I
-s6SMdX0/EaC8IFCxLXYIdRw1agHTDwf5EqtML1d9pVrgZzGC4wcknDwWZMwvRTha
-YXNRFPiQ6bqzeT7RJPRpxBtoYZDXxBNXQ/cqVt+FTiv3G+xYiVW97Sj1+fwIC7/0
-T/A01s7frHhCnJM5pDErhoJW0aq5BmesgxW2AhyY/M+mXlGbjcKCKDWahAuhf0Cx
-s4em3gwLACNvw1Ztp1sv/BvRAE81QMt9+m9PI5pZu8IVU6PpIb1jQBsvgu6POoYc
-9FIhAqYKYuzIgF1p7z3ee2c7+14IwJl1br5P6Xyx81IeS0gna8v+vicErSPCt+On
-r8VDIjv5dknh5IoQfO/+q59f8mp3e2XdVB6pZYTwsJu2i1nK6Afy/jVCJICw1I+a
-7FD6QaprCNakl/Zbfv8wJUQaKbCChpZEV3gNL1lzNinIG6b2KDc=
-=QKjo
------END PGP SIGNATURE-----
---=-=-=--
+Johan
