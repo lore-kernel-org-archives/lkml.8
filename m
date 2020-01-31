@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BEAC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A01C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608D52082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6E320705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 04:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580445630;
-	bh=Ta2jxYoCTaMj6ZPCMVj7SFqVYYk1bB1EHJ+ZCYkQBMk=;
+	s=default; t=1580445659;
+	bh=Bbr++OnXBXhqhAyAZhPj/qZKB5lXnDFMudS/JAsHFzE=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=k3hlwhLSNvkDNjJeXKPpcsQdHuWSieUFHRepF4Y98fxK+UPDjytf7cb/rl+EXQSKK
-	 qo4S8Pxv26vgpRWE2vaC+Ndjgv0ACcLjsXRSAxsvqw4STctajl5GAxQiloDyAR8yvh
-	 SeeE2e33njtVl4st4wO/EtP978srti6EloLDwyJ4=
+	b=V8++QJlqv2CDbyi4I7/Dfec5Iw90kGZDvzlX+u1Od/oDUz/CPTp4MtM8/BZ6xLCwV
+	 V6RkU4Rl+TEMgZB7c48py7RV3qLOOXxn/S6/GsrF6pRyMKvnX+yU10IEIk/5687TXp
+	 D2m2zgKhWAFIt8E4bRjf6Y9AwG/Vz3Ma+nqM+RE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgAaEka (ORCPT
+        id S1728065AbgAaEk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 23:40:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
+        Thu, 30 Jan 2020 23:40:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgAaEk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 23:40:29 -0500
+        id S1727987AbgAaEk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 23:40:58 -0500
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945C920705;
-        Fri, 31 Jan 2020 04:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E9320678;
+        Fri, 31 Jan 2020 04:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580445629;
-        bh=Ta2jxYoCTaMj6ZPCMVj7SFqVYYk1bB1EHJ+ZCYkQBMk=;
+        s=default; t=1580445657;
+        bh=Bbr++OnXBXhqhAyAZhPj/qZKB5lXnDFMudS/JAsHFzE=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0iso9VS2NFj+BC8yiQE4wsZvuqdQhuHCJWucb2ydA8LDPPgh4VuMphz3FVP5m63Iu
-         qai1d6CDalXi0sXmEdJU64FLBWAXV/c5ZgNzT8wAIeINcXbFTZC5QVPryFbuTpk4Cm
-         UfhOGintwtKbjTWxTYiVOMI6f51omYD/F52OUFBM=
-Subject: Re: [PATCH 5.5 00/56] 5.5.1-stable review
+        b=Gt15OhJjqxDRJHlLUMzWF547KFgBRGGF7BJAmEF2ePijeLvdfFncJ9nO520i7+HOx
+         LtBmZw4J5xUI9y47NACSkkgQWdhXwHmBDUX8Q4nbQQunnZQjPlkrlowNQ1yv45gDqq
+         QmqaHJzOeZH9f4tiL3NLQqo0+ZAFAE0bY/pKhrl4=
+Subject: Re: [PATCH 4.19 00/55] 4.19.101-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200130183608.849023566@linuxfoundation.org>
+References: <20200130183608.563083888@linuxfoundation.org>
 From:   shuah <shuah@kernel.org>
-Message-ID: <a99ad773-c0ac-f887-5f74-b47eb395803f@kernel.org>
-Date:   Thu, 30 Jan 2020 21:40:28 -0700
+Message-ID: <f117c42c-bb11-e006-01ba-cbf3099eb177@kernel.org>
+Date:   Thu, 30 Jan 2020 21:40:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
+In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,8 +63,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 1/30/20 11:38 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.1 release.
-> There are 56 patches in this series, all will be posted as a response
+> This is the start of the stable review cycle for the 4.19.101 release.
+> There are 55 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -72,9 +72,9 @@ On 1/30/20 11:38 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.1-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.101-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
 > and the diffstat can be found below.
 > 
 > thanks,
