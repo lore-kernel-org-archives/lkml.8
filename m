@@ -2,126 +2,103 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D770BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8919C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCB2214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580482067;
-	bh=Pa0QAne+ikfRhcST4dhxQhcKQvjaN3EVPx5vMgOXzVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HBlIvXhJWy2MJ8c9xdhSV9+hxgZIr1rR5K/DJcWVpZQlOeFHxOQSbYKCnio+5KP25
-	 ykaai0/zhIKDAQ0WYI8EOzcaNj8ogVqVEAUXzNum9E2SAGa/dJjfdKaufJcPu8VHl/
-	 p8heyFJOm4mWYBqN8/SPDFEDfxlkaV2sZ5sMchtk=
+	by mail.kernel.org (Postfix) with ESMTP id 94A0F20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgAaOrr (ORCPT
+        id S1729124AbgAaOsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:47:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 09:48:01 -0500
+Received: from mga06.intel.com ([134.134.136.31]:50390 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbgAaOrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:47:46 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E3C206D5;
-        Fri, 31 Jan 2020 14:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580482066;
-        bh=Pa0QAne+ikfRhcST4dhxQhcKQvjaN3EVPx5vMgOXzVo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D3UmqQ/pBjmnWl1PtBaM6XfZQzl+sLU+f2jy7YCYWNZLtIrbEIrys0/0Ss5/Xc0lt
-         raWKCH990ysM7rxkXTHv8SnUgWPyGF598DtDtLi+tCyQAYtjlGKnr4B2Eg5USJNfqG
-         DokwLpRCs+Dw9Nz5XRQL4vnFqRCVD2pGmTcn3Qy8=
-Date:   Fri, 31 Jan 2020 14:47:38 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Message-ID: <20200131144737.GA4948@willie-the-truck>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
- <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
- <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
- <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
- <20200131142906.GG9639@lunn.ch>
+        id S1729090AbgAaOsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:48:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 06:47:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
+   d="scan'208";a="310020734"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 31 Jan 2020 06:47:56 -0800
+Subject: Re: [PATCH] xhci-mtk: Fix NULL pointer dereference with xhci_irq()
+ for shared_hcd
+To:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Sriharsha Allenki <sallenki@codeaurora.org>
+References: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <08f69bab-2ada-d6ab-7bf7-d960e9f148a0@linux.intel.com>
+Date:   Fri, 31 Jan 2020 16:50:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131142906.GG9639@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 03:29:06PM +0100, Andrew Lunn wrote:
-> > > But by design SFP, SFP+, and QSFP cages are not fixed function network
-> > > adapters.  They are physical and logical devices that can adapt to
-> > > what is plugged into them.  How the devices are exposed should be
-> > > irrelevant to this conversation it is about the underlying
-> > > connectivity.
-> > 
-> > Apologies - I was under the impression that SFP and friends were a
-> > physical-layer thing and that a MAC in the SoC would still be fixed such
-> > that its DMA and interrupt configuration could be statically described
-> > regardless of what transceiver was plugged in (even if some configurations
-> > might not use every interrupt/stream ID/etc.) If that isn't the case I shall
-> > go and educate myself further.
+On 17.1.2020 9.41, Macpaul Lin wrote:
+> According to NULL pointer fix: https://tinyurl.com/uqft5ra
+> xhci: Fix NULL pointer dereference with xhci_irq() for shared_hcd
+> The similar issue has also been found in QC activities in Mediatek.
 > 
-> It gets interesting with QSFP cages. The Q is quad, there are 4 SERDES
-> lanes. You can use them for 1x 40G link, or you can split them into 4x
-> 10G links. So you either need one MAC or 4 MACs connecting to the
-> cage, and this can change on the fly when a modules is ejected and
-> replaced with another module. There are only one set of control pins
-> for i2c, loss of signal, TX disable, module inserted. So where the
-> interrupt/stream ID/etc are mapped needs some flexibility.
+> Here quote the description from the referenced patch as follows.
+> "Commit ("f068090426ea xhci: Fix leaking USB3 shared_hcd
+> at xhci removal") sets xhci_shared_hcd to NULL without
+> stopping xhci host. This results into a race condition
+> where shared_hcd (super speed roothub) related interrupts
+> are being handled with xhci_irq happens when the
+> xhci_plat_remove is called and shared_hcd is set to NULL.
+> Fix this by setting the shared_hcd to NULL only after the
+> controller is halted and no interrupts are generated."
 > 
-> There is also to some degree a conflict with hiding all this inside
-> firmware. This is complex stuff. It is much better to have one core
-> implementing in Linux plus some per hardware driver support, than
-> having X firmware blobs, generally closed source, each with there own
-> bugs which nobody can fix.
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+>   drivers/usb/host/xhci-mtk.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> index b18a6baef204..c227c67f5dc5 100644
+> --- a/drivers/usb/host/xhci-mtk.c
+> +++ b/drivers/usb/host/xhci-mtk.c
+> @@ -593,11 +593,11 @@ static int xhci_mtk_remove(struct platform_device *dev)
+>   	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
+>   
+>   	usb_remove_hcd(shared_hcd);
+> -	xhci->shared_hcd = NULL;
+>   	device_init_wakeup(&dev->dev, false);
+>   
+>   	usb_remove_hcd(hcd);
+>   	usb_put_hcd(shared_hcd);
+> +	xhci->shared_hcd = NULL;
+>   	usb_put_hcd(hcd);
+>   	xhci_mtk_sch_exit(mtk);
+>   	xhci_mtk_clks_disable(mtk);
+> 
 
-Devicetree to the rescue!
+Could you share details of the NULL pointer dereference, (backtrace).
 
-Entertaining the use of ACPI without any firmware abstraction for this
-hardware really feels like a square peg / round hole situation, so I'm
-assuming somebody's telling you that you need it "FOAR ENTAPRYZE". Who
-is it and can you tell them to bog off?
+The USB3 hcd is already removed when xhci->shared_hcd is set to NULL.
+We might want to add some checks to make sure we are not using the removed
+hcd anymore in that codepath anymore.
 
-Will
+-Mathias
