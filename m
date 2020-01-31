@@ -2,177 +2,102 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE72FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A93C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FF420707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49CC215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAqb78GR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bqZKRFmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgAaOyx (ORCPT
+        id S1729136AbgAaOzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:54:53 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44534 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgAaOyw (ORCPT
+        Fri, 31 Jan 2020 09:55:06 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36387 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729001AbgAaOzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:54:52 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so5042909lfa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:54:51 -0800 (PST)
+        Fri, 31 Jan 2020 09:55:05 -0500
+Received: by mail-yw1-f67.google.com with SMTP id n184so4937639ywc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pGT1zhBW/FS2v9vojokmlKIL7wGNrqqrsuA224XUr1k=;
-        b=DAqb78GRfuuhNUzt9u8NcWSL0it+aZhQ3vY1ePn7Z10l4rQD8yqmRNf3uIM8WOggl1
-         XXkH6TM4ERxFieJuuWzqEGRUfgVz3c+9YxfxYf0e4xOnflUDKCEEusmXqZ0A11Atk8rG
-         0VhyJGKTA39VuxefC3NlNAPuIu50uVp38iTvKaE6iVO/+OhQmfjjXznk3ku9Dbm2LAGk
-         1Yb+pAWvTKSNvidx7T1DelliDsHKMlnHeQUD/MHonreUO2e+vhnfhnZQ7MqeXEvFeV+H
-         i0ftOG1cAtcvR95b3O6vQQ46f/jch6aU7oEkzxyqAiUGYffbFyWygMM5Kz+M4KmRpa4+
-         0hng==
+         :cc;
+        bh=SDj5kNjMiLc1TNHQMyijHY5lqlqUv2q9y5ctnKAZRBM=;
+        b=bqZKRFmycIWRiGhpMQzPAIBZjoFVrYuo2SZLTiBQn9hk3BIfxPOgtiasQqrKsz2M5R
+         xcr70sdeXtlmRgqAkxi4MwwCCGAkJhHqVAsDAT18gQB8K95aCL2+v7W3tf6GiQuTk9wx
+         zSsFPc/QZmAsiQnT6xuRc+WOhhu4GLqhGs9PXg0H7dCfbwXXOUvKNyrwN6IBwhS4kjJP
+         xqgIEUk70E2YY22PIZpKwKrFtorhvE2J/tl5xnCl5++MsQJJfl74Og7nGC7EhicDGutJ
+         s6D889kI9JFG1is8ZQK56+B9Cjutnn92mtrnjX6fCu2blz9jNuBePoRzER6x6s+DTbFF
+         UPKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pGT1zhBW/FS2v9vojokmlKIL7wGNrqqrsuA224XUr1k=;
-        b=oiw/rkNjh8gx0vLairR8AW+lpxYlpElJrzDdJMYCtqVqkwgvLPmC0MzAaG0RH2VDdo
-         FbUatFIIVJP3m+mDawYicpVFNpgEzesSUj+YogWsmJX5RHFbzbEoy7/Vw29AcloCxjbM
-         mO/aq7KQyGU/zbcAbn/gDXd0gwAstAgKiFz6vZY4DwFSsQNbWd1FRpi/xVjxvZd6Ja2r
-         pWomkmTWKh/PfvS16h8itP0F0mqIWu0S4RloQ70hsxx6c1wmBb1NEURCgnKfIUwTvEv8
-         8bE2LrqJa4RpibE1+0qiD5Py6W+g8B3KdoaYYQpzCjJ/Q2XtMnaesuxZUdsqbFxGPKe2
-         rc2Q==
-X-Gm-Message-State: APjAAAV1c7dsPyGi/L4l/LN00LlPqCh2DMMPQrFSdNF8lupBz2xE9koA
-        xclZ/cUi9weBa/3A7Ab01u9DlcgUMSrgGnftGuI4Tg==
-X-Google-Smtp-Source: APXvYqxbMOPQ8LiPV6zFpqgTSlPFgjc9mgan2vcHQ/MV3r4mQTfUls2EL9VwedRJxidied0QNDLx4r02QwSnJhz7qKU=
-X-Received: by 2002:ac2:5b41:: with SMTP id i1mr5706344lfp.82.1580482490310;
- Fri, 31 Jan 2020 06:54:50 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=SDj5kNjMiLc1TNHQMyijHY5lqlqUv2q9y5ctnKAZRBM=;
+        b=ukOVcbhblC0UiJ9S0sahjqIT+bijjRVjdV0pNDBiOFLtL8gaNeF1I/j4GJieIbxiQZ
+         rCfWOS2VEkXMd2gsiAXCda3Ueyi7b6OhLc+bPHuzwsaQ1vOf5Fpto0Z7wktYxIMGEOyn
+         pE2TxEjVXM3ety+jxMBrZQUxVWQZQfhIt7VjEJfKc0Ydj+xH151gSiOQ4LWOYuozlgZh
+         JTKsxwZ4E8zmdNTmuHvNTcWNTpYdu57vanWlShoh1u7LRhuDgxZWY9uRVzj4f2JbVWwV
+         ECEV1I5lqmsAE1jSUSv0A/h+7IbRWlKqgSOripsjswlvs6/VLG7ifuu3MDdaCqcy9EiK
+         5qPg==
+X-Gm-Message-State: APjAAAUqVbok6nAJSEWVhpGwBaY01R3ViV7N0pXzdgrWrzpGsEDSbrDX
+        +At+5zaRCQnnUwMQukqSvAmbMF06u/1jLW2R9NvBfw==
+X-Google-Smtp-Source: APXvYqyvp5cLvKH6z6kEMndeCtof01VGlsZXoDmYcGmrhf/gmPmDw9GCx5N5tQtW9+VSCDoYF9vhN4WVGMlTHp5v3c0=
+X-Received: by 2002:a25:d112:: with SMTP id i18mr8262683ybg.364.1580482504570;
+ Fri, 31 Jan 2020 06:55:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130183608.849023566@linuxfoundation.org>
-In-Reply-To: <20200130183608.849023566@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 31 Jan 2020 20:24:39 +0530
-Message-ID: <CA+G9fYsFgp483JYaVj7NZszd_Wh9JOE6t3Tzfikdwsu_xpfaGQ@mail.gmail.com>
-Subject: Re: [PATCH 5.5 00/56] 5.5.1-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <20200131122421.23286-1-sjpark@amazon.com> <20200131122421.23286-2-sjpark@amazon.com>
+In-Reply-To: <20200131122421.23286-2-sjpark@amazon.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 31 Jan 2020 06:54:53 -0800
+Message-ID: <CANn89iK3usa_bAfnD37VKvS45Qf6FH+H4fo-9zNrGGanc=7uAw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net/ipv4/inet_timewait_sock: Fix inconsistent comments
+To:     sjpark@amazon.com
+Cc:     David Miller <davem@davemloft.net>, Shuah Khan <shuah@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, sj38.park@gmail.com,
+        aams@amazon.com, SeongJae Park <sjpark@amazon.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 00:11, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Fri, Jan 31, 2020 at 4:24 AM <sjpark@amazon.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.5.1 release.
-> There are 56 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> From: SeongJae Park <sjpark@amazon.de>
 >
-> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> Anything received after that time might be too late.
+> Commit ec94c2696f0b ("tcp/dccp: avoid one atomic operation for timewait
+> hashdance") mistakenly erased a comment for the second step of
+> `inet_twsk_hashdance()`.  This commit restores it for better
+> readability.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.1-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+>  net/ipv4/inet_timewait_sock.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> thanks,
+> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+> index c411c87ae865..fbfcd63cc170 100644
+> --- a/net/ipv4/inet_timewait_sock.c
+> +++ b/net/ipv4/inet_timewait_sock.c
+> @@ -120,6 +120,7 @@ void inet_twsk_hashdance(struct inet_timewait_sock *tw, struct sock *sk,
 >
-> greg k-h
+>         spin_lock(lock);
+>
+> +       /* Step 2: Hash TW into tcp ehash chain. */
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+This comment adds no value, please do not bring it back.
 
-Summary
-------------------------------------------------------------------------
+net-next is closed, now is not the time for cosmetic changes.
 
-kernel: 5.5.1-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: ad64b54689dd4e8943ba6ebd8461ab5273f4d665
-git describe: v5.5-57-gad64b54689dd
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5-57-gad64b54689dd
-
-No regressions (compared to build v5.5-54-g04aed3481f3d)
-
-No fixes (compared to build v5.5-54-g04aed3481f3d)
-
-
-Ran 24154 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-commands-tests
-* ltp-fs-tests
-* ltp-math-tests
-* ltp-open-posix-tests
-* network-basic-tests
-* kvm-unit-tests
-* libhugetlbfs
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Also take a look at Documentation/networking/netdev-FAQ.rst
