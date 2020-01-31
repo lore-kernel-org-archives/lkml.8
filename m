@@ -2,174 +2,210 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BE5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0943FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F64E2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580495824;
-	bh=Y/DXkxdYtT/SiYQ7qtdZnXgaoyULWQTd885QWI0b+v8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lwjneiAM0zzVJMM9QVhLHp0CSQhlGe6DN9Q1707HCnqmhiI8j+LRD7tlpMPfxVlQV
-	 TTDL8vQlLiGS7jYeWy7e0mvDyA6vooClLSO86WXlRHsr+gsbiGMlCX4Djj0IA0btBC
-	 MlAVYpkDJGxSNk+Tkcj4eeNduofV9rXUAHnd3PTI=
+	by mail.kernel.org (Postfix) with ESMTP id D05CD20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 18:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="db44KCjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgAaShD (ORCPT
+        id S1726387AbgAaSiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 13:37:03 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46004 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgAaShD (ORCPT
+        Fri, 31 Jan 2020 13:38:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49248 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgAaSiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 13:37:03 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a6so9781807wrx.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 10:37:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=OXV92UcuWOio8wUsLVreOblv28BcDDZ/aCq7MZ9L0O0=;
-        b=dyBDXys7ffHNsUDuD8glyxvA6du8y/ciqORc6VBmFajxFRhllRCvSTruxF7auG/yVL
-         oT4ZZPFRLwWW6M/oDxbO+qP7s9Z2THon72gYtdz4rPz1iAO6XclfZHugrbqZ4S6swYxn
-         Bl71rENXgvALNgi0ok7tQyVA3/pEwQdnB/oi9RUJ+DtFLDnlTD5ZB2JmfTBVQ/cc0D1L
-         cUMl2lO/njYVOr3glSxk0RouVn/Z6ZgUlqHhFwWMHigjnS+x9odQ1N5fDmBAF57SzshQ
-         +I34qoU9qMUaVG8NDKAQ4mttDImRO0nLklkXTccD0AWtia4jWMTrs43RFK8WsMjcmaRJ
-         XmPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=OXV92UcuWOio8wUsLVreOblv28BcDDZ/aCq7MZ9L0O0=;
-        b=Ys+lm8rX/cKl8xZ90tauc46dBjY3mgqR17KARUQdFh8bhsDNMcFvLiYsQRK72EKWKj
-         7XhjRKa8CiIzPV6TftmOrxAZzIj1ayZo69dqUMDH84pOaM4jebBWjSfURgVVWM1h4Grn
-         yqo8s9M8YANZothgGNls8xp78Le+L6iA4qWc4NwkaIBTNU7qJdUKJkKSGh0FZ/2O94bv
-         kO64yrOoi/JrNY0EqjfL1nKv7prVa9tJORRojSNp5J8XDPnGAtlS/Rvwi347zH9k8rO3
-         6HEKDSMZwixOGijWVs3TJn2nipmtIcRNK78nq4Oa862Vr9KPQ7Sc6KVLEeTmPvb817P3
-         q21A==
-X-Gm-Message-State: APjAAAUNJT+Irxmni76Efs40ruKYqf7oNaIspJ+B/r/r71rcr26bK4Fk
-        CcF5MirpYFhWcqgaI+MAZJ8=
-X-Google-Smtp-Source: APXvYqxunHtKyXZnuwgeqSaF0W438oP6AcY4tyRkkHHFBkMwLqf7xudNbBrngPJNxgqRxgaowv6eLg==
-X-Received: by 2002:adf:e483:: with SMTP id i3mr13216394wrm.215.1580495821710;
-        Fri, 31 Jan 2020 10:37:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o15sm12792705wra.83.2020.01.31.10.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 10:37:01 -0800 (PST)
-Date:   Fri, 31 Jan 2020 19:36:58 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     =?iso-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
-Message-ID: <20200131183658.GA71555@gmail.com>
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com>
- <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
+        Fri, 31 Jan 2020 13:38:07 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrPi064181;
+        Fri, 31 Jan 2020 12:37:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580495873;
+        bh=1CLE5t35I9JOObXscYgWNJZH4eruW4hlu6p3toaDm7U=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=db44KCjWi6bQpAf1rYr94vLvAwQ413tzA4St51wj9QiXio85oT+KcYoR3XuMEcyc/
+         ri4mmODgiztq8FiDt8TPxSJiw5R4y+1T0fBqNogJT4ty/kLims5chn7zyhkvtN9c8Z
+         DGNLG0Xa+nyuFAn77PJ8nHjXVlM0tEz6XRg6AzQU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrgH103823;
+        Fri, 31 Jan 2020 12:37:53 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 12:37:53 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 12:37:53 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VIbrLE055578;
+        Fri, 31 Jan 2020 12:37:53 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <mkl@pengutronix.de>,
+        <linux-can@vger.kernel.org>, <wg@grandegger.com>,
+        <sriram.dash@samsung.com>
+CC:     <davem@davemloft.net>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH linux-master 1/3] can: tcan4x5x: Move clock init to TCAN driver
+Date:   Fri, 31 Jan 2020 12:34:31 -0600
+Message-ID: <20200131183433.11041-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200131183433.11041-1-dmurphy@ti.com>
+References: <20200131183433.11041-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Move the clock discovery and initialization from the m_can framework to
+the registrar.  This allows for registrars to have unique clock
+initialization.  The TCAN device only needs the CAN clock reference.
 
-(Cc:ed Dan and Ard)
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/can/m_can/tcan4x5x.c | 78 ++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 19 deletions(-)
 
-* Jörg Otte <jrg.otte@gmail.com> wrote:
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index eacd428e07e9..9821babef55e 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -124,6 +124,8 @@ struct tcan4x5x_priv {
+ 	struct gpio_desc *device_state_gpio;
+ 	struct regulator *power;
+ 
++	struct clk *cclk;
++
+ 	/* Register based ip */
+ 	int mram_start;
+ 	int reg_offset;
+@@ -429,6 +431,27 @@ static struct m_can_ops tcan4x5x_ops = {
+ 	.clear_interrupts = tcan4x5x_clear_interrupts,
+ };
+ 
++static int tcan4x5x_get_clock(struct tcan4x5x_priv *priv,
++			      struct m_can_classdev *m_can_dev)
++{
++	int freq;
++
++	priv->cclk = devm_clk_get(m_can_dev->dev, "cclk");
++	if (IS_ERR(priv->cclk)) {
++		dev_err(m_can_dev->dev, "no CAN clock source defined\n");
++		freq = TCAN4X5X_EXT_CLK_DEF;
++		priv->cclk = NULL;
++
++	} else {
++		freq = clk_get_rate(priv->cclk);
++		/* Sanity check */
++		if (freq < 20000000 || freq > TCAN4X5X_EXT_CLK_DEF)
++			return -ERANGE;
++	}
++
++	return freq;
++}
++
+ static int tcan4x5x_can_probe(struct spi_device *spi)
+ {
+ 	struct tcan4x5x_priv *priv;
+@@ -451,17 +474,9 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 
+ 	mcan_class->device_data = priv;
+ 
+-	m_can_class_get_clocks(mcan_class);
+-	if (IS_ERR(mcan_class->cclk)) {
+-		dev_err(&spi->dev, "no CAN clock source defined\n");
+-		freq = TCAN4X5X_EXT_CLK_DEF;
+-	} else {
+-		freq = clk_get_rate(mcan_class->cclk);
+-	}
+-
+-	/* Sanity check */
+-	if (freq < 20000000 || freq > TCAN4X5X_EXT_CLK_DEF)
+-		return -ERANGE;
++	freq = tcan4x5x_get_clock(priv, mcan_class);
++	if (freq < 0)
++		return freq;
+ 
+ 	priv->reg_offset = TCAN4X5X_MCAN_OFFSET;
+ 	priv->mram_start = TCAN4X5X_MRAM_START;
+@@ -483,14 +498,14 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	spi->bits_per_word = 32;
+ 	ret = spi_setup(spi);
+ 	if (ret)
+-		goto out_clk;
++		return ret;
+ 
+ 	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+ 					&spi->dev, &tcan4x5x_regmap);
+ 
+ 	ret = tcan4x5x_power_enable(priv->power, 1);
+ 	if (ret)
+-		goto out_clk;
++		return ret;
+ 
+ 	ret = tcan4x5x_parse_config(mcan_class);
+ 	if (ret)
+@@ -509,12 +524,6 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 
+ out_power:
+ 	tcan4x5x_power_enable(priv->power, 0);
+-out_clk:
+-	if (!IS_ERR(mcan_class->cclk)) {
+-		clk_disable_unprepare(mcan_class->cclk);
+-		clk_disable_unprepare(mcan_class->hclk);
+-	}
+-
+ 	dev_err(&spi->dev, "Probe failed, err=%d\n", ret);
+ 	return ret;
+ }
+@@ -530,6 +539,37 @@ static int tcan4x5x_can_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static int __maybe_unused tcan4x5x_runtime_suspend(struct device *dev)
++{
++	struct net_device *ndev = dev_get_drvdata(dev);
++	struct m_can_classdev *mcan_class = netdev_priv(ndev);
++	struct tcan4x5x_priv *priv = mcan_class->device_data;
++
++	m_can_class_suspend(dev);
++
++	if (priv->cclk)
++		clk_disable_unprepare(priv->cclk);
++
++	return 0;
++}
++
++static int __maybe_unused tcan4x5x_runtime_resume(struct device *dev)
++{
++	struct net_device *ndev = dev_get_drvdata(dev);
++	struct m_can_classdev *mcan_class = netdev_priv(ndev);
++	struct tcan4x5x_priv *priv = mcan_class->device_data;
++
++	if (priv->cclk)
++		return clk_prepare_enable(priv->cclk);
++
++	return 0;
++}
++
++static const struct dev_pm_ops m_can_pmops = {
++	SET_RUNTIME_PM_OPS(tcan4x5x_runtime_suspend,
++			   tcan4x5x_runtime_resume, NULL)
++};
++
+ static const struct of_device_id tcan4x5x_of_match[] = {
+ 	{ .compatible = "ti,tcan4x5x", },
+ 	{ }
+-- 
+2.25.0
 
-> Am Fr., 31. Jan. 2020 um 07:43 Uhr schrieb Ingo Molnar <mingo@kernel.org>:
-> >
-> >
-> > * Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> >
-> > > On Thu, Jan 30, 2020 at 9:32 AM Jörg Otte <jrg.otte@gmail.com> wrote:
-> > > >
-> > > > my notebook doesn't boot with current kernel. Booting stops right after
-> > > > displaying "loading initial ramdisk..". No further displays.
-> > > > Also nothing is wriiten to the logs.
-> > > >
-> > > > last known good kernel is : vmlinuz-5.5.0-00849-gb0be0eff1a5a
-> > > > first known bad kernel is : vmlinuz-5.5.0-01154-gc677124e631d
-> > >
-> > > It would be lovely if you can bisect a bit. But my merges in that
-> > > range are all from Ingo:
-> > >
-> > > Ingo Molnar (7):
-> > >     header cleanup
-> > >     objtool updates
-> > >     RCU updates
-> > >     EFI updates
-> > >     locking updates
-> > >     perf updates
-> > >     scheduler updates
-> >
-> > If I had to guess then perhaps the EFI changes look the most dangerous
-> > ones from these trees - but in principle most of these trees could
-> > contain a boot crasher/hang bug.
-> >
-> > > but not having any messages at all makes it hard to guess where it
-> > > would be.
-> >
-> > To improve debug output:
-> >
-> > Removing any 'fbcon' options in /boot/grub/grub.cfg and adding this to
-> > the boot options might improve the debug output:
-> >
-> >   earlyprintk=vga initcall_debug ignore_loglevel debug panic_on_warn
-> >
-> > So for example if the relevant kernel boot entry in grub.cfg looks like
-> > this:
-> >
-> >   linux   /vmlinuz-5.3.0-26-generic root=UUID=1bcxabe3-0b62-4x04-b456-47cd90c0e6x4 ro  splash $vt_handoff
-> >
-> > Then editing it to the following could in principle produce (much) more
-> > verbose boot output:
-> >
-> >   linux   /vmlinuz-5.3.0-26-generic root=UUID=1bcxabe3-0b62-4x04-b456-47cd90c0e6x4 ro earlyprintk=vga initcall_debug ignore_loglevel debug panic_on_warn $vt_handoff
-> >
-> > If this produces more output than just "loading initial ramdisk..' then a
-> > photo of the hung screen would be sufficient, no need to transcribe it.
-> >
-> > > A few bisect runs would narrow it down a fair amount. Bisecting all the
-> > > way would be even better, of course,
-> >
-> > Agreed!
-> >
-> > If compiling full kernels for bisections takes too long (for example
-> > because the .config is from a distro kernel) then running "make
-> > localmodconfig" to create a config tailored to the currently active
-> > modules will cut down significantly on build time.
-> >
-> > Also, a warning: if the normal boot log contains spurious warnings then
-> > the new 'panic_on_warn' option will cause additional trouble on good
-> > kernels.
-> 
-> It's bisected.
-> The first bad commit is :
-> 1db91035d01aa8bfa2350c00ccb63d629b4041ad
-> efi: Add tracking for dynamically allocated memmaps
-
-Thanks a ton, that's very useful!
-
-I've Cc:-ed the EFI gents who are developing this code, maybe they'll 
-spot the bug.
-
-Thanks,
-
-	Ingo
