@@ -2,176 +2,91 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1189FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B868DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D582F20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885512067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:42:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KjMBerQa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GGUgZrA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgAaOmY (ORCPT
+        id S1729120AbgAaOmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:42:24 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41665 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgAaOmX (ORCPT
+        Fri, 31 Jan 2020 09:42:43 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39418 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbgAaOmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:42:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so7335726ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:42:22 -0800 (PST)
+        Fri, 31 Jan 2020 09:42:43 -0500
+Received: by mail-yw1-f66.google.com with SMTP id h126so4881065ywc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:42:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KmAMgO7snmBdaMdDatYopdjy+MP/IMsumQXInEYVh4w=;
-        b=KjMBerQaVAXONzfNRPbs7dngTkES59JtpxJbE+0YYW0Mx/ZKXvrAljR6UR/fyEnNCn
-         w0ec1mTdtkxFhA+91IX4WD+OkYdMMe4bvqpIy2mCRPe6hoHIa0uWs7RCixkwaS3MTm+P
-         WhTdMsXE2tTx4HJq7JQOjKjNQSJKSo7o9y5Qp3O6E2EIPSCRi1i9RZgmf6DkeesfiPZU
-         uJgGW0pYyotjUYWPSIsW8Gye1IZdKFKoCwkT96qBzo8EygcMdDzFD2UorxXYhEgPtFLS
-         j91FHLpkAM54p/TmFoPPkqEml12UNLyZLNEBuEO6jVHgZYNRAgJkzuMCdiso5IjmUm3h
-         okIw==
+         :cc;
+        bh=U30xAUhq9GlK3veoTCP1Aa46ad7I+mdTGkPtxq4XRnk=;
+        b=GGUgZrA4CFAgGuGv42tlyLlpH9IVKcQwtU7RjJl1VclBDO6ElU65zqp/hIUpKJaIhD
+         dFXD8WdLYIh42rN2FhkHIovIP/OWMEanVnYmJNNWIfiWDTeBa8AXbSDel1Wf4GhmvCE2
+         LcCD2WNF9vW2rhjUTO7xZpLuvoDZo2oVJkez/Mvsj3hmTb8DFPbfXcGzzCX1aHgYV30g
+         GJ+lfYiKlckfJLKJSH5icsrzbscCy39iY5OMgWKCsHr98kHVdwnL6DtEPYmIXK50euox
+         ABAjrK8hUjSrmt/d3fZ36F2vnLLtQi97JvThAppnSoJZI1Q6RxZljDCqpgoNTBTzjSkS
+         FxUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KmAMgO7snmBdaMdDatYopdjy+MP/IMsumQXInEYVh4w=;
-        b=DprG1/VPw+sQGsDUXvAC8oYtdNkZ5t71gu54lj8HRu1Ess7on+9NmjxOcpem21/oiF
-         E1V0QVCWZCPnuIunke1K8eIrO0RAHIr5Kv40LZOrEaxPgy6bZkMx1JwNhIoEXsjkBtKD
-         e8F9iwz0FvzEISj+XJwmlmK5ixhhI/W0JBL1Uk/W3ExsEZdS7rZJY/eJfsG7dhyylaBC
-         pjIE7ihel4TvEEiM0rtb5lzBQuEbiKDYOWQ7vL3Wxzl3bjfOvnNJr4TBEe3qrt4A7N6U
-         km3xBe60wHP8bO6AjFgNXgUMirH9t4uwq8mwodPtHyjmIzQoT20cGLvfocSLnTGyGbjg
-         212g==
-X-Gm-Message-State: APjAAAUld0fhgUd1YWc0vyoguZVaODz5yxCF+RbG8FDOT+bOg3/yHzME
-        cMLM4k3IXJJxScLwogbxAbqgQEz1xpe8dud7rgcP6igeUCg=
-X-Google-Smtp-Source: APXvYqzyvw+DF+WQZ3fn+XitjkVnt4aq84KynA0f8nLosrCmUxdjX71Dbjpx0sayQSZOlzM8MxHZObjaZZ3xZrAJyZU=
-X-Received: by 2002:a05:651c:1072:: with SMTP id y18mr6336321ljm.243.1580481740153;
- Fri, 31 Jan 2020 06:42:20 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=U30xAUhq9GlK3veoTCP1Aa46ad7I+mdTGkPtxq4XRnk=;
+        b=ROymyLZI0IerXIxxCBWeFBA5jX4fcBsgUK246DFhs4MPcJJGTtRhGcjoFGrTdAnJwb
+         Vh2Kycljo3JqQ6MMwKmkCjaEDTi4qNZ69sGXWht/WKPeKShJqWtqjxnCw/d7Q5RePa4S
+         Bhiq4GilebqteS2wl32TBFmmCVmioKnYLcaj/XBThJ9k5J6vAQeO5dk0kmNRowqHmBrb
+         3h2Hpu7NPZ4QsyK/jDLJLiE39bZR/8v9gaExmIYdvCIJUPjkKaP2Q9qst0TqzliDHbfd
+         /pVKcMwY+M1Od8zalsyW+MUtCGZah2BE8Bxj1QiK7KBhouTXdtH9r4+nfnaF+MYv1PBK
+         2wlg==
+X-Gm-Message-State: APjAAAXhNj5cuEz3B1/X2jjORQOAD58/XLN+O1fD/SeI9fEBiIbOoseP
+        pizFtHYSGyJkN5j1M4xGCEgQh/si3cuisGQimi1HKw==
+X-Google-Smtp-Source: APXvYqwVjlTzsTOkRDlxl6dsFym7bSPIOlDXZpEuWzoJQFEezSQLJssyXCbviCKGqUM+Fsi1PaYEN726epNCjfGBPmI=
+X-Received: by 2002:a81:7cd7:: with SMTP id x206mr7960111ywc.466.1580481760596;
+ Fri, 31 Jan 2020 06:42:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130183613.810054545@linuxfoundation.org>
-In-Reply-To: <20200130183613.810054545@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 31 Jan 2020 20:12:09 +0530
-Message-ID: <CA+G9fYt13PZ+mhhkO39DEztsOzcF7AxfQydqNCd=Gd1C4iYwiQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/110] 5.4.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+References: <20200130191049.190569-1-edumazet@google.com> <e0a0ffa9-3721-4bac-1c8f-bcbd53d22ba1@arm.com>
+ <CANn89i+fRqeSAz9eH8f2ujzBWSLUXw0eTT=tK=eNj8hL71MiFQ@mail.gmail.com> <f870ae85-995f-7866-ebbd-95b89ca28dc5@arm.com>
+In-Reply-To: <f870ae85-995f-7866-ebbd-95b89ca28dc5@arm.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 31 Jan 2020 06:42:28 -0800
+Message-ID: <CANn89iKfA+yPHiL4R7-jkewwhDgM6jkwhW5o9H=VL9CnyBikhw@mail.gmail.com>
+Subject: Re: [PATCH] dma-debug: dynamic allocation of hash table
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 00:17, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Fri, Jan 31, 2020 at 4:30 AM Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.4.17 release.
-> There are 110 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> ...and when that represents ~5% of the total system RAM it is a *lot*
+> less reasonable than even 12KB. As I said, it's great to make a debug
+> option more efficient such that what it observes is more representative
+> of the non-debug behaviour, but it mustn't come at the cost of making
+> the entire option unworkable for other users.
 >
-> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.17-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Then I suggest you send a patch to reduce PREALLOC_DMA_DEBUG_ENTRIES
+because having 65536 preallocated entries consume 4 MB of memory.
 
-Summary
-------------------------------------------------------------------------
+Actually this whole attempt to re-implement slab allocations in this
+file is suspect.
 
-kernel: 5.4.17-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 1bde1c513887dd7bac46be466f1cd06fe3a64292
-git describe: v5.4.16-111-g1bde1c513887
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.16-111-g1bde1c513887
-
-No regressions (compared to build v5.4.16)
-
-No fixes (compared to build v5.4.16)
-
-Ran 23227 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* libgpiod
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-math-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Do not get me wrong, but if you really want to run linux on a 16MB host,
+I guess you need to add CONFIG_BASE_SMALL all over the places,
+not only in this kernel/dma/debug.c file.
