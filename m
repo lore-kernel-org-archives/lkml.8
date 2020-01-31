@@ -2,126 +2,105 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01EDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF72FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5713214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XUB1rIWt"
+	by mail.kernel.org (Postfix) with ESMTP id 9CF9720705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580505592;
+	bh=lY2Z+X3l1tr6YzzhCrksivm2PIFjGHOfay6vKF4ubtE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=xCGf6v3gaLudViNveAWd/fnOiXdh5OJZ08uBHQjZ9ARYUuznHp5Rx8/L6Qb8XN5YY
+	 VgeNyaWnl0xwLus+SCNP0AbQD2Aej52EHTmTVt2unQnQbX8swJ47ES8Cf9KuGYWIg4
+	 ZJQQ6G0iiHgZbnQEPXNz+g8sOstHasdGlbtRQ52g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgAaVSZ (ORCPT
+        id S1726332AbgAaVTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:18:25 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:32896 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726138AbgAaVSY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:18:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580505503; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=c5POQGsK03IMyYhyXfqfpslU7IQ1EXdg2hdGsgrQr9c=; b=XUB1rIWtLKxnwZrz/69BsNYQ62algPtd98jvC7dg8a/5C1GFpds8+6zVStVTUfqfWwVm+5LP
- vD/NsoznVFEA1I3f1Sz1eruVozjr/v81s8hUv9a0RIeMzsumV8HO5LRkoSDbI6dyYzeyrxte
- q6sHvzK4Amz2sSlsZxLXW2sMpbU=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e349999.7f95ad1b54c8-smtp-out-n03;
- Fri, 31 Jan 2020 21:18:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 36EFCC4479C; Fri, 31 Jan 2020 21:18:17 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 31 Jan 2020 16:19:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgAaVTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 16:19:51 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94395C447A4;
-        Fri, 31 Jan 2020 21:18:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94395C447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 31 Jan 2020 14:18:13 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D6C214D8;
+        Fri, 31 Jan 2020 21:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580505591;
+        bh=lY2Z+X3l1tr6YzzhCrksivm2PIFjGHOfay6vKF4ubtE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=bBbRAl9md3jvxTlEpM1bTIyO8aJ7VEwhzlidAH9RJQq4yLIvktk1rAUP/G6CvSxLd
+         LkeTQju7Xo+vaUjf1E0P6sR2n0vF5uStbnBFnWueiqujfAP/mdoTH1FCvWQ8nhY2s/
+         eWM7eM7y6Epqs/gwPO1B8vXW/atQHN2vzFi3Q1K4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9CAFC3522722; Fri, 31 Jan 2020 13:19:50 -0800 (PST)
+Date:   Fri, 31 Jan 2020 13:19:50 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
-Message-ID: <20200131211813.GA16531@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1580117390-6057-1-git-send-email-smasetty@codeaurora.org>
- <CAD=FV=VFVC6XJ=OXJCSd2_oij5vggKnTedGP0Gj4KHC50QH0SQ@mail.gmail.com>
- <4bd79f53cab95db9286067836722dd4b@codeaurora.org>
- <CAD=FV=X7pUvab1FXkPbxio_0hW0mvAguFbPAcfQ1=K9HD9bMug@mail.gmail.com>
+        Marco Elver <elver@google.com>, mingo@kernel.org
+Subject: Re: Confused about hlist_unhashed_lockless()
+Message-ID: <20200131211950.GX2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+ <20200131205337.GU2935@paulmck-ThinkPad-P72>
+ <CANn89iJzzws6MbbwuwXs+GPHAe3X-jB=JnKLh_6bX76keoKLwA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=X7pUvab1FXkPbxio_0hW0mvAguFbPAcfQ1=K9HD9bMug@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CANn89iJzzws6MbbwuwXs+GPHAe3X-jB=JnKLh_6bX76keoKLwA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:08:09AM -0800, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Jan 31, 2020 at 4:16 AM <smasetty@codeaurora.org> wrote:
+On Fri, Jan 31, 2020 at 01:04:37PM -0800, Eric Dumazet wrote:
+> On Fri, Jan 31, 2020 at 12:53 PM Paul E. McKenney <paulmck@kernel.org> wrote:
 > >
-> > >> +                       reg = <0 0x0506a000 0 0x31000>, <0 0x0b290000
-> > >> 0 0x10000>,
-> > >> +                               <0 0x0b490000 0 0x10000>;
-> > >> +                       reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> > >> +                       interrupts = <GIC_SPI 304
-> > >> IRQ_TYPE_LEVEL_HIGH>,
-> > >> +                                  <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> > >> +                       interrupt-names = "hfi", "gmu";
-> > >> +                       clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> > >> +                              <&gpucc GPU_CC_CXO_CLK>,
-> > >> +                              <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> > >> +                              <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> > >> +                       clock-names = "gmu", "cxo", "axi", "memnoc";
-> > >> +                       power-domains = <&gpucc CX_GDSC>;
+> > On Fri, Jan 31, 2020 at 10:52:46AM -0800, Eric Dumazet wrote:
+> > > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
+> > > >
 > > >
-> > > Bindings claim that you need both CX and GC.  Is sc7180 somehow
-> > > different?  Bindings also claim that you should be providing
-> > > power-domain-names.
-> > No this is still needed, We need the GX power domain for GPU recovery
-> > use cases where the shutdown was not successful.
+> > > > This is nice, now with have data_race()
+> > > >
+> > > > Remember these patches were sent 2 months ago, at a time we were
+> > > > trying to sort out things.
+> > > >
+> > > > data_race() was merged a few days ago.
+> > >
+> > > Well, actually data_race() is not there yet anyway.
+> > >
+> > > Is it really scheduled for 5.7 kernel ?
+> >
+> > Right now, yes.  Would it make sense to separate it out and push it
+> > into the current merge window?
 > 
-> This almost sounds as if the bindings should mark the GX power domain
-> as optional?  The driver can function without it but doesn't get all
-> the features?  As the binding is written right now I think it is
-> "invalid" to not specify a a GX power domain and once the yaml
-> conversion is done then it will even be flagged as an error.  That's
-> going to make it harder to land the your patch...
+> That would be very nice, because we could start using it before KCSAN is merged.
 
-For GMU attached targets the GX power domain is mandatory assuming you want to
-recover successfully from a hard GMU hang, that is.
+Seems reasonable to me.  This one is already inn -tip:
 
-Jordan
+c48981eeb0d5 ("include/linux/compiler.h: Introduce data_race(expr) macro")
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This is in tip/WIP.locking/kcsan, so I am adding Ingo on CC.
+
+Ingo, how would you like to proceed?  For example, if it would be
+helpful, I could rebase that commit on top of rcu/for-mingo and send a
+pull request.
+
+							Thanx, Paul
