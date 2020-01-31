@@ -2,113 +2,125 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924A9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDB8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6988F2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD352067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 14:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ShZjamFM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EhHg0u+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgAaO3h (ORCPT
+        id S1729049AbgAaO3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 09:29:37 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:60056 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbgAaO3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 09:29:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=wII15MgeqWbZfMqpukw8WbJXMIjvvlTLwoyDgIUTqRM=; b=ShZjamFMEFEi8ZK6lvRTAfg72t
-        Vnb01CyPnJ7r54jskpVozNRpja4cak/rpQ3EA+z8tdCxGk/ma0n7XNXXYSzDi8aJs81HiyfqbzIDI
-        TBwGIdJHIzI15tZXE3NfSucMK1mqWPVg/4N3IYkodR379POfvridvakg2WpfKOtGPAOs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ixXIA-0007bY-Q6; Fri, 31 Jan 2020 15:29:06 +0100
-Date:   Fri, 31 Jan 2020 15:29:06 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Jon Nettleton <jon@solid-run.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
-        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Russell King <linux@armlinux.org.uk>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Paul Yang <Paul.Yang@arm.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
-Message-ID: <20200131142906.GG9639@lunn.ch>
-References: <1580198925-50411-1-git-send-email-makarand.pawagi@nxp.com>
- <20200128110916.GA491@e121166-lin.cambridge.arm.com>
- <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
- <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
- <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
- <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
- <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
- <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
- <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+        Fri, 31 Jan 2020 09:29:50 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23339 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728827AbgAaO3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 09:29:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580480988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PejrRp0WLHfGD9bvxIDUPY9VeT1zBnFCJg8McZ4Axj8=;
+        b=EhHg0u+G90tDa9IjBcl4cCMyDIbEjNMCE0sOLqmGgJfwWIgdAvXsDfUaDumLXS4hzi6Kde
+        8bRopaCrg2tQCXuSDEUOTqowwYzkPH2rc6fZ7yHta5uTMBpr4Ccwr9YL3+aezmQpAUjqsu
+        4JgWkRiCX2lBpDuZY2nKa6duhvoGKjw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-fp9GCCR0OpGgaItFZ1Y57Q-1; Fri, 31 Jan 2020 09:29:47 -0500
+X-MC-Unique: fp9GCCR0OpGgaItFZ1Y57Q-1
+Received: by mail-wm1-f72.google.com with SMTP id m18so2111880wmc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 06:29:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PejrRp0WLHfGD9bvxIDUPY9VeT1zBnFCJg8McZ4Axj8=;
+        b=q7hDKQfFzDAOsCGHIlfao3WeHvCCCZg0sJC7kbx67HxHuGNrdhWd8xMkf5jupt4Kt8
+         PuFB7rW3iVH8aHV5Ng37dNBb/nRSRrUsW+OfNZ6wUEd923811s/CFhEOmU2b8XrXLUJS
+         YXVbN9XFxPUJ7kVHFMKI7Jst9gVNEYV45axqihlAh6MTFTySOddHdS77DTi0pXdSk5xz
+         qbYCJsEmm0aP5zFA1rp3DGY5dOBxv0KSNDpq+pkYn+8wEIz8fV0I0SVEyDpW0ZAf9gyO
+         jizlTlS+SbvXkW9wD5vsK6i1E0afnIR+WgTwUEvOQOKJklTAn1M3gPYBh929XDT2z3W1
+         zdpQ==
+X-Gm-Message-State: APjAAAU/I8+9RyRzWogewD9tMB9CNKN7LN0NJdQ/JsyNY1GwfGDhvqeL
+        mysua2ODedGmxKM909Pj26F63v+d+hWasrnCSQ05tZZxTQkNi1Lwke+rEBi3eBG7rYa2RQJjCbI
+        AgEWB965vfnt/ZLzu8SGkKOa1
+X-Received: by 2002:a5d:44cd:: with SMTP id z13mr12704422wrr.104.1580480985569;
+        Fri, 31 Jan 2020 06:29:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwRMCxZHckpDcEhNoxHFfQhtFNCylRmCEGUWCEZZXq7Gu5uARj7G8YWRmdg39dMpUlGXg1t/g==
+X-Received: by 2002:a5d:44cd:: with SMTP id z13mr12704407wrr.104.1580480985325;
+        Fri, 31 Jan 2020 06:29:45 -0800 (PST)
+Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id z19sm10394558wmi.43.2020.01.31.06.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 06:29:44 -0800 (PST)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH liburing v2 0/1] test: add epoll test case
+Date:   Fri, 31 Jan 2020 15:29:42 +0100
+Message-Id: <20200131142943.120459-1-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > But by design SFP, SFP+, and QSFP cages are not fixed function network
-> > adapters.  They are physical and logical devices that can adapt to
-> > what is plugged into them.  How the devices are exposed should be
-> > irrelevant to this conversation it is about the underlying
-> > connectivity.
-> 
-> Apologies - I was under the impression that SFP and friends were a
-> physical-layer thing and that a MAC in the SoC would still be fixed such
-> that its DMA and interrupt configuration could be statically described
-> regardless of what transceiver was plugged in (even if some configurations
-> might not use every interrupt/stream ID/etc.) If that isn't the case I shall
-> go and educate myself further.
+Hi Jens,
+this is a v2 of the epoll test.
 
-Hi Robin
+v1 -> v2:
+    - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
+    - add 2 new tests to test epoll with IORING_FEAT_NODROP
+    - cleanups
 
-It gets interesting with QSFP cages. The Q is quad, there are 4 SERDES
-lanes. You can use them for 1x 40G link, or you can split them into 4x
-10G links. So you either need one MAC or 4 MACs connecting to the
-cage, and this can change on the fly when a modules is ejected and
-replaced with another module. There are only one set of control pins
-for i2c, loss of signal, TX disable, module inserted. So where the
-interrupt/stream ID/etc are mapped needs some flexibility.
+There are 4 sub-tests:
+    1. test_epoll
+    2. test_epoll_sqpoll
+    3. test_epoll_nodrop
+    4. test_epoll_sqpoll_nodrop
 
-There is also to some degree a conflict with hiding all this inside
-firmware. This is complex stuff. It is much better to have one core
-implementing in Linux plus some per hardware driver support, than
-having X firmware blobs, generally closed source, each with there own
-bugs which nobody can fix.
+In the first 2 tests, I try to avoid to queue more requests than we have room
+for in the CQ ring. These work fine, I have no faults.
 
-     Andrew
+In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
+much as I can until I get a -EBUSY, but they often fail in this way:
+the submitter manages to submit everything, the receiver receives all the
+submitted bytes, but the cleaner loses completion events (I also tried to put a
+timeout to epoll_wait() in the cleaner to be sure that it is not related to the
+patch that I send some weeks ago, but the situation doesn't change, it's like
+there is still overflow in the CQ).
+
+Next week I'll try to investigate better which is the problem.
+
+I hope my test make sense, otherwise let me know what is wrong.
+
+Anyway, when I was exploring the library, I had a doubt:
+- in the __io_uring_get_cqe() should we call sys_io_uring_enter() also if
+  submit and wait_nr are zero, but IORING_SQ_NEED_WAKEUP is set in the
+  sq.kflags?
+
+Thanks,
+Stefano
+
+Stefano Garzarella (1):
+  test: add epoll test case
+
+ .gitignore    |   1 +
+ test/Makefile |   5 +-
+ test/epoll.c  | 386 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 390 insertions(+), 2 deletions(-)
+ create mode 100644 test/epoll.c
+
+-- 
+2.24.1
+
