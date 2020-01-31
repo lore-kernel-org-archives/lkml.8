@@ -2,105 +2,95 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B9FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2110F20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580440597;
-	bh=+P4Q8vL/zkYVTL0+cGeW7SHzjvTfCjmEe8DI+bOOliI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aekYO746T0kwGr3mOwS3++Do++GwhMt3v+y6xYHtNOrDZ70SjUNHGsRnHaLbz8Ntx
-	 krtZXLGwDi3lRvyDHXrG9PQucJd4RcmjGb8+cqaDt3CHIdamMm5ew1Wi9rQqyfDJbu
-	 K5rOOKFN9XHs9Xg7qZItjYe2iRD90vaE7yeeK7u0=
+	by mail.kernel.org (Postfix) with ESMTP id B77AB20705
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="jrkCIayf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgAaDQg (ORCPT
+        id S1727909AbgAaDRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:16:36 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:19289 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgAaDQg (ORCPT
+        Thu, 30 Jan 2020 22:17:44 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41577 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgAaDRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:16:36 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00V3GRaf027939;
-        Fri, 31 Jan 2020 12:16:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00V3GRaf027939
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580440588;
-        bh=zUagY7zkaT5fHUquSXsnCtBmp3feRvS5rxxXqEGW+bs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GgUuosGpQ8zy1B4VqtQuotif5JGWV0XFzLVWPzZBrSRDSvyRqLs7QvOvkrvVQvrBz
-         I+hWZTGIJm13pZYFm2jFvLd8lAjG51/3aTX1zf+88H2bhBFEGsk28k+dgONLLfEpl5
-         eahTO+XpBTYcJehTL69ILIeVjyA+wxdMICvnrcxRRvtEun96x6+DrZvGyWk8ySLrHt
-         IhWaGEHCQCnHP6xhIvvemqkO30riWK+bbp1Ak0wJtnJVz+QAsnk4pdNpSetR2Rp6f4
-         rl+WRYYatnXRYmgMggTnft8v+hpfWZTQYlFwupiUi1/WdNVPwH+3MpRcyezjK9GI3h
-         NI+nLga3/GcXQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id g15so3543582vsf.1;
-        Thu, 30 Jan 2020 19:16:27 -0800 (PST)
-X-Gm-Message-State: APjAAAXJyzibTYZ1EEYQUA/Z7XJEgTqPgeoAC65WObGrYy1ND8IQ7Itg
-        HCluSn+du/drwQtygSVtSBRIxBeX+W0+JnSBM2c=
-X-Google-Smtp-Source: APXvYqzYIMt8w3M1BG9hsElPnnvs7pUlXxMEa6yuo7U3dDHxmNV8RIuJPu4veWuyX4j//fDyzJjvQkrdLKu3BCO8xHo=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr5401332vsh.179.1580440585640;
- Thu, 30 Jan 2020 19:16:25 -0800 (PST)
+        Thu, 30 Jan 2020 22:17:44 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so6209586eds.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 19:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oIg4izJ3dY0xBGHn3X1cuTzljmHGk0vFwMx8ad4w19E=;
+        b=jrkCIayfH2CK8HceNhz9wMOG52M88EbYtjRjCrEHVAtiKxCEmkyk/ZivE2K8qKvnOP
+         HiKlStkoa44zoxtKztVQKgk2LAIEkXfl2sGUbZRd/rcz/up0Q6G7HLb8vsgcaxt9uOY9
+         aYUflFB+ekOmAtRwng+VLIOSqXxa52B5DqgIqnb4MZOtYIgZfS6+iD1qDIBWDAl+GAAb
+         lH0vns5J8GHXg/fYr7nOIVnhQBcdvD2p4tjjbbJcw1Ih+6RAdvgtGnOqrbSSgvqC422/
+         X+egx8zvpsjnWhJQegjGuqgQlg06uBZaDaQ5Djy0/WnQzk9KMCQ0AV4FEDi967Pl8i++
+         THiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oIg4izJ3dY0xBGHn3X1cuTzljmHGk0vFwMx8ad4w19E=;
+        b=siD4Zh3NLQfG894P/1/SEE0l3WRb8bJ7xgQssyDc5QRXlmQiq+dhy785UDMixKK/QE
+         pIjroQkttvaqm6DJbobYVGgMXmAsxWlxe37EbeJH8Mwhg6g/4XaXCt46bncURNEM5iMX
+         tlOwJ54OHSSSVGThbSyjgRmTc6eR0vFlDoWHJmbZ9yhdTltyCT5uC2ttB7pzOsOvV3XG
+         QieTFNFNVgO675Tc2TyCkyQabRC/eimOUqVP9oE+CEhucOzYlN3Tk/oO5IspF7URtK3z
+         1am6PWlKjB7gLXrj4aQW+ujrCs757D0DWWDKXKaD/YHTL4khzw4OLmibQyT6xf+E6Z3s
+         2bYQ==
+X-Gm-Message-State: APjAAAVl4o+I4VD25F47b+mfAfo3IYc9sFevRi2UCAyU9em6t75yheIP
+        i6p3n0ykxU5DP83uPtgZlY1PV3/E4NXUYR2vKCZG
+X-Google-Smtp-Source: APXvYqzzdWfnLzyByQcFVGmQCzqJhEsT1dBRVturw9d61zDsL2ZmJkMBe/HXMeV5fccEH2eEGkyfWfY/Ux/vDgbn3ec=
+X-Received: by 2002:a17:906:9352:: with SMTP id p18mr6813461ejw.95.1580440661314;
+ Thu, 30 Jan 2020 19:17:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130122221.30029e32@gandalf.local.home> <CAK7LNAR1AJFDahD6cB_MryBd-79N_T5O9WV3CMEA+HOCDXZEig@mail.gmail.com>
- <20200130143941.23a0e217@gandalf.local.home> <CAK7LNATryPUSTm8wPTFHO=E5f=sVPM4T0UxT=BF2qeyVehsH6Q@mail.gmail.com>
- <20200130214100.57b8239b@rorschach.local.home>
-In-Reply-To: <20200130214100.57b8239b@rorschach.local.home>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 31 Jan 2020 12:15:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQGpyK=06qU9EZCeDkjUHC0+TUE-L=PkbMwUCrZqwvWkA@mail.gmail.com>
-Message-ID: <CAK7LNAQGpyK=06qU9EZCeDkjUHC0+TUE-L=PkbMwUCrZqwvWkA@mail.gmail.com>
-Subject: Re: [GIT PULL] kconfig: localmodconfig: Minor clean ups to streamline_config.pl
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+References: <cover.1577830902.git.rgb@redhat.com> <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
+In-Reply-To: <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 30 Jan 2020 22:17:30 -0500
+Message-ID: <CAHC9VhT9T-UMnu6bWdd733XB6QaP+Sm3KWhdy828RN_FVWBMmw@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v2 1/9] netfilter: normalize x_table function declarations
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
-
-On Fri, Jan 31, 2020 at 11:41 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Jan 6, 2020 at 1:54 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> Git context diffs were being produced with unhelpful declaration types
+> in the place of function names to help identify the funciton in which
+                                                      ^^^^^^^^
+                                                      function
+> changes were made.
 >
-> On Fri, 31 Jan 2020 11:08:59 +0900
-> Masahiro Yamada <masahiroy@kernel.org> wrote:
+> Normalize x_table function declarations so that git context diff
+> function labels work as expected.
 >
-> > OK, I see.  I will also try my best to send a notice email.
-> > I want to avoid a situation where two people
-> > are picking up the same patches without noticing each other.
->
-> BTW, I'm fine with changes to the localmodconfig code going through
-> your tree. Just let me give them acks. And if I end up having changes,
-> I'll send them to you.
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  net/netfilter/x_tables.c | 43 ++++++++++++++++++-------------------------
+>  1 file changed, 18 insertions(+), 25 deletions(-)
 
-Yes, that will make things clearer.
-I will ask you to give acks as needed,
-and apply patches to my tree.
-
-This file is seldom updated, so this will be not
-burden any way.
-
-
-
-> Thanks!
->
-> -- Steve
-
-
-
+Considering that this patch is a style change in code outside of
+audit, and we want to merge this via the audit tree, I think it is
+best if you drop the style changes from this patchset.  You can always
+submit them later to the netfilter developers.
 
 --
-Best Regards
-Masahiro Yamada
+paul moore
+www.paul-moore.com
