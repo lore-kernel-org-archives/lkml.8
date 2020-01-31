@@ -2,111 +2,92 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C085DC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07763C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983162063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B4420663
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M4gREsBx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nm/u13jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgAaRbM (ORCPT
+        id S1727112AbgAaRcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:31:12 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55844 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgAaRbL (ORCPT
+        Fri, 31 Jan 2020 12:32:08 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36851 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgAaRcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:31:11 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VHV36s087335;
-        Fri, 31 Jan 2020 11:31:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580491863;
-        bh=Gt5dd7XOIRcUxh6uvWBlZM+92xMNDI0LZYHC+I8v0Yc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=M4gREsBxtBTZzWFlbEJzezhFWLdaORzgSPq+7+d08L2iDdkdonMyzrF2XDxXWcq1J
-         VbBBh3wXz0AWxkGag23GOKlr3Vhig1fvjsTxg3qL7Py70/JONWvb19yxwkvMIxrlgo
-         phE5EXxmjYPV3AQPHMi7GieUayWb+rNJ8uaLJ8bg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VHV3HD096950
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 11:31:03 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 11:31:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 11:31:03 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VHV3pe063654;
-        Fri, 31 Jan 2020 11:31:03 -0600
-Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
- config
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191210163204.28225-1-dmurphy@ti.com>
- <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <db84cce8-925e-0b31-e196-6543359e6ea5@ti.com>
-Date:   Fri, 31 Jan 2020 11:27:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 12:32:08 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k3so3827571pgc.3;
+        Fri, 31 Jan 2020 09:32:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=didRMbxSKibSVbvqPj47ChO8FwXnSV6LD3tOEIOARYY=;
+        b=Nm/u13jt8mcKGqrzfHyO9YC4mrOG02nX/vR9MQeAzp7gYt6arIjJXpDe2oPmfVw2zZ
+         bkKElOkvhoy/gMJhgIF7Kd/tV7JsdxrA6sW3CPfQrS4m7DfNPWadc0xgCTUtRogyuBG/
+         Rz7ww6hq4z2fkYTO9Kb/u9DUuNBfhR4In8ZByx/hOGmWE6U7HGXAtx9vvlEOpzu9BIDy
+         sqKtD/uRg6nuYRb1DZLH+h88ypP1wX1xVnVHsxPIPB8nxuQTZH3VM8qjZcScCTkBD7Lc
+         e089TuL+uDJWY/riqvOVxRVL64GU2gcGiVat3q6Mk3d2A6TxG8QAGFSrZ+LTXDq5yJaK
+         OKaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=didRMbxSKibSVbvqPj47ChO8FwXnSV6LD3tOEIOARYY=;
+        b=KuQw3E7zjJHapGYTIx2F/VESmml2ZwLDsCOkrDwlJKPXWiZ3VhyICNnauiWEIjDR6P
+         HGDYUbu9qKuY5HbTJV7VXwanBD0hW9X/F+sshib6c3iTVjNxuItlMHTXZ8WtcP4BCLWI
+         keSqAxUGwlF4thr5K4L2+P0c3LRb4e8kc0y6LE+fQ9i9RQVwJ7X7wySCxpTpemyN++p2
+         42WhAV04xmEL8PNugAuCHSAP6rjYwn+e1L+ibqFQl8tIDec6qarYwVJ7boUasWWrpIMA
+         jlEsMLlBW/OUSgIlngvcrFupdWehPz3Ke3BhMZe4DwXPK9Ubb1Lz2nj82jtaqd1QMIU6
+         blMA==
+X-Gm-Message-State: APjAAAX6mmpzfe3GFDmNUejlG89UeJlKlFla+Crlxw75JJvbDo+nTYhC
+        ibwfL9Ai35N3fF87bWlJe4U=
+X-Google-Smtp-Source: APXvYqx8Ekty6OpztYcdBKZrbpwIaTivBBFCGd8T46/8eF5mBO4lqF/p0Aj4zLS/O42lInPGMrjeNw==
+X-Received: by 2002:a62:be0a:: with SMTP id l10mr12139630pff.110.1580491927361;
+        Fri, 31 Jan 2020 09:32:07 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y190sm11357750pfb.82.2020.01.31.09.32.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 09:32:05 -0800 (PST)
+Date:   Fri, 31 Jan 2020 09:32:04 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/55] 4.19.101-stable review
+Message-ID: <20200131173204.GA16567@roeck-us.net>
+References: <20200130183608.563083888@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130183608.563083888@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+On Thu, Jan 30, 2020 at 07:38:41PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.101 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
+> Anything received after that time might be too late.
+> 
 
-On 1/2/20 6:38 AM, Marc Kleine-Budde wrote:
-> On 12/10/19 5:32 PM, Dan Murphy wrote:
->> The parse config function now performs action on the device either
->> reading or writing and a reset.  If the regulator is managed it needs
->> to be turned on.  So turn on the regulator if available if the parsing
->> fails then turn off the regulator.
-> Another BTW:
-> Consider converting the switching of the vsup to runtime_pm.
->
-> Yet another one:
-> Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
-> but never enable them?
->
->> out_clk:
->> 	if (!IS_ERR(mcan_class->cclk)) {
->> 		clk_disable_unprepare(mcan_class->cclk);
->> 		clk_disable_unprepare(mcan_class->hclk);
->> 	}
-> - please move the clock handling from the m_can.c to the individual
->    driver
-> - please move the clock handling to runtime_pm in the individual driver
-> - remove the obsolete m_can_class_get_clocks()
-> - make runtime_pm mandatory
->
-> regards,
-> Marc
->
-I have separate the clock calls into pm runtime calls and moved the 
-clock init into the respective children of the framework.
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 382 pass: 382 fail: 0
 
-Did you want me to submit 1 patch with all the changes or would you like 
-3 separate patches?  First 2 patches will abstract the clocks away into 
-the children and the 3rd patch would be to remove the clocks API from 
-the framework
-
-Dan
-
+Guenter
