@@ -2,125 +2,185 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B049C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B25C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF94206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7373F206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgAaCRH (ORCPT
+        id S1727873AbgAaCSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:17:07 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:38268 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727741AbgAaCRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:17:06 -0500
-Received: from dread.disaster.area (pa49-195-111-217.pa.nsw.optusnet.com.au [49.195.111.217])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 936E23A2BDF;
-        Fri, 31 Jan 2020 13:17:02 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ixLrh-0006P1-9m; Fri, 31 Jan 2020 13:17:01 +1100
-Date:   Fri, 31 Jan 2020 13:17:01 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 06/12] btrfs: Convert from readpages to readahead
-Message-ID: <20200131021701.GB18575@dread.disaster.area>
-References: <20200125013553.24899-1-willy@infradead.org>
- <20200125013553.24899-7-willy@infradead.org>
- <20200129004609.GI18610@dread.disaster.area>
- <20200130080939.GL6615@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130080939.GL6615@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=0OveGI8p3fsTA6FL6ss4ZQ==:117 a=0OveGI8p3fsTA6FL6ss4ZQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=-ZxxmdGvqcmE25f44t8A:9
-        a=WA9dXB9HyJ0bNApb:21 a=s0uptFhnqMGzMIq5:21 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 30 Jan 2020 21:18:06 -0500
+Received: from mga02.intel.com ([134.134.136.20]:45714 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727741AbgAaCSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 21:18:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 18:18:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,384,1574150400"; 
+   d="scan'208";a="222995947"
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jan 2020 18:18:03 -0800
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     alex.williamson@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH v2 0/9] Introduce vendor ops in vfio-pci
+Date:   Thu, 30 Jan 2020 21:08:03 -0500
+Message-Id: <20200131020803.27519-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 12:09:39AM -0800, Matthew Wilcox wrote:
-> On Wed, Jan 29, 2020 at 11:46:09AM +1100, Dave Chinner wrote:
-> > On Fri, Jan 24, 2020 at 05:35:47PM -0800, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > Use the new readahead operation in btrfs
-> > > 
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > > Cc: linux-btrfs@vger.kernel.org
-> > > ---
-> > >  fs/btrfs/extent_io.c | 15 ++++-----------
-> > >  fs/btrfs/extent_io.h |  2 +-
-> > >  fs/btrfs/inode.c     | 18 +++++++++---------
-> > >  3 files changed, 14 insertions(+), 21 deletions(-)
-> > > 
-> > > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> > > index 2f4802f405a2..b1e2acbec165 100644
-> > > --- a/fs/btrfs/extent_io.c
-> > > +++ b/fs/btrfs/extent_io.c
-> > > @@ -4283,7 +4283,7 @@ int extent_writepages(struct address_space *mapping,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > -int extent_readpages(struct address_space *mapping, struct list_head *pages,
-> > > +unsigned extent_readahead(struct address_space *mapping, pgoff_t start,
-> > >  		     unsigned nr_pages)
-> > >  {
-> > >  	struct bio *bio = NULL;
-> > > @@ -4294,20 +4294,13 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
-> > >  	int nr = 0;
-> > >  	u64 prev_em_start = (u64)-1;
-> > >  
-> > > -	while (!list_empty(pages)) {
-> > > +	while (nr_pages) {
-> > >  		u64 contig_end = 0;
-> > >  
-> > > -		for (nr = 0; nr < ARRAY_SIZE(pagepool) && !list_empty(pages);) {
-> > > -			struct page *page = lru_to_page(pages);
-> > > +		for (nr = 0; nr < ARRAY_SIZE(pagepool) && nr_pages--;) {
-> > 
-> > What is stopping nr_pages from going negative here, and then looping
-> > forever on the outer nr_pages loop? Perhaps "while(nr_pages > 0) {"
-> > would be better there?
-> 
-> Ugh, nr_pages is unsigned, so that's no good.  Maybe make this a more
-> conventional loop ...
-> 
->         while (nr_pages) {
->                 u64 contig_end = 0;
-> 
->                 for (nr = 0; nr < ARRAY_SIZE(pagepool); nr++) {
->                         struct page *page = readahead_page(mapping, start++);
-> 
->                         prefetchw(&page->flags);
->                         pagepool[nr] = page;
->                         contig_end = page_offset(page) + PAGE_SIZE - 1;
->                         if (--nr_pages == 0)
->                                 break;
->                 }
+When using module vfio-pci to pass through devices, though for the most
+of time, it is desired to use default implementations in vfio-pci, vendors
+sometimes may want to do certain kind of customization.
+For example, vendors may want to add a vendor device region or may want to
+intercept writes to a BAR region.
+So, in this patch set, we introduce a way to allow vendors to focus on
+handling of regions of their interest and call default vfio-pci ops to
+handle the reset ones.
 
-Looks like it solves the problem :)
+It goes like this:
+(1) macros are provided to let vendor drivers register/unregister
+vfio_pci_vendor_driver_ops to vfio_pci in their module_init() and
+module_exit().
+vfio_pci_vendor_driver_ops contains callbacks probe() and remove() and a
+pointer to vfio_device_ops.
 
-Cheers,
+(2) vendor drivers define their module aliases as
+"vfio-pci:$vendor_id-$device_id".
+E.g. A vendor module for VF devices of Intel(R) Ethernet Controller XL710
+family can define its module alias as MODULE_ALIAS("vfio-pci:8086-154c").
 
-Dave.
+(3) when module vfio_pci is bound to a device, it would call modprobe in
+user space for modules of alias "vfio-pci:$vendor_id-$device_id", which
+would trigger unloaded vendor drivers to register their
+vfio_pci_vendor_driver_ops to vfio_pci.
+Then it searches registered ops list and calls probe() to test whether this
+vendor driver supports this physical device.
+A success probe() would make vfio_pci to use vfio_device_ops provided
+vendor driver as the ops of the vfio device. So vfio_pci_ops are not to be
+called for this device any more. Instead, they are exported to be called
+from vendor drivers as a default implementation.
+
+
+                                        _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+                                  
+ __________   (un)register vendor ops  |  ___________    ___________   |
+|          |<----------------------------|    VF    |   |           |   
+| vfio-pci |                           | |  vendor  |   | PF driver |  |
+|__________|---------------------------->|  driver  |   |___________|   
+     |           probe/remove()        |  -----------          |       |
+     |                                                         |         
+     |                                 |_ _ _ _ _ _ _ _ _ _ _ _|_ _ _ _|
+    \|/                                                       \|/
+-----------                                              ------------
+|    VF   |                                              |    PF    |
+-----------                                              ------------
+                   a typical usage in SRIOV
+
+
+
+Ref counts:
+(1) vendor drivers must be a module and compiled to depend on module
+vfio_pci.
+(2) In vfio_pci, a successful register would add refs of itself, and a
+successful unregister would derefs of itself.
+(3) In vfio_pci, a successful probe() of a vendor driver would add ref of
+the vendor module. It derefs of the vendor module after calling remove().
+(4) macro provided to make sure vendor module always unregister itself in
+its module_exit
+
+Those are to prevent below conditions:
+a. vfio_pci is unloaded after a successful register from vendor driver.
+   Though vfio_pci would later call modprobe to ask the vendor module to
+   register again, it cannot help if vendor driver remain as loaded
+   across unloading-loading of vfio_pci.
+b. vendor driver unregisters itself after successfully probed by vfio_pci.
+c. circular dependency between vfio_pci and the vendor driver.
+   if vfio_pci adds refs to both vfio_pci and vendor driver on a successful
+   register and if vendor driver only do the unregister in its module_exit,
+   then it would have no chance to do the unregister.
+
+
+Patch Overview
+patches 1-2 makes vfio_pci inheritable by vendor modules
+            by making part of struct vfio_pci_device public and functions
+            in struct vfio_pci_ops exported
+patches 3-4 provide register/unregister interfaces for vendor drivers
+patches 5-6 some more enhancements
+patch 7 provides an sample to pass through IGD devices
+patches 8-9 implement VF live migration on Intel's 710 SRIOV devices.
+            Some dirty page tracking functions are intentionally
+            commented out and would send out later in future.
+
+Changelog:
+RFC v1- RFC v2:
+- renamed mediate ops to vendor ops
+- use of request_module and module alias to manage vendor driver load
+  (Alex)
+- changed from vfio_pci_ops calling vendor ops
+  to vendor ops calling default vfio_pci_ops  (Alex)
+- dropped patches for dynamic traps of BARs. will submit them later.
+
+Links:
+Previous version (RFC v1):
+kernel part: https://www.spinics.net/lists/kernel/msg3337337.html.
+qemu part: https://www.spinics.net/lists/kernel/msg3337337.html.
+
+VFIO live migration v8:
+https://lists.gnu.org/archive/html/qemu-devel/2019-08/msg05542.html.
+
+
+Yan Zhao (9):
+  vfio/pci: split vfio_pci_device into public and private parts
+  vfio/pci: export functions in vfio_pci_ops
+  vfio/pci: register/unregister vfio_pci_vendor_driver_ops
+  vfio/pci: macros to generate module_init and module_exit for vendor
+    modules
+  vfio/pci: let vfio_pci know how many vendor regions are registered
+  vfio/pci: export vfio_pci_setup_barmap
+  samples/vfio-pci: add a sample vendor module of vfio-pci for IGD
+    devices
+  vfio: header for vfio live migration region.
+  i40e/vf_migration: vfio-pci vendor driver for VF live migration
+
+ drivers/net/ethernet/intel/Kconfig            |  10 +
+ drivers/net/ethernet/intel/i40e/Makefile      |   2 +
+ drivers/net/ethernet/intel/i40e/i40e.h        |   2 +
+ .../ethernet/intel/i40e/i40e_vf_migration.c   | 590 ++++++++++++++++++
+ .../ethernet/intel/i40e/i40e_vf_migration.h   |  92 +++
+ drivers/vfio/pci/vfio_pci.c                   | 337 ++++++----
+ drivers/vfio/pci/vfio_pci_config.c            | 157 ++---
+ drivers/vfio/pci/vfio_pci_igd.c               |  16 +-
+ drivers/vfio/pci/vfio_pci_intrs.c             | 171 ++---
+ drivers/vfio/pci/vfio_pci_nvlink2.c           |  16 +-
+ drivers/vfio/pci/vfio_pci_private.h           |  11 +-
+ drivers/vfio/pci/vfio_pci_rdwr.c              |  60 +-
+ include/linux/vfio.h                          |  61 ++
+ include/uapi/linux/vfio.h                     | 149 +++++
+ samples/Kconfig                               |   6 +
+ samples/Makefile                              |   1 +
+ samples/vfio-pci/Makefile                     |   2 +
+ samples/vfio-pci/igd_pt.c                     | 153 +++++
+ 18 files changed, 1518 insertions(+), 318 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+ create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+ create mode 100644 samples/vfio-pci/Makefile
+ create mode 100644 samples/vfio-pci/igd_pt.c
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
