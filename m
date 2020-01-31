@@ -2,123 +2,100 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D0C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF37F215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4C0214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 21:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="DB34FYS0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UFqfczXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgAaVdX (ORCPT
+        id S1726330AbgAaVga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 16:33:23 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35747 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgAaVdW (ORCPT
+        Fri, 31 Jan 2020 16:36:30 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37108 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAaVg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 16:33:22 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so3262744plt.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:33:22 -0800 (PST)
+        Fri, 31 Jan 2020 16:36:29 -0500
+Received: by mail-lj1-f193.google.com with SMTP id v17so8601458ljg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 13:36:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=v0cY8r600PZeMMg003zbfyKoArFu5BkniPYK/6FLwIM=;
-        b=DB34FYS0GbdREz9MgbfN6GuhgdDTZlKITxD0isHLtPED+4N8iQRLPGGtlunQ0K4Ob+
-         NWPbi9TxN1YqENBQKIifltqOpSzi4F+U6/mEVXYtuKxZlh0U/eL6omVSAS9R98bOTolz
-         yg0XC8KBPGgb6NZcpOiEpVi/9NALs3R97S4//yxss0Lnb/6RPxcy4a14Hv0R/Crsxhg+
-         Fma29ZkKatlSvg/biTbuUo/sPAvkwG8Xm0NHuhbDEZDzRoOXXkYMtshnPho8eF7fyuRy
-         r824XGik5cjUwfxU/DsZkZGwtO98sb30s8v3UprW8aUPV/HQud1sPFWrAmQHjlPbnMoP
-         J/XA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tPp4CE2TXss+Iqg1JyzdT3AoBMysWvmpqcl+5tL7wfM=;
+        b=UFqfczXofGowOc/1d9Jw/A37caNSorQt1frX6+nTQmuT76g0i6gIKLAHxwJewlH+l9
+         IGrJg1etsGOvaN8ZKYm66P/904XHwcbCr0qT4p1L/wP/MhQZx4Lx2YwF9GmPXZX7vkX8
+         LmWpQZH6FkjbDoMHGjw3AvhYWsDQiu2AkMkEWKg/09My08fRFAtuBoC0Y4Yiqb0hq58D
+         ARSU1Ey73Bnth/YIGBqVb0PhaihCAKyiUA0BT5uw2qLytabhK57lp2ol8ez5wkamI8C8
+         cqwsdkcxkeITkI3xnTKYHrufuq9hjxaoFvqA5+t+X4hkVyM4ZC6Pym69Nsc4ibhT2LTf
+         8Rmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=v0cY8r600PZeMMg003zbfyKoArFu5BkniPYK/6FLwIM=;
-        b=hKCECc8kh+wTyGky3i8wXfB6+3ik8D4bolYJvhqFbA3iD0k1cYzUDH63MvCopdTLGT
-         vAjIv1aYfglamM9b4pXM3+G5m9KyhfSpIcd8OxrRX0nEYvnAiLROH6D0ex5XGw/7zc8L
-         +i1TZOl4wcYdOkLvn92kbbTyhjWSAw60KLtA/nMHQ8n6nAzK1SdYQYY4xwP0ibbiu+tV
-         x898BUPvAcJvamwdriMHuTZDh27aXiyKnS8XQXamO/aROsCLcApGUAWNVwRT0BeiiSVa
-         WdrJckz6l6mnhJf+IN9Tdfloggij2QmVHJ7vns+TbiYLOEm7tgPCLaRDT0lGf0Rgg7oG
-         D+ig==
-X-Gm-Message-State: APjAAAXHhyHueO5kpp1r/jp9wYcHiwZRsj2BH200FDi4KS7tHNnioVEH
-        OxYk8REwlFgr6U6NvWjLD4zC7g==
-X-Google-Smtp-Source: APXvYqxUZPWDZetpRBZGKWvETiPTJY3F2228m8xWzfN+cNxLwgMODZHx1RESWs9RO0c/orFHJv/Dkg==
-X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr12159154pls.34.1580506402075;
-        Fri, 31 Jan 2020 13:33:22 -0800 (PST)
-Received: from ?IPv6:2600:1010:b010:9631:69c2:3ecc:ab84:f45c? ([2600:1010:b010:9631:69c2:3ecc:ab84:f45c])
-        by smtp.gmail.com with ESMTPSA id m22sm12003610pgn.8.2020.01.31.13.33.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 13:33:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-Date:   Fri, 31 Jan 2020 13:33:17 -0800
-Message-Id: <E1F9CE39-7D61-43E1-B871-6D4BFA4B6D66@amacapital.net>
-References: <20200131210424.GG18946@linux.intel.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-In-Reply-To: <20200131210424.GG18946@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tPp4CE2TXss+Iqg1JyzdT3AoBMysWvmpqcl+5tL7wfM=;
+        b=DZUNbJQFcYJQpjsMkQsoYXbM29JsKwEgivjSWzLvh3MJFQV8i26mdzVEJJ26a5VrQ6
+         V1qRv+W2J76DSWZmwIWCvLNcxv+uxKePMMOsuFS3J7hgKwdxVaumngws88hWCpvhSyjh
+         QuRS1i3MhdqUKy0WngyyVyLKV1CNTUSu+ANYwUn57JnPNCjCKzPL+BfHIIsqL7SXP3Ga
+         tvmD7X7z6o+nxM8jR4ZLaWB8VRFLdJe6Zd1FuX8dQInPfRjA0PNp2LndQxoRkMidfb0n
+         7vq7a7zIyFiYq+d5gaXAiC9gEIlLFmNPtFG+p0yvZLZyyygsRvoSEaoeC8nFDo/jrGCp
+         LuUA==
+X-Gm-Message-State: APjAAAU7uEaXazeJZuckX+AgvNZeU3B5EVhUg36pGv8hIOX3cRMEQcny
+        bvk3V+DB/mHXGKO+X3+Saby0q0sAO8n2gTa1LoAmoQ==
+X-Google-Smtp-Source: APXvYqyt/2uWbr7uISs4LADoAJ7mFl38eOmZqrUOoScK9Xl/jliht9jHg5OxSyMaVzZ4S/+E8Ii5bMdspbN94RNqBe4=
+X-Received: by 2002:a2e:85ce:: with SMTP id h14mr7134662ljj.41.1580506587808;
+ Fri, 31 Jan 2020 13:36:27 -0800 (PST)
+MIME-Version: 1.0
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org> <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
+From:   Evan Green <evgreen@google.com>
+Date:   Fri, 31 Jan 2020 13:35:51 -0800
+Message-ID: <CAE=gft7GDtQCYy8UqpVRK18eXQLTD8q19=Sfq-iitekQCS1FMA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
+ DT bindings
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> wrote:
+>
+> Redefine the Network-on-Chip devices to more accurately describe
+> the interconnect topology on Qualcomm's SDM845 platform. Each
+> interconnect device can communicate with different instances of the
+> RPMh hardware which are described as RSCs(Resource State Coordinators).
+>
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  .../bindings/interconnect/qcom,sdm845.yaml         | 49 ++++++++++++++++++----
+>  1 file changed, 40 insertions(+), 9 deletions(-)
+>
 
+This patch doesn't seem to apply cleanly on top of patch 1 because of
+whitespace context differences.
 
-> On Jan 31, 2020, at 1:04 PM, Sean Christopherson <sean.j.christopherson@in=
-tel.com> wrote:
->=20
-> =EF=BB=BFOn Fri, Jan 31, 2020 at 12:57:51PM -0800, Andy Lutomirski wrote:
->>=20
->>>> On Jan 31, 2020, at 12:18 PM, Sean Christopherson <sean.j.christopherso=
-n@intel.com> wrote:
->>>=20
->>> This is essentially what I proposed a while back.  KVM would allow enabl=
-ing
->>> split-lock #AC in the guest if and only if SMT is disabled or the enable=
- bit
->>> is per-thread, *or* the host is in "warn" mode (can live with split-lock=
- #AC
->>> being randomly disabled/enabled) and userspace has communicated to KVM t=
-hat
->>> it is pinning vCPUs.
->>=20
->> How about covering the actual sensible case: host is set to fatal?  In th=
-is
->> mode, the guest gets split lock detection whether it wants it or not. How=
- do
->> we communicate this to the guest?
->=20
-> KVM doesn't advertise split-lock #AC to the guest and returns -EFAULT to t=
-he
-> userspace VMM if the guest triggers a split-lock #AC.
->=20
-> Effectively the same behavior as any other userspace process, just that KV=
-M
-> explicitly returns -EFAULT instead of the process getting a SIGBUS.
+I'll use this as an opportunity to plug the "patman" tool, which lives
+(weirdly) in the u-boot repository, but is an excellent way to manage
+and spin upstream submissions.
 
-
-Which helps how if the guest is actually SLD-aware?
-
-I suppose we could make the argument that, if an SLD-aware guest gets #AC at=
- CPL0, it=E2=80=99s a bug, but it still seems rather nicer to forward the #A=
-C to the guest instead of summarily killing it.
-
-ISTM, on an SLD-fatal host with an SLD-aware guest, the host should tell the=
- guest =E2=80=9Chey, you may not do split locks =E2=80=94 SLD is forced on=E2=
-=80=9D and the guest should somehow acknowledge it so that it sees the archi=
-tectural behavior instead of something we made up.  Hence my suggestion.=
+-Evan
