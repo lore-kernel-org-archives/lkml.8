@@ -2,122 +2,134 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EC8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA44CC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99710215A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580477501;
-	bh=rGI+UF/ICJd+DA8hslNtVh1f+xovDraNDpFwivdJgEQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xv9PoRkSrve0Dz5Ow7L3m28K07YB3JSqnH+uwMkDiWm5p4NrA0DXrrnOCpVuW3W0Y
-	 iCG4jtRQGUqV9ztNyIQEJemvHu2IVbKb7DO3JOxBfj66ky/cc0t6RQ1I5klsvGzyuK
-	 dlQX7swwPQZ1oruiwJiMwl+MqVnyfxeMgJ/O+K0k=
+	by mail.kernel.org (Postfix) with ESMTP id BB54720707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgAaNbl (ORCPT
+        id S1728686AbgAaNdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:31:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgAaNbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:31:40 -0500
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4106320CC7;
-        Fri, 31 Jan 2020 13:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580477499;
-        bh=rGI+UF/ICJd+DA8hslNtVh1f+xovDraNDpFwivdJgEQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lNh1WjFIpIEW9gXqIRSmZJAOjv3O4mh6mGQrDhX5I681cYGAB8HU+xBjBD2rJ1C9Q
-         TJXUu70xcUSirXIZgn61heC1YOyaIndk86NtztEiWfuW+VPE4WHR42hV+ivyvdWash
-         4JYm9F+/bLF3lWQwcU2T8HrzxncujDFoDpSqLTdg=
-Received: by mail-lf1-f41.google.com with SMTP id v201so4846532lfa.11;
-        Fri, 31 Jan 2020 05:31:39 -0800 (PST)
-X-Gm-Message-State: APjAAAUfOqiAnmYfk/Ca11X4t/qjG+9TuFvOGw62bnkuc8ANS+PDekVW
-        8KYpEZlp/CjWuHiHM5SE3J8Z8Z7xMR3a/4EKmoY=
-X-Google-Smtp-Source: APXvYqwSbqju6JUksaPdkz/97mfFYOYXw/rc+uN4pEE26ZZoKFaM+ty1mhlgkTYOmglIESjcDg0P8El//QIqqmY+O8o=
-X-Received: by 2002:ac2:4472:: with SMTP id y18mr5340968lfl.39.1580477497394;
- Fri, 31 Jan 2020 05:31:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20200127215453.15144-1-lukasz.luba@arm.com> <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
- <20200127215453.15144-4-lukasz.luba@arm.com> <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
-In-Reply-To: <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 31 Jan 2020 14:31:26 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPcZCks1SxwBP-vhpsYzpsrV9MQo91QNU2obgAppxfTiyQ@mail.gmail.com>
-Message-ID: <CAJKOXPcZCks1SxwBP-vhpsYzpsrV9MQo91QNU2obgAppxfTiyQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     lukasz.luba@arm.com, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
+        Fri, 31 Jan 2020 08:33:22 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26640 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728614AbgAaNdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:33:21 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VDU2WD029264
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:33:20 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xve64jp2m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 08:33:19 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 31 Jan 2020 13:33:17 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 31 Jan 2020 13:33:14 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VDXDXa41943252
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jan 2020 13:33:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 137CBAE04D;
+        Fri, 31 Jan 2020 13:33:13 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96D83AE057;
+        Fri, 31 Jan 2020 13:33:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.193.32])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 31 Jan 2020 13:33:11 +0000 (GMT)
+Subject: Re: [PATCH 1/8] tpm: initialize crypto_id of allocated_banks to
+ HASH_ALGO__LAST
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Cc:     "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, dietmar.eggemann@arm.com
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Fri, 31 Jan 2020 08:33:10 -0500
+In-Reply-To: <8c15cf66708a4d38916b8ca39f26b5f6@huawei.com>
+References: <20200127170443.21538-1-roberto.sassu@huawei.com>
+         <20200127170443.21538-2-roberto.sassu@huawei.com>
+         <50afe1f50297b02af52621b6738ffff0c24f1bdf.camel@linux.intel.com>
+         <8c15cf66708a4d38916b8ca39f26b5f6@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20013113-0020-0000-0000-000003A5D948
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20013113-0021-0000-0000-000021FD933C
+Message-Id: <1580477590.6104.61.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1911200001
+ definitions=main-2001310117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 14:30, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
->
->
-> Hi,
->
-> On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
-> > From: Lukasz Luba <lukasz.luba@arm.com>
-> >
-> > Enable the Energy Model (EM) brings possibility to use Energy Aware
-> > Scheduler (EAS). This compiles the EM but does not enable to run EAS in
-> > default. The EAS only works with SchedUtil - a CPUFreq governor which
-> > handles direct requests from the scheduler for the frequency change. Thus,
-> > to make EAS working in default, the SchedUtil governor should be
-> > configured as default CPUFreq governor. Although, the EAS might be enabled
-> > in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
-> > then set as CPUFreq governor, i.e.:
-> >
-> > echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-> > echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-> >
-> > To check if EAS is ready to work, the read output from the command below
-> > should show '1':
-> > cat /proc/sys/kernel/sched_energy_aware
-> >
-> > To disable EAS in runtime simply 'echo 0' to the file above.
-> >
-> > Some test results, which stress the scheduler on Odroid-XU3:
-> > hackbench -l 500 -s 4096
-> > With mainline code and with this patch set.
-> >
-> > The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
-> > (which is set to =y in default exynos_defconfig)
-> >
-> >               |               this patch set                  | mainline
-> >               |-----------------------------------------------|---------------
-> >               | performance   | SchedUtil     | SchedUtil     | performance
-> >               | governor      | governor      | governor      | governor
-> >               |               | w/o EAS       | w/ EAS        |
-> > ----------------|---------------|---------------|---------------|---------------
-> > hackbench w/ PL | 12.7s               | 11.7s         | 12.0s         | 13.0s - 12.2s
-> > hackbench w/o PL| 9.2s                | 8.1s          | 8.2s          | 9.2s - 8.4s
->
-> Would you happen to have measurements of how much power is
-> saved by running hackbench using "SchedUtil governor w/ EAS"
-> instead of "SchedUtil governor w/o EAS"?
+On Thu, 2020-01-30 at 16:11 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: Jarkko Sakkinen [mailto:jarkko.sakkinen@linux.intel.com]
+> > Sent: Thursday, January 30, 2020 9:48 AM
+> > To: Roberto Sassu <roberto.sassu@huawei.com>; zohar@linux.ibm.com;
+> > james.bottomley@hansenpartnership.com; linux-integrity@vger.kernel.org
+> > Cc: linux-security-module@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+> > Subject: Re: [PATCH 1/8] tpm: initialize crypto_id of allocated_banks to
+> > HASH_ALGO__LAST
+> > 
+> > On Mon, 2020-01-27 at 18:04 +0100, Roberto Sassu wrote:
+> > > chip->allocated_banks contains the list of TPM algorithm IDs of allocated
+> > > PCR banks. It also contains the corresponding ID of the crypto subsystem,
+> > > so that users of the TPM driver can calculate a digest for a PCR extend
+> > > operation.
+> > >
+> > > However, if there is no mapping between TPM algorithm ID and crypto ID,
+> > the
+> > > crypto_id field in chip->allocated_banks remains set to zero (the array is
+> > > allocated and initialized with kcalloc() in tpm2_get_pcr_allocation()).
+> > > Zero should not be used as value for unknown mappings, as it is a valid
+> > > crypto ID (HASH_ALGO_MD4).
+> > >
+> > > This patch initializes crypto_id to HASH_ALGO__LAST.
+> > >
+> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>---
+> > 
+> > Remarks:
+> > 
+> > * After the subsystem tag, short summary starts with a capital lettter.
+> > * Missing fixes tag and cc tag to stable.
+> > * A struct called allocated_banks does not exist.
+> > * Please prefer using an imperative sentence when describing the action
+> >   to take e.g. "Thus, initialize crypto_id to HASH_ALGO__LAST".
+> 
+> Thanks. I will fix these issues in the next version of the patch set.
 
-That's a good point and quite important reason behind enabling (or not) EAS...
+Jarkko, I realize this is a TPM patch, but this patch set is dependent
+on it.  When this patch is ready, could you create a topic branch,
+which both of us could merge?
 
-Best regards,
-Krzysztof
+thanks,
+
+Mimi
+
