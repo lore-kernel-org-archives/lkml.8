@@ -6,58 +6,59 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C56C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D9BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9398E20705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B78214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 03:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="cjINDer7"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="p72bhPsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgAaDRu (ORCPT
+        id S1727967AbgAaDSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 22:17:50 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44528 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbgAaDRu (ORCPT
+        Thu, 30 Jan 2020 22:18:09 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46025 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727926AbgAaDSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 22:17:50 -0500
-Received: by mail-ed1-f67.google.com with SMTP id g19so6193339eds.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 19:17:49 -0800 (PST)
+        Thu, 30 Jan 2020 22:18:09 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so6168765edw.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 19:18:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yOLVgt8fcj2iGYHey3CUUOmMkAYnS7j8tXgJvVrXU7k=;
-        b=cjINDer7CEB6XzORhR8of1i8DxX4CJUvcOz+BiVF8rlOvRxcYqqJFssCOje0YNdmLw
-         acpDC81YkTWmD7895JLz6xiLO6vmT9csUBCwGj2HL6umCeWeu2o04CC411BxwTxJG/w3
-         CX25pbReUUx3lK6oVXm2J4aVSc9Xm90wz4Z1GbVD41D3QLNWo0jntUIDVGFQ5RijP0zU
-         lfYi0YTM39PGc2u/cA5FzfxRIC+DhBgCq/0Czc/Xd92Pbkfoo4UvasgayXhb2HRSf5tz
-         Bg+zvLhW1BqXaWHohC1sYODzXHjv/ASKhvPdCGCDCkCsZ9IdEpmUxfBX7BnkQPIrkolF
-         aGYg==
+        bh=2UFuNa0uGTLSS1K01AHJXT4Immh/ilmwx1a5+JX2kzY=;
+        b=p72bhPsqHNefTSK6Ep+tGbjM2dm4qropADYIbAbcPBmXX4btpOIYu/AUklLtW9HlW+
+         dD/G19PbLERrH9LJFPYgrkrgnoGLgRydZfUG9raQPMIbnA3IDRUSFwLT90c/JLHmEt0j
+         n+R19nbrys+yrn0UOhbRBsTMZAL6NGCtCNiOiL6fsvbBAskEB4v2s9YqP9C4YvuV1PNH
+         by/mU9jceZdiFlqAndGuo1BPis8TBbIgMHr6w4CvxbWJwl2NhcMS0JjYXqIduazoC0lA
+         LgG1dafhhm9rpDiuaCqZF9Y1kmgCbD1GnsnpJUurEV8iGXZNTMG2N6yv+3642xEriwg3
+         9daw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yOLVgt8fcj2iGYHey3CUUOmMkAYnS7j8tXgJvVrXU7k=;
-        b=oNvlZdlaU3X3RtnrYGels1JKD4U2j/bRiNWcQAGs/r1bUX6aH5SS2K6SsKFEgxjarc
-         y6dhsoNXeu/Mw0GVcUrA3TL8vIxTMoVbKkNwnck/E5uLKfihD2N8B5uiaLHJ6KZEIVmK
-         C39RnEwHEX0k3PFBLGtkZJQ6YbQJTa8XMkb012iclG2qyuN/DBqKc53Exgtfw/dzP5bC
-         J9M8xbLj0baPOpprxfWewDk4JOiqQ4GGloQ35j2smrt4O9uL0vbdrzwkNosR9RA9PhQy
-         69f2nKWLV3D2K3jlf33DHXXFdokrwoEEJKRww/wplrdwnL9/21AjEIfDCJksQCTrJ9Lr
-         oXag==
-X-Gm-Message-State: APjAAAXKMnQ7SUNt8Q3AJEI8JtofM4j5n+58FWUrUsJALnqu0K3KFIFb
-        nkfkJ0CK3aU22DvZKLW3jrO7ylKAmKL2KpX5HMOH
-X-Google-Smtp-Source: APXvYqwTUCYi1zTZ6aAj7T9ZR7RSTow6UhKXtTaXdlQwg4TDpQzCRANFe2+jrAzUPpmkZYRiK/VrJJt2rP9aOfwn3Sk=
-X-Received: by 2002:a50:a7a5:: with SMTP id i34mr6842376edc.128.1580440668703;
- Thu, 30 Jan 2020 19:17:48 -0800 (PST)
+        bh=2UFuNa0uGTLSS1K01AHJXT4Immh/ilmwx1a5+JX2kzY=;
+        b=BvMBOHxKS2vvcmbMVP+s4roYg2tQcFHctnZwipbiJM+y7avQw9WwMOH6E6gWMUY9Qr
+         /IBJBzSUa/lUcGIaVlUV76LiqjtTkgicAQ/6bQ9iMO2sS0k4zNK/E6Kag9mr6dG99Mqy
+         Y3uMiyaJXBil+lg1rVDvEWEIgx1VauRdHcWQYrwKrfoxLH0Ulb6Xpz1KltJFn0OCSz+K
+         9FNMbw4mihq2XP5K9DrfoR128/hrHiGGFtYIiOz0fCNgicg2xDRdW+kR/yK+BW3DhXvv
+         NQB7MnD4srA16hLfakSZ/SgAZVljkflLYBo7pHG55m8t0vbzyBjA14hrUwcdeNcB61+8
+         QTvA==
+X-Gm-Message-State: APjAAAVgllP5m/brg4qMarR85eq/8iRc3Pn0iyP5bp5gFHB5VWSqTb/r
+        KOPuPjt7MFho62kOR/NgXYFPgiZTIOSdxG7IdYWxrUa+Kg==
+X-Google-Smtp-Source: APXvYqxZYRdy66YBGdH/VpIt3ZboIykO9cetzPypkFQfg4TUGmTfhLVz2mVM4N1TFUn6xMYy7WmQgJiTKAg/wHr3E28=
+X-Received: by 2002:aa7:cd49:: with SMTP id v9mr6686444edw.269.1580440687367;
+ Thu, 30 Jan 2020 19:18:07 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1577830902.git.rgb@redhat.com> <c07cc1ecac3aaa09ebee771fa53e73ab6ac4f75f.1577830902.git.rgb@redhat.com>
-In-Reply-To: <c07cc1ecac3aaa09ebee771fa53e73ab6ac4f75f.1577830902.git.rgb@redhat.com>
+References: <cover.1577830902.git.rgb@redhat.com> <7df83e229cff2518e73425cdc712505fb773a9c2.1577830902.git.rgb@redhat.com>
+In-Reply-To: <7df83e229cff2518e73425cdc712505fb773a9c2.1577830902.git.rgb@redhat.com>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 30 Jan 2020 22:17:37 -0500
-Message-ID: <CAHC9VhQSzJSJz7YKdjHeW_y4nvoWBHjt00yT+ixNRwGM6+ZMsA@mail.gmail.com>
-Subject: Re: [PATCH ghak25 v2 2/9] netfilter: normalize ebtables function declarations
+Date:   Thu, 30 Jan 2020 22:17:56 -0500
+Message-ID: <CAHC9VhR=KOAJz5F1XtqSiQkX7c90qCf6dzwZp+j+BTL=sfwTFg@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v2 3/9] netfilter: normalize ebtables function
+ declarations II
 To:     Richard Guy Briggs <rgb@redhat.com>
 Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -73,19 +74,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Jan 6, 2020 at 1:55 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 >
-> Git context diffs were being produced with unhelpful declaration types
-> in the place of function names to help identify the funciton in which
-> changes were made.
->
-> Normalize ebtables function declarations so that git context diff
-> function labels work as expected.
+> Align all function declaration parameters with open parenthesis.
 >
 > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 > ---
->  net/bridge/netfilter/ebtables.c | 100 ++++++++++++++++++++--------------------
->  1 file changed, 51 insertions(+), 49 deletions(-)
+>  net/bridge/netfilter/ebtables.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
 
-My comments from the first patch regarding style chanes also applies here.
+My comments from the first patch regarding style changes also applies here.
 
 --
 paul moore
