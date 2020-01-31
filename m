@@ -2,133 +2,123 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49120C33CB7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0363D206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AEEF2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 20:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580503285;
+	bh=y2Qr/43Tz3scD0wCbna/xDvorR3LhQzqg8aVEM6oYfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rZwoMwfQ6xP9VXQ82Zsk5s+8+leqorvaUp/PnZw9lqacona6Gf2HxGduOjrmwvTTK
+	 1L6IyNxsUD+dvZnRDn0+nw9gZMWcOxSWgyZg8mSF784nC6xMqhjHn54BZhThrQJlsg
+	 Zy/vl0sKNLOeBxC8nszxISmwJJvd0Mx/Vp+0qLe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgAaUgX (ORCPT
+        id S1726943AbgAaUlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 15:36:23 -0500
-Received: from mga07.intel.com ([134.134.136.100]:10439 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgAaUgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 15:36:23 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 12:36:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,387,1574150400"; 
-   d="scan'208";a="247838310"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 31 Jan 2020 12:36:22 -0800
-Date:   Fri, 31 Jan 2020 12:36:22 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200131203622.GF18946@linux.intel.com>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
- <20200128182402.GA18652@linux.intel.com>
- <20200131150832.GA740148@xz-x1>
- <20200131193301.GC18946@linux.intel.com>
- <20200131202824.GA7063@xz-x1>
+        Fri, 31 Jan 2020 15:41:24 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40055 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgAaUlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 15:41:24 -0500
+Received: by mail-ed1-f68.google.com with SMTP id p3so9205487edx.7;
+        Fri, 31 Jan 2020 12:41:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QJJQfRq1wZ707JbA7sCfgb7195GzFk0v3Czz3H1LQFM=;
+        b=Amo52QxL2tsF50MGTgRZccozNwCZNONEZKXlQ2rwdy1N/QingfkR6eHL8KQ6IkRl7j
+         XvE/BsFWYL37SYdr4hNImct5zckkSgIbuReg9noxucXbyRWn4dlQreKdG0IB9FBVaHBF
+         T1hMl2FKIJPVa7uORjO3onNAf0fuleESUD9oZ9Bp0MYolEv/5ZRxpcGBWJbEJMTdQdwN
+         bbEXL9J7ThfLcSH0XUpVpFQCkITX1yNU20294J7FxVIhydDRikb1MecPL5g5aSby70wq
+         QVhekqZfSAlxWA73+5Zr/IWP4L3OsQIZPXRHtZ5YbGVfH94chDEUWJ9bxM/K7R0mlhMc
+         rYgg==
+X-Gm-Message-State: APjAAAUE0Rb0g8uCpEf1INI+MIdghFpwJl/mGFVhfI3sm70575fBCKDi
+        3LRz4ARB+tI8WGz9ZLSBi0k=
+X-Google-Smtp-Source: APXvYqzi2OiUv/2SQLW0+RWJMHY1JvZjAFeYrqrQ+tOC0v6TlKYJqCvpe6xewRBkzBF4uoalMMoxOg==
+X-Received: by 2002:a05:6402:1a25:: with SMTP id be5mr2197002edb.220.1580503281876;
+        Fri, 31 Jan 2020 12:41:21 -0800 (PST)
+Received: from kozik-lap ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id s16sm558231edy.51.2020.01.31.12.41.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 12:41:21 -0800 (PST)
+Date:   Fri, 31 Jan 2020 21:41:18 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+Message-ID: <20200131204118.GA27284@kozik-lap>
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-4-lukasz.luba@arm.com>
+ <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+ <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200131202824.GA7063@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 03:28:24PM -0500, Peter Xu wrote:
-> On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
-> > For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
-> > still has to use copy_{to,from}_user().
+On Fri, Jan 31, 2020 at 05:30:46PM +0000, Lukasz Luba wrote:
+ 
 > > 
-> > In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
-> > would be provided the hva of the memory region.  Since slots_lock and SRCU
-> > only protect gfn->hva, why would KVM take slots_lock since it already has
-> > the hva?
-> 
-> OK so you're suggesting to unlock the lock earlier to not cover
-> init_rmode_tss() rather than dropping the whole lock...  Yes it looks
-> good to me.  I think that's the major confusion I got.
-
-Ya.  And I missed where the -EEXIST was coming from.  I think we're on the
-same page.
-
-> > Returning -EEXIST is an ABI change, e.g. userspace can currently call
-> > KVM_SET_TSS_ADDR any number of times, it just needs to ensure proper
-> > serialization between calls.
+> > >                  |-----------------------------------------------|---------------
+> > >                  | performance   | SchedUtil     | SchedUtil     | performance
+> > >                  | governor      | governor      | governor      | governor
+> > >                  |               | w/o EAS       | w/ EAS        |
+> > > ----------------|---------------|---------------|---------------|---------------
+> > > hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
+> > > hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
 > > 
-> > If you want to change the ABI, then submit a patch to do exactly that.
-> > But don't bury an ABI change under the pretense that it's a bug fix.
+> > Why does the performance different before and after this patch?
 > 
-> Could you explain what do you mean by "ABI change"?
-> 
-> I was talking about the original code, not after applying the
-> patchset.  To be explicit, I mean [a] below:
-> 
-> int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size,
-> 			    unsigned long *uaddr)
-> {
-> 	int i, r;
-> 	unsigned long hva;
-> 	struct kvm_memslots *slots = kvm_memslots(kvm);
-> 	struct kvm_memory_slot *slot, old;
-> 
-> 	/* Called with kvm->slots_lock held.  */
-> 	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
-> 		return -EINVAL;
-> 
-> 	slot = id_to_memslot(slots, id);
-> 	if (size) {
-> 		if (slot->npages)
-> 			return -EEXIST;  <------------------------ [a]
->         }
->         ...
-> }
+> Probably due to better locality and cache utilization. I can see that
+> there is ~700k context switches vs ~450k and ~160k migrations vs ~50k.
+> If you need to communicate two threads in different clusters, it will go
+> through CCI.
 
-Doh, I completely forgot that the second __x86_set_memory_region() would
-fail.  Sorry :-(
+Mhmm... I was not specific - I mean, "performance governor". All this
+you mentioned should not differ between performance governor before and
+after. However once you have 12.7, then 13.0 - 12.2. Unless multi-core
+scheduler affects it... but then these numbers here are not showing
+only this change, but also the SCHED_MC effect.  In such case each of
+commits should be coming with their own numbers.
 
-> > > Yes, but as I mentioned, I don't think it's an issue to be considered
-> > > by KVM, otherwise we should have the same issue all over the places
-> > > when we fetch the cached userspace_addr from any user slots.
-> > 
-> > Huh?  Of course it's an issue that needs to be considered by KVM, e.g.
-> > kvm_{read,write}_guest_cached() aren't using __copy_{to,}from_user() for
-> > giggles.
+> As mentioned in response to patch 1/3. The fist patch would create MC
+> domain, something different than Energy Model or EAS. The decisions in
+> the scheduler would be different.
 > 
-> The cache is for the GPA->HVA translation (struct gfn_to_hva_cache),
-> we still use __copy_{to,}from_user() upon the HVAs, no?
+> I can merge 1/3 and 3/3 if you like, though.
 
-I'm still lost on this one.  I'm pretty sure I'm incorrectly interpreting:
-  
-  I don't think it's an issue to be considered by KVM, otherwise we should
-  have the same issue all over the places when we fetch the cached
-  userspace_addr from any user slots.
+I understand now that their independent. Still, they are part of one
+goal to tune the scheduler for Exynos platform. Splitting these looks
+too much, like enabling multiple drivers one after another.
 
-What is the issue to which you are referring?
+However if you provide numbers for each of cases (before patches, multi
+core scheduler, energy model with DTS), then I see benefit of splitting
+it.  Each commit would have its own rationale.  I am not sure if it is
+worth such investigation - that's just defconfig... distros might ignore
+it anyway.
+
+Best regards,
+Krzysztof
+
