@@ -2,118 +2,98 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5177EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8E9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17584206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C67206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 02:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YH6f4GSJ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kU2cMA3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgAaCwJ (ORCPT
+        id S1727895AbgAaCxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 21:52:09 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36312 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727739AbgAaCwI (ORCPT
+        Thu, 30 Jan 2020 21:53:52 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58287 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727777AbgAaCxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:52:08 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 185so2541013pfv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 18:52:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fEAmTEdNizSUWXKdPuS6LL74RLJsP+T/eHBkCvQrdqk=;
-        b=YH6f4GSJ+puDeLRjgj4sqKC9rM+5OJMAMj5bNNAd45cq6tZQTvXMo4fghb0bFVA42+
-         o/ohcEcjKUtelQb0ZPJAmxNseIaNui1/Rgc317qpwZs2UNJCaQo0HKHtop2sl9EhGO4N
-         d7wWKo98hocqI0covxpI/hwF7dc7/W71PHWUbe3cFbVxKW+qDh+vf33eR7LoMTyKUI4k
-         hpKX7hyrSPC10XASVqL4BP7QSWFD0Vd+SWPRWPaMw2Hcobh1+IY9a5aWYj08CP2Nh5c/
-         cLS4UizbkV2g344TvyJ8+VPhud2IS87QjDrR7kgmOiyq63mCTElGnTXqQWwyaav7ln+b
-         48eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fEAmTEdNizSUWXKdPuS6LL74RLJsP+T/eHBkCvQrdqk=;
-        b=i95av5VXAWyJntpiJSm0KbT046i5xXypK4927binRVVTUgM8QRQvOjRJkMTPse/eO9
-         TfMjXgRRS9AXLsHzSyhPirBvmcugsOXbgsk5gZ/II3opcvXFTyfFApwTOwFxRJiCS1r4
-         TvJLfoTan24O8mlP83QYgJfiWdqYxHt5yKbeFih2dsTfV2qcN39Xep+flYYar+2+q7Zs
-         hNLxmcgApvYOf9YhOeNJprqFv03pOjXei0bs1kY37L6JEa/yPC2mBu4DuFjp3X2zvEQt
-         5Go2Wvt2Q1XcHDzAjGdj03XBnAf3yj8XftrVv2b4U4WPj4X+1xJ0KE/eRU+QN0F8CHV1
-         ztHw==
-X-Gm-Message-State: APjAAAWRvN9BnT2RNRVpwTBkTG7+Qgd0sFJIYCJ2Xo9k2cN5qEi8AHD7
-        /TOWFe3PgJjV5R5iD8Oq4XncDB7KCrz1rexoNFhcvA==
-X-Google-Smtp-Source: APXvYqyTWwzXtyR6VV/gPEURYRBzZmF1ECoiufrMJUPTEqRROpWZw2y6VmhfY4hH0YNQLvf2eJDbaS0GoaxHCXaeZ/0=
-X-Received: by 2002:a63:597:: with SMTP id 145mr7644337pgf.384.1580439127902;
- Thu, 30 Jan 2020 18:52:07 -0800 (PST)
-MIME-Version: 1.0
-References: <1579805221-31905-1-git-send-email-alan.maguire@oracle.com> <1579805221-31905-4-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1579805221-31905-4-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 30 Jan 2020 18:51:56 -0800
-Message-ID: <CAFd5g47sbW25MeOs87NuP_kRMNQc0JfiVVDTcLCbNk06KNo-ww@mail.gmail.com>
-Subject: Re: [PATCH v2 kunit-next 3/3] kunit: update documentation to describe
- debugfs representation
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Thu, 30 Jan 2020 21:53:52 -0500
+X-UUID: 2ed2632f77c344a2a0c204df28cb0362-20200131
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=J/YS9xrz7SE39sg55EiuDt9slMVYOmJaP+90r0kGMF8=;
+        b=kU2cMA3os+/I6YXPqwB3/BHr2hvZiLyvU2Lj+5VvB8TH8KSVmTqGsWBo8WkSqev0Fo5qa5lCyQIDWwweOUrgjZzbKq6msuR9cHtm2SEB4ldme0hpsCOJXOmL4s7fTazW5y3IVtZk1Sb42cy/+JsG7g5lQYKgsQGWtP4Otbog4FI=;
+X-UUID: 2ed2632f77c344a2a0c204df28cb0362-20200131
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 646680630; Fri, 31 Jan 2020 10:53:46 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 31 Jan 2020 10:53:02 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 31 Jan 2020 10:51:23 +0800
+Message-ID: <1580439225.11126.34.camel@mtksdccf07>
+Subject: Re: [PATCH v4 2/2] kasan: add test for invalid size in memmove
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 31 Jan 2020 10:53:45 +0800
+In-Reply-To: <20200130181613.1bfb8df8e73a280512cab8ef@linux-foundation.org>
+References: <20191112065313.7060-1-walter-zh.wu@mediatek.com>
+         <619b898f-f9c2-1185-5ea7-b9bf21924942@virtuozzo.com>
+         <1580355838.11126.5.camel@mtksdccf07>
+         <20200130181613.1bfb8df8e73a280512cab8ef@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 10:47 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> Documentation should describe debugfs layout and semantics.
->
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
->  Documentation/dev-tools/kunit/usage.rst | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index 7cd56a1..b05c843 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -590,3 +590,22 @@ able to run one test case per invocation.
->
->  .. TODO(brendanhiggins@google.com): Add an actual example of an architecture
->     dependent KUnit test.
-> +
-> +KUnit debugfs representation
-> +============================
-> +When kunit test suites are initialized, they create an associated directory
-> +in /sys/kernel/debug/kunit/<test-suite>.  The directory contains two files
-> +
-> +- results: "cat results" displays results of last test run
-> +- run: "cat run" runs the test suite and displays the results
-> +
-> +Thus to re-run all currently loaded suites and display results, we can do this:
-> +
-> +```
-> +$ cat /sys/kernel/debug/kunit/*/run
-> +```
+T24gVGh1LCAyMDIwLTAxLTMwIGF0IDE4OjE2IC0wODAwLCBBbmRyZXcgTW9ydG9uIHdyb3RlOg0K
+PiBPbiBUaHUsIDMwIEphbiAyMDIwIDExOjQzOjU4ICswODAwIFdhbHRlciBXdSA8d2FsdGVyLXpo
+Lnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IE9uIEZyaSwgMjAxOS0xMS0yMiBhdCAw
+NjoyMSArMDgwMCwgQW5kcmV5IFJ5YWJpbmluIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBPbiAxMS8x
+Mi8xOSA5OjUzIEFNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+ID4gPiA+IFRlc3QgbmVnYXRpdmUgc2l6
+ZSBpbiBtZW1tb3ZlIGluIG9yZGVyIHRvIHZlcmlmeSB3aGV0aGVyIGl0IGNvcnJlY3RseQ0KPiA+
+ID4gPiBnZXQgS0FTQU4gcmVwb3J0Lg0KPiA+ID4gPiANCj4gPiA+ID4gQ2FzdGluZyBuZWdhdGl2
+ZSBudW1iZXJzIHRvIHNpemVfdCB3b3VsZCBpbmRlZWQgdHVybiB1cCBhcyBhIGxhcmdlDQo+ID4g
+PiA+IHNpemVfdCwgc28gaXQgd2lsbCBoYXZlIG91dC1vZi1ib3VuZHMgYnVnIGFuZCBiZSBkZXRl
+Y3RlZCBieSBLQVNBTi4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFdhbHRlciBX
+dSA8d2FsdGVyLXpoLnd1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gUmV2aWV3ZWQtYnk6IERtaXRy
+eSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4gPiA+IA0KPiA+ID4gUmV2aWV3ZWQtYnk6
+IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQo+ID4gDQo+ID4gSGkg
+QW5kcmV5LCBEbWl0cnksIEFuZHJldywNCj4gPiANCj4gPiBXb3VsZCB5b3UgdGVsbCBtZSB3aHkg
+dGhpcyBwYXRjaC1zZXRzIGRvbid0IG1lcmdlIGludG8gbGludXgtbmV4dCB0cmVlPw0KPiA+IFdl
+IGxvc3Qgc29tZXRoaW5nPw0KPiA+IA0KPiANCj4gSW4gcmVzcG9uc2UgdG8gWzEvMl0gQW5kcmV5
+IHNhaWQgIlNvIGxldCdzIGtlZXAgdGhpcyBjb2RlIGFzIHRoaXMiIGFuZA0KPiB5b3Ugc2FpZCAi
+SSB3aWxsIHNlbmQgYSBuZXcgdjUgcGF0Y2ggdG9tb3Jyb3ciLiAgU28gd2UncmUgYXdhaXRpbmcg
+YSB2NQ0KPiBwYXRjaHNldD8NCj4gDQoNCkhpIEFuZHJldywNCg0KVGhlIFsxLzJdIHBhdGNoIGRp
+c2N1c3Npb24gc2hvd3MgYmVsb3cuIFRoYW5rcyBmb3IgRGltaXRyeSBoZWxwIHRvDQpleHBsYWlu
+IGl0LiBTbyB0aGF0IHY0IHBhdGNoc2V0IGdvdCBBbmRyZXkncyBzaWduYXR1cmUuIEJlY2F1c2Ug
+SSBzZWUNCkFuZHJleSBzYWlkICJCdXQgSSBzZWUgeW91IHBvaW50IG5vdy4gTm8gb2JqZWN0aW9u
+cyB0byB0aGUgcGF0Y2ggaW4gdGhhdA0KY2FzZS4iDQoNCkBBbmRyZXksIGlmIEkgaGF2ZSBhbiBp
+bmNvcnJlY3QgdW5kZXJzdGFuZGluZywgcGxlYXNlIGxldCBtZSBrbm93LiANClRoYW5rcyBmb3Ig
+eW91ciBoZWxwLg0KDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xMS8yMS8xMDE5DQpodHRw
+czovL2xrbWwub3JnL2xrbWwvMjAxOS8xMS8yMS8xMDIwDQoNCg0KV2FsdGVyDQo=
 
-This should be in a ".. code-block:: bash", see above in this file for
-an example.
-
-> +
-> +The debugfs representation is primarily of use when kunit test suites are
-> +run in a native environment, either as modules or builtin.  Having a way
-> +to display results like this is valuable as otherwise results can be
-> +intermixed with other events in dmesg output.
-> --
-> 1.8.3.1
->
