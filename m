@@ -2,90 +2,88 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FA3C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D99020663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55234215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 01:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580432816;
+	bh=jsJEjfvvosoNzF+1nP8nbj7092fwdtBhOz2X+N5rSYc=;
+	h=In-Reply-To:References:Subject:To:From:Cc:Date:List-ID:From;
+	b=JyoCUL78qMwo3oDtiyc99gLIEOioRA1BRGLki+IOCD/LgVhc5KU8tOv8btZlpX4e4
+	 xs+yh7C6cLgc9+A0QlCN1v8SxFpeAIZylPZ6/aZrmjmBKQIBdmZtI7d3rCKHMTK6IE
+	 4eKyjnmzVqZO+qeg0uAd+ugcbYb0LBleTzzvxuZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgAaBCB (ORCPT
+        id S1727782AbgAaBGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 20:02:01 -0500
-Received: from mga07.intel.com ([134.134.136.100]:38952 "EHLO mga07.intel.com"
+        Thu, 30 Jan 2020 20:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727614AbgAaBCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 20:02:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 17:02:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,383,1574150400"; 
-   d="scan'208";a="428560074"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2020 17:01:59 -0800
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 30 Jan 2020 17:01:59 -0800
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 30 Jan 2020 17:01:59 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.202]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.97]) with mapi id 14.03.0439.000;
- Fri, 31 Jan 2020 09:01:57 +0800
-From:   "Wang, Wei W" <wei.w.wang@intel.com>
-To:     Eduardo Habkost <ehabkost@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Liang, Kan" <kan.liang@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "Xu, Like" <like.xu@intel.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: RE: [PATCH v8 00/14] Guest LBR Enabling
-Thread-Topic: [PATCH v8 00/14] Guest LBR Enabling
-Thread-Index: AQHV16ndL88cBSX1I02vHdwwHuYoV6gD80yQ
-Date:   Fri, 31 Jan 2020 01:01:56 +0000
-Message-ID: <286AC319A985734F985F78AFA26841F73E3F9B0D@shsmsx102.ccr.corp.intel.com>
-References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
- <20200130201411.GF25446@habkost.net>
-In-Reply-To: <20200130201411.GF25446@habkost.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
+        id S1727648AbgAaBGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 20:06:55 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3336320678;
+        Fri, 31 Jan 2020 01:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580432814;
+        bh=jsJEjfvvosoNzF+1nP8nbj7092fwdtBhOz2X+N5rSYc=;
+        h=In-Reply-To:References:Subject:To:From:Cc:Date:From;
+        b=EAVQXk1uO5WynQ7Wtd1arSl2mIu7+KTMUvTyGUtP+CBTahefWsrjBU/w5+WVG5pbJ
+         6oeJf0VKlrt/bX9mb5sNu4yXZTeLRu/m8+rnihFdYrPqyT+y1zbbhNQrvRbDOAHQvT
+         kM55lR9ogO4s8yk5mrgvNveWr+uooWYXRl/S1ipM=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191209195749.868-1-tiny.windzz@gmail.com>
+References: <20191209195749.868-1-tiny.windzz@gmail.com>
+Subject: Re: [PATCH 01/17] clk: sunxi: sunxi-ng: convert to devm_platform_ioremap_resource
+To:     Eugeniy.Paltsev@synopsys.com, Yangtao Li <tiny.windzz@gmail.com>,
+        afaerber@suse.de, agross@kernel.org, aisheng.dong@nxp.com,
+        allison@lohutok.net, chunhui.dai@mediatek.com,
+        cw00.choi@samsung.com, daniel.baluta@nxp.com, dinguyen@kernel.org,
+        emilio@elopez.com.ar, festevam@gmail.com, geert+renesas@glider.be,
+        gregkh@linuxfoundation.org, heiko@sntech.de, jcmvbkbc@gmail.com,
+        john@phrozen.org, jonathanh@nvidia.com, kernel@pengutronix.de,
+        kgene@kernel.org, krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        matthias.bgg@gmail.com, miquel.raynal@bootlin.com,
+        mripard@kernel.org, mturquette@baylibre.com, nsekhar@ti.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, rfontana@redhat.com,
+        robh@kernel.org, s.hauer@pengutronix.de, s.nawrocki@samsung.com,
+        shawnguo@kernel.org, swinslow@gmail.com, t-kristo@ti.com,
+        tglx@linutronix.de, thierry.reding@gmail.com,
+        tomasz.figa@gmail.com, wangyan.wang@mediatek.com,
+        weiyongjun1@huawei.com, wens@csie.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 30 Jan 2020 17:06:53 -0800
+Message-Id: <20200131010654.3336320678@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpZGF5LCBKYW51YXJ5IDMxLCAyMDIwIDQ6MTQgQU0sIEVkdWFyZG8gSGFia29zdCB3cm90
-ZToNCj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDM6MTY6MDBQTSArMDgwMCwgV2VpIFdhbmcg
-d3JvdGU6DQo+ID4gTGFzdCBCcmFuY2ggUmVjb3JkaW5nIChMQlIpIGlzIGEgcGVyZm9ybWFuY2Ug
-bW9uaXRvciB1bml0IChQTVUpDQo+ID4gZmVhdHVyZSBvbiBJbnRlbCBDUFVzIHRoYXQgY2FwdHVy
-ZXMgYnJhbmNoIHJlbGF0ZWQgaW5mby4gVGhpcyBwYXRjaA0KPiA+IHNlcmllcyBlbmFibGVzIHRo
-aXMgZmVhdHVyZSB0byBLVk0gZ3Vlc3RzLg0KPiA+DQo+ID4gRWFjaCBndWVzdCBjYW4gYmUgY29u
-ZmlndXJlZCB0byBleHBvc2UgdGhpcyBMQlIgZmVhdHVyZSB0byB0aGUgZ3Vlc3QNCj4gPiB2aWEg
-dXNlcnNwYWNlIHNldHRpbmcgdGhlIGVuYWJsaW5nIHBhcmFtIGluIEtWTV9DQVBfWDg2X0dVRVNU
-X0xCUg0KPiAocGF0Y2ggMykuDQo+IA0KPiBBcmUgUUVNVSBwYXRjaGVzIGZvciBlbmFibGluZyBL
-Vk1fQ0FQX1g4Nl9HVUVTVF9MQlIgYmVpbmcgcGxhbm5lZD8NCj4gDQpZZXMsIHdlIGhhdmUgYSBj
-b3VwbGUgb2YgcWVtdSBwYXRjaGVzLiBUaGF0J3MgcGxhbm5lZCB0byBiZSByZXZpZXdlZCBhZnRl
-ciB0aGUga2VybmVsIHBhcnQgZ2V0cyBmaW5hbGl6ZWQg8J+Yig0KDQpCZXN0LA0KV2VpDQo=
+Quoting Yangtao Li (2019-12-09 11:57:33)
+> Use devm_platform_ioremap_resource() to simplify code.
+>=20
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+
+Please add a cover letter, resend this series picking up any acks and
+dropping any patches that were rejected by maintainers of the drivers.
+There was significant discussion on one patch that was rejected, so I'll
+only pick up patches for the next cycle that are acked/reviewed-by
+relevant folks.
+
