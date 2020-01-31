@@ -2,174 +2,98 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B565AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF07C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875702082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B2B2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJToakrM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6zJ9J3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgAaWQn (ORCPT
+        id S1726518AbgAaWQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:16:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34086 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbgAaWQn (ORCPT
+        Fri, 31 Jan 2020 17:16:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42329 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbgAaWQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580509002;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vNWAMFUjo2BxvgCqYLA09WvnKRsNZUCV/NyH0B71vPw=;
-        b=cJToakrMoYYh4Y/qTnKLvU1c70LxnQWG9aaDAVeIOctQReXHaXPKpVCdauUkNVGEchL8Yg
-        AR9NDF0PsfX/yhCgiHtD9jnm4NJjOIXv99pcKDAMDo/FeBsq5ViRjJNxFNWpcEvW9DWsLQ
-        mzZkv2oNf+j0Zu7zIKMqDfQhofx2/Ls=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-lqCLY4KUPA29G1Pecx6SSg-1; Fri, 31 Jan 2020 17:16:40 -0500
-X-MC-Unique: lqCLY4KUPA29G1Pecx6SSg-1
-Received: by mail-qv1-f71.google.com with SMTP id cn2so5374468qvb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 14:16:40 -0800 (PST)
+        Fri, 31 Jan 2020 17:16:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id k11so10415203wrd.9;
+        Fri, 31 Jan 2020 14:16:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z0qLNjKELTzo8V2eDuoK6TJ0KaPfo8HAQpIU4qVlhvY=;
+        b=M6zJ9J3PkavUndeMp2TByATRmXERrJR1X50HtK8gCQBCcY/04qFM/74E8Ud7SAWNtw
+         I5CAoqdGFvw/iy2hL62ZZaFHyb3BSRPB1inwnl82G658k3kmf2X7uoMI958n44ZmFwS9
+         0zTE4pPmg1fI4PgkeLLatHnc75jp6Au4XWgfmBNCH2cEjLr5oO6oWoS9Drm/n314ibVc
+         PlGwcbsLmhRdhCoBdXFTuilXSl01Rb/Ep5CxTgH7WCDvXilNTsrrK4hCvLU2JseZDXc8
+         MSKpwanmiHKeh0FUZeWAZ7e2sJ5ALDbIsqPGO3PXF9b2NlhPkcTIOfMrPZf/w6ft7JoE
+         nW2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vNWAMFUjo2BxvgCqYLA09WvnKRsNZUCV/NyH0B71vPw=;
-        b=cjgfGzP7fmDDacJvsxvZhi5ycpTNBxgyeqDLLK8q7sjfXbCz/U/GT9MeScco6b0S1T
-         vhuPVZz2myhL19PZo3hMW1ulhxBDo9nYUdFFfXRMCGBF2j/xYtJyhxSzrpmHz9YOxc9Y
-         mTNW/6xU+yaB5ZNdy66qOvJkYygINHBfelEWkjoJEs0eCNX/33T5OryJ5Sb3//nP6K+b
-         P/1Lx0eRonBBVJ9T6f6e4+ldVAGRQE/x66A7SzwJPcSNhDq/GvkhteFRs7mq99LPq/mA
-         dI7BzNCShiU3sRWGye3fS6Q1B97ogDnY/giMBMXZylnrCcwUzeds2of1TdF9PU7PnY6E
-         7AIA==
-X-Gm-Message-State: APjAAAXz6vlJoPMgxKZGNuxU1UoNPzeZqwq7vZ9dqQjLo5LeHy9IW5nx
-        noH1tmSfs+owaZEkuHtwEWsbJ0L3fxx5ZmmNutUSUoM2dZuqFw+kV1Odh9CzvpMe6rcPCsfHH6V
-        FqPb0lMP58HBodAWLj+PX2FCH
-X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr12995303qky.41.1580508999714;
-        Fri, 31 Jan 2020 14:16:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyFBEIl/LpAFBCeYudTZUb4k/rDVnIohho0H6H5nDgOCPBmQQeP0I4pvYuc2vcz1diZHlcEEw==
-X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr12995274qky.41.1580508999416;
-        Fri, 31 Jan 2020 14:16:39 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id u24sm5247491qkm.40.2020.01.31.14.16.37
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z0qLNjKELTzo8V2eDuoK6TJ0KaPfo8HAQpIU4qVlhvY=;
+        b=CWmJ95Ywn6XozFC8CuN/PknPKtw06sALTrL84Xoxi8UE/Y8scLYpy5bgdWc3PJDR30
+         KL2T03qbBS4K8xW4J5um9o/u03SrPHOOpTEELW3wZLgtFJNUz7NS70fraEq1HuCWYXWH
+         w99QI7rWBbPr96uEvSHt8JWsnqhrvg4eVjMLDTGyBxCzAjBKNFWSu5N2RroSQrm1w6nb
+         Bi/V42UsAb1pifoyO8EVucSFsg6IORn/3MOjEscao0tKB1dMokCtHaUhgloCuW0Z1pNF
+         b32j9I0W6nIFLEjykYhkvvRBMU33g7IZQ7TLWUYzfaV8BQspAjl8rmPLUUeEcAYBCm0D
+         x1lw==
+X-Gm-Message-State: APjAAAX/2dtcA5Y1+Hw0l5wvyWkboDOSpRk1REj0JEzgIeYzRcOd6e0F
+        fRPjAmRseqr7zFe8gl8TsUshDcY6
+X-Google-Smtp-Source: APXvYqzk2ib0orQl1T3z77LcmZgoVPYGS6LGaOwmy4coPw/4BGyHwZhg0T4GsEi8Elz9myuqK6FJAQ==
+X-Received: by 2002:adf:fe0e:: with SMTP id n14mr568702wrr.116.1580509003978;
+        Fri, 31 Jan 2020 14:16:43 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id e6sm12328001wme.3.2020.01.31.14.16.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 14:16:38 -0800 (PST)
-Date:   Fri, 31 Jan 2020 17:16:37 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200131221637.GC7063@xz-x1>
-References: <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
- <20200128055005.GB662081@xz-x1>
- <20200128182402.GA18652@linux.intel.com>
- <20200131150832.GA740148@xz-x1>
- <20200131193301.GC18946@linux.intel.com>
- <20200131202824.GA7063@xz-x1>
- <20200131203622.GF18946@linux.intel.com>
- <20200131205550.GB7063@xz-x1>
- <20200131212928.GH18946@linux.intel.com>
+        Fri, 31 Jan 2020 14:16:43 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] add persistent submission state
+Date:   Sat,  1 Feb 2020 01:15:49 +0300
+Message-Id: <cover.1580508735.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200131212928.GH18946@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 01:29:28PM -0800, Sean Christopherson wrote:
-> On Fri, Jan 31, 2020 at 03:55:50PM -0500, Peter Xu wrote:
-> > On Fri, Jan 31, 2020 at 12:36:22PM -0800, Sean Christopherson wrote:
-> > > On Fri, Jan 31, 2020 at 03:28:24PM -0500, Peter Xu wrote:
-> > > > On Fri, Jan 31, 2020 at 11:33:01AM -0800, Sean Christopherson wrote:
-> > > > > For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
-> > > > > still has to use copy_{to,from}_user().
-> > > > > 
-> > > > > In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
-> > > > > would be provided the hva of the memory region.  Since slots_lock and SRCU
-> > > > > only protect gfn->hva, why would KVM take slots_lock since it already has
-> > > > > the hva?
-> > > > 
-> > > > OK so you're suggesting to unlock the lock earlier to not cover
-> > > > init_rmode_tss() rather than dropping the whole lock...  Yes it looks
-> > > > good to me.  I think that's the major confusion I got.
-> > > 
-> > > Ya.  And I missed where the -EEXIST was coming from.  I think we're on the
-> > > same page.
-> > 
-> > Good to know.  Btw, for me I would still prefer to keep the lock be
-> > after the __copy_to_user()s because "HVA is valid without lock" is
-> > only true for these private memslots.
-> 
-> No.  From KVM's perspective, the HVA is *never* valid.  Even if you rewrote
-> this statement to say "the gfn->hva translation is valid without lock" it
-> would still be incorrect. 
-> 
-> KVM is *always* using HVAs without holding lock, e.g. every time it enters
-> the guest it is deferencing a memslot because the translations stored in
-> the TLB are effectively gfn->hva->hpa.  Obviously KVM ensures that it won't
-> dereference a memslot that has been deleted/moved, but it's a lot more
-> subtle than simply holding a lock.
-> 
-> > After all this is super slow path so I wouldn't mind to take the lock
-> > for some time longer.
-> 
-> Holding the lock doesn't affect this super slow vmx_set_tss_addr(), it
-> affects everything else that wants slots_lock.  Now, admittedly it's
-> extremely unlikely userspace is going to do KVM_SET_USER_MEMORY_REGION in
-> parallel, but that's not the point and it's not why I'm objecting to
-> holding the lock.
-> 
-> Holding the lock implies protection that is *not* provided.  You and I know
-> it's not needed for copy_{to,from}_user(), but look how long it's taken us
-> to get on the same page.  A future KVM developer comes along, sees this
-> code, and thinks "oh, I need to hold slots_lock to dereference a gfn", and
-> propagates the unnecessary locking to some other code.
+Apart from unrelated first patch, this persues two goals:
 
-At least for a user memory slot, we "need to hold slots_lock to
-dereference a gfn" (or srcu), right?
+1. start preparing io_uring to move resources handling into
+opcode specific functions
 
-You know I'm suffering from a jetlag today, I thought I was still
-fine, now I start to doubt it. :-)
+2. make the first step towards long-standing optimisation ideas
 
-> 
-> > Or otherwise if you really like the unlock() to
-> > be earlier I can comment above the unlock:
-> > 
-> >   /*
-> >    * We can unlock before using the HVA only because this KVM private
-> >    * memory slot will never change until the end of VM lifecycle.
-> >    */
-> 
-> How about:
-> 
-> 	/*
-> 	 * No need to hold slots_lock while filling the TSS, the TSS private
-> 	 * memslot is guaranteed to be valid until the VM is destroyed, i.e.
-> 	 * there is no danger of corrupting guest memory by consuming a stale
-> 	 * gfn->hva lookup.
-> 	 */
+Basically, it makes struct io_submit_state embedded into ctx, so
+easily accessible and persistent, and then plays a bit around that.
 
-Sure for this.
+v2: rebase
+v3: drop the mm-related patch and rebase
+
+Pavel Begunkov (6):
+  io_uring: always pass non-null io_submit_state
+  io_uring: place io_submit_state into ctx
+  io_uring: move ring_fd into io_submit_state
+  io_uring: move *link into io_submit_state
+  io_uring: persistent req bulk allocation cache
+  io_uring: optimise req bulk allocation cache
+
+ fs/io_uring.c | 166 +++++++++++++++++++++++++++-----------------------
+ 1 file changed, 89 insertions(+), 77 deletions(-)
 
 -- 
-Peter Xu
+2.24.0
 
