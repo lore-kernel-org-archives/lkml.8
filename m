@@ -2,137 +2,85 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D764C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BFCC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA7D214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B7F217BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 00:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGweN0ZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgAaADN (ORCPT
+        id S1727650AbgAaAKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Jan 2020 19:03:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbgAaADN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Jan 2020 19:03:13 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27CE120CC7;
-        Fri, 31 Jan 2020 00:03:12 +0000 (UTC)
-Date:   Thu, 30 Jan 2020 19:03:10 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, john.koepi@gmail.com
-Subject: [PATCH] tools lib traceevent: Handle gcc __attribute__(()) in
- fields
-Message-ID: <20200130190310.640ba01c@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 30 Jan 2020 19:10:18 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35612 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgAaAKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Jan 2020 19:10:18 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so6591102wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Jan 2020 16:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xGmOfWdXKTAe9ibSYM5ANd6MBFVxWU+wRY8gMllVMzQ=;
+        b=lGweN0ZWB8Hvtqex/qm6X1ItL2L/Qvyj8lem4bEXEOlsCEa9kVEcgXmdewfd9r+G0M
+         AhwBQzrplKgwqzDwj7qAA40txJqm5ySeTBgEq3XGxwG2EYcr7vU72LkRiwuO26r2SQ09
+         3qIKCEzVh0LpnUHou68iR8FGrq44uLeVOZYZ6Cri8xNGEXUfU81sIRqrBwWYkg+UiRWA
+         PhZeoLW3RnVOPgPDygUbDjchIUsIv1DG+NsJXh80AmO8DGzWShgpmns+MqZv2rlrhKFo
+         6OAXWGzGGMPWdhXr+FursVSUfTTgcJAWWXxTRFZi/uV925eRL5x6l8s4rVTfvOYduP+R
+         bDEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xGmOfWdXKTAe9ibSYM5ANd6MBFVxWU+wRY8gMllVMzQ=;
+        b=k9lgHx8SF9CG01z9n9lMbhg8eTvhWEnSiK2ycHvW8s7NfLs7Gf1GIJUnhJEX+3rlPl
+         ZylopzHpOowv5Jlcr3YmXLFsvy78bqRtR5fu8y1SYMFItqOxD1hnQZkYE7hNGmikKvmO
+         1J2fS/8DJmmk4Z0IP3umXOFaKsaKF1R/TAlq2jdNBdKQc+9qD9e2VTYjWGRO3e3q1n55
+         sNHCmhDiZPffmq34mzcITmiq9KDKXSiaZcgXM2PRj4tU3QkOtbyCUsQrns2iTCPstlIm
+         h0GBcKcXXFqFE25cJ6UfM3zmJMvTkziHskVIdU1tQVdF9DIMqVi2WVYq7NVuhYEUxisn
+         zTPA==
+X-Gm-Message-State: APjAAAWH+83cEYnzsFHQiZxh5EZflDyWZERa2sQbCXyLoNPYA0zlVqS5
+        3M0+EYVuTvC0gtyciUm5SUwmgutJPxzyzoHD9Q0sGg==
+X-Google-Smtp-Source: APXvYqxth3izrY8iTpVM4mOb6kQ0E8ue8yQcZfAMAR7Llkyr0KHPrh0u8aQjBp+FtmXrSaW0UphTJJSbsxKt345wXRs=
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr8430126wmj.72.1580429415652;
+ Thu, 30 Jan 2020 16:10:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200130121205.40cbb903@gandalf.local.home> <20200130121352.466e3300@gandalf.local.home>
+In-Reply-To: <20200130121352.466e3300@gandalf.local.home>
+From:   Shuah Khan <shuahkhan@gmail.com>
+Date:   Thu, 30 Jan 2020 17:10:04 -0700
+Message-ID: <CAKocOOOnFTa3-FTBFSnbaLdQbXZiH4gx4=ZyoU0pW_pQv40efg@mail.gmail.com>
+Subject: Re: [PATCH] selftests/ftrace: Have pid filter test use instance flag
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 30, 2020 at 10:13 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+>
+> Shuah,
+>
+> Can you take this through your tree?
+>
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Yes. I can take this. Could you please resend it to the addresses
+listed by get_maintainers.pl
+shuah@kernel.org or skhan@linuxfoundation.org and cc linux-kselftest
+mailing list
 
-When CONFIG_STURCTLEAK and gcc plugins are enabled, then some macros become
-expanded and displayed as part of the format fields in the event format
-files. For example, the __user macro expands to __attribute__((user)) and
-the field buf for the syscall trace event sys_enter_write has it added:
-
- # cat /sys/kernel/tracing/events/syscalls/sys_enter_write/format
-name: sys_enter_write
-ID: 680
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3; size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:int __syscall_nr; offset:8;       size:4; signed:1;
-        field:unsigned int fd;  offset:16;      size:8; signed:0;
-        field:const char __attribute__((user)) * buf;   offset:24; size:8; signed:0;
-        field:size_t count;     offset:32;      size:8; signed:0;
-
-The "__attribute__((user))" breaks the parsing of the event. This needs to
-also be handled.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205857
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-
-Arnaldo,
-
-Hold off on applying this, I want to hear back from the reporter (in
-the bugzilla) to make sure this solves the issue for him.
-
--- Steve
-
- tools/lib/traceevent/event-parse.c | 41 ++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index beaa8b8c08ff..ffba056772d5 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -1477,6 +1477,47 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 		/* read the rest of the type */
- 		for (;;) {
- 			type = read_token(&token);
-+
-+			/* On some configs, gcc __attribute((*)) may appear. */
-+			if (type == TEP_EVENT_DELIM && strcmp(token, "(") == 0 &&
-+			    last_token && strcmp(last_token, "__attribute__") == 0) {
-+				char *new_token;
-+
-+				breakpoint();
-+				if (read_expected(TEP_EVENT_DELIM, "(") < 0) {
-+					free(last_token);
-+					goto fail;
-+				}
-+				free(token);
-+				if (read_expect_type(TEP_EVENT_ITEM, &token) < 0) {
-+					free(last_token);
-+					goto fail;
-+				}
-+				new_token = realloc(last_token,
-+						    strlen(last_token) +
-+						    strlen(token) + 5);
-+				if (!new_token) {
-+					free(last_token);
-+					goto fail;
-+				}
-+				last_token = new_token;
-+				strcat(last_token, "((");
-+				strcat(last_token, token);
-+				strcat(last_token, "))");
-+				free(token);
-+				token = NULL;
-+
-+				if (read_expected(TEP_EVENT_DELIM, ")") < 0) {
-+					free(last_token);
-+					goto fail;
-+				}
-+				if (read_expected(TEP_EVENT_DELIM, ")") < 0) {
-+					free(last_token);
-+					goto fail;
-+				}
-+				continue;
-+			}
-+
- 			if (type == TEP_EVENT_ITEM ||
- 			    (type == TEP_EVENT_OP && strcmp(token, "*") == 0) ||
- 			    /*
--- 
-2.20.1
-
+thanks,
+-- Shuah
