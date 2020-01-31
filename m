@@ -2,380 +2,278 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8065BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E83C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3497020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y42wNtuX"
+	by mail.kernel.org (Postfix) with ESMTP id 6998A20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgAaTca (ORCPT
+        id S1727159AbgAaTdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:32:30 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44222 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgAaTca (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:32:30 -0500
-Received: by mail-ua1-f65.google.com with SMTP id x16so2990458uao.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:32:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0AtmJu7hXFUNe9U3goH8OgcFhymU6r5KbMZh3chCyp8=;
-        b=Y42wNtuXU4P+de/Vgcp5OnUMD4nNFqiqVgdYLDKU/FTQidGg4kPiTTzI8D6unCgDlW
-         cRSrOjeeXtsMZH6UH3U+QQTa6XgYTE6sgdc4JM6qyisI4VC+P2DdvkbY/pqjavthdmkC
-         SW/yx5sMjogM1mA2XWGieJw1nmxFxRYeTplAE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0AtmJu7hXFUNe9U3goH8OgcFhymU6r5KbMZh3chCyp8=;
-        b=GUvQrKuXi1HIGyZW5+GRkZ42/J/r+9tpkiK37RXANkTNPxKT6NwzadDxx+S+FvrtYQ
-         F6ePl4/+Q8jPDBdNP46Jtc54QZsKkgldmDIrer6AbohiTenWTAI7RFsRjYygH/Qn6NWl
-         PsT5eyHd1GpK5ROoKyaKEyyTyzION9NHQfHGr0UL+PX/Ugt9mW1sx7GCvrkDJ7ublqUH
-         G9/OljIEf+pJ932UH/Wd6QTLu9fRDw2oSvl43x4WX95NXLTksHj/vjOXE4D61RnBDpcq
-         bstTIMaaZmq4npa0LPGe4Wp2Hg87ygAv1wFatNoRRDsjudaTwKjOSbTz1fRJwa2nc/E1
-         nRkg==
-X-Gm-Message-State: APjAAAVTteK7e3hhdlA7/PmIPVHFSDKcWLA42AU9XqlXp2gQIH971r+j
-        5sx7bKW1OEozf3HKUW3sXeyv/+42f7U=
-X-Google-Smtp-Source: APXvYqyBFNWQsum0SM0aQy9mDRsLSvOA50fCnkmm87PXb29zEZaQpFKD49L1NT6624BC/AaG4/7SpQ==
-X-Received: by 2002:ab0:634c:: with SMTP id f12mr7220162uap.48.1580499148089;
-        Fri, 31 Jan 2020 11:32:28 -0800 (PST)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id i65sm2847547vkb.1.2020.01.31.11.32.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 11:32:27 -0800 (PST)
-Received: by mail-ua1-f43.google.com with SMTP id 59so2979197uap.12
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 11:32:27 -0800 (PST)
-X-Received: by 2002:ab0:724c:: with SMTP id d12mr7404736uap.0.1580499146366;
- Fri, 31 Jan 2020 11:32:26 -0800 (PST)
+        Fri, 31 Jan 2020 14:33:03 -0500
+Received: from mga05.intel.com ([192.55.52.43]:63675 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgAaTdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 14:33:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 11:33:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
+   d="scan'208";a="428816941"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Jan 2020 11:33:02 -0800
+Date:   Fri, 31 Jan 2020 11:33:01 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200131193301.GC18946@linux.intel.com>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-10-peterx@redhat.com>
+ <20200121155657.GA7923@linux.intel.com>
+ <20200128055005.GB662081@xz-x1>
+ <20200128182402.GA18652@linux.intel.com>
+ <20200131150832.GA740148@xz-x1>
 MIME-Version: 1.0
-References: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1580217884-21932-1-git-send-email-harigovi@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 31 Jan 2020 11:32:14 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XwbHyYSCCqjgHoqQcRAwwekFYZbM-Mh1o=f0z+_W8ukw@mail.gmail.com>
-Message-ID: <CAD=FV=XwbHyYSCCqjgHoqQcRAwwekFYZbM-Mh1o=f0z+_W8ukw@mail.gmail.com>
-Subject: Re: [v4] arm64: dts: sc7180: add display dt nodes
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131150832.GA740148@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jan 31, 2020 at 10:08:32AM -0500, Peter Xu wrote:
+> On Tue, Jan 28, 2020 at 10:24:03AM -0800, Sean Christopherson wrote:
+> > On Tue, Jan 28, 2020 at 01:50:05PM +0800, Peter Xu wrote:
+> > > On Tue, Jan 21, 2020 at 07:56:57AM -0800, Sean Christopherson wrote:
+> > > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > > index c4d3972dcd14..ff97782b3919 100644
+> > > > > --- a/arch/x86/kvm/x86.c
+> > > > > +++ b/arch/x86/kvm/x86.c
+> > > > > @@ -9584,7 +9584,15 @@ void kvm_arch_sync_events(struct kvm *kvm)
+> > > > >  	kvm_free_pit(kvm);
+> > > > >  }
+> > > > >  
+> > > > > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> > > > > +/*
+> > > > > + * If `uaddr' is specified, `*uaddr' will be returned with the
+> > > > > + * userspace address that was just allocated.  `uaddr' is only
+> > > > > + * meaningful if the function returns zero, and `uaddr' will only be
+> > > > > + * valid when with either the slots_lock or with the SRCU read lock
+> > > > > + * held.  After we release the lock, the returned `uaddr' will be invalid.
+> > > > 
+> > > > This is all incorrect.  Neither of those locks has any bearing on the
+> > > > validity of the hva.  slots_lock does as the name suggests and prevents
+> > > > concurrent writes to the memslots.  The SRCU lock ensures the implicit
+> > > > memslots lookup in kvm_clear_guest_page() won't result in a use-after-free
+> > > > due to derefencing old memslots.
+> > > > 
+> > > > Neither of those has anything to do with the userspace address, they're
+> > > > both fully tied to KVM's gfn->hva lookup.  As Paolo pointed out, KVM's
+> > > > mapping is instead tied to the lifecycle of the VM.  Note, even *that* has
+> > > > no bearing on the validity of the mapping or address as KVM only increments
+> > > > mm_count, not mm_users, i.e. guarantees the mm struct itself won't be freed
+> > > > but doesn't ensure the vmas or associated pages tables are valid.
+> > > > 
+> > > > Which is the entire point of using __copy_{to,from}_user(), as they
+> > > > gracefully handle the scenario where the process has not valid mapping
+> > > > and/or translation for the address.
+> > > 
+> > > Sorry I don't understand.
+> > > 
+> > > I do think either the slots_lock or SRCU would protect at least the
+> > > existing kvm.memslots, and if so at least the previous vm_mmap()
+> > > return value should still be valid.
+> > 
+> > Nope.  kvm->slots_lock only protects gfn->hva lookups, e.g. userspace can
+> > munmap() the range at any time.
+> 
+> Do we need to consider that?  If the userspace did this then it'll
+> corrupt itself, and imho private memory slot is not anything special
+> here comparing to the user memory slots.  For example, the userspace
+> can unmap any region after KVM_SET_USER_MEMORY_REGION ioctl even if
+> the region is filled into some of the userspace_addr of
+> kvm_userspace_memory_region, so the cached userspace_addr can be
+> invalid, then kvm_write_guest_page() can fail too with the same
+> reason.  IMHO kvm only need to make sure it handles the failure path
+> then it's perfectly fine.
 
-On Tue, Jan 28, 2020 at 5:25 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Add display, DSI hardware DT nodes for sc7180.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v1:
->         -Added display DT nodes for sc7180
-> Changes in v2:
->         -Renamed node names
->         -Corrected code alignments
->         -Removed extra new line
->         -Added DISP AHB clock for register access
->         under display_subsystem node for global settings
-> Changes in v3:
->         -Modified node names
->         -Modified hard coded values
->         -Removed mdss reg entry
-> Changes in v4:
->         -Reverting mdp node name
->         -Setting status to disabled in main SOC dtsi file
->         -Replacing _ to - for node names
->         -Adding clock dependency patch link
->         -Splitting idp dt file to a separate patch
->
-> This patch has dependency on the below series
-> https://lkml.org/lkml/2019/12/27/73
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 128 +++++++++++++++++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 3bc3f64..c3883af 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1184,6 +1184,134 @@
->                         #power-domain-cells = <1>;
->                 };
->
-> +               mdss: mdss@ae00000 {
-> +                       compatible = "qcom,sc7180-mdss";
-> +                       reg = <0 0x0ae00000 0 0x1000>;
-> +                       reg-names = "mdss";
-> +
-> +                       power-domains = <&dispcc MDSS_GDSC>;
-> +
-> +                       clocks = <&gcc GCC_DISP_AHB_CLK>,
-> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                                <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +                       clock-names = "iface", "gcc_bus", "ahb", "core";
+Yes?  No?  My point is that your original comment's assertion that "'uaddr'
+will only be valid when with either the slots_lock or with the SRCU read
+lock held." is wrong and misleading.
 
-The clock "ahb" is not in your bindings.  If it is truly needed,
-please update your bindings.
+> > > I agree that __copy_to_user() will protect us from many cases from process
+> > > mm pov (which allows page faults inside), but again if the kvm.memslots is
+> > > changed underneath us then it's another story, IMHO, and that's why we need
+> > > either the lock or SRCU.
+> > 
+> > No, again, slots_lock and SRCU only protect gfn->hva lookups.
+> 
+> Yes, then could you further explain why do you think we don't need the
+> slot lock?  
 
-The clock "gcc_bus" is just called "bus" in the bindings.  Assuming
-this is the same clock, please use the name from the bindings.
+For the same reason we don't take mmap_sem, it gains us nothing, i.e. KVM
+still has to use copy_{to,from}_user().
 
+In the proposed __x86_set_memory_region() refactor, vmx_set_tss_addr()
+would be provided the hva of the memory region.  Since slots_lock and SRCU
+only protect gfn->hva, why would KVM take slots_lock since it already has
+the hva?
 
-> +                       assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +                       assigned-clock-rates = <300000000>;
-> +
-> +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +
-> +                       iommus = <&apps_smmu 0x800 0x2>;
-> +
-> +                       #address-cells = <2>;
-> +                       #size-cells = <2>;
-> +                       ranges;
+> > > Or are you assuming that (1) __x86_set_memory_region() is only for the
+> > > 3 private kvm memslots, 
+> > 
+> > It's not an assumption, the entire purpose of __x86_set_memory_region()
+> > is to provide support for private KVM memslots.
+> > 
+> > > and (2) currently the kvm private memory slots will never change after VM
+> > > is created and before VM is destroyed?
+> > 
+> > No, I'm not assuming the private memslots are constant, e.g. the flow in
+> > question, vmx_set_tss_addr() is directly tied to an unprotected ioctl().
+> 
+> Why it's unprotected?
 
-Do we need a:
-  status = "disabled";
+Because it doesn't need to be protected.
 
-I noticed that in sdm845 the top-level mdss node _does_ have that.  If
-someone was building a board with your chip and they had no display at
-all, would they want this node disabled?  If so then it should be
-disabled by default and boards should opt-in.
+> Now vmx_set_tss_add() is protected by the slots lock so concurrent operation
+> is safe, also it'll return -EEXIST if called for more than once.
 
+Returning -EEXIST is an ABI change, e.g. userspace can currently call
+KVM_SET_TSS_ADDR any number of times, it just needs to ensure proper
+serialization between calls.
 
-> +                       mdss_mdp: mdp@ae01000 {
-> +                               compatible = "qcom,sc7180-dpu";
-> +                               reg = <0 0x0ae01000 0 0x8f000>,
-> +                                     <0 0x0aeb0000 0 0x2008>,
-> +                                     <0 0x0af03000 0 0x16>;
-> +                               reg-names = "mdp", "vbif", "disp_cc";
+If you want to change the ABI, then submit a patch to do exactly that.
+But don't bury an ABI change under the pretense that it's a bug fix.
 
-Did I already ask why you need the "disp_cc" register space?  If I
-didn't, can I ask now?  This is not in the bindings and I can't think
-of why you'd want it.  Does the code use it?  It doesn't seem to...
+> [1]
+> 
+> > 
+> > KVM's sole responsible for vmx_set_tss_addr() is to not crash the kernel.
+> > Userspace is responsible for ensuring it doesn't break its guests, e.g.
+> > that multiple calls to KVM_SET_TSS_ADDR are properly serialized.
+> > 
+> > In the existing code, KVM ensures it doesn't crash by holding the SRCU lock
+> > for the duration of init_rmode_tss() so that the gfn->hva lookups in
+> > kvm_clear_guest_page() don't dereference a stale memslots array.
+> 
+> Here in the current master branch we have both the RCU lock and the
+> slot lock held, that's why I think we can safely remove the RCU lock
+> as long as we're still holding the slots lock.  We can't do the
+> reverse because otherwise multiple KVM_SET_TSS_ADDR could race.
 
+Your wording is all messed up.  "we have both the RCU lock and the slot
+lock held" is wrong.  KVM holds slot_lock around __x86_set_memory_region(),
+because changing the memslots must be mutually exclusive.  It then *drops*
+slots_lock because it's done writing the memslots and grabs the SRCU lock
+in order to protect the gfn->hva lookups done by init_rmode_tss().  It
+*intentionally* drops slots_lock because writing init_rmode_tss() does not
+need to be a mutually exclusive operation, per KVM's existing ABI.
 
-> +                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_ROT_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                               clock-names = "iface", "rot", "lut", "core",
-> +                                             "vsync";
+If KVM held both slots_lock and SRCU then __x86_set_memory_region() would
+deadlock on synchronize_srcu().
 
-Your bindings doc says that "bus" is required, yet you don't pass it.
-Should you?
+> > In no way
+> > does that ensure the validity of the resulting hva,
+> 
+> Yes, but as I mentioned, I don't think it's an issue to be considered
+> by KVM, otherwise we should have the same issue all over the places
+> when we fetch the cached userspace_addr from any user slots.
 
-Your bindings doc says nothing about "rot" and "lut".  Presumably
-those should be added if they are actually needed?
+Huh?  Of course it's an issue that needs to be considered by KVM, e.g.
+kvm_{read,write}_guest_cached() aren't using __copy_{to,}from_user() for
+giggles.
 
+> > e.g. multiple calls to
+> > KVM_SET_TSS_ADDR would race to set vmx->tss_addr and so init_rmode_tss()
+> > could be operating on a stale gpa.
+> 
+> Please refer to [1].
+> 
+> I just want to double-confirm on what we're discussing now. Are you
+> sure you're suggesting that we should remove the slot lock in
+> init_rmode_tss()?  Asked because you discussed quite a bit on how the
+> slot lock should protect GPA->HVA, about concurrency and so on, then
+> I'm even more comfused...
 
-> +                               assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                                                 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                               assigned-clock-rates = <300000000>,
-> +                                                      <19200000>;
-> +
-> +                               interrupt-parent = <&mdss>;
-> +                               interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+Yes, if init_rmode_tss() is provided the hva then it does not need to
+grab srcu_read_lock(&kvm->srcu) because it can directly call
+__copy_{to,from}_user() instead of bouncing through the KVM helpers that
+translate a gfn to hva.
 
-Do we need a:
-  status = "disabled";
+The code can look like this.  That being said, I've completely lost track
+of why __x86_set_memory_region() needs to provide the hva, i.e. have no
+idea if we *should* do this, or it would be better to keep the current
+code, which would be slower, but less custom.
 
-I noticed that in sdm845 the mdss_mdp node _does_ have that.  NOTE:
-you'd only want to add it if it ever made sense to turn on the
-top-level mdss node but not this one.  If this should always be
-enabled at the exact same time as the top-level mdss node then there's
-no need to add the 'status = "disabled";'
+static int init_rmode_tss(void __user *hva)
+{
+	const void *zero_page = (const void *)__va(page_to_phys(ZERO_PAGE(0)));
+	u16 data = TSS_BASE_SIZE + TSS_REDIRECTION_SIZE;
+	int r;
 
-If you decide that you don't need to add this, maybe you can submit a
-separate patch to remove it from sdm845?
+	r = __copy_to_user(hva, zero_page, PAGE_SIZE);
+	if (r)
+		return -EFAULT;
 
+	r = __copy_to_user(hva + TSS_IOPB_BASE_OFFSET, &data, sizeof(u16))
+	if (r)
+		return -EFAULT;
 
-> +                               ports {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +
-> +                                       port@0 {
-> +                                               reg = <0>;
-> +                                               dpu_intf1_out: endpoint {
-> +                                                       remote-endpoint = <&dsi0_in>;
-> +                                               };
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       dsi_controller: dsi-controller@ae94000 {
+	hva += PAGE_SIZE;
+	r = __copy_to_user(hva + PAGE_SIZE, zero_page, PAGE_SIZE);
+	if (r)
+		return -EFAULT;
 
-nit: Though "dsi-controller" is a sensible name, current binding
-examples show "dsi", not "dsi-controller".  The name "dsi" seems
-blessed by Rob Herring since it came from commit a3c463e0961c
-("dt-bindings: msm/dsi: Some binding doc cleanups") which has his Ack,
-so I'd rather go with that.
+	hva += PAGE_SIZE;
+	r = __copy_to_user(hva + PAGE_SIZE, zero_page, PAGE_SIZE);
+	if (r)
+		return -EFAULT;
 
+	data = ~0;
+	hva += RMODE_TSS_SIZE - 2 * PAGE_SIZE - 1;
+	r = __copy_to_user(hva, &data, sizeof(u16))
+	if (r)
+		return -EFAULT;
+}
 
-> +                               compatible = "qcom,mdss-dsi-ctrl";
-> +                               reg = <0 0x0ae94000 0 0x400>;
-> +                               reg-names = "dsi_ctrl";
-> +
-> +                               interrupt-parent = <&mdss>;
-> +                               interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                               clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                        <&gcc GCC_DISP_HF_AXI_CLK>;
+static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
+{
+	void __user *hva;
 
-Comparing with sdm845 I notice that the last clock used to come from
-dispcc.  Now you're getting it from gcc.  Did the architecture
-actually change or are you working around a clock that should be
-exported by the dispcc but hasn't been finished yet?
+	if (enable_unrestricted_guest)
+		return 0;
 
+	mutex_lock(&kvm->slots_lock);
+	hva = __x86_set_memory_region(kvm, TSS_PRIVATE_MEMSLOT, addr,
+				      PAGE_SIZE * 3);
+	mutex_unlock(&kvm->slots_lock);
 
-> +                               clock-names = "byte",
-> +                                             "byte_intf",
-> +                                             "pixel",
-> +                                             "core",
-> +                                             "iface",
-> +                                             "bus";
+	if (IS_ERR(hva))
+		return PTR_ERR(hva);
 
-Your bindings doc says this about which clocks you need:
+	to_kvm_vmx(kvm)->tss_addr = addr;
+	return init_rmode_tss(hva);
+}
 
-- clock-names: the following clocks are required:
-  * "mdp_core"
-  * "iface"
-  * "bus"
-  * "core_mmss"
-  * "byte"
-  * "pixel"
-  * "core"
-  For DSIv2, we need an additional clock:
-   * "src"
-  For DSI6G v2.0 onwards, we need also need the clock:
-   * "byte_intf"
-
-...seems like either the binding is wrong or you're missing a few
-clocks.  Which is it?
-
-
-> +                               phys = <&dsi_phy>;
-> +                               phy-names = "dsi";
-> +
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               status = "disabled";
-> +
-> +                               ports {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +
-> +                                       port@0 {
-> +                                               reg = <0>;
-> +                                               dsi0_in: endpoint {
-> +                                                       remote-endpoint = <&dpu_intf1_out>;
-> +                                               };
-> +                                       };
-> +
-> +                                       port@1 {
-> +                                               reg = <1>;
-> +                                               dsi0_out: endpoint {
-> +                                               };
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       dsi_phy: dsi-phy@ae94400 {
-> +                               compatible = "qcom,dsi-phy-10nm";
-> +                               reg = <0 0x0ae94400 0 0x200>,
-> +                                     <0 0x0ae94600 0 0x280>,
-> +                                     <0 0x0ae94a00 0 0x1e0>;
-> +                               reg-names = "dsi_phy",
-> +                                           "dsi_phy_lane",
-> +                                           "dsi_pll";
-> +
-> +                               #clock-cells = <1>;
-> +                               #phy-cells = <0>;
-> +
-> +                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-> +                               clock-names = "iface";
-
-Your bindings say:
-
-- clock-names: the following clocks are required:
-  * "iface"
-  * "ref" (only required for new DTS files/entries)
-
-I think you qualify as a "new" DTS file, so you should be providing "ref".
-
-
-> +                               status = "disabled";
-
-Bindings list "power-domains" as a required property.  Should the
-bindings be updated to make this optional, or should you be adding it?
-
-
-> +                       };
-> +               };
-> +
->                 pdc: interrupt-controller@b220000 {
-
-nit: your sorting is still slightly off.  I can certainly apply your
-patch atop the dispcc device tree patch [1] now, which is good.  But
-the context clue in your patch that your stuff comes right before the
-'pdc: interrupt-controller@b220000' means that you are being placed
-_after_ 'dispcc: clock-controller@af00000'.  You should be before it
-since ae00000 < af00000.
-
-...this may sound like making a big deal out of nothing, but keeping
-things sorted correctly is the best way to reduce merge conflicts when
-landing patches and that's a big deal.
-
---
-
-Also, in response to your last patch [2] I said:
-
-> ...speaking of which, can you please change your patch to replace the
-> bogus <0> in the dispcc for the DSI PHY, providing the clocks for
-> "dsi_phy_pll_byte" and "dsi_phy_pll_pixel"?  See
-> <https://crrev.com/c/2017974/3>
-
-It doesn't appear that you've done this.  Can you?
-
-
-NOTE: as you can probably guess, my review was mostly this:
-- Compare your nodes with the nodes in a similar SoC (sdm845).
-- Compare your nodes with the examples in the bindings.
-- Compare your nodes with the text of the bindings.
-
-Those are good things for you to do before you send out future patches
-to help make sure you didn't miss anything.
-
-
--Doug
-
-[1] https://lore.kernel.org/r/20200130131220.v3.15.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid
-[2] https://lore.kernel.org/r/CAD=FV=WKVGq+x1XFvZQvBcKVPdcVxQWJJmsqpAxY3t4dorvMYg@mail.gmail.com/
+Yes, userspace can corrupt its VM by invoking KVM_SET_TSS_ADDR multiple
+times without serializing the calls, but that's already true today.
