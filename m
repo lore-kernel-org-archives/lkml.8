@@ -2,109 +2,86 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1F7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABFEC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1548720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 05:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338C52173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 06:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580450787;
+	bh=hRukl1dm5QSvpXFH5kTsRLyYQBTXAnyo2x0DgzgPIIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IcsY03s4p0nlzxnd9rgfl0Y5xDFEeImlQw9a4fYOgphLL2KxLU5JaIDXNWQ09stOn
+	 Gbh5VMnPCqmz5Vt4XrTnZV1YlA9OMbmguwu0rTJzQvYf50FxGKvR/iCuGJJvOy3M1F
+	 7xcO1e5NOLcOsON7JOGMlbbK3m1U1MwlnDHvi8Oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgAaFyR (ORCPT
+        id S1728027AbgAaGG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 00:54:17 -0500
-Received: from mga12.intel.com ([192.55.52.136]:45660 "EHLO mga12.intel.com"
+        Fri, 31 Jan 2020 01:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgAaFyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 00:54:16 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Jan 2020 21:54:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,384,1574150400"; 
-   d="scan'208";a="377255838"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jan 2020 21:54:12 -0800
-Date:   Fri, 31 Jan 2020 13:54:04 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     mst@redhat.com, jasowang@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com, jgg@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        hch@infradead.org, jiri@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, maxime.coquelin@redhat.com,
-        lingshan.zhu@intel.com, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-Message-ID: <20200131055403.GB111365@___>
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <43aeecb4-4c08-df3d-1c1d-699ec4c494bd@infradead.org>
- <05e21ed9-d5af-b57c-36cd-50b34915e82d@infradead.org>
+        id S1726336AbgAaGG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 01:06:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 399752082E;
+        Fri, 31 Jan 2020 06:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580450784;
+        bh=hRukl1dm5QSvpXFH5kTsRLyYQBTXAnyo2x0DgzgPIIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0HcffgGHGHIbiwVAmOCh1SRXUGvI5CNgpQAOCC4aUs4vZCQdgxGi8LTBlTous6hor
+         yz+MeKlXCVqG0oaCpuLC8JSx5TQlyfS8nGqLwCeI48Ht/sGyVFxMvZdcBYuNPdCn0g
+         BQujIWCqKV+M95vlz+R3JgVhrpRELdmWjSfXTfBw=
+Date:   Fri, 31 Jan 2020 07:06:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 00/56] 5.5.1-stable review
+Message-ID: <20200131060622.GB2179850@kroah.com>
+References: <20200130183608.849023566@linuxfoundation.org>
+ <a99ad773-c0ac-f887-5f74-b47eb395803f@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05e21ed9-d5af-b57c-36cd-50b34915e82d@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a99ad773-c0ac-f887-5f74-b47eb395803f@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 09:12:57PM -0800, Randy Dunlap wrote:
-> On 1/30/20 7:56 PM, Randy Dunlap wrote:
-> > Hi,
+On Thu, Jan 30, 2020 at 09:40:28PM -0700, shuah wrote:
+> On 1/30/20 11:38 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.1 release.
+> > There are 56 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > On 1/30/20 7:36 PM, Tiwei Bie wrote:
-> >> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> >> index f21c45aa5e07..13e6a94d0243 100644
-> >> --- a/drivers/vhost/Kconfig
-> >> +++ b/drivers/vhost/Kconfig
-> >> @@ -34,6 +34,18 @@ config VHOST_VSOCK
-> >>  	To compile this driver as a module, choose M here: the module will be called
-> >>  	vhost_vsock.
-> >>  
-> >> +config VHOST_VDPA
-> >> +	tristate "Vhost driver for vDPA based backend"
+> > Responses should be made by Sat, 01 Feb 2020 18:35:06 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> oops, missed this one:
-> 	                           vDPA-based
+> Compiled and booted on my test system. No dmesg regressions.
 
-Will fix. Thanks!
+Thanks for testing all of these and letting me know.
 
-> 
-> >> +	depends on EVENTFD && VDPA
-> >> +	select VHOST
-> >> +	default n
-> >> +	---help---
-> >> +	This kernel module can be loaded in host kernel to accelerate
-> >> +	guest virtio devices with the vDPA based backends.
-> > 
-> > 	                              vDPA-based
-> > 
-> >> +
-> >> +	To compile this driver as a module, choose M here: the module
-> >> +	will be called vhost_vdpa.
-> >> +
-> > 
-> > The preferred Kconfig style nowadays is
-> > (a) use "help" instead of "---help---"
-> > (b) indent the help text with one tab + 2 spaces
-> > 
-> > and don't use "default n" since that is already the default.
-> > 
-> >>  config VHOST
-> >>  	tristate
-> >>          depends on VHOST_IOTLB
-> > 
-> > thanks.
-> > 
-> 
-> 
-> -- 
-> ~Randy
-> 
+greg k-h
