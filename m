@@ -2,132 +2,137 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC6FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70147C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8512082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9EF215A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qpA5X10B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgAaRi2 (ORCPT
+        id S1727035AbgAaRlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:38:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:37840 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbgAaRi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:38:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE826FEC;
-        Fri, 31 Jan 2020 09:38:27 -0800 (PST)
-Received: from [10.37.12.54] (unknown [10.37.12.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 188C23F68E;
-        Fri, 31 Jan 2020 09:38:18 -0800 (PST)
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     kgene@kernel.org, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        dietmar.eggemann@arm.com
-References: <20200127215453.15144-1-lukasz.luba@arm.com>
- <CGME20200127215538eucas1p2b8d4886de6f59f6a62257d3d66307c73@eucas1p2.samsung.com>
- <20200127215453.15144-4-lukasz.luba@arm.com>
- <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <ce51e025-edd5-fdfa-9e2a-9270cacf8660@arm.com>
-Date:   Fri, 31 Jan 2020 17:38:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 12:41:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33109 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgAaRlB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:41:01 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so9709469wrq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 09:41:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dB53pippwc9Cw99NKYUYznHPUB2hFZaxJZFvVBO7aqs=;
+        b=qpA5X10BTpYcTnqANydfOePRDFfM5juSOr2qFtgr27XSiXpOSD0IScgAJEwmmd3JpW
+         DUGpMKZH52zTS/SqVObyGMJamkdBaepDzrxfRSKKSx70INGNrdfrqBEybgcz3N3+Trxb
+         tprd/87tUYHn7uS2VA4tKsORGaWUnAvXKEJKYKxc4Keq+CSauqjMeo6m+Ah09LWtRfGp
+         jqBpJXT8XRN08SMdk8ZdtzHdPYWtsi45xHulVXlPB0Tjx/IrgEpbLeCDeFV61E5iHvvd
+         GBTg+gJbhlZtRsq9tomfDlWJ+vJYk2QLTg7E53cAy6ahljt/PvLoiQaWmO/vUtJdyMqU
+         ZXqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dB53pippwc9Cw99NKYUYznHPUB2hFZaxJZFvVBO7aqs=;
+        b=JZ+sEo9NwftvFsgs5UGDUT8yS7JfKvxO3hDfd+6KEihkrb6awedPMHQ8QbG2p0r71V
+         zRJZdBLv0T0Fp4ItkfhZbCCw7vhTzTarIfCAiqcgeB51kHvAjjVsdJfSuwta1dc+QXHz
+         UjP8Tj/v63HaIuxEtIJ8nPduOpN3oj1EvAxpxXKYEqyeF9a49hsVM/oku5OEOGMUsV/D
+         /pHfrWJtwPlMrKD9mwRmm5kKuFMkjlW2rzphgVs0bFiq4FsrEdfl6ANBnOkt3iYfTRvb
+         +f2Yu58RD5saspxI9cvJPRuVH3Ce7/tynYMkziCrCHdi0Hb3Q+RwBQ7sZhWs4XM/HDDu
+         epFg==
+X-Gm-Message-State: APjAAAW5Gw0Tsoz5TkiGza0JpcfWGgGUyV5/ndxcdScnQ1YDL83lCLiD
+        3V3NCjdwLlmcKFSRkBuCNFduSg==
+X-Google-Smtp-Source: APXvYqzMltOxjDFTZz0aISvCEPIjrr/aWK4KPPg5Rh3wcZVfSUAn0hFXxfBWGM5eTwW2w3A8GqAKDA==
+X-Received: by 2002:a5d:6a52:: with SMTP id t18mr13205891wrw.391.1580492459005;
+        Fri, 31 Jan 2020 09:40:59 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id 21sm11359594wmo.8.2020.01.31.09.40.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 09:40:58 -0800 (PST)
+Date:   Fri, 31 Jan 2020 17:40:55 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     masahiroy@kernel.org, nico@fluxnic.net,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        kernel-team@android.com, jeyu@kernel.org
+Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+Message-ID: <20200131174055.GA8425@google.com>
+References: <20200129181541.105335-1-qperret@google.com>
+ <20200131131508.GH102066@google.com>
 MIME-Version: 1.0
-In-Reply-To: <d14546d5-0cd8-c441-c2be-cdeefc8ebb8d@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131131508.GH102066@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartek,
+On Friday 31 Jan 2020 at 13:15:08 (+0000), 'Matthias Maennich' via kernel-team wrote:
+> On Wed, Jan 29, 2020 at 06:15:41PM +0000, Quentin Perret wrote:
+> > diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+> > index a904bf1f5e67..8e1b7f70e800 100755
+> > --- a/scripts/adjust_autoksyms.sh
+> > +++ b/scripts/adjust_autoksyms.sh
+> > @@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
+> > EOT
+> > sed 's/ko$/mod/' modules.order |
+> > xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+> > +cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
+> 
+> This handles absolute paths very well. I wonder whether we can make this
+> more useful for folks that want to maintain such a whitelist in their
+> copy of the tree. Lets say, I have in my sources
+> arch/x86/configs/x86_64_symbol_whitelist and in my config I have
+> CONFIG_UNUSED_KSYMS_WHITELIST="arch/x86/configs/x86_64_symbol_whitelist".
+> 
+> If I see it correctly, UNUSED_KSYMS_WHITELIST is currently either an
+> absolute path or a relative path to the current build directory. I would
+> prefer if relative paths would be relative to the source directory to
+> support the above use case. (Note, that scenario above works if I build
+> directly in the sources, but fails if I build O=/somewhere/else.)
 
-On 1/31/20 1:30 PM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi,
-> 
-> On 1/27/20 10:54 PM, lukasz.luba@arm.com wrote:
->> From: Lukasz Luba <lukasz.luba@arm.com>
->>
->> Enable the Energy Model (EM) brings possibility to use Energy Aware
->> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
->> default. The EAS only works with SchedUtil - a CPUFreq governor which
->> handles direct requests from the scheduler for the frequency change. Thus,
->> to make EAS working in default, the SchedUtil governor should be
->> configured as default CPUFreq governor. Although, the EAS might be enabled
->> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
->> then set as CPUFreq governor, i.e.:
->>
->> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
->> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
->>
->> To check if EAS is ready to work, the read output from the command below
->> should show '1':
->> cat /proc/sys/kernel/sched_energy_aware
->>
->> To disable EAS in runtime simply 'echo 0' to the file above.
->>
->> Some test results, which stress the scheduler on Odroid-XU3:
->> hackbench -l 500 -s 4096
->> With mainline code and with this patch set.
->>
->> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
->> (which is set to =y in default exynos_defconfig)
->>
->> 		|		this patch set			| mainline
->> 		|-----------------------------------------------|---------------
->> 		| performance	| SchedUtil	| SchedUtil	| performance
->> 		| governor	| governor	| governor	| governor
->> 		|		| w/o EAS	| w/ EAS	|
->> ----------------|---------------|---------------|---------------|---------------
->> hackbench w/ PL | 12.7s		| 11.7s		| 12.0s		| 13.0s - 12.2s
->> hackbench w/o PL| 9.2s		| 8.1s		| 8.2s		| 9.2s - 8.4s
-> 
-> Would you happen to have measurements of how much power is
-> saved by running hackbench using "SchedUtil governor w/ EAS"
-> instead of "SchedUtil governor w/o EAS"?
+Right, that is an interesting use case. I suppose something like the
+below should work (with appropriate documentation of the config option).
 
-I need to check if this xu3 ina2xx can aggregate energy or
-it's only drained-current-at-that-moment value.
+---8<---
+diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+index 8e1b7f70e800..d37803fd75ce 100755
+--- a/scripts/adjust_autoksyms.sh
++++ b/scripts/adjust_autoksyms.sh
+@@ -38,6 +38,12 @@ esac
+ # We need access to CONFIG_ symbols
+ . include/config/auto.conf
+ 
++ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
++# If the path is relative, it must be relative to the source tree
++if [ "$ksym_wl" == "${ksym_wl#/}" ]; then
++       ksym_wl="$abs_srctree/$ksym_wl"
++fi
++
+ # Generate a new ksym list file with symbols needed by the current
+ # set of modules.
+ cat > "$new_ksyms_file" << EOT
+@@ -48,7 +54,7 @@ cat > "$new_ksyms_file" << EOT
+ EOT
+ sed 's/ko$/mod/' modules.order |
+ xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+-cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
++cat - "$ksym_wl" |
+ sort -u |
+ sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+--->8---
 
-Regards,
-Lukasz
+Thoughts ?
 
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
->>   arch/arm/configs/exynos_defconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
->> index 1db857056992..c0f8ecabc607 100644
->> --- a/arch/arm/configs/exynos_defconfig
->> +++ b/arch/arm/configs/exynos_defconfig
->> @@ -18,6 +18,7 @@ CONFIG_ZBOOT_ROM_BSS=0x0
->>   CONFIG_ARM_APPENDED_DTB=y
->>   CONFIG_ARM_ATAG_DTB_COMPAT=y
->>   CONFIG_CMDLINE="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc mem=256M"
->> +CONFIG_ENERGY_MODEL=y
->>   CONFIG_CPU_FREQ=y
->>   CONFIG_CPU_FREQ_STAT=y
->>   CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+Thanks,
+Quentin
