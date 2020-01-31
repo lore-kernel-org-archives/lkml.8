@@ -7,234 +7,106 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E084C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97022C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED3E20707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AE320707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="B1Jbutpt"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OK2wK8zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgAaNfC (ORCPT
+        id S1728784AbgAaNez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:35:02 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:16744 "EHLO pegase1.c-s.fr"
+        Fri, 31 Jan 2020 08:34:55 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:37896 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbgAaNe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:34:58 -0500
+        id S1728743AbgAaNex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:34:53 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 488J9p5XdkzB09ZG;
-        Fri, 31 Jan 2020 14:34:54 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 488J9l2j6gz9vCRn;
+        Fri, 31 Jan 2020 14:34:51 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=B1Jbutpt; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=OK2wK8zd; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zyeo2BiJYqNt; Fri, 31 Jan 2020 14:34:54 +0100 (CET)
+        with ESMTP id HEn9-rbKM-hj; Fri, 31 Jan 2020 14:34:51 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 488J9p3vs0zB09ZQ;
-        Fri, 31 Jan 2020 14:34:54 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 488J9l1MrZz9vCRQ;
+        Fri, 31 Jan 2020 14:34:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580477694; bh=yCqqF94eZwlKNtgCfT1MK6+9zTeYYsAEUh0NEkY8v0E=;
+        t=1580477691; bh=0l2wRiL4sdEUEZL2xTCj/x/2ramxgdDth5ZF4fBx1mE=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=B1JbutptVcxKlgpFpY5y3qMLVoMUf9LH5GD3jlzlPj2FBlOuA7gwaeSXFHpdpsQ9y
-         8FXKcGdnXiMSzmsFm94ldEyS+UONO1BlvhDzUFnWdKezlCUo2SzkG5sEHJo/QEp0pf
-         ySdcidg805OuMt1ScmP9vZF+0vvZy8nWnLZ33AGU=
+        b=OK2wK8zdtAH3scK/XHxGoU6yHDLhJXUmnsrcqf6PMiOxp0TwsAEE9rg+7jV80AL7R
+         honUfTzh6cGaqoe+aY4Gap+6cbaZmvg1qyglXQ2vKkZnl4lbNVbWI07bwL6Z0qLuSe
+         dVkBBgxk3m9ZpKmNnM2sRzavanl79MvWnZh72XzM=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA9048B8AE;
-        Fri, 31 Jan 2020 14:34:55 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 809A58B8AA;
+        Fri, 31 Jan 2020 14:34:52 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nNd_MyeWiWFD; Fri, 31 Jan 2020 14:34:55 +0100 (CET)
+        with ESMTP id g-iwkmFCTPiP; Fri, 31 Jan 2020 14:34:52 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 81A3B8B8AC;
-        Fri, 31 Jan 2020 14:34:55 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F47C8B8A2;
+        Fri, 31 Jan 2020 14:34:52 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 778CC65288; Fri, 31 Jan 2020 13:34:55 +0000 (UTC)
-Message-Id: <1a73b8b1c14d6aa917a4f81dd6e73adda713cb76.1580477672.git.christophe.leroy@c-s.fr>
+        id 5830565288; Fri, 31 Jan 2020 13:34:52 +0000 (UTC)
+Message-Id: <b581983daf222221412016858e1fc0de6265a69e.1580477672.git.christophe.leroy@c-s.fr>
 In-Reply-To: <84be5ad6a996adf5693260749dcb4d8c69182073.1580477672.git.christophe.leroy@c-s.fr>
 References: <84be5ad6a996adf5693260749dcb4d8c69182073.1580477672.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 7/7] powerpc/32: use set_memory_attr()
+Subject: [PATCH v2 4/7] powerpc: Set ARCH_HAS_STRICT_MODULE_RWX
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 31 Jan 2020 13:34:55 +0000 (UTC)
+Date:   Fri, 31 Jan 2020 13:34:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use set_memory_attr() instead of the PPC32 specific change_page_attr()
+From: Russell Currey <ruscur@russell.cc>
 
-change_page_attr() was checking that the address was not mapped by
-blocks and was handling highmem, but that's unneeded because the
-affected pages can't be in highmem and block mapping verification
-is already done by the callers.
+To enable strict module RWX on powerpc, set:
 
+    CONFIG_STRICT_MODULE_RWX=y
+
+You should also have CONFIG_STRICT_KERNEL_RWX=y set to have any real
+security benefit.
+
+ARCH_HAS_STRICT_MODULE_RWX is set to require ARCH_HAS_STRICT_KERNEL_RWX.
+This is due to a quirk in arch/Kconfig and arch/powerpc/Kconfig that
+makes STRICT_MODULE_RWX *on by default* in configurations where
+STRICT_KERNEL_RWX is *unavailable*.
+
+Since this doesn't make much sense, and module RWX without kernel RWX
+doesn't make much sense, having the same dependencies as kernel RWX
+works around this problem.
+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+---
+v2: no change
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-v2: new
----
- arch/powerpc/mm/pgtable_32.c | 95 ++++--------------------------------
- 1 file changed, 10 insertions(+), 85 deletions(-)
+ arch/powerpc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 5fb90edd865e..3d92eaf3ee2f 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -23,6 +23,7 @@
- #include <linux/highmem.h>
- #include <linux/memblock.h>
- #include <linux/slab.h>
-+#include <linux/set_memory.h>
- 
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -121,99 +122,20 @@ void __init mapin_ram(void)
- 	}
- }
- 
--/* Scan the real Linux page tables and return a PTE pointer for
-- * a virtual address in a context.
-- * Returns true (1) if PTE was found, zero otherwise.  The pointer to
-- * the PTE pointer is unmodified if PTE is not found.
-- */
--static int
--get_pteptr(struct mm_struct *mm, unsigned long addr, pte_t **ptep, pmd_t **pmdp)
--{
--        pgd_t	*pgd;
--	pud_t	*pud;
--        pmd_t	*pmd;
--        pte_t	*pte;
--        int     retval = 0;
--
--        pgd = pgd_offset(mm, addr & PAGE_MASK);
--        if (pgd) {
--		pud = pud_offset(pgd, addr & PAGE_MASK);
--		if (pud && pud_present(*pud)) {
--			pmd = pmd_offset(pud, addr & PAGE_MASK);
--			if (pmd_present(*pmd)) {
--				pte = pte_offset_map(pmd, addr & PAGE_MASK);
--				if (pte) {
--					retval = 1;
--					*ptep = pte;
--					if (pmdp)
--						*pmdp = pmd;
--					/* XXX caller needs to do pte_unmap, yuck */
--				}
--			}
--		}
--        }
--        return(retval);
--}
--
--static int __change_page_attr_noflush(struct page *page, pgprot_t prot)
--{
--	pte_t *kpte;
--	pmd_t *kpmd;
--	unsigned long address;
--
--	BUG_ON(PageHighMem(page));
--	address = (unsigned long)page_address(page);
--
--	if (v_block_mapped(address))
--		return 0;
--	if (!get_pteptr(&init_mm, address, &kpte, &kpmd))
--		return -EINVAL;
--	__set_pte_at(&init_mm, address, kpte, mk_pte(page, prot), 0);
--	pte_unmap(kpte);
--
--	return 0;
--}
--
--/*
-- * Change the page attributes of an page in the linear mapping.
-- *
-- * THIS DOES NOTHING WITH BAT MAPPINGS, DEBUG USE ONLY
-- */
--static int change_page_attr(struct page *page, int numpages, pgprot_t prot)
--{
--	int i, err = 0;
--	unsigned long flags;
--	struct page *start = page;
--
--	local_irq_save(flags);
--	for (i = 0; i < numpages; i++, page++) {
--		err = __change_page_attr_noflush(page, prot);
--		if (err)
--			break;
--	}
--	wmb();
--	local_irq_restore(flags);
--	flush_tlb_kernel_range((unsigned long)page_address(start),
--			       (unsigned long)page_address(page));
--	return err;
--}
--
- void mark_initmem_nx(void)
- {
--	struct page *page = virt_to_page(_sinittext);
- 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
- 				 PFN_DOWN((unsigned long)_sinittext);
- 
- 	if (v_block_mapped((unsigned long)_stext + 1))
- 		mmu_mark_initmem_nx();
- 	else
--		change_page_attr(page, numpages, PAGE_KERNEL);
-+		set_memory_attr((unsigned long)_sinittext, numpages, PAGE_KERNEL);
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mark_rodata_ro(void)
- {
--	struct page *page;
- 	unsigned long numpages;
- 
- 	if (v_block_mapped((unsigned long)_sinittext)) {
-@@ -222,20 +144,18 @@ void mark_rodata_ro(void)
- 		return;
- 	}
- 
--	page = virt_to_page(_stext);
- 	numpages = PFN_UP((unsigned long)_etext) -
- 		   PFN_DOWN((unsigned long)_stext);
- 
--	change_page_attr(page, numpages, PAGE_KERNEL_ROX);
-+	set_memory_attr((unsigned long)_stext, numpages, PAGE_KERNEL_ROX);
- 	/*
- 	 * mark .rodata as read only. Use __init_begin rather than __end_rodata
- 	 * to cover NOTES and EXCEPTION_TABLE.
- 	 */
--	page = virt_to_page(__start_rodata);
- 	numpages = PFN_UP((unsigned long)__init_begin) -
- 		   PFN_DOWN((unsigned long)__start_rodata);
- 
--	change_page_attr(page, numpages, PAGE_KERNEL_RO);
-+	set_memory_attr((unsigned long)__start_rodata, numpages, PAGE_KERNEL_RO);
- 
- 	// mark_initmem_nx() should have already run by now
- 	ptdump_check_wx();
-@@ -245,9 +165,14 @@ void mark_rodata_ro(void)
- #ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
-+	unsigned long addr = (unsigned long)page_address(page);
-+
- 	if (PageHighMem(page))
- 		return;
- 
--	change_page_attr(page, numpages, enable ? PAGE_KERNEL : __pgprot(0));
-+	if (enable)
-+		set_memory_attr(addr, numpages, PAGE_KERNEL);
-+	else
-+		set_memory_attr(addr, numpages, __pgprot(0));
- }
- #endif /* CONFIG_DEBUG_PAGEALLOC */
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index ae6a27d07406..371e3bef5c32 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -131,6 +131,7 @@ config PPC
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
++	select ARCH_HAS_STRICT_MODULE_RWX	if ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
+ 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
 -- 
 2.25.0
 
