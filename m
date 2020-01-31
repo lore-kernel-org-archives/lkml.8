@@ -2,126 +2,188 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C97C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF397C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3599D214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85271214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 17:49:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awJJlzex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgAaRrQ (ORCPT
+        id S1727168AbgAaRtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 12:47:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:18380 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgAaRrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 12:47:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 09:47:15 -0800
-X-IronPort-AV: E=Sophos;i="5.70,386,1574150400"; 
-   d="scan'208";a="223205284"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.29]) ([10.249.174.29])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 31 Jan 2020 09:47:13 -0800
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <3499ee3f-e734-50fd-1b50-f6923d1f4f76@intel.com>
- <5D1CAD6E-7D40-48C6-8D21-203BDC3D0B63@amacapital.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <df8f7580-9e7d-bc49-30c0-eca517f8db44@intel.com>
-Date:   Sat, 1 Feb 2020 01:47:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <5D1CAD6E-7D40-48C6-8D21-203BDC3D0B63@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jan 2020 12:49:03 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46693 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgAaRtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 12:49:03 -0500
+Received: by mail-il1-f196.google.com with SMTP id t17so6818509ilm.13;
+        Fri, 31 Jan 2020 09:49:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AdMtncNmA+XGHRE6Yq/CeU6F5P0FIh6be3Vb0VSzfoQ=;
+        b=awJJlzexA7Dn4LO0Pt/cWg80olwMs4C+cHEcR8arMlDEOEc9eWR4hH5qDgfq0lHtIg
+         uODn5fGMO5vm+xpa8fJ6sA/HD232O4W/F4rEPp3LsAc0OfIjgPukdiIeIpG2Fx8C8Xe8
+         crEXjXijtqv61neTkAarwFuHsCUbXTzqCh6mBZ3ASVOQP9XGzWjFLq71lrynrdqPQOiA
+         HIob3cXpkkjqxGV/+xTdTOwamT/gBi39m5ac+a4a3lsIBjbJ+EP0iQyG+CzY+lwBVsA7
+         cTM7Fvseh+zJq7qS7TT0e5TlNO8F/F9AxHyuuFT8+yIGXjE0dYxxEasrLlImZGjyMJCK
+         dCNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AdMtncNmA+XGHRE6Yq/CeU6F5P0FIh6be3Vb0VSzfoQ=;
+        b=rx2AcMlgnFIl6Olomy8FPFmG1eQOrt3IWSl3aNnFT0bdKr9KQCmkdAgwCDGaXRcQ3P
+         Z0pRCPFeieLz5l6+tBSdSGLfia+jul5BY/ZrT/TDjnQ1iEbrSdCrPiGdGUWqdHYP3ffl
+         84siH26H9+CkltuTnHnOhrysPANMEfEPcFQ4Ruu1u5z5yX1obXcxJNik5zVL4nUrK+TC
+         Varq2iL9ji5rglLTVBfWWI8K0W6snLXF5ihpezNUD6drUC1q68eBXcTpitxIL5aXNCnO
+         wu5IWgAk2WHsF7H2ERKFdmL3TrHvWKUMmmgDNE4CzNz60dXz7WBpht+9hZmRweYO0TZk
+         bmyQ==
+X-Gm-Message-State: APjAAAUWZ/EgQ8MaWwjxj8xp8xBsTUehI1V9Cw0D0GHTEqlcasWGlmQ3
+        ljgkUst5hGNBtXgcND/hwEfgT3Aa
+X-Google-Smtp-Source: APXvYqyKW54/2z/prSdnjBj0OQt21rJgP64D5OWekkdNglmgCeH2Ed51f859d0rWjv0J5onx6/7BPw==
+X-Received: by 2002:a92:5f45:: with SMTP id t66mr10875595ilb.28.1580492942755;
+        Fri, 31 Jan 2020 09:49:02 -0800 (PST)
+Received: from tzanussi-mobl ([2601:246:3:ceb0:d4c1:8f5f:7b14:ce46])
+        by smtp.googlemail.com with ESMTPSA id v10sm2558131iol.85.2020.01.31.09.49.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 09:49:02 -0800 (PST)
+Message-ID: <1580492941.24839.5.camel@gmail.com>
+Subject: Re: [PATCH v4 06/12] tracing: Change trace_boot to use synth_event
+ interface
+From:   Tom Zanussi <tzanussi@gmail.com>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Fri, 31 Jan 2020 11:49:01 -0600
+In-Reply-To: <94f1fa0e31846d0bddca916b8663404b20559e34.1580323897.git.zanussi@kernel.org>
+References: <cover.1580323897.git.zanussi@kernel.org>
+         <94f1fa0e31846d0bddca916b8663404b20559e34.1580323897.git.zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 11:37 PM, Andy Lutomirski wrote:
+Hi Steve,
+
+It looks like you missed this patch when you pulled the other ones into
+ for-next.
+
+Tom
+
+On Wed, 2020-01-29 at 12:59 -0600, Tom Zanussi wrote:
+> Have trace_boot_add_synth_event() use the synth_event interface.
 > 
+> Also, rename synth_event_run_cmd() to synth_event_run_command() now
+> that trace_boot's version is gone.
 > 
->> On Jan 30, 2020, at 11:22 PM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>
->> ﻿On 1/31/2020 1:16 AM, Andy Lutomirski wrote:
->>>>> On Jan 30, 2020, at 8:30 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>>>
->>>> ﻿On 1/30/2020 11:18 PM, Andy Lutomirski wrote:
->>>>>>> On Jan 30, 2020, at 4:24 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>>>>>
->>>>>> ﻿There are two types of #AC can be generated in Intel CPUs:
->>>>>> 1. legacy alignment check #AC;
->>>>>> 2. split lock #AC;
->>>>>>
->>>>>> Legacy alignment check #AC can be injected to guest if guest has enabled
->>>>>> alignemnet check.
->>>>>>
->>>>>> When host enables split lock detection, i.e., split_lock_detect!=off,
->>>>>> guest will receive an unexpected #AC when there is a split_lock happens in
->>>>>> guest since KVM doesn't virtualize this feature to guest.
->>>>>>
->>>>>> Since the old guests lack split_lock #AC handler and may have split lock
->>>>>> buges. To make guest survive from split lock, applying the similar policy
->>>>>> as host's split lock detect configuration:
->>>>>> - host split lock detect is sld_warn:
->>>>>>    warning the split lock happened in guest, and disabling split lock
->>>>>>    detect around VM-enter;
->>>>>> - host split lock detect is sld_fatal:
->>>>>>    forwarding #AC to userspace. (Usually userspace dump the #AC
->>>>>>    exception and kill the guest).
->>>>> A correct userspace implementation should, with a modern guest kernel, forward the exception. Otherwise you’re introducing a DoS into the guest if the guest kernel is fine but guest userspace is buggy.
->>>>
->>>> To prevent DoS in guest, the better solution is virtualizing and advertising this feature to guest, so guest can explicitly enable it by setting split_lock_detect=fatal, if it's a latest linux guest.
->>>>
->>>> However, it's another topic, I'll send out the patches later.
->>>>
->>> Can we get a credible description of how this would work? I suggest:
->>> Intel adds and documents a new CPUID bit or core capability bit that means “split lock detection is forced on”.  If this bit is set, the MSR bit controlling split lock detection is still writable, but split lock detection is on regardless of the value.  Operating systems are expected to set the bit to 1 to indicate to a hypervisor, if present, that they understand that split lock detection is on.
->>> This would be an SDM-only change, but it would also be a commitment to certain behavior for future CPUs that don’t implement split locks.
->>
->> It sounds a PV solution for virtualization that it doesn't need to be defined in Intel-SDM but in KVM document.
->>
->> As you suggested, we can define new bit in KVM_CPUID_FEATURES (0x40000001) as KVM_FEATURE_SLD_FORCED and reuse MSR_TEST_CTL or use a new virtualized MSR for guest to tell hypervisor it understand split lock detection is forced on.
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_boot.c        | 31 ++++++++++++----------------
+> ---
+>  kernel/trace/trace_events_hist.c |  9 ++-------
+>  2 files changed, 14 insertions(+), 26 deletions(-)
 > 
-> Of course KVM can do this. But this missed the point. Intel added a new CPU feature, complete with an enumeration mechanism, that cannot be correctly used if a hypervisor is present. 
-
-Why it cannot be correctly used if a hypervisor is present?
-Because it needs to disable split lock detection when running a vcpu for 
-guest as this patch wants to do?
-
-> As it stands, without specific hypervisor and guest support of a non-Intel interface, it is *impossible* to give architecturally correct behavior to a guest. If KVM implements your suggestion, *Windows* guests will still malfunction on Linux.
-
-Actually, KVM don't need to implement my suggestion. It can just 
-virtualize and expose this feature (MSR_IA32_CORE_CAPABILITIES and 
-MSR_TEST_CTRL) to guest, (but it may have some requirement that HT is 
-disabled and host is sld_off) then guest can use it architecturally.
-
-If we don't virtualize and expose this feature to guest as now, both old 
-and modern guest should think there is no feature split lock detection, 
-and of course there is no #AC when it executes a split lock.
-
-However, the problem here is the scope of host split lock detection, 
-i.e., whether or not host's enabling of split lock detection takes 
-effect on guest.
-
-> 
-> This is Intel’s mess. Intel should have some responsibility for cleaning it up. If Intel puts something like my suggestion into the SDM, all the OSes and hypervisors will implement it the *same* way and will be compatible. Sure, old OSes will still be broken, but at least new guests will work correctly. Without something like this, even new guests are busted.
-> 
->>
->>> Can one of you Intel folks ask the architecture team about this?
->>
-
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 2f616cd926b0..8f40de349db1 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -133,38 +133,31 @@ trace_boot_add_kprobe_event(struct xbc_node
+> *node, const char *event)
+>  #endif
+>  
+>  #ifdef CONFIG_HIST_TRIGGERS
+> -extern int synth_event_run_command(const char *command);
+> -
+>  static int __init
+>  trace_boot_add_synth_event(struct xbc_node *node, const char *event)
+>  {
+> +	struct dynevent_cmd cmd;
+>  	struct xbc_node *anode;
+> -	char buf[MAX_BUF_LEN], *q;
+> +	char buf[MAX_BUF_LEN];
+>  	const char *p;
+> -	int len, delta, ret;
+> +	int ret;
+>  
+> -	len = ARRAY_SIZE(buf);
+> -	delta = snprintf(buf, len, "%s", event);
+> -	if (delta >= len) {
+> -		pr_err("Event name is too long: %s\n", event);
+> -		return -E2BIG;
+> -	}
+> -	len -= delta; q = buf + delta;
+> +	synth_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+> +
+> +	ret = synth_event_gen_cmd_start(&cmd, event, NULL);
+> +	if (ret)
+> +		return ret;
+>  
+>  	xbc_node_for_each_array_value(node, "fields", anode, p) {
+> -		delta = snprintf(q, len, " %s;", p);
+> -		if (delta >= len) {
+> -			pr_err("fields string is too long: %s\n",
+> p);
+> -			return -E2BIG;
+> -		}
+> -		len -= delta; q += delta;
+> +		ret = synth_event_add_field_str(&cmd, p);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+> -	ret = synth_event_run_command(buf);
+> +	ret = synth_event_gen_cmd_end(&cmd);
+>  	if (ret < 0)
+>  		pr_err("Failed to add synthetic event: %s\n", buf);
+>  
+> -
+>  	return ret;
+>  }
+>  #else
+> diff --git a/kernel/trace/trace_events_hist.c
+> b/kernel/trace/trace_events_hist.c
+> index 5a910bb193e9..22cd7ecdfb92 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1752,12 +1752,7 @@ static int create_or_delete_synth_event(int
+> argc, char **argv)
+>  	return ret == -ECANCELED ? -EINVAL : ret;
+>  }
+>  
+> -int synth_event_run_command(const char *command)
+> -{
+> -	return trace_run_command(command,
+> create_or_delete_synth_event);
+> -}
+> -
+> -static int synth_event_run_cmd(struct dynevent_cmd *cmd)
+> +static int synth_event_run_command(struct dynevent_cmd *cmd)
+>  {
+>  	struct synth_event *se;
+>  	int ret;
+> @@ -1787,7 +1782,7 @@ static int synth_event_run_cmd(struct
+> dynevent_cmd *cmd)
+>  void synth_event_cmd_init(struct dynevent_cmd *cmd, char *buf, int
+> maxlen)
+>  {
+>  	dynevent_cmd_init(cmd, buf, maxlen, DYNEVENT_TYPE_SYNTH,
+> -			  synth_event_run_cmd);
+> +			  synth_event_run_command);
+>  }
+>  EXPORT_SYMBOL_GPL(synth_event_cmd_init);
+>  
