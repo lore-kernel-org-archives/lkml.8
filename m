@@ -2,130 +2,167 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A438C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D090DC35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39C920705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:39:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLx0SPVk"
+	by mail.kernel.org (Postfix) with ESMTP id A818020CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580460180;
+	bh=119KLhF3P03xMSeOpDVQsbZVVDzEf0xaJjHj3Tue+eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eBceV6JlXvnx6pJcSg8XW9a+XIZDH9hIuikm7rMyai0UnWrm1Sf0OeCq8Ca0vVZlO
+	 myhQV32X7TQ7DilX2RX9pin3JqVM9NQCn6BirSx+JtR2DyRv+YHINe3/sTz0gOEBTC
+	 /tKol1HsiY9ND00nIu8IMo0XqPxzDYxDigsrIsu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgAaIjE (ORCPT
+        id S1728198AbgAaIm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:39:04 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35222 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbgAaIjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:39:04 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so7638938wro.2;
-        Fri, 31 Jan 2020 00:39:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FoKfCmWfNgqHkhotqXl/ixOYix4Lzf/o3uYst0hF2UA=;
-        b=VLx0SPVk3erxoohzVjmMM5bwQxKcDqDMF0lYxtUvC587AjI8a6v1jpeIs6H8U8cFwk
-         UFyHh5LfCL+bAiO+wV0P8uY6ba3usoJ+/UyJu/R+aQV8hXW4cnNkVPNFWEluhtU3EqVT
-         IqwLzZKvMkVz4Tfe6gufZujFHg+AtdeJGG4Q1jaWSRYglDJFLYXh0Su3umNtC2g1H/He
-         MxajuBoza96LrvOZc1ccSoQJpC+FpXQWlH/mw7VZZ7ywaKB9hzv2ptROuGsejPdY6mLs
-         z4M240EyTFeIGM4kjzPaLUxXyvbPqpIVMWv2roDUN92OnjpKPTQKjRnAmrMx3T6CNXCE
-         ibOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FoKfCmWfNgqHkhotqXl/ixOYix4Lzf/o3uYst0hF2UA=;
-        b=UsfMkI4atASmd+2NFlLIj5Nn2DAeqamq25ISF2kTh/2hJv58kD92RKZc4oWtjnjCyw
-         KLQhTCPiLrrHog5QpElb4ZFVuMUaX7qDvplhylxcOPonWygvrH7gd5fcI9YLLrXxhr4S
-         UQuAeJDshoFfjk4Rz3irS4uW456fcnrI3RmkIHIepwpILzMbvxEYPajsznA4vL+TT93t
-         oARaQNh+lNb7Ly1yOu6wNNNU/Ky43w7emlitkFwe2lSIPdbeJqLJ/zCjdjEMyD4b+wL4
-         sLFeTQ6DGcs1COn7WH1gyFS0QUeIwxwrP+kq+MTM2Kw+xQsrXZdsOz/rryzL1M7koTS7
-         8cSg==
-X-Gm-Message-State: APjAAAVsbo06+VHImuz+4fRv3qwzk4XOnvw9rQx7f4YNBpNZ/ZKxTYBF
-        G5UZx+Lz1RgLftb0+F8Pb/dHgH4p5qs=
-X-Google-Smtp-Source: APXvYqy9LfLp7An1Q2b5wirRcJvPO1Z6lbAngUDPPZW0ZGTDAvuAgC3HzBXA0Dbx0Qfr8HidAsN6jA==
-X-Received: by 2002:adf:e609:: with SMTP id p9mr10602775wrm.397.1580459940732;
-        Fri, 31 Jan 2020 00:39:00 -0800 (PST)
-Received: from quaco.ghostprotocols.net (catv-212-96-54-169.catv.broadband.hu. [212.96.54.169])
-        by smtp.gmail.com with ESMTPSA id v17sm10526092wrt.91.2020.01.31.00.38.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:39:00 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F3C2940A7D; Fri, 31 Jan 2020 09:38:58 +0100 (CET)
-Date:   Fri, 31 Jan 2020 09:38:58 +0100
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] tools: perf: add missing unlock to maps__insert error
- case
-Message-ID: <20200131083858.GH3841@kernel.org>
-References: <20200120141553.23934-1-cengiz@kernel.wtf>
+        Fri, 31 Jan 2020 03:42:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728099AbgAaIkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 03:40:47 -0500
+Received: from localhost (unknown [223.226.100.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 961D320705;
+        Fri, 31 Jan 2020 08:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580460046;
+        bh=119KLhF3P03xMSeOpDVQsbZVVDzEf0xaJjHj3Tue+eo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IzmjjCc3DOBerXMB9+bKejVuCOMgbEpqINlqBDAlsyrMwqisPuc8t8xiz0oSRWRlQ
+         pQAIlOtA1jQNHo74kPQCY3WTok+mgbFQh6ALkslHsUT0Qud+g1fMap3SvjFsG3+VbO
+         MwZx661+bP73+af1A4Zex/9rY+cPF9QPMfqJKjNQ=
+Date:   Fri, 31 Jan 2020 14:10:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
+Message-ID: <20200131084041.GI2841@vkoul-mobl>
+References: <20200113084005.849071-1-vkoul@kernel.org>
+ <20200121064608.GA2841@vkoul-mobl>
+ <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
+ <5878067.luYmtVZgP3@debian64>
+ <20200125053237.GG2841@vkoul-mobl>
+ <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120141553.23934-1-cengiz@kernel.wtf>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <64340358-6682-4ae0-9c06-d72d5a4ff259@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jan 20, 2020 at 05:15:54PM +0300, Cengiz Can escreveu:
-> `tools/perf/util/map.c` has a function named `maps__insert` that
-> acquires a write lock if its in multithread context.
-> 
-> Even though this lock is released when function successfully completes,
-> there's a branch that is executed when `maps_by_name == NULL` that
-> returns from this function without releasing the write lock.
-> 
-> Added an `up_write` to release the lock when this happens.
-> 
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
-> 
-> Hello Arnaldo,
-> 
-> I'm not exactly sure about the order that we must call up_write here.
-> 
-> Please tell me if the `__maps__free_maps_by_name` frees the
-> `rw_semaphore`. If that's the case, should we change the order to unlock and free?
+Hi Mathias,
 
-No it doesn't free the rw_semaphore, that is in 'struct maps', what is
-being freed is just something protected by rw_semaphore,
-maps->maps_by_name, so your patch is right and I'm applying it, thanks.
+On 30-01-20, 19:07, Mathias Nyman wrote:
+> On 25.1.2020 7.32, Vinod Koul wrote:
+> > > > > > > 
+> > > > > > > On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > > > > > > > 
+> > > > > > > > This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> > > > > > > > These require firmware to be loaded and in case devices have ROM those can
+> > > > > > > > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> > > > > > > > 
+> > > > > > > > This includes two patches from Christian which supported these controllers
+> > > > > > > > w/o ROM and later my patches for ROM support and multiple firmware versions,
+> > > > > > > > debugfs hook for rom erase and export of xhci-pci functions.
+> > > > > > > > 
+> ...
+> > 
+> > Mathias, any comments on this series..?
+> > 
+> 
+> Hi Vinod
+> 
+> Sorry about the delay.
+> 
+> Maybe a firmware loading driver like this that wraps the xhci pci driver could
+> work.
+> 
+> One benefit is that we could skip searching for the right firmware name based
+> on PCI ID. Each of these Renesas controllers now have their own pci_device_id
+> entry in the pci_ids[] table, and could have the supported firmware name(s)
+> in .driver_data. This way we wouldn't need to add the renesas_fw_table[] or
+> maybe even the renesas_needs_fw_dl() function in this series.
+> 
+> I realize this can't be easily changed because usb_hcd_pci_probe() takes the
+> pci_device_id pointer as an argument, and expects id.driver_data to be a
+> HC driver pointer.
+> 
+> So this turns out to be a question for Greg and Alan:
+> 
+> Would it make sense to change usb_hcd_pci_probe() to take a HC driver pointer
+> as an argument instead of a pointer to pci_device_id?
+> pci_device_id pointer is only used to extract the HC driver handle.
+> This way the driver_data could be used for, well, driver data.
+> 
+> Heikki actually suggested this some time ago to me, back then the idea was to
+> improve xhci quirks code by using driver_data for quirk flags instead of
+> finding and setting them later.
+> 
+> There are a few other opens regarding this series. Mostly because I'm not (yet)
+> familiar with all the details, so I'll just just list them here.
+> 
+> - Is it really enough to add the Renesas driver to Makefile before xhci-pci
+>   driver to make sure it gets matched and probed based on vendor/device id
+>   before xhci-pci driver is matched and probed based on pci class?
+>   What if the Renesas driver is a module and xhci-pci compiled in?
 
-- Arnaldo
- 
-> Thanks!
-> 
->  tools/perf/util/map.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index fdd5bddb3075..f67960bedebb 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -549,6 +549,7 @@ void maps__insert(struct maps *maps, struct map *map)
-> 
->  			if (maps_by_name == NULL) {
->  				__maps__free_maps_by_name(maps);
-> +				up_write(&maps->lock);
->  				return;
->  			}
-> 
-> --
-> 2.25.0
-> 
+The driver loading rules are based on level and makefile order. So
+renesas will always be loaded before xhci driver. This is required since
+xhci claims all devices, so we need to make sure it loads before.
 
+I think we should make it inbuilt driver rather than a module. xhci
+driver is only inbuilt.
+
+If there is a better way to handle this, am all for it.
+
+> - Previously probe didn't return before hcd's were added and everything set up.
+>   Now with request_firmware_nowait() probe returns early successfully, and the
+>   old xhci_pci_probe() which sets up everything is called later by the request
+>   firmware callback. So there could be whole new set of races possible.
+>   For example pci remove can be called mid firmware loading, or when the old
+>   xhci_pci_probe is still setting up things.
+
+I think this is a valid concern. Let me think about how to solve this..
+maybe add a flag in remove which ensure remove doesnt run untill the
+probe/firmware callback is completed.
+
+>   I understood that a synchronous request_firmware() in probe has its own
+>   issues, not sure if there is a good solution for this.
+
+Yeah with userspace not available, that can be tricky!
+
+> - Before the firmware is written to the controller the firmware version is
+>   compared against a hardcoded number in the drivers renesas_fw_table[].
+>   This means new firmware versions can't be supported without patching the driver.
+>   Is this intentional?
+
+Yes, we have only bunch of validated versions. There maybe more in the
+wild but we dont know. The vendor is not very helpful here :(
+
+Across all folks using this, there seems to be only few versions and
+vendor is not supporting it anymore, so chances of new versions seems
+remote
+
+
+Thanks
 -- 
-
-- Arnaldo
+~Vinod
