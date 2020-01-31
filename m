@@ -2,134 +2,105 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBFAC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC389C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8524024682
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580476610;
-	bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z3zubPKYwY9++iPIiaSISYuIWUAhYKqe6kT9Ex8lyuXffd+CiO+6/3pNzyb6GWhau
-	 PraUwQbketI+sY0O/O+GUgv77MaW1wWf6ZqGih4QqXi3yq9+d1FbmoU/iZbNPBWjN9
-	 waFDqy9mxAwh9havJNoBF3wyEVo0U92jbJ7EwX9o=
+	by mail.kernel.org (Postfix) with ESMTP id C3BF4205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgAaNQt (ORCPT
+        id S1728638AbgAaNUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:16:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgAaNQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:16:49 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B841B214D8;
-        Fri, 31 Jan 2020 13:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580476608;
-        bh=ggrq9Jgc11j9oBbDNU2WET2SP3MbFbO1y78dajMXLfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=REGgpnatP7syvTAN13b3NhETyEXsZVzYCcZ9RyVO+h3jGNo2hxi6rsL2y7DhCXW+P
-         mIhffXNpcPqw0cDM8/aAidmUwrV74NLYpT/HbvC/aJ/VMjlj3LVZ3L/dPH/2LouKwL
-         gi8QvC5LlnYvhbaq/HyIyjLsGtixlWTnrjD3rFrU=
-Received: by mail-lj1-f175.google.com with SMTP id v17so7055928ljg.4;
-        Fri, 31 Jan 2020 05:16:47 -0800 (PST)
-X-Gm-Message-State: APjAAAUTSQoDCZzBRvrHafCY+0Sfn0dJgs/zLicFSuuKVFpoub5zO1nB
-        J2dfipeRMA+4KbF1icQWsBGC5/jJLA39OtJQg5I=
-X-Google-Smtp-Source: APXvYqyHH1mBNjzJnIDT8ozGRMEfl14lXQUHfdq30KTGdoctW1gTxpv8Cq9HZwZufM6lRyIvRwc5SSMGxFrcr40jDYU=
-X-Received: by 2002:a2e:9c85:: with SMTP id x5mr6044390lji.50.1580476605934;
- Fri, 31 Jan 2020 05:16:45 -0800 (PST)
+        Fri, 31 Jan 2020 08:20:03 -0500
+Received: from icp-osb-irony-out8.external.iinet.net.au ([203.59.1.225]:21495
+        "EHLO icp-osb-irony-out8.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728579AbgAaNUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:20:03 -0500
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AlAACzKDRe/zXSMGcNWBoBAQEBAQE?=
+ =?us-ascii?q?BAQEDAQEBAREBAQECAgEBAQGBe4F9gRiBMYQUj1kBAQEBAQEGgRIliW+RSQk?=
+ =?us-ascii?q?BAQEBAQEBAQErDAEBhEACglQ4EwIQAQEBBAEBAQEBBQMBhVhMhXIBAQEBAgE?=
+ =?us-ascii?q?jFUEFCwsNCwICJgICVwYBDAYCAQGDIgGCVgUvrCh1gTIahBsBgRSDOIE4BoE?=
+ =?us-ascii?q?OKoFlilV5gQeBOAyCYD6HWYJeBI1diVqYKQiCPYdFhUeJLSGCSIgNhDUDi3i?=
+ =?us-ascii?q?OYIhnlEKBejMaCCgIgycTPY9pAQiHV4VRYgIBjkYBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2AlAACzKDRe/zXSMGcNWBoBAQEBAQEBAQEDAQEBAREBA?=
+ =?us-ascii?q?QECAgEBAQGBe4F9gRiBMYQUj1kBAQEBAQEGgRIliW+RSQkBAQEBAQEBAQErD?=
+ =?us-ascii?q?AEBhEACglQ4EwIQAQEBBAEBAQEBBQMBhVhMhXIBAQEBAgEjFUEFCwsNCwICJ?=
+ =?us-ascii?q?gICVwYBDAYCAQGDIgGCVgUvrCh1gTIahBsBgRSDOIE4BoEOKoFlilV5gQeBO?=
+ =?us-ascii?q?AyCYD6HWYJeBI1diVqYKQiCPYdFhUeJLSGCSIgNhDUDi3iOYIhnlEKBejMaC?=
+ =?us-ascii?q?CgIgycTPY9pAQiHV4VRYgIBjkYBAQ?=
+X-IronPort-AV: E=Sophos;i="5.70,385,1574092800"; 
+   d="scan'208";a="280751624"
+Received: from unknown (HELO [10.44.0.192]) ([103.48.210.53])
+  by icp-osb-irony-out8.iinet.net.au with ESMTP; 31 Jan 2020 21:19:59 +0800
+Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michael Schmitz <schmitzmic@gmail.com>
+References: <20200131124531.623136425@infradead.org>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <9fe6925a-52e5-7104-dae6-3ad97c4bbecc@linux-m68k.org>
+Date:   Fri, 31 Jan 2020 23:19:58 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200127215453.15144-1-lukasz.luba@arm.com> <20200127215453.15144-4-lukasz.luba@arm.com>
-In-Reply-To: <20200127215453.15144-4-lukasz.luba@arm.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 31 Jan 2020 14:16:34 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-Message-ID: <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
-To:     lukasz.luba@arm.com
-Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200131124531.623136425@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 at 22:55, <lukasz.luba@arm.com> wrote:
->
-> From: Lukasz Luba <lukasz.luba@arm.com>
->
-> Enable the Energy Model (EM) brings possibility to use Energy Aware
-> Scheduler (EAS). This compiles the EM but does not enable to run EAS in
-> default. The EAS only works with SchedUtil - a CPUFreq governor which
-> handles direct requests from the scheduler for the frequency change. Thus,
-> to make EAS working in default, the SchedUtil governor should be
-> configured as default CPUFreq governor.
+Hi Peter,
 
-Full stop. That's enough of needed explanation of schedutil.
+On 31/1/20 10:45 pm, Peter Zijlstra wrote:
+> In order to faciliate Will's READ_ONCE() patches:
+> 
+>    https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
+> 
+> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
+> are tested using ARAnyM/68040.
+> 
+> Michael tested the previous version on his Atari Falcon/68030.
+> 
+> Build tested for sun3/coldfire.
 
-> Although, the EAS might be enabled
-> in runtime, when the EM is present for CPUs, the SchedUtil is compiled and
-> then set as CPUFreq governor, i.e.:
->
-> echo schedutil > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-> echo schedutil > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
->
-> To check if EAS is ready to work, the read output from the command below
-> should show '1':
-> cat /proc/sys/kernel/sched_energy_aware
->
-> To disable EAS in runtime simply 'echo 0' to the file above.
+Thanks for the quick turn around. Build looks good for me too with
+this new series. I will test on real hardware on Monday.
 
-Not related to this commit. If you were implemeting here
-schedutil/EAS, then it makes sense to post all this. However what's
-the point to describe it in every defconfig change?
+Regards
+Greg
 
-> Some test results, which stress the scheduler on Odroid-XU3:
-> hackbench -l 500 -s 4096
-> With mainline code and with this patch set.
 
-Skip the last sentence - duplicated information.
-
->
-> The tests have been made with and without CONFIG_PROVE_LOCKING (PL)
-> (which is set to =y in default exynos_defconfig)
->
->                 |               this patch set                  | mainline
-
-The commit will be applied on its own branch so the meaning of "this
-patch set" will be lost. Maybe just "before/after"?
-
->                 |-----------------------------------------------|---------------
->                 | performance   | SchedUtil     | SchedUtil     | performance
->                 | governor      | governor      | governor      | governor
->                 |               | w/o EAS       | w/ EAS        |
-> ----------------|---------------|---------------|---------------|---------------
-> hackbench w/ PL | 12.7s         | 11.7s         | 12.0s         | 13.0s - 12.2s
-> hackbench w/o PL| 9.2s          | 8.1s          | 8.2s          | 9.2s - 8.4s
-
-Why does the performance different before and after this patch?
-
-Mention - lower better (?). Space between number and unit... or better
-mention [s] in column title.
-
-And last but not least:
-Why this patch is separate from 1/3? I don't get the need of splitting them.
-
-Best regards,
-Krzysztof
+> Please consider!
+> 
+> Changes since -v1:
+>   - fixed sun3/coldfire build issues
+>   - unified motorola mmu page setup
+>   - added enum to table allocator
+>   - moved pointer table allocator to motorola.c
+>   - converted coldfire pgtable_t
+>   - fixed coldfire pgd_alloc
+>   - fixed coldfire nocache
+> 
+> ---
+>   arch/m68k/include/asm/mcf_pgalloc.h      |  31 ++---
+>   arch/m68k/include/asm/motorola_pgalloc.h |  74 ++++------
+>   arch/m68k/include/asm/motorola_pgtable.h |  36 +++--
+>   arch/m68k/include/asm/page.h             |  16 ++-
+>   arch/m68k/include/asm/pgtable_mm.h       |  10 +-
+>   arch/m68k/mm/init.c                      |  34 +++--
+>   arch/m68k/mm/kmap.c                      |  36 +++--
+>   arch/m68k/mm/memory.c                    | 103 --------------
+>   arch/m68k/mm/motorola.c                  | 228 +++++++++++++++++++++++++------
+>   9 files changed, 302 insertions(+), 266 deletions(-)
+> 
+> 
