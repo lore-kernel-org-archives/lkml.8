@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB483C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B1F206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B137B206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ihFvXRFV"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WXtPzjyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgAaTJK (ORCPT
+        id S1726387AbgAaTJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:09:10 -0500
+        Fri, 31 Jan 2020 14:09:12 -0500
 Received: from mail26.static.mailgun.info ([104.130.122.26]:38502 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726001AbgAaTJK (ORCPT
+        by vger.kernel.org with ESMTP id S1726202AbgAaTJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:09:10 -0500
+        Fri, 31 Jan 2020 14:09:11 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580497750; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1580497751; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=cRZbdQI2MGJfhs6lFGLd7MsxVV7vAla/hKTzsRrdQfs=; b=ihFvXRFVT9PsLDHpySgoajXUaq+Sf3XGHwFNigXTQjCjjd9ecckwm9cm4ZfKJbTRGyWVdp2I
- /n6zo+zfbJImcc5ry5GEGNQEW7h5ycT/iZFEJ0xL3nK0HWiYUZF670vwQaa/WRWo7pAU21tf
- lgDdTmsYEDeJh726ReKqR3V/Qmo=
+ bh=bIJ07qh5lOtDS6LJCkZXbqG2dvWXiGWlxxUNOg7SvO8=; b=WXtPzjyZn3HSlLmvFq+URdwoI86gy/JGLggIBo5M4P5AFHl8KgbxM3EqmDbceQdRvOrFxwWn
+ QwGn7jx2MJX1IHpcYfbLqTFhds5/1XW1GFU5rXAZVJP5uPT5RmJaoDoM8o4h8OCxalL9k78e
+ +5hIu/sWJQTgdL/pHVg7TQyxnpU=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e347b52.7f52ecdf93e8-smtp-out-n01;
- Fri, 31 Jan 2020 19:09:06 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e347b51.7f52055ec228-smtp-out-n01;
+ Fri, 31 Jan 2020 19:09:05 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A1E66C447A5; Fri, 31 Jan 2020 19:09:06 +0000 (UTC)
+        id 73563C447AE; Fri, 31 Jan 2020 19:09:05 +0000 (UTC)
 Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5E88C447B0;
-        Fri, 31 Jan 2020 19:09:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5E88C447B0
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 88B13C447A3;
+        Fri, 31 Jan 2020 19:09:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 88B13C447A3
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -56,9 +56,9 @@ Cc:     Elliot Berman <eberman@codeaurora.org>,
         David Collins <collinsd@codeaurora.org>,
         linux-arm-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC v2 3/3] arm64: dts: qcom: sm8250: Add vendor-specific PSCI system reset2 type
-Date:   Fri, 31 Jan 2020 11:08:51 -0800
-Message-Id: <1580497731-9845-4-git-send-email-eberman@codeaurora.org>
+Subject: [RFC v2 1/3] dt: psci: Add arm,psci-sys-reset2-type property
+Date:   Fri, 31 Jan 2020 11:08:49 -0800
+Message-Id: <1580497731-9845-2-git-send-email-eberman@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580497731-9845-1-git-send-email-eberman@codeaurora.org>
 References: <1580497731-9845-1-git-send-email-eberman@codeaurora.org>
@@ -67,31 +67,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm Technologies, Inc. SoCs do not guarantee that an architectural
-warm reset boots back into Linux kernel. For instance, if download mode
-or reboot reason cookies are set, the SoC would do a warm reset into an
-alternate exception level (e.g. a mode to collect RAM dumps) or
-application at EL1 (e.g. fastboot mode). Thus, Qualcomm Technologies,
-Inc. SoCs support a vendor-specific warm reset type that can be used in
-all instances of warm/soft reboots.
+Some implementors of PSCI may relax the requirements of the PSCI
+architectural warm reset. In order to comply with PSCI specification, a
+different reset_type value must be used. The alternate PSCI
+SYSTEM_RESET2 may be used in all warm/soft reboot scenarios, replacing
+the architectural warm reset.
 
 Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/psci.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 76c0fcd..bbaeee9 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -162,6 +162,7 @@
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-+		arm,psci-sys-reset2-type = <0x80000000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/psci.yaml b/Documentation/devicetree/bindings/arm/psci.yaml
+index 8ef8542..a790e5a 100644
+--- a/Documentation/devicetree/bindings/arm/psci.yaml
++++ b/Documentation/devicetree/bindings/arm/psci.yaml
+@@ -102,6 +102,11 @@ properties:
+       [1] Kernel documentation - ARM idle states bindings
+         Documentation/devicetree/bindings/arm/idle-states.txt
  
- 	reserved_memory: reserved-memory {
++  arm,psci-sys-reset2-type:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++        reset_type parameter value to use during a warm or soft reboot.
++
+   "#power-domain-cells":
+     description:
+       The number of cells in a PM domain specifier as per binding in [3].
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
