@@ -2,134 +2,356 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCD1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B13C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D0320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159FA21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580478142;
+	bh=DCR+0TCQvaLxVbLgiAiMiZCq07yRiBpwTs50WCNYNdo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=emPO3KglpYCSb8WBrf3gWPX1iC4ilp40ph3hz3wUEHScguulCHsLJMHKdJ/bieAdx
+	 v/2zMxQU+0Kl47FiWbN5r0AyvppKMn5+LGihokstbwWaLRvU2/bg3f6awZYVXZhKKK
+	 2LFoLq5W9Ra24SDaF0jKU+ac6Pr+hZUxEBOlQBYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgAaNmR (ORCPT
+        id S1728955AbgAaNmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:42:17 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2338 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728845AbgAaNmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:42:17 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 80319B94385C5CAE7D7D;
-        Fri, 31 Jan 2020 13:42:14 +0000 (GMT)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 31 Jan 2020 13:42:14 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 31 Jan 2020 14:42:13 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Fri, 31 Jan 2020 14:42:13 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-CC:     "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 5/8] ima: allocate and initialize tfm for each PCR bank
-Thread-Topic: [PATCH 5/8] ima: allocate and initialize tfm for each PCR bank
-Thread-Index: AQHV1TQt9zbbMDf1LU6ofpxaGSDeiKgEpgeAgAAhG0A=
-Date:   Fri, 31 Jan 2020 13:42:13 +0000
-Message-ID: <17b00b78aa2249f19ba376c7613cfb38@huawei.com>
-References: <20200127170443.21538-1-roberto.sassu@huawei.com>
-         <20200127170443.21538-6-roberto.sassu@huawei.com>
- <1580473133.6104.48.camel@linux.ibm.com>
-In-Reply-To: <1580473133.6104.48.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 31 Jan 2020 08:42:21 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34331 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgAaNmU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 08:42:20 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so4928288lfc.1;
+        Fri, 31 Jan 2020 05:42:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=swGoaLp5XkgEaKdTKVoVCKg9Mf+SjLQNMQC+hY/qEZo=;
+        b=Vc0YH9OQYAl97Ap8EEnIti1iXFnxaFmvefFQypMvepURp9pbp+N1cfv/0rTNMdu/PZ
+         3L6hSZ/VIF78tVjPdauzcUe/Ghgwi5QJEN9xdiCYRLYCWe2TO3XRSEPh4OpYGxGHBfrU
+         f3fwYWfgkk2QFstesx0TOLhFUSYtQIznNKc6ApsWlGnitSfL6Q31ZIgJfDZNpOIuyu+R
+         7f8pf9U10X6UDY4sSvOXyGw+f3rBU0gWlRIwKhqvWklsWZU2FAa4mpx7vrGTx0Yvo8bu
+         xpw4R5sZVvvbZA2CEUfQ54RijluvBI+WnhRTk5Rp9zDyys9Y9qsVMWzYFDmunWsS+ZNU
+         PG8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=swGoaLp5XkgEaKdTKVoVCKg9Mf+SjLQNMQC+hY/qEZo=;
+        b=PjR5DumLqZNDscGvAK2N52phxBX/995JmvaWgtM0r9oO49G+V41btMnIcV06l14xPQ
+         T1vQm8wQcKwP1cr75kxdTgkSm32e7XcKukhM226ZKuPUJnxw1w6ofTComB+2xCWkXRSW
+         2o80s3uNcKUaSpUqGutfEWEoVqXFJfP30ZqU9jNAAx4awIxT/2W33xHIIxLauCQbWal4
+         hYUVCl78gIjExp3qG4D0B+aJ+CG9+usMBaI7sKPkZpWM1t4gLtwKxzCITep3dTWBRQVZ
+         jcqd2Xgtkp5aOF+09XTx1AzUxNoSspcUPigVWj/r+InB9wFghieV8aSMdbkPfpHqplvy
+         1ekQ==
+X-Gm-Message-State: APjAAAXNqRutesqfmhNab0aOIXzbt8jbvGwqDSRngFlTPCiKWPcTH6A1
+        ik8OCLIoS5PjvDgpSw/IGAM=
+X-Google-Smtp-Source: APXvYqzqhbZP8wEuN8VueWWDtIUfAYhpjnujwwxIA0lHj/ZJdjnEu1L9fR/W7mGXMwZ2FZcCPhHokA==
+X-Received: by 2002:ac2:4909:: with SMTP id n9mr5462365lfi.21.1580478136030;
+        Fri, 31 Jan 2020 05:42:16 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id r26sm4599627lfm.82.2020.01.31.05.42.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 Jan 2020 05:42:15 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
+In-Reply-To: <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
+References: <cover.1579007786.git.andreyknvl@google.com> <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
+Date:   Fri, 31 Jan 2020 15:42:11 +0200
+Message-ID: <87ftfv7nf0.fsf@kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
-Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IEZyaWRheSwgSmFu
-dWFyeSAzMSwgMjAyMCAxOjE5IFBNDQo+IFRvOiBSb2JlcnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1
-QGh1YXdlaS5jb20+Ow0KPiBqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tOw0KPiBqYW1l
-cy5ib3R0b21sZXlAaGFuc2VucGFydG5lcnNoaXAuY29tOyBsaW51eC1pbnRlZ3JpdHlAdmdlci5r
-ZXJuZWwub3JnDQo+IENjOiBsaW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBTaWx2aXUgVmxhc2NlYW51IDxTaWx2aXUu
-Vmxhc2NlYW51QGh1YXdlaS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS84XSBpbWE6IGFs
-bG9jYXRlIGFuZCBpbml0aWFsaXplIHRmbSBmb3IgZWFjaCBQQ1IgYmFuaw0KPiANCj4gT24gTW9u
-LCAyMDIwLTAxLTI3IGF0IDE4OjA0ICswMTAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+IFRo
-aXMgcGF0Y2ggY3JlYXRlcyBhIGNyeXB0b19zaGFzaCBzdHJ1Y3R1cmUgZm9yIGVhY2ggYWxsb2Nh
-dGVkIFBDUiBiYW5rDQo+IGFuZA0KPiA+IGZvciBTSEExIGlmIGEgYmFuayB3aXRoIHRoYXQgYWxn
-b3JpdGhtIGlzIG5vdCBjdXJyZW50bHkgYWxsb2NhdGVkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
-eTogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPg0KPiANCj4gPHNuaXA+
-DQo+IA0KPiA+ICtpbnQgX19pbml0IGltYV9pbml0X2NyeXB0byh2b2lkKQ0KPiA+ICt7DQo+ID4g
-KwllbnVtIGhhc2hfYWxnbyBhbGdvOw0KPiA+ICsJbG9uZyByYzsNCj4gPiArCWludCBpOw0KPiA+
-ICsNCj4gPiArCXJjID0gaW1hX2luaXRfaW1hX2NyeXB0bygpOw0KPiA+ICsJaWYgKHJjKQ0KPiA+
-ICsJCXJldHVybiByYzsNCj4gPiArDQo+ID4gKwlpbWFfYWxnb19hcnJheSA9IGttYWxsb2NfYXJy
-YXkoaW1hX3RwbV9jaGlwLQ0KPiA+bnJfYWxsb2NhdGVkX2JhbmtzICsgMSwNCj4gPiArCQkJCSAg
-ICAgICBzaXplb2YoKmltYV9hbGdvX2FycmF5KSwgR0ZQX0tFUk5FTCk7DQo+IA0KPiBQZXJoYXBz
-IGluc3RlYWQgb2YgaGFyZCBjb2RpbmcgIm5yX2FsbG9jYXRlZF9iYW5rcyArIDEiLCBjcmVhdGUg
-YQ0KPiB2YXJpYWJsZSBmb3Igc3RvcmluZyB0aGUgbnVtYmVyIG9mICJleHRyYSIgYmFua3MuIMKg
-V2FsayB0aGUgYmFua3MNCj4gc2V0dGluZyBpbWFfc2hhMV9pZHggYW5kLCBsYXRlciwgaW4gYSBz
-dWJzZXF1ZW50IHBhdGNoIHNldA0KPiBpbWFfaGFzaF9hbGdvX2lkeC4NCg0KSSBjb3VsZCBzdG9y
-ZSB0aGUgaW5kZXhlcyBpbiBhbiBhcnJheSBhbmQgYWRkIEFSUkFZX1NJWkUgb2YgdGhhdCBhcnJh
-eS4NCg0KPiA+ICsJaWYgKCFpbWFfYWxnb19hcnJheSkgew0KPiA+ICsJCXJjID0gLUVOT01FTTsN
-Cj4gPiArCQlnb3RvIG91dDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwg
-aW1hX3RwbV9jaGlwLT5ucl9hbGxvY2F0ZWRfYmFua3MgKyAxOyBpKyspIHsNCj4gPiArCQlpbWFf
-YWxnb19hcnJheVtpXS50Zm0gPSBOVUxMOw0KPiA+ICsJCWltYV9hbGdvX2FycmF5W2ldLmFsZ28g
-PSBIQVNIX0FMR09fX0xBU1Q7DQo+ID4gKwl9DQo+IA0KPiBpbWFfaW5pdF9jcnlwdG8oKSBpcyBl
-eGVjdXRlZCBvbmNlIG9uIGluaXRpYWxpemF0aW9uLiDCoEknbSBub3Qgc3VyZSBpZg0KPiBpdCBt
-YWtlcyBhIGRpZmZlcmVuY2UsIGJ1dCBpZiB5b3UncmUgcmVhbGx5IGNvbmNlcm5lZCBhYm91dCBh
-bg0KPiBhZGRpdGlvbmFsIGxvb3AsIHRoZSBpbml0aWFsaXphdGlvbiwgaGVyZSwgY291bGQgYmUg
-bGltaXRlZCB0byB0aGUNCj4gImV4dHJhIiBiYW5rcy4gwqBUaGUgb3RoZXIgYmFua3MgY291bGQg
-YmUgaW5pdGlhbGl6ZWQgYXQgdGhlIGJlZ2lubmluZw0KPiBvZiB0aGUgbmV4dCBsb29wLg0KDQpJ
-IHNldCBhbGdvIHRvIEhBU0hfQUxHT19fTEFTVCB0byBtYXJrIHRoZSBpbWFfYWxnb19hcnJheSBl
-bnRyaWVzIGFzDQp1bmluaXRpYWxpemVkLiBpbWFfYWxsb2NfdGZtKCkgdXNlcyBpbWFfYWxnb19h
-cnJheSBpbiB0aGUgbmV4dCBsb29wLg0KUmVwbGFjaW5nIGttYWxsb2NfYXJyYXkoKSB3aXRoIGtj
-YWxsb2MoKSB3b3VsZCBjYXVzZSBhbGdvIHRvIGJlIHNldCB0bw0KSEFTSF9BTEdPX01ENC4NCg0K
-SSBjb3VsZCBjaGVjayB0Zm0gZmlyc3QsIHdoaWNoIGVuc3VyZXMgdGhhdCBhbHNvIGFsZ28gd2Fz
-IGluaXRpYWxpemVkLg0KDQpSb2JlcnRvDQoNCj4gPiArCWltYV9zaGExX2lkeCA9IC0xOw0KPiA+
-ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBpbWFfdHBtX2NoaXAtPm5yX2FsbG9jYXRlZF9iYW5r
-czsgaSsrKSB7DQo+ID4gKwkJYWxnbyA9IGltYV90cG1fY2hpcC0+YWxsb2NhdGVkX2JhbmtzW2ld
-LmNyeXB0b19pZDsNCj4gPiArCQlpbWFfYWxnb19hcnJheVtpXS5hbGdvID0gYWxnbzsNCj4gPiAr
-DQo+ID4gKwkJLyogdW5rbm93biBUUE0gYWxnb3JpdGhtICovDQo+ID4gKwkJaWYgKGFsZ28gPT0g
-SEFTSF9BTEdPX19MQVNUKQ0KPiA+ICsJCQljb250aW51ZTsNCj4gPiArDQo+ID4gKwkJaWYgKGFs
-Z28gPT0gSEFTSF9BTEdPX1NIQTEpDQo+ID4gKwkJCWltYV9zaGExX2lkeCA9IGk7DQo+ID4gKw0K
-PiA+ICsJCWlmIChhbGdvID09IGltYV9oYXNoX2FsZ28pIHsNCj4gPiArCQkJaW1hX2FsZ29fYXJy
-YXlbaV0udGZtID0gaW1hX3NoYXNoX3RmbTsNCj4gPiArCQkJY29udGludWU7DQo+ID4gKwkJfQ0K
-PiA+ICsNCj4gPiArCQlpbWFfYWxnb19hcnJheVtpXS50Zm0gPSBpbWFfYWxsb2NfdGZtKGFsZ28p
-Ow0KPiA+ICsJCWlmIChJU19FUlIoaW1hX2FsZ29fYXJyYXlbaV0udGZtKSkgew0KPiA+ICsJCQlp
-ZiAoYWxnbyA9PSBIQVNIX0FMR09fU0hBMSkgew0KPiA+ICsJCQkJcmMgPSBQVFJfRVJSKGltYV9h
-bGdvX2FycmF5W2ldLnRmbSk7DQo+ID4gKwkJCQlpbWFfYWxnb19hcnJheVtpXS50Zm0gPSBOVUxM
-Ow0KPiA+ICsJCQkJZ290byBvdXRfYXJyYXk7DQo+ID4gKwkJCX0NCj4gPiArDQo+ID4gKwkJCWlt
-YV9hbGdvX2FycmF5W2ldLnRmbSA9IE5VTEw7DQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCWlmIChpbWFfc2hhMV9pZHggPCAwKSB7DQo+ID4gKwkJaW1hX2FsZ29fYXJyYXlbaV0udGZt
-ID0gaW1hX2FsbG9jX3RmbShIQVNIX0FMR09fU0hBMSk7DQo+ID4gKwkJaWYgKElTX0VSUihpbWFf
-YWxnb19hcnJheVtpXS50Zm0pKSB7DQo+ID4gKwkJCXJjID0gUFRSX0VSUihpbWFfYWxnb19hcnJh
-eVtpXS50Zm0pOw0KPiA+ICsJCQlnb3RvIG91dF9hcnJheTsNCj4gPiArCQl9DQo+ID4gKw0KPiA+
-ICsJCWltYV9zaGExX2lkeCA9IGk7DQo+ID4gKwkJaW1hX2FsZ29fYXJyYXlbaV0uYWxnbyA9IEhB
-U0hfQUxHT19TSEExOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICtvdXRf
-YXJyYXk6DQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwgaW1hX3RwbV9jaGlwLT5ucl9hbGxvY2F0ZWRf
-YmFua3MgKyAxOyBpKyspIHsNCj4gPiArCQlpZiAoIWltYV9hbGdvX2FycmF5W2ldLnRmbSB8fA0K
-PiA+ICsJCSAgICBpbWFfYWxnb19hcnJheVtpXS50Zm0gPT0gaW1hX3NoYXNoX3RmbSkNCj4gPiAr
-CQkJY29udGludWU7DQo+ID4gKw0KPiA+ICsJCWNyeXB0b19mcmVlX3NoYXNoKGltYV9hbGdvX2Fy
-cmF5W2ldLnRmbSk7DQo+ID4gKwl9DQo+ID4gK291dDoNCj4gPiArCWNyeXB0b19mcmVlX3NoYXNo
-KGltYV9zaGFzaF90Zm0pOw0KPiA+ICsJcmV0dXJuIHJjOw0KPiA+ICt9DQoNCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Andrey Konovalov <andreyknvl@google.com> writes:
+> USB Raw Gadget is a kernel module that provides a userspace interface for
+> the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> currently a strictly debugging feature and shouldn't be used in
+> production.
+>
+> Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> direct access to the USB Gadget layer for the userspace. The key
+> differences are:
+>
+> 1. Every USB request is passed to the userspace to get a response, while
+>    GadgetFS responds to some USB requests internally based on the provided
+>    descriptors. However note, that the UDC driver might respond to some
+>    requests on its own and never forward them to the Gadget layer.
+>
+> 2. GadgetFS performs some sanity checks on the provided USB descriptors,
+>    while Raw Gadget allows you to provide arbitrary data as responses to
+>    USB requests.
+>
+> 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+>    while GadgetFS currently binds to the first available UDC.
+>
+> 4. Raw Gadget uses predictable endpoint names (handles) across different
+>    UDCs (as long as UDCs have enough endpoints of each required transfer
+>    type).
+>
+> 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>
+> Greg, I've assumed your LGTM meant that I can add a Reviewed-by from you.
+>
+> Felipe, looking forward to your review, thanks!
+>
+>  Documentation/usb/index.rst            |    1 +
+>  Documentation/usb/raw-gadget.rst       |   59 ++
+>  drivers/usb/gadget/legacy/Kconfig      |   11 +
+>  drivers/usb/gadget/legacy/Makefile     |    1 +
+>  drivers/usb/gadget/legacy/raw_gadget.c | 1068 ++++++++++++++++++++++++
+>  include/uapi/linux/usb/raw_gadget.h    |  167 ++++
+>  6 files changed, 1307 insertions(+)
+>  create mode 100644 Documentation/usb/raw-gadget.rst
+>  create mode 100644 drivers/usb/gadget/legacy/raw_gadget.c
+>  create mode 100644 include/uapi/linux/usb/raw_gadget.h
+>
+> diff --git a/Documentation/usb/index.rst b/Documentation/usb/index.rst
+> index e55386a4abfb..90310e2a0c1f 100644
+> --- a/Documentation/usb/index.rst
+> +++ b/Documentation/usb/index.rst
+> @@ -22,6 +22,7 @@ USB support
+>      misc_usbsevseg
+>      mtouchusb
+>      ohci
+> +    raw-gadget
+>      rio
+>      usbip_protocol
+>      usbmon
+> diff --git a/Documentation/usb/raw-gadget.rst b/Documentation/usb/raw-gad=
+get.rst
+> new file mode 100644
+> index 000000000000..cbedf5451ed3
+> --- /dev/null
+> +++ b/Documentation/usb/raw-gadget.rst
+> @@ -0,0 +1,59 @@
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +USB Raw Gadget
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +USB Raw Gadget is a kernel module that provides a userspace interface for
+> +the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> +from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> +currently a strictly debugging feature and shouldn't be used in
+> +production, use GadgetFS instead.
+> +
+> +Comparison to GadgetFS
+> +~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> +direct access to the USB Gadget layer for the userspace. The key
+> +differences are:
+> +
+> +1. Every USB request is passed to the userspace to get a response, while
+> +   GadgetFS responds to some USB requests internally based on the provid=
+ed
+> +   descriptors. However note, that the UDC driver might respond to some
+> +   requests on its own and never forward them to the Gadget layer.
+> +
+> +2. GadgetFS performs some sanity checks on the provided USB descriptors,
+> +   while Raw Gadget allows you to provide arbitrary data as responses to
+> +   USB requests.
+> +
+> +3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+> +   while GadgetFS currently binds to the first available UDC.
+> +
+> +4. Raw Gadget uses predictable endpoint names (handles) across different
+> +   UDCs (as long as UDCs have enough endpoints of each required transfer
+> +   type).
+> +
+> +5. Raw Gadget has ioctl-based interface instead of a filesystem-based on=
+e.
+> +
+> +Userspace interface
+> +~~~~~~~~~~~~~~~~~~~
+> +
+> +To create a Raw Gadget instance open /dev/raw-gadget. Multiple raw-gadget
+> +instances (bound to different UDCs) can be used at the same time. The
+> +interaction with the opened file happens through the ioctl() calls, see
+> +comments in include/uapi/linux/usb/raw_gadget.h for details.
+> +
+> +The typical usage of Raw Gadget looks like:
+> +
+> +1. Open Raw Gadget instance via /dev/raw-gadget.
+> +2. Initialize the instance via USB_RAW_IOCTL_INIT.
+> +3. Launch the instance with USB_RAW_IOCTL_RUN.
+> +4. In a loop issue USB_RAW_IOCTL_EVENT_FETCH calls to receive events from
+> +   Raw Gadget and react to those depending on what kind of USB device
+> +   needs to be emulated.
+> +
+> +Potential future improvements
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +- Implement ioctl's for setting/clearing halt status on endpoints.
+> +
+> +- Reporting more events (suspend, resume, etc.) through
+> +  USB_RAW_IOCTL_EVENT_FETCH.
+> diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legac=
+y/Kconfig
+> index 119a4e47681f..55e495f5d103 100644
+> --- a/drivers/usb/gadget/legacy/Kconfig
+> +++ b/drivers/usb/gadget/legacy/Kconfig
+> @@ -489,3 +489,14 @@ config USB_G_WEBCAM
+>=20=20
+>  	  Say "y" to link the driver statically, or "m" to build a
+>  	  dynamically linked module called "g_webcam".
+> +
+> +config USB_RAW_GADGET
+> +	tristate "USB Raw Gadget"
+> +	help
+> +	  USB Raw Gadget is a kernel module that provides a userspace interface
+> +	  for the USB Gadget subsystem. Essentially it allows to emulate USB
+> +	  devices from userspace. See Documentation/usb/raw-gadget.rst for
+> +	  details.
+> +
+> +	  Say "y" to link the driver statically, or "m" to build a
+> +	  dynamically linked module called "raw_gadget".
+> diff --git a/drivers/usb/gadget/legacy/Makefile b/drivers/usb/gadget/lega=
+cy/Makefile
+> index abd0c3e66a05..4d864bf82799 100644
+> --- a/drivers/usb/gadget/legacy/Makefile
+> +++ b/drivers/usb/gadget/legacy/Makefile
+> @@ -43,3 +43,4 @@ obj-$(CONFIG_USB_G_WEBCAM)	+=3D g_webcam.o
+>  obj-$(CONFIG_USB_G_NCM)		+=3D g_ncm.o
+>  obj-$(CONFIG_USB_G_ACM_MS)	+=3D g_acm_ms.o
+>  obj-$(CONFIG_USB_GADGET_TARGET)	+=3D tcm_usb_gadget.o
+> +obj-$(CONFIG_USB_RAW_GADGET)	+=3D raw_gadget.o
+> diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/=
+legacy/raw_gadget.c
+> new file mode 100644
+> index 000000000000..51796af48069
+> --- /dev/null
+> +++ b/drivers/usb/gadget/legacy/raw_gadget.c
+> @@ -0,0 +1,1068 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+V2 only
+
+> +/*
+> + * USB Raw Gadget driver.
+> + * See Documentation/usb/raw-gadget.rst for more details.
+> + *
+> + * Andrey Konovalov <andreyknvl@gmail.com>
+> + */
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/kref.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/module.h>
+> +#include <linux/semaphore.h>
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/wait.h>
+> +
+> +#include <linux/usb.h>
+> +#include <linux/usb/ch9.h>
+> +#include <linux/usb/ch11.h>
+> +#include <linux/usb/gadget.h>
+> +
+> +#include <uapi/linux/usb/raw_gadget.h>
+> +
+> +#define	DRIVER_DESC "USB Raw Gadget"
+> +#define DRIVER_NAME "raw-gadget"
+> +
+> +MODULE_DESCRIPTION(DRIVER_DESC);
+> +MODULE_AUTHOR("Andrey Konovalov");
+> +MODULE_LICENSE("GPL");
+
+v2+. Care to fix?
+
+> +
+> +/*----------------------------------------------------------------------=
+*/
+> +
+> +#define RAW_EVENT_QUEUE_SIZE	128
+> +
+> +struct raw_event_queue {
+> +	/* See the comment in raw_event_queue_fetch() for locking details. */
+> +	spinlock_t		lock;
+> +	struct semaphore	sema;
+> +	struct usb_raw_event	*events[RAW_EVENT_QUEUE_SIZE];
+> +	int			size;
+> +};
+> +
+> +static void raw_event_queue_init(struct raw_event_queue *queue)
+> +{
+> +	spin_lock_init(&queue->lock);
+> +	sema_init(&queue->sema, 0);
+> +	queue->size =3D 0;
+> +}
+> +
+> +static int raw_event_queue_add(struct raw_event_queue *queue,
+> +	enum usb_raw_event_type type, size_t length, const void *data)
+> +{
+> +	unsigned long flags;
+> +	struct usb_raw_event *event;
+> +
+> +	spin_lock_irqsave(&queue->lock, flags);
+> +	if (WARN_ON(queue->size >=3D RAW_EVENT_QUEUE_SIZE)) {
+> +		spin_unlock_irqrestore(&queue->lock, flags);
+> +		return -ENOMEM;
+> +	}
+> +	event =3D kmalloc(sizeof(*event) + length, GFP_ATOMIC);
+
+I would very much prefer dropping GFP_ATOMIC here. Must you have this
+allocation under a spinlock?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40LrMACgkQzL64meEa
+mQZ34A/+PEsPJGJEwaPe8uSyOnxcLGfX6nQcG+umeqh87OX+SYRm89gvVrefAHkb
+K9PMn377Pwi4OTbbKqvWu9GVBD5Rt+XvFifyu81b4muLZH8SPAiYBr1z604pCAr0
+oa94r46PL0WuMQCQw7ah3GoaQYbhQgBA1VBE7LBjtpDvTBVC6HTAA4Y4O6uaRqw9
+zjRRmb1E+jO6J8/PeMqr8tcif4s3bubH6ogTBjD1ktTrZV095dCCL4ys8XaVhsc5
+NutWsx35mrLczMvy976eYUvrNPAFwEDMjShC9lb1W675jdgFx1wbJhUax47Et83P
+RRu3YfKIwGJ9Kyukrccj/ReH10jaFvlsK9EMTR94B6789vP2vyfmSGTiyoxS4c65
+Avm2n5aTO581rnr9qBFmF3hu17akOvJYcFWIHDW8wvJESTdreSNTf2zYDA4+V0Ca
+Gft582uo1YwwWv0SVjjxykpcFBb/QWyKqhDxfvSjzmZI1dHmtDjkVobnXW6x9H25
+9If6xMTAJTHz1GKZCvjMrvuk9UcvNGaztSmOILDbB1lssyivRpuvJjwU77bpvjas
+8eOwOEg0Yl1tVyReeSJZPIHcTYqyV340arQPm2/wzJRJ4wd2TrLlKM5Sa71MhciH
+EfgAbEo6C4aMu1dULcBy/5Pg0q00ZBoyT3zH57OU23eRyi/fL80=
+=zN+s
+-----END PGP SIGNATURE-----
+--=-=-=--
