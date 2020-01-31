@@ -2,99 +2,120 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B791C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5354C35240
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33AB6214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCA2206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 16:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580488995;
-	bh=hHKzqvOSq4QPPeuz3N7dN9CkLNuC6IH23w3s//vJPHI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=eE2cXGZ/+f+vR3JN9UyOQ8s7OKLTreQ5Y3UVg8fbZ0RjvPyFUWItzY7UPrK9hcknZ
-	 jTrI2XZ9IAfDg2oUQqMp7DTSlHsa73WFkYMzdZCBHi0tl7qsfNgvQPnovNP+3Lfatc
-	 57C5en53CGHxBk9k9Ts5e4+ErKJj6n3dLfqdUrcY=
+	s=default; t=1580489020;
+	bh=dcG8NLMUHRnjiTnnFkv7SM8FQTdo7P01F6ozQIzzroY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c0MBrE5A+Wht+8F/PRtwdSxY8pAggmM6KOWXAckdKW4Y2GmOTJB1w7UQQIQtxZ/Om
+	 xcrP7CtOaaip1j/Q/cYuu+awm/6Elk36W8TehEz2AM/yiN79hwnYylxhIMPAbMQRsO
+	 tqF0NQFWB0gJEY9ksN3zVh8zv2IVl4LDFzsi5rP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgAaQnO (ORCPT
+        id S1726916AbgAaQnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 11:43:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
+        Fri, 31 Jan 2020 11:43:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgAaQnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 11:43:14 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726193AbgAaQnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 11:43:39 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E5D206F0;
-        Fri, 31 Jan 2020 16:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 139242082E;
+        Fri, 31 Jan 2020 16:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580488993;
-        bh=hHKzqvOSq4QPPeuz3N7dN9CkLNuC6IH23w3s//vJPHI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=w7kEy2wVsluR4k+4Rv29HNE3tkubymRytuEWPimy6JuRNvHwhJnYEJRXwIzzwK94t
-         8BDJUquBWk56MX8621sOD8nBKcddW/b0DAR0QAuMdPPgDFGC0k8Xhy1qhCBeEwrujX
-         3HgMI7u/emGPflroz8i/KAkZrR/5UnApSE1yRdjw=
-Date:   Fri, 31 Jan 2020 16:43:09 +0000
-From:   Will Deacon <will@kernel.org>
-To:     edumazet@google.com, tglx@linutronix.de, paulmck@kernel.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org
-Subject: Confused about hlist_unhashed_lockless()
-Message-ID: <20200131164308.GA5175@willie-the-truck>
+        s=default; t=1580489018;
+        bh=dcG8NLMUHRnjiTnnFkv7SM8FQTdo7P01F6ozQIzzroY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XBNpfievlG4NIexK/B5BVWR7d1MGF+OlKAifaYr1ZU8Y9TOxykWDdPhMQggLXzE2i
+         m5RmoOEFgDSp2lgqKI4Lpfn3jnWb3uPIFJNtBZ0whtL8QXHR4qjZ6Aq0VkPc/FTion
+         7BIU1RZ6hUXNmnGxFDW6TC9sxf4KnZZrayysm3+o=
+Received: by mail-qt1-f170.google.com with SMTP id h12so5911007qtu.1;
+        Fri, 31 Jan 2020 08:43:38 -0800 (PST)
+X-Gm-Message-State: APjAAAX9QFjJktmMN09l9JPpoCPl0w543IWT/xX86mQ0QjCrzpi/Uh0D
+        iBe2kx3jt1G4hDRGJAnRT8NNIYKiUPUQWlz9oA==
+X-Google-Smtp-Source: APXvYqwCAPGiNXBSYn6EM/ra6iIgv+Org4yFgElqW19yZ4ehMloqYiN9lT1FOFl8JlJVA/yMDf4WZx8drnrxynECj9Y=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr11498995qtp.224.1580489017216;
+ Fri, 31 Jan 2020 08:43:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200130211231.224656-1-dianders@chromium.org> <20200130131220.v3.7.I513cd73b16665065ae6c22cf594d8b543745e28c@changeid>
+In-Reply-To: <20200130131220.v3.7.I513cd73b16665065ae6c22cf594d8b543745e28c@changeid>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 31 Jan 2020 10:43:25 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLj8WbP=oXAovyVFOc-58eFr5xS5EJK=kpAK-eT7_TyNw@mail.gmail.com>
+Message-ID: <CAL_JsqLj8WbP=oXAovyVFOc-58eFr5xS5EJK=kpAK-eT7_TyNw@mail.gmail.com>
+Subject: Re: [PATCH v3 07/15] dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On Thu, Jan 30, 2020 at 3:12 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> The qcom,gpucc bindings had a few problems with them:
+>
+> 1. When things were converted to yaml the name of the "gpll0 main"
+>    clock got changed from "gpll0" to "gpll0_main".  Change it back for
+>    msm8998.
+>
+> 2. Apparently there is a push not to use purist aliases for clocks but
+>    instead to just use the internal Qualcomm names.  For sdm845 and
+>    sc7180 (where the drivers haven't already been changed) move in
+>    this direction.
+>
+> Things were also getting complicated harder to deal with by jamming
+> several SoCs into one file.  Splitting simplifies things.
+>
+> Fixes: 5c6f3a36b913 ("dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v3:
+> - Added pointer to inlude file in description.
+> - Everyone but msm8998 now uses internal QC names.
+> - Fixed typo grpahics => graphics
+> - Split bindings into 3 files.
+>
+> Changes in v2:
+> - Patch ("dt-bindings: clock: Fix qcom,gpucc...") new for v2.
+>
+>  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 -------------------
+>  .../bindings/clock/qcom,msm8998-gpucc.yaml    | 66 +++++++++++++++++
+>  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 +++++++++++++++++++
+>  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 +++++++++++++++++++
+>  4 files changed, 210 insertions(+), 72 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml
 
-I just ran into c54a2744497d ("list: Add hlist_unhashed_lockless()")
-but I'm a bit confused about what it's trying to achieve. It also seems
-to have been merged without any callers (even in -next) -- was that
-intentional?
+I'm not seeing any differences in sdm845 and sc7180. Do those really
+need to be separate? It doesn't have to be all combined or all
+separate.
 
-My main source of confusion is the lack of memory barriers. For example,
-if you look at the following pair of functions:
-
-
-static inline int hlist_unhashed_lockless(const struct hlist_node *h)
-{
-	return !READ_ONCE(h->pprev);
-}
-
-static inline void hlist_add_before(struct hlist_node *n,
-				    struct hlist_node *next)
-{
-	WRITE_ONCE(n->pprev, next->pprev);
-	WRITE_ONCE(n->next, next);
-	WRITE_ONCE(next->pprev, &n->next);
-	WRITE_ONCE(*(n->pprev), n);
-}
-
-
-Then running these two concurrently on the same node means that
-hlist_unhashed_lockless() doesn't really tell you anything about whether
-or not the node is reachable in the list (i.e. there is another node
-with a next pointer pointing to it). In other words, I think all of
-these outcomes are permitted:
-
-	hlist_unhashed_lockless(n)	n reachable in list
-	0				0 (No reordering)
-	0				1 (No reordering)
-	1				0 (No reordering)
-	1				1 (Reorder first and last WRITE_ONCEs)
-
-So I must be missing some details about the use-case here. Please could
-you enlighten me? The RCU implementation permits only the first three
-outcomes afaict, why not use that and leave non-RCU hlist as it was?
-
-Cheers,
-
-Will
+Rob
