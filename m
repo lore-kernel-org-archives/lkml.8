@@ -2,99 +2,118 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35573C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3686CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CB62082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dSE512e1"
+	by mail.kernel.org (Postfix) with ESMTP id 092C120CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 07:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgAaH1n (ORCPT
+        id S1728119AbgAaHj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 02:27:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgAaH1m (ORCPT
+        Fri, 31 Jan 2020 02:39:28 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:63041 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727525AbgAaHj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 02:27:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OV/p4y3YLF/I+G4fS8IrHQYiFOxdPLgiy0K6txXzDY8=; b=dSE512e1LHxS1dMPjUmjnrf8Z
-        q2ssZVGtoRy07aoanuJfmpNvzkl4G8rwYM1vNsoRZSuOtiLqAXRflrqaGARPw06jTnRZM32PQab3I
-        c7ohWKRhx/CzX2pgQ4jU2HWqFvWIcWXIF9NRLW+x6E5dT2OS7ARTCnjYeWmCi0ZlV+gP3hP+EziZn
-        TWguo1jrQ81GyuIIy2gqnCaiaauPHXHZeslr4TzXWWtjxycJYa2Emoe+XFQxLBTBYqKUZBIAOduOK
-        IOkmnhdMooTcXnVoAwQnI+jEpkRSVMnFnCet6nRi2t9Yl74T+svO95DtfCcFSrfVJNiM0ds6NO9CR
-        UzdST+yMA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixQiK-00079w-QQ; Fri, 31 Jan 2020 07:27:40 +0000
-Subject: Re: linux-next: Tree for Jan 31 (drivers/watchdog/da9062_wdt.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        S Twiss <stwiss.opensource@diasemi.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-References: <20200131150606.34caeb7c@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ac797eb0-9b0a-d2d3-3a40-3fbd0a8b5ee0@infradead.org>
-Date:   Thu, 30 Jan 2020 23:27:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200131150606.34caeb7c@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 31 Jan 2020 02:39:28 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Jan 2020 13:09:24 +0530
+Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 31 Jan 2020 13:08:58 +0530
+Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
+        id 1DB9D213CD; Fri, 31 Jan 2020 13:08:57 +0530 (IST)
+From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, robh@kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, tientzu@chromium.org,
+        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Subject: [PATCH v2 1/2] Bluetooth: hci_qca: Enable clocks required for BT SOC
+Date:   Fri, 31 Jan 2020 13:08:54 +0530
+Message-Id: <1580456335-7317-1-git-send-email-gubbaven@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 8:06 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any v5.7 material to your linux-next included
-> branches until after v5.6-rc1 has been released.
-> 
-> I am experimenting with a "make htmldocs" build at
-> the end of the day, but it currently has an error:
-> 
-> docutils.utils.SystemMessage: Documentation/driver-api/thermal/cpu-idle-cooling.rst:95: (SEVERE/4) Unexpected section title.
+Instead of relying on other subsytem to turn ON clocks
+required for BT SoC to operate, voting them from the driver.
 
-I sent a patch for that on 2020-JAN-20 but no one has replied to the patch:
+Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+---
+v2:
+   * addressed forward declarations
+   * updated with devm_clk_get_optional()
+ 
+---
+ drivers/bluetooth/hci_qca.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-https://lore.kernel.org/linux-pm/712c1152-56b5-307f-b3f3-ed03a30b804a@infradead.org/
-
-
-
-> Changes since 20200130:
-> 
-
-
-on i386:
-when CONFIG_I2C is not set/enabled:
-
-../drivers/watchdog/da9062_wdt.c: In function ‘da9062_wdt_restart’:
-../drivers/watchdog/da9062_wdt.c:155:8: error: implicit declaration of function ‘i2c_smbus_write_byte_data’; did you mean ‘i2c_set_clientdata’? [-Werror=implicit-function-declaration]
-  ret = i2c_smbus_write_byte_data(client, DA9062AA_CONTROL_F,
-        ^~~~~~~~~~~~~~~~~~~~~~~~~
-        i2c_set_clientdata
-cc1: some warnings being treated as errors
-make[3]: *** [../scripts/Makefile.build:265: drivers/watchdog/da9062_wdt.o] Error 1
-
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index d6e0c99..73706f3 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1738,6 +1738,15 @@ static int qca_power_off(struct hci_dev *hdev)
+ 	return 0;
+ }
+ 
++static int qca_setup_clock(struct clk *clk, bool enable)
++{
++	if (enable)
++		return clk_prepare_enable(clk);
++
++	clk_disable_unprepare(clk);
++	return 0;
++}
++
+ static int qca_regulator_enable(struct qca_serdev *qcadev)
+ {
+ 	struct qca_power *power = qcadev->bt_power;
+@@ -1755,6 +1764,13 @@ static int qca_regulator_enable(struct qca_serdev *qcadev)
+ 
+ 	power->vregs_on = true;
+ 
++	ret = qca_setup_clock(qcadev->susclk, true);
++	if (ret) {
++		/* Turn off regulators to overcome power leakage */
++		qca_regulator_disable(qcadev);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1773,6 +1789,9 @@ static void qca_regulator_disable(struct qca_serdev *qcadev)
+ 
+ 	regulator_bulk_disable(power->num_vregs, power->vreg_bulk);
+ 	power->vregs_on = false;
++
++	if (qcadev->susclk)
++		qca_setup_clock(qcadev->susclk, false);
+ }
+ 
+ static int qca_init_regulators(struct qca_power *qca,
+@@ -1839,6 +1858,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 
+ 		qcadev->bt_power->vregs_on = false;
+ 
++		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
++		if (IS_ERR(qcadev->susclk)) {
++			dev_err(&serdev->dev, "failed to acquire clk\n");
++			return PTR_ERR(qcadev->susclk);
++		}
++
+ 		device_property_read_u32(&serdev->dev, "max-speed",
+ 					 &qcadev->oper_speed);
+ 		if (!qcadev->oper_speed)
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
