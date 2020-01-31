@@ -2,187 +2,97 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAF8C35246
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB0BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEC0214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE7B20707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 22:22:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efT6ccLL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AbeaxiAX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgAaWWV (ORCPT
+        id S1726877AbgAaWWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 17:22:21 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39985 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgAaWWN (ORCPT
+        Fri, 31 Jan 2020 17:22:31 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41827 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgAaWWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 17:22:13 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so4232987pgt.7;
-        Fri, 31 Jan 2020 14:22:12 -0800 (PST)
+        Fri, 31 Jan 2020 17:22:31 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j9so992263pfa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 14:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=i4A6iS3d4v/SDXbDNLzH3HRItLiF9tqu3vO4L3thEV4=;
-        b=efT6ccLLp725L6rmbzhCKHhoXCUWhEwmpCzY1M+jmHhTKSv68aEPvW/DqEUQIeY5Bb
-         Ha7TcJomL0rg5YLj5Xq1aukFl6aIdrkbdV4pUmRQaT2XCAY/5i5w+KLDBYQ2R4EoW4pF
-         EgBs1rHu2empMUuaQNXCM0U4M1QIurIvJubCyJxhk1IcWfsQuOADPNLu75YqMsx5OWVY
-         iR3JEiyuFMRmUNQjT2Blkz8ajOFdobI7mgOOHuTM+ZIJ3dvD9NaqVad1/tTMd76JFzLe
-         xyXREL2FrL6L8XsWZTAM3O3nmii846OgGb3o3Njc4BWIXNRW1O42+VuNFDDEiWlsvjZh
-         WVDw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ym4CATryr3QJbBXCpmH+mWSLbQwwdB6r4IiJNjhJKxM=;
+        b=AbeaxiAXSmyiyWHNUbJzYqLQg8oCe/1I9MYoknkNjSSPvw9PWYJllaHHOTXONw12vW
+         N7IVuUFhIeoFuznn5PPdckAaTra7JYdCZdxcDpe12Ek/R4Pn7uyMW6bdd2pZ+A7N0lk6
+         xfJWkSkh8RSWWOO9Cbdn8cRbOBsWA5bUs8wzjfKvrhOWvDsZnskFKOGLGA731rNjTiiT
+         nK5Eyc9z4+Sw0N2W2l1JaNdyXM1uhKMKp0jwX7qgsi7FONnqpsddAwyEyNEJh7/BPI6a
+         S88kJycsXPYxc/2R5u+zip6zxGOncmgqexxtkknyJA4KsXGpDfbkrp4f+TVwovCXrjhr
+         OF7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=i4A6iS3d4v/SDXbDNLzH3HRItLiF9tqu3vO4L3thEV4=;
-        b=Wo1dKGbsD7faLF3xuLLrowz5f91RdGEx+8mlPuqOh1T2SwCbdwUMEtNvjIkasglM3K
-         6rhnuM3MKBXilSpPjMHnQml4tJTHyEnGIKMIRRKHJrkgg3uQRjavwhU7i9UFi0JchwoK
-         TNGfEEFMe99HcumfevEUnsT3zpTRb7vYk/JXf7EebMJFf12fexpc1durm7cVvAjb1WHY
-         d7NVNPpiWuIsrnhpmBcdODl//xLf+JgoHHyEYls4wVeMasVaALjjHzrBr5FkkJFGEt2h
-         OV9iYsecOAsh2B2ABuN5kQUSEqTNT892ORsyvRiMTQ/Cg2hTFolJsd0SzlIcOLQpOOsw
-         Ellw==
-X-Gm-Message-State: APjAAAW1+0SNrxD3y7qh+EGFvWFZVEJZ8NcVVPOvNL1G6SihfVcuV9s2
-        yQSchTv4ycJk5ecne/BG9Dc=
-X-Google-Smtp-Source: APXvYqzsvIXic1sYRK0SB3cYQOIXBh9Yp6xjO2Hj+C+T4Jdwwae0tMAZ9/O1DNXBWbW0RMAk+sN7GA==
-X-Received: by 2002:a63:1204:: with SMTP id h4mr12135526pgl.288.1580509332195;
-        Fri, 31 Jan 2020 14:22:12 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::1:a521])
-        by smtp.gmail.com with ESMTPSA id v8sm11201515pff.151.2020.01.31.14.22.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 14:22:11 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 3/3] ARM: dts: aspeed-g6: add usb functions
-Date:   Fri, 31 Jan 2020 14:21:57 -0800
-Message-Id: <20200131222157.20849-4-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200131222157.20849-1-rentao.bupt@gmail.com>
-References: <20200131222157.20849-1-rentao.bupt@gmail.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ym4CATryr3QJbBXCpmH+mWSLbQwwdB6r4IiJNjhJKxM=;
+        b=kR2TMxvGTAMp1R84MMfNiulqUeAWoJyYitBtXIdpSfk9I3WSm73ugu5+rJ5XI6dKRv
+         zyXhXmqRt9hGS82NpZjb1SKn8kfna9zXZMaJKT/mpQJWbvzevnT7x19Amayn8yLeTaC9
+         z7tHQSda/R+uF3d4i2oWPhNJsRU3VGlAFIOU9ij4q6PQwysRDSYJdYgdWPKV59cwCSyV
+         MO9Jjjf/MLKEybC4caczOAGl9xCNgarcq5AQIwkO4TJFwu28oYxcb06J8Az2yYeL9i7Y
+         BcYaCRcFNw3wyXMy8FhpGzC77ySv3/bthcZUGOzOD0E0KtHtzsYl9vF6m5q0+r78OvMa
+         uWxA==
+X-Gm-Message-State: APjAAAUU1tUS31I/Paq3ORZlnYy61qxXKIvHgT0TzqlKBjXAdSyEjmlY
+        Xhbk+XQf8ifw29e1g2XkizvVyTLvDLM=
+X-Google-Smtp-Source: APXvYqxTillDlW/mS8lPlT9SG5wZBL0oehI9eN5JpPJ1IpJJMPh4VPircIzIYcxv85ZTCYsJ2zICWQ==
+X-Received: by 2002:aa7:9205:: with SMTP id 5mr12785889pfo.213.1580509350445;
+        Fri, 31 Jan 2020 14:22:30 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id l10sm11260963pjy.5.2020.01.31.14.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 14:22:29 -0800 (PST)
+Subject: Re: [PATCH v3 0/6] add persistent submission state
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1580508735.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
+Date:   Fri, 31 Jan 2020 15:22:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <cover.1580508735.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On 1/31/20 3:15 PM, Pavel Begunkov wrote:
+> Apart from unrelated first patch, this persues two goals:
+> 
+> 1. start preparing io_uring to move resources handling into
+> opcode specific functions
+> 
+> 2. make the first step towards long-standing optimisation ideas
+> 
+> Basically, it makes struct io_submit_state embedded into ctx, so
+> easily accessible and persistent, and then plays a bit around that.
 
-Add USB components and according pin groups in aspeed-g6 dtsi.
+Do you have any perf/latency numbers for this? Just curious if we
+see any improvements on that front, cross submit persistence of
+alloc caches should be a nice sync win, for example, or even
+for peak iops by not having to replenish the pool for each batch.
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
- arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi | 25 ++++++++++++++
- arch/arm/boot/dts/aspeed-g6.dtsi         | 43 ++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
+I can try and run some here too.
 
-diff --git a/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi b/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-index 045ce66ca876..7028e21bdd98 100644
---- a/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi
-@@ -1112,6 +1112,31 @@
- 		groups = "UART9";
- 	};
- 
-+	pinctrl_usb2ah_default: usb2ah_default {
-+		function = "USB2AH";
-+		groups = "USBA";
-+	};
-+
-+	pinctrl_usb2ad_default: usb2ad_default {
-+		function = "USB2AD";
-+		groups = "USBA";
-+	};
-+
-+	pinctrl_usb2bh_default: usb2bh_default {
-+		function = "USB2BH";
-+		groups = "USBB";
-+	};
-+
-+	pinctrl_usb2bd_default: usb2bd_default {
-+		function = "USB2BD";
-+		groups = "USBB";
-+	};
-+
-+	pinctrl_usb11bhid_default: usb11bhid_default {
-+		function = "USB11BHID";
-+		groups = "USBB";
-+	};
-+
- 	pinctrl_vb_default: vb_default {
- 		function = "VB";
- 		groups = "VB";
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 5f6142d99eeb..02c21c15c19f 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -265,6 +265,49 @@
- 			status = "disabled";
- 		};
- 
-+		ehci0: usb@1e6a1000 {
-+			compatible = "aspeed,ast2600-ehci", "generic-ehci";
-+			reg = <0x1e6a1000 0x100>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2ah_default>;
-+			status = "disabled";
-+		};
-+
-+		ehci1: usb@1e6a3000 {
-+			compatible = "aspeed,ast2600-ehci", "generic-ehci";
-+			reg = <0x1e6a3000 0x100>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT2CLK>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2bh_default>;
-+			status = "disabled";
-+		};
-+
-+		uhci: usb@1e6b0000 {
-+			compatible = "aspeed,ast2600-uhci", "generic-uhci";
-+			reg = <0x1e6b0000 0x100>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			#ports = <2>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBUHCICLK>;
-+			status = "disabled";
-+			/*
-+			 * No default pinmux, it will follow EHCI, use an
-+			 * explicit pinmux override if EHCI is not enabled.
-+			 */
-+		};
-+
-+		vhub: usb-vhub@1e6a0000 {
-+			compatible = "aspeed,ast2600-usb-vhub";
-+			reg = <0x1e6a0000 0x350>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb2ad_default>;
-+			status = "disabled";
-+		};
-+
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
 -- 
-2.17.1
+Jens Axboe
 
