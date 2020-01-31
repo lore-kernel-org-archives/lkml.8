@@ -2,268 +2,157 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298E0C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA89C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0064420707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580477119;
-	bh=m7QQ6mMxQ29Fa8lUQKmeFq523VmwrZo/+vvkFuXsjNU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=E5ItB3IJiu2varZyCSaG45qhJnhuSAaip/9JeNwuntd6/Lk63sr9WhBrZAx5oM7kw
-	 L842XRUErEgODxcZDT/Yrkmyu+cIluaI9NWMoWVOr8UtiI6XIQN5IdzaeTjC6Ra0lB
-	 T3DB6hYNW6zHIsPFjuW7M7PnUAwyjYWqixYRGwRo=
+	by mail.kernel.org (Postfix) with ESMTP id 02FFD2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 13:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNWV8Sbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgAaNZS (ORCPT
+        id S1728687AbgAaNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 08:25:18 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34102 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgAaNZS (ORCPT
+        Fri, 31 Jan 2020 08:25:46 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34763 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgAaNZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 08:25:18 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so4890213lfc.1;
-        Fri, 31 Jan 2020 05:25:16 -0800 (PST)
+        Fri, 31 Jan 2020 08:25:46 -0500
+Received: by mail-pg1-f196.google.com with SMTP id j4so3464721pgi.1;
+        Fri, 31 Jan 2020 05:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=On0qhhXBlYOtCeZtcZpo7aig8lY5SX+e5KUg+9BbvQY=;
-        b=rzISzmgQveZw+9LaOEzmO8qO3ql0FAk6Al0ixRQc7Mq68CR2K8k18Kxa0iwqPm8ubG
-         7ERq5f85UdfPjryX5mEX/3e3aEwhDf15scWg8crfc4d7tv3hyjzckHU0RH1KjI8s+/yY
-         XmeCDUhH2X+E1MC+ovO76ZlUZlrZbfsH0Xr8BAjA5Dvn36yYXaX32ya/SiSM+ZU/HcFX
-         8j0xVpPx5zTv4E5qTzrwIiLcZ2YXn7WI2LyVJ3V39nvSa7wNnC87cd2U6d6MwduF27Y2
-         Fd9iAD49+Nd2gFWraDCxrIp63koZQHaX8LG8YLmB/1aW8rGI4H36/kcsd5lchcEXbk8W
-         VmBw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Uw1FQaJ7B7AC5+CVRylYzOQ0kTnjKrLEQb7DZzSA/4Y=;
+        b=gNWV8Sbx6ScYTDYJ64qE+QmSC0CcNXwNBov85Rbgtcoq60E/gJuRzF3sa8kHAUXIJP
+         58L7Dr3G5zt65WHFz/ANSvk1GG6q/Q+zaFlW0i1WWjrWKZIiDRqQAy7erEGGyh8iHq1M
+         njRkcSrYOEWMVtGijmDGF/NSUWjJCJEpS+7qA/qLfBIGcd+IOYB4ITOWFCCsKjNnJo1b
+         0ajDUvQcs0NfvetIRZztrHzeE80KcezUL4ubQL2Qx2RpRcvR678e9533fvXHRmmIGAWt
+         c+fkvufa3kcA+WHnbdvl1Mg7OPP0j2TOanwCmY0NDYGhJLDcligaOTVPDyT1mc4LyF7C
+         bz6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=On0qhhXBlYOtCeZtcZpo7aig8lY5SX+e5KUg+9BbvQY=;
-        b=S7n1ICXjNm7BeRhV33ZDRhg3CPrjcFBSYenKvfzZvYBaJYpTZCuPY5lRYJ2OqheN3o
-         Mx6ilzUuFh+W91ricy3spaD8X20GDKZ7G7zv+BAKNlicfJBQ424FYYbN6vbUZoKeGtdc
-         VwTlmWUm+EZ/mHrO14iJuWbGVsBi8zadfKxjw0q1qSIuiVsZz5crEnidwGrDNQVKZVkj
-         XFflBUpamdrRbuYa4qU2uv0tpsRFpTI4QdnyXYINyab4lm4sshRfCTEv9wISkNyjo3VV
-         5Jrr/ZJ1H6HNvT+5WfvOPqngXrw3/gDwA36gtIbc79a7CvCutrrZcGumNAkJNl+M4Ob+
-         4tWQ==
-X-Gm-Message-State: APjAAAWvm8cvRwljJQIRk41VTYCPzQOuJJWzt8p4yQ6VpwmVxOe10zJv
-        +6Fkf3FjCaYHLyS/3RgugV8=
-X-Google-Smtp-Source: APXvYqzq/Q/pPQ4k0mOIIJJKuB00jX53XaxpQ4ZFAhWcIwROkDhtcm31B+U5CCUfOkEHEkVDyPWVxA==
-X-Received: by 2002:ac2:5195:: with SMTP id u21mr5484358lfi.141.1580477115114;
-        Fri, 31 Jan 2020 05:25:15 -0800 (PST)
-Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
-        by smtp.gmail.com with ESMTPSA id 126sm4578903lfm.38.2020.01.31.05.25.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 Jan 2020 05:25:14 -0800 (PST)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, Yu Chen <chenyu56@huawei.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v3 07/19] usb: dwc3: Registering a role switch in the DRD code.
-In-Reply-To: <20200122185610.131930-8-bryan.odonoghue@linaro.org>
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org> <20200122185610.131930-8-bryan.odonoghue@linaro.org>
-Date:   Fri, 31 Jan 2020 15:25:09 +0200
-Message-ID: <87wo977o7e.fsf@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uw1FQaJ7B7AC5+CVRylYzOQ0kTnjKrLEQb7DZzSA/4Y=;
+        b=NjEc1kPwWqP2b8Xt8vd13r4LMejCxXmFXTqQfJJng1zdmw+yf6WdX9Tq5VW22TzGfS
+         XmhpXuCpOkXHrsMJvtGICxyKLkzXZsjU6pR2lO7r4sb3KB2tPImsu7BOf8hKiRQ73pOm
+         dwYP0HVpQClHrpf0qtl6M1GSOi2rQXCvX3kgDdT2KzhWijx54CzhaJK0n1WKDzEzSq2Y
+         m+xD8eSmSm5ITXh6gmDtJrMCDI4st71FiufzjcDoVfwR7QJ8HfbVU2/byD8+ism1zV93
+         igwd51gHxUb/MuSl3qg0gxyRPfzGbmTYwaZh/7dzTw9FoXTs8qOQBd/KKnmCg2eXTAif
+         Qs1A==
+X-Gm-Message-State: APjAAAWq3pMqp9LuTInL00nGbGRUolnBIjoi/W8DBnmyGpwAUczcvnds
+        keQsDyagOFZAzZw/Rfc+49o=
+X-Google-Smtp-Source: APXvYqzJZa0hq1t1IkczddY1sn7dC2Nwyv/xkjvgnEZRNzMIFUYnDNpERPVWmI6YbILlckNXdk9bkQ==
+X-Received: by 2002:a62:1b4f:: with SMTP id b76mr10986760pfb.163.1580477145176;
+        Fri, 31 Jan 2020 05:25:45 -0800 (PST)
+Received: from localhost (g52.222-224-164.ppp.wakwak.ne.jp. [222.224.164.52])
+        by smtp.gmail.com with ESMTPSA id g18sm10448004pfi.80.2020.01.31.05.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 05:25:44 -0800 (PST)
+Date:   Fri, 31 Jan 2020 22:25:42 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Julia Lawall <Julia.Lawall@inria.fr>, kbuild-all@lists.01.org,
+        Jonas Bonn <jonas@southpole.se>,
+        kernel-janitors@vger.kernel.org,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] openrisc: use mmgrab
+Message-ID: <20200131132542.GY24874@lianli.shorne-pla.net>
+References: <1577634178-22530-5-git-send-email-Julia.Lawall@inria.fr>
+ <201912301238.xfn6pKut%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912301238.xfn6pKut%lkp@intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Dec 30, 2019 at 12:49:19PM +0800, kbuild test robot wrote:
+> Hi Julia,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on vfio/next]
+> [also build test ERROR on char-misc/char-misc-testing v5.5-rc3 next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Julia-Lawall/use-mmgrab/20191230-011611
+> base:   https://github.com/awilliam/linux-vfio.git next
+> config: openrisc-simple_smp_defconfig (attached as .config)
+> compiler: or1k-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=openrisc 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    arch/openrisc/kernel/smp.c: In function 'secondary_start_kernel':
+> >> arch/openrisc/kernel/smp.c:116:2: error: implicit declaration of function 'mmgrab'; did you mean 'igrab'? [-Werror=implicit-function-declaration]
+>      116 |  mmgrab(mm);
+>          |  ^~~~~~
+>          |  igrab
+>    cc1: some warnings being treated as errors
+> 
+> vim +116 arch/openrisc/kernel/smp.c
+> 
+>    107	
+>    108	asmlinkage __init void secondary_start_kernel(void)
+>    109	{
+>    110		struct mm_struct *mm = &init_mm;
+>    111		unsigned int cpu = smp_processor_id();
+>    112		/*
+>    113		 * All kernel threads share the same mm context; grab a
+>    114		 * reference and switch to it.
+>    115		 */
+>  > 116		mmgrab(mm);
+>    117		current->active_mm = mm;
+>    118		cpumask_set_cpu(cpu, mm_cpumask(mm));
+>    119	
+>    120		pr_info("CPU%u: Booted secondary processor\n", cpu);
+>    121	
+>    122		setup_cpuinfo();
+>    123		openrisc_clockevent_init();
+>    124	
+>    125		notify_cpu_starting(cpu);
+>    126	
+>    127		/*
+>    128		 * OK, now it's safe to let the boot CPU continue
+>    129		 */
+>    130		complete(&cpu_running);
+>    131	
+>    132		synchronise_count_slave(cpu);
+>    133		set_cpu_online(cpu, true);
+>    134	
+>    135		local_irq_enable();
+>    136	
+>    137		preempt_disable();
+>    138		/*
+>    139		 * OK, it's off to the idle thread for us
+>    140		 */
+>    141		cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+>    142	}
+>    143	
+> 
 
+Hello,  FYI I have fixed this commit and queued it on my 5.7 branch.
 
-Hi,
-
-Bryan O'Donoghue <bryan.odonoghue@linaro.org> writes:
-> From: Yu Chen <chenyu56@huawei.com>
->
-> The Type-C drivers use USB role switch API to inform the
-> system about the negotiated data role, so registering a role
-> switch in the DRD code in order to support platforms with
-> USB Type-C connectors.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: ShuFan Lee <shufan_lee@richtek.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jun Li <lijun.kernel@gmail.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  drivers/usb/dwc3/core.h |  3 ++
->  drivers/usb/dwc3/drd.c  | 77 ++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 79 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 77c4a9abe365..a99e57636172 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -25,6 +25,7 @@
->  #include <linux/usb/ch9.h>
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/role.h>
->  #include <linux/ulpi/interface.h>
->=20=20
->  #include <linux/phy/phy.h>
-> @@ -953,6 +954,7 @@ struct dwc3_scratchpad_array {
->   * @hsphy_mode: UTMI phy mode, one of following:
->   *		- USBPHY_INTERFACE_MODE_UTMI
->   *		- USBPHY_INTERFACE_MODE_UTMIW
-> + * @role_sw: usb_role_switch handle
->   * @usb2_phy: pointer to USB2 PHY
->   * @usb3_phy: pointer to USB3 PHY
->   * @usb2_generic_phy: pointer to USB2 PHY
-> @@ -1086,6 +1088,7 @@ struct dwc3 {
->  	struct extcon_dev	*edev;
->  	struct notifier_block	edev_nb;
->  	enum usb_phy_interface	hsphy_mode;
-> +	struct usb_role_switch	*role_sw;
->=20=20
->  	u32			fladj;
->  	u32			irq_gadget;
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index c946d64142ad..3b57d2ddda93 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -476,6 +476,73 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc=
-3 *dwc)
->  	return edev;
->  }
->=20=20
-> +#ifdef CONFIG_USB_ROLE_SWITCH
-
-it's best to use if (IS_*()) macros.
-
-> +#define ROLE_SWITCH 1
-
-this wouldn't be neceessary
-
-> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role ro=
-le)
-> +{
-> +	struct dwc3 *dwc =3D dev_get_drvdata(dev);
-> +	u32 mode;
-> +
-> +	switch (role) {
-> +	case USB_ROLE_HOST:
-> +		mode =3D DWC3_GCTL_PRTCAP_HOST;
-> +		break;
-> +	case USB_ROLE_DEVICE:
-> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
-> +		break;
-> +	default:
-> +		mode =3D DWC3_GCTL_PRTCAP_DEVICE;
-> +		break;
-> +	}
-> +
-> +	dwc3_set_mode(dwc, mode);
-> +	return 0;
-> +}
-> +
-> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-> +{
-> +	struct dwc3 *dwc =3D dev_get_drvdata(dev);
-> +	unsigned long flags;
-> +	enum usb_role role;
-> +
-> +	spin_lock_irqsave(&dwc->lock, flags);
-> +	switch (dwc->current_dr_role) {
-> +	case DWC3_GCTL_PRTCAP_HOST:
-> +		role =3D USB_ROLE_HOST;
-> +		break;
-> +	case DWC3_GCTL_PRTCAP_DEVICE:
-> +		role =3D USB_ROLE_DEVICE;
-> +		break;
-> +	case DWC3_GCTL_PRTCAP_OTG:
-> +		role =3D dwc->current_otg_role;
-> +		break;
-> +	default:
-> +		role =3D USB_ROLE_DEVICE;
-> +		break;
-> +	}
-> +	spin_unlock_irqrestore(&dwc->lock, flags);
-> +	return role;
-> +}
-> +
-> +static int dwc3_setup_role_switch(struct dwc3 *dwc)
-> +{
-> +	struct usb_role_switch_desc dwc3_role_switch =3D {NULL};
-> +
-> +	dwc3_role_switch.fwnode =3D dev_fwnode(dwc->dev);
-> +	dwc3_role_switch.set =3D dwc3_usb_role_switch_set;
-> +	dwc3_role_switch.get =3D dwc3_usb_role_switch_get;
-> +	dwc->role_sw =3D usb_role_switch_register(dwc->dev, &dwc3_role_switch);
-> +	if (IS_ERR(dwc->role_sw))
-> +		return PTR_ERR(dwc->role_sw);
-> +
-> +	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
-> +	return 0;
-> +}
-> +#else
-> +#define ROLE_SWITCH 0
-> +#define dwc3_setup_role_switch(x) 0
-
-or this
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl40KrUACgkQzL64meEa
-mQYy7w/9E30MqVYLkohM1KHA8Tax73YNKaJaHkYFIDAWcpp1Cz+AoIKdMAXMxq/Z
-Fa3Fe/GjDEQU/dgOBiWtJj3FQ+0ZZ78F0EpZkuevjRwi07QSKZ17h8QgaFFjHcIk
-AwpGFLDF43fsrUMZxrkf5y3cSHHl2UV8GYI4PEsAivFfIvJVIqrwTcxv3ifsoRpj
-GdyW9gwc4FqwCLWAD63PS6DLcmDzlasE7wyv5FKV2Rf0Bovqnpbg66i6yWf/OST0
-j9Cwu1GTh6xV7YoeCALwvdjL1FmKxeQoFXlOfpKdBIHbVVCGL8e7qfimMSpbTp48
-cEqQcbrlk+RqFuhixhW9tsMO8YSa+TxZnk7RWtsyV4kceM8ephMha1goui2kF8l8
-btnM3XHZKDDasoynqEtTfMU2EW+UXTPjQybZ8Q8ryrWcZD77f4b0hLn8FmDeT1bZ
-gAv5U+mLyeVvR3i5tiRFgaAqrDb2mmjzVXJpyL7vuJjU7VDrNysfBfdd+6Wjj0lJ
-RcuMGXzC7GFPfH14v+JMfcX17fMFhyj3E9yQpqLyJcBsGBVjuii69fGBBJyVUreH
-vhiMgWyU8gpU1PS2mOrPGzHyweA41IA3AfZtDAV4s3bb+dUuobhhXBh9lk2nIHxt
-lghorQ3G23FXCRzNJep5DpIgXtQvjO7tbL7qqwrRyrbqHdkQ3pg=
-=zM1p
------END PGP SIGNATURE-----
---=-=-=--
+-Stafford
