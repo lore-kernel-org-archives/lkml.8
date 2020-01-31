@@ -2,72 +2,139 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5572BC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF37C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2437E20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8054214D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 11:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgAaLdH (ORCPT
+        id S1728457AbgAaLdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 06:33:07 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23349 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728392AbgAaLdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 06:33:07 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-166-aCOUkESTNNevMVdNmDuoQg-1; Fri, 31 Jan 2020 11:33:03 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 31 Jan 2020 11:33:03 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 31 Jan 2020 11:33:03 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Bjorn Helgaas' <helgaas@kernel.org>,
-        Muni Sekhar <munisekharrms@gmail.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: pcie: xilinx: kernel hang - ISR readl()
-Thread-Topic: pcie: xilinx: kernel hang - ISR readl()
-Thread-Index: AQHV15+VMjSgSoHAFUG77qtnfiBRTqgEpIfQ
-Date:   Fri, 31 Jan 2020 11:33:03 +0000
-Message-ID: <446f8f85815b480cb1e8cf477b74b1af@AcuMS.aculab.com>
-References: <CAHhAz+ijB_SNqRiC1Fn0Uw3OpiS7go4dPPYm6YZckaQ0fuq=QQ@mail.gmail.com>
- <20200130190040.GA96992@google.com>
-In-Reply-To: <20200130190040.GA96992@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 31 Jan 2020 06:33:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:34480 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728325AbgAaLdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 06:33:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D994C1063;
+        Fri, 31 Jan 2020 03:33:13 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3476B3F67D;
+        Fri, 31 Jan 2020 03:33:13 -0800 (PST)
+Date:   Fri, 31 Jan 2020 11:33:08 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: Re: [PATCH] mm/mapping_dirty_helpers: Update huge page-table entry
+ callbacks
+Message-ID: <20200131113307.GA34020@arm.com>
+References: <20200131100052.58761-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-X-MC-Unique: aCOUkESTNNevMVdNmDuoQg-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200131100052.58761-1-thomas_os@shipmail.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQmpvcm4gSGVsZ2Fhcw0KPiBTZW50OiAzMCBKYW51YXJ5IDIwMjAgMTk6MDENCi4uDQo+
-ID4gPiBZb3UgY291bGQgbGVhcm4gdGhpcyBlaXRoZXIgdmlhIGEgUENJZSBhbmFseXplciAoZXhw
-ZW5zaXZlIHBpZWNlIG9mDQo+ID4gPiBoYXJkd2FyZSkgb3IgcG9zc2libHkgc29tZSBsb2dpYyBp
-biB0aGUgRlBHQSB0aGF0IHdvdWxkIGxvZyBQQ0llDQo+ID4gPiB0cmFuc2FjdGlvbnMgaW4gYSBi
-dWZmZXIgYW5kIG1ha2UgdGhlbSBhY2Nlc3NpYmxlIHZpYSBzb21lIG90aGVyDQo+ID4gPiBpbnRl
-cmZhY2UgKHlvdSBtZW50aW9uZWQgaXQgaGFkIHBhcmFsbGVsIGFuZCBvdGhlciBpbnRlcmZhY2Vz
-KS4NCg0KWW91IGNhbiBwcm9iYWJseSB1c2UgdGhlIFhpbGlueCBlcXVpdmFsZW50IG9mIEFsdGVy
-YSAnc2lnbmFsdGFwJw0KdG8gd29yayBvdXQgd2hhdCBpcyBoYXBwZW5pbmcgd2l0aGluIHRoZSBm
-cGdhLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
-IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRp
-b24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Fri, Jan 31, 2020 at 10:00:52AM +0000, Thomas Hellström (VMware) wrote:
+> From: Thomas Hellstrom <thellstrom@vmware.com>
+> 
+> Following the update of pagewalk code
+> commit a07984d48146 ("mm: pagewalk: add p4d_entry() and pgd_entry()")
+> we can modify the mapping_dirty_helpers' huge page-table entry callbacks
+> to avoid splitting when a huge pud or -pmd is encountered.
+> 
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Cc: Steven Price <steven.price@arm.com>
 
+LGTM
+
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+> ---
+>  mm/mapping_dirty_helpers.c | 42 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 38 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/mapping_dirty_helpers.c b/mm/mapping_dirty_helpers.c
+> index 71070dda9643..2c7d03675903 100644
+> --- a/mm/mapping_dirty_helpers.c
+> +++ b/mm/mapping_dirty_helpers.c
+> @@ -111,26 +111,60 @@ static int clean_record_pte(pte_t *pte, unsigned long addr,
+>  	return 0;
+>  }
+>  
+> -/* wp_clean_pmd_entry - The pagewalk pmd callback. */
+> +/*
+> + * wp_clean_pmd_entry - The pagewalk pmd callback.
+> + *
+> + * Dirty-tracking should take place on the PTE level, so
+> + * WARN() if encountering a dirty huge pmd.
+> + * Furthermore, never split huge pmds, since that currently
+> + * causes dirty info loss. The pagefault handler should do
+> + * that if needed.
+> + */
+>  static int wp_clean_pmd_entry(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  			      struct mm_walk *walk)
+>  {
+> -	/* Dirty-tracking should be handled on the pte level */
+>  	pmd_t pmdval = pmd_read_atomic(pmd);
+>  
+> +	if (!pmd_trans_unstable(&pmdval))
+> +		return 0;
+> +
+> +	if (pmd_none(pmdval)) {
+> +		walk->action = ACTION_AGAIN;
+> +		return 0;
+> +	}
+> +
+> +	/* Huge pmd, present or migrated */
+> +	walk->action = ACTION_CONTINUE;
+>  	if (pmd_trans_huge(pmdval) || pmd_devmap(pmdval))
+>  		WARN_ON(pmd_write(pmdval) || pmd_dirty(pmdval));
+>  
+>  	return 0;
+>  }
+>  
+> -/* wp_clean_pud_entry - The pagewalk pud callback. */
+> +/*
+> + * wp_clean_pud_entry - The pagewalk pud callback.
+> + *
+> + * Dirty-tracking should take place on the PTE level, so
+> + * WARN() if encountering a dirty huge puds.
+> + * Furthermore, never split huge puds, since that currently
+> + * causes dirty info loss. The pagefault handler should do
+> + * that if needed.
+> + */
+>  static int wp_clean_pud_entry(pud_t *pud, unsigned long addr, unsigned long end,
+>  			      struct mm_walk *walk)
+>  {
+> -	/* Dirty-tracking should be handled on the pte level */
+>  	pud_t pudval = READ_ONCE(*pud);
+>  
+> +	if (!pud_trans_unstable(&pudval))
+> +		return 0;
+> +
+> +	if (pud_none(pudval)) {
+> +		walk->action = ACTION_AGAIN;
+> +		return 0;
+> +	}
+> +
+> +	/* Huge pud */
+> +	walk->action = ACTION_CONTINUE;
+>  	if (pud_trans_huge(pudval) || pud_devmap(pudval))
+>  		WARN_ON(pud_write(pudval) || pud_dirty(pudval));
+>  
+> -- 
+> 2.21.1
+> 
