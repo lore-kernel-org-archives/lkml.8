@@ -2,183 +2,327 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2CC35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14D7C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63C120705
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B036820CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 08:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtCjGMxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgAaIsZ (ORCPT
+        id S1728287AbgAaIsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 03:48:25 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39652 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbgAaIsY (ORCPT
+        Fri, 31 Jan 2020 03:48:33 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36927 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbgAaIsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 03:48:24 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so7707917wme.4;
-        Fri, 31 Jan 2020 00:48:23 -0800 (PST)
+        Fri, 31 Jan 2020 03:48:33 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so2458915plz.4;
+        Fri, 31 Jan 2020 00:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O5ycccSqPafUQDUtArWJENgWEJXME9xnY8wDyWmiLVw=;
+        b=CtCjGMxHlPa4uMBe55NlXbqQ2Ri9C6ybpjqfv3+Q45xOWA+0PRrI+HH7abYlewqIMe
+         JElfCO3sLos1TxRjfZ+bArgAjmSLiCPYWIufxyd42VnqnBTaUCUP3f36GmdeEpc0LQ8l
+         5lQEZNT53I9+hpinOzEh7SB9irGLI90zc7Ph5xdp0eDFdktqKzCKbxKt6kFS9sWr0DDA
+         jFOkroK/s3JcQzwjPyZc22e/lAhqN0mLPFUTwPGn5w4z5ahN2JEkION/DaKhvcHOjp+t
+         7dF8dHtRRg8bFr4rrXWE4bHbVaAOW1rxA9X+wpv3zllUE66krzpaAf6zzZc7e5FvtV6l
+         cafQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2dEBK2/0QEjcEIbTow6H8atvD57XckSzsqrktuuuwiQ=;
-        b=iE1y3RWV6QWI2ssruPyBjM36XoczkGFjHbsAK0Y9paiW+gaFQBHH/jxSsIsLAoirYF
-         rrkYwl2rFqusVLx0t5h3dtjthYzl69mfNc2AT+hcEHaFoSITKYuHtiuNfHvwybE8ige+
-         zx7tBKDEZXncKMHWLI2JUQtigaqSQYDd6QPeXKDyeXnj6qcST8YugW6lELv1KbdLjWBe
-         I7Lzjzj+iLRlblzpS2iGRjTSCdLEzTM+qYiPfXp6/DDxTg4JsJ+L86wlIluEj9AQ5h3Q
-         NmpuMr8C2TMz2RmDHp3dvkAUvKFSy6eD6MwyIjZFJoWUrv4QOWi3u3bM0sZ6Q9dinoYO
-         gkPQ==
-X-Gm-Message-State: APjAAAU7CS6MbwWa3bizXyUTFUAcjJFzQrOg6OnzWrzZFWKMVFycCvz6
-        ZgTzWnp8QnEtzWrprrmhMPfTG2F/Z/Q=
-X-Google-Smtp-Source: APXvYqyHY3SsN8sdxcNTZKwuYJH0cgDW0nY1gVdu6YC/r1hZq5mTO/Ua3IXVS/iQwDDxxCzDvFMN6w==
-X-Received: by 2002:a1c:6389:: with SMTP id x131mr11106584wmb.155.1580460119746;
-        Fri, 31 Jan 2020 00:41:59 -0800 (PST)
-Received: from 1aq-andre.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id x7sm11034302wrq.41.2020.01.31.00.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 00:41:59 -0800 (PST)
-From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Ilya Ledvich <ilya@compulab.co.il>,
-        Igor Grinberg <grinberg@compulab.co.il>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 10/12] ARM: dts: imx7d: cl-som-imx7: add WiLink8 WLAN support
-Date:   Fri, 31 Jan 2020 08:36:36 +0000
-Message-Id: <20200131083638.6118-10-git@andred.net>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200131083638.6118-1-git@andred.net>
-References: <20200131083638.6118-1-git@andred.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O5ycccSqPafUQDUtArWJENgWEJXME9xnY8wDyWmiLVw=;
+        b=nf6T8kJl1rNu4tNfk+nuo9+5njKCOto1/N6YWJrqdquKQqDgy1CyLC9zE/6ryypEy9
+         0G2dSqvCIOSjuLcnvca9BebX0+IyIfy9+/soUSShop+v68jZ012cEufGplh2zUvy1lCV
+         ItjxPfGNvbwdrGkz29w94nsqyS2nJzIsOvTnat/Zed7v+zvNSlTVvuqNRfazYfC/7O9F
+         LjuxhW+4sVTJPPFS6pOGoC73I54pr7NJzuNJMoo9Zn0w3yS5Ck1CnVqq0XdbjqwhYz0m
+         gn4RGUqwHqZ0vKigMCq+NDY1Er9SQgX0rKhie1OaurNg3l2JtM2TtlgSutsVoqivqGPP
+         bmuQ==
+X-Gm-Message-State: APjAAAX1nNKmamD2MTA/rPA5LvGnDj7t3UJhq8e8cBBTpvTDn6dbG7IF
+        qdzGfkhQdDaiWby3c3R8nwzYH3AC5ACVVLFaatFWQHfLqqY=
+X-Google-Smtp-Source: APXvYqyiNY4uwfOnlxbSqgONwjK+nUKqWtW8I5m0IqBAngruxNfTIHVXqcPwf70qsozwC/k9s9tg0VayqPXTxiO6peM=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr11383068pjq.132.1580460511210;
+ Fri, 31 Jan 2020 00:48:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200131045953.wbj66jkvijnmf5s2@kili.mountain> <CAHp75Vd_CNFx8xT9yO9LA=jKjT_xnc3XotUJx4jNFKaq0bpHsg@mail.gmail.com>
+In-Reply-To: <CAHp75Vd_CNFx8xT9yO9LA=jKjT_xnc3XotUJx4jNFKaq0bpHsg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jan 2020 10:48:22 +0200
+Message-ID: <CAHp75VcxgoMstVHEUyUT9nwYKGgLER7_jXjtp+zFWfJQ1k=ykA@mail.gmail.com>
+Subject: Re: [PATCH net] device property: change device_get_phy_mode() to
+ prevent signedess bugs
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add / enable TI's WiLink8 WLAN module on SDIO2.
+On Fri, Jan 31, 2020 at 10:12 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Jan 31, 2020 at 7:03 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > The device_get_phy_mode() was returning negative error codes on
+> > failure and positive phy_interface_t values on success.  The problem is
+> > that the phy_interface_t type is an enum which GCC treats as unsigned.
+> > This lead to recurring signedness bugs where we check "if (phy_mode < 0)"
+> > and "phy_mode" is unsigned.
+> >
+> > In the commit 0c65b2b90d13 ("net: of_get_phy_mode: Change API to solve
+> > int/unit warnings") we updated of_get_phy_mode() take a pointer to
+> > phy_mode and only return zero on success and negatives on failure.  This
+> > patch does the same thing for device_get_phy_mode().  Plus it's just
+> > nice for the API to be the same in both places.
+> >
+>
+> For device property API changes
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Notes:
-* power is always enabled (because of bluetooth)
-* the downstream delay of 70ms after power-on
-  doesn't seem to reliably work, hence it was
-  bumped to 700ms
+Sorry, have to withdraw my tag. See below.
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Ilya Ledvich <ilya@compulab.co.il>
-Cc: Igor Grinberg <grinberg@compulab.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 60 +++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+> > Fixes: b9f0b2f634c0 ("net: stmmac: platform: fix probe for ACPI devices")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> > This is a change to drivers/base/ but all the users are ethernet drivers
+> > so probably it makes sense for Dave to take this?
+> >
+> > Also this fixes a bug in stmmac.  If you wanted I could make a one
+> > liner fix for that and then write this change on top of that.  The bug
+> > is only in v5.6 so it doesn't affect old kernels.
+> >
+> >  drivers/base/property.c                               | 13 +++++++++++--
+> >  drivers/net/ethernet/apm/xgene-v2/main.c              |  9 ++++-----
+> >  drivers/net/ethernet/apm/xgene-v2/main.h              |  2 +-
+> >  drivers/net/ethernet/apm/xgene/xgene_enet_main.c      |  6 +++---
+> >  drivers/net/ethernet/apm/xgene/xgene_enet_main.h      |  2 +-
+> >  drivers/net/ethernet/smsc/smsc911x.c                  |  8 +++-----
+> >  drivers/net/ethernet/socionext/netsec.c               |  5 ++---
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c |  6 +++---
+> >  include/linux/property.h                              |  3 ++-
+> >  9 files changed, 30 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index 511f6d7acdfe..8854cfbd213b 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -863,9 +863,18 @@ EXPORT_SYMBOL_GPL(fwnode_get_phy_mode);
+> >   * 'phy-connection-type', and return its index in phy_modes table, or errno in
+> >   * error case.
+> >   */
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index a16cbb070a12..4cb36decef3d 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -28,6 +28,24 @@
- 		compatible = "smsc,usb3503";
- 		reset-gpios = <&pca9555 6 GPIO_ACTIVE_LOW>;
- 	};
-+
-+	pwrseq_ti_wifi: ti-wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&pca9555 0 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <700>;
-+		/* 10μs during shutdown, but 60μs between two enables */
-+		power-off-delay-us = "60";
-+	};
-+
-+	reg_ti_wifi: regulator-ti-wifi {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wilink-regulator";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pca9555 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
- };
- 
- &cpu0 {
-@@ -232,6 +250,31 @@
- 	status = "okay";
- };
- 
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_ti_wifi>;
-+	mmc-pwrseq = <&pwrseq_ti_wifi>;
-+	non-removable;
-+	cap-power-off-card;
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1835";
-+		reg = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usdhc2_wlcore>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <15 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -308,6 +351,23 @@
- 		>;
- 	};
- 
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_CMD__SD2_CMD		0x59
-+			MX7D_PAD_SD2_CLK__SD2_CLK		0x19
-+			MX7D_PAD_SD2_DATA0__SD2_DATA0		0x59
-+			MX7D_PAD_SD2_DATA1__SD2_DATA1		0x59
-+			MX7D_PAD_SD2_DATA2__SD2_DATA2		0x59
-+			MX7D_PAD_SD2_DATA3__SD2_DATA3		0x59
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_wlcore: usdhc2wlcoregrp {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO15__GPIO1_IO15		0x34
-+		>;
-+	};
-+
- 	pinctrl_usdhc3: usdhc3grp {
- 		fsl,pins = <
- 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+You forgot to update documentation part.
+After addressing you may put my tag back.
+
+> > -int device_get_phy_mode(struct device *dev)
+> > +int device_get_phy_mode(struct device *dev, phy_interface_t *interface)
+> >  {
+> > -       return fwnode_get_phy_mode(dev_fwnode(dev));
+> > +       int mode;
+> > +
+> > +       *interface = PHY_INTERFACE_MODE_NA;
+> > +
+> > +       mode = fwnode_get_phy_mode(dev_fwnode(dev));
+> > +       if (mode < 0)
+> > +               return mode;
+> > +
+> > +       *interface = mode;
+> > +       return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(device_get_phy_mode);
+> >
+> > diff --git a/drivers/net/ethernet/apm/xgene-v2/main.c b/drivers/net/ethernet/apm/xgene-v2/main.c
+> > index c48f60996761..706602918dd1 100644
+> > --- a/drivers/net/ethernet/apm/xgene-v2/main.c
+> > +++ b/drivers/net/ethernet/apm/xgene-v2/main.c
+> > @@ -15,7 +15,7 @@ static int xge_get_resources(struct xge_pdata *pdata)
+> >  {
+> >         struct platform_device *pdev;
+> >         struct net_device *ndev;
+> > -       int phy_mode, ret = 0;
+> > +       int ret = 0;
+> >         struct resource *res;
+> >         struct device *dev;
+> >
+> > @@ -41,12 +41,11 @@ static int xge_get_resources(struct xge_pdata *pdata)
+> >
+> >         memcpy(ndev->perm_addr, ndev->dev_addr, ndev->addr_len);
+> >
+> > -       phy_mode = device_get_phy_mode(dev);
+> > -       if (phy_mode < 0) {
+> > +       ret = device_get_phy_mode(dev, &pdata->resources.phy_mode);
+> > +       if (ret) {
+> >                 dev_err(dev, "Unable to get phy-connection-type\n");
+> > -               return phy_mode;
+> > +               return ret;
+> >         }
+> > -       pdata->resources.phy_mode = phy_mode;
+> >
+> >         if (pdata->resources.phy_mode != PHY_INTERFACE_MODE_RGMII) {
+> >                 dev_err(dev, "Incorrect phy-connection-type specified\n");
+> > diff --git a/drivers/net/ethernet/apm/xgene-v2/main.h b/drivers/net/ethernet/apm/xgene-v2/main.h
+> > index d41439d2709d..d687f0185908 100644
+> > --- a/drivers/net/ethernet/apm/xgene-v2/main.h
+> > +++ b/drivers/net/ethernet/apm/xgene-v2/main.h
+> > @@ -35,7 +35,7 @@
+> >
+> >  struct xge_resource {
+> >         void __iomem *base_addr;
+> > -       int phy_mode;
+> > +       phy_interface_t phy_mode;
+> >         u32 irq;
+> >  };
+> >
+> > diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+> > index 6aee2f0fc0db..da35e70ccceb 100644
+> > --- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+> > +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+> > @@ -1736,10 +1736,10 @@ static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
+> >
+> >         memcpy(ndev->perm_addr, ndev->dev_addr, ndev->addr_len);
+> >
+> > -       pdata->phy_mode = device_get_phy_mode(dev);
+> > -       if (pdata->phy_mode < 0) {
+> > +       ret = device_get_phy_mode(dev, &pdata->phy_mode);
+> > +       if (ret) {
+> >                 dev_err(dev, "Unable to get phy-connection-type\n");
+> > -               return pdata->phy_mode;
+> > +               return ret;
+> >         }
+> >         if (!phy_interface_mode_is_rgmii(pdata->phy_mode) &&
+> >             pdata->phy_mode != PHY_INTERFACE_MODE_SGMII &&
+> > diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+> > index 18f4923b1723..600cddf1942d 100644
+> > --- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+> > +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+> > @@ -209,7 +209,7 @@ struct xgene_enet_pdata {
+> >         void __iomem *pcs_addr;
+> >         void __iomem *ring_csr_addr;
+> >         void __iomem *ring_cmd_addr;
+> > -       int phy_mode;
+> > +       phy_interface_t phy_mode;
+> >         enum xgene_enet_rm rm;
+> >         struct xgene_enet_cle cle;
+> >         u64 *extd_stats;
+> > diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+> > index 49a6a9167af4..2d773e5e67f8 100644
+> > --- a/drivers/net/ethernet/smsc/smsc911x.c
+> > +++ b/drivers/net/ethernet/smsc/smsc911x.c
+> > @@ -2361,14 +2361,12 @@ static const struct smsc911x_ops shifted_smsc911x_ops = {
+> >  static int smsc911x_probe_config(struct smsc911x_platform_config *config,
+> >                                  struct device *dev)
+> >  {
+> > -       int phy_interface;
+> >         u32 width = 0;
+> >         int err;
+> >
+> > -       phy_interface = device_get_phy_mode(dev);
+> > -       if (phy_interface < 0)
+> > -               phy_interface = PHY_INTERFACE_MODE_NA;
+> > -       config->phy_interface = phy_interface;
+> > +       err = device_get_phy_mode(dev, &config->phy_interface);
+> > +       if (err)
+> > +               config->phy_interface = PHY_INTERFACE_MODE_NA;
+> >
+> >         device_get_mac_address(dev, config->mac, ETH_ALEN);
+> >
+> > diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+> > index e8224b543dfc..95ff91230523 100644
+> > --- a/drivers/net/ethernet/socionext/netsec.c
+> > +++ b/drivers/net/ethernet/socionext/netsec.c
+> > @@ -1994,10 +1994,9 @@ static int netsec_probe(struct platform_device *pdev)
+> >         priv->msg_enable = NETIF_MSG_TX_ERR | NETIF_MSG_HW | NETIF_MSG_DRV |
+> >                            NETIF_MSG_LINK | NETIF_MSG_PROBE;
+> >
+> > -       priv->phy_interface = device_get_phy_mode(&pdev->dev);
+> > -       if ((int)priv->phy_interface < 0) {
+> > +       ret = device_get_phy_mode(&pdev->dev, &priv->phy_interface);
+> > +       if (ret) {
+> >                 dev_err(&pdev->dev, "missing required property 'phy-mode'\n");
+> > -               ret = -ENODEV;
+> >                 goto free_ndev;
+> >         }
+> >
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> > index d10ac54bf385..aa77c332ea1d 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> > @@ -412,9 +412,9 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+> >                 *mac = NULL;
+> >         }
+> >
+> > -       plat->phy_interface = device_get_phy_mode(&pdev->dev);
+> > -       if (plat->phy_interface < 0)
+> > -               return ERR_PTR(plat->phy_interface);
+> > +       rc = device_get_phy_mode(&pdev->dev, &plat->phy_interface);
+> > +       if (rc)
+> > +               return ERR_PTR(rc);
+> >
+> >         plat->interface = stmmac_of_get_mac_mode(np);
+> >         if (plat->interface < 0)
+> > diff --git a/include/linux/property.h b/include/linux/property.h
+> > index d86de017c689..2ffe9842c997 100644
+> > --- a/include/linux/property.h
+> > +++ b/include/linux/property.h
+> > @@ -12,6 +12,7 @@
+> >
+> >  #include <linux/bits.h>
+> >  #include <linux/fwnode.h>
+> > +#include <linux/phy.h>
+> >  #include <linux/types.h>
+> >
+> >  struct device;
+> > @@ -368,7 +369,7 @@ enum dev_dma_attr device_get_dma_attr(struct device *dev);
+> >
+> >  const void *device_get_match_data(struct device *dev);
+> >
+> > -int device_get_phy_mode(struct device *dev);
+> > +int device_get_phy_mode(struct device *dev, phy_interface_t *interface);
+> >
+> >  void *device_get_mac_address(struct device *dev, char *addr, int alen);
+> >
+> > --
+> > 2.11.0
+> >
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+
+
 -- 
-2.23.0.rc1
-
+With Best Regards,
+Andy Shevchenko
