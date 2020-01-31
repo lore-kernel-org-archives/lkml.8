@@ -2,90 +2,104 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581D0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D11BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA102082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40962082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 15:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="A6Y2AxBN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jd35rxH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgAaPlw (ORCPT
+        id S1729286AbgAaPmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 10:41:52 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42258 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgAaPlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 10:41:52 -0500
-Received: by mail-il1-f194.google.com with SMTP id x2so6490404ila.9
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 07:41:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bt/QheAZ930twwioViVJw8WXYDgWI7UHXp6ZgLfEFvU=;
-        b=A6Y2AxBNtVwdIYHMVc3HVU8q/VzulMbzj/3/CIXAT1NEl9g+rtYxLOZL0iajhtIH2h
-         MiLriuEA35OxvITi1H1wcLnMy7zEM42kjWp+nV44p6Hs6yBhBUfYF+CthIJYAayJ+nuX
-         KCQQixMqG90XFFpLWL+nGFGJg9T506YOP0lJW6PDhMwqcDTVKct76WRd6XFLaMwx9Bkn
-         uEPZ5feqGTRx9pGjZYNwqYBDDal5sa/0x7x1nfjPOy+8A/wZoVtP/FpcAUGoMrx6NeH8
-         OxL2xDbd8/HQGw316yFtDyGmr6CYXUjoHNSbCIXsqxQx0jR0aDHoNuccm35OKtmQ3Fpg
-         eIYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bt/QheAZ930twwioViVJw8WXYDgWI7UHXp6ZgLfEFvU=;
-        b=nx7PKO2ry04sRm3wInvovQG5qkHSkzLTgnK9/aBvuMWYUZuYAm5xh8E3ec+o9OXyGs
-         ER7pNbVSJXH8zZVqxrpcN2VXW10HQHFvxbXE5BmZ7LQQbum+yCBdU8p1PFzJqS5tKlI6
-         nfBFSGd+kwymf3CeQh+9AJqn+v1QXdeY+/FugBWuboWQ5tRwzDiB2jGWv+f7HNlOMROq
-         T2YAGcLg88Rup06bFpSCoo23ej6vqzN68GzXUUiyzIQBBpgYsNwCynDyg4pvnp4iZ665
-         N9hMipKn7S50XcTRfUbJiURUzF8+ghszVg8VltQBZcwpAZQECOgiE0Vr+FxRM5nNMSn4
-         cH5w==
-X-Gm-Message-State: APjAAAWEmnav9rZg5Ra7xEaUgbv8wc007mc2SMv6WsxXBsOTABQBKkpA
-        +27p0fjHA/B64J1UPDzPsQ3O8A==
-X-Google-Smtp-Source: APXvYqzmFO+FwGR8L2EL82Fy4qUmOkX9hKN8xdZIQNl3E/nj/xI2hVeg29FnzUN/wjKuFPY47A0oeQ==
-X-Received: by 2002:a05:6e02:4cc:: with SMTP id f12mr3138757ils.90.1580485310666;
-        Fri, 31 Jan 2020 07:41:50 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s88sm3276032ilk.79.2020.01.31.07.41.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 07:41:50 -0800 (PST)
-Subject: Re: [PATCH liburing v2 1/1] test: add epoll test case
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20200131142943.120459-1-sgarzare@redhat.com>
- <20200131142943.120459-2-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <00610b2b-2110-36c2-d6ce-85599e46013f@kernel.dk>
-Date:   Fri, 31 Jan 2020 08:41:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 10:42:16 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:60264 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729016AbgAaPmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 10:42:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=af7+Bsa4FLscpB6733Wg20Cckf2L8D3h7E9G+fD24P0=; b=jd35rxH9/vacgzLSEFyxHa9YOs
+        qqBY5xOsAhIAt5OVjZwrns5lyMi1mgIVC7GYsmM9eG7ijC7dsGaoBHuGeTWYwjYp+S7AJoBhI3KSG
+        dFSvihcIN+LcaURbfwMmPoPPDCUBWoPjbcNphkrbKNLB5cfXZ9336rk6/64j5vOm/4SU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ixYQf-000824-IP; Fri, 31 Jan 2020 16:41:57 +0100
+Date:   Fri, 31 Jan 2020 16:41:57 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jon Nettleton <jon@solid-run.com>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>, Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200131154157.GE13902@lunn.ch>
+References: <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
+ <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
+ <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
+ <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+ <20200131142906.GG9639@lunn.ch>
+ <20200131144737.GA4948@willie-the-truck>
+ <20200131150929.GB13902@lunn.ch>
+ <CABdtJHs5zdS=unviHX3=Gsbf=q9ooS0sYMUAbtvaZT0D0ORNkw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200131142943.120459-2-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABdtJHs5zdS=unviHX3=Gsbf=q9ooS0sYMUAbtvaZT0D0ORNkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 7:29 AM, Stefano Garzarella wrote:
-> This patch add the epoll test case that has four sub-tests:
-> - test_epoll
-> - test_epoll_sqpoll
-> - test_epoll_nodrop
-> - test_epoll_sqpoll_nodrop
+> Just as a review reference, I have found an old attempted
+> implementation documented here.
+> https://github.com/CumulusNetworks/apd-tools/wiki
 
-Since we have EPOLL_CTL now, any chance you could also include
-a test case that uses that instead of epoll_ctl()?
+That is interesting, but you need to be careful with it.
 
--- 
-Jens Axboe
+Top of rack switches are very different beasts to the majority of
+switches supported by Linux, which are SOHO. TOR switches have a lot
+of firmware running on them doing most of the work. A typical SOHO
+switch with a Linux kernel driver has very little firmware, Linux
+really is driving it, not just asking it to do things.
 
+Also, TOR switches typically have a binary blob running in userspace,
+meaning different information is probably required compared to kernel
+driver.
+
+There may be useful information here, but please take it with a big
+pinch of salt. And make sure you have the appropriate networking
+people involved in any specification work you do.
+
+      Andrew
