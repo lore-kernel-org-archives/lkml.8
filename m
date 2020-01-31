@@ -2,182 +2,101 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD973C33CB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A1C33CB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE9220707
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611F120707
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 12:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wmaTaJNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgAaMmd convert rfc822-to-8bit (ORCPT
+        id S1728594AbgAaMoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 07:42:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:55551 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgAaMmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:42:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 04:42:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,385,1574150400"; 
-   d="scan'208";a="402646272"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga005.jf.intel.com with ESMTP; 31 Jan 2020 04:42:31 -0800
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 31 Jan 2020 04:42:15 -0800
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 31 Jan 2020 04:42:14 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.39]) with mapi id 14.03.0439.000;
- Fri, 31 Jan 2020 20:42:13 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v3 3/8] vfio: Reclaim PASIDs when application is down
-Thread-Topic: [RFC v3 3/8] vfio: Reclaim PASIDs when application is down
-Thread-Index: AQHV1pyX9vSsvffLj0+to6Wf6wB5HKgBzCoAgALuD6A=
-Date:   Fri, 31 Jan 2020 12:42:11 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A199412@SHSMSX104.ccr.corp.intel.com>
-References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
-        <1580299912-86084-4-git-send-email-yi.l.liu@intel.com>
- <20200129165640.4f1d42e0@w520.home>
-In-Reply-To: <20200129165640.4f1d42e0@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzIyOWFiNDUtNGE5ZC00NzcwLWFjMTgtYWRlYjRlMWE3YjJlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoic3hPXC90Smc3VTdYTUIxeDFCWFVRbW5xRHljeVlmTlwvWFJQbjRLaDdRcEZna3VnN01HSmg0MG1qVUtHazVSNjRkIn0=
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Fri, 31 Jan 2020 07:44:23 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:57433 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728527AbgAaMoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:44:23 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580474662; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Y9uezJFvTZwab5W/ghxsm4kRJLfaW5nZezC8D4k+Dew=; b=wmaTaJNf51xUySNeDThn9a+rRg6ZUibyGGGcdBSNQPGMDeiQOLClKHl+Ixlq7g1f+A0bb17l
+ si/nX39iCYU4vDfPxkG3V+BS1T4a9I1OZhC6RHxmHRKw6umq+Uz1I0qkGSNpg+1YBardTmRt
+ RN82VTYPH0iTeh3gQjmRyZv2mEY=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e342124.7f4e4dd12c00-smtp-out-n02;
+ Fri, 31 Jan 2020 12:44:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0967C433A2; Fri, 31 Jan 2020 12:44:19 +0000 (UTC)
+Received: from snaseem-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: snaseem)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 529F0C43383;
+        Fri, 31 Jan 2020 12:44:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 529F0C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=snaseem@codeaurora.org
+From:   Shadab Naseem <snaseem@codeaurora.org>
+To:     srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        neeraju@codeaurora.org, Shadab Naseem <snaseem@codeaurora.org>
+Subject: [PATCH] nvmem: core: Fix msb clearing bits
+Date:   Fri, 31 Jan 2020 18:13:55 +0530
+Message-Id: <1580474635-11965-1-git-send-email-snaseem@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+When clearing the msb bits of the resultant buffer, it is
+masked with the modulo of the number of bits needed with
+respect to the BITS_PER_BYTE. To mask out the buffer,
+it is passed though GENMASK of the remainder of the bits
+starting from zeroth bit. This case is valid if nbits is not
+a multiple of BITS_PER_BYTE and you are actually creating
+a GENMASK. If the nbits coming is a multiple of BITS_PER_BYTE,
+it would pass a negative value to the high bit number of
+GENMASK with zero as the lower bit number.
 
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Thursday, January 30, 2020 7:57 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [RFC v3 3/8] vfio: Reclaim PASIDs when application is down
-> 
-> On Wed, 29 Jan 2020 04:11:47 -0800
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > When userspace application is down, kernel should reclaim the PASIDs
-> > allocated for this application to avoid PASID leak. This patch adds a
-> > PASID list in vfio_mm structure to track the allocated PASIDs. The
-> > PASID reclaim will be triggered when last vfio container is released.
-> >
-> > Previous discussions:
-> > https://patchwork.kernel.org/patch/11209429/
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/vfio.c  | 61
-> > +++++++++++++++++++++++++++++++++++++++++++++++++---
-> >  include/linux/vfio.h |  6 ++++++
-> >  2 files changed, 64 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c index
-> > c43c757..425d60a 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -2148,15 +2148,31 @@ static struct vfio_mm *vfio_create_mm(struct
-> mm_struct *mm)
-> >  	vmm->pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-> >  	vmm->pasid_count = 0;
-> >  	mutex_init(&vmm->pasid_lock);
-> > +	INIT_LIST_HEAD(&vmm->pasid_list);
-> >
-> >  	list_add(&vmm->vfio_next, &vfio.vfio_mm_list);
-> >
-> >  	return vmm;
-> >  }
-> >
-> > +static void vfio_mm_reclaim_pasid(struct vfio_mm *vmm) {
-> > +	struct pasid_node *pnode, *tmp;
-> > +
-> > +	mutex_lock(&vmm->pasid_lock);
-> > +	list_for_each_entry_safe(pnode, tmp, &vmm->pasid_list, next) {
-> > +		pr_info("%s, reclaim pasid: %u\n", __func__, pnode->pasid);
-> > +		list_del(&pnode->next);
-> > +		ioasid_free(pnode->pasid);
-> > +		kfree(pnode);
-> > +	}
-> > +	mutex_unlock(&vmm->pasid_lock);
-> > +}
-> > +
-> >  static void vfio_mm_unlock_and_free(struct vfio_mm *vmm)  {
-> >  	mutex_unlock(&vfio.vfio_mm_lock);
-> > +	vfio_mm_reclaim_pasid(vmm);
-> >  	kfree(vmm);
-> >  }
-> >
-> > @@ -2204,6 +2220,39 @@ struct vfio_mm *vfio_mm_get_from_task(struct
-> > task_struct *task)  }  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> >
-> > +/**
-> > + * Caller should hold vmm->pasid_lock  */ static int
-> > +vfio_mm_insert_pasid_node(struct vfio_mm *vmm, u32 pasid) {
-> > +	struct pasid_node *pnode;
-> > +
-> > +	pnode = kzalloc(sizeof(*pnode), GFP_KERNEL);
-> > +	if (!pnode)
-> > +		return -ENOMEM;
-> > +	pnode->pasid = pasid;
-> > +	list_add(&pnode->next, &vmm->pasid_list);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * Caller should hold vmm->pasid_lock  */ static void
-> > +vfio_mm_remove_pasid_node(struct vfio_mm *vmm, u32 pasid) {
-> > +	struct pasid_node *pnode, *tmp;
-> > +
-> > +	list_for_each_entry_safe(pnode, tmp, &vmm->pasid_list, next) {
-> > +		if (pnode->pasid == pasid) {
-> > +			list_del(&pnode->next);
-> > +			kfree(pnode);
-> > +			break;
-> > +		}
-> 
-> The _safe() list walk variant is only needed when we continue to walk the list after
-> removing an entry.  Thanks,
+As per the definition of the GENMASK, the higher bit number (h)
+is right operand for bitwise right shift. If the value of the
+right operand is negative or is greater or equal to the number
+of bits in the promoted left operand, the behavior is undefined.
+So passing a negative value to GENMASK could behave differently
+across architecture, specifically between 64 and 32 bit.
+Also, on passing the hard-coded negative value as GENMASK(-1, 0)
+is giving compiler warning for shift-count-overflow.
+Hence making a check for clearing the MSB if the nbits are not
+a multiple of BITS_PER_BYTE.
 
-Nice catch. thanks, :-)
+Signed-off-by: Shadab Naseem <snaseem@codeaurora.org>
+---
+ drivers/nvmem/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Regards,
-Yi Liu
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 1e4a798..23c1547 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -926,7 +926,8 @@ static void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell, void *buf)
+ 		*p-- = 0;
+ 
+ 	/* clear msb bits if any leftover in the last byte */
+-	*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
++	if (cell->nbits%BITS_PER_BYTE)
++		*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
+ }
+ 
+ static int __nvmem_cell_read(struct nvmem_device *nvmem,
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
