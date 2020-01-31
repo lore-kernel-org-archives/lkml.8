@@ -2,106 +2,172 @@ Return-Path: <SRS0=flzY=3U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32245C35240
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDAAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A95214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2424206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 31 Jan 2020 19:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="txvbiBEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgAaTKd (ORCPT
+        id S1726180AbgAaTSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 14:10:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56570 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgAaTKd (ORCPT
+        Fri, 31 Jan 2020 14:18:09 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50244 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgAaTSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 14:10:33 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ixbgS-0004CG-LY; Fri, 31 Jan 2020 20:10:29 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4E5EF1C1D5A;
-        Fri, 31 Jan 2020 20:10:28 +0100 (CET)
-Date:   Fri, 31 Jan 2020 19:10:28 -0000
-From:   "tip-bot2 for Steven Clarkson" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/boot: Handle malformed SRAT tables during early
- ACPI parsing
-Cc:     Steven Clarkson <sc@lambdal.com>, Borislav Petkov <bp@suse.de>,
-        linux-acpi@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
-References: <CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com>
+        Fri, 31 Jan 2020 14:18:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00VJI3a1101843;
+        Fri, 31 Jan 2020 13:18:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580498283;
+        bh=5o3jrAPOq4W1SE19xQasQh/7bnIUrU+W1nnPjFMm8Ac=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=txvbiBEH5V81ZRB5Y/0olACHpGo6nw2cniwm1RVJfYKCCdi38EoOH+sl9251fhO7w
+         PbweIJnE9MGRAZ3eHl7ZudtMmnrWEmhXzcUKRyMUnGdj7T23b6kd1DNg5YKaKdKj5T
+         kBWtVS+AnIPZzwd34XyuB6quPyv/8Nhbx5pIseAE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00VJI2hi128161
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 13:18:03 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 13:18:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 13:18:02 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00VJI23J033588;
+        Fri, 31 Jan 2020 13:18:02 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <8f0e7d61-9433-4b23-5563-4dde03cd4b4a@gmail.com>
+ <d03b5867-a55b-9abc-014f-69ce156b09f3@ti.com>
+ <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <516ae353-e068-fe5e-768f-52308ef670a9@ti.com>
+Date:   Fri, 31 Jan 2020 13:14:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158049782801.396.10779532409008194964.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <5c956a5a-cd83-f290-9995-6ea35383f5f0@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Florian
 
-Commit-ID:     2b73ea3796242608b4ccf019ff217156c92e92fe
-Gitweb:        https://git.kernel.org/tip/2b73ea3796242608b4ccf019ff217156c92e92fe
-Author:        Steven Clarkson <sc@lambdal.com>
-AuthorDate:    Thu, 30 Jan 2020 16:48:16 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 31 Jan 2020 20:03:23 +01:00
+On 1/31/20 12:42 PM, Florian Fainelli wrote:
+> On 1/31/20 10:29 AM, Dan Murphy wrote:
+>> Florian
+>>
+>> On 1/31/20 11:49 AM, Florian Fainelli wrote:
+>>> On 1/31/20 7:11 AM, Dan Murphy wrote:
+>>>> Set the speed optimization bit on the DP83867 PHY.
+>>>> This feature can also be strapped on the 64 pin PHY devices
+>>>> but the 48 pin devices do not have the strap pin available to enable
+>>>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>> OK, but why and how does that optimization work exactly?
+>> I described this in the cover letter.  And it is explained in the data
+>> sheet Section 8.4.6.6
+> Sorry I complete missed that and just focused on the patch, you should
+> consider not providing a cover letter for a single patch, and especially
+> not when the cover letter contains more information than the patch
+> commit message itself.
 
-x86/boot: Handle malformed SRAT tables during early ACPI parsing
+Sorry I usually give a cover letter to all my network related patches.
 
-Break an infinite loop when early parsing of the SRAT table is caused
-by a subtable with zero length. Known to affect the ASUS WS X299 SAGE
-motherboard with firmware version 1201 which has a large block of
-zeros in its SRAT table. The kernel could boot successfully on this
-board/firmware prior to the introduction of early parsing this table or
-after a BIOS update.
+Unless I misinterpreted David on his reply to me about cover letters.
 
- [ bp: Fixup whitespace damage and commit message. Make it return 0 to
-   denote that there are no immovable regions because who knows what
-   else is broken in this BIOS. ]
+https://www.spinics.net/lists/netdev/msg617575.html
 
-Fixes: 02a3e3cdb7f1 ("x86/boot: Parse SRAT table and count immovable memory regions")
-Signed-off-by: Steven Clarkson <sc@lambdal.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: linux-acpi@vger.kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206343
-Link: https://lkml.kernel.org/r/CAHKq8taGzj0u1E_i=poHUam60Bko5BpiJ9jn0fAupFUYexvdUQ@mail.gmail.com
----
- arch/x86/boot/compressed/acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+And I seemed to have missed David on the --cc list so I will add him for v2.
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 25019d4..ef2ad72 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -393,7 +393,13 @@ int count_immovable_mem_regions(void)
- 	table = table_addr + sizeof(struct acpi_table_srat);
- 
- 	while (table + sizeof(struct acpi_subtable_header) < table_end) {
-+
- 		sub_table = (struct acpi_subtable_header *)table;
-+		if (!sub_table->length) {
-+			debug_putstr("Invalid zero length SRAT subtable.\n");
-+			return 0;
-+		}
-+
- 		if (sub_table->type == ACPI_SRAT_TYPE_MEMORY_AFFINITY) {
- 			struct acpi_srat_mem_affinity *ma;
- 
+I was also asked not to provide the same information in the cover letter 
+and the commit message.
+
+Either way I am ok with not providing a cover letter and updating the 
+commit message with more information.
+
+
+>>>    Departing from
+>>> the BMSR reads means you possibly are going to introduce bugs and/or
+>>> incomplete information. For instance, you set phydev->pause and
+>>> phydev->asym_pause to 0 now, is there no way to extract what the link
+>>> partner has advertised?
+>> I was using the marvel.c as my template as it appears to have a separate
+>> status register as well.
+>>
+>> Instead of setting those bits in the call back I can call the
+>> genphy_read_status then override the duplex and speed based on the
+>> physts register like below.  This way link status and pause values can
+>> be updated and then we can update the speed and duplex settings.
+>>
+>>        ret = genphy_read_status(phydev);
+>>      if (ret)
+>>          return ret;
+>>
+>>      if (status < 0)
+>>          return status;
+>>
+>>      if (status & DP83867_PHYSTS_DUPLEX)
+>>          phydev->duplex = DUPLEX_FULL;
+>>      else
+>>          phydev->duplex = DUPLEX_HALF;
+>>
+>>      if (status & DP83867_PHYSTS_1000)
+>>          phydev->speed = SPEED_1000;
+>>      else if (status & DP83867_PHYSTS_100)
+>>          phydev->speed = SPEED_100;
+>>      else
+>>          phydev->speed = SPEED_10;
+>>
+> OK, but what if they disagree, are they consistently latched with
+> respect to one another?
+
+Well in parsing through the code for genphy read status when auto 
+negotiation is set the phydev structure appears to be setup per what has 
+been configured.  I did not see any reading of speed or duplex when auto 
+neg is set it is just taking the LPA register. But I am probably not 
+right here.  So we and our customers found that the phy was always 
+reporting a 1Gbps connection when the 4 wire cable connected when using 
+genphy_read_status.  This PHYSTS register provides a single location 
+within the register set for quick access to commonly accessed
+information.
+
+The PHYSTS register from the chip is what the PHY negotiated with the LP.
+
+[   10.404355] dp83867_read_status:STS is 0x6C02  - PHYSTS register 
+reporting a 100Mbps speed with a 4 wire cable
+[   10.413450] dp83867_read_status:BMCR is 0x1140  - BMCR is configured 
+for a 1Gbps connection with a 4 wire cable.  But the speed should be 
+100Mbps.
+[   10.417906] dp83867_read_status:BMSR is 0x796D  - BMSR which just 
+states what the device is capable of doing but does not report the 
+actual speed or duplex mode.
+
+So unless I missed some code in the phy_device or phy_core this is the 
+only way I could see to report the correct negotiated speed and duplex mode.
+
+Dan
+
