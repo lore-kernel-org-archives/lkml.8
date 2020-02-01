@@ -2,83 +2,116 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663DCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC6FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4210E206F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE82F206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OND2aOfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgBAQ0t (ORCPT
+        id S1726913AbgBAQ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:26:49 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:60144 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgBAQ0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:26:47 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixvbZ-005myN-UK; Sat, 01 Feb 2020 16:26:46 +0000
-Date:   Sat, 1 Feb 2020 16:26:45 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fix do_last() regression
-Message-ID: <20200201162645.GJ23230@ZenIV.linux.org.uk>
+        Sat, 1 Feb 2020 11:27:37 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:54892 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbgBAQ1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 11:27:36 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 488zyY576yz9vBmZ;
+        Sat,  1 Feb 2020 17:27:33 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=OND2aOfE; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id cOc3nVoSmWt8; Sat,  1 Feb 2020 17:27:33 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 488zyY3LN2z9vBmY;
+        Sat,  1 Feb 2020 17:27:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580574453; bh=ZjmS/adFTgLgsg7zeCN7l9gy5WSfkM50nGalFqI61jU=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=OND2aOfEStqUhg9CLiDtWmwPWq3FmlU74CaysGCTUMcz0p1a48c2qlAmwAxt7MAQQ
+         E265BrP4WfszNHtCemUVGjvXf5G2t1LHZmExnGWA733/QVFOZ423m52qO9DBQnzs0e
+         YdVUZmhsiDqgEteMFdpWWdCCqfYLJk8o0SjKAFp4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 054808B78B;
+        Sat,  1 Feb 2020 17:27:35 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id artbkuQxn9DU; Sat,  1 Feb 2020 17:27:34 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A0A648B752;
+        Sat,  1 Feb 2020 17:27:34 +0100 (CET)
+Subject: Re: [PATCH v2] powerpc/32s: Don't flush all TLBs when flushing one
+ page
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <b30b2eae6960502eaf0d9e36c60820b839693c33.1580542939.git.christophe.leroy@c-s.fr>
+Message-ID: <601bc775-6b51-c6c3-128e-ccd36d54f933@c-s.fr>
+Date:   Sat, 1 Feb 2020 17:27:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <b30b2eae6960502eaf0d9e36c60820b839693c33.1580542939.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-done from nd->inode.  I even suggested that, but the reason for that
-has slipped through the cracks and I went for dir->d_inode instead -
-made for more "obvious" patch.
 
-Analysis:
-	at the entry into do_last() and all the way to step_into(): dir
-(aka nd->path.dentry) is known not to have been freed; so's nd->inode
-and it's equal to dir->d_inode unless we are already doomed to -ECHILD.
-inode of the file to get opened is not known.
-	after step_into(): inode of the file to get opened is known;
-dir might be pointing to freed memory/be negative/etc.
-	at the call of may_create_in_sticky(): guaranteed to be out of
-RCU mode; inode of the file to get opened is known and pinned;
-dir might be garbage.
 
-The last was the reason for the original patch.  Except that at the do_last()
-entry we can be in RCU mode and it is possible that nd->path.dentry->d_inode
-has already changed under us.  In that case we are going to fail with -ECHILD,
-but we need to be careful; nd->inode is pointing to valid struct inode and
-it's the same as nd->path.dentry->d_inode in "won't fail with -ECHILD"
-case, so we should use that.
+Le 01/02/2020 à 09:04, Christophe Leroy a écrit :
+> When flushing any memory range, the flushing function
+> flushes all TLBs.
+> 
+> When (start) and (end - 1) are in the same memory page,
+> flush that page instead.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
-Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
-Cc: stable@kernel.org
-Fixes:�d0cb50185ae9 (do_last(): fetch directory ->i_mode and ->i_uid before it's too late)
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/namei.c b/fs/namei.c
-index 4167109297e0..db6565c99825 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3333,8 +3333,8 @@ static int do_last(struct nameidata *nd,
- 		   struct file *file, const struct open_flags *op)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+
+> ---
+> v2: Reworked the test as the previous one was always false (end - start was PAGE_SIZE - 1 for a single page)
+> ---
+>   arch/powerpc/mm/book3s32/tlb.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s32/tlb.c b/arch/powerpc/mm/book3s32/tlb.c
+> index 2fcd321040ff..724c0490fb17 100644
+> --- a/arch/powerpc/mm/book3s32/tlb.c
+> +++ b/arch/powerpc/mm/book3s32/tlb.c
+> @@ -79,11 +79,14 @@ static void flush_range(struct mm_struct *mm, unsigned long start,
+>   	int count;
+>   	unsigned int ctx = mm->context.id;
+>   
+> +	start &= PAGE_MASK;
+>   	if (!Hash) {
+> -		_tlbia();
+> +		if (end - start <= PAGE_SIZE)
+> +			_tlbie(start);
+> +		else
+> +			_tlbia();
+>   		return;
+>   	}
+> -	start &= PAGE_MASK;
+>   	if (start >= end)
+>   		return;
+>   	end = (end - 1) | ~PAGE_MASK;
+> 
