@@ -2,51 +2,53 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABB0C3524C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEFAC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B761020740
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F3E2073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PSHjZFT3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RnoVi6fU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgBAPNJ (ORCPT
+        id S1727154AbgBAPMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 10:13:09 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51844 "EHLO
+        Sat, 1 Feb 2020 10:12:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51822 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgBAPMp (ORCPT
+        with ESMTP id S1726669AbgBAPMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 10:12:45 -0500
+        Sat, 1 Feb 2020 10:12:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LKEoyUCzBuRkKfb9R2uO7LHx4Md5GqeUkIse+rddq2w=; b=PSHjZFT3UaRtT64bpletvme8Rc
-        K2j3wXF48qoDQ6uGA2BOOCdJYUoHrYnzlxdck31h4khrVAWg7uPKvnisvqM1HpERW+tJoLP66SD+x
-        edegMlZBASg9XS4VxEuFAfnN8NSUpTwCkFKFKbnpIqNtPLIh/SneM6MoeNbbsBf5z+FTnAXuETDS7
-        KJZx++gQlQ5Y3fcfSuCHUgq88LV2dB4R0GSNI3jJW/G15mWRBs43lNVHjZANxPLe8JuvDa8/GcTS0
-        uFsEYuGoXogighaPNchyhQCVADLkH9PsqKZBoTd8KNw2pg2R8chETC1JEvO0fBK8X4I+69KiIloOA
-        ysRVmaDA==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dB7ywmsatelLVL7Psw2UVkpn4TS1ismlyPRVqvsNN4I=; b=RnoVi6fUM/M58i6TYhoTLY0TL
+        V7I9zpJWwCzNP2scBs5DKrt7H9v8YkzB+zy/W4DudHEy5O3nZ2nS+CmMmx7gYjNpb//bY/tIKKSyZ
+        BoIYl7MaogIfsM0Y9tjCirctp4DMLxm6KpweOFcDQtxE+etr4078ycEjYIbRbs9F7wyfbU5GGbVy3
+        fnFz1u13IqALNOQOFhi0zXFNp8K2To+TxPFBQ7dryOGOMrqog5fJewQfdZiz2SpgzlRxhq5dAlgjj
+        JO1o3SZNAvTMRVCpWVcSJwTwalk4DOgKQ0oSw60THP3NVyDBfjsNRTxzLp1iNTUgC+HvKJkv6LBzz
+        TzfPOsY9g==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixuRu-0006HL-3D; Sat, 01 Feb 2020 15:12:42 +0000
+        id 1ixuRu-0006HE-1K; Sat, 01 Feb 2020 15:12:42 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/12] readahead: Ignore return value of ->readpages
-Date:   Sat,  1 Feb 2020 07:12:30 -0800
-Message-Id: <20200201151240.24082-3-willy@infradead.org>
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com
+Subject: [PATCH v4 00/12] Change readahead API
+Date:   Sat,  1 Feb 2020 07:12:28 -0800
+Message-Id: <20200201151240.24082-1-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200201151240.24082-1-willy@infradead.org>
-References: <20200201151240.24082-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,51 +58,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-We used to assign the return value to a variable, which we then ignored.
-Remove the pretence of caring.
+I would particularly value feedback on this from the gfs2 and ocfs2
+maintainers.  They have non-trivial changes, and a review on patch 5
+would be greatly appreciated.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- mm/readahead.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+This series adds a readahead address_space operation to eventually
+replace the readpages operation.  The key difference is that
+pages are added to the page cache as they are allocated (and
+then looked up by the filesystem) instead of passing them on a
+list to the readpages operation and having the filesystem add
+them to the page cache.  It's a net reduction in code for each
+implementation, more efficient than walking a list, and solves
+the direct-write vs buffered-read problem reported by yu kuai at
+https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 6bf73ef33b7e..fc77d13af556 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -113,17 +113,16 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
- 
- EXPORT_SYMBOL(read_cache_pages);
- 
--static int read_pages(struct address_space *mapping, struct file *filp,
-+static void read_pages(struct address_space *mapping, struct file *filp,
- 		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
- {
- 	struct blk_plug plug;
- 	unsigned page_idx;
--	int ret;
- 
- 	blk_start_plug(&plug);
- 
- 	if (mapping->a_ops->readpages) {
--		ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-+		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
- 		/* Clean up the remaining pages */
- 		put_pages_list(pages);
- 		goto out;
-@@ -136,12 +135,9 @@ static int read_pages(struct address_space *mapping, struct file *filp,
- 			mapping->a_ops->readpage(filp, page);
- 		put_page(page);
- 	}
--	ret = 0;
- 
- out:
- 	blk_finish_plug(&plug);
--
--	return ret;
- }
- 
- /*
+v4:
+ - Rebase on current Linus (a62aa6f7f50a ("Merge tag 'gfs2-for-5.6'"))
+ - Add comment to __do_page_cache_readahead() acknowledging we don't
+   care _that_ much about setting PageReadahead.
+ - Fix the return value check of add_to_page_cache_lru().
+ - Add a missing call to put_page() in __do_page_cache_readahead() if
+   we fail to insert the page.
+ - Improve the documentation of ->readahead (including indentation
+   problem identified by Randy).
+ - Fix off by one error in read_pages() (Dave Chinner).
+ - Fix nr_pages manipulation in btrfs (Dave Chinner).
+ - Remove bogus refcount fix in erofs (Gao Xiang, Dave Chinner).
+ - Update ext4 patch for Merkle tree readahead.
+ - Update f2fs patch for Merkle tree readahead.
+ - Reinstate next_page label in f2fs_readpages() now it's used by the
+   compression code.
+ - Reinstate call to fuse_wait_on_page_writeback (Miklos Szeredi).
+ - Remove a double-unlock in the error path in fuse.
+ - Remove an odd fly-speck in fuse_readpages().
+ - Make nr_pages loop in fuse_readpages less convoluted (Dave Chinner).
+
+Matthew Wilcox (Oracle) (12):
+  mm: Fix the return type of __do_page_cache_readahead
+  readahead: Ignore return value of ->readpages
+  readahead: Put pages in cache earlier
+  mm: Add readahead address space operation
+  fs: Convert mpage_readpages to mpage_readahead
+  btrfs: Convert from readpages to readahead
+  erofs: Convert uncompressed files from readpages to readahead
+  erofs: Convert compressed files from readpages to readahead
+  ext4: Convert from readpages to readahead
+  f2fs: Convert from readpages to readahead
+  fuse: Convert from readpages to readahead
+  iomap: Convert from readpages to readahead
+
+ Documentation/filesystems/locking.rst |  7 ++-
+ Documentation/filesystems/vfs.rst     | 14 +++++
+ drivers/staging/exfat/exfat_super.c   |  9 +--
+ fs/block_dev.c                        |  9 +--
+ fs/btrfs/extent_io.c                  | 19 +++---
+ fs/btrfs/extent_io.h                  |  2 +-
+ fs/btrfs/inode.c                      | 18 +++---
+ fs/erofs/data.c                       | 33 ++++------
+ fs/erofs/zdata.c                      | 21 +++----
+ fs/ext2/inode.c                       | 12 ++--
+ fs/ext4/ext4.h                        |  5 +-
+ fs/ext4/inode.c                       | 24 ++++----
+ fs/ext4/readpage.c                    | 20 +++---
+ fs/ext4/verity.c                      | 16 +++--
+ fs/f2fs/data.c                        | 35 +++++------
+ fs/f2fs/f2fs.h                        |  5 +-
+ fs/f2fs/verity.c                      | 16 +++--
+ fs/fat/inode.c                        |  8 +--
+ fs/fuse/file.c                        | 37 +++++------
+ fs/gfs2/aops.c                        | 20 +++---
+ fs/hpfs/file.c                        |  8 +--
+ fs/iomap/buffered-io.c                | 74 +++++-----------------
+ fs/iomap/trace.h                      |  2 +-
+ fs/isofs/inode.c                      |  9 +--
+ fs/jfs/inode.c                        |  8 +--
+ fs/mpage.c                            | 38 ++++--------
+ fs/nilfs2/inode.c                     | 13 ++--
+ fs/ocfs2/aops.c                       | 32 +++++-----
+ fs/omfs/file.c                        |  8 +--
+ fs/qnx6/inode.c                       |  8 +--
+ fs/reiserfs/inode.c                   | 10 +--
+ fs/udf/inode.c                        |  8 +--
+ fs/xfs/xfs_aops.c                     | 10 +--
+ include/linux/fs.h                    |  2 +
+ include/linux/iomap.h                 |  2 +-
+ include/linux/mpage.h                 |  2 +-
+ include/linux/pagemap.h               | 12 ++++
+ include/trace/events/erofs.h          |  6 +-
+ include/trace/events/f2fs.h           |  6 +-
+ mm/internal.h                         |  2 +-
+ mm/migrate.c                          |  2 +-
+ mm/readahead.c                        | 89 ++++++++++++++++++---------
+ 42 files changed, 332 insertions(+), 349 deletions(-)
+
 -- 
 2.24.1
 
