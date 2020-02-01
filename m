@@ -2,46 +2,47 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BF5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD0CC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6830A206F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5601C20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sXcJBxK/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fIRN6xzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgBAPaO (ORCPT
+        id S1727091AbgBAPaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 10:30:14 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:49344 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726805AbgBAPaO (ORCPT
+        Sat, 1 Feb 2020 10:30:18 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:24691 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726805AbgBAPaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 10:30:14 -0500
+        Sat, 1 Feb 2020 10:30:16 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580571013; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=K25uKYs78oVbN8Z+pz12gqxsEvgxT5fPrOSVg0wLRTE=; b=sXcJBxK/OBPRP8DqKUdzGX3CnY2hxtDMJJJAJGNF6gb0b7BWYLGD2/9ppfhx8YnCRUMaXhFg
- eBxcf4aIgQ/4VG54dDQEGiBdUNaUAVjE8VudAD6IW1Y9AkfbeHV7Mh1r0OxPT+FRGULUltVf
- hGjF4+BOahSRjvPJsQmNAl3ZQug=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ s=smtp; t=1580571015; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=n41rmseTf/6rUYviUALNtRUhz+RI5Rvog5A6rvN1Ui0=; b=fIRN6xzPppvykAidEbN1ExoyddVdp5RJeCLEHyvM/42V2Fgtc8+1nLfACORGKm+FzIrobCR2
+ DbXpsQdYPENQjqNuHW+rfrfeLbyV2xI6wyijJlsIqiX+hx2x0v9aq1hoNJxHrcSnI+DJSsll
+ l9gbIhrNlZ66M1yHSE4dW8LXiuE=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e359980.7efdf00db7d8-smtp-out-n03;
- Sat, 01 Feb 2020 15:30:08 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e359986.7f7afd9ead18-smtp-out-n02;
+ Sat, 01 Feb 2020 15:30:14 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 126B5C447A6; Sat,  1 Feb 2020 15:30:08 +0000 (UTC)
+        id 6A393C4479C; Sat,  1 Feb 2020 15:30:14 +0000 (UTC)
 Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC7DAC433CB;
-        Sat,  1 Feb 2020 15:30:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC7DAC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D8E0C433CB;
+        Sat,  1 Feb 2020 15:30:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D8E0C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
 From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
@@ -55,10 +56,12 @@ Cc:     Douglas Anderson <dianders@chromium.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv2 0/2] Convert QCOM watchdog timer bindings to YAML
-Date:   Sat,  1 Feb 2020 20:59:47 +0530
-Message-Id: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 1/2] dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
+Date:   Sat,  1 Feb 2020 20:59:48 +0530
+Message-Id: <2edca4b54ee6b33493e0427c17de983d3ce3012f.1580570160.git.saiprakash.ranjan@codeaurora.org>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1580570160.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,29 +69,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series converts QCOM watchdog timer bindings to YAML. Also
-it adds the missing SoC-specific compatible for QCS404, SC7180,
-SDM845 and SM8150 SoCs.
+Convert QCOM watchdog timer bindings to DT schema format using
+json-schema.
 
-v1: https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
-
-Changes since v1:
- As per Rob's suggestion:
-  * Replaced oneOf+const with enum.
-  * Removed timeout-sec and included watchdog.yaml.
-  * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
-
-Sai Prakash Ranjan (2):
-  dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
-  dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
-    SM8150
-
- .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
- .../bindings/watchdog/qcom-wdt.yaml           | 49 +++++++++++++++++++
- 2 files changed, 49 insertions(+), 28 deletions(-)
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 ------------
+ .../bindings/watchdog/qcom-wdt.yaml           | 44 +++++++++++++++++++
+ 2 files changed, 44 insertions(+), 28 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
 
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+deleted file mode 100644
+index 41aeaa2ff0f8..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Qualcomm Krait Processor Sub-system (KPSS) Watchdog
+----------------------------------------------------
+-
+-Required properties :
+-- compatible : shall contain only one of the following:
+-
+-			"qcom,kpss-wdt-msm8960"
+-			"qcom,kpss-wdt-apq8064"
+-			"qcom,kpss-wdt-ipq8064"
+-			"qcom,kpss-wdt-ipq4019"
+-			"qcom,kpss-timer"
+-			"qcom,scss-timer"
+-			"qcom,kpss-wdt"
+-
+-- reg : shall contain base register location and length
+-- clocks : shall contain the input clock
+-
+-Optional properties :
+-- timeout-sec : shall contain the default watchdog timeout in seconds,
+-                if unset, the default timeout is 30 seconds
+-
+-Example:
+-	watchdog@208a038 {
+-		compatible = "qcom,kpss-wdt-ipq8064";
+-		reg = <0x0208a038 0x40>;
+-		clocks = <&sleep_clk>;
+-		timeout-sec = <10>;
+-	};
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+new file mode 100644
+index 000000000000..5448cc537a03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/qcom-wdt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Krait Processor Sub-system (KPSS) Watchdog timer
++
++maintainers:
++  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
++
++allOf:
++  - $ref: watchdog.yaml#
++
++properties:
++  compatible:
++    enum:
++      - qcom,kpss-timer
++      - qcom,kpss-wdt
++      - qcom,kpss-wdt-apq8064
++      - qcom,kpss-wdt-ipq4019
++      - qcom,kpss-wdt-ipq8064
++      - qcom,kpss-wdt-msm8960
++      - qcom,scss-timer
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++    watchdog@208a038 {
++      compatible = "qcom,kpss-wdt-ipq8064";
++      reg = <0x0208a038 0x40>;
++      clocks = <&sleep_clk>;
++      timeout-sec = <10>;
++    };
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
