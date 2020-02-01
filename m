@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082B5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78742C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE706206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B0D206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgBAHqf (ORCPT
+        id S1727169AbgBAHqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 02:46:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:41116 "EHLO foss.arm.com"
+        Sat, 1 Feb 2020 02:46:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:41144 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgBAHqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 02:46:34 -0500
+        id S1726156AbgBAHqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 02:46:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4070B11B3;
-        Fri, 31 Jan 2020 23:46:34 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C780FEC;
+        Fri, 31 Jan 2020 23:46:36 -0800 (PST)
 Received: from u200856.usa.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6B0F3F52E;
-        Fri, 31 Jan 2020 23:50:12 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F7283F52E;
+        Fri, 31 Jan 2020 23:50:14 -0800 (PST)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     netdev@vger.kernel.org
 Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
         bcm-kernel-feedback-list@broadcom.com,
         linux-kernel@vger.kernel.org, wahrenst@gmx.net, andrew@lunn.ch,
         hkallweit1@gmail.com, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH 1/6] mdio_bus: Add generic mdio_find_bus()
-Date:   Sat,  1 Feb 2020 01:46:20 -0600
-Message-Id: <20200201074625.8698-2-jeremy.linton@arm.com>
+Subject: [PATCH 3/6] net: bcmgenet: enable automatic phy discovery
+Date:   Sat,  1 Feb 2020 01:46:22 -0600
+Message-Id: <20200201074625.8698-4-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201074625.8698-1-jeremy.linton@arm.com>
 References: <20200201074625.8698-1-jeremy.linton@arm.com>
@@ -44,70 +44,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears most ethernet drivers follow one of two main strategies
-for mdio bus/phy management. A monolithic model where the net driver
-itself creates, probes and uses the phy, and one where an external
-mdio/phy driver instantiates the mdio bus/phy and the net driver
-only attaches to a known phy. Usually in this latter model the phys
-are discovered via DT relationships or simply phy name/address
-hardcoding.
+The unimac mdio driver falls back to scanning the
+entire bus if its given an appropriate mask. In ACPI
+mode we expect that the system is well behaved and
+conforms to recent versions of the specification.
 
-This is a shame because modern well behaved mdio buses are self
-describing and can be probed. The mdio layer itself is fully capable
-of this, yet there isn't a clean way for a standalone net driver
-to attach and enumerate the discovered devices. This is because
-outside of of_mdio_find_bus() there isn't a straightforward way
-to acquire the mii_bus pointer.
-
-So, lets add a mdio_find_bus which can return the mii_bus based
-only on its name.
+We then utilize phy_find_first(), and
+phy_connect_direct() to find and attach to the
+discovered phy during net_device open.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 ---
- drivers/net/phy/mdio_bus.c | 17 +++++++++++++++++
- include/linux/phy.h        |  1 +
- 2 files changed, 18 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 40 +++++++++++++++++---
+ 1 file changed, 34 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 229e480179ff..46dfb112fd04 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -260,6 +260,23 @@ static struct class mdio_bus_class = {
- 	.dev_release	= mdiobus_release,
- };
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 2049f8218589..f3271975b375 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -5,7 +5,7 @@
+  * Copyright (c) 2014-2017 Broadcom
+  */
  
-+/**
-+ * mdio_find_bus - Given the name of a mdiobus, find the mii_bus.
-+ * @mdio_bus_np: Pointer to the mii_bus.
-+ *
-+ * Returns a reference to the mii_bus, or NULL if none found.  The
-+ * embedded struct device will have its reference count incremented,
-+ * and this must be put_deviced'ed once the bus is finished with.
-+ */
-+struct mii_bus *mdio_find_bus(const char *mdio_name)
-+{
-+	struct device *d;
+-
++#include <linux/acpi.h>
+ #include <linux/types.h>
+ #include <linux/delay.h>
+ #include <linux/wait.h>
+@@ -311,7 +311,9 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ int bcmgenet_mii_probe(struct net_device *dev)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+-	struct device_node *dn = priv->pdev->dev.of_node;
++	struct device *kdev = &priv->pdev->dev;
++	struct device_node *dn = kdev->of_node;
 +
-+	d = class_find_device_by_name(&mdio_bus_class, mdio_name);
-+	return d ? to_mii_bus(d) : NULL;
-+}
-+EXPORT_SYMBOL(mdio_find_bus);
+ 	struct phy_device *phydev;
+ 	u32 phy_flags = 0;
+ 	int ret;
+@@ -334,7 +336,27 @@ int bcmgenet_mii_probe(struct net_device *dev)
+ 			return -ENODEV;
+ 		}
+ 	} else {
+-		phydev = dev->phydev;
++		if (has_acpi_companion(kdev)) {
++			char mdio_bus_id[MII_BUS_ID_SIZE];
++			struct mii_bus *unimacbus;
 +
- #if IS_ENABLED(CONFIG_OF_MDIO)
- /**
-  * of_mdio_find_bus - Given an mii_bus node, find the mii_bus.
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index dd4a91f1feaa..5700dd4dbb6f 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -273,6 +273,7 @@ static inline struct mii_bus *devm_mdiobus_alloc(struct device *dev)
- 	return devm_mdiobus_alloc_size(dev, 0);
++			snprintf(mdio_bus_id, MII_BUS_ID_SIZE, "%s-%d",
++				 UNIMAC_MDIO_DRV_NAME, priv->pdev->id);
++
++			unimacbus = mdio_find_bus(mdio_bus_id);
++			if (!unimacbus) {
++				pr_err("Unable to find mii\n");
++				return -ENODEV;
++			}
++			phydev = phy_find_first(unimacbus);
++			put_device(&unimacbus->dev);
++			if (!phydev) {
++				pr_err("Unable to find PHY\n");
++				return -ENODEV;
++			}
++		} else {
++			phydev = dev->phydev;
++		}
+ 		phydev->dev_flags = phy_flags;
+ 
+ 		ret = phy_connect_direct(dev, phydev, bcmgenet_mii_setup,
+@@ -455,9 +477,12 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
+ 	/* Retain this platform_device pointer for later cleanup */
+ 	priv->mii_pdev = ppdev;
+ 	ppdev->dev.parent = &pdev->dev;
+-	ppdev->dev.of_node = bcmgenet_mii_of_find_mdio(priv);
+-	if (pdata)
++	if (dn)
++		ppdev->dev.of_node = bcmgenet_mii_of_find_mdio(priv);
++	else if (pdata)
+ 		bcmgenet_mii_pdata_init(priv, &ppd);
++	else
++		ppd.phy_mask = ~0;
+ 
+ 	ret = platform_device_add_resources(ppdev, &res, 1);
+ 	if (ret)
+@@ -586,10 +611,13 @@ static int bcmgenet_mii_pd_init(struct bcmgenet_priv *priv)
+ 
+ static int bcmgenet_mii_bus_init(struct bcmgenet_priv *priv)
+ {
+-	struct device_node *dn = priv->pdev->dev.of_node;
++	struct device *kdev = &priv->pdev->dev;
++	struct device_node *dn = kdev->of_node;
+ 
+ 	if (dn)
+ 		return bcmgenet_mii_of_init(priv);
++	else if (has_acpi_companion(kdev))
++		return bcmgenet_phy_interface_init(priv);
+ 	else
+ 		return bcmgenet_mii_pd_init(priv);
  }
- 
-+struct mii_bus *mdio_find_bus(const char *mdio_name);
- void devm_mdiobus_free(struct device *dev, struct mii_bus *bus);
- struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr);
- 
 -- 
 2.24.1
 
