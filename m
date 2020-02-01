@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF83C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6CC20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D1620679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgBASwp (ORCPT
+        id S1727430AbgBASwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:52:45 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11286 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:52:49 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbgBASwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:30 -0500
+        id S1727175AbgBASwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:31 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075498"
+   d="scan'208";a="248075514"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 23/61] KVM: x86: Clear output regs for CPUID 0x14 if PT isn't exposed to guest
-Date:   Sat,  1 Feb 2020 10:51:40 -0800
-Message-Id: <20200201185218.24473-24-sean.j.christopherson@intel.com>
+Subject: [PATCH 28/61] KVM: x86: Refactor cpuid_mask() to auto-retrieve the register
+Date:   Sat,  1 Feb 2020 10:51:45 -0800
+Message-Id: <20200201185218.24473-29-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,34 +49,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clear the output regs for the main CPUID 0x14 leaf (index=0) if Intel PT
-isn't exposed to the guest.  Leaf 0x14 enumerates Intel PT capabilities
-and should return zeroes if PT is not supported.  Incorrectly reporting
-PT capabilities is essentially a cosmetic error, i.e. doesn't negatively
-affect any known userspace/kernel, as the existence of PT itself is
-correctly enumerated via CPUID 0x7.
+Use the recently introduced cpuid_entry_get_reg() to automatically get
+the appropriate register when masking a CPUID entry.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/cpuid.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index d3c93b94abc3..056faf27b14b 100644
+index 195f4dcc8c6a..cb5870a323cc 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -663,8 +663,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		break;
- 	/* Intel PT */
- 	case 0x14:
--		if (!f_intel_pt)
-+		if (!f_intel_pt) {
-+			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
- 			break;
-+		}
+@@ -254,10 +254,12 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+ 	return r;
+ }
  
- 		for (i = 1, max_idx = entry->eax; i <= max_idx; ++i) {
- 			if (!do_host_cpuid(array, function, i))
+-static __always_inline void cpuid_mask(u32 *word, int wordnum)
++static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
++					     enum cpuid_leafs leaf)
+ {
+-	reverse_cpuid_check(wordnum);
+-	*word &= boot_cpu_data.x86_capability[wordnum];
++	u32 *reg = cpuid_entry_get_reg(entry, leaf * 32);
++
++	*reg &= boot_cpu_data.x86_capability[leaf];
+ }
+ 
+ struct kvm_cpuid_array {
+@@ -373,13 +375,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ 	case 0:
+ 		entry->eax = min(entry->eax, 1u);
+ 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+-		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
++		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+ 		/* TSC_ADJUST is emulated */
+ 		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+ 
+ 		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+ 		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+-		cpuid_mask(&entry->ecx, CPUID_7_ECX);
++		cpuid_entry_mask(entry, CPUID_7_ECX);
+ 		/* Set LA57 based on hardware capability. */
+ 		entry->ecx |= f_la57;
+ 		entry->ecx |= f_umip;
+@@ -389,7 +391,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ 			cpuid_entry_clear(entry, X86_FEATURE_PKU);
+ 
+ 		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+-		cpuid_mask(&entry->edx, CPUID_7_EDX);
++		cpuid_entry_mask(entry, CPUID_7_EDX);
+ 		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+ 			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+ 		if (boot_cpu_has(X86_FEATURE_STIBP))
+@@ -507,9 +509,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
+ 	case 1:
+ 		entry->edx &= kvm_cpuid_1_edx_x86_features;
+-		cpuid_mask(&entry->edx, CPUID_1_EDX);
++		cpuid_entry_mask(entry, CPUID_1_EDX);
+ 		entry->ecx &= kvm_cpuid_1_ecx_x86_features;
+-		cpuid_mask(&entry->ecx, CPUID_1_ECX);
++		cpuid_entry_mask(entry, CPUID_1_ECX);
+ 		/* we support x2apic emulation even if host does not support
+ 		 * it since we emulate x2apic in software */
+ 		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
+@@ -619,7 +621,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 			goto out;
+ 
+ 		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
+-		cpuid_mask(&entry->eax, CPUID_D_1_EAX);
++		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+ 		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
+ 			entry->ebx = xstate_required_size(supported_xcr0, true);
+ 		else
+@@ -699,9 +701,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
+ 	case 0x80000001:
+ 		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
+-		cpuid_mask(&entry->edx, CPUID_8000_0001_EDX);
++		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
+ 		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
+-		cpuid_mask(&entry->ecx, CPUID_8000_0001_ECX);
++		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
+ 		break;
+ 	case 0x80000007: /* Advanced power management */
+ 		/* invariant TSC is CPUID.80000007H:EDX[8] */
+@@ -720,7 +722,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = g_phys_as | (virt_as << 8);
+ 		entry->edx = 0;
+ 		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
+-		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
++		cpuid_entry_mask(entry, CPUID_8000_0008_EBX);
+ 		/*
+ 		 * AMD has separate bits for each SPEC_CTRL bit.
+ 		 * arch/x86/kernel/cpu/bugs.c is kind enough to
+@@ -763,7 +765,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
+ 	case 0xC0000001:
+ 		entry->edx &= kvm_cpuid_C000_0001_edx_x86_features;
+-		cpuid_mask(&entry->edx, CPUID_C000_0001_EDX);
++		cpuid_entry_mask(entry, CPUID_C000_0001_EDX);
+ 		break;
+ 	case 3: /* Processor serial number */
+ 	case 5: /* MONITOR/MWAIT */
 -- 
 2.24.1
 
