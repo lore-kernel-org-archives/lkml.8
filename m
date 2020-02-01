@@ -2,77 +2,91 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
+	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689B3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC3AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F442064C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1507D20674
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tiX5hS+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgBATKq (ORCPT
+        id S1726803AbgBATPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 14:10:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:43418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgBATKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 14:10:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7052FFEC;
-        Sat,  1 Feb 2020 11:10:45 -0800 (PST)
-Received: from [192.168.122.164] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21FD93F68E;
-        Sat,  1 Feb 2020 11:10:45 -0800 (PST)
-Subject: Re: [PATCH 2/6] net: bcmgenet: refactor phy mode configuration
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     opendmb@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, wahrenst@gmx.net, andrew@lunn.ch,
-        hkallweit1@gmail.com
-References: <20200201074625.8698-1-jeremy.linton@arm.com>
- <20200201074625.8698-3-jeremy.linton@arm.com>
- <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <1c8f6931-8c69-fecb-8a95-9107dfb7ade0@arm.com>
-Date:   Sat, 1 Feb 2020 13:10:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 1 Feb 2020 14:15:18 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38669 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBATPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 14:15:18 -0500
+Received: by mail-io1-f65.google.com with SMTP id s24so12160228iog.5;
+        Sat, 01 Feb 2020 11:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ABSzJZF2QYR/ALyZkNAl85pSM5jELEdL6aovxi8L7cE=;
+        b=tiX5hS+X+OIb6PO1/fhdQqhPLTr2LlITGfcVmBT4xzT9/q7rjMUzcKBJsqP2f4vpkU
+         8Ce8N70yUizJwJQmZhmbYL0Ip63US/v5mI9LAwXz5jibH57eDHUOgRTtiXbh4K+NcANC
+         6RiQ6GQlv1jZ4Uj+g1K6Hb3gBLrVtMa8lsHicbmVenpWagPv7bYiHlpfP37+8BAonfrM
+         7xrb5gHnUfMOyA9z6Ee9mXhG9XWBKmar0dfRElM7q6ZQ4JjXtM7cibnx0P1x/tS+v/6O
+         1XgYSSG+2dlkHG3mW5hrl/hU8M4i4WTPmzT0LkdStpTYSR9k6VG4JyrJil5BQnBrYkBX
+         qqhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ABSzJZF2QYR/ALyZkNAl85pSM5jELEdL6aovxi8L7cE=;
+        b=EeVU12hQ/S20cylP/A92Fu7Sm1rD0WtQHhD3ak5643T1n0PVJauu8jLdpLAbl05YKy
+         bozZXuXAcb40tqz9D/19uqZGPmTi5nDnBXyCSRp5+UZQhcY3mvL1OaZsXyXZJqlEQ6c6
+         yyqEnQ4ONrfj/hq5PU4R9dqJpxGUWDDUpC9r1Y6u/Y85DimbS5up6lCb3IVPwiEjTmcD
+         jYUDZtYGOlm0xjV6eaiQ83Q6m4jyN+JrtMFxRaE/gcbJMjxxmKTS3tucA/VB7FHhhTeE
+         sTmoxQ3gza0cVCHY5y1fflpsOG/DhoSRA2igCtVNjJAnlHvklYjf2VKYpBiWZagE2zFK
+         Plug==
+X-Gm-Message-State: APjAAAWFXEVRGk07usGKozEOXh89KS9rsW3QAYOaiqsFRNahY1jqnIoS
+        erbaDdaATCAipfeNl4ofdg+Kfc7fsO0ed8ntQoo=
+X-Google-Smtp-Source: APXvYqzYHRKWvt/fN5SVGoaSRf3+7IkzXvcaXyETfYFLOAYzaZSIIdHFjJVSkspqA2OJohkrU9ggTqMpqru8uvsfiGc=
+X-Received: by 2002:a5e:860f:: with SMTP id z15mr12605068ioj.64.1580584517329;
+ Sat, 01 Feb 2020 11:15:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com> <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
+In-Reply-To: <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Sat, 1 Feb 2020 20:15:06 +0100
+Message-ID: <CAKXUXMyToKuJf_kGXWjP1pu33XbiMD4kpBcqUhJu==-OBQ8TQQ@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+To:     Joe Perches <joe@perches.com>
+Cc:     Karsten Keil <isdn@linux-pingi.de>, Arnd Bergmann <arnd@arndb.de>,
+        isdn4linux@listserv.isdn4linux.de, Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Feb 1, 2020 at 7:43 PM Joe Perches <joe@perches.com> wrote:
+>
+> Perhaps this is a defect in the small script as
+> get_maintainer does already show the directory and
+> files as being maintained.
+>
+> ie: get_maintainer.pl does this:
+>
+>                 ##if pattern is a directory and it lacks a trailing slash, add one
+>                 if ((-d $value)) {
+>                     $value =~ s@([^/])$@$1/@;
+>                 }
+>
 
-Thanks for taking a look at this again!
+True. My script did not implement that logic; I will add that to my
+script as well.
+Fortunately, that is not the major case of issues I have found and
+they might need some improvements.
 
-On 2/1/20 10:24 AM, Florian Fainelli wrote:
-> 
-> 
-> On 1/31/2020 11:46 PM, Jeremy Linton wrote:
->> The DT phy mode is similar to what we want for ACPI
->> lets factor it out of the of path, and change the
->> of_ call to device_. Further if the phy-mode property
->> cannot be found instead of failing the driver load lets
->> just default it to RGMII.
-> 
-> Humm no please do not provide a fallback, if we cannot find a valid
-> 'phy-mode' property we error out. This controller can be used with a
-> variety of configurations (internal EPHY/GPHY, MoCA, external
-> MII/Reverse MII/RGMII) and from a support perspective it is much easier
-> for us if the driver errors out if one of those essential properties are
-> omitted.
-> 
-> Other than that, this looks OK.
-> 
-
-Sure, I went around in circles about this one because it cluttered the 
-code path up a bit.
-
+Lukas
