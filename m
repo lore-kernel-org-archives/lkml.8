@@ -2,100 +2,127 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09062C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA391C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC242067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJk2X4cA"
+	by mail.kernel.org (Postfix) with ESMTP id 942592067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgBASkn (ORCPT
+        id S1726718AbgBASnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:40:43 -0500
-Received: from mail-il1-f172.google.com ([209.85.166.172]:39435 "EHLO
-        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgBASkm (ORCPT
+        Sat, 1 Feb 2020 13:43:22 -0500
+Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:56011 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726335AbgBASnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:40:42 -0500
-Received: by mail-il1-f172.google.com with SMTP id f70so9143377ill.6;
-        Sat, 01 Feb 2020 10:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Z11+/yeQUB6zTwEssk9IOz1CExq34IGy3Oa8TOXh/Dw=;
-        b=LJk2X4cA1MrCsi7mlcIeHVA+FtISyoUCmOSZ9maIXGIt7xpBTTfNjoMb+7Zfz4bnrA
-         EZ1rWKDrG8M6+RnNPzPmsHDRYDFKVLaHJ7k9GBgoeIcvfe0DTIcP5YuppQIKDtX0HXeU
-         nwajDVdfmYJlRWA8N9cMvMFo/CHKaQIzUohK1cnprQ0yswJlIde47ZlTxGjK2PGY4lYT
-         MnR2+lwL95F3jTWPxCKF+y6ydIb4cd1IZWhy+FjENLsKtz8pBBACNOp11SESbRRRC1Ed
-         sEaCEFcWIzKyn57dqrXsCeEisvcnPhJ+fglLKkrQX+m2FL5/PYemVrrffeMeYpLto3YM
-         RARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Z11+/yeQUB6zTwEssk9IOz1CExq34IGy3Oa8TOXh/Dw=;
-        b=bt2UUjXMwzmvilLod3qbu96zmEJDQZNV73fj+XS5iQJ4pLzaMmogs4mWB2wtVv3hV5
-         fPO7od+m9hyWL6J/lg3azx+Fcux+JGz09ukZA4rqydx22R1Do2VZBARtLWOJwHddo2I5
-         MiaNGINSib6d2UQ7HvrhPwvu7zufMeR6HKouvx1Mjyt8nYwjqWvq7/jYR13aTlypJdUa
-         HLjKQ/j74n493hRXPmN6e6unRJQQ7TGmmHewxYsjisz8NZCcK2BMDHoXg0yNi2tB+MyD
-         tGcZmczxAXvsvpEzIhV/S/in0DlUcLOQ0tx1t8VvnMOPivb7af/LUMhA80e51zpgo5iZ
-         AiQQ==
-X-Gm-Message-State: APjAAAVT43hHEouRweENJD7VUry9Fzt9o6xf8f30hUQi/gpksRKAcVJt
-        JCZJm82YsykUToWodwvrAK4iOTRf+HeNeAXQr+g=
-X-Google-Smtp-Source: APXvYqxHdowNbvOAZgwablQ3gQQL55H32fErt8bUECbN0wCs1Pws7yWJjkaghzNxBt/2ALxYrUhQMOOMAxp3Wh5+Irs=
-X-Received: by 2002:a05:6e02:c71:: with SMTP id f17mr14485694ilj.272.1580582441983;
- Sat, 01 Feb 2020 10:40:41 -0800 (PST)
+        Sat, 1 Feb 2020 13:43:22 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 86BAF181D3025;
+        Sat,  1 Feb 2020 18:43:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: yard08_571b1ee802d3a
+X-Filterd-Recvd-Size: 3410
+Received: from XPS-9350 (unknown [172.58.95.93])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  1 Feb 2020 18:43:18 +0000 (UTC)
+Message-ID: <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+From:   Joe Perches <joe@perches.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     isdn4linux@listserv.isdn4linux.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 01 Feb 2020 10:41:39 -0800
+In-Reply-To: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 1 Feb 2020 12:40:31 -0600
-Message-ID: <CAH2r5mt-Q1_ZBJmC+8jr5gJhr-NmUGG933y0gc+_1DVWTJUVZQ@mail.gmail.com>
-Subject: [GIT PULL] small SMB3 fix for stable
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Stable <stable@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>,
-        ronnie sahlberg <ronniesahlberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following change since commit
-68353984d63d8d7ea728819dbdb7aecc5f32d360:
+On Sat, 2020-02-01 at 13:43 +0100, Lukas Bulwahn wrote:
+> Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
+> isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
+> the terminal slash for the two directories mISDN and hardware. Hence, all
+> files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
+> but were considered to be part of "THE REST".
 
-  Merge tag '5.6-smb3-fixes-and-dfs-and-readdir-improvements' of
-git://git.samba.org/sfrench/cifs-2.6 (2020-01-28 15:34:03 -0800)
+Not really.
 
-are available in the Git repository at:
+> Rectify the situation, and while at it, also complete the section with two
+> further build files that belong to that subsystem.
+> 
+> This was identified with a small script that finds all files belonging to
+> "THE REST" according to the current MAINTAINERS file, and I investigated
+> upon its output.
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.6-rc-small-smb3-fix-for-stable
+I believe the MAINTAINERS file will be better with the
+proposed patch.
 
-for you to fetch changes up to b581098482e6f177a4f64ea021fd5a9327ea08d5:
+Perhaps this is a defect in the small script as
+get_maintainer does already show the directory and
+files as being maintained.
 
-  cifs: update internal module version number (2020-01-31 15:13:22 -0600)
+ie: get_maintainer.pl does this:
 
-----------------------------------------------------------------
-Small SMB3 fix for stable (fixes problem with reconnect for soft mounts)
+		##if pattern is a directory and it lacks a trailing slash, add one
+		if ((-d $value)) {
+		    $value =~ s@([^/])$@$1/@;
+		}
 
-----------------------------------------------------------------
-Ronnie Sahlberg (1):
-      cifs: fix soft mounts hanging in the reconnect code
+So:
 
-Steve French (1):
-      cifs: update internal module version number
+$ ./scripts/get_maintainer.pl -f drivers/isdn/mISDN
+Karsten Keil <isdn@linux-pingi.de> (maintainer:ISDN/mISDN SUBSYSTEM)
+netdev@vger.kernel.org (open list:ISDN/mISDN SUBSYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
- fs/cifs/cifsfs.h  | 2 +-
- fs/cifs/smb2pdu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+and
 
+$ ./scripts/get_maintainer.pl -f drivers/isdn/mISDN/dsp.h
+Karsten Keil <isdn@linux-pingi.de> (maintainer:ISDN/mISDN SUBSYSTEM)
+netdev@vger.kernel.org (open list:ISDN/mISDN SUBSYSTEM)
+linux-kernel@vger.kernel.org (open list)
 
--- 
-Thanks,
+> Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
 
-Steve
+And this patch likely does not warrant a 'Fixes:' tag.
+
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Arnd, please ack or even pick it.
+> It is no functional change, so I guess you could simply pick in your own
+> tree for minor fixes.
+> 
+>  MAINTAINERS | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1f77fb8cdde3..b6a0c4fa8cfd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8908,8 +8908,10 @@ L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
+>  L:	netdev@vger.kernel.org
+>  W:	http://www.isdn4linux.de
+>  S:	Maintained
+> -F:	drivers/isdn/mISDN
+> -F:	drivers/isdn/hardware
+> +F:	drivers/isdn/mISDN/
+> +F:	drivers/isdn/hardware/
+> +F:	drivers/isdn/Kconfig
+> +F:	drivers/isdn/Makefile
+>  
+>  ISDN/CMTP OVER BLUETOOTH
+>  M:	Karsten Keil <isdn@linux-pingi.de>
+
