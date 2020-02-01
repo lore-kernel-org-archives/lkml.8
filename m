@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31629C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB76AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0682F20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C018F20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgBAS5o (ORCPT
+        id S1727387AbgBAS56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:57:44 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57278 "EHLO mga01.intel.com"
+        Sat, 1 Feb 2020 13:57:58 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37509 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbgBASw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:27 -0500
+        id S1726664AbgBASw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:26 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:26 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075440"
+   d="scan'208";a="248075431"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/61] KVM: x86: Clean up error handling in kvm_dev_ioctl_get_cpuid()
-Date:   Sat,  1 Feb 2020 10:51:21 -0800
-Message-Id: <20200201185218.24473-5-sean.j.christopherson@intel.com>
+Subject: [PATCH 01/61] KVM: x86: Return -E2BIG when KVM_GET_SUPPORTED_CPUID hits max entries
+Date:   Sat,  1 Feb 2020 10:51:18 -0800
+Message-Id: <20200201185218.24473-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,76 +49,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up the error handling in kvm_dev_ioctl_get_cpuid(), which has
-gotten a bit crusty as the function has evolved over the years.
+Fix a long-standing bug that causes KVM to return 0 instead of -E2BIG
+when userspace's array is insufficiently sized.
 
-Opportunistically hoist the static @funcs declaration to the top of the
-function to make it more obvious that it's a "static const".
+Note, while the Fixes: tag is accurate with respect to the immediate
+bug, it's likely that similar bugs in KVM_GET_SUPPORTED_CPUID existed
+prior to the refactoring, e.g. Qemu contains a workaround for the broken
+KVM_GET_SUPPORTED_CPUID behavior that predates the buggy commit by over
+two years.  The Qemu workaround is also likely the main reason the bug
+has gone unreported for so long.
 
-No functional change intended.
+Qemu hack:
+  commit 76ae317f7c16aec6b469604b1764094870a75470
+  Author: Mark McLoughlin <markmc@redhat.com>
+  Date:   Tue May 19 18:55:21 2009 +0100
 
+    kvm: work around supported cpuid ioctl() brokenness
+
+    KVM_GET_SUPPORTED_CPUID has been known to fail to return -E2BIG
+    when it runs out of entries. Detect this by always trying again
+    with a bigger table if the ioctl() fills the table.
+
+Fixes: 831bf664e9c1f ("KVM: Refactor and simplify kvm_dev_ioctl_get_supported_cpuid")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ arch/x86/kvm/cpuid.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index de52cbb46171..11d5f311ef10 100644
+index b1c469446b07..47ce04762c20 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -889,45 +889,40 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
- 			    struct kvm_cpuid_entry2 __user *entries,
- 			    unsigned int type)
- {
--	struct kvm_cpuid_entry2 *cpuid_entries;
--	int nent = 0, r = -E2BIG, i;
--
- 	static const u32 funcs[] = {
- 		0, 0x80000000, CENTAUR_CPUID_SIGNATURE, KVM_CPUID_SIGNATURE,
- 	};
+@@ -908,9 +908,14 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 			goto out_free;
  
-+	struct kvm_cpuid_entry2 *cpuid_entries;
-+	int nent = 0, r, i;
-+
- 	if (cpuid->nent < 1)
--		goto out;
-+		return -E2BIG;
- 	if (cpuid->nent > KVM_MAX_CPUID_ENTRIES)
- 		cpuid->nent = KVM_MAX_CPUID_ENTRIES;
+ 		limit = cpuid_entries[nent - 1].eax;
+-		for (func = ent->func + 1; func <= limit && nent < cpuid->nent && r == 0; ++func)
++		for (func = ent->func + 1; func <= limit && r == 0; ++func) {
++			if (nent >= cpuid->nent) {
++				r = -E2BIG;
++				goto out_free;
++			}
+ 			r = do_cpuid_func(&cpuid_entries[nent], func,
+ 				          &nent, cpuid->nent, type);
++		}
  
- 	if (sanity_check_entries(entries, cpuid->nent, type))
- 		return -EINVAL;
- 
--	r = -ENOMEM;
- 	cpuid_entries = vzalloc(array_size(sizeof(struct kvm_cpuid_entry2),
- 					   cpuid->nent));
- 	if (!cpuid_entries)
--		goto out;
-+		return -ENOMEM;
- 
--	r = 0;
- 	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
- 		r = get_cpuid_func(cpuid_entries, funcs[i], &nent, cpuid->nent,
- 				   type);
  		if (r)
  			goto out_free;
- 	}
-+	cpuid->nent = nent;
- 
--	r = -EFAULT;
- 	if (copy_to_user(entries, cpuid_entries,
- 			 nent * sizeof(struct kvm_cpuid_entry2)))
--		goto out_free;
--	cpuid->nent = nent;
--	r = 0;
-+		r = -EFAULT;
- 
- out_free:
- 	vfree(cpuid_entries);
--out:
- 	return r;
- }
- 
 -- 
 2.24.1
 
