@@ -2,152 +2,96 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD2CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B69FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86498205F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kc1nazgm"
+	by mail.kernel.org (Postfix) with ESMTP id 0260D205F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580575822;
+	bh=cz2jaRYgs63UkaIzhYF0qCRKMvYvKyiGNaEhnLQYLCE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=s/L3L0eDOaBLbOrihZDK3wDszaUtYxWdiqIqMb4+0eM8sT0UdQKMBoSImcip6YpvG
+	 vdy9l6dw7mGJxeq+iZ1xFuVfvPnWuxr02ctNPnoMeVumiux/o0mWG3vbXeTrZA27SI
+	 38/4i3q32ccoXaQsXtLn4cqE24vxk4SIdigVB5zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgBAQoi (ORCPT
+        id S1726900AbgBAQuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:44:38 -0500
-Received: from mout.gmx.net ([212.227.15.19]:44251 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgBAQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:44:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1580575470;
-        bh=/ob/a7mTZsY4S24MeD9XiEGceK7Aswp/QlUOPUdplx4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=kc1nazgmaVqhaq3ebOmtBHh0aLufYzO0TtrVsdGDUyj4tzK6KnWrHOfK8QM2mSz+j
-         Mv/W/fdG23YxfbYr2ay1h0MJF6ct606B0rkUcy8/uRc2Bjq3jUc1Ow36wVYwZyDMD/
-         qTwbrK7FylBaIJoNMgPbG65FuTiSdXVEXC6NHZgY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.183] ([37.4.249.138]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mf07E-1jVLh13fXG-00gVZh; Sat, 01
- Feb 2020 17:44:29 +0100
-Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
- warnings
-To:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
-Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200201074625.8698-1-jeremy.linton@arm.com>
- <20200201074625.8698-7-jeremy.linton@arm.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
-Date:   Sat, 1 Feb 2020 17:44:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200201074625.8698-7-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
-X-Provags-ID: V03:K1:pxSIuV1zBaipvgSKbGqEJEnpcx0G5qFegoQhfHNPqk9zvxZjQvS
- am55P9nUw7TZxBAz6uvIswj+R1R9yThkwceU8bU6U7jTe0tCZpqZWw9RFOsleKALCfnXD6z
- 3hkRUBHADgznpeS98zCgSx4Uek64q6t/SXcqKS65700JRRdE2JdEelR6/fzAmLuI8l8+OsT
- +4eCuchyp4xOyMAKBTDqQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vMYkvkvTjxA=:OB2LALFmQULgObB5lIwA/w
- P8bOp3k+fF0biyYTL+g0/QygvgFeKbzO0vckRWD1vSzGYsjphN1f58x9TWIS7KUW0eNyknd50
- w1jgx7+sUSls1UzrwR6OAM6iRYEwaJZv0FzeOajofE0EsRIHQKOupOcj4B3FQNEvUS5T/AJcm
- iYUn4CONmcLNPpv+ZNJBKIsnmuNNebHZPW308P/V8S/aXkEskfBz6RpIsKspAPGA68uEI0Fgk
- 228ZId0jJR0wwgl7S2k/X/RHUt4Cw1srt4xqJTnylLaDgHefifzbKd7GhZf14EfO40uzecLE/
- +L2dUazLVcBNAAf5tJ9oRL0aIa+G7H6G0H1gUaOryw1P57wfPzdB4MMJWrcne2RPoMsGoKkij
- H+pYW5HYrmleL5pmuJtvjwrh3S3LIh161N3cENEtdCO0WBvEkEvo9pvX8n3zSQUNhF5zJXz+6
- tPD2sweoJGhbEsaifVUKJzCue8f4TjkrK2+Wqk5jGR9E/gblbwO2nk9jg4ZjPP7U/CUZo15i4
- 51n8M2k/AkLwjvcnexZAv1sJLGa77uDy7nUPuNRKXV81xGlnkqtlKaJLcxvIh/yNZDFiCta/j
- Uk4C0yn9gH4nu5EvE9KYtvmNarga2TTqY2GgcLGrqHSi2TNNsc/h11Mfl1KQj+cHaaryHp0mv
- vVdznjTr4LzRe6g1w4isEs0F31gfXj5nzyR3Kl0FLwMwBTNPb9Lmw0h8xlS3q98TapE6iMpJ4
- YNRKd6yPNUbMOviboTcZP3w6IrSSOacRtJgQtOtqTiAc5ZhihLtFekmc8jdBmzIR9Aip0xFgt
- gimlq8UBI8fYa7/I+DSwagQvddJhiv4bp2NQ0k0Kt4gIfThORxAzhaiMEe9qvLIrwQ+DVpnSt
- 3KO+NzbzPhJ9K8vcXZqPx31tNXh91Nb+jQp8TTz363LBlpdnrU1o+YIbeED8KubWu5EuTAnWa
- Ukibq928o/zgy2AGi0OraeMbYjtSL+USsRo70PJzdkPrMv5Vd1TDCfEC8yrQ8TbrJ2B80KdiF
- kqiVqtgdDyOJX31vZ/fNBULxhLMhMqp0xtzEuDcPQhDaZNEDpb28znmk4EhgK1X4DjcCmjZsN
- 9h/g4duyLft44CsRgroRD6yOBua3tfcEtwsaOmgakyZxvyrXcGS5vrv/32svKsQOB6rVdckT2
- 3v6or9S6P4css2lGwxC+wVuo4UwCFO4/9W88hnxGl1xH1d/oq3yqriD1DILvXEJqAVV1/V6FC
- 6rl0fpcJKREGUrYNH
+        Sat, 1 Feb 2020 11:50:21 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:63393 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgBAQuU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 11:50:20 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 011GnQ2n014749;
+        Sun, 2 Feb 2020 01:49:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 011GnQ2n014749
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580575766;
+        bh=+liGyO13j1pVITn3Gx2mtqaSG3y9ETg34rlRB39rH/4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yN+UtQYH3VaMnqtFmbuUWxHCoT1TMBb7zCM7XwH5xMhWTI1rvZtM/3HfHsvzGTniN
+         HzuvvdBp3u6iYhRtGYxiVsAtFl0migbH9wvHB8AJjr4VTsBW0rhuYu8YJWzzQ3usCS
+         0AHMe2ooUS830XWTqP5D75Y7n24VMcsiBUdT23Y1SmZHq0VRuP22wOHUDIS028KrLN
+         X8xx8dp9dmwkr5d2UdO+aeOOBS3svYn+K4uL0uNWXumgD3sU/CG8UliwQ7SF+St9QT
+         YI0SQ9HPvYPO366k9UBagl0T7aEwRkZ7OYX1bne9qqI6c/ETNRii3WxvOtH+aY2cIW
+         epXEu6E5EPeUQ==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/2] kbuild: fix the document to use extra-y for vmlinux.lds
+Date:   Sun,  2 Feb 2020 01:49:23 +0900
+Message-Id: <20200201164924.5487-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVyZW15LA0KDQpbYWRkIE5pY29sYXMgYXMgQkNNMjgzNSBtYWludGFpbmVyXQ0KDQpBbSAw
-MS4wMi4yMCB1bSAwODo0NiBzY2hyaWViIEplcmVteSBMaW50b246DQo+IElmIG9uZSB0eXBlcyAi
-ZmFpbGVkIHRvIGdldCBlbmV0IGNsb2NrIiBvciBzaW1pbGFyIGludG8gZ29vZ2xlDQo+IHRoZXJl
-IGFyZSB+MzcwayBoaXRzLiBUaGUgdmFzdCBtYWpvcml0eSBhcmUgcGVvcGxlIGRlYnVnZ2luZw0K
-PiBwcm9ibGVtcyB1bnJlbGF0ZWQgdG8gdGhpcyBhZGFwdGVyLCBvciBicmFnZ2luZyBhYm91dCB0
-aGVpcg0KPiBycGkncy4gR2l2ZW4gdGhhdCBpdHMgbm90IGEgZmF0YWwgc2l0dWF0aW9uIHdpdGgg
-Y29tbW9uIERUIGJhc2VkDQo+IHN5c3RlbXMsIGxldHMgcmVkdWNlIHRoZSBzZXZlcml0eSBzbyBw
-ZW9wbGUgYXJlbid0IHNlZWluZyBmYWlsdXJlDQo+IG1lc3NhZ2VzIGluIGV2ZXJ5ZGF5IG9wZXJh
-dGlvbi4NCj4NCmknbSBmaW5lIHdpdGggeW91ciBwYXRjaCwgc2luY2UgdGhlIGNsb2NrcyBhcmUg
-b3B0aW9uYWwgYWNjb3JkaW5nIHRvIHRoZQ0KYmluZGluZy4gQnV0IGluc3RlYWQgb2YgaGlkaW5n
-IG9mIHRob3NlIHdhcm5pbmcsIGl0IHdvdWxkIGJlIGJldHRlciB0bw0KZml4IHRoZSByb290IGNh
-dXNlIChtaXNzaW5nIGNsb2NrcykuIFVuZm9ydHVuYXRlbHkgaSBkb24ndCBoYXZlIHRoZQ0KbmVj
-ZXNzYXJ5IGRvY3VtZW50YXRpb24sIGp1c3Qgc29tZSBhbnN3ZXJzIGZyb20gdGhlIFJQaSBndXlz
-Lg0KDQpUaGlzIGlzIHdoYXQgaSBnb3Qgc28gZmFyOg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvYmNtMjcxMS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS5kdHNpDQpp
-bmRleCA5NjFiZWQ4Li5kNGZmMzcwIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-MjcxMS5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iY20yNzExLmR0c2kNCkBAIC0zMzgs
-NiArMzM4LDggQEANCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgcmVnID0gPDB4MCAweDdkNTgwMDAwIDB4MTAwMDA+Ow0KwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwweDE+Ow0KwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjc2l6ZS1jZWxscyA9IDww
-eDE+Ow0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb2Nr
-cyA9IDwmY2xvY2tzIEJDTTI3MTFfQ0xPQ0tfR0VORVQyNTA+Ow0KK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb2NrLW5hbWVzID0gImVuZXQiOw0KwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPEdJ
-Q19TUEkgMTU3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDxHSUNfU1BJ
-IDE1OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgc3RhdHVzID0gImRpc2FibGVkIjsNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2Nsay9iY20vY2xrLWJjbTI4MzUuYyBiL2RyaXZlcnMvY2xrL2JjbS9jbGstYmNtMjgzNS5j
-DQppbmRleCBkZWQxM2NjLi42MjdmMWIxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9jbGsvYmNtL2Ns
-ay1iY20yODM1LmMNCisrKyBiL2RyaXZlcnMvY2xrL2JjbS9jbGstYmNtMjgzNS5jDQpAQCAtMTE2
-LDYgKzExNiwxMCBAQA0KwqAjZGVmaW5lIENNX0VNTUNESVbCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgMHgxYzQNCsKgI2RlZmluZSBDTV9FTU1DMkNUTMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgx
-ZDANCsKgI2RlZmluZSBDTV9FTU1DMkRJVsKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgxZDQNCisj
-ZGVmaW5lIENNX0dFTkVUMjUwQ1RMwqDCoMKgwqDCoMKgwqDCoCAweDFlOA0KKyNkZWZpbmUgQ01f
-R0VORVQyNTBESVbCoMKgwqDCoMKgwqDCoMKgIDB4MWVjDQorI2RlZmluZSBDTV9HRU5FVDEyNUNU
-TMKgwqDCoMKgwqDCoMKgwqAgMHgyMTANCisjZGVmaW5lIENNX0dFTkVUMTI1RElWwqDCoMKgwqDC
-oMKgwqDCoCAweDIxNA0KwqANCsKgLyogR2VuZXJhbCBiaXRzIGZvciB0aGUgQ01fKkNUTCByZWdz
-ICovDQrCoCMgZGVmaW5lIENNX0VOQUJMRcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgQklUKDQpDQpAQCAtMjAyMSw2ICsyMDI1LDI1IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgYmNtMjgzNV9jbGtfZGVzYw0KY2xrX2Rlc2NfYXJyYXlbXSA9IHsNCsKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCAuZnJhY19iaXRzID0gOCwNCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCAudGNudF9tdXggPSA0MiksDQrCoA0KK8KgwqDCoMKgwqDCoCAvKiBHRU5FVCBjbG9j
-a3MgKG9ubHkgYXZhaWxhYmxlIGZvciBCQ00yNzExKSAqLw0KK8KgwqDCoMKgwqDCoCBbQkNNMjcx
-MV9DTE9DS19HRU5FVDI1MF3CoMKgwqDCoMKgwqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQorwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTT0NfQkNNMjcxMSwNCivCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIC5uYW1lID0gImdlbmV0MjUwIiwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIC5jdGxfcmVnID0gQ01fR0VORVQyNTBDVEwsDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCAuZGl2X3JlZyA9IENNX0dFTkVUMjUwRElWLA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgLmludF9iaXRzID0gNCwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5m
-cmFjX2JpdHMgPSA4LA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLnRjbnRfbXV4ID0g
-NDUpLA0KKw0KK8KgwqDCoMKgwqDCoCBbQkNNMjcxMV9DTE9DS19HRU5FVDEyNV3CoMKgwqDCoMKg
-wqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBT
-T0NfQkNNMjcxMSwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5uYW1lID0gImdlbmV0
-MTI1IiwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5jdGxfcmVnID0gQ01fR0VORVQx
-MjVDVEwsDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAuZGl2X3JlZyA9IENNX0dFTkVU
-MTI1RElWLA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLmludF9iaXRzID0gNCwNCivC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5mcmFjX2JpdHMgPSA4LA0KK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgLnRjbnRfbXV4ID0gNTApLA0KKw0KwqDCoMKgwqDCoMKgwqAgLyog
-R2VuZXJhbCBwdXJwb3NlIChHUElPKSBjbG9ja3MgKi8NCsKgwqDCoMKgwqDCoMKgIFtCQ00yODM1
-X0NMT0NLX0dQMF3CoMKgwqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQrCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgU09DX0FMTCwNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdz
-L2Nsb2NrL2JjbTI4MzUuaA0KYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2JjbTI4MzUuaA0K
-aW5kZXggYjYwYzAzNDMuLmZjYTY1YWIgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdz
-L2Nsb2NrL2JjbTI4MzUuaA0KKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9iY20yODM1
-LmgNCkBAIC02MCwzICs2MCw1IEBADQrCoCNkZWZpbmUgQkNNMjgzNV9DTE9DS19EU0kxUMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgNTANCsKgDQrCoCNkZWZpbmUgQkNNMjcxMV9DTE9DS19FTU1DMsKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgNTENCisjZGVmaW5lIEJDTTI3MTFfQ0xPQ0tfR0VORVQyNTDC
-oMKgwqDCoMKgwqDCoMKgIDUyDQorI2RlZmluZSBCQ00yNzExX0NMT0NLX0dFTkVUMTI1wqDCoMKg
-wqDCoMKgwqDCoCA1Mw0KDQoNCg==
+The difference between "always" and "extra-y" is that the targets
+listed in $(always) are always built, whereas the ones in $(extra-y)
+are built only when KBUILD_BUILTIN is set.
+
+So, "make modules" does not build the targets in $(extra-y).
+
+vmlinux.lds is only needed for linking vmlinux. So, adding it to extra-y
+is more correct. In fact, arch/x86/kernel/Makefile does this.
+
+Fix the example code.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Documentation/kbuild/makefiles.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index d7e6534a8505..b1733b877025 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -1269,12 +1269,12 @@ When kbuild executes, the following steps are followed (roughly):
+ 	Example::
+ 
+ 		#arch/x86/kernel/Makefile
+-		always := vmlinux.lds
++		extra-y := vmlinux.lds
+ 
+ 		#Makefile
+ 		export CPPFLAGS_vmlinux.lds += -P -C -U$(ARCH)
+ 
+-	The assignment to $(always) is used to tell kbuild to build the
++	The assignment to extra-y is used to tell kbuild to build the
+ 	target vmlinux.lds.
+ 	The assignment to $(CPPFLAGS_vmlinux.lds) tells kbuild to use the
+ 	specified options when building the target vmlinux.lds.
+-- 
+2.17.1
+
