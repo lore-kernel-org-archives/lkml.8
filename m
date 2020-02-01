@@ -2,111 +2,113 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E2FC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F4AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB19206F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41200206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xe04GkMw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxszsal9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgBAMWJ (ORCPT
+        id S1726669AbgBAMoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 07:22:09 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32042 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbgBAMWJ (ORCPT
+        Sat, 1 Feb 2020 07:44:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35457 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726469AbgBAMoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 07:22:09 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580559728; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=6g00UFIo11fls4SoPhp5QqjHM3g8x0gvkFYVg+qT4ts=;
- b=Xe04GkMw/FRmduzTBL/Bwex3pJq2IMUU7fOmKMqpuupUeKeX4IAq7FMddF6i+rd6x0qJTPIY
- Ch7T8KO3f4/trRQ2H32UYWfr38FZbeqx/B6taVZ0E6APxaJBzB3r+3h+U0r/bX+4lwVbk4fr
- 609BkvXZKzAX6FG4F8sSDFFxyhc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e356d6a.7f4c17c37570-smtp-out-n02;
- Sat, 01 Feb 2020 12:22:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4A140C447A5; Sat,  1 Feb 2020 12:22:00 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C0D8C433A2;
-        Sat,  1 Feb 2020 12:21:59 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 01 Feb 2020 17:51:59 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, viresh.kumar@linaro.org,
-        sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [RFC v3 02/10] cpufreq: blacklist SDM845 in cpufreq-dt-platdev
-In-Reply-To: <20200130114004.GA56122@bogus>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <20200127200350.24465-3-sibis@codeaurora.org>
- <20200128204423.GF46072@google.com> <20200130114004.GA56122@bogus>
-Message-ID: <b886c49e4bdab4054d08f10b0d8fa763@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Sat, 1 Feb 2020 07:44:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so960016wrt.2;
+        Sat, 01 Feb 2020 04:44:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KPa4daZ7BK/PhoZPQYjuPJ3LO3kRFWJEkZ0HGJmd2Ig=;
+        b=hxszsal9DEfTE+OeaXLUu5ymD0Nw+eJVWyzfUGzFq6YhsPNz9vEEzCt3Zm9wBVoVYX
+         sdbEADhbdKEvXcLnMdP46uDXPkYG/e8nUyc2XaPvGg8jiV/+PgsDx5rC7tBUkGdaOlEK
+         DSmBKPf7OlnSLUt6bGPX/h9gqCoFzISLsqEDIuRjxrGyQYjpY73gq/YxLQoaacFQVBDb
+         2pc2HGtk4gw1oh9NQZhAF2yufHDVu5ln+rSuzjAKVEipzb0iaAPE7qWqTn1nxCTW7drS
+         gg6oz/+X9eUWmzuBAjlCaP6uFUYaa84f0BeK/N9cjTMURFiaY0czGDmRRKchzw7M1FBb
+         T2hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KPa4daZ7BK/PhoZPQYjuPJ3LO3kRFWJEkZ0HGJmd2Ig=;
+        b=rwL6LJ52sA/POz2SRMgbp9WQ0nzbuOPfT++qv/Un97v9Y9Fc5EVkaZ19XV569FC1V7
+         Vn7vuMbzxb9Z0eYPF8ArF64VdirujCVqwPbqT2pGgbGuBCsQJTvgmKRkaJ0jaPzDRcgo
+         8zSLPP5SfHnf9EnVZxo/1sbML/jK+/z/GnAj+3PJlKme2eQlgtCQbnjeVkkXGawSTKsk
+         XDPsxqOsKyQpG3kuC3AVVHD7lATHaOW41+ohhpit0NZw2XjGWIOTbAmAYhG1K1QNRChk
+         iRXl5fozAakjchdqCZecjVD3tuRxzy59ls92TKPP7hrbKkZWGDjBfb4KrdFxjZhgI+Tw
+         6MMg==
+X-Gm-Message-State: APjAAAXBt6PUK2DOzRQ/SBVJpaMl8LUN2w9lGGDWfAszyZj0irS1K+nO
+        MOANQzqX4JyLH0XdJMx4UVXt1MTr
+X-Google-Smtp-Source: APXvYqyHhsFxF+E4LbybT8yBArlt0x9wBEaFtdexXHjkCYu0bSLcVtIaC35uGSf/KDpbgC2mhQLu+w==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr4364573wrs.309.1580561042997;
+        Sat, 01 Feb 2020 04:44:02 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d5f:200:619d:5ce8:4d82:51eb])
+        by smtp.gmail.com with ESMTPSA id b13sm1724451wrq.48.2020.02.01.04.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 04:44:02 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Karsten Keil <isdn@linux-pingi.de>, Arnd Bergmann <arnd@arndb.de>
+Cc:     isdn4linux@listserv.isdn4linux.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+Date:   Sat,  1 Feb 2020 13:43:01 +0100
+Message-Id: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Sudeep,
+Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
+isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
+the terminal slash for the two directories mISDN and hardware. Hence, all
+files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
+but were considered to be part of "THE REST".
 
-Thanks for the review!
+Rectify the situation, and while at it, also complete the section with two
+further build files that belong to that subsystem.
 
-On 2020-01-30 17:10, Sudeep Holla wrote:
-> On Tue, Jan 28, 2020 at 12:44:23PM -0800, Matthias Kaehlcke wrote:
->> On Tue, Jan 28, 2020 at 01:33:42AM +0530, Sibi Sankar wrote:
->> > Add SDM845 to cpufreq-dt-platdev blacklist.
->> 
->> nit: you could mention that cpufreq is handled by the
->> 'qcom-cpufreq-hw' driver.
->> 
-> 
-> IIUC, these platforms get the OPP table from the firmware and there 
-> shouldn't
-> be OPP entries in the DT. If not, why not fix that to avoid more 
-> confusion.
-> Can we make cpu0_node_has_opp_v2_prop return false in short.
+This was identified with a small script that finds all files belonging to
+"THE REST" according to the current MAINTAINERS file, and I investigated
+upon its output.
 
-The entire point of the series is to
-define a way of identifying required
-opp-kBps values for L3/DDR at different
-cpu frequencies. The required-opps is
-chosen as the way of showcasing the
-dependencies. Hence the need to for a
-superset cpu opp-table consisting of
-all possible cpu freq values supported
-by the family of SoCs and enabling only
-the opps that are supported by the board
-from the values read back from firmware.
+Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Arnd, please ack or even pick it.
+It is no functional change, so I guess you could simply pick in your own
+tree for minor fixes.
 
-> 
-> --
-> Regards,
-> Sudeep
+ MAINTAINERS | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1f77fb8cdde3..b6a0c4fa8cfd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8908,8 +8908,10 @@ L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
+ L:	netdev@vger.kernel.org
+ W:	http://www.isdn4linux.de
+ S:	Maintained
+-F:	drivers/isdn/mISDN
+-F:	drivers/isdn/hardware
++F:	drivers/isdn/mISDN/
++F:	drivers/isdn/hardware/
++F:	drivers/isdn/Kconfig
++F:	drivers/isdn/Makefile
+ 
+ ISDN/CMTP OVER BLUETOOTH
+ M:	Karsten Keil <isdn@linux-pingi.de>
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
