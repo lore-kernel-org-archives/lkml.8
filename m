@@ -2,112 +2,116 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321ABC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F8FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0926820661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A0B2063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJ2DHsui"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flKXuCvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgBAA7f (ORCPT
+        id S1726708AbgBABIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 19:59:35 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51732 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgBAA7f (ORCPT
+        Fri, 31 Jan 2020 20:08:09 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44702 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgBABII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 19:59:35 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t23so9988319wmi.1;
-        Fri, 31 Jan 2020 16:59:33 -0800 (PST)
+        Fri, 31 Jan 2020 20:08:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x7so4474508pgl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 17:08:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o/Z1Q9j16pnd5qHxzj1VfasD9Q7tF0Et5G7N/eWy7Ks=;
-        b=XJ2DHsui8Xaz0JCtJ2EYXlxrz+FjhsQ6TzlTwhQv32cVGz2+OWC45CVtN7wcyB3YG2
-         p7EMsclbgumy+RQk0jWg20LI4/ojv/lHvr7xcdXeXyC0tmdCS8RVeedtR5F5ajN2WEJZ
-         gysPQgF25Wt+HIOLBUdaoAXQJTNPAXhqu6V3gMedbHMSpbCHjwiEUAn3nWSikduoZUZT
-         qfYTG/gpSE/r7mUuwCNvUxvg0OAofA8f2GExxmjY9C4aZnaNcduI8x6WU8kVunUNHnYD
-         CJG0dJPPLyaFFfh9ekvT6M1WBuFwmFNAgf1j7pmAb3jcDNEynk6Nv8Y/fOscTHXdRfAi
-         vIGw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tOdD7sEFO/Cm1Az2WTVTh+0ICXmcDk9hUOt8MhdrW3g=;
+        b=flKXuCvOe0TKMKlJgp5elm6wrxTqWzNK1ADjY2qsAvDIOUMYnGIBJM6CNcQYzweZ7S
+         gqGvTDrLWNFZ1jUzO3Q7HfbO3cKdufyj02+JwDh0MNAi6kHN3edQk8MEcxOq/ehpGtJ3
+         lR6d77hdMaO3StZvriz/4vAdxze4OnS+MiGbWBUXqY3NJD/MN9OQxQ0MLkqD7VFHNAzz
+         HTNz1+b9iAr0j7T24Wiv/nvFWTgl6RfdEZIbdntqL0XhO1d2FpfXkKP+yb74YOvbN7Q2
+         Xz7sjXgyG6FdVb/HawpqICouMPfZOc0+/dviJo1gU+WxKPKGmcDi5QKsczdWRzwcqXV4
+         NJUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o/Z1Q9j16pnd5qHxzj1VfasD9Q7tF0Et5G7N/eWy7Ks=;
-        b=MOwVzEM0RYOVy4nV2mUtVuNG9+dvoAGes2kfMOQsXSmXJABONrqYQj1ztgdBjj+5Ld
-         Z4dNra8JlHyJUqhVq1EEq2J+XqkkvIbur90ynAcLiqcjThJptdWALs5C7URoXjLfqjyT
-         s0Rn90qDao47S55jUOlwCV0hR2gGRxRqSzJA3z7/I0Wiua5Cgm9Qhm0/9Tc3/pASRWuZ
-         z0Myt9e8Csh7y/3Lzo8XbpQD9f0cvGmg9U/iNPR5TWWKJaQjI2XScTfZtm9I4NZ5nvvn
-         vCzikqAoj0DgnjirdcmXxX7lEusRG5wQbSBEWmsfCXWJpa3CDKUhF0gPFJdb4yqqgn2c
-         v2qA==
-X-Gm-Message-State: APjAAAUjjMTV6zULzPzYTYOwmVON27rffIyKWNFxmAIjllwTmGRFk2er
-        Tl3UwUQjM2KtI+L1oO+eBjNae9Sf
-X-Google-Smtp-Source: APXvYqxVaMLA0kmq27KIpw7WmGCxp3GYPy6zFg4Oj47SappJUhZE7DFyOz4vg9iVVmn9TXUXSMPHKg==
-X-Received: by 2002:a1c:4008:: with SMTP id n8mr14770673wma.121.1580518772615;
-        Fri, 31 Jan 2020 16:59:32 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id c9sm12979291wmc.47.2020.01.31.16.59.28
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tOdD7sEFO/Cm1Az2WTVTh+0ICXmcDk9hUOt8MhdrW3g=;
+        b=S3Y2Vxg5t7BYaraLrGC6JUvr/aiBeHf4YV7wlX+2pKOsKzH/RpzBnSwySYYf1azNcf
+         d4R4611rhd8MH9KAr0HtbSKGweLI1ffSfhoSaSF5SXiaFscWEtNwV4gzJvt5jB3dhzcH
+         yAMv8Hvdrx4Ob4rgU6GSJpLSS9PstlsTelAIOOvQEYNGmMZyZ04tLNUOlrJuFUjxwrhe
+         LPBlDqkV0d8CRlHtDbaqSes1cpO5G7Hr4Ek3E3lTA0kfCdgwgMVB+rGKhd4B1phLrGaP
+         dpRthyneZXKVpdbpBM7DcxDOvLNgyatF54KyWrOgHX12KFxI0fwIMXIoRbqEzZqUQG9E
+         BYUA==
+X-Gm-Message-State: APjAAAUIqcnxW1pwqmGgHNkx5EghA5mYKP5vc8rg+0kYtRzocMRu7tBD
+        1D0nVC7vQ1jTcvz162dMgOY=
+X-Google-Smtp-Source: APXvYqwJaA/CeAPva6qGN2HiTlf5T+eK9r+4wdYl3huDpKyxMF1+1b5jliuG6FrGJCO4BQffvZvINw==
+X-Received: by 2002:a63:ea4b:: with SMTP id l11mr12851871pgk.357.1580519288066;
+        Fri, 31 Jan 2020 17:08:08 -0800 (PST)
+Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
+        by smtp.gmail.com with ESMTPSA id z18sm11950481pfk.19.2020.01.31.17.08.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 16:59:32 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Fri, 31 Jan 2020 17:08:07 -0800 (PST)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Sat, 1 Feb 2020 10:08:04 +0900
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: place close flag changing code
-Date:   Sat,  1 Feb 2020 03:58:42 +0300
-Message-Id: <aebc542fb8d3625178fa02c6a8c6a5b2b89466c4.1580518533.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+Subject: Re: [PATCH v4 5/6] console: Introduce ->exit() callback
+Message-ID: <20200201010804.GB1352@jagdpanzerIV.localdomain>
+References: <20200130152558.51839-1-andriy.shevchenko@linux.intel.com>
+ <20200130152558.51839-5-andriy.shevchenko@linux.intel.com>
+ <20200131013154.GH115889@google.com>
+ <20200131112724.GM32742@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131112724.GM32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both iocb_flags() and kiocb_set_rw_flags() are inline and modify
-kiocb->ki_flags. Place them close, so they can be potentially better
-optimised.
+On (20/01/31 13:27), Andy Shevchenko wrote:
+[..]
+> > 
+> > I would probably push it a bit further (I posted this snippet in another
+> > thread). If console is not on the list then there is nothing for us to do
+> > and sysfs notify is pointless.
+> 
+> I didn't see post in the other thread, but I suppose that this snipped is
+> for patch 4 in the series, correct?
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+No worries! Yes, for v4.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 73a6c6a4ec50..c3687bda92d0 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1865,8 +1865,11 @@ static int io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		req->flags |= REQ_F_CUR_POS;
- 		kiocb->ki_pos = req->file->f_pos;
- 	}
--	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
- 	kiocb->ki_hint = ki_hint_validate(file_write_hint(kiocb->ki_filp));
-+	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
-+	ret = kiocb_set_rw_flags(kiocb, READ_ONCE(sqe->rw_flags));
-+	if (unlikely(ret))
-+		return ret;
- 
- 	ioprio = READ_ONCE(sqe->ioprio);
- 	if (ioprio) {
-@@ -1878,10 +1881,6 @@ static int io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	} else
- 		kiocb->ki_ioprio = get_current_ioprio();
- 
--	ret = kiocb_set_rw_flags(kiocb, READ_ONCE(sqe->rw_flags));
--	if (unlikely(ret))
--		return ret;
--
- 	/* don't allow async punt if RWF_NOWAIT was requested */
- 	if ((kiocb->ki_flags & IOCB_NOWAIT) ||
- 	    (req->file->f_flags & O_NONBLOCK))
--- 
-2.24.0
+[..]
+> > -	if (!res && console->exit)
+> > +	if (console->exit)
+> 
+> >  		console->exit(console);
+> >  
+> >  	return res;
+> 
+> ...then something like
+> 
+> 		return console->exit(console);
+> 
+> 	return 0;
+> 
+> ...or...
+> 
+> 		res = console->exit(console);
+> 
+> Which one is preferable?
 
+I don't really have preferences here, so up to you guys.
+
+	-ss
