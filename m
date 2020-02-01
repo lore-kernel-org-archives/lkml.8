@@ -2,252 +2,149 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2DDC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02786C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A9520661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7E12070C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 15:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FlVyy6qa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRaPo/P5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgBAPMn (ORCPT
+        id S1727317AbgBAPN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 10:12:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51796 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgBAPMm (ORCPT
+        Sat, 1 Feb 2020 10:13:57 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46631 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgBAPN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 10:12:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5KdHAUiS686jTpU0UKHCIX4BueXn8cIx7wjJa85X5I0=; b=FlVyy6qaG4IujDNRCtF80f9ySl
-        u5mmlE5tsMA75R2R/eYDZpmR8IeeooX5NSL6xAXJCk/H+/5OJn0NPzsNOZ5WkFGxat2yok9CazbY8
-        1pOlT/2Ai0gOBLMnUF2xrNhDj9Pe55GWzzCiOqRfpc0eJXqS4+AnHxwDAZRaVO0ztF1uHWigPOp+l
-        HXRKlCW9qU5wh3naAfOyhIlT9u7dCFkFf25j9ym/UMn5RYq51PhUzSsXbXfJaruowz2NAeBqJPszW
-        6VD6NliwDsjdULcKj4Y7T1NoMA+wy+jqvmmpBc5Ntaj6sZ2/RrVnZhTyZlszd0Okkg9ijvLICcDq7
-        t5xACMnQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixuRu-0006Hw-Cn; Sat, 01 Feb 2020 15:12:42 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH v4 10/12] f2fs: Convert from readpages to readahead
-Date:   Sat,  1 Feb 2020 07:12:38 -0800
-Message-Id: <20200201151240.24082-11-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200201151240.24082-1-willy@infradead.org>
-References: <20200201151240.24082-1-willy@infradead.org>
+        Sat, 1 Feb 2020 10:13:57 -0500
+Received: by mail-lj1-f195.google.com with SMTP id x14so10125864ljd.13;
+        Sat, 01 Feb 2020 07:13:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x8auQfYSjBpZuOhTuDNeJ3x3bvJ53JLG86ep/bJMnbM=;
+        b=KRaPo/P5+/A3UdshhvRtEXEma+O6VULl7vV5J6EfVsQR3/LFLIcOcUlZ8UIgdmUuzE
+         6Gcxjp0JaCPX/1pLX94YcUeJLMQP6Clh4JvkM4SAnaVWuG6YaKeRQpjb9Kblf7sRNc9p
+         fyeH1RMCrr+LSHUG9v3ysJsjBQufsHB6vyr58bqPAdpvsDgACBQDWXKcjqa9yMD+q0ie
+         UWP51YtMTI43YUrJAMOcccwMJkLwgvcicZo3efYBonvwsJWlvX8qzPqh8FHhhoB9/YrU
+         A11hFUiUddOnbU6HN3DX7fT9phg7XKdGOd4dOrUD++6qz0qTOJq350YMj+iX5c9U9EWT
+         VmIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x8auQfYSjBpZuOhTuDNeJ3x3bvJ53JLG86ep/bJMnbM=;
+        b=Fgy1XwU/hp7drY+3OIRNsMZw+fY79pMOVP9EWoFHy9y8tE7M9eC8jMnRDRG8TRHPzM
+         R0QjOkkBAoozFnsIvd0D/d1GoezXbgQrrrgFybdvybnXItivnDefS5IHJESq083zYGoW
+         ph88vGwTevLuLO53hcyqxE5H3n9E0eEQ9CY5S4mizYF611Vvi14uenSUcbiMwMGTq5Nz
+         QZFlDfxHzeVX8mHQMo0sRzH7HaAsNoknNEmD9Hian/o0GIoJXgeFW+0PiRKHbawT5i8m
+         yEIbWjF3EIOEY/DFb2zBeH+3a3OETjf2Vy3s3hAxsB3f9FiqMOJtfBnfnWa2Ju9pVz+W
+         YJng==
+X-Gm-Message-State: APjAAAVZS9yQrkwQgWiNcfCw54M2kL6NnssMAkD/4KBn+4baddjGqWg6
+        V+G1bUNoXq2YXkOAz2ChnXajFRqk
+X-Google-Smtp-Source: APXvYqx1q4UYJfxBrUTrc4rMfdFSOYKP0jUe9QjqckWSglTHxUz3YCCHUlwOhNCo0UVBafW18vaU9w==
+X-Received: by 2002:a2e:3e13:: with SMTP id l19mr8813755lja.11.1580570034026;
+        Sat, 01 Feb 2020 07:13:54 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c8sm6113348lfm.65.2020.02.01.07.13.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2020 07:13:53 -0800 (PST)
+Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200130043804.32243-1-digetx@gmail.com>
+ <20200130043804.32243-12-digetx@gmail.com>
+ <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
+ <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
+ <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
+ <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
+ <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
+ <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
+Message-ID: <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
+Date:   Sat, 1 Feb 2020 18:13:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+31.01.2020 17:22, Dmitry Osipenko пишет:
+> 31.01.2020 12:02, Jon Hunter пишет:
+>>
+>> On 30/01/2020 20:04, Dmitry Osipenko wrote:
+>>
+>> ...
+>>
+>>>>> The tegra_dma_stop() should put RPM anyways, which is missed in yours
+>>>>> sample. Please see handle_continuous_head_request().
+>>>>
+>>>> Yes and that is deliberate. The cyclic transfers the transfers *should*
+>>>> not stop until terminate_all is called. The tegra_dma_stop in
+>>>> handle_continuous_head_request() is an error condition and so I am not
+>>>> sure it is actually necessary to call pm_runtime_put() here.
+>>>
+>>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
+>>
+>> True.
+>>
+>>>>> I'm also finding the explicit get/put a bit easier to follow in the
+>>>>> code, don't you think so?
+>>>>
+>>>> I can see that, but I was thinking that in the case of cyclic transfers,
+>>>> it should only really be necessary to call the get/put at the beginning
+>>>> and end. So in my mind there should only be two exit points which are
+>>>> the ISR handler for SG and terminate_all for SG and cyclic.
+>>>
+>>> Alright, I'll update this patch.
+>>
+>> Hmmm ... I am wondering if we should not mess with that and leave how
+>> you have it.
+> 
+> I took another look and seems my current v6 should be more correct because:
+> 
+> 1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
+> there since tegra_dma_terminate_all() won't put RPM in this case:
+> 
+> 	if (!tdc->busy)
+> 		goto skip_dma_stop;
+> 
+> 2. We can't move the "busy" unsetting into the terminate because then
+> tegra_dma_stop() will be invoked twice. Although, one option could be to
+> remove the tegra_dma_stop() from the error paths of
+> handle_continuous_head_request(), but I'm not sure that this is correct
+> to do.
 
-Use the new readahead operation in f2fs
+Jon, I realized that my v6 variant is wrong too because
+tegra_dma_terminate_all() -> tdc->isr_handler() will put RPM, and thus,
+the RPM enable-count will be wrecked in this case.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net
----
- fs/f2fs/data.c              | 35 ++++++++++++++---------------------
- fs/f2fs/f2fs.h              |  5 ++---
- fs/f2fs/verity.c            | 16 +++++++++++-----
- include/trace/events/f2fs.h |  6 +++---
- 4 files changed, 30 insertions(+), 32 deletions(-)
+I'm now leaning to adopt yours variant and simply remove the
+tegra_dma_stop() from handle_continuous_head_request() because there
+shouldn't be any harm in keeping DMA active in the case of error
+condition. Besides, these error conditions are very extreme cases that
+should never happen in practice.
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 8bd9afa81c54..80803f8b1b40 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2159,9 +2159,8 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
-  * use ->readpage() or do the necessary surgery to decouple ->readpages()
-  * from read-ahead.
-  */
--int f2fs_mpage_readpages(struct address_space *mapping,
--			struct list_head *pages, struct page *page,
--			unsigned nr_pages, bool is_readahead)
-+int f2fs_mpage_readpages(struct address_space *mapping, pgoff_t start,
-+		struct page *page, unsigned nr_pages, bool is_readahead)
- {
- 	struct bio *bio = NULL;
- 	sector_t last_block_in_bio = 0;
-@@ -2192,15 +2191,10 @@ int f2fs_mpage_readpages(struct address_space *mapping,
- 	map.m_may_create = false;
- 
- 	for (; nr_pages; nr_pages--) {
--		if (pages) {
--			page = list_last_entry(pages, struct page, lru);
-+		if (is_readahead) {
-+			page = readahead_page(mapping, start++);
- 
- 			prefetchw(&page->flags);
--			list_del(&page->lru);
--			if (add_to_page_cache_lru(page, mapping,
--						  page_index(page),
--						  readahead_gfp_mask(mapping)))
--				goto next_page;
- 		}
- 
- #ifdef CONFIG_F2FS_FS_COMPRESSION
-@@ -2243,7 +2237,7 @@ int f2fs_mpage_readpages(struct address_space *mapping,
- 			unlock_page(page);
- 		}
- next_page:
--		if (pages)
-+		if (is_readahead)
- 			put_page(page);
- 
- #ifdef CONFIG_F2FS_FS_COMPRESSION
-@@ -2259,10 +2253,9 @@ int f2fs_mpage_readpages(struct address_space *mapping,
- 		}
- #endif
- 	}
--	BUG_ON(pages && !list_empty(pages));
- 	if (bio)
- 		__submit_bio(F2FS_I_SB(inode), bio, DATA);
--	return pages ? 0 : ret;
-+	return ret;
- }
- 
- static int f2fs_read_data_page(struct file *file, struct page *page)
-@@ -2282,27 +2275,27 @@ static int f2fs_read_data_page(struct file *file, struct page *page)
- 		ret = f2fs_read_inline_data(inode, page);
- 	if (ret == -EAGAIN)
- 		ret = f2fs_mpage_readpages(page_file_mapping(page),
--						NULL, page, 1, false);
-+						0, page, 1, false);
- 	return ret;
- }
- 
--static int f2fs_read_data_pages(struct file *file,
-+static unsigned f2fs_readahead(struct file *file,
- 			struct address_space *mapping,
--			struct list_head *pages, unsigned nr_pages)
-+			pgoff_t start, unsigned nr_pages)
- {
- 	struct inode *inode = mapping->host;
--	struct page *page = list_last_entry(pages, struct page, lru);
- 
--	trace_f2fs_readpages(inode, page, nr_pages);
-+	trace_f2fs_readpages(inode, start, nr_pages);
- 
- 	if (!f2fs_is_compress_backend_ready(inode))
- 		return 0;
- 
- 	/* If the file has inline data, skip readpages */
- 	if (f2fs_has_inline_data(inode))
--		return 0;
-+		return nr_pages;
- 
--	return f2fs_mpage_readpages(mapping, pages, NULL, nr_pages, true);
-+	f2fs_mpage_readpages(mapping, start, NULL, nr_pages, true);
-+	return 0;
- }
- 
- int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
-@@ -3778,7 +3771,7 @@ static void f2fs_swap_deactivate(struct file *file)
- 
- const struct address_space_operations f2fs_dblock_aops = {
- 	.readpage	= f2fs_read_data_page,
--	.readpages	= f2fs_read_data_pages,
-+	.readahead	= f2fs_readahead,
- 	.writepage	= f2fs_write_data_page,
- 	.writepages	= f2fs_write_data_pages,
- 	.write_begin	= f2fs_write_begin,
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5355be6b6755..db00907f90f1 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3344,9 +3344,8 @@ int f2fs_reserve_new_block(struct dnode_of_data *dn);
- int f2fs_get_block(struct dnode_of_data *dn, pgoff_t index);
- int f2fs_preallocate_blocks(struct kiocb *iocb, struct iov_iter *from);
- int f2fs_reserve_block(struct dnode_of_data *dn, pgoff_t index);
--int f2fs_mpage_readpages(struct address_space *mapping,
--			struct list_head *pages, struct page *page,
--			unsigned nr_pages, bool is_readahead);
-+int f2fs_mpage_readpages(struct address_space *mapping, pgoff_t start,
-+		struct page *page, unsigned nr_pages, bool is_readahead);
- struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
- 			int op_flags, bool for_write);
- struct page *f2fs_find_data_page(struct inode *inode, pgoff_t index);
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index d7d430a6f130..71e92b9b3aa6 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -231,7 +231,6 @@ static int f2fs_get_verity_descriptor(struct inode *inode, void *buf,
- static void f2fs_merkle_tree_readahead(struct address_space *mapping,
- 				       pgoff_t start_index, unsigned long count)
- {
--	LIST_HEAD(pages);
- 	unsigned int nr_pages = 0;
- 	struct page *page;
- 	pgoff_t index;
-@@ -240,16 +239,23 @@ static void f2fs_merkle_tree_readahead(struct address_space *mapping,
- 	for (index = start_index; index < start_index + count; index++) {
- 		page = xa_load(&mapping->i_pages, index);
- 		if (!page || xa_is_value(page)) {
--			page = __page_cache_alloc(readahead_gfp_mask(mapping));
-+			gfp_t gfp = readahead_gfp_mask(mapping);
-+			page = __page_cache_alloc(gfp);
- 			if (!page)
- 				break;
--			page->index = index;
--			list_add(&page->lru, &pages);
-+			if (add_to_page_cache_lru(page, mapping, index, gfp)) {
-+				put_page(page);
-+				break;
-+			}
- 			nr_pages++;
- 		}
- 	}
-+
-+	if (!nr_pages)
-+		return;
-+
- 	blk_start_plug(&plug);
--	f2fs_mpage_readpages(mapping, &pages, NULL, nr_pages, true);
-+	f2fs_mpage_readpages(mapping, start_index, NULL, nr_pages, true);
- 	blk_finish_plug(&plug);
- }
- 
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 67a97838c2a0..d72da4a33883 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1375,9 +1375,9 @@ TRACE_EVENT(f2fs_writepages,
- 
- TRACE_EVENT(f2fs_readpages,
- 
--	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage),
-+	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage),
- 
--	TP_ARGS(inode, page, nrpage),
-+	TP_ARGS(inode, start, nrpage),
- 
- 	TP_STRUCT__entry(
- 		__field(dev_t,	dev)
-@@ -1389,7 +1389,7 @@ TRACE_EVENT(f2fs_readpages,
- 	TP_fast_assign(
- 		__entry->dev	= inode->i_sb->s_dev;
- 		__entry->ino	= inode->i_ino;
--		__entry->start	= page->index;
-+		__entry->start	= start;
- 		__entry->nrpage	= nrpage;
- 	),
- 
--- 
-2.24.1
-
+The "list_empty(&tdc->pending_sg_req)" error seems couldn't ever happen
+at all, I'll remove it in v7.
