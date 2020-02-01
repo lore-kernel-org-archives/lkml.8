@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52990C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA3DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C50020661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599E620661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgBAS4H (ORCPT
+        id S1727718AbgBAS4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:56:07 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57278 "EHLO mga01.intel.com"
+        Sat, 1 Feb 2020 13:56:09 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgBASwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727142AbgBASwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:52:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075568"
+   d="scan'208";a="248075492"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
+  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -37,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 46/61] KVM: x86: Remove the unnecessary loop on CPUID 0x7 sub-leafs
-Date:   Sat,  1 Feb 2020 10:52:03 -0800
-Message-Id: <20200201185218.24473-47-sean.j.christopherson@intel.com>
+Subject: [PATCH 21/61] KVM: x86: Use supported_xcr0 to detect MPX support
+Date:   Sat,  1 Feb 2020 10:51:38 -0800
+Message-Id: <20200201185218.24473-22-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -50,35 +49,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly handle CPUID 0x7 sub-leaf 1.  The kernel is currently aware
-of exactly one feature in CPUID 0x7.1,  which means there is room for
-another 127 features before CPUID 0x7.2 will see the light of day, i.e.
-the looping is likely to be dead code for years to come.
+Query supported_xcr0 when checking for MPX support instead of invoking
+->mpx_supported() and drop ->mpx_supported() as kvm_mpx_supported() was
+its last user.  Rename vmx_mpx_supported() to cpu_has_vmx_mpx() to
+better align with VMX/VMCS nomenclature.
+
+Modify VMX's adjustment of xcr0 to call cpus_has_vmx_mpx() (renamed from
+vmx_mpx_supported()) directly to avoid reading supported_xcr0 before
+it's fully configured.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/cpuid.c            | 3 +--
+ arch/x86/kvm/svm.c              | 6 ------
+ arch/x86/kvm/vmx/capabilities.h | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 3 +--
+ 5 files changed, 4 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 77d206a93658..85f0d96cfeb2 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1163,7 +1163,7 @@ struct kvm_x86_ops {
+ 			       enum x86_intercept_stage stage);
+ 	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion *exit_fastpath);
+-	bool (*mpx_supported)(void);
++
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 	bool (*pt_supported)(void);
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 7362e5238799..47f61f4497fb 100644
+index b9763eb711cb..84006cc4007c 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -533,11 +533,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+@@ -47,8 +47,7 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
  
--		for (i = 1, max_idx = entry->eax; i <= max_idx; i++) {
--			if (WARN_ON_ONCE(i > 1))
--				break;
+ bool kvm_mpx_supported(void)
+ {
+-	return ((host_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR))
+-		 && kvm_x86_ops->mpx_supported());
++	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
+ }
+ EXPORT_SYMBOL_GPL(kvm_mpx_supported);
+ 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index af096c4f9c5f..3c7ddaff405d 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6082,11 +6082,6 @@ static bool svm_invpcid_supported(void)
+ 	return false;
+ }
+ 
+-static bool svm_mpx_supported(void)
+-{
+-	return false;
+-}
 -
--			entry = do_host_cpuid(array, function, i);
-+		/* KVM only supports 0x7.0 and 0x7.1, capped above via min(). */
-+		if (entry->eax == 1) {
-+			entry = do_host_cpuid(array, function, 1);
- 			if (!entry)
- 				goto out;
+ static bool svm_xsaves_supported(void)
+ {
+ 	return boot_cpu_has(X86_FEATURE_XSAVES);
+@@ -7468,7 +7463,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
  
+ 	.rdtscp_supported = svm_rdtscp_supported,
+ 	.invpcid_supported = svm_invpcid_supported,
+-	.mpx_supported = svm_mpx_supported,
+ 	.xsaves_supported = svm_xsaves_supported,
+ 	.umip_emulated = svm_umip_emulated,
+ 	.pt_supported = svm_pt_supported,
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 1a6a99382e94..0a0b1494a934 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -100,7 +100,7 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
+ 	       (vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL);
+ }
+ 
+-static inline bool vmx_mpx_supported(void)
++static inline bool cpu_has_vmx_mpx(void)
+ {
+ 	return (vmcs_config.vmexit_ctrl & VM_EXIT_CLEAR_BNDCFGS) &&
+ 		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 32a84ec15064..98fd651f7f7e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7590,7 +7590,7 @@ static __init int hardware_setup(void)
+ 		WARN_ONCE(host_bndcfgs, "KVM: BNDCFGS in host will be lost");
+ 	}
+ 
+-	if (!kvm_mpx_supported())
++	if (!cpu_has_vmx_mpx())
+ 		supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
+ 				    XFEATURE_MASK_BNDCSR);
+ 
+@@ -7857,7 +7857,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 
+ 	.check_intercept = vmx_check_intercept,
+ 	.handle_exit_irqoff = vmx_handle_exit_irqoff,
+-	.mpx_supported = vmx_mpx_supported,
+ 	.xsaves_supported = vmx_xsaves_supported,
+ 	.umip_emulated = vmx_umip_emulated,
+ 	.pt_supported = vmx_pt_supported,
 -- 
 2.24.1
 
