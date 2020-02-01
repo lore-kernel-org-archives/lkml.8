@@ -2,30 +2,30 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA00C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACEFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC5A20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEAC2067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgBAS4T (ORCPT
+        id S1727563AbgBAS4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:56:19 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57278 "EHLO mga01.intel.com"
+        Sat, 1 Feb 2020 13:56:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37509 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgBASw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:29 -0500
+        id S1726992AbgBASw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075504"
+   d="scan'208";a="248075471"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 25/61] KVM: x86: Use u32 for holding CPUID register value in helpers
-Date:   Sat,  1 Feb 2020 10:51:42 -0800
-Message-Id: <20200201185218.24473-26-sean.j.christopherson@intel.com>
+Subject: [PATCH 14/61] KVM: x86: Hoist loop counter and terminator to top of __do_cpuid_func()
+Date:   Sat,  1 Feb 2020 10:51:31 -0800
+Message-Id: <20200201185218.24473-15-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,47 +49,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the intermediate CPUID output register values from "int" to "u32"
-to match both hardware and the storage type in struct cpuid_reg.
+Declare "i" and "max_idx" at the top of __do_cpuid_func() to consolidate
+a handful of declarations in various case statements.
+
+More importantly, establish the pattern of using max_idx instead of e.g.
+entry->eax as the loop terminator in preparation for refactoring how
+entry is handled in __do_cpuid_func().
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/cpuid.c | 37 +++++++++++++------------------------
+ 1 file changed, 13 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index c1ac0995843d..72a79bdfed6b 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -95,7 +95,7 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
- 	return reverse_cpuid[x86_leaf];
- }
- 
--static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-+static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 1ae3b2502333..5044a595799f 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -439,7 +439,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 				  int *nent, int maxnent)
  {
- 	struct kvm_cpuid_entry2 *entry;
- 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-@@ -121,7 +121,7 @@ static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+-	int r;
++	int r, i, max_idx;
+ 	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+ #ifdef CONFIG_X86_64
+ 	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+@@ -535,20 +535,18 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	 * may return different values. This forces us to get_cpu() before
+ 	 * issuing the first command, and also to emulate this annoying behavior
+ 	 * in kvm_emulate_cpuid() using KVM_CPUID_FLAG_STATE_READ_NEXT */
+-	case 2: {
+-		int t, times = entry->eax & 0xff;
+-
++	case 2:
+ 		entry->flags |= KVM_CPUID_FLAG_STATE_READ_NEXT;
+-		for (t = 1; t < times; ++t) {
+-			if (!do_host_cpuid(&entry[t], nent, maxnent, function, 0))
++
++		for (i = 1, max_idx = entry->eax & 0xff; i < max_idx; ++i) {
++			if (!do_host_cpuid(&entry[i], nent, maxnent, function, 0))
+ 				goto out;
+ 		}
+ 		break;
+-	}
+ 	/* functions 4 and 0x8000001d have additional index. */
+ 	case 4:
+ 	case 0x8000001d: {
+-		int i, cache_type;
++		int cache_type;
  
- static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
+ 		/* read more entries until cache_type is zero */
+ 		for (i = 1; ; ++i) {
+@@ -568,19 +566,16 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->edx = 0;
+ 		break;
+ 	/* function 7 has additional index. */
+-	case 7: {
+-		int i;
+-
++	case 7:
+ 		do_cpuid_7_mask(entry);
  
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (!reg)
-@@ -132,7 +132,7 @@ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_
+-		for (i = 1; i <= entry->eax; i++) {
++		for (i = 1, max_idx = entry->eax; i <= max_idx; i++) {
+ 			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
+ 				goto out;
  
- static __always_inline void guest_cpuid_clear(struct kvm_vcpu *vcpu, unsigned x86_feature)
- {
--	int *reg;
-+	u32 *reg;
+ 			do_cpuid_7_mask(&entry[i]);
+ 		}
+ 		break;
+-	}
+ 	case 9:
+ 		break;
+ 	case 0xa: { /* Architectural Performance Monitoring */
+@@ -617,9 +612,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	 * thus they can be handled by common code.
+ 	 */
+ 	case 0x1f:
+-	case 0xb: {
+-		int i;
+-
++	case 0xb:
+ 		/*
+ 		 * We filled in entry[0] for CPUID(EAX=<function>,
+ 		 * ECX=00H) above.  If its level type (ECX[15:8]) is
+@@ -633,9 +626,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 				goto out;
+ 		}
+ 		break;
+-	}
+ 	case 0xd: {
+-		int idx, i;
++		int idx;
+ 		u64 supported = kvm_supported_xcr0();
  
- 	reg = guest_cpuid_get_register(vcpu, x86_feature);
- 	if (reg)
+ 		entry->eax &= supported;
+@@ -684,18 +676,15 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		break;
+ 	}
+ 	/* Intel PT */
+-	case 0x14: {
+-		int t, times = entry->eax;
+-
++	case 0x14:
+ 		if (!f_intel_pt)
+ 			break;
+ 
+-		for (t = 1; t <= times; ++t) {
+-			if (!do_host_cpuid(&entry[t], nent, maxnent, function, t))
++		for (i = 1, max_idx = entry->eax; i <= max_idx; ++i) {
++			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
+ 				goto out;
+ 		}
+ 		break;
+-	}
+ 	case KVM_CPUID_SIGNATURE: {
+ 		static const char signature[12] = "KVMKVMKVM\0\0";
+ 		const u32 *sigptr = (const u32 *)signature;
 -- 
 2.24.1
 
