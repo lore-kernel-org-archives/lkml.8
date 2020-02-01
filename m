@@ -2,107 +2,89 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C64C33CB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A85C35246
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418E92067C
+	by mail.kernel.org (Postfix) with ESMTP id 7105F20728
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHLFzUfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgBATUR (ORCPT
+        id S1726900AbgBATUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 1 Feb 2020 14:20:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56195 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBATUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 14:20:16 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q9so11572289wmj.5;
-        Sat, 01 Feb 2020 11:20:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=uYaIcIDQCFKVdgoAuxhONZQk93UzvmxTUfAkX64lc4c=;
-        b=eHLFzUfents3JEJzdh7POuGi1ogdKKFYSzv1N3mjn3gzN9AJolRqciOJWlcagcZwUL
-         tNGfwicQgQfSQa6RSc7mMar5baByqEsULRpBueMK1bu8uuzWpmuQrBbAW2Y7/wexfl2Y
-         fTnqwxgDiXAC+v79DyiNCj/BVaAwqRePZA5ARlyjEwieepxunCP2Yjl2vXSgMnoFSV5j
-         QQOEEws3YGVlIxdLMK9rp6T8Pb3Rxca+ZjkmPtFgiJk+K96uZ4OGlqT9I/uwooAsg9Uc
-         VRPF2/E8LHYmEs7HF/l85VXGgaZqQ5I3KAbX+il9HR2K9V4khm341uS/rBK2yHszxeG5
-         9Zhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=uYaIcIDQCFKVdgoAuxhONZQk93UzvmxTUfAkX64lc4c=;
-        b=mBQfFw0nvFnEXkfipQuXR6ErGGY9n9sS4rMxWYE1Zs00Xv+R3peL0lQN0dgOxiXf7P
-         zMsJx/cghfElTpppJVxei011L/yhpSkpmNKK/6OHzDCQ8WHRTzwwCC8/yX4sxakWafd9
-         OqECkceA/kdUSAD8V1CMf0teeKy6zjC+74JumKlQrRm++Lte/PXdCoimYtoydPPO/mwQ
-         o0eRavh2hsRdi2h2Oj1ZsW1yEbRVgGBgEuTTNcFV/6ICjCFNzD5Z8epj2sJwuAlnIVIr
-         IK1LhGUalCeEcCpcgT9Mus7aBWO0k0MO+qMny738jzqSIUIjYQqilFrLp4OhI8J64fzy
-         49YA==
-X-Gm-Message-State: APjAAAVR4q4M85kZE5mPatdiKizbMcqSnwVX3T9ZJU8YAVz3GOMDl8hR
-        9uGxlPAlKMOpWV0PgibQWuY=
-X-Google-Smtp-Source: APXvYqzgjSubpJ9uoJKrJRMjZO56BFJTgnT5zXFN4M8f8mt33fqF/x1t+y2yyApt5oqNlILdQ8V3ew==
-X-Received: by 2002:a05:600c:218a:: with SMTP id e10mr18953305wme.6.1580584814590;
-        Sat, 01 Feb 2020 11:20:14 -0800 (PST)
-Received: from felia ([2001:16b8:2d5f:200:619d:5ce8:4d82:51eb])
-        by smtp.gmail.com with ESMTPSA id b137sm17540723wme.26.2020.02.01.11.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 11:20:13 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Sat, 1 Feb 2020 20:20:08 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: correct entry in TI VPE/CAL DRIVERS
- section
-In-Reply-To: <CAHp75Ve5gFF8R8i_ietRUi+sfy4nQi4MBzG4XnmJfJRqYH85wQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2002012018480.6548@felia>
-References: <20200201151714.26754-1-lukas.bulwahn@gmail.com> <CAHp75Ve5gFF8R8i_ietRUi+sfy4nQi4MBzG4XnmJfJRqYH85wQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Received: from foss.arm.com ([217.140.110.172]:43454 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgBATUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 14:20:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46ECAFEC;
+        Sat,  1 Feb 2020 11:20:16 -0800 (PST)
+Received: from [192.168.122.164] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 313983F68E;
+        Sat,  1 Feb 2020 11:20:15 -0800 (PST)
+Subject: Re: [PATCH 5/6] net: bcmgenet: Fetch MAC address from the adapter
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, opendmb@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        hkallweit1@gmail.com
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-6-jeremy.linton@arm.com> <20200201153709.GK9639@lunn.ch>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <99353ae3-4ad5-b2b3-1303-4b9867eb213d@arm.com>
+Date:   Sat, 1 Feb 2020 13:20:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200201153709.GK9639@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On Sat, 1 Feb 2020, Andy Shevchenko wrote:
-
-> On Sat, Feb 1, 2020 at 5:17 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> >
-> > perl scripts/parse-maintainers.pl complains:
-> >
-> > Odd non-pattern line '  Documentation/devicetree/bindings/media/ti,cal.yaml
-> > ' for 'TI VPE/CAL DRIVERS' at scripts/parse-maintainers.pl line 147,
-> > <$file> line 16742.
-> >
-> > Commit 2099ef02c6c0 ("media: dt-bindings: media: cal: convert binding to
-> > yaml") introduced this ill-formed line into MAINTAINERS.
-> >
-> > Rectify it now.
+On 2/1/20 9:37 AM, Andrew Lunn wrote:
+>> @@ -3601,6 +3605,23 @@ static int bcmgenet_probe(struct platform_device *pdev)
+>>   	    !strcasecmp(phy_mode_str, "internal"))
+>>   		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
+>>   
+>> +	if (dn)
+>> +		macaddr = of_get_mac_address(dn);
+>> +	else if (pd)
+>> +		macaddr = pd->mac_address;
+>> +
+>> +	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
+>> +		if (has_acpi_companion(&pdev->dev))
+>> +			bcmgenet_get_hw_addr(priv, dev->dev_addr);
+>> +
+>> +		if (!is_valid_ether_addr(dev->dev_addr)) {
+>> +			dev_warn(&pdev->dev, "using random Ethernet MAC\n");
+>> +			eth_hw_addr_random(dev);
+>> +		}
+>> +	} else {
+>> +		ether_addr_copy(dev->dev_addr, macaddr);
+>> +	}
+>> +
 > 
-> There is a patch waiting for upstream:
-> https://lore.kernel.org/linux-media/20200128145828.74161-1-andriy.shevchenko@linux.intel.com/
-> 
+> Could you also maybe put in here somewhere a call to
+> device_get_mac_address(), to support getting the MAC address out of
+> ACPI?
 
-Agree, either one of those two patches solves the issue.
+I had that here until right before I posted it, mostly because I was 
+trying to consolidate the DT/ACPI paths. I pulled it out because it 
+wasn't making the code any clearer, and as I mentioned in my response to 
+the general _DSD properties I would rather entirely depend on non DSD 
+properties if possible.
 
-Lukas
+I will put it back in, but IMHO we shouldn't be finding firmware using 
+it. Since the discussion a few years back, its become clearer to me its 
+not usually needed. As in this example, the addresses can usually be 
+picked off the adapter if the firmware bothers to set them up.
+
