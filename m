@@ -2,87 +2,137 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19363C33CB2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA1320722
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9470206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jkaLZn8B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qld644UZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBAB73 (ORCPT
+        id S1727095AbgBACEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:59:29 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55382 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBAB73 (ORCPT
+        Fri, 31 Jan 2020 21:04:02 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37331 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgBACEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:59:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u4zofrgpa+AjJJCnQZ3PeAHEog0fTuL8n8cEhgWl/pw=; b=jkaLZn8BOr8CQVXQ70qmBB94b
-        GFnBxe1vmGv5VXzxwjUPK1tj2ZdDTklGTaoaKHGs+fOWcDzifGLboDlYH4Y9GzZ+ek1TOloxSFYsj
-        qQgbR7tJvgXK0pwvk+JA/3BDilDPlmeh0kR4HN0cPzVtUgloqHWvcYApF2ehNAiXq2x7F/wh1ic82
-        ooHLv6tyltTcksrgVtNjubpEWoKFMkNE/yBdYAcwTlyeoooVMtJxJ1aRmEkpjSTS/8k42uGjgxG7Y
-        f+TZaipAsVTSBEYxKVsIL2cJUEHX01BTtxf9tDV+en8U2GrsiBrTJBxQluCKIddCrYY5Nswluw/qu
-        va4iA/fng==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixi4F-0007ay-BV; Sat, 01 Feb 2020 01:59:27 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] arch/xtensa: fix Kconfig typos for HAVE_SMP
-Message-ID: <500b2132-ea3c-a385-1f37-05664de5f1dd@infradead.org>
-Date:   Fri, 31 Jan 2020 17:59:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 31 Jan 2020 21:04:02 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so4549178pga.4;
+        Fri, 31 Jan 2020 18:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ro9iu9VNOuWviWh4OwZbe94+Deahhttu3CMtreUHnJg=;
+        b=qld644UZy5MSMdAtQDkFv4eR5rOeOIeuYYfxUs23Icnpl5o/mtxhvzILGSb2z3jyMK
+         c4iUPxDxY0Yui24NWEKH6kWwdJHWBYIaJbb+XuE5HNcq0q1qMCIs1vanew6u6v1GhJw9
+         T2PcbubEr4HNdp7sRw4LVM3gfCDjNnqxxPI5MEdEgxq/gTu7B14se15UnnzgPmYO7Y1F
+         Onh2bVuPh9sw+R1MxRUdtJ3k/kMPZ9sED/MwqC3dx7ii9eVo7Fg0SxP6ejCYvW5RGAcO
+         xRR9sNJU9jPBC74vhh33HTE/r8mAT9q+SVPXs4nUv4T2HKAfxu1oG4uYc+5fw45hAwru
+         Ohgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ro9iu9VNOuWviWh4OwZbe94+Deahhttu3CMtreUHnJg=;
+        b=IcVRLYIlaDcnL0qteqVsSduG1ECSMDvzeAxdFpw4GB8RviPfOI2PdGoeq+FcDnMOm7
+         UXOXRatc0wabPBDojZQyTwkUo5NZkhxaiHSkAeQ3RYGdxDbwF5pKICnSRLLVBRE/T9e3
+         D13d6I+ikmLwnu38kyek/i7ad09mOQByr9rrHjowxLDszbystf0KoJBFDEpDj6wKZ5ZE
+         rNb6AgjbNsCRLxGIq9WkKzjx3BHtQkynmMx9P/BUshqt/ZAXG9V2XAeXE9GBHBmT9hOz
+         6xDYJpMkB+YzwZ+zA7z31b3F/QnHsV5yKdTp74/pDHugKU4XkTuCq/m8DRHW79mXWrOy
+         bxEQ==
+X-Gm-Message-State: APjAAAXWwLut/pOdjPjxVFGuaz5QHJ8cXXHCNKhn6LAspHs0WebDkqGg
+        aBmI2A1NpvrXBi7Z6rena7I=
+X-Google-Smtp-Source: APXvYqx+2t7NY80ATnmYXbW5lMP4yKLfBufkJ9KD/yZ72OykzVDh9Voe5Bf4K1yXya/3K/FKiTxm4w==
+X-Received: by 2002:a63:8e:: with SMTP id 136mr13129030pga.319.1580522641354;
+        Fri, 31 Jan 2020 18:04:01 -0800 (PST)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id p3sm11744575pfg.184.2020.01.31.18.04.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 18:04:00 -0800 (PST)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     davem@davemloft.net, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com
+Cc:     mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: stmmac: Delete txtimer in suspend()
+Date:   Fri, 31 Jan 2020 18:01:24 -0800
+Message-Id: <20200201020124.5989-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+When running v5.5 with a rootfs on NFS, memory abort may happen in
+the system resume stage:
+ Unable to handle kernel paging request at virtual address dead00000000012a
+ [dead00000000012a] address between user and kernel address ranges
+ pc : run_timer_softirq+0x334/0x3d8
+ lr : run_timer_softirq+0x244/0x3d8
+ x1 : ffff800011cafe80 x0 : dead000000000122
+ Call trace:
+  run_timer_softirq+0x334/0x3d8
+  efi_header_end+0x114/0x234
+  irq_exit+0xd0/0xd8
+  __handle_domain_irq+0x60/0xb0
+  gic_handle_irq+0x58/0xa8
+  el1_irq+0xb8/0x180
+  arch_cpu_idle+0x10/0x18
+  do_idle+0x1d8/0x2b0
+  cpu_startup_entry+0x24/0x40
+  secondary_start_kernel+0x1b4/0x208
+ Code: f9000693 a9400660 f9000020 b4000040 (f9000401)
+ ---[ end trace bb83ceeb4c482071 ]---
+ Kernel panic - not syncing: Fatal exception in interrupt
+ SMP: stopping secondary CPUs
+ SMP: failed to stop secondary CPUs 2-3
+ Kernel Offset: disabled
+ CPU features: 0x00002,2300aa30
+ Memory Limit: none
+ ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-Fix typos in xtensa Kconfig help text for HAVE_SMP.
+It's found that stmmac_xmit() and stmmac_resume() sometimes might
+run concurrently, possibly resulting in a race condition between
+mod_timer() and setup_timer(), being called by stmmac_xmit() and
+stmmac_resume() respectively.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
-Cc: linux-xtensa@linux-xtensa.org
+Since the resume() runs setup_timer() every time, it'd be safer to
+have del_timer_sync() in the suspend() as the counterpart.
+
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- arch/xtensa/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- linux-next-20200131.orig/arch/xtensa/Kconfig
-+++ linux-next-20200131/arch/xtensa/Kconfig
-@@ -180,11 +180,11 @@ config HAVE_SMP
- 	depends on XTENSA_VARIANT_CUSTOM
- 	select XTENSA_MX
- 	help
--	  This option is use to indicate that the system-on-a-chip (SOC)
-+	  This option is used to indicate that the system-on-a-chip (SOC)
- 	  supports Multiprocessing. Multiprocessor support implemented above
- 	  the CPU core definition and currently needs to be selected manually.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index ff1cbfc834b0..5836b21edd7e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4974,6 +4974,7 @@ int stmmac_suspend(struct device *dev)
+ {
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
++	u32 chan;
  
--	  Multiprocessor support in implemented with external cache and
-+	  Multiprocessor support is implemented with external cache and
- 	  interrupt controllers.
+ 	if (!ndev || !netif_running(ndev))
+ 		return 0;
+@@ -4987,6 +4988,9 @@ int stmmac_suspend(struct device *dev)
  
- 	  The MX interrupt distributer adds Interprocessor Interrupts
+ 	stmmac_disable_all_queues(priv);
+ 
++	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
++		del_timer_sync(&priv->tx_queue[chan].txtimer);
++
+ 	/* Stop TX/RX DMA */
+ 	stmmac_stop_all_dma(priv);
+ 
+-- 
+2.17.1
 
