@@ -2,141 +2,385 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC5BC33C9E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A97DC3F68F
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBB3206E6
+	by mail.kernel.org (Postfix) with ESMTP id 383042070C
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="An9h9hQf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580542098;
+	bh=VtjpcG2v+si11pTkFhBOaA0kXsDtfZYV9Oxf1X4zGlY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Al9eEYOViGjJZQNuL2xBgOh5JMUdSuC/0JcHUuX8iudnaQ5vp4LBegd4N0EqD9RxS
+	 LY7LnXhtjRiH8Mkft1jtQWo418EQ7WiQaEEdqSfXLPsa53qrK01uXQyhAoj8P0mYqp
+	 392QcpN8M6XlwFQScRgmEDSPVjc7SjTI/4a6hSEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgBAH2D (ORCPT
+        id S1727035AbgBAH2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 02:28:03 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44668 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgBAH2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 02:28:02 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d9so3714310plo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 23:28:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2tdGWkxDgfXpnJAdtjaUc34vzgvsJbHdiM8yHvDQB98=;
-        b=An9h9hQfzeqnBoTwBSP5knDHWbGL/U1hHk77g4T1UX3kn2zFWcnPMO/w3oPqJx1OSC
-         3MTc+fotYOu4KzvnZsmbBhg0OIb5bD/i5sOMK7CZrNwwbtHLjDM1N9ash0OPM2fVQGjY
-         y3BoNY72E6Y8r7zUvP7fJupd3th8pb48FR7gsfMnUksabJlOldo+RT+m3xqr3S01Of/y
-         cB4ZzdziuTbhmwdhGoKfPLwNdIwGkL/2xUfn+eGn3hzK0irwV9cHNRhvwu3mTPofKujQ
-         pdfnKcFA9WWbnqKg+LfxDmblvHrme7l1Fpeb96LY1SKoAYhmLZ8odC+sW91PfTxEoWl4
-         3ApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2tdGWkxDgfXpnJAdtjaUc34vzgvsJbHdiM8yHvDQB98=;
-        b=GNxbSJ1FhZ+7EY+TAudsLpIkmct+rT5R5LcS9sDGIwjqTVftrKiRzWQbgxbgoXFIWV
-         0OLmj4FM3CgG4TgH5/SatcZdZIcKjauootw78lQs9CE5XwO+3XjNyTN4mvMqRXyXE22/
-         pXIA44yhS//mKfrWCJ2Vy8V+D7f2htnYk4LIDVmK66ibVbtRzoARdNV3BppgWX35rhr1
-         ZKRH2KQ+70ZVF7ZTpklhrPSfjDaRgWLKpRx/MzPnY/aBPIQAEL2YEp2757ghYWQZt3xU
-         taXAkhtEF25tX8Xd0glb16swau5Eo7xx6PLvGf9gJfIH9n/Iuq3qh2b+z5JPuYvhK5sa
-         BD3w==
-X-Gm-Message-State: APjAAAX2rV83Zc8AoQfrHq2uxXPkso2QgS527d1Y26UisSa2Khonzeuf
-        ASctwgb8lsWmf0uVSkHkZHM=
-X-Google-Smtp-Source: APXvYqwygurwb6XxragQeU2J4nosucSvNpYi7cYLGA2BgmCX8lvjSlMaH85x8gA+KWF9nQu0yGWQUQ==
-X-Received: by 2002:a17:90a:5d85:: with SMTP id t5mr17043821pji.126.1580542082014;
-        Fri, 31 Jan 2020 23:28:02 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.237])
-        by smtp.googlemail.com with ESMTPSA id h7sm13240735pfq.36.2020.01.31.23.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 23:28:01 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] tracing: Annotate ftrace_graph_hash pointer with __rcu
-Date:   Sat,  1 Feb 2020 12:57:04 +0530
-Message-Id: <20200201072703.17330-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 1 Feb 2020 02:28:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgBAH2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 02:28:15 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A860206A2;
+        Sat,  1 Feb 2020 07:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580542094;
+        bh=VtjpcG2v+si11pTkFhBOaA0kXsDtfZYV9Oxf1X4zGlY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u7tBv7lmuG6UDqtoW8Q6ESbMNHK2cU2LkcZknenq7S0AzaNGJLegqG6Liw094oq1F
+         I48/23/fxc9iZFhUcKaKH7oTHhifenI5T9Sgq4bX8P/nrJVfwowbUPqYiTZ3ASITEr
+         st8WWmNHCBS9hfzVSN5kuGFd27QD+3FAPNLZpeeI=
+Date:   Sat, 1 Feb 2020 16:28:10 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] tracing: Remove check_arg() callbacks from dynevent
+ args
+Message-Id: <20200201162810.f4f6c07df6bea109772e9e9a@kernel.org>
+In-Reply-To: <c7708d6f177fcbe1a36b6e4e8e150907df0fa5d2.1580506712.git.zanussi@kernel.org>
+References: <cover.1580506712.git.zanussi@kernel.org>
+        <c7708d6f177fcbe1a36b6e4e8e150907df0fa5d2.1580506712.git.zanussi@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5664:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5785:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5864:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5866:25: error: incompatible types in comparison
+On Fri, 31 Jan 2020 15:55:32 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Use rcu_dereference_protected to access the __rcu annotated pointer.
+> It's kind of strange to have check_arg() callbacks as part of the arg
+> objects themselves; it makes more sense to just pass these in when the
+> args are added instead.
+> 
+> Remove the check_arg() callbacks from those objects which also means
+> removing the check_arg() args from the init functions, adding them to
+> the add functions and fixing up existing callers.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 9 ++++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
+Looks good to me.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 9bf1f2cd515e..959ded08dc13 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5596,7 +5596,7 @@ static const struct file_operations ftrace_notrace_fops = {
- 
- static DEFINE_MUTEX(graph_lock);
- 
--struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
- struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
- 
- enum graph_filter_type {
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 63bf60f79398..97dad3326020 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -950,22 +950,25 @@ extern void __trace_graph_return(struct trace_array *tr,
- 				 unsigned long flags, int pc);
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
--extern struct ftrace_hash *ftrace_graph_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_hash;
- extern struct ftrace_hash *ftrace_graph_notrace_hash;
- 
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- {
- 	unsigned long addr = trace->func;
- 	int ret = 0;
-+	struct ftrace_hash *hash;
- 
- 	preempt_disable_notrace();
- 
--	if (ftrace_hash_empty(ftrace_graph_hash)) {
-+	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
-+
-+	if (ftrace_hash_empty(hash)) {
- 		ret = 1;
- 		goto out;
- 	}
- 
--	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
-+	if (ftrace_lookup_ip(hash, addr)) {
- 
- 		/*
- 		 * This needs to be cleared on the return functions
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+
+> 
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> ---
+>  kernel/trace/trace_dynevent.c    | 62 ++++++++++++++++++----------------------
+>  kernel/trace/trace_dynevent.h    | 11 ++++---
+>  kernel/trace/trace_events_hist.c | 16 +++++------
+>  kernel/trace/trace_kprobe.c      | 10 +++----
+>  4 files changed, 46 insertions(+), 53 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+> index 6ffdbc4fda53..f9cfcdc9d1f3 100644
+> --- a/kernel/trace/trace_dynevent.c
+> +++ b/kernel/trace/trace_dynevent.c
+> @@ -228,27 +228,30 @@ fs_initcall(init_dynamic_event);
+>   * dynevent_arg_add - Add an arg to a dynevent_cmd
+>   * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
+>   * @arg: The argument to append to the current cmd
+> + * @check_arg: An (optional) pointer to a function checking arg sanity
+>   *
+>   * Append an argument to a dynevent_cmd.  The argument string will be
+>   * appended to the current cmd string, followed by a separator, if
+> - * applicable.  Before the argument is added, the check_arg()
+> - * function, if defined, is called.
+> + * applicable.  Before the argument is added, the @check_arg function,
+> + * if present, will be used to check the sanity of the current arg
+> + * string.
+>   *
+> - * The cmd string, separator, and check_arg() function should be set
+> - * using the dynevent_arg_init() before any arguments are added using
+> - * this function.
+> + * The cmd string and separator should be set using the
+> + * dynevent_arg_init() before any arguments are added using this
+> + * function.
+>   *
+>   * Return: 0 if successful, error otherwise.
+>   */
+>  int dynevent_arg_add(struct dynevent_cmd *cmd,
+> -		     struct dynevent_arg *arg)
+> +		     struct dynevent_arg *arg,
+> +		     dynevent_check_arg_fn_t check_arg)
+>  {
+>  	int ret = 0;
+>  	int delta;
+>  	char *q;
+>  
+> -	if (arg->check_arg) {
+> -		ret = arg->check_arg(arg);
+> +	if (check_arg) {
+> +		ret = check_arg(arg);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -269,6 +272,7 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
+>   * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
+>   * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
+>   * @arg_pair: The argument pair to append to the current cmd
+> + * @check_arg: An (optional) pointer to a function checking arg sanity
+>   *
+>   * Append an argument pair to a dynevent_cmd.  An argument pair
+>   * consists of a left-hand-side argument and a right-hand-side
+> @@ -278,24 +282,26 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
+>   *
+>   * The lhs argument string will be appended to the current cmd string,
+>   * followed by an operator, if applicable, followd by the rhs string,
+> - * followed finally by a separator, if applicable.  Before anything is
+> - * added, the check_arg() function, if defined, is called.
+> + * followed finally by a separator, if applicable.  Before the
+> + * argument is added, the @check_arg function, if present, will be
+> + * used to check the sanity of the current arg strings.
+>   *
+> - * The cmd strings, operator, separator, and check_arg() function
+> - * should be set using the dynevent_arg_pair_init() before any arguments
+> - * are added using this function.
+> + * The cmd strings, operator, and separator should be set using the
+> + * dynevent_arg_pair_init() before any arguments are added using this
+> + * function.
+>   *
+>   * Return: 0 if successful, error otherwise.
+>   */
+>  int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+> -			  struct dynevent_arg_pair *arg_pair)
+> +			  struct dynevent_arg_pair *arg_pair,
+> +			  dynevent_check_arg_fn_t check_arg)
+>  {
+>  	int ret = 0;
+>  	int delta;
+>  	char *q;
+>  
+> -	if (arg_pair->check_arg) {
+> -		ret = arg_pair->check_arg(arg_pair);
+> +	if (check_arg) {
+> +		ret = check_arg(arg_pair);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -385,20 +391,16 @@ void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
+>  /**
+>   * dynevent_arg_init - Initialize a dynevent_arg object
+>   * @arg: A pointer to the dynevent_arg struct representing the arg
+> - * @check_arg: An (optional) pointer to a function checking arg sanity
+>   * @separator: An (optional) separator, appended after adding the arg
+>   *
+>   * Initialize a dynevent_arg object.  A dynevent_arg represents an
+>   * object used to append single arguments to the current command
+> - * string.  The @check_arg function, if present, will be used to check
+> - * the sanity of the current arg string (which is directly set by the
+> - * caller).  After the arg string is successfully appended to the
+> + * string.  After the arg string is successfully appended to the
+>   * command string, the optional @separator is appended.  If no
+>   * separator was specified when initializing the arg, a space will be
+>   * appended.
+>   */
+>  void dynevent_arg_init(struct dynevent_arg *arg,
+> -		       dynevent_check_arg_fn_t check_arg,
+>  		       char separator)
+>  {
+>  	memset(arg, '\0', sizeof(*arg));
+> @@ -406,14 +408,11 @@ void dynevent_arg_init(struct dynevent_arg *arg,
+>  	if (!separator)
+>  		separator = ' ';
+>  	arg->separator = separator;
+> -
+> -	arg->check_arg = check_arg;
+>  }
+>  
+>  /**
+>   * dynevent_arg_pair_init - Initialize a dynevent_arg_pair object
+>   * @arg_pair: A pointer to the dynevent_arg_pair struct representing the arg
+> - * @check_arg: An (optional) pointer to a function checking arg sanity
+>   * @operator: An (optional) operator, appended after adding the first arg
+>   * @separator: An (optional) separator, appended after adding the second arg
+>   *
+> @@ -422,16 +421,13 @@ void dynevent_arg_init(struct dynevent_arg *arg,
+>   * variable_name;' or 'x+y' to the current command string.  An
+>   * argument pair consists of a left-hand-side argument and a
+>   * right-hand-side argument separated by an operator, which can be
+> - * whitespace, all followed by a separator, if applicable. The
+> - * @check_arg function, if present, will be used to check the sanity
+> - * of the current arg strings (which is directly set by the caller).
+> - * After the first arg string is successfully appended to the command
+> - * string, the optional @operator is appended, followed by the second
+> - * arg and and optional @separator.  If no separator was specified
+> - * when initializing the arg, a space will be appended.
+> + * whitespace, all followed by a separator, if applicable.  After the
+> + * first arg string is successfully appended to the command string,
+> + * the optional @operator is appended, followed by the second arg and
+> + * and optional @separator.  If no separator was specified when
+> + * initializing the arg, a space will be appended.
+>   */
+>  void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
+> -			    dynevent_check_arg_fn_t check_arg,
+>  			    char operator, char separator)
+>  {
+>  	memset(arg_pair, '\0', sizeof(*arg_pair));
+> @@ -443,8 +439,6 @@ void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
+>  	if (!separator)
+>  		separator = ' ';
+>  	arg_pair->separator = separator;
+> -
+> -	arg_pair->check_arg = check_arg;
+>  }
+>  
+>  /**
+> diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+> index b593fc34c5b1..d6857a254ede 100644
+> --- a/kernel/trace/trace_dynevent.h
+> +++ b/kernel/trace/trace_dynevent.h
+> @@ -126,28 +126,27 @@ typedef int (*dynevent_check_arg_fn_t)(void *data);
+>  struct dynevent_arg {
+>  	const char		*str;
+>  	char			separator; /* e.g. ';', ',', or nothing */
+> -	dynevent_check_arg_fn_t	check_arg;
+>  };
+>  
+>  extern void dynevent_arg_init(struct dynevent_arg *arg,
+> -			      dynevent_check_arg_fn_t check_arg,
+>  			      char separator);
+>  extern int dynevent_arg_add(struct dynevent_cmd *cmd,
+> -			    struct dynevent_arg *arg);
+> +			    struct dynevent_arg *arg,
+> +			    dynevent_check_arg_fn_t check_arg);
+>  
+>  struct dynevent_arg_pair {
+>  	const char		*lhs;
+>  	const char		*rhs;
+>  	char			operator; /* e.g. '=' or nothing */
+>  	char			separator; /* e.g. ';', ',', or nothing */
+> -	dynevent_check_arg_fn_t	check_arg;
+>  };
+>  
+>  extern void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
+> -				   dynevent_check_arg_fn_t check_arg,
+>  				   char operator, char separator);
+> +
+>  extern int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+> -				 struct dynevent_arg_pair *arg_pair);
+> +				 struct dynevent_arg_pair *arg_pair,
+> +				 dynevent_check_arg_fn_t check_arg);
+>  extern int dynevent_str_add(struct dynevent_cmd *cmd, const char *str);
+>  
+>  #endif
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 772bd3d7c29f..a566f5d290c1 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1334,12 +1334,12 @@ int synth_event_add_field(struct dynevent_cmd *cmd, const char *type,
+>  	if (!type || !name)
+>  		return -EINVAL;
+>  
+> -	dynevent_arg_pair_init(&arg_pair, synth_event_check_arg_fn, 0, ';');
+> +	dynevent_arg_pair_init(&arg_pair, 0, ';');
+>  
+>  	arg_pair.lhs = type;
+>  	arg_pair.rhs = name;
+>  
+> -	ret = dynevent_arg_pair_add(cmd, &arg_pair);
+> +	ret = dynevent_arg_pair_add(cmd, &arg_pair, synth_event_check_arg_fn);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1377,11 +1377,11 @@ int synth_event_add_field_str(struct dynevent_cmd *cmd, const char *type_name)
+>  	if (!type_name)
+>  		return -EINVAL;
+>  
+> -	dynevent_arg_init(&arg, NULL, ';');
+> +	dynevent_arg_init(&arg, ';');
+>  
+>  	arg.str = type_name;
+>  
+> -	ret = dynevent_arg_add(cmd, &arg);
+> +	ret = dynevent_arg_add(cmd, &arg, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1472,9 +1472,9 @@ int __synth_event_gen_cmd_start(struct dynevent_cmd *cmd, const char *name,
+>  	if (cmd->type != DYNEVENT_TYPE_SYNTH)
+>  		return -EINVAL;
+>  
+> -	dynevent_arg_init(&arg, NULL, 0);
+> +	dynevent_arg_init(&arg, 0);
+>  	arg.str = name;
+> -	ret = dynevent_arg_add(cmd, &arg);
+> +	ret = dynevent_arg_add(cmd, &arg, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1546,9 +1546,9 @@ int synth_event_gen_cmd_array_start(struct dynevent_cmd *cmd, const char *name,
+>  	if (n_fields > SYNTH_FIELDS_MAX)
+>  		return -EINVAL;
+>  
+> -	dynevent_arg_init(&arg, NULL, 0);
+> +	dynevent_arg_init(&arg, 0);
+>  	arg.str = name;
+> -	ret = dynevent_arg_add(cmd, &arg);
+> +	ret = dynevent_arg_add(cmd, &arg, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 307abb724a71..fe183d4045d2 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -962,9 +962,9 @@ int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
+>  	if (ret)
+>  		return ret;
+>  
+> -	dynevent_arg_init(&arg, NULL, 0);
+> +	dynevent_arg_init(&arg, 0);
+>  	arg.str = loc;
+> -	ret = dynevent_arg_add(cmd, &arg);
+> +	ret = dynevent_arg_add(cmd, &arg, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -982,7 +982,7 @@ int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
+>  		}
+>  
+>  		arg.str = field;
+> -		ret = dynevent_arg_add(cmd, &arg);
+> +		ret = dynevent_arg_add(cmd, &arg, NULL);
+>  		if (ret)
+>  			break;
+>  	}
+> @@ -1017,7 +1017,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
+>  	if (cmd->type != DYNEVENT_TYPE_KPROBE)
+>  		return -EINVAL;
+>  
+> -	dynevent_arg_init(&arg, NULL, 0);
+> +	dynevent_arg_init(&arg, 0);
+>  
+>  	va_start(args, cmd);
+>  	for (;;) {
+> @@ -1033,7 +1033,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
+>  		}
+>  
+>  		arg.str = field;
+> -		ret = dynevent_arg_add(cmd, &arg);
+> +		ret = dynevent_arg_add(cmd, &arg, NULL);
+>  		if (ret)
+>  			break;
+>  	}
+> -- 
+> 2.14.1
+> 
+
+
 -- 
-2.24.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
