@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42E6C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328A4C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A745620674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F0120661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgBASw1 (ORCPT
+        id S1727074AbgBASw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:52:27 -0500
+        Sat, 1 Feb 2020 13:52:28 -0500
 Received: from mga05.intel.com ([192.55.52.43]:37509 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgBASw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:26 -0500
+        id S1726354AbgBASw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:27 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075437"
+   d="scan'208";a="248075449"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/61] KVM: x86: Simplify handling of Centaur CPUID leafs
-Date:   Sat,  1 Feb 2020 10:51:20 -0800
-Message-Id: <20200201185218.24473-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 07/61] KVM: x86: Check for CPUID 0xD.N support before validating array size
+Date:   Sat,  1 Feb 2020 10:51:24 -0800
+Message-Id: <20200201185218.24473-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,82 +49,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor the handling of the Centaur-only CPUID leaf to detect the leaf
-via a runtime query instead of adding a one-off callback in the static
-array.  When the callback was introduced, there were additional fields
-in the array's structs, and more importantly, retpoline wasn't a thing.
+Now that sub-leaf 1 is handled separately, verify the next sub-leaf is
+needed before rejecting KVM_GET_SUPPORTED_CPUID due to an insufficiently
+sized userspace array.
 
-No functional change intended.
+Note, although this is technically a bug, it's not visible to userspace
+as KVM_GET_SUPPORTED_CPUID is guaranteed to fail on KVM_CPUID_SIGNATURE,
+which is hardcoded to be added after leaf 0xD.  The real motivation for
+the change is to tightly couple the nent/maxnent and do_host_cpuid()
+sequences in preparation for future cleanup.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ arch/x86/kvm/cpuid.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index f49fdd06f511..de52cbb46171 100644
+index fc8540596386..fd9b29aa7abc 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -829,15 +829,7 @@ static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
- 	return __do_cpuid_func(entry, func, nent, maxnent);
- }
+@@ -670,13 +670,14 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry[1].edx = 0;
  
--struct kvm_cpuid_param {
--	u32 func;
--	bool (*qualifier)(const struct kvm_cpuid_param *param);
--};
--
--static bool is_centaur_cpu(const struct kvm_cpuid_param *param)
--{
--	return boot_cpu_data.x86_vendor == X86_VENDOR_CENTAUR;
--}
-+#define CENTAUR_CPUID_SIGNATURE 0xC0000000
+ 		for (idx = 2, i = 2; idx < 64; ++idx) {
+-			u64 mask = ((u64)1 << idx);
++			if (!(supported & BIT_ULL(idx)))
++				continue;
  
- static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
- 			  int *nent, int maxnent, unsigned int type)
-@@ -845,6 +837,10 @@ static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
- 	u32 limit;
- 	int r;
+ 			if (*nent >= maxnent)
+ 				goto out;
  
-+	if (func == CENTAUR_CPUID_SIGNATURE &&
-+	    boot_cpu_data.x86_vendor != X86_VENDOR_CENTAUR)
-+		return 0;
-+
- 	r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
- 	if (r)
- 		return r;
-@@ -896,11 +892,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
- 	struct kvm_cpuid_entry2 *cpuid_entries;
- 	int nent = 0, r = -E2BIG, i;
- 
--	static const struct kvm_cpuid_param param[] = {
--		{ .func = 0 },
--		{ .func = 0x80000000 },
--		{ .func = 0xC0000000, .qualifier = is_centaur_cpu },
--		{ .func = KVM_CPUID_SIGNATURE },
-+	static const u32 funcs[] = {
-+		0, 0x80000000, CENTAUR_CPUID_SIGNATURE, KVM_CPUID_SIGNATURE,
- 	};
- 
- 	if (cpuid->nent < 1)
-@@ -918,14 +911,9 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
- 		goto out;
- 
- 	r = 0;
--	for (i = 0; i < ARRAY_SIZE(param); i++) {
--		const struct kvm_cpuid_param *ent = &param[i];
--
--		if (ent->qualifier && !ent->qualifier(ent))
--			continue;
--
--		r = get_cpuid_func(cpuid_entries, ent->func, &nent,
--				   cpuid->nent, type);
-+	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
-+		r = get_cpuid_func(cpuid_entries, funcs[i], &nent, cpuid->nent,
-+				   type);
- 		if (r)
- 			goto out_free;
- 	}
+ 			do_host_cpuid(&entry[i], function, idx);
+-			if (entry[i].eax == 0 || !(supported & mask))
++			if (entry[i].eax == 0)
+ 				continue;
+ 			if (WARN_ON_ONCE(entry[i].ecx & 1))
+ 				continue;
 -- 
 2.24.1
 
