@@ -2,99 +2,97 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAD5C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CC2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619AB20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580536190;
-	bh=CG7WOtvzzyGloPtARiFMtaEJatWuWW9dB+HAs41pS48=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GnHfnQdnbHnjfMFNI5SBJ0bYcYsYCP93X78s+jWPU7Cxm3mTwbKvEJRdlMGwXEA8P
-	 lSN3ep8/dX1yEpFROE3W/IaZJQYaIgahoSOAHajz45GdpEfP81qqk4+Fn8ktTTe4pY
-	 Uk6tb4aowNTvVN4DpPW63ONeoZm1jTJYosCIcfHk=
+	by mail.kernel.org (Postfix) with ESMTP id 85F8120661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:53:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMfELv6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgBAFtt (ORCPT
+        id S1726480AbgBAFxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 00:49:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgBAFtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 00:49:49 -0500
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 225E420679;
-        Sat,  1 Feb 2020 05:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580536188;
-        bh=CG7WOtvzzyGloPtARiFMtaEJatWuWW9dB+HAs41pS48=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=p9Usk0+gm9NEW+/dTAIyo1KUr60gS2q+stHHvHeh5BWEfiKxVZ/kQixvmtBM2M9aW
-         4M8sGEKicKQwAbYYy9OuRYzBynkz9J72kitjnxW3TtX3Os+G0d1G2O8p7bKDiYc2p8
-         K8x492e3xpAleXH8WtgXd/WQDYERqDtQpZys4mlk=
-Received: by mail-lj1-f178.google.com with SMTP id d10so9291917ljl.9;
-        Fri, 31 Jan 2020 21:49:48 -0800 (PST)
-X-Gm-Message-State: APjAAAUchSStkE1LDgA3Zmly/VYZjgUzusUgc5zclVV2kWUzvd8jyHTT
-        0uP7GZUmM0mxg18U28ZkjdGesn4B8KWFQ5x0JDU=
-X-Google-Smtp-Source: APXvYqyFBrAH+CbcmP5/8pUuAJaTgeOzUsajKQ0ozV92KB6+GpKRmlYfVIPxBqQWs+eDcdzH1d2OOELLh1/+sZmNgbQ=
-X-Received: by 2002:a2e:3514:: with SMTP id z20mr7770785ljz.261.1580536186311;
- Fri, 31 Jan 2020 21:49:46 -0800 (PST)
+        Sat, 1 Feb 2020 00:53:43 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35678 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgBAFxn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 00:53:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id b18so9614212oie.2;
+        Fri, 31 Jan 2020 21:53:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nn6Z1K4Ig+lUl4xv40lMeq9rx7gNTQqV1fkouNx1AkE=;
+        b=qMfELv6gCVDzyWoHrI8dxesUDXE3M1cw7AJY/HgtTJBDZi6hj8nL+jyu8fNQ7ic8H0
+         QCzkCGzeYtjWkO52gQOjFg2trtO7759pyuei63RbVGekUibOimrDGpULjZhUg4Z9qxrl
+         /Xno4xQb5ARDonX9l9GFqB2cqd6Y4VD2xRLytPuwlvP8/qJsIvZJCZDsqGViAgNzOpIt
+         orUKRghnQw3ykbGoHXbNg2NefxIUp6p3+oVGzhn57X30H83e0VHsaJy5+aCROgTHBO45
+         L+EQQ9UNdaLzStCxTM0bgDq5CBZ6BAztuiUcS60FmtjeF6JF/HeyKuYBD589Th9foDja
+         WKoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nn6Z1K4Ig+lUl4xv40lMeq9rx7gNTQqV1fkouNx1AkE=;
+        b=P6YzzvdG9pm7G54CaJHZOOcP5+M6mCQ50Ksr/ACOtORfjSo6TX0fEWvFLdPaDJNq8Y
+         VsUZfhpe918N+nvNC8CgAxuBxUpxNgvGRTBXn258aloknc/1W/vG9ewrmMycpuUq5a6V
+         mS3BuolSOqfGO5EpHw/0IiyZ2E3H0t6ngd0F7DA8VXdUJEHP0KII+tsFGPqYs7iGtT3H
+         YSkj/Fuq4B+ToE3wVix3HiRXw5IhaAkXRLcKVBY5tyZ5hpMn5xaINaboB2fw0eby7oYp
+         jDPMM16Uvipu1E7RHb6CAKtdWuCshKnhSBJCN3NqX7Dd+XXEk0ocIMJ63dYxY03TjOzH
+         TbhQ==
+X-Gm-Message-State: APjAAAUmaWiDS8vveUjR+5M++nbtQlISOiTR3WOhEZWBW5GtN73Da8Sm
+        zM7GRdGzPigBB4IQHupqFQ3T9gBMAbPI/aziA7R1RwNg
+X-Google-Smtp-Source: APXvYqwE113qFxAd9XWoPRNc6FEbRgUVY3TmHCvX+OR1Antl3haNngqyvW5T6CXiyN3NEGfJfubK/rC+j6aAjMntRwE=
+X-Received: by 2002:aca:8d5:: with SMTP id 204mr8370686oii.141.1580536422319;
+ Fri, 31 Jan 2020 21:53:42 -0800 (PST)
 MIME-Version: 1.0
-References: <c554f9e8-fdc7-ada3-8b6e-70a3f3aef89f@infradead.org>
-In-Reply-To: <c554f9e8-fdc7-ada3-8b6e-70a3f3aef89f@infradead.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 1 Feb 2020 13:49:34 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTM4-xJhY6Ter0n_b6Zu=yqA_N-FnHA2qL5vp5W+ZZqTw@mail.gmail.com>
-Message-ID: <CAJF2gTTM4-xJhY6Ter0n_b6Zu=yqA_N-FnHA2qL5vp5W+ZZqTw@mail.gmail.com>
-Subject: Re: [PATCH] arch/csky: fix some Kconfig typos
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-csky@vger.kernel.org
+References: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Sat, 1 Feb 2020 13:53:31 +0800
+Message-ID: <CANRm+CyyuWUOAj81Sg8UH_jMybZWmvZxWPWZ_twMvFnPxKD3hQ@mail.gmail.com>
+Subject: Re: [FYI PATCH 0/5] Missing TLB flushes
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked, thx
+On Fri, 31 Jan 2020 at 02:02, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>
+> The KVM hypervisor may provide a guest with ability to defer remote TLB
+> flush when the remote VCPU is not running. When this feature is used,
+> the TLB flush will happen only when the remote VPCU is scheduled to run
+> again. This will avoid unnecessary (and expensive) IPIs.
+>
+> Under certain circumstances, when a guest initiates such deferred action,
+> the hypervisor may miss the request. It is also possible that the guest
+> may mistakenly assume that it has already marked remote VCPU as needing
+> a flush when in fact that request had already been processed by the
+> hypervisor. In both cases this will result in an invalid translation
+> being present in a vCPU, potentially allowing accesses to memory locations
+> in that guest's address space that should not be accessible.
+>
+> Note that only intra-guest memory is vulnerable.
+>
+> The attached patches address both of these problems:
+> 1. The first patch makes sure the hypervisor doesn't accidentally clear
+> guest's remote flush request
+> 2. The rest of the patches prevent the race between hypervisor
+> acknowledging a remote flush request and guest issuing a new one.
 
-On Sat, Feb 1, 2020 at 9:52 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix wording in help text for the CPU_HAS_LDSTEX symbol.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: linux-csky@vger.kernel.org
-> ---
->  arch/csky/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- linux-next-20200131.orig/arch/csky/Kconfig
-> +++ linux-next-20200131/arch/csky/Kconfig
-> @@ -77,7 +77,7 @@ config CPU_HAS_TLBI
->  config CPU_HAS_LDSTEX
->         bool
->         help
-> -         For SMP, CPU needs "ldex&stex" instrcutions to atomic operations.
-> +         For SMP, CPU needs "ldex&stex" instructions for atomic operations.
->
->  config CPU_NEED_TLBSYNC
->         bool
->
+Looks good, thanks for the patchset.
 
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+    Wanpeng
