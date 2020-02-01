@@ -2,90 +2,91 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCBAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC9C33CB2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A7D20674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7E020674
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PnfObm0N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XAOPtE7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgBABpY (ORCPT
+        id S1726772AbgBABtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:45:24 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:43910 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726488AbgBABpY (ORCPT
+        Fri, 31 Jan 2020 20:49:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52214 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgBABtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:45:24 -0500
-X-UUID: 32a3becb29644f579ca0a4608131875e-20200201
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bKHd1tAggSIYDv7JYfnCgulY1L3xWENBKRTIMPNCxIY=;
-        b=PnfObm0NMA1GnJ3uWv5kD2RIpWjGCLw0RhHHAS7EUdh9M/+drlk5yzWbJ8nbi8SV4vlXxyQGqPjfvvMhInESy6rR72J75w7xsS9saOcdczd+4uByMN5/kXAOcH0eiofYmJyWg2HymZgit6t14xYKWMNte4H/Vj5nZ9lY65D/g6w=;
-X-UUID: 32a3becb29644f579ca0a4608131875e-20200201
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1724066920; Sat, 01 Feb 2020 09:45:18 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 1 Feb 2020 09:44:04 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 1 Feb 2020 09:44:11 +0800
-Message-ID: <1580521516.15794.10.camel@mtksdccf07>
-Subject: RE: [PATCH RESEND v3 4/4] scsi: ufs-mediatek: gate ref-clk during
- Auto-Hibern8
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-Date:   Sat, 1 Feb 2020 09:45:16 +0800
-In-Reply-To: <MN2PR04MB699108FC14777CC364522069FC070@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <20200129105251.12466-1-stanley.chu@mediatek.com>
-         <20200129105251.12466-5-stanley.chu@mediatek.com>
-         <MN2PR04MB699108FC14777CC364522069FC070@MN2PR04MB6991.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 31 Jan 2020 20:49:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=17fdwoTs7zyvxcbFHKjA+/Q+sSClqbZYiDlG6cIBJHs=; b=XAOPtE7vYPkWgdWpCpqHBo0XE
+        za8ECBsVRuW44tdDssxs1Qk5BiQwae/f5hL0hsPDOjxgZVmUr+CwLtzVmDfKEVFgixapQFjFhkwpE
+        /7QHzqBJYKi/VxdY92pCgeGXa8o0yIc/adpg4tnK+OTIP5SnAOwFMbbA+izWxAU0lbemcUrK0VekM
+        Xx3WxOgYyjHBHChrTstV40hQnStwxCPlUIhjQtzXI/k7LLbaUlCD7p8+APidm95qCJKPqLaAdf5jx
+        iJzWZOUovpvcSw50jjwCyJHzyfFgoXNGKD8eZNdWnPvInD12gpVLb3r7iSWoYWXFmJU/2vWCxmw3f
+        QcBZ56YOg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixhuh-0004Go-8P; Sat, 01 Feb 2020 01:49:35 +0000
+To:     Vineet Gupta <vgupta@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] arch/arc: fix some Kconfig typos
+Message-ID: <cbd02a9e-5529-1054-957f-766072496009@infradead.org>
+Date:   Fri, 31 Jan 2020 17:49:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 1F82E7DC4A3A53250291462851AFB1ACF9319A87D203BA06A9D76D33D8EF52862000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gRnJpLCAyMDIwLTAxLTMxIGF0IDE4OjQ4ICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gPiANCj4gPiArc3RhdGljIHUzMiB1ZnNfbXRrX2xpbmtfZ2V0X3N0YXRlKHN0
-cnVjdCB1ZnNfaGJhICpoYmEpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiB2YWw7DQo+ID4gKw0K
-PiA+ICsgICAgICAgdWZzaGNkX3dyaXRlbChoYmEsIDB4MjAsIFJFR19VRlNfREVCVUdfU0VMKTsN
-Cj4gPiArICAgICAgIHZhbCA9IHVmc2hjZF9yZWFkbChoYmEsIFJFR19VRlNfUFJPQkUpOw0KPiA+
-ICsgICAgICAgdmFsID0gdmFsID4+IDI4Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiB2YWw7
-DQo+ID4gK30NCj4gQSBsaXR0bGUgYml0IHN0cmFuZ2UgdGhhdCB5b3UgYXJlIHJlbHlpbmcgb24g
-ZGVidWcgcmVnaXN0ZXJzIHRvIHNldHVwIHlvdXIgcmVmLWNsb2NrLg0KPiBJcyB0aGlzIHRoaXMg
-ZGVidWcgaW5mbyBpcyBhbHdheXMgYXZhaWxhYmxlPw0KPiANCg0KWWVzLCB0aGlzIHJlZ2lzdGVy
-IGlzIG9ubHkgZm9yIHRoaXMgcHVycG9zZSBub3cgKHF1ZXJ5IGxpbmsgc3RhdGUpIGFuZA0KYWx3
-YXlzIGV4aXN0ZWQgaW4gTWVkaWFUZWsgVUZTIGhvc3QuDQoNClRoYW5rcywNClN0YW5sZXkNCg==
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix language typos in arch/arc/Kconfig.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org
+---
+ arch/arc/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- linux-next-20200131.orig/arch/arc/Kconfig
++++ linux-next-20200131/arch/arc/Kconfig
+@@ -154,7 +154,7 @@ config ARC_CPU_HS
+ 	help
+ 	  Support for ARC HS38x Cores based on ARCv2 ISA
+ 	  The notable features are:
+-	    - SMP configurations of upto 4 core with coherency
++	    - SMP configurations of up to 4 cores with coherency
+ 	    - Optional L2 Cache and IO-Coherency
+ 	    - Revised Interrupt Architecture (multiple priorites, reg banks,
+ 	        auto stack switch, auto regfile save/restore)
+@@ -192,7 +192,7 @@ config ARC_SMP_HALT_ON_RESET
+ 	help
+ 	  In SMP configuration cores can be configured as Halt-on-reset
+ 	  or they could all start at same time. For Halt-on-reset, non
+-	  masters are parked until Master kicks them so they can start of
++	  masters are parked until Master kicks them so they can start off
+ 	  at designated entry point. For other case, all jump to common
+ 	  entry point and spin wait for Master's signal.
+ 
 
