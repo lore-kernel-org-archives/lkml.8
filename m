@@ -4,28 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A452C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BCCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A5520661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4BE20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgBAS5B (ORCPT
+        id S1727735AbgBAS5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:57:01 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11279 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:57:07 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57278 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgBASw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726971AbgBASw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:52:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075474"
+   d="scan'208";a="248075461"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/61] KVM: x86: Refactor CPUID 0x4 and 0x8000001d handling
-Date:   Sat,  1 Feb 2020 10:51:32 -0800
-Message-Id: <20200201185218.24473-16-sean.j.christopherson@intel.com>
+Subject: [PATCH 11/61] KVM: x86: Drop the explicit @index from do_cpuid_7_mask()
+Date:   Sat,  1 Feb 2020 10:51:28 -0800
+Message-Id: <20200201185218.24473-12-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,47 +50,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactoring the sub-leaf handling for CPUID 0x4/0x8000001d to eliminate
-a one-off variable and its associated brackets.
+Drop the index param from do_cpuid_7_mask() and instead switch on the
+entry's index, which is guaranteed to be set by do_host_cpuid().
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ arch/x86/kvm/cpuid.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 5044a595799f..d75d539da759 100644
+index b626893a11d5..fd04f17d1836 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -545,20 +545,16 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		break;
- 	/* functions 4 and 0x8000001d have additional index. */
- 	case 4:
--	case 0x8000001d: {
--		int cache_type;
--
--		/* read more entries until cache_type is zero */
--		for (i = 1; ; ++i) {
--			cache_type = entry[i - 1].eax & 0x1f;
--			if (!cache_type)
--				break;
--
-+	case 0x8000001d:
-+		/*
-+		 * Read entries until the cache type in the previous entry is
-+		 * zero, i.e. indicates an invalid entry.
-+		 */
-+		for (i = 1; entry[i - 1].eax & 0x1f; ++i) {
- 			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
- 				goto out;
+@@ -346,7 +346,7 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
+ 	return 0;
+ }
+ 
+-static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
++static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ {
+ 	unsigned f_invpcid = kvm_x86_ops->invpcid_supported() ? F(INVPCID) : 0;
+ 	unsigned f_mpx = kvm_mpx_supported() ? F(MPX) : 0;
+@@ -380,7 +380,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 	const u32 kvm_cpuid_7_1_eax_x86_features =
+ 		F(AVX512_BF16);
+ 
+-	switch (index) {
++	switch (entry->index) {
+ 	case 0:
+ 		entry->eax = min(entry->eax, 1u);
+ 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+@@ -573,7 +573,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 	case 7: {
+ 		int i;
+ 
+-		do_cpuid_7_mask(entry, 0);
++		do_cpuid_7_mask(entry);
+ 
+ 		for (i = 1; i <= entry->eax; i++) {
+ 			if (*nent >= maxnent)
+@@ -582,7 +582,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 			do_host_cpuid(&entry[i], function, i);
+ 			++*nent;
+ 
+-			do_cpuid_7_mask(&entry[i], i);
++			do_cpuid_7_mask(&entry[i]);
  		}
  		break;
--	}
- 	case 6: /* Thermal management */
- 		entry->eax = 0x4; /* allow ARAT */
- 		entry->ebx = 0;
+ 	}
 -- 
 2.24.1
 
