@@ -2,210 +2,84 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C128AC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69367C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889DD2063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKwdvxvj"
+	by mail.kernel.org (Postfix) with ESMTP id 3F71520707
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBAAcS (ORCPT
+        id S1726761AbgBAAcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 19:32:18 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36004 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgBAAcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 19:32:18 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so10708116wru.3;
-        Fri, 31 Jan 2020 16:32:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:references:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=nClKbpvo7N4EeBPrBoCoNOC/kbhnzVjccKuhK+B/IrI=;
-        b=RKwdvxvjRXQ5CjhJCYK5xLUj/bwrgNQfxEZqEqDJyH3giH3cgGIUN0E37UGWr/0i0m
-         HgTefiQflJG1Uc/AKWYnq8H8sZtkDgpU3JychNxfhBjy6ijnQacn9ifsNY1w+24iYPy1
-         4uqEJ8XpqDOo5zimqvkAPIwucuDoD1x69bEKLs2qeoDpA4BfnG6wEDDawrJKbdTs1cyB
-         RCMoQObkOsCteAvueulUFvqbC8D8Ae1Z7WpEvMIwZnENM8vhsbFeuNkG+XilMaVDS9FJ
-         PiXzli6TD9p3FtPj8QWfWkoH+ltTP1Rqm98LgTumsSKZigc9DmHc/f3+rXwHA7aeSkXT
-         75hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=nClKbpvo7N4EeBPrBoCoNOC/kbhnzVjccKuhK+B/IrI=;
-        b=hho/+mi1aQHfAoGfdwr84vWHSmOinrjJ/1Uij+XoXrBt9nmdgs26qoZiYiNAzZSLp7
-         oulXtaPH3bMZCfArpBWAivH3xxi30vguDoFCafmv+J0wrGVfbki5tFZdqwEsPq63uK2m
-         Rnh1O7W/Qi62VhQWdXCIuRSMpSReqRAVpThyfYb0BimuNbx1wckGWcb2Jwo2h2FYLAkj
-         Lvz6pSl8ZcCtJYDlHrW2qbpP8D5QoPALXk5CAUVuYosTR4WUNVFMPHEG53tEF+2ISrRA
-         6Kv4Af0rf2BnJcIgraprbBI5Hbs6YQVWwJuYrPHXpRNWDjlTmQBImH+rYOyNQ/UAhrCJ
-         RSNQ==
-X-Gm-Message-State: APjAAAWaG1PS3DI4xm+tcga39C6OfJyMs7ci76132P59KlSO+5tnZqv9
-        9xRIWMI3r+vp8v8G8/TFRY3VKRUw
-X-Google-Smtp-Source: APXvYqwj0P/RAPdmFBWR/8nNQTpNKyHpze1P7juUF25j6ko/WhdkruYq2O1lnDmG/ceVko+D2Npvcg==
-X-Received: by 2002:adf:b310:: with SMTP id j16mr961931wrd.361.1580517135378;
-        Fri, 31 Jan 2020 16:32:15 -0800 (PST)
-Received: from [192.168.43.154] ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id v5sm14057864wrv.86.2020.01.31.16.32.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 16:32:14 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1580508735.git.asml.silence@gmail.com>
- <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
- <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH v3 0/6] add persistent submission state
-Message-ID: <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
-Date:   Sat, 1 Feb 2020 03:31:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 31 Jan 2020 19:32:31 -0500
+Received: from fieldses.org ([173.255.197.46]:57216 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgBAAcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 19:32:31 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A22E12012; Fri, 31 Jan 2020 19:32:30 -0500 (EST)
+Date:   Fri, 31 Jan 2020 19:32:30 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200201003230.GA32350@fieldses.org>
+References: <20200131141309.367c9d8b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9qbBbTO9vuKvGdNLtka83mwq4aSsQPGUJ"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131141309.367c9d8b@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9qbBbTO9vuKvGdNLtka83mwq4aSsQPGUJ
-Content-Type: multipart/mixed; boundary="cnCZt9dfTR0Vc4nYrEbEItomcGaJCGDOY";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
-Subject: Re: [PATCH v3 0/6] add persistent submission state
-References: <cover.1580508735.git.asml.silence@gmail.com>
- <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
- <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
-In-Reply-To: <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
+On Fri, Jan 31, 2020 at 02:13:09PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> net/sunrpc/auth_gss/svcauth_gss.c: In function 'gss_proxy_save_rsc':
+> net/sunrpc/auth_gss/svcauth_gss.c:1251:19: error: storage size of 'boot' isn't known
+>  1251 |   struct timespec boot;
+>       |                   ^~~~
+> net/sunrpc/auth_gss/svcauth_gss.c:1273:3: error: implicit declaration of function 'getboottime'; did you mean 'getboottime64'? [-Werror=implicit-function-declaration]
+>  1273 |   getboottime(&boot);
+>       |   ^~~~~~~~~~~
+>       |   getboottime64
+> net/sunrpc/auth_gss/svcauth_gss.c:1251:19: warning: unused variable 'boot' [-Wunused-variable]
+>  1251 |   struct timespec boot;
+>       |                   ^~~~
+> 
+> Caused by commit
+> 
+>   a415f20a18c9 ("sunrpc: expiry_time should be seconds not timeval")
+> 
+> from the nfsd tree interacting with commits
+> 
+>   de371b6c7b73 ("y2038: remove unused time32 interfaces")
+>   aa7ff200a719 ("y2038: hide timeval/timespec/itimerval/itimerspec types")
+> 
+> from the akpm-current tree.
+> 
+> I have reverted the nfsd commit for today.  A better solution is requested.
 
---cnCZt9dfTR0Vc4nYrEbEItomcGaJCGDOY
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Unfortunately that expiry time seems to be a signed 32-bit integer in
+both the kernel<->gss-proxy and the gss-proxy<->krb5 interfaces.
 
-On 01/02/2020 01:32, Pavel Begunkov wrote:
-> On 01/02/2020 01:22, Jens Axboe wrote:
->> On 1/31/20 3:15 PM, Pavel Begunkov wrote:
->>> Apart from unrelated first patch, this persues two goals:
->>>
->>> 1. start preparing io_uring to move resources handling into
->>> opcode specific functions
->>>
->>> 2. make the first step towards long-standing optimisation ideas
->>>
->>> Basically, it makes struct io_submit_state embedded into ctx, so
->>> easily accessible and persistent, and then plays a bit around that.
->>
->> Do you have any perf/latency numbers for this? Just curious if we
->> see any improvements on that front, cross submit persistence of
->> alloc caches should be a nice sync win, for example, or even
->> for peak iops by not having to replenish the pool for each batch.
->>
->> I can try and run some here too.
->>
->=20
-> I tested the first version, but my drive is too slow, so it was only no=
-ps and
-> hence no offloading. Honestly, there waren't statistically significant =
-results.
-> I'll rerun anyway.
->=20
-> I have a plan to reuse it for a tricky optimisation, but thinking twice=
-, I can
-> just stash it until everything is done. That's not the first thing in T=
-ODO and
-> will take a while.
->=20
+I guess we'll have to come to an agreement with the krb5 developers.
 
-I've got numbers, but there is nothing really interesting. Throughput is
-insignificantly better with the patches, but I'd need much more experimen=
-ts
-across reboots to confirm that.
+Simplest might be to agree that the thing's unsigned.  The expiry
+shouldn't ever need to be decades in the future, so unsigned mod 2^32
+arithmetic should work forever.
 
-Let's postpone the patchset for later
-
---=20
-Pavel Begunkov
-
-
---cnCZt9dfTR0Vc4nYrEbEItomcGaJCGDOY--
-
---9qbBbTO9vuKvGdNLtka83mwq4aSsQPGUJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl40xuoACgkQWt5b1Glr
-+6WJzRAAp6ZiD6oT1kfCj3dtT1jZOT1dYVmuEnzpXGqDYbI2VsgTmCTMUbIALQWq
-f03If6bPaCTIrMN+KMKN1XYwwI2RtCc3ddFLFyNxf1M7A3PEcnJ3lDXgJPdmficL
-UiIugHz5AYTwArin0fCKMtRVB5i9D59G1O1q6t4FRjW/M+eS/Ss+yxkkgVWdFgFV
-yAzBHuALw87pVdTdx70vr7nFuKTivY4aWLLrZcQaIfw5uE+NCKbIUFdgjtHhqxHw
-Jqa67u7Clqu1zeJYSOOefB7v+AlPFS801GOUyxoI9f6qCIG6qlcfEvWYrtuG76Sf
-HZEMh/Hw6Lo2UlPWAMMbHG7ukCMLE/YEasWufNi5MjbPAAh/xytkKU+4+6bIg3IC
-23ZjR3yov2vlxQ9h1mCc7MOiDCtUQz5YTL3TMu8+WTBhH9tPS+fjyXCTy0UFnFJS
-9WHv99AuR9zQwN/5RNrNxi2HWRdmzY3dJEehdo6H6JaiOHycjcDTn9Fwhha51MZf
-yX3Pf9ejQccwa1810jAPkbPmPerjiSprVpmpGWD4W1CO24j6Lf17dHjq/y5F25mM
-QBJ5lbQXd8ferBomfK0LI0U3szqvhwr/qZZjMnzheaySNCKjq3LkyUVEShcXBGDP
-fBqWZuK6Bjx1aLNiUIXEWXednYDSJc6EtEhwwUGt8R3k78cM7Mo=
-=iian
------END PGP SIGNATURE-----
-
---9qbBbTO9vuKvGdNLtka83mwq4aSsQPGUJ--
+--b.
