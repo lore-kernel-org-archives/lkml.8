@@ -2,273 +2,203 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0110C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31412C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F579206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZgMdPIK"
+	by mail.kernel.org (Postfix) with ESMTP id C742220679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgBAGZd (ORCPT
+        id S1726354AbgBAG2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 01:25:33 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40878 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBAGZd (ORCPT
+        Sat, 1 Feb 2020 01:28:05 -0500
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:18638 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgBAG2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 01:25:33 -0500
-Received: by mail-pj1-f68.google.com with SMTP id 12so3995261pjb.5;
-        Fri, 31 Jan 2020 22:25:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SwW5brYUYv8gFhSywa79JltgG0iP7wrzsLavgEtl/jc=;
-        b=gZgMdPIKvXzU+Llx5HKvmluy3JF3/ShJyO6RLPPIx2Gs8JJIEpFTjreVX+lsxj2Sf0
-         kGFd70SVrLlm0a0Qq6WEoh3yQ+VO2s4PFKNShrfYkcy9J0qdQ9nmRps89kL8u0kLER36
-         QoOr7YlZXyMBSpLHcNKjeotfTJuYD2q36cbenQT3pc+v7Qp3/zLwPyrnfTl6XsH8wyQL
-         +fAwDXh/TLFIS+ykSvu01zmtBUn8mLfCewx3VKN+onpUBJCkZafDQ6YvZISmBiViRsDN
-         ghiplu0dnUXt3jWcgsQMJEhBiyDCj//YF7LzirpOe+gtUtQk3qBRohdabi64wpI/fvFQ
-         DX4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SwW5brYUYv8gFhSywa79JltgG0iP7wrzsLavgEtl/jc=;
-        b=lYQtR92vIyN1ss2E49sHSwir696seg495TN7f/W7o3NxLjWuMyh1kclxElnsf6wwHs
-         0OFkSAnCn17GJ9eKpFn4cqCzoW4g69xicmN9MfD2yef9vpRfhAQjMvciYUwBOrHVkJ8v
-         ESfG6nQ3scAmB9uqh2/qj8OWQEBk0Iea9XuKZWeHYXZ0sZIzECEwtbjWxk+oXfwMSYUW
-         2b5BAkO50PmRi+OTpuPXS+RN5/ABRfoKcHVx3ZzY1BKPXj9UcZHtPIzcq9mEYbskoaaE
-         4cW4asf/hfZ6d9N1DPOPoKScDP6Z8FTF6DhnZpV35lrJIUbXwQMdUlMyD5DHJ3oMcZOb
-         syZw==
-X-Gm-Message-State: APjAAAVrAo/TWw38w8GB8wiXlnK4QpK4jpMZ/k1SeoOW/8voQCX/tzLA
-        1ppCnGBU+n8AvcVfpNfNbD4=
-X-Google-Smtp-Source: APXvYqzO2sbFotgP55sn1T4NlLmwcxwv0fr60FrLk465LmMOZYsXhSoOiKysqyiWaa3EFAn/DDswrQ==
-X-Received: by 2002:a17:902:407:: with SMTP id 7mr13304534ple.226.1580538330840;
-        Fri, 31 Jan 2020 22:25:30 -0800 (PST)
-Received: from localhost.localdomain ([149.248.18.167])
-        by smtp.gmail.com with ESMTPSA id e9sm12057094pjt.16.2020.01.31.22.25.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 22:25:30 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH] Documentation: Fix build error for cpu-idle-cooling.rst and client.rst
-Date:   Sat,  1 Feb 2020 14:25:21 +0800
-Message-Id: <20200201062521.7296-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 1 Feb 2020 01:28:04 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 488kfn3DgHzQk03;
+        Sat,  1 Feb 2020 07:28:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id 23aY_owvYlBV; Sat,  1 Feb 2020 07:27:56 +0100 (CET)
+Date:   Sat, 1 Feb 2020 17:27:44 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Ross Zwisler <zwisler@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4] Add a "nosymfollow" mount option.
+Message-ID: <20200201062744.fehlhq3jtetfcxuw@yavin.dot.cyphar.com>
+References: <20200131002750.257358-1-zwisler@google.com>
+ <20200131004558.GA6699@bombadil.infradead.org>
+ <20200131015134.5ovxakcavk2x4diz@yavin.dot.cyphar.com>
+ <20200131212021.GA108613@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wimogbxgdozmpthq"
+Content-Disposition: inline
+In-Reply-To: <20200131212021.GA108613@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
 
-Sphinx parallel build error:
-docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
+--wimogbxgdozmpthq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sphinx parallel build error:
-docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+On 2020-01-31, Ross Zwisler <zwisler@google.com> wrote:
+> On Fri, Jan 31, 2020 at 12:51:34PM +1100, Aleksa Sarai wrote:
+> > On 2020-01-30, Matthew Wilcox <willy@infradead.org> wrote:
+> > > On Thu, Jan 30, 2020 at 05:27:50PM -0700, Ross Zwisler wrote:
+> > > > For mounts that have the new "nosymfollow" option, don't follow
+> > > > symlinks when resolving paths. The new option is similar in spirit =
+to
+> > > > the existing "nodev", "noexec", and "nosuid" options. Various BSD
+> > > > variants have been supporting the "nosymfollow" mount option for a
+> > > > long time with equivalent implementations.
+> > > >=20
+> > > > Note that symlinks may still be created on file systems mounted with
+> > > > the "nosymfollow" option present. readlink() remains functional, so
+> > > > user space code that is aware of symlinks can still choose to follow
+> > > > them explicitly.
+> > > >=20
+> > > > Setting the "nosymfollow" mount option helps prevent privileged
+> > > > writers from modifying files unintentionally in case there is an
+> > > > unexpected link along the accessed path. The "nosymfollow" option is
+> > > > thus useful as a defensive measure for systems that need to deal wi=
+th
+> > > > untrusted file systems in privileged contexts.
+> > >=20
+> > > The openat2 series was just merged yesterday which includes a
+> > > LOOKUP_NO_SYMLINKS option.  Is this enough for your needs, or do you
+> > > need the mount option?
+> >=20
+> > I have discussed a theoretical "noxdev" mount option (which is
+> > effectively LOOKUP_NO_XDEV) with Howells (added to Cc) in the past, and
+> > the main argument for having a mount option is that you can apply the
+> > protection to older programs without having to rewrite them to use
+> > openat2(2).
+>=20
+> Ah, yep, this is exactly what we're trying to achieve with the "nosymfoll=
+ow"
+> mount option: protect existing programs from malicious filesystems without
+> having to modify those programs.
+>=20
+> The types of attacks we are concerned about are pretty well summarized in=
+ this
+> LWN article from over a decade ago:
+>=20
+> https://lwn.net/Articles/250468/
+>=20
+> And searching around (I just Googled "symlink exploit") it's pretty easy =
+to
+> find related security blogs and CVEs.
+>=20
+> The noxdev mount option seems interesting, bug I don't fully understand y=
+et
+> how it would work.  With the openat2() syscall it's clear which things ne=
+ed to
+> be part of the same mount: the dfd (or CWD in the case of AT_FDCWD) and t=
+he
+> filename you're opening.  How would this work for the noxdev mount option=
+ and
+> the legacy open(2) syscall, for example?  Would you just always compare
+> 'pathname' with the current working directory?  Examine 'pathname' and ma=
+ke
+> sure that if any filesystems in that path have 'noxdev' set, you never
+> traverse out of them?  Something else?
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- Documentation/driver-api/dmaengine/client.rst | 14 ++++++---
- .../driver-api/thermal/cpu-idle-cooling.rst   | 29 +++++++++++--------
- Documentation/driver-api/thermal/index.rst    |  1 +
- 3 files changed, 28 insertions(+), 16 deletions(-)
+The idea is that "noxdev" would be "sticky" (or if you prefer, like a
+glue trap). As soon as you walk into a mountpoint that has "noxdev", you
+cannot cross any subsequent mountpoint boundaries (a-la LOOKUP_NO_XDEV).
 
-diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-index a9a7a3c84c63..2104830a99ae 100644
---- a/Documentation/driver-api/dmaengine/client.rst
-+++ b/Documentation/driver-api/dmaengine/client.rst
-@@ -151,8 +151,8 @@ The details of these operations are:
-      Note that callbacks will always be invoked from the DMA
-      engines tasklet, never from interrupt context.
- 
--  Optional: per descriptor metadata
--  ---------------------------------
-+  **Optional: per descriptor metadata**
-+
-   DMAengine provides two ways for metadata support.
- 
-   DESC_METADATA_CLIENT
-@@ -199,12 +199,15 @@ The details of these operations are:
-   DESC_METADATA_CLIENT
- 
-     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-          construct the metadata in the client's buffer
-       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-          descriptor
-       3. submit the transfer
-+
-     - DMA_DEV_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-          descriptor
-@@ -215,6 +218,7 @@ The details of these operations are:
-   DESC_METADATA_ENGINE
- 
-     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
-          engine's metadata area
-@@ -222,7 +226,9 @@ The details of these operations are:
-       4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
-          amount of data the client has placed into the metadata buffer
-       5. submit the transfer
-+
-     - DMA_DEV_TO_MEM:
-+
-       1. prepare the descriptor (dmaengine_prep_*)
-       2. submit the transfer
-       3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get
-@@ -278,8 +284,8 @@ The details of these operations are:
- 
-       void dma_async_issue_pending(struct dma_chan *chan);
- 
--Further APIs:
---------------
-+Further APIs
-+------------
- 
- 1. Terminate APIs
- 
-diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-index e4f0859486c7..d8b522d37eb9 100644
---- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -1,6 +1,9 @@
-+================
-+CPU Idle Cooling
-+================
- 
--Situation:
------------
-+Situation
-+---------
- 
- Under certain circumstances a SoC can reach a critical temperature
- limit and is unable to stabilize the temperature around a temperature
-@@ -24,8 +27,8 @@ with a power less than the requested power budget and the next OPP
- exceeds the power budget. An intermediate OPP could have been used if
- it were present.
- 
--Solutions:
------------
-+Solutions
-+---------
- 
- If we can remove the static and the dynamic leakage for a specific
- duration in a controlled period, the SoC temperature will
-@@ -45,12 +48,12 @@ idle state target residency, we lead to dropping the static and the
- dynamic leakage for this period (modulo the energy needed to enter
- this state). So the sustainable power with idle cycles has a linear
- relation with the OPP’s sustainable power and can be computed with a
--coefficient similar to:
-+coefficient similar to::
- 
- 	    Power(IdleCycle) = Coef x Power(OPP)
- 
--Idle Injection:
-----------------
-+Idle Injection
-+--------------
- 
- The base concept of the idle injection is to force the CPU to go to an
- idle state for a specified time each control cycle, it provides
-@@ -64,6 +67,7 @@ latencies as the CPUs will have to wakeup from a deep sleep state.
- We use a fixed duration of idle injection that gives an acceptable
- performance penalty and a fixed latency. Mitigation can be increased
- or decreased by modulating the duty cycle of the idle injection.
-+::
- 
-      ^
-      |
-@@ -90,6 +94,7 @@ computed.
- 
- The governor will change the cooling device state thus the duty cycle
- and this variation will modulate the cooling effect.
-+::
- 
-      ^
-      |
-@@ -132,7 +137,7 @@ Power considerations
- --------------------
- 
- When we reach the thermal trip point, we have to sustain a specified
--power for a specific temperature but at this time we consume:
-+power for a specific temperature but at this time we consume::
- 
-  Power = Capacitance x Voltage^2 x Frequency x Utilisation
- 
-@@ -141,7 +146,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
- fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
- because we don’t want to change the OPP. We can group the
- ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
--‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
-+‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
- 
-  Pdyn = Cdyn x Voltage^2 x Frequency
- 
-@@ -150,7 +155,7 @@ in order to target the sustainable power defined in the device
- tree. So with the idle injection mechanism, we want an average power
- (Ptarget) resulting in an amount of time running at full power on a
- specific OPP and idle another amount of time. That could be put in a
--equation:
-+equation::
- 
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-@@ -160,7 +165,7 @@ equation:
- 
- At this point if we know the running period for the CPU, that gives us
- the idle injection we need. Alternatively if we have the idle
--injection duration, we can compute the running duration with:
-+injection duration, we can compute the running duration with::
- 
-  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
- 
-@@ -183,7 +188,7 @@ However, in this demonstration we ignore three aspects:
-    target residency, otherwise we end up consuming more energy and
-    potentially invert the mitigation effect
- 
--So the final equation is:
-+So the final equation is::
- 
-  Trunning = (Tidle - Twakeup ) x
- 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
-diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
-index 5ba61d19c6ae..4cb0b9b6bfb8 100644
---- a/Documentation/driver-api/thermal/index.rst
-+++ b/Documentation/driver-api/thermal/index.rst
-@@ -8,6 +8,7 @@ Thermal
-    :maxdepth: 1
- 
-    cpu-cooling-api
-+   cpu-idle-cooling
-    sysfs-api
-    power_allocator
- 
--- 
-2.24.0
+> If noxdev would involve a pathname traversal to make sure you don't ever =
+leave
+> mounts with noxdev set, I think this could potentially cover the use case=
+s I'm
+> worried about.  This would restrict symlink traversal to files within the=
+ same
+> filesystem, and would restrict traversal to both normal and bind mounts f=
+rom
+> within the restricted filesystem, correct?
 
+Yes, but it would have to block all mountpoint crossings including
+bind-mounts, because the obvious way of checking for mountpoint
+crossings (vfsmount comparisons) results in bind-mounts being seen as
+different mounts. This is how LOOKUP_NO_XDEV works. Would this be a
+show-stopped for ChromeOS?
+
+I personally find "noxdev" to be a semantically clearer statement of
+intention ("I don't want any lookup that reaches this mount-point to
+leave") than "nosymfollow" (though to be fair, this is closer in
+semantics to the other "no*" mount flags). But after looking at [1] and
+thinking about it for a bit, I don't really have a problem with either
+solution.
+
+The only problem is that "noxdev" would probably need to be settable on
+bind-mounts, and from [2] it looks like the new mount API struggles with
+configuring bind-mounts.
+
+> > However, the underlying argument for "noxdev" was that you could use it
+> > to constrain something like "tar -xf" inside a mountpoint (which could
+> > -- in principle -- be a bind-mount). I'm not so sure that "nosymfollow"
+> > has similar "obviously useful" applications (though I'd be happy to be
+> > proven wrong).
+>=20
+> In ChromeOS we use the LSM referenced in my patch to provide a blanket
+> enforcement that symlinks aren't traversed at all on user-supplied
+> filesystems, which are considered untrusted.  I'd essentially like to bui=
+ld on
+> the protections offered by LOOKUP_NO_SYMLINKS and extend that protection =
+to
+> all accesses to user-supplied filesystems.
+
+Yeah, after writing my mail I took a look at [1] and I agree that having
+a solution which helps older programs would be helpful. With openat2 and
+libpathrs[3] I'm hoping to lead the charge on a "rewrite userspace"
+effort, but waiting around for that to be complete probably isn't a
+workable solution. ;)
+
+[1]: https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-des=
+ign-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-=
+traversal
+[2]: https://lwn.net/Articles/809125/
+[3]: https://github.com/openSUSE/libpathrs
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--wimogbxgdozmpthq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXjUaXgAKCRCdlLljIbnQ
+EltFAQD2Ty11Fy+2kbUzE7CVrlD1V9YfmHIFj5vjMa4D/m1qBAEA08J+gbnEeZTW
++xn3HMUWaUU9MrU5+LeOhxf6NgpN0AE=
+=FE6j
+-----END PGP SIGNATURE-----
+
+--wimogbxgdozmpthq--
