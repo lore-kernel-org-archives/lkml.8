@@ -2,44 +2,48 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F95C35249
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 23:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E3BC35249
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 23:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2E220643
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 23:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C1F20643
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 23:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgBAXge (ORCPT
+        id S1726803AbgBAXiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 18:36:34 -0500
-Received: from smtprelay0158.hostedemail.com ([216.40.44.158]:46016 "EHLO
+        Sat, 1 Feb 2020 18:38:55 -0500
+Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:32808 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726487AbgBAXge (ORCPT
+        by vger.kernel.org with ESMTP id S1726487AbgBAXiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 18:36:34 -0500
+        Sat, 1 Feb 2020 18:38:55 -0500
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B4860837F24A;
-        Sat,  1 Feb 2020 23:36:32 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id A4059182CED28;
+        Sat,  1 Feb 2020 23:38:53 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: level58_1bec00691dd04
-X-Filterd-Recvd-Size: 2157
+X-HE-Tag: flock06_30532222dbd16
+X-Filterd-Recvd-Size: 2806
 Received: from XPS-9350.home (unknown [47.151.135.224])
         (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  1 Feb 2020 23:36:31 +0000 (UTC)
-Message-ID: <5ac73de311101754a25aaeac3df1aca23dbaf2af.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: rectify radix-tree testing entry in XARRAY
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  1 Feb 2020 23:38:51 +0000 (UTC)
+Message-ID: <b9b671508d478469c1ad43206dd29d770bfb7818.camel@perches.com>
+Subject: Re: [PATCH] drm/amdkfd: Make process queues logs less verbose
 From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 01 Feb 2020 15:35:23 -0800
-In-Reply-To: <alpine.DEB.2.21.2002012231410.5859@felia>
-References: <20200201180234.4960-1-lukas.bulwahn@gmail.com>
-         <alpine.DEB.2.21.2002012231410.5859@felia>
+To:     Julian Sax <jsbc@gmx.de>, amd-gfx@lists.freedesktop.org
+Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Sat, 01 Feb 2020 15:37:43 -0800
+In-Reply-To: <20200201231101.2127964-1-jsbc@gmx.de>
+References: <20200201231101.2127964-1-jsbc@gmx.de>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
@@ -49,39 +53,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-01 at 22:35 +0100, Lukas Bulwahn wrote:
+On Sun, 2020-02-02 at 00:11 +0100, Julian Sax wrote:
+> During normal usage, especially if jobs are started and stopped in rapid
+> succession, the kernel log is filled with messages like this:
 > 
-> On Sat, 1 Feb 2020, Lukas Bulwahn wrote:
+> [38732.522910] Restoring PASID 0x8003 queues
+> [38732.666767] Evicting PASID 0x8003 queues
+> [38732.714074] Restoring PASID 0x8003 queues
+> [38732.815633] Evicting PASID 0x8003 queues
+> [38732.834961] Restoring PASID 0x8003 queues
+> [38732.840536] Evicting PASID 0x8003 queues
+> [38732.869846] Restoring PASID 0x8003 queues
+> [38732.893655] Evicting PASID 0x8003 queues
+> [38732.927975] Restoring PASID 0x8003 queues
 > 
-> > The initial commit 3d5bd6e1a04a ("xarray: Add MAINTAINERS entry")
-> > missed a trailing slash to include all files and subdirectory files.
-> > Hence, all files in tools/testing/radix-tree were not part of XARRAY,
-> > but were considered to be part of "THE REST".
-> > 
-> > Rectify this to ensure patches reach the actual maintainer.
-> > 
-> > This was identified with a small script that finds all files only
-> > belonging to "THE REST" according to the current MAINTAINERS file, and I
-> > acted upon its output.
-> > 
-> > Fixes: 3d5bd6e1a04a ("xarray: Add MAINTAINERS entry")
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > Matthew, please pick this small fixup patch.
-> > 
-> > applies cleanly on current master and next-20200131
-> > 
+> According to [1], these messages are expected, but they carry little
+> value for the end user, so turn them into debug messages.
 > 
-> Matthew, Joe Perches just informed me that get_maintainers.pl is smart
-> enough to handle the case below and does not strictly need a further 
-> trailing slash.
-> 
-> Please ignore this patch; the commit message is actually wrong.
+> [1] https://github.com/RadeonOpenCompute/ROCm/issues/343
 
-While the commit message may be inexact,
-I think the actual change is good and
-could/should still be applied.
+trivia:
 
-The "Fixes:" tag is unnecessary though.
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+[]
+> @@ -604,7 +604,7 @@ static int evict_process_queues_nocpsch(struct device_queue_manager *dqm,
+>  		goto out;
+> 
+>  	pdd = qpd_to_pdd(qpd);
+> -	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
+> +	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
+>  			    pdd->process->pasid);
+
+It would be nicer to realign all the subsequent lines in a
+single statement to the now moved open parenthesis.
+
+> 
+>  	/* Mark all queues as evicted. Deactivate all active queues on
+> @@ -650,7 +650,7 @@ static int evict_process_queues_cpsch(struct device_queue_manager *dqm,
+>  		goto out;
+> 
+>  	pdd = qpd_to_pdd(qpd);
+> -	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
+> +	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
+>  			    pdd->process->pasid);
+
+etc...
 
 
