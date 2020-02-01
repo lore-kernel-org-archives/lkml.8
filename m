@@ -8,217 +8,267 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD41C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0110C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8904820679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F579206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 06:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPS4EPH2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZgMdPIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgBAGZX (ORCPT
+        id S1727090AbgBAGZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 01:25:23 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37003 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgBAGZX (ORCPT
+        Sat, 1 Feb 2020 01:25:33 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40878 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgBAGZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 01:25:23 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so4774004pga.4;
-        Fri, 31 Jan 2020 22:25:22 -0800 (PST)
+        Sat, 1 Feb 2020 01:25:33 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so3995261pjb.5;
+        Fri, 31 Jan 2020 22:25:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EBuzdcEX5JTT1Pk5WdoUrmH8eH/+zUwYVPCUxPutRHo=;
-        b=pPS4EPH2WPWqUUcvjDcMViVJagim4iBnp5ydqeJAMzTXRG9EyuKey21QyHq5AJnEcx
-         ezn7OxhMiusou6IZE7wFs7GxYuvHDQtok/I0QJrevDP2aEtRZAbEQrr7g6ynJpaXKHrx
-         Fs7/hKY3f5Rq3LTQ8kY7IvYAupeTlwgWDRqpORKkKghPzD1yUZcPKUchNmxPl+P+NLSB
-         ocvVGFVmtlR0T60YyAdVPh/QDwF8RiY+sIjC+ijK50FLQivj1YbRM0Umrl3XZU+ZuJzU
-         eBl7arvkQAq4NJ2QQWWyDAn31VQ+pkiLosKD3wc9z/sS68foEAp9wNMN/jJXjfRDZ9pX
-         smDg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SwW5brYUYv8gFhSywa79JltgG0iP7wrzsLavgEtl/jc=;
+        b=gZgMdPIKvXzU+Llx5HKvmluy3JF3/ShJyO6RLPPIx2Gs8JJIEpFTjreVX+lsxj2Sf0
+         kGFd70SVrLlm0a0Qq6WEoh3yQ+VO2s4PFKNShrfYkcy9J0qdQ9nmRps89kL8u0kLER36
+         QoOr7YlZXyMBSpLHcNKjeotfTJuYD2q36cbenQT3pc+v7Qp3/zLwPyrnfTl6XsH8wyQL
+         +fAwDXh/TLFIS+ykSvu01zmtBUn8mLfCewx3VKN+onpUBJCkZafDQ6YvZISmBiViRsDN
+         ghiplu0dnUXt3jWcgsQMJEhBiyDCj//YF7LzirpOe+gtUtQk3qBRohdabi64wpI/fvFQ
+         DX4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EBuzdcEX5JTT1Pk5WdoUrmH8eH/+zUwYVPCUxPutRHo=;
-        b=F9yjYK/9wtH7Sx5b/ZBQAof6H9oL3KMqBAFBusJCqRflulbs4sLjQ4P4dXr+OTC2nV
-         VOYK0WSaUqXyOQLET3vdPQW+e4R8LNcAt6sDtAwtVFNLwZN/Kle8wbnJLOB+lpwMK1rR
-         0rnwtVlehU7tWtdsaPv6KGqMqPPqmj0+rlCfMPTqInOIe1Jh7uQUk2jIK4FZ1bF0dTmN
-         lkYlUFhiaDkOxuujuAwVwcT5V4dP499HCh9omRbA9yJeb0Csn0oYYWwfZzXBtHoMo3TO
-         pkFi2xWlVGWI3RVZxDjy9n1Bt4jku3n1wZb4MlinvSiUgtKtveky2RBOG1i8hIzJ6iK/
-         l+xA==
-X-Gm-Message-State: APjAAAUZLxjQ2f4+YOjsT2WNFdtePtUGWYYW0uQZ+6D9orCXrOfBTRkT
-        dEfS/T2onOgXtAz+j76u+d8=
-X-Google-Smtp-Source: APXvYqzxIs8PpCGxKZZpuV6wsz6WrhnlruFneh+hB4Qm1o0YNQ/rHjtvjHGgbxIvx/FYeWLDIPBJpQ==
-X-Received: by 2002:a63:3c1b:: with SMTP id j27mr12888932pga.152.1580538322299;
-        Fri, 31 Jan 2020 22:25:22 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SwW5brYUYv8gFhSywa79JltgG0iP7wrzsLavgEtl/jc=;
+        b=lYQtR92vIyN1ss2E49sHSwir696seg495TN7f/W7o3NxLjWuMyh1kclxElnsf6wwHs
+         0OFkSAnCn17GJ9eKpFn4cqCzoW4g69xicmN9MfD2yef9vpRfhAQjMvciYUwBOrHVkJ8v
+         ESfG6nQ3scAmB9uqh2/qj8OWQEBk0Iea9XuKZWeHYXZ0sZIzECEwtbjWxk+oXfwMSYUW
+         2b5BAkO50PmRi+OTpuPXS+RN5/ABRfoKcHVx3ZzY1BKPXj9UcZHtPIzcq9mEYbskoaaE
+         4cW4asf/hfZ6d9N1DPOPoKScDP6Z8FTF6DhnZpV35lrJIUbXwQMdUlMyD5DHJ3oMcZOb
+         syZw==
+X-Gm-Message-State: APjAAAVrAo/TWw38w8GB8wiXlnK4QpK4jpMZ/k1SeoOW/8voQCX/tzLA
+        1ppCnGBU+n8AvcVfpNfNbD4=
+X-Google-Smtp-Source: APXvYqzO2sbFotgP55sn1T4NlLmwcxwv0fr60FrLk465LmMOZYsXhSoOiKysqyiWaa3EFAn/DDswrQ==
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr13304534ple.226.1580538330840;
+        Fri, 31 Jan 2020 22:25:30 -0800 (PST)
 Received: from localhost.localdomain ([149.248.18.167])
-        by smtp.gmail.com with ESMTPSA id v4sm13191971pgo.63.2020.01.31.22.25.16
+        by smtp.gmail.com with ESMTPSA id e9sm12057094pjt.16.2020.01.31.22.25.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 22:25:21 -0800 (PST)
+        Fri, 31 Jan 2020 22:25:30 -0800 (PST)
 From:   Changbin Du <changbin.du@gmail.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 2/2] x86: Disable both KASAN and UBSAN for some booting code
-Date:   Sat,  1 Feb 2020 14:24:59 +0800
-Message-Id: <20200201062459.7150-3-changbin.du@gmail.com>
+        linux-pm@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] Documentation: Fix build error for cpu-idle-cooling.rst and client.rst
+Date:   Sat,  1 Feb 2020 14:25:21 +0800
+Message-Id: <20200201062521.7296-1-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200201062459.7150-1-changbin.du@gmail.com>
-References: <20200201062459.7150-1-changbin.du@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have disabled KASAN for some special files properly which might
-prevent kernel to boot. We also need to disable UBSAN for some of these
-files:
-  o For code which could operate in one-one mapping mode. In this case,
-    kernel would crash at accessing data parameter when invoking UBSAN
-    handlers.
-  o Since UBSAN handlers are instrumented by KASAN, so invoking UBSAN
-    handlers before KASAN is initiated also is not allowed.
+This fixed some errors and warnings in cpu-idle-cooling.rst and client.rst.
 
-It is easy to prove such behavior by adding a line of code that triggers
-UBSAN report before kasan_early_init().
+Sphinx parallel build error:
+docutils.utils.SystemMessage: ...Documentation/driver-api/thermal/cpu-idle-cooling.rst:96: (SEVERE/4) Unexpected section title.
+
+Sphinx parallel build error:
+docutils.utils.SystemMessage: ...Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- arch/x86/boot/Makefile            |  2 +-
- arch/x86/boot/compressed/Makefile |  2 +-
- arch/x86/entry/vdso/Makefile      |  3 +--
- arch/x86/kernel/Makefile          | 10 +++++-----
- arch/x86/lib/Makefile             |  2 +-
- arch/x86/mm/Makefile              |  4 ++--
- arch/x86/realmode/Makefile        |  2 +-
- arch/x86/realmode/rm/Makefile     |  2 +-
- 8 files changed, 13 insertions(+), 14 deletions(-)
+ Documentation/driver-api/dmaengine/client.rst | 14 ++++++---
+ .../driver-api/thermal/cpu-idle-cooling.rst   | 29 +++++++++++--------
+ Documentation/driver-api/thermal/index.rst    |  1 +
+ 3 files changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 748b6d28a91d..cd1f1ddbd319 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -9,7 +9,7 @@
- # Changed by many, many contributors over the years.
- #
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index a9a7a3c84c63..2104830a99ae 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,8 +151,8 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
  
--KASAN_SANITIZE			:= n
-+SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+-  Optional: per descriptor metadata
+-  ---------------------------------
++  **Optional: per descriptor metadata**
++
+   DMAengine provides two ways for metadata support.
  
- # Kernel does not boot with kcov instrumentation here.
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 56aa5fa0a66b..82304ccc1e12 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -17,7 +17,7 @@
- #	(see scripts/Makefile.lib size_append)
- #	compressed vmlinux.bin.all + u32 size of vmlinux.bin.all
+   DESC_METADATA_CLIENT
+@@ -199,12 +199,15 @@ The details of these operations are:
+   DESC_METADATA_CLIENT
  
--KASAN_SANITIZE			:= n
-+SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+          construct the metadata in the client's buffer
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+       3. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+@@ -215,6 +218,7 @@ The details of these operations are:
+   DESC_METADATA_ENGINE
  
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 2b75e80f6b41..53728b92374b 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -10,8 +10,7 @@ ARCH_REL_TYPE_ABS += R_386_GLOB_DAT|R_386_JMP_SLOT|R_386_RELATIVE
- include $(srctree)/lib/vdso/Makefile
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
+          engine's metadata area
+@@ -222,7 +226,9 @@ The details of these operations are:
+       4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
+          amount of data the client has placed into the metadata buffer
+       5. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. submit the transfer
+       3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get
+@@ -278,8 +284,8 @@ The details of these operations are:
  
- KBUILD_CFLAGS += $(DISABLE_LTO)
--KASAN_SANITIZE			:= n
--UBSAN_SANITIZE			:= n
-+SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+       void dma_async_issue_pending(struct dma_chan *chan);
  
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 6175e370ee4a..c038ef0fc77c 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -22,11 +22,11 @@ CFLAGS_REMOVE_early_printk.o = -pg
- CFLAGS_REMOVE_head64.o = -pg
- endif
+-Further APIs:
+--------------
++Further APIs
++------------
  
--KASAN_SANITIZE_head$(BITS).o				:= n
--KASAN_SANITIZE_dumpstack.o				:= n
--KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
--KASAN_SANITIZE_stacktrace.o				:= n
--KASAN_SANITIZE_paravirt.o				:= n
-+SANITIZE_head$(BITS).o					:= n
-+SANITIZE_dumpstack.o					:= n
-+SANITIZE_dumpstack_$(BITS).o				:= n
-+SANITIZE_stacktrace.o					:= n
-+SANITIZE_paravirt.o					:= n
+ 1. Terminate APIs
  
- OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db42de45..f0da5b35e745 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -9,7 +9,7 @@ KCOV_INSTRUMENT_delay.o	:= n
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KCOV_INSTRUMENT_cmdline.o := n
--KASAN_SANITIZE_cmdline.o  := n
-+SANITIZE_cmdline.o	  := n
+diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+index e4f0859486c7..d8b522d37eb9 100644
+--- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
++++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+@@ -1,6 +1,9 @@
++================
++CPU Idle Cooling
++================
  
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 98aecb14fbcc..58d58d9208e9 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -4,8 +4,8 @@ KCOV_INSTRUMENT_tlb.o			:= n
- KCOV_INSTRUMENT_mem_encrypt.o		:= n
- KCOV_INSTRUMENT_mem_encrypt_identity.o	:= n
+-Situation:
+-----------
++Situation
++---------
  
--KASAN_SANITIZE_mem_encrypt.o		:= n
--KASAN_SANITIZE_mem_encrypt_identity.o	:= n
-+SANITIZE_mem_encrypt.o			:= n
-+SANITIZE_mem_encrypt_identity.o		:= n
+ Under certain circumstances a SoC can reach a critical temperature
+ limit and is unable to stabilize the temperature around a temperature
+@@ -24,8 +27,8 @@ with a power less than the requested power budget and the next OPP
+ exceeds the power budget. An intermediate OPP could have been used if
+ it were present.
  
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_mem_encrypt.o		= -pg
-diff --git a/arch/x86/realmode/Makefile b/arch/x86/realmode/Makefile
-index 682c895753d9..db86f4283808 100644
---- a/arch/x86/realmode/Makefile
-+++ b/arch/x86/realmode/Makefile
-@@ -6,7 +6,7 @@
- # for more details.
- #
- #
--KASAN_SANITIZE			:= n
-+SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+-Solutions:
+-----------
++Solutions
++---------
  
- subdir- := rm
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f60501a384f9..61017575dab1 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -6,7 +6,7 @@
- # for more details.
- #
- #
--KASAN_SANITIZE			:= n
-+SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+ If we can remove the static and the dynamic leakage for a specific
+ duration in a controlled period, the SoC temperature will
+@@ -45,12 +48,12 @@ idle state target residency, we lead to dropping the static and the
+ dynamic leakage for this period (modulo the energy needed to enter
+ this state). So the sustainable power with idle cycles has a linear
+ relation with the OPP’s sustainable power and can be computed with a
+-coefficient similar to:
++coefficient similar to::
  
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
+ 	    Power(IdleCycle) = Coef x Power(OPP)
+ 
+-Idle Injection:
+----------------
++Idle Injection
++--------------
+ 
+ The base concept of the idle injection is to force the CPU to go to an
+ idle state for a specified time each control cycle, it provides
+@@ -64,6 +67,7 @@ latencies as the CPUs will have to wakeup from a deep sleep state.
+ We use a fixed duration of idle injection that gives an acceptable
+ performance penalty and a fixed latency. Mitigation can be increased
+ or decreased by modulating the duty cycle of the idle injection.
++::
+ 
+      ^
+      |
+@@ -90,6 +94,7 @@ computed.
+ 
+ The governor will change the cooling device state thus the duty cycle
+ and this variation will modulate the cooling effect.
++::
+ 
+      ^
+      |
+@@ -132,7 +137,7 @@ Power considerations
+ --------------------
+ 
+ When we reach the thermal trip point, we have to sustain a specified
+-power for a specific temperature but at this time we consume:
++power for a specific temperature but at this time we consume::
+ 
+  Power = Capacitance x Voltage^2 x Frequency x Utilisation
+ 
+@@ -141,7 +146,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
+ fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
+ because we don’t want to change the OPP. We can group the
+ ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
+-‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
++‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
+ 
+  Pdyn = Cdyn x Voltage^2 x Frequency
+ 
+@@ -150,7 +155,7 @@ in order to target the sustainable power defined in the device
+ tree. So with the idle injection mechanism, we want an average power
+ (Ptarget) resulting in an amount of time running at full power on a
+ specific OPP and idle another amount of time. That could be put in a
+-equation:
++equation::
+ 
+  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
+ 			(Trunning + Tidle)
+@@ -160,7 +165,7 @@ equation:
+ 
+ At this point if we know the running period for the CPU, that gives us
+ the idle injection we need. Alternatively if we have the idle
+-injection duration, we can compute the running duration with:
++injection duration, we can compute the running duration with::
+ 
+  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+ 
+@@ -183,7 +188,7 @@ However, in this demonstration we ignore three aspects:
+    target residency, otherwise we end up consuming more energy and
+    potentially invert the mitigation effect
+ 
+-So the final equation is:
++So the final equation is::
+ 
+  Trunning = (Tidle - Twakeup ) x
+ 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
+diff --git a/Documentation/driver-api/thermal/index.rst b/Documentation/driver-api/thermal/index.rst
+index 5ba61d19c6ae..4cb0b9b6bfb8 100644
+--- a/Documentation/driver-api/thermal/index.rst
++++ b/Documentation/driver-api/thermal/index.rst
+@@ -8,6 +8,7 @@ Thermal
+    :maxdepth: 1
+ 
+    cpu-cooling-api
++   cpu-idle-cooling
+    sysfs-api
+    power_allocator
+ 
 -- 
 2.24.0
 
