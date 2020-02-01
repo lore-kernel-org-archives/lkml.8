@@ -2,97 +2,128 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CC2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098CFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F8120661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3C0206A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMfELv6g"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aVAm7YmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgBAFxn (ORCPT
+        id S1726450AbgBAF5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 00:53:43 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35678 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgBAFxn (ORCPT
+        Sat, 1 Feb 2020 00:57:07 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:50950 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgBAF5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 00:53:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id b18so9614212oie.2;
-        Fri, 31 Jan 2020 21:53:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nn6Z1K4Ig+lUl4xv40lMeq9rx7gNTQqV1fkouNx1AkE=;
-        b=qMfELv6gCVDzyWoHrI8dxesUDXE3M1cw7AJY/HgtTJBDZi6hj8nL+jyu8fNQ7ic8H0
-         QCzkCGzeYtjWkO52gQOjFg2trtO7759pyuei63RbVGekUibOimrDGpULjZhUg4Z9qxrl
-         /Xno4xQb5ARDonX9l9GFqB2cqd6Y4VD2xRLytPuwlvP8/qJsIvZJCZDsqGViAgNzOpIt
-         orUKRghnQw3ykbGoHXbNg2NefxIUp6p3+oVGzhn57X30H83e0VHsaJy5+aCROgTHBO45
-         L+EQQ9UNdaLzStCxTM0bgDq5CBZ6BAztuiUcS60FmtjeF6JF/HeyKuYBD589Th9foDja
-         WKoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nn6Z1K4Ig+lUl4xv40lMeq9rx7gNTQqV1fkouNx1AkE=;
-        b=P6YzzvdG9pm7G54CaJHZOOcP5+M6mCQ50Ksr/ACOtORfjSo6TX0fEWvFLdPaDJNq8Y
-         VsUZfhpe918N+nvNC8CgAxuBxUpxNgvGRTBXn258aloknc/1W/vG9ewrmMycpuUq5a6V
-         mS3BuolSOqfGO5EpHw/0IiyZ2E3H0t6ngd0F7DA8VXdUJEHP0KII+tsFGPqYs7iGtT3H
-         YSkj/Fuq4B+ToE3wVix3HiRXw5IhaAkXRLcKVBY5tyZ5hpMn5xaINaboB2fw0eby7oYp
-         jDPMM16Uvipu1E7RHb6CAKtdWuCshKnhSBJCN3NqX7Dd+XXEk0ocIMJ63dYxY03TjOzH
-         TbhQ==
-X-Gm-Message-State: APjAAAUmaWiDS8vveUjR+5M++nbtQlISOiTR3WOhEZWBW5GtN73Da8Sm
-        zM7GRdGzPigBB4IQHupqFQ3T9gBMAbPI/aziA7R1RwNg
-X-Google-Smtp-Source: APXvYqwE113qFxAd9XWoPRNc6FEbRgUVY3TmHCvX+OR1Antl3haNngqyvW5T6CXiyN3NEGfJfubK/rC+j6aAjMntRwE=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr8370686oii.141.1580536422319;
- Fri, 31 Jan 2020 21:53:42 -0800 (PST)
+        Sat, 1 Feb 2020 00:57:07 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0115rnjn154505;
+        Sat, 1 Feb 2020 05:56:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=6Y7Q6ylJXc6nIB3cUIivnJdaFcNjADagPIMOpx/zuek=;
+ b=aVAm7YmXkTLAlco7AxLJOCTRaGxTJvZuMseCklfSStqk8bJymtguBvWvIkT1WTf6Uxm7
+ /BMAL100VrjfkSqWjaIqKfDLNM4uiZkfVMHeW1CSIc9mmf0Fde/xKMNJM968yxxjO2S2
+ G1T0k9frPUeGYraJoBFN2PmJ8kzEM9ueMf0N74qyetK5fn099yEcnTvJvk3dVNT5xkY1
+ sg4Akj54b60BYUb719mhSlQMz8ozP4gHZiIC9GPO0fEdfUTn1KsO0Nu2jWZr/Zz/Lie7
+ XrerRwlm1ZaDe/PYwVKcD+5+EH7ZVIzZ7Uy3Tksi/4Kpca0EjZukan42jSop5TRcjl8R Aw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2xw1yqr7y1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 01 Feb 2020 05:56:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0115mTNl109936;
+        Sat, 1 Feb 2020 05:56:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xw15wm6kt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 01 Feb 2020 05:56:36 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0115uR75028315;
+        Sat, 1 Feb 2020 05:56:27 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 31 Jan 2020 21:56:26 -0800
+Date:   Sat, 1 Feb 2020 08:56:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, alexander.deucher@amd.com,
+        amd-gfx@lists.freedesktop.org, chris@chris-wilson.co.uk,
+        christian.koenig@amd.com, daniel@ffwll.ch, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, emil.velikov@collabora.com,
+        eric@anholt.net, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org, robdclark@chromium.org,
+        seanpaul@chromium.org, sumit.semwal@linaro.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in vgem_gem_dumb_create
+Message-ID: <20200201055612.GF1778@kadam>
+References: <000000000000ae2f81059d7716b8@google.com>
 MIME-Version: 1.0
-References: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
-In-Reply-To: <1580407316-11391-1-git-send-email-pbonzini@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Sat, 1 Feb 2020 13:53:31 +0800
-Message-ID: <CANRm+CyyuWUOAj81Sg8UH_jMybZWmvZxWPWZ_twMvFnPxKD3hQ@mail.gmail.com>
-Subject: Re: [FYI PATCH 0/5] Missing TLB flushes
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000ae2f81059d7716b8@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002010040
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9517 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002010041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 02:02, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->
-> The KVM hypervisor may provide a guest with ability to defer remote TLB
-> flush when the remote VCPU is not running. When this feature is used,
-> the TLB flush will happen only when the remote VPCU is scheduled to run
-> again. This will avoid unnecessary (and expensive) IPIs.
->
-> Under certain circumstances, when a guest initiates such deferred action,
-> the hypervisor may miss the request. It is also possible that the guest
-> may mistakenly assume that it has already marked remote VCPU as needing
-> a flush when in fact that request had already been processed by the
-> hypervisor. In both cases this will result in an invalid translation
-> being present in a vCPU, potentially allowing accesses to memory locations
-> in that guest's address space that should not be accessible.
->
-> Note that only intra-guest memory is vulnerable.
->
-> The attached patches address both of these problems:
-> 1. The first patch makes sure the hypervisor doesn't accidentally clear
-> guest's remote flush request
-> 2. The rest of the patches prevent the race between hypervisor
-> acknowledging a remote flush request and guest issuing a new one.
+I don't totally understand the stack trace but I do see a double free
+bug.
 
-Looks good, thanks for the patchset.
+drivers/gpu/drm/vgem/vgem_drv.c
+   186  static struct drm_gem_object *vgem_gem_create(struct drm_device *dev,
+   187                                                struct drm_file *file,
+   188                                                unsigned int *handle,
+   189                                                unsigned long size)
+   190  {
+   191          struct drm_vgem_gem_object *obj;
+   192          int ret;
+   193  
+   194          obj = __vgem_gem_create(dev, size);
 
-    Wanpeng
+obj->base.handle_count is zero.
+
+   195          if (IS_ERR(obj))
+   196                  return ERR_CAST(obj);
+   197  
+   198          ret = drm_gem_handle_create(file, &obj->base, handle);
+
+We bump it +1 and then the error handling calls
+drm_gem_object_handle_put_unlocked(obj);
+which calls drm_gem_object_put_unlocked(); which frees obj.
+
+
+   199          drm_gem_object_put_unlocked(&obj->base);
+
+So this is a double free.  Could someone check my thinking and send
+a patch?  It's just a one liner.  Otherwise I can send it on Monday.
+
+   200          if (ret)
+   201                  return ERR_PTR(ret);
+   202  
+   203          return &obj->base;
+   204  }
+
+regards,
+dan carpenter
