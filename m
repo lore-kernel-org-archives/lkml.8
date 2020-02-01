@@ -2,130 +2,176 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADF4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B5C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93B620643
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGVZnFZC"
+	by mail.kernel.org (Postfix) with ESMTP id 6388C20643
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgBAVfW (ORCPT
+        id S1726804AbgBAVg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 16:35:22 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51521 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBAVfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 16:35:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so11791246wmi.1;
-        Sat, 01 Feb 2020 13:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=S9VZZ78KljGoa33WiUOilS5VA6siSq4KfQ/PVuLOUBE=;
-        b=cGVZnFZCzSSv10xCFYehVFN0LVdEAzZGcAfUNdgjLxsCY+b7DSlBTU0PimWj0vln2R
-         86aAHtHeh0BHgzmP5zxkKjNDvD0+BE2s+5Msin0cEVjF7A4iH8yttNVR4AG8n4rf01Em
-         9CT+4qqQU/dmVhiQRfWZMqZvyHdikIiARuw0aC1FJO+lvqLKU/E93vreHUCcswAlgDvM
-         1nUHOOvrrQy85MfJnv3m+W6sVXZ6+eAkdh6T2hTYbmA3KEfu9Ptq5UhFe6Gk90ba8KLU
-         /vqP2mbX4aYdStiXFY/Hs6fKoZWPFst07Dhbo1FYopfRslDyhtBpCWCiUxQPPWgmatuP
-         I3OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=S9VZZ78KljGoa33WiUOilS5VA6siSq4KfQ/PVuLOUBE=;
-        b=KAeHNz0ACX5uh22cOiUqXtn232ccjckIT1oWGklCArCa5GWWGXGA0DZiInY4Y5pNvF
-         V8uYYasP97jLG4IGN3DP7Itz3UJ5YUjb//mSRYR5jOemUehRfaJRQbqP80xGMD4d8Rlx
-         PQmANDOzFV7CJSG0wxpN5P/ZEJOh9vWPivzMVDRI6mT3kTYW3QsMU3q1rhYbRX4ky3uM
-         Ibbnlo3CHEYy5DLrrUCBf8sNO5PUT3w+KAHg/F/CKBpzbUrwU58Ypr9zOo/8dFlGyI7r
-         GaHaGr2fdCYMmmxDsJ4kP1RRm+AfkBT9Tjyk+fD38AozVSFZ+QkOG8bAItZ6AjvUXmoa
-         mnCA==
-X-Gm-Message-State: APjAAAWy5Fddn7q+U1E7veJSYa3T7f+HMNWimIX96damkHCQ6n3AB1mi
-        kyHSURS+iRWb+jwU+M8Cbt8=
-X-Google-Smtp-Source: APXvYqzn5MJYZfTNQQTHWl1+XmLcR9O4YgJQwxRmXwXcE5TSQBIqADfogAh3L+707cfNqFq8yBkQ3Q==
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr20243827wmc.165.1580592919349;
-        Sat, 01 Feb 2020 13:35:19 -0800 (PST)
-Received: from felia ([2001:16b8:2d5f:200:35fb:e0f1:a37a:5e0a])
-        by smtp.gmail.com with ESMTPSA id g79sm16018741wme.17.2020.02.01.13.35.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 13:35:18 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Sat, 1 Feb 2020 22:35:12 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: rectify radix-tree testing entry in
- XARRAY
-In-Reply-To: <20200201180234.4960-1-lukas.bulwahn@gmail.com>
-Message-ID: <alpine.DEB.2.21.2002012231410.5859@felia>
-References: <20200201180234.4960-1-lukas.bulwahn@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 1 Feb 2020 16:36:26 -0500
+Received: from mga02.intel.com ([134.134.136.20]:43147 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgBAVg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 16:36:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 13:36:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,391,1574150400"; 
+   d="scan'208";a="329817601"
+Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Feb 2020 13:36:22 -0800
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+To:     stable@vger.kernel.org, sashal@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        xiaochen.shen@intel.com, Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4.19 2/3] x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
+Date:   Sun,  2 Feb 2020 06:03:43 +0800
+Message-Id: <1580594623-3020-1-git-send-email-xiaochen.shen@intel.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1578500886-21771-1-git-send-email-xiaochen.shen@intel.com>
+References: <1578500886-21771-1-git-send-email-xiaochen.shen@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+commit 074fadee59ee7a9d2b216e9854bd4efb5dad679f upstream.
 
+There is a race condition in the following scenario which results in an
+use-after-free issue when reading a monitoring file and deleting the
+parent ctrl_mon group concurrently:
 
-On Sat, 1 Feb 2020, Lukas Bulwahn wrote:
+Thread 1 calls atomic_inc() to take refcount of rdtgrp and then calls
+kernfs_break_active_protection() to drop the active reference of kernfs
+node in rdtgroup_kn_lock_live().
 
-> The initial commit 3d5bd6e1a04a ("xarray: Add MAINTAINERS entry")
-> missed a trailing slash to include all files and subdirectory files.
-> Hence, all files in tools/testing/radix-tree were not part of XARRAY,
-> but were considered to be part of "THE REST".
-> 
-> Rectify this to ensure patches reach the actual maintainer.
-> 
-> This was identified with a small script that finds all files only
-> belonging to "THE REST" according to the current MAINTAINERS file, and I
-> acted upon its output.
-> 
-> Fixes: 3d5bd6e1a04a ("xarray: Add MAINTAINERS entry")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Matthew, please pick this small fixup patch.
-> 
-> applies cleanly on current master and next-20200131
-> 
+In Thread 2, kernfs_remove() is a blocking routine. It waits on all sub
+kernfs nodes to drop the active reference when removing all subtree
+kernfs nodes recursively. Thread 2 could block on kernfs_remove() until
+Thread 1 calls kernfs_break_active_protection(). Only after
+kernfs_remove() completes the refcount of rdtgrp could be trusted.
 
-Matthew, Joe Perches just informed me that get_maintainers.pl is smart
-enough to handle the case below and does not strictly need a further 
-trailing slash.
+Before Thread 1 calls atomic_inc() and kernfs_break_active_protection(),
+Thread 2 could call kfree() when the refcount of rdtgrp (sentry) is 0
+instead of 1 due to the race.
 
-Please ignore this patch; the commit message is actually wrong.
+In Thread 1, in rdtgroup_kn_unlock(), referring to earlier rdtgrp memory
+(rdtgrp->waitcount) which was already freed in Thread 2 results in
+use-after-free issue.
 
-Lukas
+Thread 1 (rdtgroup_mondata_show)  Thread 2 (rdtgroup_rmdir)
+--------------------------------  -------------------------
+rdtgroup_kn_lock_live
+  /*
+   * kn active protection until
+   * kernfs_break_active_protection(kn)
+   */
+  rdtgrp = kernfs_to_rdtgroup(kn)
+                                  rdtgroup_kn_lock_live
+                                    atomic_inc(&rdtgrp->waitcount)
+                                    mutex_lock
+                                  rdtgroup_rmdir_ctrl
+                                    free_all_child_rdtgrp
+                                      /*
+                                       * sentry->waitcount should be 1
+                                       * but is 0 now due to the race.
+                                       */
+                                      kfree(sentry)*[1]
+  /*
+   * Only after kernfs_remove()
+   * completes, the refcount of
+   * rdtgrp could be trusted.
+   */
+  atomic_inc(&rdtgrp->waitcount)
+  /* kn->active-- */
+  kernfs_break_active_protection(kn)
+                                    rdtgroup_ctrl_remove
+                                      rdtgrp->flags = RDT_DELETED
+                                      /*
+                                       * Blocking routine, wait for
+                                       * all sub kernfs nodes to drop
+                                       * active reference in
+                                       * kernfs_break_active_protection.
+                                       */
+                                      kernfs_remove(rdtgrp->kn)
+                                  rdtgroup_kn_unlock
+                                    mutex_unlock
+                                    atomic_dec_and_test(
+                                                &rdtgrp->waitcount)
+                                    && (flags & RDT_DELETED)
+                                      kernfs_unbreak_active_protection(kn)
+                                      kfree(rdtgrp)
+  mutex_lock
+mon_event_read
+rdtgroup_kn_unlock
+  mutex_unlock
+  /*
+   * Use-after-free: refer to earlier rdtgrp
+   * memory which was freed in [1].
+   */
+  atomic_dec_and_test(&rdtgrp->waitcount)
+  && (flags & RDT_DELETED)
+    /* kn->active++ */
+    kernfs_unbreak_active_protection(kn)
+    kfree(rdtgrp)
 
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1f77fb8cdde3..4ebcc2f09028 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18198,7 +18198,7 @@ F:	lib/idr.c
->  F:	lib/xarray.c
->  F:	include/linux/idr.h
->  F:	include/linux/xarray.h
-> -F:	tools/testing/radix-tree
-> +F:	tools/testing/radix-tree/
->  
->  XBOX DVD IR REMOTE
->  M:	Benjamin Valentin <benpicco@googlemail.com>
-> -- 
-> 2.17.1
-> 
-> 
+Fix it by moving free_all_child_rdtgrp() to after kernfs_remove() in
+rdtgroup_rmdir_ctrl() to ensure it has the accurate refcount of rdtgrp.
+
+Backporting notes:
+
+Since upstream commit fa7d949337cc ("x86/resctrl: Rename and move rdt
+files to a separate directory"), the file
+arch/x86/kernel/cpu/intel_rdt_rdtgroup.c has been renamed and moved to
+arch/x86/kernel/cpu/resctrl/rdtgroup.c.
+Apply the change against file arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
+for older stable trees.
+
+Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1578500886-21771-3-git-send-email-xiaochen.shen@intel.com
+---
+ arch/x86/kernel/cpu/intel_rdt_rdtgroup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
+index db22ba0..77770ca 100644
+--- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
++++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
+@@ -2877,13 +2877,13 @@ static int rdtgroup_rmdir_ctrl(struct kernfs_node *kn, struct rdtgroup *rdtgrp,
+ 	closid_free(rdtgrp->closid);
+ 	free_rmid(rdtgrp->mon.rmid);
+ 
++	rdtgroup_ctrl_remove(kn, rdtgrp);
++
+ 	/*
+ 	 * Free all the child monitor group rmids.
+ 	 */
+ 	free_all_child_rdtgrp(rdtgrp);
+ 
+-	rdtgroup_ctrl_remove(kn, rdtgrp);
+-
+ 	return 0;
+ }
+ 
+-- 
+1.8.3.1
+
