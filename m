@@ -2,62 +2,76 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA38C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8760C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0AC20674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD8820674
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:25:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QxOHj2pZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgBAAYb (ORCPT
+        id S1727053AbgBAAZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 19:24:31 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:49500 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgBAAYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 19:24:30 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ixgaK-0001fZ-9J; Fri, 31 Jan 2020 17:24:29 -0700
-To:     Andrew Maier <andrew.maier@eideticom.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200201002307.4520-1-andrew.maier@eideticom.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <cc3a48ce-89f0-f909-d9eb-69d71a6abcc1@deltatee.com>
-Date:   Fri, 31 Jan 2020 17:24:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 31 Jan 2020 19:25:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50932 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbgBAAZo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 19:25:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Fpw6+UEhfuhuXeKhNiLAOcNkyHMzaziNThRDurB0olw=; b=QxOHj2pZg+W0B5HIBaNQ2a1dF
+        X0NQclBE2kGZleLQjTuffWwMMANrl04KeOOHt8+bcQ6CQD6k2oHx72uYHBStQflRNHip10UsC+bUF
+        Fg7POZ4hQfjJ8LdBtpUUHaKx+Rje32bllb90LUXDP3WyQ/fVujZZviLRgFeAT7YsCrvLqGXY/BB/w
+        XtqUGknjOioO7AGDFc7lDe+R24v4E+kG9joislUUkwVb8+Hoia9E/hsFJJBvG1VKjELdCeSa0PDu1
+        rNSDke9vxTqSCLFjMRvKxnwwh4Y0P6CGwh+9iPiDkrlTR0ogML9akzWOAnGVQjmF854vphMnQomW5
+        k9hsWWB1Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixgbW-0005u5-47; Sat, 01 Feb 2020 00:25:42 +0000
+Date:   Fri, 31 Jan 2020 16:25:42 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com
+Subject: Re: [PATCH 04/12] mm: Add readahead address space operation
+Message-ID: <20200201002542.GA20648@bombadil.infradead.org>
+References: <20200125013553.24899-1-willy@infradead.org>
+ <20200125013553.24899-5-willy@infradead.org>
+ <4e28eb80-d602-47e6-51ec-63bb39e1a296@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200201002307.4520-1-andrew.maier@eideticom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, andrew.maier@eideticom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] PCI/P2PDMA: Add the Intel Sky Lake-E root ports to the
- whitelist
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e28eb80-d602-47e6-51ec-63bb39e1a296@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-01-31 5:23 p.m., Andrew Maier wrote:
-> Add the four Intel Sky Lake-E host root ports to the whitelist of
-> p2pdma.
+On Fri, Jan 24, 2020 at 07:57:40PM -0800, Randy Dunlap wrote:
+> > +``readahead``
+> > +	called by the VM to read pages associated with the address_space
+> > +	object.  The pages are consecutive in the page cache and are
+> > +        locked.  The implementation should decrement the page refcount after
+> > +        attempting I/O on each page.  Usually the page will be unlocked by
+> > +        the I/O completion handler.  If the function does not attempt I/O on
+> > +        some pages, return the number of pages which were not read so the
+> > +        common code can unlock the pages for you.
+> > +
 > 
-> P2P has been tested and is working on this system.
-> 
-> Signed-off-by: Andrew Maier <andrew.maier@eideticom.com>
+> Please use consistent indentation (tabs).
 
-Looks good to me, Thanks!
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+This turned out to be not my fault.  The vim rst ... mode?  plugin?
+Whatever it is, it's converting tabs to spaces!  To fix it, I had to
+rename the file to .txt, make the edits, then rename it back.  This is
+very poor behaviour.
