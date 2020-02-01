@@ -2,122 +2,100 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09062C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9DF2067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC242067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MczfDG7J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJk2X4cA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgBASjz (ORCPT
+        id S1726804AbgBASkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:39:55 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34963 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgBASjz (ORCPT
+        Sat, 1 Feb 2020 13:40:43 -0500
+Received: from mail-il1-f172.google.com ([209.85.166.172]:39435 "EHLO
+        mail-il1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgBASkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:39:55 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so11535103edv.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:39:52 -0800 (PST)
+        Sat, 1 Feb 2020 13:40:42 -0500
+Received: by mail-il1-f172.google.com with SMTP id f70so9143377ill.6;
+        Sat, 01 Feb 2020 10:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=shZxHXCo/+rAmckA7J/Ey6QP2+YhGLEgDLAHvjT5u+A=;
-        b=MczfDG7JR4EZ5tNwWmFzxH8xkT4Gxol7teLMaJZBjDXkMZ22TrZg/CdntLukCNNy32
-         DxgkA3frPptmwHiSzKyYU+E1/CrKn01ipeKApiKUxV6X9ezBLIUaL1TvychncP+REW0M
-         2sDHVNV7TSzxTqXPpOtWtB2Cpjf8WkPRUJqB9r2w3J1NteXuO6EFf2vCRR0b72mMEHuv
-         3bvk1oNCf884BZnaykHI+n1+LOe08unkCW6vfuQe74/vuzob0C2lM3NwilwI7ee0BpeV
-         ZElt7z3x1G5/rvxAifeXrmW2dbgOFjFzOj29m/YOL+qpajbaBcRKzT5LHPNyw6ZO/j4z
-         g0kA==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Z11+/yeQUB6zTwEssk9IOz1CExq34IGy3Oa8TOXh/Dw=;
+        b=LJk2X4cA1MrCsi7mlcIeHVA+FtISyoUCmOSZ9maIXGIt7xpBTTfNjoMb+7Zfz4bnrA
+         EZ1rWKDrG8M6+RnNPzPmsHDRYDFKVLaHJ7k9GBgoeIcvfe0DTIcP5YuppQIKDtX0HXeU
+         nwajDVdfmYJlRWA8N9cMvMFo/CHKaQIzUohK1cnprQ0yswJlIde47ZlTxGjK2PGY4lYT
+         MnR2+lwL95F3jTWPxCKF+y6ydIb4cd1IZWhy+FjENLsKtz8pBBACNOp11SESbRRRC1Ed
+         sEaCEFcWIzKyn57dqrXsCeEisvcnPhJ+fglLKkrQX+m2FL5/PYemVrrffeMeYpLto3YM
+         RARw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=shZxHXCo/+rAmckA7J/Ey6QP2+YhGLEgDLAHvjT5u+A=;
-        b=DcZSma3QmbxAcIuD6UlFMFPCU5rSitKbo1e8JvHmObCjkk0c0kYbF5qjpoDB0rq7N8
-         LlcP5QawgokRxhfe5IBCBU9KJ2cLGWVTZKD3Cu8tq5hWdUVNZvLlkDaBhtGTkFlOEvpu
-         mDxl0v+kBNjTviDwrdpxQcgeeExci2VJfLOt9Zv5pp72pdwWsmV/P88mK9xC3MaKPgEh
-         VuehrcsRMic486FB72/wJaFvR817w/p2RI+1eVARjCU9kGoVsPu+JH2Yhbmav5RgL0UN
-         GWt+J52AuPr/Sow2sqT019Ai3J1SkhJG1h3GPQuQxsyYkT0leqaPq4GwsrBNFvZ7MOIP
-         yj0g==
-X-Gm-Message-State: APjAAAXbKpHdqqheZEV5KTtfZVkldFcaipuIFtuj116mQA3zOlmChBbj
-        3kdwAiVzidIYoSS7XsFgzx5tk7ubM52b0lPcLh1lZw==
-X-Google-Smtp-Source: APXvYqzr9k9sUjPdZzk/xBSVJvi9VcDZ4qnahqEsix6GlyhKhMN/tScOMmctqyz69QrUV/NRqlY/y5lKcm9+NcASIEs=
-X-Received: by 2002:aa7:db4d:: with SMTP id n13mr5756914edt.25.1580582391224;
- Sat, 01 Feb 2020 10:39:51 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Z11+/yeQUB6zTwEssk9IOz1CExq34IGy3Oa8TOXh/Dw=;
+        b=bt2UUjXMwzmvilLod3qbu96zmEJDQZNV73fj+XS5iQJ4pLzaMmogs4mWB2wtVv3hV5
+         fPO7od+m9hyWL6J/lg3azx+Fcux+JGz09ukZA4rqydx22R1Do2VZBARtLWOJwHddo2I5
+         MiaNGINSib6d2UQ7HvrhPwvu7zufMeR6HKouvx1Mjyt8nYwjqWvq7/jYR13aTlypJdUa
+         HLjKQ/j74n493hRXPmN6e6unRJQQ7TGmmHewxYsjisz8NZCcK2BMDHoXg0yNi2tB+MyD
+         tGcZmczxAXvsvpEzIhV/S/in0DlUcLOQ0tx1t8VvnMOPivb7af/LUMhA80e51zpgo5iZ
+         AiQQ==
+X-Gm-Message-State: APjAAAVT43hHEouRweENJD7VUry9Fzt9o6xf8f30hUQi/gpksRKAcVJt
+        JCZJm82YsykUToWodwvrAK4iOTRf+HeNeAXQr+g=
+X-Google-Smtp-Source: APXvYqxHdowNbvOAZgwablQ3gQQL55H32fErt8bUECbN0wCs1Pws7yWJjkaghzNxBt/2ALxYrUhQMOOMAxp3Wh5+Irs=
+X-Received: by 2002:a05:6e02:c71:: with SMTP id f17mr14485694ilj.272.1580582441983;
+ Sat, 01 Feb 2020 10:40:41 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6402:1d06:0:0:0:0 with HTTP; Sat, 1 Feb 2020 10:39:50
- -0800 (PST)
-Reply-To: mayacinemballo@gmail.com
-From:   TERANGA GOLD CORPORATION <goldcorporationteranga@gmail.com>
-Date:   Sat, 1 Feb 2020 19:39:50 +0100
-Message-ID: <CADQt5TzmWSMj4R2Bz8EPP3JMuegpJ5Y0LsT3odQvzV_ZUw8ivw@mail.gmail.com>
-Subject: TERANGA GOLD CORPORATION
-To:     linux-kernel@vger.kernel.org
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 1 Feb 2020 12:40:31 -0600
+Message-ID: <CAH2r5mt-Q1_ZBJmC+8jr5gJhr-NmUGG933y0gc+_1DVWTJUVZQ@mail.gmail.com>
+Subject: [GIT PULL] small SMB3 fix for stable
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Stable <stable@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>,
+        ronnie sahlberg <ronniesahlberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- TERANGA GOLD CORPORATION OUAGADOUGOU
- Burkina Faso Ouagadougou is One of the largest gold producing regions
-in Africa.
- (A Symbol of Africa).
+Please pull the following change since commit
+68353984d63d8d7ea728819dbdb7aecc5f32d360:
+
+  Merge tag '5.6-smb3-fixes-and-dfs-and-readdir-improvements' of
+git://git.samba.org/sfrench/cifs-2.6 (2020-01-28 15:34:03 -0800)
+
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.6-rc-small-smb3-fix-for-stable
+
+for you to fetch changes up to b581098482e6f177a4f64ea021fd5a9327ea08d5:
+
+  cifs: update internal module version number (2020-01-31 15:13:22 -0600)
+
+----------------------------------------------------------------
+Small SMB3 fix for stable (fixes problem with reconnect for soft mounts)
+
+----------------------------------------------------------------
+Ronnie Sahlberg (1):
+      cifs: fix soft mounts hanging in the reconnect code
+
+Steve French (1):
+      cifs: update internal module version number
+
+ fs/cifs/cifsfs.h  | 2 +-
+ fs/cifs/smb2pdu.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 
+-- 
+Thanks,
 
-We are group of miners producing unrefined Gold in the form of dust,
-Bars and Nuggets as well as raw uncut diamonds. We will like to use
-this medium to inform you all, that we control the mines from which
-these precious commodities are gotten. We are based in Monrovia,
-Burkina Faso, Liberia and Freetown, Sierra Leone. Mino River Miners
-Association is a Gold and Diamond-mining and exploration group. This
-group has operations in Bu Liberia and Sierra Leone.
-
-
-We deem it necessary to sell our products to genuine buyers and also
-solicit the interest of international investors, who we can work with
-continuously, in improving our mines and increasing our production
-capacity, In this vain, we have asked our representative to secure us
-the chance of meeting a very good and reliable buyer or investor, who
-will be willing to meet us and discuss possible opportunity of buying
-our products constantly and also help to improve our mines, as you
-know that Liberia has a high quality gold of 22+ and even 24 carats in
-quality, Also Burkina Faso have 92% pure gold (22k, the average
-quality extracted by artisanal miners look forward to enter into a
-long term business with buyers.
-
-
-Burkina Faso represents a significant portion of the West African
-Birimian greenstone belt exposure (approximately 22%).
-https://www.terangagold.com/exploration/burkina-faso/default.aspx
-
-
-Richard S. Young
-President, CEO & Non-Independent Director
-TERANGA GOLD CORPORATION.
-
-
-CONTACT PERSON
-
-Mayacine MBALLO
-Senior Procurement Officer chez Teranga Gold Corporation (Ouagadougou)
-EMAIL ADDRESS: mayacinemballo@gmail.com
-Tel: +226 79 10 78 95
-
-
-Jacob Ou=C3=A9draogo
-Cost Accountant at Teranga Gold Corporation (Ouagadougou)
-
-
-_____________________________________________________________________
-           Teranga Gold Corporation. All rights reserved.
+Steve
