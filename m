@@ -2,166 +2,172 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5516C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684742067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC992067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="iGRitEWo"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="IuUqXEdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgBARw3 (ORCPT
+        id S1726722AbgBAR4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 12:52:29 -0500
-Received: from mout.gmx.net ([212.227.17.22]:35819 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgBARw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 12:52:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1580579546;
-        bh=G0meMjw7IlDsf67nGNkjIezCLILaWKlvplcMNMWdfd8=;
-        h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=iGRitEWozY/kxIKngASmUJb8Z92kbfYyyVtBWBkNfJJ8/T4R9rEdmO8CmxVwZbpix
-         LKpv3OiDNZh8xGyxexDqexFu3rl3QawRkOOGDr6xhvp5FUSWKs+ZfJpp85d4WGjebD
-         1ma5VxSVypiwxQsNXd9bn4n+xPlpv2KJPwc1KmOQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.24] ([77.10.56.158]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3siG-1jfqKg2XUe-00zjg8 for
- <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 18:52:26 +0100
-To:     Linux Kernel <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: why does "mem auto-init: clearing system memory may take some
- time..." takes about 14 sec under 5.4.17 but only few msec under 5.5.1?
-Message-ID: <c7a23250-6b23-2a9e-88c8-924c34fb9139@gmx.de>
-Date:   Sat, 1 Feb 2020 18:52:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
+        Sat, 1 Feb 2020 12:56:18 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39236 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgBAR4R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 12:56:17 -0500
+Received: by mail-pj1-f67.google.com with SMTP id e9so4467791pjr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 09:56:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=GoT2Xza8HTa8YW9t0YeNg2CkziwyhPIP52r/Avd3w9Q=;
+        b=IuUqXEdZlIY+2Jd9WBKsI1VPg1zazke3iNT4V1tgpzFxPSZjpOjif5kf+6NI890RST
+         7/B1G8DjK9ELIx73WVhf6/Cc3RmtwC4+t5CXl3Vvd7DFgw9PGfU3PO1E2jq+Lg/UrC3x
+         IF6Vkr3ng+6Rdjv4tM3mu+b4qN3iWqxJ1TihpeZfjeSbQGsxyf3rYCBPQfhTG9NQ6L4Z
+         CINGPXS/f+Y7iI9+0l4GV3YjtFgd2RvC+NJxnzt6S9hNNKpsMyZiVM7p9dYQrYy0N35g
+         BzOPz2BgR9j/phRmm5WfeizF2dyEZIXQBckDsBCioIIhXxMM6fuoyS4LThd+OFJannJA
+         5iJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=GoT2Xza8HTa8YW9t0YeNg2CkziwyhPIP52r/Avd3w9Q=;
+        b=fyjzC5/FMrMJ5eSfn61SqiMLNwYQuCvA8bYiDotpdilCSBATEHhxD9ETnHAvN+astP
+         Bsf2KZHSK9Rdlm+PFkZNttam3dj118us1SKOnHJTf+GiXIhz9SSQ1onlH8yp6dWv1nrW
+         O/t52mjKjryGh15uOzZqE9QSFX8JhvpcC2PJw1VXYltvhGkm823gnLMU5RK/kkZH7LOZ
+         YGwyfMOAKuXOER1cKpEyhyZ5V31GPr/6l7MUchkxfXFx/ki+H8I6JeWzvPPdXwNL2+nQ
+         gk5IOqOae0o/b8IvAYdlnfxS6K3Ywl0s/1IU1IKVYqtW+GQTMJKaxsUNSgEw9JeFyxmc
+         0CjA==
+X-Gm-Message-State: APjAAAVoQnWqT4J55mUFP7oDQnQrpVab0kBk6ktOmiCS4zI813xKwMvn
+        sWAfDTkOdqG28YtW6DZD4Lo7Ng==
+X-Google-Smtp-Source: APXvYqwuVBJe0yuRW97unT6n4U4keypU3fR3mGbvE89pdgIUrkvOFFujmOrb6/HGbZ1oRV6zWiCXpQ==
+X-Received: by 2002:a17:90a:8008:: with SMTP id b8mr19588079pjn.37.1580579776661;
+        Sat, 01 Feb 2020 09:56:16 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:45d6:e4ad:bc82:ed68? ([2601:646:c200:1ef2:45d6:e4ad:bc82:ed68])
+        by smtp.gmail.com with ESMTPSA id q21sm14405957pff.105.2020.02.01.09.56.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2020 09:56:15 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3442LzscHbWnAZ8JqMDv6GK7DpTREpM0+PvKFTOyLlsolLYK8gz
- lZ6gRxi1+RLljFkEuP4aYxzrGR0Caub8M1/sKt1nBjTDkVT5wYmx4V6bA7ioZUegnwjZvgH
- 8Q1dIcgxUoGceH5EBrDpdW7IWT0EcdAw1kzX+Jt022sC24q2Se2tKNJ2dc5lzScB872t0N3
- ZlPCNh3C22WWV6Bg4vIiw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WRXFYShErNM=:ElK2sb4drWJukZ6UQKXluH
- +EiRR8kaozlF6YgNIS37Qo5y/RgnMwxZwkKcqeJaN20faca9/s2e4bTy05d6rfyS7CpNbaf5p
- jxkRIIS1+c3kM2uej8TH0OzLadkK2AgMehnPUxUEXnyYTj5qOlTfvv4nQSRNuS9ubkHVBrPnj
- Yder5sJoXSAMiOjTv4U7EDdrviQqALoYOqk/YWoCLxDE6srgaODr15lA23uMpO8BrkRpXOMR3
- Qa28aAKmCKATWuUlhqzhJ6jeiNhKa40yLd7ei8Spr0I4odJVD5fGU56IMoAYkwFYqwP3pX8Fd
- OzUiSrF/LgwiUfwgWDP8Zn2Sy9TucSTPjodZL4eREfGNdkY6TVXs5MC/uieR2dukVqBjCpyYF
- R3FThqRyVkXrfQ/ZGNF3U5cqnfsaT3xNHMVtou3c2MVydOVCmgPHaf+sBp+WEeouU+ffGjCZo
- EuxTKOhD6b42EXjfWRaLDoRy+Tda/JzJ306VKFmEMPFN1ecb+ofr3CBa1Ym9oo5ExTfnPkF6f
- MwDmXMZFED2abgzZErZKOlrBYy+xh/yIwm78hK14Uqg7iIF5ob2j2nWnPl6nZQp4Ce7qBB4R9
- AhuD2rGo6TuMcE1+prfuUFgDAS1yEd+9s0IbqmdgnQK5Ea+ja3dPpU+OdGhzJY4yd/FE8UQV/
- huPYhff50Mq5DC/rBCAQV9aXQqC3op0Gq+cWb/kDt6HTvswIEhsLbTXeTTdJMYFP38i3+eMDa
- D6yXuKKwKIzXrW+ec4lWDGqntMMuC7MH0KZGpbnQ0RJMhTftRvEYjHIQyZ7o77RPq8hYOctjr
- ZbzvJLRC/q+kZUAmjTsNTlZA3WpvPlCzFdKEWxRX3S0bR7aorTAR4W9OzniQ8BNqyRznOcemk
- p/7weCu1LvWMFPgibGFYHTJFAvRaSssv51ovK5b4VHepYNJLi9fqChlUpgmS/46uE3TS7G6Dp
- WsFkLwYbt80JFjJai9wLvTl7RiwkpeCYkSCWNKzoSrKmJ/pXD5td++/BGIjGF2JTyCsg5dXPG
- NZ4378DY0FgtKRweOI9A1fvbFlc0DxqVwy6M/LuIuzvseAPAMofR1fTExR03Kb81S0cKcIOTm
- DSOHWUe0hrpXp7HeV8Fvq0h9+2warR7cIS3ZO02WOXwTqfmGifrzW9oW2fGrZjq5FQrBm0QJI
- lg/K6GDhU4qIvjxCtPG+HFO1qEpO5OFvbndK8dQlRguzJkUEQA9lKyTfIPDkhcVrfNZ2nT5jX
- kGijHIwIR/utoEo4z
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
+Date:   Sat, 1 Feb 2020 09:56:11 -0800
+Message-Id: <A2622E15-756D-434D-AF64-4F67781C0A74@amacapital.net>
+References: <b2e2310d-2228-45c2-8174-048e18a46bb6@intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <b2e2310d-2228-45c2-8174-048e18a46bb6@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do wonder (and I'm surprised) about increased boot speed according to dm=
-esg for thi9s hardend Gentoo Linux system:
-Linux mr-fox 5.5.1 #1 SMP Sat Feb 1 18:25:21 CET 2020 x86_64 Intel(R) Xeon=
-(R) CPU E5-1650 v3 @ 3.50GHz GenuineIntel GNU/Linux
 
-Under 5.4.17 I do have usually 14 sec to wait:
 
-[    0.497171] mem auto-init: stack:byref_all, heap alloc:on, heap free:on
-[    0.497171] mem auto-init: clearing system memory may take some time...
-[    0.501549] Calgary: detecting Calgary via BIOS EBDA area
-[    0.501550] Calgary: Unable to locate Rio Grande table in EBDA - bailin=
-g!
-[   14.083235] Memory: 131812972K/134101088K available (12291K kernel code=
-, 1400K rwdata, 1912K rodata, 1272K init, 2040K bss, 2288116K reserved, 0K=
- cma-reserved)
-[   14.083342] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D12,=
- Nodes=3D1
-[   14.083350] Kernel/User page tables isolation: enabled
-[   14.083403] rcu: Hierarchical RCU implementation.
-[   14.083404] rcu: RCU calculated value of scheduler-enlistment delay is =
-25 jiffies.
-[   14.083414] NR_IRQS: 4352, nr_irqs: 928, preallocated irqs: 16
+> On Feb 1, 2020, at 8:58 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+>=20
+> =EF=BB=BFOn 2/1/2020 5:33 AM, Andy Lutomirski wrote:
+>>>> On Jan 31, 2020, at 1:04 PM, Sean Christopherson <sean.j.christopherson=
+@intel.com> wrote:
+>>>=20
+>>> =EF=BB=BFOn Fri, Jan 31, 2020 at 12:57:51PM -0800, Andy Lutomirski wrote=
+:
+>>>>=20
+>>>>>> On Jan 31, 2020, at 12:18 PM, Sean Christopherson <sean.j.christopher=
+son@intel.com> wrote:
+>>>>>=20
+>>>>> This is essentially what I proposed a while back.  KVM would allow ena=
+bling
+>>>>> split-lock #AC in the guest if and only if SMT is disabled or the enab=
+le bit
+>>>>> is per-thread, *or* the host is in "warn" mode (can live with split-lo=
+ck #AC
+>>>>> being randomly disabled/enabled) and userspace has communicated to KVM=
+ that
+>>>>> it is pinning vCPUs.
+>>>>=20
+>>>> How about covering the actual sensible case: host is set to fatal?  In t=
+his
+>>>> mode, the guest gets split lock detection whether it wants it or not. H=
+ow do
+>>>> we communicate this to the guest?
+>>>=20
+>>> KVM doesn't advertise split-lock #AC to the guest and returns -EFAULT to=
+ the
+>>> userspace VMM if the guest triggers a split-lock #AC.
+>>>=20
+>>> Effectively the same behavior as any other userspace process, just that K=
+VM
+>>> explicitly returns -EFAULT instead of the process getting a SIGBUS.
+>> Which helps how if the guest is actually SLD-aware?
+>> I suppose we could make the argument that, if an SLD-aware guest gets #AC=
+ at CPL0, it=E2=80=99s a bug, but it still seems rather nicer to forward the=
+ #AC to the guest instead of summarily killing it.
+>=20
+> If KVM does advertise split-lock detection to the guest, then kvm/host can=
+ know whether a guest is SLD-aware by checking guest's MSR_TEST_CTRL.SPLIT_L=
+OCK_DETECT bit.
+>=20
+> - If guest's MSR_TEST_CTRL.SPLIT_LOCK_DETECT is set, it indicates guest is=
+ SLD-aware so KVM forwards #AC to guest.
+>=20
 
-but with 5.5.1 there's no wait?:
+I disagree. If you advertise split-lock detection with the current core capa=
+bility bit, it should *work*.  And it won=E2=80=99t.  The choices you=E2=80=99=
+re actually giving the guest are:
 
-[    0.000000] mem auto-init: stack:byref_all, heap alloc:on, heap free:on
-[    0.000000] mem auto-init: clearing system memory may take some time...
-[    0.000000] Memory: 131812876K/134101088K available (12291K kernel code=
-, 1412K rwdata, 1936K rodata, 1260K init, 2012K bss, 2288212K reserved, 0K=
- cma-reserved)
-[    0.000000] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D12,=
- Nodes=3D1
-[    0.000000] Kernel/User page tables isolation: enabled
-[    0.000000] rcu: Hierarchical RCU implementation.
-[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is =
-25 jiffies.
-[    0.000000] NR_IRQS: 4352, nr_irqs: 928, preallocated irqs: 16
-[    0.000000] random: get_random_bytes called from start_kernel+0x4a8/0x6=
-59 with crng_init=3D0
+a) Guest understands SLD and wants it on.  The guest gets the same behavior a=
+s in bare metal.
 
-Do I miss something? (The kernel config was derived via "make oldconfig").
+b) Guest does not understand. Guest gets killed if it screws up as described=
+ below.
 
-=2D-
-Toralf
+> - If not set. It may be a old guest or a malicious guest or a guest withou=
+t SLD support, and we cannot figure it out. So we have to kill the guest whe=
+n host is SLD-fatal, and let guest survive when SLD-WARN for old sane buggy g=
+uest.
+
+All true, but the result of running a Linux guest in SLD-warn mode will be b=
+roken.
+
+>=20
+> In a word, all the above is on the condition that KVM advertise split-lock=
+ detection to guest. But this patch doesn't do this. Maybe I should add that=
+ part in v2.
+
+I think you should think the details all the way through, and I think you=E2=
+=80=99re likely to determine that the Intel architecture team needs to do *s=
+omething* to clean up this mess.
+
+There are two independent problems here.  First, SLD *can=E2=80=99t* be virt=
+ualized sanely because it=E2=80=99s per-core not per-thread. Second, most us=
+ers *won=E2=80=99t want* to virtualize it correctly even if they could: if a=
+ guest is allowed to do split locks, it can DoS the system.
+
+So I think there should be an architectural way to tell a guest that SLD is o=
+n whether it likes it or not. And the guest, if booted with sld=3Dwarn, can p=
+rint a message saying =E2=80=9Chaha, actually SLD is fatal=E2=80=9D and carr=
+y on.
+
+>=20
+>> ISTM, on an SLD-fatal host with an SLD-aware guest, the host should tell t=
+he guest =E2=80=9Chey, you may not do split locks =E2=80=94 SLD is forced on=
+=E2=80=9D and the guest should somehow acknowledge it so that it sees the ar=
+chitectural behavior instead of something we made up.  Hence my suggestion.
+>=20
