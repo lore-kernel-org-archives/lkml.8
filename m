@@ -2,89 +2,72 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A85C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DADC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7105F20728
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D00B20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580585116;
+	bh=7IeGbr88xPxfAlsmvZYtOueWgWLzVV8Rhk3GwYQGS8k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=lLsPKrEkjDRf9dUBKKhXGANw4HtKeJy6KzL12/qzFWM+9VEQ4rXXsbJyckPZfj8qb
+	 Q90qs6AwFTKOyyZbm2g9blhYfvYi4FUBNh0CR3xCq8jgLUAK9T677X7iot6jBN/OOx
+	 RioeJze5hsy1spkgFKS049t+5QpcDs9i1wgVzufY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgBATUR (ORCPT
+        id S1726789AbgBATZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 14:20:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:43454 "EHLO foss.arm.com"
+        Sat, 1 Feb 2020 14:25:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgBATUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 14:20:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46ECAFEC;
-        Sat,  1 Feb 2020 11:20:16 -0800 (PST)
-Received: from [192.168.122.164] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 313983F68E;
-        Sat,  1 Feb 2020 11:20:15 -0800 (PST)
-Subject: Re: [PATCH 5/6] net: bcmgenet: Fetch MAC address from the adapter
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, opendmb@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
-        hkallweit1@gmail.com
-References: <20200201074625.8698-1-jeremy.linton@arm.com>
- <20200201074625.8698-6-jeremy.linton@arm.com> <20200201153709.GK9639@lunn.ch>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <99353ae3-4ad5-b2b3-1303-4b9867eb213d@arm.com>
-Date:   Sat, 1 Feb 2020 13:20:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200201153709.GK9639@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726270AbgBATZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 14:25:15 -0500
+Subject: Re: [GIT PULL] small SMB3 fix for stable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580585114;
+        bh=7IeGbr88xPxfAlsmvZYtOueWgWLzVV8Rhk3GwYQGS8k=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=VPibsYMCguCX74umyl2gdMFwI1ZwtO77Hc0F0PfZeN3lk4hJNknvkP6RLMPKEcQZ1
+         Q53KnRiFnUEhMDGCs+UQk+62Dv6uLNDb3AEPXCqGXlVHtzwBI3RHJgSq/e/wbG/8a2
+         Xedsj3631A2tkBiPWJzvSkdzX1cL+NFd8HpAHoj8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5mt-Q1_ZBJmC+8jr5gJhr-NmUGG933y0gc+_1DVWTJUVZQ@mail.gmail.com>
+References: <CAH2r5mt-Q1_ZBJmC+8jr5gJhr-NmUGG933y0gc+_1DVWTJUVZQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5mt-Q1_ZBJmC+8jr5gJhr-NmUGG933y0gc+_1DVWTJUVZQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.6-rc-small-smb3-fix-for-stable
+X-PR-Tracked-Commit-Id: b581098482e6f177a4f64ea021fd5a9327ea08d5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 94f2630b18975bb56eee5d1a36371db967643479
+Message-Id: <158058511480.16683.1703962010950781039.pr-tracker-bot@kernel.org>
+Date:   Sat, 01 Feb 2020 19:25:14 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Stable <stable@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        ronnie sahlberg <ronniesahlberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The pull request you sent on Sat, 1 Feb 2020 12:40:31 -0600:
 
-On 2/1/20 9:37 AM, Andrew Lunn wrote:
->> @@ -3601,6 +3605,23 @@ static int bcmgenet_probe(struct platform_device *pdev)
->>   	    !strcasecmp(phy_mode_str, "internal"))
->>   		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
->>   
->> +	if (dn)
->> +		macaddr = of_get_mac_address(dn);
->> +	else if (pd)
->> +		macaddr = pd->mac_address;
->> +
->> +	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
->> +		if (has_acpi_companion(&pdev->dev))
->> +			bcmgenet_get_hw_addr(priv, dev->dev_addr);
->> +
->> +		if (!is_valid_ether_addr(dev->dev_addr)) {
->> +			dev_warn(&pdev->dev, "using random Ethernet MAC\n");
->> +			eth_hw_addr_random(dev);
->> +		}
->> +	} else {
->> +		ether_addr_copy(dev->dev_addr, macaddr);
->> +	}
->> +
-> 
-> Could you also maybe put in here somewhere a call to
-> device_get_mac_address(), to support getting the MAC address out of
-> ACPI?
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.6-rc-small-smb3-fix-for-stable
 
-I had that here until right before I posted it, mostly because I was 
-trying to consolidate the DT/ACPI paths. I pulled it out because it 
-wasn't making the code any clearer, and as I mentioned in my response to 
-the general _DSD properties I would rather entirely depend on non DSD 
-properties if possible.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/94f2630b18975bb56eee5d1a36371db967643479
 
-I will put it back in, but IMHO we shouldn't be finding firmware using 
-it. Since the discussion a few years back, its become clearer to me its 
-not usually needed. As in this example, the addresses can usually be 
-picked off the adapter if the firmware bothers to set them up.
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
