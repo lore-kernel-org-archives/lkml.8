@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11846C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033C5C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87B720674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0EE206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JSkarRTK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q6XHR6t4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgBABvL (ORCPT
+        id S1727039AbgBABwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:51:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52302 "EHLO
+        Fri, 31 Jan 2020 20:52:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53678 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBABvK (ORCPT
+        with ESMTP id S1726475AbgBABwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:51:10 -0500
+        Fri, 31 Jan 2020 20:52:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Y4oH0DJoPTg1vs/wo5hS8AuSrbZQqTSvRDnjdivmgcw=; b=JSkarRTK6B/eHxgPZOtfNHCxn
-        EoL1mNd7heoS6ln+lgRZb5aaXxNQ+XkINB9O0QD+hYlcrhponNAPp3JU0tb4pFsIulavIFfqRRy8W
-        6sfGKWeXq2sOycf1tUoE6Kdde3IAq4cXp88tCuYfF+aq/UULKyRQiexACh6zNlXePDIlDmXHZky28
-        WFaj/gkNpEiiZhaw7y3Wy1+zPQ1hpofTe7M/mnBwnTtLD6DkMFY/Qk5v/GVP4M6TZ07rs48y0PUt9
-        xm57fbLzOIBNY69AU+RcYMoWBEb2Z6AGFH5Xa8ynMMTDHh814uDVUXkE4jecENbKSHTCz6ACOwn96
-        yuvIrWXDA==;
+         bh=cWI5O2cv+SeehZ9KuYC3J+GruZ97y+6ngsaLCn03r54=; b=Q6XHR6t45O7XpvUbyEbEUFjde
+        Gma0A+VGZJ3dz7NdLu04brCnvedzP+ot5Cmm07EAcBkqSd/ezAObJ0V9tAwKZx/z2PsILNmOWySU7
+        U1p6FVo/1vYdGHJnBFG6tp+BZy5mp1aMweny5MYoPnrk22nVN6NF91k3X0WGws+P1XuOLmvhKUiws
+        xJA3svr5btcjL+e8DXr5RsTwMFzL5pe8L32PNzG1/pvizbvVypPb0z/K8MztjBLxK5WKg5YsMbp/l
+        G5QTchdlGobhev/MBrPkxpS0Z5Ufe1+1aBTR/39pXk4hxeAoINoxgkACesqcbTjJZFnNAE1vxyquo
+        zytcPJrSw==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixhwB-0005XH-PR; Sat, 01 Feb 2020 01:51:07 +0000
+        id 1ixhxX-0005ol-8s; Sat, 01 Feb 2020 01:52:31 +0000
 To:     LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
+Cc:     Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] arm64: fix NUMA Kconfig typos
-Message-ID: <2c69f4d8-03a1-20a6-e8ef-a4518a7c6d07@infradead.org>
-Date:   Fri, 31 Jan 2020 17:51:06 -0800
+Subject: [PATCH] arch/csky: fix some Kconfig typos
+Message-ID: <c554f9e8-fdc7-ada3-8b6e-70a3f3aef89f@infradead.org>
+Date:   Fri, 31 Jan 2020 17:52:30 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
@@ -60,33 +58,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix typos in arch/arm64/Kconfig:
-
-- spell Numa as NUMA
-- add hyphenation to Non-Uniform
+Fix wording in help text for the CPU_HAS_LDSTEX symbol.
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Guo Ren <guoren@kernel.org>
+Cc: linux-csky@vger.kernel.org
 ---
- arch/arm64/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/csky/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200131.orig/arch/arm64/Kconfig
-+++ linux-next-20200131/arch/arm64/Kconfig
-@@ -952,11 +952,11 @@ config HOTPLUG_CPU
- 
- # Common NUMA Features
- config NUMA
--	bool "Numa Memory Allocation and Scheduler Support"
-+	bool "NUMA Memory Allocation and Scheduler Support"
- 	select ACPI_NUMA if ACPI
- 	select OF_NUMA
+--- linux-next-20200131.orig/arch/csky/Kconfig
++++ linux-next-20200131/arch/csky/Kconfig
+@@ -77,7 +77,7 @@ config CPU_HAS_TLBI
+ config CPU_HAS_LDSTEX
+ 	bool
  	help
--	  Enable NUMA (Non Uniform Memory Access) support.
-+	  Enable NUMA (Non-Uniform Memory Access) support.
+-	  For SMP, CPU needs "ldex&stex" instrcutions to atomic operations.
++	  For SMP, CPU needs "ldex&stex" instructions for atomic operations.
  
- 	  The kernel will try to allocate memory used by a CPU on the
- 	  local memory of the CPU and add some more
+ config CPU_NEED_TLBSYNC
+ 	bool
 
