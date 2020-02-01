@@ -2,122 +2,113 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F24C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EFEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E851C20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:07:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRi0IFDa"
+	by mail.kernel.org (Postfix) with ESMTP id B75D3206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580545998;
+	bh=E0v/aw/eZV1PxYSxlag63puXSxfO+G3didZzWiq92GY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qwVTCMy1I8MybwoTKuReRtQIioABzfRnHh4p1b6/xxLVsGJIQzazhWuoHlZsh3DgM
+	 b7tyTMj+Bh+MwRisPt0Cxu2DOMoyXH5m9LcBuAmV8Esh17GLtoob6gYVDRzac/LUyw
+	 F/52hhG9abnt2KVI+P2CAdDPq10BD4sVFEq55WQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgBAIHn (ORCPT
+        id S1726354AbgBAIcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 03:07:43 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40224 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgBAIHm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 03:07:42 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y1so3739903plp.7
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 00:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=5nTO1YAVmPYSrJV28ycJBVRQxudQyA//ln8alpueGps=;
-        b=hRi0IFDaZn1lUYPec0qzmBKxfP6Dp5z1ASVzko/oGim4N6t0iTqI+Rq5GJ79UGsZk4
-         jIRbBfvCFm83PIOe/5646uAh8jt4ocQYU7CEHv9EaZyOIkDfQJ9B0eKkb/7GfYVLo1ZC
-         oT3GwN2WPDGuMq08oWbz6KJEkiqFMhXvoyPFKdSfX4BqTu3KPBWk8GM7IravPiATD710
-         u1Ky4J0jaFm2nfXfZQ7BdWnQ99puOsxnndHxi1tGJGEDuIzRsHT9SvDlkLH8dC8h4P04
-         jCjbN95qHqHt8huMtBcMIA+bc+hjyvdgw8SpcIWGUvLa8yXcIadvVzgWnZPdbi6GUbDb
-         ItuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=5nTO1YAVmPYSrJV28ycJBVRQxudQyA//ln8alpueGps=;
-        b=EgXds3/Dkam39SOXmB/u5ozH8/ZxzTlbd3JumwAyt8RUUU3FxndJrhW4b3XgMtZgXQ
-         FcNWYy27l3DYTb2rG1xSAYy4UdwfIaDnI6GGLhYEyBQ3BXwztUX2+qGPS4SxzKQ+B62E
-         3Dx0mRIAHQNBoKLagMEe/GCJKyuveg9KREOzodQ+FfKZ5MegP1L/GmjaSFJZFfespukF
-         NjQwOdXSb0mfPVknGZnwQzXvmu9YOpCm9+BnC3YDfABSQx1zU/zuJNQ+F2h2UuT4iesI
-         ymm2Q1/pOhxKSrHuB8E92yxF5POnhew+DBl4hL7Eg6pnQgecvnHxG9upEqZj5XuLDvj/
-         3V+Q==
-X-Gm-Message-State: APjAAAVmzko+YC5uO2eJmLCJdJqGM8cLLPCo9LilJ/9Vog4Z3qgJdq7B
-        jNwHucm7i6m4U1vKR+WwRBk=
-X-Google-Smtp-Source: APXvYqwaEPljKf+Uny3oyoHTmu8YcqVO19suYZDZeuOPA9IUPKs3vW0aZ/6hfDDv6IKxZBH9yVyBcg==
-X-Received: by 2002:a17:902:a514:: with SMTP id s20mr13995193plq.300.1580544460768;
-        Sat, 01 Feb 2020 00:07:40 -0800 (PST)
-Received: from [192.168.1.101] (122-58-182-19-adsl.sparkbb.co.nz. [122.58.182.19])
-        by smtp.gmail.com with ESMTPSA id x132sm12731750pfc.148.2020.02.01.00.07.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 01 Feb 2020 00:07:40 -0800 (PST)
-Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20200131124531.623136425@infradead.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Greg Ungerer <gerg@linux-m68k.org>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <415a1105-f971-5513-bd41-fbd2ec4e1cd7@gmail.com>
-Date:   Sat, 1 Feb 2020 21:07:34 +1300
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200131124531.623136425@infradead.org>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sat, 1 Feb 2020 03:32:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgBAIcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 03:32:47 -0500
+Received: from e123331-lin.c.hoisthospitality.com (dc3829c8a.static.telenet.be [195.130.156.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DC00206D3;
+        Sat,  1 Feb 2020 08:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580545967;
+        bh=E0v/aw/eZV1PxYSxlag63puXSxfO+G3didZzWiq92GY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eaZIyhqjMhiA8cBE4IIK4AtbdMSaPLPZ6W1gfG30bY2TB5nifflhk4LKtxJXws2Of
+         C4wgJdmFprVs3B/lMjQEbic56ebcrnI5GM2zs4TBTBPxB8mz6qxq20o09chKJpcw9k
+         YPxixdo3C5lOSdC6IvcbwWI05ERcgsLfZg3te224=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH] x86/ima: use correct identifier for SetupMode variable
+Date:   Sat,  1 Feb 2020 09:32:21 +0100
+Message-Id: <20200201083221.20193-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
+The IMA arch code attempts to inspect the "SetupMode" EFI variable
+by populating a variable called efi_SetupMode_name with the string
+"SecureBoot" and passing that to the EFI GetVariable service, which
+obviously does not yield the expected result.
 
-this version tested OK on 030, so
+Given that the string is only referenced a single time, let's get
+rid of the intermediate variable, and pass the correct string as
+an immediate argument. While at it, do the same for "SecureBoot".
 
-Tested-by; Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 399574c64eaf ("x86/ima: retry detecting secure boot mode")
+Fixes: 980ef4d22a95 ("x86/ima: check EFI SetupMode too")
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
 
-Am 01.02.2020 um 01:45 schrieb Peter Zijlstra:
-> Hi!
->
-> In order to faciliate Will's READ_ONCE() patches:
->
->   https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
->
-> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
-> are tested using ARAnyM/68040.
->
-> Michael tested the previous version on his Atari Falcon/68030.
->
-> Build tested for sun3/coldfire.
->
-> Please consider!
->
-> Changes since -v1:
->  - fixed sun3/coldfire build issues
->  - unified motorola mmu page setup
->  - added enum to table allocator
->  - moved pointer table allocator to motorola.c
->  - converted coldfire pgtable_t
->  - fixed coldfire pgd_alloc
->  - fixed coldfire nocache
->
-> ---
->  arch/m68k/include/asm/mcf_pgalloc.h      |  31 ++---
->  arch/m68k/include/asm/motorola_pgalloc.h |  74 ++++------
->  arch/m68k/include/asm/motorola_pgtable.h |  36 +++--
->  arch/m68k/include/asm/page.h             |  16 ++-
->  arch/m68k/include/asm/pgtable_mm.h       |  10 +-
->  arch/m68k/mm/init.c                      |  34 +++--
->  arch/m68k/mm/kmap.c                      |  36 +++--
->  arch/m68k/mm/memory.c                    | 103 --------------
->  arch/m68k/mm/motorola.c                  | 228 +++++++++++++++++++++++++------
->  9 files changed, 302 insertions(+), 266 deletions(-)
->
->
+The bug results in get_sb_mode() to always return efi_secureboot_mode_disabled.
+
+I am not too familiar with this code, but it seems get_sb_mode() is only
+called when the secure boot state has not been established yet, but I don't
+know how likely that is to occur in practice.
+
+ arch/x86/kernel/ima_arch.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/ima_arch.c b/arch/x86/kernel/ima_arch.c
+index 4d4f5d9faac3..23054909c8dd 100644
+--- a/arch/x86/kernel/ima_arch.c
++++ b/arch/x86/kernel/ima_arch.c
+@@ -10,8 +10,6 @@ extern struct boot_params boot_params;
+ 
+ static enum efi_secureboot_mode get_sb_mode(void)
+ {
+-	efi_char16_t efi_SecureBoot_name[] = L"SecureBoot";
+-	efi_char16_t efi_SetupMode_name[] = L"SecureBoot";
+ 	efi_guid_t efi_variable_guid = EFI_GLOBAL_VARIABLE_GUID;
+ 	efi_status_t status;
+ 	unsigned long size;
+@@ -25,7 +23,7 @@ static enum efi_secureboot_mode get_sb_mode(void)
+ 	}
+ 
+ 	/* Get variable contents into buffer */
+-	status = efi.get_variable(efi_SecureBoot_name, &efi_variable_guid,
++	status = efi.get_variable(L"SecureBoot", &efi_variable_guid,
+ 				  NULL, &size, &secboot);
+ 	if (status == EFI_NOT_FOUND) {
+ 		pr_info("ima: secureboot mode disabled\n");
+@@ -38,7 +36,7 @@ static enum efi_secureboot_mode get_sb_mode(void)
+ 	}
+ 
+ 	size = sizeof(setupmode);
+-	status = efi.get_variable(efi_SetupMode_name, &efi_variable_guid,
++	status = efi.get_variable(L"SetupMode", &efi_variable_guid,
+ 				  NULL, &size, &setupmode);
+ 
+ 	if (status != EFI_SUCCESS)	/* ignore unknown SetupMode */
+-- 
+2.17.1
+
