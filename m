@@ -2,130 +2,154 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E5AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0BEC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD31206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="okgZ6fLQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4A4C520740
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgBALUt (ORCPT
+        id S1726679AbgBALVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 06:20:49 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:4717 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726265AbgBALUt (ORCPT
+        Sat, 1 Feb 2020 06:21:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57170 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgBALVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 06:20:49 -0500
-X-UUID: ff97da01dd944c2c9f0feda24c8c3132-20200201
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=XTEY6dMzjjkyr9jLk6HV6IbqAj2VEs2vvVsCYlO1zCo=;
-        b=okgZ6fLQhJowbyiwEa9oqF6V0EM8nHcd6fUReOIUAHLh9aMwO41MwLkvJyJ+PcDmG2PeGaFSoKMaBeciMpt+/YB8XPq2nxr175dBiTaVGXF9EDUrD+uZaQUyhCO1KaduCjEoxQiGaN3r6vWpa8VENhlB2KrDb3R8rf9OSCN/M88=;
-X-UUID: ff97da01dd944c2c9f0feda24c8c3132-20200201
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1575815744; Sat, 01 Feb 2020 19:20:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 1 Feb 2020 19:20:01 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 1 Feb 2020 19:18:14 +0800
-Message-ID: <1580556039.10835.3.camel@mtkswgap22>
-Subject: Re: [PATCH] xhci-mtk: Fix NULL pointer dereference with xhci_irq()
- for shared_hcd
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-CC:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Chunfeng Yun" <chunfeng.yun@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Sriharsha Allenki <sallenki@codeaurora.org>
-Date:   Sat, 1 Feb 2020 19:20:39 +0800
-In-Reply-To: <08f69bab-2ada-d6ab-7bf7-d960e9f148a0@linux.intel.com>
-References: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
-         <08f69bab-2ada-d6ab-7bf7-d960e9f148a0@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sat, 1 Feb 2020 06:21:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ixqpz-0005Kk-Po; Sat, 01 Feb 2020 12:21:19 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 13DC11C1DFA;
+        Sat,  1 Feb 2020 12:21:19 +0100 (CET)
+Date:   Sat, 01 Feb 2020 11:21:18 -0000
+From:   "tip-bot2 for Konstantin Khlebnikov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] clocksource: Prevent double add_timer_on() for
+ watchdog_timer
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <158048693917.4378.13823603769948933793.stgit@buzz>
+References: <158048693917.4378.13823603769948933793.stgit@buzz>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Message-ID: <158055607880.396.15231854905152208691.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTMxIGF0IDE2OjUwICswMjAwLCBNYXRoaWFzIE55bWFuIHdyb3RlOg0K
-PiBPbiAxNy4xLjIwMjAgOS40MSwgTWFjcGF1bCBMaW4gd3JvdGU6DQo+ID4gQWNjb3JkaW5nIHRv
-IE5VTEwgcG9pbnRlciBmaXg6IGh0dHBzOi8vdGlueXVybC5jb20vdXFmdDVyYQ0KPiA+IHhoY2k6
-IEZpeCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2Ugd2l0aCB4aGNpX2lycSgpIGZvciBzaGFyZWRf
-aGNkDQo+ID4gVGhlIHNpbWlsYXIgaXNzdWUgaGFzIGFsc28gYmVlbiBmb3VuZCBpbiBRQyBhY3Rp
-dml0aWVzIGluIE1lZGlhdGVrLg0KPiA+IA0KPiA+IEhlcmUgcXVvdGUgdGhlIGRlc2NyaXB0aW9u
-IGZyb20gdGhlIHJlZmVyZW5jZWQgcGF0Y2ggYXMgZm9sbG93cy4NCj4gPiAiQ29tbWl0ICgiZjA2
-ODA5MDQyNmVhIHhoY2k6IEZpeCBsZWFraW5nIFVTQjMgc2hhcmVkX2hjZA0KPiA+IGF0IHhoY2kg
-cmVtb3ZhbCIpIHNldHMgeGhjaV9zaGFyZWRfaGNkIHRvIE5VTEwgd2l0aG91dA0KPiA+IHN0b3Bw
-aW5nIHhoY2kgaG9zdC4gVGhpcyByZXN1bHRzIGludG8gYSByYWNlIGNvbmRpdGlvbg0KPiA+IHdo
-ZXJlIHNoYXJlZF9oY2QgKHN1cGVyIHNwZWVkIHJvb3RodWIpIHJlbGF0ZWQgaW50ZXJydXB0cw0K
-PiA+IGFyZSBiZWluZyBoYW5kbGVkIHdpdGggeGhjaV9pcnEgaGFwcGVucyB3aGVuIHRoZQ0KPiA+
-IHhoY2lfcGxhdF9yZW1vdmUgaXMgY2FsbGVkIGFuZCBzaGFyZWRfaGNkIGlzIHNldCB0byBOVUxM
-Lg0KPiA+IEZpeCB0aGlzIGJ5IHNldHRpbmcgdGhlIHNoYXJlZF9oY2QgdG8gTlVMTCBvbmx5IGFm
-dGVyIHRoZQ0KPiA+IGNvbnRyb2xsZXIgaXMgaGFsdGVkIGFuZCBubyBpbnRlcnJ1cHRzIGFyZSBn
-ZW5lcmF0ZWQuIg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFNyaWhhcnNoYSBBbGxlbmtpIDxz
-YWxsZW5raUBjb2RlYXVyb3JhLm9yZz4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8
-bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy91c2IvaG9z
-dC94aGNpLW10ay5jIHwgMiArLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
-LCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2hvc3Qv
-eGhjaS1tdGsuYyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuYw0KPiA+IGluZGV4IGIxOGE2
-YmFlZjIwNC4uYzIyN2M2N2Y1ZGM1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvdXNiL2hvc3Qv
-eGhjaS1tdGsuYw0KPiA+ICsrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuYw0KPiA+IEBA
-IC01OTMsMTEgKzU5MywxMSBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX3JlbW92ZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpkZXYpDQo+ID4gICAJc3RydWN0IHVzYl9oY2QgICpzaGFyZWRfaGNkID0g
-eGhjaS0+c2hhcmVkX2hjZDsNCj4gPiAgIA0KPiA+ICAgCXVzYl9yZW1vdmVfaGNkKHNoYXJlZF9o
-Y2QpOw0KPiA+IC0JeGhjaS0+c2hhcmVkX2hjZCA9IE5VTEw7DQo+ID4gICAJZGV2aWNlX2luaXRf
-d2FrZXVwKCZkZXYtPmRldiwgZmFsc2UpOw0KPiA+ICAgDQo+ID4gICAJdXNiX3JlbW92ZV9oY2Qo
-aGNkKTsNCj4gPiAgIAl1c2JfcHV0X2hjZChzaGFyZWRfaGNkKTsNCj4gPiArCXhoY2ktPnNoYXJl
-ZF9oY2QgPSBOVUxMOw0KPiA+ICAgCXVzYl9wdXRfaGNkKGhjZCk7DQo+ID4gICAJeGhjaV9tdGtf
-c2NoX2V4aXQobXRrKTsNCj4gPiAgIAl4aGNpX210a19jbGtzX2Rpc2FibGUobXRrKTsNCj4gPiAN
-Cj4gDQo+IENvdWxkIHlvdSBzaGFyZSBkZXRhaWxzIG9mIHRoZSBOVUxMIHBvaW50ZXIgZGVyZWZl
-cmVuY2UsIChiYWNrdHJhY2UpLg0KDQpUaGlzIGJ1ZyB3YXMgZm91bmQgYnkgb3VyIFFBIHN0YWZm
-IHdoaWxlIGRvaW5nIDUwMCB0aW1lcyBwbHVnLWluIGFuZA0KcGx1Zy1vdXQgZGV2aWNlcy4gVGhl
-IGJhY2t0cmFjZSBJIGhhdmUgd2FzIHJlY29yZGVkIGJ5IFFBIGFuZCBJIGRpZG4ndA0KcmVwcm9k
-dWNlIHRoaXMgaXNzdWUgb24gbXkgb3duIGVudmlyb25tZW50LiBIb3dldmVyLCBhZnRlciBhcHBs
-aWVkIHRoaXMNCnBhdGNoIHRoZSBpc3N1ZSBzZWVtcyByZXNvbHZlLiBIZXJlIGlzIHRoZSBiYWNr
-dHJhY2U6DQoNCkV4Y2VwdGlvbiBDbGFzczogS2VybmVsIChLRSkNClBDIGlzIGF0IFs8ZmZmZmZm
-ODAwOGNjY2JjMD5dIHhoY2lfaXJxKzB4NzI4LzB4MjM2NA0KTFIgaXMgYXQgWzxmZmZmZmY4MDA4
-Y2NjNzg4Pl0geGhjaV9pcnErMHgyZjAvMHgyMzY0DQoNCkN1cnJlbnQgRXhlY3V0aW5nIFByb2Nl
-c3M6DQpbaXB0YWJsZXMsIDg1OV1bbmV0ZGFnZW50LCA3NzBdDQoNCkJhY2t0cmFjZToNCls8ZmZm
-ZmZmODAwODBlYWQ1OD5dIF9fYXRvbWljX25vdGlmaWVyX2NhbGxfY2hhaW4rMHhhOC8weDEzMCAg
-IA0KWzxmZmZmZmY4MDA4MGViNmQ0Pl0gbm90aWZ5X2RpZSsweDg0LzB4YWMgICAgICANCls8ZmZm
-ZmZmODAwODA4ZTg3ND5dIGRpZSsweDFkOC8weDNiOCAgIA0KWzxmZmZmZmY4MDA4MGE4OWIwPl0g
-X19kb19rZXJuZWxfZmF1bHQrMHgxNzgvMHgxODggICAgIA0KWzxmZmZmZmY4MDA4MGE4MWI0Pl0g
-ZG9fcGFnZV9mYXVsdCsweDQ0LzB4M2IwICANCls8ZmZmZmZmODAwODBhODExYz5dIGRvX3RyYW5z
-bGF0aW9uX2ZhdWx0KzB4NDQvMHg5OCAgICANCls8ZmZmZmZmODAwODA4MGUwOD5dIGRvX21lbV9h
-Ym9ydCsweDRjLzB4MTI4ICAgDQpbPGZmZmZmZjgwMDgwODMyZDA+XSBlbDFfZGErMHgyNC8weDNj
-ICANCls8ZmZmZmZmODAwOGNjY2JjMD5dIHhoY2lfaXJxKzB4NzI4LzB4MjM2NCAgICAgDQpbPGZm
-ZmZmZjgwMDhjOTg4MDQ+XSB1c2JfaGNkX2lycSsweDJjLzB4NDQgICAgIA0KWzxmZmZmZmY4MDA4
-MTc5YmIwPl0gX19oYW5kbGVfaXJxX2V2ZW50X3BlcmNwdSsweDI2Yy8weDRhNCAgICAgDQpbPGZm
-ZmZmZjgwMDgxNzllYzg+XSBoYW5kbGVfaXJxX2V2ZW50KzB4NWMvMHhkMA0KWzxmZmZmZmY4MDA4
-MTdlM2MwPl0gaGFuZGxlX2Zhc3Rlb2lfaXJxKzB4MTBjLzB4MWUwICAgIA0KWzxmZmZmZmY4MDA4
-MTc4N2IwPl0gX19oYW5kbGVfZG9tYWluX2lycSsweDMyYy8weDczOCAgIA0KWzxmZmZmZmY4MDA4
-MDgxNTljPl0gZ2ljX2hhbmRsZV9pcnErMHgxNzQvMHgxYzQNCls8ZmZmZmZmODAwODA4M2NmOD5d
-IGVsMF9pcnFfbmFrZWQrMHg1MC8weDVjICAgDQpbPGZmZmZmZmZmZmZmZmZmZmY+XSAweGZmZmZm
-ZmZmZmZmZmZmZmYNCg0KPiBUaGUgVVNCMyBoY2QgaXMgYWxyZWFkeSByZW1vdmVkIHdoZW4geGhj
-aS0+c2hhcmVkX2hjZCBpcyBzZXQgdG8gTlVMTC4NCj4gV2UgbWlnaHQgd2FudCB0byBhZGQgc29t
-ZSBjaGVja3MgdG8gbWFrZSBzdXJlIHdlIGFyZSBub3QgdXNpbmcgdGhlIHJlbW92ZWQNCj4gaGNk
-IGFueW1vcmUgaW4gdGhhdCBjb2RlcGF0aCBhbnltb3JlLg0KPiANCj4gLU1hdGhpYXMNCg0KVGhh
-bmtzLA0KTWFjcGF1bCBMaW4NCg0K
+The following commit has been merged into the timers/urgent branch of tip:
 
+Commit-ID:     febac332a819f0e764aa4da62757ba21d18c182b
+Gitweb:        https://git.kernel.org/tip/febac332a819f0e764aa4da62757ba21d18c182b
+Author:        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+AuthorDate:    Fri, 31 Jan 2020 19:08:59 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sat, 01 Feb 2020 11:07:56 +01:00
+
+clocksource: Prevent double add_timer_on() for watchdog_timer
+
+Kernel crashes inside QEMU/KVM are observed:
+
+  kernel BUG at kernel/time/timer.c:1154!
+  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
+
+At the same time another cpu got:
+
+  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
+
+  __hlist_del at include/linux/list.h:681
+  (inlined by) detach_timer at kernel/time/timer.c:818
+  (inlined by) expire_timers at kernel/time/timer.c:1355
+  (inlined by) __run_timers at kernel/time/timer.c:1686
+  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
+
+Unfortunately kernel logs are badly scrambled, stacktraces are lost.
+
+Printing the timer->function before the BUG_ON() pointed to
+clocksource_watchdog().
+
+The execution of clocksource_watchdog() can race with a sequence of
+clocksource_stop_watchdog() .. clocksource_start_watchdog():
+
+expire_timers()
+ detach_timer(timer, true);
+  timer->entry.pprev = NULL;
+ raw_spin_unlock_irq(&base->lock);
+ call_timer_fn
+  clocksource_watchdog()
+
+					clocksource_watchdog_kthread() or
+					clocksource_unbind()
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_stop_watchdog();
+					 del_timer(&watchdog_timer);
+					 watchdog_running = 0;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_start_watchdog();
+					 add_timer_on(&watchdog_timer, ...);
+					 watchdog_running = 1;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+  spin_lock(&watchdog_lock);
+  add_timer_on(&watchdog_timer, ...);
+   BUG_ON(timer_pending(timer) || !timer->function);
+    timer_pending() -> true
+    BUG()
+
+I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+
+Check timer_pending() before calling add_timer_on(). This is sufficient as
+all operations are synchronized by watchdog_lock.
+
+Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
+---
+ kernel/time/clocksource.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index fff5f64..428beb6 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct timer_list *unused)
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
++
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
++	}
+ out:
+ 	spin_unlock(&watchdog_lock);
+ }
