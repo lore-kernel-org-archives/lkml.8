@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788B8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A6C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2D820661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C8620679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgBASyJ (ORCPT
+        id S1727585AbgBASyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:54:09 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11279 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:54:20 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11286 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727261AbgBASwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727253AbgBASwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:52:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075589"
+   d="scan'208";a="248075583"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 53/61] KVM: VMX: Directly use VMX capabilities helper to detect RDTSCP support
-Date:   Sat,  1 Feb 2020 10:52:10 -0800
-Message-Id: <20200201185218.24473-54-sean.j.christopherson@intel.com>
+Subject: [PATCH 51/61] KVM: x86: Use kvm_cpu_caps to detect Intel PT support
+Date:   Sat,  1 Feb 2020 10:52:08 -0800
+Message-Id: <20200201185218.24473-52-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,41 +49,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use cpu_has_vmx_rdtscp() directly when computing secondary exec controls
-and drop the now defunct vmx_rdtscp_supported().
+Check for Intel PT using kvm_cpu_cap_has() to pave the way toward
+eliminating ->pt_supported().
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/x86/kvm/cpuid.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c3577f11f538..98d54cfa0cbe 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1651,11 +1651,6 @@ static void vmx_queue_exception(struct kvm_vcpu *vcpu)
- 	vmx_clear_hlt(vcpu);
- }
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index a37cb6fda979..3d287fc6eb6e 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -507,7 +507,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ {
+ 	struct kvm_cpuid_entry2 *entry;
+ 	int r, i, max_idx;
+-	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
  
--static bool vmx_rdtscp_supported(void)
--{
--	return cpu_has_vmx_rdtscp();
--}
--
- /*
-  * Swap MSR entry in host/guest MSR entry array.
-  */
-@@ -4051,7 +4046,7 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
+ 	/* all calls to cpuid_count() should be made on the same cpu */
+ 	get_cpu();
+@@ -687,7 +686,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
+ 	/* Intel PT */
+ 	case 0x14:
+-		if (!f_intel_pt) {
++		if (!kvm_cpu_cap_has(X86_FEATURE_INTEL_PT)) {
+ 			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
+ 			break;
  		}
- 	}
- 
--	if (vmx_rdtscp_supported()) {
-+	if (cpu_has_vmx_rdtscp()) {
- 		bool rdtscp_enabled = guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP);
- 		if (!rdtscp_enabled)
- 			exec_control &= ~SECONDARY_EXEC_RDTSCP;
 -- 
 2.24.1
 
