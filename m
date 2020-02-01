@@ -2,84 +2,109 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493B0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21823C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A842051A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04F32051A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580566208;
+	bh=BYKFMd0CJdSXgNCm+ByqxTh9gIwj3LjpEukTaizZLlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o0Ekqxen3fIJSK0yeGeoIyW6OBfDJgBmnz3W37ViAtIfPbn46Oc5no1UnyAdEPrEJ
+	 SbkONrYVvuHC+Mj8uRTFDtLxlhMFKuk5AQtHExoXfn1apb/c8S7+8d+yBtDSNSnWPo
+	 YDzzygBQCTVXS9TkXJjGXynMjZJpOQkNEBHezPlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgBAOHI (ORCPT
+        id S1726789AbgBAOKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 09:07:08 -0500
-Received: from gate.crashing.org ([63.228.1.57]:47802 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbgBAOHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 09:07:08 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 011E6WZ9013963;
-        Sat, 1 Feb 2020 08:06:32 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 011E6TK9013962;
-        Sat, 1 Feb 2020 08:06:29 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Sat, 1 Feb 2020 08:06:29 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/32s: Don't flush all TLBs when flushing one page
-Message-ID: <20200201140629.GM22482@gate.crashing.org>
-References: <e31c57eb5308a5a73a5c8232454c0dd9f65f6175.1580485014.git.christophe.leroy@c-s.fr> <20200131155150.GD22482@gate.crashing.org> <27cef66b-df5b-0baa-abac-5532e58bd055@c-s.fr> <20200131193833.GF22482@gate.crashing.org> <248a3cf3-1b5e-a6e1-ceec-0e3904d1cf51@c-s.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+        Sat, 1 Feb 2020 09:10:05 -0500
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:41895 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgBAOKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 09:10:05 -0500
+Received: by mail-lf1-f50.google.com with SMTP id m30so6749601lfp.8;
+        Sat, 01 Feb 2020 06:10:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=le1pAuTbbJ6ruQLayEtuDvEi/eU1A9M5o9CD90Uw478=;
+        b=YuzHtwLDg7Ai2kNVsjG6XxWS3OfhnHb8nzvgQwJISNnEMS+1WeKzbG7f6OE47pAoZA
+         ns/dlXw1kcs1QIe6dwhpknCuzdxVICHdtlKJBxPBpJ2mAmuG073I76n9L6c3BhLnn0Gn
+         sQ+MFiiOKbJA34XRotapQozklRPv9jlGIjgx+P6lPGp22DnyZUE/WEk3n2yLQGatS8li
+         fDj/b7TN5YM7zj0zOTb9X5eMd6qck0wQFM1fgQ2Rdo2eFhWTOkHncN+kbCT+/Kdf7sDv
+         kVBqzbdEHdITNUHKvANU2BpJfOi+2Ip9PQjx3bs/o95/+xvG3GadUXc3jhZiTSy9xfc8
+         GQqQ==
+X-Gm-Message-State: APjAAAVQf8kbuW0/yUtkARSUIMg/Cn86nI0GX4/olBzzep21jeKQ0y6V
+        0CoNF8amCSViiEGlskBOOC0=
+X-Google-Smtp-Source: APXvYqzwXUxzhsSvzTCmuhexgUuqxcj8C1C2A+bfgjqcHLooPY7nCXTY3vhBDZga8qCIUv8kYTZucQ==
+X-Received: by 2002:ac2:5147:: with SMTP id q7mr7822934lfd.87.1580566202781;
+        Sat, 01 Feb 2020 06:10:02 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id u16sm7138852lfi.36.2020.02.01.06.10.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 06:10:02 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ixtTN-0007sF-UA; Sat, 01 Feb 2020 15:10:09 +0100
+Date:   Sat, 1 Feb 2020 15:10:09 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     edes <edes@gmx.net>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: kernel 5.4.11: problems with usb sound cards
+Message-ID: <20200201141009.GK10381@localhost>
+References: <20200201105829.5682c887@acme7.acmenet>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <248a3cf3-1b5e-a6e1-ceec-0e3904d1cf51@c-s.fr>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <20200201105829.5682c887@acme7.acmenet>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 08:27:03AM +0100, Christophe Leroy wrote:
-> Le 31/01/2020 à 20:38, Segher Boessenkool a écrit :
-> >On Fri, Jan 31, 2020 at 05:15:20PM +0100, Christophe Leroy wrote:
-> >>Le 31/01/2020 à 16:51, Segher Boessenkool a écrit :
-> >>>On Fri, Jan 31, 2020 at 03:37:34PM +0000, Christophe Leroy wrote:
-> >>>>When the range is a single page, do a page flush instead.
-> >>>
-> >>>>+	start &= PAGE_MASK;
-> >>>>+	end = (end - 1) | ~PAGE_MASK;
-> >>>>  	if (!Hash) {
-> >>>>-		_tlbia();
-> >>>>+		if (end - start == PAGE_SIZE)
-> >>>>+			_tlbie(start);
-> >>>>+		else
-> >>>>+			_tlbia();
-> >>>>  		return;
-> >>>>  	}
-> >>>
-> >>>For just one page, you get  end - start == 0  actually?
-> >>
-> >>Oops, good catch.
-> >>
-> >>Indeed you don't get PAGE_SIZE but (PAGE_SIZE - 1) for just one page.
-> >
-> >You have all low bits masked off in both start and end, so you get zero.
-> >You could make the condion read "if (start == end)?
+On Sat, Feb 01, 2020 at 10:58:29AM -0300, edes wrote:
+> Hello, list, I hope this is the right place to post this problem.
 > 
-> No, in end the low bits are set, that's a BIT OR with ~PAGE_MASK, so it 
-> sets all low bits to 1.
+> Changes introduced in 5.4.11 (seemingly, in drivers/usb/core/config.c)
+> cause problems with at least some models of USB sound cards.
+> 
+> I have a Sound Devices USBPre2, a high quality sound card that until
+> 5.4.10 always worked perfectly out of the box as a standard USB audio
+> device.
+> 
+> Beginning with 5.4.11 and up to 5.5.0, when the sound card is connected,
+> dmesg shows:
+> 
+> [ 1310.743135] usb 3-10.3: new high-speed USB device number 6 using
+> xhci_hcd
+> [ 1310.755472] usb 3-10.3: config 1 interface 2 altsetting 1 has
+> a duplicate endpoint with address 0x85, skipping
+> [ 1310.755474] usb 3-10.3: config 1 interface 2 altsetting 2 has a
+> duplicate endpoint with address 0x85, skipping
+> [ 1310.755852] usb 3-10.3: New USB device found, idVendor=0926,
+> idProduct=0202, bcdDevice= 1.00
+> [ 1310.755853] usb 3-10.3: New USB device strings: Mfr=1, Product=2,
+> SerialNumber=3
+> [ 1310.755854] usb 3-10.3: Product: USBPre2
+> [ 1310.755855] usb 3-10.3: Manufacturer: Sound Devices
+> [ 1310.755855] usb 3-10.3: SerialNumber: HB1116132005
+> [ 1310.756803] usb 3-10.3: 1:3 : UAC_AS_GENERAL descriptor not found
+> [ 1310.757550] hid-generic 0003:0926:0202.0005: hiddev96: USB HID v1.01
+> Device
+> [Sound Devices USBPre2] on usb-0000:00:14.0-10.3/input3
+> [ 1310.773161] systemd-udevd[3856]: controlC0: Process '/usr/sbin/alsactl
+> restore 0' failed with exit code 99.
+> 
+> No capture device is created under /dev/snd, and the card works only as a
+> playback device.
 
-Oh, wow, yes, I cannot read apparently.
+Can you please post the output of "lsusb -v" for this device on 5.4.10
+and 5.4.11, respectively?
 
-Maybe there are some ROUND_DOWN and ROUND_UP macros you could use?
-
-
-Segher
+Johan
