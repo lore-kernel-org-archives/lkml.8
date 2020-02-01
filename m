@@ -2,104 +2,195 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A06AC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EDDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726E120674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTOfv6eq"
+	by mail.kernel.org (Postfix) with ESMTP id 7AB5B20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgBASvr (ORCPT
+        id S1726804AbgBASw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:51:47 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58738 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbgBASvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:51:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580583105;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tB9Flr5JK1dOLBjqc7BgpGrNDesYmTAkGtr8sueGsTM=;
-        b=iTOfv6eqpUFG2yeYZ7k58zliLjA6Hvpd2Hmjcbk8/uPVzNhYoy2JXejXwA41S2Vec4RaZ9
-        Ug/Ap8hdVPr0Y0uXmnbM1XSknPkFJSgH6ei0Qy8hBxCkWc+AiDrY3ncQOFchthD7G6B6Jq
-        IY9DS0V9qTGKM3NROcIEQJpXrkx295M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-Y6DrYIhcP6OHgKmWEmdN_w-1; Sat, 01 Feb 2020 13:51:43 -0500
-X-MC-Unique: Y6DrYIhcP6OHgKmWEmdN_w-1
-Received: by mail-wr1-f70.google.com with SMTP id l1so263626wrt.4
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:51:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tB9Flr5JK1dOLBjqc7BgpGrNDesYmTAkGtr8sueGsTM=;
-        b=Mqob5gMmHLBF/wFoS7wjKjftmPqI6Yk3Z2iA4YAr9MiSxC/iKrRBo2V0bS97nZ0ZlV
-         /I0EL9AvRcv7xJaVtGzlKTfzKh9oPmFdeNLjSSXHopkW2supDwGIixYwL+vaIwOZwdd4
-         80xLodhUVkTnGxmrsZecJOPythYsZNcVoATAIpMi0+5Wum4QLGbiSgw8Up9jEuzTHHDK
-         XVKQgGDh0PYbkUc1xabYZj5Tz4TXezhWOLl+/K6zx5ug3P3vnzOu74bULGlSafApyHHe
-         SKbiyJ9rktipW6y+SVaEyMCIvSGWtJ2wqZ0LDJ6d4FcWmW05g+IidYyvkMNAeQkklvTo
-         lcxw==
-X-Gm-Message-State: APjAAAVByd2cwzr1RU3Nofy+zwDSrNA2Fl9brFi8lN/bvAZjMEW/KdkG
-        cDqm/s69H7Fr4imkF7CDqKqJKIyAKmbp/gv2Pzff2o8dhOogM/DwM+CQ55Anuiyy2QfA7MXE3gF
-        1+Jj4mfwUrbK3LTBhs0s6KFe1
-X-Received: by 2002:a1c:df09:: with SMTP id w9mr18132178wmg.143.1580583102838;
-        Sat, 01 Feb 2020 10:51:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwtrcXwlNs8N5xVK7R4JMHvfTqKW8jsp2y194o5nU+n5b3kfGYl/Ti0Cx6Ye68n+xpLiX6iEA==
-X-Received: by 2002:a1c:df09:: with SMTP id w9mr18132164wmg.143.1580583102550;
-        Sat, 01 Feb 2020 10:51:42 -0800 (PST)
-Received: from [192.168.42.104] (93-33-54-106.ip43.fastwebnet.it. [93.33.54.106])
-        by smtp.gmail.com with ESMTPSA id e8sm17306814wrt.7.2020.02.01.10.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2020 10:51:42 -0800 (PST)
-Subject: Re: [PATCH] KVM: x86: Fix perfctr WRMSR for running counters
-To:     Eric Hankland <ehankland@google.com>
-Cc:     Jim Mattson <jmattson@google.com>, Peter Shier <pshier@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200127212256.194310-1-ehankland@google.com>
- <2a394c6d-c453-6559-bf33-f654af7922bd@redhat.com>
- <CAOyeoRVaV3Dh=M4ioiT3DU+p5ZnQGRcy9_PssJZ=a36MhL-xHQ@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c1cec3c8-570f-d824-cb20-6641cf686981@redhat.com>
-Date:   Sat, 1 Feb 2020 19:51:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sat, 1 Feb 2020 13:52:26 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37509 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgBASw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
+   d="scan'208";a="248075430"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/61] KVM: x86: Introduce KVM cpu caps
+Date:   Sat,  1 Feb 2020 10:51:17 -0800
+Message-Id: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAOyeoRVaV3Dh=M4ioiT3DU+p5ZnQGRcy9_PssJZ=a36MhL-xHQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/01/20 02:09, Eric Hankland wrote:
-> Sorry - I forgot to switch to plain text mode on my first reply.
-> 
->> I think this best written as it was before commit 2924b52117:
->>
->>                         if (!msr_info->host_initiated)
->>                                 data = (s64)(s32)data;
->>                         pmc->counter += data - pmc_read_counter(pmc);
-> Sounds good to me.
-> 
->> Do you have a testcase?
-> I added a testcase to kvm-unit-tests/x86/pmu.c that fails without this
-> patch and passes with it. Should I send out that patch now?
+Introduce what is effectively a KVM-specific copy of the x86_capabilities
+array in boot_cpu_data, kvm_cpu_caps.  kvm_cpu_caps is initialized by
+copying boot_cpu_data.x86_capabilities before ->hardware_setup().  It is
+then updated by KVM's CPUID logic (both common x86 and VMX/SVM specific)
+to adjust the caps to reflect the CPU that KVM will expose to the guest.
 
-Yes, please send it!  Thanks,
+Super cool things:
+  - Kills off 8 kvm_x86_ops hooks.
+  - Eliminates a retpoline from pretty much every page fault, and more
+    retpolines throughout KVM.
+  - Automagically handles selecting the appropriate eax/ebx/ecx/edx
+    registers when updating CPUID feature bits.
+  - Adds an auditing capability to double check that the function and
+    index of a CPUID entry are correct during reverse CPUID lookup.
 
-Paolo
+This is sort of a v2 of "KVM: x86: Purge kvm_x86_ops->*_supported()"[*],
+but only a handful of the 26 patches from that series are carried forward
+as is, and this series is obviously much more ambitiuous in scope.  And
+unlike that series, there isn't a single patch in here that makes me go
+"eww", and the end result is pretty awesome :-)
+
+Quick synopsis:
+  1. Refactor the KVM_GET_SUPPORTED_CPUID stack to consolidate code,
+     remove crustiness, and set the stage for introducing kvm_cpu_caps.
+
+  2. Introduce cpuid_entry_*() accessors/mutators to automatically
+     handle retrieving the correct reg from a CPUID entry, and to audit
+     that the entry matches the reserve CPUID lookup entry.  The
+     cpuid_entry_*() helpers make moving the code from common x86 to
+     vendor code much less risky.
+
+  3. Move CPUID adjustments to vendor code in preparation for kvm_cpu_caps,
+     which will be initialized at load time before the kvm_x86_ops hooks
+     are ready to be used, i.e. before ->hardware_setup().
+
+  4. Introduce kvm_cpu_caps and move all the CPUID code over to kvm_cpu_caps.
+
+  5. Use kvm_cpu_cap_has() to kill off a bunch of ->*_supported() hooks.
+
+  6. Additional cleanup in tangentially related areas to kill off even more
+     ->*_supported() hooks.
+
+  7. Profit!
+
+Some of (6) could maybe be moved to a different series, but there would
+likely be a number of minor conflicts.  I dropped as many arbitrary cleanup
+patches as I could without letting any of the ->*_supported() hooks live,
+and without losing confidence in the correctness of the refactoring.
+
+Tested by verifying the output of KVM_GET_SUPPORTED_CPUID is identical
+before and after on every patch on a Haswell and Coffee Lake.  Verified
+correctness when hiding features via Qemu (running this version of KVM
+in L1), e.g. that UMIP is correctly emulated for L2 when it's hidden from
+L1, on relevant patches.
+
+Boot tested and ran kvm-unit-tests at key points, e.g. large page handling.
+
+The big untested pieces are PKU, XSAVES and PT on Intel, and everything AMD.
+
+[*] https://lkml.kernel.org/r/20200129234640.8147-1-sean.j.christopherson@intel.com
+
+Sean Christopherson (61):
+  KVM: x86: Return -E2BIG when KVM_GET_SUPPORTED_CPUID hits max entries
+  KVM: x86: Refactor loop around do_cpuid_func() to separate helper
+  KVM: x86: Simplify handling of Centaur CPUID leafs
+  KVM: x86: Clean up error handling in kvm_dev_ioctl_get_cpuid()
+  KVM: x86: Check userapce CPUID array size after validating sub-leaf
+  KVM: x86: Move CPUID 0xD.1 handling out of the index>0 loop
+  KVM: x86: Check for CPUID 0xD.N support before validating array size
+  KVM: x86: Warn on zero-size save state for valid CPUID 0xD.N sub-leaf
+  KVM: x86: Refactor CPUID 0xD.N sub-leaf entry creation
+  KVM: x86: Clean up CPUID 0x7 sub-leaf loop
+  KVM: x86: Drop the explicit @index from do_cpuid_7_mask()
+  KVM: x86: Drop redundant boot cpu checks on SSBD feature bits
+  KVM: x86: Consolidate CPUID array max num entries checking
+  KVM: x86: Hoist loop counter and terminator to top of
+    __do_cpuid_func()
+  KVM: x86: Refactor CPUID 0x4 and 0x8000001d handling
+  KVM: x86: Encapsulate CPUID entries and metadata in struct
+  KVM: x86: Drop redundant array size check
+  KVM: x86: Use common loop iterator when handling CPUID 0xD.N
+  KVM: VMX: Add helpers to query Intel PT mode
+  KVM: x86: Calculate the supported xcr0 mask at load time
+  KVM: x86: Use supported_xcr0 to detect MPX support
+  KVM: x86: Make kvm_mpx_supported() an inline function
+  KVM: x86: Clear output regs for CPUID 0x14 if PT isn't exposed to
+    guest
+  KVM: x86: Drop explicit @func param from ->set_supported_cpuid()
+  KVM: x86: Use u32 for holding CPUID register value in helpers
+  KVM: x86: Introduce cpuid_entry_{get,has}() accessors
+  KVM: x86: Introduce cpuid_entry_{change,set,clear}() mutators
+  KVM: x86: Refactor cpuid_mask() to auto-retrieve the register
+  KVM: x86: Add Kconfig-controlled auditing of reverse CPUID lookups
+  KVM: x86: Handle MPX CPUID adjustment in VMX code
+  KVM: x86: Handle INVPCID CPUID adjustment in VMX code
+  KVM: x86: Handle UMIP emulation CPUID adjustment in VMX code
+  KVM: x86: Handle PKU CPUID adjustment in VMX code
+  KVM: x86: Handle RDTSCP CPUID adjustment in VMX code
+  KVM: x86: Handle Intel PT CPUID adjustment in VMX code
+  KVM: x86: Handle GBPAGE CPUID adjustment for EPT in VMX code
+  KVM: x86: Refactor handling of XSAVES CPUID adjustment
+  KVM: x86: Introduce kvm_cpu_caps to replace runtime CPUID masking
+  KVM: SVM: Convert feature updates from CPUID to KVM cpu caps
+  KVM: VMX: Convert feature updates from CPUID to KVM cpu caps
+  KVM: x86: Move XSAVES CPUID adjust to VMX's KVM cpu cap update
+  KVM: x86: Add a helper to check kernel support when setting cpu cap
+  KVM: x86: Use KVM cpu caps to mark CR4.LA57 as not-reserved
+  KVM: x86: Use KVM cpu caps to track UMIP emulation
+  KVM: x86: Fold CPUID 0x7 masking back into __do_cpuid_func()
+  KVM: x86: Remove the unnecessary loop on CPUID 0x7 sub-leafs
+  KVM: x86: Squash CPUID 0x2.0 insanity for modern CPUs
+  KVM: x86: Do host CPUID at load time to mask KVM cpu caps
+  KVM: x86: Override host CPUID results with kvm_cpu_caps
+  KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
+  KVM: x86: Use kvm_cpu_caps to detect Intel PT support
+  KVM: x86: Use KVM cpu caps to detect MSR_TSC_AUX virt support
+  KVM: VMX: Directly use VMX capabilities helper to detect RDTSCP
+    support
+  KVM: x86: Check for Intel PT MSR virtualization using KVM cpu caps
+  KVM: VMX: Directly query Intel PT mode when refreshing PMUs
+  KVM: SVM: Refactor logging of NPT enabled/disabled
+  KVM: x86/mmu: Merge kvm_{enable,disable}_tdp() into a common function
+  KVM: x86/mmu: Configure max page level during hardware setup
+  KVM: x86: Don't propagate MMU lpage support to memslot.disallow_lpage
+  KVM: Drop largepages_enabled and its accessor/mutator
+  KVM: x86: Move VMX's host_efer to common x86 code
+
+ arch/x86/include/asm/kvm_host.h |  15 +-
+ arch/x86/kvm/Kconfig            |  10 +
+ arch/x86/kvm/cpuid.c            | 771 +++++++++++++++-----------------
+ arch/x86/kvm/cpuid.h            | 123 ++++-
+ arch/x86/kvm/mmu/mmu.c          |  22 +-
+ arch/x86/kvm/svm.c              | 117 ++---
+ arch/x86/kvm/vmx/capabilities.h |  25 +-
+ arch/x86/kvm/vmx/nested.c       |   2 +-
+ arch/x86/kvm/vmx/pmu_intel.c    |   2 +-
+ arch/x86/kvm/vmx/vmx.c          | 125 +++---
+ arch/x86/kvm/vmx/vmx.h          |   5 +-
+ arch/x86/kvm/x86.c              |  48 +-
+ arch/x86/kvm/x86.h              |  10 +-
+ include/linux/kvm_host.h        |   2 -
+ virt/kvm/kvm_main.c             |  13 -
+ 15 files changed, 662 insertions(+), 628 deletions(-)
+
+-- 
+2.24.1
 
