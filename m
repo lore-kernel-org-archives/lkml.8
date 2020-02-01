@@ -2,105 +2,122 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2C8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F24C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC8E20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E851C20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Kdi/bVSI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRi0IFDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgBAIEn (ORCPT
+        id S1726387AbgBAIHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 03:04:43 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:7797 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgBAIEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 03:04:43 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 488mpK0GJcz9txXb;
-        Sat,  1 Feb 2020 09:04:41 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Kdi/bVSI; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7gid33ueGGIG; Sat,  1 Feb 2020 09:04:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 488mpJ5mDTz9txXZ;
-        Sat,  1 Feb 2020 09:04:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580544280; bh=pF6qOsoa+B6c+k7OrSh1l90UqfLv4FfQzTjeEPDmFbU=;
-        h=From:Subject:To:Cc:Date:From;
-        b=Kdi/bVSIkI/YciLcIslviNphJQReBFpq493fmrSQ9yEl3rHlug890zMlL8S3CdLAK
-         PvRv0+RzQVclxi5MA5OfaNSDTJ/HBUStyx+Tt1agsjIc1qB5NDir8cjFcZAY5st9Jy
-         ckDGEM1/aETvxZJ2KWSjdpbe9jH339QMv0ZS39Ao=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A0FA18B785;
-        Sat,  1 Feb 2020 09:04:36 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GAtog0G4TJHt; Sat,  1 Feb 2020 09:04:36 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 039D58B752;
-        Sat,  1 Feb 2020 09:04:33 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E8ADC65290; Sat,  1 Feb 2020 08:04:31 +0000 (UTC)
-Message-Id: <b30b2eae6960502eaf0d9e36c60820b839693c33.1580542939.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2] powerpc/32s: Don't flush all TLBs when flushing one page
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sat,  1 Feb 2020 08:04:31 +0000 (UTC)
+        Sat, 1 Feb 2020 03:07:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40224 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgBAIHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 03:07:42 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y1so3739903plp.7
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 00:07:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=5nTO1YAVmPYSrJV28ycJBVRQxudQyA//ln8alpueGps=;
+        b=hRi0IFDaZn1lUYPec0qzmBKxfP6Dp5z1ASVzko/oGim4N6t0iTqI+Rq5GJ79UGsZk4
+         jIRbBfvCFm83PIOe/5646uAh8jt4ocQYU7CEHv9EaZyOIkDfQJ9B0eKkb/7GfYVLo1ZC
+         oT3GwN2WPDGuMq08oWbz6KJEkiqFMhXvoyPFKdSfX4BqTu3KPBWk8GM7IravPiATD710
+         u1Ky4J0jaFm2nfXfZQ7BdWnQ99puOsxnndHxi1tGJGEDuIzRsHT9SvDlkLH8dC8h4P04
+         jCjbN95qHqHt8huMtBcMIA+bc+hjyvdgw8SpcIWGUvLa8yXcIadvVzgWnZPdbi6GUbDb
+         ItuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=5nTO1YAVmPYSrJV28ycJBVRQxudQyA//ln8alpueGps=;
+        b=EgXds3/Dkam39SOXmB/u5ozH8/ZxzTlbd3JumwAyt8RUUU3FxndJrhW4b3XgMtZgXQ
+         FcNWYy27l3DYTb2rG1xSAYy4UdwfIaDnI6GGLhYEyBQ3BXwztUX2+qGPS4SxzKQ+B62E
+         3Dx0mRIAHQNBoKLagMEe/GCJKyuveg9KREOzodQ+FfKZ5MegP1L/GmjaSFJZFfespukF
+         NjQwOdXSb0mfPVknGZnwQzXvmu9YOpCm9+BnC3YDfABSQx1zU/zuJNQ+F2h2UuT4iesI
+         ymm2Q1/pOhxKSrHuB8E92yxF5POnhew+DBl4hL7Eg6pnQgecvnHxG9upEqZj5XuLDvj/
+         3V+Q==
+X-Gm-Message-State: APjAAAVmzko+YC5uO2eJmLCJdJqGM8cLLPCo9LilJ/9Vog4Z3qgJdq7B
+        jNwHucm7i6m4U1vKR+WwRBk=
+X-Google-Smtp-Source: APXvYqwaEPljKf+Uny3oyoHTmu8YcqVO19suYZDZeuOPA9IUPKs3vW0aZ/6hfDDv6IKxZBH9yVyBcg==
+X-Received: by 2002:a17:902:a514:: with SMTP id s20mr13995193plq.300.1580544460768;
+        Sat, 01 Feb 2020 00:07:40 -0800 (PST)
+Received: from [192.168.1.101] (122-58-182-19-adsl.sparkbb.co.nz. [122.58.182.19])
+        by smtp.gmail.com with ESMTPSA id x132sm12731750pfc.148.2020.02.01.00.07.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 01 Feb 2020 00:07:40 -0800 (PST)
+Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20200131124531.623136425@infradead.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Greg Ungerer <gerg@linux-m68k.org>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <415a1105-f971-5513-bd41-fbd2ec4e1cd7@gmail.com>
+Date:   Sat, 1 Feb 2020 21:07:34 +1300
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <20200131124531.623136425@infradead.org>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When flushing any memory range, the flushing function
-flushes all TLBs.
+Peter,
 
-When (start) and (end - 1) are in the same memory page,
-flush that page instead.
+this version tested OK on 030, so
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v2: Reworked the test as the previous one was always false (end - start was PAGE_SIZE - 1 for a single page)
----
- arch/powerpc/mm/book3s32/tlb.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Tested-by; Michael Schmitz <schmitzmic@gmail.com>
 
-diff --git a/arch/powerpc/mm/book3s32/tlb.c b/arch/powerpc/mm/book3s32/tlb.c
-index 2fcd321040ff..724c0490fb17 100644
---- a/arch/powerpc/mm/book3s32/tlb.c
-+++ b/arch/powerpc/mm/book3s32/tlb.c
-@@ -79,11 +79,14 @@ static void flush_range(struct mm_struct *mm, unsigned long start,
- 	int count;
- 	unsigned int ctx = mm->context.id;
- 
-+	start &= PAGE_MASK;
- 	if (!Hash) {
--		_tlbia();
-+		if (end - start <= PAGE_SIZE)
-+			_tlbie(start);
-+		else
-+			_tlbia();
- 		return;
- 	}
--	start &= PAGE_MASK;
- 	if (start >= end)
- 		return;
- 	end = (end - 1) | ~PAGE_MASK;
--- 
-2.25.0
-
+Am 01.02.2020 um 01:45 schrieb Peter Zijlstra:
+> Hi!
+>
+> In order to faciliate Will's READ_ONCE() patches:
+>
+>   https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
+>
+> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
+> are tested using ARAnyM/68040.
+>
+> Michael tested the previous version on his Atari Falcon/68030.
+>
+> Build tested for sun3/coldfire.
+>
+> Please consider!
+>
+> Changes since -v1:
+>  - fixed sun3/coldfire build issues
+>  - unified motorola mmu page setup
+>  - added enum to table allocator
+>  - moved pointer table allocator to motorola.c
+>  - converted coldfire pgtable_t
+>  - fixed coldfire pgd_alloc
+>  - fixed coldfire nocache
+>
+> ---
+>  arch/m68k/include/asm/mcf_pgalloc.h      |  31 ++---
+>  arch/m68k/include/asm/motorola_pgalloc.h |  74 ++++------
+>  arch/m68k/include/asm/motorola_pgtable.h |  36 +++--
+>  arch/m68k/include/asm/page.h             |  16 ++-
+>  arch/m68k/include/asm/pgtable_mm.h       |  10 +-
+>  arch/m68k/mm/init.c                      |  34 +++--
+>  arch/m68k/mm/kmap.c                      |  36 +++--
+>  arch/m68k/mm/memory.c                    | 103 --------------
+>  arch/m68k/mm/motorola.c                  | 228 +++++++++++++++++++++++++------
+>  9 files changed, 302 insertions(+), 266 deletions(-)
+>
+>
