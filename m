@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03337C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10409C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB56B20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E762E20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBASze (ORCPT
+        id S1727698AbgBASzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:55:34 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11279 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:55:42 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727160AbgBASwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:31 -0500
+        id S1727165AbgBASwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075506"
+   d="scan'208";a="248075501"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -37,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}() accessors
-Date:   Sat,  1 Feb 2020 10:51:43 -0800
-Message-Id: <20200201185218.24473-27-sean.j.christopherson@intel.com>
+Subject: [PATCH 24/61] KVM: x86: Drop explicit @func param from ->set_supported_cpuid()
+Date:   Sat,  1 Feb 2020 10:51:41 -0800
+Message-Id: <20200201185218.24473-25-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -50,126 +49,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce accessors to retrieve feature bits from CPUID entries and use
-the new accessors where applicable.  Using the accessors eliminates the
-need to manually specify the register to be queried at no extra cost
-(binary output is identical) and will allow adding runtime consistency
-checks on the function and index in a future patch.
+Drop the explicit @func param from ->set_supported_cpuid() and instead
+pull the CPUID function from the relevant entry.  This sets the stage
+for hardening guest CPUID updates in future patches, e.g. allows adding
+run-time assertions that the CPUID feature being changed is actually
+a bit in the referenced CPUID entry.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c |  9 +++++----
- arch/x86/kvm/cpuid.h | 46 +++++++++++++++++++++++++++++++++++---------
- 2 files changed, 42 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/cpuid.c            | 2 +-
+ arch/x86/kvm/svm.c              | 4 ++--
+ arch/x86/kvm/vmx/vmx.c          | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 85f0d96cfeb2..a61928d5435b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1148,7 +1148,7 @@ struct kvm_x86_ops {
+ 
+ 	void (*set_tdp_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
+ 
+-	void (*set_supported_cpuid)(u32 func, struct kvm_cpuid_entry2 *entry);
++	void (*set_supported_cpuid)(struct kvm_cpuid_entry2 *entry);
+ 
+ 	bool (*has_wbinvd_exit)(void);
+ 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index e3026fe638aa..3316963dad3d 100644
+index 056faf27b14b..e3026fe638aa 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -68,7 +68,7 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 		best->edx |= F(APIC);
- 
- 	if (apic) {
--		if (best->ecx & F(TSC_DEADLINE_TIMER))
-+		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
- 			apic->lapic_timer.timer_mode_mask = 3 << 17;
- 		else
- 			apic->lapic_timer.timer_mode_mask = 1 << 17;
-@@ -96,7 +96,8 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+@@ -784,7 +784,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
  	}
  
- 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
--	if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
-+	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
-+		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
- 		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
+-	kvm_x86_ops->set_supported_cpuid(function, entry);
++	kvm_x86_ops->set_supported_cpuid(entry);
  
- 	/*
-@@ -155,7 +156,7 @@ static void cpuid_fix_nx_cap(struct kvm_vcpu *vcpu)
- 			break;
- 		}
- 	}
--	if (entry && (entry->edx & F(NX)) && !is_efer_nx()) {
-+	if (entry && cpuid_entry_has(entry, X86_FEATURE_NX) && !is_efer_nx()) {
- 		entry->edx &= ~F(NX);
- 		printk(KERN_INFO "kvm: guest NX capability removed\n");
- 	}
-@@ -387,7 +388,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
- 		entry->ebx |= F(TSC_ADJUST);
+ 	r = 0;
  
- 		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
--		f_la57 = entry->ecx & F(LA57);
-+		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
- 		cpuid_mask(&entry->ecx, CPUID_7_ECX);
- 		/* Set LA57 based on hardware capability. */
- 		entry->ecx |= f_la57;
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 72a79bdfed6b..64e96e4086e2 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -95,16 +95,10 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
- 	return reverse_cpuid[x86_leaf];
- }
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 3c7ddaff405d..535eb746fb0f 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6032,9 +6032,9 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
  
--static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-+static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
-+						  const struct cpuid_reg *cpuid)
+ #define F feature_bit
+ 
+-static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
++static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
  {
--	struct kvm_cpuid_entry2 *entry;
--	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
--
--	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
--	if (!entry)
--		return NULL;
--
--	switch (cpuid.reg) {
-+	switch (cpuid->reg) {
- 	case CPUID_EAX:
- 		return &entry->eax;
- 	case CPUID_EBX:
-@@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+-	switch (func) {
++	switch (entry->function) {
+ 	case 0x1:
+ 		if (avic)
+ 			entry->ecx &= ~F(X2APIC);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 98fd651f7f7e..3ff830e2258e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7104,9 +7104,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
  	}
  }
  
-+static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
-+						unsigned x86_feature)
-+{
-+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-+
-+	return __cpuid_entry_get_reg(entry, &cpuid);
-+}
-+
-+static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
-+					   unsigned x86_feature)
-+{
-+	u32 *reg = cpuid_entry_get_reg(entry, x86_feature);
-+
-+	return *reg & __feature_bit(x86_feature);
-+}
-+
-+static __always_inline bool cpuid_entry_has(struct kvm_cpuid_entry2 *entry,
-+					    unsigned x86_feature)
-+{
-+	return cpuid_entry_get(entry, x86_feature);
-+}
-+
-+static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
-+{
-+	struct kvm_cpuid_entry2 *entry;
-+	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
-+
-+	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
-+	if (!entry)
-+		return NULL;
-+
-+	return __cpuid_entry_get_reg(entry, &cpuid);
-+}
-+
- static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
+-static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
++static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
  {
- 	u32 *reg;
+-	if (func == 1 && nested)
++	if (entry->function == 1 && nested)
+ 		entry->ecx |= feature_bit(VMX);
+ }
+ 
 -- 
 2.24.1
 
