@@ -2,129 +2,83 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4EFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663DCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F0D206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YSNZofZ7"
+	by mail.kernel.org (Postfix) with ESMTP id 4210E206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBAQ0o (ORCPT
+        id S1727112AbgBAQ0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:26:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58866 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgBAQ0n (ORCPT
+        Sat, 1 Feb 2020 11:26:49 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60144 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgBAQ0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:26:43 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011GO2ho170066;
-        Sat, 1 Feb 2020 16:26:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=qcGXKiY3GE8IoOSuEgOX+PWsQEJZ9WKgu7dUUWQqrfQ=;
- b=YSNZofZ7ZqYnCJOxzT8gCflqxf5fW+U69ygw+SqauiAzTzmO5wdPmyb7Iu3JqVUPldJb
- i4r/4UJOEV/voWzBdpRGAh/ya5x/TjfXvibYstNEOW9IdwbVwSv6B/4saeuF600HaYMF
- C5gZbNGYHs4s6ZeVgIJM6UhsD0etsXyU5jEl+kbCx+nSVhWdZvDF7TIl+R/zKI1nuVKE
- e+m6pmS/XHQMPyJ4yFW4AuL+2NmZN1y/tGy8JKvmwZ6MyOQXStAjsAeX1tEzXV1Ia75Z
- QYxEF6Ttok170eDo5OkRmk4kjnGANo6PeQKsEWXJYtR4p3ExjsYmzrUdbccT+UyrA+lp TQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xw0rtsr75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 16:26:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011GNKM2187896;
-        Sat, 1 Feb 2020 16:26:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xvycydah3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 16:26:03 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 011GPpS3016390;
-        Sat, 1 Feb 2020 16:25:51 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 01 Feb 2020 08:25:50 -0800
-Date:   Sat, 1 Feb 2020 19:25:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com>,
-        airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, chris@chris-wilson.co.uk,
-        christian.koenig@amd.com, daniel@ffwll.ch, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, emil.velikov@collabora.com,
-        eric@anholt.net, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, robdclark@chromium.org,
-        seanpaul@chromium.org, sumit.semwal@linaro.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in vgem_gem_dumb_create
-Message-ID: <20200201162537.GK1778@kadam>
-References: <20200201043209.13412-1-hdanton@sina.com>
- <20200201090247.10928-1-hdanton@sina.com>
+        Sat, 1 Feb 2020 11:26:47 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ixvbZ-005myN-UK; Sat, 01 Feb 2020 16:26:46 +0000
+Date:   Sat, 1 Feb 2020 16:26:45 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fix do_last() regression
+Message-ID: <20200201162645.GJ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200201090247.10928-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002010121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002010121
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 05:02:47PM +0800, Hillf Danton wrote:
-> 
-> On Sat, 1 Feb 2020 09:17:57 +0300 Dan Carpenter wrote:
-> > On Sat, Feb 01, 2020 at 12:32:09PM +0800, Hillf Danton wrote:
-> > >
-> > > Release obj in error path.
-> > > 
-> > > --- a/drivers/gpu/drm/vgem/vgem_drv.c
-> > > +++ b/drivers/gpu/drm/vgem/vgem_drv.c
-> > > @@ -196,10 +196,10 @@ static struct drm_gem_object *vgem_gem_c
-> > >  		return ERR_CAST(obj);
-> > >  
-> > >  	ret = drm_gem_handle_create(file, &obj->base, handle);
-> > > -	drm_gem_object_put_unlocked(&obj->base);
-> > > -	if (ret)
-> > > +	if (ret) {
-> > > +		drm_gem_object_put_unlocked(&obj->base);
-> > >  		return ERR_PTR(ret);
-> > > -
-> > > +	}
-> > >  	return &obj->base;
-> > 
-> > Oh yeah.  It's weird that we never noticed the success path was broken.
-> > It's been that way for three years and no one noticed at all.  Very
-> > strange.
-> > 
-> > Anyway, it already gets freed on error in drm_gem_handle_create() so
-> > we should just delete the drm_gem_object_put_unlocked() here it looks
-> > like.
-> 
-> Good catch, Dan :P
-> Would you please post a patch sometime convenient next week?
+Brown paperbag time: fetching ->i_uid/->i_mode really should've been
+done from nd->inode.  I even suggested that, but the reason for that
+has slipped through the cracks and I went for dir->d_inode instead -
+made for more "obvious" patch.
 
-Sure.  Will do.
+Analysis:
+	at the entry into do_last() and all the way to step_into(): dir
+(aka nd->path.dentry) is known not to have been freed; so's nd->inode
+and it's equal to dir->d_inode unless we are already doomed to -ECHILD.
+inode of the file to get opened is not known.
+	after step_into(): inode of the file to get opened is known;
+dir might be pointing to freed memory/be negative/etc.
+	at the call of may_create_in_sticky(): guaranteed to be out of
+RCU mode; inode of the file to get opened is known and pinned;
+dir might be garbage.
 
-regards,
-dan carpenter
+The last was the reason for the original patch.  Except that at the do_last()
+entry we can be in RCU mode and it is possible that nd->path.dentry->d_inode
+has already changed under us.  In that case we are going to fail with -ECHILD,
+but we need to be careful; nd->inode is pointing to valid struct inode and
+it's the same as nd->path.dentry->d_inode in "won't fail with -ECHILD"
+case, so we should use that.
 
+Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@kernel.org
+Fixes: d0cb50185ae9 (do_last(): fetch directory ->i_mode and ->i_uid before it's too late)
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/namei.c b/fs/namei.c
+index 4167109297e0..db6565c99825 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3333,8 +3333,8 @@ static int do_last(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+ 	struct dentry *dir = nd->path.dentry;
+-	kuid_t dir_uid = dir->d_inode->i_uid;
+-	umode_t dir_mode = dir->d_inode->i_mode;
++	kuid_t dir_uid = nd->inode->i_uid;
++	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
