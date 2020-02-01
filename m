@@ -2,57 +2,64 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58324C33CB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A4BC3F68F
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2583D2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C7421655
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1580544239;
-	bh=HV9bEd5y/kS5QirGTechJ66etJMhVPV4zDZIWJvnB6w=;
+	bh=GPBdRgITfGCkjrxsYKDaRPli6I6l5AartW88IaCxTd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bm39zcm6gKW96y6GqymK2VP3UXqdJwKYt++uNo21g1hjD72hps9UaYMZTJRh7iJ5x
-	 VZoz9gg0NoNW/ve5J4hmnR1FY+wi2xd9/HeE4vAIiXnySF2cvWxPEk+s+EBes79is4
-	 21V7/oEoui8Yh4sRrP5boW+9RsDoGcKY/ZcRuP+o=
+	b=SDa/rqugqQYWoMM5rikabXq2ycbVivj0j8YNeE8obunqMdNSq3jLgh7T3EtOgB/bx
+	 GJaXlGWYzKGWxXWCXrhw0nRLg2+AMw9EsQfqlanwghxVi7aprEk0fUX02SbvG2ztyC
+	 u7cdijOjTBXSyTQ/RhlOaj/uD0eKgSzunceY36YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgBAIDz (ORCPT
+        id S1726604AbgBAIDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 03:03:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
+        Sat, 1 Feb 2020 03:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgBAIDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 03:03:54 -0500
+        id S1726001AbgBAIDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 03:03:50 -0500
 Received: from quaco.parlament.guest (catv-212-96-54-169.catv.broadband.hu [212.96.54.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F692070C;
-        Sat,  1 Feb 2020 08:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FF5206E6;
+        Sat,  1 Feb 2020 08:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580544233;
-        bh=HV9bEd5y/kS5QirGTechJ66etJMhVPV4zDZIWJvnB6w=;
+        s=default; t=1580544229;
+        bh=GPBdRgITfGCkjrxsYKDaRPli6I6l5AartW88IaCxTd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+M/j2ih9Fz7Zdwc/EPx9D7E5lYiC2OO1g2D0fTH2a/JA8WrK+VtHqzvWlf6LVOqY
-         f01QkQIjH6BHIBJ82VQpD8xq6EusrCrBumHKSA2q3vF31JNLhm6S2imPq3UCq8Ifgo
-         04vf2y3gwPt5rJIEG6uMS6+woq5JX7UGoWe1JfoY=
+        b=IYTa5joUlfFWWTEoQmO2aLrqtvRU8VrvicHx52T0r7dm2IbHbk7NaBt7iOuw8lS3b
+         +RDfzRzovzdkdOjobI5AKyc8sJdxbBoeR1yrvpfMtKcp5ee2wvImw4zyEIW6+lQpRv
+         BVjPUBosJZMmmSxK+JjZ2vbA6ImVw8ta8mjrCjyY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, sumanthk@linux.ibm.com,
+        Ian Rogers <irogers@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/6] perf test: Fix test case Merge cpu map
-Date:   Sat,  1 Feb 2020 09:03:27 +0100
-Message-Id: <20200201080330.13211-4-acme@kernel.org>
+Subject: [PATCH 2/6] perf parse: Copy string to perf_evsel_config_term
+Date:   Sat,  1 Feb 2020 09:03:26 +0100
+Message-Id: <20200201080330.13211-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200201080330.13211-1-acme@kernel.org>
 References: <20200201080330.13211-1-acme@kernel.org>
@@ -63,102 +70,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
-introduces a test case for cpumap merge operation, see functions
-perf_cpu_map__merge() and test__cpu_map_merge().
+perf with CoreSight fails to record trace data with command:
 
-The test case fails on s390 with this error message:
+  perf record -e cs_etm/@tmc_etr0/u --per-thread ls
+  failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
+  directory)/perf/
 
- [root@m35lp76 perf]# ./perf test -Fvvvvv 52
- 52: Merge cpu map                                         :
- --- start ---
- cpumask list: 1-2,4-5,7
- perf: /root/linux/tools/include/linux/refcount.h:131:\
-          refcount_sub_and_test: Assertion `!(new > val)' failed.
- Aborted (core dumped)
- [root@m35lp76 perf]#
+This failure is root caused with the commit 1dc925568f01 ("perf
+parse: Add a deep delete for parse event terms").
 
-The root cause is in the function test__cpu_map_merge():
-It creates two cpu_maps named 'a' and 'b':
+The log shows, cs_etm fails to parse the sink attribution; cs_etm event
+relies on the event configuration to pass sink name, but the event
+specific configuration data cannot be passed properly with flow:
 
-  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+  get_config_terms()
+    ADD_CONFIG_TERM(DRV_CFG, term->val.str);
+      __t->val.str = term->val.str;
+        `> __t->val.str is assigned to term->val.str;
 
-and creates a third map named 'c' which is the result of
-the merge of maps a and b:
+  parse_events_terms__purge()
+    parse_events_term__delete()
+      zfree(&term->val.str);
+        `> term->val.str is freed and assigned to NULL pointer;
 
-  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+  cs_etm_set_sink_attr()
+    sink = __t->val.str;
+      `> sink string has been freed.
 
-After some verifaction of the merged cpu_map all three
-of them are have their reference count reduced and are
-freed:
+To fix this issue, in the function get_config_terms(), this patch
+changes to use strdup() for allocation a new duplicate string rather
+than directly assignment string pointer.
 
-   perf_cpu_map__put(a); (1)
-   perf_cpu_map__put(b);
-   perf_cpu_map__put(c);
+This patch addes a new field 'free_str' in the data structure
+perf_evsel_config_term; 'free_str' is set to true when the union is used
+as a string pointer; thus it can tell perf_evsel__free_config_terms() to
+free the string.
 
-The release of perf_cpu_map__put(a) is wrong. The map
-is already released and free'ed as part of the function
+Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200117055251.24058-2-leo.yan@linaro.org
+[ Use zfree() in perf_evsel__free_config_terms ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  perf_cpu_map__merge(struct perf_cpu_map *orig,
-  |	              struct perf_cpu_map *other)
-  +--> perf_cpu_map__put(orig);
-       |
-       +--> cpu_map__delete(orig)
+:#	modified:   tools/perf/util/evsel_config.h
 
-At the end perf_cpu_map_put() is called for map 'orig'
-alias 'a' and since the reference count is 1, the map
-is deleted, as can be seen by the following gdb trace:
-
- (gdb) where
- #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
- #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
-		     have_lock=<optimized out>) at malloc.c:4222
- #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
- #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
- #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
-     other=0x156cc60) at cpumap.c:343
- #5  0x000000000110cdd0 in test__cpu_map_merge (
-     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
-
-Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
-a second time and causes the failure. Fix this be removing that
-function call.
-
-Output after:
-  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
-  52: Merge cpu map                                         :
-  --- start ---
-  cpumask list: 1-2,4-5,7
-  ---- end ----
-  Merge cpu map: Ok
-  [root@m35lp76 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: sumanthk@linux.ibm.com
-Link: http://lore.kernel.org/lkml/20200120132011.64698-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/cpumap.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/util/evsel.c        | 2 ++
+ tools/perf/util/evsel_config.h | 1 +
+ tools/perf/util/parse-events.c | 7 ++++++-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 4ac56741ac5f..29c793ac7d10 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
--	perf_cpu_map__put(a);
- 	perf_cpu_map__put(b);
- 	perf_cpu_map__put(c);
- 	return 0;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 549abd43816f..c8dc4450884c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1265,6 +1265,8 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+ 
+ 	list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+ 		list_del_init(&term->list);
++		if (term->free_str)
++			zfree(&term->val.str);
+ 		free(term);
+ 	}
+ }
+diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
+index b4a65201e4f7..e026ab67b008 100644
+--- a/tools/perf/util/evsel_config.h
++++ b/tools/perf/util/evsel_config.h
+@@ -32,6 +32,7 @@ enum evsel_term_type {
+ struct perf_evsel_config_term {
+ 	struct list_head      list;
+ 	enum evsel_term_type  type;
++	bool		      free_str;
+ 	union {
+ 		u64	      period;
+ 		u64	      freq;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f59f3c8da473..c01ba6f8fdad 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1240,7 +1240,12 @@ do {								\
+ #define ADD_CONFIG_TERM_STR(__type, __val)			\
+ do {								\
+ 	ADD_CONFIG_TERM(__type);				\
+-	__t->val.str = __val;					\
++	__t->val.str = strdup(__val);				\
++	if (!__t->val.str) {					\
++		zfree(&__t);					\
++		return -ENOMEM;					\
++	}							\
++	__t->free_str = true;					\
+ } while (0)
+ 
+ 	struct parse_events_term *term;
 -- 
 2.21.1
 
