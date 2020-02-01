@@ -2,88 +2,124 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1168C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20287C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7252205F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="g0I5kOKx"
+	by mail.kernel.org (Postfix) with ESMTP id ECAEC206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580578584;
+	bh=KuaxtJRw14v59ff+I3CJb9O7IIbfHXwjQfiE5sV/mdE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AoX7b94mgVcyp/Mbf2hLcBUdDjBc/vIOexMF0AcZhU0khL8KgsOniHiCCydDPUdw1
+	 vJXtRS1tRgeCu2brBzJmMMIOO+ZW8eN+jwBcor9tVl7p7pabi6fFoMESPY4ZWUt+aT
+	 wNsUg1CR+36YaH+IQwBssXZGTT5lTPONQoS69ix4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgBAReS (ORCPT
+        id S1726708AbgBARgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 12:34:18 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35503 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgBAReR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 12:34:17 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so10663476oie.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 09:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtlBGnOFdYatlABMmvX9Zn+TYTRXCztfhZYZ1Bz9w4U=;
-        b=g0I5kOKxbvaIHoz9zzo8+TvveUAbR9LvXjkSIK9y9JEVS47kBiSJ1EyNJB4o1BRmii
-         CvN63G1tQmqv0VVWKjeMITEWMK+GuXhhPLB0W7gY1V7O480ajxmJs60vGlwwqqscoZiU
-         WnXN8o0/DlOss4B0Cgb+N7WBWoylZTHzhBXzJLT671I2qXqrL/+Ma+2z1qkX3SN4g56X
-         ol8UpuFzah3PN49ABHPtj/QbML8z/NdOCZWOR/dHazQfTL277Ib9WdMhxCTVSvQZvBuR
-         8at5WtKcymXUXEaX8DOGadlPCCtcbZT5dTTEh0SamIUltO8pPyIEHVjvhnu5dD+8Vws8
-         AxxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtlBGnOFdYatlABMmvX9Zn+TYTRXCztfhZYZ1Bz9w4U=;
-        b=GexVc7tcy89ZRiMMifRJoKBnkwbeGFMOvE2sC3tqd1nyCo4QXQgp0OGMqcI+yV5ow+
-         7Hn1vORwjwGjob5mqCxc7T+E27ZrNYjP4N5PeDJQZ2zgqGSVgbhTuq037pnZLBqTaQwC
-         ONdVNRaxosj1GEMZhyPmxcRcqh5gXf1RUJGubi81cE61IXAIdi9ah/4kHhdUV923tbL6
-         FQdx27mL/GUXwfRij+HPIcGx6M+V6eITFFctNRriqf5wlwly1GP5lJrDISs1IpOEho2d
-         evcHB3E1aFYBN48cAs0VNN+4ttIiGAAo6rq61QexJlqFDhB+lMBRXnWJZj94NKmL9Gz7
-         SqPg==
-X-Gm-Message-State: APjAAAVORycDKd23a868i3uh2AwJ18LDQ/MYO/Ywe4aKvlLSAtqQiSMN
-        NJrpFyU768MHdQOLpOw5o8YKtd5v40+fbMOGNFmV6S2S
-X-Google-Smtp-Source: APXvYqwb5iv1ePTk/w/ExyS59Gep0ry7jVLVOw430odoGAVzf892BRwIV2FslFjJZkDioXv+xZpvSF/r4FdlRncJMSA=
-X-Received: by 2002:a54:4791:: with SMTP id o17mr9472411oic.70.1580578456766;
- Sat, 01 Feb 2020 09:34:16 -0800 (PST)
+        Sat, 1 Feb 2020 12:36:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbgBARgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 12:36:23 -0500
+Received: from cakuba.hsd1.ca.comcast.net (c-73-93-4-247.hsd1.ca.comcast.net [73.93.4.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A7DC20678;
+        Sat,  1 Feb 2020 17:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580578582;
+        bh=KuaxtJRw14v59ff+I3CJb9O7IIbfHXwjQfiE5sV/mdE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=npYR5SuSSCd/RxiufbwuT5b4Zl8DzXdHMvm2gczI+LuLTrmyTyRHAxb8GqPRusVOi
+         Nksy1LlWZ878WB0PdUdrVy/8Ii2I44Uj6dzZknH6IzTQTsdL+SqTTz+l5y69hwYEb7
+         /5shIJwIWw2mwK7nG7bHMe+sX4ZF1a4Tus98IhLg=
+Date:   Sat, 1 Feb 2020 09:36:20 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jiri Pirko <jiri@mellanox.com>, Andrew Lunn <andrew@lunn.ch>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200201093620.4b55d6fa@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20200201114919.GQ25745@shell.armlinux.org.uk>
+References: <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+        <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+        <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+        <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
+        <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
+        <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
+        <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+        <20200131142906.GG9639@lunn.ch>
+        <20200131151500.GO25745@shell.armlinux.org.uk>
+        <20200131074050.38d78ff0@cakuba.hsd1.ca.comcast.net>
+        <20200201114919.GQ25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20200201170933.924-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200201170933.924-1-lukas.bulwahn@gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 1 Feb 2020 09:34:05 -0800
-Message-ID: <CAPcyv4iP9AMrkNk-sabqCmS0bZkBcO5gx2tsv5kM0tFxjv_YTA@mail.gmail.com>
-Subject: Re: [PATCH RFC] MAINTAINERS: clarify maintenance of nvdimm testing tool
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 1, 2020 at 9:09 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> The git history shows that the files under ./tools/testing/nvdimm are
-> being developed and maintained by the LIBNVDIMM maintainers.
->
-> This was identified with a small script that finds all files only
-> belonging to "THE REST" according to the current MAINTAINERS file, and I
-> acted upon its output.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> This is a RFC patch based on what I could see as an outsider to nvdimm.
-> Dan, please pick this patch if it reflects the real responsibilities.
->
-> applies cleanly on current master and next-20200131
+On Sat, 1 Feb 2020 11:49:19 +0000, Russell King - ARM Linux admin wrote:
+> What if someone decides to do:
+> 
+> 	devlink port split device/1 count 2
+> 
+> what do we end up with?  Presumably two network devices running with
+> two serdes lanes each (if supported by the hardware).  At that point
+> can they then do:
+> 
+> 	devlink port split device/2 count 2
+> 
+> and end up with one network device with two 10G serdes lanes, and two
+> network devices each with one 10G serdes lane, 
 
-Looks good, thanks, applied.
+I think all your guesses are correct, it's a pretty straight forward
+API, but it's also pretty thin, and some of the logic is in FW, so
+there isn't much in a way of a standard on how things should behave :S
+
+> or can port splitting only be used on the "master" device/port ?
+
+I think both mlxsw and the NFP rejects re-split/further splitting.
+Ports have to be unsplit first. So there is only one device for
+splitting, and unsplitting can be done on any of the sub-devices.
+
+> Unfortunately, I don't think I have any network devices that support
+> this so I can't experiment to find out how this should work; yes, I
+> have a Mellanox card, but it supports a single 10G SFP+, and therefore
+> does not support port splitting.
+
+I think you'd need a mlxsw or an nfp to play with this.
+
+Maybe Jiri can clarify further :)
