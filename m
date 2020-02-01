@@ -2,160 +2,135 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BABC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036ECC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22E22064C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py6xERYc"
+	by mail.kernel.org (Postfix) with ESMTP id D1A552064C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 20:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgBATwh (ORCPT
+        id S1726718AbgBAUCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 14:52:37 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36247 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgBATwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 14:52:36 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so4191003plm.3;
-        Sat, 01 Feb 2020 11:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nEFNNblRqNpKNPo8t2U8tuWeN09OcfldVwvSHwZN258=;
-        b=Py6xERYcgrEQ0+UOFqTKxqkRbxm4BWMvKqC1AUuwiW7UzcVX9pzLHsqDdovZdkoZid
-         wD6kUbAs/PQEj96s3eUjbquhlNY4diSqMWoBAyxVtYBkOxRAcoQ7a2CRkSpkk+UgqRG9
-         Kw1VMmf+73rRUnGHgPu8/W362IRS1lWZgqlcOfoGcSmtmHAvuOtRg+F9tEZKiNLFcyky
-         Y3CAQ2bhFEYQceMLcFH9ervOTNSFH78Zmcvsi/ZwE1Zt0GMYTji6viri+0nI3G2qGK4r
-         30S96itKsi+lAysQhpoGKjSdWjr980V6mQyf1qqQSDrbU44yKoqE6xlysidta3E2E5oJ
-         rAyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nEFNNblRqNpKNPo8t2U8tuWeN09OcfldVwvSHwZN258=;
-        b=TlJSUs/p7k6eK0S74/tTtFYcXI2Ebk3NilXcM3Va+TF+eccc60UkPKLxXF1RAKTFb/
-         A4vpQvMA0ZNQtgn86YnjRLJxmBGU2s3/HxjmdfQ9KNXfXDD5Qae/knQoPvwLGlIbkzdU
-         +d1vf7Z5jf+XFxcK4vUI9jGusk22W0CaA9vaKexMXI8i6V+Z9lJBpO7XHJ3weDKZNpHI
-         00PO4J39n4yMTo60y4lzv9P3K3EM+7RsUMjo+va9Ko0h2P5TOG7C7RMkCdqwA1tDcWML
-         jkHEIi1cwOYSDET16pty2VOmxg49XYM9NAL2iSkMUZkuQHAfiOZZTQthjvfzG5koeLv9
-         IKyA==
-X-Gm-Message-State: APjAAAWrLreYw8WAVq4Xf4RvmWzGoQu9j9R85sqB99zSXZatciEZ0UqS
-        YlY4tfhad8XUe3bbYZ2soWA=
-X-Google-Smtp-Source: APXvYqzCM3uWw5SVuutahEAugjcnROlQqItwLliiieP4i6E/BALocpEjNvhe7tx1KRCV8JtpGPIwhw==
-X-Received: by 2002:a17:902:a617:: with SMTP id u23mr16064477plq.20.1580586754578;
-        Sat, 01 Feb 2020 11:52:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q8sm14623513pgg.92.2020.02.01.11.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Feb 2020 11:52:33 -0800 (PST)
-Date:   Sat, 1 Feb 2020 11:52:32 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling
- set_config()
-Message-ID: <20200201195232.GA17364@roeck-us.net>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <20191224120709.18247-3-brgl@bgdev.pl>
+        Sat, 1 Feb 2020 15:02:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:43576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgBAUCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 15:02:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACBC3FEC;
+        Sat,  1 Feb 2020 12:02:02 -0800 (PST)
+Received: from [192.168.122.164] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F0663F67D;
+        Sat,  1 Feb 2020 12:02:02 -0800 (PST)
+Subject: Re: [PATCH 3/6] net: bcmgenet: enable automatic phy discovery
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, opendmb@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        hkallweit1@gmail.com
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-4-jeremy.linton@arm.com> <20200201152518.GI9639@lunn.ch>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <ad9bc142-c0a8-74af-09c6-7150ff4b854a@arm.com>
+Date:   Sat, 1 Feb 2020 14:02:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224120709.18247-3-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200201152518.GI9639@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 01:06:58PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Instead of calling the gpiochip's set_config() callback directly and
-> checking its existence every time - just add a new routine that performs
-> this check internally. Call it in gpio_set_config() and
-> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> the check for chip->set() as it's irrelevant to this config option.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hi,
 
-This patch made it into mainline, even though a regression was reported
-against it by Geert. Please note that it is not just a theoretic problem
-but _does_ indeed cause regressions.
-
-Guenter
-
-> ---
->  drivers/gpio/gpiolib.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+On 2/1/20 9:25 AM, Andrew Lunn wrote:
+> On Sat, Feb 01, 2020 at 01:46:22AM -0600, Jeremy Linton wrote:
+>> The unimac mdio driver falls back to scanning the
+>> entire bus if its given an appropriate mask. In ACPI
+>> mode we expect that the system is well behaved and
+>> conforms to recent versions of the specification.
+>>
+>> We then utilize phy_find_first(), and
+>> phy_connect_direct() to find and attach to the
+>> discovered phy during net_device open.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   drivers/net/ethernet/broadcom/genet/bcmmii.c | 40 +++++++++++++++++---
+>>   1 file changed, 34 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> index 2049f8218589..f3271975b375 100644
+>> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+>> @@ -5,7 +5,7 @@
+>>    * Copyright (c) 2014-2017 Broadcom
+>>    */
+>>   
+>> -
+>> +#include <linux/acpi.h>
+>>   #include <linux/types.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/wait.h>
+>> @@ -311,7 +311,9 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+>>   int bcmgenet_mii_probe(struct net_device *dev)
+>>   {
+>>   	struct bcmgenet_priv *priv = netdev_priv(dev);
+>> -	struct device_node *dn = priv->pdev->dev.of_node;
+>> +	struct device *kdev = &priv->pdev->dev;
+>> +	struct device_node *dn = kdev->of_node;
+>> +
+>>   	struct phy_device *phydev;
+>>   	u32 phy_flags = 0;
+>>   	int ret;
+>> @@ -334,7 +336,27 @@ int bcmgenet_mii_probe(struct net_device *dev)
+>>   			return -ENODEV;
+>>   		}
+>>   	} else {
+>> -		phydev = dev->phydev;
+>> +		if (has_acpi_companion(kdev)) {
+>> +			char mdio_bus_id[MII_BUS_ID_SIZE];
+>> +			struct mii_bus *unimacbus;
+>> +
+>> +			snprintf(mdio_bus_id, MII_BUS_ID_SIZE, "%s-%d",
+>> +				 UNIMAC_MDIO_DRV_NAME, priv->pdev->id);
+>> +
+>> +			unimacbus = mdio_find_bus(mdio_bus_id);
+>> +			if (!unimacbus) {
+>> +				pr_err("Unable to find mii\n");
+>> +				return -ENODEV;
+>> +			}
+>> +			phydev = phy_find_first(unimacbus);
+>> +			put_device(&unimacbus->dev);
+>> +			if (!phydev) {
+>> +				pr_err("Unable to find PHY\n");
+>> +				return -ENODEV;
 > 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e5d101ee9ada..616e431039fc 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
->   * rely on gpio_request() having been called beforehand.
->   */
->  
-> +static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
-> +			      enum pin_config_param mode)
-> +{
-> +	if (!gc->set_config)
-> +		return -ENOTSUPP;
-> +
-> +	return gc->set_config(gc, offset, mode);
-> +}
-> +
->  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->  			   enum pin_config_param mode)
->  {
-> @@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->  	}
->  
->  	config = PIN_CONF_PACKED(mode, arg);
-> -	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
-> +	return gpio_do_set_config(gc, offset, mode);
->  }
->  
->  static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-> @@ -3294,15 +3303,9 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
->  
->  	VALIDATE_DESC(desc);
->  	chip = desc->gdev->chip;
-> -	if (!chip->set || !chip->set_config) {
-> -		gpiod_dbg(desc,
-> -			  "%s: missing set() or set_config() operations\n",
-> -			  __func__);
-> -		return -ENOTSUPP;
-> -	}
->  
->  	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
-> -	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
-> +	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
->  }
->  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
->  
-> @@ -3339,7 +3342,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
->  	packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
->  					  !transitory);
->  	gpio = gpio_chip_hwgpio(desc);
-> -	rc = chip->set_config(chip, gpio, packed);
-> +	rc = gpio_do_set_config(chip, gpio, packed);
->  	if (rc == -ENOTSUPP) {
->  		dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
->  				gpio);
+> Hi Jeremy
+> 
+> phy_find_first() is not recommended. Only use it if you have no other
+> option. If the hardware is more complex, two PHYs on one bus, you are
+> going to have a problem. So i suggest this is used only for PCI cards
+> where the hardware is very fixed, and there is only ever one MAC and
+> PHY on the PCI card. When you do have this split between MAC and MDIO
+> bus, each being independent devices, it is more likely that you do
+> have multiple PHYs on one shared MDIO bus.
+> 
+> In the DT world, you use a phy-handle to point to the PHY node in the
+> device tree. Does ACPI have the same concept, a pointer to some other
+> device in ACPI?
+
+
+I though I should clarify the direct question here about ACPI. ACPI does 
+have the ability to do what you describe, but it a more rigorous way. If 
+you look at the ACPI GenericSerialBus abstraction you will see how ACPI 
+would likely handle this situation. I've been considering making a 
+similar comment in that large fwnode patch set posted the other day.
+
