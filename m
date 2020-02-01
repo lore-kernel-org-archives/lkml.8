@@ -2,262 +2,104 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FF9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69295C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20313206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580576926;
-	bh=leQ2oVHxU64TQsgyTBsZlLGuQgNthhdi/27v/ARh1B8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PmckvwJWDvxIRYW1lEcxeuXmnkA04DBuKH6ywaZiaLEa78Xs9MF/vHpUUz8T9nVfR
-	 mQEvCCQOpov7E/PFupIne0umSKDg6O5y+40mmkwdterqMZXIlRJ/LZYOhnWlUDw/9+
-	 yLBwbsRnJzyQ6vSLiRgLsQa0fxbfXDrucXh79QjI=
+	by mail.kernel.org (Postfix) with ESMTP id 36493206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeX2Lgen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgBARIp (ORCPT
+        id S1727072AbgBARJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 12:08:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgBARIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 12:08:45 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8634C206E6;
-        Sat,  1 Feb 2020 17:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580576923;
-        bh=leQ2oVHxU64TQsgyTBsZlLGuQgNthhdi/27v/ARh1B8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J1MRrVN4o5yEdXPiNRZDwpKjaIe1x2rmyt2rslPikreH3Qel9Bv1qq9keSjD2p56G
-         9McYIJeRsDQn12EHPrrw2OCLF/XR60qVLyTSFllsezVHpDasW2kbm+9QzoOl8B0ohV
-         VwmsS3c91tPDIIOq5aV429DfBTYCRWXzv7WxnVg4=
-Date:   Sat, 1 Feb 2020 17:08:39 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <dragos.bogdan@analog.com>,
-        <nuno.sa@analog.com>
-Subject: Re: [PATCH 2/4] iio: imu: adis: Refactor adis_initial_startup
-Message-ID: <20200201170839.4ab98d8e@archlinux>
-In-Reply-To: <20200120142051.28533-2-alexandru.ardelean@analog.com>
-References: <20200120142051.28533-1-alexandru.ardelean@analog.com>
-        <20200120142051.28533-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sat, 1 Feb 2020 12:09:51 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35953 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgBARJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 12:09:51 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so12467426wru.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 09:09:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=M5KeM9XPEcQOSTgANXYZAkXANlceUDSTwSKd2fmzxsg=;
+        b=ZeX2LgenLwzZn2ZefiTmLj9NSXzjTV6+FCUUDVss9vB31lMUHQNVmOtA9fxqFtJ38I
+         08wxomhQbtbHmBA5uv6n0XpDJWGJrmbSNuHxVSx44Zj0bwnwp2koV5n2eutjKe7CR3u5
+         GIKOf7H6uw9FSNuPNz/Lj0SJlm7SnlxkeouzHgCIVGumBT8jYAuLxj5x0Dh3gWJtPHtX
+         5OfUx45n5OWYL7F4g3JSiStWSMqLbpQQfYXPrxvRCUKtnxiEu27ql6lSMHzJdqo18Eqd
+         cFKY0zPrI+CVeNBrXOcxv/LF+XUH2aWCwK4FcPhgdJEMGJK+ebVoFR++DvC6o0OAClBW
+         R0PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M5KeM9XPEcQOSTgANXYZAkXANlceUDSTwSKd2fmzxsg=;
+        b=N/b/mva5xSUuhLQUKfcH4WEjMQkMG4bWfdYX7A/X6gjSWeUDvdc6no3UKg46YTQHdo
+         pBL24G67tvQdifq8gJZ7GVVkeItxuI/LDQDLRcm2hUsQvZZe+R9e2LzAVoUc9NGpmFnc
+         W22leDQx2gVjclbeuA2ddoxpfPOKo74DRIPl6bq3zAtF0lT+AeLsJD6gRYHRwyN4nl0m
+         L8b+mL65t8ZsUgq9FRFRxx2hx7hP1kXES9+7/rxFCjgcSRu3AuPaYWDl63yQeif2u3vW
+         ZLKvDQTz/0sReW/cRzUnp8Z0FyDJEFlHnn9wZNDydXZ7HoEfbx9f1Pm8MV+iFvzDfTO2
+         iUSw==
+X-Gm-Message-State: APjAAAUZVuSj0rgJd3g/6tz1UuvN5WyN6BC+W8zzdN0sA4fZh3c0RP74
+        qBBNSrBpEXi5mv3E7mxWdOc=
+X-Google-Smtp-Source: APXvYqyXQPivQeOLGHjYOjxCCwEvHsE7pCbNy5Bktscfvdep4bNFD1CxryQdNM3Ire8mEOCXQ23L6Q==
+X-Received: by 2002:a5d:550f:: with SMTP id b15mr5223481wrv.196.1580576989001;
+        Sat, 01 Feb 2020 09:09:49 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d5f:200:619d:5ce8:4d82:51eb])
+        by smtp.gmail.com with ESMTPSA id a62sm16311759wmh.33.2020.02.01.09.09.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 09:09:48 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH RFC] MAINTAINERS: clarify maintenance of nvdimm testing tool
+Date:   Sat,  1 Feb 2020 18:09:33 +0100
+Message-Id: <20200201170933.924-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 16:20:49 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+The git history shows that the files under ./tools/testing/nvdimm are
+being developed and maintained by the LIBNVDIMM maintainers.
 
-> From: Nuno S=C3=A1 <nuno.sa@analog.com>
->=20
-> All the ADIS devices perform, at the beginning, a self test to make sure
-> the device is in a sane state. Furthermore, some drivers also do a call
-> to `adis_reset()` before the test which is also a good practice. This
-> patch unifies all those operation so that, there's no need for code
-> duplication. Furthermore, the rst pin is also checked to make sure the
-> device is not in HW reset. On top of this, some drivers also read the
-> device product id and compare it with the device being probed to make
-> sure the correct device is being handled. This can also be passed to the
-> library by introducing a variable holding the PROD_ID register of the
-> device.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/iio/imu/Kconfig      |  1 +
->  drivers/iio/imu/adis.c       | 63 ++++++++++++++++++++++++++----------
->  include/linux/iio/imu/adis.h | 15 ++++++++-
->  3 files changed, 61 insertions(+), 18 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
-> index 60bb1029e759..63036cf473c7 100644
-> --- a/drivers/iio/imu/Kconfig
-> +++ b/drivers/iio/imu/Kconfig
-> @@ -85,6 +85,7 @@ endmenu
-> =20
->  config IIO_ADIS_LIB
->  	tristate
-> +	depends on GPIOLIB
->  	help
->  	  A set of IO helper functions for the Analog Devices ADIS* device fami=
-ly.
-> =20
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index d02b1911b0f2..1eca5271380e 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -7,6 +7,7 @@
->   */
-> =20
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/mutex.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
-> @@ -365,36 +366,64 @@ static int adis_self_test(struct adis *adis)
->  }
-> =20
->  /**
-> - * adis_inital_startup() - Performs device self-test
-> + * __adis_initial_startup() - Device initial setup
->   * @adis: The adis device
->   *
-> + * This functions makes sure the device is not in reset, via rst pin.
-> + * Furthermore it performs a SW reset (only in the case we are not comin=
-g from
-> + * reset already) and a self test. It also compares the product id with =
-the
-> + * device id if the prod_id_reg variable is set.
-> + *
->   * Returns 0 if the device is operational, a negative error code otherwi=
-se.
->   *
->   * This function should be called early on in the device initialization =
-sequence
->   * to ensure that the device is in a sane and known state and that it is=
- usable.
->   */
-> -int adis_initial_startup(struct adis *adis)
-> +int __adis_initial_startup(struct adis *adis)
->  {
->  	int ret;
-> -
-> -	mutex_lock(&adis->state_lock);
-> +	struct gpio_desc *gpio;
-> +	const struct adis_timeout *timeouts =3D adis->data->timeouts;
-> +	const char *iio_name =3D spi_get_device_id(adis->spi)->name;
-> +	u16 prod_id, dev_id;
-> +
-> +	/* check if the device has rst pin low */
-> +	gpio =3D devm_gpiod_get_optional(&adis->spi->dev, "reset", GPIOD_ASIS);
-> +	if (IS_ERR(gpio)) {
-> +		return PTR_ERR(gpio);
+This was identified with a small script that finds all files only
+belonging to "THE REST" according to the current MAINTAINERS file, and I
+acted upon its output.
 
-Given you are returning here, no need for else to follow
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+This is a RFC patch based on what I could see as an outsider to nvdimm.
+Dan, please pick this patch if it reflects the real responsibilities.
 
-if (gpio...
+applies cleanly on current master and next-20200131
 
-> +	} else if (gpio && gpiod_get_value_cansleep(gpio)) {
-> +		/* bring device out of reset */
-> +		gpiod_set_value_cansleep(gpio, 0);
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hmm. So is a software reset the best option if we have a hardware reset
-line but it's not currently in the reset mode?
-
-> +		msleep(timeouts->reset_ms);
-> +	} else {
-> +		ret =3D __adis_reset(adis);
-> +		if (ret)
-> +			return ret;
-> +	}
-> =20
->  	ret =3D adis_self_test(adis);
-> -	if (ret) {
-> -		dev_err(&adis->spi->dev, "Self-test failed, trying reset.\n");
-> -		__adis_reset(adis);
-> -		ret =3D adis_self_test(adis);
-> -		if (ret) {
-> -			dev_err(&adis->spi->dev, "Second self-test failed, giving up.\n");
-> -			goto out_unlock;
-> -		}
-> -	}
-> +	if (ret)
-> +		return ret;
-> =20
-> -out_unlock:
-> -	mutex_unlock(&adis->state_lock);
-> -	return ret;
-> +	if (!adis->data->prod_id_reg)
-> +		return 0;
-> +
-> +	ret =3D adis_read_reg_16(adis, adis->data->prod_id_reg, &prod_id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D sscanf(iio_name, "adis%hu\n", &dev_id);
-
-Hmm. I have a general dislike of pulling part name strings apart to get
-IDs.  It tends to break when someone comes along and adds a part with new
-branding.  Perhaps just put it in the relevant device part specific structu=
-res
-directly?
-
-> +	if (ret !=3D 1)
-> +		return -EINVAL;
-> +
-> +	if (prod_id !=3D dev_id)
-> +		dev_warn(&adis->spi->dev,
-> +			 "Device ID(%u) and product ID(%u) do not match.",
-> +			 dev_id, prod_id);
-> +
-> +	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(adis_initial_startup);
-> +EXPORT_SYMBOL_GPL(__adis_initial_startup);
-> =20
->  /**
->   * adis_single_conversion() - Performs a single sample conversion
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index d21a013d1122..c43e7922ab32 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -41,6 +41,7 @@ struct adis_timeout {
->   * @glob_cmd_reg: Register address of the GLOB_CMD register
->   * @msc_ctrl_reg: Register address of the MSC_CTRL register
->   * @diag_stat_reg: Register address of the DIAG_STAT register
-> + * @prod_id_reg: Register address of the PROD_ID register
->   * @self_test_reg: Register address to request self test command
->   * @status_error_msgs: Array of error messgaes
->   * @status_error_mask:
-> @@ -54,6 +55,7 @@ struct adis_data {
->  	unsigned int glob_cmd_reg;
->  	unsigned int msc_ctrl_reg;
->  	unsigned int diag_stat_reg;
-> +	unsigned int prod_id_reg;
-> =20
->  	unsigned int self_test_mask;
->  	unsigned int self_test_reg;
-> @@ -299,6 +301,7 @@ static inline int adis_read_reg_32(struct adis *adis,=
- unsigned int reg,
-> =20
->  int adis_enable_irq(struct adis *adis, bool enable);
->  int __adis_check_status(struct adis *adis);
-> +int __adis_initial_startup(struct adis *adis);
-> =20
->  static inline int adis_check_status(struct adis *adis)
->  {
-> @@ -311,7 +314,17 @@ static inline int adis_check_status(struct adis *adi=
-s)
->  	return ret;
->  }
-> =20
-> -int adis_initial_startup(struct adis *adis);
-> +/* locked version of __adis_initial_startup() */
-> +static inline int adis_initial_startup(struct adis *adis)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&adis->state_lock);
-> +	ret =3D __adis_initial_startup(adis);
-> +	mutex_unlock(&adis->state_lock);
-> +
-> +	return ret;
-> +}
-> =20
->  int adis_single_conversion(struct iio_dev *indio_dev,
->  	const struct iio_chan_spec *chan, unsigned int error_mask,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1f77fb8cdde3..929386123257 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9564,6 +9564,7 @@ F:	drivers/acpi/nfit/*
+ F:	include/linux/nd.h
+ F:	include/linux/libnvdimm.h
+ F:	include/uapi/linux/ndctl.h
++F:	tools/testing/nvdimm/
+ 
+ LICENSES and SPDX stuff
+ M:	Thomas Gleixner <tglx@linutronix.de>
+-- 
+2.17.1
 
