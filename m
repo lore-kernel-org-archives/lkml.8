@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5096C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E52C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D2320661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C5520661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgBASxJ (ORCPT
+        id S1727509AbgBASxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:53:09 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11279 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:53:02 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbgBASwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:34 -0500
+        id S1727250AbgBASwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075601"
+   d="scan'208";a="248075580"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 57/61] KVM: x86/mmu: Merge kvm_{enable,disable}_tdp() into a common function
-Date:   Sat,  1 Feb 2020 10:52:14 -0800
-Message-Id: <20200201185218.24473-58-sean.j.christopherson@intel.com>
+Subject: [PATCH 50/61] KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
+Date:   Sat,  1 Feb 2020 10:52:07 -0800
+Message-Id: <20200201185218.24473-51-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,98 +49,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Combine kvm_enable_tdp() and kvm_disable_tdp() into a single function,
-kvm_configure_mmu(), in preparation for doing additional configuration
-during hardware setup.  And because having separate helpers is silly.
+Set emulated and transmuted (set based on other features) feature bits
+via kvm_cpu_caps now that the CPUID output for KVM_GET_SUPPORTED_CPUID
+is direcly overidden with kvm_cpu_caps.
+
+Note, VMX emulation of UMIP already sets kvm_cpu_caps.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 +--
- arch/x86/kvm/mmu/mmu.c          | 13 +++----------
- arch/x86/kvm/svm.c              |  5 +----
- arch/x86/kvm/vmx/vmx.c          |  4 +---
- 4 files changed, 6 insertions(+), 19 deletions(-)
+ arch/x86/kvm/cpuid.c   | 72 +++++++++++++++++++++---------------------
+ arch/x86/kvm/svm.c     | 10 +++---
+ arch/x86/kvm/vmx/vmx.c | 13 +-------
+ 3 files changed, 42 insertions(+), 53 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index a8bae9d88bce..1a13a53bbaeb 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1494,8 +1494,7 @@ void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
- void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
- void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 871c0bd04e19..a37cb6fda979 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -341,6 +341,8 @@ void kvm_set_cpu_caps(void)
+ 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+ 		F(F16C) | F(RDRAND)
+ 	);
++	/* KVM emulates x2apic in software irrespective of host support. */
++	kvm_cpu_cap_set(X86_FEATURE_X2APIC);
  
--void kvm_enable_tdp(void);
--void kvm_disable_tdp(void);
-+void kvm_configure_mmu(bool enable_tdp);
+ 	kvm_cpu_cap_mask(CPUID_7_0_EBX,
+ 		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
+@@ -366,6 +368,17 @@ void kvm_set_cpu_caps(void)
+ 		F(MD_CLEAR)
+ 	);
  
- static inline gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
- 				  struct x86_exception *exception)
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 84eeb61d06aa..08c80c7c88d4 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5541,18 +5541,11 @@ void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid)
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_invpcid_gva);
++	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
++	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
++	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
++
++	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
++		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
++	if (boot_cpu_has(X86_FEATURE_STIBP))
++		kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
++	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
++
+ 	kvm_cpu_cap_mask(CPUID_7_1_EAX,
+ 		F(AVX512_BF16)
+ 	);
+@@ -388,6 +401,29 @@ void kvm_set_cpu_caps(void)
+ 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
+ 	);
  
--void kvm_enable_tdp(void)
-+void kvm_configure_mmu(bool enable_tdp)
- {
--	tdp_enabled = true;
-+	tdp_enabled = enable_tdp;
- }
--EXPORT_SYMBOL_GPL(kvm_enable_tdp);
++	/*
++	 * AMD has separate bits for each SPEC_CTRL bit.
++	 * arch/x86/kernel/cpu/bugs.c is kind enough to
++	 * record that in cpufeatures so use them.
++	 */
++	if (boot_cpu_has(X86_FEATURE_IBPB))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_IBPB);
++	if (boot_cpu_has(X86_FEATURE_IBRS))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_IBRS);
++	if (boot_cpu_has(X86_FEATURE_STIBP))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_STIBP);
++	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_SSBD);
++	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
++		kvm_cpu_cap_set(X86_FEATURE_AMD_SSB_NO);
++	/*
++	 * The preference is to use SPEC CTRL MSR instead of the
++	 * VIRT_SPEC MSR.
++	 */
++	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
++	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
++
+ 	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
+ 		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
+ 		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
+@@ -490,9 +526,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 	case 1:
+ 		cpuid_entry_override(entry, CPUID_1_EDX);
+ 		cpuid_entry_override(entry, CPUID_1_ECX);
+-		/* we support x2apic emulation even if host does not support
+-		 * it since we emulate x2apic in software */
+-		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
+ 		break;
+ 	case 2:
+ 		/*
+@@ -547,17 +580,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		cpuid_entry_override(entry, CPUID_7_ECX);
+ 		cpuid_entry_override(entry, CPUID_7_EDX);
+ 
+-		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+-		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+-		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
 -
--void kvm_disable_tdp(void)
--{
--	tdp_enabled = false;
--}
--EXPORT_SYMBOL_GPL(kvm_disable_tdp);
+-		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+-		if (boot_cpu_has(X86_FEATURE_STIBP))
+-			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
 -
-+EXPORT_SYMBOL_GPL(kvm_configure_mmu);
- 
- /* The return value indicates if tlb flush on all vcpus is needed. */
- typedef bool (*slot_level_handler) (struct kvm *kvm, struct kvm_rmap_head *rmap_head);
+ 		/* KVM only supports 0x7.0 and 0x7.1, capped above via min(). */
+ 		if (entry->eax == 1) {
+ 			entry = do_host_cpuid(array, function, 1);
+@@ -729,28 +751,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		entry->eax = g_phys_as | (virt_as << 8);
+ 		entry->edx = 0;
+ 		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
+-		/*
+-		 * AMD has separate bits for each SPEC_CTRL bit.
+-		 * arch/x86/kernel/cpu/bugs.c is kind enough to
+-		 * record that in cpufeatures so use them.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_IBPB))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_IBPB);
+-		if (boot_cpu_has(X86_FEATURE_IBRS))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_IBRS);
+-		if (boot_cpu_has(X86_FEATURE_STIBP))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_SSBD);
+-		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
+-			cpuid_entry_set(entry, X86_FEATURE_AMD_SSB_NO);
+-		/*
+-		 * The preference is to use SPEC CTRL MSR instead of the
+-		 * VIRT_SPEC MSR.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
+-		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
+ 		break;
+ 	}
+ 	case 0x80000019:
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 80962c1eea8f..19dc74ae1efb 100644
+index e1ed5726964c..f4434816dcdf 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -1443,10 +1443,7 @@ static __init int svm_hardware_setup(void)
- 	if (npt_enabled && !npt)
- 		npt_enabled = false;
+@@ -1360,6 +1360,11 @@ static __init void svm_set_cpu_caps(void)
+ 	if (nested)
+ 		kvm_cpu_cap_set(X86_FEATURE_SVM);
  
--	if (npt_enabled)
--		kvm_enable_tdp();
--	else
--		kvm_disable_tdp();
-+	kvm_configure_mmu(npt_enabled);
- 	pr_info("kvm: Nested Paging %sabled\n", npt_enabled ? "en" : "dis");
- 
- 	if (nrips) {
++	/* CPUID 0x80000008 */
++	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
++	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
++
+ 	/* CPUID 0x8000000A */
+ 	/* Support next_rip if host supports it */
+ 	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
+@@ -6053,11 +6058,6 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
+ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ {
+ 	switch (entry->function) {
+-	case 0x80000008:
+-		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+-		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
+-		break;
+ 	case 0x8000000A:
+ 		entry->eax = 1; /* SVM revision 1 */
+ 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e6284b6aac56..59206c22b5e1 100644
+index cd5a624610c9..2a1df1b714db 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5295,7 +5295,6 @@ static void vmx_enable_tdp(void)
- 		VMX_EPT_RWX_MASK, 0ull);
+@@ -7101,18 +7101,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
  
- 	ept_set_mmio_spte_mask();
--	kvm_enable_tdp();
+ static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+ {
+-	switch (entry->function) {
+-	case 0x7:
+-		/*
+-		 * UMIP needs to be manually set even though vmx_set_cpu_caps()
+-		 * also sets UMIP since do_host_cpuid() will drop it.
+-		 */
+-		if (vmx_umip_emulated())
+-			cpuid_entry_set(entry, X86_FEATURE_UMIP);
+-		break;
+-	default:
+-		break;
+-	}
++
  }
  
- /*
-@@ -7678,8 +7677,7 @@ static __init int hardware_setup(void)
- 
- 	if (enable_ept)
- 		vmx_enable_tdp();
--	else
--		kvm_disable_tdp();
-+	kvm_configure_mmu(enable_ept);
- 
- 	/*
- 	 * Only enable PML when hardware supports PML feature, and both EPT
+ static __init void vmx_set_cpu_caps(void)
 -- 
 2.24.1
 
