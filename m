@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6F9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E683C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB8F20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410CA20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgBAS4e (ORCPT
+        id S1727734AbgBAS4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:56:34 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57278 "EHLO mga01.intel.com"
+        Sat, 1 Feb 2020 13:56:35 -0500
+Received: from mga05.intel.com ([192.55.52.43]:37515 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgBASw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726976AbgBASw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:52:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075468"
+   d="scan'208";a="248075465"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 13/61] KVM: x86: Consolidate CPUID array max num entries checking
-Date:   Sat,  1 Feb 2020 10:51:30 -0800
-Message-Id: <20200201185218.24473-14-sean.j.christopherson@intel.com>
+Subject: [PATCH 12/61] KVM: x86: Drop redundant boot cpu checks on SSBD feature bits
+Date:   Sat,  1 Feb 2020 10:51:29 -0800
+Message-Id: <20200201185218.24473-13-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,154 +49,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the nent vs. maxnent check and nent increment into do_host_cpuid()
-to consolidate what is now identical code.  To signal success vs.
-failure, return the entry and NULL respectively.  A future patch will
-build on this to also move the entry retrieval into do_host_cpuid().
+Drop redundnant checks when "emulating" SSBD feature across vendors,
+i.e. advertising the AMD variant when running on an Intel CPU and vice
+versa.  Both SPEC_CTRL_SSBD and AMD_SSBD are already defined in the
+leaf-specific feature masks and are *not* forcefully set by the kernel,
+i.e. will already be set in the entry when supported by the host.
+
+Functionally, this changes nothing, but the redundant check is
+confusing, especially when considering future patches that will further
+differentiate between "real" and "emulated" feature bits.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 49 +++++++++++++++-----------------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+ arch/x86/kvm/cpuid.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 52f0af4e10d5..1ae3b2502333 100644
+index fd04f17d1836..52f0af4e10d5 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -287,9 +287,14 @@ static __always_inline void cpuid_mask(u32 *word, int wordnum)
- 	*word &= boot_cpu_data.x86_capability[wordnum];
- }
- 
--static void do_host_cpuid(struct kvm_cpuid_entry2 *entry, u32 function,
--			   u32 index)
-+static struct kvm_cpuid_entry2 *do_host_cpuid(struct kvm_cpuid_entry2 *entry,
-+					      int *nent, int maxnent,
-+					      u32 function, u32 index)
- {
-+	if (*nent >= maxnent)
-+		return NULL;
-+	++*nent;
-+
- 	entry->function = function;
- 	entry->index = index;
- 	entry->flags = 0;
-@@ -316,6 +321,8 @@ static void do_host_cpuid(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
- 		break;
- 	}
-+
-+	return entry;
- }
- 
- static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
-@@ -507,12 +514,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 
- 	r = -E2BIG;
- 
--	if (WARN_ON(*nent >= maxnent))
-+	if (WARN_ON(!do_host_cpuid(entry, nent, maxnent, function, 0)))
- 		goto out;
- 
--	do_host_cpuid(entry, function, 0);
--	++*nent;
--
- 	switch (function) {
- 	case 0:
- 		/* Limited to the highest leaf implemented in KVM. */
-@@ -536,11 +540,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 
- 		entry->flags |= KVM_CPUID_FLAG_STATE_READ_NEXT;
- 		for (t = 1; t < times; ++t) {
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[t], nent, maxnent, function, 0))
- 				goto out;
--
--			do_host_cpuid(&entry[t], function, 0);
--			++*nent;
- 		}
- 		break;
- 	}
-@@ -555,10 +556,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			if (!cache_type)
- 				break;
- 
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
- 				goto out;
--			do_host_cpuid(&entry[i], function, i);
--			++*nent;
- 		}
- 		break;
- 	}
-@@ -575,12 +574,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		do_cpuid_7_mask(entry);
- 
- 		for (i = 1; i <= entry->eax; i++) {
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
- 				goto out;
- 
--			do_host_cpuid(&entry[i], function, i);
--			++*nent;
--
- 			do_cpuid_7_mask(&entry[i]);
- 		}
- 		break;
-@@ -633,11 +629,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		 * added entry is zero.
- 		 */
- 		for (i = 1; entry[i - 1].ecx & 0xff00; ++i) {
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[i], nent, maxnent, function, i))
- 				goto out;
--
--			do_host_cpuid(&entry[i], function, i);
--			++*nent;
- 		}
- 		break;
- 	}
-@@ -652,12 +645,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 		if (!supported)
- 			break;
- 
--		if (*nent >= maxnent)
-+		if (!do_host_cpuid(&entry[1], nent, maxnent, function, 1))
- 			goto out;
- 
--		do_host_cpuid(&entry[1], function, 1);
--		++*nent;
--
- 		entry[1].eax &= kvm_cpuid_D_1_eax_x86_features;
- 		cpuid_mask(&entry[1].eax, CPUID_D_1_EAX);
- 		if (entry[1].eax & (F(XSAVES)|F(XSAVEC)))
-@@ -672,12 +662,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			if (!(supported & BIT_ULL(idx)))
- 				continue;
- 
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[i], nent, maxnent, function, idx))
- 				goto out;
- 
--			do_host_cpuid(&entry[i], function, idx);
--			++*nent;
--
- 			/*
- 			 * The @supported check above should have filtered out
- 			 * invalid sub-leafs as well as sub-leafs managed by
-@@ -704,10 +691,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			break;
- 
- 		for (t = 1; t <= times; ++t) {
--			if (*nent >= maxnent)
-+			if (!do_host_cpuid(&entry[t], nent, maxnent, function, t))
- 				goto out;
--			do_host_cpuid(&entry[t], function, t);
--			++*nent;
- 		}
- 		break;
- 	}
+@@ -405,8 +405,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+ 			entry->edx |= F(SPEC_CTRL);
+ 		if (boot_cpu_has(X86_FEATURE_STIBP))
+ 			entry->edx |= F(INTEL_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
+-		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+ 			entry->edx |= F(SPEC_CTRL_SSBD);
+ 		/*
+ 		 * We emulate ARCH_CAPABILITIES in software even
+@@ -780,8 +779,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 			entry->ebx |= F(AMD_IBRS);
+ 		if (boot_cpu_has(X86_FEATURE_STIBP))
+ 			entry->ebx |= F(AMD_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
+-		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
++		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
+ 			entry->ebx |= F(AMD_SSBD);
+ 		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
+ 			entry->ebx |= F(AMD_SSB_NO);
 -- 
 2.24.1
 
