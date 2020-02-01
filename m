@@ -2,59 +2,203 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC42C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 13:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A84C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEF0206E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 13:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F153A206E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 13:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JnxcKirI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBANhD (ORCPT
+        id S1726677AbgBANpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 08:37:03 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:58232 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgBANhD (ORCPT
+        Sat, 1 Feb 2020 08:45:02 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:10704 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgBANpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 08:37:03 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixsxJ-005jfR-JB; Sat, 01 Feb 2020 13:37:01 +0000
-Date:   Sat, 1 Feb 2020 13:37:01 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     syzbot <syzbot+32c9f7d8a32ea5127669@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in do_dentry_open (2)
-Message-ID: <20200201133701.GI23230@ZenIV.linux.org.uk>
-References: <00000000000091cacb059d809681@google.com>
+        Sat, 1 Feb 2020 08:45:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580564700; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=kx/TRpLiN6MhH/0aT3PFHHx7YsUxVPLS2D3qTV5hyEE=; b=JnxcKirIifx5fZxXksi5CUEs3YRWhiYJpOc9eL7DMb8mSJsij78yMoWl2S30veN3sVSaWQGw
+ 5/8YjrU5p7VAxC4h2uYFS9oGRy+xddr3yVRiWdCiCX3SqR6zQpuN9n0Klfm5sWzbjQzgagwX
+ PHSqW5l4JBbhvkQ5GqgRd71ySc8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3580d8.7fa0e953a5a8-smtp-out-n02;
+ Sat, 01 Feb 2020 13:44:56 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2402AC447A2; Sat,  1 Feb 2020 13:44:55 +0000 (UTC)
+Received: from [10.79.43.230] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28AA3C433A2;
+        Sat,  1 Feb 2020 13:44:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28AA3C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: soc: qcom: apr: Add protection domain
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20191230050008.8143-1-sibis@codeaurora.org>
+ <20191230050008.8143-3-sibis@codeaurora.org> <20200131143436.GA14822@bogus>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <d94fa6ad-c5f9-fa5a-6a23-0bf773f105da@codeaurora.org>
+Date:   Sat, 1 Feb 2020 19:14:37 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000091cacb059d809681@google.com>
+In-Reply-To: <20200131143436.GA14822@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 01:48:11AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    c677124e Merge branch 'sched-core-for-linus' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=157511bee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9892b0ce783fa
-> dashboard link: https://syzkaller.appspot.com/bug?extid=32c9f7d8a32ea5127669
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1476cf66e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1640085ee00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+32c9f7d8a32ea5127669@syzkaller.appspotmail.com
+Hey Rob,
+Thanks for the review!
 
-security_file_open() or ->open() of some file returning a positive number.  No way
-to tell which one (or which file had that been) without a reproducer...
+On 1/31/20 8:04 PM, Rob Herring wrote:
+> On Mon, Dec 30, 2019 at 10:30:07AM +0530, Sibi Sankar wrote:
+>> Add optional "qcom,protection-domain" bindings for APR services. This
+>> helps to capture the dependencies between APR services and the PD on
+>> which each apr service run.
+> 
+> This is meaningless to me...
+
+Qualcomm SoCs (starting with MSM8998) allow for multiple protection
+domains (PDs) to run on the same Q6 sub-system. This allows for
+services like AVS AUDIO to have their own separate address space and
+crash/recover without disrupting the other PDs running on the same Q6
+ADSP. Add "qcom,protection-domain" bindings to capture the dependencies
+between the APR service and the PD on which the apr service runs.
+
+Is ^^ better?
+
+> 
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
+>>   1 file changed, 59 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> index db501269f47b8..f87c0b2a48de4 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
+>>   			12 - Ultrasound stream manager.
+>>   			13 - Listen stream manager.
+>>   
+>> +- qcom,protection-domain
+>> +	Usage: optional
+>> +	Value type: <stringlist>
+>> +	Definition: Must list the protection domain service name and path
+>> +		    that the particular apr service has a dependency on.
+> 
+> How many strings can there be and can you enumerate the possible
+> strings?
+
+https://lore.kernel.org/lkml/a19623d4-ab33-d87e-5925-d0411d7479dd@codeaurora.org/
+
+Like I explained in ^^ avs/audio is the only service
+that the apr device depends on and is known to run only
+in "msm/adsp/audio_pd" service path.
+
+However there are other service:service_path pairs
+which will get documented when I add support for more
+clients like fastrpc and ath10k.
+
+> 
+>> +
+>>   = EXAMPLE
+>>   The following example represents a QDSP based sound card on a MSM8996 device
+>>   which uses apr as communication between Apps and QDSP.
+>> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
+>>   			...
+>>   		};
+>>   	};
+>> +
+>> += EXAMPLE 2
+>> +The following example represents a QDSP based sound card on SDM845 device.
+>> +Here the apr services are dependent on "avs/audio" service running on AUDIO
+>> +Protection Domain hosted on ADSP remote processor.
+>> +
+>> +	apr {
+>> +		compatible = "qcom,apr-v2";
+>> +		qcom,glink-channels = "apr_audio_svc";
+>> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>> +
+>> +		q6core {
+>> +			compatible = "qcom,q6core";
+>> +			reg = <APR_SVC_ADSP_CORE>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +		};
+>> +
+>> +		q6afe: q6afe {
+>> +			compatible = "qcom,q6afe";
+>> +			reg = <APR_SVC_AFE>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +			q6afedai: dais {
+>> +				compatible = "qcom,q6afe-dais";
+>> +				#sound-dai-cells = <1>;
+>> +
+>> +				qi2s@22 {
+>> +					reg = <22>;
+>> +					qcom,sd-lines = <3>;
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		q6asm: q6asm {
+>> +			compatible = "qcom,q6asm";
+>> +			reg = <APR_SVC_ASM>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>> +			q6asmdai: dais {
+>> +				compatible = "qcom,q6asm-dais";
+>> +				#sound-dai-cells = <1>;
+>> +				iommus = <&apps_smmu 0x1821 0x0>;
+>> +			};
+>> +		};
+>> +
+>> +		q6adm: q6adm {
+>> +			compatible = "qcom,q6adm";
+>> +			reg = <APR_SVC_ADM>;
+>> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> 
+> Perhaps an example where not everything is the same. The example shows
+> me this isn't needed in DT.
+
+yes will update the example.
+
+> 
+>> +			q6routing: routing {
+>> +				compatible = "qcom,q6adm-routing";
+>> +				#sound-dai-cells = <0>;
+>> +			};
+>> +		};
+>> +	};
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
