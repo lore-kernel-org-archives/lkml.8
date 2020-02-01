@@ -2,116 +2,183 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F8FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4ABC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A0B2063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EDB20722
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flKXuCvO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HNl7IWA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgBABIJ (ORCPT
+        id S1726761AbgBABdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:08:09 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44702 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgBABII (ORCPT
+        Fri, 31 Jan 2020 20:33:32 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56010 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgBABdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:08:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so4474508pgl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 17:08:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tOdD7sEFO/Cm1Az2WTVTh+0ICXmcDk9hUOt8MhdrW3g=;
-        b=flKXuCvOe0TKMKlJgp5elm6wrxTqWzNK1ADjY2qsAvDIOUMYnGIBJM6CNcQYzweZ7S
-         gqGvTDrLWNFZ1jUzO3Q7HfbO3cKdufyj02+JwDh0MNAi6kHN3edQk8MEcxOq/ehpGtJ3
-         lR6d77hdMaO3StZvriz/4vAdxze4OnS+MiGbWBUXqY3NJD/MN9OQxQ0MLkqD7VFHNAzz
-         HTNz1+b9iAr0j7T24Wiv/nvFWTgl6RfdEZIbdntqL0XhO1d2FpfXkKP+yb74YOvbN7Q2
-         Xz7sjXgyG6FdVb/HawpqICouMPfZOc0+/dviJo1gU+WxKPKGmcDi5QKsczdWRzwcqXV4
-         NJUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tOdD7sEFO/Cm1Az2WTVTh+0ICXmcDk9hUOt8MhdrW3g=;
-        b=S3Y2Vxg5t7BYaraLrGC6JUvr/aiBeHf4YV7wlX+2pKOsKzH/RpzBnSwySYYf1azNcf
-         d4R4611rhd8MH9KAr0HtbSKGweLI1ffSfhoSaSF5SXiaFscWEtNwV4gzJvt5jB3dhzcH
-         yAMv8Hvdrx4Ob4rgU6GSJpLSS9PstlsTelAIOOvQEYNGmMZyZ04tLNUOlrJuFUjxwrhe
-         LPBlDqkV0d8CRlHtDbaqSes1cpO5G7Hr4Ek3E3lTA0kfCdgwgMVB+rGKhd4B1phLrGaP
-         dpRthyneZXKVpdbpBM7DcxDOvLNgyatF54KyWrOgHX12KFxI0fwIMXIoRbqEzZqUQG9E
-         BYUA==
-X-Gm-Message-State: APjAAAUIqcnxW1pwqmGgHNkx5EghA5mYKP5vc8rg+0kYtRzocMRu7tBD
-        1D0nVC7vQ1jTcvz162dMgOY=
-X-Google-Smtp-Source: APXvYqwJaA/CeAPva6qGN2HiTlf5T+eK9r+4wdYl3huDpKyxMF1+1b5jliuG6FrGJCO4BQffvZvINw==
-X-Received: by 2002:a63:ea4b:: with SMTP id l11mr12851871pgk.357.1580519288066;
-        Fri, 31 Jan 2020 17:08:08 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id z18sm11950481pfk.19.2020.01.31.17.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 17:08:07 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Sat, 1 Feb 2020 10:08:04 +0900
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] console: Introduce ->exit() callback
-Message-ID: <20200201010804.GB1352@jagdpanzerIV.localdomain>
-References: <20200130152558.51839-1-andriy.shevchenko@linux.intel.com>
- <20200130152558.51839-5-andriy.shevchenko@linux.intel.com>
- <20200131013154.GH115889@google.com>
- <20200131112724.GM32742@smile.fi.intel.com>
+        Fri, 31 Jan 2020 20:33:32 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0111XPmp055911;
+        Fri, 31 Jan 2020 19:33:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580520805;
+        bh=ltO/X86l/eQ0YQ6yCZwHOlZYycq3A6PW6ZvjoRyYgTE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HNl7IWA5kq8oJ8oM4SWS3/8qztwPv3jEkrsRZkCaBjcVrS2yTI3DAxPT7dOCIOuSj
+         ZFZRVeRH45QBLLvLnwtb+iWIa/iFGi9b6QM04Sg0/1rHlq3r4GVX5g3fDIDbp+l2WS
+         mb2E5svuORClNc2/UhAhRwvpu0keUMr7m6izgHog=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0111XP0n010124
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 19:33:25 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 19:33:24 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 19:33:25 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0111XOcp068100;
+        Fri, 31 Jan 2020 19:33:24 -0600
+Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
+ feature
+To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
+        <f.fainelli@gmail.com>, <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
+References: <20200131151110.31642-1-dmurphy@ti.com>
+ <20200131151110.31642-2-dmurphy@ti.com>
+ <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <27ab4feb-fe84-4d3b-1779-25a25065a9fa@ti.com>
+Date:   Fri, 31 Jan 2020 19:30:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131112724.GM32742@smile.fi.intel.com>
+In-Reply-To: <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/31 13:27), Andy Shevchenko wrote:
-[..]
-> > 
-> > I would probably push it a bit further (I posted this snippet in another
-> > thread). If console is not on the list then there is nothing for us to do
-> > and sysfs notify is pointless.
-> 
-> I didn't see post in the other thread, but I suppose that this snipped is
-> for patch 4 in the series, correct?
+Heiner
 
-No worries! Yes, for v4.
+On 1/31/20 2:56 PM, Heiner Kallweit wrote:
+> On 31.01.2020 16:11, Dan Murphy wrote:
+>> Set the speed optimization bit on the DP83867 PHY.
+>> This feature can also be strapped on the 64 pin PHY devices
+>> but the 48 pin devices do not have the strap pin available to enable
+>> this feature in the hardware.  PHY team suggests to have this bit set.
+>>
+> It's ok to enable downshift by default, however it would be good to
+> make it configurable. Best implement the downshift tunable, you can
+> use the Marvell PHY driver as reference.
+> Can the number of attempts until downshifts happens be configured?
 
-[..]
-> > -	if (!res && console->exit)
-> > +	if (console->exit)
-> 
-> >  		console->exit(console);
-> >  
-> >  	return res;
-> 
-> ...then something like
-> 
-> 		return console->exit(console);
-> 
-> 	return 0;
-> 
-> ...or...
-> 
-> 		res = console->exit(console);
-> 
-> Which one is preferable?
+Yes we can tune the number of attempts it makes to negotiate 1000Mbps 
+before enabling the speed optimization.  But why would we need to 
+configure the number of attempts currently it is defaulted to 4.  Is 
+there a use case for this level of configurability?
 
-I don't really have preferences here, so up to you guys.
 
-	-ss
+>
+>> With this bit set the PHY will auto negotiate and report the link
+>> parameters in the PHYSTS register and not in the BMCR.  So we need to
+>> over ride the genphy_read_status with a DP83867 specific read status.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+>> index 967f57ed0b65..695aaf4f942f 100644
+>> --- a/drivers/net/phy/dp83867.c
+>> +++ b/drivers/net/phy/dp83867.c
+>> @@ -21,6 +21,7 @@
+>>   #define DP83867_DEVADDR		0x1f
+>>   
+>>   #define MII_DP83867_PHYCTRL	0x10
+>> +#define MII_DP83867_PHYSTS	0x11
+>>   #define MII_DP83867_MICR	0x12
+>>   #define MII_DP83867_ISR		0x13
+>>   #define DP83867_CFG2		0x14
+>> @@ -118,6 +119,15 @@
+>>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+>>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+>>   
+>> +/* PHY STS bits */
+>> +#define DP83867_PHYSTS_1000			BIT(15)
+>> +#define DP83867_PHYSTS_100			BIT(14)
+>> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
+>> +#define DP83867_PHYSTS_LINK			BIT(10)
+>> +
+>> +/* CFG2 bits */
+>> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
+>> +
+>>   /* CFG3 bits */
+>>   #define DP83867_CFG3_INT_OE			BIT(7)
+>>   #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+>> @@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
+>>   	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>>   }
+>>   
+>> +static int dp83867_read_status(struct phy_device *phydev)
+>> +{
+>> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
+>> +
+>> +	if (status < 0)
+>> +		return status;
+>> +
+>> +	if (status & DP83867_PHYSTS_DUPLEX)
+>> +		phydev->duplex = DUPLEX_FULL;
+>> +	else
+>> +		phydev->duplex = DUPLEX_HALF;
+>> +
+>> +	if (status & DP83867_PHYSTS_1000)
+>> +		phydev->speed = SPEED_1000;
+>> +	else if (status & DP83867_PHYSTS_100)
+>> +		phydev->speed = SPEED_100;
+>> +	else
+>> +		phydev->speed = SPEED_10;
+>> +
+>> +	if (status & DP83867_PHYSTS_LINK)
+>> +		phydev->link = 1;
+>> +	else
+>> +		phydev->link = 0;
+>> +
+>> +	phydev->pause = 0;
+>> +	phydev->asym_pause = 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int dp83867_config_port_mirroring(struct phy_device *phydev)
+>>   {
+>>   	struct dp83867_private *dp83867 =
+>> @@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
+>>   	int ret, val, bs;
+>>   	u16 delay;
+>>   
+>> +	/* Force speed optimization for the PHY even if it strapped */
+>> +	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
+>> +			 DP83867_SPEED_OPTIMIZED_EN);
+> Here phy_set_bits() would be easier.
+
+Ack
+
+Dan
+
+
