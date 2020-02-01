@@ -2,124 +2,177 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687B1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01FEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 04:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9D7206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQjFL00X"
+	by mail.kernel.org (Postfix) with ESMTP id 7DB8D206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 04:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580529981;
+	bh=eualkW6ScIzKrqUwxlriK/WPPcfcnfvA7BfXE9tY9iI=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=bMGs16wMVBrfdynF4E8OkYmheCHlBBwH3PG6vwCD71PNX27dagggHNfBXBwWFfxbI
+	 qlSSRLbk0Xt83K5PU3fAuaTVTVJQRBXwESqeYeeYPbjGjYpDQDagAbn8BvGWClGH0s
+	 c3dWr6uOkQHdK5l+qWqma2itjbiQrCslFq2nLe84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgBADzy (ORCPT
+        id S1727074AbgBAEGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 22:55:54 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37619 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgBADzy (ORCPT
+        Fri, 31 Jan 2020 23:06:20 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:33027 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgBAEGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 22:55:54 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q84so9441065oic.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 19:55:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kpR02gdbkQHjEdxG9SGzf7pEIWQTwMtXqw53xDeIps0=;
-        b=VQjFL00X7xtyXkCCDgN3B68jvRIqMEmqrDPxRd5YE3DRN80cjuRwJc+vxnog0d9I5v
-         oefItgDUERaDVY/Gd5fT07KrQSGyCfMFvmsVeDqKTlRMu4QC5hyubUOprxRi3O2iZk9S
-         v53qnNnUyOyS8RL4KLV+hKJDShcM7+QvFo2HLP4uXwSiTMCgRy8D2WH6g4GTnvEFjn5i
-         by/CkmTLDYrhvYjZ9s8vSWSUayYwFsYMnktoKLw6TUHPxil+24ZVVOm8A4US4MkV6VHQ
-         XfULhdcSaKINaYs0Qt9Xq7gu1CkXzn/q0rbEaqmknolSfd9wEwSLp6tTknjiPAawKRvF
-         g/zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kpR02gdbkQHjEdxG9SGzf7pEIWQTwMtXqw53xDeIps0=;
-        b=WqkI8HH/dLUfOW1ikccQmkJVNXHTFUSOPNot10WYNKd3hZcxSeVv3IFtNcFrqymwlE
-         Nw6pF021960mH7hYclzjXUr9SGfTVYGAZDUqU6cmCjJkVGIcxtCa3Uy5+EaGUd/A/84+
-         ZkFVr0fk2GAo4nN61rjitgaZah+etAoo/X65bESfIxnM4FRaa1qNUznE0yy6UFU1aV5N
-         WOWIWhOP5+y/N3iBKoknKlaWf80FQs9tgJ5GkRJYhx990heSV4z5ErXm8wDAfo2Sa0la
-         /fhKk2HoBZmiQ77SeRlz3rAeNe8wwRk5TJnS85IDFTBC5gcyuAh2cgzn5Y/WiRg0HooG
-         muIw==
-X-Gm-Message-State: APjAAAWR4LqY7Mpxabshq/TeiqoIo8UxFKQi/CFea9ksbyRrU4GDKp5/
-        MeZ3CA8xoxon70lTjQsOvqUBIUxy+YufWA9SOae0TQ==
-X-Google-Smtp-Source: APXvYqxjgAjU3MBV4JGRRnsokOeDc9RuSZPhvl788mDb/V6Q+vKxvqq99N+lRsnjuxpaGJX4PklmpwXXNaKnby1DZuc=
-X-Received: by 2002:aca:1b17:: with SMTP id b23mr6844579oib.95.1580529351343;
- Fri, 31 Jan 2020 19:55:51 -0800 (PST)
+        Fri, 31 Jan 2020 23:06:19 -0500
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 011469iV000558;
+        Sat, 1 Feb 2020 13:06:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 011469iV000558
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1580529970;
+        bh=/9jgs7HOtSaTqTx9d4IcjnuRhqypUBy6L6rSgWmXKxA=;
+        h=From:Date:Subject:To:Cc:From;
+        b=Uj9Qd8czYEisYH4dxpV6ElxvD7LCH5TLFtXLjH4fm2xkZm4G/eSV1au9Y9JSL3ufA
+         Ux4elKaEoIwFbrk+zFu3qrYyD9EOKmYovZkQySFiyg19S2UZnhzi3/ps6FYGSGA/rP
+         OKHljU1NzuqJOhyknKvrdGfUl3n/tHo9ibohALuUwyY+Otwo/I7GSIErOU99dJLjo9
+         7cCtJ9xufnqYK2Br7XsEeGBiWiymDzPNwj3IUT8JH5kYyw3raiKJYLhKM4FpwDgflI
+         x1fFH11Ogx7QpbrOOQF+dnO2YBhHyrsb8LYHHPBunxL5jM/xU1icRc9HGhvDQxaDQf
+         cwzx3yavvVtrQ==
+X-Nifty-SrcIP: [209.85.221.174]
+Received: by mail-vk1-f174.google.com with SMTP id w67so2688406vkf.1;
+        Fri, 31 Jan 2020 20:06:10 -0800 (PST)
+X-Gm-Message-State: APjAAAUdAL1i/vCTa1ZHqgdXFADWqa+TmSD07hS8pttxpQtaHXoz99Vi
+        jEFymaZdFqfuiI7mEv93szzBpHddJlFYf0oBn94=
+X-Google-Smtp-Source: APXvYqzCPjRqL5zcGOf6XfRH71sG1R/TKHA+uhea1Kzrr8lrtVmWTz6s6Qp9DZzZFQ538B4ZGi+fd8wOFNLmMu9u7IU=
+X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr8614105vkf.73.1580529969074;
+ Fri, 31 Jan 2020 20:06:09 -0800 (PST)
 MIME-Version: 1.0
-References: <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
- <20200131221755.3874-1-sj38.park@gmail.com>
-In-Reply-To: <20200131221755.3874-1-sj38.park@gmail.com>
-From:   Neal Cardwell <ncardwell@google.com>
-Date:   Fri, 31 Jan 2020 22:55:34 -0500
-Message-ID: <CADVnQy=oFmmG-Z9QMafWLcALOBgohADgwScn2r+7CGFNAw5jvw@mail.gmail.com>
-Subject: Re: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK
- is received
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>, sjpark@amazon.com,
-        Eric Dumazet <edumazet@google.com>,
-        David Miller <davem@davemloft.net>, shuah@kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-kselftest@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, aams@amazon.com,
-        SeongJae Park <sjpark@amazon.de>,
-        Yuchung Cheng <ycheng@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 1 Feb 2020 13:05:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+Message-ID: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+Subject: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 5:18 PM SeongJae Park <sj38.park@gmail.com> wrote:
->
-> On Fri, 31 Jan 2020 17:11:35 -0500 Neal Cardwell <ncardwell@google.com> wrote:
->
-> > On Fri, Jan 31, 2020 at 1:12 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> > >
-> > >
-> > >
-> > > On 1/31/20 7:10 AM, Neal Cardwell wrote:
-> > > > On Fri, Jan 31, 2020 at 7:25 AM <sjpark@amazon.com> wrote:
-> > > >>
-> > > >> From: SeongJae Park <sjpark@amazon.de>
-> > > >>
-> > > >> When closing a connection, the two acks that required to change closing
-> > > >> socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
-> > > >> reverse order.  This is possible in RSS disabled environments such as a
-> > > >> connection inside a host.
-> [...]
-> >
-> > I looked into fixing this, but my quick reading of the Linux
-> > tcp_rcv_state_process() code is that it should behave correctly and
-> > that a connection in FIN_WAIT_1 that receives a FIN/ACK should move to
-> > TIME_WAIT.
-> >
-> > SeongJae, do you happen to have a tcpdump trace of the problematic
-> > sequence where the "process A" ends up in FIN_WAIT_2 when it should be
-> > in TIME_WAIT?
->
-> Hi Neal,
->
->
-> Yes, I have.  You can get it from the previous discussion for this patchset
-> (https://lore.kernel.org/bpf/20200129171403.3926-1-sjpark@amazon.com/).  As it
-> also has a reproducer program and how I got the tcpdump trace, I believe you
-> could get your own trace, too.  If you have any question or need help, feel
-> free to let me know. :)
+Hi Linus,
 
-Great. Thank you for the pointer.
+Please pull Kbuild updates for v5.6-rc1.
 
-I had one quick question: in the message:
-  https://lore.kernel.org/bpf/20200129171403.3926-1-sjpark@amazon.com/
-... it showed a trace with the client sending a RST/ACK, but this
-email thread shows a FIN/ACK. I am curious about the motivation for
-the difference?
+Thanks!
 
-Anyway, thanks for the report, and thanks to Eric for further clarifying!
 
-neal
+The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538=
+:
+
+  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.6
+
+for you to fetch changes up to 451dff37f0752cc8ad6f1bb82081a98d7b760310:
+
+  builddeb: split libc headers deployment out into a function
+(2020-01-29 01:51:30 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.6
+
+ - detect missing include guard in UAPI headers
+
+ - do not create orphan built-in.a or obj-y objects
+
+ - generate modules.builtin more simply, and drop tristate.conf
+
+ - simplify built-in initramfs creation
+
+ - make linux-headers deb package thinner
+
+ - optimize the deb package build script
+
+ - misc cleanups
+
+----------------------------------------------------------------
+Masahiro Yamada (32):
+      kbuild: detect missing include guard for exported headers
+      kbuild: rename header-test- to no-header-test in usr/include/Makefile
+      kbuild: do not create orphan built-in.a or obj-y objects
+      kbuild: use pattern rule for building built-in.a in sub-directories
+      kbuild: add stringify helper to quote a string passed to C files
+      kbuild: pass KBUILD_MODFILE when compiling builtin objects
+      kbuild: create modules.builtin without Makefile.modbuiltin or
+tristate.conf
+      initramfs: replace klibcdirs in Makefile with FORCE
+      gen_initramfs_list.sh: remove unused variable 'default_list'
+      gen_initramfs_list.sh: fix the tool name in the comment
+      initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+      initramfs: remove redundant dependency on BLK_DEV_INITRD
+      initramfs: make compression options not depend on INITRAMFS_SOURCE
+      initramfs: make initramfs compression choice non-optional
+      initramfs: specify $(src)/gen_initramfs.sh as a prerequisite in Makef=
+ile
+      initramfs: generate dependency list and cpio at the same time
+      initramfs: add default_cpio_list, and delete -d option support
+      gen_initramfs.sh: always output cpio even without -o option
+      initramfs: refactor the initramfs build rules
+      gen_initramfs.sh: remove intermediate cpio_list on errors
+      modpost: assume STT_SPARC_REGISTER is defined
+      kbuild: remove PYTHON2 variable
+      kbuild: remove *.tmp file when filechk fails
+      kbuild: remove 'Building modules, stage 2.' log
+      kbuild: use -S instead of -E for precise cc-option test in Kconfig
+      builddeb: remove unneeded files in hdrobjfiles for headers package
+      builddeb: match temporary directory name to the package name
+      builddeb: remove redundant $objtree/
+      builddeb: avoid invoking sub-shells where possible
+      builddeb: remove redundant make for ARCH=3Dum
+      builddeb: split kernel headers deployment out into a function
+      builddeb: split libc headers deployment out into a function
+
+Micha=C5=82 Miros=C5=82aw (2):
+      builddeb: make headers package thinner
+      builddeb: allow selection of .deb compressor
+
+ Documentation/kbuild/kconfig.rst                |   5 -
+ Makefile                                        |  24 +---
+ include/linux/module.h                          |  12 +-
+ scripts/Kbuild.include                          |  25 ++--
+ scripts/Kconfig.include                         |   2 +-
+ scripts/Makefile.build                          |   4 +-
+ scripts/Makefile.lib                            |  21 ++-
+ scripts/Makefile.modbuiltin                     |  57 --------
+ scripts/Makefile.modpost                        |   1 -
+ scripts/kconfig/confdata.c                      |  45 +-----
+ scripts/link-vmlinux.sh                         |   4 +
+ scripts/mod/modpost.c                           |   8 +-
+ scripts/package/builddeb                        | 106 ++++++++------
+ usr/.gitignore                                  |   8 +-
+ usr/Kconfig                                     |  26 ----
+ usr/Makefile                                    |  97 ++++++++-----
+ usr/default_cpio_list                           |   6 +
+ usr/{gen_initramfs_list.sh =3D> gen_initramfs.sh} | 167 ++++++------------=
+----
+ usr/include/Makefile                            | 107 +++++++-------
+ usr/initramfs_data.S                            |   5 +-
+ 20 files changed, 281 insertions(+), 449 deletions(-)
+ delete mode 100644 scripts/Makefile.modbuiltin
+ create mode 100644 usr/default_cpio_list
+ rename usr/{gen_initramfs_list.sh =3D> gen_initramfs.sh} (53%)
+
+
+--=20
+Best Regards
+Masahiro Yamada
