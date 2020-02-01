@@ -2,102 +2,78 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8F0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A583DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E29206E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8644F206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 17:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgBAQ6V (ORCPT
+        id S1726921AbgBARIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:58:21 -0500
-Received: from mga07.intel.com ([134.134.136.100]:37934 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbgBAQ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:58:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 08:58:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="218922079"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.29]) ([10.249.174.29])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 01 Feb 2020 08:58:17 -0800
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20200131210424.GG18946@linux.intel.com>
- <E1F9CE39-7D61-43E1-B871-6D4BFA4B6D66@amacapital.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <b2e2310d-2228-45c2-8174-048e18a46bb6@intel.com>
-Date:   Sun, 2 Feb 2020 00:58:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 1 Feb 2020 12:08:04 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:48087 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgBARIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 12:08:04 -0500
+Received: by mail-io1-f69.google.com with SMTP id 13so6396506iof.14
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 09:08:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=tymJqtHu6iGLng33McHVxrI0IJhfSzLoBxSmgMc7RDs=;
+        b=tJB6ZK7eVxyx7Y9ATMn+1R/PJzySSXpv/Sr6W7GtaJT/Qs/7HAH/lzP+g0t+cPLeTW
+         wEKUNPovyTPlcM90lixOkmDA564GFoY1YJ9rTQkvFbYA4dCZRhugOTceCXOYQcvDZCpL
+         ebFL5sSTf7nq+ORTB4h7MSiRDnu13my+M46p04nsPf5xfaImGnw+VkAwkfWIfNtJAx7w
+         nsjtvBDWiz4jhI7Dx/GG+HcXyLScpvOJX1Bbpqv4b0mXyWr+qOP0sZ0tI990kdejiTTS
+         H7+TdmypQ/cTvy72gHtLG93lRiGKXudqNTMInabD5lCFzU5Kg1PXzJIOWI8rg7lekysY
+         ryTg==
+X-Gm-Message-State: APjAAAXIGgIXZwxPl9S4wHs7C763lDZlDiLjCB+a/Skk5J11+nwh9zDM
+        w7F5FZ8qj4Xjs3iesuaSP5yx3NPkO9VYZiELmEo5EJS0bg17
+X-Google-Smtp-Source: APXvYqwepjCYJGI2J8ce5amIo8ruFAk8py8FuCjyu9SckBqGRIYGuJ+otdYXZhBwXMfqF4VWM3BgDWyoXjY1iNw3hTcQzL5vQlyt
 MIME-Version: 1.0
-In-Reply-To: <E1F9CE39-7D61-43E1-B871-6D4BFA4B6D66@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:b8c1:: with SMTP id i184mr9146827iof.68.1580576882237;
+ Sat, 01 Feb 2020 09:08:02 -0800 (PST)
+Date:   Sat, 01 Feb 2020 09:08:02 -0800
+In-Reply-To: <000000000000b926cf059d7c6552@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009b26dc059d86bb54@google.com>
+Subject: Re: general protection fault in path_openat
+From:   syzbot <syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/1/2020 5:33 AM, Andy Lutomirski wrote:
-> 
-> 
->> On Jan 31, 2020, at 1:04 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
->>
->> ﻿On Fri, Jan 31, 2020 at 12:57:51PM -0800, Andy Lutomirski wrote:
->>>
->>>>> On Jan 31, 2020, at 12:18 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
->>>>
->>>> This is essentially what I proposed a while back.  KVM would allow enabling
->>>> split-lock #AC in the guest if and only if SMT is disabled or the enable bit
->>>> is per-thread, *or* the host is in "warn" mode (can live with split-lock #AC
->>>> being randomly disabled/enabled) and userspace has communicated to KVM that
->>>> it is pinning vCPUs.
->>>
->>> How about covering the actual sensible case: host is set to fatal?  In this
->>> mode, the guest gets split lock detection whether it wants it or not. How do
->>> we communicate this to the guest?
->>
->> KVM doesn't advertise split-lock #AC to the guest and returns -EFAULT to the
->> userspace VMM if the guest triggers a split-lock #AC.
->>
->> Effectively the same behavior as any other userspace process, just that KVM
->> explicitly returns -EFAULT instead of the process getting a SIGBUS.
-> 
-> 
-> Which helps how if the guest is actually SLD-aware?
-> 
-> I suppose we could make the argument that, if an SLD-aware guest gets #AC at CPL0, it’s a bug, but it still seems rather nicer to forward the #AC to the guest instead of summarily killing it.
+syzbot has bisected this bug to:
 
-If KVM does advertise split-lock detection to the guest, then kvm/host 
-can know whether a guest is SLD-aware by checking guest's 
-MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
+commit d0cb50185ae942b03c4327be322055d622dc79f6
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sun Jan 26 14:29:34 2020 +0000
 
-  - If guest's MSR_TEST_CTRL.SPLIT_LOCK_DETECT is set, it indicates 
-guest is SLD-aware so KVM forwards #AC to guest.
+    do_last(): fetch directory ->i_mode and ->i_uid before it's too late
 
-  - If not set. It may be a old guest or a malicious guest or a guest 
-without SLD support, and we cannot figure it out. So we have to kill the 
-guest when host is SLD-fatal, and let guest survive when SLD-WARN for 
-old sane buggy guest.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16a8d8b5e00000
+start commit:   ccaaaf6f Merge tag 'mpx-for-linus' of git://git.kernel.org..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15a8d8b5e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11a8d8b5e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=879390c6b09ccf66
+dashboard link: https://syzkaller.appspot.com/bug?extid=190005201ced78a74ad6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1674c776e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1565e101e00000
 
-In a word, all the above is on the condition that KVM advertise 
-split-lock detection to guest. But this patch doesn't do this. Maybe I 
-should add that part in v2.
+Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
 
-> ISTM, on an SLD-fatal host with an SLD-aware guest, the host should tell the guest “hey, you may not do split locks — SLD is forced on” and the guest should somehow acknowledge it so that it sees the architectural behavior instead of something we made up.  Hence my suggestion.
-> 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
