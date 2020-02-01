@@ -2,84 +2,122 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69367C35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13762C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F71520707
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDC820661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 00:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uRWaCTcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgBAAcb (ORCPT
+        id S1726708AbgBAA6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 19:32:31 -0500
-Received: from fieldses.org ([173.255.197.46]:57216 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbgBAAcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 19:32:31 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id A22E12012; Fri, 31 Jan 2020 19:32:30 -0500 (EST)
-Date:   Fri, 31 Jan 2020 19:32:30 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200201003230.GA32350@fieldses.org>
-References: <20200131141309.367c9d8b@canb.auug.org.au>
+        Fri, 31 Jan 2020 19:58:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38169 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgBAA6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 19:58:51 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so10724568wrh.5;
+        Fri, 31 Jan 2020 16:58:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tZb1n8G3lJ99OGYyaDhlaG/vkcxK++nESS/jsSHjsOU=;
+        b=uRWaCTccM1/ZvzhssBwy7AWUw4x12+kCVG//d0F9FcNVfNRgw5ByS2dQIixybJjAci
+         /daoh5cRCsUqumoV8uYOKOmNs3QJarTz5KHIhYboAUk0wpK15Ywf3xZ0MVKlx1M8aJCg
+         jWkOhJ9XTXwcIadHl8njghdzEAeR4PpqJb2H/32211rcBqxzopOnGr3l7GUvIr3iTvAF
+         ixLS6nlNYfB5FSZZ98eq+NWNJP+PMoGhlGEImEayjt1OA9jzUQZ4Mio+vCjzihq2ruTZ
+         SUy4eED199hzTvimxeUSiwK3kK3cfUSp3fhpGhIrhZiJbTHQrFUHNp4dGqlUk8b2CLsL
+         L3Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tZb1n8G3lJ99OGYyaDhlaG/vkcxK++nESS/jsSHjsOU=;
+        b=LzFyvz4dteGBTVEpe15zGgPFoqG9zb/Nc1wuG4FeYb5qrfo5hsO+T7v9RhKUEwGmJJ
+         tPKjD2WX6/wwteA8aMIbNkKPaHGUQyqCnxRiP3IJZ3fK032bFoUq5K4PhqalJP9/yHXy
+         kM6bUaBrumY5IvrIlsDgw0ZXF13yGEXac9mgkKUwY4O9geRUeioxtnvXAZVgm1PgwfQe
+         HrnbSPskF9Kn7oGoq3urYzyb1RQxxELquwbEIsdDgrP9oLFQob5j9BN0pHU2dAMbhDxu
+         C2TWVJ8x6Sp0gLrgjoaWjSyhDckphnXE9dzG54/BJ2kBPvdM7Q1hZFtalTSGWcR9HOHe
+         ixlA==
+X-Gm-Message-State: APjAAAXkwMSsa1eUVwYtluc10PUC67gfCea+5meJxY+1lVl8p0Ld09rD
+        S99z+zC2K3w42x3jEiIqKZl4HbWA
+X-Google-Smtp-Source: APXvYqwvCKi/uD4fvDYMUyWbpJNbxzTl2kIAuQpihx3oSWD8UQ2Cgwn72x79Kesl1W914AAPOjaEeQ==
+X-Received: by 2002:a5d:6206:: with SMTP id y6mr1114837wru.130.1580518729583;
+        Fri, 31 Jan 2020 16:58:49 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id b16sm12677551wmj.39.2020.01.31.16.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 16:58:49 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: iterate req cache backwards
+Date:   Sat,  1 Feb 2020 03:58:00 +0300
+Message-Id: <df6e93383161cd3bdbe19fe816b761af0096c303.1580518665.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200131141309.367c9d8b@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 02:13:09PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the akpm-current tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> net/sunrpc/auth_gss/svcauth_gss.c: In function 'gss_proxy_save_rsc':
-> net/sunrpc/auth_gss/svcauth_gss.c:1251:19: error: storage size of 'boot' isn't known
->  1251 |   struct timespec boot;
->       |                   ^~~~
-> net/sunrpc/auth_gss/svcauth_gss.c:1273:3: error: implicit declaration of function 'getboottime'; did you mean 'getboottime64'? [-Werror=implicit-function-declaration]
->  1273 |   getboottime(&boot);
->       |   ^~~~~~~~~~~
->       |   getboottime64
-> net/sunrpc/auth_gss/svcauth_gss.c:1251:19: warning: unused variable 'boot' [-Wunused-variable]
->  1251 |   struct timespec boot;
->       |                   ^~~~
-> 
-> Caused by commit
-> 
->   a415f20a18c9 ("sunrpc: expiry_time should be seconds not timeval")
-> 
-> from the nfsd tree interacting with commits
-> 
->   de371b6c7b73 ("y2038: remove unused time32 interfaces")
->   aa7ff200a719 ("y2038: hide timeval/timespec/itimerval/itimerspec types")
-> 
-> from the akpm-current tree.
-> 
-> I have reverted the nfsd commit for today.  A better solution is requested.
+Grab requests from cache-array from the end, so can get by only
+free_reqs.
 
-Unfortunately that expiry time seems to be a signed 32-bit integer in
-both the kernel<->gss-proxy and the gss-proxy<->krb5 interfaces.
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-I guess we'll have to come to an agreement with the krb5 developers.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index fb5c5b3e23f4..73a6c6a4ec50 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -585,8 +585,7 @@ struct io_submit_state {
+ 	 * io_kiocb alloc cache
+ 	 */
+ 	void			*reqs[IO_IOPOLL_BATCH];
+-	unsigned		int free_reqs;
+-	unsigned		int cur_req;
++	unsigned int		free_reqs;
+ 
+ 	/*
+ 	 * File reference cache
+@@ -1188,12 +1187,10 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+ 			ret = 1;
+ 		}
+ 		state->free_reqs = ret - 1;
+-		state->cur_req = 1;
+-		req = state->reqs[0];
++		req = state->reqs[ret - 1];
+ 	} else {
+-		req = state->reqs[state->cur_req];
+ 		state->free_reqs--;
+-		state->cur_req++;
++		req = state->reqs[state->free_reqs];
+ 	}
+ 
+ got_it:
+@@ -4837,8 +4834,7 @@ static void io_submit_state_end(struct io_submit_state *state)
+ 	blk_finish_plug(&state->plug);
+ 	io_file_put(state);
+ 	if (state->free_reqs)
+-		kmem_cache_free_bulk(req_cachep, state->free_reqs,
+-					&state->reqs[state->cur_req]);
++		kmem_cache_free_bulk(req_cachep, state->free_reqs, state->reqs);
+ }
+ 
+ /*
+-- 
+2.24.0
 
-Simplest might be to agree that the thing's unsigned.  The expiry
-shouldn't ever need to be decades in the future, so unsigned mod 2^32
-arithmetic should work forever.
-
---b.
