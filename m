@@ -2,183 +2,93 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4ABC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0D1C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EDB20722
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D6020707
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HNl7IWA5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lHXpZqYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgBABdc (ORCPT
+        id S1727077AbgBABfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:33:32 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56010 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgBABdc (ORCPT
+        Fri, 31 Jan 2020 20:35:18 -0500
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:36437 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgBABfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:33:32 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0111XPmp055911;
-        Fri, 31 Jan 2020 19:33:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580520805;
-        bh=ltO/X86l/eQ0YQ6yCZwHOlZYycq3A6PW6ZvjoRyYgTE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HNl7IWA5kq8oJ8oM4SWS3/8qztwPv3jEkrsRZkCaBjcVrS2yTI3DAxPT7dOCIOuSj
-         ZFZRVeRH45QBLLvLnwtb+iWIa/iFGi9b6QM04Sg0/1rHlq3r4GVX5g3fDIDbp+l2WS
-         mb2E5svuORClNc2/UhAhRwvpu0keUMr7m6izgHog=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0111XP0n010124
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jan 2020 19:33:25 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
- Jan 2020 19:33:24 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 31 Jan 2020 19:33:25 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0111XOcp068100;
-        Fri, 31 Jan 2020 19:33:24 -0600
-Subject: Re: [PATCH net-master 1/1] net: phy: dp83867: Add speed optimization
- feature
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>
-References: <20200131151110.31642-1-dmurphy@ti.com>
- <20200131151110.31642-2-dmurphy@ti.com>
- <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <27ab4feb-fe84-4d3b-1779-25a25065a9fa@ti.com>
-Date:   Fri, 31 Jan 2020 19:30:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 20:35:18 -0500
+Received: by mail-pf1-f181.google.com with SMTP id 185so4348344pfv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 17:35:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:subject:to:cc:user-agent:date;
+        bh=U72RowJ6aCblh4dJK9J4/UwBLNeATv6us11nr3tf6Rg=;
+        b=lHXpZqYpZcfz6NhOploCg1vZtjIIzjhRoqPrNGU5nL0nCGSh00jmDACtW4L/Hb7pkj
+         CRsYhFPYJiwvVAirbr7fXQ7ISvu+HBXuniUXcBrABX0b+snfR1UjDvQHNZI486dg74H1
+         0HlgA6Olba7JRZAX35w4YHZipPHVcDx+H6rPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:subject:to:cc
+         :user-agent:date;
+        bh=U72RowJ6aCblh4dJK9J4/UwBLNeATv6us11nr3tf6Rg=;
+        b=d06Z3fbB6xowx4EqkjmOJZXPEosNnCwvVZLwn+0+ECy5Bgyx0MrXGG1vw+S0RyA058
+         dJRt4Rkdhe0BHEgQDtv3SqTLbdYnz1ecfSQQOKR0Oe7jDrSTn2gIkHh+8GiRDZhjysLW
+         wnx+ZMw93u7js8ckZpAbcAV3oAI3KCUolOLgSmKr2UFf9Yf26VxTqLaxE0QejjLd9YeP
+         k4l4Qs95L6UrTNSSycmMOslNsKOQf6NSVEU+eD6ecdYYj3Snun1zkOx9TlZKqHkcUVLz
+         Jgjy6J/wlCO0bGJHKyGvM8azQKR9x6xNGqNCQFYRMoW00wZDTGraNJlQ2U6d9Iyms7Uq
+         XP9Q==
+X-Gm-Message-State: APjAAAXuszxItbIzoObKZd4j1f68oJubMcoi3C5SwwqJzmKMajBT4dbL
+        KOVsyGAcO2uOxjNHKedbfdJNRaQurOiimg==
+X-Google-Smtp-Source: APXvYqyEG+K19D8CcojLJbvauVd1sqrcsQn15vj4/zQRhrorfWTreQNyLMtSiBerleA0V6/1lIjQtg==
+X-Received: by 2002:a63:e14b:: with SMTP id h11mr12780783pgk.297.1580520916023;
+        Fri, 31 Jan 2020 17:35:16 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 13sm11375726pfi.78.2020.01.31.17.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jan 2020 17:35:15 -0800 (PST)
+Message-ID: <5e34d5d3.1c69fb81.b5d48.eb80@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <7e8080f7-3825-98f5-2465-c536ecbb8146@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5e174fec.1c69fb81.f3e14.8354@mx.google.com>
+References: <20191217005424.226858-1-swboyd@chromium.org> <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com> <5e174fec.1c69fb81.f3e14.8354@mx.google.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>, Andrey Pronin <apronin@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 31 Jan 2020 17:35:14 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiner
+Quoting Stephen Boyd (2020-01-09 08:08:11)
+> Quoting Doug Anderson (2019-12-17 09:45:02)
+> > On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrot=
+e:
+> >=20
+> > > +  spi-max-frequency:
+> > > +    maxItems: 1
+> >=20
+> > This is not an array type.  Why do you need maxItems?  Should treat
+> > like an int?  Do we have any ranges of sane values we can put here?
+> > I'm sure that there is a maximum that Cr50 can talk at.
+>=20
+> From what I see looking through downstream sources my best guess for a
+> max frequency is 1 MHz.
+>=20
 
-On 1/31/20 2:56 PM, Heiner Kallweit wrote:
-> On 31.01.2020 16:11, Dan Murphy wrote:
->> Set the speed optimization bit on the DP83867 PHY.
->> This feature can also be strapped on the 64 pin PHY devices
->> but the 48 pin devices do not have the strap pin available to enable
->> this feature in the hardware.  PHY team suggests to have this bit set.
->>
-> It's ok to enable downshift by default, however it would be good to
-> make it configurable. Best implement the downshift tunable, you can
-> use the Marvell PHY driver as reference.
-> Can the number of attempts until downshifts happens be configured?
-
-Yes we can tune the number of attempts it makes to negotiate 1000Mbps 
-before enabling the speed optimization.  But why would we need to 
-configure the number of attempts currently it is defaulted to 4.  Is 
-there a use case for this level of configurability?
-
-
->
->> With this bit set the PHY will auto negotiate and report the link
->> parameters in the PHYSTS register and not in the BMCR.  So we need to
->> over ride the genphy_read_status with a DP83867 specific read status.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/dp83867.c | 48 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 48 insertions(+)
->>
->> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
->> index 967f57ed0b65..695aaf4f942f 100644
->> --- a/drivers/net/phy/dp83867.c
->> +++ b/drivers/net/phy/dp83867.c
->> @@ -21,6 +21,7 @@
->>   #define DP83867_DEVADDR		0x1f
->>   
->>   #define MII_DP83867_PHYCTRL	0x10
->> +#define MII_DP83867_PHYSTS	0x11
->>   #define MII_DP83867_MICR	0x12
->>   #define MII_DP83867_ISR		0x13
->>   #define DP83867_CFG2		0x14
->> @@ -118,6 +119,15 @@
->>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
->>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
->>   
->> +/* PHY STS bits */
->> +#define DP83867_PHYSTS_1000			BIT(15)
->> +#define DP83867_PHYSTS_100			BIT(14)
->> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
->> +#define DP83867_PHYSTS_LINK			BIT(10)
->> +
->> +/* CFG2 bits */
->> +#define DP83867_SPEED_OPTIMIZED_EN		(BIT(8) | BIT(9))
->> +
->>   /* CFG3 bits */
->>   #define DP83867_CFG3_INT_OE			BIT(7)
->>   #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
->> @@ -287,6 +297,36 @@ static int dp83867_config_intr(struct phy_device *phydev)
->>   	return phy_write(phydev, MII_DP83867_MICR, micr_status);
->>   }
->>   
->> +static int dp83867_read_status(struct phy_device *phydev)
->> +{
->> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
->> +
->> +	if (status < 0)
->> +		return status;
->> +
->> +	if (status & DP83867_PHYSTS_DUPLEX)
->> +		phydev->duplex = DUPLEX_FULL;
->> +	else
->> +		phydev->duplex = DUPLEX_HALF;
->> +
->> +	if (status & DP83867_PHYSTS_1000)
->> +		phydev->speed = SPEED_1000;
->> +	else if (status & DP83867_PHYSTS_100)
->> +		phydev->speed = SPEED_100;
->> +	else
->> +		phydev->speed = SPEED_10;
->> +
->> +	if (status & DP83867_PHYSTS_LINK)
->> +		phydev->link = 1;
->> +	else
->> +		phydev->link = 0;
->> +
->> +	phydev->pause = 0;
->> +	phydev->asym_pause = 0;
->> +
->> +	return 0;
->> +}
->> +
->>   static int dp83867_config_port_mirroring(struct phy_device *phydev)
->>   {
->>   	struct dp83867_private *dp83867 =
->> @@ -467,6 +507,12 @@ static int dp83867_config_init(struct phy_device *phydev)
->>   	int ret, val, bs;
->>   	u16 delay;
->>   
->> +	/* Force speed optimization for the PHY even if it strapped */
->> +	ret = phy_modify(phydev, DP83867_CFG2, DP83867_SPEED_OPTIMIZED_EN,
->> +			 DP83867_SPEED_OPTIMIZED_EN);
-> Here phy_set_bits() would be easier.
-
-Ack
-
-Dan
-
+I'm leaning towards dropping this property. Is there any benefit? The
+driver should know the max anyway.
 
