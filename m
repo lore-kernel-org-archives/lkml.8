@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC9C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11846C33CB2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7E020674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87B720674
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XAOPtE7v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JSkarRTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgBABtg (ORCPT
+        id S1727035AbgBABvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:49:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52214 "EHLO
+        Fri, 31 Jan 2020 20:51:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52302 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgBABtg (ORCPT
+        with ESMTP id S1726561AbgBABvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:49:36 -0500
+        Fri, 31 Jan 2020 20:51:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=17fdwoTs7zyvxcbFHKjA+/Q+sSClqbZYiDlG6cIBJHs=; b=XAOPtE7vYPkWgdWpCpqHBo0XE
-        za8ECBsVRuW44tdDssxs1Qk5BiQwae/f5hL0hsPDOjxgZVmUr+CwLtzVmDfKEVFgixapQFjFhkwpE
-        /7QHzqBJYKi/VxdY92pCgeGXa8o0yIc/adpg4tnK+OTIP5SnAOwFMbbA+izWxAU0lbemcUrK0VekM
-        Xx3WxOgYyjHBHChrTstV40hQnStwxCPlUIhjQtzXI/k7LLbaUlCD7p8+APidm95qCJKPqLaAdf5jx
-        iJzWZOUovpvcSw50jjwCyJHzyfFgoXNGKD8eZNdWnPvInD12gpVLb3r7iSWoYWXFmJU/2vWCxmw3f
-        QcBZ56YOg==;
+         bh=Y4oH0DJoPTg1vs/wo5hS8AuSrbZQqTSvRDnjdivmgcw=; b=JSkarRTK6B/eHxgPZOtfNHCxn
+        EoL1mNd7heoS6ln+lgRZb5aaXxNQ+XkINB9O0QD+hYlcrhponNAPp3JU0tb4pFsIulavIFfqRRy8W
+        6sfGKWeXq2sOycf1tUoE6Kdde3IAq4cXp88tCuYfF+aq/UULKyRQiexACh6zNlXePDIlDmXHZky28
+        WFaj/gkNpEiiZhaw7y3Wy1+zPQ1hpofTe7M/mnBwnTtLD6DkMFY/Qk5v/GVP4M6TZ07rs48y0PUt9
+        xm57fbLzOIBNY69AU+RcYMoWBEb2Z6AGFH5Xa8ynMMTDHh814uDVUXkE4jecENbKSHTCz6ACOwn96
+        yuvIrWXDA==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixhuh-0004Go-8P; Sat, 01 Feb 2020 01:49:35 +0000
-To:     Vineet Gupta <vgupta@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        id 1ixhwB-0005XH-PR; Sat, 01 Feb 2020 01:51:07 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] arch/arc: fix some Kconfig typos
-Message-ID: <cbd02a9e-5529-1054-957f-766072496009@infradead.org>
-Date:   Fri, 31 Jan 2020 17:49:33 -0800
+Subject: [PATCH] arm64: fix NUMA Kconfig typos
+Message-ID: <2c69f4d8-03a1-20a6-e8ef-a4518a7c6d07@infradead.org>
+Date:   Fri, 31 Jan 2020 17:51:06 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
@@ -60,33 +60,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix language typos in arch/arc/Kconfig.
+Fix typos in arch/arm64/Kconfig:
+
+- spell Numa as NUMA
+- add hyphenation to Non-Uniform
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arc/Kconfig |    4 ++--
+ arch/arm64/Kconfig |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- linux-next-20200131.orig/arch/arc/Kconfig
-+++ linux-next-20200131/arch/arc/Kconfig
-@@ -154,7 +154,7 @@ config ARC_CPU_HS
- 	help
- 	  Support for ARC HS38x Cores based on ARCv2 ISA
- 	  The notable features are:
--	    - SMP configurations of upto 4 core with coherency
-+	    - SMP configurations of up to 4 cores with coherency
- 	    - Optional L2 Cache and IO-Coherency
- 	    - Revised Interrupt Architecture (multiple priorites, reg banks,
- 	        auto stack switch, auto regfile save/restore)
-@@ -192,7 +192,7 @@ config ARC_SMP_HALT_ON_RESET
- 	help
- 	  In SMP configuration cores can be configured as Halt-on-reset
- 	  or they could all start at same time. For Halt-on-reset, non
--	  masters are parked until Master kicks them so they can start of
-+	  masters are parked until Master kicks them so they can start off
- 	  at designated entry point. For other case, all jump to common
- 	  entry point and spin wait for Master's signal.
+--- linux-next-20200131.orig/arch/arm64/Kconfig
++++ linux-next-20200131/arch/arm64/Kconfig
+@@ -952,11 +952,11 @@ config HOTPLUG_CPU
  
+ # Common NUMA Features
+ config NUMA
+-	bool "Numa Memory Allocation and Scheduler Support"
++	bool "NUMA Memory Allocation and Scheduler Support"
+ 	select ACPI_NUMA if ACPI
+ 	select OF_NUMA
+ 	help
+-	  Enable NUMA (Non Uniform Memory Access) support.
++	  Enable NUMA (Non-Uniform Memory Access) support.
+ 
+ 	  The kernel will try to allocate memory used by a CPU on the
+ 	  local memory of the CPU and add some more
 
