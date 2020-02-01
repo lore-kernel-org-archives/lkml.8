@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84ADC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2536DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB5C20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F102B20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgBASyf (ORCPT
+        id S1727518AbgBASyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:54:35 -0500
+        Sat, 1 Feb 2020 13:54:45 -0500
 Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbgBASwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727230AbgBASwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:52:32 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075574"
+   d="scan'208";a="248075565"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 48/61] KVM: x86: Do host CPUID at load time to mask KVM cpu caps
-Date:   Sat,  1 Feb 2020 10:52:05 -0800
-Message-Id: <20200201185218.24473-49-sean.j.christopherson@intel.com>
+Subject: [PATCH 45/61] KVM: x86: Fold CPUID 0x7 masking back into __do_cpuid_func()
+Date:   Sat,  1 Feb 2020 10:52:02 -0800
+Message-Id: <20200201185218.24473-46-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,49 +49,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mask kvm_cpu_caps based on host CPUID in preparation for overriding the
-CPUID results during KVM_GET_SUPPORTED_CPUID instead of doing the
-masking at runtime.
+Move the CPUID 0x7 masking back into __do_cpuid_func() now that the
+size of the code has been trimmed down significantly.
 
-Note, masking may or may not be necessary, e.g. the kernel rarely, if
-ever, sets real CPUID bits that are not supported by hardware.  But, the
-code is cheap and only runs once at load, so an abundance of caution is
-warranted.
+Tweak the WARN case, which is impossible to hit unless the CPU is
+completely broken, to break the loop before creating the bogus entry.
 
-No functional change intended.
+Opportunustically reorder the cpuid_entry_set() calls and shorten the
+comment about emulation to further reduce the footprint of CPUID 0x7.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/kvm/cpuid.c | 62 ++++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 40 deletions(-)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index ab2a34337588..4416f2422321 100644
+index 77a6c1db138d..7362e5238799 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -272,8 +272,22 @@ static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
- 
- static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
- {
-+	const struct cpuid_reg cpuid = x86_feature_cpuid(leaf * 32);
-+	struct kvm_cpuid_entry2 entry;
-+
- 	reverse_cpuid_check(leaf);
- 	kvm_cpu_caps[leaf] &= mask;
-+
-+#ifdef CONFIG_KVM_CPUID_AUDIT
-+	/* Entry needs to be fully populated when auditing is enabled. */
-+	entry.function = cpuid.function;
-+	entry.index = cpuid.index;
-+#endif
-+
-+	cpuid_count(cpuid.function, cpuid.index,
-+		    &entry.eax, &entry.ebx, &entry.ecx, &entry.edx);
-+
-+	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, &cpuid);
+@@ -456,44 +456,6 @@ static int __do_cpuid_func_emulated(struct kvm_cpuid_array *array, u32 func)
+ 	return 0;
  }
  
- void kvm_set_cpu_caps(void)
+-static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+-{
+-	switch (entry->index) {
+-	case 0:
+-		entry->eax = min(entry->eax, 1u);
+-		cpuid_entry_mask(entry, CPUID_7_0_EBX);
+-		/* TSC_ADJUST is emulated */
+-		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
+-		cpuid_entry_mask(entry, CPUID_7_ECX);
+-		cpuid_entry_mask(entry, CPUID_7_EDX);
+-		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
+-		if (boot_cpu_has(X86_FEATURE_STIBP))
+-			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
+-		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+-			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+-		/*
+-		 * We emulate ARCH_CAPABILITIES in software even
+-		 * if the host doesn't support it.
+-		 */
+-		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
+-		break;
+-	case 1:
+-		cpuid_entry_mask(entry, CPUID_7_1_EAX);
+-		entry->ebx = 0;
+-		entry->ecx = 0;
+-		entry->edx = 0;
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		entry->eax = 0;
+-		entry->ebx = 0;
+-		entry->ecx = 0;
+-		entry->edx = 0;
+-		break;
+-	}
+-}
+-
+ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ {
+ 	struct kvm_cpuid_entry2 *entry;
+@@ -555,14 +517,34 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+ 		break;
+ 	/* function 7 has additional index. */
+ 	case 7:
+-		do_cpuid_7_mask(entry);
++		entry->eax = min(entry->eax, 1u);
++		cpuid_entry_mask(entry, CPUID_7_0_EBX);
++		cpuid_entry_mask(entry, CPUID_7_ECX);
++		cpuid_entry_mask(entry, CPUID_7_EDX);
++
++		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
++		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
++		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
++
++		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
++			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
++		if (boot_cpu_has(X86_FEATURE_STIBP))
++			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
++		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
++			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
+ 
+ 		for (i = 1, max_idx = entry->eax; i <= max_idx; i++) {
++			if (WARN_ON_ONCE(i > 1))
++				break;
++
+ 			entry = do_host_cpuid(array, function, i);
+ 			if (!entry)
+ 				goto out;
+ 
+-			do_cpuid_7_mask(entry);
++			cpuid_entry_mask(entry, CPUID_7_1_EAX);
++			entry->ebx = 0;
++			entry->ecx = 0;
++			entry->edx = 0;
+ 		}
+ 		break;
+ 	case 9:
 -- 
 2.24.1
 
