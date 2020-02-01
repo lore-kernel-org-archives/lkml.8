@@ -5,110 +5,102 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F4AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386BAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41200206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB18206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 12:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxszsal9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzPZwDZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgBAMoF (ORCPT
+        id S1726670AbgBAM6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 07:44:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35457 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBAMoF (ORCPT
+        Sat, 1 Feb 2020 07:58:43 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42057 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgBAM6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 07:44:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w12so960016wrt.2;
-        Sat, 01 Feb 2020 04:44:03 -0800 (PST)
+        Sat, 1 Feb 2020 07:58:43 -0500
+Received: by mail-pg1-f194.google.com with SMTP id s64so5097778pgb.9;
+        Sat, 01 Feb 2020 04:58:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=KPa4daZ7BK/PhoZPQYjuPJ3LO3kRFWJEkZ0HGJmd2Ig=;
-        b=hxszsal9DEfTE+OeaXLUu5ymD0Nw+eJVWyzfUGzFq6YhsPNz9vEEzCt3Zm9wBVoVYX
-         sdbEADhbdKEvXcLnMdP46uDXPkYG/e8nUyc2XaPvGg8jiV/+PgsDx5rC7tBUkGdaOlEK
-         DSmBKPf7OlnSLUt6bGPX/h9gqCoFzISLsqEDIuRjxrGyQYjpY73gq/YxLQoaacFQVBDb
-         2pc2HGtk4gw1oh9NQZhAF2yufHDVu5ln+rSuzjAKVEipzb0iaAPE7qWqTn1nxCTW7drS
-         gg6oz/+X9eUWmzuBAjlCaP6uFUYaa84f0BeK/N9cjTMURFiaY0czGDmRRKchzw7M1FBb
-         T2hw==
+        bh=Sg2eOI3lpxVLDcDQYQkxI8yUvrkJbYXCIF4uNleTtLs=;
+        b=VzPZwDZTiS0OoC9iJdqoQZ1rJQirI983lgb8kIAJifeN7iI9AFpWSkW3lfGLH/Wqny
+         9SPjmGclSfOzm0g88K0e38IsOKwyGaexWV6Er/Ua0KH43NACA+d4KQQkN7ig5POv38+M
+         YturwSNZ1zWY+IpsyBi5TWxl3a9tp9tJEQH4KuG5IBwYJK2KryuioiFI/o+DDsViZP/I
+         JaucO0AUmY/47JkO3fIw7Ch4v5pPPLE+6CWVMKIYfugruQT8AR+1XkDXiL6j8HTGplAW
+         cP9PMZvYhP8K+ibnghXfauWD7g1oCGNOR17tbzDyTbaKXAVHH+LK0580wn3RirUXrLsb
+         QYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KPa4daZ7BK/PhoZPQYjuPJ3LO3kRFWJEkZ0HGJmd2Ig=;
-        b=rwL6LJ52sA/POz2SRMgbp9WQ0nzbuOPfT++qv/Un97v9Y9Fc5EVkaZ19XV569FC1V7
-         Vn7vuMbzxb9Z0eYPF8ArF64VdirujCVqwPbqT2pGgbGuBCsQJTvgmKRkaJ0jaPzDRcgo
-         8zSLPP5SfHnf9EnVZxo/1sbML/jK+/z/GnAj+3PJlKme2eQlgtCQbnjeVkkXGawSTKsk
-         XDPsxqOsKyQpG3kuC3AVVHD7lATHaOW41+ohhpit0NZw2XjGWIOTbAmAYhG1K1QNRChk
-         iRXl5fozAakjchdqCZecjVD3tuRxzy59ls92TKPP7hrbKkZWGDjBfb4KrdFxjZhgI+Tw
-         6MMg==
-X-Gm-Message-State: APjAAAXBt6PUK2DOzRQ/SBVJpaMl8LUN2w9lGGDWfAszyZj0irS1K+nO
-        MOANQzqX4JyLH0XdJMx4UVXt1MTr
-X-Google-Smtp-Source: APXvYqyHhsFxF+E4LbybT8yBArlt0x9wBEaFtdexXHjkCYu0bSLcVtIaC35uGSf/KDpbgC2mhQLu+w==
-X-Received: by 2002:a5d:474d:: with SMTP id o13mr4364573wrs.309.1580561042997;
-        Sat, 01 Feb 2020 04:44:02 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d5f:200:619d:5ce8:4d82:51eb])
-        by smtp.gmail.com with ESMTPSA id b13sm1724451wrq.48.2020.02.01.04.44.02
+        bh=Sg2eOI3lpxVLDcDQYQkxI8yUvrkJbYXCIF4uNleTtLs=;
+        b=eztKJX1avs0jMKGvB+nAJL/k7Az8457KlPZyL4reoD5mdO+T7xChwXTX8vTqeiyowc
+         ox1/ZeEFVzuXSubyZDsRxXEIpmCLH+3oAIuK7nbFCnN6e3eyItXWUXOH5vmlqVhkNAug
+         YOXoG9ZRpqZMXPNjeYy0aZH8vNrViy/U8MS973CaNzUuD7eUwx2vAONTk6NF05JFtohi
+         i3XUjVyAD4OgedjYSRzpirp/3MnH+9aAEh69QAm1LcwhPOtYM08Wy4mYDHA9iPlC86z/
+         PzZJklus41Q5Dr8dLUvXfmcjzHd77p/Qp7Im2a2w25IjgEJypyRQwWU7WDVFIC9lk3IG
+         2s1Q==
+X-Gm-Message-State: APjAAAWlM3d7V5Lpo4oVi7HWrBijrcHmYA+wGYEnRSke/HgefkLWuicZ
+        9omgV6YB/q+UOqcSwbPjbw==
+X-Google-Smtp-Source: APXvYqworotb8yqMSLn48khNRtGO3KrwLk+wNzdBnnKoVNx2LbrYoU5BvXU8otqmX/6laJRxkocHmg==
+X-Received: by 2002:a63:1a08:: with SMTP id a8mr15444283pga.425.1580561921051;
+        Sat, 01 Feb 2020 04:58:41 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:cd2:8ab5:f87d:af67:e1a2:1634])
+        by smtp.gmail.com with ESMTPSA id g22sm13607889pgk.85.2020.02.01.04.58.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 04:44:02 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Karsten Keil <isdn@linux-pingi.de>, Arnd Bergmann <arnd@arndb.de>
-Cc:     isdn4linux@listserv.isdn4linux.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
-Date:   Sat,  1 Feb 2020 13:43:01 +0100
-Message-Id: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+        Sat, 01 Feb 2020 04:58:40 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org, joel@joelfernandes.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] sched.h: Annotate curr pointer in rq with __rcu
+Date:   Sat,  1 Feb 2020 18:28:03 +0530
+Message-Id: <20200201125803.20245-1-madhuparnabhowmik10@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
-isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
-the terminal slash for the two directories mISDN and hardware. Hence, all
-files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
-but were considered to be part of "THE REST".
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Rectify the situation, and while at it, also complete the section with two
-further build files that belong to that subsystem.
+This patch fixes the following sparse errors in sched/core.c
+and sched/membarrier.c
+:
+kernel/sched/core.c:2372:27: error: incompatible types in comparison expression
+kernel/sched/core.c:4061:17: error: incompatible types in comparison expression
+kernel/sched/core.c:6067:9: error: incompatible types in comparison expression
+kernel/sched/membarrier.c:108:21: error: incompatible types in comparison expression
+kernel/sched/membarrier.c:177:21: error: incompatible types in comparison expression
+kernel/sched/membarrier.c:243:21: error: incompatible types in comparison expression
 
-This was identified with a small script that finds all files belonging to
-"THE REST" according to the current MAINTAINERS file, and I investigated
-upon its output.
-
-Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
-Arnd, please ack or even pick it.
-It is no functional change, so I guess you could simply pick in your own
-tree for minor fixes.
+ kernel/sched/sched.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- MAINTAINERS | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1f77fb8cdde3..b6a0c4fa8cfd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8908,8 +8908,10 @@ L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
- L:	netdev@vger.kernel.org
- W:	http://www.isdn4linux.de
- S:	Maintained
--F:	drivers/isdn/mISDN
--F:	drivers/isdn/hardware
-+F:	drivers/isdn/mISDN/
-+F:	drivers/isdn/hardware/
-+F:	drivers/isdn/Kconfig
-+F:	drivers/isdn/Makefile
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 280a3c735935..97b1396b6008 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -896,7 +896,7 @@ struct rq {
+ 	 */
+ 	unsigned long		nr_uninterruptible;
  
- ISDN/CMTP OVER BLUETOOTH
- M:	Karsten Keil <isdn@linux-pingi.de>
+-	struct task_struct	*curr;
++	struct task_struct __rcu	*curr;
+ 	struct task_struct	*idle;
+ 	struct task_struct	*stop;
+ 	unsigned long		next_balance;
 -- 
 2.17.1
 
