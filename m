@@ -2,137 +2,124 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19363C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69061C35240
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9470206F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400E920663
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qld644UZ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WzJTUP5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgBACEC (ORCPT
+        id S1726743AbgBACKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 21:04:02 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37331 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgBACEC (ORCPT
+        Fri, 31 Jan 2020 21:10:46 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37872 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgBACKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 21:04:02 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q127so4549178pga.4;
-        Fri, 31 Jan 2020 18:04:01 -0800 (PST)
+        Fri, 31 Jan 2020 21:10:46 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so3530388plz.4
+        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 18:10:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ro9iu9VNOuWviWh4OwZbe94+Deahhttu3CMtreUHnJg=;
-        b=qld644UZy5MSMdAtQDkFv4eR5rOeOIeuYYfxUs23Icnpl5o/mtxhvzILGSb2z3jyMK
-         c4iUPxDxY0Yui24NWEKH6kWwdJHWBYIaJbb+XuE5HNcq0q1qMCIs1vanew6u6v1GhJw9
-         T2PcbubEr4HNdp7sRw4LVM3gfCDjNnqxxPI5MEdEgxq/gTu7B14se15UnnzgPmYO7Y1F
-         Onh2bVuPh9sw+R1MxRUdtJ3k/kMPZ9sED/MwqC3dx7ii9eVo7Fg0SxP6ejCYvW5RGAcO
-         xRR9sNJU9jPBC74vhh33HTE/r8mAT9q+SVPXs4nUv4T2HKAfxu1oG4uYc+5fw45hAwru
-         Ohgg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=k93QIXrlhVKvP7ezICOk3caRM5BxpPtO926JL6CGXc4=;
+        b=WzJTUP5Yd/yOi2pp6mKUiEg5Y0sTCDhOnWOow3LVm9HbMEo9yewdTOGRujYdJMrLHC
+         di0stniZHIsZSf1ca98dPzIpwRLgU03JMXkzIp8zlJwynW6ovU+Na1fb8lQH3loT/Uis
+         6mfdncX2AadVERJvdPfCHeILLUGXLDmq89+uQMQ7niNSP0mkLjOjfd4OrJUYM7kdwso/
+         sBpoyFEA7ZXyvd2q5awC8NsO9PQIPEA7rAAcSfvkLeso2K51Hh7m8okJ1WN7z6RnBJJK
+         Dc9wD6CjrBAnQ6fS/3e7+Gn4bkL5n9HU9Ba+lZJ+aW2mXqe8CkBiAKewUtey/GD66djp
+         /EtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ro9iu9VNOuWviWh4OwZbe94+Deahhttu3CMtreUHnJg=;
-        b=IcVRLYIlaDcnL0qteqVsSduG1ECSMDvzeAxdFpw4GB8RviPfOI2PdGoeq+FcDnMOm7
-         UXOXRatc0wabPBDojZQyTwkUo5NZkhxaiHSkAeQ3RYGdxDbwF5pKICnSRLLVBRE/T9e3
-         D13d6I+ikmLwnu38kyek/i7ad09mOQByr9rrHjowxLDszbystf0KoJBFDEpDj6wKZ5ZE
-         rNb6AgjbNsCRLxGIq9WkKzjx3BHtQkynmMx9P/BUshqt/ZAXG9V2XAeXE9GBHBmT9hOz
-         6xDYJpMkB+YzwZ+zA7z31b3F/QnHsV5yKdTp74/pDHugKU4XkTuCq/m8DRHW79mXWrOy
-         bxEQ==
-X-Gm-Message-State: APjAAAXWwLut/pOdjPjxVFGuaz5QHJ8cXXHCNKhn6LAspHs0WebDkqGg
-        aBmI2A1NpvrXBi7Z6rena7I=
-X-Google-Smtp-Source: APXvYqx+2t7NY80ATnmYXbW5lMP4yKLfBufkJ9KD/yZ72OykzVDh9Voe5Bf4K1yXya/3K/FKiTxm4w==
-X-Received: by 2002:a63:8e:: with SMTP id 136mr13129030pga.319.1580522641354;
-        Fri, 31 Jan 2020 18:04:01 -0800 (PST)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id p3sm11744575pfg.184.2020.01.31.18.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 18:04:00 -0800 (PST)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     davem@davemloft.net, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com
-Cc:     mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: Delete txtimer in suspend()
-Date:   Fri, 31 Jan 2020 18:01:24 -0800
-Message-Id: <20200201020124.5989-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k93QIXrlhVKvP7ezICOk3caRM5BxpPtO926JL6CGXc4=;
+        b=EVxtRH1/V8NxgPMBbNyZc8LOD0F+PDwxDju2bkXZlmL6eeLwli4nodoiFDYF5c/dJm
+         VOMoxxGdRVMONLfWiJdxGZcwB4GWpZOOLk2njZfpLcFnfrbj+dWHDF6lhGKVrweiHuke
+         P+wCBE+p6nvWcZl6R0LTUgpbRJIbEoZ3yN7jrWgjiZevfFT0b23PtbYzSZXQYunzS3ZC
+         eWjbK25/yRT8RyTbHWjCzTGM2P6Wsdf1q0I0jHF4okecTiFZ5wkjyeCLYXy73UeLNCW8
+         LeNWi8dK1rrhJxDNDaG1LHdbzCE+f6GjQomrYrj24kUhmFia1UF6gH20JfetfluElBaX
+         jkUg==
+X-Gm-Message-State: APjAAAUgEE4NNcRlnb2UD9VGPinvr2hCGissduzwFn1i4eEziCmUlmm2
+        a7ycdM5s2UsFdDKop1hHzcMVuRJmRbQ=
+X-Google-Smtp-Source: APXvYqzzyMS5+MJH6hdO4YgucV12idd1nE0F8fU6Mb37cO9QTx2XLAH5YCfsk+SO5RsMUbbNJvrDqw==
+X-Received: by 2002:a17:90a:a385:: with SMTP id x5mr5223992pjp.102.1580523044195;
+        Fri, 31 Jan 2020 18:10:44 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id p17sm11327441pfn.31.2020.01.31.18.10.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2020 18:10:43 -0800 (PST)
+Subject: Re: [PATCH v3 0/6] add persistent submission state
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1580508735.git.asml.silence@gmail.com>
+ <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
+ <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
+ <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1124e9e0-cf3b-767e-40a5-57297e5ec17b@kernel.dk>
+Date:   Fri, 31 Jan 2020 19:10:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running v5.5 with a rootfs on NFS, memory abort may happen in
-the system resume stage:
- Unable to handle kernel paging request at virtual address dead00000000012a
- [dead00000000012a] address between user and kernel address ranges
- pc : run_timer_softirq+0x334/0x3d8
- lr : run_timer_softirq+0x244/0x3d8
- x1 : ffff800011cafe80 x0 : dead000000000122
- Call trace:
-  run_timer_softirq+0x334/0x3d8
-  efi_header_end+0x114/0x234
-  irq_exit+0xd0/0xd8
-  __handle_domain_irq+0x60/0xb0
-  gic_handle_irq+0x58/0xa8
-  el1_irq+0xb8/0x180
-  arch_cpu_idle+0x10/0x18
-  do_idle+0x1d8/0x2b0
-  cpu_startup_entry+0x24/0x40
-  secondary_start_kernel+0x1b4/0x208
- Code: f9000693 a9400660 f9000020 b4000040 (f9000401)
- ---[ end trace bb83ceeb4c482071 ]---
- Kernel panic - not syncing: Fatal exception in interrupt
- SMP: stopping secondary CPUs
- SMP: failed to stop secondary CPUs 2-3
- Kernel Offset: disabled
- CPU features: 0x00002,2300aa30
- Memory Limit: none
- ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+On 1/31/20 5:31 PM, Pavel Begunkov wrote:
+> On 01/02/2020 01:32, Pavel Begunkov wrote:
+>> On 01/02/2020 01:22, Jens Axboe wrote:
+>>> On 1/31/20 3:15 PM, Pavel Begunkov wrote:
+>>>> Apart from unrelated first patch, this persues two goals:
+>>>>
+>>>> 1. start preparing io_uring to move resources handling into
+>>>> opcode specific functions
+>>>>
+>>>> 2. make the first step towards long-standing optimisation ideas
+>>>>
+>>>> Basically, it makes struct io_submit_state embedded into ctx, so
+>>>> easily accessible and persistent, and then plays a bit around that.
+>>>
+>>> Do you have any perf/latency numbers for this? Just curious if we
+>>> see any improvements on that front, cross submit persistence of
+>>> alloc caches should be a nice sync win, for example, or even
+>>> for peak iops by not having to replenish the pool for each batch.
+>>>
+>>> I can try and run some here too.
+>>>
+>>
+>> I tested the first version, but my drive is too slow, so it was only nops and
+>> hence no offloading. Honestly, there waren't statistically significant results.
+>> I'll rerun anyway.
+>>
+>> I have a plan to reuse it for a tricky optimisation, but thinking twice, I can
+>> just stash it until everything is done. That's not the first thing in TODO and
+>> will take a while.
+>>
+> 
+> I've got numbers, but there is nothing really interesting. Throughput is
+> insignificantly better with the patches, but I'd need much more experiments
+> across reboots to confirm that.
+> 
+> Let's postpone the patchset for later
 
-It's found that stmmac_xmit() and stmmac_resume() sometimes might
-run concurrently, possibly resulting in a race condition between
-mod_timer() and setup_timer(), being called by stmmac_xmit() and
-stmmac_resume() respectively.
+Sounds fine to me, no need to do it unless it's a nice cleanup, and/or
+provides some nice improvements.
 
-Since the resume() runs setup_timer() every time, it'd be safer to
-have del_timer_sync() in the suspend() as the counterpart.
+It would be great to see the splice stuff revamped, though :-)
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ff1cbfc834b0..5836b21edd7e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4974,6 +4974,7 @@ int stmmac_suspend(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct stmmac_priv *priv = netdev_priv(ndev);
-+	u32 chan;
- 
- 	if (!ndev || !netif_running(ndev))
- 		return 0;
-@@ -4987,6 +4988,9 @@ int stmmac_suspend(struct device *dev)
- 
- 	stmmac_disable_all_queues(priv);
- 
-+	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
-+		del_timer_sync(&priv->tx_queue[chan].txtimer);
-+
- 	/* Stop TX/RX DMA */
- 	stmmac_stop_all_dma(priv);
- 
 -- 
-2.17.1
+Jens Axboe
 
