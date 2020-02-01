@@ -2,234 +2,120 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F8EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDCBC35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0ECD206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580543333;
-	bh=89+8KamrDyLQ4gkj73NBh7LDEXdmOCuFSYa/4IYAbX8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t8KjGTnwG7BdMiSlHZkY0HLNFubdra5I/LOiriDsfRDC2jd1ybi6JNm/Gj57GZU/H
-	 zNhj6bD238qFsvnQZ6xPHsPMIKflzNXe5+b+8HJYR1D/7FF9vtig6/qHo2j4R5n7mr
-	 BpteqxmuXYG8UFNjm/6xrQ58Tp4HtBa9JhOOmAU4=
+	by mail.kernel.org (Postfix) with ESMTP id 49FF9206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgBAHsx (ORCPT
+        id S1726466AbgBAHyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 02:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgBAHsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 02:48:52 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB416206D3;
-        Sat,  1 Feb 2020 07:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580543331;
-        bh=89+8KamrDyLQ4gkj73NBh7LDEXdmOCuFSYa/4IYAbX8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=s6oj8etRHrhklMug6rU4AHTNuX2WUpbgWg7kFzgA5jkJYzth1ZQgXYCi+2QJS5eOc
-         2QS4d59kiHF6MZYzdbjhyHd2QR4HOyxDtf6KIMCmZCET5LlrDzRH3wpddjUqcPTOkD
-         TmmRuoJnouUL2z0ipVK5seSxviZEnSlVfAc8jMtA=
-Date:   Sat, 1 Feb 2020 16:48:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] tracing: Use seq_buf for building dynevent_cmd
- string
-Message-Id: <20200201164847.0bcc61a1cdd8b7c2019783f6@kernel.org>
-In-Reply-To: <eb8a6e835c964d0ab8a38cbf5ffa60746b54a465.1580506712.git.zanussi@kernel.org>
-References: <cover.1580506712.git.zanussi@kernel.org>
-        <eb8a6e835c964d0ab8a38cbf5ffa60746b54a465.1580506712.git.zanussi@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 1 Feb 2020 02:54:20 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:60447 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgBAHyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 02:54:20 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MaIGB-1j0s9f1OCr-00WDRn; Sat, 01 Feb 2020 08:54:18 +0100
+Received: by mail-qk1-f182.google.com with SMTP id x1so9033590qkl.12;
+        Fri, 31 Jan 2020 23:54:18 -0800 (PST)
+X-Gm-Message-State: APjAAAUCkr2U/V42J2Uw4zDUgQYClOJ80jBHIySkWZsOkaqLIsrnkPlZ
+        R1lTiLsQSh1iucH0wDKDc4vO5kH09MINDr2Ets0=
+X-Google-Smtp-Source: APXvYqyNQnpxEBtv4vRLe1sVwoTOmRvI7Or42gQvFykFz8mdLXAwXfpEfrCQZJZ73WNx9A4iV5Bp5Af5CouWgkX9434=
+X-Received: by 2002:a05:620a:218d:: with SMTP id g13mr14826914qka.286.1580543657085;
+ Fri, 31 Jan 2020 23:54:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20200131141309.367c9d8b@canb.auug.org.au> <20200201003230.GA32350@fieldses.org>
+In-Reply-To: <20200201003230.GA32350@fieldses.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 1 Feb 2020 08:54:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2sWmeATCC67g+dr0qbBschztNuj8ATewdSay6Na13ARg@mail.gmail.com>
+Message-ID: <CAK8P3a2sWmeATCC67g+dr0qbBschztNuj8ATewdSay6Na13ARg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:97sbIK9+56zG/Pl/3nTMcsLgxkzt6oinf5xBBeBY+HzhdFjjuds
+ T10A21WB/wpUf/dee7ImGAUxbZU0n5dF7ojV770RRHEldaeSjKtnbi0bpqmr+XOkn2Mt+8w
+ SJdyvA+DmFxkg82uGdq+o1QnD860OQyGlfxhe1hMjxeqjpaZQzIV3CT8az0IDJnj82IP4BR
+ dLwFaiINd3Nda61nq88zA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+eeKMtLniI0=:Hd+kkX9vn+/f9dYOSwIIZY
+ g8tkEdQM09OKSu12hduKGNkK6+Wbv3BV9UZFwrynpxosHQVtu4W89QF2CcSGp82ZIFKvZE6IM
+ sqICGz9HGD7FDuQ7LrqM7uuVUbaOwTWdtS2zyKXsBSAmJ0IZSRNbnejpcaP9cpIG/UQN4afs+
+ mx2oAFQhYhc1LCg88KuoWTiRYKutrqDFU0HFfNEeCOBiZl+J6scgUQhwwc/bcHKIvxTXY8zYu
+ rNjldBBSPb17OHO6RxV61Da5UffgqTF197DG/KOUOOSil/ISwCVURMv8ZQ+mdJMDzmGGvXM76
+ D9Cxk8/Ueijx3P4oDs7ad4f/B8Rx0pZ+wAm09cK/1AGyJ5a5A6n7FcwOovGWaLpBqn9TSNhf4
+ k+W4V9m28EB0kpT/iauA3hpmkeXIZWW1lcuWYEhmRqgLGFHNoa+WQCs344DZ8BzNSgV61afOD
+ 677S3RkunFcY4FlWFobdq4jD9ya6I/rKx4QgNrtuOfwxIdkB2H/J/+mY1gi9mPzxCAic485xq
+ J2TIiP+6PENVHa+LEQAf2D0E3vPlgA35gVT4TWUNRfvC+8OwP7bx5/Y0yqt/fnMlul2ku1jt1
+ gdls5SXhRJI/y91pNdANsEoumH9do3dmSU8MN7asn/CD5Ezm11/axYTpBs4PcdeDU0pOXc0dj
+ GrhH8awS3ObjXhyhTuNa8WCVF2wukbD0u9CXqaJxJmrNEvWsC1AQ7GTTuo5fq7Ccxq4+lTTXP
+ scCoQaTfv58JJbu+YxNiPevVWPcRSfFQ1fnO1ynOJ738EFJQl8XtHy3lW/7BEDnhG1CdO3t/j
+ lSa9Bz6kENLruAalNLqJt/EC8XBJQgAAdJuNNbaMJvbo/gjzX8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 15:55:34 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+On Sat, Feb 1, 2020 at 1:32 AM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Fri, Jan 31, 2020 at 02:13:09PM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the akpm-current tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > net/sunrpc/auth_gss/svcauth_gss.c: In function 'gss_proxy_save_rsc':
+> > net/sunrpc/auth_gss/svcauth_gss.c:1251:19: error: storage size of 'boot' isn't known
+> >  1251 |   struct timespec boot;
+> >       |                   ^~~~
+> > net/sunrpc/auth_gss/svcauth_gss.c:1273:3: error: implicit declaration of function 'getboottime'; did you mean 'getboottime64'? [-Werror=implicit-function-declaration]
+> >  1273 |   getboottime(&boot);
+> >       |   ^~~~~~~~~~~
+> >       |   getboottime64
+> > net/sunrpc/auth_gss/svcauth_gss.c:1251:19: warning: unused variable 'boot' [-Wunused-variable]
+> >  1251 |   struct timespec boot;
+> >       |                   ^~~~
+> >
+> > Caused by commit
+> >
+> >   a415f20a18c9 ("sunrpc: expiry_time should be seconds not timeval")
 
-> The dynevent_cmd commands that build up the command string don't need
-> to do that themselves - there's a seq_buf facility that does pretty
-> much the same thing those command are doing manually, so use it
-> instead.
+This commit uses the now-removed 'struct timespec' type and 'getboottime()'
+function, so to fix the compilation error, the 64-bit replacements need to e
+used as described in Documentation/core-api/timekeeping.rst
 
-Looks so neat :)
+> > from the nfsd tree interacting with commits
+> >
+> >   de371b6c7b73 ("y2038: remove unused time32 interfaces")
+> >   aa7ff200a719 ("y2038: hide timeval/timespec/itimerval/itimerspec types")
+> >
+> > from the akpm-current tree.
+> >
+> > I have reverted the nfsd commit for today.  A better solution is requested.
+>
+> Unfortunately that expiry time seems to be a signed 32-bit integer in
+> both the kernel<->gss-proxy and the gss-proxy<->krb5 interfaces.
+>
+> I guess we'll have to come to an agreement with the krb5 developers.
+>
+> Simplest might be to agree that the thing's unsigned.  The expiry
+> shouldn't ever need to be decades in the future, so unsigned mod 2^32
+> arithmetic should work forever.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Can you be more specific which interface you are referring to?
+My change to gss_import_v1_context() is now part of mainline
+as of 294ec5b87a8a ("sunrpc: convert to time64_t for expiry"),
+is anything else needed there?
 
-Thank you,
-
-> 
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-> ---
->  include/linux/trace_events.h     |  4 +---
->  kernel/trace/trace_dynevent.c    | 48 +++++++++++-----------------------------
->  kernel/trace/trace_events_hist.c |  2 +-
->  kernel/trace/trace_kprobe.c      |  2 +-
->  4 files changed, 16 insertions(+), 40 deletions(-)
-> 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 7c307a7c9c6a..67f528ecb9e5 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -367,10 +367,8 @@ struct dynevent_cmd;
->  typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
->  
->  struct dynevent_cmd {
-> -	char			*buf;
-> +	struct seq_buf		seq;
->  	const char		*event_name;
-> -	int			maxlen;
-> -	int			remaining;
->  	unsigned int		n_fields;
->  	enum dynevent_type	type;
->  	dynevent_create_fn_t	run_command;
-> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-> index 204275ec8d71..9f2e8520b748 100644
-> --- a/kernel/trace/trace_dynevent.c
-> +++ b/kernel/trace/trace_dynevent.c
-> @@ -247,8 +247,6 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
->  		     dynevent_check_arg_fn_t check_arg)
->  {
->  	int ret = 0;
-> -	int delta;
-> -	char *q;
->  
->  	if (check_arg) {
->  		ret = check_arg(arg);
-> @@ -256,14 +254,11 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
->  			return ret;
->  	}
->  
-> -	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-> -
-> -	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
-> -	if (delta >= cmd->remaining) {
-> -		pr_err("String is too long: %s\n", arg->str);
-> +	ret = seq_buf_printf(&cmd->seq, " %s%c", arg->str, arg->separator);
-> +	if (ret) {
-> +		pr_err("String is too long: %s%c\n", arg->str, arg->separator);
->  		return -E2BIG;
->  	}
-> -	cmd->remaining -= delta;
->  
->  	return ret;
->  }
-> @@ -297,8 +292,6 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
->  			  dynevent_check_arg_fn_t check_arg)
->  {
->  	int ret = 0;
-> -	int delta;
-> -	char *q;
->  
->  	if (check_arg) {
->  		ret = check_arg(arg_pair);
-> @@ -306,23 +299,15 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
->  			return ret;
->  	}
->  
-> -	q = cmd->buf + (cmd->maxlen - cmd->remaining);
-> -
-> -	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
-> -			 arg_pair->operator);
-> -	if (delta >= cmd->remaining) {
-> -		pr_err("field string is too long: %s\n", arg_pair->lhs);
-> -		return -E2BIG;
-> -	}
-> -	cmd->remaining -= delta; q += delta;
-> -
-> -	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
-> -			 arg_pair->separator);
-> -	if (delta >= cmd->remaining) {
-> -		pr_err("field string is too long: %s\n", arg_pair->rhs);
-> +	ret = seq_buf_printf(&cmd->seq, " %s%c%s%c", arg_pair->lhs,
-> +			     arg_pair->operator, arg_pair->rhs,
-> +			     arg_pair->separator);
-> +	if (ret) {
-> +		pr_err("field string is too long: %s%c%s%c\n", arg_pair->lhs,
-> +		       arg_pair->operator, arg_pair->rhs,
-> +		       arg_pair->separator);
->  		return -E2BIG;
->  	}
-> -	cmd->remaining -= delta;
->  
->  	return ret;
->  }
-> @@ -340,17 +325,12 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
->  int dynevent_str_add(struct dynevent_cmd *cmd, const char *str)
->  {
->  	int ret = 0;
-> -	int delta;
-> -	char *q;
-> -
-> -	q = cmd->buf + (cmd->maxlen - cmd->remaining);
->  
-> -	delta = snprintf(q, cmd->remaining, "%s", str);
-> -	if (delta >= cmd->remaining) {
-> +	ret = seq_buf_puts(&cmd->seq, str);
-> +	if (ret) {
->  		pr_err("String is too long: %s\n", str);
->  		return -E2BIG;
->  	}
-> -	cmd->remaining -= delta;
->  
->  	return ret;
->  }
-> @@ -381,9 +361,7 @@ void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
->  {
->  	memset(cmd, '\0', sizeof(*cmd));
->  
-> -	cmd->buf = buf;
-> -	cmd->maxlen = maxlen;
-> -	cmd->remaining = cmd->maxlen;
-> +	seq_buf_init(&cmd->seq, buf, maxlen);
->  	cmd->type = type;
->  	cmd->run_command = run_command;
->  }
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index a566f5d290c1..6dc3078a6d02 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -1762,7 +1762,7 @@ static int synth_event_run_command(struct dynevent_cmd *cmd)
->  	struct synth_event *se;
->  	int ret;
->  
-> -	ret = trace_run_command(cmd->buf, create_or_delete_synth_event);
-> +	ret = trace_run_command(cmd->seq.buffer, create_or_delete_synth_event);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index fe183d4045d2..51efc790aea8 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -903,7 +903,7 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
->  
->  static int trace_kprobe_run_command(struct dynevent_cmd *cmd)
->  {
-> -	return trace_run_command(cmd->buf, create_or_delete_trace_kprobe);
-> +	return trace_run_command(cmd->seq.buffer, create_or_delete_trace_kprobe);
->  }
->  
->  /**
-> -- 
-> 2.14.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+       Arnd
