@@ -2,120 +2,100 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D68FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA391C35249
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0448820643
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GaDDcm5M"
+	by mail.kernel.org (Postfix) with ESMTP id BEE842063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgBAWSq (ORCPT
+        id S1726718AbgBAWaN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 17:18:46 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:52146 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgBAWSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 17:18:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011MIFU0155051;
-        Sat, 1 Feb 2020 22:18:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=b0eloi3LYgRMZOO881K2rypqFpFcW6O9Ott7NikrdgQ=;
- b=GaDDcm5MfqnjKt0yrsOs7KHPkR+V5Rwvh+kbpO9qzOnGzuPDafTUXT4FR7Ot3Dpd7zFg
- +n44vGjrQBCatAOSxbpbnOxy7S7hYkwgdpKPFc/ChiHxjNRTAvjnY3wOyWO2txngX5c9
- l/bseESXJVtIR8+cS4DTaWzA/kikQD0etuH68uObmXW8JbFZ/BXmOKaXTp5WUiNWiIbT
- YOr8o+umByOQj3mbqmCS8gQp56oLf+h6oJVPtfjx+/kNPymH3ekJPTwhMCz9CfgborK/
- uKobUCk0+LbYv1lsLpieHYZcIavkWrc8QLu5zHYfhtkygDrg5YxATTybsplo2EOJQjCf Jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xw19q25fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 22:18:38 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011MIOud067305;
-        Sat, 1 Feb 2020 22:18:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xw162p0rw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 01 Feb 2020 22:18:37 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 011MIY0Y027747;
-        Sat, 1 Feb 2020 22:18:34 GMT
-Received: from dhcp-10-175-204-75.vpn.oracle.com (/10.175.204.75)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 01 Feb 2020 14:18:33 -0800
-Date:   Sat, 1 Feb 2020 22:18:27 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-204-75.vpn.oracle.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-cc:     shuah@kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-doc@vger.kernel.org, corbet@lwn.net, davidgow@google.com
-Subject: Re: [PATCH v1] Documentation: kunit: fixed sphinx error in code
- block
-In-Reply-To: <20200201000102.69272-1-brendanhiggins@google.com>
-Message-ID: <alpine.LRH.2.20.2002012217470.16960@dhcp-10-175-204-75.vpn.oracle.com>
-References: <20200201000102.69272-1-brendanhiggins@google.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Sat, 1 Feb 2020 17:30:13 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:58457 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgBAWaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 17:30:12 -0500
+Received: from [IPv6:2601:646:8600:3281:fd34:ea1e:1509:a22b] ([IPv6:2601:646:8600:3281:fd34:ea1e:1509:a22b])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 011MTi6D063624
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Sat, 1 Feb 2020 14:29:47 -0800
+Date:   Sat, 01 Feb 2020 14:29:35 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200130130838.29157-1-wenyang@linux.alibaba.com>
+References: <20200130130838.29157-1-wenyang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002010164
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002010164
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH] x86/tsc: improve arithmetic division
+To:     Wen Yang <wenyang@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>
+CC:     x86@kernel.org, linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <35AFFA5A-B499-4D64-9E98-42B9A642EB0F@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020, Brendan Higgins wrote:
+On January 30, 2020 5:08:38 AM PST, Wen Yang <wenyang@linux.alibaba.com> wrote:
+>do_div() does a 64-by-32 division. Use div64_ul64() or div64_ul()
+>instead of it if the divisor is 'ul64' or 'unsigned long', to avoid
+>truncation to lower 32-bit.
+>And as a nice side effect also cleans up the function a bit.
+>
+>Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+>Cc: Thomas Gleixner <tglx@linutronix.de>
+>Cc: Ingo Molnar <mingo@redhat.com>
+>Cc: Borislav Petkov <bp@alien8.de>
+>Cc: "H. Peter Anvin" <hpa@zytor.com>
+>Cc: x86@kernel.org
+>Cc: linux-kernel@vger.kernel.org
+>---
+> arch/x86/kernel/tsc.c | 7 ++-----
+> 1 file changed, 2 insertions(+), 5 deletions(-)
+>
+>diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+>index 7e322e2daaf5..4c0320e68699 100644
+>--- a/arch/x86/kernel/tsc.c
+>+++ b/arch/x86/kernel/tsc.c
+>@@ -357,9 +357,7 @@ static unsigned long calc_pmtimer_ref(u64 deltatsc,
+>u64 pm1, u64 pm2)
+> 	pm2 -= pm1;
+> 	tmp = pm2 * 1000000000LL;
+> 	do_div(tmp, PMTMR_TICKS_PER_SEC);
+>-	do_div(deltatsc, tmp);
+>-
+>-	return (unsigned long) deltatsc;
+>+	return (unsigned long) div64_u64(deltatsc, tmp);
+> }
+> 
+> #define CAL_MS		10
+>@@ -778,8 +776,7 @@ static unsigned long
+>pit_hpet_ptimer_calibrate_cpu(void)
+> 		tsc_ref_min = min(tsc_ref_min, (unsigned long) tsc2);
+> 
+> 		/* Check the reference deviation */
+>-		delta = ((u64) tsc_pit_min) * 100;
+>-		do_div(delta, tsc_ref_min);
+>+		delta = div64_ul(((u64) tsc_pit_min) * 100, tsc_ref_min);
+> 
+> 		/*
+> 		 * If both calibration results are inside a 10% window
 
-> Fix a missing newline in a code block that was causing a warning:
-> 
-> Documentation/dev-tools/kunit/usage.rst:553: WARNING: Error in "code-block" directive:
-> maximum 1 argument(s) allowed, 3 supplied.
-> 
-> .. code-block:: bash
->         modprobe example-test
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+This is a *lot* more expensive on 32 bits (something like 10x) and as the output is truncated to unsigned long anyway, it is also unnecessary.
 
-Thanks for fixing!
+We don't use the remainder, so using do_div() is not merely unnecessary but almost certainly generates worse code: we are multiplying and then dividing by a constant, and most of the time gcc can optimize that into a single multiply/shift operation; otherwise we can do that optimization for it (see timeconst.bc.)
 
-Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+The one thing that gcc can't necessary do automatically is to know when a 64/32 → 32 division is safe; C semantics are truncation, but the CPU will trap. If it can turn it into a multiply then that problem obviously goes away.
 
-> ---
->  Documentation/dev-tools/kunit/usage.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index 7cd56a1993b14..607758a66a99c 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -551,6 +551,7 @@ options to your ``.config``:
->  Once the kernel is built and installed, a simple
->  
->  .. code-block:: bash
-> +
->  	modprobe example-test
->  
->  ...will run the tests.
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-> 
-> 
+So first I would test with regular / operators and see what code comes out.
+
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
