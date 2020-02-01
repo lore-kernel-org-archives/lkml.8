@@ -1,90 +1,121 @@
 Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SHORT_SHORTNER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A090C35249
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D68FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3C92064C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0448820643
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZdQSUNX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GaDDcm5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgBAVtt (ORCPT
+        id S1726789AbgBAWSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 16:49:49 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54804 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBAVts (ORCPT
+        Sat, 1 Feb 2020 17:18:46 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:52146 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgBAWSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 16:49:48 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g1so11776014wmh.4
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 13:49:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8g4n8OPntHUCEDrr9QgY8zCg00Uu42nL/dnCx3MOvtg=;
-        b=KZdQSUNXxj0gNOaEOw+7vpce0kDASKgZ9c5Mrkfe0JSyvv4xu4Y7rVk3M8Ieh5fYZN
-         5yo5+v7Nm2OH6IrkvU4+SI/U+7g8aGo5rWTjh1SIFQbrsOQdryMnqnrhg24XpSfOIP49
-         jZri3jXHOXWlgZ46zniLuaAAv9zlIx+Sr07pp4t7ed45+LkYHXA/jAsFotISQNJqpnV2
-         bBVb1h4YYmSyhf1ea0+vKJaE7mPWwC7xWuYf6rbMgqaxjcKrjaJYFZ8oOAwMkYx24SFH
-         LyUV969tueaYp6HBCxol4XKHmGYM2BFQsL/Igu54d9nGyhevgmICFvHiLw76fFSr7fJC
-         EKIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8g4n8OPntHUCEDrr9QgY8zCg00Uu42nL/dnCx3MOvtg=;
-        b=I4TxpM5rBE8X4YPw20dvp0SFkc8l2XILIrgJxNcSjS1qMqG2YnwMhKGf7AjeEdG600
-         vgv+KgTLh1WoJRvszIANja5jabdK/e3oPZ1kbpcFuoRQZMjew7MsVOwIWfRPAhW64Tle
-         orxVgiOBX0YHlLR1iKebKmE/OoXMrpzasequNOEBVBv48TS0Rxat9pNJb6FkrJ/cO41g
-         z+3XY1N1NGnGc+pe6sG+2CAet3WfNwLVwz397x5UuAAg0xkEjpslVmxV8bRMlOVEDBRa
-         0fMvhThMrVZeDwdDM4VcHGea0hFYIoiovw/17VVO8z2BCzae1fIYbCxm5z7BjFKB05fR
-         Xsdw==
-X-Gm-Message-State: APjAAAXbq00SPgEagajYsneOF07YKtpnNG/n/UFeW/sz+90nYstwvrRz
-        cfXSDTQCrE5Kqx4hIbbZwdPWGLUbpNie/+ZGeRyOGg==
-X-Google-Smtp-Source: APXvYqzqHLYV0zjuoU2Zxa1XqyYA5vWbjit0CjVQF2xU5w6hv4zTf9rlJWz52pQQVJe7/xb3TxXmf2fYJObIigiwx1g=
-X-Received: by 2002:a1c:bc46:: with SMTP id m67mr19188999wmf.40.1580593785798;
- Sat, 01 Feb 2020 13:49:45 -0800 (PST)
+        Sat, 1 Feb 2020 17:18:45 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011MIFU0155051;
+        Sat, 1 Feb 2020 22:18:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=b0eloi3LYgRMZOO881K2rypqFpFcW6O9Ott7NikrdgQ=;
+ b=GaDDcm5MfqnjKt0yrsOs7KHPkR+V5Rwvh+kbpO9qzOnGzuPDafTUXT4FR7Ot3Dpd7zFg
+ +n44vGjrQBCatAOSxbpbnOxy7S7hYkwgdpKPFc/ChiHxjNRTAvjnY3wOyWO2txngX5c9
+ l/bseESXJVtIR8+cS4DTaWzA/kikQD0etuH68uObmXW8JbFZ/BXmOKaXTp5WUiNWiIbT
+ YOr8o+umByOQj3mbqmCS8gQp56oLf+h6oJVPtfjx+/kNPymH3ekJPTwhMCz9CfgborK/
+ uKobUCk0+LbYv1lsLpieHYZcIavkWrc8QLu5zHYfhtkygDrg5YxATTybsplo2EOJQjCf Jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xw19q25fj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 01 Feb 2020 22:18:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 011MIOud067305;
+        Sat, 1 Feb 2020 22:18:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xw162p0rw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 01 Feb 2020 22:18:37 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 011MIY0Y027747;
+        Sat, 1 Feb 2020 22:18:34 GMT
+Received: from dhcp-10-175-204-75.vpn.oracle.com (/10.175.204.75)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 01 Feb 2020 14:18:33 -0800
+Date:   Sat, 1 Feb 2020 22:18:27 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-204-75.vpn.oracle.com
+To:     Brendan Higgins <brendanhiggins@google.com>
+cc:     shuah@kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-doc@vger.kernel.org, corbet@lwn.net, davidgow@google.com
+Subject: Re: [PATCH v1] Documentation: kunit: fixed sphinx error in code
+ block
+In-Reply-To: <20200201000102.69272-1-brendanhiggins@google.com>
+Message-ID: <alpine.LRH.2.20.2002012217470.16960@dhcp-10-175-204-75.vpn.oracle.com>
+References: <20200201000102.69272-1-brendanhiggins@google.com>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
- <20200131183658.GA71555@gmail.com> <CAKv+Gu-oPrM7oh-oTbpQsUmXcYvp9KxjXFb3DUGk__qu59rdBQ@mail.gmail.com>
- <CAPcyv4j7oraMPOhSePaXhULaNJNTFTx+TcJ-y2bqQmvNsTQDmg@mail.gmail.com>
-In-Reply-To: <CAPcyv4j7oraMPOhSePaXhULaNJNTFTx+TcJ-y2bqQmvNsTQDmg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 1 Feb 2020 22:49:35 +0100
-Message-ID: <CAKv+Gu-bAbc7a1-H5gadQ=YkfKpQUt__3J5cctDNLz1g8gH92A@mail.gmail.com>
-Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002010164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9518 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002010164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Feb 2020 at 22:44, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Fri, Jan 31, 2020 at 10:45 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > earlycon=efifb may help to get better diagnostics, but you will need to use a camera to capture the output
->
-> https://photos.app.goo.gl/uA3Wkaxc8x6A4gK47
+On Fri, 31 Jan 2020, Brendan Higgins wrote:
 
-Yeah, so it definitely has to do with the n_removal > 0 path.
+> Fix a missing newline in a code block that was causing a warning:
+> 
+> Documentation/dev-tools/kunit/usage.rst:553: WARNING: Error in "code-block" directive:
+> maximum 1 argument(s) allowed, 3 supplied.
+> 
+> .. code-block:: bash
+>         modprobe example-test
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-Did you try the change I suggested to Joerg?
+Thanks for fixing!
+
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+
+> ---
+>  Documentation/dev-tools/kunit/usage.rst | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+> index 7cd56a1993b14..607758a66a99c 100644
+> --- a/Documentation/dev-tools/kunit/usage.rst
+> +++ b/Documentation/dev-tools/kunit/usage.rst
+> @@ -551,6 +551,7 @@ options to your ``.config``:
+>  Once the kernel is built and installed, a simple
+>  
+>  .. code-block:: bash
+> +
+>  	modprobe example-test
+>  
+>  ...will run the tests.
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
+> 
