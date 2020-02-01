@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A5EC35246
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200BC3F68F
 	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8EDB2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C152073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgBASMh (ORCPT
+        id S1726912AbgBASMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:12:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58824 "EHLO mail.kernel.org"
+        Sat, 1 Feb 2020 13:12:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726469AbgBASMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726494AbgBASMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:12:37 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19D520728;
+        by mail.kernel.org (Postfix) with ESMTPSA id ADADC2070C;
         Sat,  1 Feb 2020 18:12:35 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ixxFw-001Il7-Tv; Sat, 01 Feb 2020 13:12:32 -0500
-Message-Id: <20200201181232.804196729@goodmis.org>
+        id 1ixxFx-001InZ-Ln; Sat, 01 Feb 2020 13:12:33 -0500
+Message-Id: <20200201181233.551764232@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sat, 01 Feb 2020 13:12:11 -0500
+Date:   Sat, 01 Feb 2020 13:12:16 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 1/6] tracing: Change trace_boot to use synth_event interface
+Subject: [for-next][PATCH 6/6] tracing: Use seq_buf for building dynevent_cmd string
 References: <20200201181210.203806308@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -47,103 +47,167 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <zanussi@kernel.org>
 
-Have trace_boot_add_synth_event() use the synth_event interface.
+The dynevent_cmd commands that build up the command string don't need
+to do that themselves - there's a seq_buf facility that does pretty
+much the same thing those command are doing manually, so use it
+instead.
 
-Also, rename synth_event_run_cmd() to synth_event_run_command() now
-that trace_boot's version is gone.
+Link: http://lkml.kernel.org/r/eb8a6e835c964d0ab8a38cbf5ffa60746b54a465.1580506712.git.zanussi@kernel.org
 
-Link: http://lkml.kernel.org/r/94f1fa0e31846d0bddca916b8663404b20559e34.1580323897.git.zanussi@kernel.org
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_boot.c        | 31 ++++++++++++-------------------
- kernel/trace/trace_events_hist.c |  9 ++-------
- 2 files changed, 14 insertions(+), 26 deletions(-)
+ include/linux/trace_events.h     |  4 +--
+ kernel/trace/trace_dynevent.c    | 48 +++++++++-----------------------
+ kernel/trace/trace_events_hist.c |  2 +-
+ kernel/trace/trace_kprobe.c      |  2 +-
+ 4 files changed, 16 insertions(+), 40 deletions(-)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 2298a70cdda6..06d7feb5255f 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -125,38 +125,31 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- #endif
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 7c307a7c9c6a..67f528ecb9e5 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -367,10 +367,8 @@ struct dynevent_cmd;
+ typedef int (*dynevent_create_fn_t)(struct dynevent_cmd *cmd);
  
- #ifdef CONFIG_HIST_TRIGGERS
--extern int synth_event_run_command(const char *command);
--
- static int __init
- trace_boot_add_synth_event(struct xbc_node *node, const char *event)
+ struct dynevent_cmd {
+-	char			*buf;
++	struct seq_buf		seq;
+ 	const char		*event_name;
+-	int			maxlen;
+-	int			remaining;
+ 	unsigned int		n_fields;
+ 	enum dynevent_type	type;
+ 	dynevent_create_fn_t	run_command;
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index 204275ec8d71..9f2e8520b748 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -247,8 +247,6 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
+ 		     dynevent_check_arg_fn_t check_arg)
  {
-+	struct dynevent_cmd cmd;
- 	struct xbc_node *anode;
--	char buf[MAX_BUF_LEN], *q;
-+	char buf[MAX_BUF_LEN];
- 	const char *p;
--	int len, delta, ret;
-+	int ret;
+ 	int ret = 0;
+-	int delta;
+-	char *q;
  
--	len = ARRAY_SIZE(buf);
--	delta = snprintf(buf, len, "%s", event);
--	if (delta >= len) {
--		pr_err("Event name is too long: %s\n", event);
--		return -E2BIG;
--	}
--	len -= delta; q = buf + delta;
-+	synth_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
-+
-+	ret = synth_event_gen_cmd_start(&cmd, event, NULL);
-+	if (ret)
-+		return ret;
- 
- 	xbc_node_for_each_array_value(node, "fields", anode, p) {
--		delta = snprintf(q, len, " %s;", p);
--		if (delta >= len) {
--			pr_err("fields string is too long: %s\n", p);
--			return -E2BIG;
--		}
--		len -= delta; q += delta;
-+		ret = synth_event_add_field_str(&cmd, p);
-+		if (ret)
-+			return ret;
+ 	if (check_arg) {
+ 		ret = check_arg(arg);
+@@ -256,14 +254,11 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
+ 			return ret;
  	}
  
--	ret = synth_event_run_command(buf);
-+	ret = synth_event_gen_cmd_end(&cmd);
- 	if (ret < 0)
- 		pr_err("Failed to add synthetic event: %s\n", buf);
- 
+-	q = cmd->buf + (cmd->maxlen - cmd->remaining);
 -
+-	delta = snprintf(q, cmd->remaining, " %s%c", arg->str, arg->separator);
+-	if (delta >= cmd->remaining) {
+-		pr_err("String is too long: %s\n", arg->str);
++	ret = seq_buf_printf(&cmd->seq, " %s%c", arg->str, arg->separator);
++	if (ret) {
++		pr_err("String is too long: %s%c\n", arg->str, arg->separator);
+ 		return -E2BIG;
+ 	}
+-	cmd->remaining -= delta;
+ 
  	return ret;
  }
- #else
+@@ -297,8 +292,6 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+ 			  dynevent_check_arg_fn_t check_arg)
+ {
+ 	int ret = 0;
+-	int delta;
+-	char *q;
+ 
+ 	if (check_arg) {
+ 		ret = check_arg(arg_pair);
+@@ -306,23 +299,15 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+ 			return ret;
+ 	}
+ 
+-	q = cmd->buf + (cmd->maxlen - cmd->remaining);
+-
+-	delta = snprintf(q, cmd->remaining, " %s%c", arg_pair->lhs,
+-			 arg_pair->operator);
+-	if (delta >= cmd->remaining) {
+-		pr_err("field string is too long: %s\n", arg_pair->lhs);
+-		return -E2BIG;
+-	}
+-	cmd->remaining -= delta; q += delta;
+-
+-	delta = snprintf(q, cmd->remaining, "%s%c", arg_pair->rhs,
+-			 arg_pair->separator);
+-	if (delta >= cmd->remaining) {
+-		pr_err("field string is too long: %s\n", arg_pair->rhs);
++	ret = seq_buf_printf(&cmd->seq, " %s%c%s%c", arg_pair->lhs,
++			     arg_pair->operator, arg_pair->rhs,
++			     arg_pair->separator);
++	if (ret) {
++		pr_err("field string is too long: %s%c%s%c\n", arg_pair->lhs,
++		       arg_pair->operator, arg_pair->rhs,
++		       arg_pair->separator);
+ 		return -E2BIG;
+ 	}
+-	cmd->remaining -= delta;
+ 
+ 	return ret;
+ }
+@@ -340,17 +325,12 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
+ int dynevent_str_add(struct dynevent_cmd *cmd, const char *str)
+ {
+ 	int ret = 0;
+-	int delta;
+-	char *q;
+-
+-	q = cmd->buf + (cmd->maxlen - cmd->remaining);
+ 
+-	delta = snprintf(q, cmd->remaining, "%s", str);
+-	if (delta >= cmd->remaining) {
++	ret = seq_buf_puts(&cmd->seq, str);
++	if (ret) {
+ 		pr_err("String is too long: %s\n", str);
+ 		return -E2BIG;
+ 	}
+-	cmd->remaining -= delta;
+ 
+ 	return ret;
+ }
+@@ -381,9 +361,7 @@ void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
+ {
+ 	memset(cmd, '\0', sizeof(*cmd));
+ 
+-	cmd->buf = buf;
+-	cmd->maxlen = maxlen;
+-	cmd->remaining = cmd->maxlen;
++	seq_buf_init(&cmd->seq, buf, maxlen);
+ 	cmd->type = type;
+ 	cmd->run_command = run_command;
+ }
 diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 4d56a4f0310d..2e88c9805f4b 100644
+index d2817fe52f32..b3bcfd8c7332 100644
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -1755,12 +1755,7 @@ static int create_or_delete_synth_event(int argc, char **argv)
- 	return ret == -ECANCELED ? -EINVAL : ret;
- }
- 
--int synth_event_run_command(const char *command)
--{
--	return trace_run_command(command, create_or_delete_synth_event);
--}
--
--static int synth_event_run_cmd(struct dynevent_cmd *cmd)
-+static int synth_event_run_command(struct dynevent_cmd *cmd)
- {
+@@ -1762,7 +1762,7 @@ static int synth_event_run_command(struct dynevent_cmd *cmd)
  	struct synth_event *se;
  	int ret;
-@@ -1790,7 +1785,7 @@ static int synth_event_run_cmd(struct dynevent_cmd *cmd)
- void synth_event_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen)
- {
- 	dynevent_cmd_init(cmd, buf, maxlen, DYNEVENT_TYPE_SYNTH,
--			  synth_event_run_cmd);
-+			  synth_event_run_command);
- }
- EXPORT_SYMBOL_GPL(synth_event_cmd_init);
  
+-	ret = trace_run_command(cmd->buf, create_or_delete_synth_event);
++	ret = trace_run_command(cmd->seq.buffer, create_or_delete_synth_event);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index fe183d4045d2..51efc790aea8 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -903,7 +903,7 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
+ 
+ static int trace_kprobe_run_command(struct dynevent_cmd *cmd)
+ {
+-	return trace_run_command(cmd->buf, create_or_delete_trace_kprobe);
++	return trace_run_command(cmd->seq.buffer, create_or_delete_trace_kprobe);
+ }
+ 
+ /**
 -- 
 2.24.1
 
