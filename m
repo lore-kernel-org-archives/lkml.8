@@ -2,127 +2,111 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA391C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942592067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93CC2067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580582735;
+	bh=Id3qYUe/BsmcaUwct4ysNg56F9FagbrajjZR23Jz8pM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pLnX8K3LabUF82KUihe42BAPazJ8n762ENlEpWb3HT3tTjHuX/Cpi32lwzSqOfLL3
+	 9FcXoijYQaobswtqF8GEB81/gyolmJsM7xE17IHyPqf0Sv47gsre3F2rTV0SYzM69v
+	 4BuiH+jds1a+6wKdVscLaNP73bWaoRfGFXxD7uSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgBASnW (ORCPT
+        id S1726670AbgBASpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:43:22 -0500
-Received: from smtprelay0246.hostedemail.com ([216.40.44.246]:56011 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726335AbgBASnW (ORCPT
+        Sat, 1 Feb 2020 13:45:35 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33889 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgBASpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:43:22 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 86BAF181D3025;
-        Sat,  1 Feb 2020 18:43:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: yard08_571b1ee802d3a
-X-Filterd-Recvd-Size: 3410
-Received: from XPS-9350 (unknown [172.58.95.93])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  1 Feb 2020 18:43:18 +0000 (UTC)
-Message-ID: <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     isdn4linux@listserv.isdn4linux.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 01 Feb 2020 10:41:39 -0800
-In-Reply-To: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
-References: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 1 Feb 2020 13:45:34 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so7067615lfc.1
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:45:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p9t4kwJmW5ARKxnXZ4PSmUiIMEWNVmwbZmARfKh1tBE=;
+        b=gx1D0+QmyxgtSASu1K01jjLcdzW2W7QVPS+we3A9Osh2vJkXIZD2WlELk3mYQf8AF5
+         mxuurGDEa676cmu7D5RHAqbVIOTsin6OjZZYYXMc1rOVI/MXNCchXu1aRPSE8DG1p2LK
+         ZM0CMUzd+IUSL1wjtPfrRtUrWlE/WTu0uwLao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p9t4kwJmW5ARKxnXZ4PSmUiIMEWNVmwbZmARfKh1tBE=;
+        b=S8i0LDxVUH4kiJhyE/6xFVdJSndurySt19rnbXVCM01eZI4MA5q/RmSPc55tsAgygL
+         R5aYWG9bVyZFyMuP1T5mKSVzAXuAfFYBpH8l3ztzGWb0DCy3cWANJ5eZCw8ULXLZp5hf
+         QECHAzHJbuWiBRhYTqKOSzZHzxymND83AlOSIwo1soAsOWB6PoY2eYJH0rsjvwltALdb
+         JMFENZFB3QK8pJkzZxTrmquncyaj19Pm51GFnvD9XguL8ow8IT935HF7noW+Pl/f7l7Z
+         p2kBJyncFSzyHEQ3GzN35BayhIx14Ynrp7//9evIF3eMFVAtyD6H7sIq9HuagBLHoTV/
+         TxEA==
+X-Gm-Message-State: APjAAAXZquo/Zs70GtYZCpvyGVTq931U0UqGa6nbejApl991c1zfhU/c
+        6jm8ngyg8rydwKzEOW1kYgJblrNHRSg=
+X-Google-Smtp-Source: APXvYqyQd53c974LbD2nkToY7DSU0+L3A9syueoEMYLm1HMKppRdjJjKPAIECvhItzCSiJTOcjyq7A==
+X-Received: by 2002:a19:cb17:: with SMTP id b23mr8323749lfg.201.1580582732071;
+        Sat, 01 Feb 2020 10:45:32 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id y5sm6295734lfl.6.2020.02.01.10.45.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2020 10:45:31 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id q8so10533362ljb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:45:31 -0800 (PST)
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr9494329ljb.150.1580582730741;
+ Sat, 01 Feb 2020 10:45:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+In-Reply-To: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 1 Feb 2020 10:45:15 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
+Message-ID: <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-01 at 13:43 +0100, Lukas Bulwahn wrote:
-> Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
-> isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
-> the terminal slash for the two directories mISDN and hardware. Hence, all
-> files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
-> but were considered to be part of "THE REST".
+On Fri, Jan 31, 2020 at 8:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+>  - simplify built-in initramfs creation
 
-Not really.
+Hmm.
 
-> Rectify the situation, and while at it, also complete the section with two
-> further build files that belong to that subsystem.
-> 
-> This was identified with a small script that finds all files belonging to
-> "THE REST" according to the current MAINTAINERS file, and I investigated
-> upon its output.
+This may simplify it from a _technical_ angle, but it seems to be a
+fairly annoying step backwards from a UI perspective.
 
-I believe the MAINTAINERS file will be better with the
-proposed patch.
+Now Kconfig asks a completely pointless question that most people have
+absolutely zero interest in. The old situation was better, I feel.
 
-Perhaps this is a defect in the small script as
-get_maintainer does already show the directory and
-files as being maintained.
+Basically, I feel that from a "get normal users to test development
+kernels", our Kconfig pain ends up being the biggest hurdle by far.
 
-ie: get_maintainer.pl does this:
+The kernel is easy to build and doesn't really require all that much
+infrastructure, but generating the config - particularly when it
+changes over time and you can't just say "just use the distro config"
+- is a big step for people.
 
-		##if pattern is a directory and it lacks a trailing slash, add one
-		if ((-d $value)) {
-		    $value =~ s@([^/])$@$1/@;
-		}
+So honestly, while I've pulled this, I feel that this kind of change
+is going _exactly_ the wrong way when it asks people questions that
+they don't care one whit about.
 
-So:
+If I as a kernel developer can't find it in myself to care and go "why
+does it ask this new question", then that should tell you something.
 
-$ ./scripts/get_maintainer.pl -f drivers/isdn/mISDN
-Karsten Keil <isdn@linux-pingi.de> (maintainer:ISDN/mISDN SUBSYSTEM)
-netdev@vger.kernel.org (open list:ISDN/mISDN SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
+Why do we have this choice in the first place? And no, it's not a
+"simplification" to make life more complex for users.
 
-and
-
-$ ./scripts/get_maintainer.pl -f drivers/isdn/mISDN/dsp.h
-Karsten Keil <isdn@linux-pingi.de> (maintainer:ISDN/mISDN SUBSYSTEM)
-netdev@vger.kernel.org (open list:ISDN/mISDN SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
-
-> Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
-
-And this patch likely does not warrant a 'Fixes:' tag.
-
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Arnd, please ack or even pick it.
-> It is no functional change, so I guess you could simply pick in your own
-> tree for minor fixes.
-> 
->  MAINTAINERS | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1f77fb8cdde3..b6a0c4fa8cfd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8908,8 +8908,10 @@ L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
->  L:	netdev@vger.kernel.org
->  W:	http://www.isdn4linux.de
->  S:	Maintained
-> -F:	drivers/isdn/mISDN
-> -F:	drivers/isdn/hardware
-> +F:	drivers/isdn/mISDN/
-> +F:	drivers/isdn/hardware/
-> +F:	drivers/isdn/Kconfig
-> +F:	drivers/isdn/Makefile
->  
->  ISDN/CMTP OVER BLUETOOTH
->  M:	Karsten Keil <isdn@linux-pingi.de>
-
+                   Linus
