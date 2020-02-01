@@ -2,74 +2,99 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D6DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAD5C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71535206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619AB20679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 05:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580536190;
+	bh=CG7WOtvzzyGloPtARiFMtaEJatWuWW9dB+HAs41pS48=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GnHfnQdnbHnjfMFNI5SBJ0bYcYsYCP93X78s+jWPU7Cxm3mTwbKvEJRdlMGwXEA8P
+	 lSN3ep8/dX1yEpFROE3W/IaZJQYaIgahoSOAHajz45GdpEfP81qqk4+Fn8ktTTe4pY
+	 Uk6tb4aowNTvVN4DpPW63ONeoZm1jTJYosCIcfHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgBAFew (ORCPT
+        id S1726270AbgBAFtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 00:34:52 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52930 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgBAFew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 00:34:52 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixlQf-005YzV-TQ; Sat, 01 Feb 2020 05:34:50 +0000
-Date:   Sat, 1 Feb 2020 05:34:49 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     syzbot <syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in path_openat
-Message-ID: <20200201053449.GH23230@ZenIV.linux.org.uk>
-References: <000000000000b926cf059d7c6552@google.com>
+        Sat, 1 Feb 2020 00:49:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgBAFtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 00:49:49 -0500
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 225E420679;
+        Sat,  1 Feb 2020 05:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580536188;
+        bh=CG7WOtvzzyGloPtARiFMtaEJatWuWW9dB+HAs41pS48=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p9Usk0+gm9NEW+/dTAIyo1KUr60gS2q+stHHvHeh5BWEfiKxVZ/kQixvmtBM2M9aW
+         4M8sGEKicKQwAbYYy9OuRYzBynkz9J72kitjnxW3TtX3Os+G0d1G2O8p7bKDiYc2p8
+         K8x492e3xpAleXH8WtgXd/WQDYERqDtQpZys4mlk=
+Received: by mail-lj1-f178.google.com with SMTP id d10so9291917ljl.9;
+        Fri, 31 Jan 2020 21:49:48 -0800 (PST)
+X-Gm-Message-State: APjAAAUchSStkE1LDgA3Zmly/VYZjgUzusUgc5zclVV2kWUzvd8jyHTT
+        0uP7GZUmM0mxg18U28ZkjdGesn4B8KWFQ5x0JDU=
+X-Google-Smtp-Source: APXvYqyFBrAH+CbcmP5/8pUuAJaTgeOzUsajKQ0ozV92KB6+GpKRmlYfVIPxBqQWs+eDcdzH1d2OOELLh1/+sZmNgbQ=
+X-Received: by 2002:a2e:3514:: with SMTP id z20mr7770785ljz.261.1580536186311;
+ Fri, 31 Jan 2020 21:49:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000b926cf059d7c6552@google.com>
+References: <c554f9e8-fdc7-ada3-8b6e-70a3f3aef89f@infradead.org>
+In-Reply-To: <c554f9e8-fdc7-ada3-8b6e-70a3f3aef89f@infradead.org>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 1 Feb 2020 13:49:34 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTM4-xJhY6Ter0n_b6Zu=yqA_N-FnHA2qL5vp5W+ZZqTw@mail.gmail.com>
+Message-ID: <CAJF2gTTM4-xJhY6Ter0n_b6Zu=yqA_N-FnHA2qL5vp5W+ZZqTw@mail.gmail.com>
+Subject: Re: [PATCH] arch/csky: fix some Kconfig typos
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:48:11PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    ccaaaf6f Merge tag 'mpx-for-linus' of git://git.kernel.org..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=115bda4ee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=879390c6b09ccf66
-> dashboard link: https://syzkaller.appspot.com/bug?extid=190005201ced78a74ad6
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1674c776e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1565e101e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Acked, thx
 
-Already reported; see if the following fixes that:
+On Sat, Feb 1, 2020 at 9:52 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix wording in help text for the CPU_HAS_LDSTEX symbol.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: linux-csky@vger.kernel.org
+> ---
+>  arch/csky/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- linux-next-20200131.orig/arch/csky/Kconfig
+> +++ linux-next-20200131/arch/csky/Kconfig
+> @@ -77,7 +77,7 @@ config CPU_HAS_TLBI
+>  config CPU_HAS_LDSTEX
+>         bool
+>         help
+> -         For SMP, CPU needs "ldex&stex" instrcutions to atomic operations.
+> +         For SMP, CPU needs "ldex&stex" instructions for atomic operations.
+>
+>  config CPU_NEED_TLBSYNC
+>         bool
+>
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 4167109297e0..db6565c99825 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3333,8 +3333,8 @@ static int do_last(struct nameidata *nd,
- 		   struct file *file, const struct open_flags *op)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
