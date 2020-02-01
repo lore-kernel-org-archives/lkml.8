@@ -2,121 +2,172 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDD5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B220C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DD12051A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7DB2051A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 14:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VRbvmTl9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzfglUOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgBAOxQ (ORCPT
+        id S1726947AbgBAOyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 09:53:16 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:64852 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgBAOxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 09:53:15 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 488xsh46Ztz9vBmX;
-        Sat,  1 Feb 2020 15:53:12 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=VRbvmTl9; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NHBcRM16WV_Q; Sat,  1 Feb 2020 15:53:12 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 488xsh2jncz9v0sP;
-        Sat,  1 Feb 2020 15:53:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580568792; bh=0Dfdv+0PK3mslxxk3CI2MfzCNSIzsPvbEvSTURzTZDQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VRbvmTl9Yn3vuNrio4yo5ArAFmNwjYiF+b7LGlgiCipFJYcxQVlaf5/wiXSoULmsU
-         DXDbe31Lkg/qUQXqKQjatFXUjk1zF9pPQqaqrdiehlaFCXy3aytcZ5eM546lOWqKHC
-         5t2sZkTb1CiyQnxO+O3amOXNIK0c33aLv4gPotg4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B960E8B78A;
-        Sat,  1 Feb 2020 15:53:13 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 7ooRZZ9K5nFU; Sat,  1 Feb 2020 15:53:13 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F2BA8B752;
-        Sat,  1 Feb 2020 15:53:13 +0100 (CET)
-Subject: Re: [PATCH] powerpc/32s: Don't flush all TLBs when flushing one page
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <e31c57eb5308a5a73a5c8232454c0dd9f65f6175.1580485014.git.christophe.leroy@c-s.fr>
- <20200131155150.GD22482@gate.crashing.org>
- <27cef66b-df5b-0baa-abac-5532e58bd055@c-s.fr>
- <20200131193833.GF22482@gate.crashing.org>
- <248a3cf3-1b5e-a6e1-ceec-0e3904d1cf51@c-s.fr>
- <20200201140629.GM22482@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <96671e01-6206-8952-a498-942b42e98ef0@c-s.fr>
-Date:   Sat, 1 Feb 2020 15:53:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200201140629.GM22482@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Sat, 1 Feb 2020 09:54:14 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50221 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgBAOyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 09:54:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so11144236wmb.0;
+        Sat, 01 Feb 2020 06:54:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bx34vcvVs2uZr1BGwZtV+jTy58r/Vj2Gp5eXW5kioAo=;
+        b=VzfglUOSXI5Jgmtbp6KJiEFH9laPxxO5QaUP1kddvLe5pvVnC1rBi5h3wkjYEF4HXv
+         qjaIAxxRhfj1tMZa4rPv+PWm5v4uG1nyIod3ceg3U3XdiGWWVyyQR21zuTAjhdFtIFvh
+         SwXgn98PskgdrOe7fg3BqNyI3rJwj+hMMD85CJ/8UIze600xLuf0zOVEWOyhJ3uKs+Nb
+         bPbncbWgCwIrcN6aj3RhuuFUo8G62b/1fLfp4YYkKzOOdRvTfP/FoTGcQERSG/sYCrSz
+         GUzpqUxb4eOI9noLkQlFKjQoR3NqIbsLtROugxw9mr66BWS7IGX0u9mU9eFTpdP7p6Lu
+         eNGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bx34vcvVs2uZr1BGwZtV+jTy58r/Vj2Gp5eXW5kioAo=;
+        b=rKVlVayTL1LO8yfoKq7y93fS7JtCStW4ok67QWz98ZkC0UpWptt/e1KLFuxlqCz5JJ
+         3hv67vwKItIfNOqFr/n3b9qx4DEHJVybSWuRxMnRrmNS5hZ9i7gyXbZw4rSADcd7OY+t
+         CIMok1UwnGGzitnYq0PDFpofiUiQtbDHAUguGswVYpNUex82rsBsYBKhHlYsR9k5AHRo
+         wDtpS5OCVgFwfOw21tf24HgamdFxbTOdf0ro2xPTJimkCgTg8Ki1ZvtiJSa81tzPVpNw
+         CH5wpSn8EJI2mD1h2kWe6UkElKq5fxfzXktLLqDd3qWGoNJ5+UcyROWzNAkVIQZR+rJP
+         BL3A==
+X-Gm-Message-State: APjAAAWieGiLWaKNWmhHA0H4V88LNDrsV7zhp1Skirq30bx4ehyCz+DL
+        4Ogop1kcAxyI1EQFtzHAz5I=
+X-Google-Smtp-Source: APXvYqwJ6EF10ix0SUXZRsnMvd1srZiHQeOYKBpJQHcN9PjmSEe+c9saMBQUOwfdVcWmKzUfxEAeag==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr18305920wmg.20.1580568851157;
+        Sat, 01 Feb 2020 06:54:11 -0800 (PST)
+Received: from localhost.localdomain ([88.128.88.116])
+        by smtp.gmail.com with ESMTPSA id 11sm16534882wmb.14.2020.02.01.06.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 06:54:10 -0800 (PST)
+From:   sj38.park@gmail.com
+To:     sj38.park@gmail.com
+Cc:     David.Laight@aculab.com, aams@amazon.com, davem@davemloft.net,
+        edumazet@google.com, eric.dumazet@gmail.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        ncardwell@google.com, netdev@vger.kernel.org, shuah@kernel.org,
+        sjpark@amazon.de
+Subject: [PATCH v2.1 1/2] tcp: Reduce SYN resend delay if a suspicous ACK is received
+Date:   Sat,  1 Feb 2020 14:53:53 +0000
+Message-Id: <20200201145353.2607-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200201143608.6742-1-sj38.park@gmail.com>
+References: <20200201143608.6742-1-sj38.park@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
 
+When closing a connection, the two acks that required to change closing
+socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
+reverse order.  This is possible in RSS disabled environments such as a
+connection inside a host.
 
-Le 01/02/2020 à 15:06, Segher Boessenkool a écrit :
-> On Sat, Feb 01, 2020 at 08:27:03AM +0100, Christophe Leroy wrote:
->> Le 31/01/2020 à 20:38, Segher Boessenkool a écrit :
->>> On Fri, Jan 31, 2020 at 05:15:20PM +0100, Christophe Leroy wrote:
->>>> Le 31/01/2020 à 16:51, Segher Boessenkool a écrit :
->>>>> On Fri, Jan 31, 2020 at 03:37:34PM +0000, Christophe Leroy wrote:
->>>>>> When the range is a single page, do a page flush instead.
->>>>>
->>>>>> +	start &= PAGE_MASK;
->>>>>> +	end = (end - 1) | ~PAGE_MASK;
->>>>>>   	if (!Hash) {
->>>>>> -		_tlbia();
->>>>>> +		if (end - start == PAGE_SIZE)
->>>>>> +			_tlbie(start);
->>>>>> +		else
->>>>>> +			_tlbia();
->>>>>>   		return;
->>>>>>   	}
->>>>>
->>>>> For just one page, you get  end - start == 0  actually?
->>>>
->>>> Oops, good catch.
->>>>
->>>> Indeed you don't get PAGE_SIZE but (PAGE_SIZE - 1) for just one page.
->>>
->>> You have all low bits masked off in both start and end, so you get zero.
->>> You could make the condion read "if (start == end)?
->>
->> No, in end the low bits are set, that's a BIT OR with ~PAGE_MASK, so it
->> sets all low bits to 1.
-> 
-> Oh, wow, yes, I cannot read apparently.
-> 
-> Maybe there are some ROUND_DOWN and ROUND_UP macros you could use?
-> 
+For example, expected state transitions and required packets for the
+disconnection will be similar to below flow.
 
-Yes but my intention was to modify the existing code as less as possible.
-What do you think about version v2 of the patch ?
+	 00 (Process A)				(Process B)
+	 01 ESTABLISHED				ESTABLISHED
+	 02 close()
+	 03 FIN_WAIT_1
+	 04 		---FIN-->
+	 05 					CLOSE_WAIT
+	 06 		<--ACK---
+	 07 FIN_WAIT_2
+	 08 		<--FIN/ACK---
+	 09 TIME_WAIT
+	 10 		---ACK-->
+	 11 					LAST_ACK
+	 12 CLOSED				CLOSED
 
-Christophe
+In some cases such as LINGER option applied socket, the FIN and FIN/ACK
+will be substituted to RST and RST/ACK, but there is no difference in
+the main logic.
+
+The acks in lines 6 and 8 are the acks.  If the line 8 packet is
+processed before the line 6 packet, it will be just ignored as it is not
+a expected packet, and the later process of the line 6 packet will
+change the status of Process A to FIN_WAIT_2, but as it has already
+handled line 8 packet, it will not go to TIME_WAIT and thus will not
+send the line 10 packet to Process B.  Thus, Process B will left in
+CLOSE_WAIT status, as below.
+
+	 00 (Process A)				(Process B)
+	 01 ESTABLISHED				ESTABLISHED
+	 02 close()
+	 03 FIN_WAIT_1
+	 04 		---FIN-->
+	 05 					CLOSE_WAIT
+	 06 				(<--ACK---)
+	 07	  			(<--FIN/ACK---)
+	 08 				(fired in right order)
+	 09 		<--FIN/ACK---
+	 10 		<--ACK---
+	 11 		(processed in reverse order)
+	 12 FIN_WAIT_2
+
+Later, if the Process B sends SYN to Process A for reconnection using
+the same port, Process A will responds with an ACK for the last flow,
+which has no increased sequence number.  Thus, Process A will send RST,
+wait for TIMEOUT_INIT (one second in default), and then try
+reconnection.  If reconnections are frequent, the one second latency
+spikes can be a big problem.  Below is a tcpdump results of the problem:
+
+    14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq 2560603644
+    14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5, win 512
+    14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq 2541101298
+    /* ONE SECOND DELAY */
+    15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq 2560603644
+
+This commit mitigates the problem by reducing the delay for the next SYN
+if the suspicous ACK is received while in SYN_SENT state.
+
+Following commit will add a selftest, which can be also helpful for
+understanding of this issue.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ net/ipv4/tcp_input.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 2a976f57f7e7..baa4fee117f9 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -5893,8 +5893,14 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
+ 		 *        the segment and return)"
+ 		 */
+ 		if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
+-		    after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
++		    after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
++			/* Previous FIN/ACK or RST/ACK might be ignored. */
++			if (icsk->icsk_retransmits == 0)
++				inet_csk_reset_xmit_timer(sk,
++						ICSK_TIME_RETRANS,
++						TCP_TIMEOUT_MIN, TCP_RTO_MAX);
+ 			goto reset_and_undo;
++		}
+ 
+ 		if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
+ 		    !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
+-- 
+2.17.1
+
