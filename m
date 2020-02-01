@@ -2,90 +2,194 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C5CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB91C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D49C20679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD2B206E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580581778;
-	bh=jKMJDbpHEhAKlTdIT/UPPi0qx9us1KYw98GOzNZaGn4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A/RDpwjY+h0cXtxu6nVBghgXv82jvLtHlygo5UslxPNIjCyqSe2GOlmHO22OLq03Q
-	 IIr8lqC81OmHhaEPf10X0o9uaLmxW88hjfhHhtDCL+BAKN/rSkburpatAnbRe0A/av
-	 UR0GPOhj2loVYkoDvgifVvGDRKGc2lDTq5NaFOIQ=
+	s=default; t=1580581780;
+	bh=P8e94BZKTj9lmdkE/2c/5ldrD9NmWWwyxlyqQk4l1gA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=RpCxLCzjDS8tDxpDghO/AS8pUSk6q64gVRwoL8l/cXduq2ntmiVJulpEaP9LLCiLk
+	 llL1mzIhbt0ydqAyWhF9S0585pAoU17bDR6vFJXsQPh7FcD3zveZzbrumPdroIaTDA
+	 fcLDwOd33P7XmVXTOrOIOp25HBT/CPLzS9IgtmAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBAS3h (ORCPT
+        id S1726814AbgBAS3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 1 Feb 2020 13:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbgBAS3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:29:37 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44394 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBAS3h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:29:37 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so10467999ljj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nSI0TK8DtQcgu7WAq2+0dqsq5n6ujNavCAHjt896Jhg=;
-        b=A5Ie0buo7SpllcOPGmNpyxOG7YA6j+kdIqsnzFtc1W8MKL4VnNs71wro8qKmqbCCNO
-         jnMq/AjHCV4Ub2WdHib6Xp5vXi7cyE7o55BhCqAOvz18NMJybm8Jby8Z4vYrkHB5j76B
-         SVGzrUeALZlF/zC8ExpgB54jGYy4T2P1Ol/wY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nSI0TK8DtQcgu7WAq2+0dqsq5n6ujNavCAHjt896Jhg=;
-        b=C3eKCLvEFbtJodY5bBn+rosTCbHrG/R9iALiMpBFc9OUvwkqBBDNAMP7ZdqnGAyHdU
-         3FqRb3ZQ8eFakC7i9AGxD8GiImkNRWDBptsWBOo8kzoQKlhI/ukskfTT1O+3vdyKzHct
-         URSWzDJPfMKOHFOJkxe0qr1UnQ0cGr3ZCOo90S90DHsZRg2R5T4YPaLcNikDksaryV+f
-         Z3YntGB185mUGiSXZrmesYortPjquPUxp67Ymv+E6fFEImKOzU69sNKq28yafph+rl9O
-         p6NJHr5tX71NjtKeNQNXX1ZJWTGwoJ7ySn/9pz2751EblnmchplL8yrzN1DiPXhS6rEp
-         wIPQ==
-X-Gm-Message-State: APjAAAVPIe5EFf6bf1whxDDkGBk3khYCXma9oCBck0OcVFa2ylC+3Ap1
-        FmVRUDUGmTPDiv1OX2CWpk4N02dcf9A=
-X-Google-Smtp-Source: APXvYqzgmuzmUENWySR2j7iVSIRTnmp004n68dZOibLw5lHb8B+D3w0kV4O6LhegsaZ1Ly2aZrQvQw==
-X-Received: by 2002:a2e:865a:: with SMTP id i26mr9499055ljj.236.1580581774764;
-        Sat, 01 Feb 2020 10:29:34 -0800 (PST)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id 23sm7017239ljw.31.2020.02.01.10.29.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2020 10:29:34 -0800 (PST)
-Received: by mail-lf1-f49.google.com with SMTP id f24so7037012lfh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 10:29:33 -0800 (PST)
-X-Received: by 2002:a19:c82:: with SMTP id 124mr8157515lfm.152.1580581773681;
- Sat, 01 Feb 2020 10:29:33 -0800 (PST)
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F16A20679;
+        Sat,  1 Feb 2020 18:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580581776;
+        bh=P8e94BZKTj9lmdkE/2c/5ldrD9NmWWwyxlyqQk4l1gA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EnmTA6uquITzdmA7ANHkChnd0CFlid07wbYKc/Iq8EYWj1OvLPKPLyyFaXOr1K62J
+         d0+tVMderqvl2+rIcmPbbPcAd/dHI9FKP/mhGdkRYY37XaJeFK5u8LiBItH9fuMaoJ
+         9crwcStEy1wSDU5ydTcVgoMu/aSZTumI8yAIrHjc=
+Date:   Sat, 1 Feb 2020 12:29:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+Message-ID: <20200201182934.GA6311@google.com>
 MIME-Version: 1.0
-References: <20200201162645.GJ23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200201162645.GJ23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 1 Feb 2020 10:29:17 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgKnDkhvV44mYnJfmSeEnhF-ETBHGtq--8h3c03XoXP7w@mail.gmail.com>
-Message-ID: <CAHk-=wgKnDkhvV44mYnJfmSeEnhF-ETBHGtq--8h3c03XoXP7w@mail.gmail.com>
-Subject: Re: [PATCH] fix do_last() regression
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+jdUT6d4CHWFyd1vLopY89YeobaSmzsfXL1u=Lt+hHtnA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 1, 2020 at 8:26 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Sat, Feb 01, 2020 at 08:44:40AM +0530, Muni Sekhar wrote:
+> On Sat, Feb 1, 2020 at 2:16 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Jan 31, 2020 at 10:04:05PM +0530, Muni Sekhar wrote:
+> > > On Fri, Jan 31, 2020 at 12:30 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Thu, Jan 30, 2020 at 09:37:48PM +0530, Muni Sekhar wrote:
+> > > > > On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
+> > > > > > > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > > > > > > > > Hi,
+> > > > > > > > >
+> > > > > > > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > > > > > > > > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> > > > > > > > > I see that my system freezes without capturing the crash dump for
+> > > > > > > > > certain tests. I debugged this issue and it was tracked down to the
+> > > > > > > > > below mentioned interrupt handler code.
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > In ISR, first reads the Interrupt Status register using ‘readl()’ as
+> > > > > > > > > given below.
+> > > > > > > > >     status = readl(ctrl->reg + INT_STATUS);
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > And then clears the pending interrupts using ‘writel()’ as given blow.
+> > > > > > > > >         writel(status, ctrl->reg + INT_STATUS);
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > I've noticed a kernel hang if INT_STATUS register read again after
+> > > > > > > > > clearing the pending interrupts.
+> > > > > > > > >
+> > > > > > > > > Can someone clarify me why the kernel hangs without crash dump incase
+> > > > > > > > > if I read the INT_STATUS register using readl() after clearing the
+> > > > > > > > > pending bits?
+> > > > > > > > >
+> > > > > > > > > Can readl() block?
+> > > > > > > >
+> > > > > > > > readl() should not block in software.  Obviously at the hardware CPU
+> > > > > > > > instruction level, the read instruction has to wait for the result of
+> > > > > > > > the read.  Since that data is provided by the device, i.e., your FPGA,
+> > > > > > > > it's possible there's a problem there.
+> > > > > > >
+> > > > > > > Thank you very much for your reply.
+> > > > > > > Where can I find the details about what is protocol for reading the
+> > > > > > > ‘memory mapped IO’? Can you point me to any useful links..
+> > > > > > > I tried locate the exact point of the kernel code where CPU waits for
+> > > > > > > read instruction as given below.
+> > > > > > > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+> > > > > > > Do I need to check for the assembly instructions, here?
+> > > > > >
+> > > > > > The C pointer dereference, e.g., "*address", will be some sort of a
+> > > > > > "load" instruction in assembly.  The CPU wait isn't explicit; it's
+> > > > > > just that when you load a value, the CPU waits for the value.
+> > > > > >
+> > > > > > > > Can you tell whether the FPGA has received the Memory Read for
+> > > > > > > > INT_STATUS and sent the completion?
+> > > > > > >
+> > > > > > > Is there a way to know this with the help of software debugging(either
+> > > > > > > enabling dynamic debugging or adding new debug prints)? Can you please
+> > > > > > > point some tools\hw needed to find this?
+> > > > > >
+> > > > > > You could learn this either via a PCIe analyzer (expensive piece of
+> > > > > > hardware) or possibly some logic in the FPGA that would log PCIe
+> > > > > > transactions in a buffer and make them accessible via some other
+> > > > > > interface (you mentioned it had parallel and other interfaces).
+> > > > > >
+> > > > > > > > On the architectures I'm familiar with, if a device doesn't respond,
+> > > > > > > > something would eventually time out so the CPU doesn't wait forever.
+> > > > > > >
+> > > > > > > What is timeout here? I mean how long CPU waits for completion? Since
+> > > > > > > this code runs from interrupt context, does it causes the system to
+> > > > > > > freeze if timeout is more?
+> > > > > >
+> > > > > > The Root Port should have a Completion Timeout.  This is required by
+> > > > > > the PCIe spec.  The *reporting* of the timeout is somewhat
+> > > > > > implementation-specific since the reporting is outside the PCIe
+> > > > > > domain.  I don't know the duration of the timeout, but it certainly
+> > > > > > shouldn't be long enough to look like a "system freeze".
+> > > > > Does kernel writes to PCIe configuration space register ‘Device
+> > > > > Control 2 Register’ (Offset 0x28)? When I tried to read this register,
+> > > > > I noticed bit 4 is set (which disables completion timeouts) and rest
+> > > > > all other bits are zero. So, Completion Timeout detection mechanism is
+> > > > > disabled, right? If so what could be the reason for this?
+> > > >
+> > > > To my knowledge Linux doesn't set PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+> > > > except for one powerpc case.  You can check yourself by using cscope
+> > > > or grep to look for PCI_EXP_DEVCTL2_COMP_TMOUT_DIS or PCI_EXP_DEVCTL2.
+> > > >
+> > > > If you're seeing bit 4 (PCI_EXP_DEVCTL2_COMP_TMOUT_DIS) set, it's
+> > > > likely because firmware set it.  You can try booting with
+> > > > "pci=earlydump" to see what's there before Linux starts changing
+> > > > things.
 >
-> Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-> done from nd->inode.
+> Yes Linux doesn't set PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, verified with earlydump.
+> Firmware means BIOS? If so is there a way to enable the timeout detection?
 
-I'm assuming you want me to apply this directly as a patch, or was it
-meant as a heads-up with a future pull request?
+Sure; you can change the kernel to turn off
+PCI_EXP_DEVCTL2_COMP_TMOUT_DIS (for debugging purposes, at least), or
+you can do it with setpci, e.g.,
 
-                 Linus
+  # setpci -s01:00.0 CAP_EXP+0x28.W=0x0000
+
+> 01:00.0 RAM memory: PLDA Device 5555
+>         Subsystem: Device 4000:0000
+>         Flags: bus master, fast devsel, latency 0, IRQ 16
+>         Memory at d0400000 (32-bit, non-prefetchable) [size=4M]
+>         Capabilities: [40] Power Management version 3
+>         Capabilities: [48] MSI: Enable- Count=1/1 Maskable- 64bit-
+>         Capabilities: [60] Express Endpoint, MSI 00
+>         Kernel driver in use: PLDA PCI
+>         Kernel modules: plda_pci
+> 
+> 00: 56 15 55 55 07 00 10 00 00 00 00 05 10 00 00 00
+> 10: 00 00 40 d0 00 00 00 00 00 00 00 00 00 00 00 00
+> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00
+> 30: 00 00 00 00 40 00 00 00 00 00 00 00 0b 01 00 00
+> 40: 01 48 03 00 08 00 00 00 05 60 00 00 00 00 00 00
+> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 60: 10 00 02 00 c2 8f 00 00 00 28 01 00 21 f4 03 00
+> 70: 01 00 21 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 80: 00 00 00 00 02 00 00 00 10 00 00 00 00 00 00 00
+> 90: 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 
+> So, on my system, the PCI Express capability is at "[60]" and
+> PCI_EXP_DEVCTL2 is at 0x88 with value 0x0010
+> (PCI_EXP_DEVCTL2_COMP_TMOUT_DIS). Also this matches what lspci
+> decodes:
+> 
+> $ sudo lspci -vvs00.0 | grep -A1 DevCtl2
+>                 DevCtl2: Completion Timeout: 50us to 50ms,
+> TimeoutDis+, LTR-, OBFF Disabled
+>                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
