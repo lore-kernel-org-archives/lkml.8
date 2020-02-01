@@ -2,91 +2,152 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FEAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD2CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4DD205F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86498205F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jsFiPNcF"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kc1nazgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgBAQkh (ORCPT
+        id S1727073AbgBAQoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:40:37 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55994 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgBAQkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:40:37 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so4330774pjz.5
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 08:40:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QwZ3CLPSOKerZ4q2cB/Hi0ai1yGFzd/B3udh3ZqTtuM=;
-        b=jsFiPNcF+Kv+AD+cCoimAjdmxdXVfz+jklLjuWAodKYGoYYpsmGFXd7lewm9b+k+0a
-         YxyMuZnoFgQBJJT4fvhBfbLaQinvoO/ovQPcFEXi5AGzl5olCx5gYZ4Eq7/UZCm/eIOr
-         OQ9onHvvIcrtHkP4clI72kPgvkSCx4wYKUuIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QwZ3CLPSOKerZ4q2cB/Hi0ai1yGFzd/B3udh3ZqTtuM=;
-        b=THn6JMzf2vpmkYdnL38X22+In4r7Y6sMGsXwofZzbK2S/FmGrEHUJsjUyHP+aIja+8
-         o1YxaEji0NIkw1BHhUykvv1I0OJg1c1Jipr+S7dZK1wYsehs32KAHtsSYFCWtlHoC8NM
-         V6wBjb7UdvBDt4SrttYBPWkB37378qnhxZAygFcnOa1X3BJwoXHjXVWTRaaGQtGGISwx
-         asN8AHvzjJxACmH0px28gZhmfzPD19h1oKdCk+0Gd2nCMCiDoX32chHqLmvmu2uOEg6y
-         oTbFbf9L0O8dw7QAEfLOh6jbocxIhRP9T21NKmTCZdGOCH56Si4//b6IHLcYnIJtP0LS
-         NB1A==
-X-Gm-Message-State: APjAAAUoG+XUgVlgWEQmYv16NUWEknHHooYLooW3EIQUsloGKT44mqlr
-        UC8O+KmUmvLONCn43Y1bJpw52A==
-X-Google-Smtp-Source: APXvYqxXMppfrfTklyz+pwg0P3CdY6ihdgY9Vslz5MfHbndtzF8KzUGwo01U+1jLgg/AvUUKozH1GA==
-X-Received: by 2002:a17:902:d20f:: with SMTP id t15mr16360800ply.55.1580575236433;
-        Sat, 01 Feb 2020 08:40:36 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id dw10sm14222430pjb.11.2020.02.01.08.40.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 08:40:35 -0800 (PST)
-Date:   Sat, 1 Feb 2020 08:40:34 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Russell Currey <ruscur@russell.cc>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, mpe@ellerman.id.au,
-        linux-kernel@vger.kernel.org, dja@axtens.net,
-        kernel-hardening@lists.openwall.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] lkdtm: Test KUAP directional user access unlocks on
- powerpc
-Message-ID: <202002010836.76B19684@keescook>
-References: <20200131053157.22463-1-ruscur@russell.cc>
- <1b40cea6-0675-731a-58b1-bdc65f1e495e@c-s.fr>
- <0b016861756cbe27e66651b5c21229a06558cb57.camel@russell.cc>
+        Sat, 1 Feb 2020 11:44:38 -0500
+Received: from mout.gmx.net ([212.227.15.19]:44251 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbgBAQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 11:44:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1580575470;
+        bh=/ob/a7mTZsY4S24MeD9XiEGceK7Aswp/QlUOPUdplx4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=kc1nazgmaVqhaq3ebOmtBHh0aLufYzO0TtrVsdGDUyj4tzK6KnWrHOfK8QM2mSz+j
+         Mv/W/fdG23YxfbYr2ay1h0MJF6ct606B0rkUcy8/uRc2Bjq3jUc1Ow36wVYwZyDMD/
+         qTwbrK7FylBaIJoNMgPbG65FuTiSdXVEXC6NHZgY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.183] ([37.4.249.138]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mf07E-1jVLh13fXG-00gVZh; Sat, 01
+ Feb 2020 17:44:29 +0100
+Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
+ warnings
+To:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-7-jeremy.linton@arm.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
+Date:   Sat, 1 Feb 2020 17:44:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0b016861756cbe27e66651b5c21229a06558cb57.camel@russell.cc>
+In-Reply-To: <20200201074625.8698-7-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-US
+X-Provags-ID: V03:K1:pxSIuV1zBaipvgSKbGqEJEnpcx0G5qFegoQhfHNPqk9zvxZjQvS
+ am55P9nUw7TZxBAz6uvIswj+R1R9yThkwceU8bU6U7jTe0tCZpqZWw9RFOsleKALCfnXD6z
+ 3hkRUBHADgznpeS98zCgSx4Uek64q6t/SXcqKS65700JRRdE2JdEelR6/fzAmLuI8l8+OsT
+ +4eCuchyp4xOyMAKBTDqQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vMYkvkvTjxA=:OB2LALFmQULgObB5lIwA/w
+ P8bOp3k+fF0biyYTL+g0/QygvgFeKbzO0vckRWD1vSzGYsjphN1f58x9TWIS7KUW0eNyknd50
+ w1jgx7+sUSls1UzrwR6OAM6iRYEwaJZv0FzeOajofE0EsRIHQKOupOcj4B3FQNEvUS5T/AJcm
+ iYUn4CONmcLNPpv+ZNJBKIsnmuNNebHZPW308P/V8S/aXkEskfBz6RpIsKspAPGA68uEI0Fgk
+ 228ZId0jJR0wwgl7S2k/X/RHUt4Cw1srt4xqJTnylLaDgHefifzbKd7GhZf14EfO40uzecLE/
+ +L2dUazLVcBNAAf5tJ9oRL0aIa+G7H6G0H1gUaOryw1P57wfPzdB4MMJWrcne2RPoMsGoKkij
+ H+pYW5HYrmleL5pmuJtvjwrh3S3LIh161N3cENEtdCO0WBvEkEvo9pvX8n3zSQUNhF5zJXz+6
+ tPD2sweoJGhbEsaifVUKJzCue8f4TjkrK2+Wqk5jGR9E/gblbwO2nk9jg4ZjPP7U/CUZo15i4
+ 51n8M2k/AkLwjvcnexZAv1sJLGa77uDy7nUPuNRKXV81xGlnkqtlKaJLcxvIh/yNZDFiCta/j
+ Uk4C0yn9gH4nu5EvE9KYtvmNarga2TTqY2GgcLGrqHSi2TNNsc/h11Mfl1KQj+cHaaryHp0mv
+ vVdznjTr4LzRe6g1w4isEs0F31gfXj5nzyR3Kl0FLwMwBTNPb9Lmw0h8xlS3q98TapE6iMpJ4
+ YNRKd6yPNUbMOviboTcZP3w6IrSSOacRtJgQtOtqTiAc5ZhihLtFekmc8jdBmzIR9Aip0xFgt
+ gimlq8UBI8fYa7/I+DSwagQvddJhiv4bp2NQ0k0Kt4gIfThORxAzhaiMEe9qvLIrwQ+DVpnSt
+ 3KO+NzbzPhJ9K8vcXZqPx31tNXh91Nb+jQp8TTz363LBlpdnrU1o+YIbeED8KubWu5EuTAnWa
+ Ukibq928o/zgy2AGi0OraeMbYjtSL+USsRo70PJzdkPrMv5Vd1TDCfEC8yrQ8TbrJ2B80KdiF
+ kqiVqtgdDyOJX31vZ/fNBULxhLMhMqp0xtzEuDcPQhDaZNEDpb28znmk4EhgK1X4DjcCmjZsN
+ 9h/g4duyLft44CsRgroRD6yOBua3tfcEtwsaOmgakyZxvyrXcGS5vrv/32svKsQOB6rVdckT2
+ 3v6or9S6P4css2lGwxC+wVuo4UwCFO4/9W88hnxGl1xH1d/oq3yqriD1DILvXEJqAVV1/V6FC
+ 6rl0fpcJKREGUrYNH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 05:53:14PM +1100, Russell Currey wrote:
-> Correct, the ACCESS_USERSPACE test does the same thing.  Splitting this
-> into separate R and W tests makes sense, even if it is unlikely that
-> one would be broken without the other.
-
-That would be my preference too -- the reason it wasn't separated before
-was because it was one big toggle before. I just had both directions in
-the test out of a desire for completeness.
-
-Splitting into WRITE_USERSPACE and READ_USERSPACE seems good. Though if
-you want to test functionality (read while only write disabled), then
-I'm not sure what that should look like. Does the new
-user_access_begin() API provide a way to query existing state? I'll go
-read the series...
-
--- 
-Kees Cook
+SGkgSmVyZW15LA0KDQpbYWRkIE5pY29sYXMgYXMgQkNNMjgzNSBtYWludGFpbmVyXQ0KDQpBbSAw
+MS4wMi4yMCB1bSAwODo0NiBzY2hyaWViIEplcmVteSBMaW50b246DQo+IElmIG9uZSB0eXBlcyAi
+ZmFpbGVkIHRvIGdldCBlbmV0IGNsb2NrIiBvciBzaW1pbGFyIGludG8gZ29vZ2xlDQo+IHRoZXJl
+IGFyZSB+MzcwayBoaXRzLiBUaGUgdmFzdCBtYWpvcml0eSBhcmUgcGVvcGxlIGRlYnVnZ2luZw0K
+PiBwcm9ibGVtcyB1bnJlbGF0ZWQgdG8gdGhpcyBhZGFwdGVyLCBvciBicmFnZ2luZyBhYm91dCB0
+aGVpcg0KPiBycGkncy4gR2l2ZW4gdGhhdCBpdHMgbm90IGEgZmF0YWwgc2l0dWF0aW9uIHdpdGgg
+Y29tbW9uIERUIGJhc2VkDQo+IHN5c3RlbXMsIGxldHMgcmVkdWNlIHRoZSBzZXZlcml0eSBzbyBw
+ZW9wbGUgYXJlbid0IHNlZWluZyBmYWlsdXJlDQo+IG1lc3NhZ2VzIGluIGV2ZXJ5ZGF5IG9wZXJh
+dGlvbi4NCj4NCmknbSBmaW5lIHdpdGggeW91ciBwYXRjaCwgc2luY2UgdGhlIGNsb2NrcyBhcmUg
+b3B0aW9uYWwgYWNjb3JkaW5nIHRvIHRoZQ0KYmluZGluZy4gQnV0IGluc3RlYWQgb2YgaGlkaW5n
+IG9mIHRob3NlIHdhcm5pbmcsIGl0IHdvdWxkIGJlIGJldHRlciB0bw0KZml4IHRoZSByb290IGNh
+dXNlIChtaXNzaW5nIGNsb2NrcykuIFVuZm9ydHVuYXRlbHkgaSBkb24ndCBoYXZlIHRoZQ0KbmVj
+ZXNzYXJ5IGRvY3VtZW50YXRpb24sIGp1c3Qgc29tZSBhbnN3ZXJzIGZyb20gdGhlIFJQaSBndXlz
+Lg0KDQpUaGlzIGlzIHdoYXQgaSBnb3Qgc28gZmFyOg0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvYmNtMjcxMS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS5kdHNpDQpp
+bmRleCA5NjFiZWQ4Li5kNGZmMzcwIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
+MjcxMS5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iY20yNzExLmR0c2kNCkBAIC0zMzgs
+NiArMzM4LDggQEANCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcmVnID0gPDB4MCAweDdkNTgwMDAwIDB4MTAwMDA+Ow0KwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwweDE+Ow0KwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjc2l6ZS1jZWxscyA9IDww
+eDE+Ow0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb2Nr
+cyA9IDwmY2xvY2tzIEJDTTI3MTFfQ0xPQ0tfR0VORVQyNTA+Ow0KK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsb2NrLW5hbWVzID0gImVuZXQiOw0KwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPEdJ
+Q19TUEkgMTU3IElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDxHSUNfU1BJ
+IDE1OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgc3RhdHVzID0gImRpc2FibGVkIjsNCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2Nsay9iY20vY2xrLWJjbTI4MzUuYyBiL2RyaXZlcnMvY2xrL2JjbS9jbGstYmNtMjgzNS5j
+DQppbmRleCBkZWQxM2NjLi42MjdmMWIxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9jbGsvYmNtL2Ns
+ay1iY20yODM1LmMNCisrKyBiL2RyaXZlcnMvY2xrL2JjbS9jbGstYmNtMjgzNS5jDQpAQCAtMTE2
+LDYgKzExNiwxMCBAQA0KwqAjZGVmaW5lIENNX0VNTUNESVbCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgMHgxYzQNCsKgI2RlZmluZSBDTV9FTU1DMkNUTMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgx
+ZDANCsKgI2RlZmluZSBDTV9FTU1DMkRJVsKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgxZDQNCisj
+ZGVmaW5lIENNX0dFTkVUMjUwQ1RMwqDCoMKgwqDCoMKgwqDCoCAweDFlOA0KKyNkZWZpbmUgQ01f
+R0VORVQyNTBESVbCoMKgwqDCoMKgwqDCoMKgIDB4MWVjDQorI2RlZmluZSBDTV9HRU5FVDEyNUNU
+TMKgwqDCoMKgwqDCoMKgwqAgMHgyMTANCisjZGVmaW5lIENNX0dFTkVUMTI1RElWwqDCoMKgwqDC
+oMKgwqDCoCAweDIxNA0KwqANCsKgLyogR2VuZXJhbCBiaXRzIGZvciB0aGUgQ01fKkNUTCByZWdz
+ICovDQrCoCMgZGVmaW5lIENNX0VOQUJMRcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgQklUKDQpDQpAQCAtMjAyMSw2ICsyMDI1LDI1IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgYmNtMjgzNV9jbGtfZGVzYw0KY2xrX2Rlc2NfYXJyYXlbXSA9IHsNCsKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCAuZnJhY19iaXRzID0gOCwNCsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAudGNudF9tdXggPSA0MiksDQrCoA0KK8KgwqDCoMKgwqDCoCAvKiBHRU5FVCBjbG9j
+a3MgKG9ubHkgYXZhaWxhYmxlIGZvciBCQ00yNzExKSAqLw0KK8KgwqDCoMKgwqDCoCBbQkNNMjcx
+MV9DTE9DS19HRU5FVDI1MF3CoMKgwqDCoMKgwqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQorwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTT0NfQkNNMjcxMSwNCivCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIC5uYW1lID0gImdlbmV0MjUwIiwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIC5jdGxfcmVnID0gQ01fR0VORVQyNTBDVEwsDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAuZGl2X3JlZyA9IENNX0dFTkVUMjUwRElWLA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgLmludF9iaXRzID0gNCwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5m
+cmFjX2JpdHMgPSA4LA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLnRjbnRfbXV4ID0g
+NDUpLA0KKw0KK8KgwqDCoMKgwqDCoCBbQkNNMjcxMV9DTE9DS19HRU5FVDEyNV3CoMKgwqDCoMKg
+wqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBT
+T0NfQkNNMjcxMSwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5uYW1lID0gImdlbmV0
+MTI1IiwNCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5jdGxfcmVnID0gQ01fR0VORVQx
+MjVDVEwsDQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAuZGl2X3JlZyA9IENNX0dFTkVU
+MTI1RElWLA0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLmludF9iaXRzID0gNCwNCivC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC5mcmFjX2JpdHMgPSA4LA0KK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgLnRjbnRfbXV4ID0gNTApLA0KKw0KwqDCoMKgwqDCoMKgwqAgLyog
+R2VuZXJhbCBwdXJwb3NlIChHUElPKSBjbG9ja3MgKi8NCsKgwqDCoMKgwqDCoMKgIFtCQ00yODM1
+X0NMT0NLX0dQMF3CoMKgwqDCoCA9IFJFR0lTVEVSX1BFUl9DTEsoDQrCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgU09DX0FMTCwNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdz
+L2Nsb2NrL2JjbTI4MzUuaA0KYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2JjbTI4MzUuaA0K
+aW5kZXggYjYwYzAzNDMuLmZjYTY1YWIgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdz
+L2Nsb2NrL2JjbTI4MzUuaA0KKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9iY20yODM1
+LmgNCkBAIC02MCwzICs2MCw1IEBADQrCoCNkZWZpbmUgQkNNMjgzNV9DTE9DS19EU0kxUMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgNTANCsKgDQrCoCNkZWZpbmUgQkNNMjcxMV9DTE9DS19FTU1DMsKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgNTENCisjZGVmaW5lIEJDTTI3MTFfQ0xPQ0tfR0VORVQyNTDC
+oMKgwqDCoMKgwqDCoMKgIDUyDQorI2RlZmluZSBCQ00yNzExX0NMT0NLX0dFTkVUMTI1wqDCoMKg
+wqDCoMKgwqDCoCA1Mw0KDQoNCg==
