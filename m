@@ -2,154 +2,158 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0BEC35246
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A90C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4C520740
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA722070C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 11:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mFGne9DF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgBALVX (ORCPT
+        id S1726593AbgBALtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 06:21:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:57170 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgBALVX (ORCPT
+        Sat, 1 Feb 2020 06:49:52 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58814 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgBALtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 06:21:23 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ixqpz-0005Kk-Po; Sat, 01 Feb 2020 12:21:19 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 13DC11C1DFA;
-        Sat,  1 Feb 2020 12:21:19 +0100 (CET)
-Date:   Sat, 01 Feb 2020 11:21:18 -0000
-From:   "tip-bot2 for Konstantin Khlebnikov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] clocksource: Prevent double add_timer_on() for
- watchdog_timer
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <158048693917.4378.13823603769948933793.stgit@buzz>
-References: <158048693917.4378.13823603769948933793.stgit@buzz>
+        Sat, 1 Feb 2020 06:49:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HnpDr+EYlr+rwm3PugQQ1cWKXYWrIicGoMrGWJGDElk=; b=mFGne9DFt/gmDPWvq8GGbODr4
+        74nkRl91SC6LnethSOBtJMY5ldDSVaTOJgrNiP5qkc9yB86oVQX/tbny09bLUK4rStaKyy5P8RsR0
+        EXxE4na+G0wFzokc5ThlRXoqlXf768UOkfTqmDCGudbfGl607aU6Gy/JCiF9QqUxdZqjtWko90z+6
+        5VzyMmfNrU3DSggP+As0u+Mzhv3lGLHNQ1325AvgVAIGrP1Z8SrX1BannNYfA+WxcMU/rV4HKOt+/
+        FvfzQAUlYc66AKckYu/TqHvMCyaq+WrZnKowM6J9PFG+KBuSWcpRngFGnClh3i8bKnwAOdr/WBs0V
+        EePQFJ2uw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:34528)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ixrHC-000704-FV; Sat, 01 Feb 2020 11:49:26 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ixrH5-0006Mc-Oa; Sat, 01 Feb 2020 11:49:19 +0000
+Date:   Sat, 1 Feb 2020 11:49:19 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Robin Murphy <robin.murphy@arm.com>,
+        Calvin Johnson <calvin.johnson@nxp.com>, stuyoder@gmail.com,
+        nleeder@codeaurora.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andy Wang <Andy.Wang@arm.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [EXT] Re: [PATCH] bus: fsl-mc: Add ACPI support for fsl-mc
+Message-ID: <20200201114919.GQ25745@shell.armlinux.org.uk>
+References: <DB8PR04MB7164DDF48480956F05886DABEB070@DB8PR04MB7164.eurprd04.prod.outlook.com>
+ <12531d6c569c7e14dffe8e288d9f4a0b@kernel.org>
+ <CAKv+Gu8uaJBmy5wDgk=uzcmC4vkEyOjW=JRvhpjfsdh-HcOCLg@mail.gmail.com>
+ <CABdtJHsu9R9g4mn25=9EW3jkCMhnej_rfkiRzo3OCX4cv4hpUQ@mail.gmail.com>
+ <0680c2ce-cff0-d163-6bd9-1eb39be06eee@arm.com>
+ <CABdtJHuLZeNd9bQZ-cmQi00WnObYPvM=BdWNw4EMpOFHjRd70w@mail.gmail.com>
+ <b136adc4-be48-82df-0592-97b4ba11dd79@arm.com>
+ <20200131142906.GG9639@lunn.ch>
+ <20200131151500.GO25745@shell.armlinux.org.uk>
+ <20200131074050.38d78ff0@cakuba.hsd1.ca.comcast.net>
 MIME-Version: 1.0
-Message-ID: <158055607880.396.15231854905152208691.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200131074050.38d78ff0@cakuba.hsd1.ca.comcast.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Fri, Jan 31, 2020 at 07:40:50AM -0800, Jakub Kicinski wrote:
+> On Fri, 31 Jan 2020 15:15:00 +0000, Russell King - ARM Linux admin
+> wrote:
+> > I have some prototype implementation for driving the QSFP+ cage, but
+> > I haven't yet worked out how to sensible deal with the "is it 4x 10G
+> > or 1x 40G" issue you mention above, and how to interface the QSFP+
+> > driver sensibly with one or four network drivers.
+> 
+> I'm pretty sure you know this but just FWIW - vendors who do it in FW
+> write the current config down in NVM so it doesn't get affected by
+> reboots and use devlink port splitting to change it.
 
-Commit-ID:     febac332a819f0e764aa4da62757ba21d18c182b
-Gitweb:        https://git.kernel.org/tip/febac332a819f0e764aa4da62757ba21d18c182b
-Author:        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-AuthorDate:    Fri, 31 Jan 2020 19:08:59 +03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 01 Feb 2020 11:07:56 +01:00
++Jiri
 
-clocksource: Prevent double add_timer_on() for watchdog_timer
+I wasn't aware of devlink port splitting, so thanks for that. However,
+it could do with some better documentation - there's nothing on it
+afaics in the Documentation subdirectory, and "man devlink-port"
+doesn't give much away either:
 
-Kernel crashes inside QEMU/KVM are observed:
+   devlink port split - split devlink port into more
+       DEV/PORT_INDEX - specifies the devlink port to operate on.
 
-  kernel BUG at kernel/time/timer.c:1154!
-  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
+       count COUNT
+              number of ports to split to.
 
-At the same time another cpu got:
+It's the "into more" that's not clear - presumably more ports, and
+presumably each port is a network device, but this isn't explained.
 
-  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
+I think what this is trying to say is that, if we have a QSFP+ cage
+with 4 serdes lines running at 10G, and they are initially treated as
+a single 40G ethernet:
 
-  __hlist_del at include/linux/list.h:681
-  (inlined by) detach_timer at kernel/time/timer.c:818
-  (inlined by) expire_timers at kernel/time/timer.c:1355
-  (inlined by) __run_timers at kernel/time/timer.c:1686
-  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
+	devlink port split device/1 count 4
 
-Unfortunately kernel logs are badly scrambled, stacktraces are lost.
+will then give us four 10G network devices, and:
 
-Printing the timer->function before the BUG_ON() pointed to
-clocksource_watchdog().
+	devlink port unsplit device/1
 
-The execution of clocksource_watchdog() can race with a sequence of
-clocksource_stop_watchdog() .. clocksource_start_watchdog():
+will recombine them back to a single 40G network device.
 
-expire_timers()
- detach_timer(timer, true);
-  timer->entry.pprev = NULL;
- raw_spin_unlock_irq(&base->lock);
- call_timer_fn
-  clocksource_watchdog()
+What if someone decides to do:
 
-					clocksource_watchdog_kthread() or
-					clocksource_unbind()
+	devlink port split device/1 count 2
 
-					spin_lock_irqsave(&watchdog_lock, flags);
-					clocksource_stop_watchdog();
-					 del_timer(&watchdog_timer);
-					 watchdog_running = 0;
-					spin_unlock_irqrestore(&watchdog_lock, flags);
+what do we end up with?  Presumably two network devices running with
+two serdes lanes each (if supported by the hardware).  At that point
+can they then do:
 
-					spin_lock_irqsave(&watchdog_lock, flags);
-					clocksource_start_watchdog();
-					 add_timer_on(&watchdog_timer, ...);
-					 watchdog_running = 1;
-					spin_unlock_irqrestore(&watchdog_lock, flags);
+	devlink port split device/2 count 2
 
-  spin_lock(&watchdog_lock);
-  add_timer_on(&watchdog_timer, ...);
-   BUG_ON(timer_pending(timer) || !timer->function);
-    timer_pending() -> true
-    BUG()
+and end up with one network device with two 10G serdes lanes, and two
+network devices each with one 10G serdes lane, or can port splitting
+only be used on the "master" device/port ?
 
-I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+Unfortunately, I don't think I have any network devices that support
+this so I can't experiment to find out how this should work; yes, I
+have a Mellanox card, but it supports a single 10G SFP+, and therefore
+does not support port splitting.
 
-Check timer_pending() before calling add_timer_on(). This is sufficient as
-all operations are synchronized by watchdog_lock.
-
-Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
----
- kernel/time/clocksource.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index fff5f64..428beb6 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct timer_list *unused)
- 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
- 	if (next_cpu >= nr_cpu_ids)
- 		next_cpu = cpumask_first(cpu_online_mask);
--	watchdog_timer.expires += WATCHDOG_INTERVAL;
--	add_timer_on(&watchdog_timer, next_cpu);
-+
-+	/*
-+	 * Arm timer if not already pending: could race with concurrent
-+	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
-+	 */
-+	if (!timer_pending(&watchdog_timer)) {
-+		watchdog_timer.expires += WATCHDOG_INTERVAL;
-+		add_timer_on(&watchdog_timer, next_cpu);
-+	}
- out:
- 	spin_unlock(&watchdog_lock);
- }
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
