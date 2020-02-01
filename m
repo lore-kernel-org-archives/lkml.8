@@ -2,84 +2,89 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766C2C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4854C33CB2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A3120722
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iFff6Dne"
+	by mail.kernel.org (Postfix) with ESMTP id C0C0520722
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 01:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgBAB5z (ORCPT
+        id S1727141AbgBAB6l convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 20:57:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55350 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBAB5z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 20:57:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NCZT6F0OZBbEmQvGzy3muvrfvpDV7Xo7WQ7COpovKnE=; b=iFff6DneIlw/FZCsZIiW7nf+/
-        5wyqhIPTNXRLj3XWq7qALkhTrCvROVIThJFj1QXE51LKoeSj3h9UKFWzt791dflIosIz1MkUBQd82
-        GBRePw84ae0r6UUK27AaaODdnS8IYogXPJRHDDNY4zCtdIqRjOjNFEcHFRums745nY7XREN7u3Tr3
-        57NQyE4BCJ7/sggAw0qlJzoZV2vLwV1HtCfx4lB7bN4AKoZlcfBeYnOJyArpxU7fQsflX4SQj65TD
-        jT3YoKCdE3FZWbwhAb9Xv55dOIxuOm+V2GI0NZBuXJm+ojETnJGaqLks2hFt2xpriN+ZOlOXbvk79
-        0RHi4pUHw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ixi2j-0007Xe-OD; Sat, 01 Feb 2020 01:57:54 +0000
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] arch/sh: add hyphenation in NUMA Kconfig prompt
-Message-ID: <6bae5963-2696-024d-b993-695367a1009c@infradead.org>
-Date:   Fri, 31 Jan 2020 17:57:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 31 Jan 2020 20:58:41 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12753 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbgBAB6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 31 Jan 2020 20:58:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Jan 2020 17:58:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,388,1574150400"; 
+   d="scan'208";a="325736802"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga001.fm.intel.com with ESMTP; 31 Jan 2020 17:58:41 -0800
+Received: from orsmsx153.amr.corp.intel.com (10.22.226.247) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 31 Jan 2020 17:58:40 -0800
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.147]) by
+ ORSMSX153.amr.corp.intel.com ([169.254.12.111]) with mapi id 14.03.0439.000;
+ Fri, 31 Jan 2020 17:58:40 -0800
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Chen Zhou <chenzhou10@huawei.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH next] igc: make non-global functions static
+Thread-Topic: [PATCH next] igc: make non-global functions static
+Thread-Index: AQHVxinHRRpBXZgR9U+0zAtOY/u1CqgFucdg
+Date:   Sat, 1 Feb 2020 01:58:40 +0000
+Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B971D2690@ORSMSX103.amr.corp.intel.com>
+References: <20200108133959.93035-1-chenzhou10@huawei.com>
+In-Reply-To: <20200108133959.93035-1-chenzhou10@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org>
+> On Behalf Of Chen Zhou
+> Sent: Wednesday, January 8, 2020 5:40 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net
+> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; chenzhou10@huawei.com
+> Subject: [PATCH next] igc: make non-global functions static
+> 
+> Fix sparse warning:
+> drivers/net/ethernet/intel/igc/igc_ptp.c:512:6:
+> 	warning: symbol 'igc_ptp_tx_work' was not declared. Should it be
+> static?
+> drivers/net/ethernet/intel/igc/igc_ptp.c:644:6:
+> 	warning: symbol 'igc_ptp_suspend' was not declared. Should it be
+> static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/net/ethernet/intel/igc/igc_ptp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hyphenate Non-Uniform in the NUMA kconfig prompt.
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: linux-sh@vger.kernel.org
----
- arch/sh/mm/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-next-20200131.orig/arch/sh/mm/Kconfig
-+++ linux-next-20200131/arch/sh/mm/Kconfig
-@@ -107,7 +107,7 @@ config VSYSCALL
- 	  (the default value) say Y.
- 
- config NUMA
--	bool "Non Uniform Memory Access (NUMA) Support"
-+	bool "Non-Uniform Memory Access (NUMA) Support"
- 	depends on MMU && SYS_SUPPORTS_NUMA
- 	select ARCH_WANT_NUMA_VARIABLE_LOCALITY
- 	default n
-
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 
