@@ -2,124 +2,208 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69061C35240
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85942C33CB2
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400E920663
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 02:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4867E20663
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WzJTUP5Y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hevg6VRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgBACKq (ORCPT
+        id S1726743AbgBADD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 21:10:46 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37872 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgBACKq (ORCPT
+        Fri, 31 Jan 2020 22:03:57 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:48588 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726548AbgBADD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 21:10:46 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so3530388plz.4
-        for <linux-kernel@vger.kernel.org>; Fri, 31 Jan 2020 18:10:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=k93QIXrlhVKvP7ezICOk3caRM5BxpPtO926JL6CGXc4=;
-        b=WzJTUP5Yd/yOi2pp6mKUiEg5Y0sTCDhOnWOow3LVm9HbMEo9yewdTOGRujYdJMrLHC
-         di0stniZHIsZSf1ca98dPzIpwRLgU03JMXkzIp8zlJwynW6ovU+Na1fb8lQH3loT/Uis
-         6mfdncX2AadVERJvdPfCHeILLUGXLDmq89+uQMQ7niNSP0mkLjOjfd4OrJUYM7kdwso/
-         sBpoyFEA7ZXyvd2q5awC8NsO9PQIPEA7rAAcSfvkLeso2K51Hh7m8okJ1WN7z6RnBJJK
-         Dc9wD6CjrBAnQ6fS/3e7+Gn4bkL5n9HU9Ba+lZJ+aW2mXqe8CkBiAKewUtey/GD66djp
-         /EtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k93QIXrlhVKvP7ezICOk3caRM5BxpPtO926JL6CGXc4=;
-        b=EVxtRH1/V8NxgPMBbNyZc8LOD0F+PDwxDju2bkXZlmL6eeLwli4nodoiFDYF5c/dJm
-         VOMoxxGdRVMONLfWiJdxGZcwB4GWpZOOLk2njZfpLcFnfrbj+dWHDF6lhGKVrweiHuke
-         P+wCBE+p6nvWcZl6R0LTUgpbRJIbEoZ3yN7jrWgjiZevfFT0b23PtbYzSZXQYunzS3ZC
-         eWjbK25/yRT8RyTbHWjCzTGM2P6Wsdf1q0I0jHF4okecTiFZ5wkjyeCLYXy73UeLNCW8
-         LeNWi8dK1rrhJxDNDaG1LHdbzCE+f6GjQomrYrj24kUhmFia1UF6gH20JfetfluElBaX
-         jkUg==
-X-Gm-Message-State: APjAAAUgEE4NNcRlnb2UD9VGPinvr2hCGissduzwFn1i4eEziCmUlmm2
-        a7ycdM5s2UsFdDKop1hHzcMVuRJmRbQ=
-X-Google-Smtp-Source: APXvYqzzyMS5+MJH6hdO4YgucV12idd1nE0F8fU6Mb37cO9QTx2XLAH5YCfsk+SO5RsMUbbNJvrDqw==
-X-Received: by 2002:a17:90a:a385:: with SMTP id x5mr5223992pjp.102.1580523044195;
-        Fri, 31 Jan 2020 18:10:44 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id p17sm11327441pfn.31.2020.01.31.18.10.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2020 18:10:43 -0800 (PST)
-Subject: Re: [PATCH v3 0/6] add persistent submission state
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1580508735.git.asml.silence@gmail.com>
- <6492ccd2-e829-df13-ab6e-e62590375fd1@kernel.dk>
- <199731e7-ca3f-ea6c-0813-6aa5dec6fa66@gmail.com>
- <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1124e9e0-cf3b-767e-40a5-57297e5ec17b@kernel.dk>
-Date:   Fri, 31 Jan 2020 19:10:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 31 Jan 2020 22:03:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580526236; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=g5YJIU6HDhXQS6ErNdq09HhEEvdNuOxlw+HNgly7NMk=; b=hevg6VRl0q7/aEWToStSU+gaQSonmTUyq2S0IPkJmeG6YMPOAMIBf8eJZb9TbtLsA59ctY9D
+ AUpbb91piqlQi2vkglN3ZKW7nSXvXNXr34F9wLJYZE1kEb2IpJp4aBImPA0nYQxDNMlMgWoF
+ xaDHE/2WUWRBCOVGROuuWw2dB6o=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e34ea94.7f83500eeed8-smtp-out-n01;
+ Sat, 01 Feb 2020 03:03:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 971A8C433CB; Sat,  1 Feb 2020 03:03:47 +0000 (UTC)
+Received: from [192.168.1.3] (unknown [183.83.140.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: prsood)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94EF4C43383;
+        Sat,  1 Feb 2020 03:03:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94EF4C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+Subject: Re: [PATCH] cpuset: Make cpuset hotplug synchronous
+To:     tj@kernel.org, peterz@infradead.org
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1579878449-10164-1-git-send-email-prsood@codeaurora.org>
+From:   Prateek Sood <prsood@codeaurora.org>
+Message-ID: <ee889f30-cb81-e0a8-6068-715ca3399fdd@codeaurora.org>
+Date:   Sat, 1 Feb 2020 08:33:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <18b43ead-0056-f975-a6ed-35fb645461e9@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <1579878449-10164-1-git-send-email-prsood@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/20 5:31 PM, Pavel Begunkov wrote:
-> On 01/02/2020 01:32, Pavel Begunkov wrote:
->> On 01/02/2020 01:22, Jens Axboe wrote:
->>> On 1/31/20 3:15 PM, Pavel Begunkov wrote:
->>>> Apart from unrelated first patch, this persues two goals:
->>>>
->>>> 1. start preparing io_uring to move resources handling into
->>>> opcode specific functions
->>>>
->>>> 2. make the first step towards long-standing optimisation ideas
->>>>
->>>> Basically, it makes struct io_submit_state embedded into ctx, so
->>>> easily accessible and persistent, and then plays a bit around that.
->>>
->>> Do you have any perf/latency numbers for this? Just curious if we
->>> see any improvements on that front, cross submit persistence of
->>> alloc caches should be a nice sync win, for example, or even
->>> for peak iops by not having to replenish the pool for each batch.
->>>
->>> I can try and run some here too.
->>>
->>
->> I tested the first version, but my drive is too slow, so it was only nops and
->> hence no offloading. Honestly, there waren't statistically significant results.
->> I'll rerun anyway.
->>
->> I have a plan to reuse it for a tricky optimisation, but thinking twice, I can
->> just stash it until everything is done. That's not the first thing in TODO and
->> will take a while.
->>
-> 
-> I've got numbers, but there is nothing really interesting. Throughput is
-> insignificantly better with the patches, but I'd need much more experiments
-> across reboots to confirm that.
-> 
-> Let's postpone the patchset for later
+Hi Tejun & Peter,
 
-Sounds fine to me, no need to do it unless it's a nice cleanup, and/or
-provides some nice improvements.
+Could you please share your feedback on this patch for making
 
-It would be great to see the splice stuff revamped, though :-)
+cpuset_hotplug_workfn synchronous.
+
+
+Thanks,
+
+Prateek
+
+On 1/24/2020 8:37 PM, Prateek Sood wrote:
+> Hi Tejun & Peter,
+>
+> It seems that after following patch we can make cpuset_hotplug_workfn
+> synchronous:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/cgroup/cpuset.c?h=v5.5-rc7&id=d74b27d63a8bebe2fe634944e4ebdc7b10db7a39
+>
+>
+> Could you please share your opinion on the same and below patch.
+>
+> Thanks,
+> Prateek
+>
+>> 8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8>8
+> Convert cpuset_hotplug_workfn() into synchronous call for cpu hotplug
+> path. For memory hotplug path it still gets queued as a work item.
+>
+> Since cpuset_hotplug_workfn() can be made synchronous for cpu hotplug
+> path, it is not required to wait for cpuset hotplug while thawing
+> processes.
+>
+> Signed-off-by: Prateek Sood <prsood@codeaurora.org>
+> ---
+>   include/linux/cpuset.h |  3 ---
+>   kernel/cgroup/cpuset.c | 31 +++++++++++++++++++------------
+>   kernel/power/process.c |  2 --
+>   3 files changed, 19 insertions(+), 17 deletions(-)
+>
+> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+> index 04c20de66..cede4cb 100644
+> --- a/include/linux/cpuset.h
+> +++ b/include/linux/cpuset.h
+> @@ -54,7 +54,6 @@ static inline void cpuset_dec(void)
+>   extern void cpuset_init_smp(void);
+>   extern void cpuset_force_rebuild(void);
+>   extern void cpuset_update_active_cpus(void);
+> -extern void cpuset_wait_for_hotplug(void);
+>   extern void cpuset_read_lock(void);
+>   extern void cpuset_read_unlock(void);
+>   extern void cpuset_cpus_allowed(struct task_struct *p, struct cpumask *mask);
+> @@ -176,8 +175,6 @@ static inline void cpuset_update_active_cpus(void)
+>   	partition_sched_domains(1, NULL, NULL);
+>   }
+>   
+> -static inline void cpuset_wait_for_hotplug(void) { }
+> -
+>   static inline void cpuset_read_lock(void) { }
+>   static inline void cpuset_read_unlock(void) { }
+>   
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 58f5073..cafd4d2 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -3101,7 +3101,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+>   }
+>   
+>   /**
+> - * cpuset_hotplug_workfn - handle CPU/memory hotunplug for a cpuset
+> + * cpuset_hotplug - handle CPU/memory hotunplug for a cpuset
+>    *
+>    * This function is called after either CPU or memory configuration has
+>    * changed and updates cpuset accordingly.  The top_cpuset is always
+> @@ -3116,7 +3116,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+>    * Note that CPU offlining during suspend is ignored.  We don't modify
+>    * cpusets across suspend/resume cycles at all.
+>    */
+> -static void cpuset_hotplug_workfn(struct work_struct *work)
+> +static void cpuset_hotplug(bool use_cpu_hp_lock)
+>   {
+>   	static cpumask_t new_cpus;
+>   	static nodemask_t new_mems;
+> @@ -3201,25 +3201,32 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+>   	/* rebuild sched domains if cpus_allowed has changed */
+>   	if (cpus_updated || force_rebuild) {
+>   		force_rebuild = false;
+> -		rebuild_sched_domains();
+> +		if (use_cpu_hp_lock)
+> +			rebuild_sched_domains();
+> +		else {
+> +			/* Acquiring cpu_hotplug_lock is not required.
+> +			 * When cpuset_hotplug() is called in hotplug path,
+> +			 * cpu_hotplug_lock is held by the hotplug context
+> +			 * which is waiting for cpuhp_thread_fun to indicate
+> +			 * completion of callback.
+> +			*/
+> +			percpu_down_write(&cpuset_rwsem);
+> +			rebuild_sched_domains_locked();
+> +			percpu_up_write(&cpuset_rwsem);
+> +		}
+>   	}
+>   
+>   	free_cpumasks(NULL, ptmp);
+>   }
+>   
+> -void cpuset_update_active_cpus(void)
+> +static void cpuset_hotplug_workfn(struct work_struct *work)
+>   {
+> -	/*
+> -	 * We're inside cpu hotplug critical region which usually nests
+> -	 * inside cgroup synchronization.  Bounce actual hotplug processing
+> -	 * to a work item to avoid reverse locking order.
+> -	 */
+> -	schedule_work(&cpuset_hotplug_work);
+> +	cpuset_hotplug(true);
+>   }
+>   
+> -void cpuset_wait_for_hotplug(void)
+> +void cpuset_update_active_cpus(void)
+>   {
+> -	flush_work(&cpuset_hotplug_work);
+> +	cpuset_hotplug(false);
+>   }
+>   
+>   /*
+> diff --git a/kernel/power/process.c b/kernel/power/process.c
+> index 4b6a54d..08f7019 100644
+> --- a/kernel/power/process.c
+> +++ b/kernel/power/process.c
+> @@ -204,8 +204,6 @@ void thaw_processes(void)
+>   	__usermodehelper_set_disable_depth(UMH_FREEZING);
+>   	thaw_workqueues();
+>   
+> -	cpuset_wait_for_hotplug();
+> -
+>   	read_lock(&tasklist_lock);
+>   	for_each_process_thread(g, p) {
+>   		/* No other threads should have PF_SUSPEND_TASK set */
 
 -- 
-Jens Axboe
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation
+Center, Inc., is a member of Code Aurora Forum, a Linux Foundation
+Collaborative Project
