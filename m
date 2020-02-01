@@ -2,238 +2,88 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E52C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC106C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C5520661
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A511B20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:53:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxL3/WHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgBASxC (ORCPT
+        id S1727578AbgBASxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:53:02 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbgBASwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075580"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 50/61] KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
-Date:   Sat,  1 Feb 2020 10:52:07 -0800
-Message-Id: <20200201185218.24473-51-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+        Sat, 1 Feb 2020 13:53:17 -0500
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:39228 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgBASxE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:53:04 -0500
+Received: by mail-oi1-f171.google.com with SMTP id z2so10740961oih.6;
+        Sat, 01 Feb 2020 10:53:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u78NgzZ3KrEOfpTpyNxckRqZTrwrDsJGa/4Tbk58Hxk=;
+        b=GxL3/WHIG+dHKdSJmccC2EhuC5+Xeh4cjy7QzIJDDegXBinYS/USK76BbAzD1MQjSK
+         DljAHU5SxCAXmxnPUWEt1rgfWa40Z5Vn8QUwpfruDYdwVRsHpniHdndZ0dt0RMDkgfRy
+         yUChf89Ur95RZ4ZkEB4aH4cMeG48GTxr2c/XJYLrPGCNXAFGbTTx/1UU/kdaxO6rXgcN
+         4xHsh8l2a6Gz5T6T54fZQJAt4He1si/1kPOMVUUUG7Cr1EOjT91Fvgt4kXQGBpwadtdI
+         yrgyPlClqMZYfvACn50mPrzungQY4ksE6s7IQZjhDvNPlqYGfaTv/XzfDdmwdlVwzNxP
+         O/Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u78NgzZ3KrEOfpTpyNxckRqZTrwrDsJGa/4Tbk58Hxk=;
+        b=BzTJbvDaocbdV5uMSAT+SOh5p5hfl5tZ+HvSC1wxs8w+7Ohug+YSw+mfwA6ftMjaV5
+         80ZpsYcHy1uFkCF1TmOUu1hBp/kTkPVoc+FFu8QC5AcGRgDc9ostUMkdWBMIB7OqXc1n
+         6ilH74F2dFOIhGUdixZB0SgIqCaU8h+bOrJMu1LDBn5HbBC0StDF4yM3VE9L/SyK8DLi
+         N7u8PrMABkXQ2XX0jsSRhvqgrNLJu7vVjJ6/i4hldqi1v8OuQdG1iogUyp5Uk5fJ/kV6
+         qaRsEfyLXgxSV1meZzCC9qY2o1ueZVHNAaLOTyb8iqWbFPsYx5LbCstc3J7xgxTBb51E
+         GNAg==
+X-Gm-Message-State: APjAAAVu8aId3XNeNOPEFLLDYXjIzQpGQxQ2xnBf8NcchzyHZj2hIdGM
+        LaHtY8sW2qVo6j8YUsyYALnXS5ypJv1zWtybPAI=
+X-Google-Smtp-Source: APXvYqzvVoAlLlNnEUrquYyrowd/GNygHH+kPf3WtbxWTi2YbX4mjnslEPbIqGus2wMsEDBfbJE3f0rCbVKEKHix6Rw=
+X-Received: by 2002:aca:cf07:: with SMTP id f7mr729695oig.5.1580583183580;
+ Sat, 01 Feb 2020 10:53:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000466b64059bcb3843@google.com> <20200126132352.8212-1-hdanton@sina.com>
+ <20200201070541.GJ1778@kadam>
+In-Reply-To: <20200201070541.GJ1778@kadam>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 1 Feb 2020 10:52:52 -0800
+Message-ID: <CAM_iQpWsfc5U3_csn=qZWZZs7SPptj9ZxGcriMd-aYy8NiN09Q@mail.gmail.com>
+Subject: Re: INFO: task hung in hashlimit_mt_check_common
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com>,
+        coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set emulated and transmuted (set based on other features) feature bits
-via kvm_cpu_caps now that the CPUID output for KVM_GET_SUPPORTED_CPUID
-is direcly overidden with kvm_cpu_caps.
+On Fri, Jan 31, 2020 at 11:07 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> I wonder if there is some automated way to accept test patches from the
+> mailing list.
 
-Note, VMX emulation of UMIP already sets kvm_cpu_caps.
+At least for me, I always test patches before formally posting to mailing
+lists. Sometimes I want syzbot to test some debugging or experimental
+patches too, those should not be posted to dev mailing lists.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/cpuid.c   | 72 +++++++++++++++++++++---------------------
- arch/x86/kvm/svm.c     | 10 +++---
- arch/x86/kvm/vmx/vmx.c | 13 +-------
- 3 files changed, 42 insertions(+), 53 deletions(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 871c0bd04e19..a37cb6fda979 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -341,6 +341,8 @@ void kvm_set_cpu_caps(void)
- 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
- 		F(F16C) | F(RDRAND)
- 	);
-+	/* KVM emulates x2apic in software irrespective of host support. */
-+	kvm_cpu_cap_set(X86_FEATURE_X2APIC);
- 
- 	kvm_cpu_cap_mask(CPUID_7_0_EBX,
- 		F(FSGSBASE) | F(BMI1) | F(HLE) | F(AVX2) | F(SMEP) |
-@@ -366,6 +368,17 @@ void kvm_set_cpu_caps(void)
- 		F(MD_CLEAR)
- 	);
- 
-+	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-+	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
-+	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
-+
-+	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
-+		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
-+	if (boot_cpu_has(X86_FEATURE_STIBP))
-+		kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
-+	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
-+		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
-+
- 	kvm_cpu_cap_mask(CPUID_7_1_EAX,
- 		F(AVX512_BF16)
- 	);
-@@ -388,6 +401,29 @@ void kvm_set_cpu_caps(void)
- 		F(AMD_SSB_NO) | F(AMD_STIBP) | F(AMD_STIBP_ALWAYS_ON)
- 	);
- 
-+	/*
-+	 * AMD has separate bits for each SPEC_CTRL bit.
-+	 * arch/x86/kernel/cpu/bugs.c is kind enough to
-+	 * record that in cpufeatures so use them.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_IBPB))
-+		kvm_cpu_cap_set(X86_FEATURE_AMD_IBPB);
-+	if (boot_cpu_has(X86_FEATURE_IBRS))
-+		kvm_cpu_cap_set(X86_FEATURE_AMD_IBRS);
-+	if (boot_cpu_has(X86_FEATURE_STIBP))
-+		kvm_cpu_cap_set(X86_FEATURE_AMD_STIBP);
-+	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-+		kvm_cpu_cap_set(X86_FEATURE_AMD_SSBD);
-+	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-+		kvm_cpu_cap_set(X86_FEATURE_AMD_SSB_NO);
-+	/*
-+	 * The preference is to use SPEC CTRL MSR instead of the
-+	 * VIRT_SPEC MSR.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
-+	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-+		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
- 	kvm_cpu_cap_mask(CPUID_C000_0001_EDX,
- 		F(XSTORE) | F(XSTORE_EN) | F(XCRYPT) | F(XCRYPT_EN) |
- 		F(ACE2) | F(ACE2_EN) | F(PHE) | F(PHE_EN) |
-@@ -490,9 +526,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 	case 1:
- 		cpuid_entry_override(entry, CPUID_1_EDX);
- 		cpuid_entry_override(entry, CPUID_1_ECX);
--		/* we support x2apic emulation even if host does not support
--		 * it since we emulate x2apic in software */
--		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
- 		break;
- 	case 2:
- 		/*
-@@ -547,17 +580,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		cpuid_entry_override(entry, CPUID_7_ECX);
- 		cpuid_entry_override(entry, CPUID_7_EDX);
- 
--		/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
--		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
--		cpuid_entry_set(entry, X86_FEATURE_ARCH_CAPABILITIES);
--
--		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
--			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
--		if (boot_cpu_has(X86_FEATURE_STIBP))
--			cpuid_entry_set(entry, X86_FEATURE_INTEL_STIBP);
--		if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
--			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL_SSBD);
--
- 		/* KVM only supports 0x7.0 and 0x7.1, capped above via min(). */
- 		if (entry->eax == 1) {
- 			entry = do_host_cpuid(array, function, 1);
-@@ -729,28 +751,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		entry->eax = g_phys_as | (virt_as << 8);
- 		entry->edx = 0;
- 		cpuid_entry_override(entry, CPUID_8000_0008_EBX);
--		/*
--		 * AMD has separate bits for each SPEC_CTRL bit.
--		 * arch/x86/kernel/cpu/bugs.c is kind enough to
--		 * record that in cpufeatures so use them.
--		 */
--		if (boot_cpu_has(X86_FEATURE_IBPB))
--			cpuid_entry_set(entry, X86_FEATURE_AMD_IBPB);
--		if (boot_cpu_has(X86_FEATURE_IBRS))
--			cpuid_entry_set(entry, X86_FEATURE_AMD_IBRS);
--		if (boot_cpu_has(X86_FEATURE_STIBP))
--			cpuid_entry_set(entry, X86_FEATURE_AMD_STIBP);
--		if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
--			cpuid_entry_set(entry, X86_FEATURE_AMD_SSBD);
--		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
--			cpuid_entry_set(entry, X86_FEATURE_AMD_SSB_NO);
--		/*
--		 * The preference is to use SPEC CTRL MSR instead of the
--		 * VIRT_SPEC MSR.
--		 */
--		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
--		    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
--			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
- 		break;
- 	}
- 	case 0x80000019:
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index e1ed5726964c..f4434816dcdf 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1360,6 +1360,11 @@ static __init void svm_set_cpu_caps(void)
- 	if (nested)
- 		kvm_cpu_cap_set(X86_FEATURE_SVM);
- 
-+	/* CPUID 0x80000008 */
-+	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-+	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
-+		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-+
- 	/* CPUID 0x8000000A */
- 	/* Support next_rip if host supports it */
- 	kvm_cpu_cap_check_and_set(X86_FEATURE_NRIPS);
-@@ -6053,11 +6058,6 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
- static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- {
- 	switch (entry->function) {
--	case 0x80000008:
--		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
--		    boot_cpu_has(X86_FEATURE_AMD_SSBD))
--			cpuid_entry_set(entry, X86_FEATURE_VIRT_SSBD);
--		break;
- 	case 0x8000000A:
- 		entry->eax = 1; /* SVM revision 1 */
- 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index cd5a624610c9..2a1df1b714db 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7101,18 +7101,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 
- static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
- {
--	switch (entry->function) {
--	case 0x7:
--		/*
--		 * UMIP needs to be manually set even though vmx_set_cpu_caps()
--		 * also sets UMIP since do_host_cpuid() will drop it.
--		 */
--		if (vmx_umip_emulated())
--			cpuid_entry_set(entry, X86_FEATURE_UMIP);
--		break;
--	default:
--		break;
--	}
-+
- }
- 
- static __init void vmx_set_cpu_caps(void)
--- 
-2.24.1
-
+Thanks.
