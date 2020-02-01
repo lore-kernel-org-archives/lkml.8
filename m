@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C0CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47A6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CC32073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A16217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgBASMq (ORCPT
+        id S1726992AbgBASMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58788 "EHLO mail.kernel.org"
+        Sat, 1 Feb 2020 13:12:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgBASMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726387AbgBASMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 1 Feb 2020 13:12:36 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D4C206E3;
+        by mail.kernel.org (Postfix) with ESMTPSA id AFBA620723;
         Sat,  1 Feb 2020 18:12:35 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ixxFx-001Imb-CJ; Sat, 01 Feb 2020 13:12:33 -0500
-Message-Id: <20200201181233.280569445@goodmis.org>
+        id 1ixxFx-001Ild-2X; Sat, 01 Feb 2020 13:12:33 -0500
+Message-Id: <20200201181232.955517988@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sat, 01 Feb 2020 13:12:14 -0500
+Date:   Sat, 01 Feb 2020 13:12:12 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [for-next][PATCH 4/6] tracing: Remove check_arg() callbacks from dynevent args
+Subject: [for-next][PATCH 2/6] tracing: Fix now invalid var_ref_vals assumption in trace action
 References: <20200201181210.203806308@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -47,318 +46,168 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <zanussi@kernel.org>
 
-It's kind of strange to have check_arg() callbacks as part of the arg
-objects themselves; it makes more sense to just pass these in when the
-args are added instead.
+The patch 'tracing: Fix histogram code when expression has same var as
+value' added code to return an existing variable reference when
+creating a new variable reference, which resulted in var_ref_vals
+slots being reused instead of being duplicated.
 
-Remove the check_arg() callbacks from those objects which also means
-removing the check_arg() args from the init functions, adding them to
-the add functions and fixing up existing callers.
+The implementation of the trace action assumes that the end of the
+var_ref_vals array starting at action_data.var_ref_idx corresponds to
+the values that will be assigned to the trace params. The patch
+mentioned above invalidates that assumption, which means that each
+param needs to explicitly specify its index into var_ref_vals.
 
-Link: http://lkml.kernel.org/r/c7708d6f177fcbe1a36b6e4e8e150907df0fa5d2.1580506712.git.zanussi@kernel.org
+This fix changes action_data.var_ref_idx to an array of var ref
+indexes to account for that.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/r/1580335695.6220.8.camel@kernel.org
+
+Fixes: 8bcebc77e85f ("tracing: Fix histogram code when expression has same var as value")
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_dynevent.c    | 62 +++++++++++++++-----------------
- kernel/trace/trace_dynevent.h    | 11 +++---
- kernel/trace/trace_events_hist.c | 16 ++++-----
- kernel/trace/trace_kprobe.c      | 10 +++---
- 4 files changed, 46 insertions(+), 53 deletions(-)
+ kernel/trace/trace_events_hist.c | 53 +++++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 6ffdbc4fda53..f9cfcdc9d1f3 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -228,27 +228,30 @@ fs_initcall(init_dynamic_event);
-  * dynevent_arg_add - Add an arg to a dynevent_cmd
-  * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-  * @arg: The argument to append to the current cmd
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-  *
-  * Append an argument to a dynevent_cmd.  The argument string will be
-  * appended to the current cmd string, followed by a separator, if
-- * applicable.  Before the argument is added, the check_arg()
-- * function, if defined, is called.
-+ * applicable.  Before the argument is added, the @check_arg function,
-+ * if present, will be used to check the sanity of the current arg
-+ * string.
-  *
-- * The cmd string, separator, and check_arg() function should be set
-- * using the dynevent_arg_init() before any arguments are added using
-- * this function.
-+ * The cmd string and separator should be set using the
-+ * dynevent_arg_init() before any arguments are added using this
-+ * function.
-  *
-  * Return: 0 if successful, error otherwise.
-  */
- int dynevent_arg_add(struct dynevent_cmd *cmd,
--		     struct dynevent_arg *arg)
-+		     struct dynevent_arg *arg,
-+		     dynevent_check_arg_fn_t check_arg)
- {
- 	int ret = 0;
- 	int delta;
- 	char *q;
- 
--	if (arg->check_arg) {
--		ret = arg->check_arg(arg);
-+	if (check_arg) {
-+		ret = check_arg(arg);
- 		if (ret)
- 			return ret;
- 	}
-@@ -269,6 +272,7 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
-  * dynevent_arg_pair_add - Add an arg pair to a dynevent_cmd
-  * @cmd: A pointer to the dynevent_cmd struct representing the new event cmd
-  * @arg_pair: The argument pair to append to the current cmd
-+ * @check_arg: An (optional) pointer to a function checking arg sanity
-  *
-  * Append an argument pair to a dynevent_cmd.  An argument pair
-  * consists of a left-hand-side argument and a right-hand-side
-@@ -278,24 +282,26 @@ int dynevent_arg_add(struct dynevent_cmd *cmd,
-  *
-  * The lhs argument string will be appended to the current cmd string,
-  * followed by an operator, if applicable, followd by the rhs string,
-- * followed finally by a separator, if applicable.  Before anything is
-- * added, the check_arg() function, if defined, is called.
-+ * followed finally by a separator, if applicable.  Before the
-+ * argument is added, the @check_arg function, if present, will be
-+ * used to check the sanity of the current arg strings.
-  *
-- * The cmd strings, operator, separator, and check_arg() function
-- * should be set using the dynevent_arg_pair_init() before any arguments
-- * are added using this function.
-+ * The cmd strings, operator, and separator should be set using the
-+ * dynevent_arg_pair_init() before any arguments are added using this
-+ * function.
-  *
-  * Return: 0 if successful, error otherwise.
-  */
- int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
--			  struct dynevent_arg_pair *arg_pair)
-+			  struct dynevent_arg_pair *arg_pair,
-+			  dynevent_check_arg_fn_t check_arg)
- {
- 	int ret = 0;
- 	int delta;
- 	char *q;
- 
--	if (arg_pair->check_arg) {
--		ret = arg_pair->check_arg(arg_pair);
-+	if (check_arg) {
-+		ret = check_arg(arg_pair);
- 		if (ret)
- 			return ret;
- 	}
-@@ -385,20 +391,16 @@ void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
- /**
-  * dynevent_arg_init - Initialize a dynevent_arg object
-  * @arg: A pointer to the dynevent_arg struct representing the arg
-- * @check_arg: An (optional) pointer to a function checking arg sanity
-  * @separator: An (optional) separator, appended after adding the arg
-  *
-  * Initialize a dynevent_arg object.  A dynevent_arg represents an
-  * object used to append single arguments to the current command
-- * string.  The @check_arg function, if present, will be used to check
-- * the sanity of the current arg string (which is directly set by the
-- * caller).  After the arg string is successfully appended to the
-+ * string.  After the arg string is successfully appended to the
-  * command string, the optional @separator is appended.  If no
-  * separator was specified when initializing the arg, a space will be
-  * appended.
-  */
- void dynevent_arg_init(struct dynevent_arg *arg,
--		       dynevent_check_arg_fn_t check_arg,
- 		       char separator)
- {
- 	memset(arg, '\0', sizeof(*arg));
-@@ -406,14 +408,11 @@ void dynevent_arg_init(struct dynevent_arg *arg,
- 	if (!separator)
- 		separator = ' ';
- 	arg->separator = separator;
--
--	arg->check_arg = check_arg;
- }
- 
- /**
-  * dynevent_arg_pair_init - Initialize a dynevent_arg_pair object
-  * @arg_pair: A pointer to the dynevent_arg_pair struct representing the arg
-- * @check_arg: An (optional) pointer to a function checking arg sanity
-  * @operator: An (optional) operator, appended after adding the first arg
-  * @separator: An (optional) separator, appended after adding the second arg
-  *
-@@ -422,16 +421,13 @@ void dynevent_arg_init(struct dynevent_arg *arg,
-  * variable_name;' or 'x+y' to the current command string.  An
-  * argument pair consists of a left-hand-side argument and a
-  * right-hand-side argument separated by an operator, which can be
-- * whitespace, all followed by a separator, if applicable. The
-- * @check_arg function, if present, will be used to check the sanity
-- * of the current arg strings (which is directly set by the caller).
-- * After the first arg string is successfully appended to the command
-- * string, the optional @operator is appended, followed by the second
-- * arg and and optional @separator.  If no separator was specified
-- * when initializing the arg, a space will be appended.
-+ * whitespace, all followed by a separator, if applicable.  After the
-+ * first arg string is successfully appended to the command string,
-+ * the optional @operator is appended, followed by the second arg and
-+ * and optional @separator.  If no separator was specified when
-+ * initializing the arg, a space will be appended.
-  */
- void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
--			    dynevent_check_arg_fn_t check_arg,
- 			    char operator, char separator)
- {
- 	memset(arg_pair, '\0', sizeof(*arg_pair));
-@@ -443,8 +439,6 @@ void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
- 	if (!separator)
- 		separator = ' ';
- 	arg_pair->separator = separator;
--
--	arg_pair->check_arg = check_arg;
- }
- 
- /**
-diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
-index b593fc34c5b1..d6857a254ede 100644
---- a/kernel/trace/trace_dynevent.h
-+++ b/kernel/trace/trace_dynevent.h
-@@ -126,28 +126,27 @@ typedef int (*dynevent_check_arg_fn_t)(void *data);
- struct dynevent_arg {
- 	const char		*str;
- 	char			separator; /* e.g. ';', ',', or nothing */
--	dynevent_check_arg_fn_t	check_arg;
- };
- 
- extern void dynevent_arg_init(struct dynevent_arg *arg,
--			      dynevent_check_arg_fn_t check_arg,
- 			      char separator);
- extern int dynevent_arg_add(struct dynevent_cmd *cmd,
--			    struct dynevent_arg *arg);
-+			    struct dynevent_arg *arg,
-+			    dynevent_check_arg_fn_t check_arg);
- 
- struct dynevent_arg_pair {
- 	const char		*lhs;
- 	const char		*rhs;
- 	char			operator; /* e.g. '=' or nothing */
- 	char			separator; /* e.g. ';', ',', or nothing */
--	dynevent_check_arg_fn_t	check_arg;
- };
- 
- extern void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
--				   dynevent_check_arg_fn_t check_arg,
- 				   char operator, char separator);
-+
- extern int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
--				 struct dynevent_arg_pair *arg_pair);
-+				 struct dynevent_arg_pair *arg_pair,
-+				 dynevent_check_arg_fn_t check_arg);
- extern int dynevent_str_add(struct dynevent_cmd *cmd, const char *str);
- 
- #endif
 diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 42058a1b5146..d2817fe52f32 100644
+index 2e88c9805f4b..5b4e04780411 100644
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -1334,12 +1334,12 @@ int synth_event_add_field(struct dynevent_cmd *cmd, const char *type,
- 	if (!type || !name)
- 		return -EINVAL;
+@@ -476,11 +476,12 @@ struct action_data {
+ 	 * When a histogram trigger is hit, the values of any
+ 	 * references to variables, including variables being passed
+ 	 * as parameters to synthetic events, are collected into a
+-	 * var_ref_vals array.  This var_ref_idx is the index of the
+-	 * first param in the array to be passed to the synthetic
+-	 * event invocation.
++	 * var_ref_vals array.  This var_ref_idx array is an array of
++	 * indices into the var_ref_vals array, one for each synthetic
++	 * event param, and is passed to the synthetic event
++	 * invocation.
+ 	 */
+-	unsigned int		var_ref_idx;
++	unsigned int		var_ref_idx[TRACING_MAP_VARS_MAX];
+ 	struct synth_event	*synth_event;
+ 	bool			use_trace_keyword;
+ 	char			*synth_event_name;
+@@ -884,14 +885,14 @@ static struct trace_event_functions synth_event_funcs = {
  
--	dynevent_arg_pair_init(&arg_pair, synth_event_check_arg_fn, 0, ';');
-+	dynevent_arg_pair_init(&arg_pair, 0, ';');
+ static notrace void trace_event_raw_event_synth(void *__data,
+ 						u64 *var_ref_vals,
+-						unsigned int var_ref_idx)
++						unsigned int *var_ref_idx)
+ {
+ 	struct trace_event_file *trace_file = __data;
+ 	struct synth_trace_event *entry;
+ 	struct trace_event_buffer fbuffer;
+ 	struct trace_buffer *buffer;
+ 	struct synth_event *event;
+-	unsigned int i, n_u64;
++	unsigned int i, n_u64, val_idx;
+ 	int fields_size = 0;
  
- 	arg_pair.lhs = type;
- 	arg_pair.rhs = name;
+ 	event = trace_file->event_call->data;
+@@ -914,15 +915,16 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 		goto out;
  
--	ret = dynevent_arg_pair_add(cmd, &arg_pair);
-+	ret = dynevent_arg_pair_add(cmd, &arg_pair, synth_event_check_arg_fn);
- 	if (ret)
- 		return ret;
+ 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
++		val_idx = var_ref_idx[i];
+ 		if (event->fields[i]->is_string) {
+-			char *str_val = (char *)(long)var_ref_vals[var_ref_idx + i];
++			char *str_val = (char *)(long)var_ref_vals[val_idx];
+ 			char *str_field = (char *)&entry->fields[n_u64];
  
-@@ -1377,11 +1377,11 @@ int synth_event_add_field_str(struct dynevent_cmd *cmd, const char *type_name)
- 	if (!type_name)
- 		return -EINVAL;
+ 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+ 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+ 		} else {
+ 			struct synth_field *field = event->fields[i];
+-			u64 val = var_ref_vals[var_ref_idx + i];
++			u64 val = var_ref_vals[val_idx];
  
--	dynevent_arg_init(&arg, NULL, ';');
-+	dynevent_arg_init(&arg, ';');
+ 			switch (field->size) {
+ 			case 1:
+@@ -1122,10 +1124,10 @@ static struct tracepoint *alloc_synth_tracepoint(char *name)
+ }
  
- 	arg.str = type_name;
+ typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
+-				    unsigned int var_ref_idx);
++				    unsigned int *var_ref_idx);
  
--	ret = dynevent_arg_add(cmd, &arg);
-+	ret = dynevent_arg_add(cmd, &arg, NULL);
- 	if (ret)
- 		return ret;
+ static inline void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+-			       unsigned int var_ref_idx)
++			       unsigned int *var_ref_idx)
+ {
+ 	struct tracepoint *tp = event->tp;
  
-@@ -1472,9 +1472,9 @@ int __synth_event_gen_cmd_start(struct dynevent_cmd *cmd, const char *name,
- 	if (cmd->type != DYNEVENT_TYPE_SYNTH)
- 		return -EINVAL;
+@@ -3506,6 +3508,22 @@ static int init_var_ref(struct hist_field *ref_field,
+ 	goto out;
+ }
  
--	dynevent_arg_init(&arg, NULL, 0);
-+	dynevent_arg_init(&arg, 0);
- 	arg.str = name;
--	ret = dynevent_arg_add(cmd, &arg);
-+	ret = dynevent_arg_add(cmd, &arg, NULL);
- 	if (ret)
- 		return ret;
++static int find_var_ref_idx(struct hist_trigger_data *hist_data,
++			    struct hist_field *var_field)
++{
++	struct hist_field *ref_field;
++	int i;
++
++	for (i = 0; i < hist_data->n_var_refs; i++) {
++		ref_field = hist_data->var_refs[i];
++		if (ref_field->var.idx == var_field->var.idx &&
++		    ref_field->var.hist_data == var_field->hist_data)
++			return i;
++	}
++
++	return -ENOENT;
++}
++
+ /**
+  * create_var_ref - Create a variable reference and attach it to trigger
+  * @hist_data: The trigger that will be referencing the variable
+@@ -5071,11 +5089,11 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 	struct trace_array *tr = hist_data->event_file->tr;
+ 	char *event_name, *param, *system = NULL;
+ 	struct hist_field *hist_field, *var_ref;
+-	unsigned int i, var_ref_idx;
++	unsigned int i;
+ 	unsigned int field_pos = 0;
+ 	struct synth_event *event;
+ 	char *synth_event_name;
+-	int ret = 0;
++	int var_ref_idx, ret = 0;
  
-@@ -1546,9 +1546,9 @@ int synth_event_gen_cmd_array_start(struct dynevent_cmd *cmd, const char *name,
- 	if (n_fields > SYNTH_FIELDS_MAX)
- 		return -EINVAL;
+ 	lockdep_assert_held(&event_mutex);
  
--	dynevent_arg_init(&arg, NULL, 0);
-+	dynevent_arg_init(&arg, 0);
- 	arg.str = name;
--	ret = dynevent_arg_add(cmd, &arg);
-+	ret = dynevent_arg_add(cmd, &arg, NULL);
- 	if (ret)
- 		return ret;
+@@ -5092,8 +5110,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
  
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 307abb724a71..fe183d4045d2 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -962,9 +962,9 @@ int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
- 	if (ret)
- 		return ret;
+ 	event->ref++;
  
--	dynevent_arg_init(&arg, NULL, 0);
-+	dynevent_arg_init(&arg, 0);
- 	arg.str = loc;
--	ret = dynevent_arg_add(cmd, &arg);
-+	ret = dynevent_arg_add(cmd, &arg, NULL);
- 	if (ret)
- 		return ret;
+-	var_ref_idx = hist_data->n_var_refs;
+-
+ 	for (i = 0; i < data->n_params; i++) {
+ 		char *p;
  
-@@ -982,7 +982,7 @@ int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
- 		}
+@@ -5142,6 +5158,14 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 				goto err;
+ 			}
  
- 		arg.str = field;
--		ret = dynevent_arg_add(cmd, &arg);
-+		ret = dynevent_arg_add(cmd, &arg, NULL);
- 		if (ret)
- 			break;
++			var_ref_idx = find_var_ref_idx(hist_data, var_ref);
++			if (WARN_ON(var_ref_idx < 0)) {
++				ret = var_ref_idx;
++				goto err;
++			}
++
++			data->var_ref_idx[i] = var_ref_idx;
++
+ 			field_pos++;
+ 			kfree(p);
+ 			continue;
+@@ -5160,7 +5184,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
  	}
-@@ -1017,7 +1017,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
- 	if (cmd->type != DYNEVENT_TYPE_KPROBE)
- 		return -EINVAL;
  
--	dynevent_arg_init(&arg, NULL, 0);
-+	dynevent_arg_init(&arg, 0);
- 
- 	va_start(args, cmd);
- 	for (;;) {
-@@ -1033,7 +1033,7 @@ int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...)
- 		}
- 
- 		arg.str = field;
--		ret = dynevent_arg_add(cmd, &arg);
-+		ret = dynevent_arg_add(cmd, &arg, NULL);
- 		if (ret)
- 			break;
- 	}
+ 	data->synth_event = event;
+-	data->var_ref_idx = var_ref_idx;
+  out:
+ 	return ret;
+  err:
 -- 
 2.24.1
 
