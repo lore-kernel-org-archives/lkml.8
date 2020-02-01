@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF83C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B97DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D1620679
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5A420679
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 18:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgBASwt (ORCPT
+        id S1727474AbgBASwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 13:52:49 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11283 "EHLO mga02.intel.com"
+        Sat, 1 Feb 2020 13:52:55 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11286 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbgBASwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 13:52:31 -0500
+        id S1727222AbgBASwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 13:52:32 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:27 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 10:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,390,1574150400"; 
-   d="scan'208";a="248075514"
+   d="scan'208";a="248075553"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:25 -0800
+  by orsmga002.jf.intel.com with ESMTP; 01 Feb 2020 10:52:26 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 28/61] KVM: x86: Refactor cpuid_mask() to auto-retrieve the register
-Date:   Sat,  1 Feb 2020 10:51:45 -0800
-Message-Id: <20200201185218.24473-29-sean.j.christopherson@intel.com>
+Subject: [PATCH 41/61] KVM: x86: Move XSAVES CPUID adjust to VMX's KVM cpu cap update
+Date:   Sat,  1 Feb 2020 10:51:58 -0800
+Message-Id: <20200201185218.24473-42-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200201185218.24473-1-sean.j.christopherson@intel.com>
 References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
@@ -49,112 +50,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the recently introduced cpuid_entry_get_reg() to automatically get
-the appropriate register when masking a CPUID entry.
+Move the clearing of the XSAVES CPUID bit into VMX, which has a separate
+VMCS control to enable XSAVES in non-root, to eliminate the last ugly
+renmant of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+pattern in the common CPUID handling code.
+
+Drop ->xsaves_supported(), CPUID adjustment was the only user.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 -
+ arch/x86/kvm/cpuid.c            | 4 ----
+ arch/x86/kvm/svm.c              | 6 ------
+ arch/x86/kvm/vmx/vmx.c          | 5 ++++-
+ 4 files changed, 4 insertions(+), 12 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index ba828569cda5..dd690fb5ceca 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1163,7 +1163,6 @@ struct kvm_x86_ops {
+ 	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion *exit_fastpath);
+ 
+-	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 	bool (*pt_supported)(void);
+ 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 195f4dcc8c6a..cb5870a323cc 100644
+index c2a4c9df49a9..77a6c1db138d 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -254,10 +254,12 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
- 	return r;
- }
- 
--static __always_inline void cpuid_mask(u32 *word, int wordnum)
-+static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
-+					     enum cpuid_leafs leaf)
- {
--	reverse_cpuid_check(wordnum);
--	*word &= boot_cpu_data.x86_capability[wordnum];
-+	u32 *reg = cpuid_entry_get_reg(entry, leaf * 32);
-+
-+	*reg &= boot_cpu_data.x86_capability[leaf];
- }
- 
- struct kvm_cpuid_array {
-@@ -373,13 +375,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
- 	case 0:
- 		entry->eax = min(entry->eax, 1u);
- 		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
--		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
-+		cpuid_entry_mask(entry, CPUID_7_0_EBX);
- 		/* TSC_ADJUST is emulated */
- 		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
- 
- 		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
- 		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
--		cpuid_mask(&entry->ecx, CPUID_7_ECX);
-+		cpuid_entry_mask(entry, CPUID_7_ECX);
- 		/* Set LA57 based on hardware capability. */
- 		entry->ecx |= f_la57;
- 		entry->ecx |= f_umip;
-@@ -389,7 +391,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
- 			cpuid_entry_clear(entry, X86_FEATURE_PKU);
- 
- 		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
--		cpuid_mask(&entry->edx, CPUID_7_EDX);
-+		cpuid_entry_mask(entry, CPUID_7_EDX);
- 		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
- 			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
- 		if (boot_cpu_has(X86_FEATURE_STIBP))
-@@ -507,9 +509,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		break;
- 	case 1:
- 		entry->edx &= kvm_cpuid_1_edx_x86_features;
--		cpuid_mask(&entry->edx, CPUID_1_EDX);
-+		cpuid_entry_mask(entry, CPUID_1_EDX);
- 		entry->ecx &= kvm_cpuid_1_ecx_x86_features;
--		cpuid_mask(&entry->ecx, CPUID_1_ECX);
-+		cpuid_entry_mask(entry, CPUID_1_ECX);
- 		/* we support x2apic emulation even if host does not support
- 		 * it since we emulate x2apic in software */
- 		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
-@@ -619,7 +621,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+@@ -626,10 +626,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
  			goto out;
  
- 		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
--		cpuid_mask(&entry->eax, CPUID_D_1_EAX);
-+		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+ 		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+-
+-		if (!kvm_x86_ops->xsaves_supported())
+-			cpuid_entry_clear(entry, X86_FEATURE_XSAVES);
+-
  		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
  			entry->ebx = xstate_required_size(supported_xcr0, true);
  		else
-@@ -699,9 +701,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		break;
- 	case 0x80000001:
- 		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
--		cpuid_mask(&entry->edx, CPUID_8000_0001_EDX);
-+		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
- 		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
--		cpuid_mask(&entry->ecx, CPUID_8000_0001_ECX);
-+		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
- 		break;
- 	case 0x80000007: /* Advanced power management */
- 		/* invariant TSC is CPUID.80000007H:EDX[8] */
-@@ -720,7 +722,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		entry->eax = g_phys_as | (virt_as << 8);
- 		entry->edx = 0;
- 		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
--		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
-+		cpuid_entry_mask(entry, CPUID_8000_0008_EBX);
- 		/*
- 		 * AMD has separate bits for each SPEC_CTRL bit.
- 		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-@@ -763,7 +765,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 		break;
- 	case 0xC0000001:
- 		entry->edx &= kvm_cpuid_C000_0001_edx_x86_features;
--		cpuid_mask(&entry->edx, CPUID_C000_0001_EDX);
-+		cpuid_entry_mask(entry, CPUID_C000_0001_EDX);
- 		break;
- 	case 3: /* Processor serial number */
- 	case 5: /* MONITOR/MWAIT */
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index f98a192459f7..7cb05945162e 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6080,11 +6080,6 @@ static bool svm_rdtscp_supported(void)
+ 	return boot_cpu_has(X86_FEATURE_RDTSCP);
+ }
+ 
+-static bool svm_xsaves_supported(void)
+-{
+-	return boot_cpu_has(X86_FEATURE_XSAVES);
+-}
+-
+ static bool svm_umip_emulated(void)
+ {
+ 	return false;
+@@ -7455,7 +7450,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.cpuid_update = svm_cpuid_update,
+ 
+ 	.rdtscp_supported = svm_rdtscp_supported,
+-	.xsaves_supported = svm_xsaves_supported,
+ 	.umip_emulated = svm_umip_emulated,
+ 	.pt_supported = svm_pt_supported,
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index bae915431c72..cfd0ef314176 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7131,6 +7131,10 @@ static __init void vmx_set_cpu_caps(void)
+ 	    boot_cpu_has(X86_FEATURE_OSPKE))
+ 		kvm_cpu_cap_set(X86_FEATURE_PKU);
+ 
++	/* CPUID 0xD.1 */
++	if (!vmx_xsaves_supported())
++		kvm_cpu_cap_clear(X86_FEATURE_XSAVES);
++
+ 	/* CPUID 0x80000001 */
+ 	if (!cpu_has_vmx_rdtscp())
+ 		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
+@@ -7886,7 +7890,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 
+ 	.check_intercept = vmx_check_intercept,
+ 	.handle_exit_irqoff = vmx_handle_exit_irqoff,
+-	.xsaves_supported = vmx_xsaves_supported,
+ 	.umip_emulated = vmx_umip_emulated,
+ 	.pt_supported = vmx_pt_supported,
+ 
 -- 
 2.24.1
 
