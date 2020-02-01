@@ -2,116 +2,86 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC6FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A35AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE82F206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAA0206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 16:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="OND2aOfE"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yB4T4q+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgBAQ1h (ORCPT
+        id S1727025AbgBAQ2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 11:27:37 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:54892 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbgBAQ1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 11:27:36 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 488zyY576yz9vBmZ;
-        Sat,  1 Feb 2020 17:27:33 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=OND2aOfE; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cOc3nVoSmWt8; Sat,  1 Feb 2020 17:27:33 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 488zyY3LN2z9vBmY;
-        Sat,  1 Feb 2020 17:27:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580574453; bh=ZjmS/adFTgLgsg7zeCN7l9gy5WSfkM50nGalFqI61jU=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=OND2aOfEStqUhg9CLiDtWmwPWq3FmlU74CaysGCTUMcz0p1a48c2qlAmwAxt7MAQQ
-         E265BrP4WfszNHtCemUVGjvXf5G2t1LHZmExnGWA733/QVFOZ423m52qO9DBQnzs0e
-         YdVUZmhsiDqgEteMFdpWWdCCqfYLJk8o0SjKAFp4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 054808B78B;
-        Sat,  1 Feb 2020 17:27:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id artbkuQxn9DU; Sat,  1 Feb 2020 17:27:34 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A0A648B752;
-        Sat,  1 Feb 2020 17:27:34 +0100 (CET)
-Subject: Re: [PATCH v2] powerpc/32s: Don't flush all TLBs when flushing one
- page
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <b30b2eae6960502eaf0d9e36c60820b839693c33.1580542939.git.christophe.leroy@c-s.fr>
-Message-ID: <601bc775-6b51-c6c3-128e-ccd36d54f933@c-s.fr>
-Date:   Sat, 1 Feb 2020 17:27:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Sat, 1 Feb 2020 11:28:44 -0500
+Received: from mail-pj1-f41.google.com ([209.85.216.41]:50226 "EHLO
+        mail-pj1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgBAQ2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 11:28:43 -0500
+Received: by mail-pj1-f41.google.com with SMTP id r67so4335837pjb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 08:28:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=mklDpQSOx56X51WlKAqZtd/5MRjLcpIQ1Es0sl44ojw=;
+        b=yB4T4q+3CDaLF5gscpyaw7VYcN/mkrBVX/QUVuJUuq5NgF7YDZ6B9YyskYhdsQTy3Y
+         Q/+D8IPZQMwTQ3WPcOttfsUiaq5IPmRoBjVyM20ycxSsu+jYBd/E4wAj5RpeC//j5RYO
+         HRw/YUK6w39O3os/xVXdU56+QZzRONXEyVksu/YBNfzyqFZ8+lhCxfPQmcMiRHOKxdql
+         XxzcV7ZpCwtFE600P3319Nw0SdhrnZikoftK8l4eGL4xcpI5/Q/iOG14reK0/NYnyruE
+         qGFIoNGm9FjmAInisKQlxgaEUOzDlugnqW5G4GbowI+ujF9ZhVIvq2WFKlVWnmQOWO6h
+         2pOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mklDpQSOx56X51WlKAqZtd/5MRjLcpIQ1Es0sl44ojw=;
+        b=E6sbVfPGfYKKWsdXLz23bHeNMUSaW8B1/lF9XfBvbaqtqHf8nyiNHaX0yez0yKSkf0
+         Yi1fshv4vYuCZflqq/KQobpqW7uHHeW3vTsRtBeOof/7tIay987UEwRrsY9pbb3xffzl
+         dqKDGXZUJIfQIgsWU0V6gEQ4KV6IGtGeIg0AnBrc5iqOmDfMJoPaKYYS16xFWjy40k5e
+         t3A2gra0yBstFzjgBIUVMKEurmtyo47oKUI61asfZryJvdLrJK9QkQr8IJq6+pyzFaQy
+         Izn40QKucmWr2rTV4oI028dQHFoqxA4vVq0c4cSp8c8vEIWV1JWPaEsBSw4YweetstfX
+         hBdg==
+X-Gm-Message-State: APjAAAUYANPLLCrRZyo78c5/foMO18BIWC/TiBS1LUAUzS0l9X2KNCF7
+        GQQK43C/DV9oHLgNyExf7YmDDhsVmyI=
+X-Google-Smtp-Source: APXvYqw/QG5gDF0pKFlbvpJQEm36bImGmIPJu96GNWoWMb+fe9yK00CFpy7m5H7D3TUwi+iTfcoHpw==
+X-Received: by 2002:a17:902:968c:: with SMTP id n12mr15906957plp.144.1580574522316;
+        Sat, 01 Feb 2020 08:28:42 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id v4sm15364475pgo.63.2020.02.01.08.28.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Feb 2020 08:28:41 -0800 (PST)
+Subject: Re: [PATCH 1/1] io_uring: place close flag changing code
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <aebc542fb8d3625178fa02c6a8c6a5b2b89466c4.1580518533.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9dd02612-5c5b-9508-d7cd-39212d526e14@kernel.dk>
+Date:   Sat, 1 Feb 2020 09:28:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <b30b2eae6960502eaf0d9e36c60820b839693c33.1580542939.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aebc542fb8d3625178fa02c6a8c6a5b2b89466c4.1580518533.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/31/20 5:58 PM, Pavel Begunkov wrote:
+> Both iocb_flags() and kiocb_set_rw_flags() are inline and modify
+> kiocb->ki_flags. Place them close, so they can be potentially better
+> optimised.
 
+Applied, thanks.
 
-Le 01/02/2020 à 09:04, Christophe Leroy a écrit :
-> When flushing any memory range, the flushing function
-> flushes all TLBs.
-> 
-> When (start) and (end - 1) are in the same memory page,
-> flush that page instead.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+-- 
+Jens Axboe
 
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
-
-> ---
-> v2: Reworked the test as the previous one was always false (end - start was PAGE_SIZE - 1 for a single page)
-> ---
->   arch/powerpc/mm/book3s32/tlb.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s32/tlb.c b/arch/powerpc/mm/book3s32/tlb.c
-> index 2fcd321040ff..724c0490fb17 100644
-> --- a/arch/powerpc/mm/book3s32/tlb.c
-> +++ b/arch/powerpc/mm/book3s32/tlb.c
-> @@ -79,11 +79,14 @@ static void flush_range(struct mm_struct *mm, unsigned long start,
->   	int count;
->   	unsigned int ctx = mm->context.id;
->   
-> +	start &= PAGE_MASK;
->   	if (!Hash) {
-> -		_tlbia();
-> +		if (end - start <= PAGE_SIZE)
-> +			_tlbie(start);
-> +		else
-> +			_tlbia();
->   		return;
->   	}
-> -	start &= PAGE_MASK;
->   	if (start >= end)
->   		return;
->   	end = (end - 1) | ~PAGE_MASK;
-> 
