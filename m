@@ -2,173 +2,149 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E7EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273A0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970DB2070C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF3C206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 08:52:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqp1nXp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgBAIsT (ORCPT
+        id S1726491AbgBAIwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 03:48:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56920 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgBAIsT (ORCPT
+        Sat, 1 Feb 2020 03:52:47 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55917 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgBAIwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 03:48:19 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ixoRr-0003ea-93; Sat, 01 Feb 2020 09:48:15 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2ADC1C1DF9;
-        Sat,  1 Feb 2020 09:48:14 +0100 (CET)
-Date:   Sat, 01 Feb 2020 08:48:14 -0000
-From:   "tip-bot2 for Dexuan Cui" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/hyperv: Suspend/resume the hypercall page for
- hibernation
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1578350559-130275-1-git-send-email-decui@microsoft.com>
-References: <1578350559-130275-1-git-send-email-decui@microsoft.com>
-MIME-Version: 1.0
-Message-ID: <158054689467.396.9318913619625622500.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sat, 1 Feb 2020 03:52:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so10540326wmj.5;
+        Sat, 01 Feb 2020 00:52:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=hT5skZOoqWRhUjCWgtZzuttwtqGUoIahO4XcPPg+prc=;
+        b=uqp1nXp+n9tdqX5SS1aOnwcnKko4AFGnDpzT6eiK98feiIuqWzntnolmtmBv8Y6UT3
+         maM4lZwunqN/uKs64q1S+O1BNy/vUVKDKA4QqwMys3q4sGjIWdeNg5hQmw+A+/ejHzWz
+         ZEsFLr3jzl+ssQws3qjN/SWz1E9HmK7YC3cvCFT5iw0NIfR9ixePgXus0yWOtfpFtqbw
+         LcUcLSURvlt+2i7Ald0PCOhrLGzcrraRRB9/a8eKS2bULkBGL3nUAgVGRWi1LLS34eDB
+         ZDJqgPKxiQbMLecKouqLV2bZkRLI1vCgSdtXODWxP2rgzE9Xf33vgAD93aIEcMNQLYta
+         Ar6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=hT5skZOoqWRhUjCWgtZzuttwtqGUoIahO4XcPPg+prc=;
+        b=cQlFn8hssR9UbnM05YKVPTxFVw32n//cgbigiSVzGZ7CVyXqS2KTqqQ5/jgsIqOa38
+         gNuVugWVoxnpH8utZB45h8Xj2nNQlBH1ASTlRwqyagsFuqGJ6YE/J+/cfZtdKH0rG5GQ
+         RxRdTheF+RrOuxYmRZFA3yGl4M8Ytpx0WElradMynMDROFBSvH3HgF6eVuyCKcFaAem7
+         AZPM/7UT801xioHdyODegrWrMqXtuK1MSkBfrUA9LTjNl26vjYwp2NqTM1Ep1SeeC/LX
+         yuPhWTFs74D0wE5RKobfJZ/JYtKedJqC6DMeIZnqu+spREEuWrlKpqNjvT7BGRivD3dh
+         H0Bg==
+X-Gm-Message-State: APjAAAWj0dKc5Sw/cNaAyhsOqYQ50qKIE8UaMpLhsRhVk6D08FnEi6AF
+        4es/4jy4OG+vgraCWIHyZA4=
+X-Google-Smtp-Source: APXvYqyEdp5zvKFhEc7Tx7bIrSUiB2nsiAZIU8kjNnxyC1HBl8ob35LAaitTvbxPLY03HEcdijhAjw==
+X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr17709687wmc.165.1580547163232;
+        Sat, 01 Feb 2020 00:52:43 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:bcd7:b36c:40fc:d163])
+        by smtp.gmail.com with ESMTPSA id a1sm15419304wrr.80.2020.02.01.00.52.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 00:52:42 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        SeongJae Park <sjpark@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
+        amit@kernel.org, brendan.d.gregg@gmail.com,
+        Jonathan Corbet <corbet@lwn.net>, dwmw@amazon.com,
+        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
+        kirill@shutemov.name, colin.king@canonical.com, minchan@kernel.org,
+        vdavydov.dev@gmail.com, vdavydov@parallels.com, linux-mm@kvack.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Re: [PATCH v2 6/9] mm/damon: Add minimal user-space tools
+Date:   Sat,  1 Feb 2020 09:52:33 +0100
+Message-Id: <20200201085233.28942-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200131044427.29930-1-sj38.park@gmail.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, 31 Jan 2020 05:44:27 +0100 SeongJae Park <sj38.park@gmail.com> wrote:
 
-Commit-ID:     05bd330a7fd8875c423fc07d8ddcad73c10e556e
-Gitweb:        https://git.kernel.org/tip/05bd330a7fd8875c423fc07d8ddcad73c10e556e
-Author:        Dexuan Cui <decui@microsoft.com>
-AuthorDate:    Mon, 06 Jan 2020 14:42:39 -08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sat, 01 Feb 2020 09:41:16 +01:00
+> On Thu, 30 Jan 2020 16:02:26 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+> 
+> > On Tue, Jan 28, 2020 at 1:00 AM <sjpark@amazon.com> wrote:
+> > >
+> > > From: SeongJae Park <sjpark@amazon.de>
+> > >
+> > > This commit adds a shallow wrapper python script, ``/tools/damon/damo``
+> > > that provides more convenient interface.  Note that it is only aimed to
+> > > be used for minimal reference of the DAMON's raw interfaces and for
+> > > debugging of the DAMON itself.  Based on the debugfs interface, you can
+> > > create another cool and more convenient user space tools.
+> > >
+> > > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > > ---
+> > >  MAINTAINERS               |   1 +
+> > >  tools/damon/.gitignore    |   1 +
+> > >  tools/damon/_dist.py      |  35 ++++
+> > >  tools/damon/bin2txt.py    |  64 +++++++
+> > >  tools/damon/damo          |  37 ++++
+> > >  tools/damon/heats.py      | 358 ++++++++++++++++++++++++++++++++++++++
+> > >  tools/damon/nr_regions.py |  88 ++++++++++
+> > >  tools/damon/record.py     | 194 +++++++++++++++++++++
+> > >  tools/damon/report.py     |  45 +++++
+> > >  tools/damon/wss.py        |  94 ++++++++++
+> > >  10 files changed, 917 insertions(+)
+> > >  create mode 100644 tools/damon/.gitignore
+> > >  create mode 100644 tools/damon/_dist.py
+> > >  create mode 100644 tools/damon/bin2txt.py
+> > >  create mode 100755 tools/damon/damo
+> > >  create mode 100644 tools/damon/heats.py
+> > >  create mode 100644 tools/damon/nr_regions.py
+> > >  create mode 100644 tools/damon/record.py
+> > >  create mode 100644 tools/damon/report.py
+> > >  create mode 100644 tools/damon/wss.py
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 5a4db07cad33..95729c138d34 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -4616,6 +4616,7 @@ M:        SeongJae Park <sjpark@amazon.de>
+> > >  L:     linux-mm@kvack.org
+> > >  S:     Maintained
+> > >  F:     mm/damon.c
+> > > +F:     tools/damon/*
+> > >
+> > >  DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
+> > >  L:     netdev@vger.kernel.org
+> > 
+> > Another reason to put the MAINTAINERS update at the end; that way you
+> > don't have multiple edits sprinkled around your patchset.
+> 
+> I made this change here due to the warning from 'checkpatch.pl' (WARNING:
+> added, moved or deleted file(s), does MAINTAINERS need updating?).  But, as it
+> is just a warning, I think simply ignore it and and make this change at the end
+> of the patchset would not be a problem, anyway.  What would you prefer?
 
-x86/hyperv: Suspend/resume the hypercall page for hibernation
+I think I was too worrying for just warnings.  Will ignore the warnings and
+move the MAINTAINERS changes to last patch, as you suggested.
 
-For hibernation the hypercall page must be disabled before the hibernation
-image is created so that subsequent hypercall operations fail safely. On
-resume the hypercall page has to be restored and reenabled to ensure proper
-operation of the resumed kernel.
 
-Implement the necessary suspend/resume callbacks.
+Thanks,
+SeongJae Park
 
-[ tglx: Decrypted changelog ]
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/1578350559-130275-1-git-send-email-decui@microsoft.com
-
----
- arch/x86/hyperv/hv_init.c | 50 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index caaf4dc..b0da532 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -21,11 +21,15 @@
- #include <linux/hyperv.h>
- #include <linux/slab.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/syscore_ops.h>
- #include <clocksource/hyperv_timer.h>
- 
- void *hv_hypercall_pg;
- EXPORT_SYMBOL_GPL(hv_hypercall_pg);
- 
-+/* Storage to save the hypercall page temporarily for hibernation */
-+static void *hv_hypercall_pg_saved;
-+
- u32 *hv_vp_index;
- EXPORT_SYMBOL_GPL(hv_vp_index);
- 
-@@ -246,6 +250,48 @@ static int __init hv_pci_init(void)
- 	return 1;
- }
- 
-+static int hv_suspend(void)
-+{
-+	union hv_x64_msr_hypercall_contents hypercall_msr;
-+
-+	/*
-+	 * Reset the hypercall page as it is going to be invalidated
-+	 * accross hibernation. Setting hv_hypercall_pg to NULL ensures
-+	 * that any subsequent hypercall operation fails safely instead of
-+	 * crashing due to an access of an invalid page. The hypercall page
-+	 * pointer is restored on resume.
-+	 */
-+	hv_hypercall_pg_saved = hv_hypercall_pg;
-+	hv_hypercall_pg = NULL;
-+
-+	/* Disable the hypercall page in the hypervisor */
-+	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+	hypercall_msr.enable = 0;
-+	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+
-+	return 0;
-+}
-+
-+static void hv_resume(void)
-+{
-+	union hv_x64_msr_hypercall_contents hypercall_msr;
-+
-+	/* Re-enable the hypercall page */
-+	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+	hypercall_msr.enable = 1;
-+	hypercall_msr.guest_physical_address =
-+		vmalloc_to_pfn(hv_hypercall_pg_saved);
-+	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+
-+	hv_hypercall_pg = hv_hypercall_pg_saved;
-+	hv_hypercall_pg_saved = NULL;
-+}
-+
-+static struct syscore_ops hv_syscore_ops = {
-+	.suspend	= hv_suspend,
-+	.resume		= hv_resume,
-+};
-+
- /*
-  * This function is to be invoked early in the boot sequence after the
-  * hypervisor has been detected.
-@@ -330,6 +376,8 @@ void __init hyperv_init(void)
- 
- 	x86_init.pci.arch_init = hv_pci_init;
- 
-+	register_syscore_ops(&hv_syscore_ops);
-+
- 	return;
- 
- remove_cpuhp_state:
-@@ -349,6 +397,8 @@ void hyperv_cleanup(void)
- {
- 	union hv_x64_msr_hypercall_contents hypercall_msr;
- 
-+	unregister_syscore_ops(&hv_syscore_ops);
-+
- 	/* Reset our OS id */
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
- 
+> 
+> 
+> Thanks,
+> SeongJae Park
+> 
