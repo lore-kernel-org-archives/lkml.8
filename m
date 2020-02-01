@@ -2,140 +2,104 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DATE_IN_PAST_24_48,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BCDC3524A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A72C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 12:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFAA2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4089B20679
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 12:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580644845;
+	bh=NJ8KQgSJTEBJ1TtD9Rr3dpMRZkr/JGA2pg9DegILm6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HiiepY/kwjjDhwk3axy6M03mA0KaYZg/WTfT2HRrUvQ5XuOQSoz0Gg8gyus2ZWkdF
+	 HL66zU2AdolJ93aQ/cZ2afeuc8L/7xg/5pASXJW1rdNugxq42EuvHJYBW9hh+WiKB9
+	 WNsVplXj2S0yidQ5tWS4wcChUqy1fEdWrivT3OV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgBBLvP (ORCPT
+        id S1726805AbgBBMAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:51:15 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34318 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgBBLvP (ORCPT
+        Sun, 2 Feb 2020 07:00:40 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56910 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgBBMAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:51:15 -0500
-Received: by mail-io1-f69.google.com with SMTP id n26so7505143ioj.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:51:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gDDCrfJjdDDWz7lybOsk1SBJ7NDoCvpPI4Iv7Ym26Q0=;
-        b=KqSC9CsS/hAneVf1y5wernK+ojtH+P8KBp9DrLv69CLI1GIC1DYRfXyJ6IB3i1ozm+
-         6bCbEsnN9DOdwg/4s/BieUN1hCgI4iBSXXQvrQ7ZucK9Ew2s5r8d4OH+MYgWxVzozNwA
-         6wecLEU3ahRqxh7cVSjKsezWU7VtLsIAQ0pgtiaMPjxAfFwBuCDL4wosMA1ohuWBH7hl
-         0aED4EvmvXLv8uSqeIOAtZQX3cte8R4t3+ti/mNDAyPcm1EwK05aqQc/F8OjlNpeuVjE
-         tFy2GnG9FzaYixhXtcDj9o8H8+GUpMHoeOgLayZ9TKi7QfiCToXyU4d4x4jQ2P+lfkxZ
-         gsgQ==
-X-Gm-Message-State: APjAAAUCqV1mBSClpEj8ATmBsWWg2UzhNGqntYjjnI/8tNcdMS+mG4qo
-        lHb0u47pcGeoHt6p8Gg0geBF3BniZoqJElEqHC8WwqDhjWAK
-X-Google-Smtp-Source: APXvYqzvwDgZBZuuegEnMtws/mdG1zvPsn97DNuVVZnFS/i+Oz9CAIVTKP6SFs7/+cH/DrWu5GQ5v9ZxW5D6Z7hmQEwxjJLF4yom
+        Sun, 2 Feb 2020 07:00:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lPzWLn9eAfmZaZgtVXbLGbwWmlBqlL7DYMSG6vEQjls=; b=j2L+e5NWwaUMC1fJqOVZJeRG8
+        XVGp3fN6jeeunuFTJSB9WS2gzfhB8Gbv+c0gkve1Wt1jr0168A+4s48YFgWBwaMBsau1tHQ0vJr7b
+        ekSgPubB5dwhee3telxcBpJwTaufw8PLUnWclHshCCBDYId+if/b4myzi4nBTvVNdjs6Q=;
+Received: from [151.216.144.116] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iyDvT-0006pl-Dn; Sun, 02 Feb 2020 12:00:31 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A94DED00AD7; Sat,  1 Feb 2020 11:03:58 +0000 (GMT)
+Date:   Sat, 1 Feb 2020 11:03:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 11/17] ASoC: cros_ec_codec: Use cros_ec_send_cmd_msg()
+Message-ID: <20200201110358.GR3897@sirena.org.uk>
+References: <20200130203106.201894-1-pmalani@chromium.org>
+ <20200130203106.201894-12-pmalani@chromium.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:a795:: with SMTP id e21mr15049847jaj.1.1580644273174;
- Sun, 02 Feb 2020 03:51:13 -0800 (PST)
-Date:   Sun, 02 Feb 2020 03:51:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006b3d44059d966ca1@google.com>
-Subject: BUG: unable to handle kernel paging request in netlink_unicast
-From:   syzbot <syzbot+da7f30a2f1a15a687839@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mYQNNDjzvANyiJW1"
+Content-Disposition: inline
+In-Reply-To: <20200130203106.201894-12-pmalani@chromium.org>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--mYQNNDjzvANyiJW1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1477ae95e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5766bb49c0bc43b9
-dashboard link: https://syzkaller.appspot.com/bug?extid=da7f30a2f1a15a687839
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+On Thu, Jan 30, 2020 at 12:30:56PM -0800, Prashant Malani wrote:
+> Replace send_ec_host_command() with cros_ec_send_cmd_msg() which does
+> the same thing, but is defined in a common location in platform/chrome
+> and exposed for other modules to use. This allows us to remove
+> send_ec_host_command() entirely.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+I only have this patch, I've nothing else from the series or a
+cover letter.  What's the story with dependencies and so on?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+da7f30a2f1a15a687839@syzkaller.appspotmail.com
+--mYQNNDjzvANyiJW1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-BUG: unable to handle page fault for address: ffff88809d910a50
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0011) - permissions violation
-PGD b001067 P4D b001067 PUD 21ffff067 PMD 800000009d8001e3 
-Oops: 0011 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 12558 Comm: syz-executor.2 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0xffff88809d910a50
-Code: 00 00 00 00 00 00 00 00 00 00 86 7a 03 89 ff ff ff ff 00 60 43 aa 80 88 ff ff 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <50> f8 d1 04 00 c9 ff ff 70 55 a7 86 ff ff ff ff c0 81 e4 8c 80 88
-RSP: 0018:ffffc90004d1f860 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffff869eea30 RCX: dffffc0000000000
-RDX: ffffc900024cb000 RSI: 0000000000005c7e RDI: 0000000000005c7f
-RBP: ffffc90004d1fb20 R08: dffffc0000000000 R09: ffffed1014d22849
-R10: ffffed1014d22849 R11: 0000000000000000 R12: 1ffff11013dabb07
-R13: ffff88809ed5d83a R14: 000000000000006e R15: dffffc0000000000
-FS:  00007f828b464700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88809d910a50 CR3: 000000009c353000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
- ___sys_sendmsg net/socket.c:2397 [inline]
- __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b349
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f828b463c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f828b4646d4 RCX: 000000000045b349
-RDX: 0000000000000000 RSI: 0000000020003e00 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000940 R14: 00000000004ca9e5 R15: 000000000075bf2c
-Modules linked in:
-CR2: ffff88809d910a50
----[ end trace 71a7bd2ec42e29ac ]---
-RIP: 0010:0xffff88809d910a50
-Code: 00 00 00 00 00 00 00 00 00 00 86 7a 03 89 ff ff ff ff 00 60 43 aa 80 88 ff ff 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <50> f8 d1 04 00 c9 ff ff 70 55 a7 86 ff ff ff ff c0 81 e4 8c 80 88
-RSP: 0018:ffffc90004d1f860 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffff869eea30 RCX: dffffc0000000000
-RDX: ffffc900024cb000 RSI: 0000000000005c7e RDI: 0000000000005c7f
-RBP: ffffc90004d1fb20 R08: dffffc0000000000 R09: ffffed1014d22849
-R10: ffffed1014d22849 R11: 0000000000000000 R12: 1ffff11013dabb07
-R13: ffff88809ed5d83a R14: 000000000000006e R15: dffffc0000000000
-FS:  00007f828b464700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88809d910a50 CR3: 000000009c353000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl41WxkACgkQJNaLcl1U
+h9CH4gf/QSLdGaGwrm8clz1CuyNmPEKvX4LsDa9tkoPrV22OkRCgy31n3b+n4x3S
+9KJtgvF1lFaFdo9Wprt0h8mTSBHlChsmiC8pe0n6qFOS6v7VcjRmY0boiO6W9nz2
+lO9C1ZI5tlRXX8ipBnJiugQDn/7zanjYSm1O1wZyxJt1dWuY/KqTDIbZput0vmAS
+Gbeq/152zVWRCjjLMteZ+2O2GYiasRvriSsEu9rnQzO1+6pbpF897W8EgHhtA3kn
+h92YKhAv1UYVkWhV6JBjhv9yfmaMymr1UQ6x6yVsr4Ioppx7i8+a7wSY8AT80ra2
+pdXC0uvO4dIp8fE01StcLOYZQ/lZAQ==
+=kCyu
+-----END PGP SIGNATURE-----
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--mYQNNDjzvANyiJW1--
