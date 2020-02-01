@@ -2,91 +2,107 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
-	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC3AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C64C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1507D20674
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418E92067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 19:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tiX5hS+X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHLFzUfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgBATPS (ORCPT
+        id S1726708AbgBATUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 14:15:18 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38669 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBATPS (ORCPT
+        Sat, 1 Feb 2020 14:20:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:56195 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBATUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 14:15:18 -0500
-Received: by mail-io1-f65.google.com with SMTP id s24so12160228iog.5;
-        Sat, 01 Feb 2020 11:15:17 -0800 (PST)
+        Sat, 1 Feb 2020 14:20:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id q9so11572289wmj.5;
+        Sat, 01 Feb 2020 11:20:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ABSzJZF2QYR/ALyZkNAl85pSM5jELEdL6aovxi8L7cE=;
-        b=tiX5hS+X+OIb6PO1/fhdQqhPLTr2LlITGfcVmBT4xzT9/q7rjMUzcKBJsqP2f4vpkU
-         8Ce8N70yUizJwJQmZhmbYL0Ip63US/v5mI9LAwXz5jibH57eDHUOgRTtiXbh4K+NcANC
-         6RiQ6GQlv1jZ4Uj+g1K6Hb3gBLrVtMa8lsHicbmVenpWagPv7bYiHlpfP37+8BAonfrM
-         7xrb5gHnUfMOyA9z6Ee9mXhG9XWBKmar0dfRElM7q6ZQ4JjXtM7cibnx0P1x/tS+v/6O
-         1XgYSSG+2dlkHG3mW5hrl/hU8M4i4WTPmzT0LkdStpTYSR9k6VG4JyrJil5BQnBrYkBX
-         qqhg==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=uYaIcIDQCFKVdgoAuxhONZQk93UzvmxTUfAkX64lc4c=;
+        b=eHLFzUfents3JEJzdh7POuGi1ogdKKFYSzv1N3mjn3gzN9AJolRqciOJWlcagcZwUL
+         tNGfwicQgQfSQa6RSc7mMar5baByqEsULRpBueMK1bu8uuzWpmuQrBbAW2Y7/wexfl2Y
+         fTnqwxgDiXAC+v79DyiNCj/BVaAwqRePZA5ARlyjEwieepxunCP2Yjl2vXSgMnoFSV5j
+         QQOEEws3YGVlIxdLMK9rp6T8Pb3Rxca+ZjkmPtFgiJk+K96uZ4OGlqT9I/uwooAsg9Uc
+         VRPF2/E8LHYmEs7HF/l85VXGgaZqQ5I3KAbX+il9HR2K9V4khm341uS/rBK2yHszxeG5
+         9Zhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ABSzJZF2QYR/ALyZkNAl85pSM5jELEdL6aovxi8L7cE=;
-        b=EeVU12hQ/S20cylP/A92Fu7Sm1rD0WtQHhD3ak5643T1n0PVJauu8jLdpLAbl05YKy
-         bozZXuXAcb40tqz9D/19uqZGPmTi5nDnBXyCSRp5+UZQhcY3mvL1OaZsXyXZJqlEQ6c6
-         yyqEnQ4ONrfj/hq5PU4R9dqJpxGUWDDUpC9r1Y6u/Y85DimbS5up6lCb3IVPwiEjTmcD
-         jYUDZtYGOlm0xjV6eaiQ83Q6m4jyN+JrtMFxRaE/gcbJMjxxmKTS3tucA/VB7FHhhTeE
-         sTmoxQ3gza0cVCHY5y1fflpsOG/DhoSRA2igCtVNjJAnlHvklYjf2VKYpBiWZagE2zFK
-         Plug==
-X-Gm-Message-State: APjAAAWFXEVRGk07usGKozEOXh89KS9rsW3QAYOaiqsFRNahY1jqnIoS
-        erbaDdaATCAipfeNl4ofdg+Kfc7fsO0ed8ntQoo=
-X-Google-Smtp-Source: APXvYqzYHRKWvt/fN5SVGoaSRf3+7IkzXvcaXyETfYFLOAYzaZSIIdHFjJVSkspqA2OJohkrU9ggTqMpqru8uvsfiGc=
-X-Received: by 2002:a5e:860f:: with SMTP id z15mr12605068ioj.64.1580584517329;
- Sat, 01 Feb 2020 11:15:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20200201124301.21148-1-lukas.bulwahn@gmail.com> <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
-In-Reply-To: <08d88848280f93c171e4003027644a35740a8e8e.camel@perches.com>
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=uYaIcIDQCFKVdgoAuxhONZQk93UzvmxTUfAkX64lc4c=;
+        b=mBQfFw0nvFnEXkfipQuXR6ErGGY9n9sS4rMxWYE1Zs00Xv+R3peL0lQN0dgOxiXf7P
+         zMsJx/cghfElTpppJVxei011L/yhpSkpmNKK/6OHzDCQ8WHRTzwwCC8/yX4sxakWafd9
+         OqECkceA/kdUSAD8V1CMf0teeKy6zjC+74JumKlQrRm++Lte/PXdCoimYtoydPPO/mwQ
+         o0eRavh2hsRdi2h2Oj1ZsW1yEbRVgGBgEuTTNcFV/6ICjCFNzD5Z8epj2sJwuAlnIVIr
+         IK1LhGUalCeEcCpcgT9Mus7aBWO0k0MO+qMny738jzqSIUIjYQqilFrLp4OhI8J64fzy
+         49YA==
+X-Gm-Message-State: APjAAAVR4q4M85kZE5mPatdiKizbMcqSnwVX3T9ZJU8YAVz3GOMDl8hR
+        9uGxlPAlKMOpWV0PgibQWuY=
+X-Google-Smtp-Source: APXvYqzgjSubpJ9uoJKrJRMjZO56BFJTgnT5zXFN4M8f8mt33fqF/x1t+y2yyApt5oqNlILdQ8V3ew==
+X-Received: by 2002:a05:600c:218a:: with SMTP id e10mr18953305wme.6.1580584814590;
+        Sat, 01 Feb 2020 11:20:14 -0800 (PST)
+Received: from felia ([2001:16b8:2d5f:200:619d:5ce8:4d82:51eb])
+        by smtp.gmail.com with ESMTPSA id b137sm17540723wme.26.2020.02.01.11.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 11:20:13 -0800 (PST)
 From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Sat, 1 Feb 2020 20:15:06 +0100
-Message-ID: <CAKXUXMyToKuJf_kGXWjP1pu33XbiMD4kpBcqUhJu==-OBQ8TQQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
-To:     Joe Perches <joe@perches.com>
-Cc:     Karsten Keil <isdn@linux-pingi.de>, Arnd Bergmann <arnd@arndb.de>,
-        isdn4linux@listserv.isdn4linux.de, Netdev <netdev@vger.kernel.org>,
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Sat, 1 Feb 2020 20:20:08 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] MAINTAINERS: correct entry in TI VPE/CAL DRIVERS
+ section
+In-Reply-To: <CAHp75Ve5gFF8R8i_ietRUi+sfy4nQi4MBzG4XnmJfJRqYH85wQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2002012018480.6548@felia>
+References: <20200201151714.26754-1-lukas.bulwahn@gmail.com> <CAHp75Ve5gFF8R8i_ietRUi+sfy4nQi4MBzG4XnmJfJRqYH85wQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 1, 2020 at 7:43 PM Joe Perches <joe@perches.com> wrote:
->
-> Perhaps this is a defect in the small script as
-> get_maintainer does already show the directory and
-> files as being maintained.
->
-> ie: get_maintainer.pl does this:
->
->                 ##if pattern is a directory and it lacks a trailing slash, add one
->                 if ((-d $value)) {
->                     $value =~ s@([^/])$@$1/@;
->                 }
->
 
-True. My script did not implement that logic; I will add that to my
-script as well.
-Fortunately, that is not the major case of issues I have found and
-they might need some improvements.
+
+On Sat, 1 Feb 2020, Andy Shevchenko wrote:
+
+> On Sat, Feb 1, 2020 at 5:17 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> >
+> > perl scripts/parse-maintainers.pl complains:
+> >
+> > Odd non-pattern line '  Documentation/devicetree/bindings/media/ti,cal.yaml
+> > ' for 'TI VPE/CAL DRIVERS' at scripts/parse-maintainers.pl line 147,
+> > <$file> line 16742.
+> >
+> > Commit 2099ef02c6c0 ("media: dt-bindings: media: cal: convert binding to
+> > yaml") introduced this ill-formed line into MAINTAINERS.
+> >
+> > Rectify it now.
+> 
+> There is a patch waiting for upstream:
+> https://lore.kernel.org/linux-media/20200128145828.74161-1-andriy.shevchenko@linux.intel.com/
+> 
+
+Agree, either one of those two patches solves the issue.
 
 Lukas
