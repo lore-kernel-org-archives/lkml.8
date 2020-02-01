@@ -2,99 +2,144 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B88CC35249
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E99C3524A
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1439F2063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qG0FOnbQ"
+	by mail.kernel.org (Postfix) with ESMTP id E865920643
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 22:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgBAWgZ (ORCPT
+        id S1726789AbgBAW5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 17:36:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36527 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgBAWgY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 17:36:24 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so12747582wma.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 14:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2AMOyLmKTPUkVM7s8/ZU8R055mCEqsvD4J4hy4uh7/s=;
-        b=qG0FOnbQrdWCuWBOHD0nCh3Afys+v0czoppQHcFOaB2mPa24GEsOkGlxw26p9JaJl6
-         vdaEQIrOOIZGlcQ5M5lJ16nvTe+KHIxGKa/6YvMcvnhrpBB0/pGXLZwe9bmI+u1WmtDI
-         /e0h8KWwRrfPDxqpWcisYaY2YKL3XFyURABeHkZknyM1pBLJg2zx/7aJCvw1B2OpWbVj
-         dxuVPWIHsHsQKZ0qhb/rPYI4eAvzaC7GGg+FNTQjgnMoqIn52PDjzk1Dtxz7cpYULVIT
-         dW37ge0NVSOJuWYSuOP6jnvTa4vK+hhCBWtzdqxot2b0t7K725GQr+Pg1y51Iih0Oa0K
-         JCxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2AMOyLmKTPUkVM7s8/ZU8R055mCEqsvD4J4hy4uh7/s=;
-        b=RY5Nyg24dtI5nK76Aqq08HgneHM4MhVxZvd/GB9vI4WBNXu+Oa7qUwRF00l9/hB/Hk
-         BcGXsoHcyiLdyCCmYhdLPLAS2/+2A2o69r+VC/ZO5TxFC06pTUaEPBF5HkRg1jnU5+fm
-         h4w19csnHx1oIPirvcky8zb4C2PanysVL4rJI3evRdpEoLQ+mJyzsUbHj2Ducz/A/gTh
-         Ha29pYByoId6jCIBE2QKU/hXfBemdPFzQUkdOEAieMKHwigTtBbl07zWzineRqak9kTq
-         t6j7GNmQ6TDLp2Occ9eZfH9PQUieXzCn+anrYdKvivIZ4nzGE6bMNjSm3J4TkHueCTE1
-         jC7A==
-X-Gm-Message-State: APjAAAUsmK8ezs2OxMXMijd7e5BRIwfzOhSWOipd87XM3bIPIzgpDJJz
-        2tCmgs0nphdjNgaUzPKNfVPqPwx8gP+UI2K6zIJD8g==
-X-Google-Smtp-Source: APXvYqz1ySFbhi3UolsuLzff1BGpmy3jbwgADnyh8YTBy7zWJKbBa7usS6eZV4GGAHl9sJYGbQa26258puKXsRULmcs=
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr21290326wmk.68.1580596582689;
- Sat, 01 Feb 2020 14:36:22 -0800 (PST)
-MIME-Version: 1.0
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
- <20200131183658.GA71555@gmail.com> <CAKv+Gu-oPrM7oh-oTbpQsUmXcYvp9KxjXFb3DUGk__qu59rdBQ@mail.gmail.com>
- <CAPcyv4j7oraMPOhSePaXhULaNJNTFTx+TcJ-y2bqQmvNsTQDmg@mail.gmail.com>
- <CAKv+Gu-bAbc7a1-H5gadQ=YkfKpQUt__3J5cctDNLz1g8gH92A@mail.gmail.com> <CAPcyv4gPrJe2DSPyPJjJQLakEVs3w6x-jDVbX7iydw3D9C4iRQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4gPrJe2DSPyPJjJQLakEVs3w6x-jDVbX7iydw3D9C4iRQ@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 1 Feb 2020 23:36:11 +0100
-Message-ID: <CAKv+Gu8xcww0n9Apnb+ASeyb4pNVuMjJeopO-hC6NDAGQzVg3w@mail.gmail.com>
-Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+        Sat, 1 Feb 2020 17:57:54 -0500
+Received: from mout.perfora.net ([74.208.4.197]:41429 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgBAW5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 17:57:54 -0500
+Received: from marcel-pc.lan ([81.221.75.74]) by mrelay.perfora.net
+ (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id 0MAvmU-1ioAL02lEK-009xEN;
+ Sat, 01 Feb 2020 23:57:47 +0100
+Message-ID: <334ac00a0c83e4178e3195cca5d77acaf4a3fae7.camel@ziswiler.com>
+Subject: Re: [PATCH v6 07/12] ARM: tegra: Don't enable PLLX while resuming
+ from LP1 on Tegra30
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 01 Feb 2020 23:57:42 +0100
+In-Reply-To: <20191218202142.11717-8-digetx@gmail.com>
+References: <20191218202142.11717-1-digetx@gmail.com>
+         <20191218202142.11717-8-digetx@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:/lPdDQ81GkL5XuSj9YrkkiM1dGphpYB4051qkDbcmMibnng5MvM
+ 2jxJI2tNl5CO3EXXWVg+iiWsd+k0L/28ZQ+qGew/CUiB0+KKvHmVe8/qHCAuOgJJS9FyYaZ
+ HqevSICcgJIjSpshkRvQq5qi2ZlzmujibLw4UwynYIlV5hQGF5JfkpjSiyER7O47V+lTF+K
+ 3NMNuV83P/tY18kBWCNnQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qZDMthN2Mx8=:LmWa0a71b+FZal4YAAP3b1
+ JxkKhke0OjZ3paqeKxnUiQOo2WmIZujgcz0ZgsiZALFc7rvrIrefEkJzG6B0QZZh91BMkaj3f
+ GqaYzmTUD3JLGll6lYY9B77MFzgzXCg1v1DY522C6/RYgvET4Nn90EO1Ij3FC6KAjuRVUXPPU
+ AB9dBANdMs0LzRfVNYmRxQwFevrLMk03tMpIvNRTDScsWoqZLUQN9GYIwim5ZN8cgv+V5BDNN
+ ptWzaQmXQ7bb4UxZF8PFgSAMhDW6z0+rjTo7da8QmdQlKa1gIZO3k4s3MnsQ9Eef1NMvQKUhS
+ WHE/1Rr6piETpf0EGzKSIbzxN4CnvDhUMbNo/aSfDhVGuEk/izbmAzh5kUA2ZRoJ8H4cXiXe2
+ LxTYC33aq0i5K1P8LwsyNKECLYRxl2WwSeiChDKjYoL2PNMQeLcld2HGTGKD1hYhry2t46gpD
+ 1vyuRB3ggIcINdg5LcYqXl9YdzX02Z7+D2BL8vJbZQHYwbiUyvYde8QlWQhfRKldq1MwbxOt5
+ i5JkioTvC3bHptEUx4GibUlT7/ugJi+O5sGzUAq5sDAYijdW1vLYdy4G5qhf3jVmUnMOJfjOx
+ 2UL6lxuXUJfSeYRGwSewdavaiSftFGdWOuNVjzm/Qwr9JQghPD2HLwMxXdixCj7gg8xO8+2f9
+ 2ZAGC8+ASVcPSKE6T/wLuSTKryYCqjv3Fy0OrmFtCfepJY2KDmVew+P/q1AEQMxj9JA7ersid
+ XfUtEZ12GgpJOW3nXCmDA8lGxBNZMojH+JO9gKjfDsfm3zirobj+H1hVbZRm01Ge/MDTs0PGa
+ YLahp0dM/2gcuYDswJiXrJGqkrGLUHgEHT88+xWrFGhU1kEwq/tDwNyXUTn/tCoYq3+7scS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Feb 2020 at 23:31, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sat, Feb 1, 2020 at 1:49 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Sat, 1 Feb 2020 at 22:44, Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jan 31, 2020 at 10:45 AM Ard Biesheuvel
-> > > <ard.biesheuvel@linaro.org> wrote:
-> > > >
-> > > > earlycon=efifb may help to get better diagnostics, but you will need to use a camera to capture the output
-> > >
-> > > https://photos.app.goo.gl/uA3Wkaxc8x6A4gK47
-> >
-> > Yeah, so it definitely has to do with the n_removal > 0 path.
-> >
-> > Did you try the change I suggested to Joerg?
->
-> Nice, it worked.
->
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
+Hi Dmitry
 
-Thanks for confirming. I'll spin a proper patch.
+Finally, I came around giving this a try again on the Colibri T20 and
+Apalis/Colibri T30.
+
+Overall, works like a charm and you may add the following to the entire
+series:
+
+On Wed, 2019-12-18 at 23:21 +0300, Dmitry Osipenko wrote:
+> PLLX may be kept disabled if cpufreq driver selects some other clock
+> for
+> CPU. In that case PLLX will be disabled later in the resume path by
+> the
+> CLK driver, which also can enable PLLX if necessary by itself. Thus
+> there
+> is no need to enable PLLX early during resume. Tegra114/124 CLK
+> drivers do
+> not manage PLLX on resume and thus they are left untouched by this
+> patch.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+
+Tested-by: Marcel Ziswiler <marcel@ziswiler.com>
+Tested-on: Colibri T20, Apalis/Colibri T30 on resp. EvalBoards
+
+> ---
+>  arch/arm/mach-tegra/sleep-tegra30.S | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-tegra/sleep-tegra30.S b/arch/arm/mach-
+> tegra/sleep-tegra30.S
+> index 9a20c93abe48..4f073869b8ac 100644
+> --- a/arch/arm/mach-tegra/sleep-tegra30.S
+> +++ b/arch/arm/mach-tegra/sleep-tegra30.S
+> @@ -358,7 +358,6 @@ _no_pll_iddq_exit:
+>  
+>  	pll_enable r1, r0, CLK_RESET_PLLM_BASE, CLK_RESET_PLLM_MISC
+>  	pll_enable r1, r0, CLK_RESET_PLLC_BASE, CLK_RESET_PLLC_MISC
+> -	pll_enable r1, r0, CLK_RESET_PLLX_BASE, CLK_RESET_PLLX_MISC
+>  
+>  _pll_m_c_x_done:
+>  	pll_enable r1, r0, CLK_RESET_PLLP_BASE, CLK_RESET_PLLP_MISC
+> @@ -368,8 +367,18 @@ _pll_m_c_x_done:
+>  	pll_locked r1, r0, CLK_RESET_PLLP_BASE
+>  	pll_locked r1, r0, CLK_RESET_PLLA_BASE
+>  	pll_locked r1, r0, CLK_RESET_PLLC_BASE
+> +
+> +	/*
+> +	 * CPUFreq driver could select other PLL for CPU. PLLX will be
+> +	 * enabled by the Tegra30 CLK driver on an as-needed basis, see
+> +	 * tegra30_cpu_clock_resume().
+> +	 */
+> +	cmp	r10, #TEGRA30
+> +	beq	_pll_m_c_x_locked
+> +
+>  	pll_locked r1, r0, CLK_RESET_PLLX_BASE
+>  
+> +_pll_m_c_x_locked:
+>  	mov32	r7, TEGRA_TMRUS_BASE
+>  	ldr	r1, [r7]
+>  	add	r1, r1, #LOCK_DELAY
+
+Unfortunately, that one does no longer apply after the following patch
+recently got applied on Wed Jan 8:
+
+commit 1a3388d506bf ("ARM: tegra: Enable PLLP bypass during Tegra124
+LP1")
+
+Thanks!
+
+Cheers
+
+Marcel
+
