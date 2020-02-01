@@ -2,232 +2,165 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27384C33CB3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC324206D3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD3D207FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 03:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PEsKAxAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgBADPS (ORCPT
+        id S1727074AbgBADkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 31 Jan 2020 22:15:18 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56990 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbgBADPR (ORCPT
+        Fri, 31 Jan 2020 22:40:36 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11549 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgBADkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 31 Jan 2020 22:15:17 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tos5PLC_1580526907;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Tos5PLC_1580526907)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 01 Feb 2020 11:15:13 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/slub: Detach node lock from counting free objects
-Date:   Sat,  1 Feb 2020 11:15:02 +0800
-Message-Id: <20200201031502.92218-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 31 Jan 2020 22:40:35 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e34f3240000>; Fri, 31 Jan 2020 19:40:20 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 31 Jan 2020 19:40:34 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 31 Jan 2020 19:40:34 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 1 Feb
+ 2020 03:40:34 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 1 Feb 2020 03:40:33 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e34f3310000>; Fri, 31 Jan 2020 19:40:33 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v3 01/12] mm: dump_page(): better diagnostics for compound pages
+Date:   Fri, 31 Jan 2020 19:40:18 -0800
+Message-ID: <20200201034029.4063170-2-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200201034029.4063170-1-jhubbard@nvidia.com>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580528420; bh=iEHx9VxUswj/Tdrgroo0JwdM/JRuVE7oL68Xhz3dQSA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=PEsKAxArjDtswBzqAgz5af48cL0UI4f9D2NDq60bxbMuvJ2drmwUFCZn7pRQafO+Z
+         2yg7FgVo5uMLrBcOb5AsA5Y04DFJTu+V2TMf+3P3z3LCMWRUwwdxVbJ7RfjnFEpCt5
+         dhfIaZJ5YW3hAcui5d2gmpKyKzCW5H3vsygO4nRVTTH5HfylruNT26nQtKebTP1Qzv
+         EQLH9JaRTbDqIB/Udh1i8ReYrZsbJtxa/JOqflC4QrYY4lEji3oGVMLd8UZhs6/3ti
+         xicmmR4iZVJnNpsZdThIpEgT4efffPSsfJ3VmwS2Sl0u3fvuv5vvBnsCPU7O4YxU3f
+         hVS+vy5A+IZaA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lock, protecting the node partial list, is taken when couting the free
-objects resident in that list. It introduces locking contention when the
-page(s) is moved between CPU and node partial lists in allocation path
-on another CPU. So reading "/proc/slabinfo" can possibily block the slab
-allocation on another CPU for a while, 200ms in extreme cases. If the
-slab object is to carry network packet, targeting the far-end disk array,
-it causes block IO jitter issue.
+A compound page collects the refcount in the head page, while leaving
+the refcount of each tail page at zero. Therefore, when debugging a
+problem that involves compound pages, it's best to have diagnostics that
+reflect that situation. However, dump_page() is oblivious to these
+points.
 
-This fixes the block IO jitter issue by caching the total inuse objects in
-the node in advance. The value is retrieved without taking the node partial
-list lock on reading "/proc/slabinfo".
+Change dump_page() as follows:
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Xunlei Pang <xlpang@linux.alibaba.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
+1) For tail pages, print relevant head page information: refcount, in
+   particular. But only do this if the page is not corrupted so badly
+   that the pointer to the head page is all wrong.
+
+2) Do a separate check to catch any (rare) cases of the tail page's
+   refcount being non-zero, and issue a separate, clear pr_warn() if
+   that ever happens.
+
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- mm/slab.h |  1 +
- mm/slub.c | 42 +++++++++++++++++++++++++-----------------
- 2 files changed, 26 insertions(+), 17 deletions(-)
+ mm/debug.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 7e94700aa78c..27d22837f7ff 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -619,6 +619,7 @@ struct kmem_cache_node {
- #ifdef CONFIG_SLUB_DEBUG
- 	atomic_long_t nr_slabs;
- 	atomic_long_t total_objects;
-+	atomic_long_t total_inuse;
- 	struct list_head full;
- #endif
- #endif
-diff --git a/mm/slub.c b/mm/slub.c
-index 503e11b1c4e1..67640e797550 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1060,7 +1060,8 @@ static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
- 	return atomic_long_read(&n->nr_slabs);
- }
- 
--static inline void inc_slabs_node(struct kmem_cache *s, int node, int objects)
-+static inline void inc_slabs_node(struct kmem_cache *s, int node, int objects,
-+				  int inuse)
- {
- 	struct kmem_cache_node *n = get_node(s, node);
- 
-@@ -1073,14 +1074,17 @@ static inline void inc_slabs_node(struct kmem_cache *s, int node, int objects)
- 	if (likely(n)) {
- 		atomic_long_inc(&n->nr_slabs);
- 		atomic_long_add(objects, &n->total_objects);
-+		atomic_long_add(inuse, &n->total_inuse);
- 	}
- }
--static inline void dec_slabs_node(struct kmem_cache *s, int node, int objects)
-+static inline void dec_slabs_node(struct kmem_cache *s, int node, int objects,
-+				  int inuse)
- {
- 	struct kmem_cache_node *n = get_node(s, node);
- 
- 	atomic_long_dec(&n->nr_slabs);
- 	atomic_long_sub(objects, &n->total_objects);
-+	atomic_long_sub(inuse, &n->total_inuse);
- }
- 
- /* Object debug checks for alloc/free paths */
-@@ -1395,9 +1399,11 @@ static inline unsigned long slabs_node(struct kmem_cache *s, int node)
- static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
- 							{ return 0; }
- static inline void inc_slabs_node(struct kmem_cache *s, int node,
--							int objects) {}
-+							int objects,
-+							int inuse) {}
- static inline void dec_slabs_node(struct kmem_cache *s, int node,
--							int objects) {}
-+							int objects,
-+							int inuse) {}
- 
- #endif /* CONFIG_SLUB_DEBUG */
- 
-@@ -1708,7 +1714,7 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
- 	if (!page)
- 		return NULL;
- 
--	inc_slabs_node(s, page_to_nid(page), page->objects);
-+	inc_slabs_node(s, page_to_nid(page), page->objects, page->inuse);
- 
- 	return page;
- }
-@@ -1768,7 +1774,9 @@ static void free_slab(struct kmem_cache *s, struct page *page)
- 
- static void discard_slab(struct kmem_cache *s, struct page *page)
- {
--	dec_slabs_node(s, page_to_nid(page), page->objects);
-+	int inuse = page->objects;
+diff --git a/mm/debug.c b/mm/debug.c
+index ecccd9f17801..beb1c59d784b 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -42,6 +42,32 @@ const struct trace_print_flags vmaflag_names[] =3D {
+ 	{0, NULL}
+ };
+=20
++static void __dump_tail_page(struct page *page, int mapcount)
++{
++	struct page *head =3D compound_head(page);
 +
-+	dec_slabs_node(s, page_to_nid(page), page->objects, inuse);
- 	free_slab(s, page);
- }
- 
-@@ -2396,9 +2404,9 @@ static inline int node_match(struct page *page, int node)
- }
- 
- #ifdef CONFIG_SLUB_DEBUG
--static int count_free(struct page *page)
-+static inline unsigned long node_nr_inuse(struct kmem_cache_node *n)
++	if ((page < head) || (page >=3D head + MAX_ORDER_NR_PAGES)) {
++		/*
++		 * Page is hopelessly corrupted, so limit any reporting to
++		 * information about the page itself. Do not attempt to look at
++		 * the head page.
++		 */
++		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
++			"index:%#lx (corrupted tail page case)\n",
++			page, page_ref_count(page), mapcount, page->mapping,
++			page_to_pgoff(page));
++	} else {
++		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
++			"index:%#lx compound_mapcount:%d\n",
++			page, page_ref_count(head), mapcount, head->mapping,
++			page_to_pgoff(head), compound_mapcount(page));
++	}
++
++	if (page_ref_count(page) !=3D 0)
++		pr_warn("page:%px PROBLEM: non-zero refcount (=3D=3D%d) on this "
++			"tail page\n", page, page_ref_count(page));
++}
++
+ void __dump_page(struct page *page, const char *reason)
  {
--	return page->objects - page->inuse;
-+	return atomic_long_read(&n->total_inuse);
- }
- 
- static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
-@@ -2448,14 +2456,14 @@ slab_out_of_memory(struct kmem_cache *s, gfp_t gfpflags, int nid)
- 	for_each_kmem_cache_node(s, node, n) {
- 		unsigned long nr_slabs;
- 		unsigned long nr_objs;
--		unsigned long nr_free;
-+		unsigned long nr_inuse;
- 
--		nr_free  = count_partial(n, count_free);
- 		nr_slabs = node_nr_slabs(n);
- 		nr_objs  = node_nr_objs(n);
-+		nr_inuse = node_nr_inuse(n);
- 
- 		pr_warn("  node %d: slabs: %ld, objs: %ld, free: %ld\n",
--			node, nr_slabs, nr_objs, nr_free);
-+			node, nr_slabs, nr_objs, nr_objs - nr_inuse);
- 	}
- #endif
- }
-@@ -3348,6 +3356,7 @@ init_kmem_cache_node(struct kmem_cache_node *n)
- #ifdef CONFIG_SLUB_DEBUG
- 	atomic_long_set(&n->nr_slabs, 0);
- 	atomic_long_set(&n->total_objects, 0);
-+	atomic_long_set(&n->total_inuse, 0);
- 	INIT_LIST_HEAD(&n->full);
- #endif
- }
-@@ -3411,7 +3420,7 @@ static void early_kmem_cache_node_alloc(int node)
- 	page->frozen = 0;
- 	kmem_cache_node->node[node] = n;
- 	init_kmem_cache_node(n);
--	inc_slabs_node(kmem_cache_node, node, page->objects);
-+	inc_slabs_node(kmem_cache_node, node, page->objects, page->inuse);
- 
- 	/*
- 	 * No locks need to be taken here as it has just been
-@@ -4857,8 +4866,7 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
- 			if (flags & SO_TOTAL)
- 				x = atomic_long_read(&n->total_objects);
- 			else if (flags & SO_OBJECTS)
--				x = atomic_long_read(&n->total_objects) -
--					count_partial(n, count_free);
-+				x = atomic_long_read(&n->total_inuse);
- 			else
- 				x = atomic_long_read(&n->nr_slabs);
- 			total += x;
-@@ -5900,17 +5908,17 @@ void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo)
- {
- 	unsigned long nr_slabs = 0;
- 	unsigned long nr_objs = 0;
--	unsigned long nr_free = 0;
-+	unsigned long nr_inuse = 0;
- 	int node;
- 	struct kmem_cache_node *n;
- 
- 	for_each_kmem_cache_node(s, node, n) {
- 		nr_slabs += node_nr_slabs(n);
- 		nr_objs += node_nr_objs(n);
--		nr_free += count_partial(n, count_free);
-+		nr_inuse += node_nr_inuse(n);
- 	}
- 
--	sinfo->active_objs = nr_objs - nr_free;
-+	sinfo->active_objs = nr_inuse;
- 	sinfo->num_objs = nr_objs;
- 	sinfo->active_slabs = nr_slabs;
- 	sinfo->num_slabs = nr_slabs;
--- 
-2.23.0
+ 	struct address_space *mapping;
+@@ -75,12 +101,8 @@ void __dump_page(struct page *page, const char *reason)
+ 	 */
+ 	mapcount =3D PageSlab(page) ? 0 : page_mapcount(page);
+=20
+-	if (PageCompound(page))
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+-			"index:%#lx compound_mapcount: %d\n",
+-			page, page_ref_count(page), mapcount,
+-			page->mapping, page_to_pgoff(page),
+-			compound_mapcount(page));
++	if (PageTail(page))
++		__dump_tail_page(page, mapcount);
+ 	else
+ 		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+ 			page, page_ref_count(page), mapcount,
+--=20
+2.25.0
 
