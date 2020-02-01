@@ -2,482 +2,302 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C49C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 09:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84732C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 09:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9B92067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 09:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5070A20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 09:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580550352;
-	bh=FMh94LbQzK+HxdL5yO5WzFN9MTHMpLcaUlJAhD1w+ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CQnXRQwQuq6D3wuwiXkl6uUo2MsSCPcDcnGgK3hVC8u4F9lR+dakDmbF2PSJo6xtu
-	 cHJvhGS+OwGajY6gUU57YP22BtHZIhZtYHIpg6d+Tv9WRRe7CJk0KY53Rs3H9GqP42
-	 QHfK+YPO7R49ul80Tyqg/11F/SWRZhviUbzXSjUw=
+	s=default; t=1580550379;
+	bh=8xBCY2Ukab3ELk1VnRlOmAoS2eA2ID/SmNi8IIBdfoQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=anla8ETcBVM+xpavGYlkkCnlfbPcKnQ1aUkuw51xopmlDwxmCLBw5zUiS8UzGavgA
+	 Y+e8T65nAJaha+NtH8eu84MBVNd7zryMpDP4WslqaFYqVHSaiEyux8BmVm7Lnua0EG
+	 yoJ6x5LbNVUomsK+J3lqWyDUU02D+bluOQCQy9JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgBAJpv (ORCPT
+        id S1726604AbgBAJqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 04:45:51 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53937 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgBAJpv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 04:45:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so10628912wmh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 01:45:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=BHOLRHuFHWBUOnscStz5RjS5lpTP4iFp7XCF9MeHbM8=;
-        b=dSIvKqHM+kVRiaJsDnLEVgu659sNBZRNMYEUgMRpEjs65zuaaYGCAkVInEs8xEWtys
-         94153ksLIOP1a93hddTOV7yfc/9JAoX3k67ai74VoTlLfKgOUACUKcqI+EBscwEijl2+
-         SQJJtIF5iWE/w5LOGGDFIE9G1oTX49oQE8q6kUJq9OLn6gczWEJ7m3YXwz0tSLJguilF
-         Smyakd+nUdQjSWDyiAQz0nGuod8zaZJeFQApupKopv+ymNBrfYZBJk4lE6QIOWgyvlnJ
-         9kGSvRFuCwIiBiWNByz1U1obgSpGDH7UqUc1N0q2xcneNj5q8FI86XQdTR8TTu48/pN0
-         k1mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=BHOLRHuFHWBUOnscStz5RjS5lpTP4iFp7XCF9MeHbM8=;
-        b=tjC5illu1WnV5d+QatlJwFac/rFzK7nQZHcvLgJ8xseJbAZUb7McEnHd9ZM+hzkCvY
-         cl/vuekllQaqTAqSyuhdV2awqTD47D7liUqm8n4Ai40jY0hPlb4oHdLtNyUtn/UAWn+a
-         qg5f2WgUG4AmX1Xxvbk3uHKCZEBy18kG/K5Er7zHnV8oH+dpFwIPomfEJcHzoW6BPVUK
-         SH5tLTwd2uuKrbYjhY+HJiMUNHws0++lzOZFUc/wnqkF7Sa4CfvPkq079WsK+TeP+x1X
-         JmM/0ZFEAoOMSYKSkJLy3RWS10ixC2LM3P57EJCBdRSngjVP2SKoAFq+InLjbdtw1Mfi
-         1I7A==
-X-Gm-Message-State: APjAAAVIbugoNcBvGA1x/sEp3xJ4eW2DM+QBfrBaDcQIBlUg9yQ1Derq
-        HFD5fLg7pynxpiBdijV/Ye0=
-X-Google-Smtp-Source: APXvYqxHI/mw/lscCKHpKchxWJqn/FKy1aGRclGH+63vUP7QuPI7OX2nut8ZfZgmnGvSnzN7g723aA==
-X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr17536719wmm.98.1580550347550;
-        Sat, 01 Feb 2020 01:45:47 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s15sm15788201wrp.4.2020.02.01.01.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 01:45:47 -0800 (PST)
-Date:   Sat, 1 Feb 2020 10:45:45 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     =?iso-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: [TEST PATCH RFC] Revert the EFI leak fixes for now (was: Re: EFI
- boot crash regression (was: Re: 5.6-### doesn't boot))
-Message-ID: <20200201094545.GC71555@gmail.com>
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com>
- <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
- <20200131183658.GA71555@gmail.com>
+        Sat, 1 Feb 2020 04:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbgBAJqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 04:46:18 -0500
+Received: from localhost (unknown [83.216.75.91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F35372067C;
+        Sat,  1 Feb 2020 09:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580550376;
+        bh=8xBCY2Ukab3ELk1VnRlOmAoS2eA2ID/SmNi8IIBdfoQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ptx8TmpR8eCBoNq9ISQR1Hxv3Sq9t9s6agvZffwOp2rX5uoi8LdqP34wqrcU/Lo8C
+         wGbXZeQX0sH6+k7H0eDOp871Vp7watdxNgIWDGds0UG8ZIMHaPIkR8uiigZQlTASpy
+         FzdvXyqub0ODonU1lh5IKJlCun9tqpZDgPgi067U=
+Date:   Sat, 1 Feb 2020 09:46:09 +0000
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.5.1
+Message-ID: <20200201094609.GA2302709@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200131183658.GA71555@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Jörg Otte wrote:
+I'm announcing the release of the 5.5.1 kernel.
 
-> It's bisected.
-> The first bad commit is :
-> 1db91035d01aa8bfa2350c00ccb63d629b4041ad
-> efi: Add tracking for dynamically allocated memmaps
+All users of the 5.5 kernel series must upgrade.
 
-> Unfortunately I can not revert because of compile errors!
->
-> In file included from /media/jojo/deftoshiba/kernel/linux/init/main.c:48:
-> /media/jojo/deftoshiba/kernel/linux/include/linux/efi.h:975:1: error:
-> version control conflict marker in file
-> <<<<<<< HEAD
+The updated 5.5.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.5.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-So 1db91035d0 doesn't revert cleanly, because 484a418d0754 depends on it, 
-plus there a third commit (f0ef6523475f) that has a semantic dependency 
-on 1db91035d01a.
+thanks,
 
-But you can revert them all, if done in reverse chronological order:
+greg k-h
 
-  git revert f0ef6523475f # ("efi: Fix efi_memmap_alloc() leaks")
-  git revert 484a418d0754 # ("efi: Fix handling of multiple efi_fake_mem= entries")
-  git revert 1db91035d01a # ("efi: Add tracking for dynamically allocated memmaps")
+------------
 
-You can paste those three lines into a shell as-is, or you can apply the 
-patch below which is a combination of these three reverts.
+ Makefile                                               |    2=20
+ arch/arm64/kvm/debug.c                                 |    6=20
+ arch/um/include/asm/common.lds.S                       |    2=20
+ arch/um/kernel/dyn.lds.S                               |    1=20
+ crypto/af_alg.c                                        |    6=20
+ crypto/pcrypt.c                                        |    3=20
+ drivers/android/binder.c                               |   37 ++--
+ drivers/base/component.c                               |    8 -
+ drivers/base/test/test_async_driver_probe.c            |    3=20
+ drivers/bluetooth/btusb.c                              |    2=20
+ drivers/crypto/caam/ctrl.c                             |    6=20
+ drivers/crypto/chelsio/chcr_algo.c                     |   16 --
+ drivers/crypto/vmx/aes_xts.c                           |    3=20
+ drivers/iio/adc/stm32-dfsdm-adc.c                      |    2=20
+ drivers/iio/gyro/st_gyro_core.c                        |   75 +++++++++
+ drivers/misc/mei/hdcp/mei_hdcp.c                       |   33 +++-
+ drivers/misc/mei/hw-me-regs.h                          |    6=20
+ drivers/misc/mei/pci-me.c                              |    4=20
+ drivers/net/ethernet/marvell/mvneta.c                  |    6=20
+ drivers/net/ethernet/mellanox/mlxsw/minimal.c          |    2=20
+ drivers/net/ethernet/socionext/netsec.c                |    4=20
+ drivers/net/wireless/ath/ath9k/hif_usb.c               |    2=20
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4=20
+ drivers/net/wireless/intersil/orinoco/orinoco_usb.c    |    4=20
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |    2=20
+ drivers/net/wireless/rsi/rsi_91x_hal.c                 |   12 -
+ drivers/net/wireless/rsi/rsi_91x_usb.c                 |   37 +++-
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c           |    2=20
+ drivers/power/supply/ingenic-battery.c                 |   15 +
+ drivers/staging/most/net/net.c                         |   10 +
+ drivers/staging/vt6656/device.h                        |    2=20
+ drivers/staging/vt6656/int.c                           |    6=20
+ drivers/staging/vt6656/main_usb.c                      |    1=20
+ drivers/staging/vt6656/rxtx.c                          |   26 +--
+ drivers/staging/wlan-ng/prism2mgmt.c                   |    2=20
+ drivers/tty/serial/8250/8250_bcm2835aux.c              |    2=20
+ drivers/tty/serial/imx.c                               |   51 ++++--
+ drivers/usb/dwc3/core.c                                |    3=20
+ drivers/usb/dwc3/dwc3-pci.c                            |    4=20
+ drivers/usb/host/xhci-tegra.c                          |    1=20
+ drivers/usb/serial/ir-usb.c                            |  136 ++++++++++++=
++----
+ drivers/usb/typec/tcpm/fusb302.c                       |    2=20
+ drivers/usb/typec/tcpm/wcove.c                         |    2=20
+ fs/cifs/cifsglob.h                                     |    1=20
+ fs/cifs/smb2misc.c                                     |    2=20
+ fs/cifs/smb2ops.c                                      |    9 -
+ fs/cifs/smb2transport.c                                |    2=20
+ fs/cifs/transport.c                                    |    3=20
+ fs/debugfs/file.c                                      |   17 +-
+ include/linux/usb/irda.h                               |   13 +
+ include/net/pkt_cls.h                                  |   33 ++--
+ include/net/sch_generic.h                              |    3=20
+ include/net/udp.h                                      |    3=20
+ init/Kconfig                                           |    1=20
+ kernel/gcov/Kconfig                                    |    2=20
+ net/ipv4/nexthop.c                                     |    4=20
+ net/rxrpc/input.c                                      |   12 -
+ net/sched/cls_basic.c                                  |   11 +
+ net/sched/cls_bpf.c                                    |   11 +
+ net/sched/cls_flower.c                                 |   11 +
+ net/sched/cls_fw.c                                     |   11 +
+ net/sched/cls_matchall.c                               |   11 +
+ net/sched/cls_route.c                                  |   11 +
+ net/sched/cls_rsvp.h                                   |   11 +
+ net/sched/cls_tcindex.c                                |   11 +
+ net/sched/cls_u32.c                                    |   11 +
+ net/sched/ematch.c                                     |    3=20
+ net/sched/sch_api.c                                    |   47 ++++-
+ 68 files changed, 590 insertions(+), 217 deletions(-)
 
-Jörg, can you confirm that doing these reverts fixes booting on your 
-system? If it does then a full dmesg from that kernel would be useful.
+Andrew Murray (1):
+      KVM: arm64: Write arch.mdcr_el2 changes since last vcpu_load on VHE
 
-FWIW I reviewed the bisected commit and didn't find the bug but I also 
-couldn't convince myself it's a 1:1 identity transformation and cleanup 
-of the existing logic.
+Andrey Shvetsov (1):
+      staging: most: net: fix buffer overflow
 
-The size arithmethics transformation looks correct at first sight, but 
-the data->flags handling in particular looks rather interwoven.
+Andy Shevchenko (1):
+      iio: st_gyro: Correct data for LSM9DS0 gyro
 
-Thanks,
+Bin Liu (1):
+      usb: dwc3: turn off VBUS when leaving host mode
 
-	Ingo
+Christophe JAILLET (1):
+      mlxsw: minimal: Fix an error handling path in 'mlxsw_m_port_create()'
 
-============================>
+Colin Ian King (1):
+      staging: wlan-ng: ensure error return is actually returned
 
- arch/x86/platform/efi/efi.c     | 10 ++----
- arch/x86/platform/efi/quirks.c  | 23 +++++++------
- drivers/firmware/efi/fake_mem.c | 43 ++++++++++++------------
- drivers/firmware/efi/memmap.c   | 72 ++++++++++++-----------------------------
- include/linux/efi.h             | 13 +++-----
- 5 files changed, 63 insertions(+), 98 deletions(-)
+Cong Wang (2):
+      net_sched: fix ops->bind_class() implementations
+      net_sched: walk through all child classes in tc_bind_tclass()
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 59f7f6d60cf6..4e46d2d24352 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -304,16 +304,10 @@ static void __init efi_clean_memmap(void)
- 	}
- 
- 	if (n_removal > 0) {
--		struct efi_memory_map_data data = {
--			.phys_map = efi.memmap.phys_map,
--			.desc_version = efi.memmap.desc_version,
--			.desc_size = efi.memmap.desc_size,
--			.size = data.desc_size * (efi.memmap.nr_map - n_removal),
--			.flags = 0,
--		};
-+		u64 size = efi.memmap.nr_map - n_removal;
- 
- 		pr_warn("Removing %d invalid memory map entries.\n", n_removal);
--		efi_memmap_install(&data);
-+		efi_memmap_install(efi.memmap.phys_map, size);
- 	}
- }
- 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 88d32c06cffa..86b44289ac55 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -244,7 +244,7 @@ EXPORT_SYMBOL_GPL(efi_query_variable_store);
-  */
- void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- {
--	struct efi_memory_map_data data = { 0 };
-+	phys_addr_t new_phys, new_size;
- 	struct efi_mem_range mr;
- 	efi_memory_desc_t md;
- 	int num_entries;
-@@ -272,21 +272,24 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	num_entries = efi_memmap_split_count(&md, &mr.range);
- 	num_entries += efi.memmap.nr_map;
- 
--	if (efi_memmap_alloc(num_entries, &data) != 0) {
-+	new_size = efi.memmap.desc_size * num_entries;
-+
-+	new_phys = efi_memmap_alloc(num_entries);
-+	if (!new_phys) {
- 		pr_err("Could not allocate boot services memmap\n");
- 		return;
- 	}
- 
--	new = early_memremap(data.phys_map, data.size);
-+	new = early_memremap(new_phys, new_size);
- 	if (!new) {
- 		pr_err("Failed to map new boot services memmap\n");
- 		return;
- 	}
- 
- 	efi_memmap_insert(&efi.memmap, new, &mr);
--	early_memunmap(new, data.size);
-+	early_memunmap(new, new_size);
- 
--	efi_memmap_install(&data);
-+	efi_memmap_install(new_phys, num_entries);
- 	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
- 	e820__update_table(e820_table);
- }
-@@ -405,7 +408,7 @@ static void __init efi_unmap_pages(efi_memory_desc_t *md)
- 
- void __init efi_free_boot_services(void)
- {
--	struct efi_memory_map_data data = { 0 };
-+	phys_addr_t new_phys, new_size;
- 	efi_memory_desc_t *md;
- 	int num_entries = 0;
- 	void *new, *new_md;
-@@ -460,12 +463,14 @@ void __init efi_free_boot_services(void)
- 	if (!num_entries)
- 		return;
- 
--	if (efi_memmap_alloc(num_entries, &data) != 0) {
-+	new_size = efi.memmap.desc_size * num_entries;
-+	new_phys = efi_memmap_alloc(num_entries);
-+	if (!new_phys) {
- 		pr_err("Failed to allocate new EFI memmap\n");
- 		return;
- 	}
- 
--	new = memremap(data.phys_map, data.size, MEMREMAP_WB);
-+	new = memremap(new_phys, new_size, MEMREMAP_WB);
- 	if (!new) {
- 		pr_err("Failed to map new EFI memmap\n");
- 		return;
-@@ -489,7 +494,7 @@ void __init efi_free_boot_services(void)
- 
- 	memunmap(new);
- 
--	if (efi_memmap_install(&data) != 0) {
-+	if (efi_memmap_install(new_phys, num_entries)) {
- 		pr_err("Could not install new EFI memmap\n");
- 		return;
- 	}
-diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-index 6e0f34a38171..bb9fc70d0cfa 100644
---- a/drivers/firmware/efi/fake_mem.c
-+++ b/drivers/firmware/efi/fake_mem.c
-@@ -34,45 +34,46 @@ static int __init cmp_fake_mem(const void *x1, const void *x2)
- 	return 0;
- }
- 
--static void __init efi_fake_range(struct efi_mem_range *efi_range)
-+void __init efi_fake_memmap(void)
- {
--	struct efi_memory_map_data data = { 0 };
- 	int new_nr_map = efi.memmap.nr_map;
- 	efi_memory_desc_t *md;
-+	phys_addr_t new_memmap_phy;
- 	void *new_memmap;
-+	int i;
-+
-+	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
-+		return;
- 
- 	/* count up the number of EFI memory descriptor */
--	for_each_efi_memory_desc(md)
--		new_nr_map += efi_memmap_split_count(md, &efi_range->range);
-+	for (i = 0; i < nr_fake_mem; i++) {
-+		for_each_efi_memory_desc(md) {
-+			struct range *r = &efi_fake_mems[i].range;
-+
-+			new_nr_map += efi_memmap_split_count(md, r);
-+		}
-+	}
- 
- 	/* allocate memory for new EFI memmap */
--	if (efi_memmap_alloc(new_nr_map, &data) != 0)
-+	new_memmap_phy = efi_memmap_alloc(new_nr_map);
-+	if (!new_memmap_phy)
- 		return;
- 
- 	/* create new EFI memmap */
--	new_memmap = early_memremap(data.phys_map, data.size);
-+	new_memmap = early_memremap(new_memmap_phy,
-+				    efi.memmap.desc_size * new_nr_map);
- 	if (!new_memmap) {
--		__efi_memmap_free(data.phys_map, data.size, data.flags);
-+		memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
- 		return;
- 	}
- 
--	efi_memmap_insert(&efi.memmap, new_memmap, efi_range);
-+	for (i = 0; i < nr_fake_mem; i++)
-+		efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
- 
- 	/* swap into new EFI memmap */
--	early_memunmap(new_memmap, data.size);
--
--	efi_memmap_install(&data);
--}
--
--void __init efi_fake_memmap(void)
--{
--	int i;
-+	early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
- 
--	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
--		return;
--
--	for (i = 0; i < nr_fake_mem; i++)
--		efi_fake_range(&efi_fake_mems[i]);
-+	efi_memmap_install(new_memmap_phy, new_nr_map);
- 
- 	/* print new EFI memmap */
- 	efi_print_memmap();
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 2ff1883dc788..4f98eb12c172 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -29,32 +29,9 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
- 	return PFN_PHYS(page_to_pfn(p));
- }
- 
--void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
--{
--	if (flags & EFI_MEMMAP_MEMBLOCK) {
--		if (slab_is_available())
--			memblock_free_late(phys, size);
--		else
--			memblock_free(phys, size);
--	} else if (flags & EFI_MEMMAP_SLAB) {
--		struct page *p = pfn_to_page(PHYS_PFN(phys));
--		unsigned int order = get_order(size);
--
--		free_pages((unsigned long) page_address(p), order);
--	}
--}
--
--static void __init efi_memmap_free(void)
--{
--	__efi_memmap_free(efi.memmap.phys_map,
--			efi.memmap.desc_size * efi.memmap.nr_map,
--			efi.memmap.flags);
--}
--
- /**
-  * efi_memmap_alloc - Allocate memory for the EFI memory map
-  * @num_entries: Number of entries in the allocated map.
-- * @data: efi memmap installation parameters
-  *
-  * Depending on whether mm_init() has already been invoked or not,
-  * either memblock or "normal" page allocation is used.
-@@ -62,29 +39,14 @@ static void __init efi_memmap_free(void)
-  * Returns the physical address of the allocated memory map on
-  * success, zero on failure.
-  */
--int __init efi_memmap_alloc(unsigned int num_entries,
--		struct efi_memory_map_data *data)
-+phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
- {
--	/* Expect allocation parameters are zero initialized */
--	WARN_ON(data->phys_map || data->size);
--
--	data->size = num_entries * efi.memmap.desc_size;
--	data->desc_version = efi.memmap.desc_version;
--	data->desc_size = efi.memmap.desc_size;
--	data->flags &= ~(EFI_MEMMAP_SLAB | EFI_MEMMAP_MEMBLOCK);
--	data->flags |= efi.memmap.flags & EFI_MEMMAP_LATE;
--
--	if (slab_is_available()) {
--		data->flags |= EFI_MEMMAP_SLAB;
--		data->phys_map = __efi_memmap_alloc_late(data->size);
--	} else {
--		data->flags |= EFI_MEMMAP_MEMBLOCK;
--		data->phys_map = __efi_memmap_alloc_early(data->size);
--	}
-+	unsigned long size = num_entries * efi.memmap.desc_size;
- 
--	if (!data->phys_map)
--		return -ENOMEM;
--	return 0;
-+	if (slab_is_available())
-+		return __efi_memmap_alloc_late(size);
-+
-+	return __efi_memmap_alloc_early(size);
- }
- 
- /**
-@@ -102,7 +64,8 @@ int __init efi_memmap_alloc(unsigned int num_entries,
-  *
-  * Returns zero on success, a negative error code on failure.
-  */
--static int __init __efi_memmap_init(struct efi_memory_map_data *data)
-+static int __init
-+__efi_memmap_init(struct efi_memory_map_data *data)
- {
- 	struct efi_memory_map map;
- 	phys_addr_t phys_map;
-@@ -122,9 +85,6 @@ static int __init __efi_memmap_init(struct efi_memory_map_data *data)
- 		return -ENOMEM;
- 	}
- 
--	/* NOP if data->flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB) == 0 */
--	efi_memmap_free();
--
- 	map.phys_map = data->phys_map;
- 	map.nr_map = data->size / data->desc_size;
- 	map.map_end = map.map + data->size;
-@@ -224,7 +184,8 @@ int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size)
- 
- /**
-  * efi_memmap_install - Install a new EFI memory map in efi.memmap
-- * @ctx: map allocation parameters (address, size, flags)
-+ * @addr: Physical address of the memory map
-+ * @nr_map: Number of entries in the memory map
-  *
-  * Unlike efi_memmap_init_*(), this function does not allow the caller
-  * to switch from early to late mappings. It simply uses the existing
-@@ -232,11 +193,20 @@ int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size)
-  *
-  * Returns zero on success, a negative error code on failure.
-  */
--int __init efi_memmap_install(struct efi_memory_map_data *data)
-+int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map)
- {
-+	struct efi_memory_map_data data;
-+	unsigned long flags;
-+
- 	efi_memmap_unmap();
- 
--	return __efi_memmap_init(data);
-+	data.phys_map = addr;
-+	data.size = efi.memmap.desc_size * nr_map;
-+	data.desc_version = efi.memmap.desc_version;
-+	data.desc_size = efi.memmap.desc_size;
-+	data.flags = efi.memmap.flags & EFI_MEMMAP_LATE;
-+
-+	return __efi_memmap_init(&data);
- }
- 
- /**
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 7efd7072cca5..f117d68c314e 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -759,8 +759,8 @@ typedef union {
- 
- /*
-  * Architecture independent structure for describing a memory map for the
-- * benefit of efi_memmap_init_early(), and for passing context between
-- * efi_memmap_alloc() and efi_memmap_install().
-+ * benefit of efi_memmap_init_early(), saving us the need to pass four
-+ * parameters.
-  */
- struct efi_memory_map_data {
- 	phys_addr_t phys_map;
-@@ -778,8 +778,6 @@ struct efi_memory_map {
- 	unsigned long desc_version;
- 	unsigned long desc_size;
- #define EFI_MEMMAP_LATE (1UL << 0)
--#define EFI_MEMMAP_MEMBLOCK (1UL << 1)
--#define EFI_MEMMAP_SLAB (1UL << 2)
- 	unsigned long flags;
- };
- 
-@@ -974,14 +972,11 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
- #endif
- extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
- 
--extern int __init efi_memmap_alloc(unsigned int num_entries,
--				   struct efi_memory_map_data *data);
--extern void __efi_memmap_free(u64 phys, unsigned long size,
--			      unsigned long flags);
-+extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
- extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
- extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
- extern void __init efi_memmap_unmap(void);
--extern int __init efi_memmap_install(struct efi_memory_map_data *data);
-+extern int __init efi_memmap_install(phys_addr_t addr, unsigned int nr_map);
- extern int __init efi_memmap_split_count(efi_memory_desc_t *md,
- 					 struct range *range);
- extern void __init efi_memmap_insert(struct efi_memory_map *old_memmap,
+Daniel Axtens (1):
+      crypto: vmx - reject xts inputs that are too short
+
+David Howells (1):
+      rxrpc: Fix use-after-free in rxrpc_receive_data()
+
+Eric Biggers (1):
+      crypto: chelsio - fix writing tfm flags to wrong place
+
+Eric Dumazet (1):
+      net_sched: ematch: reject invalid TCF_EM_SIMPLE
+
+Eric Snowberg (1):
+      debugfs: Return -EPERM when locked down
+
+Greg Kroah-Hartman (1):
+      Linux 5.5.1
+
+Guenter Roeck (1):
+      driver core: Fix test_async_driver_probe if NUMA is disabled
+
+Heikki Krogerus (1):
+      usb: dwc3: pci: add ID for the Intel Comet Lake -V variant
+
+Herbert Xu (2):
+      crypto: af_alg - Use bh_lock_sock in sk_destruct
+      crypto: pcrypt - Fix user-after-free on module unload
+
+Iuliana Prodan (1):
+      crypto: caam - do not reset pointer size from MCFGR register
+
+Johan Hovold (14):
+      Bluetooth: btusb: fix non-atomic allocation in completion handler
+      orinoco_usb: fix interface sanity check
+      rsi_91x_usb: fix interface sanity check
+      USB: serial: ir-usb: add missing endpoint sanity check
+      USB: serial: ir-usb: fix link-speed handling
+      USB: serial: ir-usb: fix IrLAP framing
+      ath9k: fix storage endpoint lookup
+      brcmfmac: fix interface sanity check
+      rtl8xxxu: fix interface sanity check
+      zd1211rw: fix storage endpoint lookup
+      rsi: fix use-after-free on failed probe and unbind
+      rsi: fix use-after-free on probe errors
+      rsi: fix memory leak on failed URB submission
+      rsi: fix non-atomic allocation in completion handler
+
+Johannes Berg (1):
+      Revert "um: Enable CONFIG_CONSTRUCTORS"
+
+Lorenzo Bianconi (2):
+      net: socionext: fix possible user-after-free in netsec_process_rx
+      net: socionext: fix xdp_result initialization in netsec_process_rx
+
+Lubomir Rintel (1):
+      component: do not dereference opaque pointer in debugfs
+
+Lukas Wunner (1):
+      serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
+
+Malcolm Priestley (3):
+      staging: vt6656: correct packet types for CTS protect, mode.
+      staging: vt6656: use NULLFUCTION stack on mac80211
+      staging: vt6656: Fix false Tx excessive retries reporting.
+
+Martin Fuzzey (1):
+      binder: fix log spam for existing debugfs file creation.
+
+Olivier Moysan (1):
+      iio: adc: stm32-dfsdm: fix single conversion
+
+Paul Cercueil (1):
+      power/supply: ingenic-battery: Don't change scale if there's only one
+
+Paulo Alcantara (SUSE) (1):
+      cifs: Fix memory allocation in __smb2_handle_cancelled_cmd()
+
+Peter Robinson (1):
+      usb: host: xhci-tegra: set MODULE_FIRMWARE for tegra186
+
+Ronnie Sahlberg (1):
+      cifs: set correct max-buffer-size for smb2_ioctl_init()
+
+Stephen Worley (1):
+      net: include struct nhmsg size in nh nlmsg size
+
+Sven Auhagen (1):
+      mvneta driver disallow XDP program on hardware buffer management
+
+Thomas Hebb (2):
+      usb: typec: wcove: fix "op-sink-microwatt" default that was in mW
+      usb: typec: fusb302: fix "op-sink-microwatt" default that was in mW
+
+Tomas Winkler (3):
+      mei: hdcp: bind only with i915 on the same PCH
+      mei: me: add comet point (lake) H device ids
+      mei: me: add jasper point DID
+
+Uwe Kleine-K=F6nig (1):
+      serial: imx: fix a race condition in receive path
+
+Vincent Whitchurch (1):
+      CIFS: Fix task struct use-after-free on reconnect
+
+Willem de Bruijn (1):
+      udp: segment looped gso packets correctly
+
+
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl41SOEACgkQONu9yGCS
+aT5BZBAAyLdF3e0r60AK1fWHcvWnbXwZJavLYiX75R62bRFHO6DtmTjRxNm8+UXc
+nsRzinfHbKbBzxK+I0iZ9RUD54U5DSZJJsWfHmVH/tTstkH1otUxippKChuz97lW
+g3y+fDUKPZvM7vzFQdM3l6zAxYtlrzWA12Ge+BL/InU7RGl4nlUlA+V+/4onrskk
+R65CpqvsR6k0JlCNUOT/LtAaEPY8bKhBn+QDfEFS1pM7kla8hOjb/ZOl732T/xB0
++4ckbWrljcKb9uPL+/zu+EhhuyiHbedjZMPvQF8V5KByUlg8LjHM4/Ld1qacLRjd
+pXhrwu0GDMsTxOOVJoAelm3KpEN7qmDgur8knfwiY4Lf6SNWhMMrq5Spyx9d1cXm
+8yxBYOelJwHj6wC4hXsmH+utYHkMMSPy6ew+xmnLRijn9ya3xImfZkUiIpmptUT9
+IeZoVqaGuvGfSzERgJNNefFLqe9RALWuuzrKW6dHCLQ7RbR3bhMsPF8/wuZqWg+e
+QwxPBEGDy0tAOcZVihtKyj98ivVMfnuJV6oYHcvEAg3+ziAtwALqMYLWdVKDFgG3
+JABn91X5XdljUxwlvfMn4YrYWT4Dosa5dywiqNrAWQMiGxjA3bIem/Vg6CyJtMv5
+N9eOJVjoDkgYDWeHgfd2fWl7FssgN5einMqwk1XPFKAelB1iPEE=
+=tl6h
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
