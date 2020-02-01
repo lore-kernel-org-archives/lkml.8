@@ -2,99 +2,105 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4421C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FCBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C73206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580542132;
-	bh=ySVJ+VtpaS7wNXidTmBslbOzBhZtcJN03yeuJlTde7M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r6dndCB5JjQog751XsjgUHYjwQGOfP85WqQp2bFUlnNEwv5kyoDPoMheXJe8jZI3R
-	 VqDUgnRa5sj/K8cZa9kQcXDPaVbCtTaomOPv5OPli974dKnJ91Iwd1XQEjqP9zOLMC
-	 kTIdC5a3b6gJGrYpq236nk45ToaXdzY+GvkjP3sI=
+	by mail.kernel.org (Postfix) with ESMTP id 900F2206D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 07:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgBAH2u (ORCPT
+        id S1726971AbgBAHqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 02:28:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59536 "EHLO mail.kernel.org"
+        Sat, 1 Feb 2020 02:46:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:41104 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbgBAH2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 02:28:50 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE2D206A2;
-        Sat,  1 Feb 2020 07:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580542129;
-        bh=ySVJ+VtpaS7wNXidTmBslbOzBhZtcJN03yeuJlTde7M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Rkt69jvOhucipTVCXEb8mywLEZKU4kEwl2oqOrEOkgWX3FUvqf8W17ioWNlPafYmO
-         6LsDeRYDkrIyQpeZmqn3Np3jeYVaVX4MaFv5abW+i2YFvirTOuUSo5CgTNGaqcTjVd
-         iVTWIZFDprRfSYLoiBSAFLbQOs8TVyf5eHt5CBqA=
-Date:   Sat, 1 Feb 2020 16:28:45 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] tracing: Remove useless code in
- dynevent_arg_pair_add()
-Message-Id: <20200201162845.4671305320ca03d5d42b966d@kernel.org>
-In-Reply-To: <7880a1268217886cdba7035526650195668da856.1580506712.git.zanussi@kernel.org>
-References: <cover.1580506712.git.zanussi@kernel.org>
-        <7880a1268217886cdba7035526650195668da856.1580506712.git.zanussi@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726156AbgBAHqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 02:46:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EB7CFEC;
+        Fri, 31 Jan 2020 23:46:32 -0800 (PST)
+Received: from u200856.usa.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC3C73F52E;
+        Fri, 31 Jan 2020 23:50:10 -0800 (PST)
+From:   Jeremy Linton <jeremy.linton@arm.com>
+To:     netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net, andrew@lunn.ch,
+        hkallweit1@gmail.com, Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH 0/6] Add ACPI bindings to the genet
+Date:   Sat,  1 Feb 2020 01:46:19 -0600
+Message-Id: <20200201074625.8698-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 15:55:33 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+This patch series allows the BCM GENET, as used on the RPi4,
+to attach when booted in an ACPI environment. The DSDT entry to
+trigger this is seen below. Of note, the first patch adds a
+small extension to the mdio layer which allows drivers to find
+the mii_bus without firmware assistance. The fifth patch in
+the set retrieves the MAC address from the umac registers
+rather than carrying it directly in the DSDT. This of course
+requires the firmware to pre-program it, so we continue to fall
+back on a random one if it appears to be garbage.
 
-> The final addition to q is unnecessary, since q isn't ever used
-> afterwards.
-> 
+v1 -> v2:
+     add a core routine mdio_find_bus(), then use it to attach
+         to the phy rather than hard-coding the id.
+     Broke initial ACPI support patch into 3 parts, two for bcmmii.c
+     Address some review comments from Florian
+     Lower the severity of a few dev_warns that happen all the time.
 
-Yeah, thanks for updating :)
++    Device (ETH0)
++    {
++      Name (_HID, "BCM6E4E")
++      Name (_UID, 0)
++      Name (_CCA, 0x0)
++      Method (_STA)
++      {
++        Return (0xf)
++      }
++      Method (_CRS, 0x0, Serialized)
++      {
++        Name (RBUF, ResourceTemplate ()
++        {
++          Memory32Fixed (ReadWrite, 0xFd580000, 0x10000, )
++          Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 0xBD }
++          Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 0xBE }
++        })
++        Return (RBUF)
++      }
++      Name (_DSD, Package () {
++        ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++          Package () {
++          Package () { "phy-mode", "rgmii" },
++        }
++      })
++    }
++
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Jeremy Linton (6):
+  mdio_bus: Add generic mdio_find_bus()
+  net: bcmgenet: refactor phy mode configuration
+  net: bcmgenet: enable automatic phy discovery
+  net: bcmgenet: Initial bcmgenet ACPI support
+  net: bcmgenet: Fetch MAC address from the adapter
+  net: bcmgenet: reduce severity of missing clock warnings
 
-Thank you,
-
-
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-> ---
->  kernel/trace/trace_dynevent.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-> index f9cfcdc9d1f3..204275ec8d71 100644
-> --- a/kernel/trace/trace_dynevent.c
-> +++ b/kernel/trace/trace_dynevent.c
-> @@ -322,7 +322,7 @@ int dynevent_arg_pair_add(struct dynevent_cmd *cmd,
->  		pr_err("field string is too long: %s\n", arg_pair->rhs);
->  		return -E2BIG;
->  	}
-> -	cmd->remaining -= delta; q += delta;
-> +	cmd->remaining -= delta;
->  
->  	return ret;
->  }
-> -- 
-> 2.14.1
-> 
-
+ .../net/ethernet/broadcom/genet/bcmgenet.c    | 66 +++++++++++-----
+ drivers/net/ethernet/broadcom/genet/bcmmii.c  | 79 +++++++++++++------
+ drivers/net/phy/mdio_bus.c                    | 17 ++++
+ include/linux/phy.h                           |  1 +
+ 4 files changed, 122 insertions(+), 41 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.24.1
+
