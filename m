@@ -2,111 +2,407 @@ Return-Path: <SRS0=DSTS=3V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5D6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD5C35246
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DBA20643
-	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F5A20658
+	for <linux-kernel@archiver.kernel.org>; Sat,  1 Feb 2020 21:25:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="08sfK5E/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgBAVVx (ORCPT
+        id S1726784AbgBAVZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 16:21:53 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:34455 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgBAVVw (ORCPT
+        Sat, 1 Feb 2020 16:25:19 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40807 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgBAVZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 16:21:52 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MowT0-1jLUOR1pKY-00qRXX; Sat, 01 Feb 2020 22:21:25 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sparc64: fix adjtimex regression
-Date:   Sat,  1 Feb 2020 22:20:52 +0100
-Message-Id: <20200201212104.575657-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.25.0
+        Sat, 1 Feb 2020 16:25:18 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t204so10361858qke.7
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 13:25:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=5j6M81BUNIsbWSXBo8B6Z3OscpkwwQkiJWlC0F2V+lQ=;
+        b=08sfK5E/j2NBAVCGRQxuh7SDuzWfADe5iGQgx9h8FqsXH84xDy0zrW+E1FbSmAYPez
+         LUI2Jc6xfWTaFNDTi32z5JFEjnzeNXlAbxl7EAzplXDUZ53Vs+ZZ9gzLN6urM7o5+5UI
+         /MGKESOnfmtCfw8dILDYbS5dUPap+AY1+YP8+Dh6Q2iveYpAnXhRwtO/fXkpnkJzVWkJ
+         HqKQqD9n+QJs6YSnM+zL0jTChQDvyvBwRa3c4YQgqfdDjVBQ2ZXW5Jl1/1uQcxUT+fcB
+         +6KVNmiNcGMsCz8heeDpZ0VvC5zZaaK3xS8s/H/1IbTcx8ycATd+ukrH+5ZWrdzeLzfH
+         8zwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5j6M81BUNIsbWSXBo8B6Z3OscpkwwQkiJWlC0F2V+lQ=;
+        b=UJd1/pVsZd16nc0RFsdLcJiIJVuA4cBlXus1Iy9M2PSwLSkdGLIFEPSqV6UrtQPSM7
+         AZWgwTEWpLTksDi/fxknuOU6O528vUd2Wgo4SppJQZqPVh60M466SPIQu2b3JtrNplC6
+         UArPQv1g4k6rK5C+QWZMVmrXnsE1ZK0E+3SFLa11+IpfeYmWdP6I2FgEmhNQbSZy4mw+
+         fe/j0JPGBmMRzt/Jb5lgqb55oJW3ezU0YoP1ykHnPnygJjaJUuVoNrOFto/j0sWtYaDM
+         UQ4r7VEgB8ACrIwOFHiR1jpsgFnm0coUWBQArMShNnibGf+fc2tSni5uy428TQMpZlJw
+         KaMA==
+X-Gm-Message-State: APjAAAXdO3HRHTOSvrQpeWLb/vibPYVVZvrUMbcRJGonjGxekbg4TMo/
+        ZgpR9T4gjcjlGS6Q++A3nrnjSg==
+X-Google-Smtp-Source: APXvYqwpHXrzyntERCElyMkUKa6XTx2i+HgCsAKop0xtXd0R8cERDXGz2UXGbReUpb9bN8TlTyHfcw==
+X-Received: by 2002:a37:678f:: with SMTP id b137mr554051qkc.310.1580592317404;
+        Sat, 01 Feb 2020 13:25:17 -0800 (PST)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id k7sm7146243qtd.79.2020.02.01.13.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Feb 2020 13:25:16 -0800 (PST)
+Message-ID: <e6c31a2cadfb170f86d3a0cfdca3134abe7ec4aa.camel@ndufresne.ca>
+Subject: Re: [PATCH] venus: vdec: Use pmruntime autosuspend
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>
+Date:   Sat, 01 Feb 2020 16:25:15 -0500
+In-Reply-To: <20200130154424.29483-1-stanimir.varbanov@linaro.org>
+References: <20200130154424.29483-1-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:1z5EEIgi4fNbqNsC+tS74bBl1HaQAlYsC7CubqANcDMZKS1sc2O
- 2R0UOKIblbYVdpS6ebVQd8sWEApsSDODuELOKRAHDf2pPEP5FmShtdQMsdp3tYqW9TTQuzg
- LDAMyzcFQ7hvyshJe9AyW8gpH13A5ZhKFhNO6LozDHaepfd3g5kuy4kapcW7CQ/sw+7JKb3
- qyQiiV5n7Gp6vn7IKnwoQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+G5agGtRXfY=:Eb+1bivj0+gIWZC6TSy3B7
- P80jNTgkmlDQu3jbJahpeLjH14d6ii2xuD2hmv1ipr/C41ASHh99vkih/s5HuxaSpooUG+58u
- Bq521S4VVZXNmudql2Eonu6Ajgue0VgcjFO6ppVGkFK6Z8MhI2DcBlstzxN36Hd2zxsUdoQVW
- W9vFesmTwmMuvt2+vuDD7ge30o7nOeC9ULNCYRL0sPR8BLhP9LkYZUNQs/jVZgVtNCYKXNVDT
- SsdkO+uLTA+LXuWcA+sgoqAdpBba2cjhaUBx1xYx4r2uv0AwtRPTzvNEL98MwC/HrsWGC4GTZ
- mCsY0IhyVEQNuVmoHO3L5TSOyt2JYfrShlyxrdthx/sTxzXG9mvARXYDN7QYVNi3sIUkHO4nz
- nPkf0JsBISwo9sBrdRMBSpRAXqmECEHoHAfLtPwZ6O5nnecMFyx7tCjHABm9V/zm0P7eHy16B
- +mV0ZlonC0nBavfBFmtT6wKRU8GOOIUtXYI2ZvW8EXlzB0vYtdc5YajV4pMf+TnG+RyxuwdD8
- NrYRXjxklP59SyX7hFote+FW65yx3FRczYmk/3YHHVHRqlfsF+k5DUvaAoH+EPeB+cqrkHKLd
- Pp9r8acCwQNNg9h4WIiSE5/PSff+LnprEayIO8fkXxsjs7KMixYjkNIrusCQaFL41ElLG/X6w
- xka6V86A1ce8TFpfSVZEn9w6DgtrgTuSOgkiGFrqONkdoH7q6gEW5t6tYHLNDWrOpabFzQTEC
- 4OH2cKUC+y5L7ppToPHHd5nRzN1t/4i2tvfzyPtPY+ZwA26/ftjveoS/5AOqhGZUB3gJzF7oU
- hsAcR2fF28pIbnDLrRjAQzwaXHpwrINNPLHFaNX1V1TjZrRKXQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anatoly Pugachev reported one of the y2038 patches to introduce
-a fatal bug from a stupid typo:
+Le jeudi 30 janvier 2020 à 17:44 +0200, Stanimir Varbanov a écrit :
+> Implement pmruntime autosuspend in video decoder. This will
+> allow to save power while the userspace is inactive for some
+> reasonable period of time. Here we power-off venus core clocks
+> and power domain and don't touch vcodec because it is under
+> hardware control. The later decision is made to simplify the
+> code and avoid a mess in the power management code.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-[   96.384129] watchdog: BUG: soft lockup - CPU#8 stuck for 22s!
-...
-[   96.385624]  [0000000000652ca4] handle_mm_fault+0x84/0x320
-[   96.385668]  [0000000000b6f2bc] do_sparc64_fault+0x43c/0x820
-[   96.385720]  [0000000000407754] sparc64_realfault_common+0x10/0x20
-[   96.385769]  [000000000042fa28] __do_sys_sparc_clock_adjtime+0x28/0x80
-[   96.385819]  [00000000004307f0] sys_sparc_clock_adjtime+0x10/0x20
-[   96.385866]  [0000000000406294] linux_sparc_syscall+0x34/0x44
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-Fix the code to dereference the correct pointer again.
+Tested with:
 
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Tested-by: Anatoly Pugachev <matorola@gmail.com>
-Fixes: 251ec1c159e4 ("y2038: sparc: remove use of struct timex")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-The bug was introduced through my y2038 branch and is now in
-mainline, but not in v5.5. Who should pick up the fix to
-get it into v5.6-rc1?
----
- arch/sparc/kernel/sys_sparc_64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  GST_DEBUG="v4l2*:5" gst-play-1.0 <somefile>.mp4
 
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index 34917617f258..6b92fadb6ec7 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -551,7 +551,7 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
- SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
- {
- 	struct __kernel_timex txc;
--	struct __kernel_old_timeval *tv = (void *)&txc_p->time;
-+	struct __kernel_old_timeval *tv = (void *)&txc.time;
- 	int ret;
- 
- 	/* Copy the user data space into the kernel copy
-@@ -576,7 +576,7 @@ SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,
- 		struct __kernel_timex __user *, txc_p)
- {
- 	struct __kernel_timex txc;
--	struct __kernel_old_timeval *tv = (void *)&txc_p->time;
-+	struct __kernel_old_timeval *tv = (void *)&txc.time;
- 	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_POSIX_TIMERS)) {
--- 
-2.25.0
+Pressing space to pause, wait more then 2 seconds, and space again to
+resume.
+
+regards,
+Nicolas
+
+> ---
+>  drivers/media/platform/qcom/venus/core.c |   3 +
+>  drivers/media/platform/qcom/venus/core.h |   2 +
+>  drivers/media/platform/qcom/venus/vdec.c | 134 +++++++++++++++++++----
+>  3 files changed, 119 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index c7525d951e92..e7995cbd55c1 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -210,6 +210,8 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->res)
+>  		return -ENODEV;
+>  
+> +	mutex_init(&core->pm_lock);
+> +
+>  	core->pm_ops = venus_pm_get(core->res->hfi_version);
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+> @@ -336,6 +338,7 @@ static int venus_remove(struct platform_device *pdev)
+>  	icc_put(core->cpucfg_path);
+>  
+>  	v4l2_device_unregister(&core->v4l2_dev);
+> +	mutex_destroy(&core->pm_lock);
+>  
+>  	return ret;
+>  }
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 55bdeda780bc..75b869c095b4 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -128,6 +128,7 @@ struct venus_caps {
+>   * @error:	an error returned during last HFI sync operations
+>   * @sys_error:	an error flag that signal system error event
+>   * @core_ops:	the core operations
+> + * @pm_lock:	a lock for PM operations
+>   * @enc_codecs:	encoders supported by this core
+>   * @dec_codecs:	decoders supported by this core
+>   * @max_sessions_supported:	holds the maximum number of sessions
+> @@ -168,6 +169,7 @@ struct venus_core {
+>  	bool sys_error;
+>  	const struct hfi_core_ops *core_ops;
+>  	const struct venus_pm_ops *pm_ops;
+> +	struct mutex pm_lock;
+>  	unsigned long enc_codecs;
+>  	unsigned long dec_codecs;
+>  	unsigned int max_sessions_supported;
+> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+> index 4997ae294312..e7e97779bc68 100644
+> --- a/drivers/media/platform/qcom/venus/vdec.c
+> +++ b/drivers/media/platform/qcom/venus/vdec.c
+> @@ -545,6 +545,64 @@ static const struct v4l2_ioctl_ops vdec_ioctl_ops = {
+>  	.vidioc_decoder_cmd = vdec_decoder_cmd,
+>  };
+>  
+> +static int vdec_pm_get(struct venus_inst *inst)
+> +{
+> +	struct venus_core *core = inst->core;
+> +	struct device *dev = core->dev_dec;
+> +	int ret;
+> +
+> +	mutex_lock(&core->pm_lock);
+> +	ret = pm_runtime_get_sync(dev);
+> +	mutex_unlock(&core->pm_lock);
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static int vdec_pm_put(struct venus_inst *inst, bool autosuspend)
+> +{
+> +	struct venus_core *core = inst->core;
+> +	struct device *dev = core->dev_dec;
+> +	int ret;
+> +
+> +	mutex_lock(&core->pm_lock);
+> +
+> +	if (autosuspend)
+> +		ret = pm_runtime_put_autosuspend(dev);
+> +	else
+> +		ret = pm_runtime_put_sync(dev);
+> +
+> +	mutex_unlock(&core->pm_lock);
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static int vdec_pm_get_put(struct venus_inst *inst)
+> +{
+> +	struct venus_core *core = inst->core;
+> +	struct device *dev = core->dev_dec;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&core->pm_lock);
+> +
+> +	if (pm_runtime_suspended(dev)) {
+> +		ret = pm_runtime_get_sync(dev);
+> +		if (ret < 0)
+> +			goto error;
+> +
+> +		ret = pm_runtime_put_autosuspend(dev);
+> +	}
+> +
+> +error:
+> +	mutex_unlock(&core->pm_lock);
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static void vdec_pm_touch(struct venus_inst *inst)
+> +{
+> +	pm_runtime_mark_last_busy(inst->core->dev_dec);
+> +}
+> +
+>  static int vdec_set_properties(struct venus_inst *inst)
+>  {
+>  	struct vdec_controls *ctr = &inst->controls.dec;
+> @@ -746,11 +804,19 @@ static int vdec_queue_setup(struct vb2_queue *q,
+>  		return 0;
+>  	}
+>  
+> -	ret = vdec_session_init(inst);
+> +	ret = vdec_pm_get(inst);
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = vdec_session_init(inst);
+> +	if (ret)
+> +		goto put_power;
+> +
+>  	ret = vdec_num_buffers(inst, &in_num, &out_num);
+> +	if (ret)
+> +		goto put_power;
+> +
+> +	ret = vdec_pm_put(inst, false);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -786,6 +852,10 @@ static int vdec_queue_setup(struct vb2_queue *q,
+>  	}
+>  
+>  	return ret;
+> +
+> +put_power:
+> +	vdec_pm_put(inst, false);
+> +	return ret;
+>  }
+>  
+>  static int vdec_verify_conf(struct venus_inst *inst)
+> @@ -947,14 +1017,23 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
+>  
+>  	mutex_lock(&inst->lock);
+>  
+> -	ret = venus_pm_acquire_core(inst);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
+> +	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+>  		ret = vdec_start_capture(inst);
+> -	else
+> +	} else {
+> +		ret = vdec_pm_get(inst);
+> +		if (ret)
+> +			goto error;
+> +
+> +		ret = venus_pm_acquire_core(inst);
+> +		if (ret)
+> +			goto put_power;
+> +
+> +		ret = vdec_pm_put(inst, true);
+> +		if (ret)
+> +			goto error;
+> +
+>  		ret = vdec_start_output(inst);
+> +	}
+>  
+>  	if (ret)
+>  		goto error;
+> @@ -962,6 +1041,8 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
+>  	mutex_unlock(&inst->lock);
+>  	return 0;
+>  
+> +put_power:
+> +	vdec_pm_put(inst, false);
+>  error:
+>  	venus_helper_buffers_done(inst, VB2_BUF_STATE_QUEUED);
+>  	mutex_unlock(&inst->lock);
+> @@ -1055,8 +1136,9 @@ static void vdec_session_release(struct venus_inst *inst)
+>  	struct venus_core *core = inst->core;
+>  	int ret, abort = 0;
+>  
+> -	mutex_lock(&inst->lock);
+> +	vdec_pm_get(inst);
+>  
+> +	mutex_lock(&inst->lock);
+>  	inst->codec_state = VENUS_DEC_STATE_DEINIT;
+>  
+>  	ret = hfi_session_stop(inst);
+> @@ -1078,10 +1160,11 @@ static void vdec_session_release(struct venus_inst *inst)
+>  
+>  	venus_helper_free_dpb_bufs(inst);
+>  	venus_pm_load_scale(inst);
+> -	venus_pm_release_core(inst);
+>  	INIT_LIST_HEAD(&inst->registeredbufs);
+> -
+>  	mutex_unlock(&inst->lock);
+> +
+> +	venus_pm_release_core(inst);
+> +	vdec_pm_put(inst, false);
+>  }
+>  
+>  static int vdec_buf_init(struct vb2_buffer *vb)
+> @@ -1102,6 +1185,15 @@ static void vdec_buf_cleanup(struct vb2_buffer *vb)
+>  		vdec_session_release(inst);
+>  }
+>  
+> +static void vdec_vb2_buf_queue(struct vb2_buffer *vb)
+> +{
+> +	struct venus_inst *inst = vb2_get_drv_priv(vb->vb2_queue);
+> +
+> +	vdec_pm_get_put(inst);
+> +
+> +	venus_helper_vb2_buf_queue(vb);
+> +}
+> +
+>  static const struct vb2_ops vdec_vb2_ops = {
+>  	.queue_setup = vdec_queue_setup,
+>  	.buf_init = vdec_buf_init,
+> @@ -1109,7 +1201,7 @@ static const struct vb2_ops vdec_vb2_ops = {
+>  	.buf_prepare = venus_helper_vb2_buf_prepare,
+>  	.start_streaming = vdec_start_streaming,
+>  	.stop_streaming = vdec_stop_streaming,
+> -	.buf_queue = venus_helper_vb2_buf_queue,
+> +	.buf_queue = vdec_vb2_buf_queue,
+>  };
+>  
+>  static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+> @@ -1121,6 +1213,8 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
+>  	struct vb2_buffer *vb;
+>  	unsigned int type;
+>  
+> +	vdec_pm_touch(inst);
+> +
+>  	if (buf_type == HFI_BUFFER_INPUT)
+>  		type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+>  	else
+> @@ -1227,6 +1321,8 @@ static void vdec_event_notify(struct venus_inst *inst, u32 event,
+>  	struct venus_core *core = inst->core;
+>  	struct device *dev = core->dev_dec;
+>  
+> +	vdec_pm_touch(inst);
+> +
+>  	switch (event) {
+>  	case EVT_SESSION_ERROR:
+>  		inst->session_error = true;
+> @@ -1347,13 +1443,9 @@ static int vdec_open(struct file *file)
+>  	init_waitqueue_head(&inst->reconf_wait);
+>  	venus_helper_init_instance(inst);
+>  
+> -	ret = pm_runtime_get_sync(core->dev_dec);
+> -	if (ret < 0)
+> -		goto err_free_inst;
+> -
+>  	ret = vdec_ctrl_init(inst);
+>  	if (ret)
+> -		goto err_put_sync;
+> +		goto err_free;
+>  
+>  	ret = hfi_session_create(inst, &vdec_hfi_ops);
+>  	if (ret)
+> @@ -1392,9 +1484,7 @@ static int vdec_open(struct file *file)
+>  	hfi_session_destroy(inst);
+>  err_ctrl_deinit:
+>  	vdec_ctrl_deinit(inst);
+> -err_put_sync:
+> -	pm_runtime_put_sync(core->dev_dec);
+> -err_free_inst:
+> +err_free:
+>  	kfree(inst);
+>  	return ret;
+>  }
+> @@ -1403,6 +1493,8 @@ static int vdec_close(struct file *file)
+>  {
+>  	struct venus_inst *inst = to_inst(file);
+>  
+> +	vdec_pm_get(inst);
+> +
+>  	v4l2_m2m_ctx_release(inst->m2m_ctx);
+>  	v4l2_m2m_release(inst->m2m_dev);
+>  	vdec_ctrl_deinit(inst);
+> @@ -1411,7 +1503,7 @@ static int vdec_close(struct file *file)
+>  	v4l2_fh_del(&inst->fh);
+>  	v4l2_fh_exit(&inst->fh);
+>  
+> -	pm_runtime_put_sync(inst->core->dev_dec);
+> +	vdec_pm_put(inst, false);
+>  
+>  	kfree(inst);
+>  	return 0;
+> @@ -1468,6 +1560,8 @@ static int vdec_probe(struct platform_device *pdev)
+>  	core->dev_dec = dev;
+>  
+>  	video_set_drvdata(vdev, core);
+> +	pm_runtime_set_autosuspend_delay(dev, 2000);
+> +	pm_runtime_use_autosuspend(dev);
+>  	pm_runtime_enable(dev);
+>  
+>  	return 0;
 
