@@ -2,111 +2,92 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF45C35240
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F90DC3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309AF20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcWdUf6V"
+	by mail.kernel.org (Postfix) with ESMTP id D0F522080D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580641671;
+	bh=qa1ivRHlfNgMIUlZq4FIKXe33eZU8vPPT92vwKWxYWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IAtuR/EMAiDwqAsqDkfvaHSp2lcGGU/f8nSMWZ+epBqffAlaJQdI9xDJia7/ihL89
+	 gguaoEZ54zbCKXdN6L9KlcZthsPCClGb5AkSvsMyUVrabDJKIEKxwMwtEEYqEEGps4
+	 TUdofCtk1pBG4sni9e1XYTmJqW0a6ec/ug3/rROQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgBBLHf (ORCPT
+        id S1726959AbgBBLHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:07:35 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45006 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBBLHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:07:35 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so11606309ljj.11
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:07:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ap1iT7SLhLil8Jw+Ki2RQaJZCtXHtNEHLUsGTg71AVg=;
-        b=dcWdUf6Ve1Iyamlavd+vB1+W/HWa87sxZS70lJNeguTYxtcYz9kbcdXy8BLIYGbLw9
-         OGCJeYyhbEs5mNiJFzOSP0r14U8xW/Io+hJxUYx6lcQ5nWLz/taEapFvyHer9zGKAD6y
-         CYAuakkaXI/syFc5G+abwykfV7TwLd4QfHvHHfrJsJa7BCYVueirSOSqe04c1hb3CeBf
-         dqW/ahPVKGVCrLC+PPDFv89Lba6gm6yfLote5URFft0bkGXWCdAp8u9LlRCAE4bgX1PR
-         6Zuyg4jgd3vyGe66Sw/R0ffBkETlCPGlzVfTN0ZzEL1b2bRUxUqdfJQoGdm6ynOb0C5X
-         10PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ap1iT7SLhLil8Jw+Ki2RQaJZCtXHtNEHLUsGTg71AVg=;
-        b=NWMHrg7gjwyELRyJnJCtMgtB+KHpeuyYwonY+EpWEx1aCq3O2hOQ+lG9VXLxLX/KL1
-         CbfzHwOnWWVdmvELNoND6GBkUdZgdzXK0W+WBgl69pLk0UWwpurjFnYgYtwA2Gw3bmVS
-         8wWDpkFZbPv4s/jJvNACLGPxLx7tK8Qk85Z636HCcBwwJjPu3q+Ey7nc8ejckVHs+UnF
-         bCqt2j9gX0KeF5+CYxM9E9NELiprkInXxBvtQgryTTFCB4X970HXvAi4YdH0hym6DkhL
-         VF/+NtRDEOkLEdUSoZJU7cCAFZl7UOsX3lAB4fO+ZHuAF1l0GuJOyUHeIg/ly7fvJdoF
-         ib4w==
-X-Gm-Message-State: APjAAAU7V0/5yozRUdUPuM2a7IOBAevzEaSIq12M/wNbKTEr6UGUEM9F
-        A/m7dLrh7m9KTttv6HQTsWpjU/U72nD/Uyu3/ZqY
-X-Google-Smtp-Source: APXvYqzbvmdRj73nXyO8buikoCIq8+kOxj41t7YwSIxjw8/CoklrW1ljkpZGIzMWoqnG08rXnoha4EIQCGx7HfE6vRU=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr11107177ljj.191.1580641651453;
- Sun, 02 Feb 2020 03:07:31 -0800 (PST)
+        Sun, 2 Feb 2020 06:07:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgBBLHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 06:07:51 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0CC620679;
+        Sun,  2 Feb 2020 11:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580641670;
+        bh=qa1ivRHlfNgMIUlZq4FIKXe33eZU8vPPT92vwKWxYWI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KfcYjl5SlLQVjLm/vKxqWvD975Sdbh91AjA4F+X82cZ1XbWUYk4No2TJYJXNygomh
+         QYEeZOwKSBZN/lY1LHTSFS/CnJK8LY34dBJhKiH7NBJDBpAhFTbEw+vAnSAcZIN4l4
+         ajnt3rxEm9z0HIRrbK6U73LHmZlHHZoxFjKU1n1Q=
+Date:   Sun, 2 Feb 2020 11:07:45 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     JieunKim <jieun.kim4758@gmail.com>
+Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iio: imu: st_lsm6dsx: Fix mismatched comments
+Message-ID: <20200202110745.1d16533e@archlinux>
+In-Reply-To: <20200127120359.3955-1-jieun.kim4758@gmail.com>
+References: <20200127120359.3955-1-jieun.kim4758@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
- <20200131183658.GA71555@gmail.com> <CAPcyv4iYSptWo42p1Lnbr4NWRiWG2sat+f3t8Q0kPeiiXHx3fg@mail.gmail.com>
- <CADDKRnBeB5T7ZW2LxJQMR=AjD-OyOGBs4gqH0O9_frJ5zR5E7Q@mail.gmail.com>
- <CAKv+Gu9C2gR629xegjVfVkrPhAuG5brONzbL9iDgPSPW0Ffbbw@mail.gmail.com> <20200202092255.GA72728@gmail.com>
-In-Reply-To: <20200202092255.GA72728@gmail.com>
-From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-Date:   Sun, 2 Feb 2020 12:07:20 +0100
-Message-ID: <CADDKRnAo9B=+cNO-_VbH4yADVsQqaTb61ithqxohYCwgAm6pvg@mail.gmail.com>
-Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am So., 2. Feb. 2020 um 10:22 Uhr schrieb Ingo Molnar <mingo@kernel.org>:
->
->
-> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> > Hello J=C3=B6rg,
-> >
-> > Could you please try whether the change below fixes the issue?
-> >
-> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> > index 59f7f6d60cf6..ae923ee8e2b4 100644
-> > --- a/arch/x86/platform/efi/efi.c
-> > +++ b/arch/x86/platform/efi/efi.c
-> > @@ -308,7 +308,7 @@ static void __init efi_clean_memmap(void)
-> >                         .phys_map =3D efi.memmap.phys_map,
-> >                         .desc_version =3D efi.memmap.desc_version,
-> >                         .desc_size =3D efi.memmap.desc_size,
-> > -                       .size =3D data.desc_size * (efi.memmap.nr_map -=
- n_removal),
-> > +                       .size =3D efi.memmap.desc_size * (efi.memmap.nr=
-_map - n_removal),
-> >                         .flags =3D 0,
->
-> Oh, I actually noticed this one, but convinced myself that it's correct,
-> because GCC didn't warn about uninitialized data.
->
-> But maybe in this weird case data.desc_size as used within its own
-> initializer is zero?
->
-Patch makes my kernel booting again :)
+On Mon, 27 Jan 2020 21:03:59 +0900
+JieunKim <jieun.kim4758@gmail.com> wrote:
 
-Thanks, J=C3=B6rg
+> odr to odr_table
+> gain to fs_table
+> 
+> 'gain' is actually in 'st_lsm6dsx_fs' structure of 'fs_table'
+> 
+> Signed-off-by: JieunKim <jieun.kim4758@gmail.com>
+Applied.  Thanks.
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index 9c3486a8134f..f2113a63721a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -230,8 +230,8 @@ enum st_lsm6dsx_ext_sensor_id {
+>   * @i2c_addr: I2c slave address list.
+>   * @wai: Wai address info.
+>   * @id: external sensor id.
+> - * @odr: Output data rate of the sensor [Hz].
+> - * @gain: Configured sensor sensitivity.
+> + * @odr_table: Output data rate of the sensor [Hz].
+> + * @fs_table: Configured sensor sensitivity table depending on full scale.
+>   * @temp_comp: Temperature compensation register info (addr + mask).
+>   * @pwr_table: Power on register info (addr + mask).
+>   * @off_canc: Offset cancellation register info (addr + mask).
+
