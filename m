@@ -2,92 +2,126 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F90DC3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FAEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F522080D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580641671;
-	bh=qa1ivRHlfNgMIUlZq4FIKXe33eZU8vPPT92vwKWxYWI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IAtuR/EMAiDwqAsqDkfvaHSp2lcGGU/f8nSMWZ+epBqffAlaJQdI9xDJia7/ihL89
-	 gguaoEZ54zbCKXdN6L9KlcZthsPCClGb5AkSvsMyUVrabDJKIEKxwMwtEEYqEEGps4
-	 TUdofCtk1pBG4sni9e1XYTmJqW0a6ec/ug3/rROQ=
+	by mail.kernel.org (Postfix) with ESMTP id DFC9D2080D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ktqi1Si5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgBBLHv (ORCPT
+        id S1726805AbgBBL0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgBBLHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:07:51 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CC620679;
-        Sun,  2 Feb 2020 11:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580641670;
-        bh=qa1ivRHlfNgMIUlZq4FIKXe33eZU8vPPT92vwKWxYWI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KfcYjl5SlLQVjLm/vKxqWvD975Sdbh91AjA4F+X82cZ1XbWUYk4No2TJYJXNygomh
-         QYEeZOwKSBZN/lY1LHTSFS/CnJK8LY34dBJhKiH7NBJDBpAhFTbEw+vAnSAcZIN4l4
-         ajnt3rxEm9z0HIRrbK6U73LHmZlHHZoxFjKU1n1Q=
-Date:   Sun, 2 Feb 2020 11:07:45 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     JieunKim <jieun.kim4758@gmail.com>
-Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: Fix mismatched comments
-Message-ID: <20200202110745.1d16533e@archlinux>
-In-Reply-To: <20200127120359.3955-1-jieun.kim4758@gmail.com>
-References: <20200127120359.3955-1-jieun.kim4758@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 2 Feb 2020 06:26:33 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39785 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgBBL0c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 06:26:32 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w15so11414601qkf.6
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:26:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=haUAAZdbmdU3COyJ/sqnDbNti6tUXhiH5WpEb5CUu3o=;
+        b=ktqi1Si5IANgowqGSuWt2goxaefj9MArH9hBL4drDxYpQy5gO9eIMpaj4x1g9qz0Ft
+         wJg8PZziG/0FMCaYMFvU0R1ed/sRIgt60RVYo/fiPoIuWPHtw5CoKADSbrdPinp59eNX
+         GqmqoNXOemL5q0rosXYIx2UJ1orNdlYcFK73Ygg0a/RE2arXPeSnjr+QO/TuQNX54JbP
+         bi9ii20//c0h4YooeibM3yZGm2vZjIxTdT2q1agyMmadm90FFuyO+OFJ2urFPdZeXwtw
+         AgKWNyLv5Arxyw8debfI90Lt1gaaDIBA8bYeatlKiESPBREuLesS3poug3ybj8+iH21/
+         Psqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=haUAAZdbmdU3COyJ/sqnDbNti6tUXhiH5WpEb5CUu3o=;
+        b=qoWomqjCR/YtTZxwoHMZ0LDQlmP0NzCfUT0L0ZoRT81gtkyfRNYXsIuZEIjUwI/sFF
+         DHOe7r6YxVhj/WlsQlqFW6BWguSmLIQFOjNgxB4LA2mUPD0o/I3kHmXkP8bnls077mbM
+         xWUC1vJdUnSI0RpSwbb098UTlJ3q/k9bPSRAP4wD3JM3ForlgPr9hi7Y0X9GnJu8tUQt
+         UjxcWdvbkCNmQ8Bhy+37zd3QxSPUlAXgzQiTeQB7xVOt5KtLdigEA+NuYqKZmxJFjveh
+         DK1U5z7CkY+KKCjM7gFNkxRGApthMKbjxYjOj+I2sAR1P+unpf0CRvWtPiI/cWIa5Qv1
+         Sm6Q==
+X-Gm-Message-State: APjAAAW4Pk01blNJcIcUyYedpAk3jPrRQsL7qpf4WQOgncIT2XxUhCBG
+        12xsP2yzJnJZf7UZHCTkH6A9LA==
+X-Google-Smtp-Source: APXvYqz2LMXXgwCpUXH7EnnO/Ck2Cj8Gc2SWzAj6pxocjOsHmdsAhT1kwXiGUD+liMIX2mq/rCkMKw==
+X-Received: by 2002:a05:620a:218d:: with SMTP id g13mr19497581qka.286.1580642791619;
+        Sun, 02 Feb 2020 03:26:31 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s1sm7274932qkm.84.2020.02.02.03.26.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Feb 2020 03:26:30 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page table helpers
+Date:   Sun, 2 Feb 2020 06:26:29 -0500
+Message-Id: <2C4ADFAE-7BB4-42B7-8F54-F036EA7A4316@lca.pw>
+References: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
+Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev <kasan-dev@googlegroups.com>
+In-Reply-To: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jan 2020 21:03:59 +0900
-JieunKim <jieun.kim4758@gmail.com> wrote:
 
-> odr to odr_table
-> gain to fs_table
-> 
-> 'gain' is actually in 'st_lsm6dsx_fs' structure of 'fs_table'
-> 
-> Signed-off-by: JieunKim <jieun.kim4758@gmail.com>
-Applied.  Thanks.
 
-Jonathan
+> On Jan 30, 2020, at 9:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wr=
+ote:
+>=20
+> config DEBUG_VM_PGTABLE
+>    bool "Debug arch page table for semantics compliance" if ARCH_HAS_DEBUG=
+_VM_PGTABLE || EXPERT
+>    depends on MMU
+>    default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
+>    default 'y' if DEBUG_VM
 
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index 9c3486a8134f..f2113a63721a 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -230,8 +230,8 @@ enum st_lsm6dsx_ext_sensor_id {
->   * @i2c_addr: I2c slave address list.
->   * @wai: Wai address info.
->   * @id: external sensor id.
-> - * @odr: Output data rate of the sensor [Hz].
-> - * @gain: Configured sensor sensitivity.
-> + * @odr_table: Output data rate of the sensor [Hz].
-> + * @fs_table: Configured sensor sensitivity table depending on full scale.
->   * @temp_comp: Temperature compensation register info (addr + mask).
->   * @pwr_table: Power on register info (addr + mask).
->   * @off_canc: Offset cancellation register info (addr + mask).
-
+Does it really necessary to potentially force all bots to run this? Syzbot, k=
+ernel test robot etc? Does it ever pay off for all their machine times there=
+?=
