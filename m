@@ -2,98 +2,95 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E81C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90EAC3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F5C20658
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908232080D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u340iptu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoUUS+o3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgBBQjn (ORCPT
+        id S1726992AbgBBQjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 11:39:43 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45686 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgBBQjn (ORCPT
+        Sun, 2 Feb 2020 11:39:54 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42455 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgBBQjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 11:39:43 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so4837202pls.12;
-        Sun, 02 Feb 2020 08:39:42 -0800 (PST)
+        Sun, 2 Feb 2020 11:39:53 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y19so8026837lfl.9;
+        Sun, 02 Feb 2020 08:39:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=Gk+4kc7bcxmwm9qBtI8zt+2lMveHew9wDQSMTXKODNs=;
-        b=u340iptusySS+Qerd7xdlTZcG85z+DOqIyNwWblPk+wKd/mjQdeyRPNZ7tBZILZJIU
-         nLV87YzIrIaRUKOelw3zWhxGoxtSvfreF1prYR5Pq62u0z8YNovPC9zt6nh2cwbjH/xU
-         CghTk52t3ZfZA8TdMu+FpUYi0PWJGQ4TMEGJ7kX3M0Daqaj/hkxY+FE65VS8OoZyUCut
-         j1ag2/RLZSbf270ZAbGE1fAavbl4+qN/li3DtKCKBYrz47bzgIM1fQN9UTVdjA/2sG6K
-         wExtbreSjQ/f6DMKTK6vwlgBuwBWv2F+yMOdtPnvi/bNPyBoJmFKblFcDAxiEpA3ndUt
-         sAPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZVaC0F6rgdniTKROUmCnnA4r9wsKzEyhP6hHedwGoWo=;
+        b=XoUUS+o3zhjNpAbUAUIfkj/DPoLWtowdwYUaTHzcwfzGiWEvDtnGA0vFtlP/shH3Vo
+         25dS7EkTu8G7uCL7S/SjtLAhWZe9JAEAwq4eOCUOTW82/yN4sRnb+6gZmO8M4zYMtsQT
+         5jGkW4xhG1S/8gELd3Oapxj2sn4N0CMam04YmPY6py7ZqQdQhhhofHzeb67kzv4QoH8M
+         0GXtRajwA83o+0WP59UES85ARZjANg3xULWrkuueaHQC8pTSq6ut/DMAydv1Q351UTsV
+         pLn76PMJNYr6w1MdaJb+lZRGW0wbiOBB2DJXtBj2KQ/6eZDXu59Ar2grySPYG9JSw3Hn
+         4/8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=Gk+4kc7bcxmwm9qBtI8zt+2lMveHew9wDQSMTXKODNs=;
-        b=oWRWHds7fyRe5w/IBtkH3YnihC0EIjywPq3dkE3wO3xNjEnFyt+cFMVHPCO3265wQG
-         xeqiJ1Xe83wij5t2h1LprX1g2tJPXgr3jfI9Shgj/ezHb3s4/riQAz/h+wC0vBZizNR6
-         Z+Wo4itHr+e7oPKDu/36dwluJsvg2s5HrWgq482oU6edL7crrwuhivAB7lUEMPnwTEY0
-         slbPVHIyiD8e0a/72iWvt+m/Dtb5h1GxB5hK7jza0MAppvs74FgGfHTxH7e84VN9LUbV
-         CvO4EGK3dIFN7rbJ8FMFbkL8DmKMOmYOG0aPZ2Mx8uNI43wTWOrWecWGe6DrqyDsL64d
-         He0Q==
-X-Gm-Message-State: APjAAAX0K+e324fBiMa9ef68ZHBkgSN5RhR7lUJ4q+QW0Eq7nyTI/a39
-        n3fGDAnd3WwqXrj1/xs0n1Cp/Gr9
-X-Google-Smtp-Source: APXvYqwHyC+cFz9eR+nX72AmYJ9CsrQ2dTwB0OTb/PsM1rItR9jKyRyX+djyVfGzuApXhbffE2IlLA==
-X-Received: by 2002:a17:902:ab81:: with SMTP id f1mr15266267plr.5.1580661582239;
-        Sun, 02 Feb 2020 08:39:42 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k1sm18045122pfg.66.2020.02.02.08.39.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 02 Feb 2020 08:39:41 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] ARM: dts: aspeed: tacoma: Enable eMMC controller
-Date:   Sun,  2 Feb 2020 08:39:39 -0800
-Message-Id: <20200202163939.13326-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZVaC0F6rgdniTKROUmCnnA4r9wsKzEyhP6hHedwGoWo=;
+        b=VSbnGTPQJeUOJlenCLhV3/U7B/qYL0dTvbTCAuoQ3KCnGRpZvWXcPJyC1t5sAm9OhF
+         bWprzyvuJoXQlUu9nqSHD+X8UHhzH7NbKOvC7Ea6IOvd6cO5oUKTwIJyklfHwjYu0h9a
+         Vt/oWgnxiqwTtZ1RhzLtC0NzjUm6Lt0HJXDKvuwa/iWeQFQHQIznd4YWpa2NSPJTt8ZI
+         /jMOqH7XIVdHTts+tirxl69jPWM0qWEJhAGC2pUtJMuO8VdHzOAPfxHGl657Oc6vXOGB
+         j0F7OHCcjwJObZ4egfNAgFiuDPzCVARt+O2SYgfGBLf9ZXavIaRrErZ5Kdks9mukNekj
+         fW5A==
+X-Gm-Message-State: APjAAAUsmbR03YVFUtyU803F861X5iR2IcvX82QbBwJoSu5Wtlf6wlus
+        fFaLdJaRS0SIODJN7cta3CDpksYgRnkEicW95iQ=
+X-Google-Smtp-Source: APXvYqzzlxrTpJnf9hamU4U8roypGWc+64P/nSJO0cYNO9R2+JV7vqrhizVneA72cA7hYjmojWIPthZlH0pd8OGiFsY=
+X-Received: by 2002:a19:c3c2:: with SMTP id t185mr9929668lff.56.1580661590508;
+ Sun, 02 Feb 2020 08:39:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20200202125950.1825013-1-aford173@gmail.com> <20200202125950.1825013-2-aford173@gmail.com>
+In-Reply-To: <20200202125950.1825013-2-aford173@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sun, 2 Feb 2020 13:39:41 -0300
+Message-ID: <CAOMZO5D3emrAk84wDS04qJC-3AyvFnqodhoMsXO-ukHnYsU+PQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/5] spi: fspi: dynamically alloc AHB memory
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-spi <linux-spi@vger.kernel.org>, Han Xu <han.xu@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling emmc without enabling its controller doesn't do any good.
-Enable its controller as well to make it work.
+On Sun, Feb 2, 2020 at 10:00 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> From: Han Xu <han.xu@nxp.com>
+>
+> Apply patch from NXP upstream repo to
+> dynamically allocate AHB memory as needed.
 
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+The commit log could be improved here. What is the motivation for doing this?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-index ff49ec76fa7c..47293a5e0c59 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-@@ -132,6 +132,10 @@
- 	use-ncsi;
- };
- 
-+&emmc_controller {
-+	status = "okay";
-+};
-+
- &emmc {
- 	status = "okay";
- };
--- 
-2.17.1
+> +               if (!f->ahb_addr) {
+> +                       dev_err(f->dev, "failed to alloc memory\n");
 
+There is no need for this error message as the MM core will take care of it.
