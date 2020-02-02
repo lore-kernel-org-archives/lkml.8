@@ -2,75 +2,96 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A5C35240
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 08:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CA0206E6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BDA20863
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 08:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BaVurHIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgBBHox (ORCPT
+        id S1726905AbgBBITR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 02:44:53 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43514 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726501AbgBBHox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 02:44:53 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EF867CAA9F20E8809C09;
-        Sun,  2 Feb 2020 15:44:50 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 2 Feb 2020 15:44:41 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Jeff Chang <jeff_chang@richtek.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: Remove unused including <linux/version.h>
-Date:   Sun, 2 Feb 2020 07:39:17 +0000
-Message-ID: <20200202073917.195880-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 2 Feb 2020 03:19:17 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:38581 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726825AbgBBITQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 03:19:16 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 489P4b5b7lz9tyWH;
+        Sun,  2 Feb 2020 09:19:11 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=BaVurHIL; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id B9NtGOyoWiNR; Sun,  2 Feb 2020 09:19:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 489P4b3vmYz9tyW9;
+        Sun,  2 Feb 2020 09:19:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580631551; bh=nozbN1o9P4CquvGdWc1FeJctNG7HaAWCWuutf8WmoXU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BaVurHIL6TimjlEGYLds15Z9up+mVUQ6HV+193Whp9YFYK5rM+qPDpX1j0Fa5jLCv
+         v9NWpQ21dmPmw6A/Z+xZ4BegodThZOkQUgVpRLkN0K0YjzDpsRRdSCWGxRUG3yReVW
+         O72UzU/h74/kFSX47OMjhnFbv5L1NLTG6Lk2xUrA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B0F38B767;
+        Sun,  2 Feb 2020 09:19:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id finORXVEXN_k; Sun,  2 Feb 2020 09:19:14 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6DDD8B752;
+        Sun,  2 Feb 2020 09:19:13 +0100 (CET)
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
+ ioctl for device
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+ <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+ <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
+Date:   Sun, 2 Feb 2020 09:19:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
+Hello,
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/mt6660.c | 1 -
- 1 file changed, 1 deletion(-)
+Le 02/02/2020 à 01:08, Christian Zigotzky a écrit :
+> Hello,
+> 
+> We regularly compile and test Linux kernels every day during the merge 
+> window. Since Thuesday we have very high CPU loads because of the avahi 
+> daemon on our desktop Linux systems (Ubuntu, Debian etc).
+> 
+> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
 
-diff --git a/sound/soc/codecs/mt6660.c b/sound/soc/codecs/mt6660.c
-index a36c416caad4..1a3515df1764 100644
---- a/sound/soc/codecs/mt6660.c
-+++ b/sound/soc/codecs/mt6660.c
-@@ -4,7 +4,6 @@
- 
- #include <linux/module.h>
- #include <linux/kernel.h>
--#include <linux/version.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/pm_runtime.h>
+Do you know which ioctl, on which device ?
+Can you take a trace of running avahi-daemon with 'strace' ?
 
+Can you bisect ?
 
-
-
-
+Christophe
