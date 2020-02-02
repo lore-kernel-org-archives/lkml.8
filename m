@@ -2,58 +2,59 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3461FC3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E18C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1607C2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9107F20842
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgBBRN4 (ORCPT
+        id S1727053AbgBBRN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 12:13:56 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37996 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgBBRN4 (ORCPT
+        Sun, 2 Feb 2020 12:13:59 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36061 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgBBRN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 12:13:56 -0500
-Received: by mail-qk1-f195.google.com with SMTP id k6so11929958qki.5;
-        Sun, 02 Feb 2020 09:13:55 -0800 (PST)
+        Sun, 2 Feb 2020 12:13:58 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t13so9630421qto.3;
+        Sun, 02 Feb 2020 09:13:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wkB9hEzJnTGg0+titOdjnKOkA5bK07ut9KDYjyipcyQ=;
-        b=XLwYkWNir2DWBtBW7uyPEqO1le1ovip+CWBmdvJivK6P7lopltFO/ZaaQmsxG8soLD
-         cgt6MVmvjH3TEFy7IjJryoYQuEHBo3tROOXlQXwnZPuyWBjUrKgZLWusKy0WjxIkEauJ
-         GXx/0k22r9lnLa4QYBamM0RDElfr3mGnHJ8uocI6UoXoSTEsIWqxzEXxvLPTUBvcZx/I
-         xQ4n3pZB6tNZQ3W02tKHev4PTfqNACYF7xcG+P/D7/f2nLCoCa6AMO1M+ioxVFzUQ0gO
-         /SBcZNPxE6sDeL/0olMZtQY1VE3Wj1w9f5scUEkS4sOSB4SvfCEpCj5OM8KaG5QsqLoy
-         2MEg==
-X-Gm-Message-State: APjAAAXs2k/33ouLDQMC9dlOdaJJDQ9Daiz106Lcj1txE61RKZEJ+MM1
-        79db2ldW8qbITXniJN0sSgk=
-X-Google-Smtp-Source: APXvYqy6GSEPqc154do67Yx2BRzju/BO1xu6ATlNJHsqHsL2qBR8epiNbj/7XivSIA4CxHRVd7RRow==
-X-Received: by 2002:a37:be07:: with SMTP id o7mr5554219qkf.392.1580663634734;
-        Sun, 02 Feb 2020 09:13:54 -0800 (PST)
+        bh=fNIctzUQqpzBYKShq+agBaG6jK3vI6wtoz79iRuDrBw=;
+        b=sWkCGbdMQWvcwW4ZHprK51piBkeEU7tV8JfOcgdx8Bt5urzx+A56RoD4TFU3buuuM+
+         6+3MuC5BTUgurRTh/MZ5YnuKisJEFFWVt9FUQ5IPXVI1m/QyFY+4rjCJHQvP5Uj535XQ
+         NFLijm93UgzkXOtl/HIEGrOFSfy4id0ft5MFu3++hrivKTl7SCNUcemMJPhO2+X9x0Oi
+         Edpab/AL3K+6EUjpYH0t0Wu2PlV1EkwST5wkZpyi7skfGilEv5PXAAJhGzj5VCxj67te
+         iMQWnCSz9G8ls8NJTy74JwVIA8L2G5OOynIpCmzAi9AAKhqCTNbq9cngodyizQn96O0v
+         niVw==
+X-Gm-Message-State: APjAAAWAOoIO3xJTV39+3AJi9v+uqOK7c3eS/ih2U6jg2CwPE+Uu7T37
+        yEBTu+pDtKbo9CESAKu01Jo=
+X-Google-Smtp-Source: APXvYqwebnSPusJY9nsi2lbUddkkzsLGkBomkzxc7tNp5ELHxXeAL1BDDv5tcF6aLeDghjwGVDgjuQ==
+X-Received: by 2002:aed:2321:: with SMTP id h30mr20706652qtc.355.1580663637426;
+        Sun, 02 Feb 2020 09:13:57 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 3sm8150081qte.59.2020.02.02.09.13.54
+        by smtp.gmail.com with ESMTPSA id 3sm8150081qte.59.2020.02.02.09.13.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 09:13:54 -0800 (PST)
+        Sun, 02 Feb 2020 09:13:57 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>
 Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/7] x86/efi,boot: GDT handling cleanup/fixes
-Date:   Sun,  2 Feb 2020 12:13:46 -0500
-Message-Id: <20200202171353.3736319-1-nivedita@alum.mit.edu>
+Subject: [PATCH v2 3/7] x86/boot: Reload GDTR after copying to the end of the buffer
+Date:   Sun,  2 Feb 2020 12:13:49 -0500
+Message-Id: <20200202171353.3736319-4-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200130200440.1796058-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200202171353.3736319-1-nivedita@alum.mit.edu>
 References: <20200130200440.1796058-1-nivedita@alum.mit.edu>
+ <20200202171353.3736319-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,54 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series fixes a potential bug in EFI mixed-mode and leaves GDT
-handling to startup_{32,64} instead of efi_main.
+The GDT may get overwritten during the copy or during extract_kernel,
+which will cause problems if any segment register is touched before the
+GDTR is reloaded by the decompressed kernel. For safety update the GDTR
+to point to the GDT within the copied kernel.
 
-The first patch removes KEEP_SEGMENTS support in loadflags, this is
-unused now (details in patch 1 commit msg), to slightly simplify
-subsequent changes.
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/boot/compressed/head_64.S | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-The second patch fixes a potential bug in EFI mixed-mode, where we are
-currently relying on the firmware GDT having a particular layout: a
-CODE32 segment as descriptor 2 and a DATA segment as descriptor 3.
-
-The third patch adds some safety during kernel decompression by updating
-the GDTR to point to the copied GDT, rather than the old one which may
-have been overwritten.
-
-The fourth patch adds cld/cli to startup_64, and the fifth patch removes
-all the GDT setup from efi_main and adds it to the 32-bit kernel's
-startup_32. The 64-bit kernel already does GDT setup. This should be
-safer as this code can keep track of where the .data section is moving
-and ensure that GDTR is pointing to a clean copy of the GDT.
-
-The last two patches are to fix an off-by-one in the GDT limit and do a
-micro-optimization to the GDT loading instructions.
-
-Changes from v1:
-- added removal of KEEP_SEGMENTS
-- added the mixed-mode fix
-- completely removed GDT setup from efi_main, including for the 32-bit
-  kernel
-- dropped documentation patches for now
-
-Arvind Sankar (7):
-  x86/boot: Remove KEEP_SEGMENTS support
-  efi/x86: Don't depend on firmware GDT layout
-  x86/boot: Reload GDTR after copying to the end of the buffer
-  x86/boot: Clear direction and interrupt flags in startup_64
-  efi/x86: Remove GDT setup from efi_main
-  x86/boot: GDT limit value should be size - 1
-  x86/boot: Micro-optimize GDT loading instructions
-
- Documentation/x86/boot.rst              |   8 +-
- arch/x86/boot/compressed/eboot.c        | 103 ------------------------
- arch/x86/boot/compressed/efi_thunk_64.S |  29 +++++--
- arch/x86/boot/compressed/head_32.S      |  48 +++++++----
- arch/x86/boot/compressed/head_64.S      |  66 ++++++++-------
- arch/x86/kernel/head_32.S               |   6 --
- 6 files changed, 99 insertions(+), 161 deletions(-)
-
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index c56b30bd9c7b..27eb2a6786db 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -439,6 +439,16 @@ trampoline_return:
+ 	cld
+ 	popq	%rsi
+ 
++	/*
++	 * The GDT may get overwritten either during the copy we just did or
++	 * during extract_kernel below. To avoid any issues, repoint the GDTR
++	 * to the new copy of the GDT.
++	 */
++	leaq	gdt64(%rbx), %rax
++	subq	%rbp, 2(%rax)
++	addq	%rbx, 2(%rax)
++	lgdt	(%rax)
++
+ /*
+  * Jump to the relocated address.
+  */
 -- 
 2.24.1
 
