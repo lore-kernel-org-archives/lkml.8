@@ -7,213 +7,266 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA3BC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD089C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C842067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B982067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NMVHd+pk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CWBUJy3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgBBPrp (ORCPT
+        id S1727091AbgBBPrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 10:47:45 -0500
+        Sun, 2 Feb 2020 10:47:49 -0500
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15703 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgBBPrn (ORCPT
+        with ESMTP id S1726880AbgBBPrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 10:47:43 -0500
+        Sun, 2 Feb 2020 10:47:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1580658462; x=1612194462;
+  t=1580658466; x=1612194466;
   h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CWCt1N9QQeshEUbUnNbIJ3gtz8DB25rDcqW1k3WBi7c=;
-  b=NMVHd+pkhPjWjHXEGPotCg2QLJ13t6jzGDWlENFakxHrvl1HvuC2DMDR
-   mWySHQUFqBWvfzf22ZrVQnXbumjrysEqxy23YkdJA7n+aWazZCCznAZvV
-   63CpLWT7MfInTVYfNtaFg8nxtMEO7sKPZ7wLNnMGAyQZd6Xytc8c/cN/5
-   HMNmWYfyAdonW3w5Kh98ibTk4rZxRYNewhl3tG1OcrOrH7yaSHBwx7t01
-   yI33dEwOu+KWQ8D5Gd8WLVWHXidSRKjeVC9z5pV+BpGfKuKB7V+SkFPNO
-   X9+jmZxHgroH/aRjGI9q0sp5f2/lv3LbzCdZdAp0IzZ7yQn6K7TiZSGzu
-   Q==;
-IronPort-SDR: mRuDPnP8AU02bTMtRDkxM/zaRHgph3fwPgpTCFEWYp9v7W6FCI+OZKwUeIdaM28l5hDFY8vmPD
- 8fpQDopn8YzxTvknAZvxVF0UT3DJKM+jVqmI9DWRj4i1zBURPcLjcEpwYxtLUNWClJviypzEph
- A8zGb3Lb6VXffphhEBJc9xcbDXMvODs6q1BqS5FM7r//TRR36tCkvKEBArK9KKmC2PPBdfN2KY
- zN1Sqp5X+V8eOlFANwMMAOm0mX/8r+pbMEhfjWNN0A0Nf7hQY/hLNNUrSdPqXilPlUJ5nmZ0tw
- PIQ=
+   references;
+  bh=rAReo7Ghhyllt4vhzaYwGGfwgZx7+2h3+bZQ0IC2fB4=;
+  b=CWBUJy3j2PX5uqUlgKdGVOgg8rOl5sWWI3qsIDtkk7j+wPRtoky+Rwcw
+   EJsO8c7Gi1OVM2goykBd2h068siLZWLXvqHm9+6nMN7P9BLreeScJMVaU
+   zHLU2ALFCETNwiuY4yFKM8Q73tz8849+/mK7bV1D/8dE5HQ0FwKJU0PU3
+   TNtKopgvw6fQx3hm15ssxLOdJi/gCZEI6ct79nL+G27Nk2CKCYfUOeCne
+   6ev//etyR1eh7LEZaLYpqhkxd2MG17b6hUU13c/gJxKizTqzhYfAtAoN/
+   zjTEQXjDoXdPJ9U3ft7vUceB1V6Tj88X3oX5D0xJVF48ivpXWdwCX3maQ
+   g==;
+IronPort-SDR: LV722q0NaDtVMO/sduRBiPBBr1bdM9cGarsBr3io57Zu8XmcJJ6l3eV5ehpELVVzpiaUPyap9H
+ 0xgLKeucsin0LFRewWYd5AndTc5oPJTS2gbKeNNqmJCrrJKPLcr0/6u0xR5l/jOw4saEYMm+9B
+ bGOScKkqPvAp0EJAbJ/u0sCD8gFPgrScmMvJ0OA0CPeOD1/likh2nMS577QtAVNQuycHVemY5f
+ Zg1GpkEOf/tHzrbbVV6mWZKgwgutF2FHKsAll1f4ccG9MVQOj/nZPyW8wwKCQmeXNkL4xW0kI/
+ QzI=
 X-IronPort-AV: E=Sophos;i="5.70,394,1574092800"; 
-   d="scan'208";a="128932823"
+   d="scan'208";a="128932825"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2020 23:47:42 +0800
-IronPort-SDR: N9cb7UZQYdEFN0hQvO99HkYnwZMT6jULv5z+RsM5FnCvhvqYtbFQHIrrbPDbiOywJp07Lq2FA+
- YWBFdRyzF4WEAObZx21jqRHwy5ZEyrlBkhtdK/jVAcgvojijwtYXHgBgJ0VOa7cv+5Wwag7uxT
- RTBbLQsupSXDIckGQupyG+0SNFd6YZQS+DQONz/KF39+V71v5nyXWeb1niiu8f4Q4fdHZVfVc1
- FYeJTMdFsR6RgfxM4DHs1v/5WnaIRx8IjNT38T1yagCUtcH+ILZAsNWUaIu4aVFqCAgDd2gd90
- nIZlk4G16YjTcsXD2WytXQB4
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2020 23:47:46 +0800
+IronPort-SDR: TVrMQKFd12mBMm0J4ZdfKkIro5fWV6KHALXdDIRqRDBHsc8QbAKaJLJCeZkqCkcJdwmZ8FXi93
+ fEsth+0ad8sAp6WTGU+qYrOmIRVw+f5bcyUdm7xZNcWC6GsaWXSAkvJsM+Yn1as4Vr+AGjfQfy
+ KpoU0jWElZq1lmqTChCX/sTCq6SmqTaFj3yg2WXFdJEmKOf9VHWV6/Sknz5rlp6hWXfIMXYtLM
+ yQRujku6uPqzYrRXdK9yjS22GyuQdQ4Mn7VXhsmWzGHTxesR5/raf7dNLz+lR4shvv7bCVBW02
+ M9HZYGNAATDTvzCmWHXqdtSY
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 07:40:48 -0800
-IronPort-SDR: OtM14+PQLwQOJ9dKFcdGaexuFnrKgGh8jA947SOlCv5V521jeZA3NY2sAhnFkg3a2MkkeFFliy
- T3i08w6/ZIvu3UzlfI2pw1RxSDgtHkMpo5bnUeFwmPJFitLD03ZxpvtB9yan6nKQLAmMvqAXBU
- T/r3Apfo8RFVmtDDS7gJCLd3qjk7GntaZ2g/dRwjTIJH5lpVPXDDoIMWo/knO4WoNtUZiMEJ8N
- 176GelJzODfIZeGkOgzkbkj9liXRLFGZdvy67uH6E3RBa76yyjzxUtl5y4xSVupPq/I0T1NRAW
- Bms=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 07:40:52 -0800
+IronPort-SDR: ja2sVxNlWSWVr0eGS5Bk2OcCLxkh8s42kydRC0/F5ydfYw8KlLF5YviS0nfeTVFLa9ALlHLtFu
+ ufoJaokkYUIA4TK68Ja8YLxukDGtleU+W88BJjwY0Ga09Up0fGjwcuDXZRF+LROq38a19yJZt3
+ 08HvPSQvZJNMrIDFJtkJnDTIqn9EbE0axAwxQo01xPraHW7QLoUw4VbvE6VemXQ6JLkPA1lb/E
+ rYGHg6r2qmMJh8eXght50VdiT+clmMDQ6NLJ+nRu02q8L+JY+h5+cECLFz19PceklMtr7Fpjzw
+ 0Mg=
 WDCIronportException: Internal
 Received: from kfae419068.sdcorp.global.sandisk.com ([10.0.231.195])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Feb 2020 07:47:41 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Feb 2020 07:47:44 -0800
 From:   Avi Shchislowski <avi.shchislowski@wdc.com>
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com, jejb@linux.ibm.com,
         martin.petersen@oracle.com, stanley.chu@mediatek.com,
         linux-kernel@vger.kernel.org
 Cc:     Avi Shchislowski <avi.shchislowski@wdc.com>,
         Uri Yanai <uri.yanai@wdc.com>
-Subject: [PATCH 3/5] scsi: ufs: enable thermal exception event
-Date:   Sun,  2 Feb 2020 17:47:23 +0200
-Message-Id: <1580658445-15232-4-git-send-email-avi.shchislowski@wdc.com>
+Subject: [PATCH 4/5] scsi: ufs-thermal: implement thermal file ops
+Date:   Sun,  2 Feb 2020 17:47:24 +0200
+Message-Id: <1580658445-15232-5-git-send-email-avi.shchislowski@wdc.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1580658445-15232-1-git-send-email-avi.shchislowski@wdc.com>
 References: <1580658445-15232-1-git-send-email-avi.shchislowski@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The host might need to be aware of the device's temperature, when it's
-too high or too low. Should such event occur, the device is expected
-to notify it to the host by using the exception event mechanism.
-
-E.g. when TOO_HIGH_TEMP in wExceptionEventStatus is raised, it is
-recommended to perform thermal throttling or other cooling activities
-for lowering the device Tcase temperature. Similarly, when
-TOO_LOW_TEMP is raised, it is recommended to take an applicable
-actions to increase the device’s Tcase temperature.
+The thermal interface adds a new thermal zone device sensor under
+/sys/class/thermal/ folder.
 
 Signed-off-by: Uri Yanai <uri.yanai@wdc.com>
 Signed-off-by: Avi Shchislowski <avi.shchislowski@wdc.com>
 ---
- drivers/scsi/ufs/ufs-thermal.c | 28 ++++++++++++++++++++++++----
- drivers/scsi/ufs/ufs-thermal.h |  6 ++++++
- drivers/scsi/ufs/ufs.h         |  6 +++++-
- drivers/scsi/ufs/ufshcd.c      |  4 ++++
- 4 files changed, 39 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufs-thermal.c | 122 ++++++++++++++++++++++++++++++++++++++---
+ drivers/scsi/ufs/ufs.h         |   3 +
+ 2 files changed, 117 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/scsi/ufs/ufs-thermal.c b/drivers/scsi/ufs/ufs-thermal.c
-index 469c1ed..dfa5d68 100644
+index dfa5d68..23e4ac1 100644
 --- a/drivers/scsi/ufs/ufs-thermal.c
 +++ b/drivers/scsi/ufs/ufs-thermal.c
-@@ -19,11 +19,32 @@ enum {
+@@ -31,6 +31,99 @@ enum {
+ 		}
+ };
  
- /**
-  *struct ufs_thermal - thermal zone related data
-- * @tzone: thermal zone device data
-+ * @trip: trip array
-  */
- static struct ufs_thermal {
- 	struct thermal_zone_device *zone;
--} thermal;
-+	int trip[UFS_THERM_MAX_TRIPS];
-+} thermal = {
-+		.trip = {
-+			[UFS_THERM_MAX_TEMP] = 170 * 1000,
-+			[UFS_THERM_MIN_TEMP] = -79 * 1000
-+		}
-+};
++#define attr2milicelcius(attr) (((0xFF & attr) - 80) * 1000)
 +
-+void ufs_thermal_exception_event_handler(struct ufs_hba *hba,
-+		u32 exception_status)
++static int ufs_thermal_get_temp(struct thermal_zone_device *device,
++				  int *temperature)
 +{
-+	if (WARN_ON_ONCE(!hba->thermal_features))
-+		return;
++	struct ufs_hba *hba = (struct ufs_hba *)device->devdata;
++	u32 temp;
++	int err;
 +
-+	if (exception_status & MASK_EE_TOO_HIGH_TEMP) {
-+		thermal_notify_framework(thermal.zone, UFS_THERM_HIGH_TEMP);
-+		dev_info(hba->dev, "High temperature raised\n");
-+	} else if (exception_status & MASK_EE_TOO_LOW_TEMP) {
-+		thermal_notify_framework(thermal.zone, UFS_THERM_LOW_TEMP);
-+		dev_info(hba->dev, "Low temperature raised\n");
-+	}
++	err = ufshcd_query_attr(hba,
++			UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_ROUGH_TEMP,
++			0, 0, &temp);
++	if (err)
++		return -EINVAL;
++
++	*temperature = attr2milicelcius(temp);
++	return 0;
 +}
- 
- static  struct thermal_zone_device_ops ufs_thermal_ops = {
- 	.get_temp = NULL,
-@@ -33,8 +54,7 @@ enum {
- 
- static int ufs_thermal_enable_ee(struct ufs_hba *hba)
++
++static int ufs_thermal_get_trip_temp(
++		struct thermal_zone_device *device,
++				 int trip, int *temp)
++{
++
++	if (trip < 0 || trip >= UFS_THERM_MAX_TRIPS)
++		return -EINVAL;
++
++	*temp = thermal.trip[trip];
++
++	return 0;
++}
++
++static int ufs_thermal_get_trip_type(
++		struct thermal_zone_device *device,
++		int trip, enum thermal_trip_type *type)
++{
++	if (trip < 0 || trip >= UFS_THERM_MAX_TRIPS)
++		return -EINVAL;
++
++	*type = THERMAL_TRIP_PASSIVE;
++
++	return 0;
++}
++
++static int ufs_thermal_get_boundary(struct ufs_hba *hba,
++					int trip, int *boundary)
++{
++	enum attr_idn idn;
++	int err = 0;
++	u32 val;
++
++	idn = trip == UFS_THERM_HIGH_TEMP ?
++			QUERY_ATTR_IDN_TOO_HIGH_TEMP :
++			QUERY_ATTR_IDN_TOO_LOW_TEMP;
++
++	err = ufshcd_query_attr(hba,
++			UPIU_QUERY_OPCODE_READ_ATTR,
++			idn, 0, 0, &val);
++	if (err) {
++		dev_err(hba->dev,
++		"Failed to get device too %s temperature boundary\n",
++		trip == UFS_THERM_HIGH_TEMP ? "high" : "low");
++		goto out;
++	}
++
++	if (val < 1 || val > 250) {
++		dev_err(hba->dev, "out of device temperature boundary\n");
++		err = -EINVAL;
++		goto out;
++	}
++
++	*boundary = attr2milicelcius(val);
++
++out:
++	return err;
++}
++
++static int ufs_thermal_set_trip(struct ufs_hba *hba, int trip)
++{
++	int temp;
++	int err = 0;
++
++	err = ufs_thermal_get_boundary(hba, trip, &temp);
++	if (err)
++		return err;
++
++	thermal.trip[trip] = temp;
++
++	return err;
++
++}
++
+ void ufs_thermal_exception_event_handler(struct ufs_hba *hba,
+ 		u32 exception_status)
  {
--	/* later */
--	return -EINVAL;
-+	return ufshcd_enable_ee(hba, MASK_EE_URGENT_TEMP);
+@@ -46,17 +139,12 @@ void ufs_thermal_exception_event_handler(struct ufs_hba *hba,
+ 	}
  }
  
- static void ufs_thermal_zone_unregister(struct ufs_hba *hba)
-diff --git a/drivers/scsi/ufs/ufs-thermal.h b/drivers/scsi/ufs/ufs-thermal.h
-index 7c0fcbe..285049e 100644
---- a/drivers/scsi/ufs/ufs-thermal.h
-+++ b/drivers/scsi/ufs/ufs-thermal.h
-@@ -11,9 +11,15 @@
- #ifdef CONFIG_THERMAL_UFS
- void ufs_thermal_remove(struct ufs_hba *hba);
- int ufs_thermal_probe(struct ufs_hba *hba);
-+void ufs_thermal_exception_event_handler(struct ufs_hba *hba,
-+		u32 exception_status);
- #else
- static inline void ufs_thermal_remove(struct ufs_hba *hba) {}
- static inline int ufs_thermal_probe(struct ufs_hba *hba) {return 0; }
-+void ufs_thermal_exception_event_handler(struct ufs_hba *hba,
-+		u32 exception_status)
-+{
-+}
- #endif /* CONFIG_THERMAL_UFS */
+-static  struct thermal_zone_device_ops ufs_thermal_ops = {
+-	.get_temp = NULL,
+-	.get_trip_temp = NULL,
+-	.get_trip_type = NULL,
+-};
+-
+ static int ufs_thermal_enable_ee(struct ufs_hba *hba)
+ {
+ 	return ufshcd_enable_ee(hba, MASK_EE_URGENT_TEMP);
+ }
  
- #endif /* UFS_THERMAL_H */
++
+ static void ufs_thermal_zone_unregister(struct ufs_hba *hba)
+ {
+ 	if (thermal.zone) {
+@@ -66,7 +154,13 @@ static void ufs_thermal_zone_unregister(struct ufs_hba *hba)
+ 	}
+ }
+ 
+-static int ufs_thermal_register(struct ufs_hba *hba)
++static  struct thermal_zone_device_ops ufs_thermal_ops = {
++	.get_temp = ufs_thermal_get_temp,
++	.get_trip_temp = ufs_thermal_get_trip_temp,
++	.get_trip_type = ufs_thermal_get_trip_type,
++};
++
++static int ufs_thermal_register(struct ufs_hba *hba, u8 ufs_features)
+ {
+ 	int err = 0;
+ 	char name[THERMAL_NAME_LENGTH] = {};
+@@ -74,6 +168,18 @@ static int ufs_thermal_register(struct ufs_hba *hba)
+ 	snprintf(name, THERMAL_NAME_LENGTH, "ufs_storage_%d",
+ 			hba->host->host_no);
+ 
++	if (ufs_features & UFS_FEATURE_HTEMP) {
++		err = ufs_thermal_set_trip(hba, UFS_THERM_HIGH_TEMP);
++		if (err)
++			goto out;
++	}
++
++	if (ufs_features & UFS_FEATURE_LTEMP) {
++		err = ufs_thermal_set_trip(hba, UFS_THERM_LOW_TEMP);
++		if (err)
++			goto out;
++	}
++
+ 	thermal.zone = thermal_zone_device_register(name, UFS_THERM_MAX_TRIPS,
+ 			0, hba, &ufs_thermal_ops, NULL, 0, 0);
+ 	if (IS_ERR(thermal.zone)) {
+@@ -122,7 +228,7 @@ int ufs_thermal_probe(struct ufs_hba *hba)
+ 	if (!ufs_features)
+ 		goto out;
+ 
+-	err = ufs_thermal_register(hba);
++	err = ufs_thermal_register(hba, ufs_features);
+ 	if (err)
+ 		goto out;
+ 
 diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index eb729cc..8fc0b0c 100644
+index 8fc0b0c..9f8224b 100644
 --- a/drivers/scsi/ufs/ufs.h
 +++ b/drivers/scsi/ufs/ufs.h
-@@ -363,7 +363,9 @@ enum power_desc_param_offset {
- /* Exception event mask values */
- enum {
- 	MASK_EE_STATUS		= 0xFFFF,
--	MASK_EE_URGENT_BKOPS	= (1 << 2),
-+	MASK_EE_URGENT_BKOPS	= BIT(2),
-+	MASK_EE_TOO_HIGH_TEMP	= BIT(3),
-+	MASK_EE_TOO_LOW_TEMP	= BIT(4),
+@@ -167,6 +167,9 @@ enum attr_idn {
+ 	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
+ 	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
+ 	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
++	QUERY_ATTR_IDN_ROUGH_TEMP		= 0x18,
++	QUERY_ATTR_IDN_TOO_HIGH_TEMP		= 0x19,
++	QUERY_ATTR_IDN_TOO_LOW_TEMP		= 0x1A,
  };
  
- /* Background operation status */
-@@ -375,6 +377,8 @@ enum bkops_status {
- 	BKOPS_STATUS_MAX		 = BKOPS_STATUS_CRITICAL,
- };
- 
-+#define MASK_EE_URGENT_TEMP (MASK_EE_TOO_HIGH_TEMP | MASK_EE_TOO_LOW_TEMP)
-+
- /* UTP QUERY Transaction Specific Fields OpCode */
- enum query_opcode {
- 	UPIU_QUERY_OPCODE_NOP		= 0x0,
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index f25b93c..45fb52d 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -42,6 +42,7 @@
- #include <linux/nls.h>
- #include <linux/of.h>
- #include <linux/bitfield.h>
-+#include <linux/thermal.h>
- #include "ufshcd.h"
- #include "ufs_quirks.h"
- #include "unipro.h"
-@@ -5183,6 +5184,9 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
- 	if (status & MASK_EE_URGENT_BKOPS)
- 		ufshcd_bkops_exception_event_handler(hba);
- 
-+	if (status & MASK_EE_URGENT_TEMP)
-+		ufs_thermal_exception_event_handler(hba, status);
-+
- out:
- 	ufshcd_scsi_unblock_requests(hba);
- 	pm_runtime_put_sync(hba->dev);
+ /* Descriptor idn for Query requests */
 -- 
 1.9.1
 
