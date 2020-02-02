@@ -2,297 +2,115 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F382C3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D2BC35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5030720679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D7E206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 07:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cf2ItoUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgBBHSy (ORCPT
+        id S1726869AbgBBHmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 02:18:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:44992 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgBBHSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 02:18:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E295FEC;
-        Sat,  1 Feb 2020 23:18:52 -0800 (PST)
-Received: from [10.163.1.42] (unknown [10.163.1.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 901DF3F68E;
-        Sat,  1 Feb 2020 23:22:10 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <68ed6488-aa25-ab41-8da6-f0ddeb15d52b@c-s.fr>
- <49754f74-53a7-0e4a-bb16-53617f8c902c@arm.com>
- <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ad5ad414-3524-2efa-df16-1ee357e6e2e4@arm.com>
-Date:   Sun, 2 Feb 2020 12:48:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 2 Feb 2020 02:42:00 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:6569 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgBBHl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 02:41:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580629318; x=1612165318;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pVVPGA2WzFp5c3l0K1TYYcBXTEJeNaWFm/zchLzBFCA=;
+  b=cf2ItoUxjL/xL5atC6sNmYyExmt6O8Y61bVb6i3w/+2F+FL24MLq9X2R
+   MoJHhfniCgyr4E8KkwXzOOMTFuWH3dpnxBNXNdI6tCMKykM9siC0VyRIA
+   bqMNcLc0zbeEXG8JbqLLrcUZHo9WGxBQlqFdV6r2irl61DiFp5RBMFgtf
+   QIjU6BkLMK4l2wuR4n9TAwHpjaK89svnVgvrpeWp9hFOvXmclnNINqT94
+   uSmT/aqw4GxXs3FSlvR1XuWr0kWafsXqCs2CeY42HjEWfPQ7JpzIm99wk
+   +IoLQBN0hDBI/RtDXwIavLIWezMyjomJlCnEeyJYBPzVrvc1LBdWz2FHE
+   A==;
+IronPort-SDR: NqIJVL35WNHEZKQHDEvNvydj1asX/5Wz4FnqArP1S77by2vVlcwdeHpFstSuqDRimFvrXouUrr
+ olFFvl+/gFafOmW02tNhABdQJjNzUW8fJMXUc96uQTfopreUvtYQ3mo4Itf8/VCnyYm2kgbv8r
+ 675lgZvP4bm3xPBBhRMQ9e5dpqWjL9IXksIs00reMfOmBC5zXf7nY7D0GvpIuxkbTt2qeinQrU
+ rGruNABEftyRR7DbwQ/x7b5Ma4pB0sMiWI0OwYFYhUCEyei/vrIS2faEoOdHVZwvRylVhsasE0
+ HXw=
+X-IronPort-AV: E=Sophos;i="5.70,393,1574092800"; 
+   d="scan'208";a="130383374"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2020 15:41:58 +0800
+IronPort-SDR: kVRhrivDNyWmctJ7DiyIRuqWW6r25YYHWhxBiNlXdcdtMduKbMrEKvVyofYSHxMm+8p/jknHNs
+ 4m8kYwK1LWhAkMNRkxR9zdJagA0KHBd0sRaC+mCIWXISZvcYYtyWpKXGdJrTqR+F5u9HIQCNTO
+ 9JuhDxaBe4UcqN/+GF4AVUfl3LZ9/foik5Xw82ozm6v+eO57SMhc+BEBKsQPeEdvtscZze1TUa
+ rA8as9wwQCtBD/m+M9avwC7HPe1GcOddtG3rYP8byc1zR+vr1uHDEzrfpbSgWlo8mPA8drTcSh
+ phmLAQRudniqNwdwLY32xGRm
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 23:35:04 -0800
+IronPort-SDR: ZVz61PXsm9VRyiyyjzqEdOLP5A/vwyBDKs5tpCxcDi22TnzcIv8ggkvRmR2eFoiVjXZBMEuXlo
+ eQ6szzpkt+ZK1+rjPyzmAcxk2jhX2Hm39YchMFpDK84li39yCV13/enjT7/hE2JVZ3+Fj0Ec5Q
+ rceIKf3Jxs9Y5tE+Yfs61RPetgChKCCFkfxF6nMMCC8Zmbed6OJK7Jx1Hd5QUcadvCzOSDIBHG
+ JbY6gVReRZ8AlVEzr+MWu+qmg7xBDApVNBe6W41+3wYrrAlWNaYT5Soad5JFELTj/7GJ8Pcvb1
+ 9ug=
+WDCIronportException: Internal
+Received: from kfae419068.sdcorp.global.sandisk.com ([10.0.231.195])
+  by uls-op-cesaip02.wdc.com with ESMTP; 01 Feb 2020 23:41:56 -0800
+From:   Avi Shchislowski <avi.shchislowski@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Avi Shchislowski <avi.shchislowski@sandisk.com>
+Subject: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
+Date:   Sun,  2 Feb 2020 09:41:48 +0200
+Message-Id: <1580629313-20078-1-git-send-email-avi.shchislowski@wdc.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/30/2020 07:43 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 30/01/2020 à 14:04, Anshuman Khandual a écrit :
->>
->> On 01/28/2020 10:35 PM, Christophe Leroy wrote:
->>>
->>>
->>> Le 28/01/2020 à 02:27, Anshuman Khandual a écrit :
->>>> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
->>>> index 0b6c4042942a..fb0e76d254b3 100644
->>>> --- a/arch/x86/include/asm/pgtable_64.h
->>>> +++ b/arch/x86/include/asm/pgtable_64.h
->>>> @@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
->>>>      struct mm_struct;
->>>>    +#define mm_p4d_folded mm_p4d_folded
->>>> +static inline bool mm_p4d_folded(struct mm_struct *mm)
->>>> +{
->>>> +    return !pgtable_l5_enabled();
->>>> +}
->>>> +
->>>
->>> For me this should be part of another patch, it is not directly linked to the tests.
->>
->> We did discuss about this earlier and Kirril mentioned its not worth
->> a separate patch.
->>
->> https://lore.kernel.org/linux-arm-kernel/20190913091305.rkds4f3fqv3yjhjy@box/
-> 
-> For me it would make sense to not mix this patch which implement tests, and changes that are needed for the test to work (or even build) on the different architectures.
-> 
-> But that's up to you.
-> 
->>
->>>
->>>>    void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
->>>>    void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
->>>>    diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
->>>> index 798ea36a0549..e0b04787e789 100644
->>>> --- a/include/asm-generic/pgtable.h
->>>> +++ b/include/asm-generic/pgtable.h
->>>> @@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
->>>>    # define PAGE_KERNEL_EXEC PAGE_KERNEL
->>>>    #endif
->>>>    +#ifdef CONFIG_DEBUG_VM_PGTABLE
->>>
->>> Not sure it is a good idea to put that in include/asm-generic/pgtable.h
->>
->> Logically that is the right place, as it is related to page table but
->> not something platform related.
-> 
-> I can't see any debug related features in that file.
-> 
->>
->>>
->>> By doing this you are forcing a rebuild of almost all files, whereas only init/main.o and mm/debug_vm_pgtable.o should be rebuilt when activating this config option.
->>
->> I agreed but whats the alternative ? We could move these into init/main.c
->> to make things simpler but will that be a right place, given its related
->> to generic page table.
-> 
-> What about linux/mmdebug.h instead ? (I have not checked if it would reduce the impact, but that's where things related to CONFIG_DEBUG_VM seems to be).
-> 
-> Otherwise, you can just create new file, for instance <linux/mmdebug-pgtable.h> and include that file only in the init/main.c and mm/debug_vm_pgtable.c
+From: Avi Shchislowski <avi.shchislowski@sandisk.com>
 
-IMHO it might not be wise to add yet another header file for this purpose.
-Instead lets use <linux/mmdebug.h> in line with DEBUG_VM, DEBUG_VM_PGFLAGS,
-DEBUG_VIRTUAL (which is also a stand alone test). A simple grep shows that
-the impact of mmdebug.h would be less than generic pgtable.h header.
+UFS3.0 allows using the ufs device as a temperature sensor. The
+purpose of this feature is to provide notification to the host of the
+UFS device case temperature. It allows reading of a rough estimate
+(+-10 degrees centigrade) of the current case temperature, And
+setting a lower and upper temperature bounds, in which the device
+will trigger an applicable exception event.
 
-> 
-> 
-> 
->>
->>>
->>>> +extern void debug_vm_pgtable(void);
->>>
->>> Please don't use the 'extern' keyword, it is useless and not to be used for functions declaration.
->>
->> Really ? But, there are tons of examples doing the same thing both in
->> generic and platform code as well.
-> 
-> Yes, but how can we improve if we blindly copy the errors from the past ? Having tons of 'extern' doesn't mean we must add more.
-> 
-> I think checkpatch.pl usually complains when a patch brings a new unreleval extern symbol.
+We added the capability of responding to such notifications, while
+notifying the kernel's thermal core, which further exposes the thermal
+zone attributes to user space. UFS temperature attributes are all
+read-only, so only thermal read ops (.get_xxx) can be implemented.
 
-Sure np, will drop it. But checkpatch.pl never complained.
+Avi Shchislowski (5):
+  scsi: ufs: Add ufs thermal support
+  scsi: ufs: export ufshcd_enable_ee
+  scsi: ufs: enable thermal exception event
+  scsi: ufs-thermal: implement thermal file ops
+  scsi: ufs: temperature atrributes add to ufs_sysfs
 
-> 
->>
->>>
->>>> +#else
->>>> +static inline void debug_vm_pgtable(void) { }
->>>> +#endif
->>>> +
->>>>    #endif /* !__ASSEMBLY__ */
->>>>      #ifndef io_remap_pfn_range
->>>> diff --git a/init/main.c b/init/main.c
->>>> index da1bc0b60a7d..5e59e6ac0780 100644
->>>> --- a/init/main.c
->>>> +++ b/init/main.c
->>>> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
->>>>        sched_init_smp();
->>>>          page_alloc_init_late();
->>>> +    debug_vm_pgtable();
->>>
->>> Wouldn't it be better to call debug_vm_pgtable() in kernel_init() between the call to async_synchronise_full() and ftrace_free_init_mem() ?
->>
->> IIRC, proposed location is the earliest we could call debug_vm_pgtable().
->> Is there any particular benefit or reason to move it into kernel_init() ?
-> 
-> It would avoid having it lost in the middle of drivers logs, would be close to the end of init, at a place we can't miss it, close to the result of other tests like CONFIG_DEBUG_RODATA_TEST for instance.
-> 
-> At the moment, you have to look for it to be sure the test is done and what the result is.
+ drivers/scsi/ufs/Kconfig       |  11 ++
+ drivers/scsi/ufs/Makefile      |   1 +
+ drivers/scsi/ufs/ufs-sysfs.c   |   6 +
+ drivers/scsi/ufs/ufs-thermal.c | 247 +++++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufs-thermal.h |  25 +++++
+ drivers/scsi/ufs/ufs.h         |  20 +++-
+ drivers/scsi/ufs/ufshcd.c      |   9 +-
+ drivers/scsi/ufs/ufshcd.h      |  12 ++
+ 8 files changed, 329 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/scsi/ufs/ufs-thermal.c
+ create mode 100644 drivers/scsi/ufs/ufs-thermal.h
 
-Sure, will move it.
+-- 
+1.9.1
 
-> 
->>
->>>
->>>>        /* Initialize page ext after all struct pages are initialized. */
->>>>        page_ext_init();
->>>>    diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
->>>> index 5ffe144c9794..7cceae923c05 100644
->>>> --- a/lib/Kconfig.debug
->>>> +++ b/lib/Kconfig.debug
->>>> @@ -653,6 +653,12 @@ config SCHED_STACK_END_CHECK
->>>>          data corruption or a sporadic crash at a later stage once the region
->>>>          is examined. The runtime overhead introduced is minimal.
->>>>    +config ARCH_HAS_DEBUG_VM_PGTABLE
->>>> +    bool
->>>> +    help
->>>> +      An architecture should select this when it can successfully
->>>> +      build and run DEBUG_VM_PGTABLE.
->>>> +
->>>>    config DEBUG_VM
->>>>        bool "Debug VM"
->>>>        depends on DEBUG_KERNEL
->>>> @@ -688,6 +694,22 @@ config DEBUG_VM_PGFLAGS
->>>>            If unsure, say N.
->>>>    +config DEBUG_VM_PGTABLE
->>>> +    bool "Debug arch page table for semantics compliance"
->>>> +    depends on MMU
->>>> +    depends on DEBUG_VM
->>>
->>> Does it really need to depend on DEBUG_VM ?
->>
->> No. It seemed better to package this test along with DEBUG_VM (although I
->> dont remember the conversation around it) and hence this dependency.
-> 
-> Yes but it perfectly work as standalone. The more easy it is to activate and the more people will use it. DEBUG_VM obliges to rebuild the kernel entirely and could modify the behaviour. Could the helpers we are testing behave differently when DEBUG_VM is not set ? I think it's good the test things as close as possible to final config.
-
-Makes sense. There is no functional dependency for the individual tests
-here on DEBUG_VM.
-
-> 
->>
->>> I think we could make it standalone and 'default y if DEBUG_VM' instead.
->>
->> Which will yield the same result like before but in a different way. But
->> yes, this test could go about either way but unless there is a good enough
->> reason why change the current one.
-> 
-> I think if we want people to really use it on other architectures it must be possible to activate it without having to modify Kconfig. Otherwise people won't even know the test exists and the architecture fails the test.
-> 
-> The purpose of a test suite is to detect bugs. If you can't run the test until you have fixed the bugs, I guess nobody will ever detect the bugs and they will never be fixed.
-> 
-> So I think:
-> - the test should be 'default y' when ARCH_HAS_DEBUG_VM_PGTABLE is selected
-> - the test should be 'default n' when ARCH_HAS_DEBUG_VM_PGTABLE is not selected, and it should be user selectable if EXPERT is selected.
-> 
-> Something like:
-> 
-> config DEBUG_VM_PGTABLE
->     bool "Debug arch page table for semantics compliance" if ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
->     depends on MMU
-
-(ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT) be moved along side MMU on the same line ?
-
->     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
->     default 'y' if DEBUG_VM
-
-This looks good, at least until we get all platforms enabled. Will do all these
-changes along with s390 enablement and re-spin.
-
-> 
-> 
->>
->>>
->>>> +    depends on ARCH_HAS_DEBUG_VM_PGTABLE
->>>> +    default y
->>>> +    help
->>>> +      This option provides a debug method which can be used to test
->>>> +      architecture page table helper functions on various platforms in
->>>> +      verifying if they comply with expected generic MM semantics. This
->>>> +      will help architecture code in making sure that any changes or
->>>> +      new additions of these helpers still conform to expected
->>>> +      semantics of the generic MM.
->>>> +
->>>> +      If unsure, say N.
->>>> +
->>>
->>> Does it make sense to make it 'default y' and say 'If unsure, say N' ?
->>
->> No it does. Not when it defaults 'y' unconditionally. Will drop the last
->> sentence "If unsure, say N". Nice catch, thank you.
-> 
-> Well I was not asking if 'default y' was making sense but only if 'If unsure say N' was making sense due to the 'default y'. You got it.
-> 
-> Christophe
-> 
-> 
