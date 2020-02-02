@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3416C35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D770C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FFB20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD2E20658
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0zzG3aa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wg340Ay3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBBWaQ (ORCPT
+        id S1727267AbgBBWaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 17:30:16 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34087 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727260AbgBBWaH (ORCPT
+        Sun, 2 Feb 2020 17:30:08 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44421 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgBBWaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 17:30:07 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l18so8393221lfc.1;
-        Sun, 02 Feb 2020 14:30:05 -0800 (PST)
+        Sun, 2 Feb 2020 17:30:02 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so12580582ljj.11;
+        Sun, 02 Feb 2020 14:30:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VT2b3DIhkLrsXocDLVqwdbb9fFwHJxhRiEwuiWhammQ=;
-        b=K0zzG3aa421/UtbmrOpJpNK+eddVN3a0ZR/9nRkZdTimhbXdf0vaUu3Ex+SustzPOh
-         isVYug7s5uqHG6P8MIkQ401vMbAhoVSTJFX29nXNOM2TsuWLiB/xRe7PuvtebYf981jK
-         6kDB2AEpszmYmr3VTxmYVSm7xPsxHwNpHfM6wKmy2Ib9yoRAGsK216qYvFgMgJHX+mTU
-         nY4m60FHOlIXvz32aQswO4O56/eqxN/n39edH3lF5uutXkEOFVjKRolxCIiI8EKAk6NM
-         iJJkXmQel7qMNX/vcxSvcm2wQbhhkErc7abwXpZPwSiLcTm8rYgY0VCcklW6zG8R4ntu
-         qSfQ==
+        bh=oV29kakgRgYYyDRbHczEOv6xyT6QVwpRMqzYCQR5kaM=;
+        b=Wg340Ay3uYAb1EmgfeQg34Kf9wHf0k8rvo5n4ZXj85FweoZYj2fY6V2rFesF/ig5ui
+         MLE299cKNy6AOBJInzCS6k3JoJp4teQSdzLeidppi3mq5esoyGTkY80RwL7vIjNSDcwf
+         GBMG1qwMkNdnjGDXhaBfzUW/mWrCcaj6TOhhPAhbSIWnppNM1vg14bxVnamjPtfvQKA5
+         uOHKOXlDiDyRNMPdz+5yai29JhemgD9CmAYOI19hHxlsRmxenRqxE7RR8iqeVyNaAN6O
+         WzWZkxLXvjkbTF1l1hOAY6i0ACUSVPtGihGkXxRbeII9rKyPwYCwRniHU5HaT11dtLjp
+         B4cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VT2b3DIhkLrsXocDLVqwdbb9fFwHJxhRiEwuiWhammQ=;
-        b=DVNy2balxpHIRHe0hEyLAC0T27EcwNL64mX43xr9a8OYcYsIiMm6+JDB9/hG4MGJqj
-         s6ONS8wsmzGn3iz6OPj9tePntFX7WnjE86u340oDv0dei0XWvfM/j6Lc8TFMAbFWATnS
-         ExtcunTeHa7mKjCCcRN9xgqKYmSq4TDYW+sPkZLSazKAIYcpbMdGK+Ko2M4sfzEgnqjO
-         vIM/+x5lQYhAJREeoug/uEqcIDMnkyEP5iASaWwwhqtBFfRYA8bFiicjxtucnfSG40Tp
-         4dwtg9dCz9krw7ywQznHSlyXYZebaGmfk4kbNCJx5t3oNNywVSaXkUHboYW3hS1MtzHJ
-         fL3g==
-X-Gm-Message-State: APjAAAX5frKqLpL+HJvzSgPPGRfxCWWL/zC5kMuMlzLETkxYPMH69c/d
-        G3qOArZRUzOXT0/D0ts/P2Q=
-X-Google-Smtp-Source: APXvYqxAfIHx2B1haLicEwi0YNfXLAV9LnEc/kK1ZzjxoNANQ1EkaR5rqgONny/GLxpvUVpk7NSUDg==
-X-Received: by 2002:a19:5f05:: with SMTP id t5mr10655378lfb.149.1580682604787;
-        Sun, 02 Feb 2020 14:30:04 -0800 (PST)
+        bh=oV29kakgRgYYyDRbHczEOv6xyT6QVwpRMqzYCQR5kaM=;
+        b=AggPoo5fpVwzrbnIK4ne5szC3jV2rPPQk4uZGk1xlotj6DHQmwDEiIDxHGj8QxnIr3
+         V4wjX4hpwsNE1cqgeF1JWPxTvRFDaOAectJF9vaBHxM1ay4F4mTxx0U0jZ///2sm1BuP
+         7FHxFMNWYk4fiujxdIWJah507pvaxExDpb9EfSnN8Hq03khXMyV++r9B6rZH+sHZN/gm
+         +hoGnq9Z0q8JfO/fi3iTg1p4pZUc+2y3H7lb7oh1hwx9LRlJIe+p+x3CYh/RaHcIPPg2
+         1G+7RAaIN2h1nHChALnkTSCOTAMFhhJQcxuGCRyVraChEsL6+SBaYIgQQL/cqMzGwzB3
+         Sb9Q==
+X-Gm-Message-State: APjAAAWwkMR6UP1qT6tjOStrAKcxWFIcVMMORiXg7DZ2cJlp+OFRrYot
+        FS/Qp0E0f3aZrZDbmo7Yxf8=
+X-Google-Smtp-Source: APXvYqzqXNPeS/zTglgjyVmBjf9m59MEtfDozO+pfjw8vruqJ714sLeGVPeB2m5EN6M7tXlo/2sBiQ==
+X-Received: by 2002:a2e:b60d:: with SMTP id r13mr12022595ljn.40.1580682600000;
+        Sun, 02 Feb 2020 14:30:00 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.30.03
+        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.29.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 14:30:04 -0800 (PST)
+        Sun, 02 Feb 2020 14:29:59 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 17/19] dmaengine: tegra-apb: Allow to compile as a loadable kernel module
-Date:   Mon,  3 Feb 2020 01:28:52 +0300
-Message-Id: <20200202222854.18409-18-digetx@gmail.com>
+Subject: [PATCH v7 12/19] dmaengine: tegra-apb: Remove handling of unrealistic error condition
+Date:   Mon,  3 Feb 2020 01:28:47 +0300
+Message-Id: <20200202222854.18409-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200202222854.18409-1-digetx@gmail.com>
 References: <20200202222854.18409-1-digetx@gmail.com>
@@ -79,28 +79,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver's removal was fixed by a recent commit and module load/unload
-is working well now, tested on Tegra30.
+The pending_sg_req list can't ever be empty because:
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+1. If it was empty, then handle_cont_sngl_cycle_dma_done() shall crash
+   before of handle_continuous_head_request() invocation.
+
+2. The handle_cont_sngl_cycle_dma_done() can't happen after stopping DMA.
+
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 5142da401db3..98daf3aafdcc 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -616,7 +616,7 @@ config TXX9_DMAC
- 	  integrated in chips such as the Toshiba TX4927/38/39.
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 62d181bd5e62..c7dc27ef1856 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -564,12 +564,6 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+ {
+ 	struct tegra_dma_sg_req *hsgreq;
  
- config TEGRA20_APB_DMA
--	bool "NVIDIA Tegra20 APB DMA support"
-+	tristate "NVIDIA Tegra20 APB DMA support"
- 	depends on ARCH_TEGRA
- 	select DMA_ENGINE
- 	help
+-	if (list_empty(&tdc->pending_sg_req)) {
+-		dev_err(tdc2dev(tdc), "DMA is running without req\n");
+-		tegra_dma_stop(tdc);
+-		return false;
+-	}
+-
+ 	/*
+ 	 * Check that head req on list should be in flight.
+ 	 * If it is not in flight then abort transfer as
 -- 
 2.24.0
 
