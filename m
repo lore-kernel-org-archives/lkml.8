@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1561C35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369F7C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FFB2080D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9D62080D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdR7OyUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEhWlT5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgBBVTl (ORCPT
+        id S1727205AbgBBVTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 16:19:41 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44694 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbgBBVTL (ORCPT
+        Sun, 2 Feb 2020 16:19:09 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36411 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgBBVTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 16:19:11 -0500
-Received: by mail-pl1-f193.google.com with SMTP id d9so5015984plo.11;
-        Sun, 02 Feb 2020 13:19:09 -0800 (PST)
+        Sun, 2 Feb 2020 16:19:06 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so6701332pgc.3;
+        Sun, 02 Feb 2020 13:19:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CApnqFg6dAZdHAMhoDwm2LWWZ1aLumfh05lDg8StLtA=;
-        b=OdR7OyUhWCueywPWrKoWOPiNpevH5fUhLA9mhQFziQWq6oeHDZvw3DPqt3AaAXOw87
-         H2Ngmu5zB3r8ZQ9+/CpWeJhgXhHhJelkA0Hwv4cFPtoZDGel2iNSNB6kaKGdU2s+2b1V
-         mGrDOt+jIslxRLg17+fitXzfUuNS7ZZZdyxeCVpb0ytCWlX5GaFZ1JT4S2DM8IJ0NARj
-         vvfOSrTTO5DaR5LhvXYx5wsHJqCJA5Xy3WIVKFIZ7kciCBQCtqlYHcBQKC2N+zRfX5qw
-         EsSfQPph0HD2I5ck6/tZLixz7xKAN5UpisoszBxuJ3edgvkfq796mihiWeTRFeR8qCKR
-         dOEg==
+        bh=+HqoXW19IU0tQeOfSlgHN6Hx1A42Q+7w83EjyBN0djk=;
+        b=eEhWlT5Tj1M2M79+KdTJ/ZkY6iDqP5hJIiDhZzqXAinj/L9KkQFU688Jn1PUyGQyxm
+         Bkcfp7cQtiCnwvl8tQb4rTDddT04CX3zLjxiELDRPj2y2+7UpfZvx94L7TW2xomnsHdg
+         GR7dyUrYAQewHqrCfO4G9UYTku56Ph3gmI86U7UcZerbjMXh64rOWVmYHz9tM3jSZP0E
+         97/fqoNzIsZtAvdawFdF5wzj5PiIonAkoZl9HRWHlBPjzg7roba95nbyYgKXeIXxryQ8
+         K3NzqxKbud90r2k7ktWW381bCYOSnBMFrPrSkIl28wDuNEKO9EG/YAxRtVKjSSv8uyXa
+         cfXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CApnqFg6dAZdHAMhoDwm2LWWZ1aLumfh05lDg8StLtA=;
-        b=tHs7wKLKaxS9PQ02cSVu/6wohsBbXAiHstaZoPfe723C/PqQ0tXUUz0lLzkqgHG716
-         P/FdW7YErhvFmbnc5wzxJPd2rNmSnlzKnOphYgwF9kVagOe6/a9wemrxSINntKNj4JoB
-         Bj6c2aThQSFzNqLkDkDxuY4xBCoSLwKwWa5dNNdJqpDhIndkZxS3wrWYgjxxjjV1fwa2
-         YneIA4e7uVOxwj3IspvmmUTp9hxUgIJsxH2TNId6Ab7voZtdnzBa3ZJrUXDhvllNyT1l
-         68SX6Br7tybn0dhGXpWFMFDn9OP+DTYzHc5tQ/Od96kLFsc9tbe1jH4sROV35Lnr+ZIf
-         d2/A==
-X-Gm-Message-State: APjAAAUpJ0aizy6bqW8WtAN5WskPP9VuGpV72C4c8LpD07hOlaCcmfsz
-        PPL9YvKSLy4uU+Tv7mmiRtLOFjBP
-X-Google-Smtp-Source: APXvYqxHPR3/QXzPWDEAYpCdrDvxmozm3gOtRBBYqdU0CamZVu9N8hjZFtU/72TwTeU9l/DPURiD6w==
-X-Received: by 2002:a17:902:8bc7:: with SMTP id r7mr17315291plo.12.1580678349098;
-        Sun, 02 Feb 2020 13:19:09 -0800 (PST)
+        bh=+HqoXW19IU0tQeOfSlgHN6Hx1A42Q+7w83EjyBN0djk=;
+        b=JeGGRshvuRm1rd/FVPjJtYiejZBTPGpqjQgfkNTs+vvF2A6EJkGHF9+V9yAkZyoZM6
+         JwgU5MQ3ydn5sw4tIPVo4H2pdBc8wxkz1NWcE3wOdh9ODu7+rPUJpJKodQdycHRDIump
+         estj8Q3kkryHG2qPutB5vrxnVy7WthaM9JQU8j2BFuCvYJllFGubcIUJ2GmER9HyRGgw
+         46ThSgKqa3pmYpJhxVnJOPMaFVKkZtL4lzP6XmJP/O9tROXGiZ9AP93FVCFAkM0B1tvD
+         bdRCnanQehPMaeT1IY3IaW+JO2tOAmGNbiiukg4eWEnngt7wFrHb0ptkKMVal/guYE08
+         ySmQ==
+X-Gm-Message-State: APjAAAWHmynUv1vfocMB74L0wJjhkCbprCs11hK4xXo1h5eGOL/n/R5h
+        POMHupeXAmQpyslQJ+4R99VettXM
+X-Google-Smtp-Source: APXvYqxwXr+UYh03Rgin6a5IfM55L+wGSkmtED3oBRwGNCdutIY5WGWTI2Zkb5r4Ms+8sZuujzi9Wg==
+X-Received: by 2002:a63:6441:: with SMTP id y62mr13441735pgb.86.1580678344356;
+        Sun, 02 Feb 2020 13:19:04 -0800 (PST)
 Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.07
+        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 13:19:08 -0800 (PST)
+        Sun, 02 Feb 2020 13:19:03 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc:     devicetree@vger.kernel.org,
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 07/12] dt-bindings: arm: bcm: Convert BCM23550 to YAML
-Date:   Sun,  2 Feb 2020 13:18:22 -0800
-Message-Id: <20200202211827.27682-8-f.fainelli@gmail.com>
+Subject: [PATCH 04/12] dt-bindings: arm: bcm: Convert Northstar 2 to YAML
+Date:   Sun,  2 Feb 2020 13:18:19 -0800
+Message-Id: <20200202211827.27682-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200202211827.27682-1-f.fainelli@gmail.com>
 References: <20200202211827.27682-1-f.fainelli@gmail.com>
@@ -86,65 +86,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the Broadcom BCM23550 SoC binding document for boards/SoCs to use
-YAML. Verified with dt_binding_check and dtbs_check.
+Update the Broadcom Northstar 2 SoC binding document for boards/SoCs to
+use YAML. Verified with dt_binding_check and dtbs_check.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/arm/bcm/brcm,bcm23550.txt        | 15 ------------
- .../bindings/arm/bcm/brcm,bcm23550.yaml       | 23 +++++++++++++++++++
- 2 files changed, 23 insertions(+), 15 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.yaml
+ .../devicetree/bindings/arm/bcm/brcm,ns2.txt  |  9 -------
+ .../devicetree/bindings/arm/bcm/brcm,ns2.yaml | 25 +++++++++++++++++++
+ 2 files changed, 25 insertions(+), 9 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,ns2.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
 deleted file mode 100644
-index 080baad923d6..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
+index 35f056f4a1c3..000000000000
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.txt
 +++ /dev/null
-@@ -1,15 +0,0 @@
--Broadcom BCM23550 device tree bindings
----------------------------------------
+@@ -1,9 +0,0 @@
+-Broadcom North Star 2 (NS2) device tree bindings
+-------------------------------------------------
 -
--This document describes the device tree bindings for boards with the BCM23550
--SoC.
+-Boards with NS2 shall have the following properties:
 -
 -Required root node property:
--  - compatible: brcm,bcm23550
 -
--Example:
--	/ {
--		model = "BCM23550 SoC";
--		compatible = "brcm,bcm23550";
--		[...]
--	}
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.yaml
+-NS2 SVK board
+-compatible = "brcm,ns2-svk", "brcm,ns2";
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.yaml
 new file mode 100644
-index 000000000000..7a828ccd24f8
+index 000000000000..2fb9b16408f3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.yaml
-@@ -0,0 +1,23 @@
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,ns2.yaml
+@@ -0,0 +1,25 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm23550.yaml#
++$id: http://devicetree.org/schemas/arm/bcm/brcm,ns2.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM23550 device tree bindings
++title: Broadcom North Star 2 (NS2) device tree bindings
 +
 +maintainers:
-+  - Florian Fainelli <f.fainelli@gmail.com>
++  - Ray Jui <rjui@broadcom.com>
++  - Scott Branden <sbranden@broadcom.com>
 +
 +properties:
 +  $nodename:
 +    const: '/'
 +  compatible:
 +    oneOf:
-+      - description: BCM23550 based boards
++      - description: Northstar2 based boards
 +        items:
 +          - enum:
-+              - brcm,bcm23550-sparrow
-+          - const: brcm,bcm23550
++              - brcm,ns2-svk
++              - brcm,ns2-xmc
++          - const: brcm,ns2
 +
 +...
 -- 
