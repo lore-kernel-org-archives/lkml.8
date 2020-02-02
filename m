@@ -2,128 +2,116 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18818C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CFC35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2116206D3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A10206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phTQ09+j"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="sROThqjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgBBT3P (ORCPT
+        id S1726995AbgBBTaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 14:29:15 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38222 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgBBT3O (ORCPT
+        Sun, 2 Feb 2020 14:30:21 -0500
+Received: from mail.kmu-office.ch ([178.209.48.109]:36278 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBBTaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 14:29:14 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so6600961pgm.5;
-        Sun, 02 Feb 2020 11:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=83XBXAdF60qQhjfbLi9bwa5VGB/pa56aRpXZec7GZUQ=;
-        b=phTQ09+j8Vr2PTCfUXpoYipZuNKH07aPv2Zc4kKmqWltkBWIFf9lbdsKaJi04tqGKB
-         89O9EaYkOjA51Y7sM+LHx35FD96pzQrI8ycxQF5cEY/yC1ssICLlZEQUycHoZWIVUWt2
-         q16FVK+zhYaWdLk8XAHU1LN0lvwpKUL99e4YsRBtm7+KfvKJwYQvUyk+CtcydCMaq+ET
-         221+uh0dgiGXI2gstojGhDXQ1o8QOETUOOtvRTfRA68FI1vzrH0FMON1RKItRVa6CRuq
-         g8b3vyU06z53cNAR6K9+60lftqNVoGeOuyjvd2bJRGZh6EoIfJa1jV/TIfNInWanSkyq
-         RaVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=83XBXAdF60qQhjfbLi9bwa5VGB/pa56aRpXZec7GZUQ=;
-        b=VN8H8mCN2nmRVpbvUQ1jbu9U5uQDwy8dP6fwvMAMeAKOHWyxQE000z3BAmfxISjkF2
-         1l5ci0nmLwrhnKJmjaGCVJHzxQfFqHKYIuuIE4d4kHGx5W/EdgprH34JdKuANGQVKTJf
-         3RaMHW+bg8gU7EXOR1ciT9vXFIBQ8JIky8mm5CCvUYOzyH8HMk4DY3qqnqOfu9MAA74m
-         5ddu6PqJmmdfMxipSHcw7W72GA693MqMxZ49n9rak8xYEWvuWa3otYvjQ6Fk18AJWDcG
-         T/4j0jKfc5+tQnt7qMSmrIq3qd76u9mHknroHOzrgDapaPiwi5VArSjPH8UvE1+lcvb7
-         3oKg==
-X-Gm-Message-State: APjAAAXIYN+rIn9rYVJ+yBqCkllJuwprJWOO/UYQ6H4LTLQxKJrozHfK
-        aWmhrFDa6SJv74qkUlAFZhQWiFnG
-X-Google-Smtp-Source: APXvYqzJztCs5B5fO2HsKuk9KrOTKzLnJc/BQ7QWxXvbl/crt2aXnI7p1PJyFU1wfbUJKbCsn2dMEA==
-X-Received: by 2002:a63:8dc4:: with SMTP id z187mr5569042pgd.68.1580671754231;
-        Sun, 02 Feb 2020 11:29:14 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b4sm17987390pfd.18.2020.02.02.11.29.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 02 Feb 2020 11:29:13 -0800 (PST)
-Date:   Sun, 2 Feb 2020 11:29:12 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Sriharsha Allenki <sallenki@codeaurora.org>
-Subject: Re: [PATCH] xhci-mtk: Fix NULL pointer dereference with xhci_irq()
- for shared_hcd
-Message-ID: <20200202192912.GA20763@roeck-us.net>
-References: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
+        Sun, 2 Feb 2020 14:30:21 -0500
+Received: from trochilidae.toradex.int (unknown [IPv6:2a02:169:3df5::edf])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 2E2FE5C3E95;
+        Sun,  2 Feb 2020 20:30:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1580671819;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=c10NgeLMXY9PyKT9RGI6/m1O339YHY744+DezUz8wuY=;
+        b=sROThqjmpJlX3D+RgZWB1NdsiLEgGKpFD7QGlZo8kG1+mLGcDiVNlpILZPbzrCGggfyFBh
+        p1wR5g9SXC8k8tKuBvXJQKvDjt9nzsHLdxqsHhxPwuZqUIZp8+KXEXxIf/EBt4YAn98b0m
+        Yga4sndTjDh4k2H0bG9U/eREBotbbDg=
+From:   Stefan Agner <stefan@agner.ch>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc:     stefan@agner.ch, linux@armlinux.org.uk, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, arnd@arndb.de,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Stefan Agner <stefan.agner@toradex.com>
+Subject: [PATCH] ARM: imx: limit errata selection to Cortex-A9 based designs
+Date:   Sun,  2 Feb 2020 20:30:14 +0100
+Message-Id: <20200202193014.107003-1-stefan@agner.ch>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579246910-22736-1-git-send-email-macpaul.lin@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 03:41:50PM +0800, Macpaul Lin wrote:
-> According to NULL pointer fix: https://tinyurl.com/uqft5ra
-> xhci: Fix NULL pointer dereference with xhci_irq() for shared_hcd
-> The similar issue has also been found in QC activities in Mediatek.
-> 
-> Here quote the description from the referenced patch as follows.
-> "Commit ("f068090426ea xhci: Fix leaking USB3 shared_hcd
-> at xhci removal") sets xhci_shared_hcd to NULL without
-> stopping xhci host. This results into a race condition
-> where shared_hcd (super speed roothub) related interrupts
-> are being handled with xhci_irq happens when the
-> xhci_plat_remove is called and shared_hcd is set to NULL.
-> Fix this by setting the shared_hcd to NULL only after the
-> controller is halted and no interrupts are generated."
-> 
-> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->  drivers/usb/host/xhci-mtk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index b18a6baef204..c227c67f5dc5 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -593,11 +593,11 @@ static int xhci_mtk_remove(struct platform_device *dev)
->  	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
->  
->  	usb_remove_hcd(shared_hcd);
-> -	xhci->shared_hcd = NULL;
->  	device_init_wakeup(&dev->dev, false);
->  
->  	usb_remove_hcd(hcd);
->  	usb_put_hcd(shared_hcd);
-> +	xhci->shared_hcd = NULL;
+From: Stefan Agner <stefan.agner@toradex.com>
 
-I may be wrong, but I have some concerns that this replaces
-the NULL pointer access with a UAF.
+The two erratas 754322 and 775420 are Cortex-A9 specific. Only
+select the erratas for SoC which use a Cortex-A9.
 
-Guenter
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/mach-imx/Kconfig | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
->  	usb_put_hcd(hcd);
->  	xhci_mtk_sch_exit(mtk);
->  	xhci_mtk_clks_disable(mtk);
-> -- 
-> 2.18.0
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 95584ee02b55..e7d7b90e2cf8 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -471,8 +471,6 @@ config	SOC_IMX53
+ config SOC_IMX6
+ 	bool
+ 	select ARM_CPU_SUSPEND if (PM || CPU_IDLE)
+-	select ARM_ERRATA_754322
+-	select ARM_ERRATA_775420
+ 	select ARM_GIC
+ 	select HAVE_IMX_ANATOP
+ 	select HAVE_IMX_GPC
+@@ -484,6 +482,8 @@ config SOC_IMX6
+ config SOC_IMX6Q
+ 	bool "i.MX6 Quad/DualLite support"
+ 	select ARM_ERRATA_764369 if SMP
++	select ARM_ERRATA_754322
++	select ARM_ERRATA_775420
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD
+ 	select PINCTRL_IMX6Q
+@@ -494,6 +494,8 @@ config SOC_IMX6Q
+ 
+ config SOC_IMX6SL
+ 	bool "i.MX6 SoloLite support"
++	select ARM_ERRATA_754322
++	select ARM_ERRATA_775420
+ 	select PINCTRL_IMX6SL
+ 	select SOC_IMX6
+ 
+@@ -502,6 +504,8 @@ config SOC_IMX6SL
+ 
+ config SOC_IMX6SLL
+ 	bool "i.MX6 SoloLiteLite support"
++	select ARM_ERRATA_754322
++	select ARM_ERRATA_775420
+ 	select PINCTRL_IMX6SLL
+ 	select SOC_IMX6
+ 
+@@ -510,6 +514,8 @@ config SOC_IMX6SLL
+ 
+ config SOC_IMX6SX
+ 	bool "i.MX6 SoloX support"
++	select ARM_ERRATA_754322
++	select ARM_ERRATA_775420
+ 	select PINCTRL_IMX6SX
+ 	select SOC_IMX6
+ 
+-- 
+2.25.0
+
