@@ -2,167 +2,98 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFB6C35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73A5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5176D2051A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFC720661
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gv10nS8Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxF9+j5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgBBV5d (ORCPT
+        id S1727088AbgBBWIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 16:57:33 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54552 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgBBV5b (ORCPT
+        Sun, 2 Feb 2020 17:08:47 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43916 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgBBWIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 16:57:31 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g1so13767106wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 13:57:30 -0800 (PST)
+        Sun, 2 Feb 2020 17:08:46 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s1so6492907pfh.10;
+        Sun, 02 Feb 2020 14:08:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jmAtE7xwSXR+AJEG/25i5LGMBTNXSyD6hhPgoSBYe1o=;
-        b=gv10nS8Z7FAbqlgYZGrOQBrI83FVSAwXFPTLKNyQt0LPaxtiTHggSqFghbPdNvQ1r5
-         7CkgF+sngWjdtVSYpGpxslRLevkHc0HF7YUOngXO4fxYvdgym6MYjadjADlJSgJCFH0a
-         IsfEp0GZFwoNoeZM+zxU3Gm6iti34QXCJto3EjqrcbkClmrzpBF5EAwgDlPXRvXtpALe
-         kLraKIror4yaN+RXwB0XGFp/g1BO2Y9ydI7ARVEkUAZhUTG1SIdhEEzkMnLZq9dJiXnA
-         tq1CpucixSYrU0y77vx4YVVe5O8N3yLN64zKhJl0p89ikh6wb9ZqRjGBRtr+Ri9Vzdjn
-         O6rA==
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=ysAyY0+DVCOS8g/ck4jYLTSjQn9KeBmlhbMhIvWcg0A=;
+        b=fxF9+j5QIWO8mTPa+ktoydLNApLIObVdOzHteDPtgSdpkTM90F2eV8fnQx9c4Mj+XT
+         Xv6ar4KTY8RMFY4J6RjiMX7hAdlmRThU9ixtcuc/D3UA9YvoT6wYWOLR+NSK7WGJ/Apr
+         sdkZZzJCaP/ZqR6ncBjQ2TB/wYV6WGhfGTVJcdPrZPwF9Co1X12F7g8H928+Egd80zef
+         p2YfdlKfLVBhMOEG18MIRhg5ANrtwmI6ueVuJSvKLQ5gT3jpiZph2y17Hmb+ejROnJ4c
+         mcLBSQgTqaIGcTStxthnXigCqzCfOO9KjgDYSOTKTp2xjPL6Yelcm3ATMvCXCCAPSDtg
+         g6lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jmAtE7xwSXR+AJEG/25i5LGMBTNXSyD6hhPgoSBYe1o=;
-        b=FKplSfgBe0KpuTYgkRnOSCgGXkucBTyY51bPKksdL2WasSJeA4YeAdRf/rVl9yCiV+
-         LfDzDvSIQrTlSF+6V9BHFh3H988Vl6bjGq/iK6nCUvQo3Rl2VLP8kA5aFr0jo9/11s4X
-         56kmbvuzT0JIWlWkPQTsbHdPgw6y2gQUnRcNX/J4DknJ3nw/K/L3rhHw6OATQiRHkir6
-         iIyp3ws+GCwfyflY5h1UiYPKc/RZqRAf1lgVYznQkDoDYcY90dxy+0jlUJpoxFUroSAL
-         DGfFG121+atfJ9vRAbY6sDVOR4cRPE+mrUGZZBrRnJRgJVllBu3d6RKCPZ8Ft7EmByYk
-         5E7Q==
-X-Gm-Message-State: APjAAAWgOh4ybUwJE/iXvp4DfKA85xZy5Ku8xPBgOefnln+ROw2cx6KM
-        lKBLLyJZeIfpRKFHQ5Hr7ag=
-X-Google-Smtp-Source: APXvYqxJwDn66jjhZAwmIruS4H0N6mjIcP4rBfVPljwStGDUMtTwYEUR6ImG3moa8tMtGbD1xRFWfg==
-X-Received: by 2002:a7b:c847:: with SMTP id c7mr24198750wml.3.1580680649279;
-        Sun, 02 Feb 2020 13:57:29 -0800 (PST)
-Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id c4sm20612488wml.7.2020.02.02.13.57.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=ysAyY0+DVCOS8g/ck4jYLTSjQn9KeBmlhbMhIvWcg0A=;
+        b=IkAViiL2rShULjtfXjd+zQTChoKoa9sPEZxDGIU3B++0P1M3kmaQ4m7AwRAoG/c9OV
+         xwXNh0hLs38WMfLqAK2miXL4uhNia92d8XEXAyqV5OkVY+a3QpqVAxQVXmN26dnTzyZs
+         i4eF85ohhRAQOpPU8ysh82Uh3IDCDl6hwPQKWrRWAYZIWunu/mCZtsnJOeppvN6m5SmZ
+         ECvlUiG4Q7cnUZnJHgsPSfjDrmunRk/0e6GOPBm0PLN6eN55++ZRr7PijU4sQUHkjVNn
+         bHMJSaXnk+Y+csgK/2daQlo+9dYMI8AgDTEoC2zHfUacLQXzIHq2djqCFeIHA9bUXzGX
+         T+Tw==
+X-Gm-Message-State: APjAAAXeraFBzFikfHxN+m6SeJh5D+Pbokx+LxFjLzCKlkaoiYHh9Rsq
+        h3PsjIUCV5napWj+LvaLg1M=
+X-Google-Smtp-Source: APXvYqxrAUfKej9MCl3CQ8Muv6ccpPAoBMQ2hfsDy/2yKiD7WyMzsBEKNBrkdE1p0fhbnyhnRMthtA==
+X-Received: by 2002:aa7:9aa7:: with SMTP id x7mr20796924pfi.78.1580681325917;
+        Sun, 02 Feb 2020 14:08:45 -0800 (PST)
+Received: from localhost.localdomain ([61.81.192.82])
+        by smtp.gmail.com with ESMTPSA id fh24sm17568184pjb.24.2020.02.02.14.08.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 13:57:28 -0800 (PST)
-From:   shiva.linuxworks@gmail.com
-X-Google-Original-From: sshivamurthy@micron.com
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shivamurthy Shastri <sshivamurthy@micron.com>
-Subject: [PATCH v3 4/5] mtd: spinand: micron: Add M70A series Micron SPI NAND devices
-Date:   Sun,  2 Feb 2020 22:55:07 +0100
-Message-Id: <20200202215508.2928-5-sshivamurthy@micron.com>
+        Sun, 02 Feb 2020 14:08:44 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     sj38.park@gmail.com, edumazet@google.com, David.Laight@aculab.com,
+        aams@amazon.com, davem@davemloft.net, eric.dumazet@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, ncardwell@google.com,
+        shuah@kernel.org, sjpark@amazon.de
+Subject: Re: Re: [PATCH v3 0/2] Fix reconnection latency caused by FIN/ACK handling race
+Date:   Sun,  2 Feb 2020 23:08:34 +0100
+Message-Id: <20200202220834.25728-1-sj38.park@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200202215508.2928-1-sshivamurthy@micron.com>
-References: <20200202215508.2928-1-sshivamurthy@micron.com>
+In-Reply-To: <20200202134652.0e89ce89@cakuba.hsd1.ca.comcast.net> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivamurthy Shastri <sshivamurthy@micron.com>
+On Sun, 2 Feb 2020 13:46:52 -0800 Jakub Kicinski <kuba@kernel.org> wrote:
 
-Add device table for M70A series Micron SPI NAND devices.
+> On Sun,  2 Feb 2020 03:38:25 +0000, sj38.park@gmail.com wrote:
+> > The first patch fixes the problem by adjusting the first resend delay of
+> > the SYN in the case.  The second one adds a user space test to reproduce
+> > this problem.
+> > 
+> > The patches are based on the v5.5.  You can also clone the complete git
+> > tree:
+> > 
+> >     $ git clone git://github.com/sjp38/linux -b patches/finack_lat/v3
+> > 
+> > The web is also available:
+> > https://github.com/sjp38/linux/tree/patches/finack_lat/v3
+> 
+> Applied to net, thank you!
+> 
+> In the future there is no need to duplicate the info from commit
+> messages in the cover letter.
 
-As opposed to the M79A and M78A series already supported, M70A parts
-have the "Continuous Read" feature enabled by default, which does not fit
-the subsystem needs.
+Thank you for let me know that.  I will not duplicate from next time!
 
-In this mode, the READ CACHE command doesn't require the starting column
-address. The device always output the data starting from the first
-column of the cache register, and once the end of the cache register
-reached, the data output continues through the next page. With the
-continuous read mode, it is possible to read out the entire block using
-a single READ command, and once the end of the block reached, the output
-pins become High-Z state. However, during this mode the read command
-doesn't output the OOB area.
 
-Hence, we disable the feature at probe time.
-
-Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
----
- drivers/mtd/nand/spi/micron.c | 36 +++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index 5fd1f921ef12..3d3734afc35e 100644
---- a/drivers/mtd/nand/spi/micron.c
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -18,6 +18,8 @@
- #define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
- #define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
- 
-+#define MICRON_CFG_CONTI_READ		BIT(0)
-+
- static SPINAND_OP_VARIANTS(read_cache_variants,
- 		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
- 		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-@@ -131,6 +133,26 @@ static const struct spinand_info micron_spinand_table[] = {
- 		     0,
- 		     SPINAND_ECCINFO(&micron_8_ooblayout,
- 				     micron_8_ecc_get_status)),
-+	/* M70A 4Gb 3.3V */
-+	SPINAND_INFO("MT29F4G01ABAFD", 0x34,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_CR_FEAT_BIT,
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
-+	/* M70A 4Gb 1.8V */
-+	SPINAND_INFO("MT29F4G01ABBFD", 0x35,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_CR_FEAT_BIT,
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
- };
- 
- static int micron_spinand_detect(struct spinand_device *spinand)
-@@ -153,8 +175,22 @@ static int micron_spinand_detect(struct spinand_device *spinand)
- 	return 1;
- }
- 
-+static int micron_spinand_init(struct spinand_device *spinand)
-+{
-+	/*
-+	 * M70A device series enable Continuous Read feature at Power-up,
-+	 * which is not supported. Disable this bit to avoid any possible
-+	 * failure.
-+	 */
-+	if (spinand->flags == SPINAND_HAS_CR_FEAT_BIT)
-+		return spinand_upd_cfg(spinand, MICRON_CFG_CONTI_READ, 0);
-+
-+	return 0;
-+}
-+
- static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
- 	.detect = micron_spinand_detect,
-+	.init = micron_spinand_init,
- };
- 
- const struct spinand_manufacturer micron_spinand_manufacturer = {
--- 
-2.17.1
-
+Thanks,
+SeongJae Park
