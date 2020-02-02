@@ -2,108 +2,160 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE3CC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF06C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D9120643
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="sg0V/ZEY"
+	by mail.kernel.org (Postfix) with ESMTP id 965D82067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580657641;
+	bh=NQdIkCaHC++sdUz8EJtM4E6FaGmhFs3epc/t8aDK9gE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=okPl0pkTLmIlJesfE0u9vdevP+bSOdMlu7zozXdtz3TEs7U92IztvjVxF/ZLP65wB
+	 tIG4Zv/7T3nYUS72IsJ8b49UznVGdFsBhxAnRmylgZKucSwirl02goaUujAMKPRETd
+	 /ueVMU9ceH3rUnC09FCbxvw3864fUwis+yplOMyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgBBPcs (ORCPT
+        id S1726967AbgBBPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 10:32:48 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:38633 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgBBPcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 10:32:48 -0500
-Received: by mail-vk1-f194.google.com with SMTP id w4so1821622vkd.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 07:32:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mi90bhimP2jFo8+p9OQpeUpQJ64yDvLVQgP6F2u9uVY=;
-        b=sg0V/ZEY7dip3DPh2qScwwXLgsOdsHMbJpEt/HidDkUo2ozTR1tL/uF7fLiOwFm1C8
-         HGalfdK6UF5WK+mlmAvuuk4zJRL4z34U89LZ2qoA+X+tCgM8dLGKtQh2HfOite9TOIpF
-         RkAlpkXeZ4A+9KjhaYRk2IpuXwcOV1YM/oc/wDL+OKvHqzdH4sVnkqfK5khHHHwlXlVD
-         Hnk0BjepTdKx5ylG3EknP1a+v8P4ppI1iJSYMmtujHO1XIUpJjMMlCLah+bMqn5e/oSN
-         Phg0MqA0qhlAnmY2zG5nNd6QW/u1RfgqiLhI6VCW/UL9lhaNOPidCLHwu3gec3bAuwuR
-         qYsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mi90bhimP2jFo8+p9OQpeUpQJ64yDvLVQgP6F2u9uVY=;
-        b=awDZ3WibqWrT7uNdzxH4B6xsodWp4DXp3My52sV9VDLRRZVtpsd447SLBzH+BT6dry
-         +CcPUel1pHUiIFV8aNaFQmi2zHLQd9TpHiYJfsRcqWAL6ZzuTaYrN7gbfohgC/Mu4gAh
-         MmtDm4JoFV+CEhlhaHvHNdONoE/+8VPJJTrN8O8z71o0nnO9SRCUIABfjGqvGM0xy0l4
-         Lq8b/ka8iZjgZsPXNjbN3cqqIRy8hcpHJZZZQbXA/MIyhrx9Vsr8tkbebEigpJ+vjoJz
-         mIadFsYn209jYs2SgXxaWoxMJ0gUfkaz8++rQ9YEOwh7GYuMklC8sTATMEcBSo8InYpW
-         PopQ==
-X-Gm-Message-State: APjAAAXKjKBFyAlh0pMabOiML/TwTXKnKHaSmABCtBMHtYXB49DUUv9x
-        OSXcvo8WytcBOowyPwzDwMi6QBk6d1XpdFwrBK31489C/PA=
-X-Google-Smtp-Source: APXvYqzBdegfrRAQZPJTNqqHFNCy/GnEoZFaWZ8XhQ3QHf76DwqaIc9nOnqobCWdRP3+qDU3VnSL8eetfU207zqK4jk=
-X-Received: by 2002:a1f:8d0f:: with SMTP id p15mr11945370vkd.100.1580657565589;
- Sun, 02 Feb 2020 07:32:45 -0800 (PST)
+        Sun, 2 Feb 2020 10:34:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbgBBPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 10:34:00 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB2DB20643;
+        Sun,  2 Feb 2020 15:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580657639;
+        bh=NQdIkCaHC++sdUz8EJtM4E6FaGmhFs3epc/t8aDK9gE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u/IMqBLoMM+bIHEdv7B/M0xS8LMvVgqbwg5T3uMqLP/gV7D6krxtIepaW7pSKfkHj
+         LDZFqStqTQOJZ6fzM75yGQEfK1xax25a/hc7KTOb43dRXo0KVtwiEnMBKhAW/KG11Z
+         6k/3a/nHXjwoWQiDn6KTwEly4ElCCfTKoemRjoNs=
+Date:   Sun, 2 Feb 2020 15:33:54 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: stm32-adc: fix runtime autosuspend delay when
+ slow polling
+Message-ID: <20200202153354.3dae5863@archlinux>
+In-Reply-To: <1579854369-7972-1-git-send-email-fabrice.gasnier@st.com>
+References: <1579854369-7972-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200129143757.680-1-gilad@benyossef.com> <20200129143757.680-5-gilad@benyossef.com>
- <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com>
- <CAOtvUMdUBMkmZ6nzGVxi1W_Y4yFvcd6rfvz6BA63h4eq2QFUdA@mail.gmail.com> <CAMuHMdXecd0KAN6B4GWKMp-DsmZVTJqOJfm5CymwwPMwDqG0qA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXecd0KAN6B4GWKMp-DsmZVTJqOJfm5CymwwPMwDqG0qA@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 2 Feb 2020 17:32:33 +0200
-Message-ID: <CAOtvUMcejz8qLrg8MBxM2DkYSqvfX-yKwK7NujmwD=szystUAQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 3:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Gilad,
->
-> On Thu, Jan 30, 2020 at 12:33 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > On Wed, Jan 29, 2020 at 5:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, Jan 29, 2020 at 3:39 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > > > Fix an error causing no block sizes to be reported during
-> > > > all AEAD registrations.
-> > > >
-> > > > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > >
-> > > Thanks, this fixes:
-> > >
-> > >     alg: aead: blocksize for authenc-hmac-sha1-cbc-aes-ccree (0)
-> > > doesn't match generic impl (16)
-> > >     alg: aead: blocksize for authenc-hmac-sha256-cbc-aes-ccree (0)
-> > > doesn't match generic impl (16)
-> > >
-> > > which you may want to mention in the commit description, so
-> > > people who search for the error message will find the fix.
-> > >
-> > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >
-> > > Note that even after applying this series, the kernel still crashes with
-> > >
-> > > kernel BUG at kernel/dma/swiotlb.c:497!
-> > > ....
+On Fri, 24 Jan 2020 09:26:09 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Thank you!
+> When the ADC is runtime suspended and starting a conversion, the stm32-adc
+> driver calls pm_runtime_get_sync() that gets cascaded to the parent
+> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
+> autosuspend delay (e.g. 2s) of the parent.
+> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
+> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
+> driver) as already active.
+> 
+> Currently, this makes the stm32-adc-core driver go in suspend state
+> every 2s when doing slow polling. As an example, doing a capture, e.g.
+> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
+> isn't refreshed. Once it expires, the parent immediately falls into
+> runtime suspended state, in between two captures, as soon as the child
+> driver falls into runtime suspend state:
+> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
+>   autosuspend delay of the child.
+> - stm32-adc-core switches off regulators, clocks and so on.
+> - They get switched on back again 100ms later in this example (at 2.2s).
+> 
+> So, add an explicit call to pm_runtime_mark_last_busy() for the parent
+> driver (stm32-adc-core), synchronously with the child driver (stm32-adc),
+> to avoid this.
+> 
+> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-I've managed to reproduce this here.
-Looking into it now...
+Hi Fabrice,
 
-Gilad
+Whilst this will clearly work, it seems like a somewhat adhoc solution.
+Power management specialists (cc'd):  Is this what we should be doing, or
+have Fabrice and I both missed something that we should be doing here?
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/stm32-adc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 3b291d7..670157e 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1157,6 +1157,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+>  
+>  	stm32_adc_conv_irq_disable(adc);
+>  
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  
+> @@ -1278,6 +1279,7 @@ static int stm32_adc_update_scan_mode(struct iio_dev *indio_dev,
+>  	adc->num_conv = bitmap_weight(scan_mask, indio_dev->masklength);
+>  
+>  	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  
+> @@ -1329,6 +1331,7 @@ static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
+>  	else
+>  		*readval = stm32_adc_readl(adc, reg);
+>  
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  
+> @@ -1451,6 +1454,7 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
+>  err_clr_trig:
+>  	stm32_adc_set_trig(indio_dev, NULL);
+>  err_pm_put:
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  
+> @@ -1487,6 +1491,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
+>  	if (stm32_adc_set_trig(indio_dev, NULL))
+>  		dev_err(&indio_dev->dev, "Can't clear trigger\n");
+>  
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  }
+> @@ -1874,6 +1879,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  		goto err_hw_stop;
+>  	}
+>  
+> +	pm_runtime_mark_last_busy(dev->parent);
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+>  
+
