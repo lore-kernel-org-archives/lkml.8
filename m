@@ -2,167 +2,119 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B32C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 14:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5574C3524A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 14:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F30C206E6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 14:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580652511;
-	bh=1gYVSw87cV5telUJWyrU4zFFINerB9YY8C8irZlxApA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=A+EXbillGdzaqJq0Phcw5L1daXlildNfZ2h7p3XZFVhvFYZYkpxvV1Ru96YP8t8xo
-	 tJ6g/eIRfAk9Fr+VqPpSxTHzQgawNL3HaeeKS60C7NqqHGbM/XuHsvzR+BfXJeC0Ty
-	 LRQonHG2fBLG9ojN40a9XFW03K/OEK4kmoGYzcFo=
+	by mail.kernel.org (Postfix) with ESMTP id 9117D20643
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 14:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgBBOIa (ORCPT
+        id S1726906AbgBBORY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 09:08:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56368 "EHLO mail.kernel.org"
+        Sun, 2 Feb 2020 09:17:24 -0500
+Received: from mga18.intel.com ([134.134.136.126]:6184 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgBBOIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 09:08:30 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D3B20643;
-        Sun,  2 Feb 2020 14:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580652509;
-        bh=1gYVSw87cV5telUJWyrU4zFFINerB9YY8C8irZlxApA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ess6qBFo/F1BcnkklY0GwQ0BaBxBJsuYomqCrB30q1vmmC6dsjDMoKMpqMIUUZZUK
-         znJl3Dr37+R4USh1jUHGRUCdUaetljWY9diwl/hUxmdeR5wFzc/oo3d2k8GxHsPJkz
-         IPULSo+/5Rx0OTexcH3P9lIQTNvyGSRSCguT0AxY=
-Date:   Sun, 2 Feb 2020 14:08:23 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: fix sleep in atomic context
-Message-ID: <20200202140823.531aad39@archlinux>
-In-Reply-To: <20200121110256.12415-1-olivier.moysan@st.com>
-References: <20200121110256.12415-1-olivier.moysan@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726814AbgBBORY (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 09:17:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 06:17:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,394,1574150400"; 
+   d="scan'208";a="253811057"
+Received: from kbl.sh.intel.com ([10.239.159.24])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Feb 2020 06:17:22 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v6 1/4] perf util: Fix wrong block address comparison in block_info__cmp
+Date:   Sun,  2 Feb 2020 22:16:52 +0800
+Message-Id: <20200202141655.32053-2-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200202141655.32053-1-yao.jin@linux.intel.com>
+References: <20200202141655.32053-1-yao.jin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 12:02:56 +0100
-Olivier Moysan <olivier.moysan@st.com> wrote:
+Commit 6041441870ab ("perf block: Cleanup and refactor block info
+functions") introduces a function block_info__cmp, which compares
+two blocks.
 
-> This commit fixes the error message:
-> "BUG: sleeping function called from invalid context at kernel/irq/chip.c"
-> Suppress the trigger irq handler. Make the buffer transfers directly
-> in DMA callback, instead.
-> Push buffers without timestamps, as timestamps are not supported
-> in DFSDM driver.
-> 
-> Fixes: 11646e81d775 ("iio: adc: stm32-dfsdm: add support for buffer modes")
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Applied to the fixes-togreg branch of iio.git and marked for stable.
+But the issues are:
 
-Thanks,
+1. It should return the strcmp cmp value only if it's not 0.
 
-Jonathan
+2. When symbol names are matched, we need to compare the addresses
+   of blocks further. But it wrongly uses the symbol addresses for
+   comparison.
 
-> ---
-> There is the same issue on STM32 ADC driver.
-> The solution for ADC driver has been already discussed in the thread
-> https://lkml.org/lkml/2019/3/30/171
-> The current patch for STM32 DFSDM driver, bypasses the IIO IRQ trigger
-> handler, as proposed in this thread.
-> ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 43 +++++++------------------------
->  1 file changed, 10 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 2aad2cda6943..76a60d93fe23 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -842,31 +842,6 @@ static inline void stm32_dfsdm_process_data(struct stm32_dfsdm_adc *adc,
->  	}
->  }
->  
-> -static irqreturn_t stm32_dfsdm_adc_trigger_handler(int irq, void *p)
-> -{
-> -	struct iio_poll_func *pf = p;
-> -	struct iio_dev *indio_dev = pf->indio_dev;
-> -	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> -	int available = stm32_dfsdm_adc_dma_residue(adc);
-> -
-> -	while (available >= indio_dev->scan_bytes) {
-> -		s32 *buffer = (s32 *)&adc->rx_buf[adc->bufi];
-> -
-> -		stm32_dfsdm_process_data(adc, buffer);
-> -
-> -		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-> -						   pf->timestamp);
-> -		available -= indio_dev->scan_bytes;
-> -		adc->bufi += indio_dev->scan_bytes;
-> -		if (adc->bufi >= adc->buf_sz)
-> -			adc->bufi = 0;
-> -	}
-> -
-> -	iio_trigger_notify_done(indio_dev->trig);
-> -
-> -	return IRQ_HANDLED;
-> -}
-> -
->  static void stm32_dfsdm_dma_buffer_done(void *data)
->  {
->  	struct iio_dev *indio_dev = data;
-> @@ -874,11 +849,6 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
->  	int available = stm32_dfsdm_adc_dma_residue(adc);
->  	size_t old_pos;
->  
-> -	if (indio_dev->currentmode & INDIO_BUFFER_TRIGGERED) {
-> -		iio_trigger_poll_chained(indio_dev->trig);
-> -		return;
-> -	}
-> -
->  	/*
->  	 * FIXME: In Kernel interface does not support cyclic DMA buffer,and
->  	 * offers only an interface to push data samples per samples.
-> @@ -906,7 +876,15 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
->  			adc->bufi = 0;
->  			old_pos = 0;
->  		}
-> -		/* regular iio buffer without trigger */
-> +		/*
-> +		 * In DMA mode the trigger services of IIO are not used
-> +		 * (e.g. no call to iio_trigger_poll).
-> +		 * Calling irq handler associated to the hardware trigger is not
-> +		 * relevant as the conversions have already been done. Data
-> +		 * transfers are performed directly in DMA callback instead.
-> +		 * This implementation avoids to call trigger irq handler that
-> +		 * may sleep, in an atomic context (DMA irq handler context).
-> +		 */
->  		if (adc->dev_data->type == DFSDM_IIO)
->  			iio_push_to_buffers(indio_dev, buffer);
->  	}
-> @@ -1536,8 +1514,7 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  	}
->  
->  	ret = iio_triggered_buffer_setup(indio_dev,
-> -					 &iio_pollfunc_store_time,
-> -					 &stm32_dfsdm_adc_trigger_handler,
-> +					 &iio_pollfunc_store_time, NULL,
->  					 &stm32_dfsdm_buffer_setup_ops);
->  	if (ret) {
->  		stm32_dfsdm_dma_release(indio_dev);
+3. If the syms are both NULL, we can't consider these two blocks are
+   matched.
+
+This patch fixes above 3 issues.
+
+Fixes: 6041441870ab ("perf block: Cleanup and refactor block info
+functions")
+
+ v6:
+ ---
+ New in this patch set.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/util/block-info.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index c4b030bf6ec2..4ed5bce945ad 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -74,30 +74,21 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 
+ 	if (!bi_l->sym || !bi_r->sym) {
+ 		if (!bi_l->sym && !bi_r->sym)
+-			return 0;
++			return -1;
+ 		else if (!bi_l->sym)
+ 			return -1;
+ 		else
+ 			return 1;
+ 	}
+ 
+-	if (bi_l->sym == bi_r->sym) {
+-		if (bi_l->start == bi_r->start) {
+-			if (bi_l->end == bi_r->end)
+-				return 0;
+-			else
+-				return (int64_t)(bi_r->end - bi_l->end);
+-		} else
+-			return (int64_t)(bi_r->start - bi_l->start);
+-	} else {
+-		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++	cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++	if (cmp)
+ 		return cmp;
+-	}
+ 
+-	if (bi_l->sym->start != bi_r->sym->start)
+-		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
++	if (bi_l->start != bi_r->start)
++		return (int64_t)(bi_r->start - bi_l->start);
+ 
+-	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
++	return (int64_t)(bi_r->end - bi_l->end);
+ }
+ 
+ static void init_block_info(struct block_info *bi, struct symbol *sym,
+-- 
+2.17.1
 
