@@ -2,198 +2,120 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBECC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CB1C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A5720679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="q0CxtXNI"
+	by mail.kernel.org (Postfix) with ESMTP id 3714C2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580658791;
+	bh=D+ST12kFPCpEiSy3YyflnXlRJxJQO2zccYaR8lwSiRU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cRpVKKm+4W34kcPQacclTnY9+Es7b+LHHgm+MMyTlkYoZYhR2Vz+2sxTnZVrS+lMu
+	 dS189yO2IBgOrKF3N1wgE2dGlS3Oq1lctiMvLeoso32gGeAZFFnQax2n9G5paE2gdq
+	 FUDT7mCyd3Osi/P3HRaruHdQzwj3pVyb10um8F9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBBPvB (ORCPT
+        id S1726995AbgBBPxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 10:51:01 -0500
-Received: from mail1.protonmail.ch ([185.70.40.18]:50687 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgBBPvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 10:51:00 -0500
-Date:   Sun, 02 Feb 2020 15:50:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1580658657;
-        bh=6kUBFxuC2rO7/kfngE/XoXma3JcXpxCqXT3zxI0Rd0Y=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=q0CxtXNIZLgcY7UFWJbjtll1UPkYMV+czY3JTpRMle7TMfUupVBspGV7O4E1nLzOE
-         O8Q91Vg0KwNBHIKvDjgiqNZUU5FjwhogCz2uJGSqkL/idXSAM9aEfdnr+BR69esiF/
-         0BUBrP91sn3t/n7RjmlqE52SGAms5zXAXuD0MI68=
-To:     linux-media@vger.kernel.org
-From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: [PATCH 3/3] media: vimc: deb: Add support for GBR and BGR bus formats on source pad
-Message-ID: <20200202155019.1029993-4-nfraprado@protonmail.com>
-In-Reply-To: <20200202155019.1029993-1-nfraprado@protonmail.com>
-References: <20200202155019.1029993-1-nfraprado@protonmail.com>
-Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
+        Sun, 2 Feb 2020 10:53:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbgBBPxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 10:53:10 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4E3E20658;
+        Sun,  2 Feb 2020 15:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580658789;
+        bh=D+ST12kFPCpEiSy3YyflnXlRJxJQO2zccYaR8lwSiRU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GDjVsnebGOoYehlsYa1rp2PZEwY02Qphx1BbM9SmBclOwYI6myjVJ4JeFwsonY89M
+         igvkk5Q+xxEcRK/c3omw31KYuUOfbCgxb/OKtSk0mopcU8/hukWhHOZDw5KUXu+l0p
+         hc1e8lH6xiaLhkKhAVyxSaHh6T76g9ry9SuAclaQ=
+Date:   Sun, 2 Feb 2020 15:53:04 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "zzzzPopa, zzzzStefan Serban" <StefanSerban.Popa@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH][V2] iio: ad5755: fix spelling mistake "to" -> "too" and
+ grammar
+Message-ID: <20200202155304.5eb84ee8@archlinux>
+In-Reply-To: <aae729269a5ab110fae379f88b72a8cbca6c8b13.camel@analog.com>
+References: <20200123091954.10506-1-colin.king@canonical.com>
+        <aae729269a5ab110fae379f88b72a8cbca6c8b13.camel@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for GBR and BGR media bus formats for the source pad of
-debayer subdevices.
+On Thu, 23 Jan 2020 12:16:03 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
----
- drivers/media/platform/vimc/vimc-debayer.c | 53 +++++++++++++++++-----
- 1 file changed, 41 insertions(+), 12 deletions(-)
+> On Thu, 2020-01-23 at 09:19 +0000, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > There is a spelling mistake and grammar mistake in a dev_err
+> > message. Fix it.
+> >   
+> 
+> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> 
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/pla=
-tform/vimc/vimc-debayer.c
-index 5d1b67d684bb..463cafbe107e 100644
---- a/drivers/media/platform/vimc/vimc-debayer.c
-+++ b/drivers/media/platform/vimc/vimc-debayer.c
-@@ -51,6 +51,11 @@ static const struct v4l2_mbus_framefmt sink_fmt_default =
-=3D {
- =09.colorspace =3D V4L2_COLORSPACE_DEFAULT,
- };
-=20
-+static const u32 src_rgb_codes[] =3D {
-+=09MEDIA_BUS_FMT_BGR888_1X24,
-+=09MEDIA_BUS_FMT_RGB888_1X24,
-+=09MEDIA_BUS_FMT_GBR888_1X24};
-+
- static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] =3D {
- =09{
- =09=09.code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
-@@ -148,14 +153,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev=
- *sd,
- =09=09=09=09   struct v4l2_subdev_pad_config *cfg,
- =09=09=09=09   struct v4l2_subdev_mbus_code_enum *code)
- {
--=09/* We only support one format for source pads */
- =09if (VIMC_IS_SRC(code->pad)) {
--=09=09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
--
--=09=09if (code->index)
-+=09=09if (code->index >=3D ARRAY_SIZE(src_rgb_codes))
- =09=09=09return -EINVAL;
-=20
--=09=09code->code =3D vdeb->src_code;
-+=09=09code->code =3D src_rgb_codes[code->index];
- =09} else {
- =09=09if (code->index >=3D ARRAY_SIZE(vimc_deb_pix_map_list))
- =09=09=09return -EINVAL;
-@@ -170,7 +172,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev =
-*sd,
- =09=09=09=09    struct v4l2_subdev_pad_config *cfg,
- =09=09=09=09    struct v4l2_subdev_frame_size_enum *fse)
- {
--=09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
-+=09int i;
-=20
- =09if (fse->index)
- =09=09return -EINVAL;
-@@ -181,8 +183,13 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev=
- *sd,
-=20
- =09=09if (!vpix)
- =09=09=09return -EINVAL;
--=09} else if (fse->code !=3D vdeb->src_code) {
--=09=09return -EINVAL;
-+=09} else {
-+=09=09for (i =3D 0; i < ARRAY_SIZE(src_rgb_codes); i++) {
-+=09=09=09if (src_rgb_codes[i] =3D=3D fse->code)
-+=09=09=09=09break;
-+=09=09}
-+=09=09if (i =3D=3D ARRAY_SIZE(src_rgb_codes))
-+=09=09=09return -EINVAL;
- =09}
-=20
- =09fse->min_width =3D VIMC_FRAME_MIN_WIDTH;
-@@ -237,6 +244,8 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- {
- =09struct vimc_deb_device *vdeb =3D v4l2_get_subdevdata(sd);
- =09struct v4l2_mbus_framefmt *sink_fmt;
-+=09unsigned int i;
-+=09u32 *src_code;
-=20
- =09if (fmt->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE) {
- =09=09/* Do not change the format while stream is on */
-@@ -244,8 +253,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- =09=09=09return -EBUSY;
-=20
- =09=09sink_fmt =3D &vdeb->sink_fmt;
-+=09=09src_code =3D &vdeb->src_code;
- =09} else {
- =09=09sink_fmt =3D v4l2_subdev_get_try_format(sd, cfg, 0);
-+=09=09src_code =3D &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
- =09}
-=20
- =09/*
-@@ -253,9 +264,17 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
- =09 * it is propagated from the sink
- =09 */
- =09if (VIMC_IS_SRC(fmt->pad)) {
-+=09=09u32 code =3D fmt->format.code;
-+
- =09=09fmt->format =3D *sink_fmt;
--=09=09/* TODO: Add support for other formats */
--=09=09fmt->format.code =3D vdeb->src_code;
-+
-+=09=09for (i =3D 0; i < ARRAY_SIZE(src_rgb_codes); i++) {
-+=09=09=09if (src_rgb_codes[i] =3D=3D code) {
-+=09=09=09=09*src_code =3D src_rgb_codes[i];
-+=09=09=09=09break;
-+=09=09=09}
-+=09=09}
-+=09=09fmt->format.code =3D *src_code;
- =09} else {
- =09=09/* Set the new format in the sink pad */
- =09=09vimc_deb_adjust_sink_fmt(&fmt->format);
-@@ -291,11 +310,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(str=
-uct vimc_deb_device *vdeb,
- =09=09=09=09=09=09  unsigned int col,
- =09=09=09=09=09=09  unsigned int rgb[3])
- {
-+=09const struct vimc_pix_map *vpix;
- =09unsigned int i, index;
-=20
-+=09vpix =3D vimc_pix_map_by_code(vdeb->src_code);
- =09index =3D VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
--=09for (i =3D 0; i < 3; i++)
--=09=09vdeb->src_frame[index + i] =3D rgb[i];
-+=09for (i =3D 0; i < 3; i++) {
-+=09=09switch (vpix->pixelformat) {
-+=09=09case V4L2_PIX_FMT_RGB24:
-+=09=09=09vdeb->src_frame[index + i] =3D rgb[i];
-+=09=09=09break;
-+=09=09case V4L2_PIX_FMT_BGR24:
-+=09=09=09vdeb->src_frame[index + i] =3D rgb[2-i];
-+=09=09=09break;
-+=09=09}
-+=09}
- }
-=20
- static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
---=20
-2.25.0
+This crossed with Joe observing there are quite a few other nice little bits
+of janitorial work to be done in this driver. 
 
+I merged the two together and fiddled the patch description to cover
+the result.  Hope no one minds.  Seemed like it would save everyone
+some time rather than asking for a v3.
+
+Shout out if I've messed it up or you would rather I change the
+various tags.
+
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks all,
+
+Jonathan
+
+> > ---
+> > V2: fix grammar too, thanks to Alexandru Ardelean for spotting this.
+> > ---
+> >  drivers/iio/dac/ad5755.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+> > index b9175fb4c8ab..1359a1a92fdc 100644
+> > --- a/drivers/iio/dac/ad5755.c
+> > +++ b/drivers/iio/dac/ad5755.c
+> > @@ -655,7 +655,7 @@ static struct ad5755_platform_data *ad5755_parse_dt(struct
+> > device *dev)
+> >  	for_each_child_of_node(np, pp) {
+> >  		if (devnr >= AD5755_NUM_CHANNELS) {
+> >  			dev_err(dev,
+> > -				"There is to many channels defined in DT\n");
+> > +				"There are too many channels defined in DT\n");
+> >  			goto error_out;
+> >  		}
+> >    
 
