@@ -2,154 +2,289 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24639C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB320C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE4B20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=orbital-systems-com.20150623.gappssmtp.com header.i=@orbital-systems-com.20150623.gappssmtp.com header.b="P0NfYSym"
+	by mail.kernel.org (Postfix) with ESMTP id 8C98720842
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgBBPBH (ORCPT
+        id S1726952AbgBBPDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 10:01:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43408 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgBBPBG (ORCPT
+        Sun, 2 Feb 2020 10:03:07 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:28699 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgBBPDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 10:01:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z9so2478233wrs.10
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 07:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=orbital-systems-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QfE+mOgK8l29lZ6DrOiVFpgy+skIY9cxGqE2U9hsz78=;
-        b=P0NfYSymu45Inr6BtWaAq/CTZ6or9og2T7siDhDweDSfkPc1BbSFkfFpH1XFQHrUJE
-         HixIuBSKkH7q0re+MskXTiXKrfVf1KSCZ/D9fRAQDJ5xw6W3kcREdlDj7f7viWeufn39
-         LUZp4Lm90yWaN4g93PHOTDzEaZ9/CGs7UafV8g5Uzr/lyeEGRdvdbR6HLRHG1yOOLg5E
-         +bHftwy3nQsUSUyxnhRiOENNnnfnnUgL9ZiZqEh5Gb9aoWiyg8zdRd1iN1pWCe+Xvqgg
-         LqJnX7t26Jd87caa6kDbWf2eK5Z5kzIGt8XTY9Lqd0fXFPOKLWjmaNCWiaA6+BCJINr1
-         YF9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QfE+mOgK8l29lZ6DrOiVFpgy+skIY9cxGqE2U9hsz78=;
-        b=lBDAI4mjieG3x18fpMDyiKXEzz2PtTwvrBrS6Q8CQ3kDF4W/38hNMjBJaelVxWx1eV
-         KhYW6MtjC0esXdqL0H6Lc4gGr9bDfBiw7PR/aZf5rOakOleUeuKgvNZnwpdx0pm+T5op
-         t5aczj0+wMGcNY4E7Hzc9nN+YjqNUg0VOwUwGg6Ul7XtwU4yY7QtME1RLPLWEO5yDD+t
-         u+ZPCQhSWElnYnpbGZBN8cjMfpeHSPGUa+zE5fmpKpKaR6/podC5nGrgaFS+mnQmum3P
-         0t3HCkmjrc/tn9bNpRBEqUU8qbjftAwMBntdvYAqY4bpV5GuWcSsOMPNau/U69aQkBje
-         b4YA==
-X-Gm-Message-State: APjAAAVScabQ+OG3H+tqwFqQWUnF6T9QcvNQzsFMPPnYvrKosDdlQO1n
-        T4p8BcR99CkfYvzVaQEKfOFg7A==
-X-Google-Smtp-Source: APXvYqx6DyD8OGJbnEG4v7JpmN2z0xz05XouNBn4VaiOAKskFEOKyq6Pfhei3++cQ9zF/t1bbF+pOA==
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr10829255wrv.9.1580655664350;
-        Sun, 02 Feb 2020 07:01:04 -0800 (PST)
-Received: from localhost.net ([2001:67c:1810:f051:2345:9ab3:d50f:7149])
-        by smtp.gmail.com with ESMTPSA id g25sm24995904wmh.3.2020.02.02.07.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 07:01:03 -0800 (PST)
-From:   Jonas Danielsson <jonas@orbital-systems.com>
-X-Google-Original-From: Jonas Danielsson <jonas@threetimestwo.org>
-To:     linux-mmc@vger.kernel.org
-Cc:     jonas@orbital-systems.com,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: atmel-mci: Add error injection via debugfs
-Date:   Sun,  2 Feb 2020 16:00:48 +0100
-Message-Id: <20200202150049.677553-1-jonas@threetimestwo.org>
-X-Mailer: git-send-email 2.23.0
+        Sun, 2 Feb 2020 10:03:07 -0500
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBL+l2Ceh7/J+HcV6Esas6yLv6hw=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:b98f:a052:7c52:a708]
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id 40bcf3w12F2ID6Z
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 2 Feb 2020 16:02:18 +0100 (CET)
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
+ ioctl for device
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
+        mad skateman <madskateman@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+ <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+ <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+ <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <9624aebf-edb9-a3b0-1a29-b61df6b7ba2f@xenosoft.de>
+Date:   Sun, 2 Feb 2020 16:02:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <75aab3c9-1cb6-33bf-5de1-e05bbd98b6fb@c-s.fr>
+Content-Type: multipart/mixed;
+ boundary="------------8AFEE6E81332C044F1E54B28"
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Danielsson <jonas@orbital-systems.com>
+This is a multi-part message in MIME format.
+--------------8AFEE6E81332C044F1E54B28
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This functionality was useful for us while debugging issues with
-a vendor wifi-driver that misbehaved on the SDIO bus.
+On 02 February 2020 at 09:19 am, Christophe Leroy wrote:
+> Hello,
+>
+> Le 02/02/2020 à 01:08, Christian Zigotzky a écrit :
+>> Hello,
+>>
+>> We regularly compile and test Linux kernels every day during the 
+>> merge window. Since Thuesday we have very high CPU loads because of 
+>> the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc).
+>>
+>> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for 
+>> device
+>
+> Do you know which ioctl, on which device ?
+> Can you take a trace of running avahi-daemon with 'strace' ?
+>
+> Can you bisect ?
+>
+> Christophe
+Hi Christophe,
+Hi All,
 
-This will allow you to check how SDIO clients handle mmc
-command and data errors.
+I figured out that the avahi-daemon has a problem with the IPv6 address 
+of a network interface since the Git kernel from Thursday. (Log attached)
+This generates high CPU usage because the avahi-daemon tries to access 
+the IPv6 address again and again and thereby it produces a lot of log 
+messages.
 
-Signed-off-by: Jonas Danielsson <jonas@orbital-systems.com>
----
- drivers/mmc/host/atmel-mci.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+We figured out that the networking updates aren't responsible for this 
+issue because we created a test kernel on Wednesday. The issue is 
+somewhere in the commits from Wednesday night to Thursday (CET).
 
-diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-index a9dad641c..11289c8e5 100644
---- a/drivers/mmc/host/atmel-mci.c
-+++ b/drivers/mmc/host/atmel-mci.c
-@@ -328,6 +328,8 @@ struct atmel_mci {
- 	u32			data_status;
- 	u32			stop_cmdr;
- 
-+	bool force_cmd_error;
-+	bool force_data_error;
- 	struct tasklet_struct	tasklet;
- 	unsigned long		pending_events;
- 	unsigned long		completed_events;
-@@ -618,6 +620,14 @@ static void atmci_init_debugfs(struct atmel_mci_slot *slot)
- 	if (!node)
- 		goto err;
- 
-+	node = debugfs_create_bool("force_cmd_error", 644, root, &host->force_cmd_error);
-+	if (!node)
-+		goto err;
-+
-+	node = debugfs_create_bool("force_data_error", 644, root, &host->force_data_error);
-+	if (!node)
-+		goto err;
-+
- 	node = debugfs_create_u32("state", S_IRUSR, root, (u32 *)&host->state);
- 	if (!node)
- 		goto err;
-@@ -1807,7 +1817,12 @@ static void atmci_tasklet_func(unsigned long priv)
- 				 * If there is a command error don't start
- 				 * data transfer.
- 				 */
--				if (mrq->cmd->error) {
-+				if (mrq->cmd->error || host->force_cmd_error) {
-+					if (host->force_cmd_error) {
-+						dev_info(&host->pdev->dev, "FSM: forced cmd error!\n");
-+						host->force_cmd_error = false;
-+						mrq->cmd->error = -EINVAL;
-+					}
- 					host->stop_transfer(host);
- 					host->data = NULL;
- 					atmci_writel(host, ATMCI_IDR,
-@@ -1939,7 +1954,11 @@ static void atmci_tasklet_func(unsigned long priv)
- 			atmci_writel(host, ATMCI_IDR, ATMCI_TXRDY | ATMCI_RXRDY
- 			                   | ATMCI_DATA_ERROR_FLAGS);
- 			status = host->data_status;
--			if (unlikely(status)) {
-+			if (unlikely(status) || host->force_data_error) {
-+				if (data && host->force_data_error) {
-+					dev_info(&host->pdev->dev, "FSM: forced data error!\n");
-+					host->force_data_error = false;
-+				}
- 				host->stop_transfer(host);
- 				host->data = NULL;
- 				if (data) {
-@@ -2519,6 +2538,7 @@ static int atmci_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	host->pdev = pdev;
-+	host->force_data_error = host->force_cmd_error = false;
- 	spin_lock_init(&host->lock);
- 	INIT_LIST_HEAD(&host->queue);
- 
--- 
-2.23.0
+Please compile the latest Git kernel and test it with a desktop linux 
+distribution for example Ubuntu. In my point of view there are many 
+desktop machines affected. Many server systems don't use the avahi 
+daemon so they aren't affected.
 
+It's possible to deactivate the access to the IPv6 address with the 
+following line in the file "/etc/avahi/avahi-daemon.conf":
+
+use-ipv6=no
+
+After a reboot the CPU usage is normal again. This is only a temporary 
+solution.
+
+Unfortunately I don't have the time for bisecting next week. I have a 
+lot of other work to do. In my point of view it is very important that 
+you also compile the latest Git kernels. Then you will see the issue and 
+then you have a better possibility to fix the issue.
+
+Thanks,
+Christian
+
+--------------8AFEE6E81332C044F1E54B28
+Content-Type: text/plain; charset=UTF-8;
+ name="avahi_log"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="avahi_log"
+
+S2VybmVsIDUuNS4wOiBqb3VybmFsY3RsIHwgZ3JlcCAtaSBhdmFoaQpGZWIgMDIgMTM6NTc6
+MDUgREMxIHN5c3RlbWRbMV06IExpc3RlbmluZyBvbiBBdmFoaSBtRE5TL0ROUy1TRCBTdGFj
+ayBBY3RpdmF0aW9uIFNvY2tldC4KRmViIDAyIDEzOjU3OjA1IERDMSBzeXN0ZW1kWzFdOiBT
+dGFydGluZyBBdmFoaSBtRE5TL0ROUy1TRCBTdGFjay4uLgpGZWIgMDIgMTM6NTc6MDUgREMx
+IGF2YWhpLWRhZW1vbls0MzE0XTogRm91bmQgdXNlciAnYXZhaGknIChVSUQgMTEyKSBhbmQg
+Z3JvdXAgJ2F2YWhpJyAoR0lEIDEyMikuCkZlYiAwMiAxMzo1NzowNSBEQzEgYXZhaGktZGFl
+bW9uWzQzMTRdOiBTdWNjZXNzZnVsbHkgZHJvcHBlZCByb290IHByaXZpbGVnZXMuCkZlYiAw
+MiAxMzo1NzowNSBEQzEgYXZhaGktZGFlbW9uWzQzMTRdOiBhdmFoaS1kYWVtb24gMC42LjMy
+LXJjIHN0YXJ0aW5nIHVwLgpGZWIgMDIgMTM6NTc6MDYgREMxIHN5c3RlbWRbMV06IFN0YXJ0
+ZWQgQXZhaGkgRE5TIENvbmZpZ3VyYXRpb24gRGFlbW9uLgpGZWIgMDIgMTM6NTc6MDYgREMx
+IGF2YWhpLWRhZW1vbls0MzE0XTogU3VjY2Vzc2Z1bGx5IGNhbGxlZCBjaHJvb3QoKS4KRmVi
+IDAyIDEzOjU3OjA2IERDMSBhdmFoaS1kYWVtb25bNDMxNF06IFN1Y2Nlc3NmdWxseSBkcm9w
+cGVkIHJlbWFpbmluZyBjYXBhYmlsaXRpZXMuCkZlYiAwMiAxMzo1NzowNiBEQzEgYXZhaGkt
+ZGFlbW9uWzQzMTRdOiBObyBzZXJ2aWNlIGZpbGUgZm91bmQgaW4gL2V0Yy9hdmFoaS9zZXJ2
+aWNlcy4KRmViIDAyIDEzOjU3OjA2IERDMSBhdmFoaS1kYWVtb25bNDMxNF06IE5ldHdvcmsg
+aW50ZXJmYWNlIGVudW1lcmF0aW9uIGNvbXBsZXRlZC4KRmViIDAyIDEzOjU3OjA2IERDMSBh
+dmFoaS1kYWVtb25bNDMxNF06IFNlcnZlciBzdGFydHVwIGNvbXBsZXRlLiBIb3N0IG5hbWUg
+aXMgREMxLmxvY2FsLiBMb2NhbCBzZXJ2aWNlIGNvb2tpZSBpcyAzMjAyOTIxNTUxLgpGZWIg
+MDIgMTM6NTc6MDYgREMxIGF2YWhpLWRhZW1vbls0MzE0XTogRmFpbGVkIHRvIHBhcnNlIGFk
+ZHJlc3MgJ2xvY2FsaG9zdCcsIGlnbm9yaW5nLgpGZWIgMDIgMTM6NTc6MDYgREMxIGF2YWhp
+LWRuc2NvbmZkWzQ0ODddOiBTdWNjZXNzZnVsbHkgY29ubmVjdGVkIHRvIEF2YWhpIGRhZW1v
+bi4KRmViIDAyIDEzOjU3OjA2IERDMSBzeXN0ZW1kWzFdOiBTdGFydGVkIEF2YWhpIG1ETlMv
+RE5TLVNEIFN0YWNrLgpGZWIgMDIgMTM6NTc6MDcgREMxIHJvb3RbNDc0OV06IC9ldGMvZGhj
+cC9kaGNsaWVudC1lbnRlci1ob29rcy5kL2F2YWhpLWF1dG9pcGQgcmV0dXJuZWQgbm9uLXpl
+cm8gZXhpdCBzdGF0dXMgMQpGZWIgMDIgMTM6NTc6MDcgREMxIGF2YWhpLWRhZW1vbls0MzE0
+XTogSm9pbmluZyBtRE5TIG11bHRpY2FzdCBncm91cCBvbiBpbnRlcmZhY2UgZW5QNDA5NnA0
+czQuSVB2NCB3aXRoIGFkZHJlc3MgMTkyLjE2OC4xNzguNDcuCkZlYiAwMiAxMzo1NzowNyBE
+QzEgYXZhaGktZGFlbW9uWzQzMTRdOiBOZXcgcmVsZXZhbnQgaW50ZXJmYWNlIGVuUDQwOTZw
+NHM0LklQdjQgZm9yIG1ETlMuCkZlYiAwMiAxMzo1NzowNyBEQzEgYXZhaGktZGFlbW9uWzQz
+MTRdOiBSZWdpc3RlcmluZyBuZXcgYWRkcmVzcyByZWNvcmQgZm9yIDE5Mi4xNjguMTc4LjQ3
+IG9uIGVuUDQwOTZwNHM0LklQdjQuCkZlYiAwMiAxMzo1NzowOSBEQzEgYXZhaGktZGFlbW9u
+WzQzMTRdOiBKb2luaW5nIG1ETlMgbXVsdGljYXN0IGdyb3VwIG9uIGludGVyZmFjZSBlblA0
+MDk2cDRzNC5JUHY2IHdpdGggYWRkcmVzcyBmZTgwOjoyNTA6ZmNmZjpmZWNiOjUxODEuCkZl
+YiAwMiAxMzo1NzowOSBEQzEgYXZhaGktZGFlbW9uWzQzMTRdOiBOZXcgcmVsZXZhbnQgaW50
+ZXJmYWNlIGVuUDQwOTZwNHM0LklQdjYgZm9yIG1ETlMuCkZlYiAwMiAxMzo1NzowOSBEQzEg
+YXZhaGktZGFlbW9uWzQzMTRdOiBSZWdpc3RlcmluZyBuZXcgYWRkcmVzcyByZWNvcmQgZm9y
+IGZlODA6OjI1MDpmY2ZmOmZlY2I6NTE4MSBvbiBlblA0MDk2cDRzNC4qLgpGZWIgMDIgMTM6
+NTc6MTAgREMxIGF2YWhpLWRhZW1vbls0MzE0XTogTGVhdmluZyBtRE5TIG11bHRpY2FzdCBn
+cm91cCBvbiBpbnRlcmZhY2UgZW5QNDA5NnA0czQuSVB2NiB3aXRoIGFkZHJlc3MgZmU4MDo6
+MjUwOmZjZmY6ZmVjYjo1MTgxLgpGZWIgMDIgMTM6NTc6MTAgREMxIGF2YWhpLWRhZW1vbls0
+MzE0XTogSm9pbmluZyBtRE5TIG11bHRpY2FzdCBncm91cCBvbiBpbnRlcmZhY2UgZW5QNDA5
+NnA0czQuSVB2NiB3aXRoIGFkZHJlc3MgMmEwMjo4MTA5Ojg5YzA6ZWJmYzoyNTA6ZmNmZjpm
+ZWNiOjUxODEuCkZlYiAwMiAxMzo1NzoxMCBEQzEgYXZhaGktZGFlbW9uWzQzMTRdOiBSZWdp
+c3RlcmluZyBuZXcgYWRkcmVzcyByZWNvcmQgZm9yIDJhMDI6ODEwOTo4OWMwOmViZmM6MjUw
+OmZjZmY6ZmVjYjo1MTgxIG9uIGVuUDQwOTZwNHM0LiouCkZlYiAwMiAxMzo1NzoxMCBEQzEg
+YXZhaGktZGFlbW9uWzQzMTRdOiBXaXRoZHJhd2luZyBhZGRyZXNzIHJlY29yZCBmb3IgZmU4
+MDo6MjUwOmZjZmY6ZmVjYjo1MTgxIG9uIGVuUDQwOTZwNHM0LgoKCi0tLS0tLQoKCkxhdGVz
+dCBHaXQga2VybmVsICg1LjYpOiBqb3VybmFsY3RsIHwgZ3JlcCAtaSBhdmFoaQoKRmViIDAy
+IDE0OjA0OjA0IERDMSBzeXN0ZW1kWzFdOiBMaXN0ZW5pbmcgb24gQXZhaGkgbUROUy9ETlMt
+U0QgU3RhY2sgQWN0aXZhdGlvbiBTb2NrZXQuCkZlYiAwMiAxNDowNDowNSBEQzEgc3lzdGVt
+ZFsxXTogU3RhcnRlZCBBdmFoaSBETlMgQ29uZmlndXJhdGlvbiBEYWVtb24uCkZlYiAwMiAx
+NDowNDowNSBEQzEgc3lzdGVtZFsxXTogU3RhcnRpbmcgQXZhaGkgbUROUy9ETlMtU0QgU3Rh
+Y2suLi4KRmViIDAyIDE0OjA0OjA1IERDMSBhdmFoaS1kYWVtb25bNDU3M106IEZvdW5kIHVz
+ZXIgJ2F2YWhpJyAoVUlEIDExMikgYW5kIGdyb3VwICdhdmFoaScgKEdJRCAxMjIpLgpGZWIg
+MDIgMTQ6MDQ6MDUgREMxIGF2YWhpLWRhZW1vbls0NTczXTogU3VjY2Vzc2Z1bGx5IGRyb3Bw
+ZWQgcm9vdCBwcml2aWxlZ2VzLgpGZWIgMDIgMTQ6MDQ6MDUgREMxIGF2YWhpLWRhZW1vbls0
+NTczXTogYXZhaGktZGFlbW9uIDAuNi4zMi1yYyBzdGFydGluZyB1cC4KRmViIDAyIDE0OjA0
+OjA1IERDMSBhdmFoaS1kYWVtb25bNDU3M106IFN1Y2Nlc3NmdWxseSBjYWxsZWQgY2hyb290
+KCkuCkZlYiAwMiAxNDowNDowNSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBTdWNjZXNzZnVs
+bHkgZHJvcHBlZCByZW1haW5pbmcgY2FwYWJpbGl0aWVzLgpGZWIgMDIgMTQ6MDQ6MDUgREMx
+IGF2YWhpLWRhZW1vbls0NTczXTogTm8gc2VydmljZSBmaWxlIGZvdW5kIGluIC9ldGMvYXZh
+aGkvc2VydmljZXMuCkZlYiAwMiAxNDowNDowNSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBO
+ZXR3b3JrIGludGVyZmFjZSBlbnVtZXJhdGlvbiBjb21wbGV0ZWQuCkZlYiAwMiAxNDowNDow
+NSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBTZXJ2ZXIgc3RhcnR1cCBjb21wbGV0ZS4gSG9z
+dCBuYW1lIGlzIERDMS5sb2NhbC4gTG9jYWwgc2VydmljZSBjb29raWUgaXMgMjg1MzcwNzg5
+LgpGZWIgMDIgMTQ6MDQ6MDUgREMxIGF2YWhpLWRhZW1vbls0NTczXTogRmFpbGVkIHRvIHBh
+cnNlIGFkZHJlc3MgJ2xvY2FsaG9zdCcsIGlnbm9yaW5nLgpGZWIgMDIgMTQ6MDQ6MDUgREMx
+IGF2YWhpLWRuc2NvbmZkWzQ0MjVdOiBTdWNjZXNzZnVsbHkgY29ubmVjdGVkIHRvIEF2YWhp
+IGRhZW1vbi4KRmViIDAyIDE0OjA0OjA1IERDMSByb290WzQ2NDJdOiAvZXRjL2RoY3AvZGhj
+bGllbnQtZW50ZXItaG9va3MuZC9hdmFoaS1hdXRvaXBkIHJldHVybmVkIG5vbi16ZXJvIGV4
+aXQgc3RhdHVzIDEKRmViIDAyIDE0OjA0OjA2IERDMSBzeXN0ZW1kWzFdOiBTdGFydGVkIEF2
+YWhpIG1ETlMvRE5TLVNEIFN0YWNrLgpGZWIgMDIgMTQ6MDQ6MDYgREMxIGF2YWhpLWRhZW1v
+bls0NTczXTogSm9pbmluZyBtRE5TIG11bHRpY2FzdCBncm91cCBvbiBpbnRlcmZhY2UgZW5Q
+NDA5NnA0czQuSVB2NCB3aXRoIGFkZHJlc3MgMTkyLjE2OC4xNzguNDcuCkZlYiAwMiAxNDow
+NDowNiBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBOZXcgcmVsZXZhbnQgaW50ZXJmYWNlIGVu
+UDQwOTZwNHM0LklQdjQgZm9yIG1ETlMuCkZlYiAwMiAxNDowNDowNiBEQzEgYXZhaGktZGFl
+bW9uWzQ1NzNdOiBSZWdpc3RlcmluZyBuZXcgYWRkcmVzcyByZWNvcmQgZm9yIDE5Mi4xNjgu
+MTc4LjQ3IG9uIGVuUDQwOTZwNHM0LklQdjQuCkZlYiAwMiAxNDowNDowOCBEQzEgYXZhaGkt
+ZGFlbW9uWzQ1NzNdOiBKb2luaW5nIG1ETlMgbXVsdGljYXN0IGdyb3VwIG9uIGludGVyZmFj
+ZSBlblA0MDk2cDRzNC5JUHY2IHdpdGggYWRkcmVzcyBmZTgwOjoyNTA6ZmNmZjpmZWNiOjUx
+ODEuCkZlYiAwMiAxNDowNDowOCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBOZXcgcmVsZXZh
+bnQgaW50ZXJmYWNlIGVuUDQwOTZwNHM0LklQdjYgZm9yIG1ETlMuCkZlYiAwMiAxNDowNDow
+OCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBSZWdpc3RlcmluZyBuZXcgYWRkcmVzcyByZWNv
+cmQgZm9yIGZlODA6OjI1MDpmY2ZmOmZlY2I6NTE4MSBvbiBlblA0MDk2cDRzNC4qLgpGZWIg
+MDIgMTQ6MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3By
+aWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDowOCBEQzEgYXZhaGktZGFlbW9u
+WzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAy
+IDE0OjA0OjA4IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlh
+dGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0
+NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCi4uLgpGZWIg
+MDIgMTQ6MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3By
+aWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDowOCBEQzEgYXZhaGktZGFlbW9u
+WzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAy
+IDE0OjA0OjA4IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlh
+dGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0
+NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAx
+NDowNDowOCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRl
+IGlvY3RsIGZvciBkZXZpY2UKRmViIDAyIDE0OjA0OjA4IERDMSBhdmFoaS1kYWVtb25bNDU3
+M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6
+MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBp
+b2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDowOCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNd
+OiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAyIDE0OjA0
+OjA4IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9j
+dGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MDggREMxIGF2YWhpLWRhZW1vbls0NTczXTog
+aW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDow
+OCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3Rs
+IGZvciBkZXZpY2UKRmViIDAyIDE0OjA0OjA4IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlv
+Y3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MDgg
+REMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBm
+b3IgZGV2aWNlCkZlYiAwMiAxNDowNDowOSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBMZWF2
+aW5nIG1ETlMgbXVsdGljYXN0IGdyb3VwIG9uIGludGVyZmFjZSBlblA0MDk2cDRzNC5JUHY2
+IHdpdGggYWRkcmVzcyBmZTgwOjoyNTA6ZmNmZjpmZWNiOjUxODEuCkZlYiAwMiAxNDowNDow
+OSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBKb2luaW5nIG1ETlMgbXVsdGljYXN0IGdyb3Vw
+IG9uIGludGVyZmFjZSBlblA0MDk2cDRzNC5JUHY2IHdpdGggYWRkcmVzcyAyYTAyOjgxMDk6
+ODljMDplYmZjOjI1MDpmY2ZmOmZlY2I6NTE4MS4KRmViIDAyIDE0OjA0OjA5IERDMSBhdmFo
+aS1kYWVtb25bNDU3M106IFJlZ2lzdGVyaW5nIG5ldyBhZGRyZXNzIHJlY29yZCBmb3IgMmEw
+Mjo4MTA5Ojg5YzA6ZWJmYzoyNTA6ZmNmZjpmZWNiOjUxODEgb24gZW5QNDA5NnA0czQuKi4K
+RmViIDAyIDE0OjA0OjA5IERDMSBhdmFoaS1kYWVtb25bNDU3M106IFdpdGhkcmF3aW5nIGFk
+ZHJlc3MgcmVjb3JkIGZvciBmZTgwOjoyNTA6ZmNmZjpmZWNiOjUxODEgb24gZW5QNDA5NnA0
+czQuCkZlYiAwMiAxNDowNDoyOCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJ
+bmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAyIDE0OjA0OjI4IERDMSBhdmFo
+aS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmlj
+ZQpGZWIgMDIgMTQ6MDQ6MjggREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5h
+cHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDoyOCBEQzEgYXZhaGkt
+ZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UK
+RmViIDAyIDE0OjA0OjI4IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBw
+cm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MjggREMxIGF2YWhpLWRh
+ZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCi4u
+LgpGZWIgMDIgMTQ6MDQ6MjkgREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5h
+cHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDowNDoyOSBEQzEgYXZhaGkt
+ZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UK
+RmViIDAyIDE0OjA0OjI5IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBw
+cm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MDQ6MzUgREMxIHN5c3RlbWQt
+am91cm5hbGRbMjQ4OV06IFN1cHByZXNzZWQgNTEzOTE1IG1lc3NhZ2VzIGZyb20gL3N5c3Rl
+bS5zbGljZS9hdmFoaS1kYWVtb24uc2VydmljZQpGZWIgMDIgMTQ6MDQ6MzUgREMxIGF2YWhp
+LWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNl
+CkZlYiAwMiAxNDowNDozNSBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFw
+cHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAyIDE0OjA0OjM1IERDMSBhdmFoaS1k
+YWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQoK
+Ci0tLS0tLQoKCkxhdGVzdCBHaXQga2VybmVsICg1LjYpOiBzeXN0ZW1jdGwgc3RhdHVzIGF2
+YWhpLWRhZW1vbgril48gYXZhaGktZGFlbW9uLnNlcnZpY2UgLSBBdmFoaSBtRE5TL0ROUy1T
+RCBTdGFjawogICBMb2FkZWQ6IGxvYWRlZCAoL2xpYi9zeXN0ZW1kL3N5c3RlbS9hdmFoaS1k
+YWVtb24uc2VydmljZTsgZW5hYmxlZDsgdmVuZG9yIHByZXNldDogZW5hYmxlZCkKICAgQWN0
+aXZlOiBhY3RpdmUgKHJ1bm5pbmcpIHNpbmNlIFN1biAyMDIwLTAyLTAyIDE0OjA0OjA2IENF
+VDsgMTFtaW4gYWdvCiBNYWluIFBJRDogNDU3MyAoYXZhaGktZGFlbW9uKQogICBTdGF0dXM6
+ICJhdmFoaS1kYWVtb24gMC42LjMyLXJjIHN0YXJ0aW5nIHVwLiIKICAgQ0dyb3VwOiAvc3lz
+dGVtLnNsaWNlL2F2YWhpLWRhZW1vbi5zZXJ2aWNlCiAgICAgICAgICAg4pSc4pSANDU3MyBh
+dmFoaS1kYWVtb246IHJ1bm5pbmcgW0RDMS5sb2NhbF0KICAgICAgICAgICDilJTilIA0NTgx
+IGF2YWhpLWRhZW1vbjogY2hyb290IGhlbHBlcgoKRmViIDAyIDE0OjE1OjM0IERDMSBhdmFo
+aS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmlj
+ZQpGZWIgMDIgMTQ6MTU6MzQgREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5h
+cHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDoxNTozNCBEQzEgYXZhaGkt
+ZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UK
+RmViIDAyIDE0OjE1OjM0IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBw
+cm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIgMDIgMTQ6MTU6MzQgREMxIGF2YWhpLWRh
+ZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3ByaWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZl
+YiAwMiAxNDoxNTozNCBEQzEgYXZhaGktZGFlbW9uWzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJv
+cHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAyIDE0OjE1OjM0IERDMSBhdmFoaS1kYWVt
+b25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlhdGUgaW9jdGwgZm9yIGRldmljZQpGZWIg
+MDIgMTQ6MTU6MzQgREMxIGF2YWhpLWRhZW1vbls0NTczXTogaW9jdGwoKTogSW5hcHByb3By
+aWF0ZSBpb2N0bCBmb3IgZGV2aWNlCkZlYiAwMiAxNDoxNTozNCBEQzEgYXZhaGktZGFlbW9u
+WzQ1NzNdOiBpb2N0bCgpOiBJbmFwcHJvcHJpYXRlIGlvY3RsIGZvciBkZXZpY2UKRmViIDAy
+IDE0OjE1OjM0IERDMSBhdmFoaS1kYWVtb25bNDU3M106IGlvY3RsKCk6IEluYXBwcm9wcmlh
+dGUgaW9jdGwgZm9yIGRldmljZQoKCi0tLS0tLQo=
+--------------8AFEE6E81332C044F1E54B28--
