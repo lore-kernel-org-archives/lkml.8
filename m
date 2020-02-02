@@ -2,199 +2,94 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155E4C35240
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 03:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82307C3524A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08DC2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 03:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588F920842
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l08CHI0x"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BZ9+x4AU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBBDkd (ORCPT
+        id S1726900AbgBBESY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 22:40:33 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55790 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgBBDkc (ORCPT
+        Sat, 1 Feb 2020 23:18:24 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40664 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgBBESY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 22:40:32 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so4736939pjz.5;
-        Sat, 01 Feb 2020 19:40:31 -0800 (PST)
+        Sat, 1 Feb 2020 23:18:24 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p3so12400705edx.7
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 20:18:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=zxDdizwVS9S9zbW6CYoZPwsd4Ai686l2FU5DDLJ17vw=;
-        b=l08CHI0xbb5x/mRNuqhvo7dn96NZE1Rk5E9r+joP1rpIEgJmDAIxwW/Z3BrwtAKgMJ
-         F1Mtx7YOwJ+Olbawcbt+h5aWvN2eF8Mos438at+QFcacHzkgqgQPsnOhzXpwfVfLY7Yg
-         ya/ajubrJPb4AWOlEmAQG4bUtvjTWwWLfzSIAq1Oc0hb61lIwn990lLlVM8tIvkxscXU
-         kC6kKyeQ1eOMvTxY2lIDVSQXGqiUdau/2h6bnaEBPZM0kvI6rabgRG0DnFcK9PGox5xj
-         9PBKJ2lLvLZhx+l9Y4+FFKd2xzxRJFzJdSxTjHBzLTQsAyknU0GF3JPy090VJEhqWSLi
-         ivaQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UuEb10QAUcFcGwJKCFeGhLUYYwMKG3vOlYqSejkAJjc=;
+        b=BZ9+x4AUIFJLiX/N1VBjRD80E1JAY6p+Ow1VTwbX6FGZWiklyuGDkrP0qeMciPsMUe
+         8nTSaKr4Ho6/S7dW2SpMb/OZSIj7QcOWDEwMYH9REu0dT4ejNyJIPZbDM/NhReSGj4pW
+         0F1tPaYk4DNXr3WnbLQ58PPhFJERk1lmkG/IK6NW0wEAsqpyEd1UQ7Ty1JL1Akh47bmN
+         tF+Efol3wF29/cOHJt8lRHPpntXfHAZbLjNTGpINUaeSuWaHL5PYTdxO5Kg4v+zE+uWo
+         aQd7vruF8DxQ/LOBHcs/1WTiM3K89c7fQpOzkqbwjA03mvKLkr+BDjefK9rnfrRqG2H5
+         UqtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=zxDdizwVS9S9zbW6CYoZPwsd4Ai686l2FU5DDLJ17vw=;
-        b=QejVxrj/nR8DOUKaSSm0Ivlqc1I5UhRoFEwXTy5PPcU2OqaFp4M5jsq7n0T6sjZOcS
-         l2dq7eqdaRyL4Mp+QtfOPY+VF+QhAw1svfcQT0BkP9M9R31XKRl6vYYBimL5lBQ8lb3+
-         pD+NrZDU/BENh5G+YNBFi26GwHzPF/wf5PDm4d1dOlrpw2FA0q+vzftI196xbnghkwR+
-         tLlhIjfgydMA3Cz0Za4pVK4wt2bR7oosyFnaXXnU3eWJaCujUX2G+lX7wHtvFOSi9cYT
-         npF4UiQPwAmKxw4tljEj2UfglURpzhwhdqhxLuQwl0PwV1cLavK1u1mFgjBgkex5rq0I
-         Un/w==
-X-Gm-Message-State: APjAAAUx97xQm5EOygBkiZY0TLq0Inpt475giyyWAdt+smIv8Nf8f5oA
-        MbXdH81RkQxgALE3vEadpyA=
-X-Google-Smtp-Source: APXvYqxcmaKlufJVo2ihghkddnV8StYoKf1O5tQsIsCbOQbfm+SsL/iLjWNfn+zjre0huFPmE2bpIw==
-X-Received: by 2002:a17:90b:87:: with SMTP id bb7mr21920033pjb.49.1580614831368;
-        Sat, 01 Feb 2020 19:40:31 -0800 (PST)
-Received: from localhost.localdomain ([116.84.110.10])
-        by smtp.gmail.com with ESMTPSA id e15sm15691231pja.13.2020.02.01.19.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Feb 2020 19:40:30 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     sj38.park@gmail.com, David.Laight@aculab.com, aams@amazon.com,
-        davem@davemloft.net, edumazet@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        ncardwell@google.com, netdev@vger.kernel.org, shuah@kernel.org,
-        sjpark@amazon.de
-Subject: Re: Re: [PATCH v2.1 1/2] tcp: Reduce SYN resend delay if a suspicous ACK is received
-Date:   Sun,  2 Feb 2020 04:40:19 +0100
-Message-Id: <20200202034019.16097-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <735f9641-eb21-05f3-5fa4-2189ec84d5da@gmail.com> (raw)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UuEb10QAUcFcGwJKCFeGhLUYYwMKG3vOlYqSejkAJjc=;
+        b=DvxqXrKeIs/bUFetRM8w5kbdxTppFrawXLpBmcKu28JJwhU09GQ1yN99CMNDINgCf3
+         Q/MqpCaaK22HbSSMaALxv134REpvFnn9szN6RzLNYWM/tF+jAnfXumJtAAa1UFfu5HcE
+         gIDuLE+F46P/T1sGtQiSJXzah1hOj7E5t51bB1co9ZTrLheGgGflLdL5tPd82gFaWZaA
+         Kby7mp/4XaAI+Qe6P+678Veu0SVwgKPG7dWod75NmrZ3BoakPsSRu1B+ydAJcdIDH4Gk
+         SWa3EEzuDS0Tnqw8XZtrmFkd0+S/KDzfHTsqY/f1Ejw3CKZOoGnT7RT3im+cFmjVfsEP
+         9y/Q==
+X-Gm-Message-State: APjAAAWgZLQyaeQMSXgvUMxBTEMu5TKlKj3OAogeofdwIUgAaFgEIK7E
+        RKVangp1PCl5Kfal7De53LDq23/jVl0GPiwUx6IkAQ==
+X-Google-Smtp-Source: APXvYqybtw5f2jTQcpV4gY36OnxNY8241JvcKkzJUpgAl0cx/UBNZIzQjpkYuf3EJT/Lyi67pPW/bR73IKtF1FLPUjE=
+X-Received: by 2002:a17:906:82d6:: with SMTP id a22mr15774735ejy.242.1580617100799;
+ Sat, 01 Feb 2020 20:18:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20200123014627.71720-1-bgeffon@google.com> <20200124190625.257659-1-bgeffon@google.com>
+ <20200126220650.i4lwljpvohpgvsi2@box> <CADyq12xCK_3MhGi88Am5P6DVZvrW8vqtyJMHO0zjNhvhYegm1w@mail.gmail.com>
+ <20200129104655.egvpavc2tzozlbqe@box>
+In-Reply-To: <20200129104655.egvpavc2tzozlbqe@box>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Sun, 2 Feb 2020 05:17:53 +0100
+Message-ID: <CADyq12xgnVByYOkL=GcszYYKzDpg254QEOFoW8=e1y=bmOCcFQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Feb 2020 10:23:43 -0800 Eric Dumazet <eric.dumazet@gmail.com> wrote:
+On Wed, Jan 29, 2020 at 11:46 AM Kirill A. Shutemov
+<kirill@shutemov.name> wrote:
+> Any better options for the flag name? (I have none)
 
-> 
-> 
-> On 2/1/20 6:53 AM, sj38.park@gmail.com wrote:
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > When closing a connection, the two acks that required to change closing
-> > socket's status to FIN_WAIT_2 and then TIME_WAIT could be processed in
-> > reverse order.  This is possible in RSS disabled environments such as a
-> > connection inside a host.
-> > 
-> > For example, expected state transitions and required packets for the
-> > disconnection will be similar to below flow.
-> > 
-> > 	 00 (Process A)				(Process B)
-> > 	 01 ESTABLISHED				ESTABLISHED
-> > 	 02 close()
-> > 	 03 FIN_WAIT_1
-> > 	 04 		---FIN-->
-> > 	 05 					CLOSE_WAIT
-> > 	 06 		<--ACK---
-> > 	 07 FIN_WAIT_2
-> > 	 08 		<--FIN/ACK---
-> > 	 09 TIME_WAIT
-> > 	 10 		---ACK-->
-> > 	 11 					LAST_ACK
-> > 	 12 CLOSED				CLOSED
-> > 
-> > In some cases such as LINGER option applied socket, the FIN and FIN/ACK
-> > will be substituted to RST and RST/ACK, but there is no difference in
-> > the main logic.
-> > 
-> > The acks in lines 6 and 8 are the acks.  If the line 8 packet is
-> > processed before the line 6 packet, it will be just ignored as it is not
-> > a expected packet, and the later process of the line 6 packet will
-> > change the status of Process A to FIN_WAIT_2, but as it has already
-> > handled line 8 packet, it will not go to TIME_WAIT and thus will not
-> > send the line 10 packet to Process B.  Thus, Process B will left in
-> > CLOSE_WAIT status, as below.
-> > 
-> > 	 00 (Process A)				(Process B)
-> > 	 01 ESTABLISHED				ESTABLISHED
-> > 	 02 close()
-> > 	 03 FIN_WAIT_1
-> > 	 04 		---FIN-->
-> > 	 05 					CLOSE_WAIT
-> > 	 06 				(<--ACK---)
-> > 	 07	  			(<--FIN/ACK---)
-> > 	 08 				(fired in right order)
-> > 	 09 		<--FIN/ACK---
-> > 	 10 		<--ACK---
-> > 	 11 		(processed in reverse order)
-> > 	 12 FIN_WAIT_2
-> > 
-> > Later, if the Process B sends SYN to Process A for reconnection using
-> > the same port, Process A will responds with an ACK for the last flow,
-> > which has no increased sequence number.  Thus, Process A will send RST,
-> > wait for TIMEOUT_INIT (one second in default), and then try
-> > reconnection.  If reconnections are frequent, the one second latency
-> > spikes can be a big problem.  Below is a tcpdump results of the problem:
-> > 
-> >     14.436259 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq 2560603644
-> >     14.436266 IP 127.0.0.1.4242 > 127.0.0.1.45150: Flags [.], ack 5, win 512
-> >     14.436271 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [R], seq 2541101298
-> >     /* ONE SECOND DELAY */
-> >     15.464613 IP 127.0.0.1.45150 > 127.0.0.1.4242: Flags [S], seq 2560603644
-> > 
-> > This commit mitigates the problem by reducing the delay for the next SYN
-> > if the suspicous ACK is received while in SYN_SENT state.
-> > 
-> > Following commit will add a selftest, which can be also helpful for
-> > understanding of this issue.
-> > 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  net/ipv4/tcp_input.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > index 2a976f57f7e7..baa4fee117f9 100644
-> > --- a/net/ipv4/tcp_input.c
-> > +++ b/net/ipv4/tcp_input.c
-> > @@ -5893,8 +5893,14 @@ static int tcp_rcv_synsent_state_process(struct sock *sk, struct sk_buff *skb,
-> >  		 *        the segment and return)"
-> >  		 */
-> >  		if (!after(TCP_SKB_CB(skb)->ack_seq, tp->snd_una) ||
-> > -		    after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt))
-> > +		    after(TCP_SKB_CB(skb)->ack_seq, tp->snd_nxt)) {
-> > +			/* Previous FIN/ACK or RST/ACK might be ignored. */
-> > +			if (icsk->icsk_retransmits == 0)
-> > +				inet_csk_reset_xmit_timer(sk,
-> > +						ICSK_TIME_RETRANS,
-> > +						TCP_TIMEOUT_MIN, TCP_RTO_MAX);
-> >  			goto reset_and_undo;
-> > +		}
-> >  
-> >  		if (tp->rx_opt.saw_tstamp && tp->rx_opt.rcv_tsecr &&
-> >  		    !between(tp->rx_opt.rcv_tsecr, tp->retrans_stamp,
-> > 
-> 
-> Please add my
-> 
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> 
-> Please resend the whole patch series as requested by netdev maintainers.
-> 
-> 
-> vi +134 Documentation/networking/netdev-FAQ.rst
-> 
-> Q: I made changes to only a few patches in a patch series should I resend only those changed?
-> ---------------------------------------------------------------------------------------------
-> A: No, please resend the entire patch series and make sure you do number your
-> patches such that it is clear this is the latest and greatest set of patches
-> that can be applied.
+The other option is that it's broken up into two new flags the first
+MREMAP_MUSTMOVE which can be used regardless of whether or not you're
+leaving the original mapping mapped. This would do exactly what it
+describes: move the mapping to a new address with or without
+MREMAP_FIXED, this keeps consistency with MAYMOVE.
 
-Thank you, just sent it: https://lore.kernel.org/linux-kselftest/20200202033827.16304-1-sj38.park@gmail.com/
+The second flag would be the new MREMAP_DONTUNMAP flag which requires
+MREMAP_MUSTMOVE, again with or without MREMAP_FIXED.
 
-Also, appreciate for kindly noticing the rule :)
-
-
-Thanks,
-SeongJae Park
-
-> 
-> 
+What are your thoughts on this?
