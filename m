@@ -2,156 +2,111 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57FDC3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF45C35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F232084E
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309AF20679
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oQptLglo";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="DAmbkNAw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcWdUf6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgBBLGP (ORCPT
+        id S1726905AbgBBLHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:06:15 -0500
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:31004 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBBLGP (ORCPT
+        Sun, 2 Feb 2020 06:07:35 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45006 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBBLHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:06:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1580641574; x=1612177574;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=XES2koAMzAn+jrNRN9pU7/oRTwoU1BNvGUcOReuP/RQ=;
-  b=oQptLglo5IODDYAOI3XhbvnV9NVkJ099F5q7Pq+cGQZabxzF8zYDcjpa
-   dLqe9v0zAy1RWw3q23NW7DAG6kQIsPFRc2nWXcoWPusoEHpWzPiNatMn2
-   yM+mff8F+248cKpQjtEYe8++8hSfOFyB2SKX6CI5SIm9UpvWtY18zDPcl
-   JUmPHza6MRUN85nIbpASVBplb5lQXEZDv0OrNCZTLM2p8qeMKTNcc+Wq6
-   /PwHEW8OawJOInOPIGiv84w3oOFiOXDPUtnTwSkWjEX7wzmvBdVd8425s
-   xA6t2bNDX8yhuzGWBn2kGoC4EJ0rBUL5i/zPkQIRYntVtYWdaaFkUNcve
-   A==;
-IronPort-SDR: nTaWWAEioI2uFmMN0+/5M1zKl6mugcztt5AwiBxqObfcHoMetYfV/3iBaio/XLKK3MkabgxRJf
- Pd6kql/LXOKpa+p3k7ZJE2qyG29mMr5KMG8Y5emsS5uR/v6kXwhYOOEo8fgPPfDIDKPxpsZyXW
- oSqHrR4GzGQi0/LCZvdv4t94mLy6IV+eSf9zGfhr9QsBXEISP5yzrcxjjsC69q/Vcwq/7INLgy
- skYgve6PLePfa/dvJoMsJcFGQDjd+gLeeOAL5l+Vqbx20dIRTmM5rsIfcK0mHvbINNRx74dIWU
- ulE=
-X-IronPort-AV: E=Sophos;i="5.70,393,1574092800"; 
-   d="scan'208";a="236870672"
-Received: from mail-co1nam11lp2171.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.171])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2020 19:06:13 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ECVVHzXIaWeGkic2BekVjXfNTte3mogTccsISYkGqFCCh/odK/eDEdMdcEbrBsbQE29OMRF85uXT8M/ImBYNLqV8h6Y9lQM649W3VT5clTliXfe41XWTgcW3xu+28CPgKwNxw6rQNtRJrdzptr8+O4S0SNhq+IYCLvJuRyD7GA2y7110hoWCfJMTusTQs8uW6Y93DaAZ1EpKAE8htKv1njFBhz8VDs8N+hGGTMboJK4C1NUU6zryB/rZQjNJ34mtGkE0LnFEKMqztiQFIW0oQFv99L5fX3Woe+Yw4ImTbVITFkUftkG+MBGxec3zNGNXK3mkSZfN9AdsY2064inNag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bsq9FT9moFZoKzWfdtb5BpXHbdCsbs3tT1XCbncxR8o=;
- b=AYyoP8guh95kxaUDhUBYaxV7NM1xpOPV1UVProy8YwNjNyXdQ+BnaspVcLACX8uZBg6XdyyitHbOgnw6y35JrYYo1GUrhFYcOfD9V2KihP0YH5DDEAg7yAAQMgkuzDEXt0ddKVjzv/kot6x2lf4THqnACvkPTjsMm+xJLKqRg2Q/s7RwMq5/qy3PUcB41rlIeaQud37eUmAM61jzqqVPPuQWqWgeSQXQKfvCDi7/Ou28MghZDX9JFrx5+IjTCNC0o92Yds5sxNyo0y9ZICy6zRHaP/NiA2/3VeVKRnoAlKDvoBuVimn/ujrSTajc2yuZWSbIKSU4l//1fGs+YpJNUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sun, 2 Feb 2020 06:07:35 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so11606309ljj.11
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:07:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bsq9FT9moFZoKzWfdtb5BpXHbdCsbs3tT1XCbncxR8o=;
- b=DAmbkNAwxMYC0DAPJD3aRYctHN1rkZTP5ZDUzC9+UihBTzv798OZHFHH1Rcz4DoDbtBjVWrhT6bBQSxyB/uX67r95/DzjRuQt2lZeQwMqa2jrg2vMwVEBLsxCNyetjYrf98gXRzH71RSPmbSAajjfSQgG172SvpbVXRGy0FtAKM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6333.namprd04.prod.outlook.com (52.132.169.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.26; Sun, 2 Feb 2020 11:06:11 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a9a0:3ffa:371f:ad89]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a9a0:3ffa:371f:ad89%7]) with mapi id 15.20.2686.031; Sun, 2 Feb 2020
- 11:06:11 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup Patel <anup.patel@wdc.com>, stable@vger.kernel.org
-Subject: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
-Date:   Sun,  2 Feb 2020 16:32:02 +0530
-Message-Id: <20200202110202.124048-1-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM4PR0902CA0015.eurprd09.prod.outlook.com
- (2603:10a6:200:9b::25) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ap1iT7SLhLil8Jw+Ki2RQaJZCtXHtNEHLUsGTg71AVg=;
+        b=dcWdUf6Ve1Iyamlavd+vB1+W/HWa87sxZS70lJNeguTYxtcYz9kbcdXy8BLIYGbLw9
+         OGCJeYyhbEs5mNiJFzOSP0r14U8xW/Io+hJxUYx6lcQ5nWLz/taEapFvyHer9zGKAD6y
+         CYAuakkaXI/syFc5G+abwykfV7TwLd4QfHvHHfrJsJa7BCYVueirSOSqe04c1hb3CeBf
+         dqW/ahPVKGVCrLC+PPDFv89Lba6gm6yfLote5URFft0bkGXWCdAp8u9LlRCAE4bgX1PR
+         6Zuyg4jgd3vyGe66Sw/R0ffBkETlCPGlzVfTN0ZzEL1b2bRUxUqdfJQoGdm6ynOb0C5X
+         10PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ap1iT7SLhLil8Jw+Ki2RQaJZCtXHtNEHLUsGTg71AVg=;
+        b=NWMHrg7gjwyELRyJnJCtMgtB+KHpeuyYwonY+EpWEx1aCq3O2hOQ+lG9VXLxLX/KL1
+         CbfzHwOnWWVdmvELNoND6GBkUdZgdzXK0W+WBgl69pLk0UWwpurjFnYgYtwA2Gw3bmVS
+         8wWDpkFZbPv4s/jJvNACLGPxLx7tK8Qk85Z636HCcBwwJjPu3q+Ey7nc8ejckVHs+UnF
+         bCqt2j9gX0KeF5+CYxM9E9NELiprkInXxBvtQgryTTFCB4X970HXvAi4YdH0hym6DkhL
+         VF/+NtRDEOkLEdUSoZJU7cCAFZl7UOsX3lAB4fO+ZHuAF1l0GuJOyUHeIg/ly7fvJdoF
+         ib4w==
+X-Gm-Message-State: APjAAAU7V0/5yozRUdUPuM2a7IOBAevzEaSIq12M/wNbKTEr6UGUEM9F
+        A/m7dLrh7m9KTttv6HQTsWpjU/U72nD/Uyu3/ZqY
+X-Google-Smtp-Source: APXvYqzbvmdRj73nXyO8buikoCIq8+kOxj41t7YwSIxjw8/CoklrW1ljkpZGIzMWoqnG08rXnoha4EIQCGx7HfE6vRU=
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr11107177ljj.191.1580641651453;
+ Sun, 02 Feb 2020 03:07:31 -0800 (PST)
 MIME-Version: 1.0
-Received: from wdc.com (151.216.142.133) by AM4PR0902CA0015.eurprd09.prod.outlook.com (2603:10a6:200:9b::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.29 via Frontend Transport; Sun, 2 Feb 2020 11:06:08 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [151.216.142.133]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b47ccb09-222c-4ca0-3f6a-08d7a7cfe925
-X-MS-TrafficTypeDiagnostic: MN2PR04MB6333:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR04MB633331918D2C4D61E815AB768D010@MN2PR04MB6333.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-Forefront-PRVS: 0301360BF5
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(136003)(39850400004)(396003)(189003)(199004)(8676002)(81166006)(81156014)(8936002)(66946007)(16526019)(186003)(7696005)(4326008)(66476007)(66556008)(26005)(478600001)(956004)(8886007)(52116002)(55016002)(6666004)(2616005)(1076003)(86362001)(36756003)(5660300002)(2906002)(110136005)(54906003)(316002)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6333;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Gw/8sQw5JnQ5RklLftya4FIy+3v94f+Spx31+hRNpnAUTWpPU9xTPQ5y/PkXyIUEigXJ//cUCm6OZuTMlF+kIKpX63EqzW4W6f1ERWlOW1J8RSmbGhNp1BHf/8m8VEIKanfBau4G/BjzXI6whVT6wGKjOSY5SgzDgCVxjlGCeyHJxHNzk84bJCiWBOIHDKO0dQ2X4DL2AIRuEz8dfsLho5OkBfkVF1ZPchjZ+D+vjos/Jz3/MSyChZKPuHqvgXs/iZnmTkajTbpm5x10p4rLg3mgNxDtcmj0TZ9TnLidsOdZlPTbIJ5Z2y3jBgaKMFQTpxunN2blcJkw8lI08XbtZnJtXPoD+JTKbU3gH3+kZQh8bcyDAfWQ8VNsJNq2QpWV+fphHMeEjWv1xWAfz0uAz6N7YqMTHF82ME+aIL6KE9WaB/J+rM0ulO1JuEj0FrNl
-X-MS-Exchange-AntiSpam-MessageData: B1Q6WkUWIGAhYYBzPlJslz/T9erwgvDSof4CTVmJ/Z9M0+bdMnTVoiDrqfoDpGR9lndwNwk2Ak0PRKEfb43uXh2EttphSybke3oajA9x7Ilvipr+qnTYfyJZlSMEDdxWN4d78z5gJqyqbVye1hSVUw==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b47ccb09-222c-4ca0-3f6a-08d7a7cfe925
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2020 11:06:11.2103
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g45Bk6FYNJnm3TEc3PRzLiLFEUekIFV5k18HftKvBKq4MHo0zgoCvKFr0tf6JwJ6/TfMZdO9bwj8CEpc5OMOLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6333
+References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
+ <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
+ <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
+ <20200131183658.GA71555@gmail.com> <CAPcyv4iYSptWo42p1Lnbr4NWRiWG2sat+f3t8Q0kPeiiXHx3fg@mail.gmail.com>
+ <CADDKRnBeB5T7ZW2LxJQMR=AjD-OyOGBs4gqH0O9_frJ5zR5E7Q@mail.gmail.com>
+ <CAKv+Gu9C2gR629xegjVfVkrPhAuG5brONzbL9iDgPSPW0Ffbbw@mail.gmail.com> <20200202092255.GA72728@gmail.com>
+In-Reply-To: <20200202092255.GA72728@gmail.com>
+From:   =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+Date:   Sun, 2 Feb 2020 12:07:20 +0100
+Message-ID: <CADDKRnAo9B=+cNO-_VbH4yADVsQqaTb61ithqxohYCwgAm6pvg@mail.gmail.com>
+Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Historically, we have been enabling all interrupts for each
-HART in trap_init(). Ideally, we should only enable M-mode
-interrupts for M-mode kernel and S-mode interrupts for S-mode
-kernel in trap_init().
+Am So., 2. Feb. 2020 um 10:22 Uhr schrieb Ingo Molnar <mingo@kernel.org>:
+>
+>
+> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> > Hello J=C3=B6rg,
+> >
+> > Could you please try whether the change below fixes the issue?
+> >
+> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> > index 59f7f6d60cf6..ae923ee8e2b4 100644
+> > --- a/arch/x86/platform/efi/efi.c
+> > +++ b/arch/x86/platform/efi/efi.c
+> > @@ -308,7 +308,7 @@ static void __init efi_clean_memmap(void)
+> >                         .phys_map =3D efi.memmap.phys_map,
+> >                         .desc_version =3D efi.memmap.desc_version,
+> >                         .desc_size =3D efi.memmap.desc_size,
+> > -                       .size =3D data.desc_size * (efi.memmap.nr_map -=
+ n_removal),
+> > +                       .size =3D efi.memmap.desc_size * (efi.memmap.nr=
+_map - n_removal),
+> >                         .flags =3D 0,
+>
+> Oh, I actually noticed this one, but convinced myself that it's correct,
+> because GCC didn't warn about uninitialized data.
+>
+> But maybe in this weird case data.desc_size as used within its own
+> initializer is zero?
+>
+Patch makes my kernel booting again :)
 
-Currently, we get suprious S-mode interrupts on Kendryte K210
-board running M-mode NO-MMU kernel because we are enabling all
-interrupts in trap_init(). To fix this, we only enable software
-and external interrupt in trap_init(). In future, trap_init()
-will only enable software interrupt and PLIC driver will enable
-external interrupt using CPU notifiers.
-
-Cc: stable@vger.kernel.org
-Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
- arch/riscv/kernel/traps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index f4cad5163bf2..ffb3d94bf0cc 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -156,6 +156,6 @@ void __init trap_init(void)
- 	csr_write(CSR_SCRATCH, 0);
- 	/* Set the exception vector address */
- 	csr_write(CSR_TVEC, &handle_exception);
--	/* Enable all interrupts */
--	csr_write(CSR_IE, -1);
-+	/* Enable interrupts */
-+	csr_write(CSR_IE, IE_SIE | IE_EIE);
- }
--- 
-2.17.1
-
+Thanks, J=C3=B6rg
