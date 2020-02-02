@@ -2,169 +2,113 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7FEC3524A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 10:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F75C35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 10:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACF1206E6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 10:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580640084;
-	bh=DjmOvLJxu6nBLbbp0bEQYG1bPbOlqP5KLiv8uBsHamI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xhHC4kasLytB6uEYUm/HTfT9YAtY/Qd6lFuQppKuRhlCYzWP/P0MLZ13KIDs8zbxL
-	 DidcGXFY1a2iRqW3OoUKEDUvyB9BFzSwH1Opum9HL/iFRpMDndVHSbZJPupmLQ/RS+
-	 Jn/9xIoRV8wBbnqPvjLGcGNb0KvjsIA2L8nf8DRU=
+	by mail.kernel.org (Postfix) with ESMTP id 6BF66206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 10:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Zn/grn00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgBBKlX (ORCPT
+        id S1726814AbgBBKrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 05:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgBBKlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 05:41:23 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D71206D3;
-        Sun,  2 Feb 2020 10:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580640081;
-        bh=DjmOvLJxu6nBLbbp0bEQYG1bPbOlqP5KLiv8uBsHamI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zsScn23DkdukUMrzFoLdl+wnQYrmmOGE0mcqREqvOfdr7AbfUVYlITC5u90Ecxxfa
-         XH/vUshLwOEDVRCdYccZFqmaMQDYyi8zBdLfGvcjoSC3+RjVaRdmPitpumWMoDp9A0
-         J2eCm5TVek2pOh0qrS30wga6fSYe3Et/NPRPkJVY=
-Date:   Sun, 2 Feb 2020 10:41:16 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 1/5] iio: core: Handle 'dB' suffix in core
-Message-ID: <20200202104116.4f9fa9f3@archlinux>
-In-Reply-To: <20200129142301.13918-2-beniamin.bia@analog.com>
-References: <20200129142301.13918-1-beniamin.bia@analog.com>
-        <20200129142301.13918-2-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 2 Feb 2020 05:47:05 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:8763 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBBKrF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 05:47:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1580640424; x=1612176424;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yjQuSD40krTJ5lbMtA0mAHZ+m2VaBFNpM0wv92vjO+w=;
+  b=Zn/grn00BluzHpNNHkpeSi9GnIMUpCPrAx024twF5YKT40DTS4eORtMM
+   U/SMqwStcAjuGJdRnGrw3qRV1V7At5fT/Gh6RMb78r0kUupZpfiPIOH5f
+   Y+7srgYBgJW5Fit5FgvDLP66ANedS87AfoRc5Xq/e9miV1QPFOpq2Cnw/
+   P67MkZPsEDWS1P/UGS67nIJwIfdBIJoAhYgcvyDio3ijz+Kd13Alkgjp1
+   yRtfzomGH0Ywr8UfnyTuJAnHnOXurxoneFcJ2sNLUdQEHvpW8WLBN6g4M
+   aM398K3BgU7fplqYkYKlKuRITggBKIuCXepJ9ZfwY6wjUkdtr4a9TX0bH
+   A==;
+IronPort-SDR: rFEBJ/1hooDXnzcwk5Ok5OV0PjUkIaUsHad/2Y0BiRVSbVh/+LJNCtErWBQ2sOlWGF05+QjCQc
+ QSU0Nt9tVFDATvpvadhhpmcRkVNYRSshn7VfHgvlmqNsao3SRd7axJlyX1MMuKUqW6d2lnZ5z9
+ vZnvKLnhwqc5QdQYTUngvEkZ7dzjKw2AdMK2VBcffHkdrQCPY3AHGJnyE64VB81VxCYnQEYozF
+ 9/b5socf9+hUCkf+6ZZGr3LdPmkW83wNPkU77JGOw5wvnxyysGD9Tbp6sRAMQlrBhV/IjPkUYV
+ 8fw=
+X-IronPort-AV: E=Sophos;i="5.70,393,1574092800"; 
+   d="scan'208";a="128925954"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Feb 2020 18:47:04 +0800
+IronPort-SDR: uWC/UjAy3RSeXoawdu71gaPnTIkUpcSquMBkylKgNYoSFtvK29Ec4vAt8BlAp8X5h2hNwcxd4V
+ QeQTd3kW4IQX0aifVvwSTZtCvduIvM/OV/F3iYLBVqTsvYg51js7vLIBHKIYiJ/k+IIaJ2hcnD
+ EQawLYtQas8zISsC1PVoTQ7Ki9O3A4XHQIBQhz0dgtTEZGWvlaKb1ku3wkQbCD7pxaIXOLGIbp
+ KwK/2D0ds8+G4MBdi03f1Ljo+t8fFQtTv2Z9GeHo5WhAajOi0A1lunYZCAZVt4+jw8J8zuEbTh
+ ClCjFMyUJHvVuVl3KxER4mPY
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2020 02:40:11 -0800
+IronPort-SDR: g+9jY9rY9xTXIIquZP0DDVLcZSPrWRPo0vTrMzg+040639CnXVwSeI6U80xQFEATz74GDlXKSa
+ cNIo6iZAk9RQ9T7Bw5rpccjU31iLscLc0yXwxhRwuECepKHv8UEkAphwTxX/L0iU03GHvxCKHn
+ ZV3E8/HVRkIWmDEn5/W844o+tuBWGt/eMmIARHkte4jmNI5JGM+kvlJLBdAGDAi+CEHFXjhP6E
+ VuflnumyduM2YD4ClhaAIJw60vaZhg1/Gy3h6Cu0FS9hxUvTkcFVbGgb1Q8xXuJwTBUWxeCSo1
+ TLE=
+WDCIronportException: Internal
+Received: from kfae419068.sdcorp.global.sandisk.com ([10.0.231.195])
+  by uls-op-cesaip01.wdc.com with ESMTP; 02 Feb 2020 02:47:02 -0800
+From:   Avi Shchislowski <avi.shchislowski@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     Avi Shchislowski <avi.shchislowski@wdc.com>
+Subject: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
+Date:   Sun,  2 Feb 2020 12:46:54 +0200
+Message-Id: <1580640419-6703-1-git-send-email-avi.shchislowski@wdc.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Jan 2020 16:22:57 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+UFS3.0 allows using the ufs device as a temperature sensor. The
+purpose of this feature is to provide notification to the host of the
+UFS device case temperature. It allows reading of a rough estimate
+(+-10 degrees centigrade) of the current case temperature, And
+setting a lower and upper temperature bounds, in which the device
+will trigger an applicable exception event.
 
-> This patch handles the db suffix used for writing micro db values.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  drivers/iio/industrialio-core.c | 35 ++++++++++++++++++++++++++++++---
->  1 file changed, 32 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 65ff0d067018..b70111837420 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -769,17 +769,18 @@ static ssize_t iio_read_channel_info_avail(struct device *dev,
->  }
->  
->  /**
-> - * iio_str_to_fixpoint() - Parse a fixed-point number from a string
-> + * __iio_str_to_fixpoint() - Parse a fixed-point number from a string
->   * @str: The string to parse
->   * @fract_mult: Multiplier for the first decimal place, should be a power of 10
->   * @integer: The integer part of the number
->   * @fract: The fractional part of the number
-> + * @scale_db: True if this should parse as dB
->   *
->   * Returns 0 on success, or a negative error code if the string could not be
->   * parsed.
->   */
-> -int iio_str_to_fixpoint(const char *str, int fract_mult,
-> -	int *integer, int *fract)
-> +int __iio_str_to_fixpoint(const char *str, int fract_mult,
-> +			  int *integer, int *fract, bool scale_db)
->  {
->  	int i = 0, f = 0;
->  	bool integer_part = true, negative = false;
-> @@ -810,6 +811,10 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
->  				break;
->  			else
->  				return -EINVAL;
-> +		} else if (!strncmp(str, " dB", sizeof(" dB") - 1) && scale_db) {
+We added the capability of responding to such notifications, while
+notifying the kernel's thermal core, which further exposes the thermal
+zone attributes to user space. UFS temperature attributes are all
+read-only, so only thermal read ops (.get_xxx) can be implemented.
 
-I think we need to ignore spacing between the value and the dB.
+Avi Shchislowski (5):
+  scsi: ufs: Add ufs thermal support
+  scsi: ufs: export ufshcd_enable_ee
+  scsi: ufs: enable thermal exception event
+  scsi: ufs-thermal: implement thermal file ops
+  scsi: ufs: temperature atrributes add to ufs_sysfs
 
-We could do that by ignoring spaces in general, but that will lead
-to odd results in other cases.  Perhaps we just need to handle " dB" and "dB"
-to cover likely options?
+ drivers/scsi/ufs/Kconfig       |  11 ++
+ drivers/scsi/ufs/Makefile      |   1 +
+ drivers/scsi/ufs/ufs-sysfs.c   |   6 +
+ drivers/scsi/ufs/ufs-thermal.c | 247 +++++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufs-thermal.h |  25 +++++
+ drivers/scsi/ufs/ufs.h         |  20 +++-
+ drivers/scsi/ufs/ufshcd.c      |   9 +-
+ drivers/scsi/ufs/ufshcd.h      |  12 ++
+ 8 files changed, 329 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/scsi/ufs/ufs-thermal.c
+ create mode 100644 drivers/scsi/ufs/ufs-thermal.h
 
-> +			/* Ignore the dB suffix */
-> +			str += sizeof(" dB") - 1;
-> +			continue;
->  		} else if (*str == '.' && integer_part) {
->  			integer_part = false;
->  		} else {
-> @@ -832,6 +837,22 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
->  }
->  EXPORT_SYMBOL_GPL(iio_str_to_fixpoint);
->  
-> +/**
-> + * iio_str_to_fixpoint() - Parse a fixed-point number from a string
-> + * @str: The string to parse
-> + * @fract_mult: Multiplier for the first decimal place, should be a power of 10
-> + * @integer: The integer part of the number
-> + * @fract: The fractional part of the number
-> + *
-> + * Returns 0 on success, or a negative error code if the string could not be
-> + * parsed.
-> + */
-> +int iio_str_to_fixpoint(const char *str, int fract_mult,
-> +			int *integer, int *fract)
-> +{
-> +	return __iio_str_to_fixpoint(str, fract_mult, integer, fract, false);
-> +}
-> +
->  static ssize_t iio_write_channel_info(struct device *dev,
->  				      struct device_attribute *attr,
->  				      const char *buf,
-> @@ -842,6 +863,7 @@ static ssize_t iio_write_channel_info(struct device *dev,
->  	int ret, fract_mult = 100000;
->  	int integer, fract = 0;
->  	bool is_char = false;
-> +	bool scale_db = false;
->  
->  	/* Assumes decimal - precision based on number of digits */
->  	if (!indio_dev->info->write_raw)
-> @@ -853,6 +875,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
->  		case IIO_VAL_INT:
->  			fract_mult = 0;
->  			break;
-> +		case IIO_VAL_INT_PLUS_MICRO_DB:
-> +			scale_db = true;
-> +			/* fall through */
->  		case IIO_VAL_INT_PLUS_MICRO:
->  			fract_mult = 100000;
->  			break;
-> @@ -877,6 +902,10 @@ static ssize_t iio_write_channel_info(struct device *dev,
->  		if (ret)
->  			return ret;
->  	}
-> +	ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
-> +				    scale_db);
-> +	if (ret)
-> +		return ret;
->  
->  	ret = indio_dev->info->write_raw(indio_dev, this_attr->c,
->  					 integer, fract, this_attr->address);
+-- 
+1.9.1
 
