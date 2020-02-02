@@ -2,112 +2,373 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D5FC35240
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDC3C35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5CD2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKbbrJgh"
+	by mail.kernel.org (Postfix) with ESMTP id 86AE8206E6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580636056;
+	bh=36ErpYtvk0vO6IQK2bXB47/iGmAd+jPsmD0foXUCyU0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hHHWiFdgyHZ/i/Xgzr1Bsn7JqY6b5N67st6m5iu5cQbMYz67gMYzgsTkK6ZnDq46a
+	 susr+wf5+fBesI2+CI1tLg68x8z7WrIESJXonrv6qyOjw/SOkyfca+U/+tSe5QphTA
+	 aE+sgCj9z3k6fOAfW/7mmvqAzGbAMMUniyd/S0YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgBBJc0 (ORCPT
+        id S1726859AbgBBJeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 04:32:26 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53630 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBBJc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 04:32:26 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s10so12648675wmh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 01:32:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qMT94qpo08FV4JrVN2N33KTdwZL0E+uToQonSqkknrY=;
-        b=TKbbrJghnHSsK9G5qTvMvN+qZV8beOC1UJdIaBCa7to8QUHx7gvvfk8hOk3TdWIFmM
-         URHiS8zNLACQ2fBJP+Xkg1uWeBqKGsyfgBIQroREpmvXGdohLnhUt86QU1mED8qG6JGj
-         VfHx7TIXWELCSqJrp2lkS2dKlxd2l/9L5SYIr+kPVupL82XI2yNzuyw9lXeSjFF55Cxq
-         xB8xtTdiJxRZK6he6rtheSBdk40B8yT4wM1TPbmUhurVs73HeWn8R5+sinI8S3YYR+E2
-         9PUrchJYp6hsm0PPNJbbYA6zp176RWPJHBPB6HPwKpoFZ81cMctfWcmOzJp0zvIOMHUC
-         YvuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qMT94qpo08FV4JrVN2N33KTdwZL0E+uToQonSqkknrY=;
-        b=VIWuLZcsp7zfwsUr5nTfnZbcK4qrckCK5VT+rtM/X6Wp2s66fPARvdxzu/VSQFc4nc
-         EXpORM4z05JuR9O6GWUPFCNcqk2qrSvroNp7cbP4WwFakUbUpQDGQuvVFDtsv3kDQ3Bt
-         zgFDJtGlsDegT7LhVfxP8b4pGZSMQa4cMEurUzumFphn1JbaoH3ZIkTA0dSkZ9JN7l9b
-         5Y4qJqPPG7qhMOaAHLupS8KmzMYFo88b5GHtp2wdccePED/9ujbwodOTdMv3pkuSstDz
-         ZqJpElMsDILTMgsDo5+AUJyC5HGPbqzoWYEizrhWDxF52Fl4UhLPktNnQJmyAnmFWL1f
-         Pjpw==
-X-Gm-Message-State: APjAAAXuK43lWiBdxk+0eUjcW4Od8uZJYZjddAjsBoymnSWqPsSf3Jlm
-        ELUIgvpdlIrgfX4DE3nEhoDg8xiuKvlCTQMfQB7eHw==
-X-Google-Smtp-Source: APXvYqyZH3VKlE/1dNe3lKk3WSMDzRxZuqLWT11AUrlEQA5plypiZHhkffqpUiFx1DKvwIJr+T2v0jUve4FVsyAMBAk=
-X-Received: by 2002:a1c:bc46:: with SMTP id m67mr22350008wmf.40.1580635942488;
- Sun, 02 Feb 2020 01:32:22 -0800 (PST)
+        Sun, 2 Feb 2020 04:34:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbgBBJeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 04:34:15 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5636E2067C;
+        Sun,  2 Feb 2020 09:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580636054;
+        bh=36ErpYtvk0vO6IQK2bXB47/iGmAd+jPsmD0foXUCyU0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=w0YW9PP88SoHPxqAjGjkd+xklrlTELobej4YCqjwF1OaH4PyUdoHIGByW0nIqXiCS
+         71EqRlOPret+O5yxOge2ExwNpXknbuhYq3Nnp93kb1YW1JM2lxf6NfRBSaCoBVLIQU
+         LoZtbch7OlfsA8S6re8LHbG92E9lKqBJ54uqRhR8=
+Date:   Sun, 2 Feb 2020 09:34:08 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: vncl4000: Enable runtime pm for
+ vcnl4200/4040
+Message-ID: <20200202093408.26bc63b8@archlinux>
+In-Reply-To: <237488ddf8f2707e905164c0ec81a7979f1fa9a9.1580391472.git.agx@sigxcpu.org>
+References: <cover.1580391472.git.agx@sigxcpu.org>
+        <237488ddf8f2707e905164c0ec81a7979f1fa9a9.1580391472.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CADDKRnANovPM5Xvme7Ywg8KEMUyP-gB0M-ufxKD8pw0gNwtFag@mail.gmail.com>
- <CAHk-=wjOXE4cqFOdtSymYnMMayZq8Lv7qDy-6BzCs=2=8HcoBA@mail.gmail.com>
- <20200131064327.GB130017@gmail.com> <CADDKRnATVt9JjgV+dAZDH9C3=goJ5=TzdZ8EJMjT8tKP+Uhezw@mail.gmail.com>
- <20200131183658.GA71555@gmail.com> <CAPcyv4iYSptWo42p1Lnbr4NWRiWG2sat+f3t8Q0kPeiiXHx3fg@mail.gmail.com>
- <CADDKRnBeB5T7ZW2LxJQMR=AjD-OyOGBs4gqH0O9_frJ5zR5E7Q@mail.gmail.com>
- <CAKv+Gu9C2gR629xegjVfVkrPhAuG5brONzbL9iDgPSPW0Ffbbw@mail.gmail.com> <20200202092255.GA72728@gmail.com>
-In-Reply-To: <20200202092255.GA72728@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sun, 2 Feb 2020 10:32:11 +0100
-Message-ID: <CAKv+Gu-QfKgXStODzbpwSFTHsgiSzFVKdbYiuhVPQF+XtV2MEA@mail.gmail.com>
-Subject: Re: EFI boot crash regression (was: Re: 5.6-### doesn't boot)
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     =?UTF-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Feb 2020 at 10:22, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> > Hello J=C3=B6rg,
-> >
-> > Could you please try whether the change below fixes the issue?
-> >
-> > diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> > index 59f7f6d60cf6..ae923ee8e2b4 100644
-> > --- a/arch/x86/platform/efi/efi.c
-> > +++ b/arch/x86/platform/efi/efi.c
-> > @@ -308,7 +308,7 @@ static void __init efi_clean_memmap(void)
-> >                         .phys_map =3D efi.memmap.phys_map,
-> >                         .desc_version =3D efi.memmap.desc_version,
-> >                         .desc_size =3D efi.memmap.desc_size,
-> > -                       .size =3D data.desc_size * (efi.memmap.nr_map -=
- n_removal),
-> > +                       .size =3D efi.memmap.desc_size * (efi.memmap.nr=
-_map - n_removal),
-> >                         .flags =3D 0,
->
-> Oh, I actually noticed this one, but convinced myself that it's correct,
-> because GCC didn't warn about uninitialized data.
->
-> But maybe in this weird case data.desc_size as used within its own
-> initializer is zero?
->
+On Thu, 30 Jan 2020 14:42:36 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-Something like that, yes. Note that size and desc_size appear in
-opposite order in the struct definition, and this may also affect how
-the compiler handles this.
+> This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0
+> we don't do anything since they use on demand measurement.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+Hi Guido,
+
+A few minor things inline, but otherwise looks good to me.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/light/vcnl4000.c | 135 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 124 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 8f198383626b..1395875d9553 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+> +#include <linux/pm_runtime.h>
+> =20
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -57,6 +58,8 @@
+>  #define VCNL4000_AL_OD		BIT(4) /* start on-demand ALS measurement */
+>  #define VCNL4000_PS_OD		BIT(3) /* start on-demand proximity measurement =
+*/
+> =20
+> +#define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspe=
+nd */
+> +
+>  enum vcnl4000_device_ids {
+>  	VCNL4000,
+>  	VCNL4010,
+> @@ -87,6 +90,7 @@ struct vcnl4000_chip_spec {
+>  	int (*init)(struct vcnl4000_data *data);
+>  	int (*measure_light)(struct vcnl4000_data *data, int *val);
+>  	int (*measure_proximity)(struct vcnl4000_data *data, int *val);
+> +	int (*set_power_state)(struct vcnl4000_data *data, bool on);
+>  };
+> =20
+>  static const struct i2c_device_id vcnl4000_id[] =3D {
+> @@ -99,6 +103,12 @@ static const struct i2c_device_id vcnl4000_id[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, vcnl4000_id);
+> =20
+> +static int vcnl4000_set_power_state(struct vcnl4000_data *data, bool on)
+> +{
+> +	/* no suspend op */
+> +	return 0;
+> +}
+> +
+>  static int vcnl4000_init(struct vcnl4000_data *data)
+>  {
+>  	int ret, prod_id;
+> @@ -127,9 +137,31 @@ static int vcnl4000_init(struct vcnl4000_data *data)
+>  	data->al_scale =3D 250000;
+>  	mutex_init(&data->vcnl4000_lock);
+> =20
+> +	ret =3D data->chip_spec->set_power_state(data, true);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  };
+> =20
+> +static int vcnl4200_set_power_state(struct vcnl4000_data *data, bool on)
+> +{
+> +	u16 val =3D on ? 0 /* power on */ : 1 /* shut down */;
+> +	int ret;
+> +
+> +	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Wait at least one integration cycle before fetching data */
+> +	data->vcnl4200_al.last_measurement =3D ktime_get();
+> +	data->vcnl4200_ps.last_measurement =3D ktime_get();
+
+Hmm.  Feels like these only really make sense if we are turning on?
+They may do no harm in the off path, but better if the code makes
+it clear they are irrelevant in that path.
+
+No return value.
+
+i.e. return 0;
+> +}
+> +
+>  static int vcnl4200_init(struct vcnl4000_data *data)
+>  {
+>  	int ret, id;
+> @@ -155,14 +187,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+> =20
+>  	data->rev =3D (ret >> 8) & 0xf;
+> =20
+> -	/* Set defaults and enable both channels */
+> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	data->vcnl4200_al.reg =3D VCNL4200_AL_DATA;
+>  	data->vcnl4200_ps.reg =3D VCNL4200_PS_DATA;
+>  	switch (id) {
+> @@ -180,11 +204,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  		data->al_scale =3D 120000;
+>  		break;
+>  	}
+> -	data->vcnl4200_al.last_measurement =3D ktime_set(0, 0);
+> -	data->vcnl4200_ps.last_measurement =3D ktime_set(0, 0);
+>  	mutex_init(&data->vcnl4200_al.lock);
+>  	mutex_init(&data->vcnl4200_ps.lock);
+> =20
+> +	ret =3D data->chip_spec->set_power_state(data, true);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  };
+> =20
+> @@ -291,24 +317,28 @@ static const struct vcnl4000_chip_spec vcnl4000_chi=
+p_spec_cfg[] =3D {
+>  		.init =3D vcnl4000_init,
+>  		.measure_light =3D vcnl4000_measure_light,
+>  		.measure_proximity =3D vcnl4000_measure_proximity,
+> +		.set_power_state =3D vcnl4000_set_power_state,
+>  	},
+>  	[VCNL4010] =3D {
+>  		.prod =3D "VCNL4010/4020",
+>  		.init =3D vcnl4000_init,
+>  		.measure_light =3D vcnl4000_measure_light,
+>  		.measure_proximity =3D vcnl4000_measure_proximity,
+> +		.set_power_state =3D vcnl4000_set_power_state,
+>  	},
+>  	[VCNL4040] =3D {
+>  		.prod =3D "VCNL4040",
+>  		.init =3D vcnl4200_init,
+>  		.measure_light =3D vcnl4200_measure_light,
+>  		.measure_proximity =3D vcnl4200_measure_proximity,
+> +		.set_power_state =3D vcnl4200_set_power_state,
+>  	},
+>  	[VCNL4200] =3D {
+>  		.prod =3D "VCNL4200",
+>  		.init =3D vcnl4200_init,
+>  		.measure_light =3D vcnl4200_measure_light,
+>  		.measure_proximity =3D vcnl4200_measure_proximity,
+> +		.set_power_state =3D vcnl4200_set_power_state,
+>  	},
+>  };
+> =20
+> @@ -323,6 +353,23 @@ static const struct iio_chan_spec vcnl4000_channels[=
+] =3D {
+>  	}
+>  };
+> =20
+> +static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, boo=
+l on)
+> +{
+> +	struct device *dev =3D &data->client->dev;
+> +	int ret;
+> +
+> +	if (on) {
+> +		ret =3D pm_runtime_get_sync(dev);
+> +		if (ret < 0)
+> +			pm_runtime_put_noidle(dev);
+> +	} else {
+> +		pm_runtime_mark_last_busy(dev);
+> +		ret =3D pm_runtime_put_autosuspend(dev);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int vcnl4000_read_raw(struct iio_dev *indio_dev,
+>  				struct iio_chan_spec const *chan,
+>  				int *val, int *val2, long mask)
+> @@ -332,6 +379,10 @@ static int vcnl4000_read_raw(struct iio_dev *indio_d=
+ev,
+> =20
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_RAW:
+> +		ret =3D vcnl4000_set_pm_runtime_state(data, true);
+> +		if  (ret < 0)
+> +			return ret;
+> +
+>  		switch (chan->type) {
+>  		case IIO_LIGHT:
+>  			ret =3D data->chip_spec->measure_light(data, val);
+> @@ -346,6 +397,7 @@ static int vcnl4000_read_raw(struct iio_dev *indio_de=
+v,
+>  		default:
+>  			ret =3D -EINVAL;
+>  		}
+> +		vcnl4000_set_pm_runtime_state(data, false);
+>  		return ret;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		if (chan->type !=3D IIO_LIGHT)
+> @@ -394,7 +446,22 @@ static int vcnl4000_probe(struct i2c_client *client,
+>  	indio_dev->name =3D VCNL4000_DRV_NAME;
+>  	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> =20
+> -	return devm_iio_device_register(&client->dev, indio_dev);
+> +	ret =3D pm_runtime_set_active(&client->dev);
+> +	if (ret < 0)
+> +		goto fail_poweroff;
+> +
+> +	ret =3D iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto fail_poweroff;
+> +
+> +	pm_runtime_enable(&client->dev);
+> +	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4000_SLEEP_DELAY_MS);
+> +	pm_runtime_use_autosuspend(&client->dev);
+> +
+> +	return 0;
+> +fail_poweroff:
+> +	data->chip_spec->set_power_state(data, false);
+> +	return ret;
+>  }
+> =20
+>  static const struct of_device_id vcnl_4000_of_match[] =3D {
+> @@ -422,13 +489,59 @@ static const struct of_device_id vcnl_4000_of_match=
+[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, vcnl_4000_of_match);
+> =20
+> +static int vcnl4000_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +
+> +	pm_runtime_dont_use_autosuspend(&client->dev);
+> +	pm_runtime_disable(&client->dev);
+> +	iio_device_unregister(indio_dev);
+> +	pm_runtime_set_suspended(&client->dev);
+> +
+> +	return data->chip_spec->set_power_state(data, false);
+> +}
+> +
+> +static int __maybe_unused vcnl4000_runtime_suspend(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D data->chip_spec->set_power_state(data, false);
+> +
+> +	return ret;
+
+	return data->chip_spec...
+
+> +}
+> +
+> +static int __maybe_unused vcnl4000_runtime_resume(struct device *dev)
+> +{
+> +	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D data->chip_spec->set_power_state(data, true);
+> +	if (ret < 0)
+> +		return ret;
+
+I would define the set_power_state callback to return only < 0 for error
+and 0 for no error.  (already true).
+
+then
+
+return data->chip_spec->set_power_state(data, true);
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops vcnl4000_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(vcnl4000_runtime_suspend,
+> +			   vcnl4000_runtime_resume, NULL)
+> +};
+> +
+>  static struct i2c_driver vcnl4000_driver =3D {
+>  	.driver =3D {
+>  		.name   =3D VCNL4000_DRV_NAME,
+> +		.pm	=3D &vcnl4000_pm_ops,
+>  		.of_match_table =3D vcnl_4000_of_match,
+>  	},
+>  	.probe  =3D vcnl4000_probe,
+>  	.id_table =3D vcnl4000_id,
+> +	.remove	=3D vcnl4000_remove,
+>  };
+> =20
+>  module_i2c_driver(vcnl4000_driver);
+
