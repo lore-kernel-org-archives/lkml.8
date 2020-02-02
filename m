@@ -2,138 +2,160 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A5CC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 00:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C14C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 00:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB01E20661
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 00:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E32020661
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 00:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="L8wlQXKn"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VK5rhb2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgBBAQQ (ORCPT
+        id S1726804AbgBBAU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 19:16:16 -0500
-Received: from mout.gmx.net ([212.227.17.22]:53859 "EHLO mout.gmx.net"
+        Sat, 1 Feb 2020 19:20:57 -0500
+Received: from mout.gmx.net ([212.227.15.19]:60861 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgBBAQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 19:16:15 -0500
+        id S1726708AbgBBAU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 19:20:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1580602565;
-        bh=Iz6JnGq++RMIHsnw+FCQtg3vRLAqepeZ+BGIjR4JFrg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=L8wlQXKntARNcKFFfwBJh+0xPAOUQs1/q5LBfpyJmlgBMyvhJaapsylinE2lAYS0S
-         5JakKh3cg8/ZvcsCO0AMX+uVxkm033aoDBq1OOmtZo3H1Z3CgyVcjwTeqE/y8rDzLG
-         B+gBh6USNNyQwYXtg4cfe2g8MAL880wzQjYdwqHc=
+        s=badeba3b8450; t=1580602846;
+        bh=f+zPvhIF10NZ+fPK3wRSAJN5xlV3fRtp56Osd4BOzFk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=VK5rhb2m+cQ20TwunmdLt6169V29Pz+tTv1SxHOInX00crRvg3dyUyB//WQ/ZXb6y
+         H9yl7aE+IPrBCtP2dnQXSVn7wvHc/Ob8RMv4xFh9nBSroJ7KP190xR35L4wMbpzVdu
+         FzjF6T70yU8t5/jOCI/IUSj1Z5fyrLeENkua8MeI=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from chef ([212.114.254.236]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MQ5rU-1jBISj0fNQ-00M06l; Sun, 02
- Feb 2020 01:16:05 +0100
+Received: from localhost.localdomain ([212.114.250.16]) by mail.gmx.com
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MUowV-1j7Dw7211l-00QmZF; Sun, 02 Feb 2020 01:20:46 +0100
 From:   Julian Sax <jsbc@gmx.de>
 To:     Joe Perches <joe@perches.com>
-Cc:     amd-gfx@lists.freedesktop.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+Cc:     Julian Sax <jsbc@gmx.de>, Felix Kuehling <Felix.Kuehling@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?Q?K=C3=B6ni?= =?utf-8?Q?g?= 
-        <christian.koenig@amd.com>,
-        "David \(ChunMing\) Zhou" <David1.Zhou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/amdkfd: Make process queues logs less verbose
-References: <20200201231101.2127964-1-jsbc@gmx.de>
-        <b9b671508d478469c1ad43206dd29d770bfb7818.camel@perches.com>
-Date:   Sun, 02 Feb 2020 01:14:46 +0100
-In-Reply-To: <b9b671508d478469c1ad43206dd29d770bfb7818.camel@perches.com> (Joe
-        Perches's message of "Sat, 01 Feb 2020 15:37:43 -0800")
-Message-ID: <87lfpl4zgp.fsf@chef>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Subject: [PATCH v2] drm/amdkfd: Make process queues logs less verbose
+Date:   Sun,  2 Feb 2020 01:18:01 +0100
+Message-Id: <20200202001801.2493508-1-jsbc@gmx.de>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <b9b671508d478469c1ad43206dd29d770bfb7818.camel@perches.com>
+References: <b9b671508d478469c1ad43206dd29d770bfb7818.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:XjKgjo79yS+CkYFZyTj8MqnkUUEbS8HMXP9NflgFBKb9W2PPEDF
- weuvBWkVjtKfrd21VgGpBZyxTSpanfQKcEdTRev4+VPYFz3h1hkTruiVbpuUcg0c+5Ah1mk
- N6MuAW3+dOSqp360Z7kTxr66j6wyGT+pxn2sC7qAMaGJCPkwIjRJ3KjRRYyaj6Fo+ateOx7
- fFhIWVGSvfDfDAwOjJVXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jv17eHekCmY=:WvngTvut/2R2v8Wi/rxAi7
- 8wEY/UPppVYO4XdOjeNZy1sgoRb4QgA1v27t6CUhiC9egpSBDe2zmCuU70sga3ntGrPJcwcD4
- lxVE2f44Gv2eFJkeXtmbXURHYkO8vUE+RIlMWVWxp4/ha1kljK4RBLq4RZcac/PY+DVVszvt1
- ufwLl0BZrBmBT6/a5UcHvrsVREgx0TLTNUB3BndHzXs6niAVTTal5DPF2u9ZK8xlK1Zxor6go
- L6tSs5vatLQ1Wbs9/eL+O80vJxhOvksMHjuH4s3FNWQM9deiAEQiffBF3LWpNpm/vSyS4eslJ
- CgLaLOKazHAl/C5LR1ePjkBTsb2TfDgx//ualRo9kYaXWm0OVlOvbVt2miWYhWABzxnZjP3dG
- a4b5uJCfR36XfxAiiBIJdiumNCgrfWF5l2RxohjSNsLdxZG7O9AdV7jP+42JfSyHRnV1DGcpm
- nvM41IwnR/VCog4qv4qR/sfmW1m4INremGiemtkeMjz8seuJq+D5mP2jC/1rJ1Zq2d40T5KBc
- BXJUnHK/vpqYWuD1t3GX8gINLTdahNcGQnki/5gT3LTFdesySPLOglIzTD/b9sjHFe0bHb7+9
- bfX5f5fre55Vx7KERbCZ+q4Jir2/r5uHORYiRphsst9KNe0pGr6jqjRkdlE3Z4i2IlGPezQdw
- Loyl5pnUJN2rkKeLJuQ9wy6lzFgW2dyOXM3GJImrPias5ZgWysTSVIuTyybwpvDcGa34uANat
- 2ehWFPOPOFQ2YK6isyiyrmAdA3HPa8q6FIC41qsKSG51prgjXYGf9KiwDZesCyvs7zkdoIxuo
- Lf7cQ1TAjc5nY8tzuwvO5mzF5OfExnnIm9Q/1PBGpacHHW5sdxOIH3lAPQdmZ9zd9tSy9t+6y
- qSXnzzldH++Rc76WK4qsYlFYs5gjsHy0LqrrMRj/Vt/sWGXws+HHWEmqtmCOQtHVOgdEr5HiT
- fpcvIYwNiOsVs2vpjXuaZPLWfNt2qkWDRy25WsMdlSSIcScddVUGcZlOV31zNJ3NF4pHOPMfE
- Z9hb52jAyljGC8YHxEWHH/GJB5ralt8gmorDtivWWpqOJ1yX51uzWKWDY6Qv3EuhLDnYSH3T7
- UUkhrWVvId7DYddMKxvvW9IJVjbf8aZcqeCTwSin0M0kN70ylHxZS2io9X0c1wEP9HULxq+Ws
- Pjqzo4bKEI/+BSmRLQIjdZGzftiC0bEfWY8wARX0SUjHRHRhY2xWRBbsiiM4fhdDB8bOU=
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KDqP/Jp9PNQtcCCr/i9Z9e9bWbi+49sN4qzcwl7g0/WLn2XtU+W
+ 5JLZZ78o5DWHvfEP5jM8gFSSQMnKhkfJWrHD+kdV/kJoky3+wJsUui1vTm7H3qu/f93qLRf
+ Q+FUZTo/Ebq1DGsGDI/pqxIaKvrfh+R1r5uan9IGYfQWZrCWY/xzVa3pkGVAgmHQTV/mAWN
+ chwl+u5XATv4vlseU0CDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uCCszD1rJxE=:W/2heqmdFn2806zXcUe/L3
+ lS/eAMiNIeab8Sx7wylOvFeNlrgot5YT9WryVjZWSnyUN71ygq3NPiEGyw1jjKHXsm/Cb0J9t
+ fBcb8m9mzP7n6GFA5203xsEVqXlPpp044VY2zztHL1ga7IbsPN0eluP+TSFbMMRtKfWU9szqX
+ 0A7pONt2xh3P+Utp4l1AMlwboSWgochRvScriQki/Zvk4laix+7HSi2c3dt8/8RfxVwhg2ntl
+ zp6sylB3KudzEMxeFkGS164jws5T4UCi6NoMEkippNAQeTIAR2h9DF/VzdPWoZ8c/Mc7a5AJb
+ QHOQ4kRXn3NDW4pFyxHAanrO3tv+bH/Vr6Q4KIj/AywqNCXbFLLEcydgwS0r8Rb5/leQYpG2J
+ zp7AlapcuZo4Chy223SWLxo4Jd9tzDMzIOoqeoG4g+JPA6S9J+9Lj7yCXNHlX6+AX0A3aCAZS
+ Qfb0vBd8yUDnFGkOzXatj01W6gWAoJWuu1b9tiU+BEb3IFZ8Qy3jNc7U71H//8s0vP212gwqp
+ pgKu3Djcl5cko89PIEss5fxTjrc0coR2P7s3FGsIbhfWnPnuUZ72GmS3J2m6WydyLMrgj20pP
+ Tuhj3mZrMRd8VqQDnO/m5Ou50jz83Ats+0uZ6FG1qFcVu3ltrqsRE+DycN455KHi62grMnweK
+ MFBPFsRY77bOiublep/XP39GT8NUNpiW18wYyhjZtxHyk3GGxTgSe9hVz4cx35gTNKPdp+RAC
+ +bM0RA+N5X76ne4hr7W5zI83Lm68ZntLyFep6tgDfbgLAuYuUCyEDT4IkPseUhfJsnjlPbzjb
+ V2Y4TXWke/ipF1Q4K9hnRiGktgrBTTmTdUDsvoAL+xd/2q6zzSxRVAqbpcEuKtj2QtokVlrkR
+ 8e5EFLxOYjmyxANcB+xsGVCXyK1kC8+BbsNujku8lL7IsM+GYYNZKeLeYjwkM+U5alDaB2nKT
+ zk/SBQ3CEGGyImOT2CcJZElDVaUfM/p+JVOF6H08wyibb/9sFWfxbfUu1xWnQkhVTmzYIWaxW
+ 4X2T2HaO1Ot7Jqfa2r7qUhEwnQV3e9NeHBuZpxjdqSb2LTtYuZ1ydt9mfW6SLUIzfZO2pAQTH
+ 6aGN4T05HQ778ZSVULzcSB7oLXgcFZ6l6ZnmTTcdYu+DS3xOn6VrqfscZ5f5RKxw9yBdfApyz
+ PA991+3xne09JtkJf6w+iYdcd+IVgNfNUhtumBUzHDGD7I6spfnNr8Xa01NKcEt1D1t5Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> writes:
+During normal usage, especially if jobs are started and stopped in rapid
+succession, the kernel log is filled with messages like this:
 
-> On Sun, 2020-02-02 at 00:11 +0100, Julian Sax wrote:
->> During normal usage, especially if jobs are started and stopped in rapi=
-d
->> succession, the kernel log is filled with messages like this:
->>
->> [38732.522910] Restoring PASID 0x8003 queues
->> [38732.666767] Evicting PASID 0x8003 queues
->> [38732.714074] Restoring PASID 0x8003 queues
->> [38732.815633] Evicting PASID 0x8003 queues
->> [38732.834961] Restoring PASID 0x8003 queues
->> [38732.840536] Evicting PASID 0x8003 queues
->> [38732.869846] Restoring PASID 0x8003 queues
->> [38732.893655] Evicting PASID 0x8003 queues
->> [38732.927975] Restoring PASID 0x8003 queues
->>
->> According to [1], these messages are expected, but they carry little
->> value for the end user, so turn them into debug messages.
->>
->> [1] https://github.com/RadeonOpenCompute/ROCm/issues/343
->
-> trivia:
->
->> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/dr=
-ivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-> []
->> @@ -604,7 +604,7 @@ static int evict_process_queues_nocpsch(struct devi=
-ce_queue_manager *dqm,
->>  		goto out;
->>
->>  	pdd =3D qpd_to_pdd(qpd);
->> -	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
->> +	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
->>  			    pdd->process->pasid);
->
-> It would be nicer to realign all the subsequent lines in a
-> single statement to the now moved open parenthesis.
->
->>
->>  	/* Mark all queues as evicted. Deactivate all active queues on
->> @@ -650,7 +650,7 @@ static int evict_process_queues_cpsch(struct device=
-_queue_manager *dqm,
->>  		goto out;
->>
->>  	pdd =3D qpd_to_pdd(qpd);
->> -	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
->> +	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
->>  			    pdd->process->pasid);
->
-> etc...
+[38732.522910] Restoring PASID 0x8003 queues
+[38732.666767] Evicting PASID 0x8003 queues
+[38732.714074] Restoring PASID 0x8003 queues
+[38732.815633] Evicting PASID 0x8003 queues
+[38732.834961] Restoring PASID 0x8003 queues
+[38732.840536] Evicting PASID 0x8003 queues
+[38732.869846] Restoring PASID 0x8003 queues
+[38732.893655] Evicting PASID 0x8003 queues
+[38732.927975] Restoring PASID 0x8003 queues
 
-Yeah, absolutely, thanks for pointing that out. v2 coming shortly.
+According to [1], these messages are expected, but they carry little
+value for the end user, so turn them into debug messages.
 
-Julian
+[1] https://github.com/RadeonOpenCompute/ROCm/issues/343
+
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+=2D--
+v2: fixed indenting of following lines
+
+ .../drm/amd/amdkfd/kfd_device_queue_manager.c    | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drive=
+rs/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+index 2870553a2ce0..13bd588c4419 100644
+=2D-- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
+@@ -604,8 +604,8 @@ static int evict_process_queues_nocpsch(struct device_=
+queue_manager *dqm,
+ 		goto out;
+
+ 	pdd =3D qpd_to_pdd(qpd);
+-	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
+-			    pdd->process->pasid);
++	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
++			     pdd->process->pasid);
+
+ 	/* Mark all queues as evicted. Deactivate all active queues on
+ 	 * the qpd.
+@@ -650,8 +650,8 @@ static int evict_process_queues_cpsch(struct device_qu=
+eue_manager *dqm,
+ 		goto out;
+
+ 	pdd =3D qpd_to_pdd(qpd);
+-	pr_info_ratelimited("Evicting PASID 0x%x queues\n",
+-			    pdd->process->pasid);
++	pr_debug_ratelimited("Evicting PASID 0x%x queues\n",
++			     pdd->process->pasid);
+
+ 	/* Mark all queues as evicted. Deactivate all active queues on
+ 	 * the qpd.
+@@ -696,8 +696,8 @@ static int restore_process_queues_nocpsch(struct devic=
+e_queue_manager *dqm,
+ 		goto out;
+ 	}
+
+-	pr_info_ratelimited("Restoring PASID 0x%x queues\n",
+-			    pdd->process->pasid);
++	pr_debug_ratelimited("Restoring PASID 0x%x queues\n",
++			     pdd->process->pasid);
+
+ 	/* Update PD Base in QPD */
+ 	qpd->page_table_base =3D pd_base;
+@@ -772,8 +772,8 @@ static int restore_process_queues_cpsch(struct device_=
+queue_manager *dqm,
+ 		goto out;
+ 	}
+
+-	pr_info_ratelimited("Restoring PASID 0x%x queues\n",
+-			    pdd->process->pasid);
++	pr_debug_ratelimited("Restoring PASID 0x%x queues\n",
++			     pdd->process->pasid);
+
+ 	/* Update PD Base in QPD */
+ 	qpd->page_table_base =3D pd_base;
+=2D-
+2.24.1
+
