@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75952C3524D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC337C3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402802080D
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CD420838
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJQYV9aa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ry5sjD1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgBBVTR (ORCPT
+        id S1727226AbgBBVTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 16:19:17 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35436 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgBBVTI (ORCPT
+        Sun, 2 Feb 2020 16:19:12 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42789 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbgBBVTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 16:19:08 -0500
-Received: by mail-pj1-f67.google.com with SMTP id q39so5480603pjc.0;
-        Sun, 02 Feb 2020 13:19:08 -0800 (PST)
+        Sun, 2 Feb 2020 16:19:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so6462102pfz.9;
+        Sun, 02 Feb 2020 13:19:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qM36uHLgKaTgocqSHIh2izp9K4IaAcwcVCaZh91ximY=;
-        b=TJQYV9aaM2l4PyRJTnUoacLJpHZ/16gnIs+QPF8P5h8jynmGHtlRXO6VPFKlD009lH
-         Nsrvfw7rZmZPXzN8zpdDzK9sNFfU88nUTyJ4sfIznKcDJIcwx7IL1V2hYKmaDO/1PliE
-         BOR3El+o0JZ3e9Mvia46qeovnUl98LT4GVqSHfdbrbyauqVQSFM/cVopo98bgHL8mJO8
-         d1hR9ukziX5/0zJ68afUVWBzbLXVLJC4JiwkA6V2OQ2WNVyqBn7JGTAniMEY3kQ6WVc2
-         EqMt05HMJrtKlG+zoBjaK5lXK5agJbHYDZdIWw8wyTIXzPrlI2TCYV2ULLxyjxaAuRP2
-         0Lyw==
+        bh=cLNIp7PhbQluM+POzy592n9tV10I9FW4qXHr+ace/0o=;
+        b=ry5sjD1L5SWWSxiszhSYKOJe3zcYfWegJDPhnA4gdDOnQqfvHPpwtdd6hcUx/L1NtJ
+         K/z/1wv0N6xLazRKhcauNDxKBsbvhb7fPo96DoV1ZC7LLGFO8hqcASm9IJwkntCbr66e
+         JqYgA3aV69TyKP7LALziFFb+ZFDl2IWDoglcCE6LRumZ1kZGx6vxTUqwk99zX3QEHMlA
+         VCjfCZoeHIrEJhhzywxDYJlCf33sB6aP2l5BQ3NA8NciKDGJVvpSBP9wSD7JxYtenqtG
+         qtrbdnkPxfcWZ8opEdCU/V6UKRB1zP9o6pKwGKTtIax1eDBjG5XiXRVCbIszFUk/uaEt
+         mt2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qM36uHLgKaTgocqSHIh2izp9K4IaAcwcVCaZh91ximY=;
-        b=IYPXtMIcDLp6beVpF2b3jxVN32cn1FUw2Nd2jxQAB41wXDjQ8xIRGKmKi0SCozYAKJ
-         FZXIivUKni963bSZuEe6/td1xt95B7OOAI3NysT/AovvP0+piToZBIi6nxKnv6eU1cgc
-         UztiOtbRUAPSAX4pJzoGHegTBr9d5G3gssxfclw+6Sq8zHtwevqWRMw6QZbt6A/pOH4P
-         7VkenrgscabuFgFF1T482jv8K6WYssXBCD1xPk6t+jXEtQhaO3ufrFRcTiRkcN+4QV9F
-         YB0Njy6OmsdYbLnDZqCQV6zc7ddwkOyAdN0tEaYISHTSflaYyC9Q0Ugy/TwPnJqjzvtB
-         HLXQ==
-X-Gm-Message-State: APjAAAWRhyuBbssFTAT4bnwREr1MdR9P2fU7U6O1AELfj8MrUACFuCSx
-        p8v/Z0R0zmCB7+T2hOT/r7MPjDQc
-X-Google-Smtp-Source: APXvYqzch0A10fy9dSa3A8UR0+rBOgp9guvOvWHXh7fRmsV+HcU5+TqyyguWpKkkL4j1d+UXO/Fgtg==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr20089295plr.338.1580678347527;
-        Sun, 02 Feb 2020 13:19:07 -0800 (PST)
+        bh=cLNIp7PhbQluM+POzy592n9tV10I9FW4qXHr+ace/0o=;
+        b=YsE7pqsCbiIzosIs4IZ2k1YdpWME/2BmYjywtJRYYjiVDpxKEbuKJLPtnFiD7PbRcI
+         1lEu3WpvBtuOkKCgZeshTX+Ecn4++Os0I+ep2qaEa6+Dm/KVPSnvm0L1NubNYNMyOrnF
+         YvO1ow1enJDLAKBNMzwnw9nDZcWSeInNVDm7E/GRJlZI4pC0zxRXttpAV6A77PlTzyKk
+         LNIQKBMNy4VMDM9grr1CFSGNpsYmsF/5wR4mf7iyat4vVy2/pqrsrIUJ3L0LBf6jwoQC
+         BYQnx071DAoRjPbC+zhO7pVYfXITN8KdeHKksvY61n2QboYxp5EFF2fBBmyFV5ybrV0Q
+         3vUA==
+X-Gm-Message-State: APjAAAW3BpVl1JkxYwnCsvfaZQMpO/4gu17fgp1zbvW68mMglu9KD4Yr
+        axmoedH7rqFZ4cCw7OlLcPFe71T9
+X-Google-Smtp-Source: APXvYqwrkI357eRs0qOJv+iVUPF/RoVjanzj2RJmPd1gxl+n4lOhSsmQZ6FZzFooY9j35ZJi4460Hg==
+X-Received: by 2002:a63:744f:: with SMTP id e15mr23111913pgn.344.1580678345992;
+        Sun, 02 Feb 2020 13:19:05 -0800 (PST)
 Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.06
+        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 13:19:07 -0800 (PST)
+        Sun, 02 Feb 2020 13:19:05 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc:     devicetree@vger.kernel.org,
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 06/12] dt-bindings: arm: bcm: Convert BCM21664 to YAML
-Date:   Sun,  2 Feb 2020 13:18:21 -0800
-Message-Id: <20200202211827.27682-7-f.fainelli@gmail.com>
+Subject: [PATCH 05/12] dt-bindings: arm: bcm: Convert Stingray to YAML
+Date:   Sun,  2 Feb 2020 13:18:20 -0800
+Message-Id: <20200202211827.27682-6-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200202211827.27682-1-f.fainelli@gmail.com>
 References: <20200202211827.27682-1-f.fainelli@gmail.com>
@@ -86,65 +86,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the Broadcom BCM21664 SoC binding document for boards/SoCs to use
+Update the Broadcom Stingray SoC binding document for boards/SoCs to use
 YAML. Verified with dt_binding_check and dtbs_check.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/arm/bcm/brcm,bcm21664.txt        | 15 ------------
- .../bindings/arm/bcm/brcm,bcm21664.yaml       | 23 +++++++++++++++++++
- 2 files changed, 23 insertions(+), 15 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.yaml
+ .../bindings/arm/bcm/brcm,stingray.txt        | 12 ---------
+ .../bindings/arm/bcm/brcm,stingray.yaml       | 26 +++++++++++++++++++
+ 2 files changed, 26 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,stingray.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
 deleted file mode 100644
-index e0774255e1a6..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.txt
+index 23a02178dd44..000000000000
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.txt
 +++ /dev/null
-@@ -1,15 +0,0 @@
--Broadcom BCM21664 device tree bindings
----------------------------------------
+@@ -1,12 +0,0 @@
+-Broadcom Stingray device tree bindings
+-------------------------------------------------
 -
--This document describes the device tree bindings for boards with the BCM21664
--SoC.
+-Boards with Stingray shall have the following properties:
 -
 -Required root node property:
--  - compatible: brcm,bcm21664
 -
--Example:
--	/ {
--		model = "BCM21664 SoC";
--		compatible = "brcm,bcm21664";
--		[...]
--	}
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.yaml
+-Stingray Combo SVK board
+-compatible = "brcm,bcm958742k", "brcm,stingray";
+-
+-Stingray SST100 board
+-compatible = "brcm,bcm958742t", "brcm,stingray";
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.yaml
 new file mode 100644
-index 000000000000..8a38a6b68f60
+index 000000000000..b58307086cf2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm21664.yaml
-@@ -0,0 +1,23 @@
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,stingray.yaml
+@@ -0,0 +1,26 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm21664.yaml#
++$id: http://devicetree.org/schemas/arm/bcm/brcm,stingray.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM21664 device tree bindings
++title: Broadcom Stingray device tree bindings
 +
 +maintainers:
-+  - Florian Fainelli <f.fainelli@gmail.com>
++  - Ray Jui <rjui@broadcom.com>
++  - Scott Branden <sbranden@broadcom.com>
 +
 +properties:
 +  $nodename:
 +    const: '/'
 +  compatible:
 +    oneOf:
-+      - description: BCM21664 based boards
++      - description: Broadcom Stingray based boards
 +        items:
 +          - enum:
-+              - brcm,bcm21664-garnet
-+          - const: brcm,bcm21664
++              - brcm,bcm958742k
++              - brcm,bcm958742t
++              - brcm,bcm958802a802x
++          - const: brcm,stingray
 +
 +...
 -- 
