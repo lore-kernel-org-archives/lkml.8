@@ -2,134 +2,157 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82502C3524A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 02:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38597C35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 03:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6240720658
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 02:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A89206F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 03:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njCjYDWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgBBCi0 (ORCPT
+        id S1726877AbgBBDey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 21:38:26 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:40184 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgBBCiT (ORCPT
+        Sat, 1 Feb 2020 22:34:54 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39663 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgBBDey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 21:38:19 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id DBC8229AEF; Sat,  1 Feb 2020 21:38:15 -0500 (EST)
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Message-Id: <d8f19ebc00a7688da739d41d584d081d1559f0d2.1580610812.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1580610812.git.fthain@telegraphics.com.au>
-References: <cover.1580610812.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH 1/3] fbdev/g364fb: Fix build failure
-Date:   Sun, 02 Feb 2020 13:33:32 +1100
+        Sat, 1 Feb 2020 22:34:54 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 4so5842261pgd.6;
+        Sat, 01 Feb 2020 19:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Un97QVjjkKz5RYqKD+8syS/5qdIxvzeivXj5BxZyhxA=;
+        b=njCjYDWlLN/2aDGYbXpl8lEiyKRxphgrBmGsspXsHoqtvbaXvdFsCfAGYrNU5jBbvg
+         ZvGshXAKB/eqXXXq/7YHcN/DWsAMWew1KxQSQG7nM1hD4zHW7AY+W7AR5exkx+k8BES1
+         /402oeBlTjh/7vEHsCyOCY9lSSxwZNt5Rtp38y9Id/lChQ6ZNDZZ1r2FTHYbMGK/O1av
+         5regFILDlPNqt0i7YNOt8tm7Xk5QGb+dmkx5GOCkT0izlsY0i/qbjo8si4zafuYJgNBJ
+         ujPWFqqiMQWHCBoIGclEA9L3TzoHeSGJp5LQgmsCvTJcO8WX4A/XPFj9mH9absOqXXnO
+         y0Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Un97QVjjkKz5RYqKD+8syS/5qdIxvzeivXj5BxZyhxA=;
+        b=qhVXQfSQjMwf6vEHYEwxshE6LDU/HAXnAWvIeSvvI/PhzK7wx5oRLTITHEJD5GU0Wl
+         Ix/985kPEGmfVIyX+kWyk3yKxBxLzH7F7hFpWMZHpzkbjfBeJfNwSKDHPeFAzSFz0tSW
+         3K9jeG1rwhMsguCaVmD8HPwsQiBYAfnzl/2LOsaBwJMTnmPxE3tYjcoEsLG56AHzJeGK
+         h7xQ4KMy+lPeSTmAiVb5SIfq/XoH1gEyNW4TLRw+xRKUFBIAvCrfCW4wi9DWcDuCFq+f
+         DUwwx2LoX92nuaIap2/RjVn6JozXQ1UHhoZV1iM0cONOv3ZrnYOwPMs81H4xPmf5iFWR
+         2nTw==
+X-Gm-Message-State: APjAAAXGT+R+tYPgRF7lpeQklVMBUK3erZcVFCZoaHlxcu4CR3w02Hhz
+        al1eLfdHgvW+N5NxO8hUDKI=
+X-Google-Smtp-Source: APXvYqwsO1BQlRlzQYMCtzDAz32S8KXf6zpDyI2RbDHQil+Jw2Y2zIJ8I1t7gisnpyTU3JkrKfrgeg==
+X-Received: by 2002:a63:3154:: with SMTP id x81mr7536795pgx.32.1580614493415;
+        Sat, 01 Feb 2020 19:34:53 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id f43sm15572800pje.23.2020.02.01.19.34.52
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sat, 01 Feb 2020 19:34:52 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     miklos@szeredi.hu
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH] fuse: Allow parallel DIO reads and check NOWAIT case for DIO writes
+Date:   Sun,  2 Feb 2020 11:34:47 +0800
+Message-Id: <1580614487-1341-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch resolves these compiler errors and warnings --
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-  CC      drivers/video/fbdev/g364fb.o
-drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
-drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
-drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
-drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
-drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
-drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
+Earlier there was no shared lock in DIO read path. But this patch
+(16c54688592ce: ext4: Allow parallel DIO reads)
+simplified some of the locking mechanism while still allowing for
+parallel DIO reads by adding shared lock in inode DIO read path.
 
-The MIPS Magnum framebuffer console now works when tested in QEMU.
+Add NOWAIT check at the start of cache writes, because an aio request
+with IOCB_NOWAIT could block when we call inode_lock(), which is not
+allowed.
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Change current rwsem code of direct write to do the trylock for the
+IOCB_NOWAIT case, otherwise lock for real scheme.
+
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
 ---
- drivers/video/fbdev/g364fb.c | 29 +++--------------------------
- 1 file changed, 3 insertions(+), 26 deletions(-)
+ fs/fuse/file.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
-index 223896cc5f7d..fb26230a3c7b 100644
---- a/drivers/video/fbdev/g364fb.c
-+++ b/drivers/video/fbdev/g364fb.c
-@@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
- static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
- 			    u_int blue, u_int transp,
- 			    struct fb_info *info);
--static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
- static int g364fb_blank(int blank, struct fb_info *info);
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index ce71538..4fcf492 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1263,6 +1263,9 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	ssize_t err;
+ 	loff_t endbyte = 0;
  
- static struct fb_ops g364fb_ops = {
-@@ -119,28 +118,8 @@ static struct fb_ops g364fb_ops = {
- 	.fb_fillrect	= cfb_fillrect,
- 	.fb_copyarea	= cfb_copyarea,
- 	.fb_imageblit	= cfb_imageblit,
--	.fb_cursor	= g364fb_cursor,
- };
++	if (iocb->ki_flags & IOCB_NOWAIT)
++		return -EOPNOTSUPP;
++
+ 	if (get_fuse_conn(inode)->writeback_cache) {
+ 		/* Update size (EOF optimization) and mode (SUID clearing) */
+ 		err = fuse_update_attributes(mapping->host, file);
+@@ -1432,11 +1435,7 @@ ssize_t fuse_direct_io(struct fuse_io_priv *io, struct iov_iter *iter,
  
--int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
--{
--	
--	switch (cursor->enable) {
--	case CM_ERASE:
--		*(unsigned int *) CTLA_REG |= CURS_TOGGLE;
--		break;
--
--	case CM_MOVE:
--	case CM_DRAW:
--		*(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
--		*(unsigned int *) CURS_POS_REG =
--		    ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
--						  info->var.yoffset);
--		break;
--	}
--	return 0;
--}
--
- /*
-  *  Pan or Wrap the Display
-  *
-@@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
-  */
- int __init g364fb_init(void)
+ 	ia->io = io;
+ 	if (!cuse && fuse_range_is_writeback(inode, idx_from, idx_to)) {
+-		if (!write)
+-			inode_lock(inode);
+ 		fuse_sync_writes(inode);
+-		if (!write)
+-			inode_unlock(inode);
+ 	}
+ 
+ 	io->should_dirty = !write && iter_is_iovec(iter);
+@@ -1510,6 +1509,14 @@ static ssize_t __fuse_direct_read(struct fuse_io_priv *io,
+ static ssize_t fuse_direct_read_iter(struct kiocb *iocb, struct iov_iter *to)
  {
--	volatile unsigned int *pal_ptr =
--	    (volatile unsigned int *) CLR_PAL_REG;
- 	volatile unsigned int *curs_pal_ptr =
- 	    (volatile unsigned int *) CURS_PAL_REG;
--	int mem, i, j;
-+	int mem, i;
+ 	ssize_t res;
++	struct inode *inode = file_inode(iocb->ki_filp);
++
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock_shared(inode))
++			return -EAGAIN;
++	} else {
++		inode_lock_shared(inode);
++	}
  
- 	if (fb_get_options("g364fb", NULL))
- 		return -ENODEV;
-@@ -230,8 +207,8 @@ int __init g364fb_init(void)
- 	 */
- 	*(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
- 	*(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
--	fb_var.xres_virtual = fbvar.xres;
--	fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
-+	fb_var.xres_virtual = fb_var.xres;
-+	fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
- 	fb_fix.smem_start = 0x40000000;	/* physical address */
- 	/* get size of video memory; this is special for the JAZZ hardware */
- 	mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
+ 	if (!is_sync_kiocb(iocb) && iocb->ki_flags & IOCB_DIRECT) {
+ 		res = fuse_direct_IO(iocb, to);
+@@ -1518,6 +1525,9 @@ static ssize_t fuse_direct_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 
+ 		res = __fuse_direct_read(&io, to, &iocb->ki_pos);
+ 	}
++	inode_unlock_shared(inode);
++
++	file_accessed(iocb->ki_filp);
+ 
+ 	return res;
+ }
+@@ -1529,7 +1539,13 @@ static ssize_t fuse_direct_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	ssize_t res;
+ 
+ 	/* Don't allow parallel writes to the same file */
+-	inode_lock(inode);
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock(inode))
++			return -EAGAIN;
++	} else {
++		inode_lock(inode);
++	}
++
+ 	res = generic_write_checks(iocb, from);
+ 	if (res > 0) {
+ 		if (!is_sync_kiocb(iocb) && iocb->ki_flags & IOCB_DIRECT) {
 -- 
-2.24.1
+1.9.1
 
