@@ -2,71 +2,81 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049D8C3524A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8FFC3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC92420643
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59B62080D
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgBBNVe (ORCPT
+        id S1726913AbgBBN12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 08:21:34 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726342AbgBBNVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 08:21:34 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1CD0019DDCFA158EFFD1;
-        Sun,  2 Feb 2020 21:21:30 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 2 Feb 2020 21:21:21 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yaohongbo@huawei.com>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] fs_parse: make fs_param_bad_value() static
-Date:   Sun, 2 Feb 2020 21:15:46 +0800
-Message-ID: <20200202131546.30174-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Sun, 2 Feb 2020 08:27:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:46140 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726836AbgBBN11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 08:27:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0405030E;
+        Sun,  2 Feb 2020 05:27:27 -0800 (PST)
+Received: from ssg-dev-vb.kfn.arm.com (E111385.Arm.com [10.50.4.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEA5C3F52E;
+        Sun,  2 Feb 2020 05:27:22 -0800 (PST)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Weili Qian <qianweili@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH v2 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Sun,  2 Feb 2020 15:26:58 +0200
+Message-Id: <1580650021-8578-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
 
-fs/fs_parser.c:192:5: warning:
-	symbol 'fs_param_bad_value' was not declared. Should it be static?
+Changes from previous veriosn: fixed 'make dt_bnding_check' errors.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- fs/fs_parser.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
 
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index fdc047b..904e91f 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -189,7 +189,7 @@ int fs_lookup_param(struct fs_context *fc,
- }
- EXPORT_SYMBOL(fs_lookup_param);
- 
--int fs_param_bad_value(struct p_log *log, struct fs_parameter *param)
-+static int fs_param_bad_value(struct p_log *log, struct fs_parameter *param)
- {
- 	return inval_plog(log, "Bad value for '%s'", param->key);
- }
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  51 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 789 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  69 ++
+ 6 files changed, 931 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
+
 -- 
 2.7.4
 
