@@ -2,133 +2,194 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497F4C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEADC3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F198206E6
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="hBAs0OVt"
+	by mail.kernel.org (Postfix) with ESMTP id A34D120679
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580660541;
+	bh=KNdyhD3w4yCdwrz3wHVgo4rj2j28SvdHOaIBi+5JM3A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=E1nRU74aqyPhww0xSKGmi/Iif+MC/zf1ft7hunfFbhtAulzYUOs2cSl34IRtHkN96
+	 zz9OJy2n9Ed7fF1RR80I2RV8fUv0HPC3rWz+LTTsuFBGrPDlcteQRDttIjzKHmKj2i
+	 NBBKgv2CIicOLnHPJLsHKEbneslZ8mGPlED1HptY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgBBQVp (ORCPT
+        id S1727066AbgBBQWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 11:21:45 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:33887 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgBBQVo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 11:21:44 -0500
-Received: by mail-vs1-f65.google.com with SMTP id g15so7440797vsf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 08:21:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=z4vFhFVKG0YBD0XPtA9xGNCv/BDXDAEGk9Fr40UlAwQ=;
-        b=hBAs0OVt/5C+i6kyW+CHbqpB9gOyPcztzdOGnLqZd5PmvPRtm4vj5Yq14SKZEQH+SY
-         7f889N/sdhK7bafCMvpU1y0a0FO8QTk/CF8hVEEynBHPtdRJ8YxBuRvsgDC5E4bNPBBB
-         7YHLBYy0Z7P5T2vrz32I0pXDit/bZvnL81pcUQQ9BfR8Sq+QCwTME+Hd298JAY0sQOVo
-         pjZnsd8v3sulZFUUy6fQG0YkTsF4Mrp9vxPQH6cTDUZOInl4YSHDJ059G92JX9+KLByv
-         Yy2EzaiSbRMTfMIhb+F0ZO5/7+UI/jTPldHzlIhh1+AJuBg+JRj936mzOkLRPv6qsOH3
-         sBkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=z4vFhFVKG0YBD0XPtA9xGNCv/BDXDAEGk9Fr40UlAwQ=;
-        b=CWkN0u6axQnllJJ2BgELy1d4JE37puUC7ld6w4Qb7o87nLh2IA8e6b9x/JlROUOTn3
-         1nXadQZHHIDubUEIrsWVdgjT0PJgg1y9dRP6+B1SuX4ZfdZUhOoSJUcMaQsyvZvbqiUW
-         oXSqAKKOdzz7WNMenKIqkO5PlT5paBd4dF/c3f2tHQnZOaTL/A5jbbyVzTv5GB4OFgTL
-         JLY4cUKWm44Yq6MCjWeLF3l+En9/nszb13lqNcR9UmCrcjxhiK1TJr0RUogRc6inCzi5
-         wAVq3AI49UWVMGo/AgdEAd6gPf+4LLEiUHrHYIjvHlQ5W21UujP5Ic78P3eeGiJIMFkk
-         iN8Q==
-X-Gm-Message-State: APjAAAXofS9sROTZy3v/QR1y2LXTpcuuai9ofC9Iruvp/+9ejhXBnVX8
-        qxJxL/N002Qw+Gs0UrR0xGcXgfN3L/7pBfvjatdv1g==
-X-Google-Smtp-Source: APXvYqx3XNZF2JXa9iGlKzd5VrwmWrEsb5RS4U0pCifaad4M/KM1FTXTr9XHmHL7Tsoi05WpBaJMhegB5m28Ryh/ewg=
-X-Received: by 2002:a67:fb14:: with SMTP id d20mr12085906vsr.136.1580660503807;
- Sun, 02 Feb 2020 08:21:43 -0800 (PST)
+        Sun, 2 Feb 2020 11:22:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726907AbgBBQWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 11:22:20 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB36920679;
+        Sun,  2 Feb 2020 16:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580660539;
+        bh=KNdyhD3w4yCdwrz3wHVgo4rj2j28SvdHOaIBi+5JM3A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wssfoGoRbDyGixeBuWYuQH5ygKNexFHrJzjYiVGaa//0uwq4zMSakCBYAS/pItZHi
+         Zn3hin+BVfJ8RhmFeMH9Ter6c/W0acHW+WHlDbXkAOJwbVtJix6P0PZh0ks0wRWi8F
+         n1KirtMK4D4mKlE1SUyrp/U0RTm2kbTrNuHTNRCc=
+Date:   Sun, 2 Feb 2020 16:22:15 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: ad7124: add 3db filter
+Message-ID: <20200202162215.50915c83@archlinux>
+In-Reply-To: <20200122085414.16950-1-alexandru.tachici@analog.com>
+References: <20200122085414.16950-1-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200129143757.680-1-gilad@benyossef.com> <20200129143757.680-5-gilad@benyossef.com>
- <CAMuHMdVb_AGa7980fRXaxon=uDojZ1x5d6z-FCJAt5aMEGMcbw@mail.gmail.com>
- <CAOtvUMdUBMkmZ6nzGVxi1W_Y4yFvcd6rfvz6BA63h4eq2QFUdA@mail.gmail.com>
- <CAMuHMdXecd0KAN6B4GWKMp-DsmZVTJqOJfm5CymwwPMwDqG0qA@mail.gmail.com> <CAOtvUMcejz8qLrg8MBxM2DkYSqvfX-yKwK7NujmwD=szystUAQ@mail.gmail.com>
-In-Reply-To: <CAOtvUMcejz8qLrg8MBxM2DkYSqvfX-yKwK7NujmwD=szystUAQ@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 2 Feb 2020 18:21:31 +0200
-Message-ID: <CAOtvUMeCcoVeG3aqHywyDfn-=KNb-j=ViZ5ieOpB-Q61taFosg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] crypto: ccree - fix AEAD blocksize registration
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 5:32 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote=
-:
->
-> On Thu, Jan 30, 2020 at 3:19 PM Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
-> >
-> > Hi Gilad,
-> >
-> > On Thu, Jan 30, 2020 at 12:33 PM Gilad Ben-Yossef <gilad@benyossef.com>=
- wrote:
-> > > On Wed, Jan 29, 2020 at 5:17 PM Geert Uytterhoeven <geert@linux-m68k.=
-org> wrote:
-> > > > On Wed, Jan 29, 2020 at 3:39 PM Gilad Ben-Yossef <gilad@benyossef.c=
-om> wrote:
-> > > > > Fix an error causing no block sizes to be reported during
-> > > > > all AEAD registrations.
-> > > > >
-> > > > > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > > >
-> > > > Thanks, this fixes:
-> > > >
-> > > >     alg: aead: blocksize for authenc-hmac-sha1-cbc-aes-ccree (0)
-> > > > doesn't match generic impl (16)
-> > > >     alg: aead: blocksize for authenc-hmac-sha256-cbc-aes-ccree (0)
-> > > > doesn't match generic impl (16)
-> > > >
-> > > > which you may want to mention in the commit description, so
-> > > > people who search for the error message will find the fix.
-> > > >
-> > > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >
-> > > > Note that even after applying this series, the kernel still crashes=
- with
-> > > >
-> > > > kernel BUG at kernel/dma/swiotlb.c:497!
-> > > > ....
->
-> Thank you!
->
-> I've managed to reproduce this here.
-> Looking into it now...
+On Wed, 22 Jan 2020 10:54:14 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
+> This patch adds the LOW_PASS_FILTER_3DB_FREQUENCY attribute
+> in iio_chan_spec for each channel. The used filters are sinc3
+> or sinc4. The filter type with the highest output data rate
+> is used when setting a low pass frequency in the channel's sysfs.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 
-OK, found it (I think!). Patch sent.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-I don't understand why this and the previous bugs is not causing
-problems with other configs (e.g. 32 bit ) but now I have an
-environment that triggers them I will add it to the usual tests cycle.
+thanks,
 
-Thanks again!
+Jonathan
 
-Gilad
+> ---
+>  drivers/iio/adc/ad7124.c | 69 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 68 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> index 52f45b13da4a..8f48c0581f02 100644
+> --- a/drivers/iio/adc/ad7124.c
+> +++ b/drivers/iio/adc/ad7124.c
+> @@ -70,6 +70,11 @@
+>  /* AD7124_FILTER_X */
+>  #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+>  #define AD7124_FILTER_FS(x)		FIELD_PREP(AD7124_FILTER_FS_MSK, x)
+> +#define AD7124_FILTER_TYPE_MSK		GENMASK(23, 21)
+> +#define AD7124_FILTER_TYPE_SEL(x)	FIELD_PREP(AD7124_FILTER_TYPE_MSK, x)
+> +
+> +#define AD7124_SINC3_FILTER 2
+> +#define AD7124_SINC4_FILTER 0
+>  
+>  enum ad7124_ids {
+>  	ID_AD7124_4,
+> @@ -119,6 +124,7 @@ struct ad7124_channel_config {
+>  	unsigned int vref_mv;
+>  	unsigned int pga_bits;
+>  	unsigned int odr;
+> +	unsigned int filter_type;
+>  };
+>  
+>  struct ad7124_state {
+> @@ -138,7 +144,8 @@ static const struct iio_chan_spec ad7124_channel_template = {
+>  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+>  		BIT(IIO_CHAN_INFO_SCALE) |
+>  		BIT(IIO_CHAN_INFO_OFFSET) |
+> -		BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> +		BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+>  	.scan_type = {
+>  		.sign = 'u',
+>  		.realbits = 24,
+> @@ -281,6 +288,58 @@ static int ad7124_set_channel_gain(struct ad7124_state *st,
+>  	return 0;
+>  }
+>  
+> +static int ad7124_get_3db_filter_freq(struct ad7124_state *st,
+> +				      unsigned int channel)
+> +{
+> +	unsigned int fadc;
+> +
+> +	fadc = st->channel_config[channel].odr;
+> +
+> +	switch (st->channel_config[channel].filter_type) {
+> +	case AD7124_SINC3_FILTER:
+> +		return DIV_ROUND_CLOSEST(fadc * 230, 1000);
+> +	case AD7124_SINC4_FILTER:
+> +		return DIV_ROUND_CLOSEST(fadc * 262, 1000);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad7124_set_3db_filter_freq(struct ad7124_state *st,
+> +				      unsigned int channel,
+> +				      unsigned int freq)
+> +{
+> +	unsigned int sinc4_3db_odr;
+> +	unsigned int sinc3_3db_odr;
+> +	unsigned int new_filter;
+> +	unsigned int new_odr;
+> +
+> +	sinc4_3db_odr = DIV_ROUND_CLOSEST(freq * 1000, 230);
+> +	sinc3_3db_odr = DIV_ROUND_CLOSEST(freq * 1000, 262);
+> +
+> +	if (sinc4_3db_odr > sinc3_3db_odr) {
+> +		new_filter = AD7124_SINC3_FILTER;
+> +		new_odr = sinc4_3db_odr;
+> +	} else {
+> +		new_filter = AD7124_SINC4_FILTER;
+> +		new_odr = sinc3_3db_odr;
+> +	}
+> +
+> +	if (st->channel_config[channel].filter_type != new_filter) {
+> +		int ret;
+> +
+> +		st->channel_config[channel].filter_type = new_filter;
+> +		ret = ad7124_spi_write_mask(st, AD7124_FILTER(channel),
+> +					    AD7124_FILTER_TYPE_MSK,
+> +					    AD7124_FILTER_TYPE_SEL(new_filter),
+> +					    3);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return ad7124_set_channel_odr(st, channel, new_odr);
+> +}
+> +
+>  static int ad7124_read_raw(struct iio_dev *indio_dev,
+>  			   struct iio_chan_spec const *chan,
+>  			   int *val, int *val2, long info)
+> @@ -322,6 +381,9 @@ static int ad7124_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+>  		*val = st->channel_config[chan->address].odr;
+>  
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		*val = ad7124_get_3db_filter_freq(st, chan->scan_index);
+>  		return IIO_VAL_INT;
+>  	default:
+>  		return -EINVAL;
+> @@ -355,6 +417,11 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+>  		gain = DIV_ROUND_CLOSEST(res, val2);
+>  
+>  		return ad7124_set_channel_gain(st, chan->address, gain);
+> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+> +		if (val2 != 0)
+> +			return -EINVAL;
+> +
+> +		return ad7124_set_3db_filter_freq(st, chan->address, val);
+>  	default:
+>  		return -EINVAL;
+>  	}
 
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
