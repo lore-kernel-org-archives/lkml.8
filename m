@@ -2,105 +2,61 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A773DC3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 01:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12B5C3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 02:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1FD2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 01:46:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqLkIhXg"
+	by mail.kernel.org (Postfix) with ESMTP id C16BE2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 02:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgBBBqc (ORCPT
+        id S1726921AbgBBCiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 20:46:32 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:33633 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBBBqc (ORCPT
+        Sat, 1 Feb 2020 21:38:19 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:40180 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgBBCiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 20:46:32 -0500
-Received: by mail-pf1-f202.google.com with SMTP id c72so6731935pfc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Feb 2020 17:46:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cWMg+lMkC5CwgYJ9EZeOZlpHEi0qWTvf3rAR3TItwx8=;
-        b=EqLkIhXgRZk2d6ttlAE/IrZ07I3+F1wAeV3BpJTqmC62cUYA3mD9hPRRTbkA03hsgN
-         IZj7P8/Hh7HdsYRONo4wDDiP3nDUp21b5agZa+7wz47v6Z4J3aIbKJ01Ijhb0VFhD5al
-         phf/pX8/lAzg+hoBDNPuoBddw2c/szLCfaZl6fVoPDP6PjfJpCbm+m3QP5C/K8OeVgme
-         TUSgsYlXF75y8aLvZZUQKnZvFgNS2KarOs27Hb4TU+Qdpv0mgD9aNcTyvy3YVJ+ccsaL
-         h2wNhFKg3rKRc/pYB/tbNlyfIMbCC76UPFflz9iT8TgR2iZvosTXvwuVovoQvH61R6Hy
-         eVFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cWMg+lMkC5CwgYJ9EZeOZlpHEi0qWTvf3rAR3TItwx8=;
-        b=UU2jcWYW35MARfXZPJxg7Dh7ucfl2i7Dz3J2euX+WM9QYFwo68kZbHma5NRRuiuhyr
-         Os7wypQLm4vDxu+rdKhEVRIP7NXPxxrb8wXRF6DhwKR+c7wbABwrsuHy1XI1VDn3ZeJ8
-         Xqs2Ik8FGOcovcmetMJi+fqN59amkJNIKzT4hrndxYZOLm9lMK2/75ITuUnUpXwJLJ1K
-         I9+L3Fbin8CKLysUTl1cdzBAuz2Z4LLmzTyVwn5dXuOkEGpUyHhri7NEi4BhcPF3lDXs
-         8TdL6xxeg+HI7yCNwAxLxyldGrNz6JpEANoNqKrQacg1hNe6P2nwTp/Np+h9SSA6XQYv
-         Il1w==
-X-Gm-Message-State: APjAAAU8M0NEPcBFfClNs0+tkS/akHnYEA5u3RGjc0Q0r2ikWp2ReN2G
-        1qkcNTdCZju0sQRy4/rycIGjYEkvTkk=
-X-Google-Smtp-Source: APXvYqytCAuvL8qC7xByebS+X1UOErAOhxRRMWluFWrxoVVILntVsMJsPYSA5+Z1ZQQj6bpOOlDIGN2jGQ4=
-X-Received: by 2002:a63:66c6:: with SMTP id a189mr16560150pgc.401.1580607991518;
- Sat, 01 Feb 2020 17:46:31 -0800 (PST)
-Date:   Sat,  1 Feb 2020 17:46:23 -0800
-Message-Id: <20200202014624.75356-1-hridya@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] selinux: Fix typo in filesystem name
-From:   Hridya Valsaraju <hridya@google.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Hridya Valsaraju <hridya@google.com>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 1 Feb 2020 21:38:19 -0500
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id C87F129AFA; Sat,  1 Feb 2020 21:38:15 -0500 (EST)
+Message-Id: <cover.1580610812.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH 0/3] Improve MIPS Magnum support
+Date:   Sun, 02 Feb 2020 13:33:32 +1100
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct the filesystem name to "binder" to enable
-genfscon per-file labelling for binderfs.
+A few minor patches are needed to more easily boot a MIPS Magnum build
+under 'qemu-system-mips64el -M magnum'. This series fixes a build failure
+in the g364fb driver and modifies jazz_defconfig for use with QEMU.
 
-Fixes: 7a4b5194747 ("selinux: allow per-file labelling for binderfs")
-Signed-off-by: Hridya Valsaraju <hridya@google.com>
----
+Note that QEMU's dp8393x implementation has bugs, one of which prevents
+the Linux jazzsonic driver from probing the chip. I have fixed the bugs
+that I know of in a series of patches at,
+https://github.com/fthain/qemu/commits/sonic
 
-Hello,
 
-I seem to have made the typo/mistake during a rebase. Sorry about that
-:(
+Finn Thain (3):
+  fbdev/g364fb: Fix build failure
+  mips/jazz: Remove redundant settings and shrink jazz_defconfig
+  mips/jazz: Update jazz_defconfig for MIPS Magnum
 
-Thanks,
-Hridya
+ arch/mips/configs/jazz_defconfig | 267 ++-----------------------------
+ drivers/video/fbdev/g364fb.c     |  29 +---
+ 2 files changed, 15 insertions(+), 281 deletions(-)
 
- security/selinux/hooks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 89fe3a805129..d67a80b0d8a8 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -699,7 +699,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
- 
- 	if (!strcmp(sb->s_type->name, "debugfs") ||
- 	    !strcmp(sb->s_type->name, "tracefs") ||
--	    !strcmp(sb->s_type->name, "binderfs") ||
-+	    !strcmp(sb->s_type->name, "binder") ||
- 	    !strcmp(sb->s_type->name, "pstore"))
- 		sbsec->flags |= SE_SBGENFS;
- 
 -- 
-2.25.0.341.g760bfbb309-goog
+2.24.1
 
