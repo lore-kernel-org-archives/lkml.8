@@ -2,80 +2,68 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A423C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D199C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BB120679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D275320679
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580674815;
+	bh=po/EkdwtNa+zreBFmqFHz+DcSumbOUa5aNZxL6LpnfY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=dCBXuadD5Z6o24p+CfeZMJgGyN7p+RFeANp0AHAo60UEfZBMTSncJafpsZzNfBCJ8
+	 1UfgSZ2nOZdoeHXUI6cSdH+HXfgtV4ieU3V7wWdnPOeorkmfkqb4EaL/0aGRRoohJN
+	 9k4rsmdoH4yicmjiNdU13M9AKfaWGRsNkCwZV9Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgBBUTa (ORCPT
+        id S1727112AbgBBUUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 15:19:30 -0500
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:56505 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgBBUTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 15:19:30 -0500
-Received: from localhost.localdomain ([93.22.149.209])
-        by mwinf5d11 with ME
-        id xwKT210044XJket03wKTjT; Sun, 02 Feb 2020 21:19:28 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 02 Feb 2020 21:19:28 +0100
-X-ME-IP: 93.22.149.209
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     ralf@linux-mips.org, paulburton@kernel.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] MIPS: VPE: Fix a double free and a memory leak in 'release_vpe()'
-Date:   Sun,  2 Feb 2020 21:19:22 +0100
-Message-Id: <20200202201922.22852-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 2 Feb 2020 15:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbgBBUUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 15:20:14 -0500
+Subject: Re: [GIT] Sparc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580674813;
+        bh=po/EkdwtNa+zreBFmqFHz+DcSumbOUa5aNZxL6LpnfY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XJ8AT6FbR3zNbm8ek6+P5DJWnZySOOVLCuvsghQJ8YdzA/QYqykmXv77/Ji4jexGU
+         Vq4o9gtq1MCD2CVmWuoU33YUU1XDN1qmyPphkF3RO65zM59UAX7dEAwKFfd5n/GNKV
+         RSN1+0pQbkC1cXpu0nFNJCQeTapJ5KUEcY+h7dDc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200202.115757.1806399388803712136.davem@davemloft.net>
+References: <20200202.115757.1806399388803712136.davem@davemloft.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200202.115757.1806399388803712136.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: 11648b8339f840d4b1f4c54a1abec8025d9e077d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 46d6b7becb1d5a8e697db786590c19e4067a975a
+Message-Id: <158067481377.26837.15865712190713168229.pr-tracker-bot@kernel.org>
+Date:   Sun, 02 Feb 2020 20:20:13 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointer on the memory allocated by 'alloc_progmem()' is stored in
-'v->load_addr'. So this is this memory that should be freed by
-'release_progmem()'.
+The pull request you sent on Sun, 02 Feb 2020 11:57:57 +0100 (CET):
 
-'release_progmem()' is only a call to 'kfree()'.
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git refs/heads/master
 
-With the current code, there is both a double free and a memory leak.
-Fix it by passing the correct pointer to 'release_progmem()'.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/46d6b7becb1d5a8e697db786590c19e4067a975a
 
-Fixes: e01402b115ccc ("More AP / SP bits for the 34K, the Malta bits and things. Still wants")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Un-tested
+Thank you!
 
-The 'if (v->load_addr)' looks also redundant, but, well, the code is old
-and I feel lazy tonight to send another patch for only that.
----
- arch/mips/kernel/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/kernel/vpe.c b/arch/mips/kernel/vpe.c
-index 6176b9acba95..d0d832ab3d3b 100644
---- a/arch/mips/kernel/vpe.c
-+++ b/arch/mips/kernel/vpe.c
-@@ -134,7 +134,7 @@ void release_vpe(struct vpe *v)
- {
- 	list_del(&v->list);
- 	if (v->load_addr)
--		release_progmem(v);
-+		release_progmem(v->load_addr);
- 	kfree(v);
- }
- 
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
