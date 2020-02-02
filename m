@@ -2,186 +2,92 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF62C35240
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BEAC3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2952020658
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F0D20873
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 04:38:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T7l4+/A3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgBBEd2 (ORCPT
+        id S1726947AbgBBEh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 1 Feb 2020 23:33:28 -0500
-Received: from mga09.intel.com ([134.134.136.24]:32950 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgBBEd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 1 Feb 2020 23:33:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Feb 2020 20:33:26 -0800
-X-IronPort-AV: E=Sophos;i="5.70,391,1574150400"; 
-   d="scan'208";a="223572210"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.29]) ([10.249.174.29])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 01 Feb 2020 20:33:24 -0800
-Subject: Re: [PATCH 2/2] KVM: VMX: Extend VMX's #AC handding
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <b2e2310d-2228-45c2-8174-048e18a46bb6@intel.com>
- <A2622E15-756D-434D-AF64-4F67781C0A74@amacapital.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <0fe84cd6-dac0-2241-59e5-84cb83b7c42b@intel.com>
-Date:   Sun, 2 Feb 2020 12:33:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Sat, 1 Feb 2020 23:37:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40958 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgBBEh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 1 Feb 2020 23:37:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4oWUZJaR7Jx+L3WxZYUTftOrPw0KXFITkchU6eONNQ8=; b=T7l4+/A3xrUaQ52FJYISmxjnG
+        duMEZTL96r95Umj+7OgsE+FIk3i0RC11BPcq5vSR88P1L6PQ/+njvBj7lf2gdLCAHlsX+FOBg9DqO
+        QxAM9/lQXJUr8oiveKu19VxkDskDkaQGwAOv29Has4EKNvva0RQx8JwaDFkv0wDXVV6BwUV5GIp/a
+        BYtForHRfejzD3vR0REa6j2y/s99V41bG/bmlNC8ohl3Y3UgBBTfkUi/je8SQRpm7J4XnrvBH0Nnu
+        vk7aX3Y0Z6UqKQoQ/msYTtf+sX0t9w5oej3LFg05ncHlnUgg/6DFicMgXsTD1snYT65GNUZZZsqH/
+        T3pN4f51Q==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iy717-0006gy-4o; Sun, 02 Feb 2020 04:37:53 +0000
+Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate
+ ioctl for device
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Darren Stevens <darren@stevens-zone.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, linuxppc-dev@ozlabs.org,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>,
+        "contact@a-eon.com" <contact@a-eon.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20200126115247.13402-1-mpe@ellerman.id.au>
+ <CAPDyKFrbYmV6_nV6psVLq6VRKMXf0PXpemBbj48yjOr3P130BA@mail.gmail.com>
+ <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c9c7de30-dea8-f162-f049-a16b2bcf7b7c@infradead.org>
+Date:   Sat, 1 Feb 2020 20:37:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <A2622E15-756D-434D-AF64-4F67781C0A74@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <58a6d45c-0712-18df-1b14-2f04cf12a1cb@xenosoft.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/2020 1:56 AM, Andy Lutomirski wrote:
+[might be network related, so adding netdev mailing list]
+
+On 2/1/20 4:08 PM, Christian Zigotzky wrote:
+> Hello,
 > 
+> We regularly compile and test Linux kernels every day during the merge window. Since Thuesday we have very high CPU loads because of the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc).
 > 
->> On Feb 1, 2020, at 8:58 AM, Xiaoyao Li <xiaoyao.li@intel.com> wrote:
->>
->> ﻿On 2/1/2020 5:33 AM, Andy Lutomirski wrote:
->>>>> On Jan 31, 2020, at 1:04 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
->>>>
->>>> ﻿On Fri, Jan 31, 2020 at 12:57:51PM -0800, Andy Lutomirski wrote:
->>>>>
->>>>>>> On Jan 31, 2020, at 12:18 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
->>>>>>
->>>>>> This is essentially what I proposed a while back.  KVM would allow enabling
->>>>>> split-lock #AC in the guest if and only if SMT is disabled or the enable bit
->>>>>> is per-thread, *or* the host is in "warn" mode (can live with split-lock #AC
->>>>>> being randomly disabled/enabled) and userspace has communicated to KVM that
->>>>>> it is pinning vCPUs.
->>>>>
->>>>> How about covering the actual sensible case: host is set to fatal?  In this
->>>>> mode, the guest gets split lock detection whether it wants it or not. How do
->>>>> we communicate this to the guest?
->>>>
->>>> KVM doesn't advertise split-lock #AC to the guest and returns -EFAULT to the
->>>> userspace VMM if the guest triggers a split-lock #AC.
->>>>
->>>> Effectively the same behavior as any other userspace process, just that KVM
->>>> explicitly returns -EFAULT instead of the process getting a SIGBUS.
->>> Which helps how if the guest is actually SLD-aware?
->>> I suppose we could make the argument that, if an SLD-aware guest gets #AC at CPL0, it’s a bug, but it still seems rather nicer to forward the #AC to the guest instead of summarily killing it.
->>
->> If KVM does advertise split-lock detection to the guest, then kvm/host can know whether a guest is SLD-aware by checking guest's MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
->>
->> - If guest's MSR_TEST_CTRL.SPLIT_LOCK_DETECT is set, it indicates guest is SLD-aware so KVM forwards #AC to guest.
->>
+> Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
 > 
-> I disagree. If you advertise split-lock detection with the current core capability bit, it should *work*.  And it won’t.  The choices you’re actually giving the guest are:
+> Could you please test the latest Git kernel?
 > 
-> a) Guest understands SLD and wants it on.  The guest gets the same behavior as in bare metal.
+> It is possible to deactivate the avahi daemon with the following lines in the file "/etc/avahi/avahi-daemon.conf":
 > 
-> b) Guest does not understand. Guest gets killed if it screws up as described below.
+> use-ipv4=no
+> use-ipv6=no
 > 
->> - If not set. It may be a old guest or a malicious guest or a guest without SLD support, and we cannot figure it out. So we have to kill the guest when host is SLD-fatal, and let guest survive when SLD-WARN for old sane buggy guest.
+> But this is only a temporary solution.
 > 
-> All true, but the result of running a Linux guest in SLD-warn mode will be broken.
-> 
->>
->> In a word, all the above is on the condition that KVM advertise split-lock detection to guest. But this patch doesn't do this. Maybe I should add that part in v2.
-> 
-> I think you should think the details all the way through, and I think you’re likely to determine that the Intel architecture team needs to do *something* to clean up this mess.
-> 
-> There are two independent problems here.  First, SLD *can’t* be virtualized sanely because it’s per-core not per-thread.
-
-Sadly, it's the fact we cannot change. So it's better virtualized only 
-when SMT is disabled to make thing simple.
-
-> Second, most users *won’t want* to virtualize it correctly even if they could: if a guest is allowed to do split locks, it can DoS the system.
-
-To avoid DoS attack, it must use sld_fatal mode. In this case, guest are 
-forbidden to do split locks.
-
-> So I think there should be an architectural way to tell a guest that SLD is on whether it likes it or not. And the guest, if booted with sld=warn, can print a message saying “haha, actually SLD is fatal” and carry on.
-
-OK. Let me sort it out.
-
-If SMT is disabled/unsupported, so KVM advertises SLD feature to guest. 
-below are all the case:
-
------------------------------------------------------------------------
-Host	Guest	Guest behavior
------------------------------------------------------------------------
-1. off		same as in bare metal
------------------------------------------------------------------------	
-2. warn	off	allow guest do split lock (for old guest):
-		hardware bit set initially, once split lock
-		happens, clear hardware bit when vcpu is running
-		So, it's the same as in bare metal
-	
-3.	warn	1. user space: get #AC, then clear MSR bit, but
-		   hardware bit is not cleared, #AC again, finally
-		   clear hardware bit when vcpu is running.
-		   So it's somehow the same as in bare-metal
-
-		2. kernel: same as in bare metal.
-	
-4.	fatal	same as in bare metal
-----------------------------------------------------------------------
-5.fatal	off	guest is killed when split lock,
-		or forward #AC to guest, this way guest gets an
-		unexpected #AC
-	
-6.	warn	1. user space: get #AC, then clear MSR bit, but
-		   hardware bit is not cleared, #AC again,
-		   finally guest is killed, or KVM forwards #AC
-		   to guest then guest gets an unexpected #AC.
-		2. kernel: same as in bare metal, call die();
-	
-7.	fatal	same as in bare metal
-----------------------------------------------------------------------
-
-Based on the table above, if we want guest has same behavior as in bare 
-metal, we can set host to sld_warn mode.
-If we want prevent DoS from guest, we should set host to sld_fatal mode.
+> Thanks,
+> Christian
 
 
-Now, let's analysis what if there is an architectural way to tell a 
-guest that SLD is forced on. Assume it's a SLD_forced_on cpuid bit.
-
-- Host is sld_off, SLD_forced_on cpuid bit is not set, no change for
-   case #1
-
-- Host is sld_fatal, SLD_forced_on cpuid bit must be set:
-	- if guest is SLD-aware, guest is supposed to only use fatal
-	  mode that goes to case #7. And guest is not recommended
-	  using warn mode. if guest persists, it goes to case #6
-
-	- if guest is not SLD-aware, maybe it's an old guest or it's a
-	  malicious guest that pretends not SLD-aware, it goes to
-	  case #5.
-
-- Host is sld_warn, we have two choice
-	- set SLD_forced_on cpuid bit, it's the same as host is fatal.
-	- not set SLD_force_on_cpuid bit, it's the same as case #2,#3,#4
-
-So I think introducing an architectural way to tell a guest that SLD is 
-forced on can make the only difference is that, there is a way to tell 
-guest not to use warn mode, thus eliminating case #6.
-
-If you think it really matters, I can forward this requirement to our 
-Intel architecture people.
->>
->>> ISTM, on an SLD-fatal host with an SLD-aware guest, the host should tell the guest “hey, you may not do split locks — SLD is forced on” and the guest should somehow acknowledge it so that it sees the architectural behavior instead of something we made up.  Hence my suggestion.
->>
+-- 
+~Randy
 
