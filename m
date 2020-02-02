@@ -2,185 +2,113 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9AEC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3461FC3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6379220658
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1607C2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 17:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgBBQrv (ORCPT
+        id S1726943AbgBBRN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 11:47:51 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:58153 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726885AbgBBQrv (ORCPT
+        Sun, 2 Feb 2020 12:13:56 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37996 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgBBRN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 11:47:51 -0500
-Received: (qmail 21778 invoked by uid 500); 2 Feb 2020 11:47:50 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Feb 2020 11:47:50 -0500
-Date:   Sun, 2 Feb 2020 11:47:49 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Sven Schnelle <svens@stackframe.org>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>,
-        <usb-storage@lists.one-eyed-alien.net>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] usb-storage: Add support for Ratoc U2SCX multiple
- device mode
-In-Reply-To: <20200202093750.4439-3-svens@stackframe.org>
-Message-ID: <Pine.LNX.4.44L0.2002021139010.20768-100000@netrider.rowland.org>
+        Sun, 2 Feb 2020 12:13:56 -0500
+Received: by mail-qk1-f195.google.com with SMTP id k6so11929958qki.5;
+        Sun, 02 Feb 2020 09:13:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wkB9hEzJnTGg0+titOdjnKOkA5bK07ut9KDYjyipcyQ=;
+        b=XLwYkWNir2DWBtBW7uyPEqO1le1ovip+CWBmdvJivK6P7lopltFO/ZaaQmsxG8soLD
+         cgt6MVmvjH3TEFy7IjJryoYQuEHBo3tROOXlQXwnZPuyWBjUrKgZLWusKy0WjxIkEauJ
+         GXx/0k22r9lnLa4QYBamM0RDElfr3mGnHJ8uocI6UoXoSTEsIWqxzEXxvLPTUBvcZx/I
+         xQ4n3pZB6tNZQ3W02tKHev4PTfqNACYF7xcG+P/D7/f2nLCoCa6AMO1M+ioxVFzUQ0gO
+         /SBcZNPxE6sDeL/0olMZtQY1VE3Wj1w9f5scUEkS4sOSB4SvfCEpCj5OM8KaG5QsqLoy
+         2MEg==
+X-Gm-Message-State: APjAAAXs2k/33ouLDQMC9dlOdaJJDQ9Daiz106Lcj1txE61RKZEJ+MM1
+        79db2ldW8qbITXniJN0sSgk=
+X-Google-Smtp-Source: APXvYqy6GSEPqc154do67Yx2BRzju/BO1xu6ATlNJHsqHsL2qBR8epiNbj/7XivSIA4CxHRVd7RRow==
+X-Received: by 2002:a37:be07:: with SMTP id o7mr5554219qkf.392.1580663634734;
+        Sun, 02 Feb 2020 09:13:54 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 3sm8150081qte.59.2020.02.02.09.13.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 09:13:54 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/7] x86/efi,boot: GDT handling cleanup/fixes
+Date:   Sun,  2 Feb 2020 12:13:46 -0500
+Message-Id: <20200202171353.3736319-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200130200440.1796058-1-nivedita@alum.mit.edu>
+References: <20200130200440.1796058-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Feb 2020, Sven Schnelle wrote:
+This series fixes a potential bug in EFI mixed-mode and leaves GDT
+handling to startup_{32,64} instead of efi_main.
 
-> The Ratoc U2SCX can support more than one device but uses another
-> USB ID in that case (0584:0222) with a Vendor specific class. The
-> used protocol is still USB Mass storage, but we need to fetch the
-> maximum LUN number as otherwise the controller would address all
-> devices on the SCSI bus when an invalid LUN is probed. It looks like
-> U2SCX maps SCSI ID to LUN numbers, so we must not enable
-> US_FL_SCM_MULT_TARG.
-> 
-> dmesg with the driver enabled looks like this:
-> 
-> [  133.157337] usb 1-2: new high-speed USB device number 6 using xhci_hcd
-> [  133.170273] usb 1-2: New USB device found, idVendor=0584, idProduct=0222, bcdDevice= 1.11
-> [  133.170279] usb 1-2: New USB device strings: Mfr=1, Product=3, SerialNumber=2
-> [  133.170283] usb 1-2: Product: USB-SCSI Converter
-> [  133.170286] usb 1-2: Manufacturer: RATOCSystems,Inc.
-> [  133.170289] usb 1-2: SerialNumber: 020301002197
-> [  133.171576] usb-storage 1-2:1.0: USB Mass Storage device detected
-> [  133.172084] scsi host1: usb-storage 1-2:1.0
-> [  134.199245] scsi 1:0:0:0: CD-ROM            HL-DT-ST DVDRAM GSA-4163B A100 PQ: 0 ANSI: 2
-> [  134.202744] scsi 1:0:0:1: Direct-Access     SyQuest  SQ5200C          A0L  PQ: 0 ANSI: 2
-> [  134.219300] scsi 1:0:0:2: Direct-Access     SyQuest  SQ3270S          1_24 PQ: 0 ANSI: 2
-> [  134.224660] sr 1:0:0:0: Power-on or device reset occurred
-> [  134.343256] sr 1:0:0:0: [sr0] scsi3-mmc drive: 40x/40x writer dvd-ram cd/rw xa/form2 cdda tray
-> [  134.343262] cdrom: Uniform CD-ROM driver Revision: 3.20
-> [  134.350873] sr 1:0:0:0: Attached scsi CD-ROM sr0
-> [  134.351120] sr 1:0:0:0: Attached scsi generic sg1 type 5
-> [  134.351438] sd 1:0:0:1: Attached scsi generic sg2 type 0
-> [  134.351685] sd 1:0:0:2: Attached scsi generic sg3 type 0
-> [  134.362141] sd 1:0:0:1: Power-on or device reset occurred
-> [  134.483977] sd 1:0:0:1: [sdb] Attached SCSI removable disk
-> [  134.513922] sd 1:0:0:2: Power-on or device reset occurred
-> [  134.579802] sd 1:0:0:2: [sdc] Spinning up disk...
-> [  135.602397] ......
-> [  141.707017] sd 1:0:0:1: [sdb] Spinning up disk...
-> [  151.346332] .ready
-> [  151.353990] sd 1:0:0:2: [sdc] 524288 512-byte logical blocks: (268 MB/256 MiB)
-> [  151.361560] sd 1:0:0:2: [sdc] Write Protect is off
-> [  151.361566] sd 1:0:0:2: [sdc] Mode Sense: 99 00 00 08
-> [  151.368868] sd 1:0:0:2: [sdc] Write cache: disabled, read cache: enabled, doesn't support DPO or FUA
-> [  151.428485]  sdc: sdc1
-> [  151.465364] sd 1:0:0:2: [sdc] Attached SCSI removable disk
-> [  152.178231] .....ready
-> [  156.535115] sd 1:0:0:1: [sdb] 173456 512-byte logical blocks: (88.8 MB/84.7 MiB)
-> [  156.606445]  sdb: sdb1
+The first patch removes KEEP_SEGMENTS support in loadflags, this is
+unused now (details in patch 1 commit msg), to slightly simplify
+subsequent changes.
 
-Isn't this the same as we would see for any multi-LUN device?  What's 
-so special about this log that you thought including it here was 
-important?
+The second patch fixes a potential bug in EFI mixed-mode, where we are
+currently relying on the firmware GDT having a particular layout: a
+CODE32 segment as descriptor 2 and a DATA segment as descriptor 3.
 
-> Signed-off-by: Sven Schnelle <svens@stackframe.org>
-> ---
->  drivers/usb/storage/initializers.c | 27 +++++++++++++++++++++++++++
->  drivers/usb/storage/initializers.h |  2 ++
->  drivers/usb/storage/unusual_devs.h |  5 +++++
->  3 files changed, 34 insertions(+)
-> 
-> diff --git a/drivers/usb/storage/initializers.c b/drivers/usb/storage/initializers.c
-> index f8f9ce8dc710..089d67e99aa9 100644
-> --- a/drivers/usb/storage/initializers.c
-> +++ b/drivers/usb/storage/initializers.c
-> @@ -44,6 +44,33 @@ int usb_stor_euscsi_init(struct us_data *us)
->  	return 0;
->  }
->  
-> +/* Function to get the maximum LUN (Logical Unit number) from Ratoc. */
+The third patch adds some safety during kernel decompression by updating
+the GDTR to point to the copied GDT, rather than the old one which may
+have been overwritten.
 
-People reading this code almost certainly already know what "LUN" 
-stands for.  You don't have to remind them.
+The fourth patch adds cld/cli to startup_64, and the fifth patch removes
+all the GDT setup from efi_main and adds it to the 32-bit kernel's
+startup_32. The 64-bit kernel already does GDT setup. This should be
+safer as this code can keep track of where the .data section is moving
+and ensure that GDTR is pointing to a clean copy of the GDT.
 
-> +int usb_stor_ratoc_u2scx_init(struct us_data *us)
-> +{
-> +	int i, result;
-> +	uint8_t *idmap = (uint8_t *)us->iobuf;
-> +
-> +	result = usb_stor_control_msg(us, us->recv_ctrl_pipe,
-> +					0xe6, USB_DIR_IN | USB_TYPE_VENDOR |
-> +					USB_RECIP_INTERFACE,
-> +					0x0, 0x0, idmap, 8, 5 * HZ);
-> +
-> +	if (result < 0) {
-> +		usb_stor_dbg(us, "fetching max lun failed: %d\n", result);
-> +		return result;
-> +	}
+The last two patches are to fix an off-by-one in the GDT limit and do a
+micro-optimization to the GDT loading instructions.
 
-You don't want to check that the device actually returned 8 bytes of 
-data?  What if it returned fewer?
+Changes from v1:
+- added removal of KEEP_SEGMENTS
+- added the mixed-mode fix
+- completely removed GDT setup from efi_main, including for the 32-bit
+  kernel
+- dropped documentation patches for now
 
-> +
-> +	for (i = 0; i < 7; i++) {
-> +		if (idmap[i] == 0xff)
+Arvind Sankar (7):
+  x86/boot: Remove KEEP_SEGMENTS support
+  efi/x86: Don't depend on firmware GDT layout
+  x86/boot: Reload GDTR after copying to the end of the buffer
+  x86/boot: Clear direction and interrupt flags in startup_64
+  efi/x86: Remove GDT setup from efi_main
+  x86/boot: GDT limit value should be size - 1
+  x86/boot: Micro-optimize GDT loading instructions
 
-You didn't initialize the contents of idmap.  So if the device returned
-fewer than 7 bytes, what makes you think the extra value will be 0xff?
+ Documentation/x86/boot.rst              |   8 +-
+ arch/x86/boot/compressed/eboot.c        | 103 ------------------------
+ arch/x86/boot/compressed/efi_thunk_64.S |  29 +++++--
+ arch/x86/boot/compressed/head_32.S      |  48 +++++++----
+ arch/x86/boot/compressed/head_64.S      |  66 ++++++++-------
+ arch/x86/kernel/head_32.S               |   6 --
+ 6 files changed, 99 insertions(+), 161 deletions(-)
 
-> +			break;
-> +	}
-> +
-> +	if (i == 0)
-> +		return -EIO;
-> +
-> +	us->max_lun = i - 1;
-> +	return 0;
-> +}
->  /*
->   * This function is required to activate all four slots on the UCR-61S2B
->   * flash reader
-> diff --git a/drivers/usb/storage/initializers.h b/drivers/usb/storage/initializers.h
-> index 2dbf9c7d9749..b3ad7bfadf41 100644
-> --- a/drivers/usb/storage/initializers.h
-> +++ b/drivers/usb/storage/initializers.h
-> @@ -37,3 +37,5 @@ int usb_stor_ucr61s2b_init(struct us_data *us);
->  
->  /* This places the HUAWEI E220 devices in multi-port mode */
->  int usb_stor_huawei_e220_init(struct us_data *us);
-> +
-> +int usb_stor_ratoc_u2scx_init(struct us_data *us);
-> diff --git a/drivers/usb/storage/unusual_devs.h b/drivers/usb/storage/unusual_devs.h
-> index 1cd9b6305b06..46b95944533c 100644
-> --- a/drivers/usb/storage/unusual_devs.h
-> +++ b/drivers/usb/storage/unusual_devs.h
-> @@ -2372,6 +2372,11 @@ UNUSUAL_DEV( 0xed10, 0x7636, 0x0001, 0x0001,
->  		"Digital MP3 Audio Player",
->  		USB_SC_DEVICE, USB_PR_DEVICE, NULL, US_FL_NOT_LOCKABLE ),
->  
-> +UNUSUAL_DEV(0x0584, 0x0222, 0x0000, 0xffff,
-> +		"Ratoc",
-> +		"U2SCX USB SCSI converter",
-> +		USB_SC_DEVICE, USB_PR_DEVICE, usb_stor_ratoc_u2scx_init, 0),
-> +
-
-Please read the comments at the start of the file, in particular the 
-part describing how the entries should e sorted.
-
-Alan Stern
-
->  /* Unusual uas devices */
->  #if IS_ENABLED(CONFIG_USB_UAS)
->  #include "unusual_uas.h"
-> 
+-- 
+2.24.1
 
