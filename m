@@ -2,120 +2,140 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BEAC3524A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BCDC3524A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F322067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="UGxus0Uv"
+	by mail.kernel.org (Postfix) with ESMTP id 5EFAA2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgBBLsc (ORCPT
+        id S1726881AbgBBLvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:48:32 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39288 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBBLsc (ORCPT
+        Sun, 2 Feb 2020 06:51:15 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:34318 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgBBLvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:48:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so13781488wme.4
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:48:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Op0zfe58XdVsuLFDv+kV1nCs9niSTB0gzCPSk7DxSPs=;
-        b=UGxus0UvDEEJ26RDo6DrWOA2vo37glkXXFSFf+GTlBeShN0snPnY61EzyFpFflbcP6
-         1AgXPK07wWXJXS9BGhu9nzE6uaoHggg4jwSLJczzAxLPO33lbgqV07O3Z0jvovl7o3aG
-         wfZukZU1s67yckW3jLJ8T1HiFu9IWrptgcPvcztYI2DIypbNNs7/Khp19P0WrNiaFJ+i
-         NaK3kdgK6HEBrD0SPfcD98NTFP75FyC/Y2O6ctpqZmqsJZQmYs+BA4mBDxns/msWKpmy
-         CqIsb3Ge7I9O09tHPaJpE6Xy7g4dD7HbrfcfSP+nT7X6J9aOXVcCcyVxatvywF3/UN6N
-         vpHQ==
+        Sun, 2 Feb 2020 06:51:15 -0500
+Received: by mail-io1-f69.google.com with SMTP id n26so7505143ioj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:51:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Op0zfe58XdVsuLFDv+kV1nCs9niSTB0gzCPSk7DxSPs=;
-        b=j8qseUjQxcfeaow3OcMPezxS7xjMtkA5NrjOFwBsEJ3dZSKzmM6VtNDUFWV/e453zQ
-         9yl5W/oEFMdHJ5zVLKHsq0hmr5fmzk9g/4IEslaMFx6Fzqth9VYYHhwxk+/I0mjfCA7a
-         4pfPVimuV4XRcysGzI8s5v+C8qHtHWB6nf7xVsn2E4BVY4ePXduic1VvWeKzBnVHle4M
-         zHaJa5NXQwRWUSXJVQo/ux9+SI27GsZ2ZfJyzmqo328V8anY95W/TPczZOR1UHTEyZTd
-         fWvacqK3fbRJucfgU4GFZFNnPqi4tojY77CLfOkPR+VEFTe3BYhkkkviqQPXrR3MYKHk
-         9dFw==
-X-Gm-Message-State: APjAAAXbEC3gTJIQGkWNBNyBr4mlBQ4YsJfp+28ICEtFxQlmIjXnV7TN
-        WlVzkLRWM60/A6z9tA71kHOU1E8rpcxfgZXaWmIcCXaQ0g2y
-X-Google-Smtp-Source: APXvYqxq7L4O+L8Zw+nM1sKEx/N3GRXkz3TOVixpfJQrX2G1q0+48Y2iIlYhn2cIHDmMG2e+GnhI1z0A0QWYcaZav2w=
-X-Received: by 2002:a05:600c:2113:: with SMTP id u19mr22862304wml.78.1580644110192;
- Sun, 02 Feb 2020 03:48:30 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=gDDCrfJjdDDWz7lybOsk1SBJ7NDoCvpPI4Iv7Ym26Q0=;
+        b=KqSC9CsS/hAneVf1y5wernK+ojtH+P8KBp9DrLv69CLI1GIC1DYRfXyJ6IB3i1ozm+
+         6bCbEsnN9DOdwg/4s/BieUN1hCgI4iBSXXQvrQ7ZucK9Ew2s5r8d4OH+MYgWxVzozNwA
+         6wecLEU3ahRqxh7cVSjKsezWU7VtLsIAQ0pgtiaMPjxAfFwBuCDL4wosMA1ohuWBH7hl
+         0aED4EvmvXLv8uSqeIOAtZQX3cte8R4t3+ti/mNDAyPcm1EwK05aqQc/F8OjlNpeuVjE
+         tFy2GnG9FzaYixhXtcDj9o8H8+GUpMHoeOgLayZ9TKi7QfiCToXyU4d4x4jQ2P+lfkxZ
+         gsgQ==
+X-Gm-Message-State: APjAAAUCqV1mBSClpEj8ATmBsWWg2UzhNGqntYjjnI/8tNcdMS+mG4qo
+        lHb0u47pcGeoHt6p8Gg0geBF3BniZoqJElEqHC8WwqDhjWAK
+X-Google-Smtp-Source: APXvYqzvwDgZBZuuegEnMtws/mdG1zvPsn97DNuVVZnFS/i+Oz9CAIVTKP6SFs7/+cH/DrWu5GQ5v9ZxW5D6Z7hmQEwxjJLF4yom
 MIME-Version: 1.0
-References: <20200202110202.124048-1-anup.patel@wdc.com>
-In-Reply-To: <20200202110202.124048-1-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Sun, 2 Feb 2020 03:48:18 -0800
-Message-ID: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>
+X-Received: by 2002:a02:a795:: with SMTP id e21mr15049847jaj.1.1580644273174;
+ Sun, 02 Feb 2020 03:51:13 -0800 (PST)
+Date:   Sun, 02 Feb 2020 03:51:13 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006b3d44059d966ca1@google.com>
+Subject: BUG: unable to handle kernel paging request in netlink_unicast
+From:   syzbot <syzbot+da7f30a2f1a15a687839@syzkaller.appspotmail.com>
+To:     ap420073@gmail.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        penguin-kernel@I-love.SAKURA.ne.jp, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> Historically, we have been enabling all interrupts for each
-> HART in trap_init(). Ideally, we should only enable M-mode
-> interrupts for M-mode kernel and S-mode interrupts for S-mode
-> kernel in trap_init().
->
-> Currently, we get suprious S-mode interrupts on Kendryte K210
-> board running M-mode NO-MMU kernel because we are enabling all
-> interrupts in trap_init(). To fix this, we only enable software
-> and external interrupt in trap_init(). In future, trap_init()
-> will only enable software interrupt and PLIC driver will enable
-> external interrupt using CPU notifiers.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/kernel/traps.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index f4cad5163bf2..ffb3d94bf0cc 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -156,6 +156,6 @@ void __init trap_init(void)
->         csr_write(CSR_SCRATCH, 0);
->         /* Set the exception vector address */
->         csr_write(CSR_TVEC, &handle_exception);
-> -       /* Enable all interrupts */
-> -       csr_write(CSR_IE, -1);
-> +       /* Enable interrupts */
-> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
->  }
-> --
-> 2.17.1
->
->
+Hello,
 
-Looks good.
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
--- 
-Regards,
-Atish
+syzbot found the following crash on:
+
+HEAD commit:    b3a60822 Merge branch 'for-v5.6' of git://git.kernel.org:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1477ae95e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5766bb49c0bc43b9
+dashboard link: https://syzkaller.appspot.com/bug?extid=da7f30a2f1a15a687839
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+da7f30a2f1a15a687839@syzkaller.appspotmail.com
+
+kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+BUG: unable to handle page fault for address: ffff88809d910a50
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0011) - permissions violation
+PGD b001067 P4D b001067 PUD 21ffff067 PMD 800000009d8001e3 
+Oops: 0011 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 12558 Comm: syz-executor.2 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0xffff88809d910a50
+Code: 00 00 00 00 00 00 00 00 00 00 86 7a 03 89 ff ff ff ff 00 60 43 aa 80 88 ff ff 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <50> f8 d1 04 00 c9 ff ff 70 55 a7 86 ff ff ff ff c0 81 e4 8c 80 88
+RSP: 0018:ffffc90004d1f860 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffff869eea30 RCX: dffffc0000000000
+RDX: ffffc900024cb000 RSI: 0000000000005c7e RDI: 0000000000005c7f
+RBP: ffffc90004d1fb20 R08: dffffc0000000000 R09: ffffed1014d22849
+R10: ffffed1014d22849 R11: 0000000000000000 R12: 1ffff11013dabb07
+R13: ffff88809ed5d83a R14: 000000000000006e R15: dffffc0000000000
+FS:  00007f828b464700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff88809d910a50 CR3: 000000009c353000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b349
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f828b463c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f828b4646d4 RCX: 000000000045b349
+RDX: 0000000000000000 RSI: 0000000020003e00 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000940 R14: 00000000004ca9e5 R15: 000000000075bf2c
+Modules linked in:
+CR2: ffff88809d910a50
+---[ end trace 71a7bd2ec42e29ac ]---
+RIP: 0010:0xffff88809d910a50
+Code: 00 00 00 00 00 00 00 00 00 00 86 7a 03 89 ff ff ff ff 00 60 43 aa 80 88 ff ff 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <50> f8 d1 04 00 c9 ff ff 70 55 a7 86 ff ff ff ff c0 81 e4 8c 80 88
+RSP: 0018:ffffc90004d1f860 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffff869eea30 RCX: dffffc0000000000
+RDX: ffffc900024cb000 RSI: 0000000000005c7e RDI: 0000000000005c7f
+RBP: ffffc90004d1fb20 R08: dffffc0000000000 R09: ffffed1014d22849
+R10: ffffed1014d22849 R11: 0000000000000000 R12: 1ffff11013dabb07
+R13: ffff88809ed5d83a R14: 000000000000006e R15: dffffc0000000000
+FS:  00007f828b464700(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff88809d910a50 CR3: 000000009c353000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
