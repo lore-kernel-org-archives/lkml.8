@@ -2,230 +2,120 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8F2C3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BEAC3524A
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3429A2086A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580642904;
-	bh=idvg0ScIrlr77Wo2HLm6435xerymIe999QDm8yIO6+Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jXtQNrkRTFwl3h8mrphwp+dH6aboGcZfIbsF27AMzqOZdXMXe+ZpI2qFe2M4VrLeo
-	 r2fet8GgvUYiwvnoqF3Aun6p4TTUQIPq/jU7Ky89qui1bWE8HCCdMRXuhdoV2kmdzH
-	 dLnJ4AYMk9bLdKuCXqKoGI4461y46PppSSgL+1pU=
+	by mail.kernel.org (Postfix) with ESMTP id D8F322067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 11:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="UGxus0Uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgBBL2X (ORCPT
+        id S1726743AbgBBLsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 06:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgBBL2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 06:28:23 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97DA9206D3;
-        Sun,  2 Feb 2020 11:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580642902;
-        bh=idvg0ScIrlr77Wo2HLm6435xerymIe999QDm8yIO6+Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=C1HaChaMOIyBwVl9vkRkqNBfD+C/F4DutFmVLMOFlVrERUFr9rh1UBSqkbO74zG/g
-         r5mNxXldsaarO9YcnhvGWebtfKJGT946hzquZCN4XhBAwl7yPyBBQCV/Awg2wJ7xa1
-         d/jHolFONRV+NG2tyijX+90XXdWvNHAIZKwpXFlA=
-Date:   Sun, 2 Feb 2020 11:28:15 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH v1 2/2] iio: adc: modify NPCM reset support
-Message-ID: <20200202112815.66b4b119@archlinux>
-In-Reply-To: <CAP6Zq1hupvQeXwynt02ePu6eL9X5oriNNwSmJEPqQWZBj770oA@mail.gmail.com>
-References: <20200119110032.124745-1-tmaimon77@gmail.com>
-        <20200119110032.124745-2-tmaimon77@gmail.com>
-        <20200129200143.08bf4a91@archlinux>
-        <CAP6Zq1hupvQeXwynt02ePu6eL9X5oriNNwSmJEPqQWZBj770oA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 2 Feb 2020 06:48:32 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39288 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBBLsc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 06:48:32 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c84so13781488wme.4
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 03:48:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Op0zfe58XdVsuLFDv+kV1nCs9niSTB0gzCPSk7DxSPs=;
+        b=UGxus0UvDEEJ26RDo6DrWOA2vo37glkXXFSFf+GTlBeShN0snPnY61EzyFpFflbcP6
+         1AgXPK07wWXJXS9BGhu9nzE6uaoHggg4jwSLJczzAxLPO33lbgqV07O3Z0jvovl7o3aG
+         wfZukZU1s67yckW3jLJ8T1HiFu9IWrptgcPvcztYI2DIypbNNs7/Khp19P0WrNiaFJ+i
+         NaK3kdgK6HEBrD0SPfcD98NTFP75FyC/Y2O6ctpqZmqsJZQmYs+BA4mBDxns/msWKpmy
+         CqIsb3Ge7I9O09tHPaJpE6Xy7g4dD7HbrfcfSP+nT7X6J9aOXVcCcyVxatvywF3/UN6N
+         vpHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Op0zfe58XdVsuLFDv+kV1nCs9niSTB0gzCPSk7DxSPs=;
+        b=j8qseUjQxcfeaow3OcMPezxS7xjMtkA5NrjOFwBsEJ3dZSKzmM6VtNDUFWV/e453zQ
+         9yl5W/oEFMdHJ5zVLKHsq0hmr5fmzk9g/4IEslaMFx6Fzqth9VYYHhwxk+/I0mjfCA7a
+         4pfPVimuV4XRcysGzI8s5v+C8qHtHWB6nf7xVsn2E4BVY4ePXduic1VvWeKzBnVHle4M
+         zHaJa5NXQwRWUSXJVQo/ux9+SI27GsZ2ZfJyzmqo328V8anY95W/TPczZOR1UHTEyZTd
+         fWvacqK3fbRJucfgU4GFZFNnPqi4tojY77CLfOkPR+VEFTe3BYhkkkviqQPXrR3MYKHk
+         9dFw==
+X-Gm-Message-State: APjAAAXbEC3gTJIQGkWNBNyBr4mlBQ4YsJfp+28ICEtFxQlmIjXnV7TN
+        WlVzkLRWM60/A6z9tA71kHOU1E8rpcxfgZXaWmIcCXaQ0g2y
+X-Google-Smtp-Source: APXvYqxq7L4O+L8Zw+nM1sKEx/N3GRXkz3TOVixpfJQrX2G1q0+48Y2iIlYhn2cIHDmMG2e+GnhI1z0A0QWYcaZav2w=
+X-Received: by 2002:a05:600c:2113:: with SMTP id u19mr22862304wml.78.1580644110192;
+ Sun, 02 Feb 2020 03:48:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200202110202.124048-1-anup.patel@wdc.com>
+In-Reply-To: <20200202110202.124048-1-anup.patel@wdc.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Sun, 2 Feb 2020 03:48:18 -0800
+Message-ID: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
+To:     Anup Patel <anup.patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Jan 2020 10:20:30 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
+>
+> Historically, we have been enabling all interrupts for each
+> HART in trap_init(). Ideally, we should only enable M-mode
+> interrupts for M-mode kernel and S-mode interrupts for S-mode
+> kernel in trap_init().
+>
+> Currently, we get suprious S-mode interrupts on Kendryte K210
+> board running M-mode NO-MMU kernel because we are enabling all
+> interrupts in trap_init(). To fix this, we only enable software
+> and external interrupt in trap_init(). In future, trap_init()
+> will only enable software interrupt and PLIC driver will enable
+> external interrupt using CPU notifiers.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/kernel/traps.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index f4cad5163bf2..ffb3d94bf0cc 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -156,6 +156,6 @@ void __init trap_init(void)
+>         csr_write(CSR_SCRATCH, 0);
+>         /* Set the exception vector address */
+>         csr_write(CSR_TVEC, &handle_exception);
+> -       /* Enable all interrupts */
+> -       csr_write(CSR_IE, -1);
+> +       /* Enable interrupts */
+> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
+>  }
+> --
+> 2.17.1
+>
+>
 
-> Hi Jonathan,
-> 
-> The patch replace reset ADC method from direct register access to using
-> reset driver (will applied next Linux version).
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git/commit/?h=next-20200130&id=9c81b2ccf82da6e995b63e945afa882cfaa03ca9
-> 
-> 
-> The ADC dt-binding modified as well to use the new reset method (approved
-> by Rob Herring)
-> https://www.spinics.net/lists/devicetree/msg331327.html
-> 
-> Indeed the this modification require DT modification as it described in the
-> ADC dt-binding commit, is it an issue? Do you thnk I should describe it in
-> the commit?
-
-Whether it is an issue depends on nuvoton business model.  Can they ensure
-that all places the kernel is changed will also have appropriate dt updates?
-
-If not, you need to make the code continue to function without the change
-(fall back to old methods).  If they do have enough control to ensure it won't
-break any systems out in the wild, then just add a note to say that is the
-case to the commit message.
-
-Reasons this sort of thing is sometimes safe include:
-* preproduction part so no users outside of people who will expect
-potential breakage
-* dt and new kernel images only distributed in a firmware package, or
-where build script used to build the firmware package will ensure they
-match (this is a bmc chip I think, so I guess not many people build their own
-kernels except via scripting to package everything up as a firmware image
-of some type?)
-
-Thanks,
-
-Jonathan
-> 
-> Thanks,
-> 
-> Tomer
-> 
-> 
-> 
-> On Wed, 29 Jan 2020 at 22:01, Jonathan Cameron <jic23@kernel.org> wrote:
-> 
-> > On Sun, 19 Jan 2020 13:00:32 +0200
-> > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> >  
-> > > Modify NPCM ADC reset support from
-> > > direct register access to reset controller support.
-> > >
-> > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>  
-> >
-> > Hmm.  This presumably breaks all old DT.
-> >
-> > If that's not a problem please say why.
-> >
-> > Jonathan
-> >  
-> > > ---
-> > >  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
-> > >  1 file changed, 9 insertions(+), 21 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-> > > index a6170a37ebe8..83bad2d5575d 100644
-> > > --- a/drivers/iio/adc/npcm_adc.c
-> > > +++ b/drivers/iio/adc/npcm_adc.c
-> > > @@ -14,6 +14,7 @@
-> > >  #include <linux/regulator/consumer.h>
-> > >  #include <linux/spinlock.h>
-> > >  #include <linux/uaccess.h>
-> > > +#include <linux/reset.h>
-> > >
-> > >  struct npcm_adc {
-> > >       bool int_status;
-> > > @@ -23,13 +24,9 @@ struct npcm_adc {
-> > >       struct clk *adc_clk;
-> > >       wait_queue_head_t wq;
-> > >       struct regulator *vref;
-> > > -     struct regmap *rst_regmap;
-> > > +     struct reset_control *reset;
-> > >  };
-> > >
-> > > -/* NPCM7xx reset module */
-> > > -#define NPCM7XX_IPSRST1_OFFSET               0x020
-> > > -#define NPCM7XX_IPSRST1_ADC_RST              BIT(27)
-> > > -
-> > >  /* ADC registers */
-> > >  #define NPCM_ADCCON   0x00
-> > >  #define NPCM_ADCDATA  0x04
-> > > @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info,  
-> > int *val, u8 channel)  
-> > >                                              msecs_to_jiffies(10));
-> > >       if (ret == 0) {
-> > >               regtemp = ioread32(info->regs + NPCM_ADCCON);
-> > > -             if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-> > > +             if (regtemp & NPCM_ADCCON_ADC_CONV) {
-> > >                       /* if conversion failed - reset ADC module */
-> > > -                     regmap_write(info->rst_regmap,  
-> > NPCM7XX_IPSRST1_OFFSET,  
-> > > -                                  NPCM7XX_IPSRST1_ADC_RST);
-> > > +                     reset_control_assert(info->reset);
-> > >                       msleep(100);
-> > > -                     regmap_write(info->rst_regmap,  
-> > NPCM7XX_IPSRST1_OFFSET,  
-> > > -                                  0x0);
-> > > +                     reset_control_deassert(info->reset);
-> > >                       msleep(100);
-> > >
-> > >                       /* Enable ADC and start conversion module */
-> > > @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device  
-> > *pdev)  
-> > >       struct npcm_adc *info;
-> > >       struct iio_dev *indio_dev;
-> > >       struct device *dev = &pdev->dev;
-> > > -     struct device_node *np = pdev->dev.of_node;
-> > >
-> > >       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> > >       if (!indio_dev)
-> > > @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device  
-> > *pdev)  
-> > >       if (IS_ERR(info->regs))
-> > >               return PTR_ERR(info->regs);
-> > >
-> > > +     info->reset = devm_reset_control_get(&pdev->dev, NULL);
-> > > +     if (IS_ERR(info->reset))
-> > > +             return PTR_ERR(info->reset);
-> > > +
-> > >       info->adc_clk = devm_clk_get(&pdev->dev, NULL);
-> > >       if (IS_ERR(info->adc_clk)) {
-> > >               dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
-> > > @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device  
-> > *pdev)  
-> > >       div = div >> NPCM_ADCCON_DIV_SHIFT;
-> > >       info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) *  
-> > 2);  
-> > >
-> > > -     if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
-> > > -             info->rst_regmap = syscon_regmap_lookup_by_compatible
-> > > -                     ("nuvoton,npcm750-rst");
-> > > -             if (IS_ERR(info->rst_regmap)) {
-> > > -                     dev_err(&pdev->dev, "Failed to find  
-> > nuvoton,npcm750-rst\n");  
-> > > -                     ret = PTR_ERR(info->rst_regmap);
-> > > -                     goto err_disable_clk;
-> > > -             }
-> > > -     }
-> > > -
-> > >       irq = platform_get_irq(pdev, 0);
-> > >       if (irq <= 0) {
-> > >               ret = -EINVAL;  
-> >
-> >  
-
+Looks good.
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+-- 
+Regards,
+Atish
