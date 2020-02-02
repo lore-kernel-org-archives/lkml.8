@@ -2,115 +2,155 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C06C35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 18:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20FCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5920658
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 18:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBlBZ4Ex"
+	by mail.kernel.org (Postfix) with ESMTP id A2CE82067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgBBSS4 (ORCPT
+        id S1726959AbgBBTJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 13:18:56 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40269 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgBBSS4 (ORCPT
+        Sun, 2 Feb 2020 14:09:47 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57726 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgBBTJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 13:18:56 -0500
-Received: by mail-qk1-f194.google.com with SMTP id t204so12028006qke.7;
-        Sun, 02 Feb 2020 10:18:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I63xniiKpQdj1U3DyjVkziZFNdozieGZaSMSOJa63DA=;
-        b=bBlBZ4ExHiIjVNfi75bGRhUlyfAlC8lFTrSgFK/BZVBkVUm+31wnDfxQIettyrfZSF
-         +wHTualkwWhLVM/GW7xQVKI/3yf4B/Fi0NT183oTgWQdyj+GqkJ07qUJUFzh5jlKPJt8
-         FUgRcn8/x/SO3yYqoo9xewd5MO4/zIHJgQwlGX/fXLw+ykW7DM47MLzh5K1EScRCkhKL
-         1wC9Vc54CFukNIkU9SHRI3zK5bY66nIzr/nEfpRCFUNSo6A2meHdHzTzziPKlvzDeUdx
-         OimGWtqKwphthQSyuBFkMJMS31ciJDXvZ95oak7qCJPkF7kCjkUobAUO2zieUJqx1ymi
-         KuCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I63xniiKpQdj1U3DyjVkziZFNdozieGZaSMSOJa63DA=;
-        b=Khk754ihjw1Feu2ihIpyYiqlDApxgwGskjuv5bO3ODzcd2d0ckENmf/Tmmbb9rGGYL
-         pZT2Shjriht+0LyK/3aMTUzaDMU4TLyIWYVIpI5brfTyDkH/LTZ1iq6nHGriOZ65lYc3
-         J0q+bx6r6DaUdRPHiKXvwFkNA8T6POZC+z51cRXQJPQD9qDV+XoEWTBh6ZhM8VC+v2xQ
-         MBSFFu+hFFDv/bPz/ifx89c+G58GVED8Vvfyver79b96j4yGQlmZzsPTKX5ZineYpmd/
-         6p77xcZUtkmc73BxI+Y9Jnl0U8C2viFgPcvWSh5KNy6Orl6Xy1SB3htaLdkUYhl7QsjM
-         OgPw==
-X-Gm-Message-State: APjAAAXzes5RRupFcS65DadhWUEzCuKMpMSMQbGyd5AND0vxjjAABa2V
-        OoYe7LNo7Z+yPJ0Bl8HP6zs=
-X-Google-Smtp-Source: APXvYqwMlCEZh3McBUplhPkxVe7FdTPOLkeD00pWyY6OSL7fSdSGc4bSabPy1f2Tmsi9ElVZmtiEZA==
-X-Received: by 2002:a05:620a:12c4:: with SMTP id e4mr20850006qkl.359.1580667535213;
-        Sun, 02 Feb 2020 10:18:55 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b22sm7768663qka.121.2020.02.02.10.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 10:18:55 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 2 Feb 2020 13:18:53 -0500
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/7] efi/x86: Don't depend on firmware GDT layout
-Message-ID: <20200202181853.GA3798718@rani.riverdale.lan>
-References: <20200130200440.1796058-1-nivedita@alum.mit.edu>
- <20200202171353.3736319-1-nivedita@alum.mit.edu>
- <20200202171353.3736319-3-nivedita@alum.mit.edu>
- <CAKv+Gu9_bXmRMqs3Es7XXFjRafAm0HjyM6EasuKP1nka-dLdVA@mail.gmail.com>
+        Sun, 2 Feb 2020 14:09:46 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8210C1C036E; Sun,  2 Feb 2020 20:09:44 +0100 (CET)
+Date:   Sun, 2 Feb 2020 20:09:43 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+Subject: [GIT PULL] LEDs changes for v5.6-rc1
+Message-ID: <20200202190943.GA4506@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9_bXmRMqs3Es7XXFjRafAm0HjyM6EasuKP1nka-dLdVA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 02, 2020 at 06:54:48PM +0100, Ard Biesheuvel wrote:
-> On Sun, 2 Feb 2020 at 18:13, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > At handover entry in efi32_stub_entry, the firmware's GDT is still
-> > installed. We save the GDTR for later use in __efi64_thunk but we are
-> > assuming that descriptor 2 (__KERNEL_CS) is a valid 32-bit code segment
-> > descriptor and that descriptor 3 (__KERNEL_DS/__BOOT_DS) is a valid data
-> > segment descriptor.
-> >
-> > This happens to be true for OVMF (it actually uses descriptor 1 for data
-> > segments, but descriptor 3 is also setup as data), but we shouldn't
-> > depend on this being the case.
-> >
-> > Fix this by saving the code and data selectors in addition to the GDTR
-> > in efi32_stub_entry, and restoring them in __efi64_thunk before calling
-> > the firmware. The UEFI specification guarantees that selectors will be
-> > flat, so using the DS selector for all the segment registers should be
-> > enough.
-> >
-> > We also need to install our own GDT before initializing segment
-> > registers in startup_32, so move the GDT load up to the beginning of the
-> > function.
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> 
-> It might be useful to mention /somewhere/ in the commit log that this
-> applies to mixed mode
-> 
 
-Good point. I'll wait for comments from the x86 guys and include that in
-the next re-spin.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
+leds-5.6-rc1
+
+for you to fetch changes up to 260718b3a35d23fe89d27cc7b5e8bd30f4bba1aa:
+
+  leds: lm3692x: Disable chip on brightness 0 (2020-01-07 14:09:27 +0100)
+
+----------------------------------------------------------------
+LED updates for 5.6-rc1.
+
+Some of these changes are bugfixes already merged in v5.5, but I'd
+have to rebase the for-next branch, and git merge handles that ok, so
+I did not do that.
+
+Best regards,
+								Pavel
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      led: max77650: add of_match table
+
+Guido G=FCnther (7):
+      dt: bindings: lm3692x: Add ti,ovp-microvolt property
+      leds: lm3692x: Allow to configure over voltage protection
+      dt: bindings: lm3692x: Add led-max-microamp property
+      leds: lm3692x: Make sure we don't exceed the maximum LED current
+      leds: lm3692x: Move lm3692x_init and rename to lm3692x_leds_enable
+      leds: lm3692x: Split out lm3692x_leds_disable
+      leds: lm3692x: Disable chip on brightness 0
+
+Jacek Anaszewski (1):
+      leds: gpio: Fix uninitialized gpio label for fwnode based probe
+
+Jean-Jacques Hiblot (2):
+      leds: Add managed API to get a LED from a device driver
+      leds: populate the device's of_node
+
+Linus Walleij (1):
+      leds: bd2802: Convert to use GPIO descriptors
+
+Pavel (2):
+      leds: lm3532: use extended registration so that LED can be used for b=
+acklight
+      leds: lm3532: add pointer to documentation and fix typo
+
+Pavel Machek (3):
+      ledtrig-pattern: fix email address quoting in MODULE_AUTHOR()
+      leds: rb532: cleanup whitespace
+      leds: lm3642: remove warnings for bad strtol, cleanup gotos
+
+Sakari Ailus (1):
+      leds-as3645a: Drop fwnode reference on ignored node
+
+Sven Van Asbroeck (2):
+      leds: tps6105x: add driver for MFD chip LED mode
+      dt-bindings: mfd: update TI tps6105x chip bindings
+
+Tomi Valkeinen (1):
+      leds: Add of_led_get() and led_put()
+
+Zahari Petkov (1):
+      leds: pca963x: Fix open-drain initialization
+
+ .../devicetree/bindings/leds/leds-lm3692x.txt      |   8 +
+ Documentation/devicetree/bindings/mfd/tps6105x.txt |  47 +++++-
+ drivers/leds/Kconfig                               |  10 ++
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/led-class.c                           |  97 ++++++++++-
+ drivers/leds/leds-as3645a.c                        |   3 +-
+ drivers/leds/leds-bd2802.c                         |  27 ++--
+ drivers/leds/leds-gpio.c                           |  10 +-
+ drivers/leds/leds-lm3532.c                         |  11 +-
+ drivers/leds/leds-lm3642.c                         |  37 ++---
+ drivers/leds/leds-lm3692x.c                        | 180 ++++++++++++++---=
+----
+ drivers/leds/leds-max77650.c                       |   7 +
+ drivers/leds/leds-pca963x.c                        |   8 +-
+ drivers/leds/leds-rb532.c                          |   1 -
+ drivers/leds/leds-tps6105x.c                       |  89 ++++++++++
+ drivers/leds/trigger/ledtrig-pattern.c             |   4 +-
+ include/linux/leds-bd2802.h                        |   1 -
+ include/linux/leds.h                               |   6 +
+ 18 files changed, 447 insertions(+), 100 deletions(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXjcedwAKCRAw5/Bqldv6
+8tzMAJ9EBhERsZAkXBI3gtdxfgo7ImxnGACgmbf6TYHBhosnircPzkfwiNE6os8=
+=6qGe
+-----END PGP SIGNATURE-----
+
+--IJpNTDwzlM2Ie8A6--
