@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4006C3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B9C3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7E1206D3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD34206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSu+7wq9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2qx4E2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgBBVT1 (ORCPT
+        id S1727268AbgBBVTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 16:19:27 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40979 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727247AbgBBVTR (ORCPT
+        Sun, 2 Feb 2020 16:19:20 -0500
+Received: from mail-pj1-f51.google.com ([209.85.216.51]:55619 "EHLO
+        mail-pj1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgBBVTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 16:19:17 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t14so5016404plr.8;
-        Sun, 02 Feb 2020 13:19:16 -0800 (PST)
+        Sun, 2 Feb 2020 16:19:11 -0500
+Received: by mail-pj1-f51.google.com with SMTP id d5so5385535pjz.5;
+        Sun, 02 Feb 2020 13:19:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XfjR187NXdISi2xn1LCKRhzqRpFgh+EYN6/XoOzH7QE=;
-        b=bSu+7wq9db2iSb/oq37AULgd0rrkKEniBWxHhxiWsz4MZR+ZkUtcZZWoucYeKwwiff
-         T01eGU/hMPf3ZIt75OcoK8eGR08R84+ECLoBNPdTAybXeZPnefQtaecDVTKCbvhQcVU4
-         hhOezpkMXHu18lsPq9iX6+gjghOS6NHOvzoMXzG9x8IFOTEZDj8L0UOIM8gw5xC7r51m
-         7EtY6eHG5SZqHqtFLJAjVOQDPVGwnFE9vUcILmihdXOSKJYd5ILnrxsnpigAx5Mwqz4g
-         Np+tRBqeQFWbuKgZHZxHEU2GQCW7QLu2qNSnTCJEMzDIvOemLee5gRyR9D0LAynNEIN5
-         PMuw==
+        bh=lzwVHc1k/dY+x845Gy9RdQHoQfS2nfs3A+KYo1foc+0=;
+        b=H2qx4E2Nhhp/BK97BF1fSINkDJ/idHIamceUiP6CjL6p57LV7ch1P3F1LBIno+/V7C
+         JCGivnzqrNKP8ZuMgrYAwPZ+g656v7GkQb1aTxvaeN7Q3paP1QYJDximmditdTZlBGg6
+         O+ysRhTLoLXbRm72LcVzhRpCJb1E/XxDI6jfePpFplSwJnqD2AWxXanuNWFGWkCSCFjX
+         7gh6iUcIEutC9wVbOuZZwV3DtyZVkLVBAP+RphWo9XibaOjKaBhnatufScJOlmHto115
+         d6g4IUOfrz7sgJDN9L6/nanBoqYiGEz8ofAzQfyfDikuAnIJK8l9J9pW8wYLGArisZCq
+         Muog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XfjR187NXdISi2xn1LCKRhzqRpFgh+EYN6/XoOzH7QE=;
-        b=U7GrqPIYtxCBgAeIbItKlsXmR4/DGe+elJshlVhBG9PDfECbdsiCz6vgC7ppIhFUO6
-         ghU6MVvOYFP24qAbEJBaxLyWjjpH0c8ohplMwtuNFgKK3tGTCjrOor4oAtvYsTcuz0tC
-         Kmom9mDQdvjlYIvQ0LqQi/cF2hqPMzG2GKR1JrE7haCL68j21oOtR6aZvYEY3TetwOto
-         T3xP5WBoQ7bI6X/rc2sh6On24Bd5GTrJRIQcBs78Rk6V+dv4jPOfTVHo6Yze7LPS69Wu
-         FzvqhpGb2tAf17g8yVFLoROzJp43Oy7LjlvSFHFZJaUyvUsCeKS5h5BHROBTYYYSqUiW
-         ZBMQ==
-X-Gm-Message-State: APjAAAV7eJ0xPEQ83+D9UZY0uNO1vhrelL1bv/HAQljQIAtPASWvFH7s
-        276Y5qGgoIpfDa/bBziyGNW6SdJA
-X-Google-Smtp-Source: APXvYqziE6DxBqxEoMo21k/aFZUUW0d950vCCF9swRBLnIWa1mvipMR0xnR4DoQiN2oGuecP0oaHtw==
-X-Received: by 2002:a17:902:8545:: with SMTP id d5mr19658713plo.116.1580678356002;
-        Sun, 02 Feb 2020 13:19:16 -0800 (PST)
+        bh=lzwVHc1k/dY+x845Gy9RdQHoQfS2nfs3A+KYo1foc+0=;
+        b=owYPBkNDrXy8cdmzhMRDnCVpPVEtCic36AdI0iG1GZtF2wVzCBYrA013G80OHjw70I
+         vPMpVV1ywBwM4XlyXsGOguGh7tA4MxGch5PhnHHl9MD8yIDCLY+MAMuUdJqBDCVyFvYl
+         ORsHi/uAFnv8JR5VfiOlG2A+buk7Lo/uJtmuNdtwDlzBfOM+WVmJMN0D+vPLiCkAmqaO
+         8krPAYt/DN/ZnKUVbhvz0Prny0QKuroBtAfoTjrVQCL23VAWjT70secPAk74MoolYnUG
+         z6myMG3TBSky+GtSfvt5gyEQ7INX6vPfEHttgh2uJ3VPQkO28qnCAxaf6DHi3ZdZ4gnW
+         yw0g==
+X-Gm-Message-State: APjAAAVaDNtchBKRcXvPLh0WTnBD/3Is58ZWpK/4BC6y5nYlSTZ0JXvE
+        HOf4Z7/bqP/8j/8aWg9XsRaSvK1Z
+X-Google-Smtp-Source: APXvYqwpg4xdPeG2V0xlCQCQTflLB4Gel0Sq5vaGv2Q+wOl7EIu98sLT2K4/HtfyYhyrZVMx7mAlUA==
+X-Received: by 2002:a17:90a:2545:: with SMTP id j63mr26212455pje.128.1580678350712;
+        Sun, 02 Feb 2020 13:19:10 -0800 (PST)
 Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.14
+        by smtp.gmail.com with ESMTPSA id y24sm8755639pge.72.2020.02.02.13.19.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 13:19:15 -0800 (PST)
+        Sun, 02 Feb 2020 13:19:10 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc:     devicetree@vger.kernel.org,
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 11/12] dt-bindings: arm: Document Broadcom SoCs 'secondary-boot-reg'
-Date:   Sun,  2 Feb 2020 13:18:26 -0800
-Message-Id: <20200202211827.27682-12-f.fainelli@gmail.com>
+Subject: [PATCH 08/12] dt-bindings: arm: bcm: Convert BCM4708 to YAML
+Date:   Sun,  2 Feb 2020 13:18:23 -0800
+Message-Id: <20200202211827.27682-9-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200202211827.27682-1-f.fainelli@gmail.com>
 References: <20200202211827.27682-1-f.fainelli@gmail.com>
@@ -86,176 +86,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consolidate and move the 'secondary-boot-reg' property from the 3
-existing bindingn document into the main cpus.yaml documentation.
+Update the Broadcom BCM4708 SoC family binding document for boards/SoCs
+to use YAML. Verified with dt_binding_check and dtbs_check.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../arm/bcm/brcm,bcm11351-cpu-method.txt      | 36 -----------------
- .../arm/bcm/brcm,bcm23550-cpu-method.txt      | 36 -----------------
- .../bindings/arm/bcm/brcm,nsp-cpu-method.txt  | 39 -------------------
- .../devicetree/bindings/arm/cpus.yaml         | 16 ++++++++
- 4 files changed, 16 insertions(+), 111 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+ .../bindings/arm/bcm/brcm,bcm4708.txt         | 15 ----
+ .../bindings/arm/bcm/brcm,bcm4708.yaml        | 88 +++++++++++++++++++
+ 2 files changed, 88 insertions(+), 15 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
 deleted file mode 100644
-index e3f996920403..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
+index 8608a776caa7..000000000000
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.txt
 +++ /dev/null
-@@ -1,36 +0,0 @@
--Broadcom Kona Family CPU Enable Method
----------------------------------------
--This binding defines the enable method used for starting secondary
--CPUs in the following Broadcom SoCs:
--  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664
+@@ -1,15 +0,0 @@
+-Broadcom BCM4708 device tree bindings
+--------------------------------------------
 -
--The enable method is specified by defining the following required
--properties in the "cpu" device tree node:
--  - enable-method = "brcm,bcm11351-cpu-method";
--  - secondary-boot-reg = <...>;
+-Boards with the BCM4708 SoC shall have the following properties:
 -
--The secondary-boot-reg property is a u32 value that specifies the
--physical address of the register used to request the ROM holding pen
--code release a secondary CPU.  The value written to the register is
--formed by encoding the target CPU id into the low bits of the
--physical start address it should jump to.
+-Required root node property:
 -
--Example:
--	cpus {
--		#address-cells = <1>;
--		#size-cells = <0>;
+-bcm4708
+-compatible = "brcm,bcm4708";
 -
--		cpu0: cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			reg = <0>;
--		};
+-bcm4709
+-compatible = "brcm,bcm4709";
 -
--		cpu1: cpu@1 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			reg = <1>;
--			enable-method = "brcm,bcm11351-cpu-method";
--			secondary-boot-reg = <0x3500417c>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
-deleted file mode 100644
-index a3af54c0e404..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Broadcom Kona Family CPU Enable Method
----------------------------------------
--This binding defines the enable method used for starting secondary
--CPUs in the following Broadcom SoCs:
--  BCM23550
--
--The enable method is specified by defining the following required
--properties in the "cpu" device tree node:
--  - enable-method = "brcm,bcm23550";
--  - secondary-boot-reg = <...>;
--
--The secondary-boot-reg property is a u32 value that specifies the
--physical address of the register used to request the ROM holding pen
--code release a secondary CPU.  The value written to the register is
--formed by encoding the target CPU id into the low bits of the
--physical start address it should jump to.
--
--Example:
--	cpus {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		cpu0: cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			reg = <0>;
--		};
--
--		cpu1: cpu@1 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			reg = <1>;
--			enable-method = "brcm,bcm23550";
--			secondary-boot-reg = <0x3500417c>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-deleted file mode 100644
-index 677ef9d9f445..000000000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--Broadcom Northstar Plus SoC CPU Enable Method
-----------------------------------------------
--This binding defines the enable method used for starting secondary
--CPU in the following Broadcom SoCs:
--  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
--
--The enable method is specified by defining the following required
--properties in the corresponding secondary "cpu" device tree node:
--  - enable-method = "brcm,bcm-nsp-smp";
--  - secondary-boot-reg = <...>;
--
--The secondary-boot-reg property is a u32 value that specifies the
--physical address of the register which should hold the common
--entry point for a secondary CPU. This entry is cpu node specific
--and should be added per cpu. E.g., in case of NSP (BCM58625) which
--is a dual core CPU SoC, this entry should be added to cpu1 node.
--
--
--Example:
--	cpus {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		cpu0: cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			next-level-cache = <&L2>;
--			reg = <0>;
--		};
--
--		cpu1: cpu@1 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a9";
--			next-level-cache = <&L2>;
--			enable-method = "brcm,bcm-nsp-smp";
--			secondary-boot-reg = <0xffff042c>;
--			reg = <1>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index c23c24ff7575..6f56a623c1cd 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -272,6 +272,22 @@ properties:
-       While optional, it is the preferred way to get access to
-       the cpu-core power-domains.
- 
-+  secondary-boot-reg:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      Required for systems that have an "enable-method" property value of
-+      "brcm,bcm11351-cpu-method", "brcm,bcm23550" or "brcm,bcm-nsp-smp".
+-bcm53012
+-compatible = "brcm,bcm53012";
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
+new file mode 100644
+index 000000000000..d48313c7ae45
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/bcm/brcm,bcm4708.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+      This includes the following SoCs: |
-+      BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664, BCM23550
-+      BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
++title: Broadcom BCM4708 device tree bindings
 +
-+      The secondary-boot-reg property is a u32 value that specifies the
-+      physical address of the register used to request the ROM holding pen
-+      code release a secondary CPU. The value written to the register is
-+      formed by encoding the target CPU id into the low bits of the
-+      physical start address it should jump to.
++description:
++  Broadcom BCM4708/47081/4709/47094/53012 Wi-Fi/network SoCs based
++  on the iProc architecture (Northstar).
 +
- required:
-   - device_type
-   - reg
++maintainers:
++  - Florian Fainelli <f.fainelli@gmail.com>
++  - Hauke Mehrtens <hauke@hauke-m.de>
++  - Rafal Milecki <zajec5@gmail.com>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: BCM4708 based boards
++        items:
++          - enum:
++              - asus,rt-ac56u
++              - asus,rt-ac68u
++              - buffalo,wzr-1750dhp
++              - linksys,ea6300-v1
++              - linksys,ea6500-v2
++              - luxul,xap-1510v1
++              - luxul,xwc-1000
++              - netgear,r6250v1
++              - netgear,r6300v2
++              - smartrg,sr400ac
++              - brcm,bcm94708
++          - const: brcm,bcm4708
++
++      - description: BCM47081 based boards
++        items:
++          - enum:
++              - asus,rt-n18u
++              - buffalo,wzr-600dhp2
++              - buffalo,wzr-900dhp
++              - luxul,xap-1410v1
++              - luxul,xwr-1200v1
++              - tplink,archer-c5-v2
++          - const: brcm,bcm47081
++          - const: brcm,bcm4708
++
++      - description: BCM4709 based boards
++        items:
++          - enum:
++              - asus,rt-ac87u
++              - buffalo,wxr-1900dhp
++              - linksys,ea9200
++              - netgear,r7000
++              - netgear,r8000
++              - tplink,archer-c9-v1
++              - brcm,bcm94709
++          - const: brcm,bcm4709
++          - const: brcm,bcm4708
++
++      - description: BCM47094 based boards
++        items:
++          - enum:
++              - dlink,dir-885l
++              - linksys,panamera
++              - luxul,abr-4500-v1
++              - luxul,xap-1610-v1
++              - luxul,xbr-4500-v1
++              - luxul,xwc-2000-v1
++              - luxul,xwr-3100v1
++              - luxul,xwr-3150-v1
++              - netgear,r8500
++              - phicomm,k3
++          - const: brcm,bcm47094
++          - const: brcm,bcm4708
++
++      - description: BCM53012 based boards
++        items:
++          - enum:
++              - brcm,bcm953012er
++              - brcm,bcm953012hr
++              - brcm,bcm953012k
++          - const: brcm,brcm53012
++          - const: brcm,bcm4708
++...
 -- 
 2.17.1
 
