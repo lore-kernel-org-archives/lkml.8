@@ -2,252 +2,139 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39196C3524C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C931C3524B
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB81206D3
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 19:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DD52067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=btinternet.com header.i=@btinternet.com header.b="tbCdy18V"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DL9H/zp4";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jzS/qgGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgBBTqP (ORCPT
+        id S1726992AbgBBUAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 14:46:15 -0500
-Received: from mailomta18-sa.btinternet.com ([213.120.69.24]:42956 "EHLO
-        sa-prd-fep-040.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726290AbgBBTqP (ORCPT
+        Sun, 2 Feb 2020 15:00:11 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:38072 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726290AbgBBUAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 14:46:15 -0500
-X-Greylist: delayed 942 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Feb 2020 14:46:11 EST
-Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
-          by sa-prd-fep-049.btinternet.com with ESMTP
-          id <20200202193027.PFCH6374.sa-prd-fep-049.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
-          Sun, 2 Feb 2020 19:30:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=btinternet.com; s=btmx201904; t=1580671827; 
-        bh=ot265DuLcDvIJkdqGUGmd6GlvLE0HkQlV2rrUvZoH+M=;
-        h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:MIME-Version;
-        b=tbCdy18Vr/+ILNrEQIZ3QKUZ5r0fMa1vttHDYGWVCrPAie/T4SLYBx4cUlK4UxPRIdXOhyeYOvYfvT+qN/ef5xlOIAsOueMIFzyUFzDhNUOLAkedNvt21HNxpYA21h3C5v4z5uWa+crU4aHFPtiGefalCXeNdQARtfihjvmnkQV3+OBC3u8Gc4TzYQqF09nl8SGwqLIPpUHxyUcD57Sz6GN9q+E4HiRccCVAQenxBIO1ghHa7p2+9Unjlq4Mg7/IheMBgJoqKuMVa1FgYdLlaETe4603zcUAViBV/CyDxmJ0/rTR12cd8DtKzllFKIxuVguzSILm93SJTG/jXtFUMQ==
-Authentication-Results: btinternet.com;
-    auth=pass (PLAIN) smtp.auth=richard_c_haines@btinternet.com
-X-Originating-IP: [31.49.56.38]
-X-OWM-Source-IP: 31.49.56.38 (GB)
-X-OWM-Env-Sender: richard_c_haines@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedugedrgeehgdduvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpeftihgthhgrrhguucfjrghinhgvshcuoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeefuddrgeelrdehiedrfeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpihhnvghtpeefuddrgeelrdehiedrfeekpdhmrghilhhfrhhomhepoehrihgthhgrrhgupggtpghhrghinhgvshessghtihhnthgvrhhnvghtrdgtohhmqecuuefqffgjpeekuefkvffokffogfdprhgtphhtthhopeeoughhohifvghllhhssehrvgguhhgrthdrtghomheqpdhrtghpthhtohepoehkvgihrhhinhhgshesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhsvggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphht
-        thhopeeophgruhhlsehprghulhdqmhhoohhrvgdrtghomheqpdhrtghpthhtohepoehrihgthhgrrhgupggtpghhrghinhgvsheshhhothhmrghilhdrtghomheqpdhrtghpthhtohepoehsughssehthigthhhordhnshgrrdhgohhvqedprhgtphhtthhopeeoshgvlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from localhost.localdomain (31.49.56.38) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.337) (authenticated as richard_c_haines@btinternet.com)
-        id 5E1A2CBA036A7478; Sun, 2 Feb 2020 19:30:27 +0000
-Message-ID: <459818a9ad1c808298bf3d7c9bcb130323d30e97.camel@btinternet.com>
-Subject: Re: SELinux: How to split permissions for keys?
-From:   Richard Haines <richard_c_haines@btinternet.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        David Howells <dhowells@redhat.com>, paul@paul-moore.com
-Cc:     keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 02 Feb 2020 19:30:26 +0000
-In-Reply-To: <50f98f04-d00e-ae54-9a90-d0ff10be515a@tycho.nsa.gov>
-References: <8ee40192da117d9cdf4eab1e63ab5f77b359801c.camel@btinternet.com>
-         <4057700.1579792320@warthog.procyon.org.uk>
-         <de2c5cda-567b-d310-42f7-46a2c20969c4@tycho.nsa.gov>
-         <50f98f04-d00e-ae54-9a90-d0ff10be515a@tycho.nsa.gov>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
-MIME-Version: 1.0
+        Sun, 2 Feb 2020 15:00:10 -0500
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 012JxTN8009453;
+        Sun, 2 Feb 2020 11:59:49 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=AwVHMf0ZBIJd8j/skzLv4MvW44rKFaSF/6jyTFiRJHI=;
+ b=DL9H/zp4ekYiK9xsDNcqV60MfVnXGQ04zNL5RqCZEhLfoGLqfwkI53BvKxuSTPcBfXaY
+ AvhJNB/AWM3aU8NV8e1GeHjxhBRPzBwucNUtmFvE3BVvoHIoc4jELerwRNxk3w9l0eSl
+ C8uXmbWFPnKTzjQJX10tbdMTSjyN1Gqk10g= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xwsrv9hvp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sun, 02 Feb 2020 11:59:49 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 2 Feb 2020 11:59:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RJMngZ69Sko5ThnRu2Hxc1nZ5BO5ctZ1Oh/Z7yXNrO7iNguwtNH4e8mBOEpW0hucQ2HrTZxF7VhUpfg2iFCfX9s0/Xd1rs3Qt0bncaDVneuozAZ/st5+IN5S9lDsIjdWlBe8ie6mckPBO+uVWyEp5imq28EBOYuw7JDvRKXPru7KhBt+iP/fWBy2sV/sR6Djo50y76AmFqsO6UOMNQPzMbeViLFn5UOq+j8PrEqWT1JWXY5cRx2PcUyNSKHSgN2Tc7p+TBRlXGrxLHpHbYMIa4NTAc69d0aBjnYmd+NT4YdgICJ2n09RssBrP9uhm3HHYFtD1+FxcmakAOaEx5EOJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AwVHMf0ZBIJd8j/skzLv4MvW44rKFaSF/6jyTFiRJHI=;
+ b=RGlikupYYV6J9P9iyaqX2uHXoTYj/n/WzmWmA+GNvR5uqXyyt8P5UhrqpepJuF/J7UP9ydZ4dnLenysdGzw3O4+IQizuaV4OQ0huSR+PvYpTrjE1f+cmDvCiXRKI8cfR/UcSbwEP5ZPsp7yaz8tQfrFiCRWTrFgCRdE1K4VymCIQsNc3j5H5pDOzoOSjHhC8GuUXksuoV54hQpPXU/olQp90nuyrJ4TL7dpU48QFxZUdrvk20bNwcpl5jOn9YTzXpOdXeFCbDBLLAzNHuoOmXE1TpeiRYy6XYzAaoPmu6mIvp+kK/YneAaM7mkT+wDqd4kBguUDayq6MIGi3/inB0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AwVHMf0ZBIJd8j/skzLv4MvW44rKFaSF/6jyTFiRJHI=;
+ b=jzS/qgGYq3yiOJhPgqtDsbH9msG7t6MW9tE4Re7+h93Y3i1B2gwV2MzBbtSE60wpao3+D4T5VBPl7XopMQR2+iOtwx8W2ICyduMZPGQTttSnhdx/FTGj99SIlIsf1HDjSAicjThZ+nL9Rk79MfnudeuHa4rs4YXcXrwFbNiljyI=
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
+ DM6PR15MB2857.namprd15.prod.outlook.com (20.178.229.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Sun, 2 Feb 2020 19:59:47 +0000
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c]) by DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c%4]) with mapi id 15.20.2686.030; Sun, 2 Feb 2020
+ 19:59:47 +0000
+Subject: Re: [PATCH bpf] bpftool: Remove redundant "HAVE" prefix from the
+ large INSN limit check
+To:     Michal Rostecki <mrostecki@opensuse.org>, <bpf@vger.kernel.org>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200202110200.31024-1-mrostecki@opensuse.org>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <95fd964f-04ab-5267-c958-25b5a5231030@fb.com>
+Date:   Sun, 2 Feb 2020 11:59:34 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
+In-Reply-To: <20200202110200.31024-1-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR20CA0012.namprd20.prod.outlook.com
+ (2603:10b6:300:13d::22) To DM6PR15MB3001.namprd15.prod.outlook.com
+ (2603:10b6:5:13c::16)
+MIME-Version: 1.0
+Received: from MacBook-Pro-52.local (2620:10d:c090:180::76ff) by MWHPR20CA0012.namprd20.prod.outlook.com (2603:10b6:300:13d::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.32 via Frontend Transport; Sun, 2 Feb 2020 19:59:43 +0000
+X-Originating-IP: [2620:10d:c090:180::76ff]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b10ffe9c-be12-4fda-ee74-08d7a81a7475
+X-MS-TrafficTypeDiagnostic: DM6PR15MB2857:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR15MB2857579AF3499CAD3F0ED0AAD3010@DM6PR15MB2857.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
+X-Forefront-PRVS: 0301360BF5
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(136003)(39860400002)(199004)(189003)(6486002)(5660300002)(316002)(186003)(6666004)(2616005)(16526019)(8936002)(36756003)(4326008)(6512007)(4744005)(31686004)(54906003)(66476007)(66556008)(2906002)(31696002)(478600001)(66946007)(81166006)(81156014)(8676002)(86362001)(6506007)(52116002)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB2857;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ypdpgb5MUkLjo/LL/FcHu3gMzzjTe4X9f8v0BG7JWafiHHURsiMXf+LziA67qcl6WqSR1EmVRAecYzGdu+kV+3XrPfsa8G0uMm4Gcyxpp/F7TILEq2h52cp29dcIubIloaTkU5Xtqw4uA/O9gZSOWd5JgkwxtjNhTNVvXvpNzY+KY7x9Ke6Qg6OBQbzPGigyMdCHsdD6mIAu4FiMy9ctkp2ubAWVkPSfJ6Aq0FOzqwZfXQzKgO25+hvcGyVqneaGGs8pJh4QXu4ZdTHC9PeQJv1ZF7oWLQLNZe2tX0MHztwgSfXM670WoI/tyA1IcKxW5ClBCqXkRQNiuv+gbafPOizlrmFKhFF0DO1MKeysptxJ6yrKEbmGxze8bP+LjIBA4JuRtlNweJZg4GhxZjvafIIwcQzR2xBrkDhsguOV9+m7UynLdzGR4RFy7Gj6GWMv
+X-MS-Exchange-AntiSpam-MessageData: WFYRoOQPGCIRRQyODl2N4VVv102RQ0l9e4VukXMyoIlNEEkrtpZIjJRq2fpzAZ/5NlshkHdfFLDIdLyafCwOFcHfTZ0CAuw16YSire4mCLrCvW97wKQ0S6vNCVXhxPUpcDRFzpgHKTcsWux/BP6IU0rRrZpdNdfiN3lLm+nhcJo=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b10ffe9c-be12-4fda-ee74-08d7a81a7475
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2020 19:59:47.3955
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /TZtyet++NLfOGbyjtwsdD2lRrSKTu/XOV6c0Y40VDKz7pMTM/wt+7RFYHYXONfF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB2857
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-02_07:2020-01-31,2020-02-02 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 malwarescore=0 clxscore=1011 spamscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002020159
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-23 at 15:35 -0500, Stephen Smalley wrote:
-> On 1/23/20 10:46 AM, Stephen Smalley wrote:
-> > On 1/23/20 10:12 AM, David Howells wrote:
-> > > Hi Stephen,
-> > > 
-> > > I have patches to split the permissions that are used for keys to
-> > > make 
-> > > them a
-> > > bit finer grained and easier to use - and also to move to ACLs
-> > > rather 
-> > > than
-> > > fixed masks.  See patch "keys: Replace uid/gid/perm permissions 
-> > > checking with
-> > > an ACL" here:
-> > > 
-> > >     
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-acl
-> > >  
-> > > 
-> > > 
-> > > However, I may not have managed the permission mask
-> > > transformation inside
-> > > SELinux correctly.  Could you lend an eyeball?  The change to
-> > > the 
-> > > permissions
-> > > model is as follows:
-> > > 
-> > >      The SETATTR permission is split to create two new
-> > > permissions:
-> > >       (1) SET_SECURITY - which allows the key's owner, group and
-> > > ACL 
-> > > to be
-> > >           changed and a restriction to be placed on a keyring.
-> > >       (2) REVOKE - which allows a key to be revoked.
-> > >      The SEARCH permission is split to create:
-> > >       (1) SEARCH - which allows a keyring to be search and a key
-> > > to be 
-> > > found.
-> > >       (2) JOIN - which allows a keyring to be joined as a
-> > > session 
-> > > keyring.
-> > >       (3) INVAL - which allows a key to be invalidated.
-> > >      The WRITE permission is also split to create:
-> > >       (1) WRITE - which allows a key's content to be altered and
-> > > links 
-> > > to be
-> > >           added, removed and replaced in a keyring.
-> > >       (2) CLEAR - which allows a keyring to be cleared
-> > > completely.  
-> > > This is
-> > >           split out to make it possible to give just this to an 
-> > > administrator.
-> > >       (3) REVOKE - see above.
-> > > 
-> > > The change to SELinux is attached below.
-> > > 
-> > > Should the split be pushed down into the SELinux policy rather
-> > > than 
-> > > trying to
-> > > calculate it?
-> > 
-> > My understanding is that you must provide full backward
-> > compatibility 
-> > with existing policies; hence, you must ensure that you always
-> > check the 
-> > same SELinux permission(s) for the same operation when using an
-> > existing 
-> > policy.
-> > 
-> > In order to support finer-grained distinctions in SELinux with
-> > future 
-> > policies, you can define a new SELinux policy capability along with
-> > the 
-> > new permissions, and if the policy capability is enabled in the
-> > policy, 
-> > check the new permissions rather than the old ones. A recent
-> > example of 
-> > adding a new policy capability and using it can be seen in:
-> > https://lore.kernel.org/selinux/20200116194530.8696-1-jeffv@google.com/T/#u
-> > although that patch was rejected for other reasons.
-> > 
-> > Another example was when we introduced fine-grained distinctions
-> > for all 
-> > network address families, commit
-> > da69a5306ab92e07224da54aafee8b1dccf024f6.
-> > 
-> > The new policy capability also needs to be defined in libsepol for
-> > use 
-> > by the policy compiler; an example can be seen in:
-> > https://lore.kernel.org/selinux/20170714164801.6346-1-sds@tycho.nsa.gov/
-> > 
-> > Then future policies can declare the policy capability when they
-> > are 
-> > ready to start using the new permissions instead of the old.
-> > 
-> > > Thanks,
-> > > David
-> > > ---
-> > > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > > index 116b4d644f68..c8db5235b01f 100644
-> > > --- a/security/selinux/hooks.c
-> > > +++ b/security/selinux/hooks.c
-> > > @@ -6556,6 +6556,7 @@ static int
-> > > selinux_key_permission(key_ref_t 
-> > > key_ref,
-> > >   {
-> > >       struct key *key;
-> > >       struct key_security_struct *ksec;
-> > > +    unsigned oldstyle_perm;
-> > >       u32 sid;
-> > >       /* if no specific permissions are requested, we skip the
-> > > @@ -6564,13 +6565,26 @@ static int
-> > > selinux_key_permission(key_ref_t 
-> > > key_ref,
-> > >       if (perm == 0)
-> > >           return 0;
-> > > +    oldstyle_perm = perm & (KEY_NEED_VIEW | KEY_NEED_READ | 
-> > > KEY_NEED_WRITE |
-> > > +                KEY_NEED_SEARCH | KEY_NEED_LINK);
-> > > +    if (perm & KEY_NEED_SETSEC)
-> > > +        oldstyle_perm |= OLD_KEY_NEED_SETATTR;
-> > > +    if (perm & KEY_NEED_INVAL)
-> > > +        oldstyle_perm |= KEY_NEED_SEARCH;
-> > > +    if (perm & KEY_NEED_REVOKE && !(perm &
-> > > OLD_KEY_NEED_SETATTR))
-> > > +        oldstyle_perm |= KEY_NEED_WRITE;
-> > > +    if (perm & KEY_NEED_JOIN)
-> > > +        oldstyle_perm |= KEY_NEED_SEARCH;
-> > > +    if (perm & KEY_NEED_CLEAR)
-> > > +        oldstyle_perm |= KEY_NEED_WRITE;
-> > > +
-> > 
-> > I don't know offhand if this ensures that the same SELinux
-> > permission is 
-> > always checked as it would have been previously for the same 
-> > operation+arguments.  That's what you have to preserve for
-> > existing 
-> > policies.
+
+
+On 2/2/20 3:02 AM, Michal Rostecki wrote:
+> "HAVE" prefix is already applied by default to feature macros and before
+> this change, the large INSN limit macro had the incorrect name with
+> double "HAVE".
 > 
-> As Richard pointed out in his email, your key-acl series replaces
-> two 
-> different old permissions (LINK, SEARCH) with a single permission
-> (JOIN) 
-> in different callers, so by the time we reach the SELinux hook we
-> cannot 
-> map it back unambiguously and provide full backward
-> compatibility.  The 
-> REVOKE case also seems fragile although there you seem to distinguish
-> by 
-> sometimes passing in OLD_KEY_NEED_SETATTR and sometimes not?  You'll 
-> have to fix the JOIN case to avoid userspace breakage.
-> 
-> You may want to go ahead and explicitly translate all of the
-> KEY_NEED 
-> permissions to SELinux permissions rather than passing the key 
-> permissions directly here to avoid requiring that the values always 
-> match.  The SELinux permission symbols are of the form
-> CLASS__PERMISSION 
-> (NB double underscore), e.g. KEY__SETATTR, generated automatically
-> from 
-> the security/selinux/include/classmap.h tables to the 
-> security/selinux/av_permissions.h generated header. Most hooks
-> perform 
-> such translation, e.g. file_mask_to_av().  You will almost certainly 
-> need to do this if/when you introduce support for the new permissions
-> to 
-> SELinux.
+> Fixes: 2faef64aa6b3 ("bpftool: Add misc section and probe for large INSN limit")
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
 
-
-This problem has now been fixed in [1].
-It passes the current selinux-test-suite (except test/fs_filesystem
-regression).
-
-As the fix now includes a new 'key_perms' policy capability to allow
-use of the extended key permissions, I've updated libsepol and the
-selinux-testsuite test/keys to test these.
-
-I'll submit two RFC patches that will allow [1] to be tested with
-'key_perms' true or false.
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=keys-next
-
-
-
+Acked-by: Yonghong Song <yhs@fb.com>
