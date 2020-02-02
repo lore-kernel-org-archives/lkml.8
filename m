@@ -2,184 +2,203 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFA7C3524B
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D49C35240
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18E020842
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580636087;
-	bh=jluCrMV2EMM2mvdFZRwLfZBtV8+8MvaVCC8kJ1eY4XA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aRpnlVhaFpDNQL10G8omHXNfOwwrh+0gZ3QB1ds2olTLRrcCFLbh1P6gnqNjBz/ap
-	 +niFts1uvxlvw06ncZ73EFSmJ77VNsc7B+McS9PmhdKW7XbS//87uFrjNKCe14KAuT
-	 zqfqb3MNxufvGkHx7C2TGdXFYsLMRnYPbZ7OtZog=
+	by mail.kernel.org (Postfix) with ESMTP id E6A9220838
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgBBJer (ORCPT
+        id S1726814AbgBBJhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 04:34:47 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42148 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgBBJeq (ORCPT
+        Sun, 2 Feb 2020 04:37:08 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44150 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgBBJhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 04:34:46 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k11so14045293wrd.9;
-        Sun, 02 Feb 2020 01:34:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=S2yNcMg/flOTRtk/fmlPvWyglwu5z2BGKORhR/l6zcs=;
-        b=eV69YJm3Pgc4+O8vxHRxe7KVsw1/7h+hj2J0CkCzcuPv9TCzN3w5ACzJ2REvw8PfsU
-         0H7D4ASAuFxlXKzVpiDZk6wC+JpHgNX+I0EzLoDdeH7d9I3ohuX3NgaUtiIc1DouMZd9
-         8hDSMvmrrPWSf0U0omrLQRKy6R6Sgm4uVmS5S/hIZuFVqeov8fl386Ds0qZT2V995VHn
-         nflpplGzfq0efDyhMAL8JvfYuqHCRIaHsYDGyUkE1X5xnP9FmQ9KR8qMEZd95aF/0hSF
-         2QMa35nRkUMRrnlZE72+fLb67L8xG0mBnWMhHZUFrieN800n+uK3B0Q7RAtPjMN/LCU5
-         vKOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=S2yNcMg/flOTRtk/fmlPvWyglwu5z2BGKORhR/l6zcs=;
-        b=qCIzmmYsADr21KozMxnRJ5zhIZlsHRW+JCan5Ek5MY7d1jKHvwXbRUF83ZMJqS7YsP
-         VlCowc9j2cniKvsDb4Fg2G/K7s5XhpgGwAibj9HBZZt78XPvUjEUFiN88HrR1l4CkHl8
-         8OvwjHI1LQ5JKgqm/n0/+eMngVddx4viMIh5L8Kv7DROa2EEsSLhzgYo3P4DZurAX1Yn
-         HAbdCrckkovfc/KWMlFyrPSS0Ba5M93Ei5Ws5erivDY9HjQ40+W56I4Tzd9F5Xn5+dQK
-         fANdR88T049LjMnnlQMmQZ37JS7QnrLCBYqJngOfZ8+L7R+0PhRy8xXzdlzi5aLQ+uYP
-         J3Mw==
-X-Gm-Message-State: APjAAAUW299L93lSrw9xYdfEIWhkS7i6kuFebaxAAiFJcPBmWVpfcNfi
-        AdJUGvhhUSBFiK/r81b/0P8=
-X-Google-Smtp-Source: APXvYqyMNKQiutcwPYhUaOyiBhNQm5h7ohqmGi1DwTJUBF0izw4YTB/MEG/+kGUaKwnWH9fNxQgiGw==
-X-Received: by 2002:a5d:5088:: with SMTP id a8mr4258636wrt.162.1580636084657;
-        Sun, 02 Feb 2020 01:34:44 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id f207sm19962533wme.9.2020.02.02.01.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 01:34:44 -0800 (PST)
-Date:   Sun, 2 Feb 2020 10:34:42 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        dan.j.williams@intel.com, jrg.otte@gmail.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] efi/x86: fix boot regression on systems with invalid
- memmap entries
-Message-ID: <20200202093442.GB72728@gmail.com>
-References: <20200201233304.18322-1-ardb@kernel.org>
+        Sun, 2 Feb 2020 04:37:08 -0500
+Received: from [151.216.132.156] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iyBgc-0006i9-9J; Sun, 02 Feb 2020 09:37:02 +0000
+Date:   Sun, 2 Feb 2020 10:37:02 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] clone3: allow spawning processes into cgroups
+Message-ID: <20200202093702.cdlyytywty7hk3rn@wittgenstein>
+References: <20200121154844.411-1-christian.brauner@ubuntu.com>
+ <20200121154844.411-6-christian.brauner@ubuntu.com>
+ <20200129132719.GD11384@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200201233304.18322-1-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200129132719.GD11384@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Ard Biesheuvel <ardb@kernel.org> wrote:
-
-> In efi_clean_memmap(), we do a pass over the EFI memory map to remove
-> bogus entries that may be returned on certain systems.
+On Wed, Jan 29, 2020 at 02:27:19PM +0100, Michal KoutnÃ½ wrote:
+> Hello.
 > 
-> Commit 1db91035d01aa8bf ("efi: Add tracking for dynamically allocated
-> memmaps") refactored this code to pass the input to efi_memmap_install()
-> via a temporary struct on the stack, which is populated using an
-> initializer which inadvertently defines the value of its size field
-> in terms of its desc_size field, which value cannot be relied upon yet
-> in the initializer itself.
+> On Tue, Jan 21, 2020 at 04:48:43PM +0100, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > +static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
+> > +	__acquires(&cgroup_mutex) __acquires(&cgroup_threadgroup_rwsem)
+> > +{
+> > +	int ret;
+> > +	struct cgroup *dst_cgrp = NULL;
+> > +	struct css_set *cset;
+> > +	struct super_block *sb;
+> > +	struct file *f;
+> > +
+> > +	if (kargs->flags & CLONE_INTO_CGROUP)
+> > +		mutex_lock(&cgroup_mutex);
+> > +
+> > +	cgroup_threadgroup_change_begin(current);
+> > +
+> > +	spin_lock_irq(&css_set_lock);
+> > +	cset = task_css_set(current);
+> > +	get_css_set(cset);
+> > +	spin_unlock_irq(&css_set_lock);
+> > +
+> > +	if (!(kargs->flags & CLONE_INTO_CGROUP)) {
+> > +		kargs->cset = cset;
+> Where is this css_set put when CLONE_INTO_CGROUP isn't used?
+> (Aha, it's passed to child's tsk->cgroups but see my other note below.)
 > 
-> Fix this by using efi.memmap.desc_size instead, which is where we get
-> the value for desc_size from in the first place.
+> > +	dst_cgrp = cgroup_get_from_file(f);
+> > +	if (IS_ERR(dst_cgrp)) {
+> > +		ret = PTR_ERR(dst_cgrp);
+> > +		dst_cgrp = NULL;
+> > +		goto err;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Verify that we the target cgroup is writable for us. This is
+> > +	 * usually done by the vfs layer but since we're not going through
+> > +	 * the vfs layer here we need to do it "manually".
+> > +	 */
+> > +	ret = cgroup_may_write(dst_cgrp, sb);
+> > +	if (ret)
+> > +		goto err;
+> > +
+> > +	ret = cgroup_attach_permissions(cset->dfl_cgrp, dst_cgrp, sb,
+> > +					!!(kargs->flags & CLONE_THREAD));
+> > +	if (ret)
+> > +		goto err;
+> > +
+> > +	kargs->cset = find_css_set(cset, dst_cgrp);
+> > +	if (!kargs->cset) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (cgroup_is_dead(dst_cgrp)) {
+> > +		ret = -ENODEV;
+> > +		goto err;
+> > +	}
+> I'd move this check right after cgroup_get_from_file. The fork-migration
+> path is synchrinized via cgroup_mutex with cgroup_destroy_locked and
+> there's no need checking permissions on cgroup that's going away anyway.
 > 
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/platform/efi/efi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 59f7f6d60cf6..ae923ee8e2b4 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -308,7 +308,7 @@ static void __init efi_clean_memmap(void)
->  			.phys_map = efi.memmap.phys_map,
->  			.desc_version = efi.memmap.desc_version,
->  			.desc_size = efi.memmap.desc_size,
-> -			.size = data.desc_size * (efi.memmap.nr_map - n_removal),
-> +			.size = efi.memmap.desc_size * (efi.memmap.nr_map - n_removal),
->  			.flags = 0,
->  		};
+> > +static void cgroup_css_set_put_fork(struct kernel_clone_args *kargs)
+> > +	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+> > +{
+> > +	cgroup_threadgroup_change_end(current);
+> > +
+> > +	if (kargs->flags & CLONE_INTO_CGROUP) {
+> > +		struct cgroup *cgrp = kargs->cgrp;
+> > +		struct css_set *cset = kargs->cset;
+> > +
+> > +		mutex_unlock(&cgroup_mutex);
+> > +
+> > +		if (cset) {
+> > +			put_css_set(cset);
+> > +			kargs->cset = NULL;
+> > +		}
+> > +
+> > +		if (cgrp) {
+> > +			cgroup_put(cgrp);
+> > +			kargs->cgrp = NULL;
+> > +		}
+> > +	}
+> I don't see any function problem with this ordering, however, I'd
+> prefer symmetry with the "allocation" path (in cgroup_css_set_fork),
+> i.e. cgroup_put, put_css_set and lastly mutex_unlock.
 
-Applied, and I also added:
+I prefer to yield the mutex as early as possible.
 
-    Reported-by: Jörg Otte <jrg.otte@gmail.com>
-    Tested-by: Jörg Otte <jrg.otte@gmail.com>
+> 
+> > +void cgroup_post_fork(struct task_struct *child,
+> > +		      struct kernel_clone_args *kargs)
+> > +	__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+> >  {
+> >  	struct cgroup_subsys *ss;
+> > -	struct css_set *cset;
+> > +	struct css_set *cset = kargs->cset;
+> >  	int i;
+> >  
+> >  	spin_lock_irq(&css_set_lock);
+> >  
+> >  	WARN_ON_ONCE(!list_empty(&child->cg_list));
+> > -	cset = task_css_set(current); /* current is @child's parent */
+> > -	get_css_set(cset);
+> >  	cset->nr_tasks++;
+> >  	css_set_move_task(child, NULL, cset, false);
+> So, the reference is passed over from kargs->cset to task->cgroups. I
+> think it's necessary to zero kargs->cset in order to prevent droping the 
+> reference in cgroup_css_set_put_fork.
 
-I presumptively added the Jörg's Tested-by tag: won't send the commit to 
-Linus if he still has trouble booting the laptop.
+cgroup_post_fork() is called past the point of no return for fork and
+cgroup_css_set_put_fork() is explicitly documented as only being
+callable before forks point of no return:
 
-I'm still amazed GCC doesn't warn about this pattern - why?
+ * Drop references to the prepared css_set and target cgroup if
+ * CLONE_INTO_CGROUP was requested. This function can only be
+ * called before fork()'s point of no return.
 
-BTW., could we please also organize such assignments vertically as well:
+> Perhaps, a general comment about css_set whereabouts during fork and
+> kargs passing would be useful.
+> 
+> > @@ -6016,6 +6146,17 @@ void cgroup_post_fork(struct task_struct *child)
+> >  	} while_each_subsys_mask();
+> >  
+> >  	cgroup_threadgroup_change_end(current);
+> > +
+> > +	if (kargs->flags & CLONE_INTO_CGROUP) {
+> > +		mutex_unlock(&cgroup_mutex);
+> > +
+> > +		cgroup_put(kargs->cgrp);
+> > +		kargs->cgrp = NULL;
+> > +	}
+> > +
+> > +	/* Make the new cset the root_cset of the new cgroup namespace. */
+> > +	if (kargs->flags & CLONE_NEWCGROUP)
+> > +		child->nsproxy->cgroup_ns->root_cset = cset;
+> root_cset reference (from copy_cgroup_ns) seems leaked here and where is
+> the additional reference to new cset obtained?
 
-			.phys_map	= efi.memmap.phys_map,
-			.desc_version	= efi.memmap.desc_version,
-			.desc_size	= efi.memmap.desc_size,
-			.size		= efi.memmap.desc_size * (efi.memmap.nr_map - n_removal),
-			.flags		= 0,
+This should be:
 
-(See the patch below.)
+if (kargs->flags & CLONE_NEWCGROUP) {
+	struct css_set *rcset = child->nsproxy->cgroup_ns->root_cset;
 
-Had we done that earlier the weird pattern would have stuck out a lot 
-more:
+	get_css_set(cset);
+	child->nsproxy->cgroup_ns->root_cset = cset;
+	put_css_set(rcset);
+}
 
-			.phys_map	= efi.memmap.phys_map,
-			.desc_version	= efi.memmap.desc_version,
-			.desc_size	= efi.memmap.desc_size,
-			.size		= data.desc_size * (efi.memmap.nr_map - n_removal),
-			.flags		= 0,
-
-BTW., is there a reason "struct efi_memory_map" doesn't embedd a "struct 
-efi_memory_map_data"? Or is efi_memory_map firmware ABI?
-
-If they shared the structure then copying would be easier.
-
-Thanks,
-
-	Ingo
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
- arch/x86/platform/efi/efi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index ae923ee8e2b4..293c47f9cb39 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -305,11 +305,11 @@ static void __init efi_clean_memmap(void)
- 
- 	if (n_removal > 0) {
- 		struct efi_memory_map_data data = {
--			.phys_map = efi.memmap.phys_map,
--			.desc_version = efi.memmap.desc_version,
--			.desc_size = efi.memmap.desc_size,
--			.size = efi.memmap.desc_size * (efi.memmap.nr_map - n_removal),
--			.flags = 0,
-+			.phys_map	= efi.memmap.phys_map,
-+			.desc_version	= efi.memmap.desc_version,
-+			.desc_size	= efi.memmap.desc_size,
-+			.size		= efi.memmap.desc_size * (efi.memmap.nr_map - n_removal),
-+			.flags		= 0,
- 		};
- 
- 		pr_warn("Removing %d invalid memory map entries.\n", n_removal);
+Thanks!
+Christian
