@@ -2,194 +2,133 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66B4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 12:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA64EC3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E672067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 12:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E318206E6
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 13:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgIz0s5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgBBM4M (ORCPT
+        id S1726900AbgBBNAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 07:56:12 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:41590 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgBBM4L (ORCPT
+        Sun, 2 Feb 2020 08:00:04 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43336 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgBBNAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 07:56:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id z201so7508378iof.8
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 04:56:11 -0800 (PST)
+        Sun, 2 Feb 2020 08:00:03 -0500
+Received: by mail-yw1-f68.google.com with SMTP id f204so9471670ywc.10;
+        Sun, 02 Feb 2020 05:00:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AH44IHY8LM9hNPEbRtsEm9RIhekLfcrQmhRGmajQBHY=;
+        b=JgIz0s5wSKGBK+tfeB5/vDAeI091XJabpzldKR9UAgT7pUXlJhhRG5HCDBI5LeKfic
+         Czkl7Js+nI6YwGu4UXoN9oPjZqLGLeDYTnn+m2bo3FGLo4OzdYElucGW886I+Rz3JdC9
+         OX1yzKc/bUZyKyP3MdPowqOhhdcpiN+8WIHZ1l5quntT1INEmQ2oaeLEOBBMBegZbvbc
+         jHlXkx4UL7Snn9psqzZa+EPnLs7z1hbAaU4xuxTWP0t9VgawcsH3vtNergQT5pFOER57
+         aOmCkJpKdgjgN0JpMWCwHkid8uEPyhFBjusCkDfrShvbsvthHYTMKNbX33rnbe5f99g6
+         qgUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=sePf426ABt6fcfW2msbuyQb20FjZbY8UnbS/9wl19Js=;
-        b=R2MH11ww2Ncz0cgnzs6KXGaRM0kXBrMiu/QsF0zZsirF7mLdKjxtO6LOP8u+Dhwejc
-         8lhLARqwB1I/vfUl48AdreroRY7SIoH56sd0HxTHZtYDIiXl1ad122tjJ2TfxVrEA0/I
-         YkpXaPXUJI1xZi1ztZOlwDXkZ7rLNwZo3WGYRUlztRJNJw6LcUU9DBhLBZdgGlpPql5G
-         XW3NG/X8Wx6zc033PRnp6D6IE2puifiV7PNDKkVxz1HTMQJvZhihlGlp+GnW4J6zdZ9w
-         icBrpVBQTXMJTnUbslE/RuLWJq87gEStsELO1mZqVwgCcFikdgVkhG5f+V+X0ithzs7Z
-         WZeQ==
-X-Gm-Message-State: APjAAAWe05J6mnEZylW2F/cMDBhTzmCdxD5RV4UNYWWVo1G01qpcSAt1
-        6V83Vbrdv811bQ/AFGO9YtvCrAgFOUiTQ66zz/xOGGxQNIhL
-X-Google-Smtp-Source: APXvYqy8VV3RncJn8Jm0k2KOgfBpYPIkjpHi0oXQcFF20WQB2AgJX5sLyq/vbRVZhP3msfaLP4/botoBnFUJ0k3g+eS+HaUHZXJi
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AH44IHY8LM9hNPEbRtsEm9RIhekLfcrQmhRGmajQBHY=;
+        b=UGtYqyJNqisoB3+OX6VQGEqtWroxiJwJB6Wh3RWfanYpvqOXIjU9nxxX0eFVCiz3Fg
+         +6AobjhDwUNQaz3+W34yMBL1wNzbcZnmkRaq2cB+MhlvLSQjxmCg+F4IOfiPeVb5nc/B
+         EH6f3BeQMl5kEdQar83kCOQrOHH2HpKhExS+jwP+Yo4Xd9RzC0RbksRtDF4n8v35eZed
+         CpNPy4H5S0WlgYtAmMacyduouHa4Q/Gw87TKdoGUrF5Oui8cSZXLCDehiBBK41xd6V4x
+         jJh1p+BnWo2z+DjOkl7sAqkFF42tRTmAAcgA9kV2VLKEo8i7vCPhds3KMqALtUt0rASK
+         v7Gw==
+X-Gm-Message-State: APjAAAUy+vMIWljeBI7+2OaxLg2W/PfqyOoIRGIgo1zmrHC8c+BIOqak
+        1Ks5BlFvVlWjxjsmoVnkkgGuisYaMHI=
+X-Google-Smtp-Source: APXvYqy+sjtTqD37PK/Ym1JLqM0bJO+tVP/hDjqdMipCl/DoBz8JAHptrKJ0YAzBNhEkhgjpLJA9RA==
+X-Received: by 2002:a0d:d1c6:: with SMTP id t189mr14350608ywd.393.1580648401835;
+        Sun, 02 Feb 2020 05:00:01 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id m137sm7090013ywd.108.2020.02.02.05.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 05:00:01 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Han Xu <han.xu@nxp.com>, Adam Ford <aford173@gmail.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Ashish Kumar <ashish.kumar@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V2 1/5] spi: fspi: enable fspi on imx8qxp and imx8mm
+Date:   Sun,  2 Feb 2020 06:59:46 -0600
+Message-Id: <20200202125950.1825013-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:bf06:: with SMTP id p6mr16156143iof.255.1580648170848;
- Sun, 02 Feb 2020 04:56:10 -0800 (PST)
-Date:   Sun, 02 Feb 2020 04:56:10 -0800
-In-Reply-To: <000000000000729d74059c30ddff@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bd0524059d975403@google.com>
-Subject: Re: KASAN: use-after-free Read in snd_timer_resolution
-From:   syzbot <syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com>
-To:     20200115203733.26530-1-tiwai@suse.de,
-        alsa-devel-owner@alsa-project.org, alsa-devel@alsa-project.org,
-        arnd@arndb.de, baolin.wang@linaro.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, perex@perex.cz,
-        stable-commits@vger.kernel.org, stable@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com, tiwai@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+From: Han Xu <han.xu@nxp.com>
 
-HEAD commit:    2747d5fd Add linux-next specific files for 20200116
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1147e101e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=22f506e7a3a37fe2
-dashboard link: https://syzkaller.appspot.com/bug?extid=2b2ef983f973e5c40943
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c0864ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14738df1e00000
+Pull in this patch from NXP's upstream repo to
+enable fspi on imx8qxp and imx8mm
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
+Signed-off-by: Han Xu <han.xu@nxp.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2: Reorder s-o-b lines to give credit in proper order.
 
-==================================================================
-BUG: KASAN: use-after-free in snd_timer_resolution+0xf1/0x110 sound/core/timer.c:487
-Read of size 8 at addr ffff88809e0f5a00 by task syz-executor911/9849
-
-CPU: 1 PID: 9849 Comm: syz-executor911 Not tainted 5.5.0-rc6-next-20200116-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- snd_timer_resolution+0xf1/0x110 sound/core/timer.c:487
- snd_seq_info_timer_read+0x95/0x2f1 sound/core/seq/seq_timer.c:480
- snd_info_seq_show+0xcb/0x120 sound/core/info.c:362
- seq_read+0x4ca/0x1170 fs/seq_file.c:229
- proc_reg_read+0x1f8/0x2b0 fs/proc/inode.c:223
- do_loop_readv_writev fs/read_write.c:714 [inline]
- do_loop_readv_writev fs/read_write.c:701 [inline]
- do_iter_read+0x4a4/0x660 fs/read_write.c:935
- vfs_readv+0xf0/0x160 fs/read_write.c:997
- do_preadv+0x1c4/0x280 fs/read_write.c:1089
- __do_sys_preadv fs/read_write.c:1139 [inline]
- __se_sys_preadv fs/read_write.c:1134 [inline]
- __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441389
-Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc8aa7ce38 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441389
-RDX: 0000000000000227 RSI: 00000000200017c0 RDI: 0000000000000004
-RBP: 00007ffc8aa7ce50 R08: 000000000000000f R09: 00000000000000c2
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402100
-R13: 0000000000402190 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9852:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- snd_timer_instance_new+0x4a/0x300 sound/core/timer.c:142
- snd_seq_timer_open+0x1c0/0x590 sound/core/seq/seq_timer.c:275
- queue_use+0xf1/0x270 sound/core/seq/seq_queue.c:489
- snd_seq_queue_alloc+0x2c5/0x4d0 sound/core/seq/seq_queue.c:176
- snd_seq_ioctl_create_queue+0xb0/0x330 sound/core/seq/seq_clientmgr.c:1548
- snd_seq_kernel_client_ctl+0xf8/0x140 sound/core/seq/seq_clientmgr.c:2353
- alloc_seq_queue.isra.0+0xdc/0x180 sound/core/seq/oss/seq_oss_init.c:357
- snd_seq_oss_open+0x2ff/0x960 sound/core/seq/oss/seq_oss_init.c:215
- odev_open+0x70/0x90 sound/core/seq/oss/seq_oss.c:125
- soundcore_open+0x453/0x610 sound/sound_core.c:593
- chrdev_open+0x245/0x6b0 fs/char_dev.c:414
- do_dentry_open+0x4ca/0x1350 fs/open.c:797
- vfs_open+0xa0/0xd0 fs/open.c:914
- do_last fs/namei.c:3487 [inline]
- path_openat+0x12fd/0x34d0 fs/namei.c:3604
- do_filp_open+0x192/0x260 fs/namei.c:3634
- do_sys_openat2+0x633/0x840 fs/open.c:1151
- do_sys_open+0xfc/0x190 fs/open.c:1167
- __do_sys_openat fs/open.c:1181 [inline]
- __se_sys_openat fs/open.c:1176 [inline]
- __x64_sys_openat+0x9d/0x100 fs/open.c:1176
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9852:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- snd_timer_instance_free sound/core/timer.c:166 [inline]
- snd_timer_instance_free+0x7c/0xa0 sound/core/timer.c:160
- snd_seq_timer_close+0x99/0xe0 sound/core/seq/seq_timer.c:319
- queue_delete+0x52/0xb0 sound/core/seq/seq_queue.c:134
- snd_seq_queue_delete+0x4e/0x70 sound/core/seq/seq_queue.c:196
- snd_seq_ioctl_delete_queue+0x6a/0x90 sound/core/seq/seq_clientmgr.c:1570
- snd_seq_kernel_client_ctl+0xf8/0x140 sound/core/seq/seq_clientmgr.c:2353
- delete_seq_queue.part.0+0xb6/0x120 sound/core/seq/oss/seq_oss_init.c:376
- delete_seq_queue sound/core/seq/oss/seq_oss_init.c:372 [inline]
- snd_seq_oss_release+0x116/0x150 sound/core/seq/oss/seq_oss_init.c:421
- odev_release+0x54/0x80 sound/core/seq/oss/seq_oss.c:140
- __fput+0x2ff/0x890 fs/file_table.c:280
- ____fput+0x16/0x20 fs/file_table.c:313
- task_work_run+0x145/0x1c0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0xbcb/0x2f80 kernel/exit.c:801
- do_group_exit+0x135/0x360 kernel/exit.c:899
- __do_sys_exit_group kernel/exit.c:910 [inline]
- __se_sys_exit_group kernel/exit.c:908 [inline]
- __x64_sys_exit_group+0x44/0x50 kernel/exit.c:908
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88809e0f5a00
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 0 bytes inside of
- 256-byte region [ffff88809e0f5a00, ffff88809e0f5b00)
-The buggy address belongs to the page:
-page:ffffea0002783d40 refcount:1 mapcount:0 mapping:ffff8880aa4008c0 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002783948 ffffea00027872c8 ffff8880aa4008c0
-raw: 0000000000000000 ffff88809e0f5000 0000000100000008 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809e0f5900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88809e0f5980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88809e0f5a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff88809e0f5a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809e0f5b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 8c5084a3a617..00c7899428a1 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -324,6 +324,22 @@ static const struct nxp_fspi_devtype_data lx2160a_data = {
+ 	.little_endian = true,  /* little-endian    */
+ };
+ 
++static const struct nxp_fspi_devtype_data imx8mm_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
++static const struct nxp_fspi_devtype_data imx8qxp_data = {
++	.rxfifo = SZ_512,       /* (64  * 64 bits)  */
++	.txfifo = SZ_1K,        /* (128 * 64 bits)  */
++	.ahb_buf_size = SZ_2K,  /* (256 * 64 bits)  */
++	.quirks = 0,
++	.little_endian = true,  /* little-endian    */
++};
++
+ struct nxp_fspi {
+ 	void __iomem *iobase;
+ 	void __iomem *ahb_addr;
+@@ -1076,6 +1092,8 @@ static int nxp_fspi_resume(struct device *dev)
+ 
+ static const struct of_device_id nxp_fspi_dt_ids[] = {
+ 	{ .compatible = "nxp,lx2160a-fspi", .data = (void *)&lx2160a_data, },
++	{ .compatible = "nxp,imx8mm-fspi", .data = (void *)&imx8mm_data, },
++	{ .compatible = "nxp,imx8qxp-fspi", .data = (void *)&imx8qxp_data, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+-- 
+2.24.0
 
