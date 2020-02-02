@@ -2,85 +2,75 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823FFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D56C35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC6C2086A
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="imkZ7L7p"
+	by mail.kernel.org (Postfix) with ESMTP id B518F206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 20:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580676188;
+	bh=Ch4njxdszvV1cbIifCfhuw/kD7hywsLYY/EAHrIrfqs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ugPi/3WH74+A1/e+WQLb1SMYuht7WF4yBHkB5iiBEHxOsEPlApWC2Yg7MEhqgQpzd
+	 PP4Iulc0gHbbnmihu9cmHttBfUC7n83gmqVmVixjv39bHV5By2pYqS1isVi7T8aJR+
+	 CTuYA/56l7D54FIyMH+wLlkPnZvj8P4k0NTXHXKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgBBUmT (ORCPT
+        id S1727091AbgBBUnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 15:42:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54713 "EHLO ozlabs.org"
+        Sun, 2 Feb 2020 15:43:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbgBBUmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 15:42:19 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726921AbgBBUnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 15:43:07 -0500
+Received: from cakuba.hsd1.ca.comcast.net (c-73-93-4-247.hsd1.ca.comcast.net [73.93.4.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 489jZ07344z9sPK;
-        Mon,  3 Feb 2020 07:42:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1580676137;
-        bh=B2hLmk31JryAktx7MdlUn59snzXyCALDvA6eVwGUbTg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=imkZ7L7p/Z5IaoyjkP8QVFDMzlx0ljB47+qJBMLXeZyg/TkzFS/aqN+Es0jZdNsR/
-         FJTJpxAzacaxdHpaMpP2AvOm3faM+Ikt/V0nmWT6/180lPF67zAt2RIh+Q7NsbXoDa
-         fqdqpgtmSRKg9N3O12eHtI6EoEnYRPRRzIemktTc4i/oCgDHnRVOzRbZ0A8zUE+NCw
-         GEmDmSawwwro/LCMax0aTRK76Sk1LrV3/tNy5j5RcbGnZzbtt0V1fjphLnF37YEs/0
-         tOYjivOB0UrGNqGVWu0K+/Y77cbA1j22tKQaCzV36rxg7SuqQ6kdrlmMhM91FjxPH2
-         +Z5OgZ8C21kfA==
-Date:   Mon, 3 Feb 2020 07:41:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: bad rebase of the csky tree
-Message-ID: <20200203074151.05bfe914@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id EAAC52067C;
+        Sun,  2 Feb 2020 20:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580676187;
+        bh=Ch4njxdszvV1cbIifCfhuw/kD7hywsLYY/EAHrIrfqs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VwLF0qg1SF/xAqRz22Tu1hP+J14iKyikROmY2jb42K6ILlBO2QKHTgwzmk6oBq0ZB
+         OVJ0WMl/BsZ+YXrUBhxDyYiuuIu8zpAXYdARYyJymEvp6uQGoaIQrdepE9rQdJyQp/
+         J+NRJNxJ7ZQckfh5xCLbi7dk+8vNshwR1lY7t5hw=
+Date:   Sun, 2 Feb 2020 12:43:06 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Karsten Keil <isdn@linux-pingi.de>, Arnd Bergmann <arnd@arndb.de>,
+        isdn4linux@listserv.isdn4linux.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+Message-ID: <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lriMuSHaFGbuffbes_tc9eC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lriMuSHaFGbuffbes_tc9eC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat,  1 Feb 2020 13:43:01 +0100, Lukas Bulwahn wrote:
+> Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
+> isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
+> the terminal slash for the two directories mISDN and hardware. Hence, all
+> files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
+> but were considered to be part of "THE REST".
+> 
+> Rectify the situation, and while at it, also complete the section with two
+> further build files that belong to that subsystem.
+> 
+> This was identified with a small script that finds all files belonging to
+> "THE REST" according to the current MAINTAINERS file, and I investigated
+> upon its output.
+> 
+> Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Hi all,
-
-The rebase of the csky tree has rebased some of the commits from Linus'
-tree as well.  Please do not rebase your tree unnecessarily and especially
-not during the merge window.  And be more careful about how you do
-rebases if they are necessary.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lriMuSHaFGbuffbes_tc9eC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl43NA8ACgkQAVBC80lX
-0GyvHQgAnskELwgAvripE6UZHfaFS9uA/PDWdSzOhEm+DYd4xV93EbMqRRDQ5uKI
-lWoTs4vRJzM8IEqPE0/WzrvPuge42fqzEXzWAHWW0VDRk9OL7dJBZb3LM5LXVNIB
-NrSNOQ5BvS7xuYXJo+7fk77L1OMF7irmXz22vM2oT5b0JNb15gJ6SpNA9NadhG+7
-eIvY54MtulZqkq9a1l8Min2yt9rJNoOvrBgq6Nl1YCuPy8vqgIDiP6j9PGVkOrNJ
-jh3EoAdTn2uLFQEaTjEY2DdpMiOAYfTkPTllQ9YM1KirUdFBt2l7Kqh3MkxQJ50H
-WaFaSgESjeEe+u4PZLtFtxiBysNtog==
-=sToY
------END PGP SIGNATURE-----
-
---Sig_/lriMuSHaFGbuffbes_tc9eC--
+Applied to net, thanks!
