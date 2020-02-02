@@ -2,135 +2,78 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5893FC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C7AC35249
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4E020643
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580660321;
-	bh=DFlvCNwEUCoYhh6ULMgm7xDGmYNjx/yiWgvXuvumBZI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fmfSVuPabbsNLZKepSPmByEaZTdK/cx3FuGWzMTail9bJMLtck5tFU3gES6c4MnB2
-	 77htZm+ky+D3ul2tbVnrgx3oTRDOZVU/5m0n/phnrRGaH0j1qFmTkLssELdI7CwcYS
-	 wEDDKBa4HYfKWAQt01XkhGHfFZ/484DX1fFvwMGs=
+	by mail.kernel.org (Postfix) with ESMTP id D50C020643
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 16:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgBBQSK (ORCPT
+        id S1727025AbgBBQTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 11:18:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
+        Sun, 2 Feb 2020 11:19:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:46828 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgBBQSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 11:18:09 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104CB20643;
-        Sun,  2 Feb 2020 16:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580660288;
-        bh=DFlvCNwEUCoYhh6ULMgm7xDGmYNjx/yiWgvXuvumBZI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Szq3nwpqfdHmodWCUCWrlwU9CM5QFQDpZwMf7yeKRfSuSdcsHDVKjV32yWpmI8PaJ
-         5jZKzMyk3p5Wvm34xUEjvBWde8kzXR1e7D6LeGS6OdawrzK3sEtiYA/f7TZnvYhMRj
-         frc1RnskTSJ/ZHs76ES7N4gT29CvaYPxK7bnSBu8=
-Date:   Sun, 2 Feb 2020 16:18:05 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: ABI: testing: ad7192: update sysfs
- docs
-Message-ID: <20200202161805.3758ee4a@archlinux>
-In-Reply-To: <20200122143700.6069-2-alexandru.tachici@analog.com>
-References: <20200122143700.6069-1-alexandru.tachici@analog.com>
-        <20200122143700.6069-2-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726526AbgBBQTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 11:19:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9768FEC;
+        Sun,  2 Feb 2020 08:19:25 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.50.4.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30C793F6CF;
+        Sun,  2 Feb 2020 08:19:24 -0800 (PST)
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ofir Drang <ofir.drang@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: ccree - dec auth tag size from cryptlen map
+Date:   Sun,  2 Feb 2020 18:19:14 +0200
+Message-Id: <20200202161914.9551-1-gilad@benyossef.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 16:36:59 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+Remove the auth tag size from cryptlen before mapping the destination
+in out-of-place AEAD decryption thus resolving a crash with
+extended testmgr tests.
 
-> Updated mainline documentation on ad7192 userspace sysfs.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-Minor bracket missing, otherwise looks good.
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: stable@vger.kernel.org # v4.19+
+---
+ drivers/crypto/ccree/cc_buffer_mgr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Jonathan
-> ---
->  .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 17 ++++++++++------
->  .../iio/Documentation/sysfs-bus-iio-ad7192    | 20 -------------------
->  2 files changed, 11 insertions(+), 26 deletions(-)
->  delete mode 100644 drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> index 7627d3be08f5..9be6b8a69a19 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-> @@ -2,17 +2,22 @@ What:		/sys/bus/iio/devices/iio:deviceX/ac_excitation_en
->  KernelVersion:
->  Contact:	linux-iio@vger.kernel.org
->  Description:
-> -		Reading gives the state of AC excitation.
-> -		Writing '1' enables AC excitation.
-> +		This attribute, if available, is used to enable the AC
-> +		excitation mode found on some converters. In ac excitation mode,
-> +		the polarity of the excitation voltage is reversed on
-> +		alternate cycles, to eliminate DC errors.
->  
->  What:		/sys/bus/iio/devices/iio:deviceX/bridge_switch_en
->  KernelVersion:
->  Contact:	linux-iio@vger.kernel.org
->  Description:
-> -		This bridge switch is used to disconnect it when there is a
-> -		need to minimize the system current consumption.
-> -		Reading gives the state of the bridge switch.
-> -		Writing '1' enables the bridge switch.
-> +		This attribute, if available, is used to close or open the
-> +		bridge power down switch found on some converters.
-> +		In bridge applications, such as strain gauges and load cells,
-> +		the bridge itself consumes the majority of the current in the
-> +		system. To minimize the current consumption of the system,
-> +		the bridge can be disconnected (when it is not being used
-Missing bracket.
-> +		using the bridge_switch_en attribute.
->  
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
->  KernelVersion:
-> diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192 b/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> deleted file mode 100644
-> index 1c35c507cc05..000000000000
-> --- a/drivers/staging/iio/Documentation/sysfs-bus-iio-ad7192
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -What:		/sys/.../iio:deviceX/ac_excitation_en
-> -KernelVersion:	3.1.0
-> -Contact:	linux-iio@vger.kernel.org
-> -Description:
-> -		This attribute, if available, is used to enable the AC
-> -		excitation mode found on some converters. In ac excitation mode,
-> -		the polarity of the excitation voltage is reversed on
-> -		alternate cycles, to eliminate DC errors.
-> -
-> -What:		/sys/.../iio:deviceX/bridge_switch_en
-> -KernelVersion:	3.1.0
-> -Contact:	linux-iio@vger.kernel.org
-> -Description:
-> -		This attribute, if available, is used to close or open the
-> -		bridge power down switch found on some converters.
-> -		In bridge applications, such as strain gauges and load cells,
-> -		the bridge itself consumes the majority of the current in the
-> -		system. To minimize the current consumption of the system,
-> -		the bridge can be disconnected (when it is not being used
-> -		using the bridge_switch_en attribute.
+diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
+index 885347b5b372..954f14bddf1d 100644
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -894,8 +894,12 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
+ 
+ 	if (req->src != req->dst) {
+ 		size_for_map = areq_ctx->assoclen + req->cryptlen;
+-		size_for_map += (direct == DRV_CRYPTO_DIRECTION_ENCRYPT) ?
+-				authsize : 0;
++
++		if (direct == DRV_CRYPTO_DIRECTION_ENCRYPT)
++			size_for_map += authsize;
++		else
++			size_for_map -= authsize;
++
+ 		if (is_gcm4543)
+ 			size_for_map += crypto_aead_ivsize(tfm);
+ 
+-- 
+2.25.0
 
