@@ -2,148 +2,164 @@ Return-Path: <SRS0=NZ9A=3W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D02C35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B38C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBC92067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15ED1206D3
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 21:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="Hmka/559";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BkwmvuA5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URsjV6xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgBBVZD (ORCPT
+        id S1727077AbgBBVaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 16:25:03 -0500
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:36913 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbgBBVZD (ORCPT
+        Sun, 2 Feb 2020 16:30:17 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42082 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgBBVaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 16:25:03 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id EC54C2F0;
-        Sun,  2 Feb 2020 16:25:01 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 02 Feb 2020 16:25:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=L
-        PxAQQiqRuoGOPKvYDIsLfwWX7h3xUQbmwrfmLakCe4=; b=Hmka/5594kogfTHSe
-        njcJkTHBFRhi1dtYBnecVetpuLZHyYslqhYAEa/iMriNJGBrBbfg5T3wtfNNzFoq
-        761nVT2i9lYEqde3nc6Fh+Suu+v8ZIi2X68h6N5lb7gPMXSqsxfVvpUy8WxIVy4E
-        g+2Ru49oRuw5FB2yx/csIek8a1BumVYYG2EcBzjtHaZXeIyRxIAJxomiNagq6X0q
-        I/lq5YdAp2m8SUWFB50bMni5IZd2ILVTQwo3w6NMP0VgMRn88gv+9A6WlSyIPX9U
-        hgfhrXdhBn2Z9LtcUPjDwTUf0GXWjr2qXbJLh+R7xWqo97nio742pV7+CuIXHBx+
-        3GwQQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=LPxAQQiqRuoGOPKvYDIsLfwWX7h3xUQbmwrfmLakC
-        e4=; b=BkwmvuA5eKxoL2ecK8vaWz8OzrG+bRStDEEMmrLTyH9wUl9+SLguWXcMN
-        6ezKm+ho6hYR+sh2veCV2AKy+Sa33eCNbZB7QLRUOLYhfaLaS8VqMWwSubo3DX94
-        g7IJn45iBqz7uSQiPvhUodAFjirfIdw5f9fpdbyALlIsonwquiNDWIlYBINN5m16
-        /cJW3+kGLXc7CTwNhEDypnpgkz87/71AKgu3ki+LlSMfc/89EqqroDbg65hC9pf/
-        G/GMjiSTTlb5fcAdnDtU8Kz6VtXZWjfT5G9QDW8D53XnMBlMr3W2QQ8Z3CAVzscj
-        Uy0Z5eZ80WA/P0kjQadYFfdg2XaPg==
-X-ME-Sender: <xms:LT43XhSf-nK5iOOp98uoYfio071OETUcbgluxqGJGD8PIZa7Vf5AMA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeehgddugeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefuvfhfhffkffgfgggjtgfgsehtje
-    ertddtfeejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhs
-    tghhuhgsvghrthesfhgrshhtmhgrihhlrdhfmheqnecukfhppedujeeirddukeelrdeike
-    drudekleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrihhlrdhfmh
-X-ME-Proxy: <xmx:LT43XvCoNr-G3PRj4KwYNDNeFdHGLxsA6_35jgStcFdHvb4fbpiqig>
-    <xmx:LT43Xh17-CQK3RopScxpUnApaDCE8fPvxdvuzyuMzEnPSwMhxYXy6A>
-    <xmx:LT43XtWCI7AxpL_Tln_2ZOv0OR8eY9H13WaPmFI6392QaPF02M6wWw>
-    <xmx:LT43XnQiHFRWIbda3esPxSqmlDUD860z1Vd8Ojwxt4shUKFqBAxrYQ>
-Received: from [192.168.1.20] (vol21-h02-176-189-68-189.dsl.sta.abo.bbox.fr [176.189.68.189])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7E581328005D;
-        Sun,  2 Feb 2020 16:25:00 -0500 (EST)
-Subject: Re: [PATCH] fuse: Allow parallel DIO reads and check NOWAIT case for
- DIO writes
-To:     qiwuchen55@gmail.com, miklos@szeredi.hu
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-References: <1580614487-1341-1-git-send-email-qiwuchen55@gmail.com>
-From:   Bernd Schubert <bernd.schubert@fastmail.fm>
-Autocrypt: addr=bernd.schubert@fastmail.fm; prefer-encrypt=mutual;
- keydata= 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
-Message-ID: <07d333db-9ed3-2628-673e-cb614c31f29e@fastmail.fm>
-Date:   Sun, 2 Feb 2020 22:25:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 2 Feb 2020 16:30:16 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y19so8296568lfl.9;
+        Sun, 02 Feb 2020 13:30:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ksD2PJRkb52M0/uH1lv8CPBMGBMZornu7c/r2Oi94wE=;
+        b=URsjV6xkgonCaoi+/ZKtmJIgWHog0hZZn0TRuOqMEFv30Sx8AfdweKXYqcEeQo8Waa
+         mIvdSAG91QelmxL8fm/6Ocp7TuRA8Q/kdUpRIDvwTpWFu3pVp/p6QjjevozMs0PivC8Z
+         bVfI1u/pxe57MEHXy5pDXKhhEtXnaAFAFyL+FXdKuFgV/Oo9Jw7wzlS/g2xIFcgIwX+4
+         lYZtjWPWz+Nipxg0UuMqpU278/M7UfzHmbn4z/JzglBaiAMyyMYaA9WuOIUydmF5DIsD
+         cUghRlpyM6WWT4NaUNfbAik3rWW/Og8eDcbEvnpMBL5VXh7YqTf/OgKwm4UDrGMqvzy4
+         qT7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ksD2PJRkb52M0/uH1lv8CPBMGBMZornu7c/r2Oi94wE=;
+        b=DsTvi0fxrC+IsCO98QdiPHdk42gsx6t5lnZo082mtRnyq7Kv/wlPJW6LtYoVipw4w0
+         IcG5mYsOnG98ATbC3d2IYp0oEFbeRiQgXwGRBCNEOAfSyLa8hLGTELjvIOiEUu+J4cWC
+         xn+96Kr98gWn0xbcMQdmL2skNSw5Uf/NrJtf5IwgllQYtnOGy+1nocf7Ka4Zt3sU7cMg
+         1cdvEtr0gadqUA8UlzAXv+4WWZckicTMkkEg6BeQT0FvL6AtKMMrgrLOXiee/bDe28fi
+         mRVNyj6yHFFxw3APuF8qz1wLD8OROoUeB+ZQ5cR81iXxUkQP4SS0Pp6ru1H3BAeur71v
+         LoTg==
+X-Gm-Message-State: APjAAAUCyJscD+1MS3ruhzKE7L+KWR7d+Ib+Kgt8fGUnnUv8CzB9nWB5
+        F7iEIWWqG8GJCJe1IwvT1MI=
+X-Google-Smtp-Source: APXvYqxpd/0zWkiP7/aoIoJkgjU/MVBmwR/6VUrTded9q2edoc0+TiKxYGsjaZ5tUkQP7d/jUt+szQ==
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr10492652lfp.133.1580679013061;
+        Sun, 02 Feb 2020 13:30:13 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id u25sm8586833ljj.70.2020.02.02.13.30.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 13:30:12 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH for 5.6 v1] tty: serial: Handle RX transfer in PIO mode if DMA wasn't started
+Date:   Mon,  3 Feb 2020 00:28:44 +0300
+Message-Id: <20200202212844.11592-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <1580614487-1341-1-git-send-email-qiwuchen55@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is possible to get an instant RX timeout or end-of-transfer interrupt
+before RX DMA was started, if transaction is less than 16 bytes. Transfer
+should be handled in PIO mode in this case because DMA can't handle it.
+This patch brings back the original behaviour of the driver that was
+changed by accident by a previous commit, it fixes occasional Bluetooth HW
+initialization failures which I started to notice recently.
 
+Fixes: d5e3fadb7012 ("tty: serial: tegra: Activate RX DMA transfer by request")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/tty/serial/serial-tegra.c | 35 ++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
-> @@ -1518,6 +1525,9 @@ static ssize_t fuse_direct_read_iter(struct kiocb *iocb, struct iov_iter *to)
->  
->  		res = __fuse_direct_read(&io, to, &iocb->ki_pos);
->  	}
-> +	inode_unlock_shared(inode);
-> +
-> +	file_accessed(iocb->ki_filp);
+diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
+index 33034b852a51..8de8bac9c6c7 100644
+--- a/drivers/tty/serial/serial-tegra.c
++++ b/drivers/tty/serial/serial-tegra.c
+@@ -692,11 +692,22 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
+ 				   count, DMA_TO_DEVICE);
+ }
+ 
++static void do_handle_rx_pio(struct tegra_uart_port *tup)
++{
++	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
++	struct tty_port *port = &tup->uport.state->port;
++
++	tegra_uart_handle_rx_pio(tup, port);
++	if (tty) {
++		tty_flip_buffer_push(port);
++		tty_kref_put(tty);
++	}
++}
++
+ static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
+ 				      unsigned int residue)
+ {
+ 	struct tty_port *port = &tup->uport.state->port;
+-	struct tty_struct *tty = tty_port_tty_get(port);
+ 	unsigned int count;
+ 
+ 	async_tx_ack(tup->rx_dma_desc);
+@@ -705,11 +716,7 @@ static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
+ 	/* If we are here, DMA is stopped */
+ 	tegra_uart_copy_rx_to_tty(tup, port, count);
+ 
+-	tegra_uart_handle_rx_pio(tup, port);
+-	if (tty) {
+-		tty_flip_buffer_push(port);
+-		tty_kref_put(tty);
+-	}
++	do_handle_rx_pio(tup);
+ }
+ 
+ static void tegra_uart_rx_dma_complete(void *args)
+@@ -749,8 +756,10 @@ static void tegra_uart_terminate_rx_dma(struct tegra_uart_port *tup)
+ {
+ 	struct dma_tx_state state;
+ 
+-	if (!tup->rx_dma_active)
++	if (!tup->rx_dma_active) {
++		do_handle_rx_pio(tup);
+ 		return;
++	}
+ 
+ 	dmaengine_terminate_all(tup->rx_dma_chan);
+ 	dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
+@@ -816,18 +825,6 @@ static void tegra_uart_handle_modem_signal_change(struct uart_port *u)
+ 		uart_handle_cts_change(&tup->uport, msr & UART_MSR_CTS);
+ }
+ 
+-static void do_handle_rx_pio(struct tegra_uart_port *tup)
+-{
+-	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
+-	struct tty_port *port = &tup->uport.state->port;
+-
+-	tegra_uart_handle_rx_pio(tup, port);
+-	if (tty) {
+-		tty_flip_buffer_push(port);
+-		tty_kref_put(tty);
+-	}
+-}
+-
+ static irqreturn_t tegra_uart_isr(int irq, void *data)
+ {
+ 	struct tegra_uart_port *tup = data;
+-- 
+2.24.0
 
-
-Shouldn't the file_accessed() in different patch, with a description? It
-looks totally unrelated to locking?
-
-
-Thanks,
-Bernd
