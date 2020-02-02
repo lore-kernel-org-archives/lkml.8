@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03AAC35249
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E152C3524C
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB7120679
-	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BE220658
+	for <linux-kernel@archiver.kernel.org>; Sun,  2 Feb 2020 22:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzZ9q2KM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Foz5rILV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgBBW3w (ORCPT
+        id S1727168AbgBBW3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 17:29:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34381 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbgBBW3v (ORCPT
+        Sun, 2 Feb 2020 17:29:55 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:47036 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgBBW3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 17:29:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id x7so12652355ljc.1;
-        Sun, 02 Feb 2020 14:29:50 -0800 (PST)
+        Sun, 2 Feb 2020 17:29:54 -0500
+Received: by mail-lj1-f195.google.com with SMTP id x14so12554779ljd.13;
+        Sun, 02 Feb 2020 14:29:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pIr+hEI5jiVDIpgzntOp1SJ5U4uzX7Mt42pGHqVvxOQ=;
-        b=jzZ9q2KMJmouDEZbcdN00RjfC/PXjwhT4TmtiW7J42rS2MEHcKIScPd9Y0ORk95AJy
-         PxYEElGLVUDJiRpYNmkz3fIIzoa/Akt4CHjOUiMSK6xo+GNcOx+caWi3KN4jsEwxmIac
-         B7le2/u3AaYhum9IRbWB5mVmbS5hRtHTiwsuW/Omorkfb+/hnCW+QdyK1hekz2jlTj4h
-         ELkXuGVqIO9aMcev96bpWaHzTByqePNA2Pc3LhCLr5oS7FzWvoDWd9JvaaX6Rki0fvvx
-         /liKmuD2St21iBj52CXv1LSvYDZcu9AgH6qsufLo7sLeWPlahCxmVWNmDJVDjBoP1unP
-         F1rA==
+        bh=ZP2sBFBGkO5bsS7Y1zFf5pSNHFa7vlci0txeV2iOQs8=;
+        b=Foz5rILVXxvGYBMBZLrVoGtWArCXNaGGwQ6xHp1AzJMc9crUGa2ucphj3ibX0DovEw
+         mriYWnlneCYIIAflakMGGPTTI+2icDh6V8XZqJvpQTAPZk31yHAOamprgbgPe2CJUrp9
+         zoW5bbGA3v6nhenmjeGBu7zK5Cwt17OP8ZTgfOSh2ZiVsiEheAA/oifiCEmvcQSElDbm
+         sWbR9Ab+VmcXaFKXr5TCsCIa3xlvP2ULMlSFX7X80X2Cl0CCZLLOjETaEiV1/AOBUXyR
+         /i09JuIkxzURaG8Oo51ZXoXZ94LCbFlKBoeDqv/v1sTvxZTwj623oeMKgYxLxixbuvDB
+         vupw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pIr+hEI5jiVDIpgzntOp1SJ5U4uzX7Mt42pGHqVvxOQ=;
-        b=riwbi3ok38uVaLRNvMaS4JLEDBKFiBaCMcmAMbKNwCZReFQuZtkbm64cchYKpJvitT
-         j5MDDxGeqdZoVapf7/VJAnvlu3kM0SEaHAX4JkEmsRfT5qtTcKnA+jBx9G2GAATLP8kV
-         kyTSRwhFpP/DS5REysmpe9ebN2VunAoc4HxCMp4Bvt2DD3YzEjc3nlrCZegMitxcX2uY
-         Kw7jDWNzsUkFI0Nm5udObN9AmCPkvTc5zwYwPHROGDOT/MG92Z2TQzqmDvFjv3/Q1LHY
-         dwk4FsqquGet/R60nlMhnGaKtrlR8Q78QZi5DwBOwwKw3dHlDl6/PJe/d/Qqq5h5FwGZ
-         IEkQ==
-X-Gm-Message-State: APjAAAX85PzR25F/UQlxL/wDGWwf7fU5jYASBetT5w0RdgMvE0e+MzV0
-        TFCIIF4tbxgXbiW0GcPgNmE=
-X-Google-Smtp-Source: APXvYqyHvhQscqat+8sWrjPwl3MB67ecQ11g38sjzPkkZRRFvgRzby3QJz1PyX4eMOyLq859q6JYTA==
-X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr12522033ljn.277.1580682589492;
-        Sun, 02 Feb 2020 14:29:49 -0800 (PST)
+        bh=ZP2sBFBGkO5bsS7Y1zFf5pSNHFa7vlci0txeV2iOQs8=;
+        b=hbNiIFhbhbrIcNJR6YpMyXPtG1AMoVMUmA/UJ/fOGXjejTeVS9EdhvwOQ5KPyJYTYM
+         lpH4NwavI8oRE2rjKUSB8oOENgOSmO5gS0bF0dA6qciK3MeyiFoqS2WffIygoXFHLIXK
+         rtbREut/dgYigWFX9kWouK3VLYG/IY6xLiumPV9XZyU2l84fICCYoxbZh7PoYMmZIErI
+         nMrAjgCsuE3zPCE08P8KgO30LM7SUVZj2j5PCcRN8J5QU5RKTtvGQVosOVcV3QzaiuzC
+         fKhSDQN8jdmNPLg0Hfv79T6Kfnl2wH8WXQoPt9CT/LfZ5lxfnPiKPArYCBPRUffnhrmE
+         HqHg==
+X-Gm-Message-State: APjAAAWl60wygNT4U9wYsCENiKPm+kyUadasizj+O5vOpYO304g7kjjK
+        tt7P0G4fB4WYH1XUDRsT/rxbOQPt
+X-Google-Smtp-Source: APXvYqzRCGNXj+IOjPjeU03a0TzNCfEW4cu1YI3DZXwXaGg8TKKygCW7AJVzHhjJgyWzM5GUUJvbmg==
+X-Received: by 2002:a2e:574d:: with SMTP id r13mr11918813ljd.63.1580682592154;
+        Sun, 02 Feb 2020 14:29:52 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.29.48
+        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.29.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 14:29:49 -0800 (PST)
+        Sun, 02 Feb 2020 14:29:51 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/19] dmaengine: tegra-apb: Fix use-after-free
-Date:   Mon,  3 Feb 2020 01:28:36 +0300
-Message-Id: <20200202222854.18409-2-digetx@gmail.com>
+Subject: [PATCH v7 04/19] dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+Date:   Mon,  3 Feb 2020 01:28:39 +0300
+Message-Id: <20200202222854.18409-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200202222854.18409-1-digetx@gmail.com>
 References: <20200202222854.18409-1-digetx@gmail.com>
@@ -79,57 +79,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was doing some experiments with I2C and noticed that Tegra APB DMA
-driver crashes sometime after I2C DMA transfer termination. The crash
-happens because tegra_dma_terminate_all() bails out immediately if pending
-list is empty, and thus, it doesn't release the half-completed descriptors
-which are getting re-used before ISR tasklet kicks-in.
+It's incorrect to check the channel's "busy" state without taking a lock.
+That shouldn't cause any real troubles, nevertheless it's always better
+not to have any race conditions in the code.
 
- tegra-i2c 7000c400.i2c: DMA transfer timeout
- elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
- list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
- Modules linked in:
- CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
- Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
- Workqueue: events_freezable_power_ thermal_zone_device_check
- [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
- [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
- [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
- [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
- [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
- [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
- [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
- [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
- [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
- [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
- [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
- [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
- Exception stack(0xde2ebb90 to 0xde2ebbd8)
-
-Cc: <stable@vger.kernel.org>
 Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 3a45079d11ec..319f31d27014 100644
+index f56881500a23..766c2c9eac8e 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -756,10 +756,6 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	bool was_busy;
+@@ -1294,8 +1294,7 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ 
+ 	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
+ 
+-	if (tdc->busy)
+-		tegra_dma_terminate_all(dc);
++	tegra_dma_terminate_all(dc);
  
  	spin_lock_irqsave(&tdc->lock, flags);
--	if (list_empty(&tdc->pending_sg_req)) {
--		spin_unlock_irqrestore(&tdc->lock, flags);
--		return 0;
--	}
- 
- 	if (!tdc->busy)
- 		goto skip_dma_stop;
+ 	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
 -- 
 2.24.0
 
