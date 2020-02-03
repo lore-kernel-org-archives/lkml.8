@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89100C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A7C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBC620838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0D82080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747327;
-	bh=/iqsiNq1ufmoQNtCN5R0k0FfUZr3NDO+99uNskwHkS8=;
+	s=default; t=1580747330;
+	bh=ckcf98rypvLsz0Vp0cFslnWN27jANYoCwPDwd2GDQGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GP603BjBYdzq4lRjHCP7/cT4mZs6ieFRy20bwQ+IOosAsyfs9M7eMMTtAi6cEi4jV
-	 /kAUrRmLwodNW2xnub/IClfoFLXaanFy2zQAsLqu9QOw7FXbuUQGjPy5lPm006gD8k
-	 9YdvUXMzo0qzcGr7bQM0rwqHDLmfwUtI5Q/ovugU=
+	b=AXtGVhx6DkgGPGpQJ2Tcj25HaI5+XKlC3ix2svBMtxF7fxOMRLe/v758/UZrtepS0
+	 PEhSeaATQ1BnAlD71H7FeAGarzBG2V+nA/szBNAU4x7Igi7QIIiFzi1oeuvN4jiXca
+	 j9pzf2Hpx30OhcqDJ6NXAmJCT1javXa97K7t+490=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgBCQ2p (ORCPT
+        id S1729660AbgBCQ2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbgBCQ2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:41 -0500
+        id S1727257AbgBCQ2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:46 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D2421744;
-        Mon,  3 Feb 2020 16:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A23C20CC7;
+        Mon,  3 Feb 2020 16:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747320;
-        bh=/iqsiNq1ufmoQNtCN5R0k0FfUZr3NDO+99uNskwHkS8=;
+        s=default; t=1580747325;
+        bh=ckcf98rypvLsz0Vp0cFslnWN27jANYoCwPDwd2GDQGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwiBlk9Z4QcnEq3xNdYVkuLdRj7Iuk300wIb9bbe4TGqGWL1m6IV00mRc1kBtP8fj
-         /qnpgkf/tz4yIwsr25fmih4aTRAvqe1sT9UQMZEgZTb+OurdKvQXi9cgSbWuO8lv8V
-         E73062Iu/WcU6JffXoUBosMdtyuOl0dUT1yRVzS0=
+        b=HLnj/0Qq+TGCNdtcGBHrJePj/sUocPS15p1Q5GyUrErLrPvBck9Gtb3HTo1qIwpgs
+         6ETaFxOlmdAX8CusAFtT+yJhyB5r3Lejbfkn9WZkuMB5OU39nxisitExkLqWTg7AKY
+         am+d7dFwqmOILMhK0Sl+AMRlVNocZuNVrBzvT4PI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/89] x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
-Date:   Mon,  3 Feb 2020 16:19:20 +0000
-Message-Id: <20200203161921.742470591@linuxfoundation.org>
+Subject: [PATCH 4.14 37/89] crypto: pcrypt - Fix user-after-free on module unload
+Date:   Mon,  3 Feb 2020 16:19:22 +0000
+Message-Id: <20200203161921.955878030@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -63,148 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 074fadee59ee7a9d2b216e9854bd4efb5dad679f upstream.
+[ Upstream commit 07bfd9bdf568a38d9440c607b72342036011f727 ]
 
-There is a race condition in the following scenario which results in an
-use-after-free issue when reading a monitoring file and deleting the
-parent ctrl_mon group concurrently:
+On module unload of pcrypt we must unregister the crypto algorithms
+first and then tear down the padata structure.  As otherwise the
+crypto algorithms are still alive and can be used while the padata
+structure is being freed.
 
-Thread 1 calls atomic_inc() to take refcount of rdtgrp and then calls
-kernfs_break_active_protection() to drop the active reference of kernfs
-node in rdtgroup_kn_lock_live().
-
-In Thread 2, kernfs_remove() is a blocking routine. It waits on all sub
-kernfs nodes to drop the active reference when removing all subtree
-kernfs nodes recursively. Thread 2 could block on kernfs_remove() until
-Thread 1 calls kernfs_break_active_protection(). Only after
-kernfs_remove() completes the refcount of rdtgrp could be trusted.
-
-Before Thread 1 calls atomic_inc() and kernfs_break_active_protection(),
-Thread 2 could call kfree() when the refcount of rdtgrp (sentry) is 0
-instead of 1 due to the race.
-
-In Thread 1, in rdtgroup_kn_unlock(), referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
-
-Thread 1 (rdtgroup_mondata_show)  Thread 2 (rdtgroup_rmdir)
---------------------------------  -------------------------
-rdtgroup_kn_lock_live
-  /*
-   * kn active protection until
-   * kernfs_break_active_protection(kn)
-   */
-  rdtgrp = kernfs_to_rdtgroup(kn)
-                                  rdtgroup_kn_lock_live
-                                    atomic_inc(&rdtgrp->waitcount)
-                                    mutex_lock
-                                  rdtgroup_rmdir_ctrl
-                                    free_all_child_rdtgrp
-                                      /*
-                                       * sentry->waitcount should be 1
-                                       * but is 0 now due to the race.
-                                       */
-                                      kfree(sentry)*[1]
-  /*
-   * Only after kernfs_remove()
-   * completes, the refcount of
-   * rdtgrp could be trusted.
-   */
-  atomic_inc(&rdtgrp->waitcount)
-  /* kn->active-- */
-  kernfs_break_active_protection(kn)
-                                    rdtgroup_ctrl_remove
-                                      rdtgrp->flags = RDT_DELETED
-                                      /*
-                                       * Blocking routine, wait for
-                                       * all sub kernfs nodes to drop
-                                       * active reference in
-                                       * kernfs_break_active_protection.
-                                       */
-                                      kernfs_remove(rdtgrp->kn)
-                                  rdtgroup_kn_unlock
-                                    mutex_unlock
-                                    atomic_dec_and_test(
-                                                &rdtgrp->waitcount)
-                                    && (flags & RDT_DELETED)
-                                      kernfs_unbreak_active_protection(kn)
-                                      kfree(rdtgrp)
-  mutex_lock
-mon_event_read
-rdtgroup_kn_unlock
-  mutex_unlock
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    /* kn->active++ */
-    kernfs_unbreak_active_protection(kn)
-    kfree(rdtgrp)
-
-Fix it by moving free_all_child_rdtgrp() to after kernfs_remove() in
-rdtgroup_rmdir_ctrl() to ensure it has the accurate refcount of rdtgrp.
-
-Backporting notes:
-
-Since upstream commit fa7d949337cc ("x86/resctrl: Rename and move rdt
-files to a separate directory"), the file
-arch/x86/kernel/cpu/intel_rdt_rdtgroup.c has been renamed and moved to
-arch/x86/kernel/cpu/resctrl/rdtgroup.c.
-Apply the change against file arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-for older stable trees.
-
-Upstream commit 17eafd076291 ("x86/intel_rdt: Split resource group
-removal in two") moved part of resource group removal code from
-rdtgroup_rmdir_mon() into a separate function rdtgroup_ctrl_remove().
-Apply the change against original code base of rdtgroup_rmdir_mon() for
-older stable trees.
-
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1578500886-21771-3-git-send-email-xiaochen.shen@intel.com
+Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/intel_rdt_rdtgroup.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ crypto/pcrypt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-index 734996904dc3b..01574966d91fd 100644
---- a/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_rdtgroup.c
-@@ -1800,11 +1800,6 @@ static int rdtgroup_rmdir_ctrl(struct kernfs_node *kn, struct rdtgroup *rdtgrp,
- 	closid_free(rdtgrp->closid);
- 	free_rmid(rdtgrp->mon.rmid);
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index a5718c0a3dc4e..1348541da463a 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -505,11 +505,12 @@ static int __init pcrypt_init(void)
  
--	/*
--	 * Free all the child monitor group rmids.
--	 */
--	free_all_child_rdtgrp(rdtgrp);
--
- 	list_del(&rdtgrp->rdtgroup_list);
- 
- 	/*
-@@ -1814,6 +1809,11 @@ static int rdtgroup_rmdir_ctrl(struct kernfs_node *kn, struct rdtgroup *rdtgrp,
- 	kernfs_get(kn);
- 	kernfs_remove(rdtgrp->kn);
- 
-+	/*
-+	 * Free all the child monitor group rmids.
-+	 */
-+	free_all_child_rdtgrp(rdtgrp);
+ static void __exit pcrypt_exit(void)
+ {
++	crypto_unregister_template(&pcrypt_tmpl);
 +
- 	return 0;
+ 	pcrypt_fini_padata(&pencrypt);
+ 	pcrypt_fini_padata(&pdecrypt);
+ 
+ 	kset_unregister(pcrypt_kset);
+-	crypto_unregister_template(&pcrypt_tmpl);
  }
  
+ module_init(pcrypt_init);
 -- 
 2.20.1
 
