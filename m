@@ -2,170 +2,164 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55EC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A168C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A292082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bVcdqWYs"
+	by mail.kernel.org (Postfix) with ESMTP id 6B5B92082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgBCSfQ (ORCPT
+        id S1729333AbgBCSgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:35:16 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:37869 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729061AbgBCSfQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:35:16 -0500
-Received: by mail-ua1-f67.google.com with SMTP id h32so5719214uah.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:35:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=opEKTCgEyzNySp8NgE/YRaLRspNXo0xH4Ilo0G3sH6g=;
-        b=bVcdqWYsw56zW7nr9YoFlMnqcxjJDVj4/ok84BJS1e8Yb8dBneL7jgN610vLEkKq8a
-         INkAkqv0Gm0TTiPCevDSoZcm0AI2vPcC3Ia+jWEpSfGElrgc/84lkQ8E/TslqqrzS4hM
-         /7qmk6g9qZNpsUtt5mpdv3R6s5vF52G3k+kak=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=opEKTCgEyzNySp8NgE/YRaLRspNXo0xH4Ilo0G3sH6g=;
-        b=sNttEK8S7LgAP0zJLOyGRq6MdAQjW5KX/WKZUVWMy71qhEkN9eucaGF4NYEIyXJHtz
-         kLmfMrwIRmO+aMj8+4XZ6SKvY47InKeazdUzxNIKyLIiR6igFwEmlIfL8tjWhJxYjO5f
-         5b4NFdnW/pW97I0OGOlu7IRHQy32adLIOqvNu3ZwktkCcHYdHv8Hj/WF6wVYd1etU/+D
-         4If34cCSecvUFZkO925/hM7oLDCP5/ZvLUXJ9FxKTeWoCgkI3d55x4uIJzr7HKu5d7mI
-         JdRG3RoaCJRjmhl1MAhiSSGjoAgCvciR65p8t244Db3VQC82tenIPwqGGwOv+ApMv/38
-         caVA==
-X-Gm-Message-State: APjAAAUyxFmWIp/VJIMvYQYZvN9n/HV2J4D5pDp5vuq+InAcIUJUW9dz
-        9MfxcHQ7YK6U4RIKzGW1aiac5Z29Gww=
-X-Google-Smtp-Source: APXvYqzRg1/r+WOtlW5cKP7P/zW2x97tFm/6PRXZZds22JV0K4w4t6Ul+6zVMXu/kuaW5189sHQQyA==
-X-Received: by 2002:ab0:72d0:: with SMTP id g16mr14069847uap.11.1580754913911;
-        Mon, 03 Feb 2020 10:35:13 -0800 (PST)
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
-        by smtp.gmail.com with ESMTPSA id y186sm6366697vkc.47.2020.02.03.10.35.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 10:35:13 -0800 (PST)
-Received: by mail-vk1-f181.google.com with SMTP id b69so4137653vke.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:35:12 -0800 (PST)
-X-Received: by 2002:a1f:c686:: with SMTP id w128mr15117676vkf.34.1580754912485;
- Mon, 03 Feb 2020 10:35:12 -0800 (PST)
+        Mon, 3 Feb 2020 13:36:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36022 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbgBCSgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 13:36:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2B527ACB1;
+        Mon,  3 Feb 2020 18:36:05 +0000 (UTC)
+Message-ID: <45e138de5ddd70e8033bdef6484703eed60a9cb7.camel@suse.de>
+Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
+ warnings
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>, netdev@vger.kernel.org
+Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com
+Date:   Mon, 03 Feb 2020 19:36:01 +0100
+In-Reply-To: <34aba1d9-5cad-0fee-038d-c5f3bfc9ed30@arm.com>
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+         <20200201074625.8698-7-jeremy.linton@arm.com>
+         <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
+         <34aba1d9-5cad-0fee-038d-c5f3bfc9ed30@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-2GtKugds89inu65PZmZ2"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-References: <20200130211231.224656-1-dianders@chromium.org>
- <20200130131220.v3.7.I513cd73b16665065ae6c22cf594d8b543745e28c@changeid>
- <CAL_JsqLj8WbP=oXAovyVFOc-58eFr5xS5EJK=kpAK-eT7_TyNw@mail.gmail.com>
- <CAD=FV=X=vAM7HZmA7pCm707rb8u+ogEqPUu_F_ueiS9GwbVwuw@mail.gmail.com> <20200203162954.DE0AD2086A@mail.kernel.org>
-In-Reply-To: <20200203162954.DE0AD2086A@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 3 Feb 2020 10:35:00 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VmvgjUqRzFYNbb_w7QGq0+H9jnT=aS1Zq=PR7ybgSLyA@mail.gmail.com>
-Message-ID: <CAD=FV=VmvgjUqRzFYNbb_w7QGq0+H9jnT=aS1Zq=PR7ybgSLyA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/15] dt-bindings: clock: Fix qcom,gpucc bindings for sdm845/sc7180/msm8998
-To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        =?UTF-8?Q?open_list=3AOPEN_FIRMWARE_AND_FLATTENED_DEVICE_TREE_BINDINGS_=3C?=
-         =?UTF-8?Q?devicetree=40vger=2Ekernel=2Eorg=3E=2C_Matthias_Kaehlcke_=3Cmka=40chromium?=
-         =?UTF-8?Q?=2Eorg=3E=2C_Kalyan_Thota_=3Ckalyan=5Ft=40codeaurora=2Eorg=3E=2C_Mark_Rutland_?=
-         =?UTF-8?Q?=3Cmark=2Erutland=40arm=2Ecom=3E=2C_linux=2Dclk_=3Clinux=2Dclk=40vger=2Ekernel=2Eorg?=
-         =?UTF-8?Q?=3E=2C_Kristian_H=2E_Kristensen_=3Choegsberg=40chromium=2Eorg=3E=2C_Michael_?=
-         =?UTF-8?Q?Turquette_=3Cmturquette=40baylibre=2Ecom=3E=2C_linux=2Dkernel=40vger=2Ekerne?=
-         =?UTF-8?Q?l=2Eorg?= <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--=-2GtKugds89inu65PZmZ2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
+BTW the patch looks good to me too:
+
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+On Sat, 2020-02-01 at 13:27 -0600, Jeremy Linton wrote:
+> Hi,
+>=20
+> First, thanks for looking at this!
+>=20
+> On 2/1/20 10:44 AM, Stefan Wahren wrote:
+> > Hi Jeremy,
+> >=20
+> > [add Nicolas as BCM2835 maintainer]
+> >=20
+> > Am 01.02.20 um 08:46 schrieb Jeremy Linton:
+> > > If one types "failed to get enet clock" or similar into google
+> > > there are ~370k hits. The vast majority are people debugging
+> > > problems unrelated to this adapter, or bragging about their
+> > > rpi's. Given that its not a fatal situation with common DT based
+> > > systems, lets reduce the severity so people aren't seeing failure
+> > > messages in everyday operation.
+> > >=20
+> > i'm fine with your patch, since the clocks are optional according to th=
+e
+> > binding. But instead of hiding of those warning, it would be better to
+> > fix the root cause (missing clocks). Unfortunately i don't have the
+> > necessary documentation, just some answers from the RPi guys.
+>=20
+> The DT case just added to my ammunition here :)
+>=20
+> But really, I'm fixing an ACPI problem because the ACPI power management=
+=20
+> methods are also responsible for managing the clocks. Which means if I=
+=20
+> don't lower the severity (or otherwise tweak the code path) these errors=
+=20
+> are going to happen on every ACPI boot.
+>=20
+> > This is what i got so far:
+
+Stefan, Apart from the lack of documentation (and maybe also time), is ther=
+e
+any specific reason you didn't sent the genet clock patch yet? It should be=
+ OK
+functionally isn't it?
+
+> BTW: For DT, is part of the problem here that the videocore mailbox has=
+=20
+> a clock management method?
+
+I don't think it'll be the case for these clocks. We try to only use the
+mailbox interface if access to the clock is shared with videocore's firmwar=
+e.
+The only example for now is 'pllb' which drives the CPU. See clk-raspberryp=
+i.c
+for the firmware part and clk-bcm2835.c for the rest.
+
+Note that the firmware interface has some shortcomings, it isn't fine grain=
+ed
+nor provides a full clock tree to work with, also some clock changes, from
+videocore's point of view, might change multiple plls behind your back. See=
+ for
+example the ARM clock, at offset 0x3[1]: if you don't explicitly disable tu=
+rbo
+mode, it'll change both pllb and pllc. Affecting a whole lot of peripherals=
+.
+
+In an Ideal world I'd love to see them implement ARM's SCMI[2]. It would ma=
+ke
+our lives easier.
+
+> For ACPI one of the paths of investigation is to write AML which just
+> interfaces to that mailbox interface for clock control here. (there is al=
+so
+> SCMII to be considered).
+
+As we're on the topic of integrating the mailbox interfaces with ACPI, have=
+ you
+looked at VCHIQ in the staging directory? It serves as an interface to
+videocore for the camera, HDMI audio and video codec drivers. It ultimately
+depends on the mailbox interface mentioned above. It might be interesting f=
+or
+you to look into it before writing the AML interface to the mailbox.
+
+Regards,
+Nicolas
+
+[1] https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
+[2] https://github.com/raspberrypi/firmware/issues/1139
 
 
-On Mon, Feb 3, 2020 at 8:29 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Doug Anderson (2020-01-31 08:48:37)
-> > Hi,
-> >
-> > On Fri, Jan 31, 2020 at 8:43 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Jan 30, 2020 at 3:12 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > > >
-> > > > The qcom,gpucc bindings had a few problems with them:
-> > > >
-> > > > 1. When things were converted to yaml the name of the "gpll0 main"
-> > > >    clock got changed from "gpll0" to "gpll0_main".  Change it back for
-> > > >    msm8998.
-> > > >
-> > > > 2. Apparently there is a push not to use purist aliases for clocks but
-> > > >    instead to just use the internal Qualcomm names.  For sdm845 and
-> > > >    sc7180 (where the drivers haven't already been changed) move in
-> > > >    this direction.
-> > > >
-> > > > Things were also getting complicated harder to deal with by jamming
-> > > > several SoCs into one file.  Splitting simplifies things.
-> > > >
-> > > > Fixes: 5c6f3a36b913 ("dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings")
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > ---
-> > > >
-> > > > Changes in v3:
-> > > > - Added pointer to inlude file in description.
-> > > > - Everyone but msm8998 now uses internal QC names.
-> > > > - Fixed typo grpahics => graphics
-> > > > - Split bindings into 3 files.
-> > > >
-> > > > Changes in v2:
-> > > > - Patch ("dt-bindings: clock: Fix qcom,gpucc...") new for v2.
-> > > >
-> > > >  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 -------------------
-> > > >  .../bindings/clock/qcom,msm8998-gpucc.yaml    | 66 +++++++++++++++++
-> > > >  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 +++++++++++++++++++
-> > > >  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 +++++++++++++++++++
-> > > >  4 files changed, 210 insertions(+), 72 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> > > >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,msm8998-gpucc.yaml
-> > > >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
-> > > >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sdm845-gpucc.yaml
-> > >
-> > > I'm not seeing any differences in sdm845 and sc7180. Do those really
-> > > need to be separate? It doesn't have to be all combined or all
-> > > separate.
-> >
-> > They are the same, other than pointing to a different #include file.
-> > I debated whether to put them in one file (arbitrarily named after one
-> > SoC or the other) or to put them in individual files.  I got the
-> > impression from Stephen that he'd prefer them to be separate files
-> > even in the case that they were 99% identical, but I certainly could
-> > have misunderstood.
-> >
-> > I'll do whatever you guys agree to.  If you want them in one file I'll
-> > probably name it "qcom,sdm845-gpucc.yaml" just because that SoC is
-> > earlier, unless someone tells me otherwise.
-> >
->
-> I'd prefer them to be split out and point at the include file so we know
-> what numbers are valid. It provides clarity and helps avoid the back and
-> forth of combining and splitting the files. We suffer the same problem
-> on the driver side, and we've long given up trying to combine SoCs when
-> they're otherwise fairly similar.
+--=-2GtKugds89inu65PZmZ2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Thanks for clarifying!  Rob: I hope it's OK that I've gone ahead and
-sent out v4 leaving this alone.  I knew you were interested in getting
-the other bindings patch out sooner rather than later and I was hoping
-to get both series out together so I could context switch to a few
-other things early this week.  Apologies if this was moving too
-fast...
+-----BEGIN PGP SIGNATURE-----
 
--Doug
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl44aBEACgkQlfZmHno8
+x/45rwf/QSRRNbEoqiSj02LaAKe+BMz+rYKuYE771m2QJ4r9C25KpfQE9Od4qm4w
+PralyFBM1NpW2bq3LDuavLB/fq57dgYz7wCPPt8SqV8hLHapnwUXWCot14/6KwGN
+RNnxr1Wrxr4ruvnOnY2zzJbT9gf8ofxIrrnKpxoUPF5OFN8XB9il9dU7ctkhYeFP
+NjvEJg7t4+pfxUeZ6UA6o7EEZv0sV/IgFeC/T2lzNEH0JCbcLzdyVp/7loCZqOPC
+3SGTrtrVgJbHTyIcUQUq76QUNmE671NDfvekz0r1JMEp9qYjPlOw4TS7YRYd73ki
+XYwwIsKd2sKs9Jp+DJBmh6LNNNEiGw==
+=tAsH
+-----END PGP SIGNATURE-----
+
+--=-2GtKugds89inu65PZmZ2--
+
