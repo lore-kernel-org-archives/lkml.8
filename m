@@ -2,154 +2,136 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FBFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B5FC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D12020CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8A12087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oVZNVkNO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P3ZrHiZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgBCUDv (ORCPT
+        id S1727073AbgBCUEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:03:51 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9932 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgBCUDv (ORCPT
+        Mon, 3 Feb 2020 15:04:47 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34511 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgBCUEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:03:51 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e387c980000>; Mon, 03 Feb 2020 12:03:36 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 12:03:50 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 03 Feb 2020 12:03:50 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 20:03:50 +0000
-Subject: Re: [PATCH v3 04/12] mm: introduce page_ref_sub_return()
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-5-jhubbard@nvidia.com>
- <20200203132329.oj32h4ryna4gmkwh@box>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <c9f4bb05-457d-a7ea-f449-dfb399facb3c@nvidia.com>
-Date:   Mon, 3 Feb 2020 12:03:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 3 Feb 2020 15:04:47 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i6so8136906pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 12:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QjkulTeybGn9hNr5RiBCHxoPg8v6iMLSI5yxep0HG28=;
+        b=P3ZrHiZJfNNMAoSNpfqY0kRzBLBThgv6uhIlB0hQnndEa8t4ACeotN76+b92LOyAR1
+         /AHTa0vrCdE936p8ODrCDeKIbImfC5Y3nIfpqYVyhF+ME6XxIWACUy+MVd2nb50JnKmC
+         btOtt92Dso9wsr0VBbaSqkpCsYFhVmmKv8HY8yfGOKeSyFk3sjsuPnDDAsDdmIKl9hcv
+         TDBgcvO09BtD+D3AsjhB/K7X3lo40cs7TLmyTKtscF4WfwQzE2pG++6iNIWdA9cJmxOi
+         fFejvfq/sedP1cHmT19AgmFUudrvBpGoQwk9ziMIEKhRAK+K5Zg7cWypjXTXEdwkvD29
+         6jHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QjkulTeybGn9hNr5RiBCHxoPg8v6iMLSI5yxep0HG28=;
+        b=feahzRv17Yn5c3n5myZ5CKSupAtybRYFJ0QQRHadUla8dQTGxRgH2GN04mROxEfhLb
+         n8JIbuzhZBhMfCaxcArpmD6v3pXebJ+7Rjr8526ZhMojQuBF1sxeUsW+WYBsOP69NI8L
+         JhiVdbqBY4ezKhoMYkdpfy+S3GyAglGzrnP0CvPnWH69IRhrv/TchCDDr+xoGVajCfTt
+         Q/crlics/RU5jfrv6yErTudcUTylcGbPBVSrr1RJ64q2WJo7fn15Cmd+uFTNPr8QBBD9
+         KIJLbr0AOzq/jJOGYsyc7Z8naYz/a9f/YqA8oFF9tX6aQvv2nDY2Am4uCa4xV9Tzsgn9
+         vJfw==
+X-Gm-Message-State: APjAAAUCRTnBkKnjgD3I5TlgYEGgb6UAhxgkV3t5feLsl7wXchyaSWT5
+        4DlTEEEcf2MO6GVlO84/RiiBvA==
+X-Google-Smtp-Source: APXvYqxSX3IT/Y4QU0IY3LL1ZOt6lUaeo4Pou0WcpI4oIESu5GLix0UbJ3MWDPLyKtppw2IV0Fskdw==
+X-Received: by 2002:a62:1a16:: with SMTP id a22mr26237902pfa.34.1580760286486;
+        Mon, 03 Feb 2020 12:04:46 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s14sm5229407pgv.74.2020.02.03.12.04.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 12:04:45 -0800 (PST)
+Date:   Mon, 3 Feb 2020 12:04:43 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 00/15] clk: qcom: Fix parenting for
+ dispcc/gpucc/videocc
+Message-ID: <20200203200443.GN3948@builder>
+References: <20200203183149.73842-1-dianders@chromium.org>
+ <20200203193027.62BD22080D@mail.kernel.org>
+ <CAD=FV=X2K-Qr17qXgG1Ng8MpZQogagBqMwWu=D2OpQf+ZskBPw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200203132329.oj32h4ryna4gmkwh@box>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580760216; bh=slWoAOjCgnvUbCzYd3p0ud2KsXbx4UbZ3i/D9mUZD1g=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=oVZNVkNOYc+kjHjL1ubbfOHYXpU03ACYQb+0iGYED3N00qAA3rTqLUI6W/FLL+/94
-         /0KeKWTUWnMIexwZe5JmSqXp+kb8hJtQy0qeXMnTlnzW+b9F2iWiGnPnnt9cE9x8i/
-         5STz78HwfzxwIVZPLujhbB4GRDXG5qsYqBngJ+h0QUog4ruNYP7jhqKRoTVJibYTtb
-         a5Zzlj4qk7geaex9f3KLWk/NEEPuHZInTpHE7rcDuc1a+AITXTK3Kr/YvNFR/r+NMN
-         W/eQjpACACV53Umd/t7HWidJT6UkHnNwf4WNStZTM+x7tku5YdYyA+1ka/W79nkeIP
-         FYwSgB6uujrlg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=X2K-Qr17qXgG1Ng8MpZQogagBqMwWu=D2OpQf+ZskBPw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 5:23 AM, Kirill A. Shutemov wrote:
-> On Fri, Jan 31, 2020 at 07:40:21PM -0800, John Hubbard wrote:
->> An upcoming patch requires subtracting a large chunk of refcounts from
->> a page, and checking what the resulting refcount is. This is a little
->> different than the usual "check for zero refcount" that many of the
->> page ref functions already do. However, it is similar to a few other
->> routines that (like this one) are generally useful for things such as
->> 1-based refcounting.
->>
->> Add page_ref_sub_return(), that subtracts a chunk of refcounts
->> atomically, and returns an atomic snapshot of the result.
->>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->> ---
->>  include/linux/page_ref.h | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
->> index 14d14beb1f7f..b9cbe553d1e7 100644
->> --- a/include/linux/page_ref.h
->> +++ b/include/linux/page_ref.h
->> @@ -102,6 +102,16 @@ static inline void page_ref_sub(struct page *page, int nr)
->>  		__page_ref_mod(page, -nr);
->>  }
->>  
->> +static inline int page_ref_sub_return(struct page *page, int nr)
->> +{
->> +	int ret = atomic_sub_return(nr, &page->_refcount);
->> +
->> +	if (page_ref_tracepoint_active(__tracepoint_page_ref_mod))
->> +		__page_ref_mod(page, -nr);
+On Mon 03 Feb 11:41 PST 2020, Doug Anderson wrote:
+
+> Hi,
 > 
-> Shouldn't it be __page_ref_mod_and_return() and relevant tracepoint?
-
-
-Why yes, it should. I didn't even notice that that more precise function existed,
-thanks for catching that. I've changed it to this for the next version of the
-patchset:
-
-static inline int page_ref_sub_return(struct page *page, int nr)
-{
-	int ret = atomic_sub_return(nr, &page->_refcount);
-
-	if (page_ref_tracepoint_active(__tracepoint_page_ref_mod))
-		__page_ref_mod_and_return(page, -nr, ret);
-	return ret;
-}
-
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+> On Mon, Feb 3, 2020 at 11:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Douglas Anderson (2020-02-03 10:31:33)
+> > >
+> > >  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
+> > >  ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
+> > >  .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
+> > >  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
+> > >  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
+> > >  .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
+> > >  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
+> > >  ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
+> > >  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
+> >
+> > I don't want to take patches touching dts/qcom/. These aren't necessary
+> > to merge right now, correct? Or at least, they can go via arm-soc tree?
 > 
->> +
->> +	return ret;
->> +}
->> +
->>  static inline void page_ref_inc(struct page *page)
->>  {
->>  	atomic_inc(&page->_refcount);
->> -- 
->> 2.25.0
->>
+> Right.  They can go later.
 > 
+> Specifically for sdm845 until the sdm845 patches lands the old dts
+> trees will yell about the missing clocks, but it's not like they will
+> compile fail.  Also the bindings themselves will validate fine.
+> There's no other way forward, though, and the old bindings caused
+> similar yells.
+> 
+
+Can you please help me parse this, will old DT cause complaints or will
+it fail to boot?
+
+> For sc7180 there's no usage of any of these clocks and this adds the
+> first usage, so definitely no problem there.
+> 
+> Once you've landed then Bjorn or Andy can pick up the dts.
+> 
+
+Do I need to apply these after Stephen picks the driver patches? Or are
+they simply nop until the driver patches lands?
+
+Regards,
+Bjorn
