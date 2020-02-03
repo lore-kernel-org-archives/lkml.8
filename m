@@ -2,55 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C1AC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FDDC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EAE21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C12022B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747530;
-	bh=0ZbjyXeSGqs3vPWbhO5WXJOnQJXkUM8xCFg3+RP15C8=;
+	s=default; t=1580747532;
+	bh=LrvctqCs+jpeiY2nmFR4hY+AgvccpecI98ObAdzfOmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YU6SsyPRNFy34m3vG1XgZgQEICSdlAr6Ka0qJhX/eew176tpw6jqZZiZ09Sa2YM3G
-	 1vpAo9vQHCRTvT10Qcf/OiCwYwEyczwD/SAS2EjH8RfMVHzXG5r0AZ2I2RDA4HzM1/
-	 TcSyxbpvf27TRzNJn/i8qGZa9HEJ720MSLWiSOjM=
+	b=E+xjUdTxnwDRbNd3cXx+mPAwEF9ZOVmuTYckG5xzhGQPU6OWTOVLPMCAzz4RX5aFz
+	 RAuD/PxiqWhdVhFw4IatFhkiHcSLMUiCYy7bThvcVBv9dc+3+eZIhP02TyezliyYoN
+	 rgWm7PCdR47lWsumIQK4sNiP+QVoRL9yuhUv84rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgBCQcK (ORCPT
+        id S1730379AbgBCQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbgBCQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:06 -0500
+        id S1730366AbgBCQcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:08 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1431E21582;
-        Mon,  3 Feb 2020 16:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7465221927;
+        Mon,  3 Feb 2020 16:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747525;
-        bh=0ZbjyXeSGqs3vPWbhO5WXJOnQJXkUM8xCFg3+RP15C8=;
+        s=default; t=1580747527;
+        bh=LrvctqCs+jpeiY2nmFR4hY+AgvccpecI98ObAdzfOmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ks1FpNP+d7HKkrR96E1h2JK/kqvycXj/CRQUuYdtO9gVzg4C6TzXB0ozmJ8Bsuieu
-         HlqKngsHh2NZyvnkfMx2lCm84K3Hb4YoBF9Yc1RQkg+g24lflR7xM8ltNCt+hf7SIj
-         EJCIAHBhDIMBu35GI1gXLDrK0RQ0mdM3Oz5UB2jg=
+        b=1ESNN3nJx6HjSr94U/jhDTbM8Ir3LX2/vK6wGa7Z3mhZKa4cG6JVpZe/AIFgEdn0Y
+         O/v6P2+jtJHYcUzet0TEQXbVVV4NUWJn3xoxyaQGiwJV6np1JwjURrirn77B3qgtDg
+         JljRkYMASKDo9ZjiNTJAfasaOajkktpqqOE0MaFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/70] rseq: Unregister rseq for clone CLONE_VM
-Date:   Mon,  3 Feb 2020 16:19:42 +0000
-Message-Id: <20200203161916.905521381@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/70] clk: sunxi-ng: h6-r: Fix AR100/R_APB2 parent order
+Date:   Mon,  3 Feb 2020 16:19:43 +0000
+Message-Id: <20200203161917.059862972@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -63,69 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Samuel Holland <samuel@sholland.org>
 
-[ Upstream commit 463f550fb47bede3a5d7d5177f363a6c3b45d50b ]
+[ Upstream commit 0c545240aebc2ccb8f661dc54283a14d64659804 ]
 
-It has been reported by Google that rseq is not behaving properly
-with respect to clone when CLONE_VM is used without CLONE_THREAD.
+According to the BSP source code, both the AR100 and R_APB2 clocks have
+PLL_PERIPH0 as mux index 3, not 2 as it was on previous chips. The pre-
+divider used for PLL_PERIPH0 should be changed to index 3 to match.
 
-It keeps the prior thread's rseq TLS registered when the TLS of the
-thread has moved, so the kernel can corrupt the TLS of the parent.
+This was verified by running a rough benchmark on the AR100 with various
+clock settings:
 
-The approach of clearing the per task-struct rseq registration
-on clone with CLONE_THREAD flag is incomplete. It does not cover
-the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+        | mux | pre-divider | iterations/second | clock source |
+        |=====|=============|===================|==============|
+        |   0 |           0 |  19033   (stable) |       osc24M |
+        |   2 |           5 |  11466 (unstable) |  iosc/osc16M |
+        |   2 |          17 |  11422 (unstable) |  iosc/osc16M |
+        |   3 |           5 |  85338   (stable) |  pll-periph0 |
+        |   3 |          17 |  27167   (stable) |  pll-periph0 |
 
-Here is the rationale for unregistering rseq on clone with CLONE_VM
-flag set:
+The relative performance numbers all match up (with pll-periph0 running
+at its default 600MHz).
 
-1) CLONE_THREAD requires CLONE_SIGHAND, which requires CLONE_VM to be
-   set. Therefore, just checking for CLONE_VM covers all CLONE_THREAD
-   uses. There is no point in checking for both CLONE_THREAD and
-   CLONE_VM,
-
-2) There is the possibility of an unlikely scenario where CLONE_SETTLS
-   is used without CLONE_VM. In order to be an issue, it would require
-   that the rseq TLS is in a shared memory area.
-
-   I do not plan on adding CLONE_SETTLS to the set of clone flags which
-   unregister RSEQ, because it would require that we also unregister RSEQ
-   on set_thread_area(2) and arch_prctl(2) ARCH_SET_FS for completeness.
-   So rather than doing a partial solution, it appears better to let
-   user-space explicitly perform rseq unregistration across clone if
-   needed in scenarios where CLONE_VM is not set.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191211161713.4490-3-mathieu.desnoyers@efficios.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched.h | 4 ++--
+ drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 20f5ba262cc0d..0530de9a4efcc 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1843,11 +1843,11 @@ static inline void rseq_migrate(struct task_struct *t)
- 
- /*
-  * If parent process has a registered restartable sequences area, the
-- * child inherits. Only applies when forking a process, not a thread.
-+ * child inherits. Unregister rseq for a clone with CLONE_VM set.
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+index 8d05d4f1f8a1e..28b84c701a7d2 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
+@@ -23,9 +23,9 @@
   */
- static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
- {
--	if (clone_flags & CLONE_THREAD) {
-+	if (clone_flags & CLONE_VM) {
- 		t->rseq = NULL;
- 		t->rseq_len = 0;
- 		t->rseq_sig = 0;
+ 
+ static const char * const ar100_r_apb2_parents[] = { "osc24M", "osc32k",
+-					     "pll-periph0", "iosc" };
++						     "iosc", "pll-periph0" };
+ static const struct ccu_mux_var_prediv ar100_r_apb2_predivs[] = {
+-	{ .index = 2, .shift = 0, .width = 5 },
++	{ .index = 3, .shift = 0, .width = 5 },
+ };
+ 
+ static struct ccu_div ar100_clk = {
 -- 
 2.20.1
 
