@@ -2,53 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3C6C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E839C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A4C2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022F52087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747706;
-	bh=kBkd5mUihVG4SraVZKSYG5V3/ELkKainFmm4pZDj604=;
+	s=default; t=1580747709;
+	bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DePepQt67pRTaoUgA4lfo2XMV39bFdqLj5RR3+6i4+a9EQA77lNy0bqCF1+dL+6cj
-	 Ek/TPG2x4BZa7zjnyvQ16AFeo71qGh9ZzNHO6Z920ktvq9AgW4nRUHyHrckiTCVBiE
-	 0+mt+tvbTWHFAzGgoVvC+Q/aTIE+gNM1BZI5HPMo=
+	b=XF9JeBPfbarPMfBaKi+NpHQvkDACrcWTrr16oIiyMNOvn3lEruCUA3btfsjCguGXY
+	 lkBXmt5ugRJ4iQhcQcgHafDMxjwuKffMdsWKoHXFnR2LzzHB9nKiVuqJ4klXfiMJsn
+	 attOW+hUZQ1bV/QX2qtwIYukhS4zsbGooAwlJ55Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730908AbgBCQfF (ORCPT
+        id S1730914AbgBCQfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:35:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49598 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbgBCQfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:35:01 -0500
+        id S1730901AbgBCQfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:35:04 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913F92087E;
-        Mon,  3 Feb 2020 16:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F382C2087E;
+        Mon,  3 Feb 2020 16:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747701;
-        bh=kBkd5mUihVG4SraVZKSYG5V3/ELkKainFmm4pZDj604=;
+        s=default; t=1580747703;
+        bh=qVSo41/s7T8HG9ndWY0t08ZWXbSoREZ6+XJRms8b+Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kK/VScyU8j5gmqBDPsD+jXtKtUy187rm52q/d8ewznQTvZ9LW3Ee98CwTpNS5z1og
-         d+YL50OjlorTq21JhDVjAACegOQq4eex0K1paK1RGAvaqxyqEfpwbF7lrFOZeseRbX
-         zr6Tc2uEm6rPf0tsifC3K6W1uhjAiUeAsv6bJPSo=
+        b=koubNpJ3fmbGmG/lxaTGCYC5QNmpee7hK3OcqkMPWI5oMpqr9cAk1CJEsirojbn1b
+         0rWzf9tt4rwZdxv34UHi7nsLhC8XeDODLap1CVkfQdIApXXrKavANtIcqCAJafhhFe
+         t5Aayyc8mj4K0RG0nfzCoHsqD/RYdBOQ61S/6SWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 16/90] media: af9005: uninitialized variable printked
-Date:   Mon,  3 Feb 2020 16:19:19 +0000
-Message-Id: <20200203161919.874815094@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 34/90] mac80211: mesh: restrict airtime metric to peered established plinks
+Date:   Mon,  3 Feb 2020 16:19:37 +0000
+Message-Id: <20200203161922.190564249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -61,31 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-commit 51d0c99b391f0cac61ad7b827c26f549ee55672c upstream.
+[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
 
-If usb_bulk_msg() fails, actual_length can be uninitialized.
+The following warning is triggered every time an unestablished mesh peer
+gets dumped. Checks if a peer link is established before retrieving the
+airtime link metric.
 
-Reported-by: syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
+               airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
+[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022838] Call Trace:
+[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
+[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
+[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
+[ 9563.023120]  netlink_dump+0x17b/0x370
+[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
+[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
+[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
+[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
+[ 9563.023210]  do_syscall_64+0x4e/0x140
+[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
+[rewrite commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/af9005.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/mesh_hwmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/usb/dvb-usb/af9005.c
-+++ b/drivers/media/usb/dvb-usb/af9005.c
-@@ -554,7 +554,7 @@ static int af9005_boot_packet(struct usb
- 			      u8 *buf, int size)
- {
- 	u16 checksum;
--	int act_len, i, ret;
-+	int act_len = 0, i, ret;
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index 68af623063858..d699833703819 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -328,6 +328,9 @@ u32 airtime_link_metric_get(struct ieee80211_local *local,
+ 	unsigned long fail_avg =
+ 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
  
- 	memset(buf, 0, size);
- 	buf[0] = (u8) (FW_BULKOUT_SIZE & 0xff);
++	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
++		return MAX_METRIC;
++
+ 	/* Try to get rate based on HW/SW RC algorithm.
+ 	 * Rate is returned in units of Kbps, correct this
+ 	 * to comply with airtime calculation units
+-- 
+2.20.1
+
 
 
