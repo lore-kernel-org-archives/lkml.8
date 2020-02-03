@@ -2,103 +2,177 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90A2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5427C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89092086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9322086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="D0HqVX8r"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JZ+vJMdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgBCTuv (ORCPT
+        id S1727084AbgBCTvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:50:51 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:46299 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCTuv (ORCPT
+        Mon, 3 Feb 2020 14:51:13 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9009 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgBCTvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:50:51 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y2so7375973qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:50:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JkD/cmKgVjvJlz/chODMXHldUAezWfjEz1crchIilbE=;
-        b=D0HqVX8rRbpc4IzpqW25Gk9bjTIyvGbGYetkvw/RwCmCIqfcOw8EVpr7YFX3GEFZcp
-         6ZS1B2GGkxKcJYrsn+Xq4k6aHTHS+HBr/qCyVhEaLF2AATpxfIJsee+0Nnv+NaAqxC4x
-         N7C9I2+16X32dpCYRt1mBSH53WEUVpouETToOgMfYUQ4UfI4cmiTg7rZEdF7Ao39uKN4
-         4Id4zIGnV7kRpHUY1N7/Bh9XPiy66Vn/GJdDeTicwg77mbZfCttn2TcL3A/sAyUJEDPA
-         yX576BqEXKqfp9KFDDKudOg1ZKdM4xjN6wSxswAZ3PdL6D4REh62T3oDqLyM8TQ22oEz
-         KThQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JkD/cmKgVjvJlz/chODMXHldUAezWfjEz1crchIilbE=;
-        b=INJp59WMypzftY30TnFyDUW2E9TTgKPsAXKkwFWd/ECO9wEZzNiuj3vonaVTBmseWc
-         2PpDyg+sZyPW3F2v3Pdl1sQ+P/91oA1W9KOx2nJ1KJxMrXx+wUo5WuZGC0GOYbIwUmkP
-         uTw759zTULsbVs4XXvz2jJ0d6aUYvtT3f+b7X/dHS1CIk6tOQAKNSqp3ErVtipefeg4S
-         k4bYL+W3r33UY+K5i5EuKxMoYzlAyvoF6fXw+7QVzIgJjd90/ieCzgzdX0PIs4/wpILb
-         RM8xz53U8AOYsLH5w+9uIOsBNAhRpoz6DWX4crvXFT3oakthLonpyLGwqp49qSnLe9Dv
-         BIKw==
-X-Gm-Message-State: APjAAAWi/3vyz6j9aSESe+7X8+dUp/lTqyfs4GMA1seQZLdZ0XUE4qCp
-        b3ZQ6UnvaZyrTkvsqWxwQXN4gA==
-X-Google-Smtp-Source: APXvYqwbuIXO8OPwibdyKO2L/CKGknuXkY8tzebGCWk45IElHKm9B5GgSBi2flYSqXhDle/vy6Y+eQ==
-X-Received: by 2002:a0c:f485:: with SMTP id i5mr24637963qvm.8.1580759450480;
-        Mon, 03 Feb 2020 11:50:50 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:6320])
-        by smtp.gmail.com with ESMTPSA id n4sm10348107qti.55.2020.02.03.11.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 11:50:49 -0800 (PST)
-Date:   Mon, 3 Feb 2020 14:50:48 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 21/28] mm: memcg/slab: use a single set of kmem_caches
- for all memory cgroups
-Message-ID: <20200203195048.GA4396@cmpxchg.org>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-22-guro@fb.com>
+        Mon, 3 Feb 2020 14:51:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3879a10000>; Mon, 03 Feb 2020 11:50:57 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 11:51:12 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 11:51:12 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 19:51:11 +0000
+Subject: Re: [PATCH v3 01/12] mm: dump_page(): better diagnostics for compound
+ pages
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-2-jhubbard@nvidia.com>
+ <20200203131649.vptndo5emkzlaiew@box>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <a7dac2ef-8bcd-8733-538b-aaf8fd78afd0@nvidia.com>
+Date:   Mon, 3 Feb 2020 11:51:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200127173453.2089565-22-guro@fb.com>
+In-Reply-To: <20200203131649.vptndo5emkzlaiew@box>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580759458; bh=Om5ywZkbDxRtggdzaOXy9Ggbi/ijdQm1SzF2EbMQjvE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JZ+vJMdEOrhiJ6u+ixbDu+ykSCYgGe0zfRWhBa+YB16WJUMis+trY05H4GdDlg+X7
+         IVcaOD/Hm6olIcNqlHGSt/klZCFNQZJ0vkDvije+8iTli+gA/iWIUzL68oq7b0Azgc
+         kY8aza39yGcjUOMreZRuzLuUoqDterhy9Ls4Pp5KCFcPyCIecnv9U2Ul+x+SjlyFDX
+         /jSyXFu0Da4rCeoY5CoHR3oKYl1ekQw0eTAC95imMO8NKW+XHbYotdcPEwZZVHsg/d
+         jhfIGMZ5J+zgAgFDhfPoYt2D0JL6vSoanu1gNVdEVK1SqsZLfw6OKyenfQCvn/C27O
+         J1p8xF2UtjsxA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 09:34:46AM -0800, Roman Gushchin wrote:
-> This is fairly big but mostly red patch, which makes all non-root
-> slab allocations use a single set of kmem_caches instead of
-> creating a separate set for each memory cgroup.
+On 2/3/20 5:16 AM, Kirill A. Shutemov wrote:
+> On Fri, Jan 31, 2020 at 07:40:18PM -0800, John Hubbard wrote:
+>> A compound page collects the refcount in the head page, while leaving
+>> the refcount of each tail page at zero. Therefore, when debugging a
+>> problem that involves compound pages, it's best to have diagnostics that
+>> reflect that situation. However, dump_page() is oblivious to these
+>> points.
+>>
+>> Change dump_page() as follows:
+>>
+>> 1) For tail pages, print relevant head page information: refcount, in
+>>    particular. But only do this if the page is not corrupted so badly
+>>    that the pointer to the head page is all wrong.
+>>
+>> 2) Do a separate check to catch any (rare) cases of the tail page's
+>>    refcount being non-zero, and issue a separate, clear pr_warn() if
+>>    that ever happens.
+>>
+>> Suggested-by: Matthew Wilcox <willy@infradead.org>
+>> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > 
-> Because the number of non-root kmem_caches is now capped by the number
-> of root kmem_caches, there is no need to shrink or destroy them
-> prematurely. They can be perfectly destroyed together with their
-> root counterparts. This allows to dramatically simplify the
-> management of non-root kmem_caches and delete a ton of code.
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-This is definitely going in the right direction. But it doesn't quite
-explain why we still need two sets of kmem_caches?
+Thanks for looking through all of these!
 
-In the old scheme, we had completely separate per-cgroup caches with
-separate slab pages. If a cgrouped process wanted to allocate a slab
-object, we'd go to the root cache and used the cgroup id to look up
-the right cgroup cache. On slab free we'd use page->slab_cache.
+> 
+> Few nit-picks below.
+> 
+>> ---
+>>  mm/debug.c | 34 ++++++++++++++++++++++++++++------
+>>  1 file changed, 28 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/debug.c b/mm/debug.c
+>> index ecccd9f17801..beb1c59d784b 100644
+>> --- a/mm/debug.c
+>> +++ b/mm/debug.c
+>> @@ -42,6 +42,32 @@ const struct trace_print_flags vmaflag_names[] = {
+>>  	{0, NULL}
+>>  };
+>>  
+>> +static void __dump_tail_page(struct page *page, int mapcount)
+>> +{
+>> +	struct page *head = compound_head(page);
+>> +
+>> +	if ((page < head) || (page >= head + MAX_ORDER_NR_PAGES)) {
+> 
+> I'm not sure if we want to use compound_nr() here instead of
+> MAX_ORDER_NR_PAGES. Do you have any reasonaing about it?
 
-Now we have slab pages that have a page->objcg array. Why can't all
-allocations go through a single set of kmem caches? If an allocation
-is coming from a cgroup and the slab page the allocator wants to use
-doesn't have an objcg array yet, we can allocate it on the fly, no?
+
+Yes: compound_nr(page) reads from the struct page, whereas MAX_ORDER_NR_PAGES
+is an independent, immutable limit. When checking a struct page for corruption,
+it's ideal to avoid relying on data within the struct page, as compound_nr()
+would have to do.
+
+
+> 
+>> +		/*
+>> +		 * Page is hopelessly corrupted, so limit any reporting to
+>> +		 * information about the page itself. Do not attempt to look at
+>> +		 * the head page.
+>> +		 */
+>> +		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+>> +			"index:%#lx (corrupted tail page case)\n",
+>> +			page, page_ref_count(page), mapcount, page->mapping,
+>> +			page_to_pgoff(page));
+>> +	} else {
+>> +		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
+>> +			"index:%#lx compound_mapcount:%d\n",
+>> +			page, page_ref_count(head), mapcount, head->mapping,
+>> +			page_to_pgoff(head), compound_mapcount(page));
+>> +	}
+>> +
+>> +	if (page_ref_count(page) != 0)
+>> +		pr_warn("page:%px PROBLEM: non-zero refcount (==%d) on this "
+>> +			"tail page\n", page, page_ref_count(page));
+> 
+> Wrap into {}, please.
+
+
+Fixed, thanks.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
