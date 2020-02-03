@@ -2,55 +2,59 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B900C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03FFC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40ADC20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF22086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748114;
-	bh=QRu/AKVn0AAOHfG/bix1Ht8U43k9W/oQjtS6X83Z7s0=;
+	s=default; t=1580748124;
+	bh=SFUGHyzr0jnoyBVgBpc+1WwDmOhKp+1ryGdvCC8ED8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qa9ZrYyeqN2nJuMLmWfiVVnGJF2inIRzOJC2EvbfUJ02tGobrHaqZaZc0/qhU7xQi
-	 vYCtA0K58aqX8v5FI13c6piuPeUB0XrsNoRh4fd2Tvq6bklIUslDR36+SUo6uQ46wC
-	 p1/BAxhqXQkk+53fX/gd0DMyqD96bX3w2MuasLJ8=
+	b=JLcxC8R9nr+cYFdtGgGfmuweLYIPZ3wPJsWrmOW/8k8kODqiqbRSP49hRzxyn+aYy
+	 aP6JMXZd/FzpU2XFLUxg6bPvy22trLGGlSu7QZ7jRZ7+zQZSl8CBa+NRtQpDZjD9D6
+	 BE2djIFTNZvCo9UAM5Oquh6H1EeikMletME5gUuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgBCQlx (ORCPT
+        id S1731255AbgBCQmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730772AbgBCQeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:21 -0500
+        id S1730741AbgBCQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:11 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1622D21927;
-        Mon,  3 Feb 2020 16:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB4AF21744;
+        Mon,  3 Feb 2020 16:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747660;
-        bh=QRu/AKVn0AAOHfG/bix1Ht8U43k9W/oQjtS6X83Z7s0=;
+        s=default; t=1580747651;
+        bh=SFUGHyzr0jnoyBVgBpc+1WwDmOhKp+1ryGdvCC8ED8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rgho43YuSWMmIji90JmtVAhW0yiyfSG/ii24kwE4DQSjlZafBh0ZZA+wwmRaYfbQG
-         7R2PCtcOX3BfN7VEC9rRjl15AmmfUQazZwjgfla3jvcZVYZdiRu6RykXFWPmY20hnp
-         CEt7tx0LqLRuLNoa2tZXWwi51a0lgpPVofFWFvWs=
+        b=g1sXWtlNHPN3pQX0BUUrWkgdRD7t91Gv0cYo7+NZkti3RCVHPIZ2anZUHVUXMdMGB
+         ChtWN1aDxoY0ewXeoa0dlmUDS4nGhZfxZyF0HWemEKGHd9WI5WKKlkiSznFvzMafcV
+         SRDUvjFxVqxyjWmdFF3dSxwu5GWSUrYCOI2N7TYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 05/90] x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
-Date:   Mon,  3 Feb 2020 16:19:08 +0000
-Message-Id: <20200203161918.304723675@linuxfoundation.org>
+        syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 13/90] mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
+Date:   Mon,  3 Feb 2020 16:19:16 +0000
+Message-Id: <20200203161919.389626881@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -63,127 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 074fadee59ee7a9d2b216e9854bd4efb5dad679f ]
+commit c7a91bc7c2e17e0a9c8b9745a2cb118891218fd1 upstream.
 
-There is a race condition in the following scenario which results in an
-use-after-free issue when reading a monitoring file and deleting the
-parent ctrl_mon group concurrently:
+What we are trying to do is change the '=' character to a NUL terminator
+and then at the end of the function we restore it back to an '='.  The
+problem is there are two error paths where we jump to the end of the
+function before we have replaced the '=' with NUL.
 
-Thread 1 calls atomic_inc() to take refcount of rdtgrp and then calls
-kernfs_break_active_protection() to drop the active reference of kernfs
-node in rdtgroup_kn_lock_live().
+We end up putting the '=' in the wrong place (possibly one element
+before the start of the buffer).
 
-In Thread 2, kernfs_remove() is a blocking routine. It waits on all sub
-kernfs nodes to drop the active reference when removing all subtree
-kernfs nodes recursively. Thread 2 could block on kernfs_remove() until
-Thread 1 calls kernfs_break_active_protection(). Only after
-kernfs_remove() completes the refcount of rdtgrp could be trusted.
+Link: http://lkml.kernel.org/r/20200115055426.vdjwvry44nfug7yy@kili.mountain
+Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
+Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Dmitry Vyukov <dvyukov@google.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Before Thread 1 calls atomic_inc() and kernfs_break_active_protection(),
-Thread 2 could call kfree() when the refcount of rdtgrp (sentry) is 0
-instead of 1 due to the race.
-
-In Thread 1, in rdtgroup_kn_unlock(), referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
-
-Thread 1 (rdtgroup_mondata_show)  Thread 2 (rdtgroup_rmdir)
---------------------------------  -------------------------
-rdtgroup_kn_lock_live
-  /*
-   * kn active protection until
-   * kernfs_break_active_protection(kn)
-   */
-  rdtgrp = kernfs_to_rdtgroup(kn)
-                                  rdtgroup_kn_lock_live
-                                    atomic_inc(&rdtgrp->waitcount)
-                                    mutex_lock
-                                  rdtgroup_rmdir_ctrl
-                                    free_all_child_rdtgrp
-                                      /*
-                                       * sentry->waitcount should be 1
-                                       * but is 0 now due to the race.
-                                       */
-                                      kfree(sentry)*[1]
-  /*
-   * Only after kernfs_remove()
-   * completes, the refcount of
-   * rdtgrp could be trusted.
-   */
-  atomic_inc(&rdtgrp->waitcount)
-  /* kn->active-- */
-  kernfs_break_active_protection(kn)
-                                    rdtgroup_ctrl_remove
-                                      rdtgrp->flags = RDT_DELETED
-                                      /*
-                                       * Blocking routine, wait for
-                                       * all sub kernfs nodes to drop
-                                       * active reference in
-                                       * kernfs_break_active_protection.
-                                       */
-                                      kernfs_remove(rdtgrp->kn)
-                                  rdtgroup_kn_unlock
-                                    mutex_unlock
-                                    atomic_dec_and_test(
-                                                &rdtgrp->waitcount)
-                                    && (flags & RDT_DELETED)
-                                      kernfs_unbreak_active_protection(kn)
-                                      kfree(rdtgrp)
-  mutex_lock
-mon_event_read
-rdtgroup_kn_unlock
-  mutex_unlock
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    /* kn->active++ */
-    kernfs_unbreak_active_protection(kn)
-    kfree(rdtgrp)
-
-Fix it by moving free_all_child_rdtgrp() to after kernfs_remove() in
-rdtgroup_rmdir_ctrl() to ensure it has the accurate refcount of rdtgrp.
-
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1578500886-21771-3-git-send-email-xiaochen.shen@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/mempolicy.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index c7564294a12a8..954fd048ad9bd 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2960,13 +2960,13 @@ static int rdtgroup_rmdir_ctrl(struct kernfs_node *kn, struct rdtgroup *rdtgrp,
- 	closid_free(rdtgrp->closid);
- 	free_rmid(rdtgrp->mon.rmid);
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2802,6 +2802,9 @@ int mpol_parse_str(char *str, struct mem
+ 	char *flags = strchr(str, '=');
+ 	int err = 1, mode;
  
-+	rdtgroup_ctrl_remove(kn, rdtgrp);
++	if (flags)
++		*flags++ = '\0';	/* terminate mode string */
 +
- 	/*
- 	 * Free all the child monitor group rmids.
- 	 */
- 	free_all_child_rdtgrp(rdtgrp);
+ 	if (nodelist) {
+ 		/* NUL-terminate mode or flags string */
+ 		*nodelist++ = '\0';
+@@ -2812,9 +2815,6 @@ int mpol_parse_str(char *str, struct mem
+ 	} else
+ 		nodes_clear(nodes);
  
--	rdtgroup_ctrl_remove(kn, rdtgrp);
+-	if (flags)
+-		*flags++ = '\0';	/* terminate mode string */
 -
- 	return 0;
- }
- 
--- 
-2.20.1
-
+ 	mode = match_string(policy_modes, MPOL_MAX, str);
+ 	if (mode < 0)
+ 		goto out;
 
 
