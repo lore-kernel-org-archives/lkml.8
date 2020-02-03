@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9D7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFDAC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D982166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383B621582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746909;
-	bh=V95cMtoZomrzbOpNqb6B53ntBdklZCdetoQdW31/qlQ=;
+	s=default; t=1580746914;
+	bh=C8C94JcxU1kfdUzgZcR5GWniSKPbME7wQTcbrrI6DyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dcsa+OQFLY6V1dDJ9+vk00hxsIT35IPZ37qsy2shzEBR6FFZB6wS+21upNee5W6O4
-	 RWQKA3/0s7fJUsMmFKnjg2089ipZLr3E++97Anx1kEqd29BGsZM+dNIoKl5FSE117R
-	 iWKHPY8KB+14xofHzGivSHIBAzTnc51y6WoAbess=
+	b=MTBPxBZqIgm0sEayzWrzgD+ojOYri20aUN6Jf28iFliW0g6ue8T//j072ovTxdne+
+	 R+6QiNzVwBryn+nMeXy52JQTtRcGqEvhU1wBeEV2CiGGxr/Wr2RhnmwDYbNAn5oNC0
+	 tSKkvsH7SYZEerJOUAdgZmA3PJyCwinEJrJdzkzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgBCQVs (ORCPT
+        id S1729219AbgBCQVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33532 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbgBCQVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:21:33 -0500
+        id S1729199AbgBCQVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:21:50 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A33F421582;
-        Mon,  3 Feb 2020 16:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F05032087E;
+        Mon,  3 Feb 2020 16:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746893;
-        bh=V95cMtoZomrzbOpNqb6B53ntBdklZCdetoQdW31/qlQ=;
+        s=default; t=1580746909;
+        bh=C8C94JcxU1kfdUzgZcR5GWniSKPbME7wQTcbrrI6DyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXY+KvJscpLJhJMF9otbdt7GNH+g/c+hElq2hyPOPLPGsLriZcYhaB90PWMENsT7/
-         n4yJp0cUwv7pkPOOzHl067MI3nCBi/524646dc2/tZL983K3VU1hL4MfV6RmsPWovV
-         ewGldQZtWAsfqC/bGt23+m6oqvKiNDT7uH0gU7fI=
+        b=Mqr8mA6sdKxHwJMXna+10XtdjIg0if0FLJa72zzG9zz0zAaunydZ0jaZhWJqxu4fN
+         /RdxeJ7WA/nE0IBgE8wlBc4ZCmuhL/yJU4nc52TZZ+p4RqBLMzSoaTeknqME9okbyo
+         rCextN13ORuzbz+yYSpJJ7VSylwN92xSU9SZdMx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 51/53] seq_tab_next() should increase position index
-Date:   Mon,  3 Feb 2020 16:19:43 +0000
-Message-Id: <20200203161911.812039112@linuxfoundation.org>
+Subject: [PATCH 4.4 41/53] ARM: 8955/1: virt: Relax arch timer version check during early boot
+Date:   Mon,  3 Feb 2020 16:19:33 +0000
+Message-Id: <20200203161910.201170377@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -60,35 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit 70a87287c821e9721b62463777f55ba588ac4623 ]
+[ Upstream commit 6849b5eba1965ceb0cad3a75877ef4569dd3638e ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Updates to the Generic Timer architecture allow ID_PFR1.GenTimer to
+have values other than 0 or 1 while still preserving backward
+compatibility. At the moment, Linux is quite strict in the way it
+handles this field at early boot and will not configure arch timer if
+it doesn't find the value 1.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since here use ubfx for arch timer version extraction (hyb-stub build
+with -march=armv7-a, so it is safe)
+
+To help backports (even though the code was correct at the time of writing)
+
+Fixes: 8ec58be9f3ff ("ARM: virt: arch_timers: enable access to physical timers")
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/kernel/hyp-stub.S | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index 129d6095749a4..54d5e53e94af2 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -66,8 +66,7 @@ static void *seq_tab_start(struct seq_file *seq, loff_t *pos)
- static void *seq_tab_next(struct seq_file *seq, void *v, loff_t *pos)
- {
- 	v = seq_tab_get_idx(seq->private, *pos + 1);
--	if (v)
--		++*pos;
-+	++(*pos);
- 	return v;
- }
- 
+diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
+index 2a55373f49bfb..f9948363111d1 100644
+--- a/arch/arm/kernel/hyp-stub.S
++++ b/arch/arm/kernel/hyp-stub.S
+@@ -144,10 +144,9 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
+ #if !defined(ZIMAGE) && defined(CONFIG_ARM_ARCH_TIMER)
+ 	@ make CNTP_* and CNTPCT accessible from PL1
+ 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
+-	lsr	r7, #16
+-	and	r7, #0xf
+-	cmp	r7, #1
+-	bne	1f
++	ubfx	r7, r7, #16, #4
++	teq	r7, #0
++	beq	1f
+ 	mrc	p15, 4, r7, c14, c1, 0	@ CNTHCTL
+ 	orr	r7, r7, #3		@ PL1PCEN | PL1PCTEN
+ 	mcr	p15, 4, r7, c14, c1, 0	@ CNTHCTL
 -- 
 2.20.1
 
