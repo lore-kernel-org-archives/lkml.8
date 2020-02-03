@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41FDC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B347DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8495D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C92820838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747348;
-	bh=N5HNIYWrB8a4KH24nWBO+sCQSMVf9LazI3OcHILKQkk=;
+	s=default; t=1580747350;
+	bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4bIFYHXJmMdhpCuTjAX6/ebLvWvqzIuQGcoUTljvHBunAaUtUJjGJngZPqU5v2Jf
-	 5qqT6qNA6ZhkqPTebw/bY8sW4i3EZWFYrHoOU/9sSevcrGx2Mh9cPWbPZ/5jmDYOJT
-	 3OAZTjOUKDF9D149GJvQw0/2MXtV9y+u+CERAO4E=
+	b=P10MfdZ9e0aOg517YUt8uo4Xxl22mqTNIVELECskTPfDdd0om1lzW/DjbJUKm1c7i
+	 CuXCJ5Pkmd9nOjSoxPBQH7mknJtMER/w9lSPe0QH9WuJI9XLHkOObizFlyXc2Z8BHS
+	 ecUJjuXsAtF6Z94jvNCC4IiJi2zIp/16AM5RY8sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgBCQ3H (ORCPT
+        id S1729727AbgBCQ3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729700AbgBCQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:02 -0500
+        id S1729716AbgBCQ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:06 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B6902051A;
-        Mon,  3 Feb 2020 16:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20E7B2051A;
+        Mon,  3 Feb 2020 16:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747341;
-        bh=N5HNIYWrB8a4KH24nWBO+sCQSMVf9LazI3OcHILKQkk=;
+        s=default; t=1580747346;
+        bh=FBjiEtGCtQUkVz8QK73eh6OPI6OZsUJp4HJ12lzYckk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SXBfoWEoAX6NObS50fL3euhCJOZ8060DhODIGKDE+ZRWyfHrfpBEQfx3DAc/aMNNa
-         1v3GzD00vltAtPkhkOODZG9tAN/GLQyXU9PitYuRCBn4tOXlFJdg/cKoaS4gYxzf2V
-         O3XrPoItK1DTk/RfrlAbLX41QLqwsQf+MoD8qNr4=
+        b=PhBdMa2vIZI1VU3LJrixTbUNszqX8UXQlyIQautZ4PHTHUGBjQyyl2hiiB0JQ9/mc
+         /CTcnaHuwPjVKDi+SBtj2CHJbubd6Kwvv1yrkQOwfc4MMk/YWsy8903qsemugMvxn+
+         rLdBIcNvR9ts0A5vpub609r97clLGrX2zGU08aKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 43/89] mm/mempolicy.c: fix out of bounds write in mpol_parse_str()
-Date:   Mon,  3 Feb 2020 16:19:28 +0000
-Message-Id: <20200203161922.761396204@linuxfoundation.org>
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.14 45/89] media: digitv: dont continue if remote control state cant be read
+Date:   Mon,  3 Feb 2020 16:19:30 +0000
+Message-Id: <20200203161922.990454218@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -67,59 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sean Young <sean@mess.org>
 
-commit c7a91bc7c2e17e0a9c8b9745a2cb118891218fd1 upstream.
+commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
 
-What we are trying to do is change the '=' character to a NUL terminator
-and then at the end of the function we restore it back to an '='.  The
-problem is there are two error paths where we jump to the end of the
-function before we have replaced the '=' with NUL.
+This results in an uninitialized variable read.
 
-We end up putting the '=' in the wrong place (possibly one element
-before the start of the buffer).
-
-Link: http://lkml.kernel.org/r/20200115055426.vdjwvry44nfug7yy@kili.mountain
-Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
-Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Dmitry Vyukov <dvyukov@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mempolicy.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2724,6 +2724,9 @@ int mpol_parse_str(char *str, struct mem
- 	char *flags = strchr(str, '=');
- 	int err = 1;
+--- a/drivers/media/usb/dvb-usb/digitv.c
++++ b/drivers/media/usb/dvb-usb/digitv.c
+@@ -233,18 +233,22 @@ static struct rc_map_table rc_map_digitv
  
-+	if (flags)
-+		*flags++ = '\0';	/* terminate mode string */
-+
- 	if (nodelist) {
- 		/* NUL-terminate mode or flags string */
- 		*nodelist++ = '\0';
-@@ -2734,9 +2737,6 @@ int mpol_parse_str(char *str, struct mem
- 	} else
- 		nodes_clear(nodes);
+ static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
+ {
+-	int i;
++	int ret, i;
+ 	u8 key[5];
+ 	u8 b[4] = { 0 };
  
--	if (flags)
--		*flags++ = '\0';	/* terminate mode string */
--
- 	for (mode = 0; mode < MPOL_MAX; mode++) {
- 		if (!strcmp(str, policy_modes[mode])) {
- 			break;
+ 	*event = 0;
+ 	*state = REMOTE_NO_KEY_PRESSED;
+ 
+-	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
++	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
++	if (ret)
++		return ret;
+ 
+ 	/* Tell the device we've read the remote. Not sure how necessary
+ 	   this is, but the Nebula SDK does it. */
+-	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
++	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
++	if (ret)
++		return ret;
+ 
+ 	/* if something is inside the buffer, simulate key press */
+ 	if (key[1] != 0)
 
 
