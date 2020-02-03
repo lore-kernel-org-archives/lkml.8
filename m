@@ -2,99 +2,92 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CC7C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF36C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89282080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580728628;
-	bh=hOfgDkQXNA9GPbFW4AZJE9W6aP9xIhI/B2/YSYBkl0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ior3KJNdpVoKGHIZWJenYlPWBnXqmL+iUwnCqSl5O/qUEzKhaUM14pNh6rVUji3h8
-	 dFNioda6M/Joaffm8BcCCkMjbEkqui4VI5oNnaWeKeq0ebZJl8OcWb0d/xVfWIt6FP
-	 NJ219LJ/kMEEu053qd9+yA0Usj/4/c+FB55YyCJ8=
+	by mail.kernel.org (Postfix) with ESMTP id B97E020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JskEg8dl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgBCLRH (ORCPT
+        id S1727981AbgBCLTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:17:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgBCLRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:17:07 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3952B20721;
-        Mon,  3 Feb 2020 11:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580728626;
-        bh=hOfgDkQXNA9GPbFW4AZJE9W6aP9xIhI/B2/YSYBkl0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iCEeBT7tK0216U7jKUQhiCKEkZ/IUTyBiEsCbQSQZ1tgW9bWAZ+kpEtC0mi1Sp/lv
-         Idx3bLRD3yAeaW++w2wMMw6GXg5mcR0OijMaCLhglkkZHMJQw1h+xsJY0vNH3aLdNN
-         Uw73hzJATKDocN5XJP0ZqaL27BCUg7rNnCUFEelk=
-Date:   Mon, 3 Feb 2020 11:17:01 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     peterz@infradead.org, longman@redhat.com, mingo@redhat.com,
-        catalin.marinas@arm.com, clang-built-linux@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] arm64/spinlock: fix a -Wunused-function warning
-Message-ID: <20200203111701.GA4124@willie-the-truck>
-References: <20200123202051.8106-1-cai@lca.pw>
+        Mon, 3 Feb 2020 06:19:15 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38680 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgBCLTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 06:19:12 -0500
+Received: by mail-pj1-f67.google.com with SMTP id j17so6263139pjz.3;
+        Mon, 03 Feb 2020 03:19:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dLAb3xztgDHweesldz/wp0VQkjaUb67kJlNH5oaiVi8=;
+        b=JskEg8dlqaXPpSQ2Di8o07memgkmylmIYUdT7hSZIIGW22O7KlyKQClBDj2CYtbklr
+         1b1l4XZJWnb5575BmdoR/lc8gCgyAQtkXWQz/PRaLVKV3Qr/j2qDtILn59+8RgZ7wcRA
+         fATWh0PfN0aY9cCUELRlwXO/x0pXWGLckfwp+vHo18TEtBJ8TNdObprSCTnY5d/5D6Sv
+         yYpT+9rN5Ah8cQWbUUP0HMZq/TRcb/hFbaQ33FsCB2EbOvyjEc17uV1KAl4AozhTWAKX
+         TYJTgGUwlWtjhGF66PB+ydAjjVe2hK9nioclqgWLlus8mXfWCH7HgpXlGLjJ2RqQ19l4
+         Hw/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dLAb3xztgDHweesldz/wp0VQkjaUb67kJlNH5oaiVi8=;
+        b=DshpTRHiEK4ZxQC/n1QYCcfNh1eyRxR+IKXE/pvHksN/6978LlXk7HIOaT7vTZ5khx
+         hjLOtrL19icISw7Xet+ZtuLXvyimroDfaJNhZ6314k/WzrKqv+ZkBxXUebxz/c1mg3p8
+         3eueMlyWK2RWjguuAJyQPL+5BWLjNXYhnD2Dg5S9vOEn9NqGDyxjWtalYdxlmJE+HMD6
+         xIUNJyS+T9nxIW51ICYDGN4uaZNqa4OpgrL8Dq3bqVohp/FXbC5iv34FaE9I0+/BUff5
+         a0I6U24mYybUUycXz1WVPHPjfLW+p+c4o4xbk+J12INgHGIg0XjU0VD0pEDIIb+Fv2hO
+         KMvQ==
+X-Gm-Message-State: APjAAAU7wX1NcR0zLMn9udpxQuIGquNSe0KPr1QDpnOJ+3NDnFGwdPyF
+        XypzW6FEzbHzekaugpgPzdVSuYXc+IEQvQZmSRs=
+X-Google-Smtp-Source: APXvYqyw5xhbbzVw+yQ2wqY0NDnDkGXCz6bNcND50+B6/eor7++FXaiNu0XJDggLxBk/oVzl6mwP8r50ymp5sDq4ov4=
+X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr29122443pjc.20.1580728750105;
+ Mon, 03 Feb 2020 03:19:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200123202051.8106-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com>
+ <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net> <CAHp75VdVXqz7fab4MKH2jZozx4NGGkQnJyTWHDKCdgSwD2AtpA@mail.gmail.com>
+ <ce81e9b1ac6ede9f7a16823175192ef69613ec07.camel@perches.com>
+In-Reply-To: <ce81e9b1ac6ede9f7a16823175192ef69613ec07.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Feb 2020 13:17:44 +0200
+Message-ID: <CAHp75VdaaOW0ktt4eo4NsLFu2QT1K1mHK8DZeycOPhbvcMq4wQ@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+To:     Joe Perches <joe@perches.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        isdn4linux@listserv.isdn4linux.de, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 03:20:51PM -0500, Qian Cai wrote:
-> The commit f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for
-> arm64") introduced a warning from Clang because vcpu_is_preempted() is
-> compiled away,
-> 
-> kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
-> [-Wunused-function]
-> static inline int node_cpu(struct optimistic_spin_node *node)
->                   ^
-> 1 warning generated.
-> 
-> Fix it by converting vcpu_is_preempted() to a static inline function.
-> 
-> Fixes: f5bfdc8e3947 ("locking/osq: Use optimized spinning loop for arm64")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: convert vcpu_is_preempted() to a static inline function.
-> 
->  arch/arm64/include/asm/spinlock.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
-> index 102404dc1e13..9083d6992603 100644
-> --- a/arch/arm64/include/asm/spinlock.h
-> +++ b/arch/arm64/include/asm/spinlock.h
-> @@ -18,6 +18,10 @@
->   * See:
->   * https://lore.kernel.org/lkml/20200110100612.GC2827@hirez.programming.kicks-ass.net
->   */
-> -#define vcpu_is_preempted(cpu)	false
-> +#define vcpu_is_preempted vcpu_is_preempted
-> +static inline bool vcpu_is_preempted(int cpu)
-> +{
-> +	return false;
-> +}
+On Mon, Feb 3, 2020 at 1:08 PM Joe Perches <joe@perches.com> wrote:
+> On Mon, 2020-02-03 at 12:13 +0200, Andy Shevchenko wrote:
+> > On Sun, Feb 2, 2020 at 10:45 PM Jakub Kicinski <kuba@kernel.org> wrote:
 
-Cheers, I'll queue this at -rc1.
+...
 
-Will
+> > I'm not sure it's ready. I think parse-maintainers.pl will change few
+> > lines here.
+>
+> parse-maintainers would change a _lot_ of the MAINTAINERS file
+> by reordering section letters.
+
+I think it's quite easy to find out if it had changed the record in question.
+
+-- 
+With Best Regards,
+Andy Shevchenko
