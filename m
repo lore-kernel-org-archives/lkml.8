@@ -2,208 +2,177 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638E3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D75C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2848D20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008EF21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SCEVhtfb"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KlxNRaOO";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="IAVRlmKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBCU4N (ORCPT
+        id S1726994AbgBCU7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:56:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36074 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCU4N (ORCPT
+        Mon, 3 Feb 2020 15:59:20 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:13962 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725372AbgBCU7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:56:13 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so16209087oic.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 12:56:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d+JwFHbchxJ0gg1my7n1CXaZxr3hxuHVj1YoJC44SlE=;
-        b=SCEVhtfbAbnwghXPkv1qNGhfhx7+ObPqKjLQOZh9HGoAf2EoYmD7XqBz5PP5nVTOwt
-         Xg77qSn8dKpq9fyJTZ4fb1ysvbU8U7zW7weoRKoHtZ2yFgzJ9Fc4br1YZ49aI0X7k802
-         OZYYW2/7BmFempKoaKOmfRN2mU09LOD5o4jC0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d+JwFHbchxJ0gg1my7n1CXaZxr3hxuHVj1YoJC44SlE=;
-        b=SBYOkQiD5KTV6FnOPgGFSnJk5l6ZvD2EndoJMESnCJLo9m5y+r2tJIZaw8TIJ7qPif
-         9DKSjiufcqkev+zbTCEr+8mLraJ0O3QUpGsfnMf7h/rm4JQIM8faFTScev5Wn+8uiZmf
-         Rp3iVPIwHoDEJyp1VC4DMgX7ncAcbbDsIXHXmaw27EmmDM9oMm4y5W5yvlpboElfrtQy
-         WrmdJhcAqrCbX7yvLInAla6d1ocm0zkU/Hqu3VpqPETJAHXxykbt1yFFKgHaShCwshlw
-         TcU3Zrg6u18LF2K9U8FvF+rhmLBH/xVEriOVT+bCOq2fwS4BerNqmGoGAq/z4QGBJixL
-         VzXQ==
-X-Gm-Message-State: APjAAAUxWm6/DsxWW1rb2OFM3G1xiJ5UzvRg6OJjKwNA3DTJJFxyqoul
-        +QSg45rc24JV8n8NlMk9eiQorQcXT9g=
-X-Google-Smtp-Source: APXvYqwdfSJhbKBJxVSH82Cq/02r/JcBTRZW7IZU1zGtLWcsFKO59aMtQGrYkZxGzRyHIB9ucrc1WA==
-X-Received: by 2002:aca:1a10:: with SMTP id a16mr687273oia.9.1580763371664;
-        Mon, 03 Feb 2020 12:56:11 -0800 (PST)
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
-        by smtp.gmail.com with ESMTPSA id y25sm62327oto.27.2020.02.03.12.56.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 12:56:11 -0800 (PST)
-Received: by mail-ot1-f43.google.com with SMTP id r16so15063904otd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 12:56:11 -0800 (PST)
-X-Received: by 2002:ab0:2006:: with SMTP id v6mr14461189uak.22.1580762931322;
- Mon, 03 Feb 2020 12:48:51 -0800 (PST)
+        Mon, 3 Feb 2020 15:59:19 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013Kx17u003255;
+        Mon, 3 Feb 2020 12:59:10 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=xzcYuStL/nTYbdOoM2xji+pWcSjFchmV5w42vZus8uo=;
+ b=KlxNRaOOH6dsVXonyhJLkgKnTAeW+gIuYfwA5hgw2IE+nZshIpt2ajAI5HXTmd0PyNxO
+ kMkCeDQId4CVrxpLl3dIidXDUxsM9+gjW1cDemgSB7x1NhvTmFXAdv6GL+oL4CNQJYM1
+ pIa3kcDRE3QK2sDeYr95wcL2LeZcB8sMSpA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xwsx06gxj-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 03 Feb 2020 12:59:10 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 3 Feb 2020 12:58:44 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Te5JCFGdTMtKDYh3AG+8VVwueKK2NOmh1chIbQuIUZrY24QcSBOW586m+pSAESxstU6FNHjZz34nIj6aZZNLBEwhKFFQejEKE5mXUax4BvdVT3pJ5/s3lrwO7wDUDK/3gb1vd0SXWZjmYCRqGTSganPd80ibS4rRgAbevnKUxDI5Qlnx9BsRq1g8LBIjj72Hb6INu8qY+MJHZ/Ldj69lZg+eLd0Jnveah8AWpzBi+i552sZAtimecq3kbnd2eCPi2BPqAHHswYyhUxeKYyaXZKqCyhZC7aBuUgArIlIXKler3SNtyknD9wEXAe6x2xr93M+MNi7EVvANcbXxEqRfEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xzcYuStL/nTYbdOoM2xji+pWcSjFchmV5w42vZus8uo=;
+ b=O0/aG+TvSmEy0zWHX3TkK8RM8olEpylAOPBTGzWO3iDM4T9GLEYtVaQGJs6pl0bU7s7Cnzi6EoeKVcE+RzvUx5rzPd/fd38DrWFaXs+ii03/DRJDYgaILQF2UlAecRtUVUO2ZGS0Vk0gvH7AEZB/mLP/cZDPfH3vcUWlLI8umFvJ3nDDDCkSLUEpaDdWBrwgqtTm1MvfWQCLtKC2xNblwjiFUprpEXIhFue1cBp96bWKxPRO86s5sP1XS+y3MYr9iE6JBNRO7+l7jhjy60PN3AmE8o37/U3QALGlvi4o+UPpJ9kZt0/9Lk0ZrX1cb6SD4c6dKSoEr/Q4/4to6bABig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xzcYuStL/nTYbdOoM2xji+pWcSjFchmV5w42vZus8uo=;
+ b=IAVRlmKANOp6JgnUwMIsfaFA7Ek7gmQ+NdRQeXsfwAnQ7HjlZ4Uz9YfVxBD56HGb0WjiIkH0pzRweV+jZtpGdsdz3N64+P4f8SMUkNQtX/sI522pM6syZhz8xPFJ06cpb2yLF6SVFNoU5CJTFLLVL/I6fF4R9m502BKOy9GtS3I=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
+ BYAPR15MB3208.namprd15.prod.outlook.com (20.179.58.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.29; Mon, 3 Feb 2020 20:58:41 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
+ 20:58:41 +0000
+Date:   Mon, 3 Feb 2020 12:58:34 -0800
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v2 21/28] mm: memcg/slab: use a single set of kmem_caches
+ for all memory cgroups
+Message-ID: <20200203205834.GA6781@xps.dhcp.thefacebook.com>
+References: <20200127173453.2089565-1-guro@fb.com>
+ <20200127173453.2089565-22-guro@fb.com>
+ <20200203195048.GA4396@cmpxchg.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203195048.GA4396@cmpxchg.org>
+X-ClientProxiedBy: MN2PR15CA0057.namprd15.prod.outlook.com
+ (2603:10b6:208:237::26) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:150::19)
 MIME-Version: 1.0
-References: <20200203183149.73842-1-dianders@chromium.org> <20200203193027.62BD22080D@mail.kernel.org>
- <CAD=FV=X2K-Qr17qXgG1Ng8MpZQogagBqMwWu=D2OpQf+ZskBPw@mail.gmail.com> <20200203200443.GN3948@builder>
-In-Reply-To: <20200203200443.GN3948@builder>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 3 Feb 2020 12:48:39 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VQyTHYizfzMwjAaRbmQ4zvFFzdfgGiVkLQU+b+pFVnzg@mail.gmail.com>
-Message-ID: <CAD=FV=VQyTHYizfzMwjAaRbmQ4zvFFzdfgGiVkLQU+b+pFVnzg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from xps.dhcp.thefacebook.com (2620:10d:c091:480::b502) by MN2PR15CA0057.namprd15.prod.outlook.com (2603:10b6:208:237::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.32 via Frontend Transport; Mon, 3 Feb 2020 20:58:38 +0000
+X-Originating-IP: [2620:10d:c091:480::b502]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0d192fe9-779a-457a-64ca-08d7a8ebd90d
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3208:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3208CC20238245CA7EB0D266BE000@BYAPR15MB3208.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0302D4F392
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(396003)(366004)(346002)(136003)(39860400002)(189003)(199004)(8936002)(4326008)(186003)(16526019)(316002)(8676002)(81156014)(81166006)(1076003)(5660300002)(6506007)(54906003)(33656002)(2906002)(6666004)(478600001)(7696005)(9686003)(52116002)(55016002)(66946007)(66556008)(86362001)(6916009)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3208;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EMWzOBLiwJsTwc6DvvwPmOiY7/bWvAqf2qXn0G9p4egmr7WTOcn8e+BES5FQ756VvfmyfUGRhEMu5sfx27gfqj38FccUEHDXlHwde/+fCMgT9k9QltgDVSeGWSJdOP/4v68KTRIcVsxg3QgqxFH0QUKXYs054JLy0s7nqpRJRNcbH+MPOJEkcAS0HpDNCCVaA0z35WLBiCSAF9SP2B0OaF39BfVUK70vNTfvIYeoHWKxU601HqzQ+U/1F5UNheCudqOi1hGpFwT1ZXugs2y1doiUJFmYkEkFbYDix3UWMM/Hq2/NGI28918COlnyeFaa05eV4DK37SGHSY/G6EpjdJPBx/Hgl7yES4R1SPbAdE8N0zG537YBnteVksNIc5cPzHRi/TBnOpZHFZ18W/GO1VXIjhJBNJRMruZWFG2aThgQHEnhPknoGhKewXwSKK9y
+X-MS-Exchange-AntiSpam-MessageData: tTvUHTtk/2foWARfQJMBpOeypmml3BFhjQGRiBGRa/Br5H4zdP0JnEKq7Ao1VO9DJngPul/93L4P/Gf3DxzL1DyjBhhLuvTWi9s8EwnwojWnyYtd95De8HzF2wd83X7lP658D7/j+8ZilTJ3MusVMp4EpeUOS2qgaYYbsGwzA34=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d192fe9-779a-457a-64ca-08d7a8ebd90d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 20:58:41.0497
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OglGjPtZS5HuT7ix1pwTHqVtPChxRqaxHeunQNB5/PW576Y/ZAtbqzbo64ksMl2Z
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3208
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-03_07:2020-02-02,2020-02-03 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxlogscore=964 impostorscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 phishscore=0 malwarescore=0 adultscore=0 clxscore=1011
+ suspectscore=5 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2002030152
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Feb 03, 2020 at 02:50:48PM -0500, Johannes Weiner wrote:
+> On Mon, Jan 27, 2020 at 09:34:46AM -0800, Roman Gushchin wrote:
+> > This is fairly big but mostly red patch, which makes all non-root
+> > slab allocations use a single set of kmem_caches instead of
+> > creating a separate set for each memory cgroup.
+> > 
+> > Because the number of non-root kmem_caches is now capped by the number
+> > of root kmem_caches, there is no need to shrink or destroy them
+> > prematurely. They can be perfectly destroyed together with their
+> > root counterparts. This allows to dramatically simplify the
+> > management of non-root kmem_caches and delete a ton of code.
+> 
+> This is definitely going in the right direction. But it doesn't quite
+> explain why we still need two sets of kmem_caches?
+> 
+> In the old scheme, we had completely separate per-cgroup caches with
+> separate slab pages. If a cgrouped process wanted to allocate a slab
+> object, we'd go to the root cache and used the cgroup id to look up
+> the right cgroup cache. On slab free we'd use page->slab_cache.
+> 
+> Now we have slab pages that have a page->objcg array. Why can't all
+> allocations go through a single set of kmem caches? If an allocation
+> is coming from a cgroup and the slab page the allocator wants to use
+> doesn't have an objcg array yet, we can allocate it on the fly, no?
 
-On Mon, Feb 3, 2020 at 12:04 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 03 Feb 11:41 PST 2020, Doug Anderson wrote:
->
-> > Hi,
-> >
-> > On Mon, Feb 3, 2020 at 11:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Douglas Anderson (2020-02-03 10:31:33)
-> > > >
-> > > >  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
-> > > >  ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
-> > > >  .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
-> > > >  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
-> > > >  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
-> > > >  .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
-> > > >  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
-> > > >  ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
-> > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
-> > > >  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
-> > >
-> > > I don't want to take patches touching dts/qcom/. These aren't necessary
-> > > to merge right now, correct? Or at least, they can go via arm-soc tree?
-> >
-> > Right.  They can go later.
-> >
-> > Specifically for sdm845 until the sdm845 patches lands the old dts
-> > trees will yell about the missing clocks, but it's not like they will
-> > compile fail.  Also the bindings themselves will validate fine.
-> > There's no other way forward, though, and the old bindings caused
-> > similar yells.
-> >
->
-> Can you please help me parse this, will old DT cause complaints or will
-> it fail to boot?
+Well, arguably it can be done, but there are few drawbacks:
 
-Sorry, let me try to be more clear:
+1) On the release path you'll need to make some extra work even for
+   root allocations: calculate the offset only to find the NULL objcg pointer.
 
-a) Without my series: "make dtbs_check" limited to the bindings files
-I'm touching yells.  Examples:
+2) There will be a memory overhead for root allocations
+   (which might or might not be compensated by the increase
+   of the slab utilization).
 
-.../msm8998-mtp.dt.yaml: clock-controller@5065000: clock-names:1:
-'gpll0_main' was expected
+3) I'm working on percpu memory accounting that resembles the same scheme,
+   except that obj_cgroups vector is created for the whole percpu block.
+   There will be root- and memcg-blocks, and it will be expensive to merge them.
+   I kinda like using the same scheme here and there.
 
-.../sdm845-mtp.dt.yaml: clock-controller@af00000: 'clocks' is a
-required property
-.../sdm845-mtp.dt.yaml: clock-controller@af00000: 'clock-names' is a
-required property
+Upsides?
 
-.../sdm845-mtp.dt.yaml: clock-controller@ab00000: 'clocks' is a
-required property
-.../sdm845-mtp.dt.yaml: clock-controller@ab00000: 'clock-names' is a
-required property
+1) slab utilization might increase a little bit (but I doubt it will have
+   a huge effect, because both merging sets should be relatively big and well
+   utilized)
+2) eliminate memcg kmem_cache dynamic creation/destruction. it's nice,
+   but there isn't so much code left anyway.
 
 
-b) With just the bindings from my series, "make dtbs_check" yells, but
-yells about different things.  The "gpll0_main" one goes away but this
-one is new:
-
-.../sdm845-mtp.dt.yaml: clock-controller@5090000: clock-names:0:
-'bi_tcxo' was expected
-.../sdm845-mtp.dt.yaml: clock-controller@5090000: clock-names: ['xo']
-is too short
-.../sdm845-mtp.dt.yaml: clock-controller@5090000: clocks: [[26, 0]] is too short
-
-
-c) With just the "dts" from my series, you'll again get different
-yells from "make dtbs_check".  I won't bother listing them, but they
-are similar to the above.
-
-
-d) With everything from my series, the "make dtbs_check" limited to
-the bindings files I'm touching is clean.
-
----
-
-* sdm845's ability to boot is unaffected by this series.  I have
-tested booting sdm845 after this series and it's fine.  Since nothing
-in this series touches the sdm845 clock drivers (only the bindings and
-the dts) that means that the new dts must work with the existing
-drivers.  You can land the sdm845 dts any time after Stephen and Rob
-are happy with the bindings.
-
-* It should be fine to land the sc7180 dts file without waiting for
-the driver change.  The dts here will work with both the
-dispcc/gpucc/videocc that's in clk-next and also the one that results
-from applying all of my patches.
-
-
-> > For sc7180 there's no usage of any of these clocks and this adds the
-> > first usage, so definitely no problem there.
-> >
-> > Once you've landed then Bjorn or Andy can pick up the dts.
-> >
->
-> Do I need to apply these after Stephen picks the driver patches? Or are
-> they simply nop until the driver patches lands?
-
-The sdm845 patches are a nop until some future patch changes the Linux
-driver to start using them.  I don't know of anyone planning to do
-that.  The only real result from an sdm845 perspective will be making
-things "more correct" from a dts standpoint and keeping "make
-dtbs_check" happier.
-
-The sc7180 patches are OK to land even without the driver.  They're
-not a nop and I've actually validated that I can bring the display/gpu
-up with them (even without the driver changes) on my downstream
-kernel.
-
----
-
-Sorry it's so confusing.  Happy to try to clarify more if the above is
-still too hard to follow.
-
--Doug
+So IMO it's an interesting direction to explore, but not something
+that necessarily has to be done in the context of this patchset.
