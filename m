@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CDCC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE042087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8828420838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747380;
-	bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
+	s=default; t=1580747383;
+	bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zY6Ggraj9/AZpW/9qzNoyiVvuuEnhiCSLQSs499uYJub4pbDa4Q38oH9vLlC0+0Hl
-	 6hKpgtZKg0AGtYRWDPxNnW/Tf8zLdY7NtCDRXap73+o4TuWZYIFA1NDKjYeZFt9hqS
-	 Aa8W3cTxF5ZaCKXD8kg7HkmoZ0joTrPmFe9fIWnw=
+	b=e0Xt7FI5b1x0ZlV+bKnV59xMoihRxRETgPRJ6z6KFDBnwSnnU2kvIPXr/Cic+8ofy
+	 mcqHUVN1inREMtA7aPE9GDEJbu1uWdnSVaiKY5TPEZHUAVEPXNLHrj6GoysPck9tXf
+	 VwKsK0hZPQdpD736lkJg5x1dMBwFDLNrN+C+oWIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgBCQ3j (ORCPT
+        id S1729837AbgBCQ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729801AbgBCQ3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:31 -0500
+        id S1729816AbgBCQ3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:36 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1660620838;
-        Mon,  3 Feb 2020 16:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE36720838;
+        Mon,  3 Feb 2020 16:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747370;
-        bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
+        s=default; t=1580747375;
+        bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFdBYVDI99FhEsNi+4bSMFntX9IV57GcQhOoYAYEwc+hFWb2CIFd5Qv4YUOVF8+GC
-         HiVEBsQLguYlpViLzDjtX2dGDk9FbFm9R0/p4EOkvwEK1Vkmbm1eV0UsbcI5zZk5sB
-         kkzPa/TFcUHTJDEEVxroCkCNXvmRnRvuFfYOoNFs=
+        b=i47bGTgheEJv641P62J603WrTHe+vden7vfzO7Sy85vCWPu806q5f+ammjWWY44wU
+         8ka79OmHoHOWvi4ghp5rMfVAypr30TzFQYGN+L3O+g9xcimaHqNp3/FZLNyVBRaqvK
+         GXuuMymkudxfp5+FNKO7iYXPtASdoOK3ym8/s9n8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 54/89] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Mon,  3 Feb 2020 16:19:39 +0000
-Message-Id: <20200203161923.975475988@linuxfoundation.org>
+Subject: [PATCH 4.14 56/89] mac80211: mesh: restrict airtime metric to peered established plinks
+Date:   Mon,  3 Feb 2020 16:19:41 +0000
+Message-Id: <20200203161924.166007733@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,54 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
+[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+The following warning is triggered every time an unestablished mesh peer
+gets dumped. Checks if a peer link is established before retrieving the
+airtime link metric.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
+               airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
+[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
+[ 9563.022838] Call Trace:
+[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
+[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
+[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
+[ 9563.023120]  netlink_dump+0x17b/0x370
+[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
+[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
+[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
+[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
+[ 9563.023210]  do_syscall_64+0x4e/0x140
+[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
+[rewrite commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ net/mac80211/mesh_hwmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 49aeecd312b4b..d578a9f7e1a0e 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -32,6 +32,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index fab0764c315fe..994dde6e5f9d9 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
+ 	unsigned long fail_avg =
+ 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
  
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
++	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
++		return MAX_METRIC;
 +
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
+ 	/* Try to get rate based on HW/SW RC algorithm.
+ 	 * Rate is returned in units of Kbps, correct this
+ 	 * to comply with airtime calculation units
 -- 
 2.20.1
 
