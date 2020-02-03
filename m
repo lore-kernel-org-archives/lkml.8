@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA29C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EACAC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9272520CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189942051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747914;
-	bh=lfYwe/tarBoLxtm2H/IsO93UK4HI9kUOUSlZzZUkZ5c=;
+	s=default; t=1580747920;
+	bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEUHjnp9O4BGOv3aOVh0+Ycmx+B/GnBoR9WpZmJe9zjyYRVSHxT7WV8rDcGPtod+M
-	 kU0xtlVpxS9yMZEucTnMFgYkOqTuLCRaIJxViCnKcenkLfKoZL+8mZMQ01fTGRko0t
-	 9TrchhT/6oBmLzvw52vfJs55+Gbv7dTRn44nl/Vg=
+	b=UpK9fU9zOZWmXAfmNq1VYjVKXIXASZ04IxVY3eX0Skuzvw1ko+PQ3QIsN2VFpEBKw
+	 Cn6MThqy9hOXNnP2xO7kxZJecHt9rngwzU59TcvW3dZzLZ9uA4BnvKvYHTf9CMWFLp
+	 ds6EO9KjEY1WDqFwiiAcc7mSn1Kul5/G54nkHeTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbgBCQid (ORCPT
+        id S1730562AbgBCQij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgBCQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:38:28 -0500
+        id S1731506AbgBCQib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:38:31 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9284021582;
-        Mon,  3 Feb 2020 16:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 266F121775;
+        Mon,  3 Feb 2020 16:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747908;
-        bh=lfYwe/tarBoLxtm2H/IsO93UK4HI9kUOUSlZzZUkZ5c=;
+        s=default; t=1580747910;
+        bh=KQRTBNGIx/d9uZvKRGCFrbPP4MYDMOG24kIsgdaTp+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jFni65XR1UqofCLRql4dEsq9xzknbYelGxHP/36CjlKgIH+HhxYMOc8O4vATmln9u
-         g7RT5NOVEulJP8tyP8SanQHXaRl3yow8Iq0E6l9wMloqocGPz2mtsuNjvU5Jl7i+e+
-         VSeDAW+ULDl+OeGGadT+W0AjoWt4ziyKgTU+m70w=
+        b=ebAQPYBptgzmtHmfexcATmOELJ9vFph8onkEXb+MVnbbRme8pNbRPNtRr9KeEEQTC
+         hNC3T3HACYMYWcwjJCYD/10/3eriQLRT4CPL9oPc+B7gFeBKYDpKoIG1aXeUt2k31y
+         0MhYMEWNSAlzQs7j2p5TgCCRJWNK2SiDzOH9PFUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+5493b2a54d31d6aea629@syzkaller.appspotmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 5.5 23/23] cgroup: Prevent double killing of css when enabling threaded cgroup
-Date:   Mon,  3 Feb 2020 16:20:43 +0000
-Message-Id: <20200203161906.999202354@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 19/23] media: dvb-usb/dvb-usb-urb.c: initialize actlen to 0
+Date:   Mon,  3 Feb 2020 16:20:39 +0000
+Message-Id: <20200203161906.309094277@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -62,85 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Koutný <mkoutny@suse.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit 3bc0bb36fa30e95ca829e9cf480e1ef7f7638333 upstream.
+commit 569bc8d6a6a50acb5fcf07fb10b8d2d461fdbf93 upstream.
 
-The test_cgcore_no_internal_process_constraint_on_threads selftest when
-running with subsystem controlling noise triggers two warnings:
+This fixes a syzbot failure since actlen could be uninitialized,
+but it was still used.
 
-> [  597.443115] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3131 cgroup_apply_control_enable+0xe0/0x3f0
-> [  597.443413] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3177 cgroup_apply_control_disable+0xa6/0x160
+Syzbot link:
 
-Both stem from a call to cgroup_type_write. The first warning was also
-triggered by syzkaller.
+https://syzkaller.appspot.com/bug?extid=6bf9606ee955b646c0e1
 
-When we're switching cgroup to threaded mode shortly after a subsystem
-was disabled on it, we can see the respective subsystem css dying there.
+Reported-and-tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
 
-The warning in cgroup_apply_control_enable is harmless in this case
-since we're not adding new subsys anyway.
-The warning in cgroup_apply_control_disable indicates an attempt to kill
-css of recently disabled subsystem repeatedly.
-
-The commit prevents these situations by making cgroup_type_write wait
-for all dying csses to go away before re-applying subtree controls.
-When at it, the locations of WARN_ON_ONCE calls are moved so that
-warning is triggered only when we are about to misuse the dying css.
-
-Reported-by: syzbot+5493b2a54d31d6aea629@syzkaller.appspotmail.com
-Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Acked-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cgroup/cgroup.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/media/usb/dvb-usb/dvb-usb-urb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -3055,8 +3055,6 @@ static int cgroup_apply_control_enable(s
- 		for_each_subsys(ss, ssid) {
- 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
+--- a/drivers/media/usb/dvb-usb/dvb-usb-urb.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-urb.c
+@@ -12,7 +12,7 @@
+ int dvb_usb_generic_rw(struct dvb_usb_device *d, u8 *wbuf, u16 wlen, u8 *rbuf,
+ 	u16 rlen, int delay_ms)
+ {
+-	int actlen,ret = -ENOMEM;
++	int actlen = 0, ret = -ENOMEM;
  
--			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
--
- 			if (!(cgroup_ss_mask(dsct) & (1 << ss->id)))
- 				continue;
- 
-@@ -3066,6 +3064,8 @@ static int cgroup_apply_control_enable(s
- 					return PTR_ERR(css);
- 			}
- 
-+			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
-+
- 			if (css_visible(css)) {
- 				ret = css_populate_dir(css);
- 				if (ret)
-@@ -3101,11 +3101,11 @@ static void cgroup_apply_control_disable
- 		for_each_subsys(ss, ssid) {
- 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
- 
--			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
--
- 			if (!css)
- 				continue;
- 
-+			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
-+
- 			if (css->parent &&
- 			    !(cgroup_ss_mask(dsct) & (1 << ss->id))) {
- 				kill_css(css);
-@@ -3392,7 +3392,8 @@ static ssize_t cgroup_type_write(struct
- 	if (strcmp(strstrip(buf), "threaded"))
+ 	if (!d || wbuf == NULL || wlen == 0)
  		return -EINVAL;
- 
--	cgrp = cgroup_kn_lock_live(of->kn, false);
-+	/* drain dying csses before we re-apply (threaded) subtree control */
-+	cgrp = cgroup_kn_lock_live(of->kn, true);
- 	if (!cgrp)
- 		return -ENOENT;
- 
 
 
