@@ -2,86 +2,91 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF32C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95393C3524B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39323205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeMIvx+i"
+	by mail.kernel.org (Postfix) with ESMTP id 6C9AE205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBCBps (ORCPT
+        id S1727198AbgBCBqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:45:48 -0500
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:33757 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgBCBpr (ORCPT
+        Sun, 2 Feb 2020 20:46:08 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46746 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgBCBqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:45:47 -0500
-Received: by mail-pl1-f170.google.com with SMTP id ay11so5200140plb.0;
-        Sun, 02 Feb 2020 17:45:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=biDSrCR1eP28JzHxJCCOBKezgQLDm4X9uqOfHfatW2Y=;
-        b=TeMIvx+iShPj2d3PyK/1BmMRWfjmaPWgS8OHGl+HEkJaAgYfueCeKcQUlCr6qzjScs
-         qjdKhZCu3EOCaKMTgTgGEFPdg/DjZbhsR9fN4GQFVORPdZ7zUSggRoANToJgJVMAVvve
-         WLBF1gxMsPqbJ8qv3ojZCLN4c92x77DPw0j73Qi56mQNomezV6VD7AGrn7OZhlLXvCbR
-         BJo83s0bLfAB4sKEq49ONZ/lB5Dig0QrbU675fp606k5SGKzUQVNSrhyPwoNLbDJZ2+x
-         TK7aHVU3nnVeb3GLbGJ092fm/OBT/l6vTDMr81BcGkfgJl/SDxTLYSwhJXO4IVAPbbuK
-         eoZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=biDSrCR1eP28JzHxJCCOBKezgQLDm4X9uqOfHfatW2Y=;
-        b=JD3on5X1SB0o8MKXNbQ/z23k9ITAvOFZEBO+afEFbN4wzg7H7/1JhHGDx7DZ8+muB1
-         2yfKm6fVWjrqnSHG1+lXkJmET86t84d5NzM1u6hoYxqyKrDkqzak6BXsxLFPPK5JQm11
-         d7i58huoU5S0shMjhZPEFVbOkFYQanjZS0HdVgpXnfwL/hehc7lLB8VfjLh5NDk8PpiM
-         DdT5ACn5NSJQ4yvJHUiq0NSWKOYFMfG7SYCNt/Ia7D6gDov7YEkFUT3s/jCkQso/IDTJ
-         HY4UoT6OXn59rdYZHv6UJ/HdMx5rR3YhHP1Vd6NpG2Nprf0692UmERtZjTG5HNVOF/xT
-         5JHQ==
-X-Gm-Message-State: APjAAAWoTqMuFEm4CsMWGgG8G/omfDvHcS8oyj+vG8a3HEJP2QXoRz/C
-        3MgVZlablYPfOvoE3b4weyY=
-X-Google-Smtp-Source: APXvYqwESnZ//QQxLHVoRT+umFDYhO4Iu673FVXCH2wzZBtnqX8dC+tZ8wNJsRkbuSCFlhpC7EAMDA==
-X-Received: by 2002:a17:90a:6:: with SMTP id 6mr27354639pja.71.1580694347066;
-        Sun, 02 Feb 2020 17:45:47 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id x25sm18440955pfp.30.2020.02.02.17.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 17:45:46 -0800 (PST)
-Date:   Sun, 2 Feb 2020 17:45:44 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Jacob Keller <jacob.e.keller@intel.com>
-Cc:     christopher.s.hall@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        mingo@redhat.com, x86@kernel.org, davem@davemloft.net,
-        sean.v.kelley@intel.com
-Subject: Re: [Intel PMC TGPIO Driver 1/5] drivers/ptp: Add Enhanced handling
- of reserve fields
-Message-ID: <20200203014544.GA3516@localhost>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20191211214852.26317-2-christopher.s.hall@intel.com>
- <0f868a7e-5806-4976-80b5-0185a64b42a0@intel.com>
+        Sun, 2 Feb 2020 20:46:08 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 085A328BEFA
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v6 1/5] unicode: Add standard casefolded d_ops
+Organization: Collabora
+References: <20200128230328.183524-1-drosen@google.com>
+        <20200128230328.183524-2-drosen@google.com>
+Date:   Sun, 02 Feb 2020 20:45:59 -0500
+In-Reply-To: <20200128230328.183524-2-drosen@google.com> (Daniel Rosenberg's
+        message of "Tue, 28 Jan 2020 15:03:24 -0800")
+Message-ID: <85sgjsxx2g.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f868a7e-5806-4976-80b5-0185a64b42a0@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:54:19AM -0800, Jacob Keller wrote:
-> 
-> Not that it's a big deal, but I think this might read more clearly if
-> this was "cmd == PTP_PIN_GETFUNC2 && check_rsv_field(pd.rsv)"
+Daniel Rosenberg <drosen@google.com> writes:
 
-+1
+> diff --git a/include/linux/unicode.h b/include/linux/unicode.h
+> index 990aa97d80496..5de313abeaf98 100644
+> --- a/include/linux/unicode.h
+> +++ b/include/linux/unicode.h
+> @@ -4,6 +4,8 @@
+>  
+>  #include <linux/init.h>
+>  #include <linux/dcache.h>
+> +#include <linux/fscrypt.h>
+> +#include <linux/fs.h>
+>  
+>  struct unicode_map {
+>  	const char *charset;
+> @@ -30,4 +32,19 @@ int utf8_casefold(const struct unicode_map *um, const struct qstr *str,
+>  struct unicode_map *utf8_load(const char *version);
+>  void utf8_unload(struct unicode_map *um);
+>  
+> +int utf8_ci_d_hash(const struct dentry *dentry, struct qstr *str);
+> +int utf8_ci_d_compare(const struct dentry *dentry, unsigned int len,
+> +			  const char *str, const struct qstr *name);
+
+
+I don't think fs/unicode is the right place for these very specific
+filesystem functions, just because they happen to use unicode.  It is an
+encoding library, it doesn't care about dentries, nor should know how to
+handle them.  It exposes a simple api to manipulate and convert utf8 strings.
+
+I saw change was after the desire to not have these functions polluting
+the VFS hot path, but that has nothing to do with placing them here.
+
+Would libfs be better?  or a casefolding library in fs/casefold.c?
+
+
+-- 
+Gabriel Krisman Bertazi
