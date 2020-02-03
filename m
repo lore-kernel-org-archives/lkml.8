@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BFAC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F851C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7870E2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35B92051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748517;
-	bh=UteHNnpLt/O9YQ6oHAMfw8GJtA0rGXMaFuZvPNpQoR0=;
+	s=default; t=1580748526;
+	bh=x4ChrnDWc7hN+raoHbdctHV4ADLdsE1mN+51mfav5R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uyh5jIOT0B9Dm2CKD/AkSyg2sKywUC2gPWFJn+QumneQf7zOqhCgtSJWOcR0iIsU2
-	 ADMZ0M7oQ3Q6iWqLfLO5c+XdeNYb1Z03wMIPlY4PNEGrrJZ8NiWRp2iCtZ8A45BE2D
-	 sVH5qxFznfct1Y7HwPO6JBA+DjrRphfMOBZDhG1c=
+	b=L0pih1ud1fhdpNLDD98N7cehfaB71HDSGhDkcALo9/3hNhzQRbyzYlzlmTjottWrQ
+	 ZT/185D6DvKBMDJoB1UUFkkVsPwMHFQAS5cUcaDiMv1pkDX+Vof1KKZSo6q9sy2hUy
+	 0p7Ldcyb7mwjXcJF5YtoLHuq+H6a3KkqmHjhY8ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgBCQ0G (ORCPT
+        id S1729791AbgBCQsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:26:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36946 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:48:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbgBCQ0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:26:03 -0500
+        id S1728725AbgBCQZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:51 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A002080C;
-        Mon,  3 Feb 2020 16:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA902051A;
+        Mon,  3 Feb 2020 16:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747162;
-        bh=UteHNnpLt/O9YQ6oHAMfw8GJtA0rGXMaFuZvPNpQoR0=;
+        s=default; t=1580747150;
+        bh=x4ChrnDWc7hN+raoHbdctHV4ADLdsE1mN+51mfav5R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwW46wH4oj+MabdomE9w58XUEX4YLjKkssxkMRSS6zsDeeKyWzXxd34D16B6XWGhR
-         aSzmkXKRXXLYMEhXq6awDkx52zInMFe3gsmiXfR5LFW3cqPzlgxJqYk4/DR5N4pcBu
-         TTPeRCvy8ufKBS5TFySKLAdReyxI8K+XRGZLMvm8=
+        b=qFLmJa+7z8iEh85t+mjEUz+OMisOKYyz1GKsk9FzJ5iJOjvhw2/nBbR3oqrco5hcx
+         a+T50vhz/SCDQwF5mxnXnT30rWUUueidYEnCZO8V6hDYcqFnCwMkaLvq3H0O8R3kVq
+         0NOSSLaze0NzloqSKzGHB2lp4Yxp9wJLhUAi5sW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com,
-        syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com,
-        syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 36/68] media: gspca: zero usb_buf
-Date:   Mon,  3 Feb 2020 16:19:32 +0000
-Message-Id: <20200203161910.889671568@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 05/68] USB: serial: ir-usb: fix link-speed handling
+Date:   Mon,  3 Feb 2020 16:19:01 +0000
+Message-Id: <20200203161905.609571361@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -62,42 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Johan Hovold <johan@kernel.org>
 
-commit de89d0864f66c2a1b75becfdd6bf3793c07ce870 upstream.
+commit 17a0184ca17e288decdca8b2841531e34d49285f upstream.
 
-Allocate gspca_dev->usb_buf with kzalloc instead of kmalloc to
-ensure it is property zeroed. This fixes various syzbot errors
-about uninitialized data.
+Commit e0d795e4f36c ("usb: irda: cleanup on ir-usb module") added a USB
+IrDA header with common defines, but mistakingly switched to using the
+class-descriptor baud-rate bitmask values for the outbound header.
 
-Syzbot links:
+This broke link-speed handling for rates above 9600 baud, but a device
+would also be able to operate at the default 9600 baud until a
+link-speed request was issued (e.g. using the TCGETS ioctl).
 
-https://syzkaller.appspot.com/bug?extid=32310fc2aea76898d074
-https://syzkaller.appspot.com/bug?extid=99706d6390be1ac542a2
-https://syzkaller.appspot.com/bug?extid=64437af5c781a7f0e08e
-
-Reported-and-tested-by: syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: e0d795e4f36c ("usb: irda: cleanup on ir-usb module")
+Cc: stable <stable@vger.kernel.org>     # 2.6.27
+Cc: Felipe Balbi <balbi@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/gspca.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ir-usb.c |   20 ++++++++++----------
+ include/linux/usb/irda.h    |   13 ++++++++++++-
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -2043,7 +2043,7 @@ int gspca_dev_probe2(struct usb_interfac
- 		pr_err("couldn't kzalloc gspca struct\n");
- 		return -ENOMEM;
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -336,34 +336,34 @@ static void ir_set_termios(struct tty_st
+ 
+ 	switch (baud) {
+ 	case 2400:
+-		ir_baud = USB_IRDA_BR_2400;
++		ir_baud = USB_IRDA_LS_2400;
+ 		break;
+ 	case 9600:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		break;
+ 	case 19200:
+-		ir_baud = USB_IRDA_BR_19200;
++		ir_baud = USB_IRDA_LS_19200;
+ 		break;
+ 	case 38400:
+-		ir_baud = USB_IRDA_BR_38400;
++		ir_baud = USB_IRDA_LS_38400;
+ 		break;
+ 	case 57600:
+-		ir_baud = USB_IRDA_BR_57600;
++		ir_baud = USB_IRDA_LS_57600;
+ 		break;
+ 	case 115200:
+-		ir_baud = USB_IRDA_BR_115200;
++		ir_baud = USB_IRDA_LS_115200;
+ 		break;
+ 	case 576000:
+-		ir_baud = USB_IRDA_BR_576000;
++		ir_baud = USB_IRDA_LS_576000;
+ 		break;
+ 	case 1152000:
+-		ir_baud = USB_IRDA_BR_1152000;
++		ir_baud = USB_IRDA_LS_1152000;
+ 		break;
+ 	case 4000000:
+-		ir_baud = USB_IRDA_BR_4000000;
++		ir_baud = USB_IRDA_LS_4000000;
+ 		break;
+ 	default:
+-		ir_baud = USB_IRDA_BR_9600;
++		ir_baud = USB_IRDA_LS_9600;
+ 		baud = 9600;
  	}
--	gspca_dev->usb_buf = kmalloc(USB_BUF_SZ, GFP_KERNEL);
-+	gspca_dev->usb_buf = kzalloc(USB_BUF_SZ, GFP_KERNEL);
- 	if (!gspca_dev->usb_buf) {
- 		pr_err("out of memory\n");
- 		ret = -ENOMEM;
+ 
+--- a/include/linux/usb/irda.h
++++ b/include/linux/usb/irda.h
+@@ -118,11 +118,22 @@ struct usb_irda_cs_descriptor {
+  * 6 - 115200 bps
+  * 7 - 576000 bps
+  * 8 - 1.152 Mbps
+- * 9 - 5 mbps
++ * 9 - 4 Mbps
+  * 10..15 - Reserved
+  */
+ #define USB_IRDA_STATUS_LINK_SPEED	0x0f
+ 
++#define USB_IRDA_LS_NO_CHANGE		0
++#define USB_IRDA_LS_2400		1
++#define USB_IRDA_LS_9600		2
++#define USB_IRDA_LS_19200		3
++#define USB_IRDA_LS_38400		4
++#define USB_IRDA_LS_57600		5
++#define USB_IRDA_LS_115200		6
++#define USB_IRDA_LS_576000		7
++#define USB_IRDA_LS_1152000		8
++#define USB_IRDA_LS_4000000		9
++
+ /* The following is a 4-bit value used only for
+  * outbound header:
+  *
 
 
