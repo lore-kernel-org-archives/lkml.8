@@ -2,159 +2,118 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31CEC3524E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B807BC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA89720661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Nj93hjhq"
+	by mail.kernel.org (Postfix) with ESMTP id 998E320661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgBCJiF (ORCPT
+        id S1727918AbgBCJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:38:05 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9364 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgBCJiF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:38:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e37e9e50001>; Mon, 03 Feb 2020 01:37:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 01:38:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 01:38:04 -0800
-Received: from [10.25.73.244] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 09:38:00 +0000
-Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200103100736.27627-1-vidyas@nvidia.com>
- <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
- <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
- <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ebd5fe6b-0713-a4bf-8eff-600c088d2667@nvidia.com>
-Date:   Mon, 3 Feb 2020 15:07:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 04:38:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54802 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbgBCJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:38:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id F29E6AC37;
+        Mon,  3 Feb 2020 09:38:24 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 941D61E0D5D; Mon,  3 Feb 2020 10:38:23 +0100 (CET)
+Date:   Mon, 3 Feb 2020 10:38:23 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Liu Song <fishland@aliyun.com>
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, liu.song11@zte.com.cn
+Subject: Re: [RFC PATCH] jbd2: remove unused return value of
+ jbd2_journal_cancel_revoke
+Message-ID: <20200203093823.GC12938@quack2.suse.cz>
+References: <20200130133603.7103-1-fishland@aliyun.com>
 MIME-Version: 1.0
-In-Reply-To: <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580722661; bh=rMCJ2AUZQbRi9iswPSyGqc1LNxDxGbkp9R6e0a3YQiw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Nj93hjhqUG9qxwhUp9zj8rDHbC8d/ESjEbYiB6by7JT+1i0/alc/tmc9LCpKHlq/y
-         G8tM+4DNLygeljLsUvucqb+S45L0+U7VfXhhikcuoTKYhxrBNTtXzzdHG4fw+sN4zY
-         kJWKDxn8alOFYL/uqzfd86NU0MmCNhUOfd3YaDQGWEbXNslIAECyFk/2z3mE9KNza1
-         mnW91B/oHH4vqNDmI/k5sJe+EGmqiCsjCDKNBtKGXrgOzSvDbfegPPhib8ANy9BUUk
-         G5iEkxLCo/hZPgpiNZw09j5iLxCu/Bp7BYeOdcURsjyqP9j9sjoSSxjTbLyo09oT+3
-         IGHh6OHr/UiMA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130133603.7103-1-fishland@aliyun.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 30-01-20 21:36:03, Liu Song wrote:
+> From: Liu Song <liu.song11@zte.com.cn>
+> 
+> There is no place to use the return value of "jbd2_journal_cancel_revoke",
+> so remove it.
+> 
+> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
 
+OK, makes sense. Thanks for the cleanup. You can add:
 
-On 1/23/2020 3:25 PM, Kishon Vijay Abraham I wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> Hi Vidya Sagar,
->=20
-> On 23/01/20 2:54 pm, Vidya Sagar wrote:
->> Hi Kishon,
->> Apologies for pinging again. Could you please review this series?
->>
->> Thanks,
->> Vidya Sagar
->>
->> On 1/11/2020 5:18 PM, Vidya Sagar wrote:
->>> Hi Kishon,
->>> Could you please review this series?
->>>
->>> Also, this series depends on the following change of yours
->>> http://patchwork.ozlabs.org/patch/1109884/
->>> Whats the plan to get this merged?
->=20
-> I've posted the endpoint improvements as a separate series
-> http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
->=20
-> I'd prefer this series gets tested by others. I'm also planning to test
-> this series. Sorry for the delay. I'll test review and test this series
-> early next week.
-Hi Kishon,
-Just wanted to know if you got time to test review my patches.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thanks,
-Vidya Sagar
+								Honza
 
->=20
-> Thanks
-> Kishon
->=20
->>>
->>> Thanks,
->>> Vidya Sagar
->>>
->>> On 1/3/20 3:37 PM, Vidya Sagar wrote:
->>>> EPC/DesignWare core endpoint subsystems assume that the core
->>>> registers are
->>>> available always for SW to initialize. But, that may not be the case
->>>> always.
->>>> For example, Tegra194 hardware has the core running on a clock that
->>>> is derived
->>>> from reference clock that is coming into the endpoint system from host=
-.
->>>> Hence core is made available asynchronously based on when host system
->>>> is going
->>>> for enumeration of devices. To accommodate this kind of hardwares,
->>>> support is
->>>> required to defer the core initialization until the respective
->>>> platform driver
->>>> informs the EPC/DWC endpoint sub-systems that the core is indeed
->>>> available for
->>>> initiaization. This patch series is attempting to add precisely that.
->>>> This series is based on Kishon's patch that adds notification mechanis=
-m
->>>> support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
->>>>
->>>> Vidya Sagar (5):
->>>>     PCI: endpoint: Add core init notifying feature
->>>>     PCI: dwc: Refactor core initialization code for EP mode
->>>>     PCI: endpoint: Add notification for core init completion
->>>>     PCI: dwc: Add API to notify core initialization completion
->>>>     PCI: pci-epf-test: Add support to defer core initialization
->>>>
->>>>    .../pci/controller/dwc/pcie-designware-ep.c   |=C2=A0 79 +++++++---=
---
->>>>    drivers/pci/controller/dwc/pcie-designware.h  |=C2=A0 11 ++
->>>>    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++---=
----
->>>>    drivers/pci/endpoint/pci-epc-core.c           |=C2=A0 19 ++-
->>>>    include/linux/pci-epc.h                       |=C2=A0=C2=A0 2 +
->>>>    include/linux/pci-epf.h                       |=C2=A0=C2=A0 5 +
->>>>    6 files changed, 164 insertions(+), 70 deletions(-)
->>>>
+> ---
+>  fs/jbd2/revoke.c     | 5 +----
+>  include/linux/jbd2.h | 2 +-
+>  2 files changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
+> index fa608788b93d..f4fe7a171691 100644
+> --- a/fs/jbd2/revoke.c
+> +++ b/fs/jbd2/revoke.c
+> @@ -420,12 +420,11 @@ int jbd2_journal_revoke(handle_t *handle, unsigned long long blocknr,
+>   * do not trust the Revoked bit on buffers unless RevokeValid is also
+>   * set.
+>   */
+> -int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
+> +void jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
+>  {
+>  	struct jbd2_revoke_record_s *record;
+>  	journal_t *journal = handle->h_transaction->t_journal;
+>  	int need_cancel;
+> -	int did_revoke = 0;	/* akpm: debug */
+>  	struct buffer_head *bh = jh2bh(jh);
+>  
+>  	jbd_debug(4, "journal_head %p, cancelling revoke\n", jh);
+> @@ -450,7 +449,6 @@ int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
+>  			list_del(&record->hash);
+>  			spin_unlock(&journal->j_revoke_lock);
+>  			kmem_cache_free(jbd2_revoke_record_cache, record);
+> -			did_revoke = 1;
+>  		}
+>  	}
+>  
+> @@ -473,7 +471,6 @@ int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
+>  			__brelse(bh2);
+>  		}
+>  	}
+> -	return did_revoke;
+>  }
+>  
+>  /*
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index ce44b687d02b..c27716740917 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1470,7 +1470,7 @@ extern int __init jbd2_journal_init_revoke_table_cache(void);
+>  
+>  extern void	   jbd2_journal_destroy_revoke(journal_t *);
+>  extern int	   jbd2_journal_revoke (handle_t *, unsigned long long, struct buffer_head *);
+> -extern int	   jbd2_journal_cancel_revoke(handle_t *, struct journal_head *);
+> +extern void	   jbd2_journal_cancel_revoke(handle_t *, struct journal_head *);
+>  extern void	   jbd2_journal_write_revoke_records(transaction_t *transaction,
+>  						     struct list_head *log_bufs);
+>  
+> -- 
+> 2.20.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
