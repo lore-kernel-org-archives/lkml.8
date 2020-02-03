@@ -2,169 +2,150 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10638C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F4C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D160920661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B137C20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 02:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ujZpTeGU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJdSikLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgBCCIV (ORCPT
+        id S1727218AbgBCCOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 21:08:21 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:56013 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgBCCIS (ORCPT
+        Sun, 2 Feb 2020 21:14:33 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36806 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgBCCOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 21:08:18 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so5588161pjz.5
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 18:08:17 -0800 (PST)
+        Sun, 2 Feb 2020 21:14:33 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a6so5214001plm.3;
+        Sun, 02 Feb 2020 18:14:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GPbiPKqsfybk4TJ/Ddjt4sC7QShATZuIq5L3KhpJZK4=;
-        b=ujZpTeGUmpJQDH+3gYR30Gjm1s5dT4duHB5zkpWarUSFlZ5yCodTYDifAZS+VjnQjD
-         /rgkqGFGA79XzDqJqoQiVWoXgbXiVyLxlhJss+z6eW24E52kZ4igeHY4BcSBIKgF8SeJ
-         hmO+dPwV/MxbFMGyAZivKIQXDAkpy2dNZcAZHJiwgSxP1x0Tq3vpTcRhsqfjgHzPzCY7
-         FamBGbRRb4GZoB1IXaQ6o8qIaIqCCqIFpD8HHUAJfF8oUzDx3qAxxkqWtBcnDYMAq0oC
-         zdWrO5eYSVRAYuHHgaa3LplEwuRBYVjb3GXf0ClkalCq3ZfHyIygCj0YV0d1tNjuFTQt
-         eYBg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MlSvnr7alRWcchcXEUNjydXzi0TvlR+UkqP05vumdnk=;
+        b=uJdSikLpqA68ZLjCn6j2afQv/5XuLG5V9o7dalAZskZBLiXM+eUCHaP0+R2rNQSErm
+         eZg1fjoW8Vok1Wy2HXh+KRq+f+SNb1TmGHOn1ghvDELdNWQYNtBPxm82LffZSOr6mLcE
+         67DE6Mnck8/dvVQjVFBqlrHcFBN6nUE/zet9T58SFiwhDEAZ2tmy58eqaqeTEgHueuCJ
+         4zXo4XooSE+09e0K6bx7/MiYKFouz0L50ZSN1Z1DPdvAaKMdXKlyNMDpE0ED7Wmiy2al
+         2VJZBuIabXzM3ThhG0iGPYsxTAEnD2CEhOawy8QbhfDHEWimZThnsH/fRox0Q1TbAuIl
+         8wdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GPbiPKqsfybk4TJ/Ddjt4sC7QShATZuIq5L3KhpJZK4=;
-        b=ZNVHNRMbj78dSHpSw27IP2RAlGOZrHZ8OGd1gGycQgEGJ9+eUvJnEAm0qcG0NtV+8v
-         vw0gn1sCOHGnAfZIqjBmlKB1iqapyzbvk6KtSkPYZJ2e7/GivW3WzP92mJeA0uxES+Cs
-         Ty4lD5p8WM0ktJzH6ob3fIF40PfiP/R/OUiX14bYO7K/r9FcL/Amw9KOALce/Zb8O891
-         s+iMU2bXVfhdmegO6r8INpJQTlY5d+cBk66WybIkNZ+cQZJ0+Ir6lfiUL+w0T19Wbs2k
-         ZKATp3yRyT2AkTuBL836EK+Sgf4gpNku3tWfTd9UEILXThr5YNUnSLd/TNq7wSaTduhB
-         gfjg==
-X-Gm-Message-State: APjAAAXIOhsgy0Dqjc89F68i2svoTHe63i88IovvyIQql2NQEzuwazce
-        /u4FiTUTtJ3RwHEn/ErDrpx7rw==
-X-Google-Smtp-Source: APXvYqxc3AdfyGgoc/2ApkJH3zo4OwtIcOVIs/xUH6ZnND0aXXMcJrJ4Uu5OtqimlUBe4cofQ4IkhQ==
-X-Received: by 2002:a17:90a:f317:: with SMTP id ca23mr16157184pjb.20.1580695697054;
-        Sun, 02 Feb 2020 18:08:17 -0800 (PST)
-Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id z29sm17521201pgc.21.2020.02.02.18.08.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MlSvnr7alRWcchcXEUNjydXzi0TvlR+UkqP05vumdnk=;
+        b=IkAerlVOe3Q/b7ns//n9CcQ0Zw5Jk6Voz3AqDOlqHXYKNDpJJJTcTLf9qCPGb0knxB
+         x3E7SFkctZ2M9Hf6nEuxLyz08ZVL5KY0K6YMshUJYI5GSiyNzyfp4sgOPwPkET3Ye961
+         kzj90VLQt3cA1y9phss43CXvWME0FM5myt/ZF7JSil/Ak8IU4xPvW39MXnNKiZE/OF4j
+         r4Lyv6Er7Marge8wawmR+8nb0U1CyyinW8Z7V2cuK9iKgiWKZSoCCMP4ScyronOPCbqJ
+         OH5kC22Ks7BOtPrWEqkdy0xotJKP2Z6LK0QSH3ehqGeftz1qcTOwW1CUDXxLXTN4unfU
+         7hmQ==
+X-Gm-Message-State: APjAAAVoj2Ue7hfViAex+j5kRfI2ned5je4Tq6mcTOfL1SORl2u+RiNE
+        ZhIlyNKCL/FFxM/9kSgO9Hg=
+X-Google-Smtp-Source: APXvYqyRd4ugExzcI6oAdObJ297nZlP4Jw7YnILUQHEnmxCoxJSsPmezCUQ38MPkfbE9BGg5TtZVyw==
+X-Received: by 2002:a17:90a:d205:: with SMTP id o5mr26932323pju.46.1580696072872;
+        Sun, 02 Feb 2020 18:14:32 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id g21sm18831802pfb.126.2020.02.02.18.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 18:08:16 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 5/5] perf cs-etm: Synchronize instruction sample with the thread stack
-Date:   Mon,  3 Feb 2020 10:07:16 +0800
-Message-Id: <20200203020716.31832-6-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200203020716.31832-1-leo.yan@linaro.org>
-References: <20200203020716.31832-1-leo.yan@linaro.org>
+        Sun, 02 Feb 2020 18:14:32 -0800 (PST)
+Date:   Sun, 2 Feb 2020 18:14:29 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     christopher.s.hall@intel.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
+        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
+        sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 2/5] drivers/ptp: Add PEROUT2 ioctl
+ frequency adjustment interface
+Message-ID: <20200203021429.GB3516@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20191211214852.26317-3-christopher.s.hall@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211214852.26317-3-christopher.s.hall@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The synthesized flow use 'tidq->packet' for instruction samples; on the
-other hand, 'tidp->prev_packet' is used to generate the thread stack and
-the branch samples, this results in the instruction samples using one
-packet ahead than thread stack and branch samples ('tidp->prev_packet'
-vs 'tidq->packet').
+On Wed, Dec 11, 2019 at 01:48:49PM -0800, christopher.s.hall@intel.com wrote:
+> diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+> index 93cc4f1d444a..8223f6f656dd 100644
+> --- a/include/linux/ptp_clock_kernel.h
+> +++ b/include/linux/ptp_clock_kernel.h
+> @@ -134,6 +134,8 @@ struct ptp_clock_info {
+>  			  struct ptp_system_timestamp *sts);
+>  	int (*getcrosststamp)(struct ptp_clock_info *ptp,
+>  			      struct system_device_crosststamp *cts);
+> +	int (*counttstamp)(struct ptp_clock_info *ptp,
+> +			   struct ptp_event_count_tstamp *count);
 
-This leads to an instruction's callchain error as shows in below
-example:
+KernelDoc missing.
 
-  main  1579        100      instructions:
-  	ffff000010214854 perf_event_update_userpage+0x4c ([kernel.kallsyms])
-  	ffff000010214850 perf_event_update_userpage+0x48 ([kernel.kallsyms])
-  	ffff000010219360 perf_swevent_add+0x88 ([kernel.kallsyms])
-  	ffff0000102135f4 event_sched_in.isra.57+0xbc ([kernel.kallsyms])
-  	ffff0000102137a0 group_sched_in+0x60 ([kernel.kallsyms])
-  	ffff000010213b84 flexible_sched_in+0xfc ([kernel.kallsyms])
-  	ffff00001020c0b4 visit_groups_merge+0x12c ([kernel.kallsyms])
+As tglx said, it is hard to guess what this will be used for.  I would
+appreciate a fuller explanation of the new callback in the commit log
+message.
 
-In the callchain log, for the two continuous lines the up line contains
-one child function info and the followed line contains the caller
-function info, and so forth.  So the first two lines are:
+In general, please introduce a specific new API with an example of how
+it is used.  In this series you have three new APIs,
 
-  perf_event_update_userpage+0x4c  => the sampled instruction
-  perf_event_update_userpage+0x48  => the parent function's calling
+   [Intel PMC TGPIO Driver 2/5] drivers/ptp: Add PEROUT2 ioctl frequency adjustment interface
+   [Intel PMC TGPIO Driver 3/5] drivers/ptp: Add user-space input polling interface
+   [Intel PMC TGPIO Driver 4/5] x86/tsc: Add TSC support functions to support ART driven Time-Aware GPIO
 
-The child function and parent function both are the same function
-perf_event_update_userpage(), but this isn't a recursive function, thus
-the sequence for perf_event_update_userpage() calling itself shouldn't
-never happen.  This callchain error is caused by the instruction sample
-using an ahead packet than the thread stack, the thread stack is deferred
-to process the new packet and misses to pop stack if it is just a return
-packet.
+and then a largish driver using them all.
 
-To fix this issue, we can simply change to use 'tidq->prev_packet' to
-generate the instruction samples, this allows the thread stack to push
-and pop synchronously with instruction sample.  Finally, the callchain
-can be displayed correctly as below:
+   [Intel PMC TGPIO Driver 5/5] drivers/ptp: Add PMC Time-Aware GPIO Driver
 
-  main  1579        100      instructions:
-	ffff000010214854 perf_event_update_userpage+0x4c ([kernel.kallsyms])
-	ffff000010219360 perf_swevent_add+0x88 ([kernel.kallsyms])
-	ffff0000102135f4 event_sched_in.isra.57+0xbc ([kernel.kallsyms])
-	ffff0000102137a0 group_sched_in+0x60 ([kernel.kallsyms])
-	ffff000010213b84 flexible_sched_in+0xfc ([kernel.kallsyms])
-	ffff00001020c0b4 visit_groups_merge+0x12c ([kernel.kallsyms])
+May I suggest an ordering more like:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/cs-etm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+[1/5] x86/tsc: Add TSC support functions to support ART...	(with forward explanation of the use case)
+[2/5] drivers/ptp: Add PMC Time-Aware GPIO Driver		(without new bits)
+[3/5] drivers/ptp: Add Enhanced handling of reserve fields	(okay as is)
+[4/5] drivers/ptp: Add PEROUT2 ioctl frequency adjustment interface
+[5/5] implement ^^^ in the driver
+[6/5] drivers/ptp: Add user-space input polling interface
+[7/5] implement ^^^ in the driver
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 8f805657658d..410e40ce19f2 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1414,7 +1414,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 	struct cs_etm_packet *tmp;
- 	int ret;
- 	u8 trace_chan_id = tidq->trace_chan_id;
--	u64 instrs_executed = tidq->packet->instr_count;
-+	u64 instrs_executed = tidq->prev_packet->instr_count;
- 
- 	tidq->period_instructions += instrs_executed;
- 
-@@ -1505,7 +1505,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			 * instruction)
- 			 */
- 			addr = cs_etm__instr_addr(etmq, trace_chan_id,
--						  tidq->packet, offset - 1);
-+						  tidq->prev_packet,
-+						  offset - 1);
- 			ret = cs_etm__synth_instruction_sample(
- 				etmq, tidq, addr,
- 				etm->instructions_sample_period);
-@@ -1525,7 +1526,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			 * instruction)
- 			 */
- 			addr = cs_etm__instr_addr(etmq, trace_chan_id,
--						  tidq->packet, offset - 1);
-+						  tidq->prev_packet,
-+						  offset - 1);
- 			ret = cs_etm__synth_instruction_sample(
- 				etmq, tidq, addr,
- 				etm->instructions_sample_period);
--- 
-2.17.1
+> +/*
+> + * Bits of the ptp_pin_desc.flags field:
+> + */
+> +#define PTP_PINDESC_EVTCNTVALID	(1<<0)
 
+Is this somehow connected to ...
+
+>  #define PTP_PEROUT_ONE_SHOT (1<<0)
+> +#define PTP_PEROUT_FREQ_ADJ (1<<1)
+
+... this?  If not, then they each deserve their own patch.
+
+> @@ -164,10 +179,14 @@ struct ptp_pin_desc {
+>  	 * PTP_EXTTS_REQUEST and PTP_PEROUT_REQUEST ioctls.
+>  	 */
+>  	unsigned int chan;
+> +	/*
+> +	 * Per pin capability flag
+> +	 */
+> +	unsigned int flags;
+
+Please use 'capabilities' instead of 'flags'.
+
+> +#define PTP_EVENT_COUNT_TSTAMP2 \
+> +	_IOWR(PTP_CLK_MAGIC, 19, struct ptp_event_count_tstamp)
+
+What is the connection between this, PTP_PINDESC_EVTCNTVALID, and
+PTP_PEROUT_FREQ?
+
+Thanks,
+Richard
