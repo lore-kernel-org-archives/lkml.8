@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22656C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA8C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E313321775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F062051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747395;
-	bh=QbtyRYuDdnoF3CdA9Du4Q2Xg3mhXCyDP5kEE0dKS9qs=;
+	s=default; t=1580747398;
+	bh=ribteiezUfZyuKykqN1aymityXPgyL1l+MDbwRkuauM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwPQY4sb0c4Us+zxJtBwsgd4RBIq54YnTmi1uJtTubAlSUnKlgudfwqGKjA9pMbum
-	 fqo42ne1PPS6R2oCY1XF5jsveMDIdew2rP4BFQCofGlHlpYSPFvhsy9ID7Vmot5Lbw
-	 YPvbUX37O03MpRDQncicEvX7POaDmq/3j89b41TE=
+	b=qqfqwxbz1Mj8jRAjRvs6wf+eTXJ2i18Zcf8rPlc7UfHVVoxHI5QEfzRfpyyPC2qyH
+	 CI/u+9h5/KvqUOiprzejIZo/cmIGrx7aR9Y40xb7XHlKSl7IcHunWrDeY1Bvqh8w9c
+	 z+c64dXGgECovtC99n321ier3EHVuNVpfIhNyKNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgBCQ3y (ORCPT
+        id S1729890AbgBCQ35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgBCQ3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:48 -0500
+        id S1729872AbgBCQ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:52 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC5020838;
-        Mon,  3 Feb 2020 16:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE72B20838;
+        Mon,  3 Feb 2020 16:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747387;
-        bh=QbtyRYuDdnoF3CdA9Du4Q2Xg3mhXCyDP5kEE0dKS9qs=;
+        s=default; t=1580747392;
+        bh=ribteiezUfZyuKykqN1aymityXPgyL1l+MDbwRkuauM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDNQ06yrfV8rIVpgRR3nv33uN+kkZp8+fO1Hwlrme7ZjS8jqIDgei86CWgrlSuJkr
-         0i/+ChzUNan+3iVerk+JBmlepOvuBSXE1ZycAMdzJ5incFWnFfxZdctgPDrXuG3C1Y
-         /bkOQ5cmuJDtGwJCksgfp+xdFpU3oto9IH8+xexo=
+        b=LpjwZujf+Ays431B6L/xXPPs6jxj+BiyFcu+tHWjuIEpHhj0NZs/nNVE0EYLd+fh/
+         KslN6k4hOrv9fjozkAYvUVqRGD9pQWFxGrrS9DVqbrQ77ztNNdagUYj0glb4crI1xh
+         zTftpD9miNH0x1//7SLfXRNDInZBGJCBQDywgxiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 60/89] igb: Fix SGMII SFP module discovery for 100FX/LX.
-Date:   Mon,  3 Feb 2020 16:19:45 +0000
-Message-Id: <20200203161924.525156752@linuxfoundation.org>
+Subject: [PATCH 4.14 62/89] qmi_wwan: Add support for Quectel RM500Q
+Date:   Mon,  3 Feb 2020 16:19:47 +0000
+Message-Id: <20200203161924.708944557@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,71 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-[ Upstream commit 5365ec1aeff5b9f2962a9c9b31d63f9dad7e0e2d ]
+[ Upstream commit a9ff44f0e61d074f29770413fef6a5452be7b83e ]
 
-Changing the link mode should also be done for 100BaseFX SGMII modules,
-otherwise they just don't work when the default link mode in CTRL_EXT
-coming from the EEPROM is SERDES.
+RM500Q is a 5G module from Quectel, supporting both standalone and
+non-standalone modes. The normal Quectel quirks apply (DTR and dynamic
+interface numbers).
 
-Additionally 100Base-LX SGMII SFP modules are also supported now, which
-was not the case before.
-
-Tested with an i210 using Flexoptix S.1303.2M.G 100FX and
-S.1303.10.G 100LX SGMII SFP modules.
-
-Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/e1000_82575.c | 8 ++------
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 2 +-
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
-index c37cc8bccf477..158c277ec3538 100644
---- a/drivers/net/ethernet/intel/igb/e1000_82575.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
-@@ -562,7 +562,7 @@ static s32 igb_set_sfp_media_type_82575(struct e1000_hw *hw)
- 		dev_spec->module_plugged = true;
- 		if (eth_flags->e1000_base_lx || eth_flags->e1000_base_sx) {
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
--		} else if (eth_flags->e100_base_fx) {
-+		} else if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			dev_spec->sgmii_active = true;
- 			hw->phy.media_type = e1000_media_type_internal_serdes;
- 		} else if (eth_flags->e1000_base_t) {
-@@ -689,14 +689,10 @@ static s32 igb_get_invariants_82575(struct e1000_hw *hw)
- 			break;
- 		}
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 4a984b76a60ec..db70d4c5778a6 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -999,6 +999,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
+ 	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
++	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
  
--		/* do not change link mode for 100BaseFX */
--		if (dev_spec->eth_flags.e100_base_fx)
--			break;
--
- 		/* change current link mode setting */
- 		ctrl_ext &= ~E1000_CTRL_EXT_LINK_MODE_MASK;
- 
--		if (hw->phy.media_type == e1000_media_type_copper)
-+		if (dev_spec->sgmii_active)
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_SGMII;
- 		else
- 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES;
-diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-index d06a8db514d4a..82028ce355fb1 100644
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -201,7 +201,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
- 				advertising &= ~ADVERTISED_1000baseKX_Full;
- 			}
- 		}
--		if (eth_flags->e100_base_fx) {
-+		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
- 			supported |= SUPPORTED_100baseT_Full;
- 			advertising |= ADVERTISED_100baseT_Full;
- 		}
+ 	/* 3. Combined interface devices matching on interface number */
+ 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
 -- 
 2.20.1
 
