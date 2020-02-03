@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ED9C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72154C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DE32086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E312051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747246;
-	bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+	s=default; t=1580747250;
+	bh=MTIi2xvUFrgETjS3sxrsfHrN4tB0xrG35zGaFnLhi2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9XvafdyqncOWJD2FeXWw5Y1KaxU4Tyx0G5mPptMcbnEAjf1f8DAgjvp8JZijeg/i
-	 VT6yj494NZwH52Sm0r+loSheNhPK5VyLA5B9ODrvmiFE5Io8f4ETRyUUB2cmp1uunO
-	 qoCRVbTUBOhusy8vcqAUyeGZgEagSqkIFqTKAE+Q=
+	b=F+DOtK61xah1pNTShM+vapUqdl0in8qU+Nc5aghXSNtqEndDDLpXUVfX8PI0FfdyB
+	 AuTsK9O47yFHZzyO47QHQ8/6yREXzD+IRXiZ9QS02ayZS7gTLpX7lX9o7Cjykcv9tO
+	 4OGpIzpVgqnt8DJo6UTcjeMmnic9cIaDHE/u0BuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgBCQ1Z (ORCPT
+        id S1729416AbgBCQ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbgBCQ1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:20 -0500
+        id S1729397AbgBCQ10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:26 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7EB521741;
-        Mon,  3 Feb 2020 16:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7DA2051A;
+        Mon,  3 Feb 2020 16:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747239;
-        bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
+        s=default; t=1580747246;
+        bh=MTIi2xvUFrgETjS3sxrsfHrN4tB0xrG35zGaFnLhi2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNbi711BonNg2rF9xgQtNrMDaJslJRztE81FEhFZhvOFqCQK89PrfxFbBgXz0/MGN
-         O6Jsc+e2LimHRKFSxuMnSizC0q+9uK8mFS7pbz0tazk8o3VSqUQvgRV0mAd/gRr+1t
-         sixprfxm3jeYgv+tjYev/MmGfNVG88FH4qhZ5pFw=
+        b=o2NZOTQ+7G5u+Uf1ioN0htvnE0OgUuIsVGNhYzWvKQuACdkjOTQbkPmliBFC2gih2
+         Zz6hLiGtw1qERKhw19lMS2mmMnraaYrBiiJpIodgyzhs2D1VpDfJN2UMGcSkGqVU+6
+         9ek5BijlneY0/PlGfR1R9ihbV+CUtiSvZkSPArRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 49/68] mac80211: Fix TKIP replay protection immediately after key setup
-Date:   Mon,  3 Feb 2020 16:19:45 +0000
-Message-Id: <20200203161913.035130758@linuxfoundation.org>
+Subject: [PATCH 4.9 52/68] vti[6]: fix packet tx through bpf_redirect()
+Date:   Mon,  3 Feb 2020 16:19:48 +0000
+Message-Id: <20200203161913.604139588@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,62 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit 6f601265215a421f425ba3a4850a35861d024643 ]
+[ Upstream commit 95224166a9032ff5d08fca633d37113078ce7d01 ]
 
-TKIP replay protection was skipped for the very first frame received
-after a new key is configured. While this is potentially needed to avoid
-dropping a frame in some cases, this does leave a window for replay
-attacks with group-addressed frames at the station side. Any earlier
-frame sent by the AP using the same key would be accepted as a valid
-frame and the internal RSC would then be updated to the TSC from that
-frame. This would allow multiple previously transmitted group-addressed
-frames to be replayed until the next valid new group-addressed frame
-from the AP is received by the station.
+With an ebpf program that redirects packets through a vti[6] interface,
+the packets are dropped because no dst is attached.
 
-Fix this by limiting the no-replay-protection exception to apply only
-for the case where TSC=0, i.e., when this is for the very first frame
-protected using the new key, and the local RSC had not been set to a
-higher value when configuring the key (which may happen with GTK).
+This could also be reproduced with an AF_PACKET socket, with the following
+python script (vti1 is an ip_vti interface):
 
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Link: https://lore.kernel.org/r/20200107153545.10934-1-j@w1.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+ import socket
+ send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
+ # scapy
+ # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
+ # raw(p)
+ req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
+ send_s.sendto(req, ('vti1', 0x800, 0, 0))
+
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tkip.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/ipv4/ip_vti.c  | 13 +++++++++++--
+ net/ipv6/ip6_vti.c | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/tkip.c b/net/mac80211/tkip.c
-index b3622823bad23..ebd66e8f46b3f 100644
---- a/net/mac80211/tkip.c
-+++ b/net/mac80211/tkip.c
-@@ -266,9 +266,21 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
- 	if ((keyid >> 6) != key->conf.keyidx)
- 		return TKIP_DECRYPT_INVALID_KEYIDX;
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 4e39c935e057e..ec417156f388e 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -208,8 +208,17 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	int mtu;
  
--	if (rx_ctx->ctx.state != TKIP_STATE_NOT_INIT &&
--	    (iv32 < rx_ctx->iv32 ||
--	     (iv32 == rx_ctx->iv32 && iv16 <= rx_ctx->iv16)))
-+	/* Reject replays if the received TSC is smaller than or equal to the
-+	 * last received value in a valid message, but with an exception for
-+	 * the case where a new key has been set and no valid frame using that
-+	 * key has yet received and the local RSC was initialized to 0. This
-+	 * exception allows the very first frame sent by the transmitter to be
-+	 * accepted even if that transmitter were to use TSC 0 (IEEE 802.11
-+	 * described TSC to be initialized to 1 whenever a new key is taken into
-+	 * use).
-+	 */
-+	if (iv32 < rx_ctx->iv32 ||
-+	    (iv32 == rx_ctx->iv32 &&
-+	     (iv16 < rx_ctx->iv16 ||
-+	      (iv16 == rx_ctx->iv16 &&
-+	       (rx_ctx->iv32 || rx_ctx->iv16 ||
-+		rx_ctx->ctx.state != TKIP_STATE_NOT_INIT)))))
- 		return TKIP_DECRYPT_REPLAY;
+ 	if (!dst) {
+-		dev->stats.tx_carrier_errors++;
+-		goto tx_error_icmp;
++		struct rtable *rt;
++
++		fl->u.ip4.flowi4_oif = dev->ifindex;
++		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++		if (IS_ERR(rt)) {
++			dev->stats.tx_carrier_errors++;
++			goto tx_error_icmp;
++		}
++		dst = &rt->dst;
++		skb_dst_set(skb, dst);
+ 	}
  
- 	if (only_iv) {
+ 	dst_hold(dst);
+diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
+index c2b2ee71fc6c3..a266fac084261 100644
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -453,8 +453,17 @@ vti6_xmit(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
+ 	int err = -1;
+ 	int mtu;
+ 
+-	if (!dst)
+-		goto tx_err_link_failure;
++	if (!dst) {
++		fl->u.ip6.flowi6_oif = dev->ifindex;
++		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++		if (dst->error) {
++			dst_release(dst);
++			dst = NULL;
++			goto tx_err_link_failure;
++		}
++		skb_dst_set(skb, dst);
++	}
+ 
+ 	dst_hold(dst);
+ 	dst = xfrm_lookup(t->net, dst, fl, NULL, 0);
 -- 
 2.20.1
 
