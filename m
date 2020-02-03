@@ -2,69 +2,78 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23E2C3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2B1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2AE207E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580703448;
-	bh=dlH3YhV7Mxod9gXPqKoIeydxSfO/A5SpT+3H7C25Mp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x8Q3cNQHqD90UkV+L56Y00+SqS07S8bLGB7DtiZL7P72LPdozqqZq2mXFQxR1FzDJ
-	 ECE8sbb58/JIB3yZSlEH6M16xN0Ri8Nrzj8VLLK3loM7i802amNcO5HrUF+TvzXi3Q
-	 XYm7pLSlwWoTW5yZ9IKzNGYhMv4gV7XLKs2HdFCg=
+	by mail.kernel.org (Postfix) with ESMTP id 6FF952073C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 04:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBCER2 (ORCPT
+        id S1727367AbgBCES7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 23:17:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbgBCER1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 23:17:27 -0500
-Received: from localhost (unknown [223.226.103.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3741D2073C;
-        Mon,  3 Feb 2020 04:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580703447;
-        bh=dlH3YhV7Mxod9gXPqKoIeydxSfO/A5SpT+3H7C25Mp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t7jMazlmlROMcDDHvvLuUUGJinqdIG7iE8I6OZYGCP7Ty5TQlJve45L+KUIvoEsyY
-         e9FQYVRmMl2j8Aq4+PCX6LPqZF7SOossk9wl12L3AK1rjx6Fs3cBzrZDgxFXAEuEn/
-         rVJ8SCk1Q3EZDYTDwqedM80wDpWZgFW69TURcSNg=
-Date:   Mon, 3 Feb 2020 09:47:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Dave Jiang <dave.jiang@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: fix boolconv.cocci warnings
-Message-ID: <20200203041720.GK2841@vkoul-mobl>
-References: <alpine.DEB.2.21.2001301543150.7476@hadrien>
+        Sun, 2 Feb 2020 23:18:59 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10142 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727141AbgBCES7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 23:18:59 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 67F0A88662C809797256;
+        Mon,  3 Feb 2020 12:18:42 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 3 Feb 2020 12:18:34 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <maz@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH RESEND] irqchip/gic-v3-its: Use the its_invall_cmd descriptor when building INVALL
+Date:   Mon, 3 Feb 2020 12:18:21 +0800
+Message-ID: <20200203041821.1862-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001301543150.7476@hadrien>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-01-20, 15:44, Julia Lawall wrote:
-> From: kbuild test robot <lkp@intel.com>
-> 
-> Remove unneeded conversion to bool
-> 
-> Generated by: scripts/coccinelle/misc/boolconv.cocci
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-Applied, thanks
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
 
+This patch has been originally posted at:
+https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
+but somehow has been missed for 5.5.  So repost it.
+
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index f71758632f8d..e5a25d97f8db 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -661,7 +661,7 @@ static struct its_collection *its_build_invall_cmd(struct its_node *its,
+ 						   struct its_cmd_desc *desc)
+ {
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+ 
+ 	its_fixup_cmd(cmd);
+ 
 -- 
-~Vinod
+2.19.1
+
+
