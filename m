@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24314C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD94EC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB98C20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996592080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747407;
-	bh=WLHXPwq0EdaMgI+zF0ACG1Mj7qwQtreqZgVlFTlDgD0=;
+	s=default; t=1580747410;
+	bh=kn99cz0GjAnKndxodtkxjSTxtT0/UlgUMolk8tUwlSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EETIKDrfqiiIkcCFW9h3hEvh6f2hQuTUxGPGhIoWnbxHDXVaMoGsLFj5MoWka6fpU
-	 oFZpjODg1MUABIGtr6V02VMVT73X8kcn/AVSId0HC3BPnmVFL1QWqD9klVvH3kYWnr
-	 FI7jfQxaymy5I55mY3znrwJGhSKEL+upKEXu0zr8=
+	b=fWeEkmUvmyhiAMa7+/gL/pXJY92eStLvUJyy7OJU2TvszNgJubq2Za606Rn7+zkOn
+	 jZRsKLvjAL1XFbrOqRPersfLBOC9olYb6RwtNQed37EzD3KIQsMISWaYp2gPfd7UfZ
+	 NHeqzsehWO9tCDMVAMAGZ2AFgGfQ6uNJqesQXLmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgBCQaG (ORCPT
+        id S1729930AbgBCQaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729883AbgBCQaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:02 -0500
+        id S1729919AbgBCQaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:07 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F832051A;
-        Mon,  3 Feb 2020 16:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27FB82051A;
+        Mon,  3 Feb 2020 16:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747401;
-        bh=WLHXPwq0EdaMgI+zF0ACG1Mj7qwQtreqZgVlFTlDgD0=;
+        s=default; t=1580747406;
+        bh=kn99cz0GjAnKndxodtkxjSTxtT0/UlgUMolk8tUwlSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kz3/+I3dheYeKN0DKxXp6XrCGO6Ajn0pQVIRzReVbw+UN4tD4xILIadYAa+d74Xby
-         OQbUcSByDZ2UGG5kEuUfT4AqynH8Poa4vqdEC/SXr2ug8zKWbQUanCLga5XiniBs77
-         QO+WF1tgsJoDPO+u46JUVtSkIsNu70Ni33Kkj37M=
+        b=ISmNg/63LILatZonSREiRsS4VTt1WbL0EemEVZz3o6Wo2m1VFggaLymPcbV7Y09lT
+         eKCZ5tXo96YqPEq0BTtTiZeFyJNUd23KQjKAb3nvnyGnfvdBRGsWVKxgplVaMnKypE
+         I6YTdWEGi3J4dP85a1ISTOvID6bLH5cvNzp6812U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 66/89] wireless: wext: avoid gcc -O3 warning
-Date:   Mon,  3 Feb 2020 16:19:51 +0000
-Message-Id: <20200203161925.119010568@linuxfoundation.org>
+Subject: [PATCH 4.14 26/89] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
+Date:   Mon,  3 Feb 2020 16:19:11 +0000
+Message-Id: <20200203161920.369849753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,54 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit e16119655c9e6c4aa5767cd971baa9c491f41b13 ]
+[ Upstream commit c5706c7defc79de68a115b5536376298a8fef111 ]
 
-After the introduction of CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3,
-the wext code produces a bogus warning:
+Driver fails to compile in a minimized kernel's configuration because of
+the missing dependency on GPIOLIB_IRQCHIP.
 
-In function 'iw_handler_get_iwstats',
-    inlined from 'ioctl_standard_call' at net/wireless/wext-core.c:1015:9,
-    inlined from 'wireless_process_ioctl' at net/wireless/wext-core.c:935:10,
-    inlined from 'wext_ioctl_dispatch.part.8' at net/wireless/wext-core.c:986:8,
-    inlined from 'wext_handle_ioctl':
-net/wireless/wext-core.c:671:3: error: argument 1 null where non-null expected [-Werror=nonnull]
-   memcpy(extra, stats, sizeof(struct iw_statistics));
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from arch/x86/include/asm/string.h:5,
-net/wireless/wext-core.c: In function 'wext_handle_ioctl':
-arch/x86/include/asm/string_64.h:14:14: note: in a call to function 'memcpy' declared here
+ error: ‘struct gpio_chip’ has no member named ‘irq’
+   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
 
-The problem is that ioctl_standard_call() sometimes calls the handler
-with a NULL argument that would cause a problem for iw_handler_get_iwstats.
-However, iw_handler_get_iwstats never actually gets called that way.
-
-Marking that function as noinline avoids the warning and leads
-to slightly smaller object code as well.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200107200741.3588770-1-arnd@arndb.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200106015154.12040-1-digetx@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/wext-core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/wireless/wext-core.c b/net/wireless/wext-core.c
-index 6cdb054484d66..5236a3c2c0ccf 100644
---- a/net/wireless/wext-core.c
-+++ b/net/wireless/wext-core.c
-@@ -659,7 +659,8 @@ struct iw_statistics *get_wireless_stats(struct net_device *dev)
- 	return NULL;
- }
- 
--static int iw_handler_get_iwstats(struct net_device *		dev,
-+/* noinline to avoid a bogus warning with -O3 */
-+static noinline int iw_handler_get_iwstats(struct net_device *	dev,
- 				  struct iw_request_info *	info,
- 				  union iwreq_data *		wrqu,
- 				  char *			extra)
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 2357d2f73c1ad..8d2ab77c6581d 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -990,6 +990,7 @@ config GPIO_LP87565
+ config GPIO_MAX77620
+ 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
+ 	depends on MFD_MAX77620
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
+ 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
 -- 
 2.20.1
 
