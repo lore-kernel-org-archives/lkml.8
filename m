@@ -2,87 +2,89 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26DCC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D0FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3BD2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KY9mY/PA"
+	by mail.kernel.org (Postfix) with ESMTP id B162720661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgBCKhg (ORCPT
+        id S1727307AbgBCKlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:37:36 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34320 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgBCKhf (ORCPT
+        Mon, 3 Feb 2020 05:41:12 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:14206 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgBCKlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:37:35 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j7so5701694plt.1;
-        Mon, 03 Feb 2020 02:37:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+zY3ZjySCMgRqo1DurDULy/mPL5i5TjLVEpmoFrzFls=;
-        b=KY9mY/PAd+JI4NB2OCt+ChTAjVMm4azYwodEGZcskbpKNzD4xmncvq+BibFFg+V6io
-         UV/SiEZ+thmt8Gud4r2Q5C3YCyB/wjhRPuvvNOC5I1YUQiwH9EoCIyE/AlvCv8MUG7oQ
-         Pe/qwBqZtkVwULJrSp5mWZ5cOX3Jkto8/95vZYjcXfaKoHqRcyhpVUT8VZ6XUU72bj7T
-         Nkpnv/Q5jDrnK+z63Rg83nh5pt6z52sLReZTfiZhjQhIewBsEy/cOOGwTmlTbnr9HJ3A
-         HBUI+93Db5nkkR033fr5EppcVVl4Z2K6PlpB9GurUxm7EllZVu+pkzcrdVDMsdlBNMs5
-         wmXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+zY3ZjySCMgRqo1DurDULy/mPL5i5TjLVEpmoFrzFls=;
-        b=EGyulTqxANaK3xa/cOVXqpYi2dE7MN8EZ14i+WGPbQqn9WGnEFBYW3t45o1nchmmQZ
-         LUIoLwrh00bLdvjuTERCGE4z714/tXeZxCHtk7yD+sWAbF4prmp0sZIxOEW5MXNG+O5C
-         f+nNLYlGLVMmPfHuFizxNadJsP/963lcBXITnjoSHZPahVGs4t3BJxBVDe4mGA48tflo
-         JrfpTLuPLFIYHrSlMiLRfN4vG3yQgJx1hmbPpylYCNkVUT/cb1UEIdgkGKwvFrn4gFmS
-         7Ebt9S2/nxTeIBi8o6u5DWstD/DHO/cBGXkxt3oSCqLfAU9KCOZ2LPbZFKsHkGDlfpkH
-         2Mmw==
-X-Gm-Message-State: APjAAAXvQ+vs+9f8gEE+T2jpJAa0u+fRQQks4FycULSpEIJgbmCGqECH
-        jT5F3oVopIPk4gxF4oos7JbT23CcSYqNflCCSQ4=
-X-Google-Smtp-Source: APXvYqx62M5/se5iwIWB9pEguzBWQOMquBjSvm0EyvQgjYLzX9CeYRP3pZKp481LnhUGHiwWjEe54uiHhSYqtzMv/vw=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr29301013pjq.132.1580726255079;
- Mon, 03 Feb 2020 02:37:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20200203101806.2441-1-peter.ujfalusi@ti.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:37:27 +0200
-Message-ID: <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Feb 2020 05:41:11 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Feb 2020 16:11:08 +0530
+Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Feb 2020 16:10:45 +0530
+Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
+        id A6A1E21187; Mon,  3 Feb 2020 16:10:43 +0530 (IST)
+From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, robh@kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, tientzu@chromium.org,
+        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
+        devicetree@vger.kernel.org,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Subject: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip WCN3991
+Date:   Mon,  3 Feb 2020 16:10:41 +0530
+Message-Id: <1580726441-1100-2-git-send-email-gubbaven@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
+References: <1580726441-1100-1-git-send-email-gubbaven@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+Add compatible string for the Qualcomm WCN3991 Bluetooth controller
 
-> dma_request_slave_channel_reason() no longer have user in mainline, it
-> can be removed.
->
-> Advise users of dma_request_slave_channel() and
-> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+---
+v3:
+  *Updated clocks with <&rpmhcc RPMH_RF_CLK2>  
+---
+ Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-How? There are legacy ARM boards you have to care / remove before.
-DMAengine subsystem makes a p*s off decisions without taking care of
-(I'm talking now about dma release callback, for example) end users.
-They will be scary for no reason.
-
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+index 68b67d9..beca646 100644
+--- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -11,6 +11,7 @@ Required properties:
+  - compatible: should contain one of the following:
+    * "qcom,qca6174-bt"
+    * "qcom,wcn3990-bt"
++   * "qcom,wcn3991-bt"
+    * "qcom,wcn3998-bt"
+ 
+ Optional properties for compatible string qcom,qca6174-bt:
+@@ -30,6 +31,7 @@ Optional properties for compatible string qcom,wcn399x-bt:
+ 
+  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+  - firmware-name: specify the name of nvm firmware to load
++ - clocks: clock provided to the controller
+ 
+ Examples:
+ 
+@@ -56,5 +58,6 @@ serial@898000 {
+ 		vddch0-supply = <&vreg_l25a_3p3>;
+ 		max-speed = <3200000>;
+ 		firmware-name = "crnv21.bin";
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
+ 	};
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
