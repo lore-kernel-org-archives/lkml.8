@@ -2,468 +2,178 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96BEC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A41AC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C822082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2089B21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 14:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgBCOSw (ORCPT
+        id S1728404AbgBCOTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 09:18:52 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2356 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727542AbgBCOSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 09:18:52 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C2883FF9F35D26CC8A7F;
-        Mon,  3 Feb 2020 14:18:48 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Feb 2020 14:18:48 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
- 14:18:48 +0000
-Date:   Mon, 3 Feb 2020 14:18:46 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-CC:     <alastair@d-silva.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 3 Feb 2020 09:19:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40442 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727542AbgBCOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 09:19:00 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 92FE4AFE8;
+        Mon,  3 Feb 2020 14:18:56 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 469811E0D69; Mon,  3 Feb 2020 15:18:56 +0100 (CET)
+Date:   Mon, 3 Feb 2020 15:18:56 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Keith Busch" <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Hari Bathini" <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 13/27] nvdimm/ocxl: Add support for Admin commands
-Message-ID: <20200203141846.00004981@Huawei.com>
-In-Reply-To: <20191203034655.51561-14-alastair@au1.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-        <20191203034655.51561-14-alastair@au1.ibm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 05/12] mm/gup: pass gup flags to two more routines
+Message-ID: <20200203141856.GC18591@quack2.suse.cz>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-6-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200201034029.4063170-6-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 14:46:41 +1100
-Alastair D'Silva <alastair@au1.ibm.com> wrote:
-
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Fri 31-01-20 19:40:22, John Hubbard wrote:
+> In preparation for an upcoming patch, send gup flags args to two more
+> routines: put_compound_head(), and undo_dev_pagemap().
 > 
-> This patch requests the metadata required to issue admin commands, as well
-> as some helper functions to construct and check the completion of the
-> commands.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-A few trivial bits inline.
+Looks good to me. You can add:
 
-Jonathan
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 
 > ---
->  drivers/nvdimm/ocxl/scm.c          |  67 +++++++++++++
->  drivers/nvdimm/ocxl/scm_internal.c | 152 +++++++++++++++++++++++++++++
->  drivers/nvdimm/ocxl/scm_internal.h |  62 ++++++++++++
->  3 files changed, 281 insertions(+)
+>  mm/gup.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-> index 8088f65c289e..1e175f3c3cf2 100644
-> --- a/drivers/nvdimm/ocxl/scm.c
-> +++ b/drivers/nvdimm/ocxl/scm.c
-> @@ -267,6 +267,58 @@ static int scm_register_lpc_mem(struct scm_data *scm_data)
->  	return 0;
->  }
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 65a40560c8d0..83473c2165f4 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1870,6 +1870,7 @@ static inline pte_t gup_get_pte(pte_t *ptep)
+>  #endif /* CONFIG_GUP_GET_PTE_LOW_HIGH */
 >  
-> +/**
-> + * scm_extract_command_metadata() - Extract command data from MMIO & save it for further use
-> + * @scm_data: a pointer to the SCM device data
-> + * @offset: The base address of the command data structures (address of CREQO)
-> + * @command_metadata: A pointer to the command metadata to populate
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int scm_extract_command_metadata(struct scm_data *scm_data, u32 offset,
-> +					struct command_metadata *command_metadata)
-> +{
-> +	int rc;
-> +	u64 tmp;
-> +
-> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset, OCXL_LITTLE_ENDIAN,
-> +				     &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	command_metadata->request_offset = tmp >> 32;
-> +	command_metadata->response_offset = tmp & 0xFFFFFFFF;
-> +
-> +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset + 8, OCXL_LITTLE_ENDIAN,
-> +				     &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	command_metadata->data_offset = tmp >> 32;
-> +	command_metadata->data_size = tmp & 0xFFFFFFFF;
-> +
-> +	command_metadata->id = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * scm_setup_command_metadata() - Set up the command metadata
-> + * @scm_data: a pointer to the SCM device data
-> + */
-> +static int scm_setup_command_metadata(struct scm_data *scm_data)
-> +{
-> +	int rc;
-> +
-> +	mutex_init(&scm_data->admin_command.lock);
-> +
-> +	rc = scm_extract_command_metadata(scm_data, GLOBAL_MMIO_ACMA_CREQO,
-> +					  &scm_data->admin_command);
-> +	if (rc)
-> +		return rc;
-
-Unless you are adding to this later in the series.
-
-	return scm_extract_command_metadata(scm_data,...)
-
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * scm_is_usable() - Is a controller usable?
->   * @scm_data: a pointer to the SCM device data
-> @@ -276,6 +328,8 @@ static bool scm_is_usable(const struct scm_data *scm_data)
+>  static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
+> +					    unsigned int flags,
+>  					    struct page **pages)
 >  {
->  	u64 chi = 0;
->  	int rc = scm_chi(scm_data, &chi);
-> +	if (rc)
-> +		return false;
+>  	while ((*nr) - nr_start) {
+> @@ -1909,7 +1910,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
 >  
->  	if (!(chi & GLOBAL_MMIO_CHI_CRDY)) {
->  		dev_err(&scm_data->dev, "SCM controller is not ready.\n");
-> @@ -502,6 +556,14 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  			pgmap = get_dev_pagemap(pte_pfn(pte), pgmap);
+>  			if (unlikely(!pgmap)) {
+> -				undo_dev_pagemap(nr, nr_start, pages);
+> +				undo_dev_pagemap(nr, nr_start, flags, pages);
+>  				goto pte_unmap;
+>  			}
+>  		} else if (pte_special(pte))
+> @@ -1974,7 +1975,7 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+>  
+>  		pgmap = get_dev_pagemap(pfn, pgmap);
+>  		if (unlikely(!pgmap)) {
+> -			undo_dev_pagemap(nr, nr_start, pages);
+> +			undo_dev_pagemap(nr, nr_start, flags, pages);
+>  			return 0;
+>  		}
+>  		SetPageReferenced(page);
+> @@ -2001,7 +2002,7 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  		return 0;
+>  
+>  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+> -		undo_dev_pagemap(nr, nr_start, pages);
+> +		undo_dev_pagemap(nr, nr_start, flags, pages);
+>  		return 0;
 >  	}
->  	scm_data->pdev = pdev;
+>  	return 1;
+> @@ -2019,7 +2020,7 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  		return 0;
 >  
-> +	scm_data->timeouts[ADMIN_COMMAND_ERRLOG] = 2000; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_HEARTBEAT] = 100; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_SMART] = 100; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_CONTROLLER_DUMP] = 1000; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_CONTROLLER_STATS] = 100; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_SHUTDOWN] = 1000; // ms
-> +	scm_data->timeouts[ADMIN_COMMAND_FW_UPDATE] = 16000; // ms
-> +
->  	pci_set_drvdata(pdev, scm_data);
->  
->  	scm_data->ocxl_fn = ocxl_function_open(pdev);
-> @@ -543,6 +605,11 @@ static int scm_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  		goto err;
+>  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+> -		undo_dev_pagemap(nr, nr_start, pages);
+> +		undo_dev_pagemap(nr, nr_start, flags, pages);
+>  		return 0;
 >  	}
->  
-> +	if (scm_setup_command_metadata(scm_data)) {
-> +		dev_err(&pdev->dev, "Could not read OCXL command matada\n");
-> +		goto err;
-> +	}
-> +
->  	elapsed = 0;
->  	timeout = scm_data->readiness_timeout + scm_data->memory_available_timeout;
->  	while (!scm_is_usable(scm_data)) {
-> diff --git a/drivers/nvdimm/ocxl/scm_internal.c b/drivers/nvdimm/ocxl/scm_internal.c
-> index 72d3c0e7d846..7b11b56863fb 100644
-> --- a/drivers/nvdimm/ocxl/scm_internal.c
-> +++ b/drivers/nvdimm/ocxl/scm_internal.c
-> @@ -17,3 +17,155 @@ int scm_chi(const struct scm_data *scm_data, u64 *chi)
->  
->  	return 0;
+>  	return 1;
+> @@ -2053,7 +2054,7 @@ static int record_subpages(struct page *page, unsigned long addr,
+>  	return nr;
 >  }
-> +
-> +static int scm_command_request(const struct scm_data *scm_data,
-> +			       struct command_metadata *cmd, u8 op_code)
-> +{
-> +	u64 val = op_code;
-> +	int rc;
-> +	u8 i;
-> +
-> +	cmd->op_code = op_code;
-> +	cmd->id++;
-> +
-> +	val |= ((u64)cmd->id) << 16;
-> +
-> +	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu, cmd->request_offset,
-> +				      OCXL_LITTLE_ENDIAN, val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	for (i = 0x08; i <= 0x38; i += 0x08) {
-
-perhaps use sizeof(u64) to explain where the 0x08s come from.
-For the 0x38, might be worth a define.
-
-> +		rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
-> +					      cmd->request_offset + i,
-> +					      OCXL_LITTLE_ENDIAN, 0);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int scm_admin_command_request(struct scm_data *scm_data, u8 op_code)
-> +{
-> +	u64 val;
-> +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, GLOBAL_MMIO_CHI,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return scm_command_request(scm_data, &scm_data->admin_command, op_code);
-> +}
-> +
-> +static int scm_command_response(const struct scm_data *scm_data,
-> +			 const struct command_metadata *cmd)
-> +{
-> +	u64 val;
-> +	u16 id;
-> +	u8 status;
-> +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> +					 cmd->response_offset,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	status = val & 0xff;
-> +	id = (val >> 16) & 0xffff;
-> +
-> +	if (id != cmd->id) {
-> +		dev_warn(&scm_data->dev,
-> +			 "Expected response for command %d, but received response for command %d instead.\n",
-> +			 cmd->id, id);
-> +	}
-> +
-> +	return status;
-> +}
-> +
-> +int scm_admin_response(const struct scm_data *scm_data)
-> +{
-> +	return scm_command_response(scm_data, &scm_data->admin_command);
-> +}
-> +
-> +
-> +int scm_admin_command_execute(const struct scm_data *scm_data)
-> +{
-> +	return ocxl_global_mmio_set64(scm_data->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_HCI_ACRW);
-> +}
-> +
-> +static bool scm_admin_command_complete(const struct scm_data *scm_data)
-> +{
-> +	u64 val = 0;
-> +
-> +	int rc = scm_chi(scm_data, &val);
-> +
-> +	WARN_ON(rc);
-> +
-> +	return (val & GLOBAL_MMIO_CHI_ACRA) != 0;
-> +}
-> +
-> +int scm_admin_command_complete_timeout(const struct scm_data *scm_data,
-> +				       int command)
-> +{
-> +	u32 timeout = scm_data->timeouts[command];
-> +	// 32 is the next power of 2 greater than the 20ms minimum for msleep
-> +#define TIMEOUT_SLEEP_MILLIS 32
-> +	timeout /= TIMEOUT_SLEEP_MILLIS;
-> +	if (!timeout)
-> +		timeout = SCM_DEFAULT_TIMEOUT / TIMEOUT_SLEEP_MILLIS;
-> +
-> +	while (timeout-- > 0) {
-> +		if (scm_admin_command_complete(scm_data))
-> +			return 0;
-> +		msleep(TIMEOUT_SLEEP_MILLIS);
-> +	}
-> +
-> +	if (scm_admin_command_complete(scm_data))
-> +		return 0;
-> +
-> +	return -EBUSY;
-> +}
-> +
-> +int scm_admin_response_handled(const struct scm_data *scm_data)
-> +{
-> +	return ocxl_global_mmio_set64(scm_data->ocxl_afu, GLOBAL_MMIO_CHIC,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_ACRA);
-> +}
-> +
-> +void scm_warn_status(const struct scm_data *scm_data, const char *message,
-> +		     u8 status)
-> +{
-> +	const char *text = "Unknown";
-> +
-> +	switch (status) {
-> +	case STATUS_SUCCESS:
-> +		text = "Success";
-> +		break;
-> +
-> +	case STATUS_MEM_UNAVAILABLE:
-> +		text = "Persistent memory unavailable";
-> +		break;
-> +
-> +	case STATUS_BAD_OPCODE:
-> +		text = "Bad opcode";
-> +		break;
-> +
-> +	case STATUS_BAD_REQUEST_PARM:
-> +		text = "Bad request parameter";
-> +		break;
-> +
-> +	case STATUS_BAD_DATA_PARM:
-> +		text = "Bad data parameter";
-> +		break;
-> +
-> +	case STATUS_DEBUG_BLOCKED:
-> +		text = "Debug action blocked";
-> +		break;
-> +
-> +	case STATUS_FAIL:
-> +		text = "Failed";
-> +		break;
-> +	}
-> +
-> +	dev_warn(&scm_data->dev, "%s: %s (%x)\n", message, text, status);
-> +}
-> diff --git a/drivers/nvdimm/ocxl/scm_internal.h b/drivers/nvdimm/ocxl/scm_internal.h
-> index 584450f55e30..9bff684cd069 100644
-> --- a/drivers/nvdimm/ocxl/scm_internal.h
-> +++ b/drivers/nvdimm/ocxl/scm_internal.h
-> @@ -6,6 +6,8 @@
->  #include <linux/libnvdimm.h>
->  #include <linux/mm.h>
 >  
-> +#define SCM_DEFAULT_TIMEOUT 100
-> +
->  #define GLOBAL_MMIO_CHI		0x000
->  #define GLOBAL_MMIO_CHIC	0x008
->  #define GLOBAL_MMIO_CHIE	0x010
-> @@ -80,6 +82,16 @@
+> -static void put_compound_head(struct page *page, int refs)
+> +static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>  {
+>  	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
+>  	/*
+> @@ -2103,7 +2104,7 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+>  		return 0;
 >  
->  #define SCM_LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
+>  	if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> -		put_compound_head(head, refs);
+> +		put_compound_head(head, refs, flags);
+>  		return 0;
+>  	}
 >  
-> +struct command_metadata {
-> +	u32 request_offset;
-> +	u32 response_offset;
-> +	u32 data_offset;
-> +	u32 data_size;
-> +	struct mutex lock;
-> +	u16 id;
-> +	u8 op_code;
-> +};
-> +
->  struct scm_function_0 {
->  	struct pci_dev *pdev;
->  	struct ocxl_fn *ocxl_fn;
-> @@ -95,9 +107,11 @@ struct scm_data {
->  	struct ocxl_afu *ocxl_afu;
->  	struct ocxl_context *ocxl_context;
->  	void *metadata_addr;
-> +	struct command_metadata admin_command;
->  	struct resource scm_res;
->  	struct nd_region *nd_region;
->  	char fw_version[8+1];
-> +	u32 timeouts[ADMIN_COMMAND_MAX+1];
+> @@ -2163,7 +2164,7 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  		return 0;
 >  
->  	u32 max_controller_dump_size;
->  	u16 scm_revision; // major/minor
-> @@ -122,3 +136,51 @@ struct scm_data {
->   * Returns 0 on success, negative on error
->   */
->  int scm_chi(const struct scm_data *scm_data, u64 *chi);
-> +
-> +/**
-> + * scm_admin_command_request() - Issue an admin command request
-> + * @scm_data: a pointer to the SCM device data
-> + * @op_code: The op-code for the command
-> + *
-> + * Returns an identifier for the command, or negative on error
-> + */
-> +int scm_admin_command_request(struct scm_data *scm_data, u8 op_code);
-> +
-> +/**
-> + * scm_admin_response() - Validate an admin response
-> + * @scm_data: a pointer to the SCM device data
-> + * Returns the status code of the command, or negative on error
-> + */
-> +int scm_admin_response(const struct scm_data *scm_data);
-> +
-> +/**
-> + * scm_admin_command_execute() - Notify the controller to start processing a pending admin command
-> + * @scm_data: a pointer to the SCM device data
-> + * Returns 0 on success, negative on error
-> + */
-> +int scm_admin_command_execute(const struct scm_data *scm_data);
-> +
-> +/**
-> + * scm_admin_command_complete_timeout() - Wait for an admin command to finish executing
-> + * @scm_data: a pointer to the SCM device data
-> + * @command: the admin command to wait for completion (determines the timeout)
-> + * Returns 0 on success, -EBUSY on timeout
-> + */
-> +int scm_admin_command_complete_timeout(const struct scm_data *scm_data,
-> +				       int command);
-> +
-> +/**
-> + * scm_admin_response_handled() - Notify the controller that the admin response has been handled
-> + * @scm_data: a pointer to the SCM device data
-> + * Returns 0 on success, negative on failure
-> + */
-> +int scm_admin_response_handled(const struct scm_data *scm_data);
-> +
-> +/**
-> + * scm_warn_status() - Emit a kernel warning showing a command status.
-> + * @scm_data: a pointer to the SCM device data
-> + * @message: A message to accompany the warning
-> + * @status: The command status
-> + */
-> +void scm_warn_status(const struct scm_data *scm_data, const char *message,
-> +		     u8 status);
-
-
+>  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+> -		put_compound_head(head, refs);
+> +		put_compound_head(head, refs, flags);
+>  		return 0;
+>  	}
+>  
+> @@ -2197,7 +2198,7 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  		return 0;
+>  
+>  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+> -		put_compound_head(head, refs);
+> +		put_compound_head(head, refs, flags);
+>  		return 0;
+>  	}
+>  
+> @@ -2226,7 +2227,7 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+>  		return 0;
+>  
+>  	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
+> -		put_compound_head(head, refs);
+> +		put_compound_head(head, refs, flags);
+>  		return 0;
+>  	}
+>  
+> -- 
+> 2.25.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
