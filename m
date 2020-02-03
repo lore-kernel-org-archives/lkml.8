@@ -2,50 +2,57 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6D1C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C884EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F88F2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF1E20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747897;
-	bh=Wdfl/sX1SAd1i23ygMd86X+ljSRIrHoqzxkhiFFuk0Y=;
+	s=default; t=1580747900;
+	bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jwpg+5iqFSCEB9GIMS8Zq8CQrofnuJIUzjx5/kEXcN7WtG9SMZVDet+zRmTn0/2DJ
-	 mxWorS/XtaD/I4y3Zeu9vdRbTVpzeqmesNAdRKU0CIjoCz0Wdyow0nNTbZONK83jUk
-	 +nDL+pin9eoOZSzyUJU6e9DXdo3igXCUnmQxvPno=
+	b=pwrscK1Nakz2wMwkiMaFIZXWsRtmmLdseY2exWaOFHVgXl3xFjY7wAtzkk2osOjy4
+	 4CYXKzinzHLMsSMRkUgiV623B5QWlbjiO8sv9of4Uoo39oQI1zGj2Lhipwu1Ez2LAX
+	 Zw3cyQ/dafZhG6sLw4PgAV3AHAi2mjnLv7qhqe/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbgBCQiQ (ORCPT
+        id S1731475AbgBCQiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:38:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731433AbgBCQiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:38:12 -0500
+        id S1731433AbgBCQiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:38:16 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 203B220CC7;
-        Mon,  3 Feb 2020 16:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB7252087E;
+        Mon,  3 Feb 2020 16:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747891;
-        bh=Wdfl/sX1SAd1i23ygMd86X+ljSRIrHoqzxkhiFFuk0Y=;
+        s=default; t=1580747896;
+        bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MyqklBHrbE+17OPCORsy9IL5mn+iUBzq5ScObxnmxjB5nwUm3T8iF1gKi3M0zurdH
-         7Z1IJPBYzhZZROW+WINUsGGCbc0GZn05Zr5+OaahXoUkMMLU42FTSRzXRXzB1z+dM7
-         ruWugnUM5Ub3NzkLIKZyw938TeGsz/eBBJEGa7E4=
+        b=Xb8dkL/PwakCjko3Er1mhyqE98szCJf/J8lA40RI4WzN8ArEHMcA5Y01p6gVBXm/T
+         4GYl5jquZahHe5YmX4+c3MVFr894B5VGk45ceT2Pih7XXacozWN/iSqae3GBO5Aam4
+         CvtqQqqJmpwCB7699nCQ6UpgWIZOwUfRZ08OHXbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.5 07/23] gfs2: Another gfs2_find_jhead fix
-Date:   Mon,  3 Feb 2020 16:20:27 +0000
-Message-Id: <20200203161904.122518168@linuxfoundation.org>
+        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 09/23] perf c2c: Fix return type for histogram sorting comparision functions
+Date:   Mon,  3 Feb 2020 16:20:29 +0000
+Message-Id: <20200203161904.456238714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -58,152 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Andres Freund <andres@anarazel.de>
 
-commit eed0f953b90e86e765197a1dad06bb48aedc27fe upstream.
+commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
 
-On filesystems with a block size smaller than the page size,
-gfs2_find_jhead can split a page across two bios (for example, when
-blocks are not allocated consecutively).  When that happens, the first
-bio that completes will unlock the page in its bi_end_io handler even
-though the page hasn't been read completely yet.  Fix that by using a
-chained bio for the rest of the page.
+Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
+so - hist_entry__sort to return int64. Unfortunately several of the
+builtin-c2c.c comparison routines only happened to work due the cast
+caused by the wrong return type.
 
-While at it, clean up the sector calculation logic in
-gfs2_log_alloc_bio.  In gfs2_find_jhead, simplify the disk block and
-offset calculation logic and fix a variable name.
+This causes meaningless ordering of both the cacheline list, and the
+cacheline details page. E.g a simple:
 
-Fixes: f4686c26ecc3 ("gfs2: read journal in large chunks")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+  perf c2c record -a sleep 3
+  perf c2c report
+
+will result in cacheline table like
+  =================================================
+             Shared Data Cache Line Table
+  =================================================
+  #
+  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
+  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
+  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
+
+        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
+        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
+        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
+        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
+
+i.e. with the list not being ordered by Total Hitm.
+
+Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+Signed-off-by: Andres Freund <andres@anarazel.de>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/lops.c |   68 ++++++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 44 insertions(+), 24 deletions(-)
+ tools/perf/builtin-c2c.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -259,7 +259,7 @@ static struct bio *gfs2_log_alloc_bio(st
- 	struct super_block *sb = sdp->sd_vfs;
- 	struct bio *bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
+ {
+ 	struct c2c_hist_entry *c2c_left;
+ 	struct c2c_hist_entry *c2c_right;
+-	unsigned int tot_hitm_left;
+-	unsigned int tot_hitm_right;
++	uint64_t tot_hitm_left;
++	uint64_t tot_hitm_right;
  
--	bio->bi_iter.bi_sector = blkno * (sb->s_blocksize >> 9);
-+	bio->bi_iter.bi_sector = blkno << (sb->s_blocksize_bits - 9);
- 	bio_set_dev(bio, sb->s_bdev);
- 	bio->bi_end_io = end_io;
- 	bio->bi_private = sdp;
-@@ -472,6 +472,20 @@ static void gfs2_jhead_process_page(stru
- 	put_page(page); /* Once more for find_or_create_page */
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+@@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
+ 									\
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+-	return c2c_left->stats.__f - c2c_right->stats.__f;		\
++	return (uint64_t) c2c_left->stats.__f -				\
++	       (uint64_t) c2c_right->stats.__f;				\
  }
  
-+static struct bio *gfs2_chain_bio(struct bio *prev, unsigned int nr_iovecs)
-+{
-+	struct bio *new;
-+
-+	new = bio_alloc(GFP_NOIO, nr_iovecs);
-+	bio_copy_dev(new, prev);
-+	new->bi_iter.bi_sector = bio_end_sector(prev);
-+	new->bi_opf = prev->bi_opf;
-+	new->bi_write_hint = prev->bi_write_hint;
-+	bio_chain(new, prev);
-+	submit_bio(prev);
-+	return new;
-+}
-+
- /**
-  * gfs2_find_jhead - find the head of a log
-  * @jd: The journal descriptor
-@@ -488,15 +502,15 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
- 	struct gfs2_sbd *sdp = GFS2_SB(jd->jd_inode);
- 	struct address_space *mapping = jd->jd_inode->i_mapping;
- 	unsigned int block = 0, blocks_submitted = 0, blocks_read = 0;
--	unsigned int bsize = sdp->sd_sb.sb_bsize;
-+	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
- 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
- 	unsigned int shift = PAGE_SHIFT - bsize_shift;
--	unsigned int readhead_blocks = BIO_MAX_PAGES << shift;
-+	unsigned int readahead_blocks = BIO_MAX_PAGES << shift;
- 	struct gfs2_journal_extent *je;
- 	int sz, ret = 0;
- 	struct bio *bio = NULL;
- 	struct page *page = NULL;
--	bool done = false;
-+	bool bio_chained = false, done = false;
- 	errseq_t since;
+ #define STAT_FN(__f)		\
+@@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
+ 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+ 	c2c_right = container_of(right, struct c2c_hist_entry, he);
  
- 	memset(head, 0, sizeof(*head));
-@@ -505,9 +519,9 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
+-	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
++	return (uint64_t) llc_miss(&c2c_left->stats) -
++	       (uint64_t) llc_miss(&c2c_right->stats);
+ }
  
- 	since = filemap_sample_wb_err(mapping);
- 	list_for_each_entry(je, &jd->extent_list, list) {
--		for (; block < je->lblock + je->blocks; block++) {
--			u64 dblock;
-+		u64 dblock = je->dblock;
- 
-+		for (; block < je->lblock + je->blocks; block++, dblock++) {
- 			if (!page) {
- 				page = find_or_create_page(mapping,
- 						block >> shift, GFP_NOFS);
-@@ -516,35 +530,41 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
- 					done = true;
- 					goto out;
- 				}
-+				off = 0;
- 			}
- 
--			if (bio) {
--				unsigned int off;
--
--				off = (block << bsize_shift) & ~PAGE_MASK;
-+			if (!bio || (bio_chained && !off)) {
-+				/* start new bio */
-+			} else {
- 				sz = bio_add_page(bio, page, bsize, off);
--				if (sz == bsize) { /* block added */
--					if (off + bsize == PAGE_SIZE) {
--						page = NULL;
--						goto page_added;
--					}
--					continue;
-+				if (sz == bsize)
-+					goto block_added;
-+				if (off) {
-+					unsigned int blocks =
-+						(PAGE_SIZE - off) >> bsize_shift;
-+
-+					bio = gfs2_chain_bio(bio, blocks);
-+					bio_chained = true;
-+					goto add_block_to_new_bio;
- 				}
-+			}
-+
-+			if (bio) {
- 				blocks_submitted = block + 1;
- 				submit_bio(bio);
--				bio = NULL;
- 			}
- 
--			dblock = je->dblock + (block - je->lblock);
- 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
- 			bio->bi_opf = REQ_OP_READ;
--			sz = bio_add_page(bio, page, bsize, 0);
--			gfs2_assert_warn(sdp, sz == bsize);
--			if (bsize == PAGE_SIZE)
-+			bio_chained = false;
-+add_block_to_new_bio:
-+			sz = bio_add_page(bio, page, bsize, off);
-+			BUG_ON(sz != bsize);
-+block_added:
-+			off += bsize;
-+			if (off == PAGE_SIZE)
- 				page = NULL;
--
--page_added:
--			if (blocks_submitted < blocks_read + readhead_blocks) {
-+			if (blocks_submitted < blocks_read + readahead_blocks) {
- 				/* Keep at least one bio in flight */
- 				continue;
- 			}
+ static uint64_t total_records(struct c2c_stats *stats)
 
 
