@@ -2,118 +2,761 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B807BC3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2CC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998E320661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F4F20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:39:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z48N0Ofw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBCJi2 (ORCPT
+        id S1727933AbgBCJjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:38:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54802 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbgBCJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:38:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F29E6AC37;
-        Mon,  3 Feb 2020 09:38:24 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 941D61E0D5D; Mon,  3 Feb 2020 10:38:23 +0100 (CET)
-Date:   Mon, 3 Feb 2020 10:38:23 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Liu Song <fishland@aliyun.com>
-Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liu.song11@zte.com.cn
-Subject: Re: [RFC PATCH] jbd2: remove unused return value of
- jbd2_journal_cancel_revoke
-Message-ID: <20200203093823.GC12938@quack2.suse.cz>
-References: <20200130133603.7103-1-fishland@aliyun.com>
+        Mon, 3 Feb 2020 04:39:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45333 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727630AbgBCJjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:39:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580722782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9YNumCFjxQ9hOPouL7VJOub2kyzbY9VqJbuDloyVe5Q=;
+        b=Z48N0OfwY9GIjJOriTeVA/aY4U0nvDSG7MeK1REInnHsYFO8eJp5y7O7GIg1DCo3pTiZSm
+        pwIl2xQ9b2c03vHLjmRae9kz0jqdUYt/sXsgMztWc30m6YEvJiaklKmCcxb/mzicc9GbSW
+        45vcCb4PqtSkCFfwa1RcxNFdB+VLJzc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-hZ__XWohO4Cj39yMM7hyVA-1; Mon, 03 Feb 2020 04:39:39 -0500
+X-MC-Unique: hZ__XWohO4Cj39yMM7hyVA-1
+Received: by mail-wr1-f72.google.com with SMTP id o6so7917171wrp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:39:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9YNumCFjxQ9hOPouL7VJOub2kyzbY9VqJbuDloyVe5Q=;
+        b=OjVzbrp/57k8XgF2m9WRIl4xJBePS7007eozh3pVkj1BraN++RQDXTr7c3L84sQYZa
+         TxxyVckpOeqeckr3tF5IYOiyeJeimC5SqyvHY36+sQ7hLh3Jtep6eMNnlG4IeTtdqNIc
+         qofzTRAW3zgRUNvv3k9Gu1omV+1Ouf+wkn+/r9iNMQOhKmrpnOTCBZtnRDh7SpsuTvWY
+         Ccc4mVnFvOuWF5c3dlgKsf6DlXwrz+l9r5LX8HDlNssk60yomlM5uTRY0LuFSJFRRYSj
+         rho4jFE8DoZqC7wNjXsmG8B981047DTXvqDU01uEo1FE5FunbhbGoofz1KGexiclhSg3
+         2lJQ==
+X-Gm-Message-State: APjAAAXEsEKbRDLXDerKU57LJW+lUTFM4BgMU0ZRM8Ydp8kL4jPyw99+
+        x+uBvqoUdT4YVmPyBAOFH+QBIEFibWvLVL4HcTsggwrpEbgoSbOcH+r89i//a1jcUSGNC2uInhQ
+        20/hbtjRTPXMnQJcEEnejIT+8
+X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr27964972wmm.98.1580722777924;
+        Mon, 03 Feb 2020 01:39:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxt6ElI1OGp8kfRl1NSd8cqy+70h5Bb3ZqvotaY4cVOzXeq89+blTEUqUsRO6+DdAO5lSXfeA==
+X-Received: by 2002:a05:600c:d5:: with SMTP id u21mr27964913wmm.98.1580722777351;
+        Mon, 03 Feb 2020 01:39:37 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id s15sm24265026wrp.4.2020.02.03.01.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 01:39:36 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
+        eric.auger.pro@gmail.com, eric.auger@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com
+Subject: Re: [PATCH v2 1/2] selftests: KVM: AMD Nested test infrastructure
+In-Reply-To: <20200203090851.19938-2-eric.auger@redhat.com>
+References: <20200203090851.19938-1-eric.auger@redhat.com> <20200203090851.19938-2-eric.auger@redhat.com>
+Date:   Mon, 03 Feb 2020 10:39:35 +0100
+Message-ID: <878slkovqg.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200130133603.7103-1-fishland@aliyun.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 30-01-20 21:36:03, Liu Song wrote:
-> From: Liu Song <liu.song11@zte.com.cn>
-> 
-> There is no place to use the return value of "jbd2_journal_cancel_revoke",
-> so remove it.
-> 
-> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
+Eric Auger <eric.auger@redhat.com> writes:
 
-OK, makes sense. Thanks for the cleanup. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+> Add the basic infrastructure needed to test AMD nested SVM.
+> This is largely copied from the KVM unit test infrastructure.
+>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 > ---
->  fs/jbd2/revoke.c     | 5 +----
->  include/linux/jbd2.h | 2 +-
->  2 files changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-> index fa608788b93d..f4fe7a171691 100644
-> --- a/fs/jbd2/revoke.c
-> +++ b/fs/jbd2/revoke.c
-> @@ -420,12 +420,11 @@ int jbd2_journal_revoke(handle_t *handle, unsigned long long blocknr,
->   * do not trust the Revoked bit on buffers unless RevokeValid is also
->   * set.
->   */
-> -int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
-> +void jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
->  {
->  	struct jbd2_revoke_record_s *record;
->  	journal_t *journal = handle->h_transaction->t_journal;
->  	int need_cancel;
-> -	int did_revoke = 0;	/* akpm: debug */
->  	struct buffer_head *bh = jh2bh(jh);
+>  tools/testing/selftests/kvm/Makefile          |   2 +-
+>  .../selftests/kvm/include/x86_64/processor.h  |  20 +
+>  .../selftests/kvm/include/x86_64/svm.h        | 355 ++++++++++++++++++
+>  tools/testing/selftests/kvm/lib/x86_64/svm.c  | 211 +++++++++++
+>  4 files changed, 587 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+>  create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+>
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 608fa835c764..2e770f554cae 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -8,7 +8,7 @@ KSFT_KHDR_INSTALL := 1
+>  UNAME_M := $(shell uname -m)
 >  
->  	jbd_debug(4, "journal_head %p, cancelling revoke\n", jh);
-> @@ -450,7 +449,6 @@ int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
->  			list_del(&record->hash);
->  			spin_unlock(&journal->j_revoke_lock);
->  			kmem_cache_free(jbd2_revoke_record_cache, record);
-> -			did_revoke = 1;
->  		}
->  	}
+>  LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+> -LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
+> +LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+>  LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+>  LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
 >  
-> @@ -473,7 +471,6 @@ int jbd2_journal_cancel_revoke(handle_t *handle, struct journal_head *jh)
->  			__brelse(bh2);
->  		}
->  	}
-> -	return did_revoke;
->  }
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index aa6451b3f740..8a52ae66cf5a 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -56,6 +56,26 @@ enum x86_register {
+>  	R15,
+>  };
 >  
->  /*
-> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> index ce44b687d02b..c27716740917 100644
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -1470,7 +1470,7 @@ extern int __init jbd2_journal_init_revoke_table_cache(void);
->  
->  extern void	   jbd2_journal_destroy_revoke(journal_t *);
->  extern int	   jbd2_journal_revoke (handle_t *, unsigned long long, struct buffer_head *);
-> -extern int	   jbd2_journal_cancel_revoke(handle_t *, struct journal_head *);
-> +extern void	   jbd2_journal_cancel_revoke(handle_t *, struct journal_head *);
->  extern void	   jbd2_journal_write_revoke_records(transaction_t *transaction,
->  						     struct list_head *log_bufs);
->  
-> -- 
-> 2.20.1
-> 
+> +struct regs {
+
+Nit: I would've called it a bit more specific, like
+
+'regs64' (to match 'desc64' below)
+or 'gp_regs' (to indicate that these are only general purpose registers)
+
+> +	u64 rax;
+> +	u64 rbx;
+> +	u64 rcx;
+> +	u64 rdx;
+> +	u64 cr2;
+> +	u64 rbp;
+> +	u64 rsi;
+> +	u64 rdi;
+> +	u64 r8;
+> +	u64 r9;
+> +	u64 r10;
+> +	u64 r11;
+> +	u64 r12;
+> +	u64 r13;
+> +	u64 r14;
+> +	u64 r15;
+> +	u64 rflags;
+> +};
+> +
+>  struct desc64 {
+>  	uint16_t limit0;
+>  	uint16_t base0;
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm.h b/tools/testing/selftests/kvm/include/x86_64/svm.h
+> new file mode 100644
+> index 000000000000..4a4ebe097556
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/include/x86_64/svm.h
+> @@ -0,0 +1,355 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * tools/testing/selftests/kvm/include/x86_64/svm.h
+> + * Header for nested SVM testing
+> + * Largely copied from KVM unit test svm.h
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + */
+> +
+> +#ifndef SELFTEST_KVM_SVM_H
+> +#define SELFTEST_KVM_SVM_H
+> +
+> +#include <stdint.h>
+> +#include "processor.h"
+> +
+> +#define CPUID_SVM_BIT		2
+> +#define CPUID_SVM		BIT_ULL(CPUID_SVM_BIT)
+> +
+> +enum {
+> +	INTERCEPT_INTR,
+> +	INTERCEPT_NMI,
+> +	INTERCEPT_SMI,
+> +	INTERCEPT_INIT,
+> +	INTERCEPT_VINTR,
+> +	INTERCEPT_SELECTIVE_CR0,
+> +	INTERCEPT_STORE_IDTR,
+> +	INTERCEPT_STORE_GDTR,
+> +	INTERCEPT_STORE_LDTR,
+> +	INTERCEPT_STORE_TR,
+> +	INTERCEPT_LOAD_IDTR,
+> +	INTERCEPT_LOAD_GDTR,
+> +	INTERCEPT_LOAD_LDTR,
+> +	INTERCEPT_LOAD_TR,
+> +	INTERCEPT_RDTSC,
+> +	INTERCEPT_RDPMC,
+> +	INTERCEPT_PUSHF,
+> +	INTERCEPT_POPF,
+> +	INTERCEPT_CPUID,
+> +	INTERCEPT_RSM,
+> +	INTERCEPT_IRET,
+> +	INTERCEPT_INTn,
+> +	INTERCEPT_INVD,
+> +	INTERCEPT_PAUSE,
+> +	INTERCEPT_HLT,
+> +	INTERCEPT_INVLPG,
+> +	INTERCEPT_INVLPGA,
+> +	INTERCEPT_IOIO_PROT,
+> +	INTERCEPT_MSR_PROT,
+> +	INTERCEPT_TASK_SWITCH,
+> +	INTERCEPT_FERR_FREEZE,
+> +	INTERCEPT_SHUTDOWN,
+> +	INTERCEPT_VMRUN,
+> +	INTERCEPT_VMMCALL,
+> +	INTERCEPT_VMLOAD,
+> +	INTERCEPT_VMSAVE,
+> +	INTERCEPT_STGI,
+> +	INTERCEPT_CLGI,
+> +	INTERCEPT_SKINIT,
+> +	INTERCEPT_RDTSCP,
+> +	INTERCEPT_ICEBP,
+> +	INTERCEPT_WBINVD,
+> +	INTERCEPT_MONITOR,
+> +	INTERCEPT_MWAIT,
+> +	INTERCEPT_MWAIT_COND,
+> +};
+
+The same enum in arch/x86/include/asm/svm.h has more
+(INTERCEPT_XSETBV/INTERCEPT_RDPRU).
+
+> +
+> +struct __attribute__ ((__packed__)) vmcb_control_area {
+> +	u16 intercept_cr_read;
+> +	u16 intercept_cr_write;
+> +	u16 intercept_dr_read;
+> +	u16 intercept_dr_write;
+> +	u32 intercept_exceptions;
+> +	u64 intercept;
+> +	u8 reserved_1[42];
+> +	u16 pause_filter_count;
+> +	u64 iopm_base_pa;
+> +	u64 msrpm_base_pa;
+> +	u64 tsc_offset;
+> +	u32 asid;
+> +	u8 tlb_ctl;
+> +	u8 reserved_2[3];
+> +	u32 int_ctl;
+> +	u32 int_vector;
+> +	u32 int_state;
+> +	u8 reserved_3[4];
+> +	u32 exit_code;
+> +	u32 exit_code_hi;
+> +	u64 exit_info_1;
+> +	u64 exit_info_2;
+> +	u32 exit_int_info;
+> +	u32 exit_int_info_err;
+> +	u64 nested_ctl;
+> +	u8 reserved_4[16];
+> +	u32 event_inj;
+> +	u32 event_inj_err;
+> +	u64 nested_cr3;
+> +	u64 lbr_ctl;
+> +	u64 reserved_5;
+> +	u64 next_rip;
+> +	u8 reserved_6[816];
+> +};
+
+This also doesn't match the definition in arch/x86/include/asm/svm.h
+
+> +
+> +#define TLB_CONTROL_DO_NOTHING 0
+> +#define TLB_CONTROL_FLUSH_ALL_ASID 1
+> +
+> +#define V_TPR_MASK 0x0f
+> +
+> +#define V_IRQ_SHIFT 8
+> +#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
+> +
+> +#define V_INTR_PRIO_SHIFT 16
+> +#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
+> +
+> +#define V_IGN_TPR_SHIFT 20
+> +#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
+> +
+> +#define V_INTR_MASKING_SHIFT 24
+> +#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
+> +
+> +#define SVM_INTERRUPT_SHADOW_MASK 1
+> +
+> +#define SVM_IOIO_STR_SHIFT 2
+> +#define SVM_IOIO_REP_SHIFT 3
+> +#define SVM_IOIO_SIZE_SHIFT 4
+> +#define SVM_IOIO_ASIZE_SHIFT 7
+> +
+> +#define SVM_IOIO_TYPE_MASK 1
+> +#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
+> +#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
+> +#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
+> +#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
+> +
+> +#define SVM_VM_CR_VALID_MASK	0x001fULL
+> +#define SVM_VM_CR_SVM_LOCK_MASK 0x0008ULL
+> +#define SVM_VM_CR_SVM_DIS_MASK  0x0010ULL
+> +
+> +struct __attribute__ ((__packed__)) vmcb_seg {
+> +	u16 selector;
+> +	u16 attrib;
+> +	u32 limit;
+> +	u64 base;
+> +};
+> +
+> +struct __attribute__ ((__packed__)) vmcb_save_area {
+> +	struct vmcb_seg es;
+> +	struct vmcb_seg cs;
+> +	struct vmcb_seg ss;
+> +	struct vmcb_seg ds;
+> +	struct vmcb_seg fs;
+> +	struct vmcb_seg gs;
+> +	struct vmcb_seg gdtr;
+> +	struct vmcb_seg ldtr;
+> +	struct vmcb_seg idtr;
+> +	struct vmcb_seg tr;
+> +	u8 reserved_1[43];
+> +	u8 cpl;
+> +	u8 reserved_2[4];
+> +	u64 efer;
+> +	u8 reserved_3[112];
+> +	u64 cr4;
+> +	u64 cr3;
+> +	u64 cr0;
+> +	u64 dr7;
+> +	u64 dr6;
+> +	u64 rflags;
+> +	u64 rip;
+> +	u8 reserved_4[88];
+> +	u64 rsp;
+> +	u8 reserved_5[24];
+> +	u64 rax;
+> +	u64 star;
+> +	u64 lstar;
+> +	u64 cstar;
+> +	u64 sfmask;
+> +	u64 kernel_gs_base;
+> +	u64 sysenter_cs;
+> +	u64 sysenter_esp;
+> +	u64 sysenter_eip;
+> +	u64 cr2;
+> +	u8 reserved_6[32];
+> +	u64 g_pat;
+> +	u64 dbgctl;
+> +	u64 br_from;
+> +	u64 br_to;
+> +	u64 last_excp_from;
+> +	u64 last_excp_to;
+> +};
+> +
+> +struct __attribute__ ((__packed__)) vmcb {
+> +	struct vmcb_control_area control;
+> +	struct vmcb_save_area save;
+> +};
+> +
+> +#define SVM_CPUID_FEATURE_SHIFT 2
+> +#define SVM_CPUID_FUNC 0x8000000a
+> +
+> +#define SVM_VM_CR_SVM_DISABLE 4
+> +
+> +#define SVM_SELECTOR_S_SHIFT 4
+> +#define SVM_SELECTOR_DPL_SHIFT 5
+> +#define SVM_SELECTOR_P_SHIFT 7
+> +#define SVM_SELECTOR_AVL_SHIFT 8
+> +#define SVM_SELECTOR_L_SHIFT 9
+> +#define SVM_SELECTOR_DB_SHIFT 10
+> +#define SVM_SELECTOR_G_SHIFT 11
+> +
+> +#define SVM_SELECTOR_TYPE_MASK (0xf)
+> +#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
+> +#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
+> +#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
+> +#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
+> +#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
+> +#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
+> +#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
+> +
+> +#define SVM_SELECTOR_WRITE_MASK (1 << 1)
+> +#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
+> +#define SVM_SELECTOR_CODE_MASK (1 << 3)
+> +
+> +#define INTERCEPT_CR0_MASK 1
+> +#define INTERCEPT_CR3_MASK (1 << 3)
+> +#define INTERCEPT_CR4_MASK (1 << 4)
+> +#define INTERCEPT_CR8_MASK (1 << 8)
+> +
+> +#define INTERCEPT_DR0_MASK 1
+> +#define INTERCEPT_DR1_MASK (1 << 1)
+> +#define INTERCEPT_DR2_MASK (1 << 2)
+> +#define INTERCEPT_DR3_MASK (1 << 3)
+> +#define INTERCEPT_DR4_MASK (1 << 4)
+> +#define INTERCEPT_DR5_MASK (1 << 5)
+> +#define INTERCEPT_DR6_MASK (1 << 6)
+> +#define INTERCEPT_DR7_MASK (1 << 7)
+> +
+> +#define SVM_EVTINJ_VEC_MASK 0xff
+> +
+> +#define SVM_EVTINJ_TYPE_SHIFT 8
+> +#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
+> +
+> +#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
+> +
+> +#define SVM_EVTINJ_VALID (1 << 31)
+> +#define SVM_EVTINJ_VALID_ERR (1 << 11)
+> +
+> +#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
+> +#define SVM_EXITINTINFO_TYPE_MASK SVM_EVTINJ_TYPE_MASK
+> +
+> +#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
+> +#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
+> +#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
+> +#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
+> +
+> +#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
+> +#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
+> +
+> +#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
+> +#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
+> +#define SVM_EXITINFOSHIFT_TS_HAS_ERROR_CODE 44
+> +
+> +#define	SVM_EXIT_READ_CR0	0x000
+> +#define	SVM_EXIT_READ_CR3	0x003
+> +#define	SVM_EXIT_READ_CR4	0x004
+> +#define	SVM_EXIT_READ_CR8	0x008
+> +#define	SVM_EXIT_WRITE_CR0	0x010
+> +#define	SVM_EXIT_WRITE_CR3	0x013
+> +#define	SVM_EXIT_WRITE_CR4	0x014
+> +#define	SVM_EXIT_WRITE_CR8	0x018
+> +#define	SVM_EXIT_READ_DR0	0x020
+> +#define	SVM_EXIT_READ_DR1	0x021
+> +#define	SVM_EXIT_READ_DR2	0x022
+> +#define	SVM_EXIT_READ_DR3	0x023
+> +#define	SVM_EXIT_READ_DR4	0x024
+> +#define	SVM_EXIT_READ_DR5	0x025
+> +#define	SVM_EXIT_READ_DR6	0x026
+> +#define	SVM_EXIT_READ_DR7	0x027
+> +#define	SVM_EXIT_WRITE_DR0	0x030
+> +#define	SVM_EXIT_WRITE_DR1	0x031
+> +#define	SVM_EXIT_WRITE_DR2	0x032
+> +#define	SVM_EXIT_WRITE_DR3	0x033
+> +#define	SVM_EXIT_WRITE_DR4	0x034
+> +#define	SVM_EXIT_WRITE_DR5	0x035
+> +#define	SVM_EXIT_WRITE_DR6	0x036
+> +#define	SVM_EXIT_WRITE_DR7	0x037
+> +#define SVM_EXIT_EXCP_BASE      0x040
+> +#define SVM_EXIT_INTR		0x060
+> +#define SVM_EXIT_NMI		0x061
+> +#define SVM_EXIT_SMI		0x062
+> +#define SVM_EXIT_INIT		0x063
+> +#define SVM_EXIT_VINTR		0x064
+> +#define SVM_EXIT_CR0_SEL_WRITE	0x065
+> +#define SVM_EXIT_IDTR_READ	0x066
+> +#define SVM_EXIT_GDTR_READ	0x067
+> +#define SVM_EXIT_LDTR_READ	0x068
+> +#define SVM_EXIT_TR_READ	0x069
+> +#define SVM_EXIT_IDTR_WRITE	0x06a
+> +#define SVM_EXIT_GDTR_WRITE	0x06b
+> +#define SVM_EXIT_LDTR_WRITE	0x06c
+> +#define SVM_EXIT_TR_WRITE	0x06d
+> +#define SVM_EXIT_RDTSC		0x06e
+> +#define SVM_EXIT_RDPMC		0x06f
+> +#define SVM_EXIT_PUSHF		0x070
+> +#define SVM_EXIT_POPF		0x071
+> +#define SVM_EXIT_CPUID		0x072
+> +#define SVM_EXIT_RSM		0x073
+> +#define SVM_EXIT_IRET		0x074
+> +#define SVM_EXIT_SWINT		0x075
+> +#define SVM_EXIT_INVD		0x076
+> +#define SVM_EXIT_PAUSE		0x077
+> +#define SVM_EXIT_HLT		0x078
+> +#define SVM_EXIT_INVLPG		0x079
+> +#define SVM_EXIT_INVLPGA	0x07a
+> +#define SVM_EXIT_IOIO		0x07b
+> +#define SVM_EXIT_MSR		0x07c
+> +#define SVM_EXIT_TASK_SWITCH	0x07d
+> +#define SVM_EXIT_FERR_FREEZE	0x07e
+> +#define SVM_EXIT_SHUTDOWN	0x07f
+> +#define SVM_EXIT_VMRUN		0x080
+> +#define SVM_EXIT_VMMCALL	0x081
+> +#define SVM_EXIT_VMLOAD		0x082
+> +#define SVM_EXIT_VMSAVE		0x083
+> +#define SVM_EXIT_STGI		0x084
+> +#define SVM_EXIT_CLGI		0x085
+> +#define SVM_EXIT_SKINIT		0x086
+> +#define SVM_EXIT_RDTSCP		0x087
+> +#define SVM_EXIT_ICEBP		0x088
+> +#define SVM_EXIT_WBINVD		0x089
+> +#define SVM_EXIT_MONITOR	0x08a
+> +#define SVM_EXIT_MWAIT		0x08b
+> +#define SVM_EXIT_MWAIT_COND	0x08c
+> +#define SVM_EXIT_NPF		0x400
+> +
+> +#define SVM_EXIT_ERR		-1
+> +
+> +#define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+> +
+> +struct svm_test_data {
+> +	void *vmcb_hva;
+> +	uint64_t vmcb_gpa;
+> +	struct vmcb *vmcb;
+> +
+> +	void *save_area_hva;
+> +	uint64_t save_area_gpa;
+> +	struct vmcb_save_area *save_area;
+> +};
+> +
+> +extern struct regs regs;
+> +
+> +struct svm_test_data *vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva);
+> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp);
+> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
+> +void nested_svm_check_supported(void);
+> +
+> +#endif /* SELFTEST_KVM_SVM_H */
+
+To keep this in sync with arch/x86/include/asm/svm.h I'd suggest we
+split this header into two:
+1) The exact copy on arch/x86/include/asm/svm.h
+2) Our testing add-ons.
+
+It will make updating definitions much easier in the future.
+
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+> new file mode 100644
+> index 000000000000..b025c23e502a
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+> @@ -0,0 +1,211 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * tools/testing/selftests/kvm/lib/x86_64/svm.c
+> + * Helpers used for nested SVM testing
+> + * Largely inspired from KVM unit test svm.c
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + */
+> +
+> +#include "test_util.h"
+> +#include "kvm_util.h"
+> +#include "../kvm_util_internal.h"
+> +#include "processor.h"
+> +#include "svm.h"
+> +
+> +struct regs regs;
+> +
+> +/* Allocate memory regions for nested SVM tests.
+> + *
+> + * Input Args:
+> + *   vm - The VM to allocate guest-virtual addresses in.
+> + *
+> + * Output Args:
+> + *   p_svm_gva - The guest virtual address for the struct svm_test_data.
+> + *
+> + * Return:
+> + *   Pointer to structure with the addresses of the SVM areas.
+> + */
+> +struct svm_test_data *
+> +vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
+> +{
+> +	vm_vaddr_t svm_gva = vm_vaddr_alloc(vm, getpagesize(),
+> +					    0x10000, 0, 0);
+> +	struct svm_test_data *svm = addr_gva2hva(vm, svm_gva);
+> +
+> +	svm->vmcb = (void *)vm_vaddr_alloc(vm, getpagesize(),
+> +					   0x10000, 0, 0);
+> +	svm->vmcb_hva = addr_gva2hva(vm, (uintptr_t)svm->vmcb);
+> +	svm->vmcb_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vmcb);
+> +
+> +	svm->save_area = (void *)vm_vaddr_alloc(vm, getpagesize(),
+> +						0x10000, 0, 0);
+> +	svm->save_area_hva = addr_gva2hva(vm, (uintptr_t)svm->save_area);
+> +	svm->save_area_gpa = addr_gva2gpa(vm, (uintptr_t)svm->save_area);
+> +
+> +	*p_svm_gva = svm_gva;
+> +	return svm;
+> +}
+> +
+> +struct descriptor_table_ptr {
+> +	u16 limit;
+> +	ulong base;
+> +} __attribute__((packed));
+> +
+> +static inline void sgdt(struct descriptor_table_ptr *ptr)
+> +{
+> +	asm volatile ("sgdt %0" : "=m"(*ptr));
+> +}
+> +
+> +static inline void sidt(struct descriptor_table_ptr *ptr)
+> +{
+> +	asm volatile ("sidt %0" : "=m"(*ptr));
+> +}
+> +
+
+This is not SVM specific, we seem to already have
+get_gdt_base()/get_idt_base(), can these be re-used?
+
+> +static void vmcb_set_seg(struct vmcb_seg *seg, u16 selector,
+> +			 u64 base, u32 limit, u32 attr)
+> +{
+> +	seg->selector = selector;
+> +	seg->attrib = attr;
+> +	seg->limit = limit;
+> +	seg->base = base;
+> +}
+> +
+> +static inline u16 read_cs(void)
+> +{
+> +	u16 val;
+> +
+> +	asm volatile ("mov %%cs, %0" : "=mr"(val));
+> +	return val;
+> +}
+> +
+> +static inline u16 read_ds(void)
+> +{
+> +	u16 val;
+> +
+> +	asm volatile ("mov %%ds, %0" : "=mr"(val));
+> +	return val;
+> +}
+> +
+> +static inline u16 read_es(void)
+> +{
+> +	u16 val;
+> +
+> +	asm volatile ("mov %%es, %0" : "=mr"(val));
+> +	return val;
+> +}
+> +
+> +static inline u16 read_ss(void)
+> +{
+> +	unsigned int val;
+> +
+> +	asm volatile ("mov %%ss, %0" : "=mr"(val));
+> +	return val;
+> +}
+
+We seem to have all these in include/x86_64/processor.h
+
+> +
+> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp)
+> +{
+> +	struct vmcb *vmcb = svm->vmcb;
+> +	uint64_t vmcb_gpa = svm->vmcb_gpa;
+> +	struct vmcb_save_area *save = &vmcb->save;
+> +	struct vmcb_control_area *ctrl = &vmcb->control;
+> +	u32 data_seg_attr = 3 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+> +	      | SVM_SELECTOR_DB_MASK | SVM_SELECTOR_G_MASK;
+> +	u32 code_seg_attr = 9 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+> +		| SVM_SELECTOR_L_MASK | SVM_SELECTOR_G_MASK;
+> +	struct descriptor_table_ptr desc_table_ptr;
+> +	uint64_t efer;
+> +
+> +	efer = rdmsr(MSR_EFER);
+> +	wrmsr(MSR_EFER, efer | EFER_SVME);
+> +	wrmsr(MSR_VM_HSAVE_PA, svm->save_area_gpa);
+> +
+> +	memset(vmcb, 0, sizeof(*vmcb));
+> +	asm volatile ("vmsave %0" : : "a" (vmcb_gpa) : "memory");
+> +	vmcb_set_seg(&save->es, read_es(), 0, -1U, data_seg_attr);
+> +	vmcb_set_seg(&save->cs, read_cs(), 0, -1U, code_seg_attr);
+> +	vmcb_set_seg(&save->ss, read_ss(), 0, -1U, data_seg_attr);
+> +	vmcb_set_seg(&save->ds, read_ds(), 0, -1U, data_seg_attr);
+> +	sgdt(&desc_table_ptr);
+> +	vmcb_set_seg(&save->gdtr, 0,
+> +		     desc_table_ptr.base, desc_table_ptr.limit, 0);
+> +	sidt(&desc_table_ptr);
+> +	vmcb_set_seg(&save->idtr, 0,
+> +		     desc_table_ptr.base, desc_table_ptr.limit, 0);
+> +
+> +	ctrl->asid = 1;
+> +	save->cpl = 0;
+> +	save->efer = rdmsr(MSR_EFER);
+> +	asm volatile ("mov %%cr4, %0" : "=r"(save->cr4) : : "memory");
+> +	asm volatile ("mov %%cr3, %0" : "=r"(save->cr3) : : "memory");
+> +	asm volatile ("mov %%cr0, %0" : "=r"(save->cr0) : : "memory");
+> +	asm volatile ("mov %%dr7, %0" : "=r"(save->dr7));
+> +	asm volatile ("mov %%dr6, %0" : "=r"(save->dr6));
+
+Out of pure curiosity, why the clobbering is diferent for DRs?
+
+> +	asm volatile ("mov %%cr2, %0" : "=r"(save->cr2) : : "memory");
+
+This probably can be written as a single 'asm volatile' block by
+utilizing something like offsetof() (e.g. how we do in svm_vcpu_run())
+but feel free to leave it for future generations :-)
+
+> +	save->g_pat = rdmsr(MSR_IA32_CR_PAT);
+> +	save->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
+> +	ctrl->intercept = (1ULL << INTERCEPT_VMRUN) |
+> +				(1ULL << INTERCEPT_VMMCALL);
+> +
+> +	vmcb->save.rip = (ulong)guest_rip;
+> +	vmcb->save.rsp = (ulong)guest_rsp;
+> +	regs.rdi = (ulong)svm;
+
+We don't really support 32bit, do we? I'd used 'u64' then to be
+explicit.
+
+> +}
+> +
+> +#define SAVE_GPR_C                              \
+> +	"xchg %%rbx, regs+0x8\n\t"              \
+> +	"xchg %%rcx, regs+0x10\n\t"             \
+> +	"xchg %%rdx, regs+0x18\n\t"             \
+> +	"xchg %%rbp, regs+0x28\n\t"             \
+> +	"xchg %%rsi, regs+0x30\n\t"             \
+> +	"xchg %%rdi, regs+0x38\n\t"             \
+> +	"xchg %%r8, regs+0x40\n\t"              \
+> +	"xchg %%r9, regs+0x48\n\t"              \
+> +	"xchg %%r10, regs+0x50\n\t"             \
+> +	"xchg %%r11, regs+0x58\n\t"             \
+> +	"xchg %%r12, regs+0x60\n\t"             \
+> +	"xchg %%r13, regs+0x68\n\t"             \
+> +	"xchg %%r14, regs+0x70\n\t"             \
+> +	"xchg %%r15, regs+0x78\n\t"
+> +
+> +#define LOAD_GPR_C      SAVE_GPR_C
+> +
+> +/*
+> + * selftests do not use interrupts so we dropped clgi/sti/cli/stgi
+> + * for now
+> + */
+> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa)
+> +{
+> +	asm volatile (
+> +		"vmload\n\t"
+> +		"vmload %[vmcb_gpa]\n\t"
+> +		"mov regs+0x80, %%r15\n\t"  // rflags
+> +		"mov %%r15, 0x170(%[vmcb])\n\t"
+> +		"mov regs, %%r15\n\t"       // rax
+> +		"mov %%r15, 0x1f8(%[vmcb])\n\t"
+> +		LOAD_GPR_C
+> +		"vmrun %[vmcb_gpa]\n\t"
+> +		SAVE_GPR_C
+> +		"mov 0x170(%[vmcb]), %%r15\n\t"  // rflags
+> +		"mov %%r15, regs+0x80\n\t"
+> +		"mov 0x1f8(%[vmcb]), %%r15\n\t"  // rax
+> +		"mov %%r15, regs\n\t"
+> +		"vmsave %[vmcb_gpa]\n\t"
+> +		: : [vmcb] "r" (vmcb), [vmcb_gpa] "a" (vmcb_gpa)
+> +		: "rbx", "rcx", "rdx", "rsi",
+> +		  "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",
+> +		  "memory");
+> +
+> +}
+> +
+> +void nested_svm_check_supported(void)
+> +{
+> +	struct kvm_cpuid_entry2 *entry =
+> +		kvm_get_supported_cpuid_entry(0x80000001);
+> +
+> +	if (!(entry->ecx & CPUID_SVM)) {
+> +		fprintf(stderr, "nested SVM not enabled, skipping test\n");
+> +		exit(KSFT_SKIP);
+> +	}
+> +}
+> +
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Vitaly
+
