@@ -2,154 +2,154 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B0C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E1FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D79D2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580764570;
-	bh=j0N6eETsdex09Lk4R3IVPgEbrrhavpttKWgdQcpVkKk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=H0PnL9PeVlVfjJJzHvbp7QWB5xH5I7H9Q5gBQydkS64S1AijJsh3gheEFuC4Nh4h3
-	 rkvv+F4XXPCa8HAn6/04xXdTejz9SGSEbECBU3eBB6nddtfaepEu8+vfG7WzxB+1KA
-	 osjYI9+kxu3fJKxf5AFlCmPeRhZAYQi9wvhhu1Tg=
+	by mail.kernel.org (Postfix) with ESMTP id 71EFD20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgBCVQJ (ORCPT
+        id S1727156AbgBCVQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:16:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgBCVQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:16:09 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8917A20838;
-        Mon,  3 Feb 2020 21:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580764568;
-        bh=j0N6eETsdex09Lk4R3IVPgEbrrhavpttKWgdQcpVkKk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=NGXeLYuQVp/2xJRfioxTBKnzNmygMNE3Bm7rb+hUJr4ZjltCbUVy2nYZQnAWya/lB
-         I9vNRnVO+noZc1hJAhRXbMez1RbEuZ1f0U80fPFsdfh+wMrwUAJedGR9CLj+YORYhL
-         5pgEzJNvtKFMWVXBgGic3l862i/Afbj8SFr5vfhk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5D4693522718; Mon,  3 Feb 2020 13:16:08 -0800 (PST)
-Date:   Mon, 3 Feb 2020 13:16:08 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        'Eric Dumazet' <edumazet@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>
-Subject: Re: Confused about hlist_unhashed_lockless()
-Message-ID: <20200203211608.GO2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200131164308.GA5175@willie-the-truck>
- <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
- <20200131184322.GA11457@worktop.programming.kicks-ass.net>
- <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
- <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
- <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
- <20200203155839.GK2935@paulmck-ThinkPad-P72>
- <20200203160227.GA7274@willie-the-truck>
- <20200203172947.GM2935@paulmck-ThinkPad-P72>
- <20200203182737.GB12136@willie-the-truck>
+        Mon, 3 Feb 2020 16:16:47 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33219 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgBCVQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 16:16:47 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h4so4894797qkm.0;
+        Mon, 03 Feb 2020 13:16:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fwu1ofu8gmyJhMQgts5qdiTVhaWWRWOOtCO5HwATfdc=;
+        b=lcGd6cnNgYNjwBkv5j7Yns8BJxSfEljKNF9aMNo0B8XzqfXlO7TNyTVBQPT/ZvAtcy
+         NcJ9hnH/UTgUw+6h11z1xAwbQ4FcyVovOjF9O03AgJE/E5weduh/nIrYk+LQ9cVr7guJ
+         uc3glioNA5QfadzytFDZHBKWnLU35XxKL8Tn6xAycufeTq/lkmvM9Yb1eZtn64sitkAH
+         1sx5exgXG6o1dGJAvgjpwU6dr4E/8gnUZMgF+0dW9U3vTBDjEQeW5QZLA9/8m49SfZ/R
+         kQzPr9qQPEyxhGl2QydXtyJKPYnBjTAqH/HDgs0dV2JA+YQto6a9tRPGmkZUypnw0+jl
+         aZdA==
+X-Gm-Message-State: APjAAAUqi3cjnOqVIc/VucRi4saLA87b88HSLQFc8ft5p1hz7cBcs6fJ
+        Ev08iwrgSqNR1WJ/SK9EV+g=
+X-Google-Smtp-Source: APXvYqyLKrntXqs3AGalhgc3fsA+daN9eTg2g2vjR7x1nXdvRGtAfX2ycRDjQk6AjW6hIReG3QfVZg==
+X-Received: by 2002:a37:ef0c:: with SMTP id j12mr25406259qkk.52.1580764605901;
+        Mon, 03 Feb 2020 13:16:45 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id s26sm10283941qkj.24.2020.02.03.13.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 13:16:45 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH] initramfs: don't double-compress built-in initramfs if the kernel is compressed
+Date:   Mon,  3 Feb 2020 16:16:44 -0500
+Message-Id: <20200203211644.39847-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200203200656.GA455151@rani.riverdale.lan>
+References: <20200203200656.GA455151@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203182737.GB12136@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 06:27:37PM +0000, Will Deacon wrote:
-> Hi Paul,
-> 
-> On Mon, Feb 03, 2020 at 09:29:47AM -0800, Paul E. McKenney wrote:
-> > On Mon, Feb 03, 2020 at 04:02:28PM +0000, Will Deacon wrote:
-> > > On Mon, Feb 03, 2020 at 07:58:39AM -0800, Paul E. McKenney wrote:
-> > > > On Mon, Feb 03, 2020 at 03:45:54PM +0000, David Laight wrote:
-> > > > > From: Eric Dumazet
-> > > > > > Sent: 31 January 2020 18:53
-> > > > > > 
-> > > > > > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
-> > > > > > >
-> > > > > > 
-> > > > > > > This is nice, now with have data_race()
-> > > > > > >
-> > > > > > > Remember these patches were sent 2 months ago, at a time we were
-> > > > > > > trying to sort out things.
-> > > > > > >
-> > > > > > > data_race() was merged a few days ago.
-> > > > > > 
-> > > > > > Well, actually data_race() is not there yet anyway.
-> > > > > 
-> > > > > Shouldn't it be NO_DATA_RACE() ??
-> > > > 
-> > > > No, because you use data_race() when there really are data races, but you
-> > > > want KCSAN to ignore them.  For example, diagnostic code that doesn't
-> > > > participate in the actual concurrency design and that doesn't run all
-> > > > that often might use data_race().  For another example, if a developer
-> > > > knew that data races existed, but that the compiler could not reasonably
-> > > > do anything untoward with those data races, that developer might well
-> > > > choose to use data_race() instead of READ_ONCE().  Especially if the
-> > > > access in question was on a fastpath where helpful compiler optimizations
-> > > > would be prohibited by use of READ_ONCE().
-> > > 
-> > > Yes, and in this particular case I think we can remove some WRITE_ONCE()s
-> > > from the non-RCU hlist code too (similarly for hlist_nulls).
-> > 
-> > Quite possibly, but we should take them case by case.  READ_ONCE()
-> > really does protect against some optimizations, while data_race() does
-> > not at all.
-> 
-> Agreed, and I plan to send patches for review so we can discuss them in
-> more detail then.
+If the kernel is going to be compressed anyway, there is no point in
+double-compressing the built-in initramfs. Hide the built-in initramfs
+compression choice in this case.
 
-Looking forward to seeing them!
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ init/Kconfig | 9 +++++++++
+ usr/Kconfig  | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-> > But yes, in some cases you want to -avoid- using READ_ONCE() and
-> > WRITE_ONCE() so that KCSAN can do its job.  For example, given a per-CPU
-> > variable that is only supposed to be accessed from the corresponding CPU
-> > except for reads by diagnostic code, you should have the main algorithm
-> > use plain C-language reads and writes, and have the diagnostic code
-> > use data_race().  This allows KCSAN to correctly flag bugs that access
-> > this per-CPU variable off-CPU while leaving the diagnostic code alone.
-> 
-> Yes, and in a similar vein I think the WRITE_ONCE() additions to the hlist
-> code may hide unintentional racy access to the hlist where I would argue
-> that the correct behaviour is either to acknowledge the data race (like the
-> timer code) or to use the RCU variant. The problem with what's currently in
-> mainline is that it reads a bit like the non-RCU hlist is directly usable as
-> a lock-free list implementation, which really isn't the case.
+diff --git a/init/Kconfig b/init/Kconfig
+index 24b23d843df1..88da0976bbfa 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -176,6 +176,9 @@ config HAVE_KERNEL_LZ4
+ config HAVE_KERNEL_UNCOMPRESSED
+ 	bool
+ 
++config KERNEL_COMPRESSED
++	bool
++
+ choice
+ 	prompt "Kernel compression mode"
+ 	default KERNEL_GZIP
+@@ -201,6 +204,7 @@ choice
+ config KERNEL_GZIP
+ 	bool "Gzip"
+ 	depends on HAVE_KERNEL_GZIP
++	select KERNEL_COMPRESSED
+ 	help
+ 	  The old and tried gzip compression. It provides a good balance
+ 	  between compression ratio and decompression speed.
+@@ -208,6 +212,7 @@ config KERNEL_GZIP
+ config KERNEL_BZIP2
+ 	bool "Bzip2"
+ 	depends on HAVE_KERNEL_BZIP2
++	select KERNEL_COMPRESSED
+ 	help
+ 	  Its compression ratio and speed is intermediate.
+ 	  Decompression speed is slowest among the choices.  The kernel
+@@ -218,6 +223,7 @@ config KERNEL_BZIP2
+ config KERNEL_LZMA
+ 	bool "LZMA"
+ 	depends on HAVE_KERNEL_LZMA
++	select KERNEL_COMPRESSED
+ 	help
+ 	  This compression algorithm's ratio is best.  Decompression speed
+ 	  is between gzip and bzip2.  Compression is slowest.
+@@ -226,6 +232,7 @@ config KERNEL_LZMA
+ config KERNEL_XZ
+ 	bool "XZ"
+ 	depends on HAVE_KERNEL_XZ
++	select KERNEL_COMPRESSED
+ 	help
+ 	  XZ uses the LZMA2 algorithm and instruction set specific
+ 	  BCJ filters which can improve compression ratio of executable
+@@ -241,6 +248,7 @@ config KERNEL_XZ
+ config KERNEL_LZO
+ 	bool "LZO"
+ 	depends on HAVE_KERNEL_LZO
++	select KERNEL_COMPRESSED
+ 	help
+ 	  Its compression ratio is the poorest among the choices. The kernel
+ 	  size is about 10% bigger than gzip; however its speed
+@@ -249,6 +257,7 @@ config KERNEL_LZO
+ config KERNEL_LZ4
+ 	bool "LZ4"
+ 	depends on HAVE_KERNEL_LZ4
++	select KERNEL_COMPRESSED
+ 	help
+ 	  LZ4 is an LZ77-type compressor with a fixed, byte-oriented encoding.
+ 	  A preliminary version of LZ4 de/compression tool is available at
+diff --git a/usr/Kconfig b/usr/Kconfig
+index bdf5bbd40727..f39eeb9ea2e3 100644
+--- a/usr/Kconfig
++++ b/usr/Kconfig
+@@ -102,7 +102,7 @@ config RD_LZ4
+ 
+ choice
+ 	prompt "Built-in initramfs compression mode"
+-	depends on INITRAMFS_SOURCE != ""
++	depends on INITRAMFS_SOURCE != "" && !KERNEL_COMPRESSED
+ 	help
+ 	  This option allows you to decide by which algorithm the builtin
+ 	  initramfs will be compressed.  Several compression algorithms are
+-- 
+2.24.1
 
-Fair point.  So your thought is that the RCU variant (or something
-similar to it) is used in the lockless case, and that KCSAN complains
-about lockless use of the non-READ_ONCE() interface?  If so, that seems
-like it might work quite well.
-
-> > Seem reasonable?
-> 
-> It does to me, but we should probably try to apply this a bit more
-> consistently in patch review. Adding {READ,WRITE}_ONCE() until the
-> sanitiser shuts up is easy, but picking that apart later on is a real
-> challenge.
-
-Agreed.  It does seem like early days for laying out a reasonable set
-of use cases, but we do have to start somewhere.  My hope is that the
-resulting automated review of concurency will be more than worth the
-effort.  Hope springs eternal and all that...  :-)
-
-							Thanx, Paul
