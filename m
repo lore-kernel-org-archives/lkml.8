@@ -2,199 +2,425 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFB5C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3936CC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8618920658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34DF2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Z5gtfsfA"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="dt54kiu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgBCVVe (ORCPT
+        id S1727168AbgBCVVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:21:34 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42220 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgBCVVd (ORCPT
+        Mon, 3 Feb 2020 16:21:40 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]:36795 "EHLO
+        mail-qt1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCVVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:21:33 -0500
-Received: by mail-wr1-f65.google.com with SMTP id k11so20167233wrd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:21:30 -0800 (PST)
+        Mon, 3 Feb 2020 16:21:40 -0500
+Received: by mail-qt1-f178.google.com with SMTP id t13so12679547qto.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:21:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Linhx/sgeP54sgG+yFgZRMaacWHjWnum0M0q4uxIwCA=;
-        b=Z5gtfsfAtTaxUTOyoRg2CywyxUtjD9NQNrgkDf53dqfMSbSlzrHW2aKdpciqAD2vKD
-         lqWaoYIS1bCN09Bu99tYSirZ61FxtpEdxLsKgIOkgKx1Lv6CSbzVcKJlZmxI4t+7pm7x
-         UcgcO4RWop26tUYd14soRDqSAL6atSK1889KQ=
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AjcsQ7wkV3k+UyEAAc2ikCIF9hs55RZZslpGRj2CEow=;
+        b=dt54kiu+yirOyfLDCk0Z1km3LK1KDKHkGdo3BDs0TPWFrYpevfnx8ahy0nh5ePkBB6
+         8KWiY3Y3Exdbpvttn360VZM37jG3JwvnoPE+rk40nk89m0LEmdBDyNrE80VEDnF1g/Z9
+         idfPuZhsd3BpOqwxdx6XPTfO5kJdmO3gLU9+KEyEtWvRapoOxhgWXW6MTRU0BAFa8+Gs
+         n1zZjG6qhCjcsb7hPzG5pmc5jQa2H7RiPAc4VfIDVX81SI0O+NCEDGbQ9jRwdHoK6R7+
+         Qtot416msvJhyYnFrqROyBVnui2v+BrfQpy7YBMv5WorjF00pqFEvvQpdmMCGCl6XH8q
+         uFUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Linhx/sgeP54sgG+yFgZRMaacWHjWnum0M0q4uxIwCA=;
-        b=NGTA19HMsCuTmTWtml+etnAQxMUxoc0MJyJuGidmRrglAJzIVBZwvkPQEiodqsmDjd
-         dg7jW7zYk2KDrhq6qzCcdWor9e74CKgLMwwEDvrYIDIJbYR3oYQyxNgXyUhx+NM2PjjG
-         QmBFoma2/M2z4/TFA0lo3zLitLTlzcZKpL1Cw+UCGHplsVFPFvdV4stc6YJ5jq/ylh6f
-         Q1NWJx71sjywoEYD8+Ob0ttXpNW/MmwNQwOzzmKTzO6EKQipJm48QUJ7PiNVenpe0v4G
-         j/8aSALz9t/wfpM9H94yJz654chHDEFa27jEtUl7rFKUAwPgHpQuHVQnb3gZGGL4vLlQ
-         fHDQ==
-X-Gm-Message-State: APjAAAXrz/WeVMPYyfG/GCRQX3E+MVxTyxypwQti+w718pFgBlgGLsv7
-        3aXkOivbSXdhHtekQNoNDJjEoQ==
-X-Google-Smtp-Source: APXvYqxzc+Knk9Bu4G6pzqI5sZxcvOTL57ZIDi7NYOhwgL1JxlGPYEkVPquC3VdQ5pfubirVGlUKcg==
-X-Received: by 2002:adf:ecc2:: with SMTP id s2mr17929089wro.263.1580764889775;
-        Mon, 03 Feb 2020 13:21:29 -0800 (PST)
-Received: from [10.67.50.115] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 124sm882518wmc.29.2020.02.03.13.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 13:21:29 -0800 (PST)
-Subject: Re: [PATCH 6/6] net: bcmgenet: reduce severity of missing clock
- warnings
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
-Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com
-References: <20200201074625.8698-1-jeremy.linton@arm.com>
- <20200201074625.8698-7-jeremy.linton@arm.com>
- <2dfd6cd2-1dd0-c8ff-8d83-aed3b4ea7a79@gmx.net>
- <34aba1d9-5cad-0fee-038d-c5f3bfc9ed30@arm.com>
- <45e138de5ddd70e8033bdef6484703eed60a9cb7.camel@suse.de>
- <70a6ad63-dccc-e595-789d-800484197bbe@gmx.net>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
- 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
- OXY+VnhOn2EcREN7qdAKw0j9Sw==
-Message-ID: <e5be3a95-0b7e-370a-2d65-fdeabbdfa187@broadcom.com>
-Date:   Mon, 3 Feb 2020 13:21:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AjcsQ7wkV3k+UyEAAc2ikCIF9hs55RZZslpGRj2CEow=;
+        b=LwEHGXUzsxe9alXbSS23wLvBomsMRTP08E8q6KAPSTRXdIqSgZ9WdgXk8IjfiRFjWr
+         lIF9xmcxbjuSJ9etD1GVS2Ob7T1SqNBNyLQi7Vw/hXs7ixTsNy3cVwDatAJMpfL+v8Su
+         oHeLPIQkrcjH/kbT27qHd5co1h4CiM4ITNlKwCEdT9KrSFm0czSbnvB6bsT7bYbNUxSb
+         oDS8TL/JEyDTlM7ay2y+E9BCf9dsg9qqRDxxpBRskk9Ph23Tq8gEs/ozcIUdNOUhyeME
+         jjdQVNhrdf3USj6+KHtdGKMm4j9g4rFyP5Mm2BNXiqhvKuzKYRohpP+wU/gZO+FbHpq4
+         S0yg==
+X-Gm-Message-State: APjAAAVVR0Oo5hA65tS/VUCMMhjC64LNER4w6SVQE3j150UZ9bJo8YI3
+        GhRILPvY87hu8tiHPjA7m+YtJdwDOqA=
+X-Google-Smtp-Source: APXvYqyz0EIa1fihnaeXFTtYgKzsIodCuEcXwzFnTPu7ghL7GsJYdlIVB7kYaxpA1I7flVc2zGLwFg==
+X-Received: by 2002:ac8:365c:: with SMTP id n28mr25267545qtb.260.1580764898731;
+        Mon, 03 Feb 2020 13:21:38 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:6320])
+        by smtp.gmail.com with ESMTPSA id p50sm10950286qtf.5.2020.02.03.13.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 13:21:37 -0800 (PST)
+Date:   Mon, 3 Feb 2020 16:21:36 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 1/3] mm: memcontrol: fix memory.low proportional
+ distribution
+Message-ID: <20200203212136.GC6380@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-2-hannes@cmpxchg.org>
+ <20200130114929.GT24244@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <70a6ad63-dccc-e595-789d-800484197bbe@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130114929.GT24244@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 11:08 AM, Stefan Wahren wrote:
-> Hi,
+On Thu, Jan 30, 2020 at 12:49:29PM +0100, Michal Hocko wrote:
+> On Thu 19-12-19 15:07:16, Johannes Weiner wrote:
+> > When memory.low is overcommitted - i.e. the children claim more
+> > protection than their shared ancestor grants them - the allowance is
+> > distributed in proportion to how much each sibling uses their own
+> > declared protection:
 > 
-> Am 03.02.20 um 19:36 schrieb Nicolas Saenz Julienne:
->> Hi,
->> BTW the patch looks good to me too:
->>
->> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>
->> On Sat, 2020-02-01 at 13:27 -0600, Jeremy Linton wrote:
->>> Hi,
->>>
->>> First, thanks for looking at this!
->>>
->>> On 2/1/20 10:44 AM, Stefan Wahren wrote:
->>>> Hi Jeremy,
->>>>
->>>> [add Nicolas as BCM2835 maintainer]
->>>>
->>>> Am 01.02.20 um 08:46 schrieb Jeremy Linton:
->>>>> If one types "failed to get enet clock" or similar into google
->>>>> there are ~370k hits. The vast majority are people debugging
->>>>> problems unrelated to this adapter, or bragging about their
->>>>> rpi's. Given that its not a fatal situation with common DT based
->>>>> systems, lets reduce the severity so people aren't seeing failure
->>>>> messages in everyday operation.
->>>>>
->>>> i'm fine with your patch, since the clocks are optional according to the
->>>> binding. But instead of hiding of those warning, it would be better to
->>>> fix the root cause (missing clocks). Unfortunately i don't have the
->>>> necessary documentation, just some answers from the RPi guys.
->>> The DT case just added to my ammunition here :)
->>>
->>> But really, I'm fixing an ACPI problem because the ACPI power management
->>> methods are also responsible for managing the clocks. Which means if I
->>> don't lower the severity (or otherwise tweak the code path) these errors
->>> are going to happen on every ACPI boot.
->>>
->>>> This is what i got so far:
->> Stefan, Apart from the lack of documentation (and maybe also time), is there
->> any specific reason you didn't sent the genet clock patch yet? It should be OK
->> functionally isn't it?
+> Has there ever been any actual explanation why do we care about
+> overcommitted protection? I have got back to email threads when
+> the effective hierarchical protection has been proposed.
+> http://lkml.kernel.org/r/20180320223353.5673-1-guro@fb.com talks about
+> some "leaf memory cgroups are more valuable than others" which sounds ok
+> but it doesn't explain why children have to overcommit parent in the
+> first place. Do we have any other documentation to explain the usecase?
+
+I don't think we properly documented it, no. Maybe Roman can elaborate
+on that a bit more since he added it.
+
+What I can see is that it makes configuration a bit more forgiving and
+easier to set up. At the top-level you tend to configure a share of
+available host memory, and at the leaf level you tend to communicate a
+requirement of the workload. In practice, these two aren't always
+perfectly in sync, with workloads coming and going, the software being
+changed and configs tuned by different teams.
+
+Now obviously, they cannot be completely out of wack - you can't set
+aside 1G of host memory, and then have 30 workloads that need 1G each
+to run comfortably. But as long as the ballpark is correct, it's nice
+if things keep working when you're off by a couple MB here and there.
+
+> > 	low_usage = min(memory.low, memory.current)
+> > 	elow = parent_elow * (low_usage / siblings_low_usage)
+> > 
+> > However, siblings_low_usage is not the sum of all low_usages. It sums
+> > up the usages of *only those cgroups that are within their memory.low*
+> > That means that low_usage can be *bigger* than siblings_low_usage, and
+> > consequently the total protection afforded to the children can be
+> > bigger than what the ancestor grants the subtree.
+> > 
+> > Consider three groups where two are in excess of their protection:
+> > 
+> >   A/memory.low = 10G
+> >   A/A1/memory.low = 10G, memory.current = 20G
+> >   A/A2/memory.low = 10G, memory.current = 20G
+> >   A/A3/memory.low = 10G, memory.current =  8G
+> >   siblings_low_usage = 8G (only A3 contributes)
+> > 
+> >   A1/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
+> >   A2/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
+> >   A3/elow = parent_elow(10G) * low_usage(8G) / siblings_low_usage(8G) = 10.0G
+> > 
+> >   (the 12.5G are capped to the explicit memory.low setting of 10G)
+> > 
+> > With that, the sum of all awarded protection below A is 30G, when A
+> > only grants 10G for the entire subtree.
+> > 
+> > What does this mean in practice? A1 and A2 would still be in excess of
+> > their 10G allowance and would be reclaimed, whereas A3 would not. As
+> > they eventually drop below their protection setting, they would be
+> > counted in siblings_low_usage again and the error would right itself.
+> > 
+> > When reclaim was applied in a binary fashion (cgroup is reclaimed when
+> > it's above its protection, otherwise it's skipped) this would actually
+> > work out just fine. However, since 1bc63fb1272b ("mm, memcg: make scan
+> > aggression always exclude protection"), reclaim pressure is scaled to
+> > how much a cgroup is above its protection. As a result this
+> > calculation error unduly skews pressure away from A1 and A2 toward the
+> > rest of the system.
 > 
-> last time i tried to specify the both clocks as suggest by the binding
-> document (took genet125 for wol, not sure this is correct), but this
-> caused an abort on the BCM2711. In the lack of documentation i stopped
-> further investigations. As i saw that Jeremy send this patch, i wanted
-> to share my current results and retestet it with this version which
-> doesn't crash. I don't know the reason why both clocks should be
-> specified, but this patch should be acceptable since the RPi 4 doesn't
-> support wake on LAN.
+> Just to make sure I fully follow. The overall excess over protection is
+> 38G in your example (for A) while the reclaim would only scan 20G for
+> this hierarchy until the error starts to fixup because
+> siblings_low_usage would get back into sync, correct?
 
-Your clock changes look correct, but there is also a CLKGEN register
-block which has separate clocks for the GENET controller, which lives at
-register offset 0x7d5e0048 and which has the following layout:
+Exactly right.
 
-bit 0: GENET_CLK_250_CLOCK_ENABLE
-bit 1: GENET_EEE_CLOCK_ENABLE
-bit 2: GENET_GISB_CLOCK_ENABLE
-bit 3: GENET_GMII_CLOCK_ENABLE
-bit 4: GENET_HFB_CLOCK_ENABLE
-bit 5: GENET_L2_INTR_CLOCK_ENABLE
-bit 6: GENET_SCB_CLOCK_ENABLE
-bit 7: GENET_UNIMAC_SYS_RX_CLOCK_ENABLE
-bit 8: GENET_UNIMAC_SYS_TX_CLOCK_ENABLE
+> > But why did we do it like this in the first place?
+> > 
+> > The reasoning behind exempting groups in excess from
+> > siblings_low_usage was to go after them first during reclaim in an
+> > overcommitted subtree:
+> > 
+> >   A/memory.low = 2G, memory.current = 4G
+> >   A/A1/memory.low = 3G, memory.current = 2G
+> >   A/A2/memory.low = 1G, memory.current = 2G
+> > 
+> >   siblings_low_usage = 2G (only A1 contributes)
+> >   A1/elow = parent_elow(2G) * low_usage(2G) / siblings_low_usage(2G) = 2G
+> >   A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G
+> > 
+> > While the children combined are overcomitting A and are technically
+> > both at fault, A2 is actively declaring unprotected memory and we
+> > would like to reclaim that first.
+> > 
+> > However, while this sounds like a noble goal on the face of it, it
+> > doesn't make much difference in actual memory distribution: Because A
+> > is overcommitted, reclaim will not stop once A2 gets pushed back to
+> > within its allowance; we'll have to reclaim A1 either way. The end
+> > result is still that protection is distributed proportionally, with A1
+> > getting 3/4 (1.5G) and A2 getting 1/4 (0.5G) of A's allowance.
+> > 
+> > [ If A weren't overcommitted, it wouldn't make a difference since each
+> >   cgroup would just get the protection it declares:
+> > 
+> >   A/memory.low = 2G, memory.current = 3G
+> >   A/A1/memory.low = 1G, memory.current = 1G
+> >   A/A2/memory.low = 1G, memory.current = 2G
+> > 
+> >   With the current calculation:
+> > 
+> >   siblings_low_usage = 1G (only A1 contributes)
+> >   A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
+> >   A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
+> > 
+> >   Including excess groups in siblings_low_usage:
+> > 
+> >   siblings_low_usage = 2G
+> >   A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G
+> >   A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G ]
+> > 
+> > Simplify the calculation and fix the proportional reclaim bug by
+> > including excess cgroups in siblings_low_usage.
+> 
+> I think it would be better to also show the initial example with the
+> overcommitted protection because this is the primary usecase this patch
+> is targeting in the first place.
+>    A/memory.low = 10G
+>    A/A1/memory.low = 10G, memory.current = 20G
+>    A/A2/memory.low = 10G, memory.current = 20G
+>    A/A3/memory.low = 10G, memory.current =  8G
+>    siblings_low_usage = 28G
+>  
+>    A1/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(28G) = 3.5G
+>    A2/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(28G) = 3.5G
+>    A3/elow = parent_elow(10G) * low_usage(8G) / siblings_low_usage(28G) = 2.8G
 
-you will need all of those clocks turned on for normal operation minus
-EEE, unless EEE is desirable which is why it is a separate clock. Those
-clocks default to ON unless turned off, and the main gate that you
-control is probably enough.
+Good idea, I added this. Attaching the updated patch below.
 
-The Pi4 could support Wake-on-LAN with appropriate VPU firmware changes,
-but I do not believe there is any interest in doing that. I would not
-"bend" the clock representation just so as to please the driver with its
-clocking needs.
+> so wrt the global reclaim we have 38G of reclaimable memory with 38G
+> excess over A's protection. It is true that A3 will get reclaimed way
+> before A1, A2 reach their protection which might be just good enough to
+> satisfy the external memory pressure because it is not really likely
+> that the global pressure would require more than 20G dropped all at
+> once, right?
+
+I think the key realization is that in this configuration, neither A1,
+A2 nor A3 *have* 10G of protection. So at this point it's fair to
+reclaim them all at once.
+
+> That being said I can see the problem with the existing implementation
+> and how you workaround it. I am still unclear about why should we care
+> about overcommit on the protection that much and in that light the patch
+> makes more sense because it doesn't overflow the memory pressure to
+> outside.
+> Longer term, though, do we really have to care about this scenario? If
+> yes, can we have it documented?
+
+Yes, I think that's a good idea. This patch is not because I have a
+strong case for overcommit, but because of the bug of escaping
+pressure and to simplify things for patch #3.
+
+> Do we want a fixes tag here? There are two changes that need to be
+> applied together to have a visible effect.
+> 
+> Fixes: 1bc63fb1272b ("mm, memcg: make scan aggression always exclude protection")
+> Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
+> 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks for your review, Michal!
+
+Updated patch incorporating your feedback:
+
+---
+
+From 46513e8afdc0f325be7007bdbb4e85a009e17dcc Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 9 Dec 2019 15:18:58 -0500
+Subject: [PATCH] mm: memcontrol: fix memory.low proportional distribution
+
+When memory.low is overcommitted - i.e. the children claim more
+protection than their shared ancestor grants them - the allowance is
+distributed in proportion to how much each sibling uses their own
+declared protection:
+
+	low_usage = min(memory.low, memory.current)
+	elow = parent_elow * (low_usage / siblings_low_usage)
+
+However, siblings_low_usage is not the sum of all low_usages. It sums
+up the usages of *only those cgroups that are within their memory.low*
+That means that low_usage can be *bigger* than siblings_low_usage, and
+consequently the total protection afforded to the children can be
+bigger than what the ancestor grants the subtree.
+
+Consider three groups where two are in excess of their protection:
+
+  A/memory.low = 10G
+  A/A1/memory.low = 10G, memory.current = 20G
+  A/A2/memory.low = 10G, memory.current = 20G
+  A/A3/memory.low = 10G, memory.current =  8G
+  siblings_low_usage = 8G (only A3 contributes)
+
+  A1/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
+  A2/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(8G) = 12.5G -> 10G
+  A3/elow = parent_elow(10G) * low_usage(8G) / siblings_low_usage(8G) = 10.0G
+
+  (the 12.5G are capped to the explicit memory.low setting of 10G)
+
+With that, the sum of all awarded protection below A is 30G, when A
+only grants 10G for the entire subtree.
+
+What does this mean in practice? A1 and A2 would still be in excess of
+their 10G allowance and would be reclaimed, whereas A3 would not. As
+they eventually drop below their protection setting, they would be
+counted in siblings_low_usage again and the error would right itself.
+
+When reclaim was applied in a binary fashion (cgroup is reclaimed when
+it's above its protection, otherwise it's skipped) this would actually
+work out just fine. However, since 1bc63fb1272b ("mm, memcg: make scan
+aggression always exclude protection"), reclaim pressure is scaled to
+how much a cgroup is above its protection. As a result this
+calculation error unduly skews pressure away from A1 and A2 toward the
+rest of the system.
+
+But why did we do it like this in the first place?
+
+The reasoning behind exempting groups in excess from
+siblings_low_usage was to go after them first during reclaim in an
+overcommitted subtree:
+
+  A/memory.low = 2G, memory.current = 4G
+  A/A1/memory.low = 3G, memory.current = 2G
+  A/A2/memory.low = 1G, memory.current = 2G
+
+  siblings_low_usage = 2G (only A1 contributes)
+  A1/elow = parent_elow(2G) * low_usage(2G) / siblings_low_usage(2G) = 2G
+  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G
+
+While the children combined are overcomitting A and are technically
+both at fault, A2 is actively declaring unprotected memory and we
+would like to reclaim that first.
+
+However, while this sounds like a noble goal on the face of it, it
+doesn't make much difference in actual memory distribution: Because A
+is overcommitted, reclaim will not stop once A2 gets pushed back to
+within its allowance; we'll have to reclaim A1 either way. The end
+result is still that protection is distributed proportionally, with A1
+getting 3/4 (1.5G) and A2 getting 1/4 (0.5G) of A's allowance.
+
+[ If A weren't overcommitted, it wouldn't make a difference since each
+  cgroup would just get the protection it declares:
+
+  A/memory.low = 2G, memory.current = 3G
+  A/A1/memory.low = 1G, memory.current = 1G
+  A/A2/memory.low = 1G, memory.current = 2G
+
+  With the current calculation:
+
+  siblings_low_usage = 1G (only A1 contributes)
+  A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
+  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(1G) = 2G -> 1G
+
+  Including excess groups in siblings_low_usage:
+
+  siblings_low_usage = 2G
+  A1/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G
+  A2/elow = parent_elow(2G) * low_usage(1G) / siblings_low_usage(2G) = 1G -> 1G ]
+
+Simplify the calculation and fix the proportional reclaim bug by
+including excess cgroups in siblings_low_usage.
+
+After this patch, the effective memory.low distribution from the
+example above would be as follows:
+
+  A/memory.low = 10G
+  A/A1/memory.low = 10G, memory.current = 20G
+  A/A2/memory.low = 10G, memory.current = 20G
+  A/A3/memory.low = 10G, memory.current =  8G
+  siblings_low_usage = 28G
+
+  A1/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(28G) = 3.5G
+  A2/elow = parent_elow(10G) * low_usage(10G) / siblings_low_usage(28G) = 3.5G
+  A3/elow = parent_elow(10G) * low_usage(8G) / siblings_low_usage(28G) = 2.8G
+
+Fixes: 1bc63fb1272b ("mm, memcg: make scan aggression always exclude protection")
+Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
+Acked-by: Tejun Heo <tj@kernel.org>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c   |  4 +---
+ mm/page_counter.c | 12 ++----------
+ 2 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c5b5f74cfd4d..874a0b00f89b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6236,9 +6236,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  * elow = min( memory.low, parent->elow * ------------------ ),
+  *                                        siblings_low_usage
+  *
+- *             | memory.current, if memory.current < memory.low
+- * low_usage = |
+- *	       | 0, otherwise.
++ * low_usage = min(memory.low, memory.current)
+  *
+  *
+  * Such definition of the effective memory.low provides the expected
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index de31470655f6..75d53f15f040 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -23,11 +23,7 @@ static void propagate_protected_usage(struct page_counter *c,
+ 		return;
+ 
+ 	if (c->min || atomic_long_read(&c->min_usage)) {
+-		if (usage <= c->min)
+-			protected = usage;
+-		else
+-			protected = 0;
+-
++		protected = min(usage, c->min);
+ 		old_protected = atomic_long_xchg(&c->min_usage, protected);
+ 		delta = protected - old_protected;
+ 		if (delta)
+@@ -35,11 +31,7 @@ static void propagate_protected_usage(struct page_counter *c,
+ 	}
+ 
+ 	if (c->low || atomic_long_read(&c->low_usage)) {
+-		if (usage <= c->low)
+-			protected = usage;
+-		else
+-			protected = 0;
+-
++		protected = min(usage, c->low);
+ 		old_protected = atomic_long_xchg(&c->low_usage, protected);
+ 		delta = protected - old_protected;
+ 		if (delta)
 -- 
-Florian
+2.24.1
+
