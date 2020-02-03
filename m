@@ -2,1572 +2,602 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E7FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0FF20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4F12080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgBCL1o (ORCPT
+        id S1727937AbgBCL2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:27:44 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727801AbgBCL1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:27:43 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id C05D221E917F743D5A75;
-        Mon,  3 Feb 2020 11:27:39 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Feb 2020 11:27:38 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
- 11:27:38 +0000
-Date:   Mon, 3 Feb 2020 11:27:36 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "ekigwana@gmail.com" <ekigwana@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v3 1/3] iio: frequency: adf4360: Add support for ADF4360
- PLLs
-Message-ID: <20200203112736.00001241@Huawei.com>
-In-Reply-To: <9f7217403fc2e69934eded4502d39198c2427806.camel@analog.com>
-References: <20200128111302.24359-1-alexandru.ardelean@analog.com>
-        <20200202144549.3209f04b@archlinux>
-        <9f7217403fc2e69934eded4502d39198c2427806.camel@analog.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 3 Feb 2020 06:28:07 -0500
+Received: from mga18.intel.com ([134.134.136.126]:15997 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727240AbgBCL2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 06:28:06 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 03:28:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,397,1574150400"; 
+   d="gz'50?scan'50,208,50";a="219349980"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 03 Feb 2020 03:28:01 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iyZtZ-0002hF-Ay; Mon, 03 Feb 2020 19:28:01 +0800
+Date:   Mon, 3 Feb 2020 19:27:50 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     kbuild-all@lists.01.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v5 6/6] powerpc/vdso: Switch VDSO to generic C
+ implementation.
+Message-ID: <202002031426.QLrslGif%lkp@intel.com>
+References: <231ec2e1fd2470ef7a9b8b2c766ff8e4095b6dd3.1580399657.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/mixed; boundary="43rdztibw6ibhzfr"
+Content-Disposition: inline
+In-Reply-To: <231ec2e1fd2470ef7a9b8b2c766ff8e4095b6dd3.1580399657.git.christophe.leroy@c-s.fr>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Feb 2020 11:18:51 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-> On Sun, 2020-02-02 at 14:45 +0000, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Tue, 28 Jan 2020 13:13:00 +0200
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> > > From: Edward Kigwana <ekigwana@gmail.com>
-> > > 
-> > > The ADF4360-N (N is 0..9) are a family of integrated integer-N synthesizer
-> > > and voltage controlled oscillator (VCO).
-> > > 
-> > > Control of all the on-chip registers is through a simple 3-wire SPI
-> > > interface. The device operates with a power supply ranging from 3.0 V to
-> > > 3.6 V and can be powered down when not in use.
-> > > 
-> > > The initial draft-work was done by Lars-Peter Clausen <lars@metafoo.de>
-> > > The current/latest/complete version was implemented by
-> > > Edward Kigwana <ekigwana@gmail.com>.
-> > > 
-> > > The ADF4360-9 is also present on the Analog Devices 'Advanced Active
-> > > Learning Module 2000' (ADALM-2000).
-> > > 
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-0.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-1.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-2.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-3.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-4.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-5.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-6.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-7.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-8.pdf
-> > > Link: 
-> > > https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-9.pdf
-> > > Link: 
-> > > https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/ADALM2000.html
-> > > 
-> > > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> > > Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
-> > 
-> > Superficially this looks like you really have a clock source driver.
-> > You then wrap it in IIO in order to provide convenient userspace interfaces.
-> > 
-> > I'm not sure we want to do that and I definitely need agreement from those
-> > responsible for clock source drivers before I take anything that does do
-> > this sort of combination of the two types of driver.
-> >   
-> 
-> I'll admit that I am a bit fuzzy about these frequency-generators/clock-
-> sources/synthesizer chips.
-> In the sense, I don't know where to draw the line between when to consider it
-> [primarly] an IIO device [for the IIO subsystem] or when to consider it a clock-
-> device [primarily, for the clk subsystem].
-> Obviously there's an inertia [for me at least] to go IIO, as I know it a bit
-> better. 
-> 
-> We've had some quick/short discussions [internally] about this driver, and also
-> about the LTC6952. We didn't have a bigger one, where we try to discuss them
-> more in-detail; but we do have a plan to do it.
-> 
-> So, then maybe [until then] a question: how do we decide this? [generally
-> speaking, not just adf4360 & ltc6952]
-> i.e. when to consider it clk-first or iio-first;
-> I'm not sure if there is a clear-cut rule, but maybe some guidelines/thoughts?
-> Obviously, I'll have to read-up more on the clk framework code [as well] to get
-> a feel for it.
-> 
-> We've done some things internally [up until now] with some of these clock-chips
-> that's been mostly IIO-centric. Now, much of it may not be correct, but it is
-> what we use as template when writing new driver, which [of course] is not good.
-> And, I also don't want to push/force our mistakes upstream, because that is
-> [well...] bad. Hence this/these question(s).
+--43rdztibw6ibhzfr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Clocks aren't an area I know much about either.   I'd suggest an RFC with
-a description of the types of devices and some examples.  Send that to
-linux-iio and linux-clk and see what responses you get.
+Hi Christophe,
 
-Make sure to highlight the fuzzy boundary when we get into waveform generators
-etc rather than straight forward clocks. + include some of the devices that
-definitely aren't suitable for use clocking normal SoCs etc.
+Thank you for the patch! Yet something to improve:
 
-Will be interesting to see where this one goes.
+[auto build test ERROR on next-20200130]
+[cannot apply to powerpc/next tip/timers/vdso mpe/next v5.5 v5.5-rc7 v5.5-rc6 v5.5]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Jonathan
+url:    https://github.com/0day-ci/linux/commits/Christophe-Leroy/powerpc-switch-VDSO-to-C-implementation/20200202-175410
+base:    c32e1d01a152aee976763ccf7c7ced53ca45b78f
+config: powerpc-defconfig (attached as .config)
+compiler: powerpc64-linux-gcc (GCC) 7.5.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.5.0 make.cross ARCH=powerpc 
 
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-> 
-> Thanks
-> Alex
-> 
-> > I can see that, for these high speed devices, the intent is normally to
-> > provide
-> > an input signal to some external circuitry rather than some internal clock
-> > signal, but given this is registered as a clock source the argument that it is
-> > somehow special doesn't seem to hold.
-> > 
-> > A few more specific comments inline.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >  
-> > Jonathan
-> >   
-> > > ---
-> > > 
-> > > Changelog v2 -> v3:
-> > > * dropped patch about adf4371.yaml; added by accident since it was used to
-> > >   compare against
-> > > * addressed Rob's review comments for DT schema
-> > > 
-> > > Changelog v1 -> v2:
-> > > * validate dt-bindings file with
-> > >   make dt_binding_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/iio/frequency/adi,adf4360.
-> > > yaml
-> > > 
-> > >  drivers/iio/frequency/Kconfig   |   11 +
-> > >  drivers/iio/frequency/Makefile  |    1 +
-> > >  drivers/iio/frequency/adf4360.c | 1263 +++++++++++++++++++++++++++++++
-> > >  3 files changed, 1275 insertions(+)
-> > >  create mode 100644 drivers/iio/frequency/adf4360.c
-> > > 
-> > > diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
-> > > index 240b81502512..781236496661 100644
-> > > --- a/drivers/iio/frequency/Kconfig
-> > > +++ b/drivers/iio/frequency/Kconfig
-> > > @@ -39,6 +39,17 @@ config ADF4350
-> > >  	  To compile this driver as a module, choose M here: the
-> > >  	  module will be called adf4350.
-> > >  
-> > > +config ADF4360
-> > > +	tristate "Analog Devices ADF4360 Wideband Synthesizers"
-> > > +	depends on SPI
-> > > +	depends on COMMON_CLK
-> > > +	help
-> > > +	  Say yes here to build support for Analog Devices ADF4360
-> > > +	  Wideband Synthesizers. The driver provides direct access via sysfs.
-> > > +
-> > > +	  To compile this driver as a module, choose M here: the
-> > > +	  module will be called adf4360.
-> > > +
-> > >  config ADF4371
-> > >  	tristate "Analog Devices ADF4371/ADF4372 Wideband Synthesizers"
-> > >  	depends on SPI
-> > > diff --git a/drivers/iio/frequency/Makefile b/drivers/iio/frequency/Makefile
-> > > index 518b1e50caef..85f2f81da662 100644
-> > > --- a/drivers/iio/frequency/Makefile
-> > > +++ b/drivers/iio/frequency/Makefile
-> > > @@ -6,4 +6,5 @@
-> > >  # When adding new entries keep the list in alphabetical order
-> > >  obj-$(CONFIG_AD9523) += ad9523.o
-> > >  obj-$(CONFIG_ADF4350) += adf4350.o
-> > > +obj-$(CONFIG_ADF4360) += adf4360.o
-> > >  obj-$(CONFIG_ADF4371) += adf4371.o
-> > > diff --git a/drivers/iio/frequency/adf4360.c
-> > > b/drivers/iio/frequency/adf4360.c
-> > > new file mode 100644
-> > > index 000000000000..49ad58092171
-> > > --- /dev/null
-> > > +++ b/drivers/iio/frequency/adf4360.c
-> > > @@ -0,0 +1,1263 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * ADF4360 PLL with Integrated Synthesizer and VCO
-> > > + *
-> > > + * Copyright 2014-2019 Analog Devices Inc.
-> > > + * Copyright 2019-2020 Edward Kigwana.
-> > > + */
-> > > +
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/clk-provider.h>
-> > > +#include <linux/delay.h>
-> > > +#include <linux/device.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > +#include <linux/spi/spi.h>
-> > > +#include <linux/util_macros.h>
-> > > +
-> > > +#include <linux/iio/iio.h>
-> > > +
-> > > +/* Register address macro */
-> > > +#define ADF4360_REG(x)			(x)
-> > > +
-> > > +/* ADF4360_CTRL */
-> > > +#define ADF4360_ADDR_CPL_MSK		GENMASK(3, 2)
-> > > +#define ADF4360_CPL(x)			FIELD_PREP(ADF4360_ADDR_CPL_MSK,
-> > > x)
-> > > +#define ADF4360_ADDR_MUXOUT_MSK		GENMASK(7, 5)
-> > > +#define ADF4360_MUXOUT(x)		FIELD_PREP(ADF4360_ADDR_MUXOUT_MSK, x)
-> > > +#define ADF4360_ADDR_PDP_MSK		BIT(8)
-> > > +#define ADF4360_PDP(x)			FIELD_PREP(ADF4360_ADDR_PDP_MSK,
-> > > x)
-> > > +#define ADF4360_ADDR_MTLD_MSK		BIT(11)
-> > > +#define ADF4360_MTLD(x)			FIELD_PREP(ADF4360_ADDR_MTLD_MSK
-> > > , x)
-> > > +#define ADF4360_ADDR_OPL_MSK		GENMASK(13, 12)
-> > > +#define ADF4360_OPL(x)			FIELD_PREP(ADF4360_ADDR_OPL_MSK,
-> > > x)
-> > > +#define ADF4360_ADDR_CPI1_MSK		GENMASK(16, 14)
-> > > +#define ADF4360_CPI1(x)			FIELD_PREP(ADF4360_ADDR_CPI1_MSK
-> > > , x)
-> > > +#define ADF4360_ADDR_CPI2_MSK		GENMASK(19, 17)
-> > > +/* ADF4360_RDIV */
-> > > +#define ADF4360_CPI2(x)			FIELD_PREP(ADF4360_ADDR_CPI2_MSK
-> > > , x)
-> > > +#define ADF4360_ADDR_PWR_DWN_MSK	GENMASK(21, 20)
-> > > +#define ADF4360_POWERDOWN(x)		FIELD_PREP(ADF4360_ADDR_PWR_DWN_
-> > > MSK, x)
-> > > +#define ADF4360_ADDR_PRESCALER_MSK	GENMASK(23, 22)
-> > > +#define ADF4360_PRESCALER(x)		FIELD_PREP(ADF4360_ADDR_PRESCALE
-> > > R_MSK, x)
-> > > +
-> > > +/* ADF4360_NDIV */
-> > > +#define ADF4360_ADDR_A_CNTR_MSK		GENMASK(6, 2)
-> > > +#define ADF4360_A_COUNTER(x)		FIELD_PREP(ADF4360_ADDR_A_CNTR_M
-> > > SK, x)
-> > > +#define ADF4360_ADDR_B_CNTR_MSK		GENMASK(20, 8)
-> > > +#define ADF4360_B_COUNTER(x)		FIELD_PREP(ADF4360_ADDR_B_CNTR_M
-> > > SK, x)
-> > > +#define ADF4360_ADDR_OUT_DIV2_MSK	BIT(22)
-> > > +#define ADF4360_OUT_DIV2(x)		FIELD_PREP(ADF4360_ADDR_OUT_DIV2
-> > > _MSK, x)
-> > > +#define ADF4360_ADDR_DIV2_SEL_MSK	BIT(23)
-> > > +#define ADF4360_PRESCALER_DIV2(x)	FIELD_PREP(ADF4360_ADDR_DIV2_SEL_MSK, x)
-> > > +
-> > > +#define ADF4360_ADDR_R_CNTR_MSK		GENMASK(15, 2)
-> > > +#define ADF4360_R_COUNTER(x)		FIELD_PREP(ADF4360_ADDR_R_CNTR_M
-> > > SK, x)
-> > > +#define ADF4360_ADDR_ABP_MSK		GENMASK(17, 16)
-> > > +#define ADF4360_ABP(x)			FIELD_PREP(ADF4360_ADDR_ABP_MSK,
-> > > x)
-> > > +#define ADF4360_ADDR_BSC_MSK		GENMASK(21, 20)
-> > > +#define ADF4360_BSC(x)			FIELD_PREP(ADF4360_ADDR_BSC_MSK,
-> > > x)
-> > > +
-> > > +/* Specifications */
-> > > +#define ADF4360_MAX_PFD_RATE		8000000 /* 8 MHz */
-> > > +#define ADF4360_MAX_COUNTER_RATE	300000000 /* 300 MHz */
-> > > +#define ADF4360_MAX_REFIN_RATE		250000000 /* 250 MHz */
-> > > +
-> > > +enum {
-> > > +	ADF4360_CTRL,
-> > > +	ADF4360_RDIV,
-> > > +	ADF4360_NDIV,
-> > > +	ADF4360_REG_NUM,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_GEN1_PC_5,
-> > > +	ADF4360_GEN1_PC_10,
-> > > +	ADF4360_GEN1_PC_15,
-> > > +	ADF4360_GEN1_PC_20,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_GEN2_PC_2_5,
-> > > +	ADF4360_GEN2_PC_5,
-> > > +	ADF4360_GEN2_PC_7_5,
-> > > +	ADF4360_GEN2_PC_10,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_MUXOUT_THREE_STATE,
-> > > +	ADF4360_MUXOUT_LOCK_DETECT,
-> > > +	ADF4360_MUXOUT_NDIV,
-> > > +	ADF4360_MUXOUT_DVDD,
-> > > +	ADF4360_MUXOUT_RDIV,
-> > > +	ADF4360_MUXOUT_OD_LD,
-> > > +	ADF4360_MUXOUT_SDO,
-> > > +	ADF4360_MUXOUT_GND,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_PL_3_5,
-> > > +	ADF4360_PL_5,
-> > > +	ADF4360_PL_7_5,
-> > > +	ADF4360_PL_11,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_CPI_0_31,
-> > > +	ADF4360_CPI_0_62,
-> > > +	ADF4360_CPI_0_93,
-> > > +	ADF4360_CPI_1_25,
-> > > +	ADF4360_CPI_1_56,
-> > > +	ADF4360_CPI_1_87,
-> > > +	ADF4360_CPI_2_18,
-> > > +	ADF4360_CPI_2_50,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_POWER_DOWN_NORMAL,
-> > > +	ADF4360_POWER_DOWN_SOFT_ASYNC,
-> > > +	ADF4360_POWER_DOWN_CE,
-> > > +	ADF4360_POWER_DOWN_SOFT_SYNC,
-> > > +	ADF4360_POWER_DOWN_REGULATOR,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_PRESCALER_8,
-> > > +	ADF4360_PRESCALER_16,
-> > > +	ADF4360_PRESCALER_32,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_ABP_3_0NS,
-> > > +	ADF4360_ABP_1_3NS,
-> > > +	ADF4360_ABP_6_0NS,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_BSC_1,
-> > > +	ADF4360_BSC_2,
-> > > +	ADF4360_BSC_4,
-> > > +	ADF4360_BSC_8,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ID_ADF4360_0,
-> > > +	ID_ADF4360_1,
-> > > +	ID_ADF4360_2,
-> > > +	ID_ADF4360_3,
-> > > +	ID_ADF4360_4,
-> > > +	ID_ADF4360_5,
-> > > +	ID_ADF4360_6,
-> > > +	ID_ADF4360_7,
-> > > +	ID_ADF4360_8,
-> > > +	ID_ADF4360_9,
-> > > +};
-> > > +
-> > > +enum {
-> > > +	ADF4360_FREQ_REFIN,
-> > > +	ADF4360_MTLD,
-> > > +	ADF4360_FREQ_PFD,
-> > > +};
-> > > +
-> > > +static const char * const adf4360_power_level_modes[] = {  
-> > This isn't an enum.  These are real values in sensible units not
-> > magic strings.   Handle them as integers.
-> > 
-> > We may need to define additional ABI for this but it should be
-> > possible to 'fit' it in the normal structure of ABI.
-> >   
-> > > +	[ADF4360_PL_3_5] = "3500-uA",
-> > > +	[ADF4360_PL_5] = "5000-uA",
-> > > +	[ADF4360_PL_7_5] = "7500-uA",
-> > > +	[ADF4360_PL_11] = "11000-uA",
-> > > +};
-> > > +
-> > > +static const unsigned int adf4360_power_lvl_microamp[] = {
-> > > +	[ADF4360_PL_3_5] = 3500,
-> > > +	[ADF4360_PL_5] = 5000,
-> > > +	[ADF4360_PL_7_5] = 7500,
-> > > +	[ADF4360_PL_11] = 11000,
-> > > +};
-> > > +
-> > > +static const unsigned int adf4360_cpi_modes[] = {
-> > > +	[ADF4360_CPI_0_31] = 310,
-> > > +	[ADF4360_CPI_0_62] = 620,
-> > > +	[ADF4360_CPI_0_93] = 930,
-> > > +	[ADF4360_CPI_1_25] = 1250,
-> > > +	[ADF4360_CPI_1_56] = 1560,
-> > > +	[ADF4360_CPI_1_87] = 1870,
-> > > +	[ADF4360_CPI_2_18] = 2180,
-> > > +	[ADF4360_CPI_2_50] = 2500,
-> > > +};
-> > > +
-> > > +static const char * const adf4360_muxout_modes[] = {  
-> > Superficially from glancing at the datasheet I thing this is debug
-> > functionality?  Perhaps move it to debugfs so as to avoid creating
-> > complex new ABI in sysfs.
-> >   
-> > > +	[ADF4360_MUXOUT_THREE_STATE] = "three-state",
-> > > +	[ADF4360_MUXOUT_LOCK_DETECT] = "lock-detect",
-> > > +	[ADF4360_MUXOUT_NDIV] = "ndiv",
-> > > +	[ADF4360_MUXOUT_DVDD] = "dvdd",
-> > > +	[ADF4360_MUXOUT_RDIV] = "rdiv",
-> > > +	[ADF4360_MUXOUT_OD_LD] = "od-ld",
-> > > +	[ADF4360_MUXOUT_SDO] = "sdo",
-> > > +	[ADF4360_MUXOUT_GND] = "gnd",
-> > > +};
-> > > +
-> > > +static const char * const adf4360_power_down_modes[] = {
-> > > +	[ADF4360_POWER_DOWN_NORMAL] = "normal",
-> > > +	[ADF4360_POWER_DOWN_SOFT_ASYNC] = "soft-async",
-> > > +	[ADF4360_POWER_DOWN_CE] = "ce",
-> > > +	[ADF4360_POWER_DOWN_SOFT_SYNC] = "soft-sync",
-> > > +	[ADF4360_POWER_DOWN_REGULATOR] = "regulator",  
-> > This seems to map rather oddly to the datasheet.  Perhaps some
-> > comments to explain what is going on here would help/  
-> > > +};
-> > > +
-> > > +struct adf4360_output {
-> > > +	struct clk_hw hw;
-> > > +	struct iio_dev *indio_dev;
-> > > +};
-> > > +
-> > > +#define to_output(_hw) container_of(_hw, struct adf4360_output, hw)
-> > > +
-> > > +struct adf4360_chip_info {
-> > > +	unsigned int vco_min;
-> > > +	unsigned int vco_max;
-> > > +	unsigned int default_cpl;
-> > > +};
-> > > +
-> > > +struct adf4360_state {
-> > > +	struct spi_device *spi;
-> > > +	const struct adf4360_chip_info *info;
-> > > +	struct adf4360_output output;
-> > > +	struct clk *clkin;
-> > > +	struct gpio_desc *muxout_gpio;
-> > > +	struct gpio_desc *chip_en_gpio;
-> > > +	struct regulator *vdd_reg;
-> > > +	struct mutex lock; /* Protect PLL state. */
-> > > +	unsigned int part_id;
-> > > +	unsigned long clkin_freq;
-> > > +	unsigned long freq_req;
-> > > +	unsigned long r;
-> > > +	unsigned long n;
-> > > +	unsigned int vco_min;
-> > > +	unsigned int vco_max;
-> > > +	unsigned int pfd_freq;
-> > > +	unsigned int cpi;
-> > > +	bool pdp;
-> > > +	bool mtld;
-> > > +	unsigned int power_level;
-> > > +	unsigned int muxout_mode;
-> > > +	unsigned int power_down_mode;
-> > > +	bool initial_reg_seq;
-> > > +	const char *clk_out_name;
-> > > +	unsigned int regs[ADF4360_REG_NUM];
-> > > +	u8 spi_data[3] ____cacheline_aligned;
-> > > +};
-> > > +
-> > > +static const struct adf4360_chip_info adf4360_chip_info_tbl[] = {
-> > > +	{	/* ADF4360-0 */
-> > > +		.vco_min = 2400000000U,
-> > > +		.vco_max = 2725000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_10,
-> > > +	}, {	/* ADF4360-1 */
-> > > +		.vco_min = 2050000000U,
-> > > +		.vco_max = 2450000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_15,
-> > > +	}, {	/* ADF4360-2 */
-> > > +		.vco_min = 1850000000U,
-> > > +		.vco_max = 2170000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_15,
-> > > +	}, {	/* ADF4360-3 */
-> > > +		.vco_min = 1600000000U,
-> > > +		.vco_max = 1950000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_15,
-> > > +	}, {	/* ADF4360-4 */
-> > > +		.vco_min = 1450000000U,
-> > > +		.vco_max = 1750000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_15,
-> > > +	}, {	/* ADF4360-5 */
-> > > +		.vco_min = 1200000000U,
-> > > +		.vco_max = 1400000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_10,
-> > > +	}, {	/* ADF4360-6 */
-> > > +		.vco_min = 1050000000U,
-> > > +		.vco_max = 1250000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_10,
-> > > +	}, {	/* ADF4360-7 */
-> > > +		.vco_min = 350000000U,
-> > > +		.vco_max = 1800000000U,
-> > > +		.default_cpl = ADF4360_GEN1_PC_5,
-> > > +	}, {	/* ADF4360-8 */
-> > > +		.vco_min = 65000000U,
-> > > +		.vco_max = 400000000U,
-> > > +		.default_cpl = ADF4360_GEN2_PC_5,
-> > > +	}, {	/* ADF4360-9 */
-> > > +		.vco_min = 65000000U,
-> > > +		.vco_max = 400000000U,
-> > > +		.default_cpl = ADF4360_GEN2_PC_5,
-> > > +	}
-> > > +};
-> > > +
-> > > +static int adf4360_write_reg(struct adf4360_state *st, unsigned int reg,
-> > > +			     unsigned int val)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	val |= reg;
-> > > +
-> > > +	st->spi_data[0] = (val >> 16) & 0xff;
-> > > +	st->spi_data[1] = (val >> 8) & 0xff;
-> > > +	st->spi_data[2] = val & 0xff;
-> > > +
-> > > +	ret = spi_write(st->spi, st->spi_data, ARRAY_SIZE(st->spi_data));
-> > > +	if (ret == 0)
-> > > +		st->regs[reg] = val;
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +/* fVCO = B * fREFIN / R */
-> > > +
-> > > +static unsigned long adf4360_clk_recalc_rate(struct clk_hw *hw,
-> > > +					     unsigned long parent_rate)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	if (st->r == 0)
-> > > +		return 0;
-> > > +
-> > > +	/*
-> > > +	 * The result is guaranteed to fit in 32-bit, but the intermediate
-> > > +	 * result might require 64-bit.
-> > > +	 */
-> > > +	return DIV_ROUND_CLOSEST_ULL((uint64_t)parent_rate * st->n, st->r);
-> > > +}
-> > > +
-> > > +static unsigned int adf4360_calc_prescaler(unsigned int pfd_freq,
-> > > +					   unsigned int n,
-> > > +					   unsigned int *out_p,
-> > > +					   unsigned int *out_a,
-> > > +					   unsigned int *out_b)
-> > > +{
-> > > +	unsigned int rate = pfd_freq * n;
-> > > +	unsigned int p, a, b;
-> > > +
-> > > +	/* Make sure divider counter input frequency is low enough */
-> > > +	p = 8;
-> > > +	while (p < 32 && rate / p > ADF4360_MAX_COUNTER_RATE)
-> > > +		p *= 2;
-> > > +
-> > > +	/*
-> > > +	 * The range of dividers that can be produced using the dual-modulus
-> > > +	 * pre-scaler is not continuous for values of n < p*(p-1). If we end up
-> > > +	 * with a non supported divider value, pick the next closest one.
-> > > +	 */
-> > > +	a = n % p;
-> > > +	b = n / p;
-> > > +
-> > > +	if (b < 3) {
-> > > +		b = 3;
-> > > +		a = 0;
-> > > +	} else if (a > b) {
-> > > +		if (a - b < p - a) {
-> > > +			a = b;
-> > > +		} else {
-> > > +			a = 0;
-> > > +			b++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (out_p)
-> > > +		*out_p = p;
-> > > +	if (out_a)
-> > > +		*out_a = a;
-> > > +	if (out_b)
-> > > +		*out_b = b;
-> > > +
-> > > +	return p * b + a;
-> > > +}
-> > > +
-> > > +static long adf4360_clk_round_rate(struct clk_hw *hw,
-> > > +				   unsigned long rate,
-> > > +				   unsigned long *parent_rate)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	unsigned int r, n;
-> > > +	unsigned int pfd_freq;
-> > > +
-> > > +	if (*parent_rate == 0)
-> > > +		return 0;
-> > > +
-> > > +	if (st->part_id == ID_ADF4360_9)
-> > > +		return *parent_rate * st->n / st->r;
-> > > +
-> > > +	if (rate > st->vco_max)
-> > > +		return st->vco_max;
-> > > +
-> > > +	/* ADF4360-0 to AD4370-7 have an optional by two divider */
-> > > +	if (st->part_id <= ID_ADF4360_7) {
-> > > +		if (rate < st->vco_min / 2)
-> > > +			return st->vco_min / 2;
-> > > +		if (rate < st->vco_min && rate > st->vco_max / 2) {
-> > > +			if (st->vco_min - rate < rate - st->vco_max / 2)
-> > > +				return st->vco_min;
-> > > +			else
-> > > +				return st->vco_max / 2;
-> > > +		}
-> > > +	} else {
-> > > +		if (rate < st->vco_min)
-> > > +			return st->vco_min;
-> > > +	}
-> > > +
-> > > +	r = DIV_ROUND_CLOSEST(*parent_rate, st->pfd_freq);
-> > > +	pfd_freq = *parent_rate / r;
-> > > +	n = DIV_ROUND_CLOSEST(rate, pfd_freq);
-> > > +
-> > > +	if (st->part_id <= ID_ADF4360_7)
-> > > +		n = adf4360_calc_prescaler(pfd_freq, n, NULL, NULL, NULL);
-> > > +
-> > > +	return pfd_freq * n;
-> > > +}
-> > > +
-> > > +static inline bool adf4360_is_powerdown(struct adf4360_state *st)
-> > > +{
-> > > +	return (st->power_down_mode != ADF4360_POWER_DOWN_NORMAL);
-> > > +}
-> > > +
-> > > +static int adf4360_set_freq(struct adf4360_state *st, unsigned long rate)
-> > > +{
-> > > +	unsigned int val_r, val_n, val_ctrl;
-> > > +	unsigned int pfd_freq;
-> > > +	unsigned long r, n;
-> > > +	int ret;
-> > > +
-> > > +	if (!st->clkin_freq || (st->clkin_freq > ADF4360_MAX_REFIN_RATE))
-> > > +		return -EINVAL;
-> > > +
-> > > +	if ((rate < st->vco_min) || (rate > st->vco_max))
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (adf4360_is_powerdown(st))
-> > > +		ret = -EBUSY;
-> > > +
-> > > +	r = DIV_ROUND_CLOSEST(st->clkin_freq, st->pfd_freq);
-> > > +	pfd_freq = st->clkin_freq / r;
-> > > +	n = DIV_ROUND_CLOSEST(rate, pfd_freq);
-> > > +
-> > > +	val_ctrl = ADF4360_CPL(st->info->default_cpl) |
-> > > +		   ADF4360_MUXOUT(st->muxout_mode) |
-> > > +		   ADF4360_PDP(!st->pdp) |
-> > > +		   ADF4360_MTLD(st->mtld) |
-> > > +		   ADF4360_OPL(st->power_level) |
-> > > +		   ADF4360_CPI1(st->cpi) |
-> > > +		   ADF4360_CPI2(st->cpi) |
-> > > +		   ADF4360_POWERDOWN(st->power_down_mode);
-> > > +
-> > > +	/* ADF4360-0 to ADF4360-7 have a dual-modulous prescaler */
-> > > +	if (st->part_id <= ID_ADF4360_7) {
-> > > +		unsigned int p, a, b;
-> > > +
-> > > +		n = adf4360_calc_prescaler(pfd_freq, n, &p, &a, &b);
-> > > +
-> > > +		switch (p) {
-> > > +		case 8:
-> > > +			val_ctrl |= ADF4360_PRESCALER(ADF4360_PRESCALER_8);
-> > > +			break;
-> > > +		case 16:
-> > > +			val_ctrl |= ADF4360_PRESCALER(ADF4360_PRESCALER_16);
-> > > +			break;
-> > > +		default:
-> > > +			val_ctrl |= ADF4360_PRESCALER(ADF4360_PRESCALER_32);
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		val_n = ADF4360_A_COUNTER(a) |
-> > > +			ADF4360_B_COUNTER(b);
-> > > +
-> > > +		if (rate < st->vco_min)
-> > > +			val_n |= ADF4360_OUT_DIV2(true) |
-> > > +				 ADF4360_PRESCALER_DIV2(true);
-> > > +	} else {
-> > > +		val_n = ADF4360_B_COUNTER(n);
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Always use BSC divider of 8, see Analog Devices AN-1347.
-> > > +	 * 
-> > > http://www.analog.com/media/en/technical-documentation/application-notes/AN-1347.pdf
-> > > +	 */
-> > > +	val_r = ADF4360_R_COUNTER(r) |
-> > > +		ADF4360_ABP(ADF4360_ABP_3_0NS) |
-> > > +		ADF4360_BSC(ADF4360_BSC_8);
-> > > +
-> > > +	ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_RDIV), val_r);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_CTRL), val_ctrl);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	/*
-> > > +	 * Allow the transient behavior of the ADF4360-7 during initial
-> > > +	 * power-up to settle.
-> > > +	 */
-> > > +	if (st->initial_reg_seq) {
-> > > +		usleep_range(15000, 20000);
-> > > +		st->initial_reg_seq = false;
-> > > +	}
-> > > +
-> > > +	ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_NDIV), val_n);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	st->freq_req = rate;
-> > > +	st->n = n;
-> > > +	st->r = r;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int adf4360_clk_set_rate(struct clk_hw *hw,
-> > > +				unsigned long rate,
-> > > +				unsigned long parent_rate)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	int ret;
-> > > +
-> > > +	if ((parent_rate == 0) || (parent_rate > ADF4360_MAX_REFIN_RATE))
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	if (st->clkin_freq != parent_rate)
-> > > +		st->clkin_freq = parent_rate;
-> > > +
-> > > +	ret = adf4360_set_freq(st, rate);
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int __adf4360_power_down(struct adf4360_state *st, unsigned int
-> > > mode)
-> > > +{
-> > > +	struct device *dev = &st->spi->dev;
-> > > +	unsigned int val;
-> > > +	int ret = 0;
-> > > +
-> > > +	switch (mode) {
-> > > +	case ADF4360_POWER_DOWN_NORMAL:
-> > > +		if (st->vdd_reg) {
-> > > +			ret = regulator_enable(st->vdd_reg);
-> > > +			if (ret) {
-> > > +				dev_err(dev, "Supply enable error: %d\n", ret);
-> > > +				return ret;
-> > > +			}
-> > > +		}
-> > > +
-> > > +		st->initial_reg_seq = true;
-> > > +		st->power_down_mode = mode;
-> > > +		ret = adf4360_set_freq(st, st->freq_req);
-> > > +		break;
-> > > +	case ADF4360_POWER_DOWN_SOFT_ASYNC: /* fallthrough */
-> > > +	case ADF4360_POWER_DOWN_SOFT_SYNC:
-> > > +		val = st->regs[ADF4360_CTRL] & ~ADF4360_ADDR_MUXOUT_MSK;
-> > > +		val |= ADF4360_POWERDOWN(mode);
-> > > +		ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_CTRL), val);
-> > > +		break;
-> > > +	case ADF4360_POWER_DOWN_CE:
-> > > +		if (st->chip_en_gpio)
-> > > +			gpiod_set_value(st->chip_en_gpio, 0x0);
-> > > +		else
-> > > +			return -ENODEV;
-> > > +		break;
-> > > +	case ADF4360_POWER_DOWN_REGULATOR:
-> > > +		if (!st->vdd_reg)
-> > > +			return -ENODEV;
-> > > +
-> > > +		if (st->chip_en_gpio)
-> > > +			ret = __adf4360_power_down(st, ADF4360_POWER_DOWN_CE);
-> > > +		else
-> > > +			ret = __adf4360_power_down(st,
-> > > +						ADF4360_POWER_DOWN_SOFT_ASYNC);
-> > > +
-> > > +		ret = regulator_disable(st->vdd_reg);
-> > > +		if (ret)
-> > > +			dev_err(dev, "Supply disable error: %d\n", ret);
-> > > +		break;
-> > > +	}
-> > > +	if (ret == 0)
-> > > +		st->power_down_mode = mode;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int adf4360_power_down(struct adf4360_state *st, unsigned int mode)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	ret = __adf4360_power_down(st, mode);
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int adf4360_clk_prepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return adf4360_power_down(st, ADF4360_POWER_DOWN_NORMAL);
-> > > +}
-> > > +
-> > > +static void adf4360_clk_unprepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	adf4360_power_down(st, ADF4360_POWER_DOWN_SOFT_ASYNC);
-> > > +}
-> > > +
-> > > +static int adf4360_clk_enable(struct clk_hw *hw)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	if (st->chip_en_gpio)
-> > > +		gpiod_set_value(st->chip_en_gpio, 0x1);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void adf4360_clk_disable(struct clk_hw *hw)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	if (st->chip_en_gpio)
-> > > +		adf4360_power_down(st, ADF4360_POWER_DOWN_CE);
-> > > +}
-> > > +
-> > > +static int adf4360_clk_is_enabled(struct clk_hw *hw)
-> > > +{
-> > > +	struct iio_dev *indio_dev = to_output(hw)->indio_dev;
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return adf4360_is_powerdown(st);
-> > > +}
-> > > +
-> > > +static const struct clk_ops adf4360_clk_ops = {
-> > > +	.recalc_rate = adf4360_clk_recalc_rate,
-> > > +	.round_rate = adf4360_clk_round_rate,
-> > > +	.set_rate = adf4360_clk_set_rate,
-> > > +	.prepare = adf4360_clk_prepare,
-> > > +	.unprepare = adf4360_clk_unprepare,
-> > > +	.enable = adf4360_clk_enable,
-> > > +	.disable = adf4360_clk_disable,
-> > > +	.is_enabled = adf4360_clk_is_enabled,
-> > > +};
-> > > +
-> > > +static ssize_t adf4360_read(struct iio_dev *indio_dev,
-> > > +			    uintptr_t private,
-> > > +			    const struct iio_chan_spec *chan,
-> > > +			    char *buf)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	unsigned long val;
-> > > +	int ret = 0;
-> > > +
-> > > +	switch ((u32)private) {
-> > > +	case ADF4360_FREQ_REFIN:
-> > > +		val = st->clkin_freq;
-> > > +		break;
-> > > +	case ADF4360_MTLD:
-> > > +		val = st->mtld;
-> > > +		break;
-> > > +	case ADF4360_FREQ_PFD:
-> > > +		val = st->pfd_freq;
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +		val = 0;
-> > > +	}
-> > > +
-> > > +	return ret < 0 ? ret : sprintf(buf, "%lu\n", val);
-> > > +}
-> > > +
-> > > +static ssize_t adf4360_write(struct iio_dev *indio_dev,
-> > > +			     uintptr_t private,
-> > > +			     const struct iio_chan_spec *chan,
-> > > +			     const char *buf, size_t len)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	unsigned long readin, tmp;
-> > > +	bool mtld;
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	switch ((u32)private) {
-> > > +	case ADF4360_FREQ_REFIN:
-> > > +		ret = kstrtoul(buf, 10, &readin);
-> > > +		if (ret)
-> > > +			break;
-> > > +
-> > > +		if ((readin > ADF4360_MAX_REFIN_RATE) || (readin == 0)) {
-> > > +			ret = -EINVAL;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		if (st->clkin) {
-> > > +			tmp = clk_round_rate(st->clkin, readin);
-> > > +			if (tmp != readin) {
-> > > +				ret = -EINVAL;
-> > > +				break;
-> > > +			}
-> > > +
-> > > +			ret = clk_set_rate(st->clkin, tmp);
-> > > +			if (ret)
-> > > +				break;  
-> > A bit odd to directly provide an interface to control and entirely different
-> > bit of hardware.   If there are specific demands on the input clock as a
-> > result
-> > of something to do with the outputs, then fair enough.  Direct tweaking like
-> > this seems like a very odd interface.
-> >   
-> > > +		}
-> > > +
-> > > +		st->clkin_freq = readin;
-> > > +		break;
-> > > +	case ADF4360_MTLD:
-> > > +		ret = kstrtobool(buf, &mtld);
-> > > +		if (ret)
-> > > +			break;
-> > > +
-> > > +		st->mtld = mtld;
-> > > +		break;
-> > > +	case ADF4360_FREQ_PFD:
-> > > +		ret = kstrtoul(buf, 10, &readin);
-> > > +		if (ret)
-> > > +			break;
-> > > +
-> > > +		if ((readin > ADF4360_MAX_PFD_RATE) || (readin == 0)) {
-> > > +			ret = -EINVAL;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +		st->pfd_freq = readin;
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +	}
-> > > +
-> > > +	if (ret == 0)
-> > > +		ret = adf4360_set_freq(st, st->freq_req);
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret ? ret : len;
-> > > +}
-> > > +
-> > > +static int adf4360_get_muxout_mode(struct iio_dev *indio_dev,
-> > > +				   const struct iio_chan_spec *chan)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return st->muxout_mode;
-> > > +}
-> > > +
-> > > +static int adf4360_set_muxout_mode(struct iio_dev *indio_dev,
-> > > +				   const struct iio_chan_spec *chan,
-> > > +				   unsigned int mode)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	unsigned int writeval;
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	writeval = st->regs[ADF4360_CTRL] & ~ADF4360_ADDR_MUXOUT_MSK;
-> > > +	writeval |= ADF4360_MUXOUT(mode & 0x7);
-> > > +	ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_CTRL), writeval);
-> > > +	if (ret == 0)
-> > > +		st->muxout_mode = mode & 0x7;
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static const struct iio_enum adf4360_muxout_modes_available = {
-> > > +	.items = adf4360_muxout_modes,
-> > > +	.num_items = ARRAY_SIZE(adf4360_muxout_modes),
-> > > +	.get = adf4360_get_muxout_mode,
-> > > +	.set = adf4360_set_muxout_mode,
-> > > +};
-> > > +
-> > > +static int adf4360_get_power_down(struct iio_dev *indio_dev,
-> > > +				  const struct iio_chan_spec *chan)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return st->power_down_mode;
-> > > +}
-> > > +
-> > > +static int adf4360_set_power_down(struct iio_dev *indio_dev,
-> > > +				  const struct iio_chan_spec *chan,
-> > > +				  unsigned int mode)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return adf4360_power_down(st, mode);
-> > > +}
-> > > +
-> > > +static const struct iio_enum adf4360_pwr_dwn_modes_available = {
-> > > +	.items = adf4360_power_down_modes,
-> > > +	.num_items = ARRAY_SIZE(adf4360_power_down_modes),
-> > > +	.get = adf4360_get_power_down,
-> > > +	.set = adf4360_set_power_down,
-> > > +};
-> > > +
-> > > +static int adf4360_get_power_level(struct iio_dev *indio_dev,
-> > > +				   const struct iio_chan_spec *chan)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +
-> > > +	return st->power_level;
-> > > +}
-> > > +
-> > > +static int adf4360_set_power_level(struct iio_dev *indio_dev,
-> > > +				   const struct iio_chan_spec *chan,
-> > > +				   unsigned int level)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	unsigned int val;
-> > > +	int ret;
-> > > +
-> > > +	if (adf4360_is_powerdown(st))
-> > > +		return -EBUSY;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	val = st->regs[ADF4360_CTRL] & ~ADF4360_ADDR_OPL_MSK;
-> > > +	val |= ADF4360_OPL(level);
-> > > +	ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_CTRL), val);
-> > > +	st->power_level = level;
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static const struct iio_enum adf4360_pwr_lvl_modes_available = {
-> > > +	.items = adf4360_power_level_modes,
-> > > +	.num_items = ARRAY_SIZE(adf4360_power_level_modes),
-> > > +	.get = adf4360_get_power_level,
-> > > +	.set = adf4360_set_power_level,
-> > > +};
-> > > +
-> > > +#define _ADF4360_EXT_INFO(_name, _ident) { \
-> > > +	.name = _name, \
-> > > +	.read = adf4360_read, \
-> > > +	.write = adf4360_write, \
-> > > +	.private = _ident, \
-> > > +	.shared = IIO_SEPARATE, \
-> > > +}
-> > > +
-> > > +static const struct iio_chan_spec_ext_info adf4360_ext_info[] = {  
-> > 
-> > This is a wide range of new ABI.  These all need documentation
-> > in Documentation/ABI/testing/sysfs-bus-iio-*
-> > 
-> > Without docs, it's hard to discuss if these are appropriate but a few initial
-> > comments...  
-> > > +	_ADF4360_EXT_INFO("refin_frequency", ADF4360_FREQ_REFIN),  
-> > Looks like a control that should be matched to some clock source and
-> > not change at runtime?
-> >   
-> > > +	_ADF4360_EXT_INFO("mute_till_lock_detect", ADF4360_MTLD),
-> > > +	_ADF4360_EXT_INFO("pfd_frequency", ADF4360_FREQ_PFD),
-> > > +	IIO_ENUM_AVAILABLE("muxout_mode", &adf4360_muxout_modes_available),
-> > > +	IIO_ENUM("muxout_mode", false, &adf4360_muxout_modes_available),
-> > > +	IIO_ENUM_AVAILABLE("power_down", &adf4360_pwr_dwn_modes_available),
-> > > +	IIO_ENUM("power_down", false, &adf4360_pwr_dwn_modes_available),
-> > > +	IIO_ENUM_AVAILABLE("power_level", &adf4360_pwr_lvl_modes_available),
-> > > +	IIO_ENUM("power_level", false, &adf4360_pwr_lvl_modes_available),
-> > > +	{ },
-> > > +};
-> > > +
-> > > +static const struct iio_chan_spec adf4360_chan = {
-> > > +	.type = IIO_ALTVOLTAGE,
-> > > +	.indexed = 1,
-> > > +	.output = 1,
-> > > +	.info_mask_separate = BIT(IIO_CHAN_INFO_FREQUENCY),
-> > > +	.ext_info = adf4360_ext_info,
-> > > +};
-> > > +
-> > > +static int adf4360_read_raw(struct iio_dev *indio_dev,
-> > > +			    struct iio_chan_spec const *chan,
-> > > +			    int *val,
-> > > +			    int *val2,
-> > > +			    long mask)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	bool lk_det;
-> > > +
-> > > +	switch (mask) {
-> > > +	case IIO_CHAN_INFO_FREQUENCY:
-> > > +		if (adf4360_is_powerdown(st))
-> > > +			return -EBUSY;
-> > > +
-> > > +		lk_det = (ADF4360_MUXOUT_LOCK_DETECT | ADF4360_MUXOUT_OD_LD) &
-> > > +			 st->muxout_mode;
-> > > +		if (lk_det && st->muxout_gpio) {
-> > > +			if (!gpiod_get_value(st->muxout_gpio)) {
-> > > +				dev_dbg(&st->spi->dev, "PLL un-locked\n");
-> > > +				return -EBUSY;
-> > > +			}
-> > > +		}
-> > > +
-> > > +		*val = st->freq_req;
-> > > +		return IIO_VAL_INT;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +};
-> > > +
-> > > +static int adf4360_write_raw(struct iio_dev *indio_dev,
-> > > +			     struct iio_chan_spec const *chan,
-> > > +			     int val,
-> > > +			     int val2,
-> > > +			     long mask)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	switch (mask) {
-> > > +	case IIO_CHAN_INFO_FREQUENCY:
-> > > +		ret = adf4360_set_freq(st, val);
-> > > +		break;
-> > > +	default:
-> > > +		ret = -EINVAL;
-> > > +	}
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int adf4360_reg_access(struct iio_dev *indio_dev,
-> > > +			      unsigned int reg,
-> > > +			      unsigned int writeval,
-> > > +			      unsigned int *readval)
-> > > +{
-> > > +	struct adf4360_state *st = iio_priv(indio_dev);
-> > > +	int ret = 0;
-> > > +
-> > > +	if (reg >= ADF4360_REG_NUM)
-> > > +		return -EFAULT;
-> > > +
-> > > +	mutex_lock(&st->lock);
-> > > +	if (readval) {
-> > > +		*readval = st->regs[reg];
-> > > +	} else {
-> > > +		writeval &= 0xFFFFFC;
-> > > +		ret = adf4360_write_reg(st, reg, writeval);
-> > > +	}
-> > > +	mutex_unlock(&st->lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static const struct iio_info adf4360_iio_info = {
-> > > +	.read_raw = &adf4360_read_raw,
-> > > +	.write_raw = &adf4360_write_raw,
-> > > +	.debugfs_reg_access = &adf4360_reg_access,
-> > > +};
-> > > +
-> > > +static int adf4360_get_gpio(struct adf4360_state *st)
-> > > +{
-> > > +	struct device *dev = &st->spi->dev;
-> > > +	unsigned int val;
-> > > +	int ret, i;
-> > > +
-> > > +	st->chip_en_gpio = devm_gpiod_get_optional(dev, "enable",
-> > > +						   GPIOD_OUT_HIGH);
-> > > +	if (IS_ERR(st->chip_en_gpio)) {
-> > > +		dev_err(dev, "Chip enable GPIO error\n");  
-> > 
-> > Put handling in here to prevent an error message of DEFER.
-> > Same for the other routes where this might happen.
-> >   
-> > > +		return PTR_ERR(st->chip_en_gpio);
-> > > +	}
-> > > +
-> > > +	if (st->chip_en_gpio)
-> > > +		st->power_down_mode = ADF4360_POWER_DOWN_CE;
-> > > +
-> > > +	st->muxout_gpio = devm_gpiod_get_optional(dev, "adi,muxout", GPIOD_IN);
-> > > +	if (IS_ERR(st->muxout_gpio)) {
-> > > +		dev_err(dev, "Muxout GPIO error\n");
-> > > +		return PTR_ERR(st->muxout_gpio);
-> > > +	}
-> > > +
-> > > +	if (!st->muxout_gpio)
-> > > +		return 0;
-> > > +
-> > > +	/* ADF4360 PLLs are write only devices, try to probe using GPIO. */
-> > > +	for (i = 0; i < 4; i++) {
-> > > +		if (i & 1)
-> > > +			val = ADF4360_MUXOUT(ADF4360_MUXOUT_DVDD);
-> > > +		else
-> > > +			val = ADF4360_MUXOUT(ADF4360_MUXOUT_GND);
-> > > +
-> > > +		ret = adf4360_write_reg(st, ADF4360_REG(ADF4360_CTRL), val);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		ret = gpiod_get_value(st->muxout_gpio);
-> > > +		if (ret ^ (i & 1)) {
-> > > +			dev_err(dev, "Probe failed (muxout)");
-> > > +			return -ENODEV;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void adf4360_clkin_disable(void *data)
-> > > +{
-> > > +	struct adf4360_state *st = data;
-> > > +
-> > > +	clk_disable_unprepare(st->clkin);
-> > > +}
-> > > +
-> > > +static int adf4360_get_clkin(struct adf4360_state *st)
-> > > +{
-> > > +	struct device *dev = &st->spi->dev;
-> > > +	struct clk *clk;
-> > > +	int ret;
-> > > +
-> > > +	clk = devm_clk_get(dev, "clkin");
-> > > +	if (IS_ERR(clk))
-> > > +		return PTR_ERR(clk);
-> > > +
-> > > +	ret = clk_prepare_enable(clk);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = devm_add_action_or_reset(dev, adf4360_clkin_disable, st);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	st->clkin = clk;
-> > > +	st->clkin_freq = clk_get_rate(clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void adf4360_clk_del_provider(void *data)
-> > > +{
-> > > +	struct adf4360_state *st = data;
-> > > +
-> > > +	of_clk_del_provider(st->spi->dev.of_node);
-> > > +}
-> > > +
-> > > +static int adf4360_clk_register(struct adf4360_state *st)
-> > > +{  
-> > 
-> > Hmm. This makes me wonder why this is an IIO driver rather than a clk
-> > driver?  Definitely needs some more information in the patch description
-> > or a cover letter.
-> >   
-> > > +	struct spi_device *spi = st->spi;
-> > > +	struct clk_init_data init;
-> > > +	struct clk *clk;
-> > > +	const char *parent_name;
-> > > +	int ret;
-> > > +
-> > > +	parent_name = of_clk_get_parent_name(spi->dev.of_node, 0);
-> > > +	if (!parent_name)
-> > > +		return -EINVAL;
-> > > +
-> > > +	init.name = st->clk_out_name;
-> > > +	init.ops = &adf4360_clk_ops;
-> > > +	init.flags = CLK_SET_RATE_GATE;
-> > > +	init.parent_names = &parent_name;
-> > > +	init.num_parents = 1;
-> > > +
-> > > +	st->output.hw.init = &init;
-> > > +
-> > > +	clk = devm_clk_register(&spi->dev, &st->output.hw);
-> > > +	if (IS_ERR(clk))
-> > > +		return PTR_ERR(clk);
-> > > +
-> > > +	ret = of_clk_add_provider(spi->dev.of_node, of_clk_src_simple_get, clk);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return devm_add_action_or_reset(&spi->dev, adf4360_clk_del_provider,
-> > > st);
-> > > +}
-> > > +
-> > > +static int adf4360_parse_dt(struct adf4360_state *st)
-> > > +{
-> > > +	struct device *dev = &st->spi->dev;
-> > > +	u32 tmp;
-> > > +	int ret;
-> > > +
-> > > +	ret = device_property_read_string(dev, "clock-output-names",
-> > > +					  &st->clk_out_name);
-> > > +	if ((ret < 0) && dev->of_node)
-> > > +		st->clk_out_name = dev->of_node->name;
-> > > +
-> > > +	if (st->part_id >= ID_ADF4360_7) {
-> > > +		/*
-> > > +		 * ADF4360-7 to ADF4360-9 have a VCO that is tuned to a specific
-> > > +		 * range using an external inductor. These properties describe
-> > > +		 * the range selected by the external inductor.
-> > > +		 */
-> > > +		ret = device_property_read_u32(dev,
-> > > +					       "adi,vco-minimum-frequency-hz",
-> > > +					       &tmp);
-> > > +		if (ret == 0)
-> > > +			st->vco_min = max(st->info->vco_min, tmp);
-> > > +		else
-> > > +			st->vco_min = st->info->vco_min;
-> > > +
-> > > +		ret = device_property_read_u32(dev,
-> > > +					       "adi,vco-maximum-frequency-hz",
-> > > +					       &tmp);
-> > > +		if (ret == 0)
-> > > +			st->vco_max = min(st->info->vco_max, tmp);
-> > > +		else
-> > > +			st->vco_max = st->info->vco_max;
-> > > +	} else {
-> > > +		st->vco_min = st->info->vco_min;
-> > > +		st->vco_max = st->info->vco_max;
-> > > +	}
-> > > +
-> > > +	st->pdp = device_property_read_bool(dev, "adi,loop-filter-inverting");
-> > > +
-> > > +	ret = device_property_read_u32(dev,
-> > > +				       "adi,loop-filter-pfd-frequency-hz",
-> > > +				       &tmp);
-> > > +	if (ret == 0) {
-> > > +		st->pfd_freq = tmp;
-> > > +	} else {
-> > > +		dev_err(dev, "PFD frequency property missing\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	ret = device_property_read_u32(dev,
-> > > +				"adi,loop-filter-charge-pump-current-microamp",
-> > > +				&tmp);
-> > > +	if (ret == 0) {
-> > > +		st->cpi = find_closest(tmp, adf4360_cpi_modes,
-> > > +				       ARRAY_SIZE(adf4360_cpi_modes));
-> > > +	} else {
-> > > +		dev_err(dev, "CPI property missing\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	ret = device_property_read_u32(dev, "adi,power-up-frequency-hz", &tmp);
-> > > +	if (ret == 0)
-> > > +		st->freq_req = tmp;
-> > > +	else
-> > > +		st->freq_req = st->vco_min;
-> > > +
-> > > +	ret = device_property_read_u32(dev, "adi,power-out-level-microamp",
-> > > +				       &tmp);
-> > > +	if (ret == 0)
-> > > +		st->power_level = find_closest(tmp, adf4360_power_lvl_microamp,
-> > > +					ARRAY_SIZE(adf4360_power_lvl_microamp));
-> > > +	else
-> > > +		st->power_level = ADF4360_PL_5;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int adf4360_probe(struct spi_device *spi)
-> > > +{
-> > > +	struct iio_dev *indio_dev;
-> > > +	const struct spi_device_id *id = spi_get_device_id(spi);  
-> > 
-> > Given we require various dt parameters to be present, might as well
-> > associate the id with the of_ structures instead and use the dt
-> > calls throughout.  Even better if you use the firmware type independent
-> > versions.
-> >   
-> > > +	struct adf4360_state *st;
-> > > +	int ret;
-> > > +
-> > > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> > > +	if (!indio_dev)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	st = iio_priv(indio_dev);
-> > > +
-> > > +	mutex_init(&st->lock);
-> > > +
-> > > +	spi_set_drvdata(spi, indio_dev);
-> > > +
-> > > +	st->spi = spi;
-> > > +	st->info = &adf4360_chip_info_tbl[id->driver_data];
-> > > +	st->part_id = id->driver_data;
-> > > +	st->muxout_mode = ADF4360_MUXOUT_LOCK_DETECT;
-> > > +	st->mtld = true;
-> > > +
-> > > +	ret = adf4360_parse_dt(st);
-> > > +	if (ret) {
-> > > +		dev_err(&spi->dev, "Parsing properties failed (%d)\n", ret);
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > > +	indio_dev->dev.parent = &spi->dev;
-> > > +
-> > > +	if (spi->dev.of_node)
-> > > +		indio_dev->name = spi->dev.of_node->name;
-> > > +	else
-> > > +		indio_dev->name = spi_get_device_id(spi)->name;
-> > > +
-> > > +	indio_dev->info = &adf4360_iio_info;
-> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +	indio_dev->channels = &adf4360_chan;
-> > > +	indio_dev->num_channels = 1;
-> > > +	st->output.indio_dev = indio_dev;
-> > > +
-> > > +	ret = adf4360_get_gpio(st);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = adf4360_get_clkin(st);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	st->vdd_reg = devm_regulator_get_optional(&spi->dev, "vdd");
-> > > +	if (IS_ERR(st->vdd_reg)) {
-> > > +		if (PTR_ERR(st->vdd_reg) != -ENODEV) {
-> > > +			dev_err(&spi->dev, "Regulator error\n");
-> > > +			return PTR_ERR(st->vdd_reg);
-> > > +		}
-> > > +
-> > > +		st->vdd_reg = NULL;
-> > > +	}
-> > > +
-> > > +	ret = adf4360_power_down(st, ADF4360_POWER_DOWN_NORMAL);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = adf4360_clk_register(st);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return devm_iio_device_register(&spi->dev, indio_dev);
-> > > +}
-> > > +
-> > > +static const struct of_device_id adf4360_of_match[] = {
-> > > +	{ .compatible = "adi,adf4360-0", },
-> > > +	{ .compatible = "adi,adf4360-1", },
-> > > +	{ .compatible = "adi,adf4360-2", },
-> > > +	{ .compatible = "adi,adf4360-3", },
-> > > +	{ .compatible = "adi,adf4360-4", },
-> > > +	{ .compatible = "adi,adf4360-5", },
-> > > +	{ .compatible = "adi,adf4360-6", },
-> > > +	{ .compatible = "adi,adf4360-7", },
-> > > +	{ .compatible = "adi,adf4360-8", },
-> > > +	{ .compatible = "adi,adf4360-9", },
-> > > +	{},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, adf4360_of_match);
-> > > +
-> > > +static const struct spi_device_id adf4360_id[] = {  
-> > 
-> > As mentioned above, you can't actually probe this device
-> > without a pile of dt stuff.  So this fallback doesn't
-> > make much sense.  Use the data field in the of table
-> > above and get rid of this table entirely.
-> >   
-> > > +	{"adf4360-0", ID_ADF4360_0},
-> > > +	{"adf4360-1", ID_ADF4360_1},
-> > > +	{"adf4360-2", ID_ADF4360_2},
-> > > +	{"adf4360-3", ID_ADF4360_3},
-> > > +	{"adf4360-4", ID_ADF4360_4},
-> > > +	{"adf4360-5", ID_ADF4360_5},
-> > > +	{"adf4360-6", ID_ADF4360_6},
-> > > +	{"adf4360-7", ID_ADF4360_7},
-> > > +	{"adf4360-8", ID_ADF4360_8},
-> > > +	{"adf4360-9", ID_ADF4360_9},
-> > > +	{}
-> > > +};
-> > > +
-> > > +static struct spi_driver adf4360_driver = {
-> > > +	.driver = {
-> > > +		.name = "adf4360",
-> > > +		.of_match_table = adf4360_of_match,
-> > > +		.owner = THIS_MODULE,  
-> > 
-> > It's a long time since we had to set the .owner field for each driver.
-> > 
-> > Follow through what happens in module_spi_driver, spi_register_driver
-> > etc and you'll find it's set automatically during driver registration.
-> >   
-> > > +	},
-> > > +	.probe = adf4360_probe,
-> > > +	.id_table = adf4360_id,
-> > > +};
-> > > +module_spi_driver(adf4360_driver);
-> > > +
-> > > +MODULE_LICENSE("GPL v2");
-> > > +MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
-> > > +MODULE_AUTHOR("Edward Kigwana <ekigwana@gmail.com>");
-> > > +MODULE_DESCRIPTION("Analog Devices ADF4360 PLL");  
+All errors (new ones prefixed by >>):
 
+>> arch/powerpc/kernel/vdso32/vgettimeofday.c:26:1: error: unknown type name 'time_t'; did you mean 'ktime_t'?
+    time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+    ^~~~~~
+    ktime_t
+   arch/powerpc/kernel/vdso32/vgettimeofday.c:26:24: error: unknown type name 'time_t'; did you mean 'ktime_t'?
+    time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+                           ^~~~~~
+                           ktime_t
+--
+>> arch/powerpc/kernel/vdso64/vgettimeofday.c:26:1: error: unknown type name 'time_t'; did you mean 'ktime_t'?
+    time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+    ^~~~~~
+    ktime_t
+   arch/powerpc/kernel/vdso64/vgettimeofday.c:26:24: error: unknown type name 'time_t'; did you mean 'ktime_t'?
+    time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+                           ^~~~~~
+                           ktime_t
 
+vim +26 arch/powerpc/kernel/vdso32/vgettimeofday.c
+
+    25	
+  > 26	time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+
+--43rdztibw6ibhzfr
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+H4sICGnHNl4AAy5jb25maWcAlDzbctw2su/5iqnkZbe2kpVtWbbPKT2AJDiDDEnQADnS+IWl
+yGOvam3JR5fd+O9Pd4OXBgiOnFQSe7ob90bfwV9++mUlnh7vvl493lxfffnyffX5cHu4v3o8
+fFx9uvly+N9VpleVblYyU81vQFzc3D79+c9vd/893H+7Xr3+7fVvJ6vt4f728GWV3t1+uvn8
+BI1v7m5/+uUn+PcXAH79Bv3c/8+qb3N2+usX7OPXz9fXq7+t0/TvqzfYC1CnusrVukvTTtkO
+MOffBxD86HbSWKWr8zcnr09ORtpCVOsRdcK62AjbCVt2a93oqSOGUFWhKjlDXQhTdaXYJ7Jr
+K1WpRolCfZDZRKjM++5Cm+0ESVpVZI0qZdeIpJCd1aaZsM3GSJHBeLmG/wGJxaa0O2va7C+r
+h8Pj07dpB3DYTla7Tph1V6hSNeevXuJm9jPVZa1gmEbaZnXzsLq9e8QehtaFTkUxbMnPP8fA
+nWj5rtD8OyuKhtFvxE52W2kqWXTrD6qeyDnm8sME94nH6Y6UkblmMhdt0XQbbZtKlPL857/d
+3t0e/j7Owl4INrLd252q0xkA/0ybYoLX2qrLrnzfylbGoVOTcaIXokk3HWEjU02NtrYrZanN
+vhNNI9INb9xaWaiEtxtRooXLE+mR9lEYGJMocEKiKAbeADZbPTz98fD94fHwdeKNtaykUSlx
+od3oC3ZJAkxXyJ0s4vhSrY1okEHYqZoMUBa2vDPSyipgeZmtZSe1AsIqK6TxsZkuhapisG6j
+pMFV7udTKa1CykVEtNtcm1Rm/bVS1ZpxQy2MlX2P4/bzdWcyade59Y/pcPtxdfcp2PBwRnS9
+d9MZBegUrtcW9rtq7ISks0Wh0qh02yVGiywVtjna+ihZqW3X1plo5MAlzc3Xw/1DjFFoTF1J
+YAXWVaW7zQeUICWd/bhJAKxhDJ2pNMKprpWCY+dtHDRvi2KpCeMutd4gW9E+Gkvd9Ps+W8J4
+XY2UZd1AV5U37gDf6aKtGmH20VvXU3Gc00h1+8/m6uHfq0cYd3UFc3h4vHp8WF1dX9893T7e
+3H6e9nCnTNNBg06kqYaxHLeNQ9AW++jITkQ66Sq4fDtvUTEqOPfo0hKbwfJ0KkEgAXlMtqCW
+sY3g3IgguACF2FMjbyGIugy7mrbSquiN+YGtHKUnrExZXQxCh47CpO3KRjgXTq4DHJ8h/Ozk
+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
+dcguidRC1f8AUnN6qROnAQA=
+
+--43rdztibw6ibhzfr--
