@@ -2,53 +2,55 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB2FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951EEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BB224654
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E36421582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747880;
-	bh=6DmBolbtfr5xFdGIY7cFqc5o5dNUZ0YZKeKqRMpNUGo=;
+	s=default; t=1580747887;
+	bh=b5Xx3wUqY3pLbFR9mM/ktBYg8m5LfXKR6QBrlNYZJYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngyqQu0SdsMlVrxyKsx71wFY9yiEBZDSHtbzBzEPC+jf3R8aj0Lw2gflaocG1Tfx6
-	 GSDDq2a5PqiSi9KFr0Qtchau8iBgW8nscTT0c1W70Kgkvz3yj8vBgHBwfsTR8lxP/E
-	 I7IrcnNqZwSuwpZ6z6RhxefKZFe0PMlHmhUdR50A=
+	b=viiB3Slx+jKTA13px3ltSY7ssuMYESkLf3AsURggL/SkRnG7lbeBmgnps+5Fi0uNQ
+	 NL0YuZknh3NC3vFM2HBzhfdU/VTGw3nciBcLGtpZXrdwXnYyXlPdS77FLoqMeaLu5a
+	 TqFxYA3RPVQgNIrUj9I68RE3QxrcQIJSYEDC692E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgBCQh6 (ORCPT
+        id S1731454AbgBCQiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53566 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbgBCQhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:51 -0500
+        id S1731433AbgBCQiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:38:03 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B222051A;
-        Mon,  3 Feb 2020 16:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69AF20CC7;
+        Mon,  3 Feb 2020 16:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747870;
-        bh=6DmBolbtfr5xFdGIY7cFqc5o5dNUZ0YZKeKqRMpNUGo=;
+        s=default; t=1580747882;
+        bh=b5Xx3wUqY3pLbFR9mM/ktBYg8m5LfXKR6QBrlNYZJYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XFTXoiWpx+4ORXBgj6f4eH8eaX49e33TolgRsSKXO9Ypxh5lE/zbKpVarCXHV5mHT
-         O5YuNM9samnPc1Gw1oeYL7Nq7InyNheV6DNCkKXIRXlrr8qNH+H9ep2vPLgIsVUwKA
-         p6X63COqwcO82u6nCs9mKIxCiFRKoyonBGt7gbKw=
+        b=knDFsJtvcTUTDzhwMAIh1Qk4Kt1TDvoQ03UlJyKwA905KTenKjPU/l4Mn8UU3eeHL
+         G+xQFN1gDh/FszWZeo23yt5N+VVZeSy8NIcXAFS52vQuGBTtk7bP3kF/fgAHotWTUS
+         N8yCoL1v4FRr8bMdByoXa/6JqMnZPgebkL819I9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 15/23] media: digitv: dont continue if remote control state cant be read
-Date:   Mon,  3 Feb 2020 16:20:35 +0000
-Message-Id: <20200203161905.564349234@linuxfoundation.org>
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Xiaochen Shen <xiaochen.shen@intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 03/23] x86/resctrl: Fix a deadlock due to inaccurate reference
+Date:   Mon,  3 Feb 2020 16:20:23 +0000
+Message-Id: <20200203161903.583723943@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -61,48 +63,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Xiaochen Shen <xiaochen.shen@intel.com>
 
-commit eecc70d22ae51225de1ef629c1159f7116476b2e upstream.
+[ Upstream commit 334b0f4e9b1b4a1d475f803419d202f6c5e4d18e ]
 
-This results in an uninitialized variable read.
+There is a race condition which results in a deadlock when rmdir and
+mkdir execute concurrently:
 
-Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+$ ls /sys/fs/resctrl/c1/mon_groups/m1/
+cpus  cpus_list  mon_data  tasks
 
+Thread 1: rmdir /sys/fs/resctrl/c1
+Thread 2: mkdir /sys/fs/resctrl/c1/mon_groups/m1
+
+3 locks held by mkdir/48649:
+ #0:  (sb_writers#17){.+.+}, at: [<ffffffffb4ca2aa0>] mnt_want_write+0x20/0x50
+ #1:  (&type->i_mutex_dir_key#8/1){+.+.}, at: [<ffffffffb4c8c13b>] filename_create+0x7b/0x170
+ #2:  (rdtgroup_mutex){+.+.}, at: [<ffffffffb4a4389d>] rdtgroup_kn_lock_live+0x3d/0x70
+
+4 locks held by rmdir/48652:
+ #0:  (sb_writers#17){.+.+}, at: [<ffffffffb4ca2aa0>] mnt_want_write+0x20/0x50
+ #1:  (&type->i_mutex_dir_key#8/1){+.+.}, at: [<ffffffffb4c8c3cf>] do_rmdir+0x13f/0x1e0
+ #2:  (&type->i_mutex_dir_key#8){++++}, at: [<ffffffffb4c86d5d>] vfs_rmdir+0x4d/0x120
+ #3:  (rdtgroup_mutex){+.+.}, at: [<ffffffffb4a4389d>] rdtgroup_kn_lock_live+0x3d/0x70
+
+Thread 1 is deleting control group "c1". Holding rdtgroup_mutex,
+kernfs_remove() removes all kernfs nodes under directory "c1"
+recursively, then waits for sub kernfs node "mon_groups" to drop active
+reference.
+
+Thread 2 is trying to create a subdirectory "m1" in the "mon_groups"
+directory. The wrapper kernfs_iop_mkdir() takes an active reference to
+the "mon_groups" directory but the code drops the active reference to
+the parent directory "c1" instead.
+
+As a result, Thread 1 is blocked on waiting for active reference to drop
+and never release rdtgroup_mutex, while Thread 2 is also blocked on
+trying to get rdtgroup_mutex.
+
+Thread 1 (rdtgroup_rmdir)   Thread 2 (rdtgroup_mkdir)
+(rmdir /sys/fs/resctrl/c1)  (mkdir /sys/fs/resctrl/c1/mon_groups/m1)
+-------------------------   -------------------------
+                            kernfs_iop_mkdir
+                              /*
+                               * kn: "m1", parent_kn: "mon_groups",
+                               * prgrp_kn: parent_kn->parent: "c1",
+                               *
+                               * "mon_groups", parent_kn->active++: 1
+                               */
+                              kernfs_get_active(parent_kn)
+kernfs_iop_rmdir
+  /* "c1", kn->active++ */
+  kernfs_get_active(kn)
+
+  rdtgroup_kn_lock_live
+    atomic_inc(&rdtgrp->waitcount)
+    /* "c1", kn->active-- */
+    kernfs_break_active_protection(kn)
+    mutex_lock
+
+  rdtgroup_rmdir_ctrl
+    free_all_child_rdtgrp
+      sentry->flags = RDT_DELETED
+
+    rdtgroup_ctrl_remove
+      rdtgrp->flags = RDT_DELETED
+      kernfs_get(kn)
+      kernfs_remove(rdtgrp->kn)
+        __kernfs_remove
+          /* "mon_groups", sub_kn */
+          atomic_add(KN_DEACTIVATED_BIAS, &sub_kn->active)
+          kernfs_drain(sub_kn)
+            /*
+             * sub_kn->active == KN_DEACTIVATED_BIAS + 1,
+             * waiting on sub_kn->active to drop, but it
+             * never drops in Thread 2 which is blocked
+             * on getting rdtgroup_mutex.
+             */
+Thread 1 hangs here ---->
+            wait_event(sub_kn->active == KN_DEACTIVATED_BIAS)
+            ...
+                              rdtgroup_mkdir
+                                rdtgroup_mkdir_mon(parent_kn, prgrp_kn)
+                                  mkdir_rdt_prepare(parent_kn, prgrp_kn)
+                                    rdtgroup_kn_lock_live(prgrp_kn)
+                                      atomic_inc(&rdtgrp->waitcount)
+                                      /*
+                                       * "c1", prgrp_kn->active--
+                                       *
+                                       * The active reference on "c1" is
+                                       * dropped, but not matching the
+                                       * actual active reference taken
+                                       * on "mon_groups", thus causing
+                                       * Thread 1 to wait forever while
+                                       * holding rdtgroup_mutex.
+                                       */
+                                      kernfs_break_active_protection(
+                                                               prgrp_kn)
+                                      /*
+                                       * Trying to get rdtgroup_mutex
+                                       * which is held by Thread 1.
+                                       */
+Thread 2 hangs here ---->             mutex_lock
+                                      ...
+
+The problem is that the creation of a subdirectory in the "mon_groups"
+directory incorrectly releases the active protection of its parent
+directory instead of itself before it starts waiting for rdtgroup_mutex.
+This is triggered by the rdtgroup_mkdir() flow calling
+rdtgroup_kn_lock_live()/rdtgroup_kn_unlock() with kernfs node of the
+parent control group ("c1") as argument. It should be called with kernfs
+node "mon_groups" instead. What is currently missing is that the
+kn->priv of "mon_groups" is NULL instead of pointing to the rdtgrp.
+
+Fix it by pointing kn->priv to rdtgrp when "mon_groups" is created. Then
+it could be passed to rdtgroup_kn_lock_live()/rdtgroup_kn_unlock()
+instead. And then it operates on the same rdtgroup structure but handles
+the active reference of kernfs node "mon_groups" to prevent deadlock.
+The same changes are also made to the "mon_data" directories.
+
+This results in some unused function parameters that will be cleaned up
+in follow-up patch as the focus here is on the fix only in support of
+backporting efforts.
+
+Fixes: c7d9aac61311 ("x86/intel_rdt/cqm: Add mkdir support for RDT monitoring")
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1578500886-21771-4-git-send-email-xiaochen.shen@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/digitv.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/media/usb/dvb-usb/digitv.c
-+++ b/drivers/media/usb/dvb-usb/digitv.c
-@@ -230,18 +230,22 @@ static struct rc_map_table rc_map_digitv
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index dac7209a07084..e4da26325e3ea 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1970,7 +1970,7 @@ static int rdt_get_tree(struct fs_context *fc)
  
- static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
- {
--	int i;
-+	int ret, i;
- 	u8 key[5];
- 	u8 b[4] = { 0 };
+ 	if (rdt_mon_capable) {
+ 		ret = mongroup_create_dir(rdtgroup_default.kn,
+-					  NULL, "mon_groups",
++					  &rdtgroup_default, "mon_groups",
+ 					  &kn_mongrp);
+ 		if (ret < 0)
+ 			goto out_info;
+@@ -2446,7 +2446,7 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
+ 	/*
+ 	 * Create the mon_data directory first.
+ 	 */
+-	ret = mongroup_create_dir(parent_kn, NULL, "mon_data", &kn);
++	ret = mongroup_create_dir(parent_kn, prgrp, "mon_data", &kn);
+ 	if (ret)
+ 		return ret;
  
- 	*event = 0;
- 	*state = REMOTE_NO_KEY_PRESSED;
+@@ -2645,7 +2645,7 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+ 	uint files = 0;
+ 	int ret;
  
--	digitv_ctrl_msg(d,USB_READ_REMOTE,0,NULL,0,&key[1],4);
-+	ret = digitv_ctrl_msg(d, USB_READ_REMOTE, 0, NULL, 0, &key[1], 4);
-+	if (ret)
-+		return ret;
+-	prdtgrp = rdtgroup_kn_lock_live(prgrp_kn);
++	prdtgrp = rdtgroup_kn_lock_live(parent_kn);
+ 	if (!prdtgrp) {
+ 		ret = -ENODEV;
+ 		goto out_unlock;
+@@ -2718,7 +2718,7 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+ 	kernfs_activate(kn);
  
- 	/* Tell the device we've read the remote. Not sure how necessary
- 	   this is, but the Nebula SDK does it. */
--	digitv_ctrl_msg(d,USB_WRITE_REMOTE,0,b,4,NULL,0);
-+	ret = digitv_ctrl_msg(d, USB_WRITE_REMOTE, 0, b, 4, NULL, 0);
-+	if (ret)
-+		return ret;
+ 	/*
+-	 * The caller unlocks the prgrp_kn upon success.
++	 * The caller unlocks the parent_kn upon success.
+ 	 */
+ 	return 0;
  
- 	/* if something is inside the buffer, simulate key press */
- 	if (key[1] != 0)
+@@ -2729,7 +2729,7 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+ out_free_rgrp:
+ 	kfree(rdtgrp);
+ out_unlock:
+-	rdtgroup_kn_unlock(prgrp_kn);
++	rdtgroup_kn_unlock(parent_kn);
+ 	return ret;
+ }
+ 
+@@ -2767,7 +2767,7 @@ static int rdtgroup_mkdir_mon(struct kernfs_node *parent_kn,
+ 	 */
+ 	list_add_tail(&rdtgrp->mon.crdtgrp_list, &prgrp->mon.crdtgrp_list);
+ 
+-	rdtgroup_kn_unlock(prgrp_kn);
++	rdtgroup_kn_unlock(parent_kn);
+ 	return ret;
+ }
+ 
+@@ -2810,7 +2810,7 @@ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+ 		 * Create an empty mon_groups directory to hold the subset
+ 		 * of tasks and cpus to monitor.
+ 		 */
+-		ret = mongroup_create_dir(kn, NULL, "mon_groups", NULL);
++		ret = mongroup_create_dir(kn, rdtgrp, "mon_groups", NULL);
+ 		if (ret) {
+ 			rdt_last_cmd_puts("kernfs subdir error\n");
+ 			goto out_del_list;
+@@ -2826,7 +2826,7 @@ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+ out_common_fail:
+ 	mkdir_rdt_prepare_clean(rdtgrp);
+ out_unlock:
+-	rdtgroup_kn_unlock(prgrp_kn);
++	rdtgroup_kn_unlock(parent_kn);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
 
 
