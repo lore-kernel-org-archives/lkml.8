@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DB4C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7009C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8B221741
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6EC2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747606;
-	bh=jWRssr90GBfEJ4YHTI/skt6o02YDdSqapYNKQs8ZPNc=;
+	s=default; t=1580747607;
+	bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0V0/TL/ZII3QrmNjfom7IkTriilS5z2P4Rh1hUWHT52DjfI04pX6s5teb4A1gt8X
-	 gaoH+VKgfjIAnoGJ1SDvsRIuBRlChyxdskA/iUeLf9fhGGbat1V+2pB4f/EWzPVc7X
-	 Lo3xllBdzKyEMiK6xkxIgv+EZoNTmSn6rG941bsA=
+	b=ekX3tjPPurVPjwvxNzdh7sm+h2eUa+PFxCt+6FDDnMc1lFnFd5gZw64sAwWMfwTOB
+	 Dmal452ENb27douams14nUGkliFmVN6M3RYnbe7Du00ULRaDq0vHmRn6UFBMv7Jry+
+	 p/X7mWHbbxB+08I129EBeTeCPjlqqwtojgvcCgVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgBCQdZ (ORCPT
+        id S1730593AbgBCQd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730563AbgBCQdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:20 -0500
+        id S1730577AbgBCQdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:24 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3E621741;
-        Mon,  3 Feb 2020 16:33:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661DA2082E;
+        Mon,  3 Feb 2020 16:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747599;
-        bh=jWRssr90GBfEJ4YHTI/skt6o02YDdSqapYNKQs8ZPNc=;
+        s=default; t=1580747603;
+        bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V8MHyI2UrNRQG9U/WIFaGmlVDMWfEN136UQ6wmh1B+qqBB/pS3Bzmgd9ApTMMWawZ
-         GONN2+Iyed4Ecv+2gsX2IwhO2N69jn4mNdQ+u5yAj2Zw43C/FKG7fiKAUbJB0ZZF48
-         aQSai8E5dm5IvHkMUIdsKoxrHxzv30ZsxndFReY4=
+        b=oa8ikF2Shn15ExKA6KFq/yAeFlL1G3Du0fXokuN+oniSiObJzFTBy+6MOJIZjLzYB
+         2RoiJDh0rjK2KADCf5W2FBxN9yODVE7gJ5dF9Yia/k2hWWFoihGTg7mRxn01PgveFc
+         eKM1ttnqg8vj7+c9S92QtgJYxoVEWrzTJR2lD1XY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
+        stable@vger.kernel.org, Shahed Shaikh <shshaikh@marvell.com>,
+        Yonggen Xu <Yonggen.Xu@dell.com>,
+        Manish Chopra <manishc@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 62/70] r8152: get default setting of WOL before initializing
-Date:   Mon,  3 Feb 2020 16:20:14 +0000
-Message-Id: <20200203161921.126096722@linuxfoundation.org>
+Subject: [PATCH 4.19 64/70] qlcnic: Fix CPU soft lockup while collecting firmware dump
+Date:   Mon,  3 Feb 2020 16:20:16 +0000
+Message-Id: <20200203161921.384801113@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,47 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hayes Wang <hayeswang@realtek.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
+[ Upstream commit 22e984493a41bf8081f13d9ed84def3ca8cfd427 ]
 
-Initailization would reset runtime suspend by tp->saved_wolopts, so
-the tp->saved_wolopts should be set before initializing.
+Driver while collecting firmware dump takes longer time to
+collect/process some of the firmware dump entries/memories.
+Bigger capture masks makes it worse as it results in larger
+amount of data being collected and results in CPU soft lockup.
+Place cond_resched() in some of the driver flows that are
+expectedly time consuming to relinquish the CPU to avoid CPU
+soft lockup panic.
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Tested-by: Yonggen Xu <Yonggen.Xu@dell.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 1 +
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index db817d3c2bb8b..c5c188dc66268 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5259,6 +5259,11 @@ static int rtl8152_probe(struct usb_interface *intf,
- 
- 	intf->needs_remote_wakeup = 1;
- 
-+	if (!rtl_can_wakeup(tp))
-+		__rtl_set_wol(tp, 0);
-+	else
-+		tp->saved_wolopts = __rtl_get_wol(tp);
-+
- 	tp->rtl_ops.init(tp);
- 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
- 	set_ethernet_addr(tp);
-@@ -5272,10 +5277,6 @@ static int rtl8152_probe(struct usb_interface *intf,
- 		goto out1;
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+index a496390b8632f..07f9067affc65 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+@@ -2043,6 +2043,7 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
+ 			break;
+ 		}
+ 		entry += p_hdr->size;
++		cond_resched();
+ 	}
+ 	p_dev->ahw->reset.seq_index = index;
+ }
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+index afa10a163da1f..f34ae8c75bc5e 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+@@ -703,6 +703,7 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
+ 		addr += 16;
+ 		reg_read -= 16;
+ 		ret += 16;
++		cond_resched();
+ 	}
+ out:
+ 	mutex_unlock(&adapter->ahw->mem_lock);
+@@ -1383,6 +1384,7 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
+ 		buf_offset += entry->hdr.cap_size;
+ 		entry_offset += entry->hdr.offset;
+ 		buffer = fw_dump->data + buf_offset;
++		cond_resched();
  	}
  
--	if (!rtl_can_wakeup(tp))
--		__rtl_set_wol(tp, 0);
--
--	tp->saved_wolopts = __rtl_get_wol(tp);
- 	if (tp->saved_wolopts)
- 		device_set_wakeup_enable(&udev->dev, true);
- 	else
+ 	fw_dump->clr = 1;
 -- 
 2.20.1
 
