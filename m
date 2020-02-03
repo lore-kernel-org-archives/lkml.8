@@ -2,56 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1237AC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D55C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC162086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F922086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748219;
-	bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
+	s=default; t=1580748224;
+	bh=wxmR6bK+1cTs6I/4bhCczSGmGHbhgq301hFma19OM/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oR9yOudZqlYds957PzWhKlTmnCzypetnMTSwE7l8Z7f98bi391LBQTMyssfcj5qjv
-	 sOaoh+28xWiu8J9ohET+5ZDFKvftUYJOqkHuTXKFQdAQGyGThhFgNZ2CJclocVM1Tv
-	 QI1esM2omhlGn4gJn2E5tMEIxFUgbAWpz6hdBnO0=
+	b=T0OZepIWY+bqX4ShnNCAgXXH1mbGKNDldK5j/HVe3vw4wx4QwIAJ0V6qAXwhqI0hs
+	 CddMnbK1fZRasg2Qw/uNDbRJw5Q66cpE7sw0Lc1VrKqwpmVkVHnyyY8tp/8Jbcqrt3
+	 0uzDGVcBlDRiottZbgCj8wQqbcQOITG7jM2tBLl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbgBCQni (ORCPT
+        id S1731333AbgBCQnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:43:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46538 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:43:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730180AbgBCQcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:46 -0500
+        id S1730129AbgBCQcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:39 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B09E2087E;
-        Mon,  3 Feb 2020 16:32:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 700942051A;
+        Mon,  3 Feb 2020 16:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747566;
-        bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
+        s=default; t=1580747558;
+        bh=wxmR6bK+1cTs6I/4bhCczSGmGHbhgq301hFma19OM/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMjcERjoW7JlqOD3M7UbCE6fMzWBGVoOqjLDCaTHjzu1VwkgOPIl5K63Hm6icutuf
-         Jxb2PBC/1z/CHWNCcVeel4CxZO+XGVGJCxASbzMU6Sm/Uirv+m+c9R72fVhzB89/dy
-         B5PmOC1k6uF9U+dvlsALz40ToSJjbCSM1APw+N0U=
+        b=tNNxzYEOaq2YRCN4nu46040rh1v7yCGJi7rWc4PZ54tCNiLwJ5thLe7XJoPDDm/wO
+         zsfi3EvIhBERUXZSntF9WX+rfVAdsKLhYMHmm9yjH3ahEKdaAH55hkDitBT+cIMNSw
+         fZIrcOjmgsUn5wCpEI6U/vHpVgt6k/Aybqq9mDNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>,
-        Dmitry Levin <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        kbuild test robot <lkp@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 10/70] tools lib: Fix builds when glibc contains strlcpy()
-Date:   Mon,  3 Feb 2020 16:19:22 +0000
-Message-Id: <20200203161913.994548206@linuxfoundation.org>
+        stable@vger.kernel.org, Orr Mazor <Orr.Mazor@tandemg.com>,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 43/70] cfg80211: Fix radar event during another phy CAC
+Date:   Mon,  3 Feb 2020 16:19:55 +0000
+Message-Id: <20200203161918.611962441@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -64,97 +61,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Chikunov <vt@altlinux.org>
+From: Orr Mazor <orr.mazor@tandemg.com>
 
-commit 6c4798d3f08b81c2c52936b10e0fa872590c96ae upstream.
+[ Upstream commit 26ec17a1dc5ecdd8d91aba63ead6f8b5ad5dea0d ]
 
-Disable a couple of compilation warnings (which are treated as errors)
-on strlcpy() definition and declaration, allowing users to compile perf
-and kernel (objtool) when:
+In case a radar event of CAC_FINISHED or RADAR_DETECTED
+happens during another phy is during CAC we might need
+to cancel that CAC.
 
-1. glibc have strlcpy() (such as in ALT Linux since 2004) objtool and
-   perf build fails with this (in gcc):
+If we got a radar in a channel that another phy is now
+doing CAC on then the CAC should be canceled there.
 
-  In file included from exec-cmd.c:3:
-  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
-     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+If, for example, 2 phys doing CAC on the same channels,
+or on comptable channels, once on of them will finish his
+CAC the other might need to cancel his CAC, since it is no
+longer relevant.
 
-2. clang ignores `-Wredundant-decls', but produces another warning when
-   building perf:
+To fix that the commit adds an callback and implement it in
+mac80211 to end CAC.
+This commit also adds a call to said callback if after a radar
+event we see the CAC is no longer relevant
 
-    CC       util/string.o
-  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
-  size_t __weak strlcpy(char *dest, const char *src, size_t size)
-  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
-  # define __weak                 __attribute__((weak))
-  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
-  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
-
-Committer notes:
-
-The
-
- #pragma GCC diagnostic
-
-directive was introduced in gcc 4.6, so check for that as well.
-
-Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
-Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
-Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-Reviewed-by: Dmitry Levin <ldv@altlinux.org>
-Cc: Dmitry Levin <ldv@altlinux.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: kbuild test robot <lkp@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Link: http://lore.kernel.org/lkml/20191224172029.19690-1-vt@altlinux.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Orr Mazor <Orr.Mazor@tandemg.com>
+Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20191222145449.15792-1-Orr.Mazor@tandemg.com
+[slightly reformat/reword commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/string.h |    8 ++++++++
- tools/lib/string.c           |    7 +++++++
- 2 files changed, 15 insertions(+)
+ include/net/cfg80211.h  |  5 +++++
+ net/mac80211/cfg.c      | 23 +++++++++++++++++++++++
+ net/wireless/rdev-ops.h | 10 ++++++++++
+ net/wireless/reg.c      | 23 ++++++++++++++++++++++-
+ net/wireless/trace.h    |  5 +++++
+ 5 files changed, 65 insertions(+), 1 deletion(-)
 
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -14,7 +14,15 @@ int strtobool(const char *s, bool *res);
-  * However uClibc headers also define __GLIBC__ hence the hack below
-  */
- #if defined(__GLIBC__) && !defined(__UCLIBC__)
-+// pragma diagnostic was introduced in gcc 4.6
-+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wredundant-decls"
-+#endif
- extern size_t strlcpy(char *dest, const char *src, size_t size);
-+#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-+#pragma GCC diagnostic pop
-+#endif
- #endif
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index 1fa2e72ff7a6a..ae936cd5567e0 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -3050,6 +3050,9 @@ struct cfg80211_external_auth_params {
+  *
+  * @start_radar_detection: Start radar detection in the driver.
+  *
++ * @end_cac: End running CAC, probably because a related CAC
++ *	was finished on another phy.
++ *
+  * @update_ft_ies: Provide updated Fast BSS Transition information to the
+  *	driver. If the SME is in the driver/firmware, this information can be
+  *	used in building Authentication and Reassociation Request frames.
+@@ -3364,6 +3367,8 @@ struct cfg80211_ops {
+ 					 struct net_device *dev,
+ 					 struct cfg80211_chan_def *chandef,
+ 					 u32 cac_time_ms);
++	void	(*end_cac)(struct wiphy *wiphy,
++				struct net_device *dev);
+ 	int	(*update_ft_ies)(struct wiphy *wiphy, struct net_device *dev,
+ 				 struct cfg80211_update_ft_ies_params *ftie);
+ 	int	(*crit_proto_start)(struct wiphy *wiphy,
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index e46944500cfa1..cb7076d9a7698 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -2825,6 +2825,28 @@ static int ieee80211_start_radar_detection(struct wiphy *wiphy,
+ 	return err;
+ }
  
- char *str_error_r(int errnum, char *buf, size_t buflen);
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -95,6 +95,10 @@ int strtobool(const char *s, bool *res)
-  * If libc has strlcpy() then that version will override this
-  * implementation:
-  */
-+#ifdef __clang__
-+#pragma clang diagnostic push
-+#pragma clang diagnostic ignored "-Wignored-attributes"
-+#endif
- size_t __weak strlcpy(char *dest, const char *src, size_t size)
++static void ieee80211_end_cac(struct wiphy *wiphy,
++			      struct net_device *dev)
++{
++	struct ieee80211_sub_if_data *sdata = IEEE80211_DEV_TO_SUB_IF(dev);
++	struct ieee80211_local *local = sdata->local;
++
++	mutex_lock(&local->mtx);
++	list_for_each_entry(sdata, &local->interfaces, list) {
++		/* it might be waiting for the local->mtx, but then
++		 * by the time it gets it, sdata->wdev.cac_started
++		 * will no longer be true
++		 */
++		cancel_delayed_work(&sdata->dfs_cac_timer_work);
++
++		if (sdata->wdev.cac_started) {
++			ieee80211_vif_release_channel(sdata);
++			sdata->wdev.cac_started = false;
++		}
++	}
++	mutex_unlock(&local->mtx);
++}
++
+ static struct cfg80211_beacon_data *
+ cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
  {
- 	size_t ret = strlen(src);
-@@ -106,3 +110,6 @@ size_t __weak strlcpy(char *dest, const
- 	}
+@@ -3848,6 +3870,7 @@ const struct cfg80211_ops mac80211_config_ops = {
+ #endif
+ 	.get_channel = ieee80211_cfg_get_channel,
+ 	.start_radar_detection = ieee80211_start_radar_detection,
++	.end_cac = ieee80211_end_cac,
+ 	.channel_switch = ieee80211_channel_switch,
+ 	.set_qos_map = ieee80211_set_qos_map,
+ 	.set_ap_chanwidth = ieee80211_set_ap_chanwidth,
+diff --git a/net/wireless/rdev-ops.h b/net/wireless/rdev-ops.h
+index 4cff76f33d45f..a8c58aeb9dde9 100644
+--- a/net/wireless/rdev-ops.h
++++ b/net/wireless/rdev-ops.h
+@@ -1170,6 +1170,16 @@ rdev_start_radar_detection(struct cfg80211_registered_device *rdev,
  	return ret;
  }
-+#ifdef __clang__
-+#pragma clang diagnostic pop
-+#endif
+ 
++static inline void
++rdev_end_cac(struct cfg80211_registered_device *rdev,
++	     struct net_device *dev)
++{
++	trace_rdev_end_cac(&rdev->wiphy, dev);
++	if (rdev->ops->end_cac)
++		rdev->ops->end_cac(&rdev->wiphy, dev);
++	trace_rdev_return_void(&rdev->wiphy);
++}
++
+ static inline int
+ rdev_set_mcast_rate(struct cfg80211_registered_device *rdev,
+ 		    struct net_device *dev,
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 4c3c8a1c116da..018c60be153a7 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -3840,6 +3840,25 @@ bool regulatory_pre_cac_allowed(struct wiphy *wiphy)
+ 	return pre_cac_allowed;
+ }
+ 
++static void cfg80211_check_and_end_cac(struct cfg80211_registered_device *rdev)
++{
++	struct wireless_dev *wdev;
++	/* If we finished CAC or received radar, we should end any
++	 * CAC running on the same channels.
++	 * the check !cfg80211_chandef_dfs_usable contain 2 options:
++	 * either all channels are available - those the CAC_FINISHED
++	 * event has effected another wdev state, or there is a channel
++	 * in unavailable state in wdev chandef - those the RADAR_DETECTED
++	 * event has effected another wdev state.
++	 * In both cases we should end the CAC on the wdev.
++	 */
++	list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
++		if (wdev->cac_started &&
++		    !cfg80211_chandef_dfs_usable(&rdev->wiphy, &wdev->chandef))
++			rdev_end_cac(rdev, wdev->netdev);
++	}
++}
++
+ void regulatory_propagate_dfs_state(struct wiphy *wiphy,
+ 				    struct cfg80211_chan_def *chandef,
+ 				    enum nl80211_dfs_state dfs_state,
+@@ -3866,8 +3885,10 @@ void regulatory_propagate_dfs_state(struct wiphy *wiphy,
+ 		cfg80211_set_dfs_state(&rdev->wiphy, chandef, dfs_state);
+ 
+ 		if (event == NL80211_RADAR_DETECTED ||
+-		    event == NL80211_RADAR_CAC_FINISHED)
++		    event == NL80211_RADAR_CAC_FINISHED) {
+ 			cfg80211_sched_dfs_chan_update(rdev);
++			cfg80211_check_and_end_cac(rdev);
++		}
+ 
+ 		nl80211_radar_notify(rdev, chandef, event, NULL, GFP_KERNEL);
+ 	}
+diff --git a/net/wireless/trace.h b/net/wireless/trace.h
+index 7c73510b161f3..54b0bb344cf93 100644
+--- a/net/wireless/trace.h
++++ b/net/wireless/trace.h
+@@ -607,6 +607,11 @@ DEFINE_EVENT(wiphy_netdev_evt, rdev_flush_pmksa,
+ 	TP_ARGS(wiphy, netdev)
+ );
+ 
++DEFINE_EVENT(wiphy_netdev_evt, rdev_end_cac,
++	     TP_PROTO(struct wiphy *wiphy, struct net_device *netdev),
++	     TP_ARGS(wiphy, netdev)
++);
++
+ DECLARE_EVENT_CLASS(station_add_change,
+ 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, u8 *mac,
+ 		 struct station_parameters *params),
+-- 
+2.20.1
+
 
 
