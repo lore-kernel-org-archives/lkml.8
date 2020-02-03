@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DF3C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7F42051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AA82051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748458;
-	bh=bYRu9xAq3TrK7LyKKXCxOGboiZsoLtfEg8a7OZShoPs=;
+	s=default; t=1580748462;
+	bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C9GfnqoyvZvawE0g/fN6hF8NBShiOEE+iBZOK0Im+zp793XWxk15lf7JXnLzoVoHb
-	 EwWKXym2a4B0dNS+KOhOjE66jj9d8nrmkE9stb+Mks5y7VYByFaCoAhAnD3vhKsq3F
-	 7NHsUKtW2jraDX/7ToB9rarffeR72YYlVVGa4RLA=
+	b=QPfZ/5CbIeuAw3lJbkGPoN9hDYm2Bgm4OhnQKISqhHupKmNHDZLyDYskrNv2DecVB
+	 /j07Pw4PmVzCSeEsRpHHPl46/rviUuHUGEHxqcVIkESeHUpN5ufPX8H/YwEswPiK65
+	 N3xqJBAlBibOjGe3dgM2mANHhIScgPmBSe9WOPFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgBCQ1L (ORCPT
+        id S1729993AbgBCQrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38228 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:47:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgBCQ1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:07 -0500
+        id S1729348AbgBCQ1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:10 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 644DB2086A;
-        Mon,  3 Feb 2020 16:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE422086A;
+        Mon,  3 Feb 2020 16:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747224;
-        bh=bYRu9xAq3TrK7LyKKXCxOGboiZsoLtfEg8a7OZShoPs=;
+        s=default; t=1580747229;
+        bh=mHQFP/vtoC7Zz+C7h04SYqUhhYKg5fKVuKYZAuh6FrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSmVWpOJ2dYn+nlSHtaLBfhuzNuF0EHji5Vg63JumTrlMwTgWFjRnqOv3TNWs7VYB
-         ADW7Vj0Y8YGCb66+bRxxnqLUNzgUWbGjt9H9RbXuQmSNMVOAWxg1ARu15Q1uOHMea2
-         8FLcwpablBlqkO2gno9f9oYQCDWtUInzu7emQh+E=
+        b=DHWETLMeaxAWSqvZ6R/g1uXI+JhyCv6fr1uv2YrVzZYnRW0X7vn9giUhOuSAdC0Sq
+         1qYmDGhhwo6+XkroQHsJAnhbBTCmqd++3osRRvfCrWMjeQdt4R67GRCxpPPP3MKEUo
+         3eacTULkPxlS+mr0qIJIRRJd/ZAmZnoXe365DUK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Cathy Luo <xiaohua.luo@nxp.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 64/68] net/sonic: Fix receive buffer handling
-Date:   Mon,  3 Feb 2020 16:20:00 +0000
-Message-Id: <20200203161915.371037510@linuxfoundation.org>
+Subject: [PATCH 4.9 48/68] wireless: fix enabling channel 12 for custom regulatory domain
+Date:   Mon,  3 Feb 2020 16:19:44 +0000
+Message-Id: <20200203161912.848158796@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -61,114 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-[ Upstream commit 9e311820f67e740f4fb8dcb82b4c4b5b05bdd1a5 ]
+[ Upstream commit c4b9d655e445a8be0bff624aedea190606b5ebbc ]
 
-The SONIC can sometimes advance its rx buffer pointer (RRP register)
-without advancing its rx descriptor pointer (CRDA register). As a result
-the index of the current rx descriptor may not equal that of the current
-rx buffer. The driver mistakenly assumes that they are always equal.
-This assumption leads to incorrect packet lengths and possible packet
-duplication. Avoid this by calling a new function to locate the buffer
-corresponding to a given descriptor.
+Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by
+default when checking usable channels"") fixed a broken
+regulatory (leaving channel 12 open for AP where not permitted).
+Apply a similar fix to custom regulatory domain processing.
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Cathy Luo <xiaohua.luo@nxp.com>
+Signed-off-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Link: https://lore.kernel.org/r/1576836859-8945-1-git-send-email-ganapathi.bhat@nxp.com
+[reword commit message, fix coding style, add a comment]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 35 ++++++++++++++++++++++++----
- drivers/net/ethernet/natsemi/sonic.h |  5 ++--
- 2 files changed, 33 insertions(+), 7 deletions(-)
+ net/wireless/reg.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 7aa7f8050d44e..b6599aa22504f 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -423,6 +423,21 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index dde741f298de7..0e66768427ba7 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1715,14 +1715,15 @@ static void update_all_wiphy_regulatory(enum nl80211_reg_initiator initiator)
+ 
+ static void handle_channel_custom(struct wiphy *wiphy,
+ 				  struct ieee80211_channel *chan,
+-				  const struct ieee80211_regdomain *regd)
++				  const struct ieee80211_regdomain *regd,
++				  u32 min_bw)
+ {
+ 	u32 bw_flags = 0;
+ 	const struct ieee80211_reg_rule *reg_rule = NULL;
+ 	const struct ieee80211_power_rule *power_rule = NULL;
+ 	u32 bw;
+ 
+-	for (bw = MHZ_TO_KHZ(20); bw >= MHZ_TO_KHZ(5); bw = bw / 2) {
++	for (bw = MHZ_TO_KHZ(20); bw >= min_bw; bw = bw / 2) {
+ 		reg_rule = freq_reg_info_regd(MHZ_TO_KHZ(chan->center_freq),
+ 					      regd, bw);
+ 		if (!IS_ERR(reg_rule))
+@@ -1778,8 +1779,14 @@ static void handle_band_custom(struct wiphy *wiphy,
+ 	if (!sband)
+ 		return;
+ 
++	/*
++	 * We currently assume that you always want at least 20 MHz,
++	 * otherwise channel 12 might get enabled if this rule is
++	 * compatible to US, which permits 2402 - 2472 MHz.
++	 */
+ 	for (i = 0; i < sband->n_channels; i++)
+-		handle_channel_custom(wiphy, &sband->channels[i], regd);
++		handle_channel_custom(wiphy, &sband->channels[i], regd,
++				      MHZ_TO_KHZ(20));
  }
  
-+/* Return the array index corresponding to a given Receive Buffer pointer. */
-+static int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
-+			   unsigned int last)
-+{
-+	unsigned int i = last;
-+
-+	do {
-+		i = (i + 1) & SONIC_RRS_MASK;
-+		if (addr == lp->rx_laddr[i])
-+			return i;
-+	} while (i != last);
-+
-+	return -ENOENT;
-+}
-+
- /*
-  * We have a good packet(s), pass it/them up the network stack.
-  */
-@@ -442,6 +457,16 @@ static void sonic_rx(struct net_device *dev)
- 
- 		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
- 		if (status & SONIC_RCR_PRX) {
-+			u32 addr = (sonic_rda_get(dev, entry,
-+						  SONIC_RD_PKTPTR_H) << 16) |
-+				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
-+			int i = index_from_addr(lp, addr, entry);
-+
-+			if (i < 0) {
-+				WARN_ONCE(1, "failed to find buffer!\n");
-+				break;
-+			}
-+
- 			/* Malloc up new buffer. */
- 			new_skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
- 			if (new_skb == NULL) {
-@@ -463,7 +488,7 @@ static void sonic_rx(struct net_device *dev)
- 
- 			/* now we have a new skb to replace it, pass the used one up the stack */
- 			dma_unmap_single(lp->device, lp->rx_laddr[entry], SONIC_RBSIZE, DMA_FROM_DEVICE);
--			used_skb = lp->rx_skb[entry];
-+			used_skb = lp->rx_skb[i];
- 			pkt_len = sonic_rda_get(dev, entry, SONIC_RD_PKTLEN);
- 			skb_trim(used_skb, pkt_len);
- 			used_skb->protocol = eth_type_trans(used_skb, dev);
-@@ -472,13 +497,13 @@ static void sonic_rx(struct net_device *dev)
- 			lp->stats.rx_bytes += pkt_len;
- 
- 			/* and insert the new skb */
--			lp->rx_laddr[entry] = new_laddr;
--			lp->rx_skb[entry] = new_skb;
-+			lp->rx_laddr[i] = new_laddr;
-+			lp->rx_skb[i] = new_skb;
- 
- 			bufadr_l = (unsigned long)new_laddr & 0xffff;
- 			bufadr_h = (unsigned long)new_laddr >> 16;
--			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_L, bufadr_l);
--			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
-+			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
-+			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
- 		} else {
- 			/* This should only happen, if we enable accepting broken packets. */
- 			lp->stats.rx_errors++;
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index a009a99c0e544..d9f8ceb5353a4 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -273,8 +273,9 @@
- #define SONIC_NUM_RDS   SONIC_NUM_RRS /* number of receive descriptors */
- #define SONIC_NUM_TDS   16            /* number of transmit descriptors */
- 
--#define SONIC_RDS_MASK  (SONIC_NUM_RDS-1)
--#define SONIC_TDS_MASK  (SONIC_NUM_TDS-1)
-+#define SONIC_RRS_MASK  (SONIC_NUM_RRS - 1)
-+#define SONIC_RDS_MASK  (SONIC_NUM_RDS - 1)
-+#define SONIC_TDS_MASK  (SONIC_NUM_TDS - 1)
- 
- #define SONIC_RBSIZE	1520          /* size of one resource buffer */
- 
+ /* Used by drivers prior to wiphy registration */
 -- 
 2.20.1
 
