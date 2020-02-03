@@ -2,104 +2,96 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16EBC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C30CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5345720658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TZzJZVlY"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2DF20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 20:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgBCUkn (ORCPT
+        id S1727080AbgBCUl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 15:40:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49350 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726278AbgBCUkn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 15:40:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580762442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=pyvOKTyWkhnbfDDvx/t4H+37pFyaHZSbAEznQ9w1oyc=;
-        b=TZzJZVlYU0eTggOF8/15pPMtN8SlIXM0ziVGHJ4Fp2/BS0MNaUaQa3RF0OCYrGTA+u1VZr
-        rVrVJ649jZOEfrcVc2PDckdFQIZeKCw+R6YR3+3JZg1QfotZghdeAtYiQO9LYFJvyBDzMp
-        mRiZiKWNJarJuxw177p8gw4wVF6ckhA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-7l1xuXRFPdWWM4vbT9eVRQ-1; Mon, 03 Feb 2020 15:40:39 -0500
-X-MC-Unique: 7l1xuXRFPdWWM4vbT9eVRQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 809C118C8C01;
-        Mon,  3 Feb 2020 20:40:38 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4853187B1D;
-        Mon,  3 Feb 2020 20:40:38 +0000 (UTC)
-Date:   Mon, 3 Feb 2020 13:40:37 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [GIT PULL] VFIO updates for v5.6-rc1
-Message-ID: <20200203134037.2fda624f@w520.home>
+        Mon, 3 Feb 2020 15:41:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:58355 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbgBCUl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 15:41:56 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 12:41:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
+   d="scan'208";a="310831201"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 03 Feb 2020 12:41:55 -0800
+Date:   Mon, 3 Feb 2020 12:41:55 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v17] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200203204155.GE19638@linux.intel.com>
+References: <4E95BFAA-A115-4159-AA4F-6AAB548C6E6C@gmail.com>
+ <C3302B2F-177F-4C39-910E-EADBA9285DD0@intel.com>
+ <8CC9FBA7-D464-4E58-8912-3E14A751D243@gmail.com>
+ <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200126200535.GB30377@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, Jan 26, 2020 at 12:05:35PM -0800, Luck, Tony wrote:
+> +/*
+> + * Locking is not required at the moment because only bit 29 of this
+> + * MSR is implemented and locking would not prevent that the operation
+> + * of one thread is immediately undone by the sibling thread.
+> + * Use the "safe" versions of rdmsr/wrmsr here because although code
+> + * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+> + * exist, there may be glitches in virtualization that leave a guest
+> + * with an incorrect view of real h/w capabilities.
+> + */
+> +static bool __sld_msr_set(bool on)
+> +{
+> +	u64 test_ctrl_val;
+> +
+> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> +		return false;
 
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+How about caching the MSR value on a per-{cpu/core} basis at boot to avoid
+the RDMSR when switching to/from from a misbehaving tasks?  E.g. to avoid
+penalizing well-behaved tasks any more than necessary.
 
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+We've likely got bigger issues if MSR_TEST_CTL is being written by BIOS
+at runtime, even if the writes were limited to synchronous calls from the
+kernel.
 
-are available in the Git repository at:
+Probably makes sense to split the MSR's init sequence and runtime sequence,
+e.g. to also use an unsafe wrmsrl() at runtime so that an unexpected #GP
+generates a WARN.
 
-  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.6-rc1
-
-for you to fetch changes up to 7b5372ba04ca1caabed1470d4ec23001cde2eb91:
-
-  vfio: platform: fix __iomem in vfio_platform_amdxgbe.c (2020-01-09 11:32:14 -0700)
-
-----------------------------------------------------------------
-VFIO updates for v5.6-rc1
-
- - Fix nvlink error path (Alexey Kardashevskiy)
-
- - Update nvlink and spapr to use mmgrab() (Julia Lawall)
-
- - Update static declaration (Ben Dooks)
-
- - Annotate __iomem to fix sparse warnings (Ben Dooks)
-
-----------------------------------------------------------------
-Alexey Kardashevskiy (1):
-      vfio/spapr/nvlink2: Skip unpinning pages on error exit
-
-Ben Dooks (Codethink) (2):
-      vfio/mdev: make create attribute static
-      vfio: platform: fix __iomem in vfio_platform_amdxgbe.c
-
-Julia Lawall (2):
-      vfio: vfio_pci_nvlink2: use mmgrab
-      vfio/spapr_tce: use mmgrab
-
- drivers/vfio/mdev/mdev_sysfs.c                      | 2 +-
- drivers/vfio/pci/vfio_pci_nvlink2.c                 | 8 +++++---
- drivers/vfio/platform/reset/vfio_platform_amdxgbe.c | 4 ++--
- drivers/vfio/vfio_iommu_spapr_tce.c                 | 2 +-
- 4 files changed, 9 insertions(+), 7 deletions(-)
-
+> +
+> +	if (on)
+> +		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +	else
+> +		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +
+> +	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
+> +}
