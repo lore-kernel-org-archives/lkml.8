@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D0C35247
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A0DC35249
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42F12051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757C62051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748422;
-	bh=aq8oHi+kuRzmddBuHvtWptQ6KXrAq8zkhQV3IruTfN8=;
+	s=default; t=1580748423;
+	bh=CiQeIRcGx1eIKU7i3VXIcuFBQVvaTX2mx9Zqf/l7cyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5dR7/BZ4Dbid9ft6qDABg5dNA8sabjZyebnKPZzqj6YWJPZh4gsFWDCDgbPSrrqT
-	 f46t6pM4uxhJrLmqN4aM0diOm++TvvBIfBGOQrSrzeWce6dTsm8ovuJ87yZt4Yfbk0
-	 Ng7SGdAx3LoHl3fs2Fd6vMscrmsFGh9Y107m3s2Q=
+	b=jGOb9qZ95tHaukQIAmSckWTCZtWoY0CFeilR4OTB941fL+wBx0jT+JYjifGliTjov
+	 FPzXblfwhnmyeWs4j/Ls0NzwyhEk2UA7HTvU7kVOc+NEUnKQjVE9+ILog96eyLnpBl
+	 vXIEn5gZ6UMdwqlWEDIvbYkD5sKCMAiViEOc9I+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgBCQrB (ORCPT
+        id S1729514AbgBCQ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbgBCQ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:07 -0500
+        id S1729482AbgBCQ1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:50 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 910542080C;
-        Mon,  3 Feb 2020 16:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C9220838;
+        Mon,  3 Feb 2020 16:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747287;
-        bh=aq8oHi+kuRzmddBuHvtWptQ6KXrAq8zkhQV3IruTfN8=;
+        s=default; t=1580747270;
+        bh=CiQeIRcGx1eIKU7i3VXIcuFBQVvaTX2mx9Zqf/l7cyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWdJMOL7COL5uPZQshO/heO/+S+d7xFYEODEZSW+ZhfR7jKBdDIPx1iYkGqDhbKpZ
-         ckj02rAqzW3p99xwH+q/jUpkrjlXTLuoM52RPzQZ1aiOndPZUx9xSyNlGz741P773C
-         1ytyBaRq7Ns7twRUJfZ7Z06pBbA27x0QRBmNPCh8=
+        b=l5gkyEFsvqyBUVmTLdSShThHn4Lr/fDG8ATAr4Te0eti/K1mlZ0zhVmb7TOgkZqd3
+         ajqzhfgU/uAbHxqPPQAvnS6HAABLifgxDrLo29qEuCL/RwqmhpEQgYZhpagWGtygXn
+         qQvqbvZ3DWmCpYRm0tfP4FotTE3KIhxkBgWgG4gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 03/89] USB: serial: ir-usb: add missing endpoint sanity check
-Date:   Mon,  3 Feb 2020 16:18:48 +0000
-Message-Id: <20200203161917.312739259@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 14/89] ath9k: fix storage endpoint lookup
+Date:   Mon,  3 Feb 2020 16:18:59 +0000
+Message-Id: <20200203161918.759534226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,38 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 2988a8ae7476fe9535ab620320790d1714bdad1d upstream.
+commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
 
-Add missing endpoint sanity check to avoid dereferencing a NULL-pointer
-on open() in case a device lacks a bulk-out endpoint.
-
-Note that prior to commit f4a4cbb2047e ("USB: ir-usb: reimplement using
-generic framework") the oops would instead happen on open() if the
-device lacked a bulk-in endpoint and on write() if it lacked a bulk-out
+Make sure to use the current alternate setting when verifying the
+storage interface descriptors to avoid submitting an URB to an invalid
 endpoint.
 
-Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+Cc: stable <stable@vger.kernel.org>     # 2.6.39
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ir-usb.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ir-usb.c
-+++ b/drivers/usb/serial/ir-usb.c
-@@ -199,6 +199,9 @@ static int ir_startup(struct usb_serial
- 	struct usb_irda_cs_descriptor *irda_desc;
- 	int rates;
- 
-+	if (serial->num_bulk_in < 1 || serial->num_bulk_out < 1)
-+		return -ENODEV;
-+
- 	irda_desc = irda_usb_find_class_desc(serial, 0);
- 	if (!irda_desc) {
- 		dev_err(&serial->dev->dev,
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -1214,7 +1214,7 @@ err_fw:
+ static int send_eject_command(struct usb_interface *interface)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct usb_host_interface *iface_desc = &interface->altsetting[0];
++	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	unsigned char *cmd;
+ 	u8 bulk_out_ep;
 
 
