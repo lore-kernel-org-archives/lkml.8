@@ -2,135 +2,313 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D131C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90CBC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2260024688
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580750756;
-	bh=U+WFdDMs2py+jrUgPw25TAgQh0Oc93Yfllr/9P1q1zw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=B/qVECNrNxGNuWDjrrnV99rAHPIu+S9C3H0AgZMUb7tHFQPFV0MwUgoUVtwxFeUzp
-	 yPuyHpJ4DatkAw6Xn6odeD2NSTuZMWa3WHxSzghlH6myjbdRcsh/akMNz6NuJKn1VZ
-	 Sf8rLSfI/guP/rMz7VSUgF0lDnK3mcsSRPXPaJrM=
+	by mail.kernel.org (Postfix) with ESMTP id A1E402086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgBCRZz (ORCPT
+        id S1728167AbgBCR2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbgBCRZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:25:55 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3839F21D7E;
-        Mon,  3 Feb 2020 17:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580750754;
-        bh=U+WFdDMs2py+jrUgPw25TAgQh0Oc93Yfllr/9P1q1zw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Ox6TelB70UeTlYdxY9Fp+JnDQczAzGzoRebrj0xmq/1MDdHIlSeZ5I5X+OpvvRuAU
-         p3/Kc94bDNvU3RcYBaDCRm+gHpLaVC3A8Tklwn8R7Re2Tl4oUsvILslUOWwmvW52DI
-         9uTvwy3UwgEFmRjtbAzk3ecodIfQWgnpHd6+UfUQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0B1EE3522718; Mon,  3 Feb 2020 09:25:54 -0800 (PST)
-Date:   Mon, 3 Feb 2020 09:25:54 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Marco Elver' <elver@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Confused about hlist_unhashed_lockless()
-Message-ID: <20200203172554.GL2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200131164308.GA5175@willie-the-truck>
- <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
- <20200131184322.GA11457@worktop.programming.kicks-ass.net>
- <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
- <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
- <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
- <CANpmjNNVstV4AJHtf0aht1xyj+_a-Kj4so4Mi1DpOWDPYN=-2Q@mail.gmail.com>
- <154c51cc385544789c9fa0b233fc76e7@AcuMS.aculab.com>
+        Mon, 3 Feb 2020 12:28:51 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:33629 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgBCR2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 12:28:51 -0500
+Received: by mail-io1-f69.google.com with SMTP id i8so9886813ioi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 09:28:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=i8un32MgIhK52ArzevaWM6LPBN+PFjSnMddDz4IYX3s=;
+        b=Up/z3nr+yQjpTXbGuig3RXqHx0Lu8GoxRuXImzJC81jizjPeV3Q5ebT6aqUpAbS2lv
+         V+zMZw+AGS95cEGATgRXEaeh7VMpSgj2xnwe3hCaEOA6kyBtH8CRkLhuoI6wLyn+S6PO
+         nGgxxf0r9+2Z7pVibY3NuGbYWf8mZQuAod2Vach4pEio2GqJxUlF/cmiQXHfYX9ij3b+
+         fOdiCFuX7BUM3gfdKi9CPZeSZ5Aj6KMLVuIKESYC85kBs+vW1HHOHTbBszxsuL27pVUw
+         XhkdE7F8OjZFv/knwOTxvcvM30/IeRXw2IXUv8noq5af+mj9yD4jtsWbVnShykJxOjWK
+         /Abw==
+X-Gm-Message-State: APjAAAXcP/k3vS/IBXE7i8PyoH7AeOZ2zg/OutI2Dlzd2XoI1Z7aMZTQ
+        LxmJKRxZii6HcyXGH5bpqLSTLUsfn+Gt4y2aUC64yPpSfQgG
+X-Google-Smtp-Source: APXvYqzOb1d6yRb3Ol//RAtGzq3y7n8sUw8l0aU/i/dMla/HQLLoQgYQFKVI4QQn57HRy1HB1ru0vcBGAyxz9LFHMQWqg88c5l85
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <154c51cc385544789c9fa0b233fc76e7@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6602:2815:: with SMTP id d21mr19111577ioe.217.1580750929074;
+ Mon, 03 Feb 2020 09:28:49 -0800 (PST)
+Date:   Mon, 03 Feb 2020 09:28:49 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009b2012059daf41b8@google.com>
+Subject: possible deadlock in rds_wake_sk_sleep (2)
+From:   syzbot <syzbot+fafe7ab87492bb36ac5b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, santosh.shilimkar@oracle.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:05:25PM +0000, David Laight wrote:
-> From: Marco Elver
-> > Sent: 03 February 2020 15:55
-> > 
-> > On Mon, 3 Feb 2020 at 16:45, David Laight <David.Laight@aculab.com> wrote:
-> > >
-> > > From: Eric Dumazet
-> > > > Sent: 31 January 2020 18:53
-> > > >
-> > > > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
-> > > > >
-> > > >
-> > > > > This is nice, now with have data_race()
-> > > > >
-> > > > > Remember these patches were sent 2 months ago, at a time we were
-> > > > > trying to sort out things.
-> > > > >
-> > > > > data_race() was merged a few days ago.
-> > > >
-> > > > Well, actually data_race() is not there yet anyway.
-> > >
-> > > Shouldn't it be NO_DATA_RACE() ??
-> > 
-> > Various options were considered, and based on feedback from Linus,
-> > decided 'data_race(..)' is the best option:
-> >   https://lore.kernel.org/linux-fsdevel/CAHk-
-> > =wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
-> > 
-> > It's meant to be as unobtrusive as possible, and an all-caps macro was
-> > ruled out.
-> 
-> Except that it then looks like something that actually does something.
-> 
-> > Second, the "NO_" prefix would be incorrect, since it'd be the
-> > opposite of what it is. The macro is meant to document and mark a
-> > deliberate data race.
-> 
-> It should be IGNORE_DATA_RACE() then.
+Hello,
 
-People will get used to the name more quickly than they will get used
-to typing the extra seven characters.  Here is the current comment header:
+syzbot found the following crash on:
 
-/*
- * data_race(): macro to document that accesses in an expression may conflict with
- * other concurrent accesses resulting in data races, but the resulting
- * behaviour is deemed safe regardless.
- *
- * This macro *does not* affect normal code generation, but is a hint to tooling
- * that data races here should be ignored.
- */
+HEAD commit:    9f68e365 Merge tag 'drm-next-2020-01-30' of git://anongit...
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17558df1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=95b275782b150c86
+dashboard link: https://syzkaller.appspot.com/bug?extid=fafe7ab87492bb36ac5b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-I will be converting this to docbook form.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-In addition, in the KCSAN documentation:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fafe7ab87492bb36ac5b@syzkaller.appspotmail.com
 
-* KCSAN understands the ``data_race(expr)`` annotation, which tells KCSAN that
-  any data races due to accesses in ``expr`` should be ignored and resulting
-  behaviour when encountering a data race is deemed safe.
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-syzkaller #0 Not tainted
+------------------------------------------------------
+kworker/u4:4/231 is trying to acquire lock:
+ffff8880a7e4de10 (&rs->rs_recv_lock){..--}, at: rds_wake_sk_sleep+0x24/0xe0 net/rds/af_rds.c:109
 
-Fair enough?
+but task is already holding lock:
+ffff888096fed900 (&(&rm->m_rs_lock)->rlock){..-.}, at: rds_send_remove_from_sock+0x352/0x9d0 net/rds/send.c:628
 
-								Thanx, Paul
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&(&rm->m_rs_lock)->rlock){..-.}:
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+       rds_message_purge net/rds/message.c:138 [inline]
+       rds_message_put net/rds/message.c:180 [inline]
+       rds_message_put+0x1d9/0xda0 net/rds/message.c:173
+       rds_loop_inc_free+0x16/0x20 net/rds/loop.c:115
+       rds_inc_put+0x148/0x1b0 net/rds/recv.c:82
+       rds_clear_recv_queue+0x157/0x380 net/rds/recv.c:770
+       rds_release+0x117/0x430 net/rds/af_rds.c:73
+       __sock_release+0xce/0x280 net/socket.c:605
+       sock_close+0x1e/0x30 net/socket.c:1283
+       __fput+0x2ff/0x890 fs/file_table.c:280
+       ____fput+0x16/0x20 fs/file_table.c:313
+       task_work_run+0x145/0x1c0 kernel/task_work.c:113
+       tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+       exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+       prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+       syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+       do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&rs->rs_recv_lock){..--}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain kernel/locking/lockdep.c:2970 [inline]
+       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+       __raw_read_lock_irqsave include/linux/rwlock_api_smp.h:159 [inline]
+       _raw_read_lock_irqsave+0x98/0xd0 kernel/locking/spinlock.c:231
+       rds_wake_sk_sleep+0x24/0xe0 net/rds/af_rds.c:109
+       rds_send_remove_from_sock+0xc0/0x9d0 net/rds/send.c:634
+       rds_send_path_drop_acked+0x330/0x430 net/rds/send.c:710
+       rds_tcp_write_space+0x1bb/0x6a1 net/rds/tcp_send.c:203
+       tcp_new_space net/ipv4/tcp_input.c:5217 [inline]
+       tcp_check_space+0x18f/0x760 net/ipv4/tcp_input.c:5228
+       tcp_data_snd_check net/ipv4/tcp_input.c:5238 [inline]
+       tcp_rcv_established+0x188b/0x1e90 net/ipv4/tcp_input.c:5646
+       tcp_v4_do_rcv+0x619/0x8d0 net/ipv4/tcp_ipv4.c:1619
+       tcp_v4_rcv+0x307f/0x3b40 net/ipv4/tcp_ipv4.c:2001
+       ip_protocol_deliver_rcu+0x5a/0x880 net/ipv4/ip_input.c:204
+       ip_local_deliver_finish+0x23b/0x380 net/ipv4/ip_input.c:231
+       NF_HOOK include/linux/netfilter.h:307 [inline]
+       NF_HOOK include/linux/netfilter.h:301 [inline]
+       ip_local_deliver+0x1e9/0x520 net/ipv4/ip_input.c:252
+       dst_input include/net/dst.h:442 [inline]
+       ip_rcv_finish+0x1db/0x2f0 net/ipv4/ip_input.c:428
+       NF_HOOK include/linux/netfilter.h:307 [inline]
+       NF_HOOK include/linux/netfilter.h:301 [inline]
+       ip_rcv+0xe8/0x3f0 net/ipv4/ip_input.c:538
+       __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5198
+       __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5312
+       process_backlog+0x206/0x750 net/core/dev.c:6144
+       napi_poll net/core/dev.c:6582 [inline]
+       net_rx_action+0x508/0x1120 net/core/dev.c:6650
+       __do_softirq+0x262/0x98c kernel/softirq.c:292
+       do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
+       do_softirq.part.0+0x11a/0x170 kernel/softirq.c:337
+       do_softirq kernel/softirq.c:329 [inline]
+       __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:189
+       local_bh_enable include/linux/bottom_half.h:32 [inline]
+       rcu_read_unlock_bh include/linux/rcupdate.h:690 [inline]
+       ip_finish_output2+0x957/0x2610 net/ipv4/ip_output.c:229
+       __ip_finish_output net/ipv4/ip_output.c:306 [inline]
+       __ip_finish_output+0x604/0xc00 net/ipv4/ip_output.c:288
+       ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:316
+       NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+       ip_output+0x22b/0x680 net/ipv4/ip_output.c:430
+       dst_output include/net/dst.h:436 [inline]
+       ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
+       __ip_queue_xmit+0x878/0x1c20 net/ipv4/ip_output.c:530
+       ip_queue_xmit+0x5a/0x70 include/net/ip.h:237
+       __tcp_transmit_skb+0x1ac9/0x3900 net/ipv4/tcp_output.c:1234
+       __tcp_send_ack.part.0+0x3c6/0x5b0 net/ipv4/tcp_output.c:3771
+       __tcp_send_ack net/ipv4/tcp_output.c:3777 [inline]
+       tcp_send_ack net/ipv4/tcp_output.c:3777 [inline]
+       tcp_send_delayed_ack+0x361/0x460 net/ipv4/tcp_output.c:3725
+       __tcp_ack_snd_check+0x6b0/0x980 net/ipv4/tcp_input.c:5268
+       tcp_rcv_established+0x1789/0x1e90 net/ipv4/tcp_input.c:5694
+       tcp_v4_do_rcv+0x619/0x8d0 net/ipv4/tcp_ipv4.c:1619
+       sk_backlog_rcv include/net/sock.h:938 [inline]
+       __release_sock+0x129/0x390 net/core/sock.c:2437
+       release_sock+0x59/0x1c0 net/core/sock.c:2953
+       tcp_sendmsg+0x3b/0x50 net/ipv4/tcp.c:1434
+       inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xd7/0x130 net/socket.c:672
+       kernel_sendmsg+0x44/0x50 net/socket.c:692
+       rds_tcp_sendmsg+0xc7/0x100 net/rds/tcp_send.c:71
+       rds_tcp_xmit+0x6e2/0xa40 net/rds/tcp_send.c:109
+       rds_send_xmit+0x1354/0x2970 net/rds/send.c:367
+       rds_send_worker+0x9c/0x2a0 net/rds/threads.c:200
+       process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+       worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+       kthread+0x361/0x430 kernel/kthread.c:255
+       ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&(&rm->m_rs_lock)->rlock);
+                               lock(&rs->rs_recv_lock);
+                               lock(&(&rm->m_rs_lock)->rlock);
+  lock(&rs->rs_recv_lock);
+
+ *** DEADLOCK ***
+
+9 locks held by kworker/u4:4/231:
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: __write_once_size include/linux/compiler.h:226 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:855 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
+ #0: ffff888099596928 ((wq_completion)krdsd){+.+.}, at: process_one_work+0x8dd/0x17a0 kernel/workqueue.c:2235
+ #1: ffffc90001717dc0 ((work_completion)(&(&cp->cp_send_w)->work)){+.+.}, at: process_one_work+0x917/0x17a0 kernel/workqueue.c:2239
+ #2: ffff8880873b0150 (k-sk_lock-AF_INET){+.+.}, at: lock_sock include/net/sock.h:1516 [inline]
+ #2: ffff8880873b0150 (k-sk_lock-AF_INET){+.+.}, at: tcp_sendmsg+0x22/0x50 net/ipv4/tcp.c:1432
+ #3: ffffffff89babf40 (rcu_read_lock){....}, at: sock_net include/net/sock.h:2459 [inline]
+ #3: ffffffff89babf40 (rcu_read_lock){....}, at: __ip_queue_xmit+0x42/0x1c20 net/ipv4/ip_output.c:455
+ #4: ffffffff89babf40 (rcu_read_lock){....}, at: __write_once_size include/linux/compiler.h:226 [inline]
+ #4: ffffffff89babf40 (rcu_read_lock){....}, at: __skb_unlink include/linux/skbuff.h:2034 [inline]
+ #4: ffffffff89babf40 (rcu_read_lock){....}, at: __skb_dequeue include/linux/skbuff.h:2049 [inline]
+ #4: ffffffff89babf40 (rcu_read_lock){....}, at: process_backlog+0x195/0x750 net/core/dev.c:6142
+ #5: ffffffff89babf40 (rcu_read_lock){....}, at: __skb_pull include/linux/skbuff.h:2265 [inline]
+ #5: ffffffff89babf40 (rcu_read_lock){....}, at: ip_local_deliver_finish+0x13a/0x380 net/ipv4/ip_input.c:228
+ #6: ffff88805b9c4e60 (k-slock-AF_INET6/1){+.-.}, at: tcp_v4_rcv+0x2e1a/0x3b40 net/ipv4/tcp_ipv4.c:1995
+ #7: ffff88805b9c5150 (clock-AF_INET6){++.-}, at: rds_tcp_write_space+0x28/0x6a1 net/rds/tcp_send.c:189
+ #8: ffff888096fed900 (&(&rm->m_rs_lock)->rlock){..-.}, at: rds_send_remove_from_sock+0x352/0x9d0 net/rds/send.c:628
+
+stack backtrace:
+CPU: 1 PID: 231 Comm: kworker/u4:4 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: krdsd rds_send_worker
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain kernel/locking/lockdep.c:2970 [inline]
+ __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ __raw_read_lock_irqsave include/linux/rwlock_api_smp.h:159 [inline]
+ _raw_read_lock_irqsave+0x98/0xd0 kernel/locking/spinlock.c:231
+ rds_wake_sk_sleep+0x24/0xe0 net/rds/af_rds.c:109
+ rds_send_remove_from_sock+0xc0/0x9d0 net/rds/send.c:634
+ rds_send_path_drop_acked+0x330/0x430 net/rds/send.c:710
+ rds_tcp_write_space+0x1bb/0x6a1 net/rds/tcp_send.c:203
+ tcp_new_space net/ipv4/tcp_input.c:5217 [inline]
+ tcp_check_space+0x18f/0x760 net/ipv4/tcp_input.c:5228
+ tcp_data_snd_check net/ipv4/tcp_input.c:5238 [inline]
+ tcp_rcv_established+0x188b/0x1e90 net/ipv4/tcp_input.c:5646
+ tcp_v4_do_rcv+0x619/0x8d0 net/ipv4/tcp_ipv4.c:1619
+ tcp_v4_rcv+0x307f/0x3b40 net/ipv4/tcp_ipv4.c:2001
+ ip_protocol_deliver_rcu+0x5a/0x880 net/ipv4/ip_input.c:204
+ ip_local_deliver_finish+0x23b/0x380 net/ipv4/ip_input.c:231
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ NF_HOOK include/linux/netfilter.h:301 [inline]
+ ip_local_deliver+0x1e9/0x520 net/ipv4/ip_input.c:252
+ dst_input include/net/dst.h:442 [inline]
+ ip_rcv_finish+0x1db/0x2f0 net/ipv4/ip_input.c:428
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ NF_HOOK include/linux/netfilter.h:301 [inline]
+ ip_rcv+0xe8/0x3f0 net/ipv4/ip_input.c:538
+ __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5198
+ __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5312
+ process_backlog+0x206/0x750 net/core/dev.c:6144
+ napi_poll net/core/dev.c:6582 [inline]
+ net_rx_action+0x508/0x1120 net/core/dev.c:6650
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
+ </IRQ>
+ do_softirq.part.0+0x11a/0x170 kernel/softirq.c:337
+ do_softirq kernel/softirq.c:329 [inline]
+ __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:189
+ local_bh_enable include/linux/bottom_half.h:32 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:690 [inline]
+ ip_finish_output2+0x957/0x2610 net/ipv4/ip_output.c:229
+ __ip_finish_output net/ipv4/ip_output.c:306 [inline]
+ __ip_finish_output+0x604/0xc00 net/ipv4/ip_output.c:288
+ ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:316
+ NF_HOOK_COND include/linux/netfilter.h:296 [inline]
+ ip_output+0x22b/0x680 net/ipv4/ip_output.c:430
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
+ __ip_queue_xmit+0x878/0x1c20 net/ipv4/ip_output.c:530
+ ip_queue_xmit+0x5a/0x70 include/net/ip.h:237
+ __tcp_transmit_skb+0x1ac9/0x3900 net/ipv4/tcp_output.c:1234
+ __tcp_send_ack.part.0+0x3c6/0x5b0 net/ipv4/tcp_output.c:3771
+ __tcp_send_ack net/ipv4/tcp_output.c:3777 [inline]
+ tcp_send_ack net/ipv4/tcp_output.c:3777 [inline]
+ tcp_send_delayed_ack+0x361/0x460 net/ipv4/tcp_output.c:3725
+ __tcp_ack_snd_check+0x6b0/0x980 net/ipv4/tcp_input.c:5268
+ tcp_rcv_established+0x1789/0x1e90 net/ipv4/tcp_input.c:5694
+ tcp_v4_do_rcv+0x619/0x8d0 net/ipv4/tcp_ipv4.c:1619
+ sk_backlog_rcv include/net/sock.h:938 [inline]
+ __release_sock+0x129/0x390 net/core/sock.c:2437
+ release_sock+0x59/0x1c0 net/core/sock.c:2953
+ tcp_sendmsg+0x3b/0x50 net/ipv4/tcp.c:1434
+ inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ kernel_sendmsg+0x44/0x50 net/socket.c:692
+ rds_tcp_sendmsg+0xc7/0x100 net/rds/tcp_send.c:71
+ rds_tcp_xmit+0x6e2/0xa40 net/rds/tcp_send.c:109
+ rds_send_xmit+0x1354/0x2970 net/rds/send.c:367
+ rds_send_worker+0x9c/0x2a0 net/rds/threads.c:200
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
