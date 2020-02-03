@@ -2,117 +2,76 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D4C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A29C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92842080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7759A2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580742487;
-	bh=K/wRk9Mo7taae+TxofgZMKUL4Bw+cp1ibWYgzzyd8Fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F7eil/MqlB9iJXsL1QKTO8nSLfFzj+P9JeyUW0F9fqF9VUxunsOEgHqxM/zsgTekg
-	 uptOPueSlIjNU8ySt1OsE5dgkLQazmnOERsr7Lwqz2Elzqsvkd7SIfBgmu2IYmWMPI
-	 b6KWkMjONLpW83Pg80m2I4ZLAlJj9O1V8iYhl1xM=
+	s=default; t=1580742522;
+	bh=Nb7hvXDQ9+r6z44arPAgwdnw9IiSRV2K+tFdLqVRakA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=oIhAjKLPVHKnhm8VW2fYxLmX9zKgJVTrbEZV9XAVXRVX33tXm8TheZ0thfngwckQq
+	 nG3hnPNsloLBpYNPLjUuN0i9ka66rAApqzacP2aveB2hiAekjfHLcl72VW4hYag2Ir
+	 2QKkMSQZu7NmPKmOL0adgGzRWehtg8X0CixL6iQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgBCPIH (ORCPT
+        id S1728595AbgBCPIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:08:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgBCPIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:08:06 -0500
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 119DE2080C;
-        Mon,  3 Feb 2020 15:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580742485;
-        bh=K/wRk9Mo7taae+TxofgZMKUL4Bw+cp1ibWYgzzyd8Fs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8Y3pFun9CYr1EuITEo0Wiqc6BetFwqCj5c8zjSOf4rsF23OEmhDpiN8sIMsJJtG5
-         oDt5jGaqgrR29x5KDUiUzABMD792Z1nm4ErXaHLcwxLftyoqMh+oZZu5+xmLUz/I1/
-         c1nbSHkYvfFo0A/jy3iMRYqpyVR6ZyKxy3SLBKas=
-Date:   Mon, 3 Feb 2020 17:08:00 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Andrea Mayer <andrea.mayer@uniroma2.it>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
-        Paolo Lungaroni <paolo.lungaroni@cnit.it>
-Subject: Re: [net-next] seg6: add support for optional attributes during
- behavior construction
-Message-ID: <20200203150800.GQ414821@unreal>
-References: <20200203143658.1561-1-andrea.mayer@uniroma2.it>
+        Mon, 3 Feb 2020 10:08:41 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37532 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgBCPIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:08:41 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f129so17581597wmf.2;
+        Mon, 03 Feb 2020 07:08:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=Nb7hvXDQ9+r6z44arPAgwdnw9IiSRV2K+tFdLqVRakA=;
+        b=MF++XBr92Yr19bG7DSMQJUnoADavhB7dLauTWwsd0nHeKBIHT9gBa2Zc2GDhbg2pi1
+         JGd1u9Y4SZErjzXB6Vi3tSO8dLpfEqMuzylj0d1YHZRc4zzbxf9Mqx6wY/RtbQ412Wlu
+         IJr7Rd4gKFxHAjmy+lz4DIkpLSkJuWmrI3ACkBraFRmqSd2nsSIFslmFUSO8mhkGQPhk
+         BQ40XHAIcGTd8Pn/gjbq1JOv8NDNP151kifq7QHpbGzEVnI675Jit0HRQbB4FbiOLj+q
+         kPtLdNCz1LHeHbYyZ/z8HGZEn0CKlVa5TjbvC6l9MJGC4gA6ZRGDzwFquQEKzJCi45Es
+         ulNQ==
+X-Gm-Message-State: APjAAAXsCHnVbCxr17/EZ2mWHkxWykOJ/RkszNUHWAgM/Sr7OcFkXrMM
+        zqWgS17olBG0Xx8pwf2tN7YFO19rr1rKcA==
+X-Google-Smtp-Source: APXvYqwRTWwdE7Z935cUy0RmDlJnjoUb2bB6WgF+R57y6KHiLfJeX6QYdxltCaSCIIybDdazeKqtDg==
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr31061809wmc.9.1580742520124;
+        Mon, 03 Feb 2020 07:08:40 -0800 (PST)
+Received: from Johanness-MBP.fritz.box (ppp-46-244-208-208.dynamic.mnet-online.de. [46.244.208.208])
+        by smtp.gmail.com with ESMTPSA id u8sm23826007wmm.15.2020.02.03.07.08.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 07:08:39 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] fs: New zonefs file system
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+References: <20200129131118.998939-1-damien.lemoal@wdc.com>
+ <20200129131118.998939-2-damien.lemoal@wdc.com>
+From:   Johannes Thumshirn <jth@kernel.org>
+Message-ID: <bd8f0172-7843-b08f-10eb-399e9fd5ecf9@kernel.org>
+Date:   Mon, 3 Feb 2020 16:08:37 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203143658.1561-1-andrea.mayer@uniroma2.it>
+In-Reply-To: <20200129131118.998939-2-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 03:36:58PM +0100, Andrea Mayer wrote:
-> before this patch, each SRv6 behavior specifies a set of required
-> attributes that must be provided by the userspace application when the
-> behavior is created. If an attribute is not supplied, the creation
-> operation fails.
-> As a workaround, if an attribute is not needed by a behavior, it requires
-> to be set by the userspace application to a conventional skip-value. The
-> kernel side, that processes the creation request of a behavior, reads the
-> supplied attribute values and checks if it has been set to the
-> conventional skip-value or not. Hence, each optional attribute must have a
-> conventional skip-value which is known a priori and shared between
-> userspace applications and kernel.
->
-> Messy code and complicated tricks may arise from this approach.
-> On the other hand, this patch explicitly differentiates the required
-> mandatory attributes from the optional ones. Now, each behavior can declare
-> a set of required attributes and a set of optional ones. The behavior
-> creation fails in case a required attribute is missing, while it goes on
-> without generating any issue if an optional attribute is not supplied by
-> the userspace application.
->
-> To properly combine the required and optional attributes, a new callback
-> function called destroy() is used for releasing resources that have been
-> acquired, during the parse() operation, by a given attribute.
-> However, the destroy() function is optional and if an attribute does not
-> require resources that have to be later released, the callback can be
-> omitted.
->
-> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-> ---
->  net/ipv6/seg6_local.c | 226 ++++++++++++++++++++++++++++++++++++------
->  1 file changed, 198 insertions(+), 28 deletions(-)
->
-> diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
-> index 85a5447a3e8d..480f1ab35221 100644
-> --- a/net/ipv6/seg6_local.c
-> +++ b/net/ipv6/seg6_local.c
-> @@ -7,6 +7,13 @@
->   *  eBPF support: Mathieu Xhonneux <m.xhonneux@gmail.com>
->   */
->
-> +/* Changes:
-> + *
-> + * Andrea Mayer <andrea.mayer@uniroma2.it>
-> + *	add support for optional attributes during behavior construction
-> + *
-> + */
-
-The lines above look strange in 2020 when all of us are using git.
-
-Thanks
+Looks good,
+Reviewed-by: Johannes Thumshirn <jth@kernel.org>
