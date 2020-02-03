@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7B1C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62301C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7C2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4D720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748294;
-	bh=Fb6DoChUixkAgybc60OAS1PBtkR5+l+wqOyX35AhbJc=;
+	s=default; t=1580748297;
+	bh=B0JIqMD29LvbOe+RxwvtK3buCFf3EOPoDEsuj7C77js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U//1/Gllnlk9Nw4W7Ncyj1BKh/teBLsXFMgu0qHOE0nMVpBHG9lU4M8PMppjtwiaL
-	 9MpE0s29eEX8RJUToht3WE8FU+e5u/umE6I/YXhSwIvFjne+lNsVd8s4yf+Mq21uEN
-	 CWSLkcv9nM0Vricq+Ab/Mk7c5441lEUahKbTYLEg=
+	b=PBEl7Ll0g/G8ASxEy0uk8TSEnmARU0f8j+juujihyB3vqDu9CmJkyeclwvW67mbnK
+	 TJcjBdzQA65Yo6sc8fqSsBb1CEza8lAAf005gPJWhwwl6fRVxlPbDW78eTCB6QBYU4
+	 2T5C7B336PB/UNdKP24/m4s8YSkHNd2cgMizUFZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgBCQar (ORCPT
+        id S1730839AbgBCQo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:44:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730061AbgBCQan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:43 -0500
+        id S1730061AbgBCQar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:47 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3A420838;
-        Mon,  3 Feb 2020 16:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62C32086A;
+        Mon,  3 Feb 2020 16:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747442;
-        bh=Fb6DoChUixkAgybc60OAS1PBtkR5+l+wqOyX35AhbJc=;
+        s=default; t=1580747447;
+        bh=B0JIqMD29LvbOe+RxwvtK3buCFf3EOPoDEsuj7C77js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DLw9g07mWSOajI3VHK2v6bqnMk7wZ5sbdLksTcfnzdm6xiDVnZieOBjRMg/vQHOo
-         yZfR+ILPrEghY44dl+xRm5BLsYIBNSXT3wjlxVIhqt2JGWjcz219n8HUixSf7oB33T
-         qwLWPWDo/6cRuUFnCMP13HLxo9e3lntFqyVqCKf4=
+        b=mye8JN0KpHbMjliSXEEq57M756R3y5+/8RIf8LkmVYJRExgi23C2IEtDHfvOMWube
+         J4YnXnYn9OQHSYvCmRE+2pXYZk4s6Ysfp91adHdJvLfS551/fhYBb3kSBLaSPso1ZL
+         a/8nVBYCneN17j65rfZr2j8cO1oUEhRAq6lT7cBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 86/89] net/sonic: Quiesce SONIC before re-initializing descriptor memory
-Date:   Mon,  3 Feb 2020 16:20:11 +0000
-Message-Id: <20200203161927.193688933@linuxfoundation.org>
+Subject: [PATCH 4.14 87/89] seq_tab_next() should increase position index
+Date:   Mon,  3 Feb 2020 16:20:12 +0000
+Message-Id: <20200203161927.304835541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,95 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 3f4b7e6a2be982fd8820a2b54d46dd9c351db899 ]
+[ Upstream commit 70a87287c821e9721b62463777f55ba588ac4623 ]
 
-Make sure the SONIC's DMA engine is idle before altering the transmit
-and receive descriptors. Add a helper for this as it will be needed
-again.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 25 +++++++++++++++++++++++++
- drivers/net/ethernet/natsemi/sonic.h |  3 +++
- 2 files changed, 28 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index b6599aa22504f..254e6dbc4c6aa 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -103,6 +103,24 @@ static int sonic_open(struct net_device *dev)
- 	return 0;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index 9e5cd18e7358c..8bd90ad156073 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -66,8 +66,7 @@ static void *seq_tab_start(struct seq_file *seq, loff_t *pos)
+ static void *seq_tab_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	v = seq_tab_get_idx(seq->private, *pos + 1);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
  }
  
-+/* Wait for the SONIC to become idle. */
-+static void sonic_quiesce(struct net_device *dev, u16 mask)
-+{
-+	struct sonic_local * __maybe_unused lp = netdev_priv(dev);
-+	int i;
-+	u16 bits;
-+
-+	for (i = 0; i < 1000; ++i) {
-+		bits = SONIC_READ(SONIC_CMD) & mask;
-+		if (!bits)
-+			return;
-+		if (irqs_disabled() || in_interrupt())
-+			udelay(20);
-+		else
-+			usleep_range(100, 200);
-+	}
-+	WARN_ONCE(1, "command deadline expired! 0x%04x\n", bits);
-+}
- 
- /*
-  * Close the SONIC device
-@@ -120,6 +138,9 @@ static int sonic_close(struct net_device *dev)
- 	/*
- 	 * stop the SONIC, disable interrupts
- 	 */
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
-+
- 	SONIC_WRITE(SONIC_IMR, 0);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
-@@ -159,6 +180,9 @@ static void sonic_tx_timeout(struct net_device *dev)
- 	 * put the Sonic into software-reset mode and
- 	 * disable all interrupts before releasing DMA buffers
- 	 */
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
-+
- 	SONIC_WRITE(SONIC_IMR, 0);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
-@@ -638,6 +662,7 @@ static int sonic_init(struct net_device *dev)
- 	 */
- 	SONIC_WRITE(SONIC_CMD, 0);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	sonic_quiesce(dev, SONIC_CR_ALL);
- 
- 	/*
- 	 * initialize the receive resource area
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index 83905eee6960c..7dc011655e70a 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -110,6 +110,9 @@
- #define SONIC_CR_TXP            0x0002
- #define SONIC_CR_HTX            0x0001
- 
-+#define SONIC_CR_ALL (SONIC_CR_LCAM | SONIC_CR_RRRA | \
-+		      SONIC_CR_RXEN | SONIC_CR_TXP)
-+
- /*
-  * SONIC data configuration bits
-  */
 -- 
 2.20.1
 
