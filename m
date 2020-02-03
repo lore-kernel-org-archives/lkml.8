@@ -2,112 +2,156 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA32C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6D9C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56F920658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784E820658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:25:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="IrJckNU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBCJWv (ORCPT
+        id S1727726AbgBCJZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:22:51 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60194 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgBCJWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:22:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 01:22:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,397,1574150400"; 
-   d="scan'208";a="263351396"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Feb 2020 01:22:45 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1iyXwM-0004Pw-8z; Mon, 03 Feb 2020 11:22:46 +0200
-Date:   Mon, 3 Feb 2020 11:22:46 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "linux.cj@gmail.com" <linux.cj@gmail.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "Rajesh V. Bikkina" <rajesh.bikkina@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mon, 3 Feb 2020 04:25:30 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38655 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCJZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:25:29 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so16986611wrh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:25:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=F9yu2wtiNO9AUs6nrKy2by5yqmhTTOqT7fKPke38AkA=;
+        b=IrJckNU3TBy2Ho2bFZT/sDmmNA89gz9uNI1I08zCGhFGKvXfO4vweB2nmJSN5YsKsz
+         9/zJJ1M89N6Mvjz0m9hDX3GK2ebobSvAi+TWW/29be5h1rnJrgTH7yy4vAPfdX3fw0nm
+         mzz4HtL4SiBvNNpfhiK8hYs9RMM/Z+fK1ne0EPb6sRkkyby4laEWtx9aiL5EhWDncZef
+         PtzeS10ymMQlChGaOeTgMZw4sdLkSmSxPnPI4Y+q0cv1GQJs//H6UCIilrAldZSSaCRE
+         87nn70bfkP2KB/hg/MAnp/gqTRkrkPLgTts/3thKG2qc1Ms7U5o0stuV6NzswbnVctbu
+         lhuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F9yu2wtiNO9AUs6nrKy2by5yqmhTTOqT7fKPke38AkA=;
+        b=dps2+si9Y/4u5ekkQb5/3utAYiLlMOU/zs+EQhAqW/n92qkgfjDs7FlkFwpoPaciXe
+         J6wDy8T4D8k91AW3yvK6qe4Sk/hkxA/wzanVY7l/DmdbFFQOMPL7gE6pWrp429sZk/I4
+         uU311i9alt2Vm/2pyU3CdZE6B4+yDUVd3c0elSBPFMblDWpaBec9ZeL1MF5Kngcf+fEa
+         zywSdRtdL6vI/p3o8XwsBQ3xislJoX6fwSAyLZkeXNpFxZVu9MnrNsr1LNdrgNRxs/ks
+         AM0vFkCCVVgwIWKaQNerKDUO5bM3Pv/om22mMlrzzkP62gZMeo+SkgCvLJpG9ecOQKoF
+         sJqg==
+X-Gm-Message-State: APjAAAUuBidXxbbsx3ROaYBF/eiVPUHfUniTzx9K62C0QlT6S2b6jxz5
+        f/sn4RhhQZK1OU05vlEdllXbcw==
+X-Google-Smtp-Source: APXvYqxMp3Ck8IjM3P3+ox8B3yR/DSErPTTa6J5xqFm1bMcpTRQZ39Yvj8v9HY3lGBV2CsuW0xEyMw==
+X-Received: by 2002:adf:f787:: with SMTP id q7mr11348594wrp.297.1580721928632;
+        Mon, 03 Feb 2020 01:25:28 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:459c:4174:f0ee:1b26])
+        by smtp.gmail.com with ESMTPSA id b18sm24549847wru.50.2020.02.03.01.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 01:25:27 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:25:25 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, x86@kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v1 4/7] device property: fwnode_get_phy_mode: Change API
- to solve int/unit warnings
-Message-ID: <20200203092246.GX32742@smile.fi.intel.com>
-References: <20200131153440.20870-1-calvin.johnson@nxp.com>
- <20200131153440.20870-5-calvin.johnson@nxp.com>
- <CAHp75Vdnz79NiHs5MfxAevzOuk-A6ESHR+Epoym+v3Qo4XPvLw@mail.gmail.com>
- <AM0PR04MB5636C44D0943B7E5F01218DF93000@AM0PR04MB5636.eurprd04.prod.outlook.com>
+        "K. Y. Srinivasan" <kys@microsoft.com>
+Subject: Re: [PATCH v2 1/3] PCI: hv: Move hypercall related definitions into
+ tlfs header
+Message-ID: <20200203092525.GC20189@big-machine>
+References: <20200203050313.69247-1-boqun.feng@gmail.com>
+ <20200203050313.69247-2-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB5636C44D0943B7E5F01218DF93000@AM0PR04MB5636.eurprd04.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200203050313.69247-2-boqun.feng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 09:13:42AM +0000, Calvin Johnson (OSS) wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Subject: Re: [PATCH v1 4/7] device property: fwnode_get_phy_mode:
-> > Change API to solve int/unit warnings
-> > 
-> > On Fri, Jan 31, 2020 at 5:38 PM Calvin Johnson <calvin.johnson@nxp.com>
-> > wrote:
-> > >
-> > > From: Calvin Johnson <calvin.johnson@oss.nxp.com>
-> > >
-> > > API fwnode_get_phy_mode is modified to follow the changes made by
-> > > Commit 0c65b2b90d13c1 ("net: of_get_phy_mode: Change API to solve
-> > > int/unit warnings").
-> > 
-> > I think it would be good to base your series on Dan's fix patch.
+On Mon, Feb 03, 2020 at 01:03:11PM +0800, Boqun Feng wrote:
+> Currently HVCALL_RETARGET_INTERRUPT and HV_PARTITION_ID_SELF are defined
+> in pci-hyperv.c. However, similar to other hypercall related definitions
+> , it makes more sense to put them in the tlfs header file.
+
+Nit: please keep the comma attached to the previous word - even if that
+means you need to move the word with it to the next line to maintain line
+limits.
+
 > 
-> This patch is based on Dan's fix patch https://www.spinics.net/lists/netdev/msg606487.html .
-> Commit 0c65b2b90d13c1 ("net: of_get_phy_mode: Change API to solve int/unit warnings").
-> Can you please give more clarity on what you meant? Please point to me, if there is some 
-> specific patch that you are referring to.
+> Besides, these definitions are arch-dependent, so for the support of
+> virtual PCI on non-x86 archs in the future, move them into arch-specific
+> tlfs header file.
+> 
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h  | 3 +++
+>  drivers/pci/controller/pci-hyperv.c | 6 ------
+>  2 files changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 5f10f7f2098d..739bd89226a5 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -376,6 +376,7 @@ struct hv_tsc_emulation_status {
+>  #define HVCALL_SEND_IPI_EX			0x0015
+>  #define HVCALL_POST_MESSAGE			0x005c
+>  #define HVCALL_SIGNAL_EVENT			0x005d
+> +#define HVCALL_RETARGET_INTERRUPT		0x007e
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+>  
+> @@ -405,6 +406,8 @@ enum HV_GENERIC_SET_FORMAT {
+>  	HV_GENERIC_SET_ALL,
+>  };
+>  
+> +#define HV_PARTITION_ID_SELF                    ((u64)-1)
+> +
+>  #define HV_HYPERCALL_RESULT_MASK	GENMASK_ULL(15, 0)
+>  #define HV_HYPERCALL_FAST_BIT		BIT(16)
+>  #define HV_HYPERCALL_VARHEAD_OFFSET	17
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 9977abff92fc..aacfcc90d929 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -406,12 +406,6 @@ struct pci_eject_response {
+>  
+>  static int pci_ring_size = (4 * PAGE_SIZE);
+>  
+> -/*
+> - * Definitions or interrupt steering hypercall.
+> - */
+> -#define HV_PARTITION_ID_SELF		((u64)-1)
+> -#define HVCALL_RETARGET_INTERRUPT	0x7e
+> -
 
-Ah, sorry, I meant the "device property: change device_get_phy_mode() to
-prevent signedess bugs" [1]. It fixes some PHY initialization issues with the
-existing code (thus, should be backported).
+Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
-[1]: https://lkml.org/lkml/2020/1/31/1
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  struct hv_interrupt_entry {
+>  	u32	source;			/* 1 for MSI(-X) */
+>  	u32	reserved1;
+> -- 
+> 2.24.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
