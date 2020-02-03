@@ -2,183 +2,103 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A510C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD3EC3524E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118182070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D549720721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kfdsiqm6"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="UOVYXCRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgBCJJf (ORCPT
+        id S1727798AbgBCJKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:09:35 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26639 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727891AbgBCJJe (ORCPT
+        Mon, 3 Feb 2020 04:10:38 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50785 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbgBCJKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:09:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580720972;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F6gihr51hzrmDVnwI47jvfr4fHpjoQrzs19cP1GQvt0=;
-        b=Kfdsiqm6n94DAKxFjzIJ1/GFM4exAALVdva6qAPpYiT5IpoHQf5erVKijpLBXO7wIu4gOB
-        E0jiNLT5jwTGbMDKs3jnMmmYbX1Bb8WOb0nvUhypMlIJy9qB/WHC++IsYW3qB1wtIExnDd
-        8Tf1ObpaIyLH8xdajL7PMFiKWr5Fqf0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-_GTXD0wlMx2wGAeyYBW4EA-1; Mon, 03 Feb 2020 04:09:31 -0500
-X-MC-Unique: _GTXD0wlMx2wGAeyYBW4EA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41C4B8017CC;
-        Mon,  3 Feb 2020 09:09:30 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D72819C58;
-        Mon,  3 Feb 2020 09:09:25 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
-Subject: [PATCH v2 2/2] selftests: KVM: SVM: Add vmcall test
-Date:   Mon,  3 Feb 2020 10:08:51 +0100
-Message-Id: <20200203090851.19938-3-eric.auger@redhat.com>
-In-Reply-To: <20200203090851.19938-1-eric.auger@redhat.com>
-References: <20200203090851.19938-1-eric.auger@redhat.com>
+        Mon, 3 Feb 2020 04:10:37 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r67so6050608pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:10:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GdnNdnWJaDcUVCq0geRe2WaQj8c2WK+3ArcS2rroge4=;
+        b=UOVYXCRF/dwVfkMz296E3J0RLNs+wrhtscM2WLQx4lk6yMElzwISgevk4+XQKZ+y6V
+         qQ8jwMV/J9mo7H+NecThRw9nqL6wv1hnjBNkQfhHYEiNxIUSZ5yoDFoBryoz5XFsdOhp
+         HMbIqXCzYjtJcfTQbl0LjPXzigxCuwm21l5fcM5hLp/SbPgWTvxOOEVB9QTaFcrp/xkQ
+         u7n9rcJ4WwXaVTVV0hwbnl98dUm74f5xpMd/wRZ5xxdbtpOQd2gA2olp5x13GO70OtvK
+         0LBOuia+qGKcu7BbsFIZnOHjxzZC4uCqprY7HEZUi0Uh49tmuKy1irn0U9luirZIW59x
+         IPQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GdnNdnWJaDcUVCq0geRe2WaQj8c2WK+3ArcS2rroge4=;
+        b=Wd3/O4z/mNaEuoHOsdpwLXVpnFkNmhRTvnPya/Q2vmm9vbSJUL/ECkmXSucEhhXVLz
+         TJf8ZSuhwKpv2D+eeft2Wp19HIRIlKFald6PYLlUz8YKRuT+uqSKO/oA4mKP3Jvx84Jd
+         BINsVOugC9Re+q5ABtF0+HRAiENykB0Z1qqndzXbr1XJyGwnLnf3PVozGWUPiOgORKdb
+         bwDXAUW3+TpEYvYsdfVbrOq3WP08b2ROMC6xc7cphRb9Apsof69h94C7mRRwT/er/2Hi
+         Q5JN4qMWyBMmWyAjFjFnppAZvy74dOUJMWMJWHWCnWGsVqDbCbB1L8GahZQ9DRl+Q3hw
+         1bkQ==
+X-Gm-Message-State: APjAAAVkxEPFWyxvAAEBmsW53ixZ0Ykf7mQjGufPmLl6vJvcNMv/wJeY
+        12FacoaXW/y43mt3vwNAhh8baA==
+X-Google-Smtp-Source: APXvYqwvYee9a5uw5VUUf+RdsWW8I+Awo/lkJG9Is5/tHstxlBEp+lghT9F7sKZzDVA6ixGfnzHjJw==
+X-Received: by 2002:a17:90a:8a8f:: with SMTP id x15mr28788646pjn.87.1580721036957;
+        Mon, 03 Feb 2020 01:10:36 -0800 (PST)
+Received: from starnight.local ([150.116.255.181])
+        by smtp.googlemail.com with ESMTPSA id y64sm14300390pgb.25.2020.02.03.01.10.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 01:10:36 -0800 (PST)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no IOMMU
+Date:   Mon,  3 Feb 2020 17:10:10 +0800
+Message-Id: <20200203091009.196658-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-L2 guest calls vmcall and L1 checks the exit status does
-correspond.
+If the device has no IOMMU, it still invokes iommu_need_mapping during
+intel_alloc_coherent. However, iommu_need_mapping can only check the
+device is DUMMY_DEVICE_DOMAIN_INFO or not. This patch marks the device
+is a DUMMY_DEVICE_DOMAIN_INFO if the device has no IOMMU.
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 ---
- tools/testing/selftests/kvm/Makefile          |  1 +
- .../selftests/kvm/x86_64/svm_vmcall_test.c    | 86 +++++++++++++++++++
- 2 files changed, 87 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+ drivers/iommu/intel-iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftes=
-ts/kvm/Makefile
-index 2e770f554cae..b529d3b42c02 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_set_nested_state_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_tsc_adjust_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/xss_msr_test
-+TEST_GEN_PROGS_x86_64 +=3D x86_64/svm_vmcall_test
- TEST_GEN_PROGS_x86_64 +=3D clear_dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D kvm_create_max_vcpus
-diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools=
-/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-new file mode 100644
-index 000000000000..75e66f3bbbc0
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * svm_vmcall_test
-+ *
-+ * Copyright (C) 2020, Red Hat, Inc.
-+ *
-+ * Nested SVM testing: VMCALL
-+ */
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "svm.h"
-+
-+#include <string.h>
-+#include <sys/ioctl.h>
-+
-+#include "kselftest.h"
-+#include <linux/kernel.h>
-+
-+#define VCPU_ID		5
-+
-+/* The virtual machine object. */
-+static struct kvm_vm *vm;
-+
-+static inline void l2_vmcall(struct svm_test_data *svm)
-+{
-+	__asm__ __volatile__("vmcall");
-+}
-+
-+static void l1_guest_code(struct svm_test_data *svm)
-+{
-+	#define L2_GUEST_STACK_SIZE 64
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb =3D svm->vmcb;
-+
-+	/* Prepare for L2 execution. */
-+	generic_svm_setup(svm, l2_vmcall,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+
-+	run_guest(vmcb, svm->vmcb_gpa);
-+
-+	GUEST_ASSERT(vmcb->control.exit_code =3D=3D SVM_EXIT_VMMCALL);
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	vm_vaddr_t svm_gva;
-+
-+	nested_svm_check_supported();
-+
-+	vm =3D vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
-+	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-+
-+	vcpu_alloc_svm(vm, &svm_gva);
-+	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
-+
-+	for (;;) {
-+		volatile struct kvm_run *run =3D vcpu_state(vm, VCPU_ID);
-+		struct ucall uc;
-+
-+		vcpu_run(vm, VCPU_ID);
-+		TEST_ASSERT(run->exit_reason =3D=3D KVM_EXIT_IO,
-+			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
-+			    run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
-+
-+		switch (get_ucall(vm, VCPU_ID, &uc)) {
-+		case UCALL_ABORT:
-+			TEST_ASSERT(false, "%s",
-+				    (const char *)uc.args[0]);
-+			/* NOT REACHED */
-+		case UCALL_SYNC:
-+			break;
-+		case UCALL_DONE:
-+			goto done;
-+		default:
-+			TEST_ASSERT(false,
-+				    "Unknown ucall 0x%x.", uc.cmd);
-+		}
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 35a4a3abedc6..878bc986a015 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5612,8 +5612,10 @@ static int intel_iommu_add_device(struct device *dev)
+ 	int ret;
+ 
+ 	iommu = device_to_iommu(dev, &bus, &devfn);
+-	if (!iommu)
++	if (!iommu) {
++		dev->archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+ 		return -ENODEV;
 +	}
-+done:
-+	kvm_vm_free(vm);
-+	return 0;
-+}
---=20
-2.20.1
+ 
+ 	iommu_device_link(&iommu->iommu, dev);
+ 
+-- 
+2.25.0
 
