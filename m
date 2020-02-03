@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A5FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A68C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2162D2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616AA2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748173;
-	bh=QsjbUwwT6G2tcMfHQDcUEaZfQFcpR3qcXYmk4I4shpY=;
+	s=default; t=1580748177;
+	bh=im9tKlJjWpmjonHKie/VgDdH2xKFXdRSI5C2ILY+XUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gh8GUzwOpscj2IFF/t1S0Ev8UT2pVaQIXfaaAu+FjR8XkS+XfsKoA82Xw5F6hY6QL
-	 vEJLPCA1q9rRUm0KR0oFTuV9H3KFgD9kkKiLzJygEEfnEy5gHHkOmc5qlf9ckTlTAK
-	 YBpZWnLmTRyu31h2Mbth0I5RnZsU3QlGaV1mSHeU=
+	b=lTPpwFkgwHPywUwMiWFT3KbDbRhKnEFP0BSSFBPzMfXO834KC0u1uy9tx1JbJGOhz
+	 KQ6GloyGMPbS27SM5XBhKJGsgGccs/1eBTLPh8nDBJxWnk25q4vWT40g/ZDqKtb5m4
+	 kl9p2iUp4fvaWjniH4kkV5bRFkjDhkqK9dWudqEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgBCQmw (ORCPT
+        id S1730627AbgBCQdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgBCQdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:45 -0500
+        id S1730609AbgBCQde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:34 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA50B21741;
-        Mon,  3 Feb 2020 16:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F06C9217BA;
+        Mon,  3 Feb 2020 16:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747625;
-        bh=QsjbUwwT6G2tcMfHQDcUEaZfQFcpR3qcXYmk4I4shpY=;
+        s=default; t=1580747613;
+        bh=im9tKlJjWpmjonHKie/VgDdH2xKFXdRSI5C2ILY+XUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9bvl4no5v6UeCQMOS2bGGZpSyR/01S7L9tMvFVtYqzepa3p+w09VQUD0cBGm/6Au
-         ptcuB73Kzbt68ZSqvaJO2a8+ju5kZ4W62fK1wIlv+KXzejBWc7iCc9cE/ZeXpXgZGf
-         ANdhH0d6rru1TRG9Po8IParbhmzZkqCqxhOkugeg=
+        b=Y4LTxwbWnqFDs1RKgiD3YYESN5Og3BBPs0QNUdEs9hzhm8+ydMEu1plgBpfcTdDZD
+         UfOfat09jt9qrn/NPZnpZOiJ9Ky+XbTnofWgLWv9Hh62dH5dthzathikahA+G5qqDK
+         gKmkWr8RyhY9EFGLgsJW9gYxtpmuEmleNSpZlpCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/70] ARM: dts: am335x-boneblack-common: fix memory size
-Date:   Mon,  3 Feb 2020 16:20:05 +0000
-Message-Id: <20200203161920.022371354@linuxfoundation.org>
+Subject: [PATCH 4.19 68/70] seq_tab_next() should increase position index
+Date:   Mon,  3 Feb 2020 16:20:20 +0000
+Message-Id: <20200203161921.921245897@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,39 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matwey V. Kornilov <matwey@sai.msu.ru>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 5abd45ea0fc3060f7805e131753fdcbafd6c6618 ]
+[ Upstream commit 70a87287c821e9721b62463777f55ba588ac4623 ]
 
-BeagleBone Black series is equipped with 512MB RAM
-whereas only 256MB is included from am335x-bone-common.dtsi
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-This leads to an issue with unusual setups when devicetree
-is loaded by GRUB2 directly.
-
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-boneblack-common.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 21bc1173fa6b9..cb4267edde63d 100644
---- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-@@ -131,6 +131,11 @@
- };
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index d320e9afab880..4af6e6ffc5df2 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -70,8 +70,7 @@ static void *seq_tab_start(struct seq_file *seq, loff_t *pos)
+ static void *seq_tab_next(struct seq_file *seq, void *v, loff_t *pos)
+ {
+ 	v = seq_tab_get_idx(seq->private, *pos + 1);
+-	if (v)
+-		++*pos;
++	++(*pos);
+ 	return v;
+ }
  
- / {
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
- 	clk_mcasp0_fixed: clk_mcasp0_fixed {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
 -- 
 2.20.1
 
