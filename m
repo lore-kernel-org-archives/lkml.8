@@ -2,53 +2,50 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0F4C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6737C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6E52082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ECE2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746860;
-	bh=MFdQwpC8ocAw3gqlG2PhUf+SO3XPMQEGZg511YDWX24=;
+	s=default; t=1580746862;
+	bh=gwwaMJc62zOc4cwZ+A57UL//D1KSGXRTJYpOZuPMX4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frUXpXHhfJM+YPv8jOO+oWm+VGyoa+JF8XJfLj8la5hf4oYtJFAGyTMubNZNAZ3ja
-	 15/fjiVySpy9jIW2tDsxcLJybkQvtpjVtI0Khxa8pZN+viOn1brHhX5Wy8dkKMcknv
-	 aowdlxxwWnyFUQZ0xpdvQTkcMRmXLZlmXX+kxEMA=
+	b=va4p9XDKE9RSicqd8oY29f20WrJ7WDP+VWsb1sOKS912S+ESHhIDFKH6Dc0ruNE5E
+	 BGoOZKlYEOjrtnjSi0R+pm4C4QfL4DhgZEBW9p8267us3iazPIOe7toLOhHhtw7sjY
+	 ABhChmNvCy56spR1VwDhpB/wIQmqKmpRgVnrd5Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgBCQVA (ORCPT
+        id S1729051AbgBCQVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:21:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:21:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbgBCQU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:20:57 -0500
+        id S1729026AbgBCQU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:20:59 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B192082E;
-        Mon,  3 Feb 2020 16:20:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE5162080D;
+        Mon,  3 Feb 2020 16:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746856;
-        bh=MFdQwpC8ocAw3gqlG2PhUf+SO3XPMQEGZg511YDWX24=;
+        s=default; t=1580746859;
+        bh=gwwaMJc62zOc4cwZ+A57UL//D1KSGXRTJYpOZuPMX4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WaB8gk1thL+CvRw+YH712TIZFLE8Mcc4CuEV3yfqZGcERKlZR/RAQO05WQzutJL83
-         T0CDzjTuFZt8n9iyfV+xUgvwTIcWI8H10cBuwarIMKZQwc2RrRJEw6pIR2c14Iq4HA
-         6g57hhlCwP34/A5KAtDEDKRcQsEf7cp5LFK6LALo=
+        b=uzWNMzn0FHC0I2J5BsjxHtvUxkAtH9MfhzQCdytjRN6SQLILpvHlgScoS+qbjpCnm
+         KKjKp6ZOgm/OQb2niojAZ5Ee9CQiMmvOwDT7GtNGe2dLBWOI+dowJ5XM+Be1PWoGqy
+         U/k3bJ5hq0nnWDCda4bbD68AW5MEeQSJH5U3z6wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 34/53] clk: mmp2: Fix the order of timer mux parents
-Date:   Mon,  3 Feb 2020 16:19:26 +0000
-Message-Id: <20200203161909.159100760@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 04/53] USB: serial: ir-usb: add missing endpoint sanity check
+Date:   Mon,  3 Feb 2020 16:18:56 +0000
+Message-Id: <20200203161903.906704798@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
@@ -61,41 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
+commit 2988a8ae7476fe9535ab620320790d1714bdad1d upstream.
 
-Determined empirically, no documentation is available.
+Add missing endpoint sanity check to avoid dereferencing a NULL-pointer
+on open() in case a device lacks a bulk-out endpoint.
 
-The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
-thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
-what is going on, ended up just dividing the rate as of
-commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
+Note that prior to commit f4a4cbb2047e ("USB: ir-usb: reimplement using
+generic framework") the oops would instead happen on open() if the
+device lacked a bulk-in endpoint and on write() if it lacked a bulk-out
+endpoint.
 
-Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/mmp/clk-of-mmp2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ir-usb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 8b45cb2caed1b..60db6531996eb 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
- static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -198,6 +198,9 @@ static int ir_startup(struct usb_serial
+ {
+ 	struct usb_irda_cs_descriptor *irda_desc;
  
- static DEFINE_SPINLOCK(timer_lock);
--static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
-+static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
- 
- static DEFINE_SPINLOCK(reset_lock);
- 
--- 
-2.20.1
-
++	if (serial->num_bulk_in < 1 || serial->num_bulk_out < 1)
++		return -ENODEV;
++
+ 	irda_desc = irda_usb_find_class_desc(serial, 0);
+ 	if (!irda_desc) {
+ 		dev_err(&serial->dev->dev,
 
 
