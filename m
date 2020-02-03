@@ -2,135 +2,150 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB692C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C072EC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1EA20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DABD2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 11:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qXuwCM2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgBCLcb (ORCPT
+        id S1728049AbgBCLhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 06:32:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:6727 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgBCLca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 06:32:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 03:32:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,397,1574150400"; 
-   d="scan'208";a="225138976"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Feb 2020 03:32:27 -0800
-Subject: Re: [PATCH 3/4] mmc: sdhci-of-arasan: Add support for DLL reset for
- ZynqMP platforms
-To:     Manish Narani <manish.narani@xilinx.com>, michal.simek@xilinx.com,
-        ulf.hansson@linaro.org, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
-        tejas.patel@xilinx.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-References: <1579602095-30060-1-git-send-email-manish.narani@xilinx.com>
- <1579602095-30060-4-git-send-email-manish.narani@xilinx.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <08d85f87-6180-2e59-5d71-d916a0e44603@intel.com>
-Date:   Mon, 3 Feb 2020 13:31:37 +0200
+        Mon, 3 Feb 2020 06:37:51 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19133 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgBCLhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 06:37:50 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3805ff0003>; Mon, 03 Feb 2020 03:37:35 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 03:37:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 03 Feb 2020 03:37:50 -0800
+Received: from [10.26.11.224] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 11:37:47 +0000
+Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200130043804.32243-1-digetx@gmail.com>
+ <20200130043804.32243-12-digetx@gmail.com>
+ <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
+ <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
+ <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
+ <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
+ <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
+ <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
+ <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <423eb28f-b5fc-c917-a7b2-72562183683f@nvidia.com>
+Date:   Mon, 3 Feb 2020 11:37:44 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1579602095-30060-4-git-send-email-manish.narani@xilinx.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580729856; bh=ceXnFZ7jddmETXXwdfs4mGpj+O00W2KY/YQ322nXt4U=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qXuwCM2rJ8br+WfWyobe/MOBDj1SnQ+sqtC2P5uvgpRUccqPpupsIKKpULWJuCtQy
+         6+QbNlZX687vt/qhOmx92gy1Pw3v7rccOBTqUiXn8aSGPyXtGngyhgs/b4F70poRYT
+         HflYyjxCPZzn3obut9ctKGikXHbRtlIn2F/Gl9YHEdaZnc/fVJUbCCEc4t5ywtcCHT
+         tjAk/8johzjzyOG9rnIKLdMoqAyLTOAN1mgi0zhYljIfFsCZRsZVUwTW++WsiNqgAH
+         JiRUMU80FPLJEYHqhP2uynEgr2Gi/RKZazoeeDHl/eWOEztujVleq0XhrIEdFle+7g
+         v+rjTZC4ZZUpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/20 12:21 pm, Manish Narani wrote:
-> The DLL resets are required while executing the auto tuning procedure in
-> ZynqMP. This patch adds code to support the same.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On 01/02/2020 15:13, Dmitry Osipenko wrote:
+> 31.01.2020 17:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 31.01.2020 12:02, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>> On 30/01/2020 20:04, Dmitry Osipenko wrote:
+>>>
+>>> ...
+>>>
+>>>>>> The tegra_dma_stop() should put RPM anyways, which is missed in your=
+s
+>>>>>> sample. Please see handle_continuous_head_request().
+>>>>>
+>>>>> Yes and that is deliberate. The cyclic transfers the transfers *shoul=
+d*
+>>>>> not stop until terminate_all is called. The tegra_dma_stop in
+>>>>> handle_continuous_head_request() is an error condition and so I am no=
+t
+>>>>> sure it is actually necessary to call pm_runtime_put() here.
+>>>>
+>>>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
+>>>
+>>> True.
+>>>
+>>>>>> I'm also finding the explicit get/put a bit easier to follow in the
+>>>>>> code, don't you think so?
+>>>>>
+>>>>> I can see that, but I was thinking that in the case of cyclic transfe=
+rs,
+>>>>> it should only really be necessary to call the get/put at the beginni=
+ng
+>>>>> and end. So in my mind there should only be two exit points which are
+>>>>> the ISR handler for SG and terminate_all for SG and cyclic.
+>>>>
+>>>> Alright, I'll update this patch.
+>>>
+>>> Hmmm ... I am wondering if we should not mess with that and leave how
+>>> you have it.
+>>
+>> I took another look and seems my current v6 should be more correct becau=
+se:
+>>
+>> 1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
+>> there since tegra_dma_terminate_all() won't put RPM in this case:
+>>
+>> 	if (!tdc->busy)
+>> 		goto skip_dma_stop;
+>>
+>> 2. We can't move the "busy" unsetting into the terminate because then
+>> tegra_dma_stop() will be invoked twice. Although, one option could be to
+>> remove the tegra_dma_stop() from the error paths of
+>> handle_continuous_head_request(), but I'm not sure that this is correct
+>> to do.
+>=20
+> Jon, I realized that my v6 variant is wrong too because
+> tegra_dma_terminate_all() -> tdc->isr_handler() will put RPM, and thus,
+> the RPM enable-count will be wrecked in this case.
 
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 46 ++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e49b44b4d82e..39176ab5ca1f 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -757,6 +757,50 @@ static const struct clk_ops zynqmp_sampleclk_ops = {
->  	.set_phase = sdhci_zynqmp_sampleclk_set_phase,
->  };
->  
-> +static void arasan_zynqmp_dll_reset(struct sdhci_host *host, u32 deviceid)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
-> +	struct sdhci_arasan_zynqmp_clk_data *zynqmp_clk_data =
-> +		sdhci_arasan->clk_data.clk_of_data;
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_clk_data->eemi_ops;
-> +	u16 clk;
-> +
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +	clk &= ~(SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN);
-> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> +
-> +	/* Issue DLL Reset */
-> +	eemi_ops->ioctl(deviceid, IOCTL_SD_DLL_RESET,
-> +			PM_DLL_RESET_PULSE, 0, NULL);
-> +
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +
-> +	sdhci_enable_clk(host, clk);
-> +}
-> +
-> +static int arasan_zynqmp_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
-> +	struct clk_hw *hw = &sdhci_arasan->clk_data.sdcardclk_hw;
-> +	const char *clk_name = clk_hw_get_name(hw);
-> +	u32 device_id = !strcmp(clk_name, "clk_out_sd0") ? NODE_SD_0 :
-> +							   NODE_SD_1;
-> +	int err;
-> +
-> +	arasan_zynqmp_dll_reset(host, device_id);
-> +
-> +	err = sdhci_execute_tuning(mmc, opcode);
-> +	if (err)
-> +		return err;
-> +
-> +	arasan_zynqmp_dll_reset(host, device_id);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * sdhci_arasan_update_clockmultiplier - Set corecfg_clockmultiplier
->   *
-> @@ -1247,6 +1291,8 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->  
->  		zynqmp_clk_data->eemi_ops = eemi_ops;
->  		sdhci_arasan->clk_data.clk_of_data = zynqmp_clk_data;
-> +		host->mmc_host_ops.execute_tuning =
-> +			arasan_zynqmp_execute_tuning;
->  	}
->  
->  	arasan_dt_parse_clk_phases(&pdev->dev, &sdhci_arasan->clk_data);
-> 
+Did you see my other suggestion to move the pm_runtime_put() outside of
+tegra_dma_stop? There are only a few call sites for tegra_dma_stop and
+so if we call pm_runtime_put() after calling tegra_dma_stop this should
+simplify matters.
 
+Jon
+
+--=20
+nvpublic
