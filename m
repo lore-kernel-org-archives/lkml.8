@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B5C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10409C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D941621582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF4821582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747306;
-	bh=exqW1YB8XKZ3dbWmNRrCkY4Cyio9kpbWiIWBCqpb6Tk=;
+	s=default; t=1580747308;
+	bh=AL/Lh1kxI+HWzurICUoC6PRowq7LZ0ALNgNT3Ki+fgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwwWrCpByseGFBeklIrALRQ74mNIDVfL106MV8PizE5dGDrSkZDUGQMSH5DkZSs6K
-	 Jl/w/6+9+ysuW54PaYfOoi25KD3rUiPjkDrwdqSPi7UVpjVlxJPpa6OoO1NU6qypYW
-	 eMxfCwRx3/qC9FS9sZq2wtcDh4MaA18iixz1paBU=
+	b=o4R6HLOxACRqNDzLJD2I9KevFLgY3hT9JiYeQhP5eHknAq1rrMm9wY6t7/K9oaps9
+	 bKS4jH4EaAf0C2QX6tXKkF7124S3kASZ4RQ2ZuiRACB/8A3+M2TEIHCtZN18eXA7i9
+	 zS4Sm5X38xMZ+SuXMJ68avUpX/IuCUDr1X3anECQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgBCQ2Z (ORCPT
+        id S1729595AbgBCQ22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39836 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:28:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729559AbgBCQ2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:19 -0500
+        id S1729245AbgBCQ2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:22 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F50120CC7;
-        Mon,  3 Feb 2020 16:28:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 042B52080C;
+        Mon,  3 Feb 2020 16:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747299;
-        bh=exqW1YB8XKZ3dbWmNRrCkY4Cyio9kpbWiIWBCqpb6Tk=;
+        s=default; t=1580747301;
+        bh=AL/Lh1kxI+HWzurICUoC6PRowq7LZ0ALNgNT3Ki+fgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SAiat6x9ti6FyQwDwiBDa0PXN8cLVkDSKZld0bw2oPaEEmnrRavX52nsfP0HShAdA
-         oC/P99z9djLs0qj6IAiYlA3cWwRZfVzIhtA658ndTzzAFoH6ST8AY/B9ILEcYy2olf
-         S9eIf4PFIZhZ7g1ZbsId9+MhictwbWeYz623Pt+c=
+        b=UH3+HmaTPWkFlStPsb6e83EIZHze/iFzdBoJToXKBFjwFL1E2PM6b0KTtRu9mexMm
+         JQiCK5XibyUcHM5a4jRycyAGCqSaIWOd9BBgCswJVNIbANIBXKy5D4vOOQBPguCgpu
+         RD9acZhwkm3b4Nour9pxoPq/sD1242GMakObMktU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH 4.14 08/89] staging: wlan-ng: ensure error return is actually returned
-Date:   Mon,  3 Feb 2020 16:18:53 +0000
-Message-Id: <20200203161917.937635999@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.14 09/89] staging: vt6656: correct packet types for CTS protect, mode.
+Date:   Mon,  3 Feb 2020 16:18:54 +0000
+Message-Id: <20200203161918.098717194@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -58,37 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 4cc41cbce536876678b35e03c4a8a7bb72c78fa9 upstream.
+commit d971fdd3412f8342747778fb59b8803720ed82b1 upstream.
 
-Currently when the call to prism2sta_ifst fails a netdev_err error
-is reported, error return variable result is set to -1 but the
-function always returns 0 for success.  Fix this by returning
-the error value in variable result rather than 0.
+It appears that the driver still transmits in CTS protect mode even
+though it is not enabled in mac80211.
 
-Addresses-Coverity: ("Unused value")
-Fixes: 00b3ed168508 ("Staging: add wlan-ng prism2 usb driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+That is both packet types PK_TYPE_11GA and PK_TYPE_11GB both use CTS protect.
+The only difference between them GA does not use B rates.
+
+Find if only B rate in GB or GA in protect mode otherwise transmit packets
+as PK_TYPE_11A.
+
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200114181604.390235-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/9c1323ff-dbb3-0eaa-43e1-9453f7390dc0@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wlan-ng/prism2mgmt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/vt6656/device.h |    2 ++
+ drivers/staging/vt6656/rxtx.c   |   12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/wlan-ng/prism2mgmt.c
-+++ b/drivers/staging/wlan-ng/prism2mgmt.c
-@@ -945,7 +945,7 @@ int prism2mgmt_flashdl_state(struct wlan
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -62,6 +62,8 @@
+ #define RATE_AUTO	12
+ 
+ #define MAX_RATE			12
++#define VNT_B_RATES	(BIT(RATE_1M) | BIT(RATE_2M) |\
++			BIT(RATE_5M) | BIT(RATE_11M))
+ 
+ /*
+  * device specific
+--- a/drivers/staging/vt6656/rxtx.c
++++ b/drivers/staging/vt6656/rxtx.c
+@@ -825,10 +825,14 @@ int vnt_tx_packet(struct vnt_private *pr
+ 		if (info->band == NL80211_BAND_5GHZ) {
+ 			pkt_type = PK_TYPE_11A;
+ 		} else {
+-			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT)
+-				pkt_type = PK_TYPE_11GB;
+-			else
+-				pkt_type = PK_TYPE_11GA;
++			if (tx_rate->flags & IEEE80211_TX_RC_USE_CTS_PROTECT) {
++				if (priv->basic_rates & VNT_B_RATES)
++					pkt_type = PK_TYPE_11GB;
++				else
++					pkt_type = PK_TYPE_11GA;
++			} else {
++				pkt_type = PK_TYPE_11A;
++			}
  		}
- 	}
- 
--	return 0;
-+	return result;
- }
- 
- /*----------------------------------------------------------------
+ 	} else {
+ 		pkt_type = PK_TYPE_11B;
 
 
