@@ -2,57 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C884EC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B2BC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF1E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F91721582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747900;
-	bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
+	s=default; t=1580747906;
+	bh=9KeJ7yaCGgNg9PgIAjp8U+LArV2ZV5IqK5631pvuGiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwrscK1Nakz2wMwkiMaFIZXWsRtmmLdseY2exWaOFHVgXl3xFjY7wAtzkk2osOjy4
-	 4CYXKzinzHLMsSMRkUgiV623B5QWlbjiO8sv9of4Uoo39oQI1zGj2Lhipwu1Ez2LAX
-	 Zw3cyQ/dafZhG6sLw4PgAV3AHAi2mjnLv7qhqe/4=
+	b=SJgm9TJwBcz9zbFk1WdVSPz5Ff6I9jfbqS8lMlxEC8Md/ZTKDu/7BR1gTBX3uRcql
+	 a9zAdHh8C9mdK1klt6quuW8kX3vUZQ7UHrzR9LG6yYoxI8ek1xkSuY83ipdNV5hADE
+	 H25SzxeHGdgRqWm5ILCwNQIrzpy5vMG9SDGo3Z2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgBCQiT (ORCPT
+        id S1731491AbgBCQiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:38:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54170 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731433AbgBCQiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:38:16 -0500
+        id S1731200AbgBCQiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:38:21 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB7252087E;
-        Mon,  3 Feb 2020 16:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D9E21582;
+        Mon,  3 Feb 2020 16:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747896;
-        bh=nU36sniQgPFfGCvo9LY0os9+T+abyU6kUH4GzuHQaT8=;
+        s=default; t=1580747900;
+        bh=9KeJ7yaCGgNg9PgIAjp8U+LArV2ZV5IqK5631pvuGiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xb8dkL/PwakCjko3Er1mhyqE98szCJf/J8lA40RI4WzN8ArEHMcA5Y01p6gVBXm/T
-         4GYl5jquZahHe5YmX4+c3MVFr894B5VGk45ceT2Pih7XXacozWN/iSqae3GBO5Aam4
-         CvtqQqqJmpwCB7699nCQ6UpgWIZOwUfRZ08OHXbs=
+        b=lArK7TOqRgMmc4QisiHVitJFcWas/RP7zioxzxdJzkMoPTnJ+kJv60AH6zxLVHLgv
+         v7lW9NGJD2fYehEQt8UXXV+Br8LReiTg61ukKzZBqRF5+pt+CZGspyiQlOJ2jdUKFc
+         MaBd+jFABhEpooamxPjIfHRm/AHybRsbtt167Nrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andres Freund <andres@anarazel.de>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.5 09/23] perf c2c: Fix return type for histogram sorting comparision functions
-Date:   Mon,  3 Feb 2020 16:20:29 +0000
-Message-Id: <20200203161904.456238714@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH 5.5 20/23] tomoyo: Use atomic_t for statistics counter
+Date:   Mon,  3 Feb 2020 16:20:40 +0000
+Message-Id: <20200203161906.506347497@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -65,86 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Freund <andres@anarazel.de>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit c1c8013ec34d7163431d18367808ea40b2e305f8 upstream.
+commit a8772fad0172aeae339144598b809fd8d4823331 upstream.
 
-Commit 722ddfde366f ("perf tools: Fix time sorting") changed - correctly
-so - hist_entry__sort to return int64. Unfortunately several of the
-builtin-c2c.c comparison routines only happened to work due the cast
-caused by the wrong return type.
+syzbot is reporting that there is a race at tomoyo_stat_update() [1].
+Although it is acceptable to fail to track exact number of times policy
+was updated, convert to atomic_t because this is not a hot path.
 
-This causes meaningless ordering of both the cacheline list, and the
-cacheline details page. E.g a simple:
+[1] https://syzkaller.appspot.com/bug?id=a4d7b973972eeed410596e6604580e0133b0fc04
 
-  perf c2c record -a sleep 3
-  perf c2c report
-
-will result in cacheline table like
-  =================================================
-             Shared Data Cache Line Table
-  =================================================
-  #
-  #        ------- Cacheline ----------    Total     Tot  - LLC Load Hitm -  - Store Reference -  - Load Dram -     LLC  Total  - Core Load Hit -  - LLC Load Hit -
-  # Index         Address  Node  PA cnt  records    Hitm  Total  Lcl    Rmt  Total  L1Hit  L1Miss     Lcl   Rmt  Ld Miss  Loads    FB    L1   L2     Llc      Rmt
-  # .....  ..............  ....  ......  .......  ......  .....  .....  ...  ....   .....  ......  ......  ....  ......   .....  .....  ..... ...  ....     .......
-
-        0  0x7f0d27ffba00   N/A       0       52   0.12%     13      6    7    12      12       0       0     7      14      40      4     16    0    0           0
-        1  0x7f0d27ff61c0   N/A       0     6353  14.04%   1475    801  674   779     779       0       0   718    1392    5574   1299   1967    0  115           0
-        2  0x7f0d26d3ec80   N/A       0       71   0.15%     16      4   12    13      13       0       0    12      24      58      1     20    0    9           0
-        3  0x7f0d26d3ec00   N/A       0       98   0.22%     23     17    6    19      19       0       0     6      12      79      0     40    0   10           0
-
-i.e. with the list not being ordered by Total Hitm.
-
-Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-Signed-off-by: Andres Freund <andres@anarazel.de>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20200109043030.233746-1-andres@anarazel.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/builtin-c2c.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ security/tomoyo/common.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __
+--- a/security/tomoyo/common.c
++++ b/security/tomoyo/common.c
+@@ -2322,9 +2322,9 @@ static const char * const tomoyo_memory_
+ 	[TOMOYO_MEMORY_QUERY]  = "query message:",
+ };
+ 
+-/* Timestamp counter for last updated. */
+-static unsigned int tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
+ /* Counter for number of updates. */
++static atomic_t tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
++/* Timestamp counter for last updated. */
+ static time64_t tomoyo_stat_modified[TOMOYO_MAX_POLICY_STAT];
+ 
+ /**
+@@ -2336,10 +2336,7 @@ static time64_t tomoyo_stat_modified[TOM
+  */
+ void tomoyo_update_stat(const u8 index)
  {
- 	struct c2c_hist_entry *c2c_left;
- 	struct c2c_hist_entry *c2c_right;
--	unsigned int tot_hitm_left;
--	unsigned int tot_hitm_right;
-+	uint64_t tot_hitm_left;
-+	uint64_t tot_hitm_right;
- 
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
-@@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __m
- 									\
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
--	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-+	return (uint64_t) c2c_left->stats.__f -				\
-+	       (uint64_t) c2c_right->stats.__f;				\
+-	/*
+-	 * I don't use atomic operations because race condition is not fatal.
+-	 */
+-	tomoyo_stat_updated[index]++;
++	atomic_inc(&tomoyo_stat_updated[index]);
+ 	tomoyo_stat_modified[index] = ktime_get_real_seconds();
  }
  
- #define STAT_FN(__f)		\
-@@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
+@@ -2360,7 +2357,7 @@ static void tomoyo_read_stat(struct tomo
+ 	for (i = 0; i < TOMOYO_MAX_POLICY_STAT; i++) {
+ 		tomoyo_io_printf(head, "Policy %-30s %10u",
+ 				 tomoyo_policy_headers[i],
+-				 tomoyo_stat_updated[i]);
++				 atomic_read(&tomoyo_stat_updated[i]));
+ 		if (tomoyo_stat_modified[i]) {
+ 			struct tomoyo_time stamp;
  
--	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-+	return (uint64_t) llc_miss(&c2c_left->stats) -
-+	       (uint64_t) llc_miss(&c2c_right->stats);
- }
- 
- static uint64_t total_records(struct c2c_stats *stats)
 
 
