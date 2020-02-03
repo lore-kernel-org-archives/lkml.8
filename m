@@ -2,53 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5B3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E616C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347692087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B45820838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747117;
-	bh=g8iDQnd6Yr9F7M26ThvnaNNeqrJbWLkQXykum1JpWXY=;
+	s=default; t=1580747121;
+	bh=q8E44Y+HeWBDgmDA0JoDWmyJ0l7+apXBWUL+o0tRAJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIaggMDxifoJUZeJnWssl0QxIwgvG2KMEPufsCpLQsjSKufu/Thq1YF7NTFKkxEij
-	 1XBugF58UwISh5HxAG4jWVpSSGjthh3SpW/weddnBGjM1K/CT0+3lYB4ryM+UJyWIY
-	 Caw+jorsmm3N07bhojrEM1aVR9DDySzeFa+hGcGI=
+	b=Ol7b4ZHEOZWe/WEC1KCzzTxf7DLw1zLjbUuwDsf6KpXh4LyAq2gpWTIXw/8s2hL/Z
+	 ENGEEugk3Fu8VHU9Ic4a9pTOROflLZuwA7HJVrXY5JhdhG2S0A0Ziv+whxwnvptl2J
+	 MaemEs4rWh9AWgLrxZ6LYb/st+16pX8/wohWdPkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBCQZP (ORCPT
+        id S1728311AbgBCQZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbgBCQZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:12 -0500
+        id S1728217AbgBCQZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:15 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A27462087E;
-        Mon,  3 Feb 2020 16:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 078B821582;
+        Mon,  3 Feb 2020 16:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747112;
-        bh=g8iDQnd6Yr9F7M26ThvnaNNeqrJbWLkQXykum1JpWXY=;
+        s=default; t=1580747114;
+        bh=q8E44Y+HeWBDgmDA0JoDWmyJ0l7+apXBWUL+o0tRAJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RD4RJH0gvlltCVDkFr0YWbOT56WMCNeckyluWO8cCiAIfVH6B1al4uZPgstqP9E++
-         uyzwYzsImn3tnULrcMs2GFG4C+zgHQp/jzaMhihRq9NK1JCJzr9iderz8Rva2Qz8JQ
-         5WhV3KB9/hzPe4No4O5U5/tiI+cuOD49IRyoAofU=
+        b=hJdHekLydrV8EzfcfVk+5Z6FLal5Abq5ZG+h5eLSJtsHmYYp6Y9xTLdTSS+XhPJ66
+         0U5imQfKO7BmwTLgIb6vFSimMytsGp0PS9PLwV3I1eOOa8olXDMJEGgBW22BuU2L7z
+         87Fbst6XxKxv7edVj5FTi8F1t2wHpGvyzsinFooI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Ofer Levi <oferle@mellanox.com>,
-        linux-snps-arc@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/68] arc: eznps: fix allmodconfig kconfig warning
-Date:   Mon,  3 Feb 2020 16:19:13 +0000
-Message-Id: <20200203161907.915759199@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/68] watchdog: rn5t618_wdt: fix module aliases
+Date:   Mon,  3 Feb 2020 16:19:14 +0000
+Message-Id: <20200203161908.046906940@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -61,40 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 1928b36cfa4df1aeedf5f2644d0c33f3a1fcfd7b ]
+[ Upstream commit a76dfb859cd42df6e3d1910659128ffcd2fb6ba2 ]
 
-Fix kconfig warning for arch/arc/plat-eznps/Kconfig allmodconfig:
+Platform device aliases were missing so module autoloading
+did not work.
 
-WARNING: unmet direct dependencies detected for CLKSRC_NPS
-  Depends on [n]: GENERIC_CLOCKEVENTS [=y] && !PHYS_ADDR_T_64BIT [=y]
-  Selected by [y]:
-  - ARC_PLAT_EZNPS [=y]
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: Ofer Levi <oferle@mellanox.com>
-Cc: linux-snps-arc@lists.infradead.org
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191213214802.22268-1-andreas@kemnade.info
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/plat-eznps/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/rn5t618_wdt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
-index 1d175cc6ad6d3..86f844caa405d 100644
---- a/arch/arc/plat-eznps/Kconfig
-+++ b/arch/arc/plat-eznps/Kconfig
-@@ -7,7 +7,7 @@ menuconfig ARC_PLAT_EZNPS
- 	bool "\"EZchip\" ARC dev platform"
- 	select ARC_HAS_COH_CACHES if SMP
- 	select CPU_BIG_ENDIAN
--	select CLKSRC_NPS
-+	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
- 	select EZNPS_GIC
- 	select EZCHIP_NPS_MANAGEMENT_ENET if ETHERNET
- 	help
+diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
+index 0805ee2acd7a9..7aa8bf2d0f917 100644
+--- a/drivers/watchdog/rn5t618_wdt.c
++++ b/drivers/watchdog/rn5t618_wdt.c
+@@ -193,6 +193,7 @@ static struct platform_driver rn5t618_wdt_driver = {
+ 
+ module_platform_driver(rn5t618_wdt_driver);
+ 
++MODULE_ALIAS("platform:rn5t618-wdt");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 watchdog driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
