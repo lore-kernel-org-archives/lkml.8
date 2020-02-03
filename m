@@ -2,2431 +2,768 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961A4C3524A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73D7C3524C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7AE2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD32C20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="AK+e3Km5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ISTdPRBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgBCDLv (ORCPT
+        id S1727225AbgBCDXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 22:11:51 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39697 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgBCDLv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 22:11:51 -0500
-Received: by mail-qt1-f195.google.com with SMTP id c5so10344625qtj.6
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Feb 2020 19:11:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=L84kR28aINnKvlcJPw1ffOVe0dxk5e3TedLlFlX4090=;
-        b=AK+e3Km5gwOOK4sPmSQT/JedakvtjGJeM543MY5rpNOYCx8XUq37fT81xUSpiPscvN
-         m2fwR864eRvmvN5dAs7Gyshh3WjkeFT3y/JuAjm1GBkU7AYAmCBNz3KkIXqrV/+V65ib
-         K/gSYz6QVQs5I5sTBo+jSt1DKN6wgpiykPpfhmuYmF99uqwVgIrNKiImR70WQzyvgDJe
-         yfcJGvVD/DQrAs6lcL5jCGjG+fBnKSfS9MvksAWIjlyfMFhjaPu6HFXtBfwjv9gSqL2q
-         qZFQ0u12CelI0vMjnUvtfEfz0PWtrvY3Plrup1jVLwS7bZiYbVByRcLjqC8ABiapMd50
-         Kmhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=L84kR28aINnKvlcJPw1ffOVe0dxk5e3TedLlFlX4090=;
-        b=qZ4z3N0mMbTRT7ggFaDd5BxhBvKz9QXODO9s60OqW7HE8rgvDKYagfMRPvYz6cw0fT
-         wD9Iy/BNMafpUfi0CEjc0Kiab2/P0TX4hyI8qIhtk78HZNLrde/SrRfnyR4ckUE+/Uyz
-         hCfDOIpSAL1sMsGwkj9+jEacxguuYNudV8ReM0jXcvc5xUyIeBOzm2+OlC7ZidvhqMj2
-         DfA5+Zs4yjIbVpSXyXpjgbMIBNAwPDED/nlSbK3yqwrbfLBqId18oUo7j9D5Du9CZJHh
-         VjhbGHtQNP+rep8Gl38tun4dATS+TEVJw7g3+WePPAchjkNVrM9bRgebniVddpk3x4jc
-         tvnA==
-X-Gm-Message-State: APjAAAXvT9YLBBVqrRsz3o3rjJdaJIUgaItcOuZl1PVLw2yKB8rq+ShX
-        kXFiYDeCEVTZQI5gcemxguDFyg==
-X-Google-Smtp-Source: APXvYqz9bh5RBBtJqqDb/v5DIm0AqciyfmgagKzZ5dRdGRFXxyNlV5GZKkt9BQWsotwptC01FMlxiA==
-X-Received: by 2002:ac8:7388:: with SMTP id t8mr21748245qtp.244.1580699506747;
-        Sun, 02 Feb 2020 19:11:46 -0800 (PST)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id f59sm6129010qtb.75.2020.02.02.19.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 19:11:45 -0800 (PST)
-Message-ID: <a4efcb4e1591ac9cf305742d34337335b6ff7f29.camel@ndufresne.ca>
-Subject: Re: [PATCH v3 5/5] media: meson: vdec: add VP9 decoder support
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
-        hans.verkuil@cisco.com
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Sun, 02 Feb 2020 22:11:44 -0500
-In-Reply-To: <20200116133437.2443-6-narmstrong@baylibre.com>
-References: <20200116133437.2443-1-narmstrong@baylibre.com>
-         <20200116133437.2443-6-narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sun, 2 Feb 2020 22:23:40 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38301 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbgBCDXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 22:23:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 489tT31Lf1z9sRh;
+        Mon,  3 Feb 2020 14:23:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1580700215;
+        bh=H/h/tfPZSxXcXA1PluxjZftw7i9/o7vYdo9OW39MxA0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ISTdPRBpI3gT02+Mf47z+Dc2rdwUD6x/fB6eNZF/mdmq86Li19m01ZkVZ8NOXL1NV
+         qt5tmzSX3qHjGpDPZFe5hRnA8Vgfmd0gNUIJ3RrBdY0gC7TSwTpO7M40kh7x0b3in2
+         +iwb9KCFyCuJkZhOm+q8WtnBwOnDR0JuBbtsVDItdNGBo2e9u7vCREf7SJa9eOhCbB
+         g0EmE4iX4DbZvhI40KVLJVsd4M3hXkfuoO/i0Lc0vaWrmeAZHX4Wq/TwO1uk/GuG6T
+         37SZ1OJaubmDF41SF8GnKKCA23tHQSW4/euSkU03fqMws99QqbvfYmAgzjIhEB1f3O
+         Jo6R5dSTJatmw==
+Date:   Mon, 3 Feb 2020 14:23:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Feb 3
+Message-ID: <20200203142334.4f699874@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/GD9pKOgkroWocyTDkAQA5/r";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+--Sig_/GD9pKOgkroWocyTDkAQA5/r
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Le jeudi 16 janvier 2020 à 14:34 +0100, Neil Armstrong a écrit :
-> From: Maxime Jourdan <mjourdan@baylibre.com>
-> 
-> This adds VP9 decoding for the Amlogic GXL, G12A & SM1 SoCs, using
-> the commong "HEVC" HW decoder.
-> 
-> For G12A & SM1, it uses the IOMMU support from the firmware.
-> 
-> For 10bit decoding, the firmware can only decode in the proprietary
-> Amlogic Framebuffer Compression format, but can output in 8bit NV12
-> buffer while writing the decoded frame.
-> 
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/staging/media/meson/vdec/Makefile     |    2 +-
->  drivers/staging/media/meson/vdec/codec_vp9.c  | 2139 +++++++++++++++++
->  drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
->  drivers/staging/media/meson/vdec/hevc_regs.h  |    7 +
->  drivers/staging/media/meson/vdec/vdec.c       |    5 +
->  .../staging/media/meson/vdec/vdec_helpers.c   |    4 +
->  .../staging/media/meson/vdec/vdec_platform.c  |   38 +
->  7 files changed, 2207 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
->  create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
-> 
-> diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
-> index f55b6e625034..6e726af84ac9 100644
-> --- a/drivers/staging/media/meson/vdec/Makefile
-> +++ b/drivers/staging/media/meson/vdec/Makefile
-> @@ -3,6 +3,6 @@
->  
->  meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
->  meson-vdec-objs += vdec_1.o vdec_hevc.o
-> -meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o
-> +meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o codec_vp9.o
->  
->  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
-> diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
-> new file mode 100644
-> index 000000000000..9e23ccbb7cc0
-> --- /dev/null
-> +++ b/drivers/staging/media/meson/vdec/codec_vp9.c
-> @@ -0,0 +1,2139 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2018 Maxime Jourdan <mjourdan@baylibre.com>
-> + * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#include <media/v4l2-mem2mem.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +
-> +#include "dos_regs.h"
-> +#include "hevc_regs.h"
-> +#include "vdec_helpers.h"
-> +#include "codec_hevc_common.h"
-> +
-> +/* HEVC reg mapping */
-> +#define VP9_DEC_STATUS_REG	HEVC_ASSIST_SCRATCH_0
-> +	#define VP9_10B_DECODE_SLICE	5
-> +	#define VP9_HEAD_PARSER_DONE	0xf0
-> +#define VP9_RPM_BUFFER		HEVC_ASSIST_SCRATCH_1
-> +#define VP9_SHORT_TERM_RPS	HEVC_ASSIST_SCRATCH_2
-> +#define VP9_ADAPT_PROB_REG	HEVC_ASSIST_SCRATCH_3
-> +#define VP9_MMU_MAP_BUFFER	HEVC_ASSIST_SCRATCH_4
-> +#define VP9_PPS_BUFFER		HEVC_ASSIST_SCRATCH_5
-> +#define VP9_SAO_UP		HEVC_ASSIST_SCRATCH_6
-> +#define VP9_STREAM_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_7
-> +#define VP9_STREAM_SWAP_BUFFER2 HEVC_ASSIST_SCRATCH_8
-> +#define VP9_PROB_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_9
-> +#define VP9_COUNT_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_A
-> +#define VP9_SEG_MAP_BUFFER	HEVC_ASSIST_SCRATCH_B
-> +#define VP9_SCALELUT		HEVC_ASSIST_SCRATCH_D
-> +#define VP9_WAIT_FLAG		HEVC_ASSIST_SCRATCH_E
-> +#define LMEM_DUMP_ADR		HEVC_ASSIST_SCRATCH_F
-> +#define NAL_SEARCH_CTL		HEVC_ASSIST_SCRATCH_I
-> +#define VP9_DECODE_MODE		HEVC_ASSIST_SCRATCH_J
-> +	#define DECODE_MODE_SINGLE 0
-> +#define DECODE_STOP_POS		HEVC_ASSIST_SCRATCH_K
-> +#define HEVC_DECODE_COUNT	HEVC_ASSIST_SCRATCH_M
-> +#define HEVC_DECODE_SIZE	HEVC_ASSIST_SCRATCH_N
-> +
-> +/* VP9 Constants */
-> +#define LCU_SIZE		64
-> +#define MAX_REF_PIC_NUM		24
-> +#define REFS_PER_FRAME		3
-> +#define REF_FRAMES		8
-> +#define MV_MEM_UNIT		0x240
-> +#define ADAPT_PROB_SIZE		0xf80
-> +
-> +enum FRAME_TYPE {
-> +	KEY_FRAME = 0,
-> +	INTER_FRAME = 1,
-> +	FRAME_TYPES,
-> +};
-> +
-> +/* VP9 Workspace layout */
-> +#define MPRED_MV_BUF_SIZE 0x120000
-> +
-> +#define IPP_SIZE	0x4000
-> +#define SAO_ABV_SIZE	0x30000
-> +#define SAO_VB_SIZE	0x30000
-> +#define SH_TM_RPS_SIZE	0x800
-> +#define VPS_SIZE	0x800
-> +#define SPS_SIZE	0x800
-> +#define PPS_SIZE	0x2000
-> +#define SAO_UP_SIZE	0x2800
-> +#define SWAP_BUF_SIZE	0x800
-> +#define SWAP_BUF2_SIZE	0x800
-> +#define SCALELUT_SIZE	0x8000
-> +#define DBLK_PARA_SIZE	0x80000
-> +#define DBLK_DATA_SIZE	0x80000
-> +#define SEG_MAP_SIZE	0xd800
-> +#define PROB_SIZE	0x5000
-> +#define COUNT_SIZE	0x3000
-> +#define MMU_VBH_SIZE	0x5000
-> +#define MPRED_ABV_SIZE	0x10000
-> +#define MPRED_MV_SIZE	(MPRED_MV_BUF_SIZE * MAX_REF_PIC_NUM)
-> +#define RPM_BUF_SIZE	0x100
-> +#define LMEM_SIZE	0x800
-> +
-> +#define IPP_OFFSET       0x00
-> +#define SAO_ABV_OFFSET   (IPP_OFFSET + IPP_SIZE)
-> +#define SAO_VB_OFFSET    (SAO_ABV_OFFSET + SAO_ABV_SIZE)
-> +#define SH_TM_RPS_OFFSET (SAO_VB_OFFSET + SAO_VB_SIZE)
-> +#define VPS_OFFSET       (SH_TM_RPS_OFFSET + SH_TM_RPS_SIZE)
-> +#define SPS_OFFSET       (VPS_OFFSET + VPS_SIZE)
-> +#define PPS_OFFSET       (SPS_OFFSET + SPS_SIZE)
-> +#define SAO_UP_OFFSET    (PPS_OFFSET + PPS_SIZE)
-> +#define SWAP_BUF_OFFSET  (SAO_UP_OFFSET + SAO_UP_SIZE)
-> +#define SWAP_BUF2_OFFSET (SWAP_BUF_OFFSET + SWAP_BUF_SIZE)
-> +#define SCALELUT_OFFSET  (SWAP_BUF2_OFFSET + SWAP_BUF2_SIZE)
-> +#define DBLK_PARA_OFFSET (SCALELUT_OFFSET + SCALELUT_SIZE)
-> +#define DBLK_DATA_OFFSET (DBLK_PARA_OFFSET + DBLK_PARA_SIZE)
-> +#define SEG_MAP_OFFSET   (DBLK_DATA_OFFSET + DBLK_DATA_SIZE)
-> +#define PROB_OFFSET      (SEG_MAP_OFFSET + SEG_MAP_SIZE)
-> +#define COUNT_OFFSET     (PROB_OFFSET + PROB_SIZE)
-> +#define MMU_VBH_OFFSET   (COUNT_OFFSET + COUNT_SIZE)
-> +#define MPRED_ABV_OFFSET (MMU_VBH_OFFSET + MMU_VBH_SIZE)
-> +#define MPRED_MV_OFFSET  (MPRED_ABV_OFFSET + MPRED_ABV_SIZE)
-> +#define RPM_OFFSET       (MPRED_MV_OFFSET + MPRED_MV_SIZE)
-> +#define LMEM_OFFSET      (RPM_OFFSET + RPM_BUF_SIZE)
-> +
-> +#define SIZE_WORKSPACE	ALIGN(LMEM_OFFSET + LMEM_SIZE, 64 * SZ_1K)
-> +
-> +#define NONE           -1
-> +#define INTRA_FRAME     0
-> +#define LAST_FRAME      1
-> +#define GOLDEN_FRAME    2
-> +#define ALTREF_FRAME    3
-> +#define MAX_REF_FRAMES  4
-> +
-> +/*
-> + * Defines, declarations, sub-functions for vp9 de-block loop
-> +	filter Thr/Lvl table update
-> + * - struct segmentation is for loop filter only (removed something)
-> + * - function "vp9_loop_filter_init" and "vp9_loop_filter_frame_init" will
-> +	be instantiated in C_Entry
-> + * - vp9_loop_filter_init run once before decoding start
-> + * - vp9_loop_filter_frame_init run before every frame decoding start
-> + * - set video format to VP9 is in vp9_loop_filter_init
-> + */
-> +#define MAX_LOOP_FILTER		63
-> +#define MAX_REF_LF_DELTAS	4
-> +#define MAX_MODE_LF_DELTAS	2
-> +#define SEGMENT_DELTADATA	0
-> +#define SEGMENT_ABSDATA		1
-> +#define MAX_SEGMENTS		8
-> +
-> +/* VP9 PROB processing defines */
-> +#define VP9_PARTITION_START      0
-> +#define VP9_PARTITION_SIZE_STEP  (3 * 4)
-> +#define VP9_PARTITION_ONE_SIZE   (4 * VP9_PARTITION_SIZE_STEP)
-> +#define VP9_PARTITION_KEY_START  0
-> +#define VP9_PARTITION_P_START    VP9_PARTITION_ONE_SIZE
-> +#define VP9_PARTITION_SIZE       (2 * VP9_PARTITION_ONE_SIZE)
-> +#define VP9_SKIP_START           (VP9_PARTITION_START + VP9_PARTITION_SIZE)
-> +#define VP9_SKIP_SIZE            4 /* only use 3*/
-> +#define VP9_TX_MODE_START        (VP9_SKIP_START + VP9_SKIP_SIZE)
-> +#define VP9_TX_MODE_8_0_OFFSET   0
-> +#define VP9_TX_MODE_8_1_OFFSET   1
-> +#define VP9_TX_MODE_16_0_OFFSET  2
-> +#define VP9_TX_MODE_16_1_OFFSET  4
-> +#define VP9_TX_MODE_32_0_OFFSET  6
-> +#define VP9_TX_MODE_32_1_OFFSET  9
-> +#define VP9_TX_MODE_SIZE         12
-> +#define VP9_COEF_START           (VP9_TX_MODE_START + VP9_TX_MODE_SIZE)
-> +#define VP9_COEF_BAND_0_OFFSET   0
-> +#define VP9_COEF_BAND_1_OFFSET   (VP9_COEF_BAND_0_OFFSET + 3 * 3 + 1)
-> +#define VP9_COEF_BAND_2_OFFSET   (VP9_COEF_BAND_1_OFFSET + 6 * 3)
-> +#define VP9_COEF_BAND_3_OFFSET   (VP9_COEF_BAND_2_OFFSET + 6 * 3)
-> +#define VP9_COEF_BAND_4_OFFSET   (VP9_COEF_BAND_3_OFFSET + 6 * 3)
-> +#define VP9_COEF_BAND_5_OFFSET   (VP9_COEF_BAND_4_OFFSET + 6 * 3)
-> +#define VP9_COEF_SIZE_ONE_SET    100 /* ((3 + 5 * 6) * 3 + 1 padding)*/
-> +#define VP9_COEF_4X4_START       (VP9_COEF_START + 0 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_COEF_8X8_START       (VP9_COEF_START + 4 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_COEF_16X16_START     (VP9_COEF_START + 8 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_COEF_32X32_START     (VP9_COEF_START + 12 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_COEF_SIZE_PLANE      (2 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_COEF_SIZE            (4 * 2 * 2 * VP9_COEF_SIZE_ONE_SET)
-> +#define VP9_INTER_MODE_START     (VP9_COEF_START + VP9_COEF_SIZE)
-> +#define VP9_INTER_MODE_SIZE      24 /* only use 21 (# * 7)*/
-> +#define VP9_INTERP_START         (VP9_INTER_MODE_START + VP9_INTER_MODE_SIZE)
-> +#define VP9_INTERP_SIZE          8
-> +#define VP9_INTRA_INTER_START    (VP9_INTERP_START + VP9_INTERP_SIZE)
-> +#define VP9_INTRA_INTER_SIZE     4
-> +#define VP9_INTERP_INTRA_INTER_START  VP9_INTERP_START
-> +#define VP9_INTERP_INTRA_INTER_SIZE   (VP9_INTERP_SIZE + VP9_INTRA_INTER_SIZE)
-> +#define VP9_COMP_INTER_START     \
-> +		(VP9_INTERP_INTRA_INTER_START + VP9_INTERP_INTRA_INTER_SIZE)
-> +#define VP9_COMP_INTER_SIZE      5
-> +#define VP9_COMP_REF_START       (VP9_COMP_INTER_START + VP9_COMP_INTER_SIZE)
-> +#define VP9_COMP_REF_SIZE        5
-> +#define VP9_SINGLE_REF_START     (VP9_COMP_REF_START + VP9_COMP_REF_SIZE)
-> +#define VP9_SINGLE_REF_SIZE      10
-> +#define VP9_REF_MODE_START       VP9_COMP_INTER_START
-> +#define VP9_REF_MODE_SIZE        \
-> +		(VP9_COMP_INTER_SIZE + VP9_COMP_REF_SIZE + VP9_SINGLE_REF_SIZE)
-> +#define VP9_IF_Y_MODE_START      (VP9_REF_MODE_START + VP9_REF_MODE_SIZE)
-> +#define VP9_IF_Y_MODE_SIZE       36
-> +#define VP9_IF_UV_MODE_START     (VP9_IF_Y_MODE_START + VP9_IF_Y_MODE_SIZE)
-> +#define VP9_IF_UV_MODE_SIZE      92 /* only use 90*/
-> +#define VP9_MV_JOINTS_START      (VP9_IF_UV_MODE_START + VP9_IF_UV_MODE_SIZE)
-> +#define VP9_MV_JOINTS_SIZE       3
-> +#define VP9_MV_SIGN_0_START      (VP9_MV_JOINTS_START + VP9_MV_JOINTS_SIZE)
-> +#define VP9_MV_SIGN_0_SIZE       1
-> +#define VP9_MV_CLASSES_0_START   (VP9_MV_SIGN_0_START + VP9_MV_SIGN_0_SIZE)
-> +#define VP9_MV_CLASSES_0_SIZE    10
-> +#define VP9_MV_CLASS0_0_START    \
-> +		(VP9_MV_CLASSES_0_START + VP9_MV_CLASSES_0_SIZE)
-> +#define VP9_MV_CLASS0_0_SIZE     1
-> +#define VP9_MV_BITS_0_START      (VP9_MV_CLASS0_0_START + VP9_MV_CLASS0_0_SIZE)
-> +#define VP9_MV_BITS_0_SIZE       10
-> +#define VP9_MV_SIGN_1_START      (VP9_MV_BITS_0_START + VP9_MV_BITS_0_SIZE)
-> +#define VP9_MV_SIGN_1_SIZE       1
-> +#define VP9_MV_CLASSES_1_START   \
-> +			(VP9_MV_SIGN_1_START + VP9_MV_SIGN_1_SIZE)
-> +#define VP9_MV_CLASSES_1_SIZE    10
-> +#define VP9_MV_CLASS0_1_START    \
-> +			(VP9_MV_CLASSES_1_START + VP9_MV_CLASSES_1_SIZE)
-> +#define VP9_MV_CLASS0_1_SIZE     1
-> +#define VP9_MV_BITS_1_START      \
-> +			(VP9_MV_CLASS0_1_START + VP9_MV_CLASS0_1_SIZE)
-> +#define VP9_MV_BITS_1_SIZE       10
-> +#define VP9_MV_CLASS0_FP_0_START \
-> +			(VP9_MV_BITS_1_START + VP9_MV_BITS_1_SIZE)
-> +#define VP9_MV_CLASS0_FP_0_SIZE  9
-> +#define VP9_MV_CLASS0_FP_1_START \
-> +			(VP9_MV_CLASS0_FP_0_START + VP9_MV_CLASS0_FP_0_SIZE)
-> +#define VP9_MV_CLASS0_FP_1_SIZE  9
-> +#define VP9_MV_CLASS0_HP_0_START \
-> +			(VP9_MV_CLASS0_FP_1_START + VP9_MV_CLASS0_FP_1_SIZE)
-> +#define VP9_MV_CLASS0_HP_0_SIZE  2
-> +#define VP9_MV_CLASS0_HP_1_START \
-> +			(VP9_MV_CLASS0_HP_0_START + VP9_MV_CLASS0_HP_0_SIZE)
-> +#define VP9_MV_CLASS0_HP_1_SIZE  2
-> +#define VP9_MV_START             VP9_MV_JOINTS_START
-> +#define VP9_MV_SIZE              72 /*only use 69*/
-> +
-> +#define VP9_TOTAL_SIZE           (VP9_MV_START + VP9_MV_SIZE)
-> +
-> +/* VP9 COUNT mem processing defines */
-> +#define VP9_COEF_COUNT_START           0
-> +#define VP9_COEF_COUNT_BAND_0_OFFSET   0
-> +#define VP9_COEF_COUNT_BAND_1_OFFSET   \
-> +			(VP9_COEF_COUNT_BAND_0_OFFSET + 3 * 5)
-> +#define VP9_COEF_COUNT_BAND_2_OFFSET   \
-> +			(VP9_COEF_COUNT_BAND_1_OFFSET + 6 * 5)
-> +#define VP9_COEF_COUNT_BAND_3_OFFSET   \
-> +			(VP9_COEF_COUNT_BAND_2_OFFSET + 6 * 5)
-> +#define VP9_COEF_COUNT_BAND_4_OFFSET   \
-> +			(VP9_COEF_COUNT_BAND_3_OFFSET + 6 * 5)
-> +#define VP9_COEF_COUNT_BAND_5_OFFSET   \
-> +			(VP9_COEF_COUNT_BAND_4_OFFSET + 6 * 5)
-> +#define VP9_COEF_COUNT_SIZE_ONE_SET    165 /* ((3 + 5 * 6) * 5 */
-> +#define VP9_COEF_COUNT_4X4_START       \
-> +		(VP9_COEF_COUNT_START + 0 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +#define VP9_COEF_COUNT_8X8_START       \
-> +		(VP9_COEF_COUNT_START + 4 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +#define VP9_COEF_COUNT_16X16_START     \
-> +		(VP9_COEF_COUNT_START + 8 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +#define VP9_COEF_COUNT_32X32_START     \
-> +		(VP9_COEF_COUNT_START + 12 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +#define VP9_COEF_COUNT_SIZE_PLANE      (2 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +#define VP9_COEF_COUNT_SIZE            (4 * 2 * 2 * VP9_COEF_COUNT_SIZE_ONE_SET)
-> +
-> +#define VP9_INTRA_INTER_COUNT_START    \
-> +		(VP9_COEF_COUNT_START + VP9_COEF_COUNT_SIZE)
-> +#define VP9_INTRA_INTER_COUNT_SIZE     (4 * 2)
-> +#define VP9_COMP_INTER_COUNT_START     \
-> +		(VP9_INTRA_INTER_COUNT_START + VP9_INTRA_INTER_COUNT_SIZE)
-> +#define VP9_COMP_INTER_COUNT_SIZE      (5 * 2)
-> +#define VP9_COMP_REF_COUNT_START       \
-> +		(VP9_COMP_INTER_COUNT_START + VP9_COMP_INTER_COUNT_SIZE)
-> +#define VP9_COMP_REF_COUNT_SIZE        (5 * 2)
-> +#define VP9_SINGLE_REF_COUNT_START     \
-> +		(VP9_COMP_REF_COUNT_START + VP9_COMP_REF_COUNT_SIZE)
-> +#define VP9_SINGLE_REF_COUNT_SIZE      (10 * 2)
-> +#define VP9_TX_MODE_COUNT_START        \
-> +		(VP9_SINGLE_REF_COUNT_START + VP9_SINGLE_REF_COUNT_SIZE)
-> +#define VP9_TX_MODE_COUNT_SIZE         (12 * 2)
-> +#define VP9_SKIP_COUNT_START           \
-> +		(VP9_TX_MODE_COUNT_START + VP9_TX_MODE_COUNT_SIZE)
-> +#define VP9_SKIP_COUNT_SIZE            (3 * 2)
-> +#define VP9_MV_SIGN_0_COUNT_START      \
-> +		(VP9_SKIP_COUNT_START + VP9_SKIP_COUNT_SIZE)
-> +#define VP9_MV_SIGN_0_COUNT_SIZE       (1 * 2)
-> +#define VP9_MV_SIGN_1_COUNT_START      \
-> +		(VP9_MV_SIGN_0_COUNT_START + VP9_MV_SIGN_0_COUNT_SIZE)
-> +#define VP9_MV_SIGN_1_COUNT_SIZE       (1 * 2)
-> +#define VP9_MV_BITS_0_COUNT_START      \
-> +		(VP9_MV_SIGN_1_COUNT_START + VP9_MV_SIGN_1_COUNT_SIZE)
-> +#define VP9_MV_BITS_0_COUNT_SIZE       (10 * 2)
-> +#define VP9_MV_BITS_1_COUNT_START      \
-> +		(VP9_MV_BITS_0_COUNT_START + VP9_MV_BITS_0_COUNT_SIZE)
-> +#define VP9_MV_BITS_1_COUNT_SIZE       (10 * 2)
-> +#define VP9_MV_CLASS0_HP_0_COUNT_START \
-> +		(VP9_MV_BITS_1_COUNT_START + VP9_MV_BITS_1_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_HP_0_COUNT_SIZE  (2 * 2)
-> +#define VP9_MV_CLASS0_HP_1_COUNT_START \
-> +		(VP9_MV_CLASS0_HP_0_COUNT_START + VP9_MV_CLASS0_HP_0_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_HP_1_COUNT_SIZE  (2 * 2)
-> +
-> +/* Start merge_tree */
-> +#define VP9_INTER_MODE_COUNT_START     \
-> +		(VP9_MV_CLASS0_HP_1_COUNT_START + VP9_MV_CLASS0_HP_1_COUNT_SIZE)
-> +#define VP9_INTER_MODE_COUNT_SIZE      (7 * 4)
-> +#define VP9_IF_Y_MODE_COUNT_START      \
-> +		(VP9_INTER_MODE_COUNT_START + VP9_INTER_MODE_COUNT_SIZE)
-> +#define VP9_IF_Y_MODE_COUNT_SIZE       (10 * 4)
-> +#define VP9_IF_UV_MODE_COUNT_START     \
-> +		(VP9_IF_Y_MODE_COUNT_START + VP9_IF_Y_MODE_COUNT_SIZE)
-> +#define VP9_IF_UV_MODE_COUNT_SIZE      (10 * 10)
-> +#define VP9_PARTITION_P_COUNT_START    \
-> +		(VP9_IF_UV_MODE_COUNT_START + VP9_IF_UV_MODE_COUNT_SIZE)
-> +#define VP9_PARTITION_P_COUNT_SIZE     (4 * 4 * 4)
-> +#define VP9_INTERP_COUNT_START         \
-> +		(VP9_PARTITION_P_COUNT_START + VP9_PARTITION_P_COUNT_SIZE)
-> +#define VP9_INTERP_COUNT_SIZE          (4 * 3)
-> +#define VP9_MV_JOINTS_COUNT_START      \
-> +		(VP9_INTERP_COUNT_START + VP9_INTERP_COUNT_SIZE)
-> +#define VP9_MV_JOINTS_COUNT_SIZE       (1 * 4)
-> +#define VP9_MV_CLASSES_0_COUNT_START   \
-> +		(VP9_MV_JOINTS_COUNT_START + VP9_MV_JOINTS_COUNT_SIZE)
-> +#define VP9_MV_CLASSES_0_COUNT_SIZE    (1 * 11)
-> +#define VP9_MV_CLASS0_0_COUNT_START    \
-> +		(VP9_MV_CLASSES_0_COUNT_START + VP9_MV_CLASSES_0_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_0_COUNT_SIZE     (1 * 2)
-> +#define VP9_MV_CLASSES_1_COUNT_START   \
-> +		(VP9_MV_CLASS0_0_COUNT_START + VP9_MV_CLASS0_0_COUNT_SIZE)
-> +#define VP9_MV_CLASSES_1_COUNT_SIZE    (1 * 11)
-> +#define VP9_MV_CLASS0_1_COUNT_START    \
-> +		(VP9_MV_CLASSES_1_COUNT_START + VP9_MV_CLASSES_1_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_1_COUNT_SIZE     (1 * 2)
-> +#define VP9_MV_CLASS0_FP_0_COUNT_START \
-> +		(VP9_MV_CLASS0_1_COUNT_START + VP9_MV_CLASS0_1_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_FP_0_COUNT_SIZE  (3 * 4)
-> +#define VP9_MV_CLASS0_FP_1_COUNT_START \
-> +		(VP9_MV_CLASS0_FP_0_COUNT_START + VP9_MV_CLASS0_FP_0_COUNT_SIZE)
-> +#define VP9_MV_CLASS0_FP_1_COUNT_SIZE  (3 * 4)
-> +
-> +#define DC_PRED    0	/* Average of above and left pixels */
-> +#define V_PRED     1	/* Vertical */
-> +#define H_PRED     2	/* Horizontal */
-> +#define D45_PRED   3	/* Directional 45 deg = round(arctan(1/1) * 180/pi) */
-> +#define D135_PRED  4	/* Directional 135 deg = 180 - 45 */
-> +#define D117_PRED  5	/* Directional 117 deg = 180 - 63 */
-> +#define D153_PRED  6	/* Directional 153 deg = 180 - 27 */
-> +#define D207_PRED  7	/* Directional 207 deg = 180 + 27 */
-> +#define D63_PRED   8	/* Directional 63 deg = round(arctan(2/1) * 180/pi) */
-> +#define TM_PRED    9	/* True-motion */
-> +
-> +#define ROUND_POWER_OF_TWO(value, num) (((value) + (1 << ((num) - 1))) >> (num))
-> +
-> +#define MODE_MV_COUNT_SAT 20
-> +static const int count_to_update_factor[MODE_MV_COUNT_SAT + 1] = {
-> +	0, 6, 12, 19, 25, 32, 38, 44, 51, 57, 64,
-> +	70, 76, 83, 89, 96, 102, 108, 115, 121, 128
-> +};
-> +
-> +union rpm_param {
-> +	struct {
-> +		u16 data[RPM_BUF_SIZE];
-> +	} l;
-> +	struct {
-> +		u16 profile;
-> +		u16 show_existing_frame;
-> +		u16 frame_to_show_idx;
-> +		u16 frame_type; /*1 bit*/
-> +		u16 show_frame; /*1 bit*/
-> +		u16 error_resilient_mode; /*1 bit*/
-> +		u16 intra_only; /*1 bit*/
-> +		u16 display_size_present; /*1 bit*/
-> +		u16 reset_frame_context;
-> +		u16 refresh_frame_flags;
-> +		u16 width;
-> +		u16 height;
-> +		u16 display_width;
-> +		u16 display_height;
-> +		u16 ref_info;
-> +		u16 same_frame_size;
-> +		u16 mode_ref_delta_enabled;
-> +		u16 ref_deltas[4];
-> +		u16 mode_deltas[2];
-> +		u16 filter_level;
-> +		u16 sharpness_level;
-> +		u16 bit_depth;
-> +		u16 seg_quant_info[8];
-> +		u16 seg_enabled;
-> +		u16 seg_abs_delta;
-> +		/* bit 15: feature enabled; bit 8, sign; bit[5:0], data */
-> +		u16 seg_lf_info[8];
-> +	} p;
-> +};
-> +
-> +enum SEG_LVL_FEATURES {
-> +	SEG_LVL_ALT_Q = 0,	/* Use alternate Quantizer */
-> +	SEG_LVL_ALT_LF = 1,	/* Use alternate loop filter value */
-> +	SEG_LVL_REF_FRAME = 2,	/* Optional Segment reference frame */
-> +	SEG_LVL_SKIP = 3,	/* Optional Segment (0,0) + skip mode */
-> +	SEG_LVL_MAX = 4		/* Number of features supported */
-> +};
-> +
-> +struct segmentation {
-> +	u8 enabled;
-> +	u8 update_map;
-> +	u8 update_data;
-> +	u8 abs_delta;
-> +	u8 temporal_update;
-> +	s16 feature_data[MAX_SEGMENTS][SEG_LVL_MAX];
-> +	unsigned int feature_mask[MAX_SEGMENTS];
-> +};
-> +
-> +struct loop_filter_thresh {
-> +	u8 mblim;
-> +	u8 lim;
-> +	u8 hev_thr;
-> +};
-> +
-> +struct loop_filter_info_n {
-> +	struct loop_filter_thresh lfthr[MAX_LOOP_FILTER + 1];
-> +	u8 lvl[MAX_SEGMENTS][MAX_REF_FRAMES][MAX_MODE_LF_DELTAS];
-> +};
-> +
-> +struct loopfilter {
-> +	int filter_level;
-> +
-> +	int sharpness_level;
-> +	int last_sharpness_level;
-> +
-> +	u8 mode_ref_delta_enabled;
-> +	u8 mode_ref_delta_update;
-> +
-> +	/*0 = Intra, Last, GF, ARF*/
-> +	signed char ref_deltas[MAX_REF_LF_DELTAS];
-> +	signed char last_ref_deltas[MAX_REF_LF_DELTAS];
-> +
-> +	/*0 = ZERO_MV, MV*/
-> +	signed char mode_deltas[MAX_MODE_LF_DELTAS];
-> +	signed char last_mode_deltas[MAX_MODE_LF_DELTAS];
-> +};
-> +
-> +struct vp9_frame {
-> +	struct list_head list;
-> +	struct vb2_v4l2_buffer *vbuf;
-> +	int index;
-> +	int intra_only;
-> +	int show;
-> +	int type;
-> +	int done;
-> +	unsigned int width;
-> +	unsigned int height;
-> +};
-> +
-> +struct codec_vp9 {
-> +	/* VP9 context lock */
-> +	struct mutex lock;
-> +
-> +	/* Common part with the HEVC decoder */
-> +	struct codec_hevc_common common;
-> +
-> +	/* Buffer for the VP9 Workspace */
-> +	void      *workspace_vaddr;
-> +	dma_addr_t workspace_paddr;
-> +
-> +	/* Contains many information parsed from the bitstream */
-> +	union rpm_param rpm_param;
-> +
-> +	/* Whether we detected the bitstream as 10-bit */
-> +	int is_10bit;
-> +
-> +	/* Coded resolution reported by the hardware */
-> +	u32 width, height;
-> +
-> +	/* All ref frames used by the HW at a given time */
-> +	struct list_head ref_frames_list;
-> +	u32 frames_num;
-> +
-> +	/* In case of downsampling (decoding with FBC but outputting in NV12M),
-> +	 * we need to allocate additional buffers for FBC.
-> +	 */
-> +	void      *fbc_buffer_vaddr[MAX_REF_PIC_NUM];
-> +	dma_addr_t fbc_buffer_paddr[MAX_REF_PIC_NUM];
-> +
-> +	int ref_frame_map[REF_FRAMES];
-> +	int next_ref_frame_map[REF_FRAMES];
-> +	struct vp9_frame *frame_refs[REFS_PER_FRAME];
-> +
-> +	u32 lcu_total;
-> +
-> +	/* loop filter */
-> +	int default_filt_lvl;
-> +	struct loop_filter_info_n lfi;
-> +	struct loopfilter lf;
-> +	struct segmentation seg_4lf;
-> +
-> +	struct vp9_frame *cur_frame;
-> +	struct vp9_frame *prev_frame;
-> +};
-> +
-> +static int div_r32(s64 m, int n)
-> +{
-> +	s64 qu = div_s64(m, n);
-> +
-> +	return (int)qu;
-> +}
-> +
-> +static int clip_prob(int p)
-> +{
-> +	return clamp_val(p, 1, 255);
-> +}
-> +
-> +static int segfeature_active(struct segmentation *seg, int segment_id,
-> +			     enum SEG_LVL_FEATURES feature_id)
-> +{
-> +	return seg->enabled &&
-> +		(seg->feature_mask[segment_id] & (1 << feature_id));
-> +}
-> +
-> +static int get_segdata(struct segmentation *seg, int segment_id,
-> +		       enum SEG_LVL_FEATURES feature_id)
-> +{
-> +	return seg->feature_data[segment_id][feature_id];
-> +}
-> +
-> +static void vp9_update_sharpness(struct loop_filter_info_n *lfi,
-> +				 int sharpness_lvl)
-> +{
-> +	int lvl;
-> +
-> +	/* For each possible value for the loop filter fill out limits*/
-> +	for (lvl = 0; lvl <= MAX_LOOP_FILTER; lvl++) {
-> +		/* Set loop filter parameters that control sharpness.*/
-> +		int block_inside_limit = lvl >> ((sharpness_lvl > 0) +
-> +					(sharpness_lvl > 4));
-> +
-> +		if (sharpness_lvl > 0) {
-> +			if (block_inside_limit > (9 - sharpness_lvl))
-> +				block_inside_limit = (9 - sharpness_lvl);
-> +		}
-> +
-> +		if (block_inside_limit < 1)
-> +			block_inside_limit = 1;
-> +
-> +		lfi->lfthr[lvl].lim = (u8)block_inside_limit;
-> +		lfi->lfthr[lvl].mblim = (u8)(2 * (lvl + 2) +
-> +				block_inside_limit);
-> +	}
-> +}
-> +
-> +/* Instantiate this function once when decode is started */
-> +static void
-> +vp9_loop_filter_init(struct amvdec_core *core, struct codec_vp9 *vp9)
-> +{
-> +	struct loop_filter_info_n *lfi = &vp9->lfi;
-> +	struct loopfilter *lf = &vp9->lf;
-> +	struct segmentation *seg_4lf = &vp9->seg_4lf;
-> +	int i;
-> +
-> +	memset(lfi, 0, sizeof(struct loop_filter_info_n));
-> +	memset(lf, 0, sizeof(struct loopfilter));
-> +	memset(seg_4lf, 0, sizeof(struct segmentation));
-> +	lf->sharpness_level = 0;
-> +	vp9_update_sharpness(lfi, lf->sharpness_level);
-> +	lf->last_sharpness_level = lf->sharpness_level;
-> +
-> +	for (i = 0; i < 32; i++) {
-> +		unsigned int thr;
-> +
-> +		thr = ((lfi->lfthr[i * 2 + 1].lim & 0x3f) << 8) |
-> +			(lfi->lfthr[i * 2 + 1].mblim & 0xff);
-> +		thr = (thr << 16) | ((lfi->lfthr[i * 2].lim & 0x3f) << 8) |
-> +			(lfi->lfthr[i * 2].mblim & 0xff);
-> +
-> +		amvdec_write_dos(core, HEVC_DBLK_CFG9, thr);
-> +	}
-> +
-> +	if (core->platform->revision >= VDEC_REVISION_G12A)
-> +		/* VP9 video format */
-> +		amvdec_write_dos(core, HEVC_DBLK_CFGB, (0x54 << 8) | BIT(0));
-> +	else if (core->platform->revision >= VDEC_REVISION_SM1)
-> +		amvdec_write_dos(core, HEVC_DBLK_CFGB,
-> +				 (0x3 << 14) | /* dw fifo thres r and b */
-> +				 (0x3 << 12) | /* dw fifo thres r or b */
-> +				 (0x3 << 10) | /* dw fifo thres not r/b */
-> +				 BIT(0)); /* VP9 video format */
-> +	else
-> +		amvdec_write_dos(core, HEVC_DBLK_CFGB, 0x40400001);
-> +}
-> +
-> +static void
-> +vp9_loop_filter_frame_init(struct amvdec_core *core, struct segmentation *seg,
-> +			   struct loop_filter_info_n *lfi,
-> +			   struct loopfilter *lf, int default_filt_lvl)
-> +{
-> +	int i;
-> +	int seg_id;
-> +
-> +	/*
-> +	 * n_shift is the multiplier for lf_deltas
-> +	 * the multiplier is:
-> +	 * - 1 for when filter_lvl is between 0 and 31
-> +	 * - 2 when filter_lvl is between 32 and 63
-> +	 */
-> +	const int scale = 1 << (default_filt_lvl >> 5);
-> +
-> +	/* update limits if sharpness has changed */
-> +	if (lf->last_sharpness_level != lf->sharpness_level) {
-> +		vp9_update_sharpness(lfi, lf->sharpness_level);
-> +		lf->last_sharpness_level = lf->sharpness_level;
-> +
-> +		/* Write to register */
-> +		for (i = 0; i < 32; i++) {
-> +			unsigned int thr;
-> +
-> +			thr = ((lfi->lfthr[i * 2 + 1].lim & 0x3f) << 8) |
-> +			      (lfi->lfthr[i * 2 + 1].mblim & 0xff);
-> +			thr = (thr << 16) |
-> +			      ((lfi->lfthr[i * 2].lim & 0x3f) << 8) |
-> +			      (lfi->lfthr[i * 2].mblim & 0xff);
-> +
-> +			amvdec_write_dos(core, HEVC_DBLK_CFG9, thr);
-> +		}
-> +	}
-> +
-> +	for (seg_id = 0; seg_id < MAX_SEGMENTS; seg_id++) {
-> +		int lvl_seg = default_filt_lvl;
-> +
-> +		if (segfeature_active(seg, seg_id, SEG_LVL_ALT_LF)) {
-> +			const int data = get_segdata(seg, seg_id,
-> +						SEG_LVL_ALT_LF);
-> +			lvl_seg = clamp_t(int,
-> +					  seg->abs_delta == SEGMENT_ABSDATA ?
-> +						data : default_filt_lvl + data,
-> +					  0, MAX_LOOP_FILTER);
-> +		}
-> +
-> +		if (!lf->mode_ref_delta_enabled) {
-> +			/*
-> +			 * We could get rid of this if we assume that deltas
-> +			 * are set to zero when not in use.
-> +			 * encoder always uses deltas
-> +			 */
-> +			memset(lfi->lvl[seg_id], lvl_seg,
-> +			       sizeof(lfi->lvl[seg_id]));
-> +		} else {
-> +			int ref, mode;
-> +			const int intra_lvl =
-> +				lvl_seg + lf->ref_deltas[INTRA_FRAME] * scale;
-> +			lfi->lvl[seg_id][INTRA_FRAME][0] =
-> +				clamp_val(intra_lvl, 0, MAX_LOOP_FILTER);
-> +
-> +			for (ref = LAST_FRAME; ref < MAX_REF_FRAMES; ++ref) {
-> +				for (mode = 0; mode < MAX_MODE_LF_DELTAS;
-> +				     ++mode) {
-> +					const int inter_lvl =
-> +						lvl_seg +
-> +						lf->ref_deltas[ref] * scale +
-> +						lf->mode_deltas[mode] * scale;
-> +					lfi->lvl[seg_id][ref][mode] =
-> +						clamp_val(inter_lvl, 0,
-> +							  MAX_LOOP_FILTER);
-> +				}
-> +			}
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < 16; i++) {
-> +		unsigned int level;
-> +
-> +		level = ((lfi->lvl[i >> 1][3][i & 1] & 0x3f) << 24) |
-> +			((lfi->lvl[i >> 1][2][i & 1] & 0x3f) << 16) |
-> +			((lfi->lvl[i >> 1][1][i & 1] & 0x3f) << 8) |
-> +			(lfi->lvl[i >> 1][0][i & 1] & 0x3f);
-> +		if (!default_filt_lvl)
-> +			level = 0;
-> +
-> +		amvdec_write_dos(core, HEVC_DBLK_CFGA, level);
-> +	}
-> +}
-> +
-> +static void codec_vp9_flush_output(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	struct vp9_frame *tmp, *n;
-> +
-> +	mutex_lock(&vp9->lock);
-> +	list_for_each_entry_safe(tmp, n, &vp9->ref_frames_list, list) {
-> +		if (!tmp->done) {
-> +			if (tmp->show)
-> +				amvdec_dst_buf_done(sess, tmp->vbuf,
-> +						    V4L2_FIELD_NONE);
-> +			else
-> +				v4l2_m2m_buf_queue(sess->m2m_ctx, tmp->vbuf);
-> +
-> +			vp9->frames_num--;
-> +		}
-> +
-> +		list_del(&tmp->list);
-> +		kfree(tmp);
-> +	}
-> +	mutex_unlock(&vp9->lock);
-> +}
-> +
-> +static u32 codec_vp9_num_pending_bufs(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +
-> +	if (!vp9)
-> +		return 0;
-> +
-> +	return vp9->frames_num;
-> +}
-> +
-> +static int codec_vp9_alloc_workspace(struct amvdec_core *core,
-> +				     struct codec_vp9 *vp9)
-> +{
-> +	/* Allocate some memory for the VP9 decoder's state */
-> +	vp9->workspace_vaddr = dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
-> +						  &vp9->workspace_paddr,
-> +						  GFP_KERNEL);
-> +	if (!vp9->workspace_vaddr) {
-> +		dev_err(core->dev, "Failed to allocate VP9 Workspace\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	memset(vp9->workspace_vaddr, 0, SIZE_WORKSPACE);
-> +
-> +	return 0;
-> +}
-> +
-> +static void codec_vp9_setup_workspace(struct amvdec_session *sess,
-> +				      struct codec_vp9 *vp9)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	u32 revision = core->platform->revision;
-> +	dma_addr_t wkaddr = vp9->workspace_paddr;
-> +
-> +	amvdec_write_dos(core, HEVCD_IPP_LINEBUFF_BASE, wkaddr + IPP_OFFSET);
-> +	amvdec_write_dos(core, VP9_RPM_BUFFER, wkaddr + RPM_OFFSET);
-> +	amvdec_write_dos(core, VP9_SHORT_TERM_RPS, wkaddr + SH_TM_RPS_OFFSET);
-> +	amvdec_write_dos(core, VP9_PPS_BUFFER, wkaddr + PPS_OFFSET);
-> +	amvdec_write_dos(core, VP9_SAO_UP, wkaddr + SAO_UP_OFFSET);
-> +
-> +	amvdec_write_dos(core, VP9_STREAM_SWAP_BUFFER,
-> +			 wkaddr + SWAP_BUF_OFFSET);
-> +	amvdec_write_dos(core, VP9_STREAM_SWAP_BUFFER2,
-> +			 wkaddr + SWAP_BUF2_OFFSET);
-> +	amvdec_write_dos(core, VP9_SCALELUT, wkaddr + SCALELUT_OFFSET);
-> +
-> +	if (core->platform->revision >= VDEC_REVISION_G12A)
-> +		amvdec_write_dos(core, HEVC_DBLK_CFGE,
-> +				 wkaddr + DBLK_PARA_OFFSET);
-> +
-> +	amvdec_write_dos(core, HEVC_DBLK_CFG4, wkaddr + DBLK_PARA_OFFSET);
-> +	amvdec_write_dos(core, HEVC_DBLK_CFG5, wkaddr + DBLK_DATA_OFFSET);
-> +	amvdec_write_dos(core, VP9_SEG_MAP_BUFFER, wkaddr + SEG_MAP_OFFSET);
-> +	amvdec_write_dos(core, VP9_PROB_SWAP_BUFFER, wkaddr + PROB_OFFSET);
-> +	amvdec_write_dos(core, VP9_COUNT_SWAP_BUFFER, wkaddr + COUNT_OFFSET);
-> +	amvdec_write_dos(core, LMEM_DUMP_ADR, wkaddr + LMEM_OFFSET);
-> +
-> +	if (codec_hevc_use_mmu(revision, sess->pixfmt_cap, vp9->is_10bit)) {
-> +		amvdec_write_dos(core, HEVC_SAO_MMU_VH0_ADDR,
-> +				 wkaddr + MMU_VBH_OFFSET);
-> +		amvdec_write_dos(core, HEVC_SAO_MMU_VH1_ADDR,
-> +				 wkaddr + MMU_VBH_OFFSET + (MMU_VBH_SIZE / 2));
-> +
-> +		if (revision >= VDEC_REVISION_G12A)
-> +			amvdec_write_dos(core, HEVC_ASSIST_MMU_MAP_ADDR,
-> +					 vp9->common.mmu_map_paddr);
-> +		else
-> +			amvdec_write_dos(core, VP9_MMU_MAP_BUFFER,
-> +					 vp9->common.mmu_map_paddr);
-> +	}
-> +}
-> +
-> +static int codec_vp9_start(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	struct codec_vp9 *vp9;
-> +	u32 val;
-> +	int i;
-> +	int ret;
-> +
-> +	vp9 = kzalloc(sizeof(*vp9), GFP_KERNEL);
-> +	if (!vp9)
-> +		return -ENOMEM;
-> +
-> +	ret = codec_vp9_alloc_workspace(core, vp9);
-> +	if (ret)
-> +		goto free_vp9;
-> +
-> +	codec_vp9_setup_workspace(sess, vp9);
-> +	amvdec_write_dos_bits(core, HEVC_STREAM_CONTROL, BIT(0));
-> +	/* stream_fifo_hole */
-> +	if (core->platform->revision >= VDEC_REVISION_G12A)
-> +		amvdec_write_dos_bits(core, HEVC_STREAM_FIFO_CTL, BIT(29));
-> +
-> +	val = amvdec_read_dos(core, HEVC_PARSER_INT_CONTROL) & 0x7fffffff;
-> +	val |= (3 << 29) | BIT(24) | BIT(22) | BIT(7) | BIT(4) | BIT(0);
-> +	amvdec_write_dos(core, HEVC_PARSER_INT_CONTROL, val);
-> +	amvdec_write_dos_bits(core, HEVC_SHIFT_STATUS, BIT(0));
-> +	amvdec_write_dos(core, HEVC_SHIFT_CONTROL, BIT(10) | BIT(9) |
-> +			 (3 << 6) | BIT(5) | BIT(2) | BIT(1) | BIT(0));
-> +	amvdec_write_dos(core, HEVC_CABAC_CONTROL, BIT(0));
-> +	amvdec_write_dos(core, HEVC_PARSER_CORE_CONTROL, BIT(0));
-> +	amvdec_write_dos(core, HEVC_SHIFT_STARTCODE, 0x00000001);
-> +
-> +	amvdec_write_dos(core, VP9_DEC_STATUS_REG, 0);
-> +
-> +	amvdec_write_dos(core, HEVC_PARSER_CMD_WRITE, BIT(16));
-> +	for (i = 0; i < ARRAY_SIZE(vdec_hevc_parser_cmd); ++i)
-> +		amvdec_write_dos(core, HEVC_PARSER_CMD_WRITE,
-> +				 vdec_hevc_parser_cmd[i]);
-> +
-> +	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_0, PARSER_CMD_SKIP_CFG_0);
-> +	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_1, PARSER_CMD_SKIP_CFG_1);
-> +	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_2, PARSER_CMD_SKIP_CFG_2);
-> +	amvdec_write_dos(core, HEVC_PARSER_IF_CONTROL,
-> +			 BIT(5) | BIT(2) | BIT(0));
-> +
-> +	amvdec_write_dos(core, HEVCD_IPP_TOP_CNTL, BIT(0));
-> +	amvdec_write_dos(core, HEVCD_IPP_TOP_CNTL, BIT(1));
-> +
-> +	amvdec_write_dos(core, VP9_WAIT_FLAG, 1);
-> +
-> +	/* clear mailbox interrupt */
-> +	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_CLR_REG, 1);
-> +	/* enable mailbox interrupt */
-> +	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_MASK, 1);
-> +	/* disable PSCALE for hardware sharing */
-> +	amvdec_write_dos(core, HEVC_PSCALE_CTRL, 0);
-> +	/* Let the uCode do all the parsing */
-> +	amvdec_write_dos(core, NAL_SEARCH_CTL, 0x8);
-> +
-> +	amvdec_write_dos(core, DECODE_STOP_POS, 0);
-> +	amvdec_write_dos(core, VP9_DECODE_MODE, DECODE_MODE_SINGLE);
-> +
-> +	pr_debug("decode_count: %u; decode_size: %u\n",
-> +		 amvdec_read_dos(core, HEVC_DECODE_COUNT),
-> +		 amvdec_read_dos(core, HEVC_DECODE_SIZE));
-> +
-> +	vp9_loop_filter_init(core, vp9);
-> +
-> +	INIT_LIST_HEAD(&vp9->ref_frames_list);
-> +	mutex_init(&vp9->lock);
-> +	memset(&vp9->ref_frame_map, -1, sizeof(vp9->ref_frame_map));
-> +	memset(&vp9->next_ref_frame_map, -1, sizeof(vp9->next_ref_frame_map));
-> +	for (i = 0; i < REFS_PER_FRAME; ++i)
-> +		vp9->frame_refs[i] = NULL;
-> +	sess->priv = vp9;
-> +
-> +	return 0;
-> +
-> +free_vp9:
-> +	kfree(vp9);
-> +	return ret;
-> +}
-> +
-> +static int codec_vp9_stop(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +
-> +	mutex_lock(&vp9->lock);
-> +	if (vp9->workspace_vaddr)
-> +		dma_free_coherent(core->dev, SIZE_WORKSPACE,
-> +				  vp9->workspace_vaddr,
-> +				  vp9->workspace_paddr);
-> +
-> +	codec_hevc_free_fbc_buffers(sess, &vp9->common);
-> +	mutex_unlock(&vp9->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void codec_vp9_set_sao(struct amvdec_session *sess,
-> +			      struct vb2_buffer *vb)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +
-> +	dma_addr_t buf_y_paddr;
-> +	dma_addr_t buf_u_v_paddr;
-> +	u32 val;
-> +
-> +	if (codec_hevc_use_downsample(sess->pixfmt_cap, vp9->is_10bit))
-> +		buf_y_paddr =
-> +			vp9->common.fbc_buffer_paddr[vb->index];
-> +	else
-> +		buf_y_paddr =
-> +		       vb2_dma_contig_plane_dma_addr(vb, 0);
-> +
-> +	if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit)) {
-> +		val = amvdec_read_dos(core, HEVC_SAO_CTRL5) & ~0xff0200;
-> +		amvdec_write_dos(core, HEVC_SAO_CTRL5, val);
-> +		amvdec_write_dos(core, HEVC_CM_BODY_START_ADDR, buf_y_paddr);
-> +	}
-> +
-> +	if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M) {
-> +		buf_y_paddr =
-> +		       vb2_dma_contig_plane_dma_addr(vb, 0);
-> +		buf_u_v_paddr =
-> +		       vb2_dma_contig_plane_dma_addr(vb, 1);
-> +		amvdec_write_dos(core, HEVC_SAO_Y_START_ADDR, buf_y_paddr);
-> +		amvdec_write_dos(core, HEVC_SAO_C_START_ADDR, buf_u_v_paddr);
-> +		amvdec_write_dos(core, HEVC_SAO_Y_WPTR, buf_y_paddr);
-> +		amvdec_write_dos(core, HEVC_SAO_C_WPTR, buf_u_v_paddr);
-> +	}
-> +
-> +	if (codec_hevc_use_mmu(core->platform->revision, sess->pixfmt_cap,
-> +			       vp9->is_10bit)) {
-> +		amvdec_write_dos(core, HEVC_CM_HEADER_START_ADDR,
-> +				 vp9->common.mmu_header_paddr[vb->index]);
-> +		/* use HEVC_CM_HEADER_START_ADDR */
-> +		amvdec_write_dos_bits(core, HEVC_SAO_CTRL5, BIT(10));
-> +	}
-> +
-> +	amvdec_write_dos(core, HEVC_SAO_Y_LENGTH,
-> +			 amvdec_get_output_size(sess));
-> +	amvdec_write_dos(core, HEVC_SAO_C_LENGTH,
-> +			 (amvdec_get_output_size(sess) / 2));
-> +
-> +	if (core->platform->revision >= VDEC_REVISION_G12A) {
-> +		amvdec_clear_dos_bits(core, HEVC_DBLK_CFGB,
-> +				      BIT(4) | BIT(5) | BIT(8) | BIT(9));
-> +		/* enable first, compressed write */
-> +		if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit))
-> +			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(8));
-> +
-> +		/* enable second, uncompressed write */
-> +		if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M)
-> +			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(9));
-> +
-> +		/* dblk pipeline mode=1 for performance */
-> +		if (sess->width >= 1280)
-> +			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(4));
-> +
-> +		pr_debug("HEVC_DBLK_CFGB: %08X\n",
-> +			 amvdec_read_dos(core, HEVC_DBLK_CFGB));
-> +	}
-> +
-> +	val = amvdec_read_dos(core, HEVC_SAO_CTRL1) & ~0x3ff0;
-> +	val |= 0xff0; /* Set endianness for 2-bytes swaps (nv12) */
-> +	if (core->platform->revision < VDEC_REVISION_G12A) {
-> +		val &= ~0x3;
-> +		if (!codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit))
-> +			val |= BIT(0); /* disable cm compression */
-> +		/* TOFIX: Handle Amlogic Framebuffer compression */
-> +	}
-> +
-> +	amvdec_write_dos(core, HEVC_SAO_CTRL1, val);
-> +	pr_debug("HEVC_SAO_CTRL1: %08X\n", val);
-> +
-> +	/* no downscale for NV12 */
-> +	val = amvdec_read_dos(core, HEVC_SAO_CTRL5) & ~0xff0000;
-> +	amvdec_write_dos(core, HEVC_SAO_CTRL5, val);
-> +
-> +	val = amvdec_read_dos(core, HEVCD_IPP_AXIIF_CONFIG) & ~0x30;
-> +	val |= 0xf;
-> +	val &= ~BIT(12); /* NV12 */
-> +	amvdec_write_dos(core, HEVCD_IPP_AXIIF_CONFIG, val);
-> +}
-> +
-> +static dma_addr_t codec_vp9_get_frame_mv_paddr(struct codec_vp9 *vp9,
-> +					       struct vp9_frame *frame)
-> +{
-> +	return vp9->workspace_paddr + MPRED_MV_OFFSET +
-> +	       (frame->index * MPRED_MV_BUF_SIZE);
-> +}
-> +
-> +static void codec_vp9_set_mpred_mv(struct amvdec_core *core,
-> +				   struct codec_vp9 *vp9)
-> +{
-> +	int mpred_mv_rd_end_addr;
-> +	int use_prev_frame_mvs = vp9->prev_frame->width ==
-> +					vp9->cur_frame->width &&
-> +				 vp9->prev_frame->height ==
-> +					vp9->cur_frame->height &&
-> +				 !vp9->prev_frame->intra_only &&
-> +				 vp9->prev_frame->show &&
-> +				 vp9->prev_frame->type != KEY_FRAME;
-> +
-> +	amvdec_write_dos(core, HEVC_MPRED_CTRL3, 0x24122412);
-> +	amvdec_write_dos(core, HEVC_MPRED_ABV_START_ADDR,
-> +			 vp9->workspace_paddr + MPRED_ABV_OFFSET);
-> +
-> +	amvdec_clear_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-> +	if (use_prev_frame_mvs)
-> +		amvdec_write_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-> +
-> +	amvdec_write_dos(core, HEVC_MPRED_MV_WR_START_ADDR,
-> +			 codec_vp9_get_frame_mv_paddr(vp9, vp9->cur_frame));
-> +	amvdec_write_dos(core, HEVC_MPRED_MV_WPTR,
-> +			 codec_vp9_get_frame_mv_paddr(vp9, vp9->cur_frame));
-> +
-> +	amvdec_write_dos(core, HEVC_MPRED_MV_RD_START_ADDR,
-> +			 codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame));
-> +	amvdec_write_dos(core, HEVC_MPRED_MV_RPTR,
-> +			 codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame));
-> +
-> +	mpred_mv_rd_end_addr =
-> +			codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame) +
-> +			(vp9->lcu_total * MV_MEM_UNIT);
-> +	amvdec_write_dos(core, HEVC_MPRED_MV_RD_END_ADDR, mpred_mv_rd_end_addr);
-> +}
-> +
-> +static void codec_vp9_update_next_ref(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	u32 buf_idx = vp9->cur_frame->index;
-> +	int ref_index = 0;
-> +	int refresh_frame_flags;
-> +	int mask;
-> +
-> +	refresh_frame_flags = vp9->cur_frame->type == KEY_FRAME ?
-> +				0xff : param->p.refresh_frame_flags;
-> +
-> +	for (mask = refresh_frame_flags; mask; mask >>= 1) {
-> +		pr_debug("mask=%08X; ref_index=%d\n", mask, ref_index);
-> +		if (mask & 1)
-> +			vp9->next_ref_frame_map[ref_index] = buf_idx;
-> +		else
-> +			vp9->next_ref_frame_map[ref_index] =
-> +				vp9->ref_frame_map[ref_index];
-> +
-> +		++ref_index;
-> +	}
-> +
-> +	for (; ref_index < REF_FRAMES; ++ref_index)
-> +		vp9->next_ref_frame_map[ref_index] =
-> +			vp9->ref_frame_map[ref_index];
-> +}
-> +
-> +static void codec_vp9_save_refs(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int i;
-> +
-> +	for (i = 0; i < REFS_PER_FRAME; ++i) {
-> +		const int ref = (param->p.ref_info >>
-> +				 (((REFS_PER_FRAME - i - 1) * 4) + 1)) & 0x7;
-> +
-> +		if (vp9->ref_frame_map[ref] < 0)
-> +			continue;
-> +
-> +		pr_warn("%s: FIXME, would need to save ref %d\n",
-> +			__func__, vp9->ref_frame_map[ref]);
-> +	}
-> +}
-> +
-> +static void codec_vp9_update_ref(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int ref_index = 0;
-> +	int mask;
-> +	int refresh_frame_flags;
-> +
-> +	if (!vp9->cur_frame)
-> +		return;
-> +
-> +	refresh_frame_flags = vp9->cur_frame->type == KEY_FRAME ?
-> +				0xff : param->p.refresh_frame_flags;
-> +
-> +	for (mask = refresh_frame_flags; mask; mask >>= 1) {
-> +		vp9->ref_frame_map[ref_index] =
-> +			vp9->next_ref_frame_map[ref_index];
-> +		++ref_index;
-> +	}
-> +
-> +	if (param->p.show_existing_frame)
-> +		return;
-> +
-> +	for (; ref_index < REF_FRAMES; ++ref_index)
-> +		vp9->ref_frame_map[ref_index] =
-> +			vp9->next_ref_frame_map[ref_index];
-> +}
-> +
-> +static struct vp9_frame *codec_vp9_get_frame_by_idx(struct codec_vp9 *vp9,
-> +						    int idx)
-> +{
-> +	struct vp9_frame *frame;
-> +
-> +	list_for_each_entry(frame, &vp9->ref_frames_list, list) {
-> +		if (frame->index == idx)
-> +			return frame;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static void codec_vp9_sync_ref(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int i;
-> +
-> +	for (i = 0; i < REFS_PER_FRAME; ++i) {
-> +		const int ref = (param->p.ref_info >>
-> +				 (((REFS_PER_FRAME - i - 1) * 4) + 1)) & 0x7;
-> +		const int idx = vp9->ref_frame_map[ref];
-> +
-> +		vp9->frame_refs[i] = codec_vp9_get_frame_by_idx(vp9, idx);
-> +		if (!vp9->frame_refs[i])
-> +			pr_warn("%s: couldn't find VP9 ref %d\n", __func__,
-> +				idx);
-> +	}
-> +}
-> +
-> +static void codec_vp9_set_refs(struct amvdec_session *sess,
-> +			       struct codec_vp9 *vp9)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	int i;
-> +
-> +	for (i = 0; i < REFS_PER_FRAME; ++i) {
-> +		struct vp9_frame *frame = vp9->frame_refs[i];
-> +		int id_y;
-> +		int id_u_v;
-> +
-> +		if (!frame)
-> +			continue;
-> +
-> +		if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit)) {
-> +			id_y = frame->index;
-> +			id_u_v = id_y;
-> +		} else {
-> +			id_y = frame->index * 2;
-> +			id_u_v = id_y + 1;
-> +		}
-> +
-> +		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR,
-> +				 (id_u_v << 16) | (id_u_v << 8) | id_y);
-> +	}
-> +}
-> +
-> +static void codec_vp9_set_mc(struct amvdec_session *sess,
-> +			     struct codec_vp9 *vp9)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	u32 scale = 0;
-> +	u32 sz;
-> +	int i;
-> +
-> +	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
-> +	codec_vp9_set_refs(sess, vp9);
-> +	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR,
-> +			 (16 << 8) | 1);
-> +	codec_vp9_set_refs(sess, vp9);
-> +
-> +	amvdec_write_dos(core, VP9D_MPP_REFINFO_TBL_ACCCONFIG, BIT(2));
-> +	for (i = 0; i < REFS_PER_FRAME; ++i) {
-> +		if (!vp9->frame_refs[i])
-> +			continue;
-> +
-> +		if (vp9->frame_refs[i]->width != vp9->width ||
-> +		    vp9->frame_refs[i]->height != vp9->height)
-> +			scale = 1;
-> +
-> +		sz = amvdec_am21c_body_size(vp9->frame_refs[i]->width,
-> +					    vp9->frame_refs[i]->height);
-> +
-> +		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-> +				 vp9->frame_refs[i]->width);
-> +		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-> +				 vp9->frame_refs[i]->height);
-> +		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-> +				 (vp9->frame_refs[i]->width << 14) /
-> +				 vp9->width);
-> +		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-> +				 (vp9->frame_refs[i]->height << 14) /
-> +				 vp9->height);
-> +		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA, sz >> 5);
-> +	}
-> +
-> +	amvdec_write_dos(core, VP9D_MPP_REF_SCALE_ENBL, scale);
-> +}
-> +
-> +static struct vp9_frame *codec_vp9_get_new_frame(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	struct vb2_v4l2_buffer *vbuf;
-> +	struct vp9_frame *new_frame;
-> +
-> +	new_frame = kzalloc(sizeof(*new_frame), GFP_KERNEL);
-> +	if (!new_frame)
-> +		return NULL;
-> +
-> +	vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-> +	if (!vbuf) {
-> +		dev_err(sess->core->dev, "No dst buffer available\n");
-> +		kfree(new_frame);
-> +		return NULL;
-> +	}
-> +
-> +	while (codec_vp9_get_frame_by_idx(vp9, vbuf->vb2_buf.index)) {
-> +		struct vb2_v4l2_buffer *old_vbuf = vbuf;
-> +
-> +		vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-> +		v4l2_m2m_buf_queue(sess->m2m_ctx, old_vbuf);
-> +		if (!vbuf) {
-> +			dev_err(sess->core->dev, "No dst buffer available\n");
-> +			kfree(new_frame);
-> +			return NULL;
-> +		}
-> +	}
-> +
-> +	new_frame->vbuf = vbuf;
-> +	new_frame->index = vbuf->vb2_buf.index;
-> +	new_frame->intra_only = param->p.intra_only;
-> +	new_frame->show = param->p.show_frame;
-> +	new_frame->type = param->p.frame_type;
-> +	new_frame->width = vp9->width;
-> +	new_frame->height = vp9->height;
-> +	list_add_tail(&new_frame->list, &vp9->ref_frames_list);
-> +	vp9->frames_num++;
-> +
-> +	return new_frame;
-> +}
-> +
-> +static void codec_vp9_show_existing_frame(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +
-> +	if (!param->p.show_existing_frame)
-> +		return;
-> +
-> +	pr_debug("showing frame %u\n", param->p.frame_to_show_idx);
-> +}
-> +
-> +static void codec_vp9_rm_noshow_frame(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	struct vp9_frame *tmp;
-> +
-> +	list_for_each_entry(tmp, &vp9->ref_frames_list, list) {
-> +		if (tmp->show)
-> +			continue;
-> +
-> +		pr_debug("rm noshow: %u\n", tmp->index);
-> +		v4l2_m2m_buf_queue(sess->m2m_ctx, tmp->vbuf);
-> +		list_del(&tmp->list);
-> +		kfree(tmp);
-> +		vp9->frames_num--;
-> +		return;
-> +	}
-> +}
-> +
-> +static void codec_vp9_process_frame(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int intra_only;
-> +
-> +	if (!param->p.show_frame)
-> +		codec_vp9_rm_noshow_frame(sess);
-> +
-> +	vp9->cur_frame = codec_vp9_get_new_frame(sess);
-> +	if (!vp9->cur_frame)
-> +		return;
-> +
-> +	pr_debug("frame %d: type: %08X; show_exist: %u; show: %u, intra_only: %u\n",
-> +		 vp9->cur_frame->index,
-> +		 param->p.frame_type, param->p.show_existing_frame,
-> +		 param->p.show_frame, param->p.intra_only);
-> +
-> +	if (param->p.frame_type != KEY_FRAME)
-> +		codec_vp9_sync_ref(vp9);
-> +	codec_vp9_update_next_ref(vp9);
-> +	codec_vp9_show_existing_frame(vp9);
-> +
-> +	if (codec_hevc_use_mmu(core->platform->revision, sess->pixfmt_cap,
-> +			       vp9->is_10bit))
-> +		codec_hevc_fill_mmu_map(sess, &vp9->common,
-> +					&vp9->cur_frame->vbuf->vb2_buf);
-> +
-> +	intra_only = param->p.show_frame ? 0 : param->p.intra_only;
-> +
-> +	/* clear mpred (for keyframe only) */
-> +	if (param->p.frame_type != KEY_FRAME && !intra_only) {
-> +		codec_vp9_set_mc(sess, vp9);
-> +		codec_vp9_set_mpred_mv(core, vp9);
-> +	} else {
-> +		amvdec_clear_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-> +	}
-> +
-> +	amvdec_write_dos(core, HEVC_PARSER_PICTURE_SIZE,
-> +			 (vp9->height << 16) | vp9->width);
-> +	codec_vp9_set_sao(sess, &vp9->cur_frame->vbuf->vb2_buf);
-> +
-> +	vp9_loop_filter_frame_init(core, &vp9->seg_4lf,
-> +				   &vp9->lfi, &vp9->lf,
-> +				   vp9->default_filt_lvl);
-> +
-> +	/* ask uCode to start decoding */
-> +	amvdec_write_dos(core, VP9_DEC_STATUS_REG, VP9_10B_DECODE_SLICE);
-> +}
-> +
-> +static void codec_vp9_process_lf(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int i;
-> +
-> +	vp9->lf.mode_ref_delta_enabled = param->p.mode_ref_delta_enabled;
-> +	vp9->lf.sharpness_level = param->p.sharpness_level;
-> +	vp9->default_filt_lvl = param->p.filter_level;
-> +	vp9->seg_4lf.enabled = param->p.seg_enabled;
-> +	vp9->seg_4lf.abs_delta = param->p.seg_abs_delta;
-> +
-> +	for (i = 0; i < 4; i++)
-> +		vp9->lf.ref_deltas[i] = param->p.ref_deltas[i];
-> +
-> +	for (i = 0; i < 2; i++)
-> +		vp9->lf.mode_deltas[i] = param->p.mode_deltas[i];
-> +
-> +	for (i = 0; i < MAX_SEGMENTS; i++)
-> +		vp9->seg_4lf.feature_mask[i] =
-> +			(param->p.seg_lf_info[i] & 0x8000) ?
-> +				(1 << SEG_LVL_ALT_LF) : 0;
-> +
-> +	for (i = 0; i < MAX_SEGMENTS; i++)
-> +		vp9->seg_4lf.feature_data[i][SEG_LVL_ALT_LF] =
-> +			(param->p.seg_lf_info[i] & 0x100) ?
-> +				-(param->p.seg_lf_info[i] & 0x3f)
-> +				: (param->p.seg_lf_info[i] & 0x3f);
-> +}
-> +
-> +static void codec_vp9_resume(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +
-> +	mutex_lock(&vp9->lock);
-> +
-> +	if (codec_hevc_setup_buffers(sess, &vp9->common, vp9->is_10bit)) {
-> +		mutex_unlock(&vp9->lock);
-> +		amvdec_abort(sess);
-> +		return;
-> +	}
-> +
-> +	codec_vp9_setup_workspace(sess, vp9);
-> +	codec_hevc_setup_decode_head(sess, vp9->is_10bit);
-> +	codec_vp9_process_lf(vp9);
-> +	codec_vp9_process_frame(sess);
-> +
-> +	mutex_unlock(&vp9->lock);
-> +}
-> +
-> +/**
-> + * The RPM section within the workspace contains
-> + * many information regarding the parsed bitstream
-> + */
-> +static void codec_vp9_fetch_rpm(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	u16 *rpm_vaddr = vp9->workspace_vaddr + RPM_OFFSET;
-> +	int i, j;
-> +
-> +	for (i = 0; i < RPM_BUF_SIZE; i += 4)
-> +		for (j = 0; j < 4; j++)
-> +			vp9->rpm_param.l.data[i + j] = rpm_vaddr[i + 3 - j];
-> +}
-> +
-> +static int codec_vp9_process_rpm(struct codec_vp9 *vp9)
-> +{
-> +	union rpm_param *param = &vp9->rpm_param;
-> +	int src_changed = 0;
-> +	int is_10bit = 0;
-> +	int pic_width_64 = ALIGN(param->p.width, 64);
-> +	int pic_height_32 = ALIGN(param->p.height, 32);
-> +	int pic_width_lcu  = (pic_width_64 % LCU_SIZE) ?
-> +				pic_width_64 / LCU_SIZE  + 1
-> +				: pic_width_64 / LCU_SIZE;
-> +	int pic_height_lcu = (pic_height_32 % LCU_SIZE) ?
-> +				pic_height_32 / LCU_SIZE + 1
-> +				: pic_height_32 / LCU_SIZE;
-> +	vp9->lcu_total = pic_width_lcu * pic_height_lcu;
-> +
-> +	if (param->p.bit_depth == 10)
-> +		is_10bit = 1;
-> +
-> +	if (vp9->width != param->p.width || vp9->height != param->p.height ||
-> +	    vp9->is_10bit != is_10bit)
-> +		src_changed = 1;
-> +
-> +	vp9->width = param->p.width;
-> +	vp9->height = param->p.height;
-> +	vp9->is_10bit = is_10bit;
-> +
-> +	pr_debug("width: %u; height: %u; is_10bit: %d; src_changed: %d\n",
-> +		 vp9->width, vp9->height, is_10bit, src_changed);
-> +
-> +	return src_changed;
-> +}
-> +
-> +static bool codec_vp9_is_ref(struct codec_vp9 *vp9, struct vp9_frame *frame)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < REF_FRAMES; ++i)
-> +		if (vp9->ref_frame_map[i] == frame->index)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
-> +static void codec_vp9_show_frame(struct amvdec_session *sess)
-> +{
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	struct vp9_frame *tmp, *n;
-> +
-> +	list_for_each_entry_safe(tmp, n, &vp9->ref_frames_list, list) {
-> +		if (!tmp->show || tmp == vp9->cur_frame)
-> +			continue;
-> +
-> +		if (!tmp->done) {
-> +			pr_debug("Doning %u\n", tmp->index);
-> +			amvdec_dst_buf_done(sess, tmp->vbuf, V4L2_FIELD_NONE);
-> +			tmp->done = 1;
-> +			vp9->frames_num--;
-> +		}
-> +
-> +		if (codec_vp9_is_ref(vp9, tmp) || tmp == vp9->prev_frame)
-> +			continue;
-> +
-> +		pr_debug("deleting %d\n", tmp->index);
-> +		list_del(&tmp->list);
-> +		kfree(tmp);
-> +	}
-> +}
-> +
-> +static void vp9_tree_merge_probs(unsigned int *prev_prob,
-> +				 unsigned int *cur_prob,
-> +				 int coef_node_start, int tree_left,
-> +				 int tree_right,
-> +				 int tree_i, int node)
-> +{
-> +	int prob_32, prob_res, prob_shift;
-> +	int pre_prob, new_prob;
-> +	int den, m_count, get_prob, factor;
-> +
-> +	prob_32 = prev_prob[coef_node_start / 4 * 2];
-> +	prob_res = coef_node_start & 3;
-> +	prob_shift = prob_res * 8;
-> +	pre_prob = (prob_32 >> prob_shift) & 0xff;
-> +
-> +	den = tree_left + tree_right;
-> +
-> +	if (den == 0) {
-> +		new_prob = pre_prob;
-> +	} else {
-> +		m_count = den < MODE_MV_COUNT_SAT ? den : MODE_MV_COUNT_SAT;
-> +		get_prob =
-> +			clip_prob(div_r32(((int64_t)tree_left * 256 +
-> +					   (den >> 1)),
-> +					  den));
-> +
-> +		/* weighted_prob */
-> +		factor = count_to_update_factor[m_count];
-> +		new_prob = ROUND_POWER_OF_TWO(pre_prob * (256 - factor) +
-> +					      get_prob * factor, 8);
-> +	}
-> +
-> +	cur_prob[coef_node_start / 4 * 2] =
-> +		(cur_prob[coef_node_start / 4 * 2] & (~(0xff << prob_shift))) |
-> +		(new_prob << prob_shift);
-> +}
-> +
-> +static void adapt_coef_probs_cxt(unsigned int *prev_prob,
-> +				 unsigned int *cur_prob,
-> +				 unsigned int *count,
-> +				 int update_factor,
-> +				 int cxt_num,
-> +				 int coef_cxt_start,
-> +				 int coef_count_cxt_start)
-> +{
-> +	int prob_32, prob_res, prob_shift;
-> +	int pre_prob, new_prob;
-> +	int num, den, m_count, get_prob, factor;
-> +	int node, coef_node_start;
-> +	int count_sat = 24;
-> +	int cxt;
-> +
-> +	for (cxt = 0; cxt < cxt_num; cxt++) {
-> +		const int n0 = count[coef_count_cxt_start];
-> +		const int n1 = count[coef_count_cxt_start + 1];
-> +		const int n2 = count[coef_count_cxt_start + 2];
-> +		const int neob = count[coef_count_cxt_start + 3];
-> +		const int nneob = count[coef_count_cxt_start + 4];
-> +		const unsigned int branch_ct[3][2] = {
-> +			{ neob, nneob },
-> +			{ n0, n1 + n2 },
-> +			{ n1, n2 }
-> +		};
-> +
-> +		coef_node_start = coef_cxt_start;
-> +		for (node = 0 ; node < 3 ; node++) {
-> +			prob_32 = prev_prob[coef_node_start / 4 * 2];
-> +			prob_res = coef_node_start & 3;
-> +			prob_shift = prob_res * 8;
-> +			pre_prob = (prob_32 >> prob_shift) & 0xff;
-> +
-> +			/* get binary prob */
-> +			num = branch_ct[node][0];
-> +			den = branch_ct[node][0] + branch_ct[node][1];
-> +			m_count = den < count_sat ? den : count_sat;
-> +
-> +			get_prob = (den == 0) ?
-> +					128u :
-> +					clip_prob(div_r32(((int64_t)num * 256 +
-> +							  (den >> 1)), den));
-> +
-> +			factor = update_factor * m_count / count_sat;
-> +			new_prob =
-> +				ROUND_POWER_OF_TWO(pre_prob * (256 - factor) +
-> +						   get_prob * factor, 8);
-> +
-> +			cur_prob[coef_node_start / 4 * 2] =
-> +				(cur_prob[coef_node_start / 4 * 2] &
-> +				 (~(0xff << prob_shift))) |
-> +				(new_prob << prob_shift);
-> +
-> +			coef_node_start += 1;
-> +		}
-> +
-> +		coef_cxt_start = coef_cxt_start + 3;
-> +		coef_count_cxt_start = coef_count_cxt_start + 5;
-> +	}
-> +}
-> +
-> +static void adapt_coef_probs(int prev_kf, int cur_kf, int pre_fc,
-> +			     unsigned int *prev_prob, unsigned int *cur_prob,
-> +			     unsigned int *count)
-> +{
-> +	int tx_size, coef_tx_size_start, coef_count_tx_size_start;
-> +	int plane, coef_plane_start, coef_count_plane_start;
-> +	int type, coef_type_start, coef_count_type_start;
-> +	int band, coef_band_start, coef_count_band_start;
-> +	int cxt_num;
-> +	int coef_cxt_start, coef_count_cxt_start;
-> +	int node, coef_node_start, coef_count_node_start;
-> +
-> +	int tree_i, tree_left, tree_right;
-> +	int mvd_i;
-> +
-> +	int update_factor = cur_kf ? 112 : (prev_kf ? 128 : 112);
-> +
-> +	int prob_32;
-> +	int prob_res;
-> +	int prob_shift;
-> +	int pre_prob;
-> +
-> +	int den;
-> +	int get_prob;
-> +	int m_count;
-> +	int factor;
-> +
-> +	int new_prob;
-> +
-> +	for (tx_size = 0 ; tx_size < 4 ; tx_size++) {
-> +		coef_tx_size_start = VP9_COEF_START +
-> +				tx_size * 4 * VP9_COEF_SIZE_ONE_SET;
-> +		coef_count_tx_size_start = VP9_COEF_COUNT_START +
-> +				tx_size * 4 * VP9_COEF_COUNT_SIZE_ONE_SET;
-> +		coef_plane_start = coef_tx_size_start;
-> +		coef_count_plane_start = coef_count_tx_size_start;
-> +
-> +		for (plane = 0 ; plane < 2 ; plane++) {
-> +			coef_type_start = coef_plane_start;
-> +			coef_count_type_start = coef_count_plane_start;
-> +
-> +			for (type = 0 ; type < 2 ; type++) {
-> +				coef_band_start = coef_type_start;
-> +				coef_count_band_start = coef_count_type_start;
-> +
-> +				for (band = 0 ; band < 6 ; band++) {
-> +					if (band == 0)
-> +						cxt_num = 3;
-> +					else
-> +						cxt_num = 6;
-> +					coef_cxt_start = coef_band_start;
-> +					coef_count_cxt_start =
-> +						coef_count_band_start;
-> +
-> +					adapt_coef_probs_cxt(prev_prob,
-> +							     cur_prob,
-> +							     count,
-> +							     update_factor,
-> +							     cxt_num,
-> +							     coef_cxt_start,
-> +							coef_count_cxt_start);
-> +
-> +					if (band == 0) {
-> +						coef_band_start += 10;
-> +						coef_count_band_start += 15;
-> +					} else {
-> +						coef_band_start += 18;
-> +						coef_count_band_start += 30;
-> +					}
-> +				}
-> +				coef_type_start += VP9_COEF_SIZE_ONE_SET;
-> +				coef_count_type_start +=
-> +					VP9_COEF_COUNT_SIZE_ONE_SET;
-> +			}
-> +
-> +			coef_plane_start += 2 * VP9_COEF_SIZE_ONE_SET;
-> +			coef_count_plane_start +=
-> +				2 * VP9_COEF_COUNT_SIZE_ONE_SET;
-> +		}
-> +	}
-> +
-> +	if (cur_kf == 0) {
-> +		/* mode_mv_merge_probs - merge_intra_inter_prob */
-> +		for (coef_count_node_start = VP9_INTRA_INTER_COUNT_START;
-> +		     coef_count_node_start < (VP9_MV_CLASS0_HP_1_COUNT_START +
-> +					      VP9_MV_CLASS0_HP_1_COUNT_SIZE);
-> +		     coef_count_node_start += 2) {
-> +			if (coef_count_node_start ==
-> +					VP9_INTRA_INTER_COUNT_START)
-> +				coef_node_start = VP9_INTRA_INTER_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_COMP_INTER_COUNT_START)
-> +				coef_node_start = VP9_COMP_INTER_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_TX_MODE_COUNT_START)
-> +				coef_node_start = VP9_TX_MODE_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_SKIP_COUNT_START)
-> +				coef_node_start = VP9_SKIP_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_MV_SIGN_0_COUNT_START)
-> +				coef_node_start = VP9_MV_SIGN_0_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_MV_SIGN_1_COUNT_START)
-> +				coef_node_start = VP9_MV_SIGN_1_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_MV_BITS_0_COUNT_START)
-> +				coef_node_start = VP9_MV_BITS_0_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_MV_BITS_1_COUNT_START)
-> +				coef_node_start = VP9_MV_BITS_1_START;
-> +			else if (coef_count_node_start ==
-> +					VP9_MV_CLASS0_HP_0_COUNT_START)
-> +				coef_node_start = VP9_MV_CLASS0_HP_0_START;
-> +
-> +			den = count[coef_count_node_start] +
-> +			      count[coef_count_node_start + 1];
-> +
-> +			prob_32 = prev_prob[coef_node_start / 4 * 2];
-> +			prob_res = coef_node_start & 3;
-> +			prob_shift = prob_res * 8;
-> +			pre_prob = (prob_32 >> prob_shift) & 0xff;
-> +
-> +			if (den == 0) {
-> +				new_prob = pre_prob;
-> +			} else {
-> +				m_count = den < MODE_MV_COUNT_SAT ?
-> +						den : MODE_MV_COUNT_SAT;
-> +				get_prob =
-> +				clip_prob(div_r32(((int64_t)
-> +					count[coef_count_node_start] * 256 +
-> +					(den >> 1)),
-> +					den));
-> +
-> +				/* weighted prob */
-> +				factor = count_to_update_factor[m_count];
-> +				new_prob =
-> +					ROUND_POWER_OF_TWO(pre_prob *
-> +							   (256 - factor) +
-> +							   get_prob * factor,
-> +							   8);
-> +			}
-> +
-> +			cur_prob[coef_node_start / 4 * 2] =
-> +				(cur_prob[coef_node_start / 4 * 2] &
-> +				 (~(0xff << prob_shift))) |
-> +				(new_prob << prob_shift);
-> +
-> +			coef_node_start = coef_node_start + 1;
-> +		}
-> +
-> +		coef_node_start = VP9_INTER_MODE_START;
-> +		coef_count_node_start = VP9_INTER_MODE_COUNT_START;
-> +		for (tree_i = 0 ; tree_i < 7 ; tree_i++) {
-> +			for (node = 0 ; node < 3 ; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 2:
-> +					tree_left = count[start + 1];
-> +					tree_right = count[start + 3];
-> +					break;
-> +				case 1:
-> +					tree_left = count[start + 0];
-> +					tree_right = count[start + 1] +
-> +						     count[start + 3];
-> +					break;
-> +				default:
-> +					tree_left = count[start + 2];
-> +					tree_right = count[start + 0] +
-> +						     count[start + 1] +
-> +						     count[start + 3];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +
-> +			coef_count_node_start = coef_count_node_start + 4;
-> +		}
-> +
-> +		coef_node_start = VP9_IF_Y_MODE_START;
-> +		coef_count_node_start = VP9_IF_Y_MODE_COUNT_START;
-> +		for (tree_i = 0 ; tree_i < 14 ; tree_i++) {
-> +			for (node = 0 ; node < 9 ; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 8:
-> +					tree_left =
-> +						count[start + D153_PRED];
-> +					tree_right =
-> +						count[start + D207_PRED];
-> +					break;
-> +				case 7:
-> +					tree_left =
-> +						count[start + D63_PRED];
-> +					tree_right =
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED];
-> +					break;
-> +				case 6:
-> +					tree_left =
-> +						count[start + D45_PRED];
-> +					tree_right =
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED] +
-> +						count[start + D63_PRED];
-> +					break;
-> +				case 5:
-> +					tree_left =
-> +						count[start + D135_PRED];
-> +					tree_right =
-> +						count[start + D117_PRED];
-> +					break;
-> +				case 4:
-> +					tree_left =
-> +						count[start + H_PRED];
-> +					tree_right =
-> +						count[start + D117_PRED] +
-> +						count[start + D135_PRED];
-> +					break;
-> +				case 3:
-> +					tree_left =
-> +						count[start + H_PRED] +
-> +						count[start + D117_PRED] +
-> +						count[start + D135_PRED];
-> +					tree_right =
-> +						count[start + D45_PRED] +
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED] +
-> +						count[start + D63_PRED];
-> +					break;
-> +				case 2:
-> +					tree_left =
-> +						count[start + V_PRED];
-> +					tree_right =
-> +						count[start + H_PRED] +
-> +						count[start + D117_PRED] +
-> +						count[start + D135_PRED] +
-> +						count[start + D45_PRED] +
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED] +
-> +						count[start + D63_PRED];
-> +					break;
-> +				case 1:
-> +					tree_left =
-> +						count[start + TM_PRED];
-> +					tree_right =
-> +						count[start + V_PRED] +
-> +						count[start + H_PRED] +
-> +						count[start + D117_PRED] +
-> +						count[start + D135_PRED] +
-> +						count[start + D45_PRED] +
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED] +
-> +						count[start + D63_PRED];
-> +					break;
-> +				default:
-> +					tree_left =
-> +						count[start + DC_PRED];
-> +					tree_right =
-> +						count[start + TM_PRED] +
-> +						count[start + V_PRED] +
-> +						count[start + H_PRED] +
-> +						count[start + D117_PRED] +
-> +						count[start + D135_PRED] +
-> +						count[start + D45_PRED] +
-> +						count[start + D207_PRED] +
-> +						count[start + D153_PRED] +
-> +						count[start + D63_PRED];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +			coef_count_node_start = coef_count_node_start + 10;
-> +		}
-> +
-> +		coef_node_start = VP9_PARTITION_P_START;
-> +		coef_count_node_start = VP9_PARTITION_P_COUNT_START;
-> +		for (tree_i = 0 ; tree_i < 16 ; tree_i++) {
-> +			for (node = 0 ; node < 3 ; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 2:
-> +					tree_left = count[start + 2];
-> +					tree_right = count[start + 3];
-> +					break;
-> +				case 1:
-> +					tree_left = count[start + 1];
-> +					tree_right = count[start + 2] +
-> +						     count[start + 3];
-> +					break;
-> +				default:
-> +					tree_left = count[start + 0];
-> +					tree_right = count[start + 1] +
-> +						     count[start + 2] +
-> +						     count[start + 3];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +
-> +			coef_count_node_start = coef_count_node_start + 4;
-> +		}
-> +
-> +		coef_node_start = VP9_INTERP_START;
-> +		coef_count_node_start = VP9_INTERP_COUNT_START;
-> +		for (tree_i = 0 ; tree_i < 4 ; tree_i++) {
-> +			for (node = 0 ; node < 2 ; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 1:
-> +					tree_left = count[start + 1];
-> +					tree_right = count[start + 2];
-> +					break;
-> +				default:
-> +					tree_left = count[start + 0];
-> +					tree_right = count[start + 1] +
-> +						     count[start + 2];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +			coef_count_node_start = coef_count_node_start + 3;
-> +		}
-> +
-> +		coef_node_start = VP9_MV_JOINTS_START;
-> +		coef_count_node_start = VP9_MV_JOINTS_COUNT_START;
-> +		for (tree_i = 0 ; tree_i < 1 ; tree_i++) {
-> +			for (node = 0 ; node < 3 ; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 2:
-> +					tree_left = count[start + 2];
-> +					tree_right = count[start + 3];
-> +					break;
-> +				case 1:
-> +					tree_left = count[start + 1];
-> +					tree_right = count[start + 2] +
-> +						     count[start + 3];
-> +					break;
-> +				default:
-> +					tree_left = count[start + 0];
-> +					tree_right = count[start + 1] +
-> +						     count[start + 2] +
-> +						     count[start + 3];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +			coef_count_node_start = coef_count_node_start + 4;
-> +		}
-> +
-> +		for (mvd_i = 0 ; mvd_i < 2 ; mvd_i++) {
-> +			coef_node_start = mvd_i ? VP9_MV_CLASSES_1_START :
-> +						  VP9_MV_CLASSES_0_START;
-> +			coef_count_node_start = mvd_i ?
-> +					VP9_MV_CLASSES_1_COUNT_START :
-> +					VP9_MV_CLASSES_0_COUNT_START;
-> +			tree_i = 0;
-> +			for (node = 0; node < 10; node++) {
-> +				unsigned int start = coef_count_node_start;
-> +
-> +				switch (node) {
-> +				case 9:
-> +					tree_left = count[start + 9];
-> +					tree_right = count[start + 10];
-> +					break;
-> +				case 8:
-> +					tree_left = count[start + 7];
-> +					tree_right = count[start + 8];
-> +					break;
-> +				case 7:
-> +					tree_left = count[start + 7] +
-> +						     count[start + 8];
-> +					tree_right = count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				case 6:
-> +					tree_left = count[start + 6];
-> +					tree_right = count[start + 7] +
-> +						     count[start + 8] +
-> +						     count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				case 5:
-> +					tree_left = count[start + 4];
-> +					tree_right = count[start + 5];
-> +					break;
-> +				case 4:
-> +					tree_left = count[start + 4] +
-> +						    count[start + 5];
-> +					tree_right = count[start + 6] +
-> +						     count[start + 7] +
-> +						     count[start + 8] +
-> +						     count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				case 3:
-> +					tree_left = count[start + 2];
-> +					tree_right = count[start + 3];
-> +					break;
-> +				case 2:
-> +					tree_left = count[start + 2] +
-> +						    count[start + 3];
-> +					tree_right = count[start + 4] +
-> +						     count[start + 5] +
-> +						     count[start + 6] +
-> +						     count[start + 7] +
-> +						     count[start + 8] +
-> +						     count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				case 1:
-> +					tree_left = count[start + 1];
-> +					tree_right = count[start + 2] +
-> +						     count[start + 3] +
-> +						     count[start + 4] +
-> +						     count[start + 5] +
-> +						     count[start + 6] +
-> +						     count[start + 7] +
-> +						     count[start + 8] +
-> +						     count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				default:
-> +					tree_left = count[start + 0];
-> +					tree_right = count[start + 1] +
-> +						     count[start + 2] +
-> +						     count[start + 3] +
-> +						     count[start + 4] +
-> +						     count[start + 5] +
-> +						     count[start + 6] +
-> +						     count[start + 7] +
-> +						     count[start + 8] +
-> +						     count[start + 9] +
-> +						     count[start + 10];
-> +					break;
-> +				}
-> +
-> +				vp9_tree_merge_probs(prev_prob, cur_prob,
-> +						     coef_node_start,
-> +						     tree_left, tree_right,
-> +						     tree_i, node);
-> +
-> +				coef_node_start = coef_node_start + 1;
-> +			}
-> +
-> +			coef_node_start = mvd_i ? VP9_MV_CLASS0_1_START :
-> +						  VP9_MV_CLASS0_0_START;
-> +			coef_count_node_start =	mvd_i ?
-> +						VP9_MV_CLASS0_1_COUNT_START :
-> +						VP9_MV_CLASS0_0_COUNT_START;
-> +			tree_i = 0;
-> +			node = 0;
-> +			tree_left = count[coef_count_node_start + 0];
-> +			tree_right = count[coef_count_node_start + 1];
-> +
-> +			vp9_tree_merge_probs(prev_prob, cur_prob,
-> +					     coef_node_start,
-> +					     tree_left, tree_right,
-> +					     tree_i, node);
-> +			coef_node_start = mvd_i ? VP9_MV_CLASS0_FP_1_START :
-> +						  VP9_MV_CLASS0_FP_0_START;
-> +			coef_count_node_start =	mvd_i ?
-> +					VP9_MV_CLASS0_FP_1_COUNT_START :
-> +					VP9_MV_CLASS0_FP_0_COUNT_START;
-> +
-> +			for (tree_i = 0; tree_i < 3; tree_i++) {
-> +				for (node = 0; node < 3; node++) {
-> +					unsigned int start =
-> +						coef_count_node_start;
-> +					switch (node) {
-> +					case 2:
-> +						tree_left = count[start + 2];
-> +						tree_right = count[start + 3];
-> +						break;
-> +					case 1:
-> +						tree_left = count[start + 1];
-> +						tree_right = count[start + 2] +
-> +							     count[start + 3];
-> +						break;
-> +					default:
-> +						tree_left = count[start + 0];
-> +						tree_right = count[start + 1] +
-> +							     count[start + 2] +
-> +							     count[start + 3];
-> +						break;
-> +					}
-> +
-> +					vp9_tree_merge_probs(prev_prob,
-> +							     cur_prob,
-> +							     coef_node_start,
-> +							     tree_left,
-> +							     tree_right,
-> +							     tree_i, node);
-> +
-> +					coef_node_start = coef_node_start + 1;
-> +				}
-> +				coef_count_node_start =
-> +					coef_count_node_start + 4;
-> +			}
-> +		}
-> +	}
-> +}
-> +
-> +static irqreturn_t codec_vp9_threaded_isr(struct amvdec_session *sess)
-> +{
-> +	struct amvdec_core *core = sess->core;
-> +	struct codec_vp9 *vp9 = sess->priv;
-> +	u32 dec_status = amvdec_read_dos(core, VP9_DEC_STATUS_REG);
-> +	u32 prob_status = amvdec_read_dos(core, VP9_ADAPT_PROB_REG);
-> +	int i;
-> +
-> +	if (!vp9)
-> +		return IRQ_HANDLED;
-> +
-> +	mutex_lock(&vp9->lock);
-> +	if (dec_status != VP9_HEAD_PARSER_DONE) {
-> +		dev_err(core->dev_dec, "Unrecognized dec_status: %08X\n",
-> +			dec_status);
-> +		amvdec_abort(sess);
-> +		goto unlock;
-> +	}
-> +
-> +	pr_debug("ISR: %08X;%08X\n", dec_status, prob_status);
-> +	sess->keyframe_found = 1;
-> +
-> +	if ((prob_status & 0xff) == 0xfd && vp9->cur_frame) {
-> +		/* VP9_REQ_ADAPT_PROB */
-> +		u8 *prev_prob_b = ((u8 *)vp9->workspace_vaddr +
-> +					 PROB_OFFSET) +
-> +					((prob_status >> 8) * 0x1000);
-> +		u8 *cur_prob_b = ((u8 *)vp9->workspace_vaddr +
-> +					 PROB_OFFSET) + 0x4000;
-> +		u8 *count_b = (u8 *)vp9->workspace_vaddr +
-> +				   COUNT_OFFSET;
-> +		int last_frame_type = vp9->prev_frame ?
-> +						vp9->prev_frame->type :
-> +						KEY_FRAME;
-> +
-> +		adapt_coef_probs(last_frame_type == KEY_FRAME,
-> +				 vp9->cur_frame->type == KEY_FRAME ? 1 : 0,
-> +				 prob_status >> 8,
-> +				 (unsigned int *)prev_prob_b,
-> +				 (unsigned int *)cur_prob_b,
-> +				 (unsigned int *)count_b);
-> +
-> +		memcpy(prev_prob_b, cur_prob_b, ADAPT_PROB_SIZE);
-> +		amvdec_write_dos(core, VP9_ADAPT_PROB_REG, 0);
-> +	}
-> +
-> +	/* Invalidate first 3 refs */
-> +	for (i = 0; i < REFS_PER_FRAME ; ++i)
-> +		vp9->frame_refs[i] = NULL;
-> +
-> +	vp9->prev_frame = vp9->cur_frame;
-> +	codec_vp9_update_ref(vp9);
-> +
-> +	codec_vp9_fetch_rpm(sess);
-> +	if (codec_vp9_process_rpm(vp9)) {
-> +		amvdec_src_change(sess, vp9->width, vp9->height, 16);
-> +
-> +		/* No frame is actually processed */
-> +		vp9->cur_frame = NULL;
-> +
-> +		/* Show the remaining frame */
-> +		codec_vp9_show_frame(sess);
-> +
-> +		/* FIXME: Save refs for resized frame */
-> +		if (vp9->frames_num)
-> +			codec_vp9_save_refs(vp9);
-> +
-> +		goto unlock;
-> +	}
-> +
-> +	codec_vp9_process_lf(vp9);
-> +	codec_vp9_process_frame(sess);
-> +	codec_vp9_show_frame(sess);
-> +
-> +unlock:
-> +	mutex_unlock(&vp9->lock);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t codec_vp9_isr(struct amvdec_session *sess)
-> +{
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +struct amvdec_codec_ops codec_vp9_ops = {
-> +	.start = codec_vp9_start,
-> +	.stop = codec_vp9_stop,
-> +	.isr = codec_vp9_isr,
-> +	.threaded_isr = codec_vp9_threaded_isr,
-> +	.num_pending_bufs = codec_vp9_num_pending_bufs,
-> +	.drain = codec_vp9_flush_output,
-> +	.resume = codec_vp9_resume,
-> +};
-> diff --git a/drivers/staging/media/meson/vdec/codec_vp9.h b/drivers/staging/media/meson/vdec/codec_vp9.h
-> new file mode 100644
-> index 000000000000..62db65a2b939
-> --- /dev/null
-> +++ b/drivers/staging/media/meson/vdec/codec_vp9.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright (C) 2018 Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-> + */
-> +
-> +#ifndef __MESON_VDEC_CODEC_VP9_H_
-> +#define __MESON_VDEC_CODEC_VP9_H_
-> +
-> +#include "vdec.h"
-> +
-> +extern struct amvdec_codec_ops codec_vp9_ops;
-> +
-> +#endif
-> diff --git a/drivers/staging/media/meson/vdec/hevc_regs.h b/drivers/staging/media/meson/vdec/hevc_regs.h
-> index 55c1a80b955a..0392f41a1eed 100644
-> --- a/drivers/staging/media/meson/vdec/hevc_regs.h
-> +++ b/drivers/staging/media/meson/vdec/hevc_regs.h
-> @@ -122,6 +122,8 @@
->  #define HEVC_MPRED_L0_REF00_POC 0xc880
->  #define HEVC_MPRED_L1_REF00_POC 0xc8c0
->  
-> +#define HEVC_MPRED_CTRL4 0xc930
-> +
->  #define HEVC_MPRED_CUR_POC 0xc980
->  #define HEVC_MPRED_COL_POC 0xc984
->  #define HEVC_MPRED_MV_RD_END_ADDR 0xc988
-> @@ -140,6 +142,10 @@
->  #define HEVCD_IPP_LINEBUFF_BASE 0xd024
->  #define HEVCD_IPP_AXIIF_CONFIG 0xd02c
->  
-> +#define VP9D_MPP_REF_SCALE_ENBL		0xd104
-> +#define VP9D_MPP_REFINFO_TBL_ACCCONFIG	0xd108
-> +#define VP9D_MPP_REFINFO_DATA		0xd10c
-> +
->  #define HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR 0xd180
->  #define HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR 0xd184
->  #define HEVCD_MPP_ANC2AXI_TBL_DATA 0xd190
-> @@ -164,6 +170,7 @@
->  #define HEVC_DBLK_CFG9 0xd424
->  #define HEVC_DBLK_CFGA 0xd428
->  #define HEVC_DBLK_STS0 0xd42c
-> +#define HEVC_DBLK_CFGB 0xd42c
->  #define HEVC_DBLK_STS1 0xd430
->  #define HEVC_DBLK_CFGE 0xd438
->  
-> diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
-> index 5514d2d259a4..1e531a335c50 100644
-> --- a/drivers/staging/media/meson/vdec/vdec.c
-> +++ b/drivers/staging/media/meson/vdec/vdec.c
-> @@ -395,6 +395,7 @@ static void vdec_reset_bufs_recycle(struct amvdec_session *sess)
->  static void vdec_stop_streaming(struct vb2_queue *q)
->  {
->  	struct amvdec_session *sess = vb2_get_drv_priv(q);
-> +	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
->  	struct amvdec_core *core = sess->core;
->  	struct vb2_v4l2_buffer *buf;
->  
-> @@ -423,6 +424,10 @@ static void vdec_stop_streaming(struct vb2_queue *q)
->  
->  		sess->streamon_out = 0;
->  	} else {
-> +		/* Drain remaining refs if was still running */
-> +		if (sess->status >= STATUS_RUNNING && codec_ops->drain)
-> +			codec_ops->drain(sess);
-> +
->  		while ((buf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx)))
->  			v4l2_m2m_buf_done(buf, VB2_BUF_STATE_ERROR);
->  
-> diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> index 818064b6b4d0..a4f62b892188 100644
-> --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-> +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> @@ -299,6 +299,10 @@ static void dst_buf_done(struct amvdec_session *sess,
->  			sess->sequence_cap - 1);
->  		v4l2_event_queue_fh(&sess->fh, &ev);
->  		vbuf->flags |= V4L2_BUF_FLAG_LAST;
-> +	} else if (sess->status == STATUS_NEEDS_RESUME) {
-> +		/* Mark LAST for drained show frames during a source change */
-> +		vbuf->flags |= V4L2_BUF_FLAG_LAST;
-> +		sess->sequence_cap = 0;
->  	} else if (sess->should_stop)
->  		dev_dbg(dev, "should_stop, %u bufs remain\n",
->  			atomic_read(&sess->esparser_queued_bufs));
-> diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
-> index e9356a46828f..72a833b1cebd 100644
-> --- a/drivers/staging/media/meson/vdec/vdec_platform.c
-> +++ b/drivers/staging/media/meson/vdec/vdec_platform.c
-> @@ -8,8 +8,10 @@
->  #include "vdec.h"
->  
->  #include "vdec_1.h"
-> +#include "vdec_hevc.h"
->  #include "codec_mpeg12.h"
->  #include "codec_h264.h"
-> +#include "codec_vp9.h"
->  
->  static const struct amvdec_format vdec_formats_gxbb[] = {
->  	{
-> @@ -51,6 +53,18 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
->  
->  static const struct amvdec_format vdec_formats_gxl[] = {
->  	{
-> +		.pixfmt = V4L2_PIX_FMT_VP9,
-> +		.min_buffers = 16,
-> +		.max_buffers = 24,
-> +		.max_width = 3840,
-> +		.max_height = 2160,
-> +		.vdec_ops = &vdec_hevc_ops,
-> +		.codec_ops = &codec_vp9_ops,
-> +		.firmware_path = "meson/vdec/gxl_vp9.bin",
+Hi all,
 
-Is there a pull request pending for this firmware ? I could not test as
-this firmware was missing. Note that it could be nice to remove the
-format from the enumeration in that case, as it's very confusing
-initially.
+Please do not add any v5.7 material to your linux-next included
+branches until after v5.6-rc1 has been released.
 
-> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt = V4L2_PIX_FMT_H264,
->  		.min_buffers = 2,
->  		.max_buffers = 24,
-> @@ -127,6 +141,18 @@ static const struct amvdec_format vdec_formats_gxm[] = {
->  
->  static const struct amvdec_format vdec_formats_g12a[] = {
->  	{
-> +		.pixfmt = V4L2_PIX_FMT_VP9,
-> +		.min_buffers = 16,
-> +		.max_buffers = 24,
-> +		.max_width = 3840,
-> +		.max_height = 2160,
-> +		.vdec_ops = &vdec_hevc_ops,
-> +		.codec_ops = &codec_vp9_ops,
-> +		.firmware_path = "meson/vdec/g12a_vp9.bin",
-> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt = V4L2_PIX_FMT_H264,
->  		.min_buffers = 2,
->  		.max_buffers = 24,
-> @@ -165,6 +191,18 @@ static const struct amvdec_format vdec_formats_g12a[] = {
->  
->  static const struct amvdec_format vdec_formats_sm1[] = {
->  	{
-> +		.pixfmt = V4L2_PIX_FMT_VP9,
-> +		.min_buffers = 16,
-> +		.max_buffers = 24,
-> +		.max_width = 3840,
-> +		.max_height = 2160,
-> +		.vdec_ops = &vdec_hevc_ops,
-> +		.codec_ops = &codec_vp9_ops,
-> +		.firmware_path = "meson/vdec/g12a_vp9.bin",
-> +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-> +		.flags = V4L2_FMT_FLAG_COMPRESSED |
-> +			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-> +	}, {
->  		.pixfmt = V4L2_PIX_FMT_H264,
->  		.min_buffers = 2,
->  		.max_buffers = 24,
+News: I have added an htmldocs build to the end of my day.  It seems to
+be building at the moment, but has many warnings.
 
+Changes since 20200131:
+
+The block tree gained a build failure so I used the version from
+next-20200131.
+
+Non-merge commits (relative to Linus' tree): 2676
+ 2518 files changed, 108142 insertions(+), 39862 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig and htmldocs. And finally, a simple boot test of
+the powerpc pseries_le_defconfig kernel in qemu (with and without kvm
+enabled).
+
+Below is a summary of the state of the merge.
+
+I am currently merging 315 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (46d6b7becb1d Merge git://git.kernel.org/pub/scm/linu=
+x/kernel/git/davem/sparc)
+Merging fixes/master (d21718ad2f81 evh_bytechan: fix out of bounds accesses)
+Merging kbuild-current/fixes (94f2630b1897 Merge tag '5.6-rc-small-smb3-fix=
+-for-stable' of git://git.samba.org/sfrench/cifs-2.6)
+Merging arc-current/for-curr (f45ba2bd6da0 ARCv2: fpu: preserve userspace f=
+pu state)
+Merging arm-current/fixes (6849b5eba196 ARM: 8955/1: virt: Relax arch timer=
+ version check during early boot)
+Merging arm-soc-fixes/arm/fixes (6716cb162deb Merge tag 'omap-for-fixes-whe=
+never-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux=
+-omap into arm/fixes)
+Merging arm64-fixes/for-next/fixes (aa638cfe3e73 arm64: cpu_errata: Add His=
+ilicon TSV110 to spectre-v2 safe list)
+Merging m68k-current/for-linus (6aabc1facdb2 m68k: Implement copy_thread_tl=
+s())
+Merging powerpc-fixes/fixes (5d2e5dd5849b powerpc/mm/hash: Fix sharing cont=
+ext ids between kernel & userspace)
+Merging s390-fixes/fixes (def9d2780727 Linux 5.5-rc7)
+Merging sparc/master (11648b8339f8 sparc64: fix adjtimex regression)
+Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
+Merging net/master (dff6bc1bfd46 MAINTAINERS: correct entries for ISDN/mISD=
+N section)
+Merging bpf/master (2577e373bbc0 runqslower: Fix Makefile)
+Merging ipsec/master (72d62c4e422e net: drop_monitor: Use kstrdup)
+Merging netfilter/master (78e06cf43093 netfilter: nf_flowtable: fix documen=
+tation)
+Merging ipvs/master (c24b75e0f923 ipvs: move old_secure_tcp into struct net=
+ns_ipvs)
+Merging wireless-drivers/master (1754c4f60aaf libertas: make lbs_ibss_join_=
+existing() return error code on rates overflow)
+Merging mac80211/master (8b792f84c637 Merge branch 'mlxsw-Various-fixes')
+Merging rdma-fixes/for-rc (9554de394b7e i40iw: Remove setting of VMA privat=
+e data and use rdma_user_mmap_io)
+Merging sound-current/for-linus (112e3f5ac505 ALSA: hdsp: Make the firmware=
+ loading ioctl a bit more readable)
+Merging sound-asoc-fixes/for-linus (ab8ccdd6018b Merge branch 'asoc-5.6' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (def9d2780727 Linux 5.5-rc7)
+Merging regulator-fixes/for-linus (d670b40cfde8 Merge branch 'regulator-5.6=
+' into regulator-linus)
+Merging spi-fixes/for-linus (7265e8fc5108 Merge branch 'spi-5.5' into spi-l=
+inus)
+Merging pci-current/for-linus (5e89cd303e3a PCI: Mark AMD Navi14 GPU rev 0x=
+c5 ATS as broken)
+Merging driver-core.current/driver-core-linus (9f68e3655aae Merge tag 'drm-=
+next-2020-01-30' of git://anongit.freedesktop.org/drm/drm)
+Merging tty.current/tty-linus (b3a987b0264d Linux 5.5-rc6)
+Merging usb.current/usb-linus (9f68e3655aae Merge tag 'drm-next-2020-01-30'=
+ of git://anongit.freedesktop.org/drm/drm)
+Merging usb-gadget-fixes/fixes (e5b5da96da50 usb: gadget: fix wrong endpoin=
+t desc)
+Merging usb-serial-fixes/usb-linus (def9d2780727 Linux 5.5-rc7)
+Merging usb-chipidea-fixes/ci-for-usb-stable (16009db47c51 usb: chipidea: u=
+dc: workaround for endpoint conflict issue)
+Merging phy/fixes (4f510aa10468 phy/rockchip: inno-hdmi: round clock rate d=
+own to closest 1000 Hz)
+Merging staging.current/staging-linus (39bed42de2e7 Merge tag 'for-linus-hm=
+m' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma)
+Merging char-misc.current/char-misc-linus (98c49f1746ac char: hpet: Fix out=
+-of-bounds read bug)
+Merging soundwire-fixes/fixes (e42617b825f8 Linux 5.5-rc1)
+Merging thunderbolt-fixes/fixes (d5226fa6dbae Linux 5.5)
+Merging input-current/for-linus (b19efcabb587 Merge branch 'next' into for-=
+linus)
+Merging crypto-current/master (0bc81767c5bd crypto: arm/chacha - fix build =
+failured when kernel mode NEON is disabled)
+Merging ide/master (94f2630b1897 Merge tag '5.6-rc-small-smb3-fix-for-stabl=
+e' of git://git.samba.org/sfrench/cifs-2.6)
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (c79f46a28239 Linux 5.5-rc5)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (c79f46a28239 Linux 5.5-rc5)
+Merging backlight-fixes/for-backlight-fixes (219d54332a09 Linux 5.4)
+Merging mtd-fixes/mtd/fixes (def9d2780727 Linux 5.5-rc7)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (8821e92879a3 Merge tag 'v5.5-rc5' into patchwo=
+rk)
+Merging reset-fixes/reset/fixes (089531445262 MAINTAINERS: fix style in RES=
+ET CONTROLLER FRAMEWORK)
+Merging mips-fixes/mips-fixes (bbcc5672b006 MIPS: Avoid VDSO ABI breakage d=
+ue to global register variable)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (b0b039515445 ARM: dts: am43x-epos-evm: set data p=
+in directions for spi0 and spi1)
+Merging kvm-fixes/master (ae6088216ce4 Merge tag 'trace-v5.5-rc5' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace)
+Merging kvms390-fixes/master (fe33a928bfcd KVM: s390: ENOTSUPP -> EOPNOTSUP=
+P fixups)
+Merging hwmon-fixes/hwmon (7fee59f20781 hwmon: (pmbus/ltc2978) Fix PMBus po=
+lling of MFR_COMMON definitions.)
+Merging nvdimm-fixes/libnvdimm-fixes (c14685547762 tools/testing/nvdimm: Fi=
+x mock support for ioremap)
+Merging btrfs-fixes/next-fixes (5715b7fa8d8d Merge branch 'misc-5.5' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (d0cb50185ae9 do_last(): fetch directory ->i_mode a=
+nd ->i_uid before it's too late)
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (d5226fa6dbae Linux 5.5)
+Merging samsung-krzk-fixes/fixes (a2315d3aea59 ARM: exynos_defconfig: Resto=
+re debugfs support)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (e42617b825f8 Linux 5.5-rc1)
+Merging devicetree-fixes/dt/linus (fdf34a19296c dt-bindings: phy: Fix error=
+s in intel,lgm-emmc-phy example)
+Merging scsi-fixes/fixes (81a82753dc1d scsi: ufs: fix spelling mistake "ini=
+tilized" -> "initialized")
+Merging drm-fixes/drm-fixes (d5226fa6dbae Linux 5.5)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (d5226fa6dbae Linux 5.5)
+Merging mmc-fixes/fixes (2a187d033520 mmc: sdhci: fix minimum clock rate fo=
+r v3 controller)
+Merging rtc-fixes/rtc-fixes (f01f4ffdfb70 rtc: cmos: Revert "rtc: Fix the A=
+ltCentury value on AMD/Hygon platform")
+Merging gnss-fixes/gnss-linus (d1eef1c61974 Linux 5.5-rc2)
+Merging hyperv-fixes/hyperv-fixes (af42d3466bdc Linux 5.4-rc8)
+Merging soc-fsl-fixes/fix (5674a92ca4b7 soc/fsl/qe: Fix an error code in qe=
+_pin_request())
+Merging risc-v-fixes/fixes (def9d2780727 Linux 5.5-rc7)
+Merging pidfd-fixes/fixes (0bef168e8859 exit: Fix Sparse errors and warning=
+s)
+Merging fpga-fixes/fixes (dec43da46f63 fpga: altera-ps-spi: Fix getting of =
+optional confd gpio)
+Merging spdx/spdx-linus (b3a608222336 Merge branch 'for-v5.6' of git://git.=
+kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security)
+Merging gpio-intel-fixes/fixes (d5226fa6dbae Linux 5.5)
+Merging pinctrl-intel-fixes/fixes (d5226fa6dbae Linux 5.5)
+Merging erofs-fixes/fixes (d1eef1c61974 Linux 5.5-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (8ccb5bf7619c drm/mst: Fix poss=
+ible NULL pointer dereference in drm_dp_mst_process_up_req())
+Merging kspp-gustavo/for-next/kspp (3d519d6d388b sh: kgdb: Mark expected sw=
+itch fall-throughs)
+Merging kbuild/for-next (94f2630b1897 Merge tag '5.6-rc-small-smb3-fix-for-=
+stable' of git://git.samba.org/sfrench/cifs-2.6)
+Merging compiler-attributes/compiler-attributes (54ecb8f7028c Linux 5.4-rc1)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (8c8c5a4994a3 dma-contiguous: CMA: give preced=
+ence to cmdline)
+Merging asm-generic/master (060dc911501f nds32: fix build failure caused by=
+ page table folding updates)
+Merging arc/for-next (def9d2780727 Linux 5.5-rc7)
+Merging arm/for-next (29cd07a400ae Merge branches 'fixes' and 'misc' into f=
+or-next)
+Merging arm64/for-next/core (e533dbe9dcb1 arm64: acpi: fix DAIF manipulatio=
+n with pNMI)
+Merging arm-perf/for-next/perf (8703317ae576 drivers/perf: hisi: update the=
+ sccl_id/ccl_id for certain HiSilicon platform)
+Merging arm-soc/for-next (18ee80c0533a ARM: Document merges)
+CONFLICT (content): Merge conflict in drivers/soc/tegra/fuse/tegra-apbmisc.c
+Merging amlogic/for-next (1b01733a0400 Merge branch 'v5.6/defconfig' into t=
+mp/aml-rebuild)
+Merging aspeed/for-next (767774e5f8b3 ARM: dts: aspeed: tiogapass: Add gpio=
+ line names)
+Merging at91/at91-next (4ba105339864 Merge branches 'at91-soc', 'at91-dt' a=
+nd 'at91-defconfig' into at91-next)
+Merging bcm2835/for-next (f14234184671 Merge branch 'bcm2835-maintainers-ne=
+xt' into for-next)
+Merging imx-mxs/for-next (c65228f2fe91 Merge branch 'imx/defconfig' into fo=
+r-next)
+Merging keystone/next (a1766a49fc90 Merge tag 'drivers_soc_for_5.6' into ne=
+xt)
+Merging mediatek/for-next (fdef5207b966 Merge branch 'v5.5-next/soc' into f=
+or-next)
+Merging mvebu/for-next (c0d03b53ef47 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (f9f5267ec296 Merge branch 'omap-for-v5.6/dt' into fo=
+r-next)
+Merging qcom/for-next (4c26b123c1dd Merge branches 'arm64-defconfig-for-5.6=
+', 'arm64-for-5.6', 'defconfig-for-5.6', 'drivers-for-5.6' and 'dts-for-5.6=
+' into for-next)
+Merging realtek/for-next (45698e00d5a9 Merge branch 'v5.6/dt' into next)
+Merging renesas/next (9e4188a77f5e Merge branch 'renesas-drivers-for-v5.6' =
+into renesas-next)
+Merging reset/reset/next (5ec504fa67af reset: intel: add unspecified HAS_IO=
+MEM dependency)
+Merging rockchip/for-next (d9279b5b52ef Merge branch 'v5.6-armsoc/dts64' in=
+to for-next)
+Merging samsung-krzk/for-next (ce232ab5d7c8 Merge branch 'next/soc' into fo=
+r-next)
+Merging scmi/for-linux-next (f45e09d6e80b Merge remote-tracking branch 'kor=
+g_sudeep/fixes/juno' into for-linux-next)
+Merging sunxi/sunxi/for-next (7493e675c584 Merge remote-tracking branches '=
+sunxi-korg/sunxi/clk-fixes-for-5.5', 'sunxi-korg/sunxi/fixes-for-5.5', 'sun=
+xi-korg/sunxi/config-for-5.6', 'sunxi-korg/sunxi/config64-for-5.6', 'sunxi-=
+korg/sunxi/clk-for-5.6' and 'sunxi-korg/sunxi/dt-for-5.6' into sunxi/for-ne=
+xt)
+Merging tegra/for-next (9a55272ef4d5 Merge branch for-5.6/clk into for-next)
+Merging clk/clk-next (db865ee447d4 Merge branches 'clk-imx', 'clk-ti', 'clk=
+-xilinx', 'clk-nvidia', 'clk-qcom', 'clk-freescale' and 'clk-qoriq' into cl=
+k-next)
+Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (192872ee3e79 csky: Minimize defconfig to support b=
+uildroot config.fragment)
+CONFLICT (content): Merge conflict in Makefile
+Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
+ize_t etc. to posix_types.h)
+Merging ia64/next (240b62d381fe ia64: remove stale paravirt leftovers)
+Merging m68k/for-next (6aabc1facdb2 m68k: Implement copy_thread_tls())
+Merging m68knommu/for-next (def9d2780727 Linux 5.5-rc7)
+Merging microblaze/next (22648c989cb8 microblaze: Increase max dtb size to =
+64K from 32K)
+Merging mips/mips-next (2c4288719806 MIPS: PCI: Add detection of IOC3 on IO=
+7, IO8, IO9 and Fuel)
+Merging nds32/next (a7f96fce201c MAINTAINERS: add nds32 maintainer)
+Merging nios2/for-next (051d75d3bb31 MAINTAINERS: Update Ley Foon Tan's ema=
+il address)
+Merging openrisc/for-next (0ecdcaa6d5e7 openrisc: Fix Kconfig indentation)
+Merging parisc-hd/for-next (8121fbc4ebbb parisc: map_pages(): cleanup page =
+table initialization)
+Merging powerpc/next (4c25df5640ae Merge branch 'topic/user-access-begin' i=
+nto next)
+Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
+es)
+Merging soc-fsl/next (6e62bd36e9ad soc: fsl: qe: remove set but not used va=
+riable 'mm_gc')
+Merging risc-v/for-next (4d99abce8ce8 riscv: Use flush_icache_mm for flush_=
+icache_user_range)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (55d0a513a0e2 s390/pkey/zcrypt: Support EP11 AES secu=
+re keys)
+Merging sh/sh-next (a193018e5290 sh: add missing EXPORT_SYMBOL() for __dela=
+y)
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (d65197ad5249 um: Fix time-travel=3Dinf-cpu with xor=
+/raid6)
+Merging xtensa/xtensa-for-next (ede5ef35ce32 Merge branch 'xtensa-5.6-fixes=
+' into xtensa-for-next)
+Merging fscrypt/master (edc440e3d27f fscrypt: improve format of no-key name=
+s)
+Merging afs/afs-next (4fe171bb81b1 afs: Remove set but not used variable 'r=
+et')
+Merging btrfs/for-next (1f1b5766df75 Merge branch 'for-next-current-v5.5-20=
+200202' into for-next-20200202)
+Merging ceph/master (3325322f773b rbd: set the 'device' link in sysfs)
+Merging cifs/for-next (94f2630b1897 Merge tag '5.6-rc-small-smb3-fix-for-st=
+able' of git://git.samba.org/sfrench/cifs-2.6)
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (b4a81b87a4cf ecryptfs: fix a memory leak bug in ecry=
+ptfs_init_messaging())
+Merging erofs/dev (1e4a29556794 erofs: clean up z_erofs_submit_queue())
+Merging ext3/for_next (daf1cd925487 Pull macro cleanup patches.)
+Merging ext4/dev (7f6225e446cc jbd2: clean __jbd2_journal_abort_hard() and =
+__journal_abort_soft())
+Merging f2fs/dev (ccaaaf6fe5a5 Merge tag 'mpx-for-linus' of git://git.kerne=
+l.org/pub/scm/linux/kernel/git/daveh/x86-mpx)
+Merging fsverity/fsverity (da3a3da4e6c6 fs-verity: use u64_to_user_ptr())
+Merging fuse/for-next (7df1e988c723 fuse: fix fuse_send_readpages() in the =
+syncronous read case)
+Merging jfs/jfs-next (802a5017ffb2 jfs: remove unused MAXL2PAGES)
+Merging nfs/linux-next (d5226fa6dbae Linux 5.5)
+Merging nfs-anna/linux-next (1346d280eafa NFS: Revalidate once when holding=
+ a delegation)
+Merging nfsd/nfsd-next (06b3fc37dfd6 nfsd4: fix double free in nfsd4_do_asy=
+nc_copy())
+Applying: Revert "sunrpc: expiry_time should be seconds not timeval"
+Merging orangefs/for-next (f9bbb68233aa orangefs: posix open permission che=
+cking...)
+Merging overlayfs/overlayfs-next (1a980b8cbf00 ovl: add splice file read wr=
+ite helper)
+Merging ubifs/linux-next (fe357dbae113 ubi: Fix an error pointer dereferenc=
+e in error handling code)
+Merging v9fs/9p-next (79fb9216b7be 9p: Remove unneeded semicolon)
+Merging xfs/for-next (cdbcf82b86ea xfs: fix xfs_buf_ioerror_alert location =
+reporting)
+Merging zonefs/for-next (37d131712f17 zonefs: Add documentation)
+Merging iomap/iomap-for-next (243145bc4336 fs: Fix page_mkwrite off-by-one =
+errors)
+Merging djw-vfs/vfs-for-next (3253d9d09337 splice: only read in as much inf=
+ormation as there is pipe buffer space)
+Merging file-locks/locks-next (98ca480a8f22 locks: print unsigned ino in /p=
+roc/locks)
+Merging vfs/for-next (d2dfd78ce9d2 Merge branch 'merge.nfs-fs_parse' into f=
+or-next)
+CONFLICT (content): Merge conflict in fs/jbd2/journal.c
+CONFLICT (content): Merge conflict in fs/Makefile
+Applying: fs: fix up for !CONFIG_BLOCK and bmap
+Merging printk/for-next (e616b43fb3a3 Merge branch 'for-5.6' into for-next)
+Merging pci/next (01b810ed7187 Merge branch 'remotes/lorenzo/pci/uniphier')
+Merging pstore/for-next/pstore (e163fdb3f7f8 pstore/ram: Regularize prz lab=
+el allocation lifetime)
+Merging hid/for-next (d036ff0e56a7 Merge branch 'for-5.6/logitech' into for=
+-next)
+Merging i2c/i2c/for-next (ccf7f7a51619 Revert "i2c: stm32f7: allow controll=
+er to be wakeup-source")
+Merging i3c/i3c/next (3952cf8ff2f7 i3c: master: dw: reattach device on firs=
+t available location of address table)
+Merging dmi/master (2429c99fa13a firmware: dmi: Add dmi_memdev_handle)
+Merging hwmon-staging/hwmon-next (fd8bdb23b918 hwmon: (k10temp) Display up =
+to eight sets of CCD temperatures)
+Merging jc_docs/docs-next (77ce1a47ebca docs: filesystems: add overlayfs to=
+ index.rst)
+Merging v4l-dvb/master (1697d9812481 media: staging/intel-ipu3: remove TODO=
+ item about acronyms)
+Merging v4l-dvb-next/master (d45331b00ddb Linux 5.3-rc4)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (dd08aa64df30 Merge branch 'acpi-misc' into linux-nex=
+t)
+Merging cpufreq-arm/cpufreq/arm/linux-next (a48ac1c9f294 cpufreq: brcmstb-a=
+vs: fix imbalance of cpufreq policy refcount)
+Merging cpupower/cpupower (8c30fa7666ff Correction to manpage of cpupower)
+Merging opp/opp/linux-next (03758d60265c opp: Replace list_kref with a loca=
+l counter)
+Merging thermal/thermal/linux-next (eefb85077bfe ARM: configs: Build BCM271=
+1 thermal as module)
+CONFLICT (add/add): Merge conflict in Documentation/driver-api/thermal/cpu-=
+idle-cooling.rst
+CONFLICT (add/add): Merge conflict in Documentation/devicetree/bindings/the=
+rmal/brcm,avs-ro-thermal.yaml
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (67f8e65e4fc1 firewire: net: remove set but not u=
+sed variable 'guid')
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (8889f6fa3588 RDMA/core: Make the entire API tree sta=
+tic)
+Merging net-next/master (9f68e3655aae Merge tag 'drm-next-2020-01-30' of gi=
+t://anongit.freedesktop.org/drm/drm)
+Merging bpf-next/master (b3a608222336 Merge branch 'for-v5.6' of git://git.=
+kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security)
+Merging ipsec-next/master (e27cca96cd68 xfrm: add espintcp (RFC 8229))
+Merging mlx5-next/mlx5-next (9b695a64279e net/mlx5: Add bit to indicate sup=
+port for encap/decap in sw-steering managed tables)
+Merging netfilter-next/master (b3a608222336 Merge branch 'for-v5.6' of git:=
+//git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security)
+Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
+s)
+CONFLICT (content): Merge conflict in drivers/nfc/st21nfca/se.c
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (2a13513f99e7 Merge ath-next from git:=
+//git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git)
+Merging bluetooth/master (fe6648315605 Bluetooth: optimize barrier usage fo=
+r Rmw atomics)
+Merging mac80211-next/master (30b2f0be23fb mac80211: add ieee80211_is_any_n=
+ullfunc())
+Merging gfs2/for-next (a31b4ec539e9 Revert "gfs2: eliminate tr_num_revoke_r=
+m")
+Merging mtd/mtd/next (4575243c5c17 Merge tag 'nand/for-5.6' into mtd/next)
+Merging nand/nand/next (d85339d9ea26 mtd: onenand: Rename omap2 driver to a=
+void a build warning)
+Merging spi-nor/spi-nor/next (ccfb9299a0b6 mtd: spi-nor: Add support for at=
+25sl321)
+Merging crypto/master (0bc81767c5bd crypto: arm/chacha - fix build failured=
+ when kernel mode NEON is disabled)
+Merging drm/drm-next (b45f1b3b585e Merge branch 'ttm-prot-fix' of git://peo=
+ple.freedesktop.org/~thomash/linux into drm-next)
+Merging amdgpu/drm-next (658d696d0197 drm/amdgpu/smu_v11_0: Correct behavio=
+r of restoring default tables (v2))
+Merging drm-intel/for-linux-next (f0b2878f3649 drm/i915: Fix i915_error_sta=
+te_store error defination)
+Merging drm-tegra/drm/tegra/for-next (c472a0b0a1fd drm/tegra: sor: Initiali=
+ze runtime PM before use)
+Merging drm-misc/for-linux-next (db735fc4036b drm/msm: Set dma maximum segm=
+ent size for mdss)
+Merging drm-msm/msm-next (5f9935f514d6 drm/msm: Fix error about comments wi=
+thin a comment block)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (4d24376370fb gpu: ipu-v3: image-convert: only=
+ sample into the next tile if necessary)
+Merging etnaviv/etnaviv/next (22567d017c2c dt-bindings: etnaviv: Add #cooli=
+ng-cells)
+Merging regmap/for-next (ea87683909bc Merge branch 'regmap-5.6' into regmap=
+-next)
+Merging sound/for-next (112e3f5ac505 ALSA: hdsp: Make the firmware loading =
+ioctl a bit more readable)
+Merging sound-asoc/for-next (ab8ccdd6018b Merge branch 'asoc-5.6' into asoc=
+-linus)
+Merging modules/modules-next (6080d608eeff module.h: Annotate mod_kallsyms =
+with __rcu)
+Merging input/next (c5ccf2ad3d33 Input: synaptics-rmi4 - switch to reduced =
+reporting mode)
+Merging block/for-next (766202ba3aba Merge branch 'io_uring-5.6' into for-n=
+ext)
+$ git reset --hard HEAD^
+Merging next-20200131 version of block
+Merging device-mapper/for-next (47ace7e012b9 dm: fix potential for q->make_=
+request_fn NULL pointer)
+Merging pcmcia/pcmcia-next (71705c611263 PCMCIA/i82092: remove #if 0 block)
+Merging mmc/next (533a6cfe08f9 mmc: core: Default to generic_cmd6_time as t=
+imeout in __mmc_switch())
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (6a24f567af4a mfd: syscon: Add arguments support f=
+or syscon reference)
+CONFLICT (content): Merge conflict in drivers/regulator/bd718x7-regulator.c
+Merging backlight/for-backlight-next (7af43a76695d backlight: qcom-wled: Fi=
+x unsigned comparison to zero)
+Merging battery/for-next (3d32a8437c05 power: supply: ipaq_micro_battery: r=
+emove unneeded semicolon)
+Merging regulator/for-next (29bf153e5fbc Merge remote-tracking branch 'regu=
+lator/topic/equal' into regulator-next)
+Merging security/next-testing (10c2d111c906 security: remove EARLY_LSM_COUN=
+T which never used)
+Merging apparmor/apparmor-next (01df52d726b5 apparmor: remove duplicate che=
+ck of xattrs on profile attachment.)
+Merging integrity/next-integrity (d54e17b40666 Merge branch 'next-integrity=
+.defer-measuring-keys' into next-integrity)
+Merging keys/keys-next (24f779af0476 Merge branch 'keys-acl' into keys-next)
+CONFLICT (content): Merge conflict in include/linux/lsm_audit.h
+Merging selinux/next (98aa00345de5 selinux: fix regression introduced by mo=
+ve_mount(2) syscall)
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (b3a608222336 Merge branch 'for-v5.6' of git://git.ke=
+rnel.org:/pub/scm/linux/kernel/git/jmorris/linux-security)
+Merging tpmdd/next (7084eddf6be9 tpm: Add tpm_version_major sysfs file)
+Merging watchdog/master (057b52b4b3d5 watchdog: da9062: make restart handle=
+r atomic safe)
+Merging iommu/next (e3b5ee0cfb65 Merge branches 'iommu/fixes', 'arm/smmu', =
+'x86/amd', 'x86/vt-d' and 'core' into next)
+Merging vfio/next (7b5372ba04ca vfio: platform: fix __iomem in vfio_platfor=
+m_amdxgbe.c)
+Merging audit/next (cb5172d96d16 audit: Add __rcu annotation to RCU pointer)
+Merging devicetree/for-next (e9a3bfe38e39 scripts/dtc: Revert "yamltree: En=
+sure consistent bracketing of properties with phandles")
+Merging mailbox/mailbox-for-next (c6c6bc6ea9fc mailbox: imx: add support fo=
+r imx v1 mu)
+Merging spi/for-next (754a36a58c29 Merge branch 'spi-5.6' into spi-next)
+Merging tip/auto-latest (178915ad4ab3 Merge branch 'core/urgent')
+Merging clockevents/timers/drivers/next (e4c3b4213b79 clocksource/hyperv: S=
+et TSC clocksource as default w/ InvariantTSC)
+Merging edac/edac-for-next (7e5d6cf35329 EDAC/amd64: Do not warn when remov=
+ing instances)
+Merging irqchip/irq/irqchip-next (656b42deddea irqchip: Some Kconfig cleanu=
+p for C-SKY)
+Merging ftrace/for-next (2b90927c77c9 tracing: Use seq_buf for building dyn=
+event_cmd string)
+CONFLICT (content): Merge conflict in init/main.c
+Merging rcu/rcu/next (59d8cc6b2e37 rcu: Forgive slow expedited grace period=
+s at boot time)
+Merging kvm/linux-next (4cbc418a44d5 Merge branch 'cve-2019-3016' into kvm-=
+next-5.6)
+Merging kvm-arm/next (4a267aa70795 KVM: arm64: Treat emulated TVAL TimerVal=
+ue as a signed 32-bit integer)
+Merging kvm-ppc/kvm-ppc-next (fd24a8624eb2 KVM: PPC: Book3S PR: Fix -Werror=
+=3Dreturn-type build failure)
+Merging kvms390/next (b2ff728bae9b selftests: KVM: testing the local IRQs r=
+esets)
+Merging xen-tip/linux-next (8557bbe5156e xen/blkback: Consistently insert o=
+ne empty line between functions)
+Merging percpu/for-next (9391e7a9a1e2 Merge branch 'for-5.6' into for-next)
+Merging workqueues/for-next (e8ab20d9bcb3 workqueue: remove workqueue_work =
+event class)
+Merging drivers-x86/for-next (cf85e7c7f437 platform/x86: intel_pmc_ipc: Swi=
+tch to use driver->dev_groups)
+Merging chrome-platform/for-next (27ef91a2e9a5 platform/chrome: cros_ec: Ma=
+tch implementation with headers)
+Merging hsi/for-next (c1030cd45619 HSI: Remove dev_err() usage after platfo=
+rm_get_irq())
+Merging leds/for-next (260718b3a35d leds: lm3692x: Disable chip on brightne=
+ss 0)
+Merging ipmi/for-next (6b8526d3abc0 ipmi:ssif: Handle a possible NULL point=
+er reference)
+Merging driver-core/driver-core-next (9f68e3655aae Merge tag 'drm-next-2020=
+-01-30' of git://anongit.freedesktop.org/drm/drm)
+Merging usb/usb-next (9f68e3655aae Merge tag 'drm-next-2020-01-30' of git:/=
+/anongit.freedesktop.org/drm/drm)
+Merging usb-gadget/next (4baa550ecc86 usb: musb: remove dummy driver musb_a=
+m335x.c)
+Merging usb-serial/usb-next (19c64e7354e5 USB: serial: cyberjack: fix spell=
+ing mistake "To" -> "Too")
+Merging usb-chipidea-next/ci-for-usb-next (4d6141288c33 usb: chipidea: imx:=
+ pinctrl for HSIC is optional)
+Merging phy-next/next (3f41f8ca21c5 dt-bindings: fix compilation error of t=
+he example in intel,lgm-emmc-phy.yaml)
+Merging tty/tty-next (85f4c95172d6 tty: n_hdlc: Use flexible-array member a=
+nd struct_size() helper)
+Merging char-misc/char-misc-next (15d663249653 Merge branch 'urgent-for-min=
+go' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu)
+Merging extcon/extcon-next (b7365587f513 extcon: Remove unneeded extern key=
+word from extcon.h)
+Merging soundwire/next (5098cae1f79c dt-bindings: soundwire: fix example)
+Merging thunderbolt/next (d5226fa6dbae Linux 5.5)
+Merging staging/staging-next (39bed42de2e7 Merge tag 'for-linus-hmm' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma)
+Merging mux/for-next (f356d58c3a04 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (30c8fa3ec61a interconnect: qcom: Add MSM8916 intercon=
+nect provider driver)
+Merging slave-dma/next (474809a28e7b dmaengine: Fix return value for dma_re=
+quest_chan() in case of failure)
+Merging cgroup/for-next (0cd9d33ace33 cgroup: init_tasks shouldn't be linke=
+d to the root cgroup)
+Merging scsi/for-next (c4b119f431e1 Merge branch 'fixes' into for-next)
+Merging scsi-mkp/for-next (81a82753dc1d scsi: ufs: fix spelling mistake "in=
+itilized" -> "initialized")
+Merging vhost/linux-next (d1281e3a562e virtio-blk: remove VIRTIO_BLK_F_SCSI=
+ support)
+CONFLICT (content): Merge conflict in drivers/block/virtio_blk.c
+Merging rpmsg/for-next (34a9acb223e3 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Merging gpio/for-next (0282c72d30d3 Merge tag 'gpio-updates-for-v5.6-part2'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel)
+Merging gpio-brgl/gpio/for-next (1e4d149e9017 gpio: altera: change to platf=
+orm_get_irq_optional to avoid false-positive error)
+Merging gpio-intel/for-next (d5226fa6dbae Linux 5.5)
+Merging pinctrl/for-next (122ce22cb37b pinctrl: madera: Remove extra blank =
+line)
+Merging pinctrl-intel/for-next (cd0a32371db7 pinctrl: tigerlake: Tiger Lake=
+ uses _HID enumeration)
+Merging pinctrl-samsung/for-next (225a2ec19aac pinctrl: samsung: Fix missin=
+g OF and GPIOLIB dependency on S3C24xx and S3C64xx)
+Merging pwm/for-next (9871abffc810 pwm: Remove set but not set variable 'pw=
+m')
+Merging userns/for-next (61a47c1ad3a4 sysctl: Remove the sysctl system call)
+Merging ktest/for-next (9b5f852ae20d ktest: Make default build option oldco=
+nfig not randconfig)
+Merging random/dev (4cb760b02419 s390x: Mark archrandom.h functions __must_=
+check)
+Merging kselftest/next (af4ddd607dff selftests/ftrace: fix glob selftest)
+Merging y2038/y2038 (c4e71212a245 Revert "drm/etnaviv: reject timeouts with=
+ tv_nsec >=3D NSEC_PER_SEC")
+Merging livepatching/for-next (d28b4c1b2b3d Merge branch 'for-5.6/selftests=
+' into for-next)
+Merging coresight/next (ad9882f15884 coresight: etm4x: Fix unused function =
+warning)
+Merging rtc/rtc-next (f45719240700 dt-bindings: rtc: at91rm9200: document c=
+locks property)
+Merging nvdimm/libnvdimm-for-next (46cf053efec6 Linux 5.5-rc3)
+Merging at24/at24/for-next (cd5676db0574 misc: eeprom: at24: support pm_run=
+time control)
+Merging ntb/ntb-next (1ef512b16bc8 NTB: Fix an error in get link status)
+Merging kspp/for-next/kspp (c79f46a28239 Linux 5.5-rc5)
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (d1eef1c61974 Linux 5.5-rc2)
+Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
+lues)
+Merging slimbus/for-next (526eaf5d08a2 slimbus: Use the correct style for S=
+PDX License Identifier)
+Merging nvmem/for-next (4a81ae0c43bc nvmem: add QTI SDAM driver)
+Merging xarray/xarray (3a00e7c47c38 ida: remove abandoned macros)
+Merging hyperv/hyperv-next (54e19d34011f hv_utils: Add the support of hiber=
+nation)
+Merging auxdisplay/auxdisplay (54ecb8f7028c Linux 5.4-rc1)
+Merging kgdb/kgdb/for-next (c58ff643763c kdb: Tweak escape handling for vi =
+users)
+Merging pidfd/for-next (8d19f1c8e193 prctl: PR_{G,S}ET_IO_FLUSHER to suppor=
+t controlling memory reclaim)
+Merging devfreq/devfreq-next (054fef0337fe PM / devfreq: Change to DEVFREQ_=
+GOV_UPDATE_INTERVAL event name)
+Merging hmm/hmm (5292e24a6acf mm/mmu_notifiers: Use 'interval_sub' as the v=
+ariable for mmu_interval_notifier)
+Merging fpga/for-next (28910cee898c fpga: xilinx-pr-decoupler: Remove clk_g=
+et error message for probe defer)
+Merging kunit/test (e42617b825f8 Linux 5.5-rc1)
+Merging cel/cel-next (a99d8080aaf3 Linux 5.4-rc6)
+Merging kasan-bitops/topic/kasan-bitops (4f4afc2c9599 docs/core-api: Remove=
+ possibly confusing sub-headings from Bit Operations)
+Merging generic-ioremap/for-next (4bdc0d676a64 remove ioremap_nocache and d=
+evm_ioremap_nocache)
+Merging kunit-next/kunit (35c57fc3f8ea kunit: building kunit as a module br=
+eaks allmodconfig)
+Merging akpm-current/current (c2ab9895e523 ipc/msg.c: Adjust indentation in=
+ ksys_msgctl)
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: drivers/block/null_blk_main.c: fix layout
+Applying: drivers/block/null_blk_main.c: fix uninitialized var warnings
+Applying: pinctrl: fix pxa2xx.c build warnings
+Applying: mm: remove __krealloc
+Applying: mm: add generic p?d_leaf() macros
+Applying: arc: mm: add p?d_leaf() definitions
+Applying: arm: mm: add p?d_leaf() definitions
+Applying: arm64: mm: add p?d_leaf() definitions
+Applying: mips: mm: add p?d_leaf() definitions
+Applying: powerpc: mm: add p?d_leaf() definitions
+Applying: riscv: mm: add p?d_leaf() definitions
+Applying: s390: mm: add p?d_leaf() definitions
+Applying: sparc: mm: add p?d_leaf() definitions
+Applying: x86: mm: add p?d_leaf() definitions
+Applying: mm: pagewalk: add p4d_entry() and pgd_entry()
+Applying: mm: pagewalk: fix unused variable warning
+Applying: mm: pagewalk: allow walking without vma
+Applying: mm: pagewalk: don't lock PTEs for walk_page_range_novma()
+Applying: mm: pagewalk: fix termination condition in walk_pte_range()
+Applying: mm: pagewalk: add 'depth' parameter to pte_hole
+Applying: x86: mm: point to struct seq_file from struct pg_state
+Applying: x86: mm+efi: convert ptdump_walk_pgd_level() to take a mm_struct
+Applying: x86: mm: convert ptdump_walk_pgd_level_debugfs() to take an mm_st=
+ruct
+Applying: mm: add generic ptdump
+Applying: x86: mm: convert dump_pagetables to use walk_page_range
+Applying: arm64: mm: convert mm/dump.c to use walk_page_range()
+Applying: arm64: mm: display non-present entries in ptdump
+Applying: mm: ptdump: reduce level numbers by 1 in note_page()
+Applying: x86: mm: avoid allocating struct mm_struct on the stack
+Applying: x86-mm-avoid-allocating-struct-mm_struct-on-the-stack-fix
+Applying: powerpc/mmu_gather: enable RCU_TABLE_FREE even for !SMP case
+Applying: mm/mmu_gather: invalidate TLB correctly on batch allocation failu=
+re and flush
+Applying: asm-generic/tlb: avoid potential double flush
+Applying: asm-gemeric/tlb: remove stray function declarations
+Applying: asm-generic/tlb: add missing CONFIG symbol
+Applying: asm-generic/tlb: rename HAVE_RCU_TABLE_FREE
+Applying: asm-generic/tlb: rename HAVE_MMU_GATHER_PAGE_SIZE
+Applying: asm-generic/tlb: Rename HAVE_MMU_GATHER_NO_GATHER
+Applying: asm-generic/tlb: Provide MMU_GATHER_TABLE_FREE
+Applying: proc: decouple proc from VFS with "struct proc_ops"
+Applying: proc: convert everything to "struct proc_ops"
+Applying: proc-convert-everything-to-struct-proc_ops-fix
+Applying: proc-convert-everything-to-struct-proc_ops-fix-2
+Applying: lib/string: add strnchrnul()
+Applying: bitops: more BITS_TO_* macros
+Applying: lib: add test for bitmap_parse()
+Applying: fix rebase issue
+Applying: lib/test_bitmap: fix address space when test user buffer
+Applying: lib: make bitmap_parse_user a wrapper on bitmap_parse
+Applying: lib: rework bitmap_parse()
+Applying: lib: new testcases for bitmap_parse{_user}
+Applying: include/linux/cpumask.h: don't calculate length of the input stri=
+ng
+Applying: treewide: remove redundant IS_ERR() before error code check
+Applying: ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
+Applying: drivers/tty/serial/sh-sci.c: suppress warning
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (f1f518d16d24 drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/GD9pKOgkroWocyTDkAQA5/r
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl43kjYACgkQAVBC80lX
+0Gw1OQf/SAsg5P55W/FRkC01BljDmt6wMsd8iS0NskfusNDSRw+T3EYDNRRIGby/
+TKnfLgo1it/753JpQsIWZUZ4BWxlC6dWnTyv8mbop+vtu4kDkWftgkMKSDwXiUbj
+/2bHKmRMa6R/h74F/W6P4tIYS+52Y0drCpKO+EYxdYv7BXbg+acqWnR9uhaoTliM
+zUgJAYlSErEMWMrml1GLrB8O6wtjXQIn+Bx84x02KlUKMXy7C863iclOtc6tRRxO
+NWBoSAxqs8YpK0NVRVSwyF6TlkB9A2ePIHsWciXsu2NbjO23PUTm74zuOUjMw4y0
+You0w/xmplUpI2kmIZkkKFgfKzBbCw==
+=MLdN
+-----END PGP SIGNATURE-----
+
+--Sig_/GD9pKOgkroWocyTDkAQA5/r--
