@@ -2,94 +2,132 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513B4C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96806C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 269C720CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED6B2192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yo1y1Xav"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WntZtkVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgBCSnF (ORCPT
+        id S1729696AbgBCSnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:43:05 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45822 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgBCSnE (ORCPT
+        Mon, 3 Feb 2020 13:43:23 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39868 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgBCSnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:43:04 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x1so15238939qkl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:43:03 -0800 (PST)
+        Mon, 3 Feb 2020 13:43:23 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e9so137561pjr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:43:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4PMgClN19IhUmet8zzgKP6n4a6viDIBm9kvnRUtH3mA=;
-        b=Yo1y1XavCUEy1wE5P7+cmjzPnnfg1oFVKZVmBL5dtthCguCkZ1WQnpf2YAC7eHPaDm
-         LAIKxbOy+zNgxZgCta9TGT+psszC8jdSUX+mmFt4blUWtcmCkMJVzzsTh65pnXnuuFti
-         F2uSLrsCNrlosOXGbZRwweYEiSo/SJzkncSnM=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xOTk3g8W7pXsEb3fB9weLwB8mgi1DoDYv/P++HZPauA=;
+        b=WntZtkVuJvCU93iqhDKUAwLVSj6S62pzDhf4dzlnYjaC6kdbQaJmlmnbJjA09n8fKB
+         9GEzu88rpv/GOmPVMKaiEpTdN86/xX7PRwkQ229XpO2MwjA2WlInv9QyENywTXuLdrzg
+         XT69EC4/0g2meSc0wdkX5lW/5R3YXVXyU8HjyFkanlRBhBoo8e05Ki6lzv3zbEz2WpwK
+         DysHr0kDGwTGkXwKZlYmcZby55t/gkLzHkp3Q3J5ZK+4NnIqKEyHnbHUCfIL95O8vvap
+         b1cOZJv5S7TVINX1GzEqMwuvIEG6qnGs2vyrPT2gAZcpwY6slvW7RgisKGGSEHh/224H
+         R+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4PMgClN19IhUmet8zzgKP6n4a6viDIBm9kvnRUtH3mA=;
-        b=WkKjYf3rsz4icerT/3LpGC4IorcPMNJlx8U1W3ON2CMkvyQ2Ya83jpFfaMenVEtiH9
-         3vk8bOsydCFjK/L4F3vT/KTPXaD/5ouN+3nhEPjhxBSVANz8Dvi5XEFvJHKC4zNc9S7R
-         CGjN1Mw1+qDAqeXJ3L0DgpSx2Drzkb9HfCZ4Y9FXTAezqvczmBiOoCTxJNQeNAUh3jfR
-         WZ9rAMdsU4rRBAaR42LPPJfMk4o6BGmvOWYFVvSxZw8TRIrEQ0hGHu1fOezImkrpTkyH
-         vcdH99HTV6YMdM/J5NbLuBywzI1pHWqQe2pOKvNM5Z4JiF9pX72P7VXUYJMpkfcOxigh
-         ST9g==
-X-Gm-Message-State: APjAAAV1qVtowcHIUqHRKoeqzDQLMfltoes9AgwunnEwEOY++W3xU982
-        6XUNhpMg+17DWYqM/E7roHG5B+a3ScuUrRLcIb6K2w==
-X-Google-Smtp-Source: APXvYqw1bX0A3kJ4KvUVv86WXufvnleEdtH4TO5zCbHUJmtjESA5AF1NOa9A9O2Tbs2y01O4QjbPgw6zzCm91hZD6E4=
-X-Received: by 2002:a05:620a:2218:: with SMTP id m24mr25211961qkh.442.1580755381994;
- Mon, 03 Feb 2020 10:43:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xOTk3g8W7pXsEb3fB9weLwB8mgi1DoDYv/P++HZPauA=;
+        b=tFhtKqZYZUQnVpdejnbIRhA+6E7+CHQEfz9S2m6e6O6C/4rS6rv0GP7mZGgNLM1CRY
+         Ma9Mr7C6lROOeVIhlidcXmHm1XI6Zh7hGWyYbW63gdYmmO8l1CIr87HbErZwgqzlw7CV
+         Ji57UIfOSedmriny07DZjFGKOx6iFZwt6FWuYDrz/t7FJoNT7MKh+vuF32UDLStpnZYz
+         GUY78OW2KiBWSh8eHtd0ZLKphO7EBwSUynrO+LxNw1w0CwM2+VTl6aAfpCH3pl1Ka1KQ
+         jx6msyGsbL6bjMkPcxR4XvFh9bVHapD14e5cgn9d7fjH6KQlw8dOfEFt7rAY2BZxp3Xv
+         vkVw==
+X-Gm-Message-State: APjAAAUBfTC7x6dwvA8N472/K/9dkSaBCA7XkfbOmTCwnFKXPeMAxQeX
+        WwCVa3BIz5cTFUpo70FcA/WfEQ==
+X-Google-Smtp-Source: APXvYqxg4wWsrsQKMZeeGYwT0lz6oFlgUbwB1raH4pu13jkLYVEo4GJDTDDZsk1GP+8pUqoEw1FYCQ==
+X-Received: by 2002:a17:902:8f91:: with SMTP id z17mr24761583plo.234.1580755402569;
+        Mon, 03 Feb 2020 10:43:22 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 72sm21106619pfw.7.2020.02.03.10.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 10:43:22 -0800 (PST)
+Date:   Mon, 3 Feb 2020 10:43:20 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] drivers: thermal: tsens: kernel-doc fixup
+Message-ID: <20200203184320.GH3948@builder>
+References: <cover.1580390127.git.amit.kucheria@linaro.org>
+ <1fccb71bd5d54842d2c54d175c080d0edeabca26.1580390127.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <20200130203106.201894-1-pmalani@chromium.org> <20200130203106.201894-12-pmalani@chromium.org>
- <20200201110358.GR3897@sirena.org.uk>
-In-Reply-To: <20200201110358.GR3897@sirena.org.uk>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 3 Feb 2020 10:42:51 -0800
-Message-ID: <CACeCKaf2=_6jEaUSKgEiucmO4KNgQu7F-P2Po=UjLdfXZwm_Bg@mail.gmail.com>
-Subject: Re: [PATCH 11/17] ASoC: cros_ec_codec: Use cros_ec_send_cmd_msg()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1fccb71bd5d54842d2c54d175c080d0edeabca26.1580390127.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark, thanks for looking at the patch. Please see inline.
+On Thu 30 Jan 05:27 PST 2020, Amit Kucheria wrote:
 
-On Sun, Feb 2, 2020 at 4:00 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Jan 30, 2020 at 12:30:56PM -0800, Prashant Malani wrote:
-> > Replace send_ec_host_command() with cros_ec_send_cmd_msg() which does
-> > the same thing, but is defined in a common location in platform/chrome
-> > and exposed for other modules to use. This allows us to remove
-> > send_ec_host_command() entirely.
->
-> I only have this patch, I've nothing else from the series or a
-> cover letter.  What's the story with dependencies and so on?
-Sorry about that. I will add you to the cover letter for subsequent
-versions (I followed https://lwn.net/Articles/585782/ but I think it
-only adds the relevant mailing lists to the cover letter...)
-Just for reference, the cover series LKML link is here:
-https://lkml.org/lkml/2020/1/30/802
+> Document ul_lock, threshold and control structure members and make
+> the following kernel-doc invocation happy:
+> 
+> $ scripts/kernel-doc -v -none drivers/thermal/qcom/*
+> 
+> drivers/thermal/qcom/qcom-spmi-temp-alarm.c:105: info: Scanning doc for qpnp_tm_get_temp_stage
+> drivers/thermal/qcom/tsens-common.c:18: info: Scanning doc for struct tsens_irq_data
+> drivers/thermal/qcom/tsens-common.c:130: info: Scanning doc for tsens_hw_to_mC
+> drivers/thermal/qcom/tsens-common.c:163: info: Scanning doc for tsens_mC_to_hw
+> drivers/thermal/qcom/tsens-common.c:245: info: Scanning doc for tsens_set_interrupt
+> drivers/thermal/qcom/tsens-common.c:268: info: Scanning doc for tsens_threshold_violated
+> drivers/thermal/qcom/tsens-common.c:362: info: Scanning doc for tsens_critical_irq_thread
+> drivers/thermal/qcom/tsens-common.c:438: info: Scanning doc for tsens_irq_thread
+> drivers/thermal/qcom/tsens.h:41: info: Scanning doc for struct tsens_sensor
+> drivers/thermal/qcom/tsens.h:59: info: Scanning doc for struct tsens_ops
+> drivers/thermal/qcom/tsens.h:494: info: Scanning doc for struct tsens_features
+> drivers/thermal/qcom/tsens.h:513: info: Scanning doc for struct tsens_plat_data
+> drivers/thermal/qcom/tsens.h:529: info: Scanning doc for struct tsens_context
+> 
 
-Best regards,
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index cf0511a947d4..dd163b27add4 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -526,6 +526,8 @@ struct tsens_plat_data {
+>  
+>  /**
+>   * struct tsens_context - Registers to be saved/restored across a context loss
+> + * @threshold: Threshold register value
+> + * @control: Control register value
+>   */
+>  struct tsens_context {
+>  	int	threshold;
+> @@ -540,6 +542,7 @@ struct tsens_context {
+>   * @srot_map: pointer to SROT register address space
+>   * @tm_offset: deal with old device trees that don't address TM and SROT
+>   *             address space separately
+> + * @ul_lock: lock while processing upper/lower threshold interrupts
+>   * @crit_lock: lock while processing critical threshold interrupts
+>   * @rf: array of regmap_fields used to store value of the field
+>   * @ctx: registers to be saved and restored during suspend/resume
+> -- 
+> 2.20.1
+> 
