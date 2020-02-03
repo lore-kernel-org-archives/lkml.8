@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE11C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7936D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42F12051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748417;
-	bh=gZTojiRIa7PMDSQh+1NN3TajZTLFOjR4j7G0Y0vGmGI=;
+	s=default; t=1580748422;
+	bh=aq8oHi+kuRzmddBuHvtWptQ6KXrAq8zkhQV3IruTfN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJAGXmhwPAzi8HF+gxnek7bvqk2NSz1aLkAxrvAxYLqtdS7LwMIHGctenQDCj+bP6
-	 vOWK7HfgzvYctY7SU5PyIxS8rswYguiBYaqolj3FSytlGqHrKkyZe/ToikRiYqDKxR
-	 1/+v+BrNxL2+/gO8KW3VaBYrTkgVCCjmuGDRO2Vs=
+	b=E5dR7/BZ4Dbid9ft6qDABg5dNA8sabjZyebnKPZzqj6YWJPZh4gsFWDCDgbPSrrqT
+	 f46t6pM4uxhJrLmqN4aM0diOm++TvvBIfBGOQrSrzeWce6dTsm8ovuJ87yZt4Yfbk0
+	 Ng7SGdAx3LoHl3fs2Fd6vMscrmsFGh9Y107m3s2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgBCQ2I (ORCPT
+        id S1730004AbgBCQrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:28:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729489AbgBCQ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:53 -0500
+        id S1729203AbgBCQ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:07 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F6E20838;
-        Mon,  3 Feb 2020 16:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 910542080C;
+        Mon,  3 Feb 2020 16:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747272;
-        bh=gZTojiRIa7PMDSQh+1NN3TajZTLFOjR4j7G0Y0vGmGI=;
+        s=default; t=1580747287;
+        bh=aq8oHi+kuRzmddBuHvtWptQ6KXrAq8zkhQV3IruTfN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbSMYZ++BdWUZPe08CNSf22NEzPcQkXEZ09KK99csXI0pWM1PH3C6VrXoEfgcNmnM
-         HgsN2A8fPkrYUCXgLZ5L4b7W/oQzIVTfLqh5a29k6iyNXYsLZpM4ilg94M2nWkUJNw
-         0hPlBUTTsbc4Dy27YXNF82DTSC3HcCqTbSWfjiuE=
+        b=DWdJMOL7COL5uPZQshO/heO/+S+d7xFYEODEZSW+ZhfR7jKBdDIPx1iYkGqDhbKpZ
+         ckj02rAqzW3p99xwH+q/jUpkrjlXTLuoM52RPzQZ1aiOndPZUx9xSyNlGz741P773C
+         1ytyBaRq7Ns7twRUJfZ7Z06pBbA27x0QRBmNPCh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 15/89] brcmfmac: fix interface sanity check
-Date:   Mon,  3 Feb 2020 16:19:00 +0000
-Message-Id: <20200203161918.894777019@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 03/89] USB: serial: ir-usb: add missing endpoint sanity check
+Date:   Mon,  3 Feb 2020 16:18:48 +0000
+Message-Id: <20200203161917.312739259@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,44 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
+commit 2988a8ae7476fe9535ab620320790d1714bdad1d upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Add missing endpoint sanity check to avoid dereferencing a NULL-pointer
+on open() in case a device lacks a bulk-out endpoint.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Note that prior to commit f4a4cbb2047e ("USB: ir-usb: reimplement using
+generic framework") the oops would instead happen on open() if the
+device lacked a bulk-in endpoint and on write() if it lacked a bulk-out
+endpoint.
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: stable <stable@vger.kernel.org>     # 3.4
-Cc: Arend van Spriel <arend@broadcom.com>
+Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/serial/ir-usb.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -1333,7 +1333,7 @@ brcmf_usb_probe(struct usb_interface *in
- 		goto fail;
- 	}
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -199,6 +199,9 @@ static int ir_startup(struct usb_serial
+ 	struct usb_irda_cs_descriptor *irda_desc;
+ 	int rates;
  
--	desc = &intf->altsetting[0].desc;
-+	desc = &intf->cur_altsetting->desc;
- 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
- 	    (desc->bInterfaceSubClass != 2) ||
- 	    (desc->bInterfaceProtocol != 0xff)) {
-@@ -1346,7 +1346,7 @@ brcmf_usb_probe(struct usb_interface *in
- 
- 	num_of_eps = desc->bNumEndpoints;
- 	for (ep = 0; ep < num_of_eps; ep++) {
--		endpoint = &intf->altsetting[0].endpoint[ep].desc;
-+		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
- 		endpoint_num = usb_endpoint_num(endpoint);
- 		if (!usb_endpoint_xfer_bulk(endpoint))
- 			continue;
++	if (serial->num_bulk_in < 1 || serial->num_bulk_out < 1)
++		return -ENODEV;
++
+ 	irda_desc = irda_usb_find_class_desc(serial, 0);
+ 	if (!irda_desc) {
+ 		dev_err(&serial->dev->dev,
 
 
