@@ -1,135 +1,158 @@
-Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=t9Lj=3Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60025C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2448C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A79206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:57:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duCawprx"
+	by mail.kernel.org (Postfix) with ESMTP id B38C12084E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Feb 2020 00:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgBCX5u (ORCPT
+        id S1727102AbgBDAAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:57:50 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42109 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726834AbgBCX5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:57:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580774268;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=377KzugWtdEB1RiDk7iefCk+Qa+LIHv5m9/4EkwomLQ=;
-        b=duCawprxM30AbMNVHZ3Sx1vZJyJJ+aoQ7bHmnPL65879k2j33FdHFEy7XJVwkLsw1dRBkx
-        EuEO3XXbE28ObsdxoSn/d7qYDvvTkuKBQZL9OspbNdgXkI0PLNfE3HkXv+6GgzRMjRc7pM
-        iW6E+4juy+XQzNq5afP8hokRmiq4hKE=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-ehzYx0NTPqOsuzfdw4nB7A-1; Mon, 03 Feb 2020 18:57:46 -0500
-X-MC-Unique: ehzYx0NTPqOsuzfdw4nB7A-1
-Received: by mail-qv1-f72.google.com with SMTP id v3so10621112qvm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:57:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=377KzugWtdEB1RiDk7iefCk+Qa+LIHv5m9/4EkwomLQ=;
-        b=GtoxdrIDvYWEQBLwfN5FTxoiBvMsXKnsjdsJK74lVGUaoNEx7jZ+oj6ypYdu7HT2lL
-         XM6W1YbUVB/uih/BVoNl9K9NNQa8uiTrbPsbExc2zcCDaZCVZktGC15XtjtJoPmyxzGW
-         NqB/hCYDD3BX4BJqwIhZbo6uVTgXDPx/+iMLFU35DrX7ibA8onJHP175PisLftO0/kcd
-         xecPbBeB0Jo+OKd1FWbxFxq6ikIn8LS5wbCUzxBvRtSngTstjjkkK8mffIQbLFsbql3q
-         glYlqLDd2nYRPlV9N2HyTvPaClhWgSkLFE62H4qSlLiDI67QyF4h8pto5JM63jynzPbO
-         rwPw==
-X-Gm-Message-State: APjAAAVw+UfG+1mAwU3iO4JJWALdm5OMS4OB0Ou/ikHeeGxxEzL862II
-        gWRY/jEQxSt9wnN0I/4+SCQ7LVLLBBsn6masU3Snf3YYF5QQoKe7wnjuJFPvO+VLwIg+gZfg9oG
-        FWJW3I6lMsBU5tRrwIP/TET+t
-X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr25491054qvb.89.1580774266436;
-        Mon, 03 Feb 2020 15:57:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy6N76q16RG6gaA3Ccei9IOEfvL+VW0BlpNSl5MYgnCZ7NxgKf3lkrSb8R3wf0XT5Uq1MHCGA==
-X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr25491037qvb.89.1580774266111;
-        Mon, 03 Feb 2020 15:57:46 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id 13sm10092406qke.85.2020.02.03.15.57.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 15:57:45 -0800 (PST)
-Date:   Mon, 3 Feb 2020 18:57:43 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH V4] sched/isolation: isolate from handling managed
- interrupt
-Message-ID: <20200203235743.GH155875@xz-x1>
-References: <20200120091625.17912-1-ming.lei@redhat.com>
- <87eevrei7h.fsf@nanos.tec.linutronix.de>
- <20200203192154.GG155875@xz-x1>
- <87a75zz2hl.fsf@nanos.tec.linutronix.de>
+        Mon, 3 Feb 2020 19:00:36 -0500
+Received: from namei.org ([65.99.196.166]:43090 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbgBDAAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 19:00:35 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 013Nxnn2015307;
+        Mon, 3 Feb 2020 23:59:49 GMT
+Date:   Tue, 4 Feb 2020 10:59:49 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     linux-security-module@vger.kernel.org
+cc:     linux-kernel@vger.kernel.org, lwn@lwn.net,
+        fedora-selinux-list@redhat.com, linux-crypto@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        Audit-ML <linux-audit@redhat.com>, gentoo-hardened@gentoo.org,
+        keyrings@linux-nfs.org, tpmdd-devel@lists.sourceforge.net,
+        Linux Security Summit Program Committee 
+        <lss-pc@lists.linuxfoundation.org>
+Subject: [ANNOUNCE][CFP] Linux Security Summit North America 2020
+Message-ID: <alpine.LRH.2.21.2002041054320.12768@namei.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87a75zz2hl.fsf@nanos.tec.linutronix.de>
+Content-Type: multipart/mixed; BOUNDARY="1665246916-1737447927-1580774163=:12768"
+Content-ID: <alpine.LRH.2.21.2002041056360.12768@namei.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 11:15:50PM +0000, Thomas Gleixner wrote:
-> Peter Xu <peterx@redhat.com> writes:
-> > The new "managed_irq" works for us, thanks for both of your work!
-> >
-> > However I just noticed that this new sub-parameter might break users
-> > if applied incorrectly to old kernels, because iiuc "isolcpus="
-> > parameter will not apply at all when there's unknown sub-parameters:
-> >
-> > static int __init housekeeping_isolcpus_setup(char *str)
-> > {
-> > 	unsigned int flags = 0;
-> >
-> > 	while (isalpha(*str)) {
-> >                 ...
-> >                 pr_warn("isolcpus: Error, unknown flag\n");
-> >                 return 0;
-> >         }
-> >         ...
-> > }
-> >
-> > Then the same kernel parameter will break isolcpus= if the user
-> > reboots and switches to an older kernel.
-> >
-> > A solution to this could be that we introduce an isolated parameter
-> > for "managed_irq", then on the old kernels only the new parameter will
-> > be ignored rather than the whole "isolcpus=" parameter, so nothing
-> > will break.
-> >
-> > I'm not sure whether it's already too late for this, or if there's any
-> > better alternative.  Just raise this question up to see whether we
-> > still have chance to fix this up.
-> 
-> No, really. The basic guarantee is that your new kernel is going to work
-> fine with the previous command line, but making a guarantee that new
-> command line options still work on an old kernel are just creating a
-> horrible mess. So if that command line interface was not designed to
-> handle unknown arguments in the first place, you better fix that.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi, Thomas,
+--1665246916-1737447927-1580774163=:12768
+Content-Type: text/plain; CHARSET=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.LRH.2.21.2002041056361.12768@namei.org>
 
-Just to make sure I understand it right: are you suggesting that we
-fix up housekeeping_isolcpus_setup() to be able to skip unknown sub
-parameters?
+==============================================================================
+		   ANNOUNCEMENT AND CALL FOR PARTICIPATION
 
-Thanks,
+		   LINUX SECURITY SUMMIT NORTH AMERICA 2020
+                             
+			        24-26 JUNE
+			    AUSTIN, TEXAS, USA
+==============================================================================
 
--- 
-Peter Xu
+DESCRIPTION
+ 
+Linux Security Summit North America (LSS-NA) is a technical forum for
+collaboration between Linux developers, researchers, and end-users.  Its
+primary aim is to foster community efforts in analyzing and solving Linux
+security challenges.
+ 
+ The program committee currently seeks proposals for:
+ 
+   * Refereed Presentations:
+     45 minutes in length.
+ 
+   * Panel Discussion Topics:
+     45 minutes in length.
+ 
+   * Short Topics:
+     30 minutes in total, including at least 10 minutes discussion.
+ 
+   * Tutorials
+     90 minutes in length.
+ 
+Tutorial sessions should be focused on advanced Linux security defense
+topics within areas such as the kernel, compiler, and security-related
+libraries.  Priority will be given to tutorials created for this conference,
+and those where the presenter a leading subject matter expert on the topic.
+ 
+Topic areas include, but are not limited to:
+ 
+   * Kernel self-protection
+   * Access control
+   * Cryptography and key management
+   * Integrity policy and enforcement
+   * Hardware Security
+   * IoT and embedded security
+   * Virtualization and containers
+   * System-specific system hardening
+   * Case studies
+   * Security tools
+   * Security UX
+   * Emerging technologies, threats & techniques
 
+  Proposals should be submitted via:
+
+    https://events.linuxfoundation.org/linux-security-summit-north-america/program/cfp/
+ 
+
+DATES
+ 
+  * CFP close:            March 31
+  * CFP notifications:    April 13
+  * Schedule announced:   April 16
+  * Event:                June 24-26
+
+
+WHO SHOULD ATTEND
+ 
+We're seeking a diverse range of attendees and welcome participation by
+people involved in Linux security development, operations, and research.
+ 
+LSS-NA is a unique global event that provides the opportunity to present and
+discuss your work or research with key Linux security community members and
+maintainers.  It¢s also useful for those who wish to keep up with the latest
+in Linux security development and to provide input to the development
+process.
+
+WEB SITE
+
+    https://events.linuxfoundation.org/linux-security-summit-north-america/
+
+TWITTER
+
+  For event updates and announcements, follow:
+
+    https://twitter.com/LinuxSecSummit
+  
+    #linuxsecuritysummit
+
+PROGRAM COMMITTEE
+
+  The program committee for LSS 2020 is:
+
+    * James Morris, Microsoft
+    * Serge Hallyn, Cisco
+    * Paul Moore, Cisco
+    * Stephen Smalley, NSA
+    * Elena Reshetova, Intel
+    * John Johansen, Canonical
+    * Kees Cook, Google
+    * Casey Schaufler, Intel
+    * Mimi Zohar, IBM
+    * David A. Wheeler, Institute for Defense Analyses
+
+  The program committee may be contacted as a group via email:
+    lss-pc () lists.linuxfoundation.org
+--1665246916-1737447927-1580774163=:12768--
