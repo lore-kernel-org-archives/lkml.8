@@ -2,80 +2,101 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2623C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4078DC3524B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9547620679
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XCcsIbra"
+	by mail.kernel.org (Postfix) with ESMTP id 171FE206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgBCBRh (ORCPT
+        id S1727159AbgBCBUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:17:37 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:33544 "EHLO vps0.lunn.ch"
+        Sun, 2 Feb 2020 20:20:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgBCBRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:17:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Pg3gkrEgnoEJZvScerIJAe8qFqPzR9YYna0FwRjFm7o=; b=XCcsIbraVVxu09hQ48MivZvB0t
-        UfJy4x1mw9yDLP+x8cZ+XbGcFpTZUiDqyRoue72qfI581UN5Jykk2p1hEzYKxDqeLBbgk314swsyB
-        ape3NVBZ5LfqKd9/r36MIY1wunNIB2XtQlliGPOMr3VWdjfNDvj+QYXHNsgC7YcN91qs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iyQMm-0007wh-5O; Mon, 03 Feb 2020 02:17:32 +0100
-Date:   Mon, 3 Feb 2020 02:17:32 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org,
-        opendmb@gmail.com, davem@davemloft.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH 2/6] net: bcmgenet: refactor phy mode configuration
-Message-ID: <20200203011732.GB30319@lunn.ch>
-References: <20200201074625.8698-1-jeremy.linton@arm.com>
- <20200201074625.8698-3-jeremy.linton@arm.com>
- <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
+        id S1726912AbgBCBUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:20:43 -0500
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9CE820679;
+        Mon,  3 Feb 2020 01:20:40 +0000 (UTC)
+Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
+From:   Greg Ungerer <gerg@linux-m68k.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michael Schmitz <schmitzmic@gmail.com>
+References: <20200131124531.623136425@infradead.org>
+ <9fe6925a-52e5-7104-dae6-3ad97c4bbecc@linux-m68k.org>
+Message-ID: <d42d698c-afdf-f960-5ca7-0f9911a6c9c3@linux-m68k.org>
+Date:   Mon, 3 Feb 2020 11:20:37 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
+In-Reply-To: <9fe6925a-52e5-7104-dae6-3ad97c4bbecc@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 08:24:14AM -0800, Florian Fainelli wrote:
-> 
-> 
-> On 1/31/2020 11:46 PM, Jeremy Linton wrote:
-> > The DT phy mode is similar to what we want for ACPI
-> > lets factor it out of the of path, and change the
-> > of_ call to device_. Further if the phy-mode property
-> > cannot be found instead of failing the driver load lets
-> > just default it to RGMII.
-> 
-> Humm no please do not provide a fallback, if we cannot find a valid
-> 'phy-mode' property we error out. This controller can be used with a
-> variety of configurations (internal EPHY/GPHY, MoCA, external
-> MII/Reverse MII/RGMII) and from a support perspective it is much easier
-> for us if the driver errors out if one of those essential properties are
-> omitted.
+Hi Peter,
 
-Hi Florian
+On 31/1/20 11:19 pm, Greg Ungerer wrote:
+> On 31/1/20 10:45 pm, Peter Zijlstra wrote:
+>> In order to faciliate Will's READ_ONCE() patches:
+>>
+>>    https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
+>>
+>> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
+>> are tested using ARAnyM/68040.
+>>
+>> Michael tested the previous version on his Atari Falcon/68030.
+>>
+>> Build tested for sun3/coldfire.
+> 
+> Thanks for the quick turn around. Build looks good for me too with
+> this new series. I will test on real hardware on Monday.
 
-Does any of the silicon variants have two or more MACs sharing one
-MDIO bus? I'm thinking about the next patch in the series.
+So this tests good for me on real hardware. I had a look over the
+ColdFire changes and I have no problems with anything.
+So for the ColdFire parts:
 
-     Thanks
-	Andrew
+Tested-by: Greg Ungerer <gerg@linux-m68k.org>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+
+Regards
+Greg
+
+
+>> Please consider!
+>>
+>> Changes since -v1:
+>>   - fixed sun3/coldfire build issues
+>>   - unified motorola mmu page setup
+>>   - added enum to table allocator
+>>   - moved pointer table allocator to motorola.c
+>>   - converted coldfire pgtable_t
+>>   - fixed coldfire pgd_alloc
+>>   - fixed coldfire nocache
+>>
+>> ---
+>>   arch/m68k/include/asm/mcf_pgalloc.h      |  31 ++---
+>>   arch/m68k/include/asm/motorola_pgalloc.h |  74 ++++------
+>>   arch/m68k/include/asm/motorola_pgtable.h |  36 +++--
+>>   arch/m68k/include/asm/page.h             |  16 ++-
+>>   arch/m68k/include/asm/pgtable_mm.h       |  10 +-
+>>   arch/m68k/mm/init.c                      |  34 +++--
+>>   arch/m68k/mm/kmap.c                      |  36 +++--
+>>   arch/m68k/mm/memory.c                    | 103 --------------
+>>   arch/m68k/mm/motorola.c                  | 228 +++++++++++++++++++++++++------
+>>   9 files changed, 302 insertions(+), 266 deletions(-)
+>>
+>>
