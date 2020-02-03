@@ -2,167 +2,158 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B84C3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 06:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BA3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 06:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBCD2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 06:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB2F20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 06:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nqwHLhhe";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Q0KHKHKj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="crvGvA8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgBCGWA (ORCPT
+        id S1727563AbgBCGXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 01:22:00 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:42576 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727240AbgBCGV7 (ORCPT
+        Mon, 3 Feb 2020 01:23:22 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:55857 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbgBCGXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 01:21:59 -0500
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0136A2sG017419;
-        Sun, 2 Feb 2020 22:20:52 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=K/8ktSIsAvoJ0nUZ5dILkNtx4J6nUrEgEIG+FDKgSHI=;
- b=nqwHLhheXdj+Wal0rgZHuIOmcBK0MrFxvdaWSzqQj030yD3fInONWcaDZtLk8XxArsza
- 3cYTKRoxS3WAw6feoP7S2ZTRDQwTPjrHunhGOOJdVy01YvPF5H7vr9laYtE9GTu0yOhH
- Rrj/w31JNcefJDzB+GwN7sxwVJvWGjbtIQI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2xw5vsntpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sun, 02 Feb 2020 22:20:51 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 2 Feb 2020 22:20:51 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PBk8EfOHxNkQcjW3a/HAa7E9wy2f2w/8HKtETTK4xnP96Nlnt/saGGd/bQlpD1bR3i0JC/DvkAiDvfs3bJ5FJh6mEGYXTeb16LMNqFabYsM6oa2CV0y4ncUQ34IrtuFahq9VMVqhuWz6FIkBD3VKkEhLxy6U5vASAjFgijDLk8XMoBNH7p5cHViZesQnCtofO5zXEkZM37/mC+MKAEZQxzx+vU99qdNS/lxXNdK+h+mYMtIB/nrZuUJn7zJpC//7p3vog5TiqoHuaDrFSEvpxtS0nlBp5X4O71VvEToufNs7Sb8asE4DaZFk2KTVdK02UfnuEXxy30THhRjcNPA9Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K/8ktSIsAvoJ0nUZ5dILkNtx4J6nUrEgEIG+FDKgSHI=;
- b=Aw3Kedog5AS2xMmQ9NueWnbzQfx+2UzVbyfARfzQTAEVTHG+c654bphh+1Fx0LR3j6SIOhWSCz6tOSuOIYjNmzblv5DOYdfIdlh/fmzJd67OMn5A9b7rSal2oA9TK4zv78etY7ibFsFqEuFrHHZWZIsWN64UA+v/lkOdOIEiw+c0uDI/RcxX7f1PTkSurWLPD6QXkBlpLHE5TfKR83W2S7h0IzSfG6SkFls5D0eYBNeNtXC5VFt6wP9BarfZZC1FyY83FSUjQuEvWZUbfJrWNZPNH/yfMYLsHNwnx5HqRD2JAnTO2cVCjqW7qikaKXPXdl/3I/gtFaCc0cXfPRkaUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K/8ktSIsAvoJ0nUZ5dILkNtx4J6nUrEgEIG+FDKgSHI=;
- b=Q0KHKHKj4ZTn2rmPtzIjpwCgWRfKBbji0kKrcaWFY8aKF6xZzYeSsvyWYquNdegDIjMw87clI8RGZJNJt1SLsbXAzEZb2ug81pouD9C6X0rjh7HGKmrUbkmFZ9YJKQcZVVEeZWpHbALoVQHNz1fSwNZp7LulM3HDeAOcVwJudto=
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
- DM6PR15MB2826.namprd15.prod.outlook.com (20.179.164.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.27; Mon, 3 Feb 2020 06:20:36 +0000
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::294e:884:76fd:743c]) by DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::294e:884:76fd:743c%4]) with mapi id 15.20.2686.030; Mon, 3 Feb 2020
- 06:20:36 +0000
-Subject: Re: [PATCH -next] bpf: make btf_check_func_type_match() static
-To:     Hongbo Yao <yaohongbo@huawei.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>
-CC:     <chenzhou10@huawei.com>, <kafai@fb.com>, <songliubraving@fb.com>,
-        <andriin@fb.com>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-References: <20200203020220.117152-1-yaohongbo@huawei.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <a29bf101-81b0-68ef-356c-dfdc9c53d899@fb.com>
-Date:   Sun, 2 Feb 2020 22:20:31 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
-In-Reply-To: <20200203020220.117152-1-yaohongbo@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR03CA0018.namprd03.prod.outlook.com
- (2603:10b6:300:117::28) To DM6PR15MB3001.namprd15.prod.outlook.com
- (2603:10b6:5:13c::16)
+        Mon, 3 Feb 2020 01:23:21 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580711000; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=B884mIi1FderXMyOjaDduMnL5Xg3XoTXVNT7DKdrpYA=;
+ b=crvGvA8p2Y/UmTWq7Evw8xcxk9oNfS9M255GTERB7VqLarf6BN15vYUTk/vdM2c6ah0sBPBH
+ COIvLRiDCwuxYjs+DtER99a7fvuNIBoNMc2hOeqLmwy5sebkeXpFupmsiUqXuVr3kDotMSe1
+ JSbcf84orUPkB52Yahsu+1iPTDE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e37bc56.7effc1b02928-smtp-out-n02;
+ Mon, 03 Feb 2020 06:23:18 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8BC7BC447A9; Mon,  3 Feb 2020 06:23:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92D0CC433CB;
+        Mon,  3 Feb 2020 06:23:15 +0000 (UTC)
 MIME-Version: 1.0
-Received: from MacBook-Pro-52.local (2620:10d:c090:180::afe7) by MWHPR03CA0018.namprd03.prod.outlook.com (2603:10b6:300:117::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.29 via Frontend Transport; Mon, 3 Feb 2020 06:20:34 +0000
-X-Originating-IP: [2620:10d:c090:180::afe7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d9cea84e-7bd2-4a5e-b2cc-08d7a8712e73
-X-MS-TrafficTypeDiagnostic: DM6PR15MB2826:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR15MB28264B169DAFFA6D1AB8BAC6D3000@DM6PR15MB2826.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:291;
-X-Forefront-PRVS: 0302D4F392
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(6666004)(66946007)(53546011)(6506007)(5660300002)(66556008)(66476007)(52116002)(81156014)(8676002)(81166006)(478600001)(8936002)(316002)(16526019)(31686004)(2906002)(6486002)(6512007)(31696002)(86362001)(186003)(2616005)(4326008)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB2826;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bkJgpyaHV8h8MGm9SfOruVxFeJuq/OQNuqcOP6Sgo0FJM2FsU8pEVQX1burRaPJVxdGbH85+vQ4VxEXoHy/pHlnU/Koi4GcJgJi2dIMGauLzqmqlztP67x0Ny4QwTM2V85UJ2N19obHPSYvRPwS/ULirmx8iNEslgAu3P2+/0ZOB8LBcyZz0L94k2Sh3YEw/TDX+vBuHkYWIKlB5bNz4dIh56flKZZZSxRdvosmPjFvhBqCx+mTMTqZJXsmzkSD2mj7bsmf8Jct6ITraD+a4WFPtuXy8lL62W8g010g9e3sXHjpU39Xgi/9XFXNQPldukNCFE4e3t/OBB+dC6lNE3WH7DiGB23mU60eeRH9kD2BvRj4ChDyoBew5TfVdkgm7gcu6qSTLGtBnO//cDFcf52gJONf9QlHBz+KBYWutqu97bq4HsUJHUAzGjOjXyy7v
-X-MS-Exchange-AntiSpam-MessageData: +BG3KNvhsvVnHfDug5jXGdZXILspH3fQF6xMEeEXL0iFdOe9qLt4MpcGXeI0ABfGos3Am/+Pf/38a49H4siKLjjBLfNqJpPPPiYT6qXn4W8OC3HimgHfMCWCjjBbsa6XvJdtssWlFB5hJpKBujmqn7Amzt3ol65J2CkeF5BHjEE=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9cea84e-7bd2-4a5e-b2cc-08d7a8712e73
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 06:20:36.3118
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OutLqTq+6zduPepUAz5Nzz49tHmOmRiJr3BuC7z32tFpbXgwchloDlz3VmGz3mdf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB2826
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_01:2020-02-02,2020-02-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- mlxlogscore=999 suspectscore=0 clxscore=1011 priorityscore=1501
- adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1911200001 definitions=main-2002030049
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Feb 2020 14:23:15 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Sayali Lokhande <sayalil@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/8] scsi: ufs: Flush exception event before suspend
+In-Reply-To: <525e4f67-f471-54a6-aaea-b3772a550af1@acm.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-2-git-send-email-cang@codeaurora.org>
+ <525e4f67-f471-54a6-aaea-b3772a550af1@acm.org>
+Message-ID: <82723efc44714e8677505cb7999d3fd5@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/2/20 6:02 PM, Hongbo Yao wrote:
-> Fix sparse warning:
-> kernel/bpf/btf.c:4131:5: warning: symbol 'btf_check_func_type_match' was
-> not declared. Should it be static?
-
-Yes, static is better since the function is only used in one file.
-
-Please use the tag "[PATCH bpf-next]" instead of "[PATCH -next]".
-Since this is to fix a sparse warning, I think it should be okay
-to target bpf-next. Please resubmit after bpf-next reopens in
-about a week.
-
+On 2020-01-26 11:29, Bart Van Assche wrote:
+> On 2020-01-22 23:25, Can Guo wrote:
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 1201578..c2de29f 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -4760,8 +4760,15 @@ static void ufshcd_slave_destroy(struct 
+>> scsi_device *sdev)
+>>  			 * UFS device needs urgent BKOPs.
+>>  			 */
+>>  			if (!hba->pm_op_in_progress &&
+>> -			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
+>> -				schedule_work(&hba->eeh_work);
+>> +			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr)) {
+>> +				/*
+>> +				 * Prevent suspend once eeh_work is scheduled
+>> +				 * to avoid deadlock between ufshcd_suspend
+>> +				 * and exception event handler.
+>> +				 */
+>> +				if (schedule_work(&hba->eeh_work))
+>> +					pm_runtime_get_noresume(hba->dev);
+>> +			}
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
-> ---
->   kernel/bpf/btf.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Please combine the two logical tests with "&&" instead of nesting two
+> if-statements inside each other.
 > 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 8c9d8f266bef..83d3d92023af 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -4144,7 +4144,7 @@ int btf_distill_func_proto(struct bpf_verifier_log *log,
->    * EFAULT - verifier bug
->    * 0 - 99% match. The last 1% is validated by the verifier.
->    */
-> -int btf_check_func_type_match(struct bpf_verifier_log *log,
-> +static int btf_check_func_type_match(struct bpf_verifier_log *log,
->   			      struct btf *btf1, const struct btf_type *t1,
->   			      struct btf *btf2, const struct btf_type *t2)
-
-Please also align
-   struct btf *btf1, const struct btf_type *t1,
-   struct btf *btf2, const struct btf_type *t2)
-properly after you added 'static' before the function declaration.
-
->   {
+>>  			break;
+>>  		case UPIU_TRANSACTION_REJECT_UPIU:
+>>  			/* TODO: handle Reject UPIU Response */
+>> @@ -5215,7 +5222,14 @@ static void 
+>> ufshcd_exception_event_handler(struct work_struct *work)
+>> 
+>>  out:
+>>  	scsi_unblock_requests(hba->host);
+>> -	pm_runtime_put_sync(hba->dev);
+>> +	/*
+>> +	 * pm_runtime_get_noresume is called while scheduling
+>> +	 * eeh_work to avoid suspend racing with exception work.
+>> +	 * Hence decrement usage counter using pm_runtime_put_noidle
+>> +	 * to allow suspend on completion of exception event handler.
+>> +	 */
+>> +	pm_runtime_put_noidle(hba->dev);
+>> +	pm_runtime_put(hba->dev);
+>>  	return;
+>>  }
+>> 
+>> @@ -7901,6 +7915,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, 
+>> enum ufs_pm_op pm_op)
+>>  			goto enable_gating;
+>>  	}
+>> 
+>> +	flush_work(&hba->eeh_work);
+>>  	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
+>>  	if (ret)
+>>  		goto set_dev_active;
 > 
+> I think this patch introduces a new race condition, namely the 
+> following:
+> - ufshcd_slave_destroy() tests pm_op_in_progress and reads the value
+>   zero from that variable.
+> - ufshcd_suspend() sets hba->pm_op_in_progress to one.
+> - ufshcd_slave_destroy() calls schedule_work().
+> 
+> How about fixing this race condition by calling
+> pm_runtime_get_noresume() before checking pm_op_in_progress and by
+> reallowing resume if no work is scheduled?
+> 
+> Thanks,
+> 
+> Bart.
+
+Hi Bart,
+
+If you apply this patch, you will find the change is not in
+ufshcd_slave_destroy(), but in ufshcd_transfer_rsp_status().
+So the racing you mentioned above does not exist.
+
+Thanks,
+
+Can Guo.
