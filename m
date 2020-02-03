@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF153C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B0DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965E62082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C6721D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747996;
-	bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
+	s=default; t=1580747999;
+	bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk3bELegC1fveF/dORKh/XbM0knhvknkI5u5PsTm0h5RZz94oJddRxwopGfER99xe
-	 oY2U2NCh8wRnZGR5FVPt3kN+szaTtCCB9Y3FzXhwJCqldMbFcQjOj6bMjxHNbzMQ9A
-	 WWoHh30qW+rko3g8hAQsrqFjIqpiBHuf52QfJpFc=
+	b=rfhdMP+TMjCF4Ctyxwv53YfuhFRhTOd0KKPYaWLE8TSvQlEMy703IOxNWTreb9j0w
+	 H9On6n+1kut8GGOeo87PLnk4bFp+xbvNWAhLpRbEjvH6PhXU/M0vVBtRZ4R75VDZJu
+	 OcG14GsDscTVFSLGstlNCWxIYepH2Losv/4doZLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbgBCQhC (ORCPT
+        id S1731486AbgBCQj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52372 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgBCQg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:56 -0500
+        id S1731256AbgBCQhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:01 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A41102051A;
-        Mon,  3 Feb 2020 16:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A4D20721;
+        Mon,  3 Feb 2020 16:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747816;
-        bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
+        s=default; t=1580747820;
+        bh=z8JvJ+ByIAn+lh5NmKZ61jSBglLW2Qni5MjImejmzhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HRlcsApFz2FZNLdSQtQJ8St/7eEKBQUQS3FSNx6CfkHUfdDrkimsxm6vG3j94DMAf
-         EHFZiTmXEPgujopHedWUcSTPNSecjYQzKZHqFVLJITe9psJ2aBa2WI9LWR8ghnWYkB
-         ujz27g74bSzcYnBtMmr1f1EP48Igk+gT0bVGpjsI=
+        b=NU+YuGmbkiTqTMx81Qn6v+WkOT5HbvWp5gKmyTXxc86gg5Xt53Ko2BhZ5FEcm/0TH
+         n1KUV9qnRhENvYVZSS74aOKHn077sA2UA+Mud5TJVA3b8X4ApiTnQoZamRhWXiwvWg
+         nfmX3K4fJ80w68cBtsPjfpvZOanztZ6YFvs/9KYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shahed Shaikh <shshaikh@marvell.com>,
-        Yonggen Xu <Yonggen.Xu@dell.com>,
-        Manish Chopra <manishc@marvell.com>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 82/90] qlcnic: Fix CPU soft lockup while collecting firmware dump
-Date:   Mon,  3 Feb 2020 16:20:25 +0000
-Message-Id: <20200203161927.139388793@linuxfoundation.org>
+Subject: [PATCH 5.4 84/90] net/fsl: treat fsl,erratum-a011043
+Date:   Mon,  3 Feb 2020 16:20:27 +0000
+Message-Id: <20200203161927.325905755@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,60 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-[ Upstream commit 22e984493a41bf8081f13d9ed84def3ca8cfd427 ]
+[ Upstream commit 1d3ca681b9d9575ccf696ebc2840a1ebb1fd4074 ]
 
-Driver while collecting firmware dump takes longer time to
-collect/process some of the firmware dump entries/memories.
-Bigger capture masks makes it worse as it results in larger
-amount of data being collected and results in CPU soft lockup.
-Place cond_resched() in some of the driver flows that are
-expectedly time consuming to relinquish the CPU to avoid CPU
-soft lockup panic.
+When fsl,erratum-a011043 is set, adjust for erratum A011043:
+MDIO reads to internal PCS registers may result in having
+the MDIO_CFG[MDIO_RD_ER] bit set, even when there is no
+error and read data (MDIO_DATA[MDIO_DATA]) is correct.
+Software may get false read error when reading internal
+PCS registers through MDIO. As a workaround, all internal
+MDIO accesses should ignore the MDIO_CFG[MDIO_RD_ER] bit.
 
-Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
-Tested-by: Yonggen Xu <Yonggen.Xu@dell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 1 +
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/net/ethernet/freescale/xgmac_mdio.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index a496390b8632f..07f9067affc65 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -2043,6 +2043,7 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
- 			break;
- 		}
- 		entry += p_hdr->size;
-+		cond_resched();
- 	}
- 	p_dev->ahw->reset.seq_index = index;
- }
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-index afa10a163da1f..f34ae8c75bc5e 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
-@@ -703,6 +703,7 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
- 		addr += 16;
- 		reg_read -= 16;
- 		ret += 16;
-+		cond_resched();
- 	}
- out:
- 	mutex_unlock(&adapter->ahw->mem_lock);
-@@ -1383,6 +1384,7 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
- 		buf_offset += entry->hdr.cap_size;
- 		entry_offset += entry->hdr.offset;
- 		buffer = fw_dump->data + buf_offset;
-+		cond_resched();
- 	}
+diff --git a/drivers/net/ethernet/freescale/xgmac_mdio.c b/drivers/net/ethernet/freescale/xgmac_mdio.c
+index e03b30c60dcfd..c82c85ef5fb34 100644
+--- a/drivers/net/ethernet/freescale/xgmac_mdio.c
++++ b/drivers/net/ethernet/freescale/xgmac_mdio.c
+@@ -49,6 +49,7 @@ struct tgec_mdio_controller {
+ struct mdio_fsl_priv {
+ 	struct	tgec_mdio_controller __iomem *mdio_base;
+ 	bool	is_little_endian;
++	bool	has_a011043;
+ };
  
- 	fw_dump->clr = 1;
+ static u32 xgmac_read32(void __iomem *regs,
+@@ -226,7 +227,8 @@ static int xgmac_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		return ret;
+ 
+ 	/* Return all Fs if nothing was there */
+-	if (xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) {
++	if ((xgmac_read32(&regs->mdio_stat, endian) & MDIO_STAT_RD_ER) &&
++	    !priv->has_a011043) {
+ 		dev_err(&bus->dev,
+ 			"Error while reading PHY%d reg at %d.%hhu\n",
+ 			phy_id, dev_addr, regnum);
+@@ -274,6 +276,9 @@ static int xgmac_mdio_probe(struct platform_device *pdev)
+ 	priv->is_little_endian = of_property_read_bool(pdev->dev.of_node,
+ 						       "little-endian");
+ 
++	priv->has_a011043 = of_property_read_bool(pdev->dev.of_node,
++						  "fsl,erratum-a011043");
++
+ 	ret = of_mdiobus_register(bus, np);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "cannot register MDIO bus\n");
 -- 
 2.20.1
 
