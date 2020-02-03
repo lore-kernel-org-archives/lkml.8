@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A2EC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701DBC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3B520CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E8F20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aUDpLd8N"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="enAfhxuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgBCVjm (ORCPT
+        id S1727215AbgBCVjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:39:42 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19546 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgBCVjm (ORCPT
+        Mon, 3 Feb 2020 16:39:52 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13988 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCVjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:39:42 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3892e50001>; Mon, 03 Feb 2020 13:38:45 -0800
+        Mon, 3 Feb 2020 16:39:52 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3893100000>; Mon, 03 Feb 2020 13:39:28 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Feb 2020 13:39:41 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 13:39:51 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 13:39:41 -0800
+        by hqpgpgate102.nvidia.com on Mon, 03 Feb 2020 13:39:51 -0800
 Received: from [10.26.11.224] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
- 2020 21:39:38 +0000
-Subject: Re: [PATCH 4.14 00/89] 4.14.170-stable review
+ 2020 21:39:48 +0000
+Subject: Re: [PATCH 4.19 00/70] 4.19.102-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
         <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
         <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
         <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200203161916.847439465@linuxfoundation.org>
+References: <20200203161912.158976871@linuxfoundation.org>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <0aea59e8-6560-d385-504c-b826780a8533@nvidia.com>
-Date:   Mon, 3 Feb 2020 21:39:35 +0000
+Message-ID: <022a1e41-2221-3124-a7f3-909cf08edd1f@nvidia.com>
+Date:   Mon, 3 Feb 2020 21:39:46 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
+In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -55,26 +55,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580765925; bh=ODCZxNbmtMcpaxOAc+ZdHdiN3KqwLMNnGIFaqnAKc/4=;
+        t=1580765968; bh=kjhA0tZxxu3S4eN8L9BfeZeqw5izXFeYwyWs7wZIxmw=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=aUDpLd8NXa5L7O1FMCOXWr6c9wvdkf3vjdl2nMfaogc+M2mX7IaJZRf8hUButLPPY
-         U6dU3p9Us6hKGMG0sJe0Tz+85imzqKDKjOnHOB/7NJAlidYq8YyU9Lkhgnp0Y1C8C0
-         QYyN334Nl0A0BsGipwOw+RYnnuYyzkMH6p7dDmnrwy11MLd+ug/rDeH9T6PkJA1pC8
-         /7f3RbALa6GVwhPDlrGuMloElRXBqLo9JofHSb4CpaNCoDflum9x6cLqVBiuE/gbJ/
-         hOej7BbXFvMVx9lXC2KvtF+qeBpXNmyXmsjzl0RP9mLMN2uSAR5M6DXFG9ujnJ20ts
-         UCW8lb23qJtHg==
+        b=enAfhxufox1KLT1keTEpxS5WRS2iPbR19jE1cryH3m6O3IBp6lJoXqkkVcMKPU390
+         nPFPmZmT5ZrpPjRLVxDpqGrIFVcZoXOqQq/rB74QSPdW6VYc4u+NLpD7c49LGGItap
+         c+6/kZiHRivyCORrLgBGw998n5zOFniZFbByJyeSzMBIQfVNIB1hhbafbSv/qwcqzh
+         w+gC+H+RDqjmIZ5AXTX3hiEShxEmLq6V+nAmeLHGSkBfhNPFxwUgKdHCtvtCBCxMuB
+         KgGwjsu6Cx1c7QX0ymzt5rR+5EtI+7JWXrHdrmK2hMODaSsDxWkkJM6nbsETeOFBW8
+         bZF1rX2Pp7BAw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 03/02/2020 16:18, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.170 release.
-> There are 89 patches in this series, all will be posted as a response
+On 03/02/2020 16:19, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.102 release.
+> There are 70 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -82,9 +82,9 @@ On 03/02/2020 16:18, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.170-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.102-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
 > and the diffstat can be found below.
 > 
 > thanks,
@@ -93,13 +93,14 @@ On 03/02/2020 16:18, Greg Kroah-Hartman wrote:
 
 All tests are passing for Tegra ...
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
-Linux version:	4.14.170-rc1-g2be5c4bdc0df
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+Linux version:	4.19.102-rc1-g15412149f234
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
                 tegra210-p2371-2180, tegra30-cardhu-a04
 
 Cheers
