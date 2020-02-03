@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85E2C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0259DC35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8BE20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EEF21775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvhVrWsZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GHKe7K8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgBCQm3 (ORCPT
+        id S1731684AbgBCQm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:42:29 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42859 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731610AbgBCQmH (ORCPT
+        Mon, 3 Feb 2020 11:42:28 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35634 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731124AbgBCQmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:42:07 -0500
+        Mon, 3 Feb 2020 11:42:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580748126;
+        s=mimecast20190719; t=1580748130;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=lNAPArXbNovHkR2AMewAPMmBXHpx4HCht8HvJkIov8w=;
-        b=DvhVrWsZmTAMkdSaOcgv/jpwJmX8ZISZjLur17HPwXQBlUSF70qmnTuNqbjbZw1skajSYB
-        L2avc5s0ZiXbXwOZFty9am2f6dr9Kgxb9Z3k0CivqqGnob6/WWobpmh/dW9TSjfljHglca
-        OJR6mOfYLJwW1Z7i6Bbj1cSMcpOkWuo=
+        bh=9VWvQGPBU27LRODQE2DAzJDJigt9+M/hKMjwHQzqBmo=;
+        b=GHKe7K8sBu+oI2QraYwK2qk3P2AoWVoT/Lnp8YHxsksWgCEnzagV1FTmbIyYyiWp5RvZ3v
+        drXs3IX7jkza2JUFqe+T1g7VoB0AzH0M/KBjpNRNX2xTnlLFn0LY5aOtYdQutfoTUsc4UV
+        BJjNk7I9mQh21DKPCgvAduOu2m3a6u4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-XyZADh58N2CbyL3yGiGlzQ-1; Mon, 03 Feb 2020 11:42:02 -0500
-X-MC-Unique: XyZADh58N2CbyL3yGiGlzQ-1
+ us-mta-14-vsiP23bRPAiOaPkuxqgK3A-1; Mon, 03 Feb 2020 11:42:06 -0500
+X-MC-Unique: vsiP23bRPAiOaPkuxqgK3A-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB9F6801E70;
-        Mon,  3 Feb 2020 16:42:01 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 155C9100726A;
+        Mon,  3 Feb 2020 16:42:05 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F319710013A7;
-        Mon,  3 Feb 2020 16:42:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E03510013A7;
+        Mon,  3 Feb 2020 16:42:04 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>
 Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v5 3/7] locking/lockdep: Track number of zapped classes
-Date:   Mon,  3 Feb 2020 11:41:43 -0500
-Message-Id: <20200203164147.17990-4-longman@redhat.com>
+Subject: [PATCH v5 7/7] locking/lockdep: Add a fast path for chain_hlocks allocation
+Date:   Mon,  3 Feb 2020 11:41:47 -0500
+Message-Id: <20200203164147.17990-8-longman@redhat.com>
 In-Reply-To: <20200203164147.17990-1-longman@redhat.com>
 References: <20200203164147.17990-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
@@ -60,71 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The whole point of the lockdep dynamic key patch is to allow unused
-locks to be removed from the lockdep data buffers so that existing
-buffer space can be reused. However, there is no way to find out how
-many unused locks are zapped and so we don't know if the zapping process
-is working properly.
+When alloc_chain_hlocks() is called, the most likely scenario is
+to allocate from the primordial chain block which holds the whole
+chain_hlocks[] array initially. It is the primordial chain block if its
+size is bigger than MAX_LOCK_DEPTH. As long as the number of entries left
+after splitting is still bigger than MAX_CHAIN_BUCKETS it will remain
+in bucket 0. By splitting out a sub-block at the end, we only need to
+adjust the size without changing any of the existing linkage information.
+This optimized fast path can reduce the latency of allocation requests.
 
-Add a new nr_zapped_classes counter to track that and show it in
-/proc/lockdep_stats.
+This patch does change the order by which chain_hlocks entries are
+allocated. The original code allocates entries from the beginning of
+the array. Now it will be allocated from the end of the array backward.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lockdep.c           | 2 ++
- kernel/locking/lockdep_internals.h | 1 +
- kernel/locking/lockdep_proc.c      | 6 ++++++
- 3 files changed, 9 insertions(+)
+ kernel/locking/lockdep.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 35449f5b79fb..28222d03345f 100644
+index 70288bb2331d..d05799872882 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -147,6 +147,7 @@ static DECLARE_BITMAP(list_entries_in_use, MAX_LOCKDEP_ENTRIES);
- #define KEYHASH_SIZE		(1UL << KEYHASH_BITS)
- static struct hlist_head lock_keys_hash[KEYHASH_SIZE];
- unsigned long nr_lock_classes;
-+unsigned long nr_zapped_classes;
- #ifndef CONFIG_DEBUG_LOCKDEP
- static
- #endif
-@@ -4880,6 +4881,7 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
- 	}
- 
- 	remove_class_from_lock_chains(pf, class);
-+	nr_zapped_classes++;
+@@ -2701,15 +2701,19 @@ static inline int chain_block_size(int offset)
+ 	return (chain_hlocks[offset + 2] << 16) | chain_hlocks[offset + 3];
  }
  
- static void reinit_class(struct lock_class *class)
-diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index a525368b8cf6..76db80446a32 100644
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -130,6 +130,7 @@ extern const char *__get_key_name(const struct lockdep_subclass_key *key,
- struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i);
++static inline void init_chain_block_size(int offset, int size)
++{
++	chain_hlocks[offset + 2] = size >> 16;
++	chain_hlocks[offset + 3] = (u16)size;
++}
++
+ static inline void init_chain_block(int offset, int next, int bucket, int size)
+ {
+ 	chain_hlocks[offset] = (next >> 16) | CHAIN_BLK_FLAG;
+ 	chain_hlocks[offset + 1] = (u16)next;
  
- extern unsigned long nr_lock_classes;
-+extern unsigned long nr_zapped_classes;
- extern unsigned long nr_list_entries;
- long lockdep_next_lockchain(long i);
- unsigned long lock_chain_count(void);
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 0f6842bcfba8..453e497b6124 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -343,6 +343,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 	seq_printf(m, " debug_locks:                   %11u\n",
- 			debug_locks);
- 
-+	/*
-+	 * Zappped classes and lockdep data buffers reuse statistics.
-+	 */
-+	seq_puts(m, "\n");
-+	seq_printf(m, " zapped classes:                %11lu\n",
-+			nr_zapped_classes);
- 	return 0;
+-	if (bucket == 0) {
+-		chain_hlocks[offset + 2] = size >> 16;
+-		chain_hlocks[offset + 3] = (u16)size;
+-	}
++	if (bucket == 0)
++		init_chain_block_size(offset, size);
  }
  
+ static inline void add_chain_block(int offset, int size)
+@@ -2809,6 +2813,18 @@ static int alloc_chain_hlocks(int req)
+ 			return curr;
+ 		}
+ 
++		/*
++		 * Fast path: splitting out a sub-block at the end of the
++		 * primordial chain block.
++		 */
++		if (likely((size > MAX_LOCK_DEPTH) &&
++			   (size - req > MAX_CHAIN_BUCKETS))) {
++			size -= req;
++			nr_free_chain_hlocks -= req;
++			init_chain_block_size(curr, size);
++			return curr + size;
++		}
++
+ 		if (size > max_size) {
+ 			max_prev = prev;
+ 			max_curr = curr;
 -- 
 2.18.1
 
