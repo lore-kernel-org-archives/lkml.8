@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4471EC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEA8C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1823220838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0A020838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748263;
-	bh=T/LbyhOpANalFGth4QIQR7yQjVB/DcC7Wez3GWw4MgM=;
+	s=default; t=1580748266;
+	bh=tI9Mp8W8EjqrfA9AfeHBMMTk2MT5fyEAYSPNYbwmJT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dP46TnjskSijE5W5i4EpABKL0fr29ZPgDVm/hbWyfGmXc6J86G3wW6MPevSZBAcis
-	 jV3a+1bzsT1W/EXjo512BizC6+ThyO3O7+4oXMCqilHgpQkk/3QDuPKfVcbeoAdEEw
-	 1X8lZD8yQ6hWCuYuJnuRF/WStckxLNVRFf+NzkJM=
+	b=KfTobh6sXYym205vwqfH9dVmnSQ6fKJ6zMpyQzJrxl0yfNThIJVEnaBlydSuP1bf6
+	 AmfbrWtKwKHB+16Aonw/8gpuKKguP+XJQn6DPYPMhtYRXefk/E96w1neQwBozQEV41
+	 b1yqh/eCX94DerIFzj/IjG/jBvLmLOfNfXt7xL+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgBCQbn (ORCPT
+        id S1730257AbgBCQbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:31:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730233AbgBCQbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Feb 2020 11:31:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730233AbgBCQbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:31:35 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 049322082E;
-        Mon,  3 Feb 2020 16:31:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B2F21741;
+        Mon,  3 Feb 2020 16:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747499;
-        bh=T/LbyhOpANalFGth4QIQR7yQjVB/DcC7Wez3GWw4MgM=;
+        s=default; t=1580747494;
+        bh=tI9Mp8W8EjqrfA9AfeHBMMTk2MT5fyEAYSPNYbwmJT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nxDfaqXYjbXwuB+A+7AUSxTNwoX2BzGPhkajvSiR2zz04z8It4cJFNmoTkH39pC5O
-         6IWRUhepIfDKdvKjjWWOXFfCBjWD0mgoXaqGbASU1DcWWDDbcMV8ONpwMoe/L0WxqY
-         aobhNW+/76wbKZV2c/h2TSfDMhXNqe+UQ5kCjgHY=
+        b=aTnDSwJNxT05kLZsnNrAM5bY7T2NZ8hY1prX4zzrTp3rZovXk1kIhVY2I75offFf6
+         UKfukpb6ko3pAMWl47ecPlZT4gyRlOUxLHp+cykg5v/nay71+7w63u90EcY0l5OuXB
+         Ihp1McHTbc+y/uzZqGgNM2+2ioS8dke6tyxXF0Dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH 4.19 20/70] tomoyo: Use atomic_t for statistics counter
-Date:   Mon,  3 Feb 2020 16:19:32 +0000
-Message-Id: <20200203161915.573229417@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com,
+        syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com,
+        syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 18/70] media: gspca: zero usb_buf
+Date:   Mon,  3 Feb 2020 16:19:30 +0000
+Message-Id: <20200203161915.265422265@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,58 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit a8772fad0172aeae339144598b809fd8d4823331 upstream.
+commit de89d0864f66c2a1b75becfdd6bf3793c07ce870 upstream.
 
-syzbot is reporting that there is a race at tomoyo_stat_update() [1].
-Although it is acceptable to fail to track exact number of times policy
-was updated, convert to atomic_t because this is not a hot path.
+Allocate gspca_dev->usb_buf with kzalloc instead of kmalloc to
+ensure it is property zeroed. This fixes various syzbot errors
+about uninitialized data.
 
-[1] https://syzkaller.appspot.com/bug?id=a4d7b973972eeed410596e6604580e0133b0fc04
+Syzbot links:
 
-Reported-by: syzbot <syzbot+efea72d4a0a1d03596cd@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+https://syzkaller.appspot.com/bug?extid=32310fc2aea76898d074
+https://syzkaller.appspot.com/bug?extid=99706d6390be1ac542a2
+https://syzkaller.appspot.com/bug?extid=64437af5c781a7f0e08e
+
+Reported-and-tested-by: syzbot+32310fc2aea76898d074@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+99706d6390be1ac542a2@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+64437af5c781a7f0e08e@syzkaller.appspotmail.com
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/tomoyo/common.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/media/usb/gspca/gspca.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/tomoyo/common.c
-+++ b/security/tomoyo/common.c
-@@ -2254,9 +2254,9 @@ static const char * const tomoyo_memory_
- 	[TOMOYO_MEMORY_QUERY]  = "query message:",
- };
- 
--/* Timestamp counter for last updated. */
--static unsigned int tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
- /* Counter for number of updates. */
-+static atomic_t tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
-+/* Timestamp counter for last updated. */
- static time64_t tomoyo_stat_modified[TOMOYO_MAX_POLICY_STAT];
- 
- /**
-@@ -2268,10 +2268,7 @@ static time64_t tomoyo_stat_modified[TOM
-  */
- void tomoyo_update_stat(const u8 index)
- {
--	/*
--	 * I don't use atomic operations because race condition is not fatal.
--	 */
--	tomoyo_stat_updated[index]++;
-+	atomic_inc(&tomoyo_stat_updated[index]);
- 	tomoyo_stat_modified[index] = ktime_get_real_seconds();
- }
- 
-@@ -2291,7 +2288,7 @@ static void tomoyo_read_stat(struct tomo
- 	for (i = 0; i < TOMOYO_MAX_POLICY_STAT; i++) {
- 		tomoyo_io_printf(head, "Policy %-30s %10u",
- 				 tomoyo_policy_headers[i],
--				 tomoyo_stat_updated[i]);
-+				 atomic_read(&tomoyo_stat_updated[i]));
- 		if (tomoyo_stat_modified[i]) {
- 			struct tomoyo_time stamp;
- 			tomoyo_convert_time(tomoyo_stat_modified[i], &stamp);
+--- a/drivers/media/usb/gspca/gspca.c
++++ b/drivers/media/usb/gspca/gspca.c
+@@ -1473,7 +1473,7 @@ int gspca_dev_probe2(struct usb_interfac
+ 		pr_err("couldn't kzalloc gspca struct\n");
+ 		return -ENOMEM;
+ 	}
+-	gspca_dev->usb_buf = kmalloc(USB_BUF_SZ, GFP_KERNEL);
++	gspca_dev->usb_buf = kzalloc(USB_BUF_SZ, GFP_KERNEL);
+ 	if (!gspca_dev->usb_buf) {
+ 		pr_err("out of memory\n");
+ 		ret = -ENOMEM;
 
 
