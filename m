@@ -2,118 +2,95 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08092C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B7C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80BE20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDE720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgBCPjX (ORCPT
+        id S1728130AbgBCPkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:39:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57616 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgBCPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:39:23 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AFFA0ADE2;
-        Mon,  3 Feb 2020 15:39:21 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id C9BD0DA81B; Mon,  3 Feb 2020 16:39:00 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs updates for 5.6, part 2
-Date:   Mon,  3 Feb 2020 16:38:55 +0100
-Message-Id: <cover.1580742376.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 3 Feb 2020 10:40:08 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:52140 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727606AbgBCPkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:40:08 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-183-INfOXLASNUmZXlA7243NPA-1; Mon, 03 Feb 2020 15:40:05 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 3 Feb 2020 15:40:04 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Feb 2020 15:40:04 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
+        Neal Cardwell <ncardwell@google.com>
+CC:     "sjpark@amazon.com" <sjpark@amazon.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "sj38.park@gmail.com" <sj38.park@gmail.com>,
+        "aams@amazon.com" <aams@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Yuchung Cheng <ycheng@google.com>
+Subject: RE: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is
+ received
+Thread-Topic: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is
+ received
+Thread-Index: AQHV2IlPJWOIosB7x0WML/igObqFf6gJnv4A
+Date:   Mon, 3 Feb 2020 15:40:04 +0000
+Message-ID: <5a8c1658de8f49b2994d19d371c13c79@AcuMS.aculab.com>
+References: <20200131122421.23286-1-sjpark@amazon.com>
+ <20200131122421.23286-3-sjpark@amazon.com>
+ <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
+ <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com>
+ <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
+ <7d36a817-5519-8496-17cf-00eda5ed4ec7@gmail.com>
+In-Reply-To: <7d36a817-5519-8496-17cf-00eda5ed4ec7@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: INfOXLASNUmZXlA7243NPA-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDMxIEphbnVhcnkgMjAyMCAyMjo1NA0KPiBPbiAx
+LzMxLzIwIDI6MTEgUE0sIE5lYWwgQ2FyZHdlbGwgd3JvdGU6DQo+IA0KPiA+IEkgbG9va2VkIGlu
+dG8gZml4aW5nIHRoaXMsIGJ1dCBteSBxdWljayByZWFkaW5nIG9mIHRoZSBMaW51eA0KPiA+IHRj
+cF9yY3Zfc3RhdGVfcHJvY2VzcygpIGNvZGUgaXMgdGhhdCBpdCBzaG91bGQgYmVoYXZlIGNvcnJl
+Y3RseSBhbmQNCj4gPiB0aGF0IGEgY29ubmVjdGlvbiBpbiBGSU5fV0FJVF8xIHRoYXQgcmVjZWl2
+ZXMgYSBGSU4vQUNLIHNob3VsZCBtb3ZlIHRvDQo+ID4gVElNRV9XQUlULg0KPiA+DQo+ID4gU2Vv
+bmdKYWUsIGRvIHlvdSBoYXBwZW4gdG8gaGF2ZSBhIHRjcGR1bXAgdHJhY2Ugb2YgdGhlIHByb2Js
+ZW1hdGljDQo+ID4gc2VxdWVuY2Ugd2hlcmUgdGhlICJwcm9jZXNzIEEiIGVuZHMgdXAgaW4gRklO
+X1dBSVRfMiB3aGVuIGl0IHNob3VsZCBiZQ0KPiA+IGluIFRJTUVfV0FJVD8NCj4gPg0KPiA+IElm
+IEkgaGF2ZSB0aW1lIEkgd2lsbCB0cnkgdG8gY29uc3RydWN0IGEgcGFja2V0ZHJpbGwgY2FzZSB0
+byB2ZXJpZnkNCj4gPiB0aGUgYmVoYXZpb3IgaW4gdGhpcyBjYXNlLg0KPiANCj4gVW5mb3J0dW5h
+dGVseSB5b3Ugd29udCBiZSBhYmxlIHRvIHJlcHJvZHVjZSB0aGUgaXNzdWUgd2l0aCBwYWNrZXRk
+cmlsbCwNCj4gc2luY2UgaXQgaW52b2x2ZWQgcGFja2V0cyBiZWluZyBwcm9jZXNzZWQgYXQgdGhl
+IHNhbWUgdGltZSAocmFjZSB3aW5kb3cpDQoNCllvdSBtaWdodCBiZSBhYmxlIHRvIGZvcmNlIHRo
+ZSB0aW1pbmcgcmFjZSBieSBhZGRpbmcgYSBzbGVlcA0KaW4gb25lIG9mIHRoZSBjb2RlIHBhdGhz
+Lg0KDQpObyBnb29kIGZvciBhIHJlZ3Jlc3Npb24gdGVzdCwgYnV0IG9rIGZvciBjb2RlIHRlc3Rp
+bmcuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
+Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
+biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-second batch containing fixes that arrived after the merge window
-freeze, mostly stable material. The top patch is fresh but addressing
-space reporing bug that's been bothering users and we've tested it
-meanwhile.
-
-Please pull thanks.
-
-* fix race in tree-mod-log element tracking
-
-* fix bio flushing inside extent writepages
-
-* fix assertion when in-memory tracking of discarded extents finds an
-  empty tree (eg. after adding a new device)
-
-* update logic of temporary read-only block groups to take into account
-  overcommit
-
-* fix some fixup worker corner cases:
-  - page could not go through proper COW cycle and the dirty status is
-    lost due to page migration
-  - deadlock if delayed allocation is performed under page lock
-
-* fix send emitting invalid clones within the same file
-
-* fix statfs reporting 0 free space when global block reserve size is
-  larger than remaining free space but there is still space for new
-  chunks
-
-----------------------------------------------------------------
-The following changes since commit 4e19443da1941050b346f8fc4c368aa68413bc88:
-
-  btrfs: free block groups after free'ing fs trees (2020-01-23 17:24:39 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-tag
-
-for you to fetch changes up to d55966c4279bfc6a0cf0b32bf13f5df228a1eeb6:
-
-  btrfs: do not zero f_bavail if we have available space (2020-02-02 18:49:32 +0100)
-
-----------------------------------------------------------------
-Chris Mason (1):
-      Btrfs: keep pages dirty when using btrfs_writepage_fixup_worker
-
-Filipe Manana (2):
-      Btrfs: fix race between adding and putting tree mod seq elements and nodes
-      Btrfs: send, fix emission of invalid clone operations within the same file
-
-Josef Bacik (6):
-      btrfs: flush write bio if we loop in extent_write_cache_pages
-      btrfs: fix force usage in inc_block_group_ro
-      btrfs: take overcommit into account in inc_block_group_ro
-      btrfs: drop the -EBUSY case in __extent_writepage_io
-      btrfs: do not do delalloc reservation under page lock
-      btrfs: do not zero f_bavail if we have available space
-
-Nikolay Borisov (1):
-      btrfs: Correctly handle empty trees in find_first_clear_extent_bit
-
- fs/btrfs/block-group.c           |  39 +++++++++----
- fs/btrfs/ctree.c                 |   8 +--
- fs/btrfs/ctree.h                 |   6 +-
- fs/btrfs/delayed-ref.c           |   8 +--
- fs/btrfs/disk-io.c               |   1 -
- fs/btrfs/extent_io.c             |  49 +++++++++-------
- fs/btrfs/inode.c                 | 121 +++++++++++++++++++++++++++++++--------
- fs/btrfs/send.c                  |   3 +-
- fs/btrfs/space-info.c            |  18 +++---
- fs/btrfs/space-info.h            |   3 +
- fs/btrfs/super.c                 |  10 +++-
- fs/btrfs/tests/btrfs-tests.c     |   1 -
- fs/btrfs/tests/extent-io-tests.c |   9 +++
- 13 files changed, 193 insertions(+), 83 deletions(-)
