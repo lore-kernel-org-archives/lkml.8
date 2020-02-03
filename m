@@ -2,320 +2,138 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBF8C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A04C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DBA2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FFF2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Mgr88Bva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgBCJRP (ORCPT
+        id S1727950AbgBCJSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:17:15 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:46346 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbgBCJRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:17:09 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 6EEE5FB02;
-        Mon,  3 Feb 2020 10:17:06 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JMWt_TKgTVIz; Mon,  3 Feb 2020 10:17:03 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id E6A4D400E8; Mon,  3 Feb 2020 10:17:02 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] iio: vncl4000: Enable runtime pm for vcnl4200/4040
-Date:   Mon,  3 Feb 2020 10:17:02 +0100
-Message-Id: <60fa4c2a739448778ae56fe3f2fdb10302055c59.1580721204.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1580721204.git.agx@sigxcpu.org>
-References: <cover.1580721204.git.agx@sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 3 Feb 2020 04:18:13 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:26135 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727600AbgBCJSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:18:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580721492; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=/mowUMRBwi8+f1Y4Wpo+Yhwj4BjgTxc+Oi6vytVPViQ=; b=Mgr88Bva/rimNVfCDWmz8HjpArFzqBO9S1dUx3AOazrPEf+uMe77uywGocglLdlaHflvJWkz
+ xxaksWn/9NvMFLVZbo1V/mEQWGIDB+oDwqUGzwBkITKI7cgkxva+jGmzF4TtDlVnEYXOLPjG
+ wUQaYXK8a9Tu7gRGm/3CFNUaJyY=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e37e551.7f0a50d5e8f0-smtp-out-n02;
+ Mon, 03 Feb 2020 09:18:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F2E6C447A6; Mon,  3 Feb 2020 09:18:07 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F559C43383;
+        Mon,  3 Feb 2020 09:18:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F559C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/8] scsi: ufs: Flush exception event before suspend
+Date:   Mon,  3 Feb 2020 01:17:43 -0800
+Message-Id: <1580721472-10784-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is modelled after the vcnl4035 driver. For the vcnl40{0,1,2}0
-we don't do anything since they use on demand measurement.
+From: Sayali Lokhande <sayalil@codeaurora.org>
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Exception event can be raised by the device when system
+suspend is in progress. This will result in unclocked
+register access in exception event handler as clocks will
+be turned off during suspend. This change makes sure to flush
+exception event handler work in suspend before disabling
+clocks to avoid unclocked register access issue.
+
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- drivers/iio/light/vcnl4000.c | 129 +++++++++++++++++++++++++++++++----
- 1 file changed, 117 insertions(+), 12 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 8f198383626b..3b71c7d538af 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -22,6 +22,7 @@
- #include <linux/i2c.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/pm_runtime.h>
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index abd0e6b..10dbc0c 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4730,8 +4730,15 @@ static void ufshcd_slave_destroy(struct scsi_device *sdev)
+ 			 * UFS device needs urgent BKOPs.
+ 			 */
+ 			if (!hba->pm_op_in_progress &&
+-			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr))
+-				schedule_work(&hba->eeh_work);
++			    ufshcd_is_exception_event(lrbp->ucd_rsp_ptr) &&
++			    schedule_work(&hba->eeh_work)) {
++				/*
++				 * Prevent suspend once eeh_work is scheduled
++				 * to avoid deadlock between ufshcd_suspend
++				 * and exception event handler.
++				 */
++				pm_runtime_get_noresume(hba->dev);
++			}
+ 			break;
+ 		case UPIU_TRANSACTION_REJECT_UPIU:
+ 			/* TODO: handle Reject UPIU Response */
+@@ -5184,7 +5191,14 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
  
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -57,6 +58,8 @@
- #define VCNL4000_AL_OD		BIT(4) /* start on-demand ALS measurement */
- #define VCNL4000_PS_OD		BIT(3) /* start on-demand proximity measurement */
- 
-+#define VCNL4000_SLEEP_DELAY_MS	2000 /* before we enter pm_runtime_suspend */
-+
- enum vcnl4000_device_ids {
- 	VCNL4000,
- 	VCNL4010,
-@@ -87,6 +90,7 @@ struct vcnl4000_chip_spec {
- 	int (*init)(struct vcnl4000_data *data);
- 	int (*measure_light)(struct vcnl4000_data *data, int *val);
- 	int (*measure_proximity)(struct vcnl4000_data *data, int *val);
-+	int (*set_power_state)(struct vcnl4000_data *data, bool on);
- };
- 
- static const struct i2c_device_id vcnl4000_id[] = {
-@@ -99,6 +103,12 @@ static const struct i2c_device_id vcnl4000_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, vcnl4000_id);
- 
-+static int vcnl4000_set_power_state(struct vcnl4000_data *data, bool on)
-+{
-+	/* no suspend op */
-+	return 0;
-+}
-+
- static int vcnl4000_init(struct vcnl4000_data *data)
- {
- 	int ret, prod_id;
-@@ -127,9 +137,31 @@ static int vcnl4000_init(struct vcnl4000_data *data)
- 	data->al_scale = 250000;
- 	mutex_init(&data->vcnl4000_lock);
- 
--	return 0;
-+	return data->chip_spec->set_power_state(data, true);
- };
- 
-+static int vcnl4200_set_power_state(struct vcnl4000_data *data, bool on)
-+{
-+	u16 val = on ? 0 /* power on */ : 1 /* shut down */;
-+	int ret;
-+
-+	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (on) {
-+		/* Wait at least one integration cycle before fetching data */
-+		data->vcnl4200_al.last_measurement = ktime_get();
-+		data->vcnl4200_ps.last_measurement = ktime_get();
-+	}
-+
-+	return 0;
-+}
-+
- static int vcnl4200_init(struct vcnl4000_data *data)
- {
- 	int ret, id;
-@@ -155,14 +187,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 
- 	data->rev = (ret >> 8) & 0xf;
- 
--	/* Set defaults and enable both channels */
--	ret = i2c_smbus_write_word_data(data->client, VCNL4200_AL_CONF, 0);
--	if (ret < 0)
--		return ret;
--	ret = i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, 0);
--	if (ret < 0)
--		return ret;
--
- 	data->vcnl4200_al.reg = VCNL4200_AL_DATA;
- 	data->vcnl4200_ps.reg = VCNL4200_PS_DATA;
- 	switch (id) {
-@@ -180,11 +204,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 		data->al_scale = 120000;
- 		break;
- 	}
--	data->vcnl4200_al.last_measurement = ktime_set(0, 0);
--	data->vcnl4200_ps.last_measurement = ktime_set(0, 0);
- 	mutex_init(&data->vcnl4200_al.lock);
- 	mutex_init(&data->vcnl4200_ps.lock);
- 
-+	ret = data->chip_spec->set_power_state(data, true);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- };
- 
-@@ -291,24 +317,28 @@ static const struct vcnl4000_chip_spec vcnl4000_chip_spec_cfg[] = {
- 		.init = vcnl4000_init,
- 		.measure_light = vcnl4000_measure_light,
- 		.measure_proximity = vcnl4000_measure_proximity,
-+		.set_power_state = vcnl4000_set_power_state,
- 	},
- 	[VCNL4010] = {
- 		.prod = "VCNL4010/4020",
- 		.init = vcnl4000_init,
- 		.measure_light = vcnl4000_measure_light,
- 		.measure_proximity = vcnl4000_measure_proximity,
-+		.set_power_state = vcnl4000_set_power_state,
- 	},
- 	[VCNL4040] = {
- 		.prod = "VCNL4040",
- 		.init = vcnl4200_init,
- 		.measure_light = vcnl4200_measure_light,
- 		.measure_proximity = vcnl4200_measure_proximity,
-+		.set_power_state = vcnl4200_set_power_state,
- 	},
- 	[VCNL4200] = {
- 		.prod = "VCNL4200",
- 		.init = vcnl4200_init,
- 		.measure_light = vcnl4200_measure_light,
- 		.measure_proximity = vcnl4200_measure_proximity,
-+		.set_power_state = vcnl4200_set_power_state,
- 	},
- };
- 
-@@ -323,6 +353,23 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
- 	}
- };
- 
-+static int vcnl4000_set_pm_runtime_state(struct vcnl4000_data *data, bool on)
-+{
-+	struct device *dev = &data->client->dev;
-+	int ret;
-+
-+	if (on) {
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret < 0)
-+			pm_runtime_put_noidle(dev);
-+	} else {
-+		pm_runtime_mark_last_busy(dev);
-+		ret = pm_runtime_put_autosuspend(dev);
-+	}
-+
-+	return ret;
-+}
-+
- static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 				struct iio_chan_spec const *chan,
- 				int *val, int *val2, long mask)
-@@ -332,6 +379,10 @@ static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-+		ret = vcnl4000_set_pm_runtime_state(data, true);
-+		if  (ret < 0)
-+			return ret;
-+
- 		switch (chan->type) {
- 		case IIO_LIGHT:
- 			ret = data->chip_spec->measure_light(data, val);
-@@ -346,6 +397,7 @@ static int vcnl4000_read_raw(struct iio_dev *indio_dev,
- 		default:
- 			ret = -EINVAL;
- 		}
-+		vcnl4000_set_pm_runtime_state(data, false);
- 		return ret;
- 	case IIO_CHAN_INFO_SCALE:
- 		if (chan->type != IIO_LIGHT)
-@@ -394,7 +446,22 @@ static int vcnl4000_probe(struct i2c_client *client,
- 	indio_dev->name = VCNL4000_DRV_NAME;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	return devm_iio_device_register(&client->dev, indio_dev);
-+	ret = pm_runtime_set_active(&client->dev);
-+	if (ret < 0)
-+		goto fail_poweroff;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0)
-+		goto fail_poweroff;
-+
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4000_SLEEP_DELAY_MS);
-+	pm_runtime_use_autosuspend(&client->dev);
-+
-+	return 0;
-+fail_poweroff:
-+	data->chip_spec->set_power_state(data, false);
-+	return ret;
+ out:
+ 	ufshcd_scsi_unblock_requests(hba);
+-	pm_runtime_put_sync(hba->dev);
++	/*
++	 * pm_runtime_get_noresume is called while scheduling
++	 * eeh_work to avoid suspend racing with exception work.
++	 * Hence decrement usage counter using pm_runtime_put_noidle
++	 * to allow suspend on completion of exception event handler.
++	 */
++	pm_runtime_put_noidle(hba->dev);
++	pm_runtime_put(hba->dev);
+ 	return;
  }
  
- static const struct of_device_id vcnl_4000_of_match[] = {
-@@ -422,13 +489,51 @@ static const struct of_device_id vcnl_4000_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, vcnl_4000_of_match);
+@@ -7924,6 +7938,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 			goto enable_gating;
+ 	}
  
-+static int vcnl4000_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	pm_runtime_dont_use_autosuspend(&client->dev);
-+	pm_runtime_disable(&client->dev);
-+	iio_device_unregister(indio_dev);
-+	pm_runtime_set_suspended(&client->dev);
-+
-+	return data->chip_spec->set_power_state(data, false);
-+}
-+
-+static int __maybe_unused vcnl4000_runtime_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	return data->chip_spec->set_power_state(data, false);
-+}
-+
-+static int __maybe_unused vcnl4000_runtime_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	return data->chip_spec->set_power_state(data, true);
-+}
-+
-+static const struct dev_pm_ops vcnl4000_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(vcnl4000_runtime_suspend,
-+			   vcnl4000_runtime_resume, NULL)
-+};
-+
- static struct i2c_driver vcnl4000_driver = {
- 	.driver = {
- 		.name   = VCNL4000_DRV_NAME,
-+		.pm	= &vcnl4000_pm_ops,
- 		.of_match_table = vcnl_4000_of_match,
- 	},
- 	.probe  = vcnl4000_probe,
- 	.id_table = vcnl4000_id,
-+	.remove	= vcnl4000_remove,
- };
- 
- module_i2c_driver(vcnl4000_driver);
++	flush_work(&hba->eeh_work);
+ 	ret = ufshcd_link_state_transition(hba, req_link_state, 1);
+ 	if (ret)
+ 		goto set_dev_active;
 -- 
-2.23.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
