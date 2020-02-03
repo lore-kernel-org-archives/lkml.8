@@ -2,52 +2,56 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B871FC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1237AC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856272086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC162086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748213;
-	bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
+	s=default; t=1580748219;
+	bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kDJW2uLpc+DLueYRkZe1+Cc1GFW6E2r+oQUKwBmoalg4562Shto+wN/C5+OWdsOHq
-	 fUEm7M1frk4qjDW8lVT3xLBFpBMlxpYXAL0kGWtSwFXkVHPZ/ezZxCbjXfWSp9is5p
-	 dDhx7DUkcXtlaRK0jdK4WqvaRiLtKp9/wa4/ZUNM=
+	b=oR9yOudZqlYds957PzWhKlTmnCzypetnMTSwE7l8Z7f98bi391LBQTMyssfcj5qjv
+	 sOaoh+28xWiu8J9ohET+5ZDFKvftUYJOqkHuTXKFQdAQGyGThhFgNZ2CJclocVM1Tv
+	 QI1esM2omhlGn4gJn2E5tMEIxFUgbAWpz6hdBnO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbgBCQcv (ORCPT
+        id S1731277AbgBCQni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:43:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbgBCQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:49 -0500
+        id S1730180AbgBCQcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:46 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06B842051A;
-        Mon,  3 Feb 2020 16:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B09E2087E;
+        Mon,  3 Feb 2020 16:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747568;
-        bh=juo3GS7boxFKexj+JW88vhjeX/iXSAXwaH0be0zL5jc=;
+        s=default; t=1580747566;
+        bh=SCJEmv0iAHFTm4Tp6DgzuSw1c6tPFAGLtEas5RCywVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMj54UC/i//QYoMYrWc0esgmBvqwE2O0QpUGFB7EIhPTNi71YUX80bQnezohCrI3i
-         q8+/flvyv2a2MOH9gCznUeCEPwdlYn017w4+IQrjVtVKa/X2YFfZFvb/Qc1YvhfH13
-         SSXQKvWR8Z/0DtMTJEiqxhe0atqD99JyO1xEy2gw=
+        b=cMjcERjoW7JlqOD3M7UbCE6fMzWBGVoOqjLDCaTHjzu1VwkgOPIl5K63Hm6icutuf
+         Jxb2PBC/1z/CHWNCcVeel4CxZO+XGVGJCxASbzMU6Sm/Uirv+m+c9R72fVhzB89/dy
+         B5PmOC1k6uF9U+dvlsALz40ToSJjbCSM1APw+N0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/70] netfilter: nft_tunnel: ERSPAN_VERSION must not be null
-Date:   Mon,  3 Feb 2020 16:19:58 +0000
-Message-Id: <20200203161918.995823026@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>,
+        Dmitry Levin <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 10/70] tools lib: Fix builds when glibc contains strlcpy()
+Date:   Mon,  3 Feb 2020 16:19:22 +0000
+Message-Id: <20200203161913.994548206@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,34 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Vitaly Chikunov <vt@altlinux.org>
 
-[ Upstream commit 9ec22d7c6c69146180577f3ad5fdf504beeaee62 ]
+commit 6c4798d3f08b81c2c52936b10e0fa872590c96ae upstream.
 
-Fixes: af308b94a2a4a5 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Disable a couple of compilation warnings (which are treated as errors)
+on strlcpy() definition and declaration, allowing users to compile perf
+and kernel (objtool) when:
+
+1. glibc have strlcpy() (such as in ALT Linux since 2004) objtool and
+   perf build fails with this (in gcc):
+
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+
+2. clang ignores `-Wredundant-decls', but produces another warning when
+   building perf:
+
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+
+Committer notes:
+
+The
+
+ #pragma GCC diagnostic
+
+directive was introduced in gcc 4.6, so check for that as well.
+
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Dmitry Levin <ldv@altlinux.org>
+Cc: Dmitry Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: kbuild test robot <lkp@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Link: http://lore.kernel.org/lkml/20191224172029.19690-1-vt@altlinux.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/netfilter/nft_tunnel.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/include/linux/string.h |    8 ++++++++
+ tools/lib/string.c           |    7 +++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index 09441bbb0166f..e5444f3ff43fc 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -235,6 +235,9 @@ static int nft_tunnel_obj_erspan_init(const struct nlattr *attr,
- 	if (err < 0)
- 		return err;
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -14,7 +14,15 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++// pragma diagnostic was introduced in gcc 4.6
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
++#endif
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic pop
++#endif
+ #endif
  
-+	if (!tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION])
-+		 return -EINVAL;
-+
- 	version = ntohl(nla_get_be32(tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION]));
- 	switch (version) {
- 	case ERSPAN_VERSION:
--- 
-2.20.1
-
+ char *str_error_r(int errnum, char *buf, size_t buflen);
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -95,6 +95,10 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
+  */
++#ifdef __clang__
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wignored-attributes"
++#endif
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+ {
+ 	size_t ret = strlen(src);
+@@ -106,3 +110,6 @@ size_t __weak strlcpy(char *dest, const
+ 	}
+ 	return ret;
+ }
++#ifdef __clang__
++#pragma clang diagnostic pop
++#endif
 
 
