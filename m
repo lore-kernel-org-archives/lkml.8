@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820EAC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8127CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7632082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A28B2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TePUltcY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nYUJygIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgBCScp (ORCPT
+        id S1730066AbgBCScp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 3 Feb 2020 13:32:45 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37998 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729898AbgBCSc2 (ORCPT
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36796 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729985AbgBCSc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:32:28 -0500
-Received: by mail-pg1-f195.google.com with SMTP id a33so8258786pgm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:32:27 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:29 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 185so8008391pfv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wwHxgEKez+fOFQykbyJ2qqd0S0Aa+T2rnyaksz+8v/M=;
-        b=TePUltcYjHGOlhvm0sss/m7Bi8+vuqTXeBmxqiuTXNO7vBo8DOMdKF8xaaGZ+Ak1/L
-         e+xMsYn8+w1pPO2BsSHcBT9+8H8s1i0ZN+cXyfYYl3D4XMGvL9VvLivjnfdhUztJtqpN
-         nAlwQ0RtFvqRjNWTF81qT183sNFpLO6Dx+2mM=
+        bh=Jo0olqgMnkzurEg4dWqwCBwLi+N2wWcbXWJXOIPzme8=;
+        b=nYUJygIUSbVTXhXFO7+qNnTNnfukf5txscppTz+MTPVZ4oFv8iXEP9AkclCpjSHewY
+         XScnMbFGsaAUEa016ps6Q2v6Ivmcqffkepe0FN9stFAbXRmw7UOMx50mpNzqQdtuvO9p
+         B/yff2fq5OPRcUgalVaEDfWwTZXZ/R520zizk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wwHxgEKez+fOFQykbyJ2qqd0S0Aa+T2rnyaksz+8v/M=;
-        b=n71eJSsOTu9wVP1verm+QKh9s1tlzajnwfHi1rnWWf6jn0DOa0UBgqOxz8G+RB0nc5
-         b4aTTHPUeT7Dwi2xgb3KHZdi8TAMAdradHpTejAsC+3TRn5HZgfS2PQ+mr9DiCPqF+Jq
-         gkx/0pwn2OGnmPUgAu8MBMpIHodt+S8Ha13g96f28Icr3SlwGCeoIWwaxq8YY3308E3r
-         S5qeUoRZhwP5qlSIp9TUL0sLxoe/OUmdIumP1YVG7Dg90Bqv6ieqV7GEDaCIbGnxq+lF
-         PthoiH7aliAoYv/6Hg4wJDVOw2dpCZ61MViRd/zcyyZuBufWMYHQsdYfAK7EyV/LP4xQ
-         FmRA==
-X-Gm-Message-State: APjAAAUX9UtCOcxEuQfbjSZFiAeh5QIuCQzRewbLZEuMX6hNXHwTO1HR
-        3xiOTcvl6ieYU6NLOOeD2Cj+OA==
-X-Google-Smtp-Source: APXvYqz38nwGUpv83wdaxTCNi+AL895a1bGWZsc4tkumVdC6AUR9GLTk3X5Ee2dUKrhJgDGub2DzRQ==
-X-Received: by 2002:a63:1f5b:: with SMTP id q27mr12770437pgm.434.1580754747633;
-        Mon, 03 Feb 2020 10:32:27 -0800 (PST)
+        bh=Jo0olqgMnkzurEg4dWqwCBwLi+N2wWcbXWJXOIPzme8=;
+        b=pDgm0SOx+a6W6jpVU3fm5P0iCmS3cJ/dYWVICBEbxVZlAvq+E7xl8jQBAPomSjrAxl
+         l4zUMud2EKqVcRZOBIpBcjj4zjPtNlas6ZIVzAIFHIcafvaMAc8MILc989l2ReWnNwAt
+         OcvQvUNqsKp0go+yAqgAy38yX4432APmEw8c05CV5J87rVDhbGzr/4IfERqbcL+KlCC7
+         RWMVoF19nEWyZ3hSCGoHzp5WuPidsbeYP1fWijvyC6h7f/v0FL3aLU37TV/I+SXYzgFa
+         /5YK21muJ5crY09Cg9/UCL9jufBApExMUx10SN4sl3DJ+LsO9x7z+ntXiWOG9rWmcvbA
+         iAbg==
+X-Gm-Message-State: APjAAAXsnvUU7XZ7zhnW3pjZnQglLAgNGaWg3NfbY3l7ayV6s3IJmQJf
+        hSSqEUFeMBQOpx2wMtKE73GKzQ==
+X-Google-Smtp-Source: APXvYqxhWhgChXoUPvOD81GXdBg/j2G+GZuWLcUcvqFxA4nxIp7F10nCV9y5Pk48VXZ+rxgns3JLQQ==
+X-Received: by 2002:a63:e545:: with SMTP id z5mr26100199pgj.209.1580754748647;
+        Mon, 03 Feb 2020 10:32:28 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.26
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:32:27 -0800 (PST)
+        Mon, 03 Feb 2020 10:32:28 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -64,12 +64,11 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 12/15] clk: qcom: Get rid of the test clock for videocc-sc7180
-Date:   Mon,  3 Feb 2020 10:31:45 -0800
-Message-Id: <20200203103049.v4.12.Ifd19a2701a102ec9f04e61a09345198383a9e937@changeid>
+Subject: [PATCH v4 13/15] clk: qcom: Use ARRAY_SIZE in videocc-sc7180 for parent clocks
+Date:   Mon,  3 Feb 2020 10:31:46 -0800
+Message-Id: <20200203103049.v4.13.If37e4b1b5553ac9db5ea51e84a6eec286cdf209e@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
 References: <20200203183149.73842-1-dianders@chromium.org>
@@ -80,46 +79,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test clock isn't in the bindings and apparently it's not used by
-anyone upstream.  Remove it.
+It's nicer to use ARRAY_SIZE instead of hardcoding.  Had we always
+been doing this it would have prevented a previous bug.  See commit
+74c31ff9c84a ("clk: qcom: gpu_cc_gmu_clk_src has 5 parents, not 6").
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4: None
 Changes in v3:
-- Patch ("clk: qcom: Get rid of the test...videocc-sc7180") new for v3.
+- Patch ("clk: qcom: Use ARRAY_SIZE in videocc-sc7180...") new for v3.
 
 Changes in v2: None
 
- drivers/clk/qcom/videocc-sc7180.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/qcom/videocc-sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/qcom/videocc-sc7180.c b/drivers/clk/qcom/videocc-sc7180.c
-index 76add30024aa..653fc4e6bb6f 100644
+index 653fc4e6bb6f..c363c3cc544e 100644
 --- a/drivers/clk/qcom/videocc-sc7180.c
 +++ b/drivers/clk/qcom/videocc-sc7180.c
-@@ -50,13 +50,11 @@ static struct clk_alpha_pll video_pll0 = {
- static const struct parent_map video_cc_parent_map_1[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_VIDEO_PLL0_OUT_MAIN, 1 },
--	{ P_CORE_BI_PLL_TEST_SE, 7 },
- };
- 
- static const struct clk_parent_data video_cc_parent_data_1[] = {
- 	{ .fw_name = "bi_tcxo" },
- 	{ .hw = &video_pll0.clkr.hw },
--	{ .fw_name = "core_bi_pll_test_se", .name = "core_bi_pll_test_se" },
- };
- 
- static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
-@@ -78,7 +76,7 @@ static struct clk_rcg2 video_cc_venus_clk_src = {
+@@ -76,7 +76,7 @@ static struct clk_rcg2 video_cc_venus_clk_src = {
  	.clkr.hw.init = &(struct clk_init_data){
  		.name = "video_cc_venus_clk_src",
  		.parent_data = video_cc_parent_data_1,
--		.num_parents = 3,
-+		.num_parents = 2,
+-		.num_parents = 2,
++		.num_parents = ARRAY_SIZE(video_cc_parent_data_1),
  		.flags = CLK_SET_RATE_PARENT,
  		.ops = &clk_rcg2_shared_ops,
  	},
