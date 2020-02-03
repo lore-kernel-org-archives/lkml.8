@@ -2,260 +2,145 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EA3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE91C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8B820674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866C72084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOnQlBMZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PS8sL4oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgBCXnF (ORCPT
+        id S1727165AbgBCXna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:43:05 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45639 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgBCXnF (ORCPT
+        Mon, 3 Feb 2020 18:43:30 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3739 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCXna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:43:05 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so6455598pls.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:43:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T0mU1oroPJ0HY0dNzcxXAcfNPatT+YGlRxX9kH7dcIM=;
-        b=eOnQlBMZeFlZMZhMg5K5rXBW4GCRyvsE9wnChJZOKBLvUruSaKtCQrMI8SAP92lorM
-         2Nk5VUOs4fjtWeV7bHpp5Nzqejkk2tR5i20g82K83aj6fc0qA68dU7gctigC+mekpeas
-         dattNjYNvwKTsp5mKYr9D9zyM12iaahkJhpme1FfknvksKFoY0vNBraIwp5Ra4/xVRZo
-         Q1AoSxdkQ7HlODEofCi8sRsrlFSiio9aF3rUHydH+Jotqob1nLedAzrOOEJaSehshlwg
-         OZwHcRsJWdldrWoJA4yypQrYfzFWcqpLmaH2teaoF/fckIxOszU98/Ha+nWLVcBvARap
-         jvjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T0mU1oroPJ0HY0dNzcxXAcfNPatT+YGlRxX9kH7dcIM=;
-        b=ZAwQs8pY9ZzianyDY84ECe79T/XdA982/jxBxF5eMBf6LAOGrMzBfRQfCvFnPh6Gfg
-         ixdbnkwpR4h22dXmRxK42MbW6I6HhiMhSxJwyMiJuON6QABCCCE3KRlq3JGvMn5VcuBH
-         swiwvTyL4wHwSo4tX5IJ1GbHm/e+uVS6+NWJhTwY/kIjwUp7aKMFMjG0R7u411s/rzt0
-         hjV6iAMkiPpUpmANdEnOq7RsBVt/9etOQg19KdwtdbByqXhRcjpIbLYJiykvQoWJObNO
-         HR+1+vqgy/CAUOW0EHCAc/xIa+Kfhovj7Ni0N0NgxfMEu/f0iAczIZgyjfIdURfAH55D
-         GG7Q==
-X-Gm-Message-State: APjAAAWt4dvnlMrm0VEIm0lX+oonlFnzHDTCiLAbvDmMUMntLIgcCM90
-        MypVxDYaBYhHxbzTL3IMbry0mQ==
-X-Google-Smtp-Source: APXvYqzmKejF7h24aEIn3bKKAXldqS9ubKBjs2a9h5aypFZz0uySrK09eGtkxT0ayDJJRn2uphRKEA==
-X-Received: by 2002:a17:902:7687:: with SMTP id m7mr25751409pll.136.1580773383601;
-        Mon, 03 Feb 2020 15:43:03 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g21sm22460189pfb.126.2020.02.03.15.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 15:43:03 -0800 (PST)
-Date:   Mon, 3 Feb 2020 15:43:00 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        seanpaul@chromium.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 9/9] drm/bridge: ti-sn65dsi86: Avoid invalid rates
-Message-ID: <20200203234300.GI311651@builder>
-References: <20191218223530.253106-1-dianders@chromium.org>
- <20191218143416.v3.9.Ib59207b66db377380d13748752d6fce5596462c5@changeid>
+        Mon, 3 Feb 2020 18:43:30 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e38b0090000>; Mon, 03 Feb 2020 15:43:05 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 15:43:28 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 15:43:28 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 23:43:27 +0000
+Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-11-jhubbard@nvidia.com>
+ <20200203135320.edujsfjwt5nvtiit@box>
+ <0425e1e6-f172-91df-2251-7583fcfed3e6@nvidia.com>
+ <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
+ <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
+ <aa33fc2c-956b-4197-e418-220198827ce6@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <633e9f2a-8c1c-3efa-517b-05fa521b46b1@nvidia.com>
+Date:   Mon, 3 Feb 2020 15:43:27 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218143416.v3.9.Ib59207b66db377380d13748752d6fce5596462c5@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <aa33fc2c-956b-4197-e418-220198827ce6@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580773385; bh=MChMtAOB97wuw3SDkE4H/wY3+dt35Dw/om3+HvNa0aE=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PS8sL4oeNdXk6NMZf0rjaximnIDvEzbbM3ydEc8YenlAP6Xb1EaghIfiTNusMC13o
+         LNhl3qgROKHw+lMkQkiOg+jtNP9jE+DKQjfhWkdceQI6MxwbRvWmPiH2JAkvHLMuBz
+         IaXe5PLRRHF1wQbFZWrZwuxTyqzWYRfIdTfVhXQoh7QeTiF9qJmQ/RXq7PkjrKLw7e
+         KluUq7Lx0S5H1/UuVCIKoRantn2FbhM5vlIuCw8mtvoZexQbV9ycpriQtDpGFc6PX4
+         fpFX/LsPjqRJ1dTDluzz7x+audWmbTFFekMrThs9McZkTGB8cPCFbTKRg/xtZZEgEs
+         K+V9iwIOjjS/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
+On 2/3/20 3:16 PM, John Hubbard wrote:
+> On 2/3/20 1:34 PM, John Hubbard wrote:
+>> On 2/3/20 1:30 PM, Kirill A. Shutemov wrote:
+>>> On Mon, Feb 03, 2020 at 01:04:04PM -0800, John Hubbard wrote:
+>>>> On 2/3/20 5:53 AM, Kirill A. Shutemov wrote:
+>>>>> On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
+>>>>>> diff --git a/mm/gup.c b/mm/gup.c
+>>>>>> index c10d0d051c5b..9fe61d15fc0e 100644
+>>>>>> --- a/mm/gup.c
+>>>>>> +++ b/mm/gup.c
+>>>>>> @@ -29,6 +29,19 @@ struct follow_page_context {
+>>>>>>  	unsigned int page_mask;
+>>>>>>  };
+>>>>>>  
+>>>>>> +#ifdef CONFIG_DEBUG_VM
+>>>>>
+>>>>> Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
+>>>>>
+>>>>
+>>>> Early on, gup_benchmark showed a really significant slowdown from using these 
+>>>> counters. And I don't doubt that it's still the case.
+>>>>
+>>>> I'll re-measure and add a short summary and a few numbers to the patch commit
+>>>> description, and to the v4 cover letter.
+>>>
+>>> Looks like you'll show zeros for these counters if debug is off. It can be
+>>> confusing to the user. I think these counters should go away if you don't
+>>> count them.
+>>>
+>>
+>> OK, that's a good point. (And in fact, the counters==0 situation already led me
+>> astray briefly while debugging with Leon R, even. heh.) I'll remove them entirely for
+>> the !CONFIG_DEBUG_VM case.
+>>
+> 
+> On second thought, let me do some more careful performance testing. I don't recall
+> now if I was just removing every possible perf slowdown item, when I made this decision.
+> It could be that the perf is not affected, and I could just leave this feature enabled
+> at all times, which would be nicer.
+> 
+> And after all, these counters were designed for pretty hot-path items. I'll report back
+> with results...
 
-> Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>,
-> Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, and
-> Rob Clark <robdclark@chromium.org>.
-> 
-> Let's read the SUPPORTED_LINK_RATES and/or MAX_LINK_RATE (depending on
-> the eDP version of the sink) to figure out what eDP rates are
-> supported and pick the ideal one.
-> 
-> NOTE: I have only personally tested this code on eDP panels that are
-> 1.3 or older.  Code reading SUPPORTED_LINK_RATES for DP 1.4+ was
-> tested by hacking the code to pretend that a table was there.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Sure enough, any perf effects are hidden in the noise. I'll just remove the CONFIG_DEBUG_VM
+checks. Glad you asked about this!
 
-> ---
-> 
-> Changes in v3:
-> - Init rate_valid table, don't rely on stack being 0 (oops).
-> - Rename rate_times_200khz to rate_per_200khz.
-> - Loop over the ti_sn_bridge_dp_rate_lut table, making code smaller.
-> - Use 'true' instead of 1 for bools.
-> - Added note to commit message noting DP 1.4+ isn't well tested.
-> 
-> Changes in v2:
-> - Patch ("Avoid invalid rates") replaces ("Skip non-standard DP rates")
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 100 +++++++++++++++++++-------
->  1 file changed, 75 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index e1b817ccd9c7..a57c6108cb1f 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -475,39 +475,85 @@ static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
->  	return i;
->  }
->  
-> -static int ti_sn_bridge_get_max_dp_rate_idx(struct ti_sn_bridge *pdata)
-> +static void ti_sn_bridge_read_valid_rates(struct ti_sn_bridge *pdata,
-> +					  bool rate_valid[])
->  {
-> -	u8 data;
-> +	unsigned int rate_per_200khz;
-> +	unsigned int rate_mhz;
-> +	u8 dpcd_val;
->  	int ret;
-> +	int i, j;
-> +
-> +	ret = drm_dp_dpcd_readb(&pdata->aux, DP_EDP_DPCD_REV, &dpcd_val);
-> +	if (ret != 1) {
-> +		DRM_DEV_ERROR(pdata->dev,
-> +			      "Can't read eDP rev (%d), assuming 1.1\n", ret);
-> +		dpcd_val = DP_EDP_11;
-> +	}
-> +
-> +	if (dpcd_val >= DP_EDP_14) {
-> +		/* eDP 1.4 devices must provide a custom table */
-> +		__le16 sink_rates[DP_MAX_SUPPORTED_RATES];
-> +
-> +		ret = drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
-> +				       sink_rates, sizeof(sink_rates));
-> +
-> +		if (ret != sizeof(sink_rates)) {
-> +			DRM_DEV_ERROR(pdata->dev,
-> +				"Can't read supported rate table (%d)\n", ret);
-> +
-> +			/* By zeroing we'll fall back to DP_MAX_LINK_RATE. */
-> +			memset(sink_rates, 0, sizeof(sink_rates));
-> +		}
-> +
-> +		for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
-> +			rate_per_200khz = le16_to_cpu(sink_rates[i]);
-> +
-> +			if (!rate_per_200khz)
-> +				break;
-> +
-> +			rate_mhz = rate_per_200khz * 200 / 1000;
-> +			for (j = 0;
-> +			     j < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
-> +			     j++) {
-> +				if (ti_sn_bridge_dp_rate_lut[j] == rate_mhz)
-> +					rate_valid[j] = true;
-> +			}
-> +		}
-> +
-> +		for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut); i++) {
-> +			if (rate_valid[i])
-> +				return;
-> +		}
-> +		DRM_DEV_ERROR(pdata->dev,
-> +			      "No matching eDP rates in table; falling back\n");
-> +	}
->  
-> -	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &data);
-> +	/* On older versions best we can do is use DP_MAX_LINK_RATE */
-> +	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
->  	if (ret != 1) {
->  		DRM_DEV_ERROR(pdata->dev,
->  			      "Can't read max rate (%d); assuming 5.4 GHz\n",
->  			      ret);
-> -		return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
-> +		dpcd_val = DP_LINK_BW_5_4;
->  	}
->  
-> -	/*
-> -	 * Return an index into ti_sn_bridge_dp_rate_lut.  Just hardcode
-> -	 * these indicies since it's not like the register spec is ever going
-> -	 * to change and a loop would just be more complicated.  Apparently
-> -	 * the DP sink can only return these few rates as supported even
-> -	 * though the bridge allows some rates in between.
-> -	 */
-> -	switch (data) {
-> -	case DP_LINK_BW_1_62:
-> -		return 1;
-> -	case DP_LINK_BW_2_7:
-> -		return 4;
-> +	switch (dpcd_val) {
-> +	default:
-> +		DRM_DEV_ERROR(pdata->dev,
-> +			      "Unexpected max rate (%#x); assuming 5.4 GHz\n",
-> +			      (int)dpcd_val);
-> +		/* fall through */
->  	case DP_LINK_BW_5_4:
-> -		return 7;
-> +		rate_valid[7] = 1;
-> +		/* fall through */
-> +	case DP_LINK_BW_2_7:
-> +		rate_valid[4] = 1;
-> +		/* fall through */
-> +	case DP_LINK_BW_1_62:
-> +		rate_valid[1] = 1;
-> +		break;
->  	}
-> -
-> -	DRM_DEV_ERROR(pdata->dev,
-> -		      "Unexpected max data rate (%#x); assuming 5.4 GHz\n",
-> -		      (int)data);
-> -	return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
->  }
->  
->  static void ti_sn_bridge_set_video_timings(struct ti_sn_bridge *pdata)
-> @@ -609,9 +655,9 @@ static int ti_sn_link_training(struct ti_sn_bridge *pdata, int dp_rate_idx,
->  static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  {
->  	struct ti_sn_bridge *pdata = bridge_to_ti_sn_bridge(bridge);
-> +	bool rate_valid[ARRAY_SIZE(ti_sn_bridge_dp_rate_lut)] = { };
->  	const char *last_err_str = "No supported DP rate";
->  	int dp_rate_idx;
-> -	int max_dp_rate_idx;
->  	unsigned int val;
->  	int ret = -EINVAL;
->  
-> @@ -655,11 +701,15 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
->  	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
->  			   val);
->  
-> +	ti_sn_bridge_read_valid_rates(pdata, rate_valid);
-> +
->  	/* Train until we run out of rates */
-> -	max_dp_rate_idx = ti_sn_bridge_get_max_dp_rate_idx(pdata);
->  	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata);
-> -	     dp_rate_idx <= max_dp_rate_idx;
-> +	     dp_rate_idx < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
->  	     dp_rate_idx++) {
-> +		if (!rate_valid[dp_rate_idx])
-> +			continue;
-> +
->  		ret = ti_sn_link_training(pdata, dp_rate_idx, &last_err_str);
->  		if (!ret)
->  			break;
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
