@@ -2,101 +2,136 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4078DC3524B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C581C3524C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171FE206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527AA206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rp5g68WH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBCBUn (ORCPT
+        id S1727192AbgBCB1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:20:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgBCBUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:20:43 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CE820679;
-        Mon,  3 Feb 2020 01:20:40 +0000 (UTC)
-Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
-From:   Greg Ungerer <gerg@linux-m68k.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Michael Schmitz <schmitzmic@gmail.com>
-References: <20200131124531.623136425@infradead.org>
- <9fe6925a-52e5-7104-dae6-3ad97c4bbecc@linux-m68k.org>
-Message-ID: <d42d698c-afdf-f960-5ca7-0f9911a6c9c3@linux-m68k.org>
-Date:   Mon, 3 Feb 2020 11:20:37 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 2 Feb 2020 20:27:06 -0500
+Received: from mail-pf1-f172.google.com ([209.85.210.172]:36397 "EHLO
+        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgBCB1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:27:04 -0500
+Received: by mail-pf1-f172.google.com with SMTP id 185so6679555pfv.3;
+        Sun, 02 Feb 2020 17:27:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1Tq4h9ZZDh4yrfQKkZJ5ar+EXcbr5Jla2vvrbnBibGs=;
+        b=Rp5g68WHKyEoWGW98IV7sNQv6Na6fJdLyehd0np+PwO8mX0B4GJhSTR5uzfsnTGA2P
+         iRiDlscNeK9cW50Tjlbr7kaFBjecXKh4cwznKyl1tDhBqUqoZ5HDFpzg3igz3cC1MTtG
+         1zgkLN3dcuC3fQD/AAT5PtWi/wzaRyVYtbMb2wshi0ZTlB8W9/fAyhFO+1cKlbvRgoVl
+         T4DXPuB06DDk7KiTdMt4nS5afKDOQ3whbkOyMYUyI/+kucAfjfjq6AVTI3sfkH28eyyL
+         Q7LFGUFx92QsxryrwOymj48wfemMrMXl93cr+B738hAzsVJIxil6z/eg4Jes19y8ANT1
+         /u+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1Tq4h9ZZDh4yrfQKkZJ5ar+EXcbr5Jla2vvrbnBibGs=;
+        b=pIKsAIdKd/sUifQtJ25Ph8BKxEEZuQoxteHXI0rJCLom1vjqYzNzbuMjIiDyWtVwH+
+         BQY2NFTgbtU9EK1OGfjm2LOSnmrSFjdBBl85OUXv4gU/nc2f3n4z4sqKP1KK7F2T1oDx
+         tqqJIlUv/tchL/2fhxMM2YT4mFnl4lEEi1GVux1gy268Ej3Y5JuT42W/NcZKOp2hGky8
+         Uc3JItTAhv2UiyTqf3itYo3Ef71K/rz5DSJQ5ACJncDTX6VYsI8St/58OcZ+FNpEl+zs
+         I68N1mmP5pYPPlFXYXReMAVOE3QN/R6UrHof5lFNkfsqJ1iZsmPHhzJm/xJ8dj3kVPO1
+         PV+Q==
+X-Gm-Message-State: APjAAAWqvNtfamZka6PCIBzSO4TcLT47AOeGYM6ky7aWx5gWr2Q58Sd8
+        vIoE+xm/jqXM7G+Q8qLxakw=
+X-Google-Smtp-Source: APXvYqxIWVmEoTEB2ZO9rvBUJOtfdafNBet3fWWmmi4glMqJgj1UshBRdAVzLnAaBBX0rLB3aeewZQ==
+X-Received: by 2002:a62:ab0d:: with SMTP id p13mr22227648pff.135.1580693223295;
+        Sun, 02 Feb 2020 17:27:03 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id t28sm18062385pfq.122.2020.02.02.17.27.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 17:27:02 -0800 (PST)
+Date:   Sun, 2 Feb 2020 17:27:00 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     christopher.s.hall@intel.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
+        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
+        sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 1/5] drivers/ptp: Add Enhanced handling
+ of reserve fields
+Message-ID: <20200203012700.GA2354@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20191211214852.26317-2-christopher.s.hall@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <9fe6925a-52e5-7104-dae6-3ad97c4bbecc@linux-m68k.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211214852.26317-2-christopher.s.hall@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Wed, Dec 11, 2019 at 01:48:48PM -0800, christopher.s.hall@intel.com wrote:
+> diff --git a/drivers/ptp/ptp_chardev.c b/drivers/ptp/ptp_chardev.c
+> index 9d72ab593f13..f9ad6df57fa5 100644
+> --- a/drivers/ptp/ptp_chardev.c
+> +++ b/drivers/ptp/ptp_chardev.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/timekeeping.h>
+>  
+>  #include <linux/nospec.h>
+> +#include <linux/string.h>
 
-On 31/1/20 11:19 pm, Greg Ungerer wrote:
-> On 31/1/20 10:45 pm, Peter Zijlstra wrote:
->> In order to faciliate Will's READ_ONCE() patches:
->>
->>    https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
->>
->> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
->> are tested using ARAnyM/68040.
->>
->> Michael tested the previous version on his Atari Falcon/68030.
->>
->> Build tested for sun3/coldfire.
-> 
-> Thanks for the quick turn around. Build looks good for me too with
-> this new series. I will test on real hardware on Monday.
+Please group these two includes with the others, above, in
+alphabetical order.
 
-So this tests good for me on real hardware. I had a look over the
-ColdFire changes and I have no problems with anything.
-So for the ColdFire parts:
+>  #include "ptp_private.h"
+>  
+> @@ -106,6 +107,28 @@ int ptp_open(struct posix_clock *pc, fmode_t fmode)
+>  	return 0;
+>  }
+>  
+> +/* Returns -1 if any reserved fields are non-zero */
+> +static inline int _check_rsv_field(unsigned int *field, size_t size)
 
-Tested-by: Greg Ungerer <gerg@linux-m68k.org>
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+How about _check_reserved_field() instead?
 
-Regards
-Greg
+> +{
+> +	unsigned int *iter;
 
+Ugh, 'ptr' please.
 
->> Please consider!
->>
->> Changes since -v1:
->>   - fixed sun3/coldfire build issues
->>   - unified motorola mmu page setup
->>   - added enum to table allocator
->>   - moved pointer table allocator to motorola.c
->>   - converted coldfire pgtable_t
->>   - fixed coldfire pgd_alloc
->>   - fixed coldfire nocache
->>
->> ---
->>   arch/m68k/include/asm/mcf_pgalloc.h      |  31 ++---
->>   arch/m68k/include/asm/motorola_pgalloc.h |  74 ++++------
->>   arch/m68k/include/asm/motorola_pgtable.h |  36 +++--
->>   arch/m68k/include/asm/page.h             |  16 ++-
->>   arch/m68k/include/asm/pgtable_mm.h       |  10 +-
->>   arch/m68k/mm/init.c                      |  34 +++--
->>   arch/m68k/mm/kmap.c                      |  36 +++--
->>   arch/m68k/mm/memory.c                    | 103 --------------
->>   arch/m68k/mm/motorola.c                  | 228 +++++++++++++++++++++++++------
->>   9 files changed, 302 insertions(+), 266 deletions(-)
->>
->>
+> +	int ret = 0;
+> +
+> +	for (iter = field; iter < field+size && ret == 0; ++iter)
+> +		ret = *iter == 0 ? 0 : -1;
+
+Please use the "early out" pattern:
+
+	for (ptr = field; ptr < field + size; ptr++) {
+		if (*ptr) {
+			return -1;
+		}
+	}
+	return 0;
+
+Note:  field + size
+Note:  ptr++
+
+> +
+> +	return ret;
+> +}
+> +#define check_rsv_field(field) _check_rsv_field(field, ARRAY_SIZE(field))
+
+And check_reserved_field() here.  No need to abbreviate.
+
+Thanks,
+Richard
