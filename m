@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A0AC3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FA6C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933D32051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B3A20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748443;
-	bh=xOSw62RuoXWZIX9+LIKWM+wn6MT42/NMjSbT1nptbSA=;
+	s=default; t=1580748448;
+	bh=hKiHU1a63UxaLAHfhkLxunuN0U4UHhCWDSp0Il/mFMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwByvqvfn6G5MXVamh4EIHOfY/Ca2phVfKK4vOwABY7iBEFQeqRGbB1Oc0udVAW7w
-	 ZOKNwSyMjKC7RXOGqbUBG5hzsEZU051vHO++5/wv+NsaWuvQ1J2kOarcmmSYlE5MCb
-	 l2a/Tz6wD/xXM+9Rgqqr5p77VKwWaMw6NZVM71Y4=
+	b=qwaHDxxb0Yy/2qVSu2voGLu+Nr5oeN2wkAy+lSfXCY+f7NX/7NOFJ1I+I30f25bvK
+	 EdYarmIDxfN0++VfcBcdvg12oF6EcdMgBPC/r2DOaS+AccNX5yap5mAOy521zI+1Nw
+	 Fa+SfxJzBvd7C1+5xqGFiWvwbmHJjzfwd1NA84IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgBCQ1e (ORCPT
+        id S1729405AbgBCQ11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbgBCQ1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:32 -0500
+        id S1728526AbgBCQ1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:24 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C292051A;
-        Mon,  3 Feb 2020 16:27:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900E02086A;
+        Mon,  3 Feb 2020 16:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747251;
-        bh=xOSw62RuoXWZIX9+LIKWM+wn6MT42/NMjSbT1nptbSA=;
+        s=default; t=1580747244;
+        bh=hKiHU1a63UxaLAHfhkLxunuN0U4UHhCWDSp0Il/mFMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPcNxugwH5nMMmIUzjoTZ94d3OkxnAYjdTI7l3+o0b/bY094mHIXA5zU8V2ttNkYf
-         3rwsUntAg21w87SXrYEjlaVlY93TpXOGuBDnlSWTDoivPyjEErH7H8NSfKZ4GSNYbX
-         5uN75wPcCxURu1u+fbYLi+OrQBrq1Y884hM2VtsU=
+        b=q0qV/7Qk6MHXsFoOzGzdtKqqlfGxGHFcJ8CJ0tVfEix9mcqbJWgZ0jn9QONk1uFO7
+         b0U8csIWPNGe4dEjO8/bQlSDTbYg1YqGE6iJcxANupmy2xMj6abZ3hJ9dK+0o3UygQ
+         ax6Hmb8z9plfBLCIww5nSuqw/Ep+wZ2ZjP4Cug2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 54/68] ARM: 8955/1: virt: Relax arch timer version check during early boot
-Date:   Mon,  3 Feb 2020 16:19:50 +0000
-Message-Id: <20200203161913.878648447@linuxfoundation.org>
+Subject: [PATCH 4.9 51/68] Input: aiptek - use descriptors of current altsetting
+Date:   Mon,  3 Feb 2020 16:19:47 +0000
+Message-Id: <20200203161913.376134472@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -61,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 6849b5eba1965ceb0cad3a75877ef4569dd3638e ]
+[ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
 
-Updates to the Generic Timer architecture allow ID_PFR1.GenTimer to
-have values other than 0 or 1 while still preserving backward
-compatibility. At the moment, Linux is quite strict in the way it
-handles this field at early boot and will not configure arch timer if
-it doesn't find the value 1.
+Make sure to always use the descriptors of the current alternate setting
+to avoid future issues when accessing fields that may differ between
+settings.
 
-Since here use ubfx for arch timer version extraction (hyb-stub build
-with -march=armv7-a, so it is safe)
-
-To help backports (even though the code was correct at the time of writing)
-
-Fixes: 8ec58be9f3ff ("ARM: virt: arch_timers: enable access to physical timers")
-Acked-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hyp-stub.S | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/input/tablet/aiptek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index f5e5e3e196592..f587681a9553c 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -158,10 +158,9 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- #if !defined(ZIMAGE) && defined(CONFIG_ARM_ARCH_TIMER)
- 	@ make CNTP_* and CNTPCT accessible from PL1
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
--	lsr	r7, #16
--	and	r7, #0xf
--	cmp	r7, #1
--	bne	1f
-+	ubfx	r7, r7, #16, #4
-+	teq	r7, #0
-+	beq	1f
- 	mrc	p15, 4, r7, c14, c1, 0	@ CNTHCTL
- 	orr	r7, r7, #3		@ PL1PCEN | PL1PCTEN
- 	mcr	p15, 4, r7, c14, c1, 0	@ CNTHCTL
+diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+index 5a7e5e073e526..3b5bccad4a1bb 100644
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -1733,7 +1733,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 
+ 	aiptek->inputdev = inputdev;
+ 	aiptek->intf = intf;
+-	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
++	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+ 	aiptek->inDelay = 0;
+ 	aiptek->endDelay = 0;
+ 	aiptek->previousJitterable = 0;
 -- 
 2.20.1
 
