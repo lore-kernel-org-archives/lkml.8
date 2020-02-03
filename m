@@ -2,90 +2,104 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28721C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF41C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4BF20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580732638;
-	bh=DaVbhOcwQcUqBB6R2bC90u79+9972OgbrdPgCGo4ayc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K4BciJJYjo+8VAdNPIYbrNhI2jitNbCmUhaBA1OgEmSpw3hoV/8qJdEd4PVQh9J6y
-	 lCf+xysaBDE04a6zlq2tq8TSYjoWwowdCsNxoFQUJdlRGZR4hUNRvYchMwfqO5SNvn
-	 5uL6ZTo1TNDOSwkYgFc6vWYoew19STWktsjgRECI=
+	by mail.kernel.org (Postfix) with ESMTP id 13B0A2192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TIEQPIAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgBCMX5 (ORCPT
+        id S1728009AbgBCMZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:23:57 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36879 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgBCMX5 (ORCPT
+        Mon, 3 Feb 2020 07:25:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51875 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727339AbgBCMZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:23:57 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so17831113wru.4;
-        Mon, 03 Feb 2020 04:23:55 -0800 (PST)
+        Mon, 3 Feb 2020 07:25:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580732720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rnhSOZrfyRptYaXvcR6IW21U5l/A6AEDfxI9feZjAvY=;
+        b=TIEQPIAmVdzZr0tT1lydQNdr7B2//2TcnqVUzs+WxOo8KxNX0qoDUf6BH5lozIjX1xNsk7
+        VfjG37/cbB0hX27Bsx8oj7kz1cqZEpSPItJu2GPHp5tdelGGwOXgk1m7mrMBdfWdTc0rzJ
+        UFK1vvK+w52hD5EpMYUDfyE0y07b/+U=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-WtNfqeaONfWCNl_avbI_Rw-1; Mon, 03 Feb 2020 07:25:19 -0500
+X-MC-Unique: WtNfqeaONfWCNl_avbI_Rw-1
+Received: by mail-wr1-f72.google.com with SMTP id x15so8124348wrl.15
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 04:25:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3v/Vs0yeJ3ecKwEer6nb6dCD848+syrgOhZ1MgNf01o=;
-        b=fqKSl7X0LutSAY99vuoVKB6cxiwFTzr1G1eDlVI4oxgGt1QDruCijmCtNXclpwOHuZ
-         QZYJX0eD5KbnjcYZ+GKYovEqcwIJHduocWVnh5DQLcRSMrEgBx08vGgevNZiHExlkfQg
-         ffp+pNGtx0xx2HKY+Cs8TCU/9xjNnFlRe1vJZCGGAWl/OJgEyjTazaK5LVQiffqf0e1N
-         1CwIF57bt2Pmi4WFSRwapdwYDQRi4+t5c2WbdlZsiSBG7WI9GEmHds24MBZkLVGBFxRx
-         jbJeQDCEpgL/s0lv8L6Mdy78gOp7vFBvxoIF1RWQCDAkz8qdbxUIlJ/r+EEqgKr4VIUT
-         Dr/w==
-X-Gm-Message-State: APjAAAXVskE183SbV+q8jt3k3TBc35xpZx8hhIdBOX7Xna64Z3X5atey
-        Sb157QCu/40FF2/dYqEbvQ==
-X-Google-Smtp-Source: APXvYqzm7oTIsPC2zqv1FVF4iP/x1vKYv6xy17lG21/YsbaWyAoqw9qpdPt25TTkhLOPw4zWj+CrZQ==
-X-Received: by 2002:a5d:620b:: with SMTP id y11mr15162486wru.230.1580732635248;
-        Mon, 03 Feb 2020 04:23:55 -0800 (PST)
-Received: from rob-hp-laptop ([212.187.182.163])
-        by smtp.gmail.com with ESMTPSA id n1sm25145622wrw.52.2020.02.03.04.23.53
+         :mime-version:content-disposition:in-reply-to;
+        bh=rnhSOZrfyRptYaXvcR6IW21U5l/A6AEDfxI9feZjAvY=;
+        b=pYmCAzUj+EPdvvLjQbcqqM0gJEATL6wutjXJyZUU727JmoNLfFSgG+bn174eRNqudN
+         IfO8HnGcWt4Uzpvg209G88jQbXwGeZtSUdB7Yo4xl6bmduwTQSjjcVY7pE3PVGa4pt6i
+         9m1WNQ9eNXF6zmEQsr4LCxMbAtAe7uQ21t+TBEzi3HadkKX59jB0HKPqg4ebZtb8Ya6q
+         ABrEBomnhxiI4S6BY3nxFai1vfwJXOXCdleCDXlJRGxrJxBs9Y991RQvSceHnNJiEtgT
+         ukTa0NdvWNDpqyAdLCU3Y8ePgdta8LnWR3yubrwHRd78kdD2Pz44HFiKji3UpF1h9uGA
+         213g==
+X-Gm-Message-State: APjAAAVuQ6vcKZF7+GMGQjhUxYSnk/k0IuJSBpBUAs5vRY7Upxk7fo+M
+        zdQcyci8gaktzcSg5vyU1sBxCsoViWHMDi8vyszGj8OIiCbuIElQ6fEP0QTIpIieimvegIEhUWr
+        M/qCQYEcBIBVXELkQnIO5IV2G
+X-Received: by 2002:a5d:4d04:: with SMTP id z4mr9862978wrt.157.1580732717982;
+        Mon, 03 Feb 2020 04:25:17 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy5ghHPlkc6xYznMwtJxDFgEjOmagx2Zb7+ckF0+ETu5uHQ0dVmPuQCkSW/CyhcLslYmPrC6w==
+X-Received: by 2002:a5d:4d04:: with SMTP id z4mr9862941wrt.157.1580732717777;
+        Mon, 03 Feb 2020 04:25:17 -0800 (PST)
+Received: from localhost.localdomain ([151.29.2.83])
+        by smtp.gmail.com with ESMTPSA id e22sm18968813wme.45.2020.02.03.04.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 04:23:54 -0800 (PST)
-Received: (nullmailer pid 26802 invoked by uid 1000);
-        Mon, 03 Feb 2020 12:23:52 -0000
-Date:   Mon, 3 Feb 2020 12:23:52 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com, alain.volmat@st.com
-Subject: Re: [PATCH 2/5] dt-bindings: i2c: i2c-stm32f7: add st,stm32mp15-i2c
- compatible
-Message-ID: <20200203122352.GA26745@bogus>
-References: <1579795970-22319-1-git-send-email-alain.volmat@st.com>
- <1579795970-22319-3-git-send-email-alain.volmat@st.com>
+        Mon, 03 Feb 2020 04:25:17 -0800 (PST)
+Date:   Mon, 3 Feb 2020 13:25:14 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH -v2 0/7] locking: Percpu-rwsem rewrite
+Message-ID: <20200203122514.GK8582@localhost.localdomain>
+References: <20200131150703.194229898@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579795970-22319-3-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200131150703.194229898@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 17:12:47 +0100, Alain Volmat wrote:
-> Add a new stm32mp15 specific compatible to handle FastMode+
-> registers which are different on the stm32mp15 compared
-> to the stm32f7 or stm32h7.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 31/01/20 16:07, Peter Zijlstra wrote:
+> Hi all,
+> 
+> This is the long awaited report of the percpu-rwsem rework (sorry Juri).
+> 
+> IIRC (I really have trouble keeping up momentum on this series) I've addressed
+> all previous comments by Oleg and Davidlohr and Waiman and hope we can stick
+> this in tip/locking/core for inclusion in the next merge.
+> 
+> It has been cooked (thoroughly) in PREEMPT_RT, and not found wanting.
+> 
+> Any objections to me stuffing it in so we can all forget about it properly?
+
+FWIW, backported and tested again on downstream PREEMPT_RT kernel.
+locktorture didn't find any problem and latencies look good.
+
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+
+Thanks!
+
+Juri
+
