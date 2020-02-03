@@ -2,57 +2,60 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC026C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7A3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C6D20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8125218AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747865;
-	bh=3n72pU4WVZkfE6e7Hsg0eDUU0ly95MhHTPzCc1hSGTs=;
+	s=default; t=1580747872;
+	bh=bMgZZy1qqrTGcobRB/v6mBwqSQpFkgMhc+FHm3UYgUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v56hKVAA/OTKX3JpcNthklxgWjJKPFiaxJNN3ordvlSqrArVFFiye1mplViA/Urua
-	 DKe24KcnyYZpGO3NZ0EBbDfPeEGNesp8p3sg8f9Ov+8vlSy61ZJ9fvBu/P/l8au7E8
-	 djOmy0iH1QsodpLoULmq71OeRvPjemQJBcgfZxxQ=
+	b=wj4dbqoh0HWYJSN5L6kjvdfXasUiIPfuK3ZyoMWltrYZo7YGL63qHjZv6zd/pUYvr
+	 aet7zVpnUIrdxdOJmf0jNrDfwvhlngVg2Rmf4X+j09GqMgiLvrP584TrFylqvrM8wM
+	 U83h0OGXivyDC9FiUi/QR0gn4nIlb60XGDxtsyo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbgBCQhp (ORCPT
+        id S1731394AbgBCQhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:37:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:37:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbgBCQh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:37:29 -0500
+        id S1731357AbgBCQhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:36 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E238F2087E;
-        Mon,  3 Feb 2020 16:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090A42082E;
+        Mon,  3 Feb 2020 16:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747849;
-        bh=3n72pU4WVZkfE6e7Hsg0eDUU0ly95MhHTPzCc1hSGTs=;
+        s=default; t=1580747856;
+        bh=bMgZZy1qqrTGcobRB/v6mBwqSQpFkgMhc+FHm3UYgUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EoIxNjq2WXpbRc5zyQZn/2CVV6gTtT8gm8a+u/fvbWV3q/pcwThslQyCtVPtcqhYf
-         zBfNPEkl6/lc39oq+CNueAuTH2LMDF89IEym4NcdFFLJr3lGbx5phAku77S1F8WQ4u
-         SY2V4z/kuQaPamfHCIOpP2DcVEXuh0O6QTF41Wa4=
+        b=FIOCAStzuc1FOPDc8LDWqwPFXo3zJ73UQ8gr2syWdrMH7+k7mMDdvaR30p8aM7GrL
+         D/XgqQET6bP5TRIUz/1u0qBwyvUhSNXOCr5uaOs+dX5bMFTau2l6wZfT2hwF7rUImM
+         yw5IKReGc5NvDq5IJIgAv12wMueUv3lnyj1YTloo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 65/90] Input: aiptek - use descriptors of current altsetting
-Date:   Mon,  3 Feb 2020 16:20:08 +0000
-Message-Id: <20200203161925.451117468@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
+        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
+        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 01/23] vfs: fix do_last() regression
+Date:   Mon,  3 Feb 2020 16:20:21 +0000
+Message-Id: <20200203161903.315802929@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
-References: <20200203161917.612554987@linuxfoundation.org>
+In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
+References: <20200203161902.288335885@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,38 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
+commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
 
-Make sure to always use the descriptors of the current alternate setting
-to avoid future issues when accessing fields that may differ between
-settings.
+Brown paperbag time: fetching ->i_uid/->i_mode really should've been
+done from nd->inode.  I even suggested that, but the reason for that has
+slipped through the cracks and I went for dir->d_inode instead - made
+for more "obvious" patch.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Analysis:
+
+ - at the entry into do_last() and all the way to step_into(): dir (aka
+   nd->path.dentry) is known not to have been freed; so's nd->inode and
+   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
+   inode of the file to get opened is not known.
+
+ - after step_into(): inode of the file to get opened is known; dir
+   might be pointing to freed memory/be negative/etc.
+
+ - at the call of may_create_in_sticky(): guaranteed to be out of RCU
+   mode; inode of the file to get opened is known and pinned; dir might
+   be garbage.
+
+The last was the reason for the original patch.  Except that at the
+do_last() entry we can be in RCU mode and it is possible that
+nd->path.dentry->d_inode has already changed under us.
+
+In that case we are going to fail with -ECHILD, but we need to be
+careful; nd->inode is pointing to valid struct inode and it's the same
+as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
+should use that.
+
+Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@kernel.org
+Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/tablet/aiptek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/namei.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-index 06d0ffef4a171..e08b0ef078e81 100644
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -1713,7 +1713,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 
- 	aiptek->inputdev = inputdev;
- 	aiptek->intf = intf;
--	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
-+	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
- 	aiptek->inDelay = 0;
- 	aiptek->endDelay = 0;
- 	aiptek->previousJitterable = 0;
--- 
-2.20.1
-
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3202,8 +3202,8 @@ static int do_last(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
+ 	struct dentry *dir = nd->path.dentry;
+-	kuid_t dir_uid = dir->d_inode->i_uid;
+-	umode_t dir_mode = dir->d_inode->i_mode;
++	kuid_t dir_uid = nd->inode->i_uid;
++	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
 
 
