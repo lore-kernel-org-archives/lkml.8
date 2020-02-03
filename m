@@ -2,159 +2,106 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F7C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2292EC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D124E2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED42020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wcPheB0j"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="btfmWO7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgBCJSt (ORCPT
+        id S1727581AbgBCJUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:18:49 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13666 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727773AbgBCJSr (ORCPT
+        Mon, 3 Feb 2020 04:20:42 -0500
+Received: from smtp11.infineon.com ([217.10.52.105]:27099 "EHLO
+        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgBCJUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:18:47 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580721527; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=V+8m5T4YfK9wEr3fxSe/8uMdxEMj2GnvJiyPlUOKVy0=; b=wcPheB0jFcC9wnkqLQWrt+dhGslpr+uRbQv0kFRnVW1HwJSiBp8q9csYx1BQl+Pgcc/o5Vi6
- iXW1ZL1fxcHeq4qZrFVGWFZDIaF7L/0LdDv2Hhs4Wj9YX8MfdI12gsqpy/Aw1L5KBRuGBb2e
- lHyN0NszQ//xQEYn0NrdsUrG/Yc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e37e573.7f0d8e32fea0-smtp-out-n03;
- Mon, 03 Feb 2020 09:18:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 283DFC447B1; Mon,  3 Feb 2020 09:18:40 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F6A7C447A1;
-        Mon,  3 Feb 2020 09:18:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F6A7C447A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pedro Sousa <sousa@synopsys.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
-Date:   Mon,  3 Feb 2020 01:17:50 -0800
-Message-Id: <1580721472-10784-9-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
-References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
+        Mon, 3 Feb 2020 04:20:42 -0500
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Feb 2020 04:20:41 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1580721642; x=1612257642;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=S+aFt3xpcgLC1SHHmrUIQUyVr6Ob8IJ2Z341QwbK1Dw=;
+  b=btfmWO7ZFibYtWQTA+6iB1ZyZIQ54XzrEzO7pQjou9IW3rk4OhJYpI2J
+   0wZJgAnDJcplP0la9DmuZX5amcB0FP+aKhhGOSkIPD6MmpOZTOL1UZOU5
+   4b9p150Zbo9LySfsqgvL8sB5NFPY4T6Zevo9DZiYb6wPd3si+/NPdNfmj
+   I=;
+IronPort-SDR: 0I5YmOzQwtppJhTcYNFeSh1RQc9kh0GwWJKUsikBGmre1oF1gDyUj+tPLQhHdkgBluO40UUH3m
+ rF7E4t+wVfix9NN3COPNew6PbW2rZPttOaZRQbq87spnvDK31BPPHfUG8VUOd8x+daDtMji9TY
+ cRpAnQdNjjMYdGsRS0c0h1LdPSqZnA4M/nFgoXiq/mXeN40LSWPqxld3Ktfg/OrxiCtqxcrTST
+ KEyZw6od2zKhQAnQ5sRBww7YO6jv/ToiG/QAAXrG74dBvI/vx2n8LelyqfiEGCZvIiC85DRjlQ
+ f/U=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9519"; a="147917928"
+X-IronPort-AV: E=Sophos;i="5.70,397,1574118000"; 
+   d="scan'208";a="147917928"
+Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 10:13:34 +0100
+Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
+        by mucxv003.muc.infineon.com (Postfix) with ESMTPS;
+        Mon,  3 Feb 2020 10:13:33 +0100 (CET)
+Received: from [10.154.32.73] (172.23.8.247) by MUCSE708.infineon.com
+ (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1713.5; Mon, 3 Feb
+ 2020 10:13:33 +0100
+Subject: Re: [PATCH v7 4/6] tpm: tpm_tis_spi: Support cr50 devices
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     Andrey Pronin <apronin@chromium.org>,
+        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <20190920183240.181420-1-swboyd@chromium.org>
+ <20190920183240.181420-5-swboyd@chromium.org>
+From:   Alexander Steffen <Alexander.Steffen@infineon.com>
+Message-ID: <007dfd87-5170-684a-26dc-9e7533d42034@infineon.com>
+Date:   Mon, 3 Feb 2020 10:13:29 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20190920183240.181420-5-swboyd@chromium.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.8.247]
+X-ClientProxiedBy: MUCSE707.infineon.com (172.23.7.81) To
+ MUCSE708.infineon.com (172.23.7.82)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ADAPT is added specifically for HS Gear4 mode only, select INITIAL adapt
-before do power mode change to G4 and select no adapt before switch to
-non-G4 modes.
+On 20.09.2019 20:32, Stephen Boyd wrote:
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index a01c4cab902a..c96439f11c85 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -21,7 +21,9 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+>   tpm-$(CONFIG_OF) += eventlog/of.o
+>   obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+>   obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> -obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+> +obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
+> +tpm_tis_spi_mod-y := tpm_tis_spi.o
+> +tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+>   obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
+>   obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
+>   obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 14 +++++++++++++-
- drivers/scsi/ufs/ufshci.h |  1 +
- drivers/scsi/ufs/unipro.h |  7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+This renames the driver module from tpm_tis_spi to tpm_tis_spi_mod, was 
+this done intentionally? When trying to upgrade the kernel, this just 
+broke my test system, since all scripts expect to be able to load 
+tpm_tis_spi, which does not exist anymore with that change.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d5c547b..0ac5d47 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4077,6 +4077,17 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
- 		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HSSERIES),
- 						pwr_mode->hs_rate);
- 
-+	if (hba->ufs_version >= UFSHCI_VERSION_30) {
-+		if (pwr_mode->gear_tx == UFS_HS_G4)
-+			/* INITIAL ADAPT */
-+			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-+					PA_INITIAL_ADAPT);
-+		else
-+			/* NO ADAPT */
-+			ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXHSADAPTTYPE),
-+					PA_NO_ADAPT);
-+	}
-+
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA0),
- 			DL_FC0ProtectionTimeOutVal_Default);
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA1),
-@@ -8455,7 +8466,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	if ((hba->ufs_version != UFSHCI_VERSION_10) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_11) &&
- 	    (hba->ufs_version != UFSHCI_VERSION_20) &&
--	    (hba->ufs_version != UFSHCI_VERSION_21))
-+	    (hba->ufs_version != UFSHCI_VERSION_21) &&
-+	    (hba->ufs_version != UFSHCI_VERSION_30))
- 		dev_err(hba->dev, "invalid UFS version 0x%x\n",
- 			hba->ufs_version);
- 
-diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
-index c2961d3..f2ee816 100644
---- a/drivers/scsi/ufs/ufshci.h
-+++ b/drivers/scsi/ufs/ufshci.h
-@@ -104,6 +104,7 @@ enum {
- 	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
- 	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
- 	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
-+	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
- };
- 
- /*
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-index 3dc4d8b..5a724b2 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
-@@ -146,6 +146,12 @@
- #define PA_SLEEPNOCONFIGTIME	0x15A2
- #define PA_STALLNOCONFIGTIME	0x15A3
- #define PA_SAVECONFIGTIME	0x15A4
-+#define PA_TXHSADAPTTYPE	0x15D4
-+
-+/* Adpat type for PA_TXHSADAPTTYPE attribute */
-+#define PA_REFRESH_ADAPT	0x00
-+#define PA_INITIAL_ADAPT	0x01
-+#define PA_NO_ADAPT		0x03
- 
- #define PA_TACTIVATE_TIME_UNIT_US	10
- #define PA_HIBERN8_TIME_UNIT_US		100
-@@ -203,6 +209,7 @@ enum ufs_hs_gear_tag {
- 	UFS_HS_G1,		/* HS Gear 1 (default for reset) */
- 	UFS_HS_G2,		/* HS Gear 2 */
- 	UFS_HS_G3,		/* HS Gear 3 */
-+	UFS_HS_G4,		/* HS Gear 4 */
- };
- 
- enum ufs_unipro_ver {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Alexander
