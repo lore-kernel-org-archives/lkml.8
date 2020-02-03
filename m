@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B27C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3459EC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E39021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCA32192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747548;
-	bh=DxN8coZhDZX7wQFQzVq2wymNWBofR8Gq1Op8S0pVaGw=;
+	s=default; t=1580747552;
+	bh=gzerEBnobQSk9HW2tP5Ss82Ye2lwxuasUMh0JmOVQeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tuBHbR5Ys99H6a0++M0VGZPTWeYVVuVmCs0A3lxUTGqlWtEBbflR2VWHMAcvNirPX
-	 qR/nOBomtX+B3AC6kdT7J4tR8E3oTMfCd2MR6h/z972TMEGhFYM2rMs/JPPHKbcGJT
-	 GrBfAAOgL/3YldYZ2cGNz2uFKdQr86h7vHSL880Y=
+	b=DCm4AryRLm7vU7KHMVUW5ZmDbiWzhdWdEqEBaKYFtjL1Tv2jPcQG2cjaR9T0NSKI3
+	 OzP8UMhqVQPL0UZUtOsqj1iThyd1HxqZbXmQqmphCKsPkLwmWPaskUyo1AsCjvqPlu
+	 JNPEYLU+31pmcJAfu2cLqcFpqD2L+TxGW9kYkiVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbgBCQc1 (ORCPT
+        id S1730111AbgBCQca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:32:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:32:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730413AbgBCQcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:32:23 -0500
+        id S1730420AbgBCQc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:32:26 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF25421741;
-        Mon,  3 Feb 2020 16:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA0321744;
+        Mon,  3 Feb 2020 16:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747542;
-        bh=DxN8coZhDZX7wQFQzVq2wymNWBofR8Gq1Op8S0pVaGw=;
+        s=default; t=1580747544;
+        bh=gzerEBnobQSk9HW2tP5Ss82Ye2lwxuasUMh0JmOVQeQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMU7/9YA7xZEPaz0uPseRMeocXLNfciJTvXJQqCzwvN1XoaTpgbZl1yYkEchuUV05
-         01b2b2Mxc8hFwS/ioQdYEDWMpD2RgCh7EgQcq9xOzPUsCQBax0dCJX4TuDI7rMXuMC
-         U8LN3qBi5A4dFYmuXw+zalpYBk7yzlxfoHavl6II=
+        b=orVY7xvBR0bhwwnYlEBvnTCPYrzZA+M6vv6g31bK/cQT4tRyQGdYqmvTDPpBCiX9I
+         sKOY28hVLS6wfoI7Ci/PMSMWlMxWm6NcrmFmJBaJk7lxaYlsaQTZDrMzou7DmKPvb1
+         l/jL6/CYak6+0Rh1FIHK+JgYCxqiFebZjwr11Wts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cambda Zhu <cambda@linux.alibaba.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
+        stable@vger.kernel.org,
+        Manfred Rudigier <manfred.rudigier@omicronenergy.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/70] ixgbe: Fix calculation of queue with VFs and flow director on interface flap
-Date:   Mon,  3 Feb 2020 16:19:48 +0000
-Message-Id: <20200203161917.694078668@linuxfoundation.org>
+Subject: [PATCH 4.19 37/70] igb: Fix SGMII SFP module discovery for 100FX/LX.
+Date:   Mon,  3 Feb 2020 16:19:49 +0000
+Message-Id: <20200203161917.819956666@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,81 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cambda Zhu <cambda@linux.alibaba.com>
+From: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
 
-[ Upstream commit 4fad78ad6422d9bca62135bbed8b6abc4cbb85b8 ]
+[ Upstream commit 5365ec1aeff5b9f2962a9c9b31d63f9dad7e0e2d ]
 
-This patch fixes the calculation of queue when we restore flow director
-filters after resetting adapter. In ixgbe_fdir_filter_restore(), filter's
-vf may be zero which makes the queue outside of the rx_ring array.
+Changing the link mode should also be done for 100BaseFX SGMII modules,
+otherwise they just don't work when the default link mode in CTRL_EXT
+coming from the EEPROM is SERDES.
 
-The calculation is changed to the same as ixgbe_add_ethtool_fdir_entry().
+Additionally 100Base-LX SGMII SFP modules are also supported now, which
+was not the case before.
 
-Signed-off-by: Cambda Zhu <cambda@linux.alibaba.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Tested with an i210 using Flexoptix S.1303.2M.G 100FX and
+S.1303.10.G 100LX SGMII SFP modules.
+
+Signed-off-by: Manfred Rudigier <manfred.rudigier@omicronenergy.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/intel/igb/e1000_82575.c | 8 ++------
+ drivers/net/ethernet/intel/igb/igb_ethtool.c | 2 +-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 51cd58fbab695..8177276500f5a 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -5189,7 +5189,7 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	struct hlist_node *node2;
- 	struct ixgbe_fdir_filter *filter;
--	u64 action;
-+	u8 queue;
+diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
+index bafdcf70a353d..fdab974b245b7 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_82575.c
++++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
+@@ -530,7 +530,7 @@ static s32 igb_set_sfp_media_type_82575(struct e1000_hw *hw)
+ 		dev_spec->module_plugged = true;
+ 		if (eth_flags->e1000_base_lx || eth_flags->e1000_base_sx) {
+ 			hw->phy.media_type = e1000_media_type_internal_serdes;
+-		} else if (eth_flags->e100_base_fx) {
++		} else if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
+ 			dev_spec->sgmii_active = true;
+ 			hw->phy.media_type = e1000_media_type_internal_serdes;
+ 		} else if (eth_flags->e1000_base_t) {
+@@ -657,14 +657,10 @@ static s32 igb_get_invariants_82575(struct e1000_hw *hw)
+ 			break;
+ 		}
  
- 	spin_lock(&adapter->fdir_perfect_lock);
+-		/* do not change link mode for 100BaseFX */
+-		if (dev_spec->eth_flags.e100_base_fx)
+-			break;
+-
+ 		/* change current link mode setting */
+ 		ctrl_ext &= ~E1000_CTRL_EXT_LINK_MODE_MASK;
  
-@@ -5198,17 +5198,34 @@ static void ixgbe_fdir_filter_restore(struct ixgbe_adapter *adapter)
- 
- 	hlist_for_each_entry_safe(filter, node2,
- 				  &adapter->fdir_filter_list, fdir_node) {
--		action = filter->action;
--		if (action != IXGBE_FDIR_DROP_QUEUE && action != 0)
--			action =
--			(action >> ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF) - 1;
-+		if (filter->action == IXGBE_FDIR_DROP_QUEUE) {
-+			queue = IXGBE_FDIR_DROP_QUEUE;
-+		} else {
-+			u32 ring = ethtool_get_flow_spec_ring(filter->action);
-+			u8 vf = ethtool_get_flow_spec_ring_vf(filter->action);
-+
-+			if (!vf && (ring >= adapter->num_rx_queues)) {
-+				e_err(drv, "FDIR restore failed without VF, ring: %u\n",
-+				      ring);
-+				continue;
-+			} else if (vf &&
-+				   ((vf > adapter->num_vfs) ||
-+				     ring >= adapter->num_rx_queues_per_pool)) {
-+				e_err(drv, "FDIR restore failed with VF, vf: %hhu, ring: %u\n",
-+				      vf, ring);
-+				continue;
-+			}
-+
-+			/* Map the ring onto the absolute queue index */
-+			if (!vf)
-+				queue = adapter->rx_ring[ring]->reg_idx;
-+			else
-+				queue = ((vf - 1) *
-+					adapter->num_rx_queues_per_pool) + ring;
-+		}
- 
- 		ixgbe_fdir_write_perfect_filter_82599(hw,
--				&filter->filter,
--				filter->sw_idx,
--				(action == IXGBE_FDIR_DROP_QUEUE) ?
--				IXGBE_FDIR_DROP_QUEUE :
--				adapter->rx_ring[action]->reg_idx);
-+				&filter->filter, filter->sw_idx, queue);
- 	}
- 
- 	spin_unlock(&adapter->fdir_perfect_lock);
+-		if (hw->phy.media_type == e1000_media_type_copper)
++		if (dev_spec->sgmii_active)
+ 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_SGMII;
+ 		else
+ 			ctrl_ext |= E1000_CTRL_EXT_LINK_MODE_PCIE_SERDES;
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index 5acf3b743876a..50954e4449854 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -181,7 +181,7 @@ static int igb_get_link_ksettings(struct net_device *netdev,
+ 				advertising &= ~ADVERTISED_1000baseKX_Full;
+ 			}
+ 		}
+-		if (eth_flags->e100_base_fx) {
++		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
+ 			supported |= SUPPORTED_100baseT_Full;
+ 			advertising |= ADVERTISED_100baseT_Full;
+ 		}
 -- 
 2.20.1
 
