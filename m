@@ -2,53 +2,54 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B95C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5E4C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1FE20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34E620661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYXohi9s"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vJNbTJ3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgBCHQa (ORCPT
+        id S1727407AbgBCHR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 02:16:30 -0500
+        Mon, 3 Feb 2020 02:17:29 -0500
 Received: from mail25.static.mailgun.info ([104.130.122.25]:29978 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725973AbgBCHQa (ORCPT
+        by vger.kernel.org with ESMTP id S1727226AbgBCHR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 02:16:30 -0500
+        Mon, 3 Feb 2020 02:17:28 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1580714189; h=Message-ID: References: In-Reply-To: Subject:
+ s=smtp; t=1580714247; h=Message-ID: References: In-Reply-To: Subject:
  Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jUeEF/Zuy5Iv2uD5XELfW5OO2/vfRduEY6ZeD7zd/Vc=;
- b=iYXohi9szRzXMJSru6EstvuO3ugHR6/9cbeaVpq/F+Nhy/dP1ela1t4RH//wbHQFVZfXvBy/
- TGlOtuQxMefo8qlv6fEA3RtgqBztRGutqb6lNpkPdaufXLuM53XQDBZfX3TX42Kcqz6iwVtl
- wB3pGhxHGFZQTrMZC/jMrCY0zEA=
+ MIME-Version: Sender; bh=LSUOB0htOB7h0HnG8rrlaTFbDlSnIcVLwSog0W6Hsls=;
+ b=vJNbTJ3I/Yy//Ok7FuOAgUM3ZGYkFzZJwpLdXBpRxzcfi1SXNLCD+tsMF6rvAddjt00w0WmN
+ jls1frp6oqlvPXk4+2GZFyetpYYg8jGEEBBMNL3fSH4tJmLLrzF7uQpuxts/dxJHzXJM4bME
+ cl3msuFTVc3ocz6/8H3pPinxaR8=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e37c8cd.7fcc923c9ae8-smtp-out-n03;
- Mon, 03 Feb 2020 07:16:29 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e37c902.7f2180f166c0-smtp-out-n02;
+ Mon, 03 Feb 2020 07:17:22 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59490C447AA; Mon,  3 Feb 2020 07:16:27 +0000 (UTC)
+        id C2CE2C447A1; Mon,  3 Feb 2020 07:17:21 +0000 (UTC)
 Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
         (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B22F0C43383;
-        Mon,  3 Feb 2020 07:16:26 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 181D7C433CB;
+        Mon,  3 Feb 2020 07:17:21 +0000 (UTC)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Feb 2020 15:16:26 +0800
+Date:   Mon, 03 Feb 2020 15:17:21 +0800
 From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
 Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         linux-scsi@vger.kernel.org, kernel-team@android.com,
@@ -62,13 +63,13 @@ Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         Stanley Chu <stanley.chu@mediatek.com>,
         Venkat Gopalakrishnan <venkatg@codeaurora.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait time
- support
-In-Reply-To: <d51c7c51-482a-01c3-fae0-1e83f9df45ac@acm.org>
+Subject: Re: [EXT] [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait
+ time support
+In-Reply-To: <BN7PR08MB568451D6C66F4C6FB11E6EEBDB0F0@BN7PR08MB5684.namprd08.prod.outlook.com>
 References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
  <1579764349-15578-7-git-send-email-cang@codeaurora.org>
- <d51c7c51-482a-01c3-fae0-1e83f9df45ac@acm.org>
-Message-ID: <bcbd7e82b1ea6f653d5136e89e70c9f0@codeaurora.org>
+ <BN7PR08MB568451D6C66F4C6FB11E6EEBDB0F0@BN7PR08MB5684.namprd08.prod.outlook.com>
+Message-ID: <b263ce1549ef4a6e1a0659f2fa0165e1@codeaurora.org>
 X-Sender: cang@codeaurora.org
 User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,22 +77,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-26 11:34, Bart Van Assche wrote:
-> On 2020-01-22 23:25, Can Guo wrote:
->> +	/* getting Specification Version in big endian format */
->> +	hba->dev_info.spec_version = desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 
->> 8 |
->> +				      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
+On 2020-01-24 07:11, Bean Huo (beanhuo) wrote:
+> Hi,  Can
 > 
-> Please use get_unaligned_be16() instead of open-coding it.
+>> 
+>> In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime 
+>> defines the
+>> minimum time for which the reference clock is required by device 
+>> during
+>> transition to LS-MODE or HIBERN8 state. Make this change to reflect 
+>> the new
+>> requirement by adding delays before turning off the clock.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufs.h    |  3 +++
+>>  drivers/scsi/ufs/ufshcd.c | 41
+>> +++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 44 insertions(+)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
+>> 3327981..385bac8 100644
+>> --- a/drivers/scsi/ufs/ufs.h
+>> +++ b/drivers/scsi/ufs/ufs.h
+>> @@ -168,6 +168,7 @@ enum attr_idn {
+>>  	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
+>>  	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
+>>  	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
+>> +	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
+>>  };
+>> 
+>>  /* Descriptor idn for Query requests */ @@ -530,6 +531,8 @@ struct
+>> ufs_dev_info {
+>>  	bool f_power_on_wp_en;
+>>  	/* Keeps information if any of the LU is power on write protected */
+>>  	bool is_lu_power_on_wp;
+>> +	u16 spec_version;
+>> +	u32 clk_gating_wait_us;
+>>  };
+>> 
+> This one also need rebase
 > 
 > Thanks,
 > 
-> Bart.
+> //Bean
 
-I am just keeping symmetry with the other device descriptors,
-for example w_manufacturer_id.
+Shall rebase this series.
 
 Thanks,
 
-Can Guo.
+Can Guo
