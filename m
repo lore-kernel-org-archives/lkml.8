@@ -2,207 +2,98 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B5BC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F860C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 991202070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jTZr/216"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE9E2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbgBCJ7w (ORCPT
+        id S1727443AbgBCKAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:59:52 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45242 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727337AbgBCJ7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:59:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580723991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B1NfG/wEwzb4qfvuHz92YFVlPl1qDYt7tfMRCttPhDs=;
-        b=jTZr/216G/OvQ9NRmHVP3ss+2cLTmSZ3yMCLAZsFnpapvD6f/W3ylsULnMRUnLVh8lMMKz
-        94TRatWqGM424zKV1oB/3GJ5QY8MF3vcn4UeANAmNCGlX1S5oWYSDKF+2RBgm5pjmamHX2
-        /NuWfPT7C4CtFztfYuU4QG9eDtZewJI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-aKRMZUjMNWmebPHpb5B_3w-1; Mon, 03 Feb 2020 04:59:50 -0500
-X-MC-Unique: aKRMZUjMNWmebPHpb5B_3w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48B67800D41;
-        Mon,  3 Feb 2020 09:59:49 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D55FE7792E;
-        Mon,  3 Feb 2020 09:59:45 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] selftests: KVM: SVM: Add vmcall test
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
-        eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pbonzini@redhat.com
-References: <20200203090851.19938-1-eric.auger@redhat.com>
- <20200203090851.19938-3-eric.auger@redhat.com>
- <875zgoovhx.fsf@vitty.brq.redhat.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <f6e4a06b-8795-170a-15f4-51b58ea467c1@redhat.com>
-Date:   Mon, 3 Feb 2020 10:59:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 3 Feb 2020 05:00:44 -0500
+Received: from mga12.intel.com ([192.55.52.136]:11623 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726836AbgBCKAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 05:00:44 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 02:00:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,397,1574150400"; 
+   d="scan'208";a="225121166"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Feb 2020 02:00:42 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iyYX5-00054m-Nb; Mon, 03 Feb 2020 12:00:43 +0200
+Date:   Mon, 3 Feb 2020 12:00:43 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] platform/x86: thinkpad_acpi: remove unused defines
+Message-ID: <20200203100043.GZ32742@smile.fi.intel.com>
+References: <20200131143650.4149-1-linux@weissschuh.net>
+ <20200131143650.4149-2-linux@weissschuh.net>
 MIME-Version: 1.0
-In-Reply-To: <875zgoovhx.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200131143650.4149-2-linux@weissschuh.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jan 31, 2020 at 03:36:48PM +0100, Thomas Weiﬂschuh wrote:
+> They were never used.
 
-On 2/3/20 10:44 AM, Vitaly Kuznetsov wrote:
-> Eric Auger <eric.auger@redhat.com> writes:
-> 
->> L2 guest calls vmcall and L1 checks the exit status does
->> correspond.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->> ---
->>  tools/testing/selftests/kvm/Makefile          |  1 +
->>  .../selftests/kvm/x86_64/svm_vmcall_test.c    | 86 +++++++++++++++++++
->>  2 files changed, 87 insertions(+)
->>  create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->>
->> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
->> index 2e770f554cae..b529d3b42c02 100644
->> --- a/tools/testing/selftests/kvm/Makefile
->> +++ b/tools/testing/selftests/kvm/Makefile
->> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
->>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
->>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->>  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
->> +TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
->>  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->>  TEST_GEN_PROGS_x86_64 += dirty_log_test
->>  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
->> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->> new file mode 100644
->> index 000000000000..75e66f3bbbc0
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->> @@ -0,0 +1,86 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * svm_vmcall_test
->> + *
->> + * Copyright (C) 2020, Red Hat, Inc.
->> + *
->> + * Nested SVM testing: VMCALL
->> + */
->> +
->> +#include "test_util.h"
->> +#include "kvm_util.h"
->> +#include "processor.h"
->> +#include "svm.h"
->> +
->> +#include <string.h>
->> +#include <sys/ioctl.h>
->> +
->> +#include "kselftest.h"
->> +#include <linux/kernel.h>
->> +
->> +#define VCPU_ID		5
->> +
->> +/* The virtual machine object. */
-> 
-> I'm not sure this comment is any helpful, the virus is probably
-> spreading from vmx_close_while_nested_test.c/vmx_tsc_adjust_test.c :-)
+Thanks for the series.
 
-;-)
-> 
->> +static struct kvm_vm *vm;
->> +
->> +static inline void l2_vmcall(struct svm_test_data *svm)
->> +{
->> +	__asm__ __volatile__("vmcall");
->> +}
->> +
->> +static void l1_guest_code(struct svm_test_data *svm)
->> +{
->> +	#define L2_GUEST_STACK_SIZE 64
->> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
->> +	struct vmcb *vmcb = svm->vmcb;
->> +
->> +	/* Prepare for L2 execution. */
->> +	generic_svm_setup(svm, l2_vmcall,
->> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->> +
->> +	run_guest(vmcb, svm->vmcb_gpa);
->> +
->> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
->> +	GUEST_DONE();
->> +}
->> +
->> +int main(int argc, char *argv[])
->> +{
->> +	vm_vaddr_t svm_gva;
->> +
->> +	nested_svm_check_supported();
->> +
->> +	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
->> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
->> +
->> +	vcpu_alloc_svm(vm, &svm_gva);
->> +	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
->> +
->> +	for (;;) {
->> +		volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
->> +		struct ucall uc;
->> +
->> +		vcpu_run(vm, VCPU_ID);
->> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
->> +			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
->> +			    run->exit_reason,
->> +			    exit_reason_str(run->exit_reason));
->> +
->> +		switch (get_ucall(vm, VCPU_ID, &uc)) {
->> +		case UCALL_ABORT:
->> +			TEST_ASSERT(false, "%s",
->> +				    (const char *)uc.args[0]);
->> +			/* NOT REACHED */
->> +		case UCALL_SYNC:
->> +			break;
->> +		case UCALL_DONE:
->> +			goto done;
->> +		default:
->> +			TEST_ASSERT(false,
->> +				    "Unknown ucall 0x%x.", uc.cmd);
->> +		}
->> +	}
->> +done:
->> +	kvm_vm_free(vm);
->> +	return 0;
->> +}
-> 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Unfortunately I may not proceed it since it misses our patchwork [1]
+for some reason.
 
-Thanks!
+Besides that, this patch is okay, but the rest two must be:
+ - unified together to avoid regression in the middle
+ - done other way around, simple add aliases to *old* ones
 
-I will respin quickly
+Don't forget to update any documentation if needed.
 
-Eric
+[1]: https://patchwork.kernel.org/project/platform-driver-x86/list/
+
 > 
-> Thanks!
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index da794dcfdd92..2d3a99e3efb7 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9323,9 +9323,6 @@ static struct ibm_struct mute_led_driver_data = {
+>  #define GET_STOP	"BCSG"
+>  #define SET_STOP	"BCSS"
+>  
+> -#define START_ATTR "charge_start_threshold"
+> -#define STOP_ATTR  "charge_stop_threshold"
+> -
+>  enum {
+>  	BAT_ANY = 0,
+>  	BAT_PRIMARY = 1,
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
