@@ -2,158 +2,134 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9769C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60025C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A042420674
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A79206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BS2opUho"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duCawprx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgBCXpN (ORCPT
+        id S1727015AbgBCX5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:45:13 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50243 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBCXpN (ORCPT
+        Mon, 3 Feb 2020 18:57:50 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42109 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726834AbgBCX5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:45:13 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so508350pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:45:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G6Bxx9TbIG0iY9oRVMNU9c056800TubVW/1xZmxYimU=;
-        b=BS2opUho7qkDJYHP42XaqdEJFYhNQcO6Ijt3iC3262X2h0sS7oHTZDGcTL9gurt+Tx
-         1FUoMi3Em+Mlx04ikIRH2PtuMrayXZNUcYuY0VRxb32QixT6yOzYhP2LL+1KwsYZfyZA
-         mpFHLliKcZAohbuIhHVYk4RKmMNSUGDKZsl3IUAnTEB9b4g4K/JiYNMUljIQq1e8Zlxd
-         vsAVojJsK6FBXa9e+gAJrIXlX9CjlBUPEGecZg7pgfOS/R1XsUIoFcl5l/ptEIy5XQjR
-         mo8wJp+g9+puNFeSBZiOLSO7Yj0Gif/NBFvoUWLO1KACtvDjxqsnW8x/gJyTZ6ozpOea
-         iDfg==
+        Mon, 3 Feb 2020 18:57:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580774268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=377KzugWtdEB1RiDk7iefCk+Qa+LIHv5m9/4EkwomLQ=;
+        b=duCawprxM30AbMNVHZ3Sx1vZJyJJ+aoQ7bHmnPL65879k2j33FdHFEy7XJVwkLsw1dRBkx
+        EuEO3XXbE28ObsdxoSn/d7qYDvvTkuKBQZL9OspbNdgXkI0PLNfE3HkXv+6GgzRMjRc7pM
+        iW6E+4juy+XQzNq5afP8hokRmiq4hKE=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-ehzYx0NTPqOsuzfdw4nB7A-1; Mon, 03 Feb 2020 18:57:46 -0500
+X-MC-Unique: ehzYx0NTPqOsuzfdw4nB7A-1
+Received: by mail-qv1-f72.google.com with SMTP id v3so10621112qvm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:57:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G6Bxx9TbIG0iY9oRVMNU9c056800TubVW/1xZmxYimU=;
-        b=tPg7howV3CfO/6OWvQSni94iJRYAn4xO/qp951v8OelfJgkMqepBJzbbOWJRZzptya
-         5Zypr9UJuJsl3qqA2uDEEALZEmjJHii+hWB5nH16hIJGFBq0j+CWsKdxyQtnJo/sECP0
-         6jIycbPqvJMUvz0kXpc6pU0bSZjze+6UlQHqcISVEQm1o1oPtlOe0LUhNUkM48XlKMUy
-         8Ow9wPFrQ6JLiFgJvw7PXkk6yS2n+rp4slYEsD6uAbca74BJSs3UFAjCGWzK4kjH59iH
-         HYwUpAkJ+3X20fX4EP0Ttu8gGgqf3Ftge5tPPXxY+BlHlPdYONai9+W4+Z0uh9HnLDW6
-         Rq/g==
-X-Gm-Message-State: APjAAAV/Vgy0yv7q/LA4uUlPh5faK+eJb0afVTd8WNhAzRXq55nUxnAW
-        CUURxREc2or/k6Aaavrc+6aOXg==
-X-Google-Smtp-Source: APXvYqzR84D/Z5QnedxPsJ3+pJD7lDPLfohlOhX1hEdzsbf14l56KWV6lClbPw6RDzHJOgIpOYwHQQ==
-X-Received: by 2002:a17:902:a711:: with SMTP id w17mr8133895plq.152.1580773512589;
-        Mon, 03 Feb 2020 15:45:12 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m12sm21180648pfh.37.2020.02.03.15.45.11
+         :mime-version:content-disposition:in-reply-to;
+        bh=377KzugWtdEB1RiDk7iefCk+Qa+LIHv5m9/4EkwomLQ=;
+        b=GtoxdrIDvYWEQBLwfN5FTxoiBvMsXKnsjdsJK74lVGUaoNEx7jZ+oj6ypYdu7HT2lL
+         XM6W1YbUVB/uih/BVoNl9K9NNQa8uiTrbPsbExc2zcCDaZCVZktGC15XtjtJoPmyxzGW
+         NqB/hCYDD3BX4BJqwIhZbo6uVTgXDPx/+iMLFU35DrX7ibA8onJHP175PisLftO0/kcd
+         xecPbBeB0Jo+OKd1FWbxFxq6ikIn8LS5wbCUzxBvRtSngTstjjkkK8mffIQbLFsbql3q
+         glYlqLDd2nYRPlV9N2HyTvPaClhWgSkLFE62H4qSlLiDI67QyF4h8pto5JM63jynzPbO
+         rwPw==
+X-Gm-Message-State: APjAAAVw+UfG+1mAwU3iO4JJWALdm5OMS4OB0Ou/ikHeeGxxEzL862II
+        gWRY/jEQxSt9wnN0I/4+SCQ7LVLLBBsn6masU3Snf3YYF5QQoKe7wnjuJFPvO+VLwIg+gZfg9oG
+        FWJW3I6lMsBU5tRrwIP/TET+t
+X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr25491054qvb.89.1580774266436;
+        Mon, 03 Feb 2020 15:57:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy6N76q16RG6gaA3Ccei9IOEfvL+VW0BlpNSl5MYgnCZ7NxgKf3lkrSb8R3wf0XT5Uq1MHCGA==
+X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr25491037qvb.89.1580774266111;
+        Mon, 03 Feb 2020 15:57:46 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id 13sm10092406qke.85.2020.02.03.15.57.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 15:45:11 -0800 (PST)
-Date:   Mon, 3 Feb 2020 15:45:09 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        seanpaul@chromium.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 0/9] drm/bridge: ti-sn65dsi86: Improve support for AUO
- B116XAK01 + other DP
-Message-ID: <20200203234509.GJ311651@builder>
-References: <20191218223530.253106-1-dianders@chromium.org>
+        Mon, 03 Feb 2020 15:57:45 -0800 (PST)
+Date:   Mon, 3 Feb 2020 18:57:43 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH V4] sched/isolation: isolate from handling managed
+ interrupt
+Message-ID: <20200203235743.GH155875@xz-x1>
+References: <20200120091625.17912-1-ming.lei@redhat.com>
+ <87eevrei7h.fsf@nanos.tec.linutronix.de>
+ <20200203192154.GG155875@xz-x1>
+ <87a75zz2hl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191218223530.253106-1-dianders@chromium.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <87a75zz2hl.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
+On Mon, Feb 03, 2020 at 11:15:50PM +0000, Thomas Gleixner wrote:
+> Peter Xu <peterx@redhat.com> writes:
+> > The new "managed_irq" works for us, thanks for both of your work!
+> >
+> > However I just noticed that this new sub-parameter might break users
+> > if applied incorrectly to old kernels, because iiuc "isolcpus="
+> > parameter will not apply at all when there's unknown sub-parameters:
+> >
+> > static int __init housekeeping_isolcpus_setup(char *str)
+> > {
+> > 	unsigned int flags = 0;
+> >
+> > 	while (isalpha(*str)) {
+> >                 ...
+> >                 pr_warn("isolcpus: Error, unknown flag\n");
+> >                 return 0;
+> >         }
+> >         ...
+> > }
+> >
+> > Then the same kernel parameter will break isolcpus= if the user
+> > reboots and switches to an older kernel.
+> >
+> > A solution to this could be that we introduce an isolated parameter
+> > for "managed_irq", then on the old kernels only the new parameter will
+> > be ignored rather than the whole "isolcpus=" parameter, so nothing
+> > will break.
+> >
+> > I'm not sure whether it's already too late for this, or if there's any
+> > better alternative.  Just raise this question up to see whether we
+> > still have chance to fix this up.
+> 
+> No, really. The basic guarantee is that your new kernel is going to work
+> fine with the previous command line, but making a guarantee that new
+> command line options still work on an old kernel are just creating a
+> horrible mess. So if that command line interface was not designed to
+> handle unknown arguments in the first place, you better fix that.
 
-> This series contains a pile of patches that was created to support
-> hooking up the AUO B116XAK01 panel to the eDP side of the bridge.  In
-> general it should be useful for hooking up a wider variety of DP
-> panels to the bridge, especially those with lower resolution and lower
-> bits per pixel.
-> 
-> The overall result of this series:
-> * Allows panels with fewer than 4 DP lanes hooked up to work.
-> * Optimizes the link rate for panels with 6 bpp.
-> * Supports trying more than one link rate when training if the main
->   link rate didn't work.
-> * Avoids invalid link rates.
-> 
-> It's not expected that this series will break any existing users but
-> testing is always good.
-> 
-> To support the AUO B116XAK01, we could actually stop at the ("Use
-> 18-bit DP if we can") patch since that causes the panel to run at a
-> link rate of 1.62 which works.  The patches to try more than one link
-> rate were all developed prior to realizing that I could just use
-> 18-bit mode and were validated with that patch reverted.
-> 
-> These patches were tested on sdm845-cheza atop mainline as of
-> 2019-12-13 and also on another board (the one with AUO B116XAK01) atop
-> a downstream kernel tree.
-> 
-> This patch series doesn't do anything to optimize the MIPI link and
-> only focuses on the DP link.  For instance, it's left as an exercise
-> to the reader to see if we can use the 666-packed mode on the MIPI
-> link and save some power (because we could lower the clock rate).
-> 
-> I am nowhere near a display expert and my knowledge of DP and MIPI is
-> pretty much zero.  If something about this patch series smells wrong,
-> it probably is.  Please let know and I'll try to fix it.
-> 
+Hi, Thomas,
 
-Thanks for the patches Doug, this fixes the rate and DP lane-count
-issues I'm seeing on my Lenovo Yoga C630 with the current
-implementation.
+Just to make sure I understand it right: are you suggesting that we
+fix up housekeeping_isolcpus_setup() to be able to skip unknown sub
+parameters?
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Thanks,
 
-Regards,
-Bjorn
+-- 
+Peter Xu
 
-> Changes in v3:
-> - Init rate_valid table, don't rely on stack being 0 (oops).
-> - Rename rate_times_200khz to rate_per_200khz.
-> - Loop over the ti_sn_bridge_dp_rate_lut table, making code smaller.
-> - Use 'true' instead of 1 for bools.
-> - Added note to commit message noting DP 1.4+ isn't well tested.
-> 
-> Changes in v2:
-> - Squash in maybe-uninitialized fix from Rob Clark.
-> - Patch ("Avoid invalid rates") replaces ("Skip non-standard DP rates")
-> 
-> Douglas Anderson (9):
->   drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
->   drm/bridge: ti-sn65dsi86: zero is never greater than an unsigned int
->   drm/bridge: ti-sn65dsi86: Don't use MIPI variables for DP link
->   drm/bridge: ti-sn65dsi86: Config number of DP lanes Mo' Betta
->   drm/bridge: ti-sn65dsi86: Read num lanes from the DP sink
->   drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
->   drm/bridge: ti-sn65dsi86: Group DP link training bits in a function
->   drm/bridge: ti-sn65dsi86: Train at faster rates if slower ones fail
->   drm/bridge: ti-sn65dsi86: Avoid invalid rates
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 259 +++++++++++++++++++++-----
->  1 file changed, 216 insertions(+), 43 deletions(-)
-> 
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
