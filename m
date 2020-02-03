@@ -2,87 +2,123 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8532C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA19C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1962084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D7F2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="PYCHYPKJ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DW4g/6/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgBCVxm (ORCPT
+        id S1727102AbgBCVzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:53:42 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:36957 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgBCVxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:53:42 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id a8992644;
-        Mon, 3 Feb 2020 21:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=Ex4nOF/GtbLLELsAhbDd852gL
-        jE=; b=PYCHYPKJtwvfYSOm5DF3eh1afYT+fxIWeveDkH1NomWBBMk8MgmkkcZoo
-        vwBLvNm7XBwXhQRpn0Zw3oHNWOF52O/bWeymKhx6/51Y2uyoloUUoJBnNsxU/cGz
-        ADyuxNqmnyIvRi3qnHst/xIxNWGAwSMS6LBGWVa54nVGDwYf6jh+DZn1oJfaNK+K
-        S26Vqcxq4pIXNOyW2IL3NLPqbbYh/8to/RHkCCsH3Yyhm2WRTDzeb1KWa61+X7wl
-        XgBx6ybbp0rjBgkDcgl0M9EckWWqirkQ4Dzf285rrQ9uha5jVop28ounJoV/FyEx
-        FvAhgGOEBmZ0f9GlJ9veAgWg9bB+Q==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1b4d9316 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 3 Feb 2020 21:52:57 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org, bhelgaas@google.com, x86@kernel.org,
-        hch@lst.de
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH v2] x86/PCI: ensure to_pci_sysdata usage is available to !CONFIG_PCI
-Date:   Mon,  3 Feb 2020 22:53:06 +0100
-Message-Id: <20200203215306.172000-1-Jason@zx2c4.com>
-In-Reply-To: <20200203200942.GA130652@google.com>
-References: <20200203200942.GA130652@google.com>
+        Mon, 3 Feb 2020 16:55:44 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40086 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCVzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 16:55:43 -0500
+Received: by mail-lf1-f68.google.com with SMTP id c23so10798395lfi.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xJAkb73npUQtmUSyvboyg3nc2D2eMj/LRe7QTM0JtTw=;
+        b=DW4g/6/MYnXF1LPe7/2RfS04IyD4h5v6Zw7F9g9HD0UoluTY5xl5rQH07HxoIfbmSL
+         LbFPoisu/4Tf5fjpwS9AZkUc3Kpx3LfxRMz8B9pPJvkrCLA7ieUqNXTThuqVrogXnyXm
+         YmQ06qGBkh/Fdsm2rVaRMS0Rnw0TP30W+hypvgpymsuhXKoHKFW7l3sqQWzs6Er7Z+aE
+         hf88D1ebprJj+AYGaHcWnx0tNLJhNmcUm61BuHbDtb4G838UMGhHK90rGrVQ2upG1cZ/
+         o/zhxtnTwPa6UXPgEeMmNrNB7tYI4gWFHfxIfqHrrdDCxj+zCFGgWe5xu355ukz9kbT4
+         S7Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xJAkb73npUQtmUSyvboyg3nc2D2eMj/LRe7QTM0JtTw=;
+        b=M5vAyCydiBMbPL9VmzpA9avWiy1sV+PfWxreUmoa9cRkxDSc4iSZ5fhzDkIJQz4f1m
+         EqgHZp7JKUiek1Q4ZdwLrybvtXnrzw7RcNhgi+8YZm1D9ipPfse8ZOlV3nfvuWzUzdo0
+         c0vE3bqa0tmZ2I9S+QI+o1Ftgm2yLlTECUkjq4D1EOSUIWbQzCFaYMyIom4h578WGEKd
+         yT59Xt/27eTxZ7Y3jOw8zPfOpCsBg9fwlsdYMdFxgyfodz3WKQ646pIj+vdZmJVnaPbW
+         SG+ybaMFFnapcbKzCj3her7ZZWOxN57t8D74At3EOHF4xj0zmIu+yiEtG1o2vuZg6yBY
+         lapg==
+X-Gm-Message-State: APjAAAVW8vQVy3TUSgCUsCyct1NPMES5z17u4rpwRwy/sx9YkI7x2Rg0
+        d2f8qjpVAMuOFOwYnSqwJZY07Q==
+X-Google-Smtp-Source: APXvYqzKhf8yy+VrDIH7P5bwPA/N4dISxyqqDNekLgToc6ApS5rJ2jA6asIx54ka9+WFODqsBDZ5WA==
+X-Received: by 2002:a19:9159:: with SMTP id y25mr13507738lfj.63.1580766941406;
+        Mon, 03 Feb 2020 13:55:41 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 144sm9700269lfi.67.2020.02.03.13.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 13:55:40 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 86130100AF6; Tue,  4 Feb 2020 00:55:53 +0300 (+03)
+Date:   Tue, 4 Feb 2020 00:55:53 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 11/12] mm/gup_benchmark: support pin_user_pages() and
+ related calls
+Message-ID: <20200203215553.q7zx6diprbby6ns5@box.shutemov.name>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-12-jhubbard@nvidia.com>
+ <20200203135845.ymfbghs7rf67awex@box>
+ <b554db44-7315-b99f-1151-ba2a1b2445ce@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b554db44-7315-b99f-1151-ba2a1b2445ce@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently, the helper to_pci_sysdata was added inside of the CONFIG_PCI
-guard, but it is used from inside of a CONFIG_NUMA guard, which does not
-require CONFIG_PCI. This breaks builds on !CONFIG_PCI machines. This
-commit makes that function available in all configurations.
+On Mon, Feb 03, 2020 at 01:17:40PM -0800, John Hubbard wrote:
+> On 2/3/20 5:58 AM, Kirill A. Shutemov wrote:
+> ...
+> >> @@ -19,6 +21,48 @@ struct gup_benchmark {
+> >>  	__u64 expansion[10];	/* For future use */
+> >>  };
+> >>  
+> >> +static void put_back_pages(unsigned int cmd, struct page **pages,
+> >> +			   unsigned long nr_pages)
+> >> +{
+> >> +	int i;
+> >> +
+> >> +	switch (cmd) {
+> >> +	case GUP_FAST_BENCHMARK:
+> >> +	case GUP_LONGTERM_BENCHMARK:
+> >> +	case GUP_BENCHMARK:
+> >> +		for (i = 0; i < nr_pages; i++)
+> > 
+> > 'i' is 'int' and 'nr_pages' is 'unsigned long'.
+> > There's space for trouble :P
+> > 
+> 
+> Yes, I've changed it to "unsigned int", thanks.
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Fixes: aad6aa0cd674 ("x86/PCI: Add to_pci_sysdata() helper")
-Cc: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/pci.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm confused. If nr_pages is more than UINT_MAX, this is endless loop.
+Hm?
 
-diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
-index 40ac1330adb2..7ccb338507e3 100644
---- a/arch/x86/include/asm/pci.h
-+++ b/arch/x86/include/asm/pci.h
-@@ -33,13 +33,13 @@ extern int pci_routeirq;
- extern int noioapicquirk;
- extern int noioapicreroute;
- 
--#ifdef CONFIG_PCI
--
- static inline struct pci_sysdata *to_pci_sysdata(const struct pci_bus *bus)
- {
- 	return bus->sysdata;
- }
- 
-+#ifdef CONFIG_PCI
-+
- #ifdef CONFIG_PCI_DOMAINS
- static inline int pci_domain_nr(struct pci_bus *bus)
- {
 -- 
-2.25.0
-
+ Kirill A. Shutemov
