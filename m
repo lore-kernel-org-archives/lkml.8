@@ -2,71 +2,111 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E9FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198FFC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76A62086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9FF2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 17:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lE8nW5EG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJLh2L/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgBCRsf (ORCPT
+        id S1728821AbgBCRtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 12:48:35 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbgBCRse (ORCPT
+        Mon, 3 Feb 2020 12:49:42 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54324 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727314AbgBCRtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 12:48:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qaNhAb2AuX/dDKlI2Nc6HqM1nu/HRABHcDrGh66UQSo=; b=lE8nW5EGQC3bFw6YfTWzEFDcER
-        Rnb+N2XhqFZSRYUeZuTz14Q+J0Ax6E8czMpT6tFvgPiKmEmHWBV2wDlio2LWhPkwPEdG1+iiTlYls
-        bfXjYeSFFWrZJa4SbIsS3yoIqTNZ2eGgdr6ClF59ihqJZcGmu8M6JiBaWu6i82Pq2+VTev9SEDOA5
-        N0aYadTGjbHJLieL6LtqXy44K6NYSN1pJcLJtXr+hhYdRXrrWtUO2nBVkJew/xYL3mRzZbKQN7z6e
-        PI7JCeNLC7YltU5MgoaL9ITb13mCbniHEz6c6GDFw8EJvZpQpmPmyD5QllEjaSqu1l5EvRNyYSIfs
-        JZz/27jA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyfpn-0004EU-Gp; Mon, 03 Feb 2020 17:48:31 +0000
-Date:   Mon, 3 Feb 2020 09:48:31 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, mingo@kernel.org,
-        will@kernel.org, oleg@redhat.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH -v2 5/7] locking/percpu-rwsem: Remove the embedded rwsem
-Message-ID: <20200203174831.GA9834@infradead.org>
-References: <20200131150703.194229898@infradead.org>
- <20200131151540.155211856@infradead.org>
- <20200203142050.GA28595@infradead.org>
- <20200203150933.GJ14914@hirez.programming.kicks-ass.net>
+        Mon, 3 Feb 2020 12:49:41 -0500
+Received: by mail-pj1-f66.google.com with SMTP id dw13so73888pjb.4;
+        Mon, 03 Feb 2020 09:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VFIHct8h7RIoSFqhED+o/Azmguq6Ly7hEHelGB4W9mA=;
+        b=rJLh2L/JEaA6qndkElyMttwtnyOOcFo960BcBRtEhli7f+n5Htup9fOrk7dDrf71b9
+         bwKcPMeuY0GzMnuUsXSrcI1exWFWvfuLcD6cbbJyrrkS5Fs91/MHqci/eA1F9l5GDlav
+         C+JhNAubnuJ1c84qw7UqStwYFixG+SBAbDrdXPoTIfH59gPPfbgjjQ/RqD3Dx3fD/zQk
+         EIP8SiwqlEIFSTodreMH1vbNTpjlpO8jc/hT1/DGjqZWOlqn/zmZnISvcuNzJRt3beFC
+         GVt/ON72eBuasAWL/wUc/RuThDZUfxMgXJ2SsRUNVqhb0evzm3IKAbFEAzLA+6naeFrJ
+         alkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VFIHct8h7RIoSFqhED+o/Azmguq6Ly7hEHelGB4W9mA=;
+        b=gYW7iAt9VvhXhk62shGrLWh/+SKhAwRwyN+Z+hQHR4TeSFDrkS+Z1PKWX0c2w/uP2R
+         4DcCjDAvsHqgFXtJ9dekPx3f0D8EVGjvzmwtzUzkeaRV7ikwcbMGzNazvN0yebhslE0M
+         tATuKydAh1QJakmfgroAsQNMFRRO56mwJtW5Ve70iqUQw405eF1r10yLRylvB5GqeD4x
+         /nf5aN7K7SIQ/XODST1YeJG2S88IZ3e5TgQHcxUGOrDrpvbnaWmwy8zqcEdU74mnmFSN
+         LpIU9XZkKAx9LspuvkmsThBbVbRr19G6Bx5we5A5JeMavUlTqm17vjUkCiiripZ/de5d
+         7IdA==
+X-Gm-Message-State: APjAAAVpL1+ex89bA6Hm6xZvKbzlKB8ckQKO+mgtDgkqwDfKutuHY+eI
+        EMaRxTkNEPHDctw6Etskxww=
+X-Google-Smtp-Source: APXvYqwjIumHE4pR9pnVMujFPGFWpCGP5BbojLG8Sb/TuKcHjQDsDGAkmB4Q9MYtN8sRZVHvt9LVgA==
+X-Received: by 2002:a17:902:a984:: with SMTP id bh4mr25180238plb.281.1580752179633;
+        Mon, 03 Feb 2020 09:49:39 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j8sm97701pjb.4.2020.02.03.09.49.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Feb 2020 09:49:38 -0800 (PST)
+Date:   Mon, 3 Feb 2020 09:49:37 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH -next] watchdog: fix mtk_wdt.c RESET_CONTROLLER build
+ error
+Message-ID: <20200203174937.GA18628@roeck-us.net>
+References: <77c1e557-4941-3806-2933-6c3583576390@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203150933.GJ14914@hirez.programming.kicks-ass.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <77c1e557-4941-3806-2933-6c3583576390@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 04:09:33PM +0100, Peter Zijlstra wrote:
-> > Can you split the removal of the non-owned resem support into a separate
-> > patch?  I still think keeping this one and moving aio to that scheme is
-> > a better idea than the current ad-hoc locking scheme that has all kinds
-> > of issues.
+On Mon, Feb 03, 2020 at 08:10:29AM -0800, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> That's basically 2 lines of code and a comment, surely we can ressurect
-> that if/when it's needed again?
+> Fix build error when CONFIG_RESET_CONTROLLER is not set by
+> selecting RESET_CONTROLLER.
+> 
+> ld: drivers/watchdog/mtk_wdt.o: in function `mtk_wdt_probe':
+> mtk_wdt.c:(.text+0x3ec): undefined reference to `devm_reset_controller_register'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: linux-watchdog@vger.kernel.org
 
-Sure, I could.  But then you'd still need to update your commit log for
-this patch explaining why it includes unrelated changes to a different
-subsystem.  By splitting it you also document your changes much better.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- linux-next-20200203.orig/drivers/watchdog/Kconfig
+> +++ linux-next-20200203/drivers/watchdog/Kconfig
+> @@ -841,6 +841,7 @@ config MEDIATEK_WATCHDOG
+>  	tristate "Mediatek SoCs watchdog support"
+>  	depends on ARCH_MEDIATEK || COMPILE_TEST
+>  	select WATCHDOG_CORE
+> +	select RESET_CONTROLLER
+>  	help
+>  	  Say Y here to include support for the watchdog timer
+>  	  in Mediatek SoCs.
+> 
+> 
