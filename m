@@ -2,123 +2,151 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36148C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13ED42087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3AF2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bl/tRYss"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kUu9P+c9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgBCPr3 (ORCPT
+        id S1728196AbgBCPsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:47:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45559 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728047AbgBCPr3 (ORCPT
+        Mon, 3 Feb 2020 10:48:21 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45150 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgBCPsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:47:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580744848;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hXZe6FEUmH9hjk4hufHYUU+BgVLORNyZ1sbApPlRBeU=;
-        b=bl/tRYssUdg7HivggzHPDcQhHyrqcqrFaSUFeXoTVyswe03h/bmlft9uYdD1absZYmW0Ro
-        5tvP8ySKZXoyvsS10lKIrl7q8iJT4Zx8srWkg9CO5tlKGiIC69TtZ6mMmWvvVVwxwzInaR
-        nij/eJKmZSATtk3lnnZz6BqvXUEJiVU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-aeDC1h7MNYCqXuy0WDdweg-1; Mon, 03 Feb 2020 10:47:24 -0500
-X-MC-Unique: aeDC1h7MNYCqXuy0WDdweg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5959D800D4E;
-        Mon,  3 Feb 2020 15:47:21 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 095D55C1B5;
-        Mon,  3 Feb 2020 15:47:15 +0000 (UTC)
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com
-References: <20200124075235.GX14914@hirez.programming.kicks-ass.net>
- <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
- <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
- <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
- <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
- <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
- <20200125111931.GW11457@worktop.programming.kicks-ass.net>
- <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
- <20200203134540.GA14879@hirez.programming.kicks-ass.net>
- <6d11b22b-2fb5-7dea-f88b-b32f1576a5e0@redhat.com>
- <20200203152807.GK14914@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <15fa978d-bd41-3ecb-83d5-896187e11244@redhat.com>
-Date:   Mon, 3 Feb 2020 10:47:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200203152807.GK14914@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Mon, 3 Feb 2020 10:48:20 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d9so11730274qte.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:48:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YNMOJs1FPm/l462+AObUcJBpy8J/6Ie1z+BZTrXlP78=;
+        b=kUu9P+c9Xi/sRwQmUmgRczJtLr5gqK+yFzRIYgulkIKq53mKQTosQf2B1M6rGAi1Vz
+         zf6l65bkbMXSBdMvkcorvRBREKJsVTppzgxLeEe94RRQYYE5rTfTkBy5PLm4V1jr5ZQ2
+         8/TkMtxS7aFoHnfHuQCreV0p97LuOHmi4sH1PeQhHzRc+prSAziRCba+Efew+79NFeug
+         7sAupOPSdzNPuzEGx/PoF+bkDk7yc1blkxEFffDT9NhTb2wE5i6A49kcGqskeWYy690O
+         nI+R4iCW7RBwWJK/FMvjoUPLd2pEL4Dy23U+/NizYdlcaK8tA1r3cfCm2lrDynXLFW6Q
+         69MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YNMOJs1FPm/l462+AObUcJBpy8J/6Ie1z+BZTrXlP78=;
+        b=ju2MkPx9q0YJAZpopOXfOrSnE2ptFiiNX1tGHkQszpD1jhq5k3+k5qqVVf9oXsomRK
+         XvxF+FT7MrjEt43ZtzV6m8mSlBa6x6WjbS3ub6QIP4oncQkeVweAz+M7y+fMt8avFFC3
+         TDqR+rsYVf9V6gz30rQtLjBecNyA5J7JUw9uta+1EfjoPFemIlXxFckdDwpBx84IWBni
+         aWpnYLuIzMbpfQSKdeV+5PZqMZ878fRBvt8XutX1z/rrF0RDbLhEgJJNlfafL7Ec+pWC
+         CgaDmM5UYpKgvlpbd2Ylv7BTAvjrZU9FAy4IQvNHh3TUtMon2YCgviuyK/+96BCYzfo8
+         UtyQ==
+X-Gm-Message-State: APjAAAXUpkr/tSYCUcZ6y2sLaBWNLmhqZ01GEJOyNv9MhcAWdO1vc3L4
+        YbuY2dwG1mJw6vi/bS46ZZSChg==
+X-Google-Smtp-Source: APXvYqzzoz8hW5WNsRr+QGAP5pmz1r20ujicRCSbC4RPyZEQg2Pm/930hS/RB0M0ITiwlO80rrs//A==
+X-Received: by 2002:ac8:7695:: with SMTP id g21mr22123082qtr.99.1580744899546;
+        Mon, 03 Feb 2020 07:48:19 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n132sm9814556qke.58.2020.02.03.07.48.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Feb 2020 07:48:18 -0800 (PST)
+Message-ID: <1580744894.7365.3.camel@lca.pw>
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev <kasan-dev@googlegroups.com>
+Date:   Mon, 03 Feb 2020 10:48:14 -0500
+In-Reply-To: <8e94a073-4045-89aa-6a3b-24847ad7c858@c-s.fr>
+References: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
+         <2C4ADFAE-7BB4-42B7-8F54-F036EA7A4316@lca.pw>
+         <8e94a073-4045-89aa-6a3b-24847ad7c858@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 10:28 AM, Peter Zijlstra wrote:
-> On Mon, Feb 03, 2020 at 09:59:12AM -0500, Waiman Long wrote:
->> On 2/3/20 8:45 AM, Peter Zijlstra wrote:
->>> Presumably you have a workload where CNA is actually a win? That is,
->>> what inspired you to go down this road? Which actual kernel lock is so
->>> contended on NUMA machines that we need to do this?
->> Today, a 2-socket Rome server can have 128 cores and 256 threads. If we
->> scale up more, we could easily have more than 1000 threads in a system.
->> With that many logical cpus available, it is easy to envision some heavy
->> spinlock contention can happen fairly regularly. This patch can
->> alleviate the congestion and improve performance under that
->> circumstance. Of course, the specific locks that are contended will
->> depend on the workloads.
-> Not the point. If there isn't an issue today, we don't have anything to
-> fix.
->
-> Furthermore, we've always adressed specific issues by looking at the
-> locking granularity, first.
+On Mon, 2020-02-03 at 16:14 +0100, Christophe Leroy wrote:
+> 
+> Le 02/02/2020 à 12:26, Qian Cai a écrit :
+> > 
+> > 
+> > > On Jan 30, 2020, at 9:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> > > 
+> > > config DEBUG_VM_PGTABLE
+> > >     bool "Debug arch page table for semantics compliance" if ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
+> > >     depends on MMU
+> > >     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
+> > >     default 'y' if DEBUG_VM
+> > 
+> > Does it really necessary to potentially force all bots to run this? Syzbot, kernel test robot etc? Does it ever pay off for all their machine times there?
+> > 
+> 
+> Machine time ?
+> 
+> On a 32 bits powerpc running at 132 MHz, the tests takes less than 10ms. 
+> Is it worth taking the risk of not detecting faults by not selecting it 
+> by default ?
 
-You are right in that. Unlike ticket spinlock where performance can drop
-precipitately over a cliff when there is heavy contention, qspinlock
-won't have this kind of performance drop. My suspicion is that slowdowns
-caused by heavy spinlock contention in actual workloads are likely to be
-more transient in nature and harder to pinpoint. These days, I seldom
-get bug report that is related to heavy spinlock contention.
+The risk is quite low as Catalin mentioned this thing is not to detect
+regressions but rather for arch/mm maintainers.
 
->
-> So again, what specific lock inspired all these patches?
->
-Maybe Alex has some data to share.
+I do appreciate the efforts to get everyone as possible to run this thing,
+so it get more notices once it is broken. However, DEBUG_VM seems like such
+a generic Kconfig those days that have even been enabled by default for
+Fedora Linux, so I would rather see a more sensitive default been taken
+even though the test runtime is fairly quickly on a small machine for now.
 
-Cheers,
-Longman
+> 
+> [    5.656916] debug_vm_pgtable: debug_vm_pgtable: Validating 
+> architecture page table helpers
+> [    5.665661] debug_vm_pgtable: debug_vm_pgtable: Validated 
+> architecture page table helpers
 
