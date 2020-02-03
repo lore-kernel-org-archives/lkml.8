@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C30C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E3FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7391E2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6889C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580746795;
-	bh=+Bnp/PEjYgWugTCK5CbHdsK5GEnec/R5q6lbcnrZi3g=;
+	s=default; t=1580746799;
+	bh=n9UtoocktdQLkm09h0FjxYd1haMrow92/EoSnmJxBKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/rnEDDNpbo6S7+kVUMfSqsoUFRQflSGtepSqK1fh0aJ7kHty67OwkGRR6wPB5NKA
-	 b67U+P6G2GN2Jp6xX+nAcVnVuPckbyqZ4+4xthbSgVKfOJEPraq05jSzPjYfr3Ze/a
-	 h954xxaXBahtIvJHTA8TJNbdi5cLYoSTpOxqYOzM=
+	b=L4Jgeid4rxqHpvaWdqp+kwyR7dvdLtcU+QYWNnfMPf84HTsu5oN1xVhhjvAHcJBUa
+	 3h+LPBTm+FEA8Eq7a3SZa7FIEpXxDNiwV5J/tq7hE96pc7o2yfi8sWQWPyENGcd8wP
+	 Eafna7I3Jd+7fhFgqSfhfhDimgqVXE/hU1P98bgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgBCQTz (ORCPT
+        id S1728693AbgBCQT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:19:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:19:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgBCQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:19:54 -0500
+        id S1728324AbgBCQT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:19:56 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 798E020838;
-        Mon,  3 Feb 2020 16:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD9D22086A;
+        Mon,  3 Feb 2020 16:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580746792;
-        bh=+Bnp/PEjYgWugTCK5CbHdsK5GEnec/R5q6lbcnrZi3g=;
+        s=default; t=1580746795;
+        bh=n9UtoocktdQLkm09h0FjxYd1haMrow92/EoSnmJxBKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqfvEArIlUBrtvcJp1r/QKCjmWdVYMbyZToeyQxYJtp++dpHgcazoEgv+v4anICPI
-         iNXkMNyxtA3qQ6249wsY0Pu20ZAlDO0eAHC3lDSR+Yg/ftCakYedYoA/pPBkaOYR/6
-         UV4P3Ypea59t2LHTWnoWkm8dj+7WtFAdEZLx8Cso=
+        b=ijBhmG+4dTCCrwtgaYIY2nUe2/nnONBtgeADACNUQVZOU2rkVHv+cOWd7h2FAuMEX
+         25Nm3Dmu/bUd8iJLGQpxlR6aOGH+azrebuIga6ZaM39ulUKv1V9HGy2GCFtdsVDZGS
+         iIu50+mfGmKh4bxAfh+/5iENNzET9apIOjU1xuNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Andreas Schneider <asn@cryptomilk.org>
-Subject: [PATCH 4.4 01/53] ALSA: pcm: Add missing copy ops check before clearing buffer
-Date:   Mon,  3 Feb 2020 16:18:53 +0000
-Message-Id: <20200203161903.318084200@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.4 10/53] staging: vt6656: use NULLFUCTION stack on mac80211
+Date:   Mon,  3 Feb 2020 16:19:02 +0000
+Message-Id: <20200203161905.020862802@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.714326084@linuxfoundation.org>
 References: <20200203161902.714326084@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-[ this is a fix specific to 4.4.y and 4.9.y stable trees;
-  4.14.y and older already contain the right fix ]
+commit d579c43c82f093e63639151625b2139166c730fd upstream.
 
-The stable 4.4.y and 4.9.y backports of the upstream commit
-add9d56d7b37 ("ALSA: pcm: Avoid possible info leaks from PCM stream
-buffers") dropped the check of substream->ops->copy_user as copy_user
-is a new member that isn't present in the older kernels.
-Although upstream drivers should work without this NULL check, it may
-cause a regression with a downstream driver that sets some
-inaccessible address to runtime->dma_area, leading to a crash at
-worst.
+It appears that the drivers does not go into power save correctly the
+NULL data packets are not being transmitted because it not enabled
+in mac80211.
 
-Since such drivers must have ops->copy member on older kernels instead
-of ops->copy_user, this patch adds the missing check of ops->copy for
-fixing the regression.
+The driver needs to capture ieee80211_is_nullfunc headers and
+copy the duration_id to it's own duration data header.
 
-Reported-and-tested-by: Andreas Schneider <asn@cryptomilk.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/610971ae-555b-a6c3-61b3-444a0c1e35b4@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/core/pcm_native.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -588,7 +588,7 @@ static int snd_pcm_hw_params(struct snd_
- 		runtime->boundary *= 2;
+---
+ drivers/staging/vt6656/main_usb.c |    1 +
+ drivers/staging/vt6656/rxtx.c     |   14 +++++---------
+ 2 files changed, 6 insertions(+), 9 deletions(-)
+
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -1002,6 +1002,7 @@ vt6656_probe(struct usb_interface *intf,
+ 	ieee80211_hw_set(priv->hw, RX_INCLUDES_FCS);
+ 	ieee80211_hw_set(priv->hw, REPORTS_TX_ACK_STATUS);
+ 	ieee80211_hw_set(priv->hw, SUPPORTS_PS);
++	ieee80211_hw_set(priv->hw, PS_NULLFUNC_STACK);
  
- 	/* clear the buffer for avoiding possible kernel info leaks */
--	if (runtime->dma_area)
-+	if (runtime->dma_area && !substream->ops->copy)
- 		memset(runtime->dma_area, 0, runtime->dma_bytes);
+ 	priv->hw->max_signal = 100;
  
- 	snd_pcm_timer_resolution_change(substream);
+--- a/drivers/staging/vt6656/rxtx.c
++++ b/drivers/staging/vt6656/rxtx.c
+@@ -280,11 +280,9 @@ static u16 vnt_rxtx_datahead_g(struct vn
+ 							PK_TYPE_11B, &buf->b);
+ 
+ 	/* Get Duration and TimeStamp */
+-	if (ieee80211_is_pspoll(hdr->frame_control)) {
+-		__le16 dur = cpu_to_le16(priv->current_aid | BIT(14) | BIT(15));
+-
+-		buf->duration_a = dur;
+-		buf->duration_b = dur;
++	if (ieee80211_is_nullfunc(hdr->frame_control)) {
++		buf->duration_a = hdr->duration_id;
++		buf->duration_b = hdr->duration_id;
+ 	} else {
+ 		buf->duration_a = vnt_get_duration_le(priv,
+ 						tx_context->pkt_type, need_ack);
+@@ -373,10 +371,8 @@ static u16 vnt_rxtx_datahead_ab(struct v
+ 			  tx_context->pkt_type, &buf->ab);
+ 
+ 	/* Get Duration and TimeStampOff */
+-	if (ieee80211_is_pspoll(hdr->frame_control)) {
+-		__le16 dur = cpu_to_le16(priv->current_aid | BIT(14) | BIT(15));
+-
+-		buf->duration = dur;
++	if (ieee80211_is_nullfunc(hdr->frame_control)) {
++		buf->duration = hdr->duration_id;
+ 	} else {
+ 		buf->duration = vnt_get_duration_le(priv, tx_context->pkt_type,
+ 						    need_ack);
 
 
