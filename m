@@ -2,124 +2,135 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F40C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF7C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0D22086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C992E2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cpZ1edWI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blwMci7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgBCTlj (ORCPT
+        id S1727044AbgBCTmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:41:39 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40075 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgBCTli (ORCPT
+        Mon, 3 Feb 2020 14:42:01 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51433 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgBCTmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:41:38 -0500
-Received: by mail-ua1-f68.google.com with SMTP id g13so2409384uab.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:41:37 -0800 (PST)
+        Mon, 3 Feb 2020 14:42:01 -0500
+Received: by mail-pj1-f66.google.com with SMTP id fa20so207150pjb.1;
+        Mon, 03 Feb 2020 11:42:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NCm+aKbpcmsno90SlUdPzAeCBBjBdQJv8DZqSIB3TLc=;
-        b=cpZ1edWIsH5TQ+/Zjo96Im+Kyjp+MYJhHErcmWKEaPehX2/4pi0G9wf3IOqyrht4Lb
-         HntRYMoY9ItVRobZDa9P+bvjKBGZcgB2uNCsUIl2cYB68qggUCLNhxmm4gncJM6jQ2cm
-         csj+AnSNFV4sd79IORgtOu5wfViHItEn+amHU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YGczli9kRu4G0EE9ppK/ZW7lnNhHOnn2KrgcFZjo3F4=;
+        b=blwMci7mz2N1tkDktCs7E8urYt8dkZzBulEzDjpsEAoBCH5Tr6zzMpRIR/HoARACOm
+         IG0wWVpsEohRwVOfHGozsf5HfwkcTNg1U37D+ur6vAtJCBa1auwM8OQMrWQk5nrBXUrC
+         9ynCssqpweEyHNU4HKfBZqZD+3jNIODCwtiEwXjMw8rU8I5UhSjWaUGQ1ZfCpPr52B/H
+         YoJCEDGrgrb/NHwfdEJuqBPnN6E/Q1W/1uvwyTkf5Arp4kxLo5djNwsXPjvzWaBlOza3
+         H8EetcxskLdns/GY62bKN9LDERXs/kWH8QxaNtKW9+4/XEYkYiGTQMyN85f0Eheb2cFg
+         Yrgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NCm+aKbpcmsno90SlUdPzAeCBBjBdQJv8DZqSIB3TLc=;
-        b=ccICpucxkJTqCEq1402YTXhurA46Vyo8Ls0xA4Zuj1DSWvvBg+SGPQJMYKkFw3z1mr
-         JdFRjeXxAAotkNjzKgX9Fzvlb+/6P4KHc3jP2vJklp5qYhfOpXkc8G9UvzFAVg4LIB6f
-         fOcrpAgOz4XfEASB/JP0OC/C35g2/oE8n9RZyJQwLEmcO57IfbUUsQbYqln16Wt38GY1
-         ej/YsI5Ru6N4rHcvoHcZMavzTx+zauqWbOGYSDGFST+DGP7qBpXa04zZ1qrNqj4a6frP
-         VXYVT875quS0e3HGPZ6AwQW+//7m5Gfe6KKOlGUvPKiIv/09vCMAVZWpeQzNmflzP9w+
-         pDIw==
-X-Gm-Message-State: APjAAAXWqcNCzQi0kXh0M4+fBewXfNjd9Pq+SBkDHTlOp+hF9iyW2agu
-        KWS19I2U+4UqwiftZ3GdyeRHMb91GO4=
-X-Google-Smtp-Source: APXvYqxyqXho/EVhkGdVIvuBAmITWLZx+OH9gxZUaStnvPN7w6sRSPqTxEgOwr8wfYfbKJQwDG+LjQ==
-X-Received: by 2002:ab0:555e:: with SMTP id u30mr15470736uaa.39.1580758896885;
-        Mon, 03 Feb 2020 11:41:36 -0800 (PST)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id 94sm5979627uaw.5.2020.02.03.11.41.35
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YGczli9kRu4G0EE9ppK/ZW7lnNhHOnn2KrgcFZjo3F4=;
+        b=CWzFbdeLf5EOdY+Py2HzNOWZ7KHO6zcRFBFErdRL+M1rHAqDvU0wPuYMAa2NJIT1ls
+         CvNIhzhGMAjDbFyjiPjm4J3Ybai+qvYueGDxHBeMAaBHUvln1xetmkbtLj/OAN2y14/A
+         Si5taOJ2MVNwCsx2eZxFnw7V+i//aqSw4/BDKAgi5H4kOtjBqfVt3+7M1CFgH5WbXORL
+         tzIzmxhjTtOXpSKh9tgpiZ0Brh+xwBw0EYaxFCnUf+uzMKaYaZD5yY2/sP/FKJ4b54aW
+         sGmnu+7H+YaIwQvPK15UN3jEl+0efPWAVXTjb+uk9W+AqfFxH4bTOGkQ2KH27UqA5Ycp
+         dn1Q==
+X-Gm-Message-State: APjAAAX3B5BvGXngky7IpzaRXK9w741hFfe/I6J2fnbzcSTXEMz4HPdD
+        1kp/k1Xeiiro4Cn79kGdjBH1Ts8p
+X-Google-Smtp-Source: APXvYqyHBg00+skHe0SQxFojfwHROIQ+ILJSjqjBWz4Bl8u6mjcuR+1vYWCWIwAOx63W1quZyKt4mg==
+X-Received: by 2002:a17:902:7d93:: with SMTP id a19mr24912115plm.283.1580758920688;
+        Mon, 03 Feb 2020 11:42:00 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id x21sm20686309pfn.164.2020.02.03.11.41.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 11:41:36 -0800 (PST)
-Received: by mail-ua1-f54.google.com with SMTP id f7so5794524uaa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:41:35 -0800 (PST)
-X-Received: by 2002:ab0:30c2:: with SMTP id c2mr14984867uam.8.1580758895085;
- Mon, 03 Feb 2020 11:41:35 -0800 (PST)
+        Mon, 03 Feb 2020 11:42:00 -0800 (PST)
+Subject: Re: [PATCH] skbuff: fix a data race in skb_queue_len()
+To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
+Cc:     kuba@kernel.org, elver@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1580756190-3541-1-git-send-email-cai@lca.pw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <648d6673-bbd8-6634-0174-f9b77194ecfd@gmail.com>
+Date:   Mon, 3 Feb 2020 11:41:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200203183149.73842-1-dianders@chromium.org> <20200203193027.62BD22080D@mail.kernel.org>
-In-Reply-To: <20200203193027.62BD22080D@mail.kernel.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 3 Feb 2020 11:41:23 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=X2K-Qr17qXgG1Ng8MpZQogagBqMwWu=D2OpQf+ZskBPw@mail.gmail.com>
-Message-ID: <CAD=FV=X2K-Qr17qXgG1Ng8MpZQogagBqMwWu=D2OpQf+ZskBPw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/15] clk: qcom: Fix parenting for dispcc/gpucc/videocc
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1580756190-3541-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Mon, Feb 3, 2020 at 11:30 AM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Douglas Anderson (2020-02-03 10:31:33)
-> >
-> >  .../devicetree/bindings/clock/qcom,gpucc.yaml | 72 --------------
-> >  ...om,dispcc.yaml => qcom,msm8998-gpucc.yaml} | 33 +++----
-> >  .../bindings/clock/qcom,sc7180-dispcc.yaml    | 84 ++++++++++++++++
-> >  .../bindings/clock/qcom,sc7180-gpucc.yaml     | 72 ++++++++++++++
-> >  .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 ++++++++++++
-> >  .../bindings/clock/qcom,sdm845-dispcc.yaml    | 99 +++++++++++++++++++
-> >  .../bindings/clock/qcom,sdm845-gpucc.yaml     | 72 ++++++++++++++
-> >  ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++---
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 47 +++++++++
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 28 +++++-
->
-> I don't want to take patches touching dts/qcom/. These aren't necessary
-> to merge right now, correct? Or at least, they can go via arm-soc tree?
 
-Right.  They can go later.
+On 2/3/20 10:56 AM, Qian Cai wrote:
+> sk_buff.qlen can be accessed concurrently as noticed by KCSAN,
+> 
+>  BUG: KCSAN: data-race in __skb_try_recv_from_queue / unix_dgram_sendmsg
+> 
+>  read to 0xffff8a1b1d8a81c0 of 4 bytes by task 5371 on cpu 96:
+>   unix_dgram_sendmsg+0x9a9/0xb70 include/linux/skbuff.h:1821
+> 				 net/unix/af_unix.c:1761
+>   ____sys_sendmsg+0x33e/0x370
+>   ___sys_sendmsg+0xa6/0xf0
+>   __sys_sendmsg+0x69/0xf0
+>   __x64_sys_sendmsg+0x51/0x70
+>   do_syscall_64+0x91/0xb47
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+>  write to 0xffff8a1b1d8a81c0 of 4 bytes by task 1 on cpu 99:
+>   __skb_try_recv_from_queue+0x327/0x410 include/linux/skbuff.h:2029
+>   __skb_try_recv_datagram+0xbe/0x220
+>   unix_dgram_recvmsg+0xee/0x850
+>   ____sys_recvmsg+0x1fb/0x210
+>   ___sys_recvmsg+0xa2/0xf0
+>   __sys_recvmsg+0x66/0xf0
+>   __x64_sys_recvmsg+0x51/0x70
+>   do_syscall_64+0x91/0xb47
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Since only the read is operating as lockless, it could introduce a logic
+> bug in unix_recvq_full() due to the load tearing. Fix it by adding
+> a READ_ONCE() there.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/skbuff.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 3d13a4b717e9..4b5157164f3e 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1818,7 +1818,7 @@ static inline struct sk_buff *skb_peek_tail(const struct sk_buff_head *list_)
+>   */
+>  static inline __u32 skb_queue_len(const struct sk_buff_head *list_)
+>  {
+> -	return list_->qlen;
+> +	return READ_ONCE(list_->qlen);
+>  }
 
-Specifically for sdm845 until the sdm845 patches lands the old dts
-trees will yell about the missing clocks, but it's not like they will
-compile fail.  Also the bindings themselves will validate fine.
-There's no other way forward, though, and the old bindings caused
-similar yells.
+We do not want to add READ_ONCE() for all uses of skb_queue_len()
 
-For sc7180 there's no usage of any of these clocks and this adds the
-first usage, so definitely no problem there.
+This could hide some real bugs, and could generate slightly less
+efficient code in the cases we have the lock held.
 
-Once you've landed then Bjorn or Andy can pick up the dts.
 
--Doug
+
