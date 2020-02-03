@@ -2,157 +2,160 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2075C3524C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BB0C3524C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34982067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3B22082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoJy5s+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBCBxc (ORCPT
+        id S1727167AbgBCB4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:53:32 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10138 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726494AbgBCBxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:53:32 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 105ED91C7133A3B85418;
-        Mon,  3 Feb 2020 09:53:30 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 3 Feb 2020
- 09:53:20 +0800
-Subject: Re: [PATCH V4] brd: check and limit max_part par
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        <wubo40@huawei.comwubo>, Louhongxiang <louhongxiang@huawei.com>
-References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
-Message-ID: <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
-Date:   Mon, 3 Feb 2020 09:53:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 2 Feb 2020 20:56:33 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45770 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgBCB4d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:56:33 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v19so13229851oic.12;
+        Sun, 02 Feb 2020 17:56:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y2BAnnFqBl0ny/UG9avlBqD34L7kMVfx2OwCIBjO+No=;
+        b=FoJy5s+Vjtqt/WYVTotJ9W30/xIwYF5UOfD1EF1k00/rJrpmxqRc1Bdgs9qIIq96io
+         EEsFWCmUVy3Mh3bWYC2PJsZ39kvh27XWIeCYkoeFXUJNO1Zojs9ymuhSJSURGu1k4Mv7
+         GsJOoQtAM1nDrGuNGr4Bjq3VA/WK5kPoBUCFBsaMXAVau9lwZ8mOW4YrOx1YQ+jeoV85
+         L9gx0hMd0CZpKuCq/GXlKilrgn10beOVARaqJXqscJwMdVDwQOjwnvTy6I5KYBRX+2BH
+         MKxlIrk2vZqgW8sDDB0FHxKY+IuQa76EoBlAhp8/AZ2zjDxfDb848Vyx/O+WTwEZMvv5
+         WBbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y2BAnnFqBl0ny/UG9avlBqD34L7kMVfx2OwCIBjO+No=;
+        b=Q1nepnNUixWiTeLDtwVJn/0HEYo1uXCOZKss1Fo2Ib+hBVU2lsCdk4sMbWmwThAPJY
+         NrnKj3npMZyEUjWr/cT6vR7YwbBVX2JyNG/wYxyHZ9mOmDFzmJ9ZNlEPyS0ZrMFZS3H6
+         uWgQnzvdLqrOrNANLEbxJ2GKFmKeYqdqPUKf0Eiuh0Dbm3m25ukXtw5r9sfnuyxojbRZ
+         8kJNZvcabgorduny7IcQEUd72AKGHNMZppqkPMgU94jqiYILfvCX4mbtpQZP05QPv0+m
+         Gf9I1q86S9Kr++tLld7r4WlXmS+MCJaKO/aiVqEAXIBDqtIaDP0p8b7sXn51x3nf5/vx
+         4FfA==
+X-Gm-Message-State: APjAAAXJ8CYglsD6ecUZuwnW+J2oVAEOnfktXoZNDe8fJZKwQVt/tyqI
+        Uu4M64ykoCXFc1so1gXkQQjTVqYOxkezkMgLIfz8Yw==
+X-Google-Smtp-Source: APXvYqzYVyWHsYbCf5iLnzCcMJtqYB3/GbQNuRQPHhRjiyDYYPVMb0DwR8G40Oj0GaXrMl+kxGk3cEi4DfsSo7xVb/4=
+X-Received: by 2002:aca:d502:: with SMTP id m2mr12708577oig.41.1580694992545;
+ Sun, 02 Feb 2020 17:56:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+References: <20200120023326.GA149019@google.com> <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
+ <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
+In-Reply-To: <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Mon, 3 Feb 2020 11:56:20 +1000
+Message-ID: <CAPM=9twvggZqVu=HmXZMN70+-6hAPGdog-dGFnM7jp3RhjAB9w@mail.gmail.com>
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth notification"
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Ben Skeggs <skeggsb@gmail.com>
+Cc:     "Alex G." <mr.nuke.me@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jan Vesely <jano.vesely@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping...
+On Tue, 21 Jan 2020 at 21:11, Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> On Mo, 2020-01-20 at 10:01 -0600, Alex G. wrote:
+> >
+> > On 1/19/20 8:33 PM, Bjorn Helgaas wrote:
+> > > [+cc NVMe, GPU driver folks]
+> > >
+> > > On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
+> > > > I think we have a problem with link bandwidth change notifications
+> > > > (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
+> > > >
+> > > > Here's a recent bug report where Jan reported "_tons_" of these
+> > > > notifications on an nvme device:
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=206197
+> > > >
+> > > > There was similar discussion involving GPU drivers at
+> > > > https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> > > >
+> > > > The current solution is the CONFIG_PCIE_BW config option, which
+> > > > disables the messages completely.  That option defaults to "off" (no
+> > > > messages), but even so, I think it's a little problematic.
+> > > >
+> > > > Users are not really in a position to figure out whether it's safe to
+> > > > enable.  All they can do is experiment and see whether it works with
+> > > > their current mix of devices and drivers.
+> > > >
+> > > > I don't think it's currently useful for distros because it's a
+> > > > compile-time switch, and distros cannot predict what system configs
+> > > > will be used, so I don't think they can enable it.
+> > > >
+> > > > Does anybody have proposals for making it smarter about distinguishing
+> > > > real problems from intentional power management, or maybe interfaces
+> > > > drivers could use to tell us when we should ignore bandwidth changes?
+> > >
+> > > NVMe, GPU folks, do your drivers or devices change PCIe link
+> > > speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+> > > the PCI core interprets changes like that as problems that need to be
+> > > reported.
+> > >
+> > > If drivers do change link speed/width, can you point me to where
+> > > that's done?  Would it be feasible to add some sort of PCI core
+> > > interface so the driver could say "ignore" or "pay attention to"
+> > > subsequent link changes?
+> > >
+> > > Or maybe there would even be a way to move the link change itself into
+> > > the PCI core, so the core would be aware of what's going on?
+> >
+> > Funny thing is, I was going to suggest an in-kernel API for this.
+> >    * Driver requests lower link speed 'X'
+> >    * Link management interrupt fires
+> >    * If link speed is at or above 'X' then do not report it.
+> > I think an "ignore" flag would defeat the purpose of having link
+> > bandwidth reporting in the first place. If some drivers set it, and
+> > others don't, then it would be inconsistent enough to not be useful.
+> >
+> > A second suggestion is, if there is a way to ratelimit these messages on
+> > a per-downstream port basis.
+>
+> Both AMD and Nvidia GPUs have embedded controllers, which are
+> responsible for the power management. IIRC those controllers can
+> autonomously initiate PCIe link speed changes depending on measured bus
+> load. So there is no way for the driver to signal the requested bus
+> speed to the PCIe core.
+>
+> I guess for the GPU usecase the best we can do is to have the driver
+> opt-out of the link bandwidth notifications, as the driver knows that
+> there is some autonomous entity on the endpoint mucking with the link
+> parameters.
+>
 
-On 2020/1/21 12:04, Zhiqiang Liu wrote:
-> 
-> In brd_init func, rd_nr num of brd_device are firstly allocated
-> and add in brd_devices, then brd_devices are traversed to add each
-> brd_device by calling add_disk func. When allocating brd_device,
-> the disk->first_minor is set to i * max_part, if rd_nr * max_part
-> is larger than MINORMASK, two different brd_device may have the same
-> devt, then only one of them can be successfully added.
-> when rmmod brd.ko, it will cause oops when calling brd_exit.
-> 
-> Follow those steps:
->   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
->   # rmmod brd
-> then, the oops will appear.
-> 
-> Oops log:
-> [  726.613722] Call trace:
-> [  726.614175]  kernfs_find_ns+0x24/0x130
-> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-> [  726.615749]  sysfs_remove_group+0x38/0xb0
-> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-> [  726.617320]  blk_unregister_queue+0x98/0x100
-> [  726.618105]  del_gendisk+0x144/0x2b8
-> [  726.618759]  brd_exit+0x68/0x560 [brd]
-> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-> [  726.620384]  el0_svc_common+0x78/0x130
-> [  726.621057]  el0_svc_handler+0x38/0x78
-> [  726.621738]  el0_svc+0x8/0xc
-> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
-> 
-> Here, we add brd_check_and_reset_par func to check and limit max_part par.
-> 
-> --
-> V3->V4:(suggested by Ming Lei)
->  - remove useless change
->  - add one limit of max_part
-> 
-> V2->V3: (suggested by Ming Lei)
->  - clear .minors when running out of consecutive minor space in brd_alloc
->  - remove limit of rd_nr
-> 
-> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
-> 
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> ---
->  drivers/block/brd.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index df8103dd40ac..4684f95e3369 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
->  	 *  is harmless)
->  	 */
->  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
-> -	disk = brd->brd_disk = alloc_disk(max_part);
-> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
-> +			0 : max_part);
->  	if (!disk)
->  		goto out_free_queue;
->  	disk->major		= RAMDISK_MAJOR;
-> -	disk->first_minor	= i * max_part;
-> +	disk->first_minor	= i * disk->minors;
->  	disk->fops		= &brd_fops;
->  	disk->private_data	= brd;
->  	disk->queue		= brd->brd_queue;
-> @@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
->  	return kobj;
->  }
-> 
-> +static inline void brd_check_and_reset_par(void)
-> +{
-> +	if (unlikely(!max_part))
-> +		max_part = 1;
-> +
-> +	if (max_part > DISK_MAX_PARTS) {
-> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
-> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
-> +		max_part = DISK_MAX_PARTS;
-> +	}
-> +
-> +	/*
-> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
-> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
-> +	 */
-> +	if ((1U << MINORBITS) % max_part != 0)
-> +		max_part = 1UL << fls(max_part);
-> +}
-> +
->  static int __init brd_init(void)
->  {
->  	struct brd_device *brd, *next;
-> @@ -491,8 +511,7 @@ static int __init brd_init(void)
->  	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
->  		return -EIO;
-> 
-> -	if (unlikely(!max_part))
-> -		max_part = 1;
-> +	brd_check_and_reset_par();
-> 
->  	for (i = 0; i < rd_nr; i++) {
->  		brd = brd_alloc(i);
-> 
+Adding Alex and Ben for AMD and NVIDIA info
 
+Dave.
