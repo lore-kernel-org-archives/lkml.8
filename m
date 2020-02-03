@@ -2,52 +2,51 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECB0C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94572C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9192622522
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6120521582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748555;
-	bh=Xhb1nh/FiHIeB1Iv8gg+VodxFY8ceMSYemck/IQ4NRI=;
+	s=default; t=1580748557;
+	bh=12c1Cba7k9vHIdxb59e3M30I8y9BZKq3PODOf2RGwDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2m0FvRNWec5dSDxH/8jgMiWUGFfED0QSs0QPwdXUSlphDd5waqvEPuNQfwBrz4keg
-	 9Cz4ZPjL8QPHtaXu3Wv5MViDmSiFOEEFh00cD0ZOrChBa/jfR74Dxq5zJy97m9jNWb
-	 grb2fhygyjS98nPVhmtuNOznPAB8oGFq6JcqqcGI=
+	b=QC4P0IP2ZGqvuPNlBsz3oSsIUM/8oJIqdKfPrx43aUZg6I6iwWazfCeQlRRrWbXZ8
+	 MN0taXESbb558KVjiiYaALqsKBoi+V4rWatffZz3oVl3vNP8G9l4KCeHdAQoTjDsIk
+	 IzL0jkGhvPUqTw9llHP8ofANE1uDwniRgDR9i9i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgBCQtL (ORCPT
+        id S1728185AbgBCQZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:49:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbgBCQZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:22 -0500
+        id S1728128AbgBCQZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:10 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CED2080C;
-        Mon,  3 Feb 2020 16:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4581821582;
+        Mon,  3 Feb 2020 16:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747121;
-        bh=Xhb1nh/FiHIeB1Iv8gg+VodxFY8ceMSYemck/IQ4NRI=;
+        s=default; t=1580747109;
+        bh=12c1Cba7k9vHIdxb59e3M30I8y9BZKq3PODOf2RGwDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBRJJUJu4MPyIVzWaK0CKtMe+jqPqRdY75I6PGpNonApCMd5qIT/8wgtFVlbqLShQ
-         CODDLH9Sv5NcEA3Q8ME3cYUjN/gWtOSbsbXeljXalYUu9fYejmmsm+LTnwTtpJsIsN
-         2xQ/Xn4B5eOTxXQVhONbHKaRKEuEzdIgJzVzXEDM=
+        b=fX788b/kPduGmEJF6ECai68kcLZy9scUT73QCg3o0Gdfe9Q/H7p2ep2HizMD6AIHb
+         NVYT37f7TGL0fcfC2XA+F1fPVIWda/ZdLWvdkENl7EmR00p94S3vb9q1gnJeIJNxng
+         Fr5aOBn2ne45VNd7gTD5KXeHU1joFv7yDewSaPSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/68] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
-Date:   Mon,  3 Feb 2020 16:19:17 +0000
-Message-Id: <20200203161908.577154146@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 16/68] zd1211rw: fix storage endpoint lookup
+Date:   Mon,  3 Feb 2020 16:19:12 +0000
+Message-Id: <20200203161907.738309609@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,38 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit c5706c7defc79de68a115b5536376298a8fef111 ]
+commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
 
-Driver fails to compile in a minimized kernel's configuration because of
-the missing dependency on GPIOLIB_IRQCHIP.
+Make sure to use the current alternate setting when verifying the
+storage interface descriptors to avoid submitting an URB to an invalid
+endpoint.
 
- error: ‘struct gpio_chip’ has no member named ‘irq’
-   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200106015154.12040-1-digetx@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
+Cc: stable <stable@vger.kernel.org>     # 2.6.19
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b992badb99dd2..5d097d631e39f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -920,6 +920,7 @@ config GPIO_LP873X
- config GPIO_MAX77620
- 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
- 	depends on MFD_MAX77620
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
- 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
--- 
-2.20.1
-
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
+@@ -1272,7 +1272,7 @@ static void print_id(struct usb_device *
+ static int eject_installer(struct usb_interface *intf)
+ {
+ 	struct usb_device *udev = interface_to_usbdev(intf);
+-	struct usb_host_interface *iface_desc = &intf->altsetting[0];
++	struct usb_host_interface *iface_desc = intf->cur_altsetting;
+ 	struct usb_endpoint_descriptor *endpoint;
+ 	unsigned char *cmd;
+ 	u8 bulk_out_ep;
 
 
