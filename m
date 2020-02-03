@@ -2,123 +2,289 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA19C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5EAC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D7F2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DW4g/6/M"
+	by mail.kernel.org (Postfix) with ESMTP id BF1842084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgBCVzo (ORCPT
+        id S1727112AbgBCV6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:55:44 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40086 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgBCVzn (ORCPT
+        Mon, 3 Feb 2020 16:58:17 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:45041 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgBCV6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:55:43 -0500
-Received: by mail-lf1-f68.google.com with SMTP id c23so10798395lfi.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:55:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xJAkb73npUQtmUSyvboyg3nc2D2eMj/LRe7QTM0JtTw=;
-        b=DW4g/6/MYnXF1LPe7/2RfS04IyD4h5v6Zw7F9g9HD0UoluTY5xl5rQH07HxoIfbmSL
-         LbFPoisu/4Tf5fjpwS9AZkUc3Kpx3LfxRMz8B9pPJvkrCLA7ieUqNXTThuqVrogXnyXm
-         YmQ06qGBkh/Fdsm2rVaRMS0Rnw0TP30W+hypvgpymsuhXKoHKFW7l3sqQWzs6Er7Z+aE
-         hf88D1ebprJj+AYGaHcWnx0tNLJhNmcUm61BuHbDtb4G838UMGhHK90rGrVQ2upG1cZ/
-         o/zhxtnTwPa6UXPgEeMmNrNB7tYI4gWFHfxIfqHrrdDCxj+zCFGgWe5xu355ukz9kbT4
-         S7Hg==
+        Mon, 3 Feb 2020 16:58:16 -0500
+Received: by mail-il1-f199.google.com with SMTP id h87so13167766ild.11
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:58:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xJAkb73npUQtmUSyvboyg3nc2D2eMj/LRe7QTM0JtTw=;
-        b=M5vAyCydiBMbPL9VmzpA9avWiy1sV+PfWxreUmoa9cRkxDSc4iSZ5fhzDkIJQz4f1m
-         EqgHZp7JKUiek1Q4ZdwLrybvtXnrzw7RcNhgi+8YZm1D9ipPfse8ZOlV3nfvuWzUzdo0
-         c0vE3bqa0tmZ2I9S+QI+o1Ftgm2yLlTECUkjq4D1EOSUIWbQzCFaYMyIom4h578WGEKd
-         yT59Xt/27eTxZ7Y3jOw8zPfOpCsBg9fwlsdYMdFxgyfodz3WKQ646pIj+vdZmJVnaPbW
-         SG+ybaMFFnapcbKzCj3her7ZZWOxN57t8D74At3EOHF4xj0zmIu+yiEtG1o2vuZg6yBY
-         lapg==
-X-Gm-Message-State: APjAAAVW8vQVy3TUSgCUsCyct1NPMES5z17u4rpwRwy/sx9YkI7x2Rg0
-        d2f8qjpVAMuOFOwYnSqwJZY07Q==
-X-Google-Smtp-Source: APXvYqzKhf8yy+VrDIH7P5bwPA/N4dISxyqqDNekLgToc6ApS5rJ2jA6asIx54ka9+WFODqsBDZ5WA==
-X-Received: by 2002:a19:9159:: with SMTP id y25mr13507738lfj.63.1580766941406;
-        Mon, 03 Feb 2020 13:55:41 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 144sm9700269lfi.67.2020.02.03.13.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 13:55:40 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 86130100AF6; Tue,  4 Feb 2020 00:55:53 +0300 (+03)
-Date:   Tue, 4 Feb 2020 00:55:53 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/12] mm/gup_benchmark: support pin_user_pages() and
- related calls
-Message-ID: <20200203215553.q7zx6diprbby6ns5@box.shutemov.name>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-12-jhubbard@nvidia.com>
- <20200203135845.ymfbghs7rf67awex@box>
- <b554db44-7315-b99f-1151-ba2a1b2445ce@nvidia.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=BV5bGmLp3Jvdfl+pa8JRvVqICwp/WeY6QDoBp6Mfh14=;
+        b=dSYlFaovXQVlqI8epfR0Gmznoj1vonOQP3dvPQqgxgWpaTIeAeYDRNqPapqi3hQl5f
+         IDW15DF4v8DQ4BdMfM68UDt82kNz2pa4wlENyrGLE8XVYCxMzTglesE6HA4wMoGmPSrn
+         iMKFqZ3BuJpMU5LsXhTT2+aNG7LULKFdXdWwp0NZP4KjjJ2nnlQ6BurVMEbw9lFDrFdi
+         wLdaFZTfkpzcu3hLIKnZdAsvSFDg5aOM61aBBHwsmXPHzRL15t5VSkIHVXm6pQaNwoU+
+         w3p8F9FOwZqfPXfpAiprDOTm9x36oL6khC/6BjBVCIB2plt56orteYIzhKd3LVDfR9KA
+         GpaA==
+X-Gm-Message-State: APjAAAUm28qcdvVOF/pIlRPcyN1ufwNqGBmu2fD4O0qF0o7JKgKEnEoM
+        sftYCzmD9W9lT62ImRVy1PFBftMqPViZ4jf99AW01iONjyIO
+X-Google-Smtp-Source: APXvYqzdZak/7xmCchg8/6oBXNyfNZJA3WutyuOPMhmAfTM3NEaV8p9M8rU4kir77Ws5GLydR95zxztABeKTlUDyjIflhjTdSiNg
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b554db44-7315-b99f-1151-ba2a1b2445ce@nvidia.com>
+X-Received: by 2002:a5e:d602:: with SMTP id w2mr19525192iom.94.1580767094901;
+ Mon, 03 Feb 2020 13:58:14 -0800 (PST)
+Date:   Mon, 03 Feb 2020 13:58:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002a13b5059db305a5@google.com>
+Subject: possible deadlock in pty_write
+From:   syzbot <syzbot+3118a33395397bb6b0ca@syzkaller.appspotmail.com>
+To:     a@unstable.cc, andrew@lunn.ch, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        hkallweit1@gmail.com, jakub.kicinski@netronome.com,
+        jslaby@suse.com, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 01:17:40PM -0800, John Hubbard wrote:
-> On 2/3/20 5:58 AM, Kirill A. Shutemov wrote:
-> ...
-> >> @@ -19,6 +21,48 @@ struct gup_benchmark {
-> >>  	__u64 expansion[10];	/* For future use */
-> >>  };
-> >>  
-> >> +static void put_back_pages(unsigned int cmd, struct page **pages,
-> >> +			   unsigned long nr_pages)
-> >> +{
-> >> +	int i;
-> >> +
-> >> +	switch (cmd) {
-> >> +	case GUP_FAST_BENCHMARK:
-> >> +	case GUP_LONGTERM_BENCHMARK:
-> >> +	case GUP_BENCHMARK:
-> >> +		for (i = 0; i < nr_pages; i++)
-> > 
-> > 'i' is 'int' and 'nr_pages' is 'unsigned long'.
-> > There's space for trouble :P
-> > 
-> 
-> Yes, I've changed it to "unsigned int", thanks.
+Hello,
 
-I'm confused. If nr_pages is more than UINT_MAX, this is endless loop.
-Hm?
+syzbot found the following crash on:
 
--- 
- Kirill A. Shutemov
+HEAD commit:    ccaaaf6f Merge tag 'mpx-for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11bc585ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=879390c6b09ccf66
+dashboard link: https://syzkaller.appspot.com/bug?extid=3118a33395397bb6b0ca
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165bda4ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1646a85ee00000
+
+The bug was bisected to:
+
+commit 65b27995a4ab8fc51b4adc6b4dcdca20f7a595bb
+Author: Heiner Kallweit <hkallweit1@gmail.com>
+Date:   Mon Aug 12 21:52:19 2019 +0000
+
+    net: phy: let phy_speed_down/up support speeds >1Gbps
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1764f735e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14e4f735e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e4f735e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3118a33395397bb6b0ca@syzkaller.appspotmail.com
+Fixes: 65b27995a4ab ("net: phy: let phy_speed_down/up support speeds >1Gbps")
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor465/10262 is trying to acquire lock:
+ffffffff89b9f960 (console_owner){-.-.}, at: console_trylock_spinning kernel/printk/printk.c:1724 [inline]
+ffffffff89b9f960 (console_owner){-.-.}, at: vprintk_emit+0x3fd/0x700 kernel/printk/printk.c:1995
+
+but task is already holding lock:
+ffff88808d6b7940 (&(&port->lock)->rlock){-.-.}, at: pty_write+0xff/0x200 drivers/tty/pty.c:120
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&(&port->lock)->rlock){-.-.}:
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+       tty_port_tty_get+0x24/0x100 drivers/tty/tty_port.c:287
+       tty_port_default_wakeup+0x16/0x40 drivers/tty/tty_port.c:47
+       tty_port_tty_wakeup+0x57/0x70 drivers/tty/tty_port.c:387
+       uart_write_wakeup+0x46/0x70 drivers/tty/serial/serial_core.c:104
+       serial8250_tx_chars+0x495/0xaf0 drivers/tty/serial/8250/8250_port.c:1760
+       serial8250_handle_irq.part.0+0x261/0x2b0 drivers/tty/serial/8250/8250_port.c:1833
+       serial8250_handle_irq drivers/tty/serial/8250/8250_port.c:1819 [inline]
+       serial8250_default_handle_irq+0xc0/0x150 drivers/tty/serial/8250/8250_port.c:1849
+       serial8250_interrupt+0xf1/0x1a0 drivers/tty/serial/8250/8250_core.c:126
+       __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
+       handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
+       handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
+       handle_edge_irq+0x25e/0x8d0 kernel/irq/chip.c:830
+       generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
+       do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
+       ret_from_intr+0x0/0x36
+       arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
+       __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+       _raw_spin_unlock_irqrestore+0x90/0xe0 kernel/locking/spinlock.c:191
+       spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
+       uart_write+0x3b6/0x6f0 drivers/tty/serial/serial_core.c:613
+       process_output_block drivers/tty/n_tty.c:595 [inline]
+       n_tty_write+0x40e/0x1080 drivers/tty/n_tty.c:2333
+       do_tty_write drivers/tty/tty_io.c:962 [inline]
+       tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
+       redirected_tty_write+0xb2/0xc0 drivers/tty/tty_io.c:1067
+       __vfs_write+0x8a/0x110 fs/read_write.c:494
+       vfs_write+0x268/0x5d0 fs/read_write.c:558
+       ksys_write+0x14f/0x290 fs/read_write.c:611
+       __do_sys_write fs/read_write.c:623 [inline]
+       __se_sys_write fs/read_write.c:620 [inline]
+       __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (&port_lock_key){-.-.}:
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+       serial8250_console_write+0x253/0x9a0 drivers/tty/serial/8250/8250_port.c:3142
+       univ8250_console_write+0x5f/0x70 drivers/tty/serial/8250/8250_core.c:587
+       call_console_drivers kernel/printk/printk.c:1791 [inline]
+       console_unlock+0xb7a/0xf00 kernel/printk/printk.c:2473
+       vprintk_emit+0x2a0/0x700 kernel/printk/printk.c:1996
+       vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
+       vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
+       printk+0xba/0xed kernel/printk/printk.c:2056
+       register_console+0x745/0xb50 kernel/printk/printk.c:2798
+       univ8250_console_init+0x3e/0x4b drivers/tty/serial/8250/8250_core.c:682
+       console_init+0x461/0x67b kernel/printk/printk.c:2884
+       start_kernel+0x653/0x8e2 init/main.c:713
+       x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+       x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:471
+       secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+
+-> #0 (console_owner){-.-.}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain kernel/locking/lockdep.c:2970 [inline]
+       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+       console_trylock_spinning kernel/printk/printk.c:1745 [inline]
+       vprintk_emit+0x43a/0x700 kernel/printk/printk.c:1995
+       vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
+       vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
+       printk+0xba/0xed kernel/printk/printk.c:2056
+       fail_dump lib/fault-inject.c:45 [inline]
+       should_fail+0x708/0x852 lib/fault-inject.c:144
+       __should_failslab+0x121/0x190 mm/failslab.c:33
+       should_failslab+0x9/0x14 mm/slab_common.c:1811
+       slab_pre_alloc_hook mm/slab.h:567 [inline]
+       slab_alloc mm/slab.c:3306 [inline]
+       __do_kmalloc mm/slab.c:3654 [inline]
+       __kmalloc+0x71/0x770 mm/slab.c:3665
+       kmalloc include/linux/slab.h:561 [inline]
+       tty_buffer_alloc drivers/tty/tty_buffer.c:175 [inline]
+       __tty_buffer_request_room+0x1fb/0x5c0 drivers/tty/tty_buffer.c:273
+       tty_insert_flip_string_fixed_flag+0x93/0x1f0 drivers/tty/tty_buffer.c:318
+       tty_insert_flip_string include/linux/tty_flip.h:37 [inline]
+       pty_write+0x133/0x200 drivers/tty/pty.c:122
+       n_tty_write+0xb1d/0x1080 drivers/tty/n_tty.c:2356
+       do_tty_write drivers/tty/tty_io.c:962 [inline]
+       tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
+       do_loop_readv_writev fs/read_write.c:717 [inline]
+       do_loop_readv_writev fs/read_write.c:701 [inline]
+       do_iter_write fs/read_write.c:972 [inline]
+       do_iter_write+0x4a0/0x610 fs/read_write.c:951
+       vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+       do_writev+0x15b/0x330 fs/read_write.c:1058
+       __do_sys_writev fs/read_write.c:1131 [inline]
+       __se_sys_writev fs/read_write.c:1128 [inline]
+       __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+  console_owner --> &port_lock_key --> &(&port->lock)->rlock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&(&port->lock)->rlock);
+                               lock(&port_lock_key);
+                               lock(&(&port->lock)->rlock);
+  lock(console_owner);
+
+ *** DEADLOCK ***
+
+5 locks held by syz-executor465/10262:
+ #0: ffff88809dca8090 (&tty->ldisc_sem){++++}, at: ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+ #1: ffff88809dca8118 (&tty->atomic_write_lock){+.+.}, at: tty_write_lock+0x23/0x90 drivers/tty/tty_io.c:888
+ #2: ffff88809dca82a0 (&tty->termios_rwsem){++++}, at: n_tty_write+0x1b5/0x1080 drivers/tty/n_tty.c:2316
+ #3: ffffc90007a67360 (&ldata->output_lock){+.+.}, at: n_tty_write+0xadd/0x1080 drivers/tty/n_tty.c:2355
+ #4: ffff88808d6b7940 (&(&port->lock)->rlock){-.-.}, at: pty_write+0xff/0x200 drivers/tty/pty.c:120
+
+stack backtrace:
+CPU: 0 PID: 10262 Comm: syz-executor465 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain kernel/locking/lockdep.c:2970 [inline]
+ __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ console_trylock_spinning kernel/printk/printk.c:1745 [inline]
+ vprintk_emit+0x43a/0x700 kernel/printk/printk.c:1995
+ vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
+ vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
+ printk+0xba/0xed kernel/printk/printk.c:2056
+ fail_dump lib/fault-inject.c:45 [inline]
+ should_fail+0x708/0x852 lib/fault-inject.c:144
+ __should_failslab+0x121/0x190 mm/failslab.c:33
+ should_failslab+0x9/0x14 mm/slab_common.c:1811
+ slab_pre_alloc_hook mm/slab.h:567 [inline]
+ slab_alloc mm/slab.c:3306 [inline]
+ __do_kmalloc mm/slab.c:3654 [inline]
+ __kmalloc+0x71/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ tty_buffer_alloc drivers/tty/tty_buffer.c:175 [inline]
+ __tty_buffer_request_room+0x1fb/0x5c0 drivers/tty/tty_buffer.c:273
+ tty_insert_flip_string_fixed_flag+0x93/0x1f0 drivers/tty/tty_buffer.c:318
+ tty_insert_flip_string include/linux/tty_flip.h:37 [inline]
+ pty_write+0x133/0x200 drivers/tty/pty.c:122
+ n_tty_write+0xb1d/0x1080 drivers/tty/n_tty.c:2356
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
+ do_loop_readv_writev fs/read_write.c:717 [inline]
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_iter_write fs/read_write.c:972 [inline]
+ do_iter_write+0x4a0/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
+ __do_sys_writev fs/read_write.c:1131 [inline]
+ __se_sys_writev fs/read_write.c:1128 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4437c9
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 6b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe144fe178 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004437c9
+RDX: 1000000000000252 RSI: 00000000200023c0 RDI: 0000000000000005
+RBP: 00000000000385a4 R08: 0000000000000001 R09: 0000000000400033
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000006 R14: 0000000000000000 R15: 0000000000000000
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
