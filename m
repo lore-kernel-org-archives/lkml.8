@@ -2,96 +2,93 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40062C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D3C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B8C20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0077520658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uOG4l/EJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SI98XHDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgBCKR0 (ORCPT
+        id S1727904AbgBCKSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:17:26 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42112 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgBCKRZ (ORCPT
+        Mon, 3 Feb 2020 05:18:14 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50474 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgBCKSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:17:25 -0500
-Received: by mail-pl1-f193.google.com with SMTP id e8so3058625plt.9;
-        Mon, 03 Feb 2020 02:17:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
-        b=uOG4l/EJf8A41gc/jrWj8EHPHycM5dDbt4B75bhhTdoLLLwHOrRFYjwVJm7iW3MmaA
-         DjAAMXUI+hBR2vVQ9OXZ+9Xp7LhNCzKguyxX3oE8IjszizV/Jhr0sHESa/OLqKyBg9+x
-         t8TmgTUUwcdk0G6KVv3Xk13Q5kvka41iQXWwk7F50eyCTaaDYsJvXlfBYL8LzOrBWszR
-         xUgGSsWF5zfk823OiDIDtlAvxCQG+EhsAj7nnETA+Bp7Lq+rOzhVkfKaCBym1UEe/Ra5
-         9P0rRsLjziDh+71Bx9dKNnghPeXSy8yP0ToW30/pmaXLkYtlUJQ7rxDySWKKI/nEdzOB
-         k91Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BI5Btq2BdundVSKnBkH4i1TFYWWU2lOLfpEXkz2+34s=;
-        b=degCOYuNyiMDoRC67xhEgwMWLGIKZcEcQehePhdhcQQTWCdP+G2HvwFCHgbgF3AgTB
-         6ZTun9q9ontChwbYSv+CWJaHVBX1OLWZzVBvGygRAtKj/wPOvR7zkmHH1N0BCW3ot29b
-         +l7f0tcOzfnTN0ErFJIZuZCenlnWxnJ7nSOUA6Z20EidbPZj0n1d/1HMqq6sWendkc6+
-         PJVzJ8MuRcLAlghMQLASaMCkQFXE7NSNqpeVViyec0mtpBdE8hMyfZYSVwbI2eaygiz5
-         Rw0F3nE/9xovqyHhTz2p4bw9y52U4asLrxfhD4kIAb+iO9i+57AfJ4tgQmdZsIUuKTrq
-         NA0g==
-X-Gm-Message-State: APjAAAX5cFEEb+jqJJJhEoD3JVoaKBlFJ1SFM2lNWCoiuJS/fVxt1WRd
-        xGZuN5kOA2b4Tc6xxivMuVLZ9Om+SyNBjU7reQ0=
-X-Google-Smtp-Source: APXvYqzV9MbL08KEx9zQLN9PuY7RQZClzngiq85jd5w3xWNpSBewrq2tMS+iJnHE6y9/aOoQFGFajKLDEHBk7ulmy10=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr29209552pjq.132.1580725045200;
- Mon, 03 Feb 2020 02:17:25 -0800 (PST)
+        Mon, 3 Feb 2020 05:18:14 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 013AIAVW110563;
+        Mon, 3 Feb 2020 04:18:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580725090;
+        bh=yJ6wTZzEMM7o4cu5XQIF0bGLFzSyxsdTLmhvXICYwxs=;
+        h=From:To:CC:Subject:Date;
+        b=SI98XHDGSv5/qxEJoGOcEp/bi4zyYDorEvjRTcb+ni9KJOK4hJvHMGdHLwh7ZRqmx
+         iL1s2v6Y2U7pXWWez4pMva29sSCjCfCvfaJjkUcWwXs0Zhj29tNxyuCOOy+vrP8GSL
+         T8mG47be1a6jwSMBFSt5wAhcQQoZ1Dr0FuyLP/7Y=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 013AIAbx039721
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 3 Feb 2020 04:18:10 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 3 Feb
+ 2020 04:18:09 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 3 Feb 2020 04:18:09 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 013AI7mS040513;
+        Mon, 3 Feb 2020 04:18:07 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>
+Subject: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
+Date:   Mon, 3 Feb 2020 12:18:03 +0200
+Message-ID: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200129084509.20371-1-beniamin.bia@analog.com> <20200129084509.20371-3-beniamin.bia@analog.com>
-In-Reply-To: <20200129084509.20371-3-beniamin.bia@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:17:17 +0200
-Message-ID: <CAHp75VfbhqvsigBDY_uYsTVwLRGVuBhr0eO1zqSu4ivjd7X-oQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: add entry for hmc425a driver.
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        biabeniamin@outlook.com, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 29, 2020 at 10:45 AM Beniamin Bia <beniamin.bia@analog.com> wrote:
->
-> Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
-> attenuator.
+Hi,
 
-> +ANALOG DEVICES INC HMC425A DRIVER
-> +M:     Beniamin Bia <beniamin.bia@analog.com>
-> +M:     Michael Hennerich <michael.hennerich@analog.com>
-> +L:     linux-iio@vger.kernel.org
-> +W:     http://ez.analog.com/community/linux-device-drivers
-> +S:     Supported
-> +F:     drivers/iio/amplifiers/hmc425a.c
-> +F:     Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+dma_request_slave_channel_reason() no longer have user in mainline, it
+can be removed.
 
-Had you run parse-maintainers.pl afterwards to see if everything is okay?
+Advise users of dma_request_slave_channel() and
+dma_request_slave_channel_compat() to move to dma_request_slave_chan()
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dmaengine: Remove unused define for (dma_request_slave_channel_reason)()
+  dmaengine: Mark dma_request_slave_channel() deprecated
+  dmaengine: Encourage dma_request_slave_channel_compat() users to
+    migrate
+
+ drivers/dma/dmaengine.c   | 18 ------------------
+ include/linux/dmaengine.h | 28 ++++++++++++++++++----------
+ 2 files changed, 18 insertions(+), 28 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
