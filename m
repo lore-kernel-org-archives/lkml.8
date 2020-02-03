@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B16C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ED8C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9112084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F57120658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLJ+562g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QAofa0p/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBCNFI (ORCPT
+        id S1727781AbgBCNIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:05:08 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33094 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgBCNFH (ORCPT
+        Mon, 3 Feb 2020 08:08:37 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52300 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgBCNIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:05:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id u6so4738313wrt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:05:03 -0800 (PST)
+        Mon, 3 Feb 2020 08:08:37 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so15838451wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:08:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :content-transfer-encoding:user-agent;
-        bh=3kBq8kAXdU/eUGiK90mF3tp3+3qsy8R9b9xYatOimb8=;
-        b=pLJ+562gCgjTDM0oYy3AC3NGZXNwFKeV87MkrYQFuVqlnyDUmJVUpyPYtufeo6lvhq
-         IE6wImazhB+wyZcgTJHTfjnd5rzVtK44sAKGJ7ITfA6Zp/AxmIrCpkXQ3bh/1QjthyP+
-         nGMIf6k6moX16I2xNDCaNcasK7VkbPAphbsYTDtxOgxoiRbLZVby+sssiR9j/+UJC7i3
-         z2hJHfQlUOd7yx+EQY1arbeYzvKiElq+tx7QzFihVP6gzearZSsW1PR9rG6swSv24c0s
-         AH3rb0jRiyhW2AiMH4NiTpcVepVXLGnYc6sCGqIPStMJuHw9WMTe5r0QxFSrKE9hf3Qq
-         Sa7A==
+        bh=alT0mD61PM/IBFgvStBHZhsIUV9279dnSKZ61XBI5jc=;
+        b=QAofa0p/RCZbmlHj1/ajk8aQlfSuCRHsGbBuB7d0L/5nmPL2cSQmk5x0jzmBv2rtHc
+         9K9xgTe8kvO1MFMtTXbEXm17D7JRgPDp7DoiNhjabcAFpLBgl4fu/yXIH2SGU4X1YmRv
+         VQ1bQTGBuKsWEo5ygsBJQC/8x/7DpjSqp948eW8M9bUBVOU3mT4K5WFZ3MTjBk45fEHt
+         rr1jcKfIg7oFBswqjwtUYXqZ3g9khU7CfZ7tS+78diopV3r94i6ZDC9rrykco+cC1hmQ
+         gbl57v/oNhXMwg4kmIWv3FNnquL306AABnKGLNb9qLxqC4JG1Q2bhj+OonijmWfp7Ow0
+         anRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:content-transfer-encoding:user-agent;
-        bh=3kBq8kAXdU/eUGiK90mF3tp3+3qsy8R9b9xYatOimb8=;
-        b=aABOib8YU3IBm4zdU88Rh8SUDWtc7MLy2jqOu6+3JbvBS7W9Gv7qK1kIl6wTBuvD0X
-         bcATlhVYCYhlupP3N/0DtBPNuhtuY0VyEGXdATTL39DRyj1i4bOqB+JD+w9osI3PqWl/
-         HAcnPuhh9jibc/oakGJExGIFiTBnYTT4WzvP5is+GDarEW4o6eMGWYz4PcbRJHj9nPjo
-         iM9t92PtSw47E6bbHOCIs0uPLsJhiwFeMZpmzD0M8K+5GKHvDTi01DxwcsnQ2MOXVs5X
-         P5XRnYbMjt2LyvMHUm7cvV5XVS8r6R0XqBd5WEeq7uXP5MeJ9ifeiX2qGlZHzWYKnKJR
-         ndvw==
-X-Gm-Message-State: APjAAAVsbWCiAIwqPQYkLSDmfZGMVFTRqd+AgtkN7ABR6KPtp/6SM5qs
-        x/r35BR/tk+VkoGM36SKb2s17A==
-X-Google-Smtp-Source: APXvYqxLA9S+JWcZfesIimYc5ZiLv0KEUiNPRVn1B/CtcgaTy77LCUY9315En+2GHtRjnWS/hiFJ3w==
-X-Received: by 2002:adf:f8c4:: with SMTP id f4mr14817806wrq.243.1580735102235;
-        Mon, 03 Feb 2020 05:05:02 -0800 (PST)
+        bh=alT0mD61PM/IBFgvStBHZhsIUV9279dnSKZ61XBI5jc=;
+        b=cs6wG/tBRpfylBDYDpZwdUT9pX1rINaeZ02ubGTDVhFvZ89kq47HzNMvvhohU8t5eW
+         u2JhcK5IqlIXjczRYyFTL3Sybknupl5/Ori1F353LtDrHSrcTymG1oi+ltE4QEVgByB0
+         ABYzh+pNnBbtBd/pqwruFrGVSZqrnu001vY5BmC/3xBErJMxdvEC58x5k8Iy7ppuHspK
+         8Df0o8OKd6GoSFRcKle/J77xsyxwWh78pJO5hCpso5+sMDNJtzjeMfk8eLhf9GflwduL
+         uf7fqN5azECHrZqnTKxvHbwlA5rR47xO3SHPPIYijMDykbqaGdbdlgLcJ90BcB7s1bOy
+         vMHQ==
+X-Gm-Message-State: APjAAAU+caZd/SDLZwkJgWkibJG0/NzbC2DbZq1v8M4krgwoAl7Hvk9g
+        Yovgqf+Y/tumdlJBjzlUHtutarhwQ/4=
+X-Google-Smtp-Source: APXvYqxRDDIB56mxJPWmdntUgFbEZe5KInVP02xvy63yxMievqtnO/73UkPd3xJQ8IiCwptj6W+Xsw==
+X-Received: by 2002:a1c:5419:: with SMTP id i25mr29548970wmb.150.1580735315452;
+        Mon, 03 Feb 2020 05:08:35 -0800 (PST)
 Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id d16sm27622039wrg.27.2020.02.03.05.05.01
+        by smtp.gmail.com with ESMTPSA id m21sm23917657wmi.27.2020.02.03.05.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 05:05:01 -0800 (PST)
-Date:   Mon, 3 Feb 2020 13:05:16 +0000
+        Mon, 03 Feb 2020 05:08:34 -0800 (PST)
+Date:   Mon, 3 Feb 2020 13:08:49 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     torvalds@linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MFD for v5.6
-Message-ID: <20200203130516.GB15069@dell>
+Subject: [GIT PULL] Backlight for v5.6
+Message-ID: <20200203130849.GC15069@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -74,206 +74,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Good afternoon Linus,
 
-Please be aware that this is likely to conflict with Mark Brown's
-Regulator tree:
-
-  https://lkml.org/lkml/2020/1/27/791
-
-However the fix-up should be trivial.
-
 The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.6
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git tags/backlight-next-5.6
 
-for you to fetch changes up to 5312f321a67cfee1fe4de245bc558fa857dce33b:
+for you to fetch changes up to 7af43a76695db71a57203793fb9dd3c81a5783b1:
 
-  mfd: syscon: Fix syscon_regmap_lookup_by_phandle_args() dummy (2020-02-03 08:39:49 +0000)
+  backlight: qcom-wled: Fix unsigned comparison to zero (2020-01-23 07:53:12 +0000)
 
 ----------------------------------------------------------------
- - New Drivers
-   - Add support for ROHM BD71828 PMICs and GPIOs
-   - Add support for Qualcomm Aqstic Audio Codecs WCD9340 and WCD9341
-
-- New Device Support
-   - Add support for BD71828 to BD70528 RTC driver
-   - Add support for Intel's Jasper Lake to LPSS PCI
-
- - New Functionality
-   - Add support for Power Key to ROHM BD71828
-   - Add support for Clocks to ROHM BD71828
-   - Add support for GPIOs to Dialog DA9062
-   - Add support for USB PD Notify to ChromiumOS EC
-   - Allow callers to specify args when requesting regmap lookup; syscon
-
  - Fix-ups
-   - Improve error handling and sanity checking; atmel-hlcdc, dln2
-   - Device Tree support/documentation; bd71828, da9062, xylon,logicvc,
-                                        ab8500, max14577, atmel-usart
-   - Match devices using platform IDs; bd7xxxx
-   - Refactor BD718x7 regulator component; bd718x7-regulator
-   - Use standard interfaces/helpers; syscon, sm501
-   - Trivial (whitespace, spelling, etc); ab8500-core, Kconfig
-   - Remove unused code; db8500-prcmu, tqmx86
-   - Wait until boot has finished before accessing registers; madera-core
-   - Provide missing register value defaults; cs47l15-tables
-   - Allow more time for hardware to reset; madera-core
+   - Remove superfluous code; ams369fg06
+   - Convert over to GPIO descriptor (gpiod); bd6107
 
  - Bug Fixes
-   - Fix erroneous register values; rohm-bd70528
-   - Fix register volatility; axp20x, rn5t618
-   - Fix Kconfig dependencies; MFD_MAX77650
-   - Fix incorrect compatible string; da9062-core
-   - Fix syscon_regmap_lookup_by_phandle_args() stub; syscon
+   - Fix unsigned comparison to less than zero; qcom-wled
 
 ----------------------------------------------------------------
-Andreas Kemnade (1):
-      mfd: rn5t618: Mark ADC control register volatile
+Chen Zhou (1):
+      backlight: qcom-wled: Fix unsigned comparison to zero
 
-Andy Shevchenko (2):
-      mfd: syscon: Re-use resource_size() to count max_register
-      mfd: intel-lpss: Add Intel Jasper Lake PCI IDs
+Linus Walleij (2):
+      backlight: ams369fg06: Drop GPIO include
+      backlight: bd6107: Convert to use GPIO descriptor
 
-Bartosz Golaszewski (1):
-      mfd: max77650: Select REGMAP_IRQ in Kconfig
-
-Charles Keepax (3):
-      mfd: madera: Wait for boot done before accessing any other registers
-      mfd: cs47l15: Add missing register default
-      mfd: madera: Allow more time for hardware reset
-
-Chuhong Yuan (1):
-      mfd: sm501: Fix mismatches of request_mem_region
-
-Claudiu Beznea (4):
-      mfd: atmel-hlcdc: Add struct device member to struct atmel_hlcdc_regmap
-      mfd: atmel-hlcdc: Return in case of error
-      dt-bindings: atmel-usart: Remove wildcard
-      dt-bindings: atmel-usart: Add microchip,sam9x60-{usart, dbgu}
-
-Geert Uytterhoeven (1):
-      mfd: syscon: Fix syscon_regmap_lookup_by_phandle_args() dummy
-
-Krzysztof Kozlowski (1):
-      mfd: Kconfig: Rename Samsung to lowercase
-
-Lee Jones (1):
-      Merge branches 'ib-mfd-drm-5.6' and 'ib-mfd-clk-gpio-regulator-rtc-5.6' into ibs-for-mfd-merged
-
-Linus Walleij (3):
-      mfd: ab8500: Fix ab8500-clk typo
-      mfd: dbx500-prcmu: Drop set_display_clocks()
-      mfd: dbx500-prcmu: Drop DSI pll clock functions
-
-Marco Felsch (3):
-      mfd: da9062: add support for the DA9062 GPIOs in the core
-      dt-bindings: mfd: da9062: add gpio bindings
-      mfd: da9062: Fix watchdog compatible string
-
-Matheus Castello (1):
-      dt-bindings: mfd: max14577: Add reference to max14040_battery.txt descriptions
-
-Matti Vaittinen (11):
-      dt-bindings: leds: ROHM BD71282 PMIC LED driver
-      dt-bindings: mfd: Document ROHM BD71828 bindings
-      mfd: Rohm PMICs: Use platform_device_id to match MFD sub-devices
-      mfd: bd718x7: Add compatible for BD71850
-      mfd: bd71828: Support ROHM BD71828 PMIC - core
-      mfd: bd71828: Add power-key support
-      clk: bd718x7: Support ROHM BD71828 clk block
-      regulator: bd718x7: Split driver to common and bd718x7 specific parts
-      mfd: bd70528: Fix hour register mask
-      rtc: bd70528: add BD71828 support
-      gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
-
-Oliver Neukum (1):
-      mfd: dln2: More sanity checking for endpoints
-
-Orson Zhai (1):
-      mfd: syscon: Add arguments support for syscon reference
-
-Paul Kocialkowski (1):
-      dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-
-Prashant Malani (1):
-      mfd: cros_ec: Add cros-usbpd-notify subdevice
-
-Samuel Holland (1):
-      mfd: axp20x: Mark AXP20X_VBUS_IPSOUT_MGMT as volatile
-
-Srinivas Kandagatla (1):
-      mfd: wcd934x: Add support to wcd9340/wcd9341 codec
-
-Stephan Gerhold (2):
-      dt-bindings: mfd: ab8500: Document AB8505 bindings
-      mfd: ab8500-core: Add device tree support for AB8505
-
-yu kuai (1):
-      mfd: tqmx86: remove set but not used variable 'i2c_ien'
-
- .../bindings/leds/rohm,bd71828-leds.yaml           |  52 ++
- Documentation/devicetree/bindings/mfd/ab8500.txt   |   8 +-
- .../devicetree/bindings/mfd/atmel-usart.txt        |  11 +-
- Documentation/devicetree/bindings/mfd/da9062.txt   |  10 +
- Documentation/devicetree/bindings/mfd/max14577.txt |   2 +
- .../devicetree/bindings/mfd/rohm,bd71828-pmic.yaml | 193 ++++++++
- .../devicetree/bindings/mfd/xylon,logicvc.yaml     |  50 ++
- drivers/clk/Kconfig                                |   6 +-
- drivers/clk/clk-bd718x7.c                          |  50 +-
- drivers/gpio/Kconfig                               |  12 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-bd71828.c                        | 159 ++++++
- drivers/mfd/Kconfig                                |  30 +-
- drivers/mfd/Makefile                               |   2 +
- drivers/mfd/ab8500-core.c                          |  18 +-
- drivers/mfd/atmel-hlcdc.c                          |  18 +-
- drivers/mfd/axp20x.c                               |   2 +-
- drivers/mfd/cros_ec_dev.c                          |  22 +
- drivers/mfd/cs47l15-tables.c                       |   1 +
- drivers/mfd/da9062-core.c                          |  18 +-
- drivers/mfd/db8500-prcmu.c                         | 122 +----
- drivers/mfd/dln2.c                                 |  13 +-
- drivers/mfd/intel-lpss-pci.c                       |  13 +
- drivers/mfd/madera-core.c                          |  33 +-
- drivers/mfd/rn5t618.c                              |   1 +
- drivers/mfd/rohm-bd70528.c                         |   3 +-
- drivers/mfd/rohm-bd71828.c                         | 344 +++++++++++++
- drivers/mfd/rohm-bd718x7.c                         |  43 +-
- drivers/mfd/sm501.c                                |  19 +-
- drivers/mfd/syscon.c                               |  31 +-
- drivers/mfd/tqmx86.c                               |   3 +-
- drivers/mfd/wcd934x.c                              | 306 ++++++++++++
- drivers/regulator/Kconfig                          |   4 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/bd718x7-regulator.c              | 200 +++-----
- drivers/regulator/rohm-regulator.c                 |  95 ++++
- drivers/rtc/Kconfig                                |   3 +-
- drivers/rtc/rtc-bd70528.c                          | 220 +++++++--
- include/linux/mfd/db8500-prcmu.h                   |  18 -
- include/linux/mfd/dbx500-prcmu.h                   |  30 --
- include/linux/mfd/rohm-bd70528.h                   |  19 +-
- include/linux/mfd/rohm-bd71828.h                   | 423 ++++++++++++++++
- include/linux/mfd/rohm-bd718x7.h                   |   6 -
- include/linux/mfd/rohm-generic.h                   |  70 ++-
- include/linux/mfd/rohm-shared.h                    |  21 +
- include/linux/mfd/syscon.h                         |  14 +
- include/linux/mfd/wcd934x/registers.h              | 531 +++++++++++++++++++++
- include/linux/mfd/wcd934x/wcd934x.h                |  31 ++
- 48 files changed, 2863 insertions(+), 419 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
- create mode 100644 drivers/gpio/gpio-bd71828.c
- create mode 100644 drivers/mfd/rohm-bd71828.c
- create mode 100644 drivers/mfd/wcd934x.c
- create mode 100644 drivers/regulator/rohm-regulator.c
- create mode 100644 include/linux/mfd/rohm-bd71828.h
- create mode 100644 include/linux/mfd/rohm-shared.h
- create mode 100644 include/linux/mfd/wcd934x/registers.h
- create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+ drivers/video/backlight/ams369fg06.c |  1 -
+ drivers/video/backlight/bd6107.c     | 24 ++++++++++++++++--------
+ drivers/video/backlight/qcom-wled.c  |  4 ++--
+ include/linux/platform_data/bd6107.h |  1 -
+ 4 files changed, 18 insertions(+), 12 deletions(-)
 
 -- 
 Lee Jones [李琼斯]
