@@ -2,119 +2,134 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D18C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E203FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072852084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DF220674
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eoW3ojXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgBCWFj (ORCPT
+        id S1727151AbgBCWGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:05:39 -0500
-Received: from mga18.intel.com ([134.134.136.126]:63768 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbgBCWFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:05:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 14:05:38 -0800
-X-IronPort-AV: E=Sophos;i="5.70,398,1574150400"; 
-   d="scan'208";a="249140829"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Feb 2020 14:05:38 -0800
-Message-ID: <6758b1e3373fc06b37af1c87901237974d52322f.camel@linux.intel.com>
-Subject: Re: [PATCH v16.1 0/9] mm / virtio: Provide support for free page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        david@redhat.com
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de,
-        vbabka@suse.cz, AlexanderDuyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org
-Date:   Mon, 03 Feb 2020 14:05:38 -0800
-In-Reply-To: <20200122173040.6142.39116.stgit@localhost.localdomain>
-References: <20200122173040.6142.39116.stgit@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 3 Feb 2020 17:06:50 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42692 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCWGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 17:06:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013M4ZF3186917;
+        Mon, 3 Feb 2020 22:06:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=NB6sde12eQA5tWD5a8THQMHPqXfAxjDZixfUJ6/2uDw=;
+ b=eoW3ojXGBlrl0QsjywVC4TTeOxKjLTEdbLzKm90+VgOHF0nJV+siN4GAaKm5Ho81X2kv
+ WzcsbLydae2Oq8NMC8ctYKeflx7gR7f138p2q3IDj1rSp9tVL0ITVgVBQojYOmFs1h1v
+ Qv4kToXls2BSZE0vkjM2rBfOWlVJkv6E/3j3LOCC9aJSMHTci47RjHd565mTt/ZhibsO
+ 4Nq+S2LEGxZOJj6pN9CDFmzsKhAdmLtHCVQK82qEdFuv4oyO4JRXPYgf1mfGZUD5IG5d
+ x54QaUv3XfUt5hSJh9xntcZio9MgA+lXtVTrxActUr2qValGvZIXdaYzkWtC8oPZ7A/Y 9Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xw19qat17-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 22:06:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013M4WoI140542;
+        Mon, 3 Feb 2020 22:06:47 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2xxsbhvtkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 22:06:46 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 013M6jil019527;
+        Mon, 3 Feb 2020 22:06:45 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Feb 2020 14:06:45 -0800
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 1F3246A010B; Mon,  3 Feb 2020 17:10:27 -0500 (EST)
+Date:   Mon, 3 Feb 2020 17:10:27 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] (ibft) changes for 5.6 merge window
+Message-ID: <20200203221027.GA10946@char.us.oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002030159
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002030159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-22 at 09:43 -0800, Alexander Duyck wrote:
-> This series provides an asynchronous means of reporting free guest pages
-> to a hypervisor so that the memory associated with those pages can be
-> dropped and reused by other processes and/or guests on the host. Using
-> this it is possible to avoid unnecessary I/O to disk and greatly improve
-> performance in the case of memory overcommit on the host.
 
-<snip>
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> A brief history on the background of free page reporting can be found at:
-> https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
-> 
-> Changes from v14:
-> https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
-> Renamed "unused page reporting" to "free page reporting"
->   Updated code, kconfig, and patch descriptions
-> Split out patch for __free_isolated_page
->   Renamed function to __putback_isolated_page
-> Rewrote core reporting functionality
->   Added logic to reschedule worker in 2 seconds instead of run to completion
->   Removed reported_pages statistics
->   Removed REPORTING_REQUESTED bit used in zone flags
->   Replaced page_reporting_dev_info refcount with state variable
->   Removed scatterlist from page_reporting_dev_info
->   Removed capacity from page reporting device
->   Added dynamic scatterlist allocation/free at start/end of reporting process
->   Updated __free_one_page so that reported pages are not always added to tail
->   Added logic to handle error from report function
-> Updated virtio-balloon patch that adds support for page reporting
->   Updated patch description to try and highlight differences in approaches
->   Updated logic to reflect that we cannot limit the scatterlist from device
->   Added logic to return error from report function
-> Moved documentation patch to end of patch set
-> 
-> Changes from v15:
-> https://lore.kernel.org/lkml/20191205161928.19548.41654.stgit@localhost.localdomain/
-> Rebased on linux-next-20191219
-> Split out patches for budget and moving head to last page processed
-> Updated budget code to reduce how much memory is reported per pass
-> Added logic to also rotate the list if we exit due a page isolation failure
-> Added migratetype as argument in __putback_isolated_page
-> 
-> Changes from v16:
-> https://lore.kernel.org/lkml/20200103210509.29237.18426.stgit@localhost.localdomain/
-> Rebased on linux-next-20200122
->   Updated patch 2 to to account for removal of pr_info in __isolate_free_page
-> Updated patch title for patches 7, 8, and 9 to use prefix mm/page_reporting
-> No code changes other than conflict resolution for patch 2
+Hey Linus,
 
-So I thought I would put out a gentle nudge since it has been about 4
-weeks since v16 was submitted, a little over a week and a half for v16.1,
-and I have yet to get any feedback on the code contained in the patchset.
-Codewise nothing has changed from the v16 patchset other than rebasing it
-off of the linux-next tree to resolve some merge conflicts that I saw
-recently, and discussion around v16.1 was mostly about next steps and how
-to deal with the page cache instead of discussing the code itself.
+The following changes since commit 040a3c33623ba4bd11588ab0820281b854a3ffaf:
 
-The full patchset can be found at:
-https://lore.kernel.org/lkml/20200122173040.6142.39116.stgit@localhost.localdomain/
+  Merge tag 'iommu-fixes-v5.5-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu (2020-01-12 09:35:42 -0800)
 
-I believe I still need review feedback for patches 3, 4, 7, 8, and 9.
+are available in the Git repository at:
 
-Thanks.
+  git://git.kernel.org/pub/scm/linux/kernel/git/konrad/ibft.git stable/for-linus-5.6
 
-- Alex
+for you to fetch changes up to c08406033fe83a4cb307f2a2e949c59bb86b4f49:
 
+  iscsi_ibft: Don't limits Targets and NICs to two (2020-01-12 13:16:04 -0500)
+
+..basically adhere to the iBFT spec and extend the structure to handle to more
+than two NICs.
+
+Thank you!
+
+----------------------------------------------------------------
+Lubomir Rintel (1):
+      iscsi_ibft: Don't limits Targets and NICs to two
+
+ drivers/firmware/iscsi_ibft.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJeOJpTAAoJEFKlDoTx2wm/7LgP/1o2Bmpyy2PZDJJs8Ow1QYe6
+m0CcWsWFp7rwbJ3usZaLb5MCp97LcbYrKooVdgtH1zAiRt1mp00VHJj6hXfbdhxf
+qUABAJ4HommRILvRS1ejm/rx8YT3WJzn8n6RPFWSDlx+tmZy+roJcVEts9c/xDFa
+9T5h+1L3xzQw1IGSPH5yXG7LcbEKOVdH3N1wXiZdnU/ZYhgrYGP1jdk/c5uF2W4C
+LNELAt3tSUUxCIm7r6/7qQpOvtDqOeORnRxeN+eObWqlOOQzw7RWkX5p1CniFc1Z
+L2HCooxHr5gKHRVLL5MtJP2DRKaOUR5NJSMUk+fxeyeP78NtIixfGAP90W5w/cOY
+ucZXdVxeNsq+mmm388LIjQ6ht/3g+ehJP5+T1144kHdf45X8cnHq78XruuWafiqz
+mkc73CABxHi9ZgUMBv3hTIXVRRS3eaW9oE4R58ikuHDqJ3npa4A5mm1sffqK5PLZ
+Qnw33mi0rVdIi5rNqu4E18GF/mVX1cc7ejl8wyr9Hb3d2qS3F6KtHmjE4k1cZeCk
+t1Zx3OKv+Umb50RsNDiLaZXJNpBwJeZTJxZHHI0NgCYIKDdhZ/LWVB1pSXex3vaS
+5P/d2NC0FPUrVIpQml22rSoyCNScLd/H6FL5imFZueyvJu1eVt0qODEXv5K77orF
+GlL3744Ff3seK7X/WCG/
+=+mMZ
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
