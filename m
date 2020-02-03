@@ -2,55 +2,56 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23465C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A0AC3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6312051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933D32051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748434;
-	bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
+	s=default; t=1580748443;
+	bh=xOSw62RuoXWZIX9+LIKWM+wn6MT42/NMjSbT1nptbSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pI1GL4Dx1ykACxKlL/K6BTkUFgeilBObvD6dbSiopyNfqlLdytfpIzw/xpFHVDw+m
-	 uHxSN7VXihcJYF2tnE+8kVc2o4YNJk6LfySVYx4ZJdY7cg2NtwR7HJUaSzuHnXDdtu
-	 DfVLX/VwP+JO37lscjVN1V85UVAHf3U/U/5GibMs=
+	b=vwByvqvfn6G5MXVamh4EIHOfY/Ca2phVfKK4vOwABY7iBEFQeqRGbB1Oc0udVAW7w
+	 ZOKNwSyMjKC7RXOGqbUBG5hzsEZU051vHO++5/wv+NsaWuvQ1J2kOarcmmSYlE5MCb
+	 l2a/Tz6wD/xXM+9Rgqqr5p77VKwWaMw6NZVM71Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgBCQrM (ORCPT
+        id S1727628AbgBCQ1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:47:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728089AbgBCQ1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:55 -0500
+        id S1729420AbgBCQ1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:32 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E72080C;
-        Mon,  3 Feb 2020 16:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C292051A;
+        Mon,  3 Feb 2020 16:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747275;
-        bh=Mk4vzYviUrOYODydEGb0g0Jx38FB2OMBIl3s58qcUGM=;
+        s=default; t=1580747251;
+        bh=xOSw62RuoXWZIX9+LIKWM+wn6MT42/NMjSbT1nptbSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4P+bNYSHiXoiBk7r4lsRzHeLseXbt9/dLzcZaPTuDnlL+h58Y79wPR5V9nGesjgl
-         0+Klg7bgiglQdQCZz4jG0sDObMGiHR+Sz7GXR/zHUF+q84Yes3CWC1+xHTJYS53LNE
-         oodVh1EmX8zti4RxawWd7VTHoMFt6uSQZ/SolxVg=
+        b=OPcNxugwH5nMMmIUzjoTZ94d3OkxnAYjdTI7l3+o0b/bY094mHIXA5zU8V2ttNkYf
+         3rwsUntAg21w87SXrYEjlaVlY93TpXOGuBDnlSWTDoivPyjEErH7H8NSfKZ4GSNYbX
+         5uN75wPcCxURu1u+fbYLi+OrQBrq1Y884hM2VtsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jes Sorensen <Jes.Sorensen@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 16/89] rtl8xxxu: fix interface sanity check
-Date:   Mon,  3 Feb 2020 16:19:01 +0000
-Message-Id: <20200203161919.067020127@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 54/68] ARM: 8955/1: virt: Relax arch timer version check during early boot
+Date:   Mon,  3 Feb 2020 16:19:50 +0000
+Message-Id: <20200203161913.878648447@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
-References: <20200203161916.847439465@linuxfoundation.org>
+In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
+References: <20200203161904.705434837@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-commit 39a4281c312f2d226c710bc656ce380c621a2b16 upstream.
+[ Upstream commit 6849b5eba1965ceb0cad3a75877ef4569dd3638e ]
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Updates to the Generic Timer architecture allow ID_PFR1.GenTimer to
+have values other than 0 or 1 while still preserving backward
+compatibility. At the moment, Linux is quite strict in the way it
+handles this field at early boot and will not configure arch timer if
+it doesn't find the value 1.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Since here use ubfx for arch timer version extraction (hyb-stub build
+with -march=armv7-a, so it is safe)
 
-Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
-Cc: stable <stable@vger.kernel.org>     # 4.4
-Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To help backports (even though the code was correct at the time of writing)
 
+Fixes: 8ec58be9f3ff ("ARM: virt: arch_timers: enable access to physical timers")
+Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/hyp-stub.S | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -5921,7 +5921,7 @@ static int rtl8xxxu_parse_usb(struct rtl
- 	u8 dir, xtype, num;
- 	int ret = 0;
- 
--	host_interface = &interface->altsetting[0];
-+	host_interface = interface->cur_altsetting;
- 	interface_desc = &host_interface->desc;
- 	endpoints = interface_desc->bNumEndpoints;
- 
+diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
+index f5e5e3e196592..f587681a9553c 100644
+--- a/arch/arm/kernel/hyp-stub.S
++++ b/arch/arm/kernel/hyp-stub.S
+@@ -158,10 +158,9 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
+ #if !defined(ZIMAGE) && defined(CONFIG_ARM_ARCH_TIMER)
+ 	@ make CNTP_* and CNTPCT accessible from PL1
+ 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
+-	lsr	r7, #16
+-	and	r7, #0xf
+-	cmp	r7, #1
+-	bne	1f
++	ubfx	r7, r7, #16, #4
++	teq	r7, #0
++	beq	1f
+ 	mrc	p15, 4, r7, c14, c1, 0	@ CNTHCTL
+ 	orr	r7, r7, #3		@ PL1PCEN | PL1PCTEN
+ 	mcr	p15, 4, r7, c14, c1, 0	@ CNTHCTL
+-- 
+2.20.1
+
 
 
