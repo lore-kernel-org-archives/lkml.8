@@ -2,108 +2,110 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5033AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7238BC33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278DE21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FDB207E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="XDZxoHhC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ifgv49xE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgBCNqV (ORCPT
+        id S1728165AbgBCNqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:46:21 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41435 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgBCNqV (ORCPT
+        Mon, 3 Feb 2020 08:46:25 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40260 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728143AbgBCNqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:46:21 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so14688589ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tU9tK10SJbC8EDc1nwVApy1mZDrqz45FwFA9axqWA50=;
-        b=XDZxoHhCcK/pGBTHQTPXfmvtfOmM8Qx8aZuUUNp8bBh+ABwsHj6XiY+mvVsbwnG+WK
-         J+h9pC9u5JxzLXhuxudUIFZCRY7iVP8GEtrBuMhhajKY2VbUmsOAJOiCHqHSLIAFMP+h
-         BAR615hNSp5oNHhpaCb492STJsM7SDPqgTMXh/tEeok0wkcP1Ylg+iooZ4gFg8q/Y7Ce
-         HNnXYnWiHsb9v+nFvr/4j0fP3Q9jM4aQgAgHSRau7HUOJrbvHT/VgtzDJn+TmhgIQoP9
-         uWYcKYY23Qm56Gdf0De+1ri647PIXY1Br8V0GjmteuTNK7fWj+kV0lWWF0XQYzAPYtEh
-         nPVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tU9tK10SJbC8EDc1nwVApy1mZDrqz45FwFA9axqWA50=;
-        b=OAxQHhzZJHbmaCM0sPfpe2bqCYgayzPqSW6onuBn/FAOgMAvAulV5M6wc0eQWhwXA+
-         sQVkJjf6EQMq6wwPPK5CuptfPCPHVZwl4suR8ZcWvp19aczMlMWJ2nNkPkGGPzCegeUs
-         RzALEivg4EnX5e8ICN2TKLBMbm6kRVtmKxLvwptNaJ4eM4PKWP2uxUjiGGkGTjk/xtw7
-         iiUBkPpnaS48JxIo/pBkefBCbZyyWtHfR8gv+F/r+8fUTgei5oc6Yhty6LsOfBq/hndB
-         kixmg+jbcMHgRMMqZcWDc63je9N7gQFKAqoeam7WvN3PcgJolU3XVZkXKN5ZweQ8BVCU
-         26WQ==
-X-Gm-Message-State: APjAAAWnrOLbuw1t+fAnK+5E+UQ7T+UaHxV02Nqwv/kafAFpvJ4CTNxw
-        ZiPHHIEG2+8opbrkN1G25WsP0w==
-X-Google-Smtp-Source: APXvYqyy6A/WwKqfelaaFFwhQh2rUZje06Y/Uu8QUR0CaG7TohoxG9uxfSDbuo3RreSYZYQDJJrQ4Q==
-X-Received: by 2002:a2e:8758:: with SMTP id q24mr14214187ljj.157.1580737579039;
-        Mon, 03 Feb 2020 05:46:19 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q16sm8810732lfa.12.2020.02.03.05.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 05:46:18 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id D207B100DC8; Mon,  3 Feb 2020 16:46:29 +0300 (+03)
-Date:   Mon, 3 Feb 2020 16:46:29 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/12] mm: dump_page(): better diagnostics for huge
- pinned pages
-Message-ID: <20200203134629.qxkgsso5kksb3ljj@box>
-References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-10-jhubbard@nvidia.com>
+        Mon, 3 Feb 2020 08:46:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=ydJSIlzM2hfUd3hl9T8tzcAmF2kYDsfmAnSpEAfBJFE=; b=Ifgv49xEstpI6IK+7zuM3iAvmJ
+        jr82lguHcDCP1cXc5T81M5VxnAYuFDas9953pxIHOCtEMmJ43fiGkeyF5+hY1TOStG3WChXAhdu6M
+        4bVDMfZkJo3oib3cWXIwf99ZG4eOFvzz9UTYlQB+6ZmTi7lOUJYvzrW3Gewcz/1GI3YuwmF/1zfCB
+        WDbZYc43ExER/r5rjtWqf6hxqhSyOu3QU/xD6Zhgcc8P8SgPg7BA7VOhYR4+tk0xtGx2ypu41t1Id
+        ht8N7MaR+waqTk32jUpD1OYtU/VURox040tiS7juhC4s045+nmg4kGNNZWIvu7JPUlqWEKGTC0QWo
+        c3w0IGbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyc2p-0004pA-2r; Mon, 03 Feb 2020 13:45:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 53105305803;
+        Mon,  3 Feb 2020 14:43:55 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5F4B82B63D250; Mon,  3 Feb 2020 14:45:40 +0100 (CET)
+Date:   Mon, 3 Feb 2020 14:45:40 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com, x86@kernel.org,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+Message-ID: <20200203134540.GA14879@hirez.programming.kicks-ass.net>
+References: <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+ <3862F8A1-FF9B-40AD-A88E-2C0BA7AF6F58@oracle.com>
+ <20200124075235.GX14914@hirez.programming.kicks-ass.net>
+ <2c6741c5-d89d-4b2c-cebe-a7c7f6eed884@redhat.com>
+ <48ce49e5-98a7-23cd-09f4-8290a65abbb5@redhat.com>
+ <8D3AFB47-B595-418C-9568-08780DDC58FF@oracle.com>
+ <714892cd-d96f-4d41-ae8b-d7b7642a6e3c@redhat.com>
+ <1669BFDE-A1A5-4ED8-B586-035460BBF68A@oracle.com>
+ <20200125111931.GW11457@worktop.programming.kicks-ass.net>
+ <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200201034029.4063170-10-jhubbard@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <F32558D8-4ACB-483A-AB4C-F565003A02E7@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 07:40:26PM -0800, John Hubbard wrote:
-> As part of pin_user_pages() and related API calls, pages are
-> "dma-pinned". For the case of compound pages of order > 1, the per-page
-> accounting of dma pins is accomplished via the 3rd struct page in the
-> compound page. In order to support debugging of any pin_user_pages()-
-> related problems, enhance dump_page() so as to report the pin count
-> in that case.
+On Thu, Jan 30, 2020 at 05:05:28PM -0500, Alex Kogan wrote:
 > 
-> Documentation/core-api/pin_user_pages.rst is also updated accordingly.
+> > On Jan 25, 2020, at 6:19 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > On Fri, Jan 24, 2020 at 01:19:05PM -0500, Alex Kogan wrote:
+> > 
+> >> Is there a lightweight way to identify such a “prioritized” thread?
+> > 
+> > No; people might for instance care about tail latencies between their
+> > identically spec'ed worker tasks.
 > 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> I would argue that those users need to tune/reduce the intra-node handoff
+> threshold for their needs. Or disable CNA altogether.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+I really don't like boot time arguments (or tunables in generic) for a
+machine to work as it should.
 
--- 
- Kirill A. Shutemov
+The default really should 'just work'.
+
+> In general, Peter, seems like you are not on board with the way Longman
+> suggested to handle prioritized threads. Am I right?
+
+Right.
+
+Presumably you have a workload where CNA is actually a win? That is,
+what inspired you to go down this road? Which actual kernel lock is so
+contended on NUMA machines that we need to do this?
