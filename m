@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B0FC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF37C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0743521775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2292087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747632;
-	bh=ACeJ2/+e6q1TL5FqdhhkxfO0iCy5+VdHQmJAaoOf/Oo=;
+	s=default; t=1580747636;
+	bh=UwGbtDRfN9KysfXxiqJ16+rixGyRwG8BonN8x2eCj3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J59gjJi57SZk+wflyzz/5c4skisrBAj4WpF978eT2FKuarI+b1DM3I0fVH1u5agdS
-	 lLRZjy6ICHQ2yRmc3y801ZomGYZ5ZwuQTYeGMxfhqkgI6YeihwhI3KunCsIzIUDA0d
-	 anc1QkUBzdKk7PTPeyKhhWuweK7AOppMJgCfOUk4=
+	b=wRvCSB6eTosHaNOLbgvQktLDbhInsRiwdzC2uaF25Wn2NGcK1IdzoLdQNjPwvsyF7
+	 jF3Y6rnzDwcDrxyARahUMfSuse+pGmLjRYomhf9kKnKCZPkoVZiF0vmo4hByGw6bVt
+	 mEME7gg5SVtKB/9O8eS3kbnIzN+2kQhvp8156xgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbgBCQdv (ORCPT
+        id S1730691AbgBCQdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbgBCQds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:48 -0500
+        id S1730677AbgBCQdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:52 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B052087E;
-        Mon,  3 Feb 2020 16:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C345C2087E;
+        Mon,  3 Feb 2020 16:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747627;
-        bh=ACeJ2/+e6q1TL5FqdhhkxfO0iCy5+VdHQmJAaoOf/Oo=;
+        s=default; t=1580747632;
+        bh=UwGbtDRfN9KysfXxiqJ16+rixGyRwG8BonN8x2eCj3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/agLq7ja1G52U5lQ3RWRBel380cvWXBq5C988jT/wCVJEVg7zYZ55h6svazSQBPv
-         RPeSfc8S7ivypOyv+FKnDmgEQjLrYJCF4ycZKIseNEyL2zpHrpGwSaaGuWOhC9+vmO
-         d7p1YvD/zXWL5AEbm9kRGC0WaqFkQvQu7SH0kxH4=
+        b=LJdSt+rjEYgqQWOGkzZ1Zqrlx9wH2HiVNnYhuEKPrv6f3FuPhuMZBIsZ8kmsrrqxI
+         LRA3/JsAZTbzdLisYXU042DCGL4HOrAn+gJZ5tE8Ldan5TgTRLP3wnMajWuh1lCScZ
+         xwQloUaE8ftwUO495Ql/pA5Kf+0Ug5jr0ggDxODg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/70] vti[6]: fix packet tx through bpf_redirect()
-Date:   Mon,  3 Feb 2020 16:20:06 +0000
-Message-Id: <20200203161920.155843437@linuxfoundation.org>
+Subject: [PATCH 4.19 56/70] xfrm: interface: do not confirm neighbor when do pmtu update
+Date:   Mon,  3 Feb 2020 16:20:08 +0000
+Message-Id: <20200203161920.389011463@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,80 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Xu Wang <vulab@iscas.ac.cn>
 
-[ Upstream commit 95224166a9032ff5d08fca633d37113078ce7d01 ]
+[ Upstream commit 8aaea2b0428b6aad7c7e22d3fddc31a78bb1d724 ]
 
-With an ebpf program that redirects packets through a vti[6] interface,
-the packets are dropped because no dst is attached.
+When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
+we should not call dst_confirm_neigh() as there is no two-way communication.
 
-This could also be reproduced with an AF_PACKET socket, with the following
-python script (vti1 is an ip_vti interface):
-
- import socket
- send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
- # scapy
- # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
- # raw(p)
- req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
- send_s.sendto(req, ('vti1', 0x800, 0, 0))
-
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_vti.c  | 13 +++++++++++--
- net/ipv6/ip6_vti.c | 13 +++++++++++--
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ net/xfrm/xfrm_interface.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 960f4faaf2942..f5e5fcd908592 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -208,8 +208,17 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
- 	int mtu;
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index 20565a4742112..317fe9c92932b 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -294,7 +294,7 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
  
- 	if (!dst) {
--		dev->stats.tx_carrier_errors++;
--		goto tx_error_icmp;
-+		struct rtable *rt;
-+
-+		fl->u.ip4.flowi4_oif = dev->ifindex;
-+		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+		if (IS_ERR(rt)) {
-+			dev->stats.tx_carrier_errors++;
-+			goto tx_error_icmp;
-+		}
-+		dst = &rt->dst;
-+		skb_dst_set(skb, dst);
- 	}
+ 	mtu = dst_mtu(dst);
+ 	if (!skb->ignore_df && skb->len > mtu) {
+-		skb_dst_update_pmtu(skb, mtu);
++		skb_dst_update_pmtu_no_confirm(skb, mtu);
  
- 	dst_hold(dst);
-diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
-index bfd39db3398a5..67ff206b6d619 100644
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -453,8 +453,17 @@ vti6_xmit(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
- 	int err = -1;
- 	int mtu;
- 
--	if (!dst)
--		goto tx_err_link_failure;
-+	if (!dst) {
-+		fl->u.ip6.flowi6_oif = dev->ifindex;
-+		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+		if (dst->error) {
-+			dst_release(dst);
-+			dst = NULL;
-+			goto tx_err_link_failure;
-+		}
-+		skb_dst_set(skb, dst);
-+	}
- 
- 	dst_hold(dst);
- 	dst = xfrm_lookup(t->net, dst, fl, NULL, 0);
+ 		if (skb->protocol == htons(ETH_P_IPV6)) {
+ 			if (mtu < IPV6_MIN_MTU)
 -- 
 2.20.1
 
