@@ -2,55 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B22C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAF5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796E42082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A9821582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747939;
-	bh=xYuZxASDJzRdJFvffnSMjjcEVkeHubuXhswIAaTn+kI=;
+	s=default; t=1580747942;
+	bh=kBkd5mUihVG4SraVZKSYG5V3/ELkKainFmm4pZDj604=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yIyJ8Iy03RNyCsyCJv5iPOHw7q0jup91o7E1MWB2eZwc8k4jJXl4vShtqjD5k5t43
-	 bl9KuXh2YxkU9UbqCGQ/iSEtqdhKc+WGtedBeRH+i+eTWsBcbqVUZubsr+5t7D4FRR
-	 0qf8K+1braRdVQuPyD2VqV+X5S63sA8u8LmZEJEE=
+	b=J2vqLFOZK3T2/qv/ebzn4hTnlxR0KY+hqUEbWB+DAJzi90kNvx4Usd3niCONSmPjj
+	 nPisa0v4ddYxqOWFmgPuHofC2XbJsdTScF9VrSXgEEHqVdvhwSKj9FaI8OTKDTT92L
+	 71MPkzkaxbh2KeorQh3Vowyy3qKkWQZXVn0+cnS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbgBCQi6 (ORCPT
+        id S1731435AbgBCQiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:38:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53880 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731442AbgBCQiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:38:05 -0500
+        id S1731400AbgBCQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:37:53 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0963F2051A;
-        Mon,  3 Feb 2020 16:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E2A22051A;
+        Mon,  3 Feb 2020 16:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747884;
-        bh=xYuZxASDJzRdJFvffnSMjjcEVkeHubuXhswIAaTn+kI=;
+        s=default; t=1580747873;
+        bh=kBkd5mUihVG4SraVZKSYG5V3/ELkKainFmm4pZDj604=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPUqfBj2u7mwJ0eoE3sN+yJWNOcUTGghAgxBSmRJhtr2frB/smwp1UAHARnoQJXWj
-         IVYo0GM+thLRRZXb3oECGAVDjGWvASHtY4A5xeb/rWK086/EUMvVYXHDwmejiRlIqp
-         I1o3Tfj4TZxO/mzvqGr1hI1S0eEV7/yBlh0voKgE=
+        b=kWFItMwMrZ6ZTRTUmGa3brWEKFEDf9iXvGGTsp4XvdXqNLjsaAZTCgaBuyJiFS1iv
+         ceYvE+SIZG+/FcvuMqbY2uiVCPvQKEVVVS7ulFnPe0P7pNxdEa6wLX0OV7J1qbL4kN
+         eBhsKC9guDyrQQjBU0fRhQnO7mGFPCQaMcwaquxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 04/23] x86/resctrl: Fix use-after-free when deleting resource groups
-Date:   Mon,  3 Feb 2020 16:20:24 +0000
-Message-Id: <20200203161903.686984755@linuxfoundation.org>
+        syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.5 16/23] media: af9005: uninitialized variable printked
+Date:   Mon,  3 Feb 2020 16:20:36 +0000
+Message-Id: <20200203161905.734306738@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -63,224 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit b8511ccc75c033f6d54188ea4df7bf1e85778740 ]
+commit 51d0c99b391f0cac61ad7b827c26f549ee55672c upstream.
 
-A resource group (rdtgrp) contains a reference count (rdtgrp->waitcount)
-that indicates how many waiters expect this rdtgrp to exist. Waiters
-could be waiting on rdtgroup_mutex or some work sitting on a task's
-workqueue for when the task returns from kernel mode or exits.
+If usb_bulk_msg() fails, actual_length can be uninitialized.
 
-The deletion of a rdtgrp is intended to have two phases:
+Reported-by: syzbot+9d42b7773d2fecd983ab@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  (1) while holding rdtgroup_mutex the necessary cleanup is done and
-  rdtgrp->flags is set to RDT_DELETED,
-
-  (2) after releasing the rdtgroup_mutex, the rdtgrp structure is freed
-  only if there are no waiters and its flag is set to RDT_DELETED. Upon
-  gaining access to rdtgroup_mutex or rdtgrp, a waiter is required to check
-  for the RDT_DELETED flag.
-
-When unmounting the resctrl file system or deleting ctrl_mon groups,
-all of the subdirectories are removed and the data structure of rdtgrp
-is forcibly freed without checking rdtgrp->waitcount. If at this point
-there was a waiter on rdtgrp then a use-after-free issue occurs when the
-waiter starts running and accesses the rdtgrp structure it was waiting
-on.
-
-See kfree() calls in [1], [2] and [3] in these two call paths in
-following scenarios:
-(1) rdt_kill_sb() -> rmdir_all_sub() -> free_all_child_rdtgrp()
-(2) rdtgroup_rmdir() -> rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
-
-There are several scenarios that result in use-after-free issue in
-following:
-
-Scenario 1:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdt_kill_sb() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
-
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdt_kill_sb)
--------------------------------        ----------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       mutex_lock
-                                       rmdir_all_sub
-                                         /*
-                                          * sentry and rdtgrp are freed
-                                          * without checking refcount
-                                          */
-                                         free_all_child_rdtgrp
-                                           kfree(sentry)*[1]
-                                         kfree(rdtgrp)*[2]
-                                       mutex_unlock
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1] or [2].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
-
-Scenario 2:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdtgroup_rmdir() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
-
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdtgroup_rmdir)
--------------------------------        -------------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       rdtgroup_kn_lock_live
-                                         atomic_inc(&rdtgrp->waitcount)
-                                         mutex_lock
-                                       rdtgroup_rmdir_ctrl
-                                         free_all_child_rdtgrp
-                                           /*
-                                            * sentry is freed without
-                                            * checking refcount
-                                            */
-                                           kfree(sentry)*[3]
-                                         rdtgroup_ctrl_remove
-                                           rdtgrp->flags = RDT_DELETED
-                                       rdtgroup_kn_unlock
-                                         mutex_unlock
-                                         atomic_dec_and_test(
-                                                     &rdtgrp->waitcount)
-                                         && (flags & RDT_DELETED)
-                                           kfree(rdtgrp)
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [3].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
-
-If CONFIG_DEBUG_SLAB=y, Slab corruption on kmalloc-2k can be observed
-like following. Note that "0x6b" is POISON_FREE after kfree(). The
-corrupted bits "0x6a", "0x64" at offset 0x424 correspond to
-waitcount member of struct rdtgroup which was freed:
-
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c5b0d000, len=2048
-  420: 6b 6b 6b 6b 6a 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkjkkkkkkkkkkk
-  Single bit error detected. Probably bad RAM.
-  Run memtest86+ or a similar memory test tool.
-  Next obj: start=ffff9504c5b0d800, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c58ab800, len=2048
-  420: 6b 6b 6b 6b 64 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkdkkkkkkkkkkk
-  Prev obj: start=ffff9504c58ab000, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-
-Fix this by taking reference count (waitcount) of rdtgrp into account in
-the two call paths that currently do not do so. Instead of always
-freeing the resource group it will only be freed if there are no waiters
-on it. If there are waiters, the resource group will have its flags set
-to RDT_DELETED.
-
-It will be left to the waiter to free the resource group when it starts
-running and finding that it was the last waiter and the resource group
-has been removed (rdtgrp->flags & RDT_DELETED) since. (1) rdt_kill_sb()
--> rmdir_all_sub() -> free_all_child_rdtgrp() (2) rdtgroup_rmdir() ->
-rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
-
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Fixes: 60cf5e101fd4 ("x86/intel_rdt: Add mkdir to resctrl file system")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1578500886-21771-2-git-send-email-xiaochen.shen@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/media/usb/dvb-usb/af9005.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index e4da26325e3ea..c7564294a12a8 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2205,7 +2205,11 @@ static void free_all_child_rdtgrp(struct rdtgroup *rdtgrp)
- 	list_for_each_entry_safe(sentry, stmp, head, mon.crdtgrp_list) {
- 		free_rmid(sentry->mon.rmid);
- 		list_del(&sentry->mon.crdtgrp_list);
--		kfree(sentry);
-+
-+		if (atomic_read(&sentry->waitcount) != 0)
-+			sentry->flags = RDT_DELETED;
-+		else
-+			kfree(sentry);
- 	}
- }
+--- a/drivers/media/usb/dvb-usb/af9005.c
++++ b/drivers/media/usb/dvb-usb/af9005.c
+@@ -554,7 +554,7 @@ static int af9005_boot_packet(struct usb
+ 			      u8 *buf, int size)
+ {
+ 	u16 checksum;
+-	int act_len, i, ret;
++	int act_len = 0, i, ret;
  
-@@ -2243,7 +2247,11 @@ static void rmdir_all_sub(void)
- 
- 		kernfs_remove(rdtgrp->kn);
- 		list_del(&rdtgrp->rdtgroup_list);
--		kfree(rdtgrp);
-+
-+		if (atomic_read(&rdtgrp->waitcount) != 0)
-+			rdtgrp->flags = RDT_DELETED;
-+		else
-+			kfree(rdtgrp);
- 	}
- 	/* Notify online CPUs to update per cpu storage and PQR_ASSOC MSR */
- 	update_closid_rmid(cpu_online_mask, &rdtgroup_default);
--- 
-2.20.1
-
+ 	memset(buf, 0, size);
+ 	buf[0] = (u8) (FW_BULKOUT_SIZE & 0xff);
 
 
