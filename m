@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9417CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C285C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605B12086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F54521775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748158;
-	bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
+	s=default; t=1580748162;
+	bh=lyfHlZxCuvdVXLyDtTWxrp0LGBg4suiUMtlIpv6ANgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvLsFPFBAVRcMKaw3vUTGn06ZBjK6F1Cwz4j7ke2FYDT9qxUAqawt6LxYwMWgBlHj
-	 cdDvjwWGt2wa73UhrALaodjDtw4ogPOZ1ZCe84wsaAs5zjX3+1CYnGSs/F+hgR74EA
-	 zFlls2cKL7x1QyXn9OALAx1e+x5lk1XQZ+Ra4zSM=
+	b=2oy0QNEX7M/hez/wbjgFho2XtvUxPv+venD33I436Eb1Rsco4j9mCaoQit59x2zer
+	 xT83zfXj9WvdxBYEp4L25CXl6uGjALVm2H9pOEZmI0a+IG9b2v10kZAgipxrOw/oCS
+	 AacQed6tb/VZp7HYBTlYZpyIStPvJBpU8gzfsgjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgBCQeD (ORCPT
+        id S1730699AbgBCQd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbgBCQd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:59 -0500
+        id S1730686AbgBCQdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:55 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E682221744;
-        Mon,  3 Feb 2020 16:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA3321775;
+        Mon,  3 Feb 2020 16:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747639;
-        bh=KCRqnPrC1zoA3FxXCtQkGkNTNDI8yiqkX4GiR5ndBRc=;
+        s=default; t=1580747634;
+        bh=lyfHlZxCuvdVXLyDtTWxrp0LGBg4suiUMtlIpv6ANgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YgPzNomLEL9faHqAyhPoX1llSEwIw3LBAI0ZpgGoIp51fzD7eQ4QD4igsQQWc59P1
-         brRSvrHzjhGUEFINOm8SPNKeAnfphbeqFtNLTQYvL7qwiZq83D1/aamb2yO4DYwrxh
-         F85JTyfas73J03BDXVGxy+S5H7EqhTG2dJoQkVJ8=
+        b=oduchFHVsSKuV72yrPl8w9tkOwBjQASXqDZ65XqjtlU/pcuGLLC2vMmcVDWSjk2iu
+         MyCy4D598FMZAgAvRYvY1kZlJNULNQe/rCWC7iqjNyQOQvpetzQiqHaiy1D8oM7rjb
+         23bOX5YJIUWz7DQbRVLYIbsawHpJl5A6xDKAhaoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/70] riscv: delete temporary files
-Date:   Mon,  3 Feb 2020 16:20:01 +0000
-Message-Id: <20200203161919.439647477@linuxfoundation.org>
+Subject: [PATCH 4.19 57/70] scsi: fnic: do not queue commands during fwreset
+Date:   Mon,  3 Feb 2020 16:20:09 +0000
+Message-Id: <20200203161920.494332953@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,36 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilie Halip <ilie.halip@gmail.com>
+From: Hannes Reinecke <hare@suse.de>
 
-[ Upstream commit 95f4d9cced96afa9c69b3da8e79e96102c84fc60 ]
+[ Upstream commit 0e2209629fec427ba75a6351486153a9feddd36b ]
 
-Temporary files used in the VDSO build process linger on even after make
-mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
+When a link is going down the driver will be calling fnic_cleanup_io(),
+which will traverse all commands and calling 'done' for each found command.
+While the traversal is handled under the host_lock, calling 'done' happens
+after the host_lock is being dropped.
 
-Delete them once they're no longer needed.
+As fnic_queuecommand_lck() is being called with the host_lock held, it
+might well be that it will pick the command being selected for abortion
+from the above routine and enqueue it for sending, but then 'done' is being
+called on that very command from the above routine.
 
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Which of course confuses the hell out of the scsi midlayer.
+
+So fix this by not queueing commands when fnic_cleanup_io is active.
+
+Link: https://lore.kernel.org/r/20200116102053.62755-1-hare@suse.de
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/vdso/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/fnic/fnic_scsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index eed1c137f6183..87f71a6cd3ef8 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -55,7 +55,8 @@ quiet_cmd_vdsold = VDSOLD  $@
-       cmd_vdsold = $(CC) $(KBUILD_CFLAGS) $(call cc-option, -no-pie) -nostdlib -nostartfiles $(SYSCFLAGS_$(@F)) \
-                            -Wl,-T,$(filter-out FORCE,$^) -o $@.tmp && \
-                    $(CROSS_COMPILE)objcopy \
--                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@
-+                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@ && \
-+                   rm $@.tmp
+diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
+index 8cbd3c9f0b4cb..73ffc16ec0225 100644
+--- a/drivers/scsi/fnic/fnic_scsi.c
++++ b/drivers/scsi/fnic/fnic_scsi.c
+@@ -446,6 +446,9 @@ static int fnic_queuecommand_lck(struct scsi_cmnd *sc, void (*done)(struct scsi_
+ 	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_IO_BLOCKED)))
+ 		return SCSI_MLQUEUE_HOST_BUSY;
  
- # install commands for the unstripped file
- quiet_cmd_vdso_install = INSTALL $@
++	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_FWRESET)))
++		return SCSI_MLQUEUE_HOST_BUSY;
++
+ 	rport = starget_to_rport(scsi_target(sc->device));
+ 	if (!rport) {
+ 		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host,
 -- 
 2.20.1
 
