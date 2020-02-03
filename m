@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E88C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7EAC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600802051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ABD2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748400;
-	bh=LPXC/bbMwboiC8gkHl4hEag4UPlGj4kkNkiySF5hbBU=;
+	s=default; t=1580748412;
+	bh=5+irEPlmqi6WCyY1yB5qmS3DAHsbtHGhPpk/PzwxTlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAcgp9KeRRmMUd5YrKgLU/R5nwYnMIC9Ov7laYc0eMkHk/2b8Y8RqpoXRg9LIquKn
-	 hOhmP513zY4Jy+ReCaw/8SK8MCZu5qf/0SPNAzV0n/jAyDVprgW4CJ1v1mt8dkeP/M
-	 bOSrRtRNZmSiP1LmUWCKSyP+1s80ba36Oe8cEYMI=
+	b=Lj/sUWnVn4aHgzV7no9GlDsIj3jGxOyt2bcgH0+8zZvNbjeerPGmbZfgDVN/oJe5V
+	 Iev/qHXaHLykpHRSCutKKU4i4UBTWM4WNXe+G86+wL77SNYrRStPixeu3mKcRrL6sD
+	 7an+1/KH6J3xdgVJnavvLkmDL8p1q2q/MQxHx9aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgBCQqi (ORCPT
+        id S1731138AbgBCQqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:46:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:46:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729610AbgBCQ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:28:33 -0500
+        id S1729535AbgBCQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:28:12 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EC92051A;
-        Mon,  3 Feb 2020 16:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5812520CC7;
+        Mon,  3 Feb 2020 16:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747313;
-        bh=LPXC/bbMwboiC8gkHl4hEag4UPlGj4kkNkiySF5hbBU=;
+        s=default; t=1580747291;
+        bh=5+irEPlmqi6WCyY1yB5qmS3DAHsbtHGhPpk/PzwxTlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9Qm7sHcotkNeq/5mMT+ifufv8Loc3aHvY2+mG1Uej6r+S2IMH0JhIeuaLnEar2cc
-         mzZHZgOumsftHBsCyEmPm6I6P0zncB4upPY015FagmCjWTCOf4ttjBV2WYmqNmIVXt
-         +DoR1fzyDdikZ80JUh1rHpCchzXa1G2hDaY5n4PM=
+        b=LO6Y/SplILWKu190fgZEWCZKMWU3LLO8Ic+BgbOM1Z2xYX9pZHnbrROXPqPEmJJds
+         xG8zuIK60VlL/ogkn84Wl7GLUCn3nmmmp6gNLlR3LKklvQpF2V2NVSBvtTyZnlYxr9
+         DIB2Hp+Jz8ATzfCc7tZ6igKUzN8IIo9MvXfMYYmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 32/89] crypto: af_alg - Use bh_lock_sock in sk_destruct
-Date:   Mon,  3 Feb 2020 16:19:17 +0000
-Message-Id: <20200203161921.119779644@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 05/89] USB: serial: ir-usb: fix IrLAP framing
+Date:   Mon,  3 Feb 2020 16:18:50 +0000
+Message-Id: <20200203161917.550343724@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,43 +58,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Johan Hovold <johan@kernel.org>
 
-commit 37f96694cf73ba116993a9d2d99ad6a75fa7fdb0 upstream.
+commit 38c0d5bdf4973f9f5a888166e9d3e9ed0d32057a upstream.
 
-As af_alg_release_parent may be called from BH context (most notably
-due to an async request that only completes after socket closure,
-or as reported here because of an RCU-delayed sk_destruct call), we
-must use bh_lock_sock instead of lock_sock.
+Commit f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+switched to using the generic write implementation which may combine
+multiple write requests into larger transfers. This can break the IrLAP
+protocol where end-of-frame is determined using the USB short packet
+mechanism, for example, if multiple frames are sent in rapid succession.
 
-Reported-by: syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c840ac6af3f8 ("crypto: af_alg - Disallow bind/setkey/...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+Cc: stable <stable@vger.kernel.org>     # 2.6.35
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/af_alg.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/serial/ir-usb.c |  113 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 91 insertions(+), 22 deletions(-)
 
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -139,11 +139,13 @@ void af_alg_release_parent(struct sock *
- 	sk = ask->parent;
- 	ask = alg_sk(sk);
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -49,9 +49,10 @@ static int buffer_size;
+ static int xbof = -1;
  
--	lock_sock(sk);
-+	local_bh_disable();
-+	bh_lock_sock(sk);
- 	ask->nokey_refcnt -= nokey;
- 	if (!last)
- 		last = !--ask->refcnt;
--	release_sock(sk);
-+	bh_unlock_sock(sk);
-+	local_bh_enable();
+ static int  ir_startup (struct usb_serial *serial);
+-static int  ir_open(struct tty_struct *tty, struct usb_serial_port *port);
+-static int ir_prepare_write_buffer(struct usb_serial_port *port,
+-						void *dest, size_t size);
++static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
++		const unsigned char *buf, int count);
++static int ir_write_room(struct tty_struct *tty);
++static void ir_write_bulk_callback(struct urb *urb);
+ static void ir_process_read_urb(struct urb *urb);
+ static void ir_set_termios(struct tty_struct *tty,
+ 		struct usb_serial_port *port, struct ktermios *old_termios);
+@@ -81,8 +82,9 @@ static struct usb_serial_driver ir_devic
+ 	.num_ports		= 1,
+ 	.set_termios		= ir_set_termios,
+ 	.attach			= ir_startup,
+-	.open			= ir_open,
+-	.prepare_write_buffer	= ir_prepare_write_buffer,
++	.write			= ir_write,
++	.write_room		= ir_write_room,
++	.write_bulk_callback	= ir_write_bulk_callback,
+ 	.process_read_urb	= ir_process_read_urb,
+ };
  
- 	if (last)
- 		sock_put(sk);
+@@ -258,35 +260,102 @@ static int ir_startup(struct usb_serial
+ 	return 0;
+ }
+ 
+-static int ir_open(struct tty_struct *tty, struct usb_serial_port *port)
++static int ir_write(struct tty_struct *tty, struct usb_serial_port *port,
++		const unsigned char *buf, int count)
+ {
+-	int i;
++	struct urb *urb = NULL;
++	unsigned long flags;
++	int ret;
+ 
+-	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i)
+-		port->write_urbs[i]->transfer_flags = URB_ZERO_PACKET;
++	if (port->bulk_out_size == 0)
++		return -EINVAL;
+ 
+-	/* Start reading from the device */
+-	return usb_serial_generic_open(tty, port);
+-}
++	if (count == 0)
++		return 0;
+ 
+-static int ir_prepare_write_buffer(struct usb_serial_port *port,
+-						void *dest, size_t size)
+-{
+-	unsigned char *buf = dest;
+-	int count;
++	count = min(count, port->bulk_out_size - 1);
++
++	spin_lock_irqsave(&port->lock, flags);
++	if (__test_and_clear_bit(0, &port->write_urbs_free)) {
++		urb = port->write_urbs[0];
++		port->tx_bytes += count;
++	}
++	spin_unlock_irqrestore(&port->lock, flags);
++
++	if (!urb)
++		return 0;
+ 
+ 	/*
+ 	 * The first byte of the packet we send to the device contains an
+-	 * inbound header which indicates an additional number of BOFs and
++	 * outbound header which indicates an additional number of BOFs and
+ 	 * a baud rate change.
+ 	 *
+ 	 * See section 5.4.2.2 of the USB IrDA spec.
+ 	 */
+-	*buf = ir_xbof | ir_baud;
++	*(u8 *)urb->transfer_buffer = ir_xbof | ir_baud;
++
++	memcpy(urb->transfer_buffer + 1, buf, count);
++
++	urb->transfer_buffer_length = count + 1;
++	urb->transfer_flags = URB_ZERO_PACKET;
++
++	ret = usb_submit_urb(urb, GFP_ATOMIC);
++	if (ret) {
++		dev_err(&port->dev, "failed to submit write urb: %d\n", ret);
++
++		spin_lock_irqsave(&port->lock, flags);
++		__set_bit(0, &port->write_urbs_free);
++		port->tx_bytes -= count;
++		spin_unlock_irqrestore(&port->lock, flags);
++
++		return ret;
++	}
++
++	return count;
++}
++
++static void ir_write_bulk_callback(struct urb *urb)
++{
++	struct usb_serial_port *port = urb->context;
++	int status = urb->status;
++	unsigned long flags;
++
++	spin_lock_irqsave(&port->lock, flags);
++	__set_bit(0, &port->write_urbs_free);
++	port->tx_bytes -= urb->transfer_buffer_length - 1;
++	spin_unlock_irqrestore(&port->lock, flags);
++
++	switch (status) {
++	case 0:
++		break;
++	case -ENOENT:
++	case -ECONNRESET:
++	case -ESHUTDOWN:
++		dev_dbg(&port->dev, "write urb stopped: %d\n", status);
++		return;
++	case -EPIPE:
++		dev_err(&port->dev, "write urb stopped: %d\n", status);
++		return;
++	default:
++		dev_err(&port->dev, "nonzero write-urb status: %d\n", status);
++		break;
++	}
++
++	usb_serial_port_softint(port);
++}
++
++static int ir_write_room(struct tty_struct *tty)
++{
++	struct usb_serial_port *port = tty->driver_data;
++	int count = 0;
++
++	if (port->bulk_out_size == 0)
++		return 0;
++
++	if (test_bit(0, &port->write_urbs_free))
++		count = port->bulk_out_size - 1;
+ 
+-	count = kfifo_out_locked(&port->write_fifo, buf + 1, size - 1,
+-								&port->lock);
+-	return count + 1;
++	return count;
+ }
+ 
+ static void ir_process_read_urb(struct urb *urb)
 
 
