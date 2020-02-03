@@ -2,106 +2,176 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B53CC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50CEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3336D2087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747253;
-	bh=mPV8pOApGUcWAqTRUtRnpic/2GQ030XfApSb2e1ez08=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQ41cwYRf2yhtj5KvZZs5c6K7UdVX1zmWP0+ErOPxsP8+Zz94l7s0+DJ/+M8rSXd7
-	 yLAqA6/Tnx7Scn6U0853VcNaD3gFmDa4CrimFmzNFD5+ipjLVm3Gi2wDvC/m37SjfS
-	 F6q5WQocwlRFAkTejk5AnH6IF8NXkH8dGq1VSh2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 82B0721582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kgo2mZAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgBCQ1c (ORCPT
+        id S1729456AbgBCQ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbgBCQ13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:29 -0500
-Received: from localhost (unknown [104.132.45.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61F5B2086A;
-        Mon,  3 Feb 2020 16:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747248;
-        bh=mPV8pOApGUcWAqTRUtRnpic/2GQ030XfApSb2e1ez08=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDq/Mt+jKNFV1GfPNl2nA0xmr7sqeWyuxb2PJJZpgAHifGtcDCUqNKPWdDA+rqNaS
-         eW4snNEND6YIUTgi+F3UovHV5GhHCEgdHqVssb8TqDnNFSEjPfMlFHALnZkodaEnOG
-         agm6YhFHLM64rVd2SgihYl1YlSVJIDZTuRHU5iLE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 53/68] scsi: fnic: do not queue commands during fwreset
-Date:   Mon,  3 Feb 2020 16:19:49 +0000
-Message-Id: <20200203161913.727410180@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
-References: <20200203161904.705434837@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Feb 2020 11:27:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57974 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbgBCQ1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=GlhiWZUF/YX3gEFzvjYXVXI3s+IP0haz6QdP1XP2Q4c=; b=kgo2mZARm8v3jQFbI3uCEpxH6U
+        NrmKQla4px8BTh70BOn737Z9BQ9vJ+P6KkOfQOO+oDa3aX79Mo8HTpZdx0ixdfGULQnTa+x7CIZaW
+        4FvO8K4pY8lG89evFWlYd5jmRkfuuTibRnswe4k1mfSvHdlsgFWKUalivplkEc9Se3/+Y8HqHY8LW
+        s2VxB3aNiEISZsdJrK+ijLNY3K0vXqtib3rE7usWPMxSnamH2ZaxOmiDv/Uf91pjSS+siRzJgAXdp
+        2cC05VxR7Ub15GuCb4+zJBk4YyYwZ8cDHUFewBU0hsmd+MMK0xgNfeLHZu4DCGNYQoMDkMZ9ToE0C
+        yXoNhI1Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iyeZQ-00016X-5u; Mon, 03 Feb 2020 16:27:32 +0000
+Subject: Re: linux-next: Tree for Feb 3 (arch/x86/{various}; all PCI-related)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+References: <20200203142334.4f699874@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b569f6f3-a757-5bbb-3e1a-9d78b12709b7@infradead.org>
+Date:   Mon, 3 Feb 2020 08:27:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200203142334.4f699874@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+On 2/2/20 7:23 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add any v5.7 material to your linux-next included
+> branches until after v5.6-rc1 has been released.
+> 
+> News: I have added an htmldocs build to the end of my day.  It seems to
+> be building at the moment, but has many warnings.
+> 
+> Changes since 20200131:
+> 
 
-[ Upstream commit 0e2209629fec427ba75a6351486153a9feddd36b ]
+(trying this again, with more Cc:s since last week's report [on Jan. 28]
+got no response)
 
-When a link is going down the driver will be calling fnic_cleanup_io(),
-which will traverse all commands and calling 'done' for each found command.
-While the traversal is handled under the host_lock, calling 'done' happens
-after the host_lock is being dropped.
 
-As fnic_queuecommand_lck() is being called with the host_lock held, it
-might well be that it will pick the command being selected for abortion
-from the above routine and enqueue it for sending, but then 'done' is being
-called on that very command from the above routine.
+on x86_64:
 
-Which of course confuses the hell out of the scsi midlayer.
+# CONFIG_PCI is not set
 
-So fix this by not queueing commands when fnic_cleanup_io is active.
+Several source files will not build when CONFIG_PCI is not set/enabled.
 
-Link: https://lore.kernel.org/r/20200116102053.62755-1-hare@suse.de
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/fnic/fnic_scsi.c | 3 +++
- 1 file changed, 3 insertions(+)
+Examples:
 
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index c056b8111ad27..7bf6102b4c3d5 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -445,6 +445,9 @@ static int fnic_queuecommand_lck(struct scsi_cmnd *sc, void (*done)(struct scsi_
- 	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_IO_BLOCKED)))
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 
-+	if (unlikely(fnic_chk_state_flags_locked(fnic, FNIC_FLAGS_FWRESET)))
-+		return SCSI_MLQUEUE_HOST_BUSY;
-+
- 	rport = starget_to_rport(scsi_target(sc->device));
- 	ret = fc_remote_port_chkready(rport);
- 	if (ret) {
+  CC      arch/x86/events/amd/ibs.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/events/amd/ibs.c:12:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_dev
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+  CC      arch/x86/kernel/cpu/cacheinfo.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/kernel/cpu/cacheinfo.c:17:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_bus
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+  CC      arch/x86/kernel/apic/io_apic.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/kernel/apic/io_apic.c:40:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_bus
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+  CC      arch/x86/kernel/setup.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/kernel/setup.c:16:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_bus
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+  CC      arch/x86/kernel/x86_init.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/kernel/x86_init.c:9:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_bus
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+  CC      arch/x86/kernel/irqinit.o
+In file included from ../include/linux/pci.h:1778:0,
+                 from ../arch/x86/include/asm/prom.h:15,
+                 from ../arch/x86/kernel/irqinit.c:29:
+../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
+../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
+  return to_pci_sysdata(bus)->node;
+         ^~~~~~~~~~~~~~
+         to_pci_dev
+../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
+  return to_pci_sysdata(bus)->node;
+                            ^~
+
+
+That's just a sample:
+
+$ buildsummary.pl build-r9671.out 
+file: arch/x86/boot/header.S: errors: 1, warnings: 0
+file: arch/x86/include/asm/pci.h: errors: 234, warnings: 0
+build-r9671.out: totals: error/warning files: 2, errors: 235, warnings: 0, Section mismatches: 0
+
+
+
+
 -- 
-2.20.1
-
-
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
