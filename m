@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E07C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB645C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D567620838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832692087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747427;
-	bh=DbnJXhXZVwhVhOlvy2ggRvVGgF+J3/rpNWGE9rhTsOg=;
+	s=default; t=1580747431;
+	bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvgSi6CBRwGchLXx6GVVNf7XOdwq8Qu6ycTGG62HvH1xa0yEPpXl+c8kWP1WjpHav
-	 oA7YQgmS754FMtm8eYhIcjhfZjsI1cFjkIGrCwSjGf2u/ZCbCJqS5aZnPKZQlVwYny
-	 7kFxvwBVfLnoRvw7hDpXuHLHEO47qbUh2fnVH5mY=
+	b=Urw3faYkjxLbMOstt7s9J+8qrYgoLtEgvMMj2NLv8jQogi6TqVnoZXenCsxlbMDA3
+	 95+w0+ENgag0QmRPaSj16cQtsQ+xwY580+gQknojXB/EFPy2oweAnixpcWykfayxty
+	 i4qCapS2M09Ynf206baYV0C9FpDIc4iAi51h+km0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgBCQa1 (ORCPT
+        id S1730018AbgBCQa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:30:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42786 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729981AbgBCQaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:30:22 -0500
+        id S1730002AbgBCQa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:30:26 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7982921744;
-        Mon,  3 Feb 2020 16:30:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46A6E2086A;
+        Mon,  3 Feb 2020 16:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747420;
-        bh=DbnJXhXZVwhVhOlvy2ggRvVGgF+J3/rpNWGE9rhTsOg=;
+        s=default; t=1580747425;
+        bh=3wGRL90czmoweh8O1WUlHwtiqXhbAD81rd8yS1gnIek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zyWM6p63SffHyAm099UudyNApul9PDEdazrUEhHzo2qaW1ECF7AcW1jyM1OR5rQXx
-         YZpRfvRbRVn+bx61XAnQBIIYCB/XFCYWqVXHTbxa5uDzoW/DNI49gisWb9uLnKxkwq
-         1rDWd0ajQpBPoAv0DnxjiMXRj9/PJ8sOIoscfV5M=
+        b=Qd1RtVFMt8cYwBW1zMWYCmav8y8EnGoVV7M5OSi/7GTGynbbYCIg5FImVqFBM/fYR
+         TNNcQdTezP7u5kFicXW4A2acPkX4a6pl1bUuB/PDXKmC6X53BaxxdMVM4zskyGC8m7
+         jRZtXTeKRuRbwnFx12MpGMxg7Pd3HMm9SJSB7oSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Shahed Shaikh <shshaikh@marvell.com>,
+        Yonggen Xu <Yonggen.Xu@dell.com>,
+        Manish Chopra <manishc@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 77/89] airo: Add missing CAP_NET_ADMIN check in AIROOLDIOCTL/SIOCDEVPRIVATE
-Date:   Mon,  3 Feb 2020 16:20:02 +0000
-Message-Id: <20200203161926.315460100@linuxfoundation.org>
+Subject: [PATCH 4.14 79/89] qlcnic: Fix CPU soft lockup while collecting firmware dump
+Date:   Mon,  3 Feb 2020 16:20:04 +0000
+Message-Id: <20200203161926.520406709@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -62,81 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 78f7a7566f5eb59321e99b55a6fdb16ea05b37d1 ]
+[ Upstream commit 22e984493a41bf8081f13d9ed84def3ca8cfd427 ]
 
-The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
-implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
+Driver while collecting firmware dump takes longer time to
+collect/process some of the firmware dump entries/memories.
+Bigger capture masks makes it worse as it results in larger
+amount of data being collected and results in CPU soft lockup.
+Place cond_resched() in some of the driver flows that are
+expectedly time consuming to relinquish the CPU to avoid CPU
+soft lockup panic.
 
-The ioctl handler copies an aironet_ioctl struct from userspace, which
-includes a command. Some of the commands are handled in readrids(),
-where the user controlled command is converted into a driver-internal
-value called "ridcode".
-
-There are two command values, AIROGWEPKTMP and AIROGWEPKNV, which
-correspond to ridcode values of RID_WEP_TEMP and RID_WEP_PERM
-respectively. These commands both have checks that the user has
-CAP_NET_ADMIN, with the comment that "Only super-user can read WEP
-keys", otherwise they return -EPERM.
-
-However there is another command value, AIRORRID, that lets the user
-specify the ridcode value directly, with no other checks. This means
-the user can bypass the CAP_NET_ADMIN check on AIROGWEPKTMP and
-AIROGWEPKNV.
-
-Fix it by moving the CAP_NET_ADMIN check out of the command handling
-and instead do it later based on the ridcode. That way regardless of
-whether the ridcode is set via AIROGWEPKTMP or AIROGWEPKNV, or passed
-in using AIRORID, we always do the CAP_NET_ADMIN check.
-
-Found by Ilja by code inspection, not tested as I don't have the
-required hardware.
-
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Tested-by: Yonggen Xu <Yonggen.Xu@dell.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/cisco/airo.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 1 +
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index c9ffbdd42e67c..f3f20abbe2696 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -7788,16 +7788,8 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
- 	case AIROGVLIST:    ridcode = RID_APLIST;       break;
- 	case AIROGDRVNAM:   ridcode = RID_DRVNAME;      break;
- 	case AIROGEHTENC:   ridcode = RID_ETHERENCAP;   break;
--	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;
--		/* Only super-user can read WEP keys */
--		if (!capable(CAP_NET_ADMIN))
--			return -EPERM;
--		break;
--	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;
--		/* Only super-user can read WEP keys */
--		if (!capable(CAP_NET_ADMIN))
--			return -EPERM;
--		break;
-+	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;	break;
-+	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;	break;
- 	case AIROGSTAT:     ridcode = RID_STATUS;       break;
- 	case AIROGSTATSD32: ridcode = RID_STATSDELTA;   break;
- 	case AIROGSTATSC32: ridcode = RID_STATS;        break;
-@@ -7811,6 +7803,12 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+index a496390b8632f..07f9067affc65 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+@@ -2043,6 +2043,7 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
+ 			break;
+ 		}
+ 		entry += p_hdr->size;
++		cond_resched();
+ 	}
+ 	p_dev->ahw->reset.seq_index = index;
+ }
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+index afa10a163da1f..f34ae8c75bc5e 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_minidump.c
+@@ -703,6 +703,7 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
+ 		addr += 16;
+ 		reg_read -= 16;
+ 		ret += 16;
++		cond_resched();
+ 	}
+ out:
+ 	mutex_unlock(&adapter->ahw->mem_lock);
+@@ -1383,6 +1384,7 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
+ 		buf_offset += entry->hdr.cap_size;
+ 		entry_offset += entry->hdr.offset;
+ 		buffer = fw_dump->data + buf_offset;
++		cond_resched();
  	}
  
-+	if (ridcode == RID_WEP_TEMP || ridcode == RID_WEP_PERM) {
-+		/* Only super-user can read WEP keys */
-+		if (!capable(CAP_NET_ADMIN))
-+			return -EPERM;
-+	}
-+
- 	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
- 		return -ENOMEM;
- 
+ 	fw_dump->clr = 1;
 -- 
 2.20.1
 
