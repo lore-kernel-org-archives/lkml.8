@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152ADC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5033AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB64522522
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278DE21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DURGIzxz"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="XDZxoHhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgBCNpV (ORCPT
+        id S1728146AbgBCNqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:45:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38687 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgBCNpU (ORCPT
+        Mon, 3 Feb 2020 08:46:21 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41435 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgBCNqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:45:20 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so14709129ljh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:45:19 -0800 (PST)
+        Mon, 3 Feb 2020 08:46:21 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so14688589ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=IUnQxMQHK0UYauIcgeOHrO2ytoGAz4cOuFspZoniEQM=;
-        b=DURGIzxzZtlePaPxLJuosPF5IgjZvLdBpBnJnfYw6LYoKYQi//fW9+VuRZubXpKrEs
-         3LMX+Dpp/1wWzauoESO6FvNHyyFvT4ul/xmaQLRrO4IMpiPr5U4TM20F1rk36BsGETrD
-         OAVS3E71vo6UWrJIn/2DbLCgJt0lXqBdU2N+2Guw47TBqPHCoLufJi+bKVRkmIWqivfM
-         zt/fxcxR0rw0vkfLZVGljC++AW9VE8+TNO4ilAZwM87sCtqkbKX4ppGWe913SsRoISk5
-         efZHmY3oSI37vKDvFb11D4iu7C2qLtXgX0OhF/qKJduP3x4bnKRRtidhdUVeVNILt/cB
-         x37A==
+        bh=tU9tK10SJbC8EDc1nwVApy1mZDrqz45FwFA9axqWA50=;
+        b=XDZxoHhCcK/pGBTHQTPXfmvtfOmM8Qx8aZuUUNp8bBh+ABwsHj6XiY+mvVsbwnG+WK
+         J+h9pC9u5JxzLXhuxudUIFZCRY7iVP8GEtrBuMhhajKY2VbUmsOAJOiCHqHSLIAFMP+h
+         BAR615hNSp5oNHhpaCb492STJsM7SDPqgTMXh/tEeok0wkcP1Ylg+iooZ4gFg8q/Y7Ce
+         HNnXYnWiHsb9v+nFvr/4j0fP3Q9jM4aQgAgHSRau7HUOJrbvHT/VgtzDJn+TmhgIQoP9
+         uWYcKYY23Qm56Gdf0De+1ri647PIXY1Br8V0GjmteuTNK7fWj+kV0lWWF0XQYzAPYtEh
+         nPVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IUnQxMQHK0UYauIcgeOHrO2ytoGAz4cOuFspZoniEQM=;
-        b=OuF5fzac7JSzHnlqLHpdDwxy0z3I6z20bSEAEYTcfweIbYK03Nk9YuRRzSs9XYrVKy
-         Whmb2/oCqTtdTigCsxr7HNuAQuG9LfuOW3e764egpE0+YpmrzQfMiErk5yZehzPKluSt
-         r1QS9vBQmJiO3U48jwjdACDGT3TFFwHQsUX1c0VJR5Eh4frIX4TaHbMqhFSA1PYTAuxr
-         b/B2dH9xK/dtIQxy+z1hRmzZU4r05IoIZQR/PqWbc1bB9p6QdqhFYGQabbmRbRIHzt5e
-         ovRSuYu1Clp/TUUUmq+xOxtb2mG0ngjHM6c3djqR2qZ2jhEgMT+YaBISeUw4csQN1B6H
-         t2pw==
-X-Gm-Message-State: APjAAAV8j+uW87HASaL3kZuopww56PU1q/8qM3H4teA5VqMii3G/uKso
-        X1lkj/9Se9xXmjl+N6xvt7/gnIbDQXM=
-X-Google-Smtp-Source: APXvYqz21QOHxuJSZYBWZNueW6EmQAJJS09hunv0rSU3v6P4mQLVjJclJr9NDXL+6UxPq3PhvyF1oA==
-X-Received: by 2002:a2e:8188:: with SMTP id e8mr14013556ljg.57.1580737518361;
-        Mon, 03 Feb 2020 05:45:18 -0800 (PST)
+        bh=tU9tK10SJbC8EDc1nwVApy1mZDrqz45FwFA9axqWA50=;
+        b=OAxQHhzZJHbmaCM0sPfpe2bqCYgayzPqSW6onuBn/FAOgMAvAulV5M6wc0eQWhwXA+
+         sQVkJjf6EQMq6wwPPK5CuptfPCPHVZwl4suR8ZcWvp19aczMlMWJ2nNkPkGGPzCegeUs
+         RzALEivg4EnX5e8ICN2TKLBMbm6kRVtmKxLvwptNaJ4eM4PKWP2uxUjiGGkGTjk/xtw7
+         iiUBkPpnaS48JxIo/pBkefBCbZyyWtHfR8gv+F/r+8fUTgei5oc6Yhty6LsOfBq/hndB
+         kixmg+jbcMHgRMMqZcWDc63je9N7gQFKAqoeam7WvN3PcgJolU3XVZkXKN5ZweQ8BVCU
+         26WQ==
+X-Gm-Message-State: APjAAAWnrOLbuw1t+fAnK+5E+UQ7T+UaHxV02Nqwv/kafAFpvJ4CTNxw
+        ZiPHHIEG2+8opbrkN1G25WsP0w==
+X-Google-Smtp-Source: APXvYqyy6A/WwKqfelaaFFwhQh2rUZje06Y/Uu8QUR0CaG7TohoxG9uxfSDbuo3RreSYZYQDJJrQ4Q==
+X-Received: by 2002:a2e:8758:: with SMTP id q24mr14214187ljj.157.1580737579039;
+        Mon, 03 Feb 2020 05:46:19 -0800 (PST)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 11sm9941435lju.103.2020.02.03.05.45.17
+        by smtp.gmail.com with ESMTPSA id q16sm8810732lfa.12.2020.02.03.05.46.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 05:45:17 -0800 (PST)
+        Mon, 03 Feb 2020 05:46:18 -0800 (PST)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id EE551100DC8; Mon,  3 Feb 2020 16:45:29 +0300 (+03)
-Date:   Mon, 3 Feb 2020 16:45:29 +0300
+        id D207B100DC8; Mon,  3 Feb 2020 16:46:29 +0300 (+03)
+Date:   Mon, 3 Feb 2020 16:46:29 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     John Hubbard <jhubbard@nvidia.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -77,46 +77,30 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 08/12] mm/gup: page->hpage_pinned_refcount: exact pin
- counts for huge pages
-Message-ID: <20200203134529.onxociznb5mgtjhf@box>
+Subject: Re: [PATCH v3 09/12] mm: dump_page(): better diagnostics for huge
+ pinned pages
+Message-ID: <20200203134629.qxkgsso5kksb3ljj@box>
 References: <20200201034029.4063170-1-jhubbard@nvidia.com>
- <20200201034029.4063170-9-jhubbard@nvidia.com>
+ <20200201034029.4063170-10-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200201034029.4063170-9-jhubbard@nvidia.com>
+In-Reply-To: <20200201034029.4063170-10-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 07:40:25PM -0800, John Hubbard wrote:
-> For huge pages (and in fact, any compound page), the
-> GUP_PIN_COUNTING_BIAS scheme tends to overflow too easily, each tail
-> page increments the head page->_refcount by GUP_PIN_COUNTING_BIAS
-> (1024). That limits the number of huge pages that can be pinned.
+On Fri, Jan 31, 2020 at 07:40:26PM -0800, John Hubbard wrote:
+> As part of pin_user_pages() and related API calls, pages are
+> "dma-pinned". For the case of compound pages of order > 1, the per-page
+> accounting of dma pins is accomplished via the 3rd struct page in the
+> compound page. In order to support debugging of any pin_user_pages()-
+> related problems, enhance dump_page() so as to report the pin count
+> in that case.
 > 
-> This patch removes that limitation, by using an exact form of pin
-> counting for compound pages of order > 1. The "order > 1" is required
-> because this approach uses the 3rd struct page in the compound page, and
-> order 1 compound pages only have two pages, so that won't work there.
-
-Could you update the comment for HPAGE_PMD_ORDER < 2 check in
-hugepage_init() to reflect addtional user for the condition.
+> Documentation/core-api/pin_user_pages.rst is also updated accordingly.
 > 
-> A new struct page field, hpage_pinned_refcount, has been added,
-> replacing a padding field in the union (so no new space is used).
-> 
-> This enhancement also has a useful side effect: huge pages and compound
-> pages (of order > 1) do not suffer from the "potential false positives"
-> problem that is discussed in the page_dma_pinned() comment block. That
-> is because these compound pages have extra space for tracking things, so
-> they get exact pin counts instead of overloading page->_refcount.
-> 
-> Documentation/core-api/pin_user_pages.rst is updated accordingly.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
 > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
