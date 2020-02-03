@@ -2,55 +2,50 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430D1C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6D1C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA712051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F88F2082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747892;
-	bh=QRu/AKVn0AAOHfG/bix1Ht8U43k9W/oQjtS6X83Z7s0=;
+	s=default; t=1580747897;
+	bh=Wdfl/sX1SAd1i23ygMd86X+ljSRIrHoqzxkhiFFuk0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHcLz5fne4QwGfXD7NZ6oOp6zI9mbFslkuGQIXbU21skAFOt479jnEDfKNhRz5i1v
-	 vO/C+dzsgZaGAzMFEB0LLJdvV8O9S4skzKxa+wYlRqqR4HQpnEy8ht1GUWD5pX6oeh
-	 XEK7wF4N+7GyKYNZYw5wyPc/BEcBxmVU76/8NDoY=
+	b=Jwpg+5iqFSCEB9GIMS8Zq8CQrofnuJIUzjx5/kEXcN7WtG9SMZVDet+zRmTn0/2DJ
+	 mxWorS/XtaD/I4y3Zeu9vdRbTVpzeqmesNAdRKU0CIjoCz0Wdyow0nNTbZONK83jUk
+	 +nDL+pin9eoOZSzyUJU6e9DXdo3igXCUnmQxvPno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgBCQiL (ORCPT
+        id S1731469AbgBCQiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:38:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53918 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731433AbgBCQiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:38:08 -0500
+        id S1731433AbgBCQiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:38:12 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 651D12087E;
-        Mon,  3 Feb 2020 16:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 203B220CC7;
+        Mon,  3 Feb 2020 16:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747886;
-        bh=QRu/AKVn0AAOHfG/bix1Ht8U43k9W/oQjtS6X83Z7s0=;
+        s=default; t=1580747891;
+        bh=Wdfl/sX1SAd1i23ygMd86X+ljSRIrHoqzxkhiFFuk0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skffbovmtLLYGOJoXB0uA/ewJYt3NFgABfKwLrtfwEgIXD2JKewWqmO2ZYNnqE1gy
-         I0ylGJOwY850egR/xC0h5Elrt3wam9yjKG7zM7wtoDK62TUeqKudgprBDRWfleMURB
-         1QnCMe1XXfZaegRQfHlf26Fn2tQq3ETiSdIZNAQE=
+        b=MyqklBHrbE+17OPCORsy9IL5mn+iUBzq5ScObxnmxjB5nwUm3T8iF1gKi3M0zurdH
+         7Z1IJPBYzhZZROW+WINUsGGCbc0GZn05Zr5+OaahXoUkMMLU42FTSRzXRXzB1z+dM7
+         ruWugnUM5Ub3NzkLIKZyw938TeGsz/eBBJEGa7E4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 05/23] x86/resctrl: Fix use-after-free due to inaccurate refcount of rdtgroup
-Date:   Mon,  3 Feb 2020 16:20:25 +0000
-Message-Id: <20200203161903.828292226@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.5 07/23] gfs2: Another gfs2_find_jhead fix
+Date:   Mon,  3 Feb 2020 16:20:27 +0000
+Message-Id: <20200203161904.122518168@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161902.288335885@linuxfoundation.org>
 References: <20200203161902.288335885@linuxfoundation.org>
@@ -63,127 +58,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 074fadee59ee7a9d2b216e9854bd4efb5dad679f ]
+commit eed0f953b90e86e765197a1dad06bb48aedc27fe upstream.
 
-There is a race condition in the following scenario which results in an
-use-after-free issue when reading a monitoring file and deleting the
-parent ctrl_mon group concurrently:
+On filesystems with a block size smaller than the page size,
+gfs2_find_jhead can split a page across two bios (for example, when
+blocks are not allocated consecutively).  When that happens, the first
+bio that completes will unlock the page in its bi_end_io handler even
+though the page hasn't been read completely yet.  Fix that by using a
+chained bio for the rest of the page.
 
-Thread 1 calls atomic_inc() to take refcount of rdtgrp and then calls
-kernfs_break_active_protection() to drop the active reference of kernfs
-node in rdtgroup_kn_lock_live().
+While at it, clean up the sector calculation logic in
+gfs2_log_alloc_bio.  In gfs2_find_jhead, simplify the disk block and
+offset calculation logic and fix a variable name.
 
-In Thread 2, kernfs_remove() is a blocking routine. It waits on all sub
-kernfs nodes to drop the active reference when removing all subtree
-kernfs nodes recursively. Thread 2 could block on kernfs_remove() until
-Thread 1 calls kernfs_break_active_protection(). Only after
-kernfs_remove() completes the refcount of rdtgrp could be trusted.
+Fixes: f4686c26ecc3 ("gfs2: read journal in large chunks")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Before Thread 1 calls atomic_inc() and kernfs_break_active_protection(),
-Thread 2 could call kfree() when the refcount of rdtgrp (sentry) is 0
-instead of 1 due to the race.
-
-In Thread 1, in rdtgroup_kn_unlock(), referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
-
-Thread 1 (rdtgroup_mondata_show)  Thread 2 (rdtgroup_rmdir)
---------------------------------  -------------------------
-rdtgroup_kn_lock_live
-  /*
-   * kn active protection until
-   * kernfs_break_active_protection(kn)
-   */
-  rdtgrp = kernfs_to_rdtgroup(kn)
-                                  rdtgroup_kn_lock_live
-                                    atomic_inc(&rdtgrp->waitcount)
-                                    mutex_lock
-                                  rdtgroup_rmdir_ctrl
-                                    free_all_child_rdtgrp
-                                      /*
-                                       * sentry->waitcount should be 1
-                                       * but is 0 now due to the race.
-                                       */
-                                      kfree(sentry)*[1]
-  /*
-   * Only after kernfs_remove()
-   * completes, the refcount of
-   * rdtgrp could be trusted.
-   */
-  atomic_inc(&rdtgrp->waitcount)
-  /* kn->active-- */
-  kernfs_break_active_protection(kn)
-                                    rdtgroup_ctrl_remove
-                                      rdtgrp->flags = RDT_DELETED
-                                      /*
-                                       * Blocking routine, wait for
-                                       * all sub kernfs nodes to drop
-                                       * active reference in
-                                       * kernfs_break_active_protection.
-                                       */
-                                      kernfs_remove(rdtgrp->kn)
-                                  rdtgroup_kn_unlock
-                                    mutex_unlock
-                                    atomic_dec_and_test(
-                                                &rdtgrp->waitcount)
-                                    && (flags & RDT_DELETED)
-                                      kernfs_unbreak_active_protection(kn)
-                                      kfree(rdtgrp)
-  mutex_lock
-mon_event_read
-rdtgroup_kn_unlock
-  mutex_unlock
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    /* kn->active++ */
-    kernfs_unbreak_active_protection(kn)
-    kfree(rdtgrp)
-
-Fix it by moving free_all_child_rdtgrp() to after kernfs_remove() in
-rdtgroup_rmdir_ctrl() to ensure it has the accurate refcount of rdtgrp.
-
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1578500886-21771-3-git-send-email-xiaochen.shen@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/gfs2/lops.c |   68 ++++++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 44 insertions(+), 24 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index c7564294a12a8..954fd048ad9bd 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2960,13 +2960,13 @@ static int rdtgroup_rmdir_ctrl(struct kernfs_node *kn, struct rdtgroup *rdtgrp,
- 	closid_free(rdtgrp->closid);
- 	free_rmid(rdtgrp->mon.rmid);
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -259,7 +259,7 @@ static struct bio *gfs2_log_alloc_bio(st
+ 	struct super_block *sb = sdp->sd_vfs;
+ 	struct bio *bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
  
-+	rdtgroup_ctrl_remove(kn, rdtgrp);
-+
- 	/*
- 	 * Free all the child monitor group rmids.
- 	 */
- 	free_all_child_rdtgrp(rdtgrp);
- 
--	rdtgroup_ctrl_remove(kn, rdtgrp);
--
- 	return 0;
+-	bio->bi_iter.bi_sector = blkno * (sb->s_blocksize >> 9);
++	bio->bi_iter.bi_sector = blkno << (sb->s_blocksize_bits - 9);
+ 	bio_set_dev(bio, sb->s_bdev);
+ 	bio->bi_end_io = end_io;
+ 	bio->bi_private = sdp;
+@@ -472,6 +472,20 @@ static void gfs2_jhead_process_page(stru
+ 	put_page(page); /* Once more for find_or_create_page */
  }
  
--- 
-2.20.1
-
++static struct bio *gfs2_chain_bio(struct bio *prev, unsigned int nr_iovecs)
++{
++	struct bio *new;
++
++	new = bio_alloc(GFP_NOIO, nr_iovecs);
++	bio_copy_dev(new, prev);
++	new->bi_iter.bi_sector = bio_end_sector(prev);
++	new->bi_opf = prev->bi_opf;
++	new->bi_write_hint = prev->bi_write_hint;
++	bio_chain(new, prev);
++	submit_bio(prev);
++	return new;
++}
++
+ /**
+  * gfs2_find_jhead - find the head of a log
+  * @jd: The journal descriptor
+@@ -488,15 +502,15 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
+ 	struct gfs2_sbd *sdp = GFS2_SB(jd->jd_inode);
+ 	struct address_space *mapping = jd->jd_inode->i_mapping;
+ 	unsigned int block = 0, blocks_submitted = 0, blocks_read = 0;
+-	unsigned int bsize = sdp->sd_sb.sb_bsize;
++	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
+ 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
+ 	unsigned int shift = PAGE_SHIFT - bsize_shift;
+-	unsigned int readhead_blocks = BIO_MAX_PAGES << shift;
++	unsigned int readahead_blocks = BIO_MAX_PAGES << shift;
+ 	struct gfs2_journal_extent *je;
+ 	int sz, ret = 0;
+ 	struct bio *bio = NULL;
+ 	struct page *page = NULL;
+-	bool done = false;
++	bool bio_chained = false, done = false;
+ 	errseq_t since;
+ 
+ 	memset(head, 0, sizeof(*head));
+@@ -505,9 +519,9 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
+ 
+ 	since = filemap_sample_wb_err(mapping);
+ 	list_for_each_entry(je, &jd->extent_list, list) {
+-		for (; block < je->lblock + je->blocks; block++) {
+-			u64 dblock;
++		u64 dblock = je->dblock;
+ 
++		for (; block < je->lblock + je->blocks; block++, dblock++) {
+ 			if (!page) {
+ 				page = find_or_create_page(mapping,
+ 						block >> shift, GFP_NOFS);
+@@ -516,35 +530,41 @@ int gfs2_find_jhead(struct gfs2_jdesc *j
+ 					done = true;
+ 					goto out;
+ 				}
++				off = 0;
+ 			}
+ 
+-			if (bio) {
+-				unsigned int off;
+-
+-				off = (block << bsize_shift) & ~PAGE_MASK;
++			if (!bio || (bio_chained && !off)) {
++				/* start new bio */
++			} else {
+ 				sz = bio_add_page(bio, page, bsize, off);
+-				if (sz == bsize) { /* block added */
+-					if (off + bsize == PAGE_SIZE) {
+-						page = NULL;
+-						goto page_added;
+-					}
+-					continue;
++				if (sz == bsize)
++					goto block_added;
++				if (off) {
++					unsigned int blocks =
++						(PAGE_SIZE - off) >> bsize_shift;
++
++					bio = gfs2_chain_bio(bio, blocks);
++					bio_chained = true;
++					goto add_block_to_new_bio;
+ 				}
++			}
++
++			if (bio) {
+ 				blocks_submitted = block + 1;
+ 				submit_bio(bio);
+-				bio = NULL;
+ 			}
+ 
+-			dblock = je->dblock + (block - je->lblock);
+ 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
+ 			bio->bi_opf = REQ_OP_READ;
+-			sz = bio_add_page(bio, page, bsize, 0);
+-			gfs2_assert_warn(sdp, sz == bsize);
+-			if (bsize == PAGE_SIZE)
++			bio_chained = false;
++add_block_to_new_bio:
++			sz = bio_add_page(bio, page, bsize, off);
++			BUG_ON(sz != bsize);
++block_added:
++			off += bsize;
++			if (off == PAGE_SIZE)
+ 				page = NULL;
+-
+-page_added:
+-			if (blocks_submitted < blocks_read + readhead_blocks) {
++			if (blocks_submitted < blocks_read + readahead_blocks) {
+ 				/* Keep at least one bio in flight */
+ 				continue;
+ 			}
 
 
