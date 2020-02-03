@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEDEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21400C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC692086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5CA2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747135;
-	bh=b6IVOamTvGku5jkgEhCb3/Ctk25jZQJJxSPkmWFjWbE=;
+	s=default; t=1580747142;
+	bh=i4Fj1l9bmgpgllRjXQzyyZlFb6ND9niGu1f2Esom5cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOk2vjtSDbsh/eLyh6AoYuy9RiPIiJGal9YZOMg+6I7NANjVPkThKrS1KggbEA7F+
-	 Qkb5lA2eOJTE68v3g2O1Ikf9676y0x/RSk3Zibi8lpKHGWIUlnWcFAApSSG6tzpZdV
-	 eh8Ik7fOslfArKATPg8YZKVVpONHV48WxC37bSX0=
+	b=cXazLqtlTA1NApL7/gZAs5hqZH3q5yZ0kcFUoRuC4zvqbx4qvgGaR8yMa12mru58o
+	 tBCbu1p7ptM8v1B/+E5HwL1J0HuvmAmoy3iwIRjWIHWilePCSpYVReP5hDfb8jPMAS
+	 b6Cz8jKjCPH+BRA9V3i1k3MqS2Vfc6N+8zwGUMcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgBCQZf (ORCPT
+        id S1728629AbgBCQZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgBCQZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:31 -0500
+        id S1728477AbgBCQZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:33 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923952080C;
-        Mon,  3 Feb 2020 16:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9AF020CC7;
+        Mon,  3 Feb 2020 16:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747131;
-        bh=b6IVOamTvGku5jkgEhCb3/Ctk25jZQJJxSPkmWFjWbE=;
+        s=default; t=1580747133;
+        bh=i4Fj1l9bmgpgllRjXQzyyZlFb6ND9niGu1f2Esom5cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dj57FnYcFix05Qlyc+SL8ipakXkeCCEgQ2vagUXwYMvQ7sE0xSNuYYeGxHcKlU9fl
-         Lh+Jzzxcb0xyeZfn+2O67TS1zAG5Jpem435Y7SeYzeRUvp2EfEUv9v5kjrZwvBfMtI
-         GqeVgEV7auXXp7GLoYSMvkHVguRZAvrAEfsTjXTs=
+        b=Nw4mbtdXHgo7oXxjFSPdB4OnsTR/JBm2/vW5b7LmAY9SZlvsebLL81dFdzcjqPvGR
+         gCdiuYtTw9PF7lTH5SDvMpNM47Lwk4QDt1H8qEcfxWx695nk5BpNXqvs36ReSwksPS
+         uURYsxH9/sRME0x8MorX+4CNKKikzRK9SHyxJRUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 24/68] net_sched: ematch: reject invalid TCF_EM_SIMPLE
-Date:   Mon,  3 Feb 2020 16:19:20 +0000
-Message-Id: <20200203161909.061635854@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 25/68] crypto: af_alg - Use bh_lock_sock in sk_destruct
+Date:   Mon,  3 Feb 2020 16:19:21 +0000
+Message-Id: <20200203161909.215978728@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -61,79 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 55cd9f67f1e45de8517cdaab985fb8e56c0bc1d8 ]
+commit 37f96694cf73ba116993a9d2d99ad6a75fa7fdb0 upstream.
 
-It is possible for malicious userspace to set TCF_EM_SIMPLE bit
-even for matches that should not have this bit set.
+As af_alg_release_parent may be called from BH context (most notably
+due to an async request that only completes after socket closure,
+or as reported here because of an RCU-delayed sk_destruct call), we
+must use bh_lock_sock instead of lock_sock.
 
-This can fool two places using tcf_em_is_simple()
-
-1) tcf_em_tree_destroy() -> memory leak of em->data
-   if ops->destroy() is NULL
-
-2) tcf_em_tree_dump() wrongly report/leak 4 low-order bytes
-   of a kernel pointer.
-
-BUG: memory leak
-unreferenced object 0xffff888121850a40 (size 32):
-  comm "syz-executor927", pid 7193, jiffies 4294941655 (age 19.840s)
-  hex dump (first 32 bytes):
-    00 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000f67036ea>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000f67036ea>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000f67036ea>] slab_alloc mm/slab.c:3320 [inline]
-    [<00000000f67036ea>] __do_kmalloc mm/slab.c:3654 [inline]
-    [<00000000f67036ea>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-    [<00000000fab0cc8e>] kmemdup+0x27/0x60 mm/util.c:127
-    [<00000000d9992e0a>] kmemdup include/linux/string.h:453 [inline]
-    [<00000000d9992e0a>] em_nbyte_change+0x5b/0x90 net/sched/em_nbyte.c:32
-    [<000000007e04f711>] tcf_em_validate net/sched/ematch.c:241 [inline]
-    [<000000007e04f711>] tcf_em_tree_validate net/sched/ematch.c:359 [inline]
-    [<000000007e04f711>] tcf_em_tree_validate+0x332/0x46f net/sched/ematch.c:300
-    [<000000007a769204>] basic_set_parms net/sched/cls_basic.c:157 [inline]
-    [<000000007a769204>] basic_change+0x1d7/0x5f0 net/sched/cls_basic.c:219
-    [<00000000e57a5997>] tc_new_tfilter+0x566/0xf70 net/sched/cls_api.c:2104
-    [<0000000074b68559>] rtnetlink_rcv_msg+0x3b2/0x4b0 net/core/rtnetlink.c:5415
-    [<00000000b7fe53fb>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000e83a40d0>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-    [<00000000d62ba933>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000d62ba933>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<0000000088070f72>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<00000000f70b15ea>] sock_sendmsg_nosec net/socket.c:639 [inline]
-    [<00000000f70b15ea>] sock_sendmsg+0x54/0x70 net/socket.c:659
-    [<00000000ef95a9be>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-    [<00000000b650f1ab>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-    [<0000000055bfa74a>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-    [<000000002abac183>] __do_sys_sendmsg net/socket.c:2426 [inline]
-    [<000000002abac183>] __se_sys_sendmsg net/socket.c:2424 [inline]
-    [<000000002abac183>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+03c4738ed29d5d366ddf@syzkaller.appspotmail.com
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+c2f1558d49e25cc36e5e@syzkaller.appspotmail.com
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c840ac6af3f8 ("crypto: af_alg - Disallow bind/setkey/...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/ematch.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/net/sched/ematch.c
-+++ b/net/sched/ematch.c
-@@ -242,6 +242,9 @@ static int tcf_em_validate(struct tcf_pr
- 			goto errout;
+---
+ crypto/af_alg.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -136,11 +136,13 @@ void af_alg_release_parent(struct sock *
+ 	sk = ask->parent;
+ 	ask = alg_sk(sk);
  
- 		if (em->ops->change) {
-+			err = -EINVAL;
-+			if (em_hdr->flags & TCF_EM_SIMPLE)
-+				goto errout;
- 			err = em->ops->change(net, data, data_len, em);
- 			if (err < 0)
- 				goto errout;
+-	lock_sock(sk);
++	local_bh_disable();
++	bh_lock_sock(sk);
+ 	ask->nokey_refcnt -= nokey;
+ 	if (!last)
+ 		last = !--ask->refcnt;
+-	release_sock(sk);
++	bh_unlock_sock(sk);
++	local_bh_enable();
+ 
+ 	if (last)
+ 		sock_put(sk);
 
 
