@@ -2,176 +2,130 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_DBL_ABUSE_MALW,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50CEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB9DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B0721582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kgo2mZAR"
+	by mail.kernel.org (Postfix) with ESMTP id 34AFB2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580747260;
+	bh=p8BeVFlI4B5jR4xhcn1nzxAZeFco8rxCzUuCaHxiy8E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XpkLjYAM/J2iPS19B1Crm2pUhiHTZoKLaRNgBRl8pRnx01jak+++z72dIplowQYiS
+	 5RMsVY6eHk7J32ioC9eKYepsNIwglV2BMkbW4qy/Xnfdgm0hqOBGzAYRV6kkwHFZQC
+	 1bVkLxxXVBmq9TdTu4IV9B/P+qpIiL6Cnr1NaWGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgBCQ1h (ORCPT
+        id S1729447AbgBCQ1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57974 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbgBCQ1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729433AbgBCQ1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Feb 2020 11:27:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=GlhiWZUF/YX3gEFzvjYXVXI3s+IP0haz6QdP1XP2Q4c=; b=kgo2mZARm8v3jQFbI3uCEpxH6U
-        NrmKQla4px8BTh70BOn737Z9BQ9vJ+P6KkOfQOO+oDa3aX79Mo8HTpZdx0ixdfGULQnTa+x7CIZaW
-        4FvO8K4pY8lG89evFWlYd5jmRkfuuTibRnswe4k1mfSvHdlsgFWKUalivplkEc9Se3/+Y8HqHY8LW
-        s2VxB3aNiEISZsdJrK+ijLNY3K0vXqtib3rE7usWPMxSnamH2ZaxOmiDv/Uf91pjSS+siRzJgAXdp
-        2cC05VxR7Ub15GuCb4+zJBk4YyYwZ8cDHUFewBU0hsmd+MMK0xgNfeLHZu4DCGNYQoMDkMZ9ToE0C
-        yXoNhI1Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyeZQ-00016X-5u; Mon, 03 Feb 2020 16:27:32 +0000
-Subject: Re: linux-next: Tree for Feb 3 (arch/x86/{various}; all PCI-related)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20200203142334.4f699874@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b569f6f3-a757-5bbb-3e1a-9d78b12709b7@infradead.org>
-Date:   Mon, 3 Feb 2020 08:27:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317052086A;
+        Mon,  3 Feb 2020 16:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580747253;
+        bh=p8BeVFlI4B5jR4xhcn1nzxAZeFco8rxCzUuCaHxiy8E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LlOkBys0By3xopfdq437g2h+Ddegjaf5ueLjgetxffIuQHVzZDycojNv5SWimYFdR
+         2waxTM0rGZt0BD6aJe+O0LX5kBgDHJ1Fu/xLPvCuENigt/uJH90RwPOaasaFM/QXbb
+         oa/bW9y7NUL0MNZNU17CnJT4UPUELTv/sPy2+ybM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 55/68] airo: Fix possible info leak in AIROOLDIOCTL/SIOCDEVPRIVATE
+Date:   Mon,  3 Feb 2020 16:19:51 +0000
+Message-Id: <20200203161914.040441122@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
+References: <20200203161904.705434837@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200203142334.4f699874@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/2/20 7:23 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Please do not add any v5.7 material to your linux-next included
-> branches until after v5.6-rc1 has been released.
-> 
-> News: I have added an htmldocs build to the end of my day.  It seems to
-> be building at the moment, but has many warnings.
-> 
-> Changes since 20200131:
-> 
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-(trying this again, with more Cc:s since last week's report [on Jan. 28]
-got no response)
+[ Upstream commit d6bce2137f5d6bb1093e96d2f801479099b28094 ]
 
+The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
+implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
 
-on x86_64:
+The ioctl handler copies an aironet_ioctl struct from userspace, which
+includes a command and a length. Some of the commands are handled in
+readrids(), which kmalloc()'s a buffer of RIDSIZE (2048) bytes.
 
-# CONFIG_PCI is not set
+That buffer is then passed to PC4500_readrid(), which has two cases.
+The else case does some setup and then reads up to RIDSIZE bytes from
+the hardware into the kmalloc()'ed buffer.
 
-Several source files will not build when CONFIG_PCI is not set/enabled.
+Here len == RIDSIZE, pBuf is the kmalloc()'ed buffer:
 
-Examples:
+	// read the rid length field
+	bap_read(ai, pBuf, 2, BAP1);
+	// length for remaining part of rid
+	len = min(len, (int)le16_to_cpu(*(__le16*)pBuf)) - 2;
+	...
+	// read remainder of the rid
+	rc = bap_read(ai, ((__le16*)pBuf)+1, len, BAP1);
 
-  CC      arch/x86/events/amd/ibs.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/events/amd/ibs.c:12:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_dev
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+PC4500_readrid() then returns to readrids() which does:
 
-  CC      arch/x86/kernel/cpu/cacheinfo.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/cpu/cacheinfo.c:17:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+	len = comp->len;
+	if (copy_to_user(comp->data, iobuf, min(len, (int)RIDSIZE))) {
 
-  CC      arch/x86/kernel/apic/io_apic.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/apic/io_apic.c:40:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+Where comp->len is the user controlled length field.
 
-  CC      arch/x86/kernel/setup.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/setup.c:16:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+So if the "rid length field" returned by the hardware is < 2048, and
+the user requests 2048 bytes in comp->len, we will leak the previous
+contents of the kmalloc()'ed buffer to userspace.
 
-  CC      arch/x86/kernel/x86_init.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/kernel/x86_init.c:9:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_bus'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_bus
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+Fix it by kzalloc()'ing the buffer.
 
-  CC      arch/x86/kernel/irqinit.o
-In file included from ../include/linux/pci.h:1778:0,
-                 from ../arch/x86/include/asm/prom.h:15,
-                 from ../arch/x86/kernel/irqinit.c:29:
-../arch/x86/include/asm/pci.h: In function '__pcibus_to_node':
-../arch/x86/include/asm/pci.h:126:9: error: implicit declaration of function 'to_pci_sysdata'; did you mean 'to_pci_dev'? [-Werror=implicit-function-declaration]
-  return to_pci_sysdata(bus)->node;
-         ^~~~~~~~~~~~~~
-         to_pci_dev
-../arch/x86/include/asm/pci.h:126:28: error: invalid type argument of '->' (have 'int')
-  return to_pci_sysdata(bus)->node;
-                            ^~
+Found by Ilja by code inspection, not tested as I don't have the
+required hardware.
 
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/cisco/airo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That's just a sample:
-
-$ buildsummary.pl build-r9671.out 
-file: arch/x86/boot/header.S: errors: 1, warnings: 0
-file: arch/x86/include/asm/pci.h: errors: 234, warnings: 0
-build-r9671.out: totals: error/warning files: 2, errors: 235, warnings: 0, Section mismatches: 0
-
-
-
-
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index 04939e576ee02..7956b5b529c99 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -7819,7 +7819,7 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
+ 		return -EINVAL;
+ 	}
+ 
+-	if ((iobuf = kmalloc(RIDSIZE, GFP_KERNEL)) == NULL)
++	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
+ 		return -ENOMEM;
+ 
+ 	PC4500_readrid(ai,ridcode,iobuf,RIDSIZE, 1);
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.20.1
+
+
+
