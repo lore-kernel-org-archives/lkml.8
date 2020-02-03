@@ -2,138 +2,126 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A8DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F6DC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE5D20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3530D20720
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qCNcTepK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lil64nru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgBCVex (ORCPT
+        id S1727140AbgBCVfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:34:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58158 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCVex (ORCPT
+        Mon, 3 Feb 2020 16:35:00 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15529 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgBCVe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:34:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RopiKUB7iog3vHCG/dVyQVRi17HY++IdZnq14RjmMqo=; b=qCNcTepKO/3xSSn/r68TuzJnKt
-        b2OiqCyvcFUUCCCK6Cv9cMtmbBCWvbSY9HbCzoQ+nTTK6Pxo9KdDl8xjsD8mavlTxr7ffgM4bY5jI
-        AODGNG2a/KJ1GGnInvzU2bGXJQvPtn8Zr75YRh7YBiM2wN1RwLhSBO+Dpq/R4gXUvmr2f4yVsBA2O
-        +HQNwoIKHINdjxW34l2NoVYFStBBu88xEuAh/WLw1BQ9ds7XH6Lcjx9XTY2FLc8xLwLXQAOjFquka
-        NX3t2BWf08QbBO6vk11n1FqvqNxg6EvK59GsxvC8Ev6WMc16PJw/v/43KKDud2wKo2JGkG+ghrgsv
-        0jE6UybQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iyjMg-0004O9-7p; Mon, 03 Feb 2020 21:34:42 +0000
-Date:   Mon, 3 Feb 2020 13:34:42 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     linux-nvdimm@lists.01.org, Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Liran Alon <liran.alon@oracle.com>,
-        Nikita Leshenko <nikita.leshchenko@oracle.com>,
-        Barret Rhoden <brho@google.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH RFC 01/10] mm: Add pmd support for _PAGE_SPECIAL
-Message-ID: <20200203213442.GK8731@bombadil.infradead.org>
-References: <20200110190313.17144-1-joao.m.martins@oracle.com>
- <20200110190313.17144-2-joao.m.martins@oracle.com>
+        Mon, 3 Feb 2020 16:34:59 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3891f40000>; Mon, 03 Feb 2020 13:34:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Feb 2020 13:34:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Feb 2020 13:34:59 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Feb
+ 2020 21:34:58 +0000
+Subject: Re: [PATCH v3 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-11-jhubbard@nvidia.com>
+ <20200203135320.edujsfjwt5nvtiit@box>
+ <0425e1e6-f172-91df-2251-7583fcfed3e6@nvidia.com>
+ <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <0a81878a-1f7f-daec-0833-d5b91d197ddf@nvidia.com>
+Date:   Mon, 3 Feb 2020 13:34:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110190313.17144-2-joao.m.martins@oracle.com>
+In-Reply-To: <20200203213022.rltjlohvaswk32ln@box.shutemov.name>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580765684; bh=kGDtNYXBy0zFUD4iLnz+tUqVaKJvqr8r2bUfyaZ94Dw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lil64nrusY2x09d9REkLc9RTXIIE+yyHnKjfdLHxccFpRZiiYsQeNWUqRp3Ub1/4s
+         bd/LkFmhyJnXuYsE2GWCKaZUdA5vRG1GCoy6hIpxIFShc9Jucge2PdCO5n8odGUBV5
+         OadbuemDOVCzRFeeb9c0o7Q9QNsn3O2sD4WBb0svV4CWVsKr+5k4EUzpLxlVkV+qWo
+         fkSvdmSuXL2e2du7xqqB6MRTNYiEweYr1AaPqGJUl8Yl8f2Ekxsg429JjSTAVcmJGp
+         GLRup3JAq6cMc2eIcAufmW8QQOWX7XNyyVztw3larEWoHW51cML0Qh1qdWCk0ZUG+n
+         iMTXQTTIQDNYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 07:03:04PM +0000, Joao Martins wrote:
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -293,6 +293,15 @@ static inline int pgd_devmap(pgd_t pgd)
->  {
->  	return 0;
->  }
-> +#endif
-> +
-> +#ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
-> +static inline int pmd_special(pmd_t pmd)
-> +{
-> +	return !!(pmd_flags(pmd) & _PAGE_SPECIAL);
-> +}
-> +#endif
+On 2/3/20 1:30 PM, Kirill A. Shutemov wrote:
+> On Mon, Feb 03, 2020 at 01:04:04PM -0800, John Hubbard wrote:
+>> On 2/3/20 5:53 AM, Kirill A. Shutemov wrote:
+>>> On Fri, Jan 31, 2020 at 07:40:27PM -0800, John Hubbard wrote:
+>>>> diff --git a/mm/gup.c b/mm/gup.c
+>>>> index c10d0d051c5b..9fe61d15fc0e 100644
+>>>> --- a/mm/gup.c
+>>>> +++ b/mm/gup.c
+>>>> @@ -29,6 +29,19 @@ struct follow_page_context {
+>>>>  	unsigned int page_mask;
+>>>>  };
+>>>>  
+>>>> +#ifdef CONFIG_DEBUG_VM
+>>>
+>>> Why under CONFIG_DEBUG_VM? There's nothing about this in the cover letter.
+>>>
+>>
+>> Early on, gup_benchmark showed a really significant slowdown from using these 
+>> counters. And I don't doubt that it's still the case.
+>>
+>> I'll re-measure and add a short summary and a few numbers to the patch commit
+>> description, and to the v4 cover letter.
+> 
+> Looks like you'll show zeros for these counters if debug is off. It can be
+> confusing to the user. I think these counters should go away if you don't
+> count them.
+> 
 
-The ifdef/endif don't make much sense here; x86 does have PTE_SPECIAL,
-and this is an x86 header file, so that can be assumed.
+OK, that's a good point. (And in fact, the counters==0 situation already led me
+astray briefly while debugging with Leon R, even. heh.) I'll remove them entirely for
+the !CONFIG_DEBUG_VM case.
 
-> +++ b/mm/gup.c
-> @@ -2079,6 +2079,9 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
->  	}
->  
-> +	if (pmd_special(orig))
-> +		return 0;
-
-Here, you're calling it unconditionally.  I think you need a pmd_special()
-conditionally defined in include/asm-generic/pgtable.h
-
-+#ifndef CONFIG_ARCH_HAS_PTE_SPECIAL
-+static inline bool pmd_special(pmd_t pmd)
-+{
-+	return false;
-+}
-+#endif
-
-(oh, and plese use bool instead of int; I know that's different from
-pte_special(), but pte_special() predates bool and nobody's done the work
-to convert it yet)
-
-> +++ b/mm/huge_memory.c
-> @@ -791,6 +791,8 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
->  	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
->  	if (pfn_t_devmap(pfn))
->  		entry = pmd_mkdevmap(entry);
-> +	else if (pfn_t_special(pfn))
-> +		entry = pmd_mkspecial(entry);
-
-Again, we'll need a generic one.
-
-> @@ -823,8 +825,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
->  	 * but we need to be consistent with PTEs and architectures that
->  	 * can't support a 'special' bit.
->  	 */
-> -	BUG_ON(!(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)) &&
-> -			!pfn_t_devmap(pfn));
-> +	BUG_ON(!(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)));
-
-Should that rather be ...
-
-+	BUG_ON(!(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)) &&
-+			!pfn_t_devmap(pfn) && !pfn_t_special(pfn));
-
-I also think this comment needs adjusting:
-
-        /*
-         * There is no pmd_special() but there may be special pmds, e.g.
-         * in a direct-access (dax) mapping, so let's just replicate the
-         * !CONFIG_ARCH_HAS_PTE_SPECIAL case from vm_normal_page() here.
-         */
-
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
