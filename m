@@ -2,52 +2,53 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B44C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92A0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6CB2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7823A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747514;
-	bh=WIQV5IOn5uIZP2r5HHJ/+hpMVwDPSSHQ6G8Z0Ir6Op8=;
+	s=default; t=1580747516;
+	bh=T/jzZ2ogRvUw89rxkC5bNFbY9f/guSXh75QqfLjQDUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CsZ2w/Law/pUwLaIKxrYx/pxM9HiZtzCsJoHRvP3hj96Md13ZcWOfS2SGJOREw8N
-	 8bFrlvT/erKRrMcZchNnohyiXp+MiIAQUd8AjrAtCaKk9gVLBsDJlVd/KHWBR4Axil
-	 sdl/1rXQmIRr7Y/yiKOVz7JQssDhRrf2RKZiC6m0=
+	b=D1fsYLxCFl2TAwDKYScQZy+wbjyRAyErPPHmhfJXKIp8L/Vv4xPIwy/4ujIv1g3ZT
+	 5aKamblZKIRvDjuQ0JuvqAQWO0v1FRnNuz1ywvqEue3qFMTtKiSzfkEk3EiiwFmmHb
+	 mkFv4xTg1Lqq4Oy4t+aevuASbPtreS5E8z8OKFtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgBCQbw (ORCPT
+        id S1730325AbgBCQbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:31:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45284 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:31:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgBCQbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:31:49 -0500
+        id S1730305AbgBCQbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:31:52 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9173A2082E;
-        Mon,  3 Feb 2020 16:31:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 018A62051A;
+        Mon,  3 Feb 2020 16:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747509;
-        bh=WIQV5IOn5uIZP2r5HHJ/+hpMVwDPSSHQ6G8Z0Ir6Op8=;
+        s=default; t=1580747511;
+        bh=T/jzZ2ogRvUw89rxkC5bNFbY9f/guSXh75QqfLjQDUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KglSJnAz7fwR7T/SkcZNq9KA9xAhIfx1xhTgX7CHCWWjAEx84NW/6HUXpTGAS73jw
-         oK4sE3hi1U4WESs3mcMJW90sPe6/2FDlp6TJz6KFv4/Bx+6SNOx1gb5Y11kj3PJLXC
-         AS/uTqn4oZcUFq8ZcR50d8e5BFyDm30WGtS5svfc=
+        b=rXcEewh6i+ES/qCY1sEyMxFcTFOjzABp0/iIMPqNPGPQJAFS2IFUqtnccqc34jeHi
+         Q2LzvWh1VgbZww8ngJQAfyKdLYLex6VkKQJOsk1hdzotRzMwPtZ60WZX4aO0E+eozb
+         t3U47Xb75TjmLlc/00fyWlBYzfkYXnNoNqu+Oq3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.19 24/70] media: si470x-i2c: Move free() past last use of radio
-Date:   Mon,  3 Feb 2020 16:19:36 +0000
-Message-Id: <20200203161916.096592935@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 25/70] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+Date:   Mon,  3 Feb 2020 16:19:37 +0000
+Message-Id: <20200203161916.211831274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -60,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-A pointer to 'struct si470x_device' is currently used after free:
+[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
 
-  drivers/media/radio/si470x/radio-si470x-i2c.c:462:25-30: ERROR: reference
-    preceded by free on line 460
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-Shift the call to free() down past its final use.
-
-NB: Not sending to Mainline, since the problem does not exist there, it was
-caused by the backport of 2df200ab234a ("media: si470x-i2c: add missed
-operations in remove") to the stable trees.
-
-Cc: <stable@vger.kernel.org> # v3.18+
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/si470x/radio-si470x-i2c.c |    2 +-
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/radio/si470x/radio-si470x-i2c.c
-+++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
-@@ -483,10 +483,10 @@ static int si470x_i2c_remove(struct i2c_
- 
- 	free_irq(client->irq, radio);
- 	video_unregister_device(&radio->videodev);
--	kfree(radio);
- 
- 	v4l2_ctrl_handler_free(&radio->hdl);
- 	v4l2_device_unregister(&radio->v4l2_dev);
-+	kfree(radio);
- 	return 0;
- }
- 
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index e5f0645e53a7b..7e74ba83f8095 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -90,7 +90,7 @@
+ 		initial-mode = <1>; /* initialize in HUB mode */
+ 		disabled-ports = <1>;
+ 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+-		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
+ 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
+ 		refclk-frequency = <19200000>;
+ 	};
+-- 
+2.20.1
+
 
 
