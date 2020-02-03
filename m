@@ -2,119 +2,100 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CBFC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C648C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304572192A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D1C20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580745485;
-	bh=m7Kl5FoZm3lmRL2dTBCMIyAgTK4wo14t6B6fU5twwNM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D0I0LXVV2KMHUq0U+tRXE01xgqSG7YvFjxCZMWANBZE2qQbc1+LAQREs+QQfJ9m/n
-	 HCmIJUpNiVWuXDdNikBdgh91nRhX9wJ/Yr5g0s6wunui+YI4E0l02si6A8+Bt4URUm
-	 k9GfrRBJGHk5RrLMT42Ylwwgg2BgwSZOQlYz+jzU=
+	s=default; t=1580745521;
+	bh=RHjlVOlmohcRY28alvHfcJe32q4TVF5P2eQ6qHs54Cs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fjrBULLWzEVxsPowklLgfaY4sTgAC+ZWByJVdx/95yERH1Mb24+0QUVd0x5yVt6gl
+	 FGF2NH6PYaPCWdMgS5kSJPjw7apOo/sPFApCDr78fxi8Rp8oI/BqJw36dGEXdGBCi2
+	 TBxM76sTbHIvSgw+QQHZnCqKuYITRl+FUv4lcEgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgBCP6E (ORCPT
+        id S1728321AbgBCP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:58:04 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45814 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbgBCP6E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:58:04 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v19so15176059oic.12;
-        Mon, 03 Feb 2020 07:58:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QNy1sNVUArXTL8VJUA8IVgEv6FUx+7xlRaj38yN9+Ik=;
-        b=c4YUUZR2ALNr8ZOgLymmhULkleAD2QDlQ88ZvstQx3J00QZr034vr5gQ/1tIWtZhG5
-         U2EJ0T0wyXRgBoHm8I94F/AomoKRj1hXsTptOj2KmCGU9toAt22570T8KxfE7ngnGOPh
-         DoRMKBPStsdS1MD9+Y/2gQI32/VKhyoYVR8kOsyQ2Y4F4ny2TF1gOM46oSMNQNE5dBl6
-         MWj6NQpMfWUwuSIp3WS/VDDwWZH9d2CZ5RwrpLg4joLycLTYqnPWrORin6IO3ygBcqra
-         H4EzttECPXMAIXJimwRuC/eBpG7EU6JRfk2/yXaIWeAszCMajWanwTtSqlE89kSU80WT
-         S89w==
-X-Gm-Message-State: APjAAAWKnPtN/n8KVgoIZ0KtZ3z84jpOWkyA5dSwsuv/jZmFDEHm+hu/
-        fQHMxvjFf+Sc+7o8GefMKk1TIDuq0zsC6PbLh+w=
-X-Google-Smtp-Source: APXvYqyQP8HF/CGvf81WGV+tfzuoYmp1mCJV4HWnW40HlY1nO7ttJlcUOMUBmkSYp2uY0oUipXcv8RgVWcI7NCUZHT8=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr15585763oig.103.1580745483499;
- Mon, 03 Feb 2020 07:58:03 -0800 (PST)
+        Mon, 3 Feb 2020 10:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727507AbgBCP6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 10:58:40 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949B12087E;
+        Mon,  3 Feb 2020 15:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580745519;
+        bh=RHjlVOlmohcRY28alvHfcJe32q4TVF5P2eQ6qHs54Cs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=VpZjPV9qofw2iE96np4AHC0ilA/Wqh8JQBr9+VsP2IdkjoK8RNbJolbw3QSjOWgbZ
+         i7k6ZbP35rGfxn5/D5Tc9ZM4nWfygmiyN90lMfLlnFn/iFsXlP0itUr1oCbH0SwAS9
+         VXr4AyCsGoIVTshPhvZCktG6zkWEzFXoGh17H1hs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6C7793522718; Mon,  3 Feb 2020 07:58:39 -0800 (PST)
+Date:   Mon, 3 Feb 2020 07:58:39 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Eric Dumazet' <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: Re: Confused about hlist_unhashed_lockless()
+Message-ID: <20200203155839.GK2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200131164308.GA5175@willie-the-truck>
+ <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com>
+ <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20200203154517.2347-1-tiny.windzz@gmail.com>
-In-Reply-To: <20200203154517.2347-1-tiny.windzz@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 3 Feb 2020 16:57:52 +0100
-Message-ID: <CAJZ5v0hRnCXqDhee4UENYzqka3--2Vhnu3TWikrWJtGcq6aimA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: make cpufreq_global_kobject static
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 4:45 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> The cpufreq_global_kobject is only used internally by cpufreq.c
-> after this:
->
-> commit 2361be236662 ("cpufreq: Don't create empty
-> /sys/devices/system/cpu/cpufreq directory")
->
-> Make it static.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/cpufreq/cpufreq.c | 4 +---
->  include/linux/cpufreq.h   | 3 ---
->  2 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 4adac3a8c265..a0831d3d5ed1 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -105,6 +105,7 @@ bool have_governor_per_policy(void)
->  }
->  EXPORT_SYMBOL_GPL(have_governor_per_policy);
->
-> +static struct kobject *cpufreq_global_kobject;
->  struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
->  {
->         if (have_governor_per_policy())
-> @@ -2745,9 +2746,6 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
->
-> -struct kobject *cpufreq_global_kobject;
-> -EXPORT_SYMBOL(cpufreq_global_kobject);
-> -
->  static int __init cpufreq_core_init(void)
->  {
->         if (cpufreq_disabled())
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index 018dce868de6..0fb561d1b524 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -201,9 +201,6 @@ static inline bool policy_is_shared(struct cpufreq_policy *policy)
->         return cpumask_weight(policy->cpus) > 1;
->  }
->
-> -/* /sys/devices/system/cpu/cpufreq: entry point for global variables */
-> -extern struct kobject *cpufreq_global_kobject;
-> -
->  #ifdef CONFIG_CPU_FREQ
->  unsigned int cpufreq_get(unsigned int cpu);
->  unsigned int cpufreq_quick_get(unsigned int cpu);
-> --
+On Mon, Feb 03, 2020 at 03:45:54PM +0000, David Laight wrote:
+> From: Eric Dumazet
+> > Sent: 31 January 2020 18:53
+> > 
+> > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
+> > >
+> > 
+> > > This is nice, now with have data_race()
+> > >
+> > > Remember these patches were sent 2 months ago, at a time we were
+> > > trying to sort out things.
+> > >
+> > > data_race() was merged a few days ago.
+> > 
+> > Well, actually data_race() is not there yet anyway.
+> 
+> Shouldn't it be NO_DATA_RACE() ??
 
-Applied as 5.6 material with minor modification, thanks!
+No, because you use data_race() when there really are data races, but you
+want KCSAN to ignore them.  For example, diagnostic code that doesn't
+participate in the actual concurrency design and that doesn't run all
+that often might use data_race().  For another example, if a developer
+knew that data races existed, but that the compiler could not reasonably
+do anything untoward with those data races, that developer might well
+choose to use data_race() instead of READ_ONCE().  Especially if the
+access in question was on a fastpath where helpful compiler optimizations
+would be prohibited by use of READ_ONCE().
+
+							Thanx, Paul
