@@ -2,201 +2,276 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F743C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C9C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E862084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WGKBXawb"
+	by mail.kernel.org (Postfix) with ESMTP id 4763920721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgBCMhB (ORCPT
+        id S1727873AbgBCMhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:37:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53076 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgBCMhB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:37:01 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013CSMFJ096252;
-        Mon, 3 Feb 2020 12:36:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=IJGUSyWiTaDYU5n8SmGWHykGFqXTyFbeX+/CFLNeh/s=;
- b=WGKBXawbXQfi/qnDTR0v9uR3p39edwt4+FuFM6cy4ibIWN0/YnU5bt84tC68Ah75uLPK
- op1nohif4RCeyrGIrxb3c3U6c6ghwN7C7TfQsmkn3/m4m6rjHusEoRdu2twLedOs4mvS
- IyN7N72StYNN2eFrJDEB/jQ6nveIazVBn/N5AN+01201pDgeQFFr1zC5hcC9q6Z4C1gm
- eSF2NmSRSoQJ4JlBUNvl9mVP7ZAlg246zfOBD6kP1yVkHEoWjYhnKGrGR8/Pmgk5BiB/
- R7xH4swz0LvPW/FaakFczCZEIvHxlOLB7e4hcjWPbeGsLm3DctSrfW8P3CWwUvpAcUKa 6A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xw0rtyh2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Feb 2020 12:36:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013CSMZZ081244;
-        Mon, 3 Feb 2020 12:36:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xwkg8pbuf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Feb 2020 12:36:48 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 013CajHQ004519;
-        Mon, 3 Feb 2020 12:36:45 GMT
-Received: from [192.168.1.14] (/114.88.246.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Feb 2020 04:36:45 -0800
-Subject: Re: [PATCH V4] brd: check and limit max_part par
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        wubo40@huawei.comwubo, Louhongxiang <louhongxiang@huawei.com>
-References: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
- <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <606d4b34-7f2f-2207-a725-2999b75cbbb7@oracle.com>
-Date:   Mon, 3 Feb 2020 20:36:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 3 Feb 2020 07:37:22 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2350 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727368AbgBCMhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:37:22 -0500
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 3C5B5B98C4AD21534E93;
+        Mon,  3 Feb 2020 12:37:15 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 3 Feb 2020 12:37:14 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
+ 12:37:14 +0000
+Date:   Mon, 3 Feb 2020 12:37:12 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+CC:     <alastair@d-silva.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Keith Busch" <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rob Herring" <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        "Hari Bathini" <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 06/27] ocxl: Tally up the LPC memory on a link &
+ allow it to be mapped
+Message-ID: <20200203123712.0000461a@Huawei.com>
+In-Reply-To: <20191203034655.51561-7-alastair@au1.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+        <20191203034655.51561-7-alastair@au1.ibm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <fe925c14-fe70-b237-b793-e6b865687c11@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002030095
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002030095
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/3/20 9:53 AM, Zhiqiang Liu wrote:
-> Friendly ping...
-> 
-> On 2020/1/21 12:04, Zhiqiang Liu wrote:
->>
->> In brd_init func, rd_nr num of brd_device are firstly allocated
->> and add in brd_devices, then brd_devices are traversed to add each
->> brd_device by calling add_disk func. When allocating brd_device,
->> the disk->first_minor is set to i * max_part, if rd_nr * max_part
->> is larger than MINORMASK, two different brd_device may have the same
->> devt, then only one of them can be successfully added.
->> when rmmod brd.ko, it will cause oops when calling brd_exit.
->>
->> Follow those steps:
->>   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
->>   # rmmod brd
->> then, the oops will appear.
->>
->> Oops log:
->> [  726.613722] Call trace:
->> [  726.614175]  kernfs_find_ns+0x24/0x130
->> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
->> [  726.615749]  sysfs_remove_group+0x38/0xb0
->> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
->> [  726.617320]  blk_unregister_queue+0x98/0x100
->> [  726.618105]  del_gendisk+0x144/0x2b8
->> [  726.618759]  brd_exit+0x68/0x560 [brd]
->> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
->> [  726.620384]  el0_svc_common+0x78/0x130
->> [  726.621057]  el0_svc_handler+0x38/0x78
->> [  726.621738]  el0_svc+0x8/0xc
->> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
->>
->> Here, we add brd_check_and_reset_par func to check and limit max_part par.
->>
->> --
->> V3->V4:(suggested by Ming Lei)
->>  - remove useless change
->>  - add one limit of max_part
->>
->> V2->V3: (suggested by Ming Lei)
->>  - clear .minors when running out of consecutive minor space in brd_alloc
->>  - remove limit of rd_nr
->>
->> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
->>
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->> ---
->>  drivers/block/brd.c | 27 +++++++++++++++++++++++----
->>  1 file changed, 23 insertions(+), 4 deletions(-)
->>
+On Tue, 3 Dec 2019 14:46:34 +1100
+Alastair D'Silva <alastair@au1.ibm.com> wrote:
 
-Looks good to me.
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-
->> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
->> index df8103dd40ac..4684f95e3369 100644
->> --- a/drivers/block/brd.c
->> +++ b/drivers/block/brd.c
->> @@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
->>  	 *  is harmless)
->>  	 */
->>  	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
->> -	disk = brd->brd_disk = alloc_disk(max_part);
->> +	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
->> +			0 : max_part);
->>  	if (!disk)
->>  		goto out_free_queue;
->>  	disk->major		= RAMDISK_MAJOR;
->> -	disk->first_minor	= i * max_part;
->> +	disk->first_minor	= i * disk->minors;
->>  	disk->fops		= &brd_fops;
->>  	disk->private_data	= brd;
->>  	disk->queue		= brd->brd_queue;
->> @@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
->>  	return kobj;
->>  }
->>
->> +static inline void brd_check_and_reset_par(void)
->> +{
->> +	if (unlikely(!max_part))
->> +		max_part = 1;
->> +
->> +	if (max_part > DISK_MAX_PARTS) {
->> +		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
->> +			DISK_MAX_PARTS, DISK_MAX_PARTS);
->> +		max_part = DISK_MAX_PARTS;
->> +	}
->> +
->> +	/*
->> +	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
->> +	 * otherwise, it is possiable to get same dev_t when adding partitions.
->> +	 */
->> +	if ((1U << MINORBITS) % max_part != 0)
->> +		max_part = 1UL << fls(max_part);
->> +}
->> +
->>  static int __init brd_init(void)
->>  {
->>  	struct brd_device *brd, *next;
->> @@ -491,8 +511,7 @@ static int __init brd_init(void)
->>  	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
->>  		return -EIO;
->>
->> -	if (unlikely(!max_part))
->> -		max_part = 1;
->> +	brd_check_and_reset_par();
->>
->>  	for (i = 0; i < rd_nr; i++) {
->>  		brd = brd_alloc(i);
->>
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
+> Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Hi Alastair,
+
+A few trivial comments inline.
+
+Jonathan
+
+> ---
+>  drivers/misc/ocxl/core.c          | 10 ++++++
+>  drivers/misc/ocxl/link.c          | 60 +++++++++++++++++++++++++++++++
+>  drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++
+>  3 files changed, 103 insertions(+)
+> 
+> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> index b7a09b21ab36..2531c6cf19a0 100644
+> --- a/drivers/misc/ocxl/core.c
+> +++ b/drivers/misc/ocxl/core.c
+> @@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+>  	if (rc)
+>  		goto err_free_pasid;
+>  
+> +	if (afu->config.lpc_mem_size || afu->config.special_purpose_mem_size) {
+> +		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu->config.lpc_mem_offset,
+> +					   afu->config.lpc_mem_size +
+> +					   afu->config.special_purpose_mem_size);
+> +		if (rc)
+> +			goto err_free_mmio;
+> +	}
+> +
+>  	return 0;
+>  
+> +err_free_mmio:
+> +	unmap_mmio_areas(afu);
+>  err_free_pasid:
+>  	reclaim_afu_pasid(afu);
+>  err_free_actag:
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index 58d111afd9f6..d8503f0dc6ec 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -84,6 +84,11 @@ struct ocxl_link {
+>  	int dev;
+>  	atomic_t irq_available;
+>  	struct spa *spa;
+> +	struct mutex lpc_mem_lock;
+
+Always a good idea to explicitly document what a lock is intended to protect.
+
+> +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the link */
+> +	u64 lpc_mem;
+> +	int lpc_consumers;
+> +
+>  	void *platform_data;
+>  };
+>  static struct list_head links_list = LIST_HEAD_INIT(links_list);
+> @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_l
+>  	if (rc)
+>  		goto err_spa;
+>  
+> +	mutex_init(&link->lpc_mem_lock);
+> +
+>  	/* platform specific hook */
+>  	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
+>  				&link->platform_data);
+> @@ -711,3 +718,56 @@ void ocxl_link_free_irq(void *link_handle, int hw_irq)
+>  	atomic_inc(&link->irq_available);
+>  }
+>  EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
+> +
+> +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
+> +{
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> +
+> +	// Check for overflow
+
+Stray c++ style comment.
+
+> +	if (offset > (offset + size))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&link->lpc_mem_lock);
+> +	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
+> +
+> +	mutex_unlock(&link->lpc_mem_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
+> +{
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> +	u64 lpc_mem;
+> +
+> +	mutex_lock(&link->lpc_mem_lock);
+> +	if (link->lpc_mem) {
+
+If you don't modify this later in the series (I haven't read it all yet :),
+it rather feels like it would be more compact and just as readable as
+something like...
+
+	if (!link->lpc_mem)
+		link->lpc_mem = pnv_ocxl...
+
+	if (link->lpc_mem)
+		link->lpc_consumers++;
+	mutex_unlock(&link->lpc_mem_lock);
+		
+	return link->lpc_mem;
+
+> +		lpc_mem = link->lpc_mem;
+> +
+> +		link->lpc_consumers++;
+> +		mutex_unlock(&link->lpc_mem_lock);
+> +		return lpc_mem;
+> +	}
+> +
+> +	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link->lpc_mem_sz);
+> +	if (link->lpc_mem)
+> +		link->lpc_consumers++;
+> +	lpc_mem = link->lpc_mem;
+> +	mutex_unlock(&link->lpc_mem_lock);
+> +
+> +	return lpc_mem;
+> +}
+> +
+> +void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev)
+> +{
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> +
+> +	mutex_lock(&link->lpc_mem_lock);
+> +	WARN_ON(--link->lpc_consumers < 0);
+> +	if (link->lpc_consumers == 0) {
+> +		pnv_ocxl_platform_lpc_release(pdev);
+> +		link->lpc_mem = 0;
+> +	}
+> +
+> +	mutex_unlock(&link->lpc_mem_lock);
+> +}
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 97415afd79f3..20b417e00949 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -141,4 +141,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset);
+>  u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+>  void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+>  
+> +/**
+> + * ocxl_link_add_lpc_mem() - Increment the amount of memory required by an OpenCAPI link
+> + *
+> + * @link_handle: The OpenCAPI link handle
+> + * @offset: The offset of the memory to add
+> + * @size: The amount of memory to increment by
+> + *
+> + * Return 0 on success, negative on overflow
+> + */
+> +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size);
+> +
+> +/**
+> + * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
+> + *
+> + * Since LPC memory belongs to a link, the whole LPC memory available
+> + * on the link bust be mapped in order to make it accessible to a device.
+
+must
+
+> + *
+> + * @link_handle: The OpenCAPI link handle
+> + * @pdev: A device that is on the link
+> + */
+> +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
+> +
+> +/**
+> + * ocxl_link_lpc_release() - Release the LPC memory device for an OpenCAPI device
+> + *
+> + * Offlines LPC memory on an OpenCAPI link for a device. If this is the
+> + * last device on the link to release the memory, unmap it from the link.
+> + *
+> + * @link_handle: The OpenCAPI link handle
+> + * @pdev: A device that is on the link
+> + */
+> +void ocxl_link_lpc_release(void *link_handle, struct pci_dev *pdev);
+> +
+>  #endif /* _OCXL_INTERNAL_H_ */
+
 
