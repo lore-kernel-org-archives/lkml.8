@@ -2,106 +2,97 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFBFC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38C4C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38B120658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8804920658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNXtJhDN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktB4pnhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgBCKLW (ORCPT
+        id S1727726AbgBCKNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:11:22 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:52922 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgBCKLV (ORCPT
+        Mon, 3 Feb 2020 05:13:32 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37353 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgBCKNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:11:21 -0500
-Received: by mail-pj1-f66.google.com with SMTP id ep11so6105811pjb.2;
-        Mon, 03 Feb 2020 02:11:21 -0800 (PST)
+        Mon, 3 Feb 2020 05:13:32 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so6200379pjb.2;
+        Mon, 03 Feb 2020 02:13:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
-        b=gNXtJhDNv08S4fJzniL6YYfHrPochu1S78UL6QYeJlnVpLV0vinCkGwH8B/gzyBZO5
-         QauncyeOmUrcZWzAcCxAxLmhc+gz/CJG3ii4UPaf55f6uCqNr4pFmaksaV/qOlR3mG2X
-         V5kfb6rS7WifHScLmVAKmVI3NqpIEADkgfjFxcaXCT784raeWl5jM2OFkuc9N3csCDxd
-         e4ywrFJnDdI8XhyHGMYiYFtUg0ZzdEGFKR5eiX8k2IFDiYwmTI/9rcDJvLCrv7KdfnyB
-         rdmCRsu/g7OQNvg7OSJHJfxbeRLnDKswIwnDFBgK8cRlJvSQhCNIk5iI7xrHex0RwEkp
-         GEHg==
+        bh=GD14FMeWoDKUquusWa5QP4XNkdd6IXnIuERNShAs1x4=;
+        b=ktB4pnhKlWRnPkz0racHaBHuc4IRVlnEqRkL7gFlMe/O5nOh48rXm+Sb2bhp49WEFK
+         BfL+re4bXVVbbKa8e9ULQxlulvWoouNli844YmkOhDNmLgQ7CQv9DoFN7ZSAgE6gv3h9
+         rQnNEM577Sal69BSvXTeKFEdLcc3W8FQdNXaOjRCqKGpnVFwQnkov4oXKL6aHPD6YoTP
+         ObrzvVGNgNf6X8E0c44bpGalQZutXWwGmRD/2S7WOFcFIBql+FFrLmAEs2Z8EybK9KCa
+         m3UjpwRmIfnru1/eIqeeZ2FpUCd6vjXOQzkbs2jrQPkk+PIKbHX93KR11VCIhpKiAq1q
+         83Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4dC5vZjnr8IWvufmlwLWuCfxRjV7yLvgDjVS1/z103Q=;
-        b=RB433vD2Av/bjgcjNrA9hohzgzsELN7eGT75BVeeEanEU2qXmPVb9tig0z+l6IvIq5
-         KhsbLVn/r9+PMaexCso1bIBs/NtqqzM0BuIFu7+Ty7duAyz5SgxK6oMZpmVtnDv81GQE
-         oQmEfIUimYPlmDkcp64Cbq4QF09CsTokxiGqMvOjjGw1iBvRKm851aPlENVAKnFn2AQm
-         MWp4Ghr1tHPv2i/zk6T25s5hQ0WqYxeNlFGhyCzCosk+G7pb4UozpGoZ65Mam5Bla+yg
-         k263PHx1a5uJXCZtzB10TlMNE6u6yiwnxRTu2kWywFL6Rb+OQS2JmiJzNKIoR7V+j5v1
-         /Rcw==
-X-Gm-Message-State: APjAAAW83r6a4WGqTaIrSe1e7YHeIdwyAvD2Xu8LyIgEKdw2eW4R5DXC
-        01msxfnwcRefKgHjUl4heWsBu+85/BFeydWdlBU=
-X-Google-Smtp-Source: APXvYqwvSk3kyzFEkF16zgVr87wi9kTgBo74pIIZQvaZ95Y0VScXP+UxOQwValhzbgbSNpxG+b6SSg+VgL3Dcl7uSbE=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr28494608pjb.30.1580724681048;
- Mon, 03 Feb 2020 02:11:21 -0800 (PST)
+        bh=GD14FMeWoDKUquusWa5QP4XNkdd6IXnIuERNShAs1x4=;
+        b=XQ8F+oyM/Vq9vZkoFY1eHiF72HnvbmFjq5ep7To/zYds07R6yoWaWhpNsJnCImSKjE
+         9NcMBt0YoEDHIuijp8VFaFGLs2JqY9mBg5KZO7PiA89lyrkAUmmL6hBhPw+klamubKhm
+         Hx1cuJn8jcY/ebcr60EY/o0jfM9dsP/sijrTCcdwFPvOqsIqoOBiEzIpy/kyaa0vGiZ7
+         I7Yqmo1m/RlRhhPgKjATe/79k4y+0OMr0tpJkd16B2P8E71nUZHPq2c7SzjMhkw3+KCr
+         SjnAKMyCuMvXjNqRize/rEhpbLqB8AakoYI7/fFbOc5qkJZnKkYPNTnx15I5dhVmwALT
+         juOQ==
+X-Gm-Message-State: APjAAAU0HCgXprCvNGdxT7EAtJVEQ3SrIKM3iWcM4NSoMdTN1jwyPZW6
+        jY7LKHYxl39gtc/bggEYFrMUhcgXXVld03NZM8g=
+X-Google-Smtp-Source: APXvYqwGyhQNbP8YuInSmt7jSMBKWaXjhTPEzV9pZ9Pnd3o4H2NF3Q3L6Ro9oY5ldYGpbcNAhn/s7De7NMoPaHshqNI=
+X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr28825873pjc.20.1580724811635;
+ Mon, 03 Feb 2020 02:13:31 -0800 (PST)
 MIME-Version: 1.0
-References: <1580650021-8578-1-git-send-email-hadar.gat@arm.com> <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
-In-Reply-To: <1580650021-8578-4-git-send-email-hadar.gat@arm.com>
+References: <20200201124301.21148-1-lukas.bulwahn@gmail.com> <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:11:13 +0200
-Message-ID: <CAHp75Vd4VYJD9kSgMU+iKOC5FOarPtMG4eG3Jbnf7OeebWuC7w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: add HG as cctrng maintainer
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Date:   Mon, 3 Feb 2020 12:13:23 +0200
+Message-ID: <CAHp75VdVXqz7fab4MKH2jZozx4NGGkQnJyTWHDKCdgSwD2AtpA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Weili Qian <qianweili@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
+        isdn4linux@listserv.isdn4linux.de, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 3:29 PM Hadar Gat <hadar.gat@arm.com> wrote:
+On Sun, Feb 2, 2020 at 10:45 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> On Sat,  1 Feb 2020 13:43:01 +0100, Lukas Bulwahn wrote:
+> > Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
+> > isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
+> > the terminal slash for the two directories mISDN and hardware. Hence, all
+> > files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
+> > but were considered to be part of "THE REST".
+> >
+> > Rectify the situation, and while at it, also complete the section with two
+> > further build files that belong to that subsystem.
+> >
+> > This was identified with a small script that finds all files belonging to
+> > "THE REST" according to the current MAINTAINERS file, and I investigated
+> > upon its output.
+> >
+> > Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 >
-> I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+> Applied to net, thanks!
 
-> +CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-> +M:     Hadar Gat <hadar.gat@arm.com>
-> +L:     linux-crypto@vger.kernel.org
-> +S:     Supported
-> +F:     drivers/char/hw_random/cctrng.c
-> +F:     drivers/char/hw_random/cctrng.h
-> +F:     Documentation/devicetree/bindings/rng/arm-cctrng.txt
-> +W:     https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-> +
-
-Had you run parse-maintainers.pl afterwards to be sure everything is okay?
+I'm not sure it's ready. I think parse-maintainers.pl will change few
+lines here.
 
 -- 
 With Best Regards,
