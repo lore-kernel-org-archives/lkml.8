@@ -2,108 +2,159 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE139C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989E0C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F83520838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6932C2084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 21:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjF/en/P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HBLVJVXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgBCVnK (ORCPT
+        id S1727102AbgBCVox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 16:43:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34441 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgBCVnK (ORCPT
+        Mon, 3 Feb 2020 16:44:53 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33403 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725372AbgBCVox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 16:43:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so8286789pfc.1;
-        Mon, 03 Feb 2020 13:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
-        b=AjF/en/PwCT4W2EHQ5+3AviOlyIo9uYNWYWol1vasV9sf8IdjnbhX0VVoyzxvrEf/D
-         GFZdJygPyQAUvAfYJcknUmlv/ZtEEyBxTFc9ZsL0fnmwF2hX+u7HoCsDurh8jvMg1FWI
-         ZWHACVb5FbOXuB2KNwYM0j5X+9+pI30sBWK2io4DQOsjatvjLtJ3k8LvU5jD6h+0bApj
-         nji7QoFrpIa/EfyS9aE1H8PnCdnd46+Bv/wWa0lI/yY3MRhmscM5HAz8FUe4N0GHhpMf
-         AblamewqllV4aFJNX9rqC38Bfrua5qSGpBXfEvK4rxqB8uDXrzrhq3DbRWcLI4ZsALte
-         Lfjg==
+        Mon, 3 Feb 2020 16:44:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580766291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=APvzKJbOVU63A3dxA5kI8kBeWOZPD++mpXTHMc1xuKc=;
+        b=HBLVJVXvxYCtQQDhR+yiD09/k73GjU5RfywgtxhxQt8PZAXsIJ3cr9lxbei67z85ObqTjw
+        kEUBIjloQ4ufv7gTzXbmPJYKEN+eN+2kb6yHbbzgt1Sr1/cwfcuyvEH0mEeDQcJ7+3TjT/
+        TgSSyR+9lbWm3bG1PZlIkxLCjO/4Bf0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-7FiP-X_DMzO-5Zu12XEdAQ-1; Mon, 03 Feb 2020 16:44:48 -0500
+X-MC-Unique: 7FiP-X_DMzO-5Zu12XEdAQ-1
+Received: by mail-wr1-f72.google.com with SMTP id d15so5589644wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 13:44:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4utvhxtA7zvr4Iu+DFpm/vNXzWR8TFP5LHSqSIJBCWo=;
-        b=kaYy9bn6CiQJOQv9VcSKd6kZQoVT9NL3NbS85qC2V8bRe/69zKYV5SV6I7SMfcKJA/
-         X4JDPrs5idQaw0W+jtGWtXrkcTnD6ZQUV2syvh0qr04N3q13CxKgaq2IYh+geFUa40nH
-         INHMv6ED2YVf+Yj27ZQJE65TRmF5aCfp/pmsFYsrDv12N9RBT9wfBtpvuCSE/vx3r2tI
-         2UUVHjcj9J0+jeDJNf/UNGBlJ75z6J4jXdIhqb3+eUZyK1SkQgPhKuv58CbyTaFSNvtU
-         CASOdC/6X6NFSYmqzphxoTdMoP/P+a5zPl+EfASS4QihMdd7Dtc7Sj7UqyoTXI+eN6up
-         W8qA==
-X-Gm-Message-State: APjAAAUEZSn4dHuHz2AAVFyZHTcrPXGsLfnPs50ux/Pw1Mjg2LQPAPUk
-        nSjGth1wSFk6dLPRC2andZlYyNzo
-X-Google-Smtp-Source: APXvYqzqvmjhjyfBbCiXK6ubgSKYGKoWsiXrEE1FSXHo7/8RTwhszxSZmlrQQ8mbNKUBQU48ZmIo+A==
-X-Received: by 2002:a63:6c82:: with SMTP id h124mr27098458pgc.328.1580766189626;
-        Mon, 03 Feb 2020 13:43:09 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id c26sm2947558pfj.8.2020.02.03.13.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 13:43:08 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Bart Tanghe <bart.tanghe@thomasmore.be>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH] pwm: bcm2835: Dynamically allocate base
-Date:   Mon,  3 Feb 2020 13:35:35 -0800
-Message-Id: <20200203213536.32226-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=APvzKJbOVU63A3dxA5kI8kBeWOZPD++mpXTHMc1xuKc=;
+        b=ZLN+gCwN2qiDhuuNxyX207h2hbv5gVWIKjRqpEI6wiIrt4BvJ+e16XQURuhn9yzVZE
+         ZrPbZ383G1nZWo9Vw8oS+gRR4rVudyBEUhY92zjOP8YdBfZ8dYM5s8lCAjfBq3t3l1TS
+         X3q2hRnbv1zJKNaNKL9JYIhofwr+OpWB42TM1xeg0l2xsM74/hfLjEZ2kloeArU7vf78
+         oUqnKoHIHuVFye3tr6Vk+JEMS2ZPCB6/DdnAbDPMFH8pGdH6Yw4gZJqYwteUTrqAAzvI
+         U4+BLSrzwDPKD1wWCwFLHmyYICxSasS3IGykSESXIVXhXn2ZsvIGeVuhSHH3f000glL0
+         uCSg==
+X-Gm-Message-State: APjAAAVcmoy5mR843aposjNI+QWTu997FKZmQ2g+lgGCu+Ggn4zrZ9x3
+        /UXE9AJR1OsQCigPXHG47EXquILSF10yJ8LZ797u7Ss45S2mxo33KrZyg9sJdsCoPSyQxtSkEMw
+        w2YjRHAaCuK8Ind48l0q4PwQr
+X-Received: by 2002:adf:ec83:: with SMTP id z3mr16898620wrn.133.1580766286883;
+        Mon, 03 Feb 2020 13:44:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyrsyYng4IR6o6G/LYaVafSTJOiC/W7rP+gXYQ+Gl4WeTH94Pt4DFpOc0g+rN+cc4LgnOQtXQ==
+X-Received: by 2002:adf:ec83:: with SMTP id z3mr16898607wrn.133.1580766286715;
+        Mon, 03 Feb 2020 13:44:46 -0800 (PST)
+Received: from [192.168.3.122] (p5B0C6AA7.dip0.t-ipconnect.de. [91.12.106.167])
+        by smtp.gmail.com with ESMTPSA id e17sm14180838wrn.62.2020.02.03.13.44.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2020 13:44:46 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1 1/2] mm/page_alloc: fix and rework pfn handling in memmap_init_zone()
+Date:   Mon, 3 Feb 2020 22:44:45 +0100
+Message-Id: <1583F4CF-6CD8-4AB6-A2F6-60E6AEE5D5B2@redhat.com>
+References: <CAKgT0UdFphMbS04NMRYU=VUmbnVi_purz4UA0cqA3dd7YW-pJA@mail.gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+In-Reply-To: <CAKgT0UdFphMbS04NMRYU=VUmbnVi_purz4UA0cqA3dd7YW-pJA@mail.gmail.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54e..d78f86f8e462 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
- 
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
--- 
-2.17.1
+> Am 03.02.2020 um 22:35 schrieb Alexander Duyck <alexander.duyck@gmail.com>=
+:
+>=20
+> =EF=BB=BFOn Mon, Jan 13, 2020 at 6:40 AM David Hildenbrand <david@redhat.c=
+om> wrote:
+>>=20
+>> Let's update the pfn manually whenever we continue the loop. This makes
+>> the code easier to read but also less error prone (and we can directly
+>> fix one issue).
+>>=20
+>> When overlap_memmap_init() returns true, pfn is updated to
+>> "memblock_region_memory_end_pfn(r)". So it already points at the *next*
+>> pfn to process. Incrementing the pfn another time is wrong, we might
+>> leave one uninitialized. I spotted this by inspecting the code, so I have=
+
+>> no idea if this is relevant in practise (with kernelcore=3Dmirror).
+>>=20
+>> Fixes: a9a9e77fbf27 ("mm: move mirrored memory specific code outside of m=
+emmap_init_zone")
+>> Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>> mm/page_alloc.c | 9 ++++++---
+>> 1 file changed, 6 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index a41bd7341de1..a92791512077 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -5905,18 +5905,20 @@ void __meminit memmap_init_zone(unsigned long siz=
+e, int nid, unsigned long zone,
+>>        }
+>> #endif
+>>=20
+>> -       for (pfn =3D start_pfn; pfn < end_pfn; pfn++) {
+>> +       for (pfn =3D start_pfn; pfn < end_pfn; ) {
+>>                /*
+>>                 * There can be holes in boot-time mem_map[]s handed to th=
+is
+>>                 * function.  They do not exist on hotplugged memory.
+>>                 */
+>>                if (context =3D=3D MEMMAP_EARLY) {
+>>                        if (!early_pfn_valid(pfn)) {
+>> -                               pfn =3D next_pfn(pfn) - 1;
+>> +                               pfn =3D next_pfn(pfn);
+>>                                continue;
+>>                        }
+>> -                       if (!early_pfn_in_nid(pfn, nid))
+>> +                       if (!early_pfn_in_nid(pfn, nid)) {
+>> +                               pfn++;
+>>                                continue;
+>> +                       }
+>>                        if (overlap_memmap_init(zone, &pfn))
+>>                                continue;
+>>                        if (defer_init(nid, pfn, end_pfn))
+>=20
+> I'm pretty sure this is a bit broken. The overlap_memmap_init is going
+> to return memblock_region_memory_end_pfn instead of the start of the
+> next region. I think that is going to stick you in a mirrored region
+> without advancing in that case. You would also need to have that case
+> do a pfn++ before the continue;
+
+Thanks for having a look.
+
+Did you read the description regarding this change?=
 
