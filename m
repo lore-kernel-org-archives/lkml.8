@@ -2,136 +2,205 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_MALW autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8276DC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDFDC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566DF207E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1182020CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyqkCHaq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rVFnBSAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgBCNh2 (ORCPT
+        id S1727756AbgBCNhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:37:28 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51436 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbgBCNhZ (ORCPT
+        Mon, 3 Feb 2020 08:37:32 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:59444 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728083AbgBCNha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:37:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so15946367wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:37:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/2GSwnkg77BNm4nP5NyAu/SMCbCUCxlKEX7RXd5hGo=;
-        b=QyqkCHaqANazKMga60HtjP7wB2dSFkmIppV/fL+3uluO6cMtGcuV1ZMB0HLtni0ufU
-         NqMd+7iz+MQ2Xkn/nt6/x/3HL3ltE8PYfr1d9xoPjCNNcybC0Z17TX4G8fXfdg+6OsWy
-         mmvaigLl5jz/yms5rEZEH5sY90O0ksKi1YnjEaJmzYfJdyzsRfXummetiPM41WEtjxSj
-         0kLQ2w9BylCEXs6kkewgHQXiSTfiwjqKe3Ir6b/B5ZqLGJysVWzOl6b7Q8UBdkLhnIb0
-         RmA6dpkRH8ULSn8vtmtCDiS7WkgPexSWNck1irp+0QDBHiK398L0VrhVjnri7tgDKbJT
-         U4pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/2GSwnkg77BNm4nP5NyAu/SMCbCUCxlKEX7RXd5hGo=;
-        b=sAs6tNRlEwwhjOTFlB4d1Uq2p/nDVTUZN4ZvvNCUHK82BHw1jQKXoJgc/y97RZQPyf
-         bvDvVptbkXlR58ggkouPtls2PNz9wMsXJ1v1VCBZKubCzv/x1GALOAEa0lrE61s1ohnw
-         5CsK5YZJG8OFNim2qzVreR18EEa4sAwq3jjINGNiyzQO4P1kvJSyvU8y1B9rghLrQPij
-         L4zPbki60xXr9tRN8fCBOTLM1VtdkaWeriEVl71fiDr+4Dc6PA+ApViz7I1cI1RZxq53
-         IQS062/lFmr/jLMn5lMTP5tnBse1K3R2A/ac+esI54xzK1z96u4KG7t6WNu7xbX0r/Vj
-         GRiA==
-X-Gm-Message-State: APjAAAXJXww3vAYEYVL7gYIzhF5Bq7x8MSPUXAjTQ8bSiSdteF/8tWck
-        ZSIm3udoFBnSBq5E1rQcBEjz/8JqpIekfFC82Zk=
-X-Google-Smtp-Source: APXvYqyCHeEo+TF2vW137Ow69GfaGeid3s96v7had5ahLw8/ZMjxPFmMIZZzfzrfvrZ6vMtnWx4v3dJeeuqW7X3og3Y=
-X-Received: by 2002:a7b:ce10:: with SMTP id m16mr28136509wmc.115.1580737043064;
- Mon, 03 Feb 2020 05:37:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20200203012702.GA8731@bombadil.infradead.org> <CACVXFVPyW9+oSPAv7-+=hExzktLkmPG=gYUY5acR5UGeJzTh0Q@mail.gmail.com>
- <20200203132334.GH8731@bombadil.infradead.org>
-In-Reply-To: <20200203132334.GH8731@bombadil.infradead.org>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Mon, 3 Feb 2020 21:37:11 +0800
-Message-ID: <CACVXFVNqP=oEZNiu=nebJ5EKKXfMfq7e=M1Ko1_TVw-FJTUpZw@mail.gmail.com>
-Subject: Re: Current Linus tree protection fault in __kmalloc
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        gustavo@embeddedor.com, Clemens Ladisch <clemens@ladisch.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 3 Feb 2020 08:37:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580737049; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=3oBp+GQXIvHz9eMsTaJ9GKjk778UhbK5cdSMUYMH/24=; b=rVFnBSAmo+5dF5bhPTD5ljqc6jTApnG6Jgjpf3Fd2VGF+GEDwtRZN0SUWp49vBKZhKq7rqP6
+ 9eo6YTOBEVI23T9QHbY20z6mmcrgqg+txAaShZQyO00FJsSy+VDactR8pBN73VajKSVFnqRW
+ Mza02pkNbzPoiTdZLVNtCEdOt5k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e382216.7f7af6bbad50-smtp-out-n02;
+ Mon, 03 Feb 2020 13:37:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1A969C447A4; Mon,  3 Feb 2020 13:37:26 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14511C433CB;
+        Mon,  3 Feb 2020 13:37:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14511C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        sudeep.holla@arm.com, Lorenzo.Pieralisi@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v3 4/7] drivers: qcom: rpmh-rsc: Add RSC power domain support
+Date:   Mon,  3 Feb 2020 19:05:37 +0530
+Message-Id: <1580736940-6985-5-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 9:23 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Mon, Feb 03, 2020 at 06:47:03PM +0800, Ming Lei wrote:
-> > On Mon, Feb 3, 2020 at 9:29 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > Anyone else seeing this?  My poor laptop has little compile grunt.
-> >
-> > It can be triggered in my VM every time, and has started git-bisect already.
->
-> Glad to know it's not just me.  I finished a git bisect, but it
-> pointed to a nonsense commit:
->
-> git bisect start
-> # bad: [a8ad62c76e8d082aa5fc3f2bd9f65d13ff2d5e8a] iomap: Convert from readpages to readahead
-> git bisect bad a8ad62c76e8d082aa5fc3f2bd9f65d13ff2d5e8a
-> # good: [d5226fa6dbae0569ee43ecfc08bdcd6770fc4755] Linux 5.5
-> git bisect good d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
-> # good: [aac96626713fe167c672f9a008be0f514aa3e237] Merge tag 'usb-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> git bisect good aac96626713fe167c672f9a008be0f514aa3e237
-> # good: [d47c7f06268082bc0082a15297a07c0da59b0fc4] Merge branch 'linux-5.6' of git://github.com/skeggsb/linux into drm-next
-> git bisect good d47c7f06268082bc0082a15297a07c0da59b0fc4
-> # bad: [4cadc60d6bcfee9c626d4b55e9dc1475d21ad3bb] Merge tag 'for-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
-> git bisect bad 4cadc60d6bcfee9c626d4b55e9dc1475d21ad3bb
-> # bad: [701a9c8092ddf299d7f90ab2d66b19b4526d1186] Merge tag 'char-misc-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-> git bisect bad 701a9c8092ddf299d7f90ab2d66b19b4526d1186
-> # good: [270f104ba26f0498aff85e5b002e2f4c2249c04b] staging: wfx: update TODO
-> git bisect good 270f104ba26f0498aff85e5b002e2f4c2249c04b
-> # good: [ca9b5b6283984f67434cee810f3b08e19630226d] Merge tag 'tty-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-> git bisect good ca9b5b6283984f67434cee810f3b08e19630226d
-> # good: [10d3e38c7923853967cea97513213bba923dde64] Merge tag 'icc-5.6-rc1' of https://git.linaro.org/people/georgi.djakov/linux into char-misc-next
-> git bisect good 10d3e38c7923853967cea97513213bba923dde64
-> # good: [b5909c6d16fd4e3972b0cd48dedde08d55575342] staging: kpc2000: rename variables with kpc namespace
-> git bisect good b5909c6d16fd4e3972b0cd48dedde08d55575342
-> # good: [72a9cc952f123948ca1d1011a12e5e1312140b68] devtmpfs: factor out common tail of devtmpfs_{create,delete}_node
-> git bisect good 72a9cc952f123948ca1d1011a12e5e1312140b68
-> # good: [2485055394be272d098ca7dd63193d5041fb8140] staging: most: core: drop device reference
-> git bisect good 2485055394be272d098ca7dd63193d5041fb8140
-> # good: [7ba31c3f2f1ee095d8126f4d3757fc3b2bc3c838] Merge tag 'staging-5.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
-> git bisect good 7ba31c3f2f1ee095d8126f4d3757fc3b2bc3c838
-> # bad: [0db4a15d4c2787b1112001790d4f95bd2c5fed6f] mei: me: add jasper point DID
-> git bisect bad 0db4a15d4c2787b1112001790d4f95bd2c5fed6f
-> # bad: [987f028b8637cfa7658aa456ae73f8f21a7a7f6f] char: hpet: Use flexible-array member
-> git bisect bad 987f028b8637cfa7658aa456ae73f8f21a7a7f6f
-> # bad: [eb143f8756e77c8fcfc4d574922ae9efd3a43ca9] binder: fix log spam for existing debugfs file creation.
-> git bisect bad eb143f8756e77c8fcfc4d574922ae9efd3a43ca9
-> # first bad commit: [eb143f8756e77c8fcfc4d574922ae9efd3a43ca9] binder: fix log spam for existing debugfs file creation.
->
-> The .config doesn't even have the binder enabled, which is the only file
-> touched in the commit.
->
+Add RSC power domain support. RSC is top level power domain in
+hireachical CPU LPM modes. Once the rsc domain is down flush all
+cached sleep and wake votes from controller.
 
-My git bisect is just done, and it points to the following commit:
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ drivers/soc/qcom/rpmh-internal.h |  2 +
+ drivers/soc/qcom/rpmh-rsc.c      | 81 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 83 insertions(+)
 
-commit 987f028b8637cfa7658aa456ae73f8f21a7a7f6f
-Author: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Date:   Mon Jan 20 17:53:26 2020 -0600
-
-    char: hpet: Use flexible-array member
-
-I have double checked the commit, and looks it is really the 1st bad one.
-
-Thanks,
-Ming Lei
+diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
+index 6eec32b..3736c14 100644
+--- a/drivers/soc/qcom/rpmh-internal.h
++++ b/drivers/soc/qcom/rpmh-internal.h
+@@ -8,6 +8,7 @@
+ #define __RPM_INTERNAL_H__
+ 
+ #include <linux/bitmap.h>
++#include <linux/pm_domain.h>
+ #include <soc/qcom/tcs.h>
+ 
+ #define TCS_TYPE_NR			4
+@@ -102,6 +103,7 @@ struct rsc_drv {
+ 	DECLARE_BITMAP(tcs_in_use, MAX_TCS_NR);
+ 	spinlock_t lock;
+ 	struct rpmh_ctrlr client;
++	struct generic_pm_domain rsc_pd;
+ };
+ 
+ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg);
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index e278fc1..92bca4c 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -499,6 +499,32 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
+ }
+ 
+ /**
++ * rpmh_rsc_ctrlr_is_idle: Check if any of the AMCs are busy.
++ *
++ * @drv: The controller
++ *
++ * Return: false if the TCSes are engaged in handling requests, True otherwise.
++ */
++static bool rpmh_rsc_ctrlr_is_idle(struct rsc_drv *drv)
++{
++	int m;
++	struct tcs_group *tcs = get_tcs_of_type(drv, ACTIVE_TCS);
++	bool ret = true;
++	unsigned long flags;
++
++	spin_lock_irqsave(&drv->lock, flags);
++	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
++		if (!tcs_is_free(drv, m)) {
++			ret = false;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&drv->lock, flags);
++
++	return ret;
++}
++
++/**
+  * rpmh_rsc_write_ctrl_data: Write request to the controller
+  *
+  * @drv: the controller
+@@ -521,6 +547,50 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+ 	return tcs_ctrl_write(drv, msg);
+ }
+ 
++static int rpmh_domain_power_off(struct generic_pm_domain *rsc_pd)
++{
++	struct rsc_drv *drv = container_of(rsc_pd, struct rsc_drv, rsc_pd);
++
++	/*
++	 * RPMh domain can not be powered off when there is pending ACK for
++	 * ACTIVE_TCS request. Exit when controller is busy.
++	 */
++	if (!rpmh_rsc_ctrlr_is_idle(drv))
++		return -EBUSY;
++
++	return rpmh_flush(&drv->client);
++}
++
++static int rpmh_probe_power_domain(struct platform_device *pdev,
++				   struct rsc_drv *drv)
++{
++	int ret;
++	struct generic_pm_domain *rsc_pd = &drv->rsc_pd;
++	struct device_node *dn = pdev->dev.of_node;
++
++	rsc_pd->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s", dn->name);
++	if (!rsc_pd->name)
++		return -ENOMEM;
++
++	rsc_pd->name = kbasename(rsc_pd->name);
++	rsc_pd->power_off = rpmh_domain_power_off;
++	rsc_pd->flags |= GENPD_FLAG_IRQ_SAFE;
++
++	ret = pm_genpd_init(rsc_pd, NULL, false);
++	if (ret)
++		return ret;
++
++	ret = of_genpd_add_provider_simple(dn, rsc_pd);
++	if (ret)
++		goto remove_pd;
++
++	return ret;
++
++remove_pd:
++	pm_genpd_remove(rsc_pd);
++	return ret;
++}
++
+ static int rpmh_probe_tcs_config(struct platform_device *pdev,
+ 				 struct rsc_drv *drv)
+ {
+@@ -663,6 +733,17 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Power domain is not required for controllers that support 'solver'
++	 * mode where they can be in autonomous mode executing low power mode
++	 * to power down.
++	 */
++	if (of_property_read_bool(dn, "#power-domain-cells")) {
++		ret = rpmh_probe_power_domain(pdev, drv);
++		if (ret)
++			return ret;
++	}
++
+ 	/* Enable the active TCS to send requests immediately */
+ 	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, drv->tcs[ACTIVE_TCS].mask);
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
