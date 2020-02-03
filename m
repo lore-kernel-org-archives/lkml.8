@@ -2,320 +2,319 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E403C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACB1C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFCC20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580731358;
-	bh=PPDsukE45fQxVX6fT70rED7RcfcSV9PORLLlbTFcosA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dn6WmDWEy7mOwpxLkctkT2VaL1XSr+Bdj6poc5HcWElz4ZrPKJYfztVuhO5A/xv5S
-	 HcVPFB25og3N2SnOinHydxuMo5sm+DlMmLSzd6KWZqu5koGWKQg8warS8MjbY2alC6
-	 WPTDGGhqvpFWY3xqux+HyuyJD4WAt7/RszxnX8ys=
+	by mail.kernel.org (Postfix) with ESMTP id 9C2B12082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgBCMCh (ORCPT
+        id S1727720AbgBCMDo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbgBCMCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:02:36 -0500
-Received: from localhost (unknown [223.226.103.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A40A20721;
-        Mon,  3 Feb 2020 12:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580731355;
-        bh=PPDsukE45fQxVX6fT70rED7RcfcSV9PORLLlbTFcosA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ziu9ELIK1IsVcjb6FRavjkNa73OCw5i8NUBbDZWg6BCG6+azoS1nR7J2zuAqfaoXi
-         TyS2gS8EBUmCzmmT/4NkGv3ieoN+Lg02Ix/PE+ZlZWlBT0tfp/XguHt4hwS8TriGYw
-         XOHsQVB/PG3xujML8V7UNSiLU8e5y4B+ndz8A4M8=
-Date:   Mon, 3 Feb 2020 17:32:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
- devices and use 'Master Devices' instead
-Message-ID: <20200203120229.GO2841@vkoul-mobl>
-References: <20200114060959.GA2818@vkoul-mobl>
- <6635bf0b-c20a-7561-bcbf-4a480a077ae4@linux.intel.com>
- <20200118071257.GY2818@vkoul-mobl>
- <73907607-0763-576d-b24e-4773dfb15f0b@linux.intel.com>
- <20200128105036.GO2841@vkoul-mobl>
- <d9478d9b-68a9-3d2c-338e-ca02e81e218e@linux.intel.com>
- <20200129050817.GW2841@vkoul-mobl>
- <4c49c9d0-e7b7-6c9b-03b8-90a94bfd1407@linux.intel.com>
+        Mon, 3 Feb 2020 07:03:44 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2349 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727102AbgBCMDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:03:43 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 3CF4667FA7CBC00D936B;
+        Mon,  3 Feb 2020 12:03:40 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 3 Feb 2020 12:03:39 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
+ 12:03:39 +0000
+Date:   Mon, 3 Feb 2020 12:03:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <dragos.bogdan@analog.com>
+Subject: Re: [PATCH 2/4] iio: imu: adis: Refactor adis_initial_startup
+Message-ID: <20200203120338.000044c1@Huawei.com>
+In-Reply-To: <da82db5f81e116c7ecc36f5d9833b90b4f7cd15d.camel@gmail.com>
+References: <20200120142051.28533-1-alexandru.ardelean@analog.com>
+        <20200120142051.28533-2-alexandru.ardelean@analog.com>
+        <20200201170839.4ab98d8e@archlinux>
+        <da82db5f81e116c7ecc36f5d9833b90b4f7cd15d.camel@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c49c9d0-e7b7-6c9b-03b8-90a94bfd1407@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-01-20, 08:59, Pierre-Louis Bossart wrote:
-> Hi Vinod,
+On Mon, 3 Feb 2020 10:31:30 +0100
+Nuno Sá <noname.nuno@gmail.com> wrote:
+
+> Hi Jonathan,
 > 
-> > > > If I look at the calling sequence of the code (looked up the sof code on
-> > > > github, topic/sof-dev-rebase), the sof code sound/soc/sof/intel/hda.c
-> > > > invokes the sdw_intel_startup() and sdw_intel_probe() based on hardware
-> > > > sequencing and further you call .init and .probe/startup of sdw_md_driver.
-> > > > 
-> > > > I really do not see why we need a sdw_md_driver object to do that. You can
-> > > > easily have a another function exported by sdw_intel driver and you call
-> > > > these and do same functionality without having a sdw_md_driver in
-> > > > between.
+> 
+> On Sat, 2020-02-01 at 17:08 +0000, Jonathan Cameron wrote:
+> > On Mon, 20 Jan 2020 16:20:49 +0200
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> > > From: Nuno Sá <nuno.sa@analog.com>
 > > > 
-> > > I must admit I am beyond my comfort zone: I introduced this
-> > > sdw_master_driver only based on Greg's recommendation to look at GreyBus.
+> > > All the ADIS devices perform, at the beginning, a self test to make
+> > > sure
+> > > the device is in a sane state. Furthermore, some drivers also do a
+> > > call
+> > > to `adis_reset()` before the test which is also a good practice.
+> > > This
+> > > patch unifies all those operation so that, there's no need for code
+> > > duplication. Furthermore, the rst pin is also checked to make sure
+> > > the
+> > > device is not in HW reset. On top of this, some drivers also read
+> > > the
+> > > device product id and compare it with the device being probed to
+> > > make
+> > > sure the correct device is being handled. This can also be passed
+> > > to the
+> > > library by introducing a variable holding the PROD_ID register of
+> > > the
+> > > device.
+> > > 
+> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > >  drivers/iio/imu/Kconfig      |  1 +
+> > >  drivers/iio/imu/adis.c       | 63 ++++++++++++++++++++++++++----
+> > > ------
+> > >  include/linux/iio/imu/adis.h | 15 ++++++++-
+> > >  3 files changed, 61 insertions(+), 18 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
+> > > index 60bb1029e759..63036cf473c7 100644
+> > > --- a/drivers/iio/imu/Kconfig
+> > > +++ b/drivers/iio/imu/Kconfig
+> > > @@ -85,6 +85,7 @@ endmenu
+> > >  
+> > >  config IIO_ADIS_LIB
+> > >  	tristate
+> > > +	depends on GPIOLIB
+> > >  	help
+> > >  	  A set of IO helper functions for the Analog Devices ADIS*
+> > > device family.
+> > >  
+> > > diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> > > index d02b1911b0f2..1eca5271380e 100644
+> > > --- a/drivers/iio/imu/adis.c
+> > > +++ b/drivers/iio/imu/adis.c
+> > > @@ -7,6 +7,7 @@
+> > >   */
+> > >  
+> > >  #include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/mutex.h>
+> > >  #include <linux/device.h>
+> > >  #include <linux/kernel.h>
+> > > @@ -365,36 +366,64 @@ static int adis_self_test(struct adis *adis)
+> > >  }
+> > >  
+> > >  /**
+> > > - * adis_inital_startup() - Performs device self-test
+> > > + * __adis_initial_startup() - Device initial setup
+> > >   * @adis: The adis device
+> > >   *
+> > > + * This functions makes sure the device is not in reset, via rst
+> > > pin.
+> > > + * Furthermore it performs a SW reset (only in the case we are not
+> > > coming from
+> > > + * reset already) and a self test. It also compares the product id
+> > > with the
+> > > + * device id if the prod_id_reg variable is set.
+> > > + *
+> > >   * Returns 0 if the device is operational, a negative error code
+> > > otherwise.
+> > >   *
+> > >   * This function should be called early on in the device
+> > > initialization sequence
+> > >   * to ensure that the device is in a sane and known state and that
+> > > it is usable.
+> > >   */
+> > > -int adis_initial_startup(struct adis *adis)
+> > > +int __adis_initial_startup(struct adis *adis)
+> > >  {
+> > >  	int ret;
+> > > -
+> > > -	mutex_lock(&adis->state_lock);
+> > > +	struct gpio_desc *gpio;
+> > > +	const struct adis_timeout *timeouts = adis->data->timeouts;
+> > > +	const char *iio_name = spi_get_device_id(adis->spi)->name;
+> > > +	u16 prod_id, dev_id;
+> > > +
+> > > +	/* check if the device has rst pin low */
+> > > +	gpio = devm_gpiod_get_optional(&adis->spi->dev, "reset",
+> > > GPIOD_ASIS);
+> > > +	if (IS_ERR(gpio)) {
+> > > +		return PTR_ERR(gpio);  
 > > 
-> > Well the recommendation was to add a device, so adding sdw_master_device
-> > was the right approach. But we don't need to add driver as well.
-> 
-> I provided two reasons below why we need one
-> [1] ASoC use of dev->driver
-> [2] PM hooks.
-> 
-> I would kindly ask that you re-check these points and reply on each, thank
-> you. I did not remove them from my reply so that you don't have to go back
-> to the previous emails.
-> 
-> > > That said, I have two key points that I should explain further.
-> > > 
-> > > When we started this work, we initially did not have a notion of 'master
-> > > driver' coupled with the 'master_device'. But we faced a number of issues
-> > > with ASoC registrations, which seemed to required a driver to be registered
-> > > and associated with the device. We kept this part as a separate commit to
-> > > make sure this requirement wasn't lost:
+> > Given you are returning here, no need for else to follow
 > > 
-> > Yes ASoC does require the DAI driver as it holds a reference to it. That
-> > was the reason we have a platform device and a platform driver for
-> > "int-sdw".
+> > if (gpio...
+> >   
 > 
-> no, it's not related to references, it's using the name, see [1]. And it's
-> not related to the 'dai driver' which is a separate entity unrelated to
-> devices.
+> Definitely...
 > 
-> > Would it make sense to keep this as is and then export the init and
-> > startup APIs which can be invoked by SOF part for hardware
-> > initialization. So driver loading is a separate step from hardware
-> > initialization and sequencing.
+> > > +	} else if (gpio && gpiod_get_value_cansleep(gpio)) {
+> > > +		/* bring device out of reset */
+> > > +		gpiod_set_value_cansleep(gpio, 0);  
 > > 
-> > Also you continue with the benefit of parent-child relations for this
-> > device :) and pm should be simpler.
+> > Hmm. So is a software reset the best option if we have a hardware
+> > reset
+> > line but it's not currently in the reset mode?
+> >   
 > 
-> the parent-child relationship was used in all cases, I don't understand why
-> things would be different, you still need to add hooks in the 'driver' for
-> the pm of the 'master' child device, be it a platform device or not.
+> Hmm, that's a fair question. Now that I think about it, if we do have a
+> gpio we should just assume it's in reset and call
+> `gpiod_set_value_cansleep`. So, I guess we could just ditch the
+> `gpiod_get_value_cansleep(gpio)` part.
+
+Not sure I agree.   For example the driver may well have been unbound
+and rebound for some reason.
+
+I would argue you should just do a set / reset cycle with appropriate sleep
+in between.  If it's already set then no harm done, if it isn't you force
+a hardware reset.
+
 > 
-> > Btw this helps if ever in future you have a separate instance of sdw
-> > controller that can be just hooked to acpi/pci/whatever device part and
-> > driver works without big plumbing
+> > > +		msleep(timeouts->reset_ms);
+> > > +	} else {
+> > > +		ret = __adis_reset(adis);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +	}
+> > >  
+> > >  	ret = adis_self_test(adis);
+> > > -	if (ret) {
+> > > -		dev_err(&adis->spi->dev, "Self-test failed, trying
+> > > reset.\n");
+> > > -		__adis_reset(adis);
+> > > -		ret = adis_self_test(adis);
+> > > -		if (ret) {
+> > > -			dev_err(&adis->spi->dev, "Second self-test
+> > > failed, giving up.\n");
+> > > -			goto out_unlock;
+> > > -		}
+> > > -	}
+> > > +	if (ret)
+> > > +		return ret;
+> > >  
+> > > -out_unlock:
+> > > -	mutex_unlock(&adis->state_lock);
+> > > -	return ret;
+> > > +	if (!adis->data->prod_id_reg)
+> > > +		return 0;
+> > > +
+> > > +	ret = adis_read_reg_16(adis, adis->data->prod_id_reg,
+> > > &prod_id);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = sscanf(iio_name, "adis%hu\n", &dev_id);  
 > > 
-> > > https://github.com/thesofproject/linux/commit/28b934ce9c165e095dac5cf71da5685768831337
-> > > 
+> > Hmm. I have a general dislike of pulling part name strings apart to
+> > get
+> > IDs.  It tends to break when someone comes along and adds a part with
+> > new
+> > branding.  Perhaps just put it in the relevant device part specific
+> > structures
+> > directly?
+> >   
 > 
-> [1]
+> I'll admit that this to orientated to ADI devices and I basically just
+> took what all the drivers were doing and placed it inside the
+> library...
 > 
-> > > Looking back at my notes, this came from this piece of code:
-> > > 
-> > > static char *fmt_single_name(struct device *dev, int *id)
-> > > {
-> > > 	char *found, name[NAME_SIZE];
-> > > 	int id1, id2;
-> > > 
-> > > 	if (dev_name(dev) == NULL)
-> > > 		return NULL;
-> > > 
-> > > 	strlcpy(name, dev_name(dev), NAME_SIZE);
-> > > 
-> > > 	/* are we a "%s.%d" name (platform and SPI components) */
-> > > 	found = strstr(name, dev->driver->name); <<< oops
-> > > 
-> > > so for ASoC, there is an expectation that each device does have a driver
-> > > associated with it. Just for fun I reverted the commit above and that
-> > > immediately trigger an kernel oops.
+> So, you mean passing this to each `chip_info` and then passing it to
+> the library through `adis_data`?
 
-in the existing driver (the one on upstream atm), you have:
+Yes.  People don't tend to expect strings to need to take a particular form,
+so pulling them apart in a library can give unexpected results...
 
-static struct platform_driver sdw_intel_drv = {
-        .probe = intel_probe,
-        .remove = intel_remove,
-        .driver = {
-                .name = "int-sdw",
-
-        },
-};
-
-This is the DAI driver which registers the DAIs and and you pass on this
-device, so for platform driver and above it should just work. That is
-why my recommendation is to continue with this.
-
-> 
-> [2]
-> 
-> > > The other point that we came across is that PM support is only enabled
-> > > thanks to a hook in the driver structure:
-> > > 
-> > > static const struct dev_pm_ops intel_pm = {
-> > > 	SET_SYSTEM_SLEEP_PM_OPS(intel_suspend, intel_resume)
-> > > 	SET_RUNTIME_PM_OPS(intel_suspend_runtime, intel_resume_runtime, NULL)
-> > > };
-> > > 
-> > > struct sdw_master_driver intel_sdw_driver = {
-> > > 	.driver = {
-> > > 		.name = "intel-sdw",
-> > > 		.owner = THIS_MODULE,
-> > > 		.bus = &sdw_bus_type,
-> > > 		.pm = &intel_pm, <<<<
-> > > 	},
-> > > 	.probe = intel_master_probe,
-> > > 	.startup = intel_master_startup,
-> > > 	.process_wake_event = intel_master_process_wakeen_event,
-> > > 	.remove = intel_master_remove,
-> > > };
-> > > 
-> > > I am not aware of any other way to do this.
-
-Again, you can add this to platform_driver sdw_intel_drv.
-
-> 
-> I suggested a minimal way of using the 'device_driver' directly in
-> https://github.com/thesofproject/linux/pull/1755
-> 
-> > > > So to summarize, my recommendation would be to drop sdw_md_driver, keep
-> > > > sdw_master_device object and make sdw_master_device_add() hidden to
-> > > > driver and call it from sdw_add_bus_master() and keep intel specific
-> > > > startup/init routine which do same steps as they have now.
-> > > 
-> > > I am afraid the sequence you suggest is not technically possible:
-> > > sdw_add_bus_master() requires a device to be created already, see e.g. how
-> > > it's used by Qualcomm:
-> > > 
-> > > https://github.com/thesofproject/linux/blob/4026efd12ac983d363fb43c37a8af741a2c90dc8/drivers/soundwire/qcom.c#L811
-> > > 
-> > > sdw_add_bus_master() is called from the platform device probe.
-> > > I cannot insert a device creation in this code.
+> > > +	if (ret != 1)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (prod_id != dev_id)
+> > > +		dev_warn(&adis->spi->dev,
+> > > +			 "Device ID(%u) and product ID(%u) do not
+> > > match.",
+> > > +			 dev_id, prod_id);
+> > > +
+> > > +	return 0;
+> > >  }
+> > > -EXPORT_SYMBOL_GPL(adis_initial_startup);
+> > > +EXPORT_SYMBOL_GPL(__adis_initial_startup);
+> > >  
+> > >  /**
+> > >   * adis_single_conversion() - Performs a single sample conversion
+> > > diff --git a/include/linux/iio/imu/adis.h
+> > > b/include/linux/iio/imu/adis.h
+> > > index d21a013d1122..c43e7922ab32 100644
+> > > --- a/include/linux/iio/imu/adis.h
+> > > +++ b/include/linux/iio/imu/adis.h
+> > > @@ -41,6 +41,7 @@ struct adis_timeout {
+> > >   * @glob_cmd_reg: Register address of the GLOB_CMD register
+> > >   * @msc_ctrl_reg: Register address of the MSC_CTRL register
+> > >   * @diag_stat_reg: Register address of the DIAG_STAT register
+> > > + * @prod_id_reg: Register address of the PROD_ID register
+> > >   * @self_test_reg: Register address to request self test command
+> > >   * @status_error_msgs: Array of error messgaes
+> > >   * @status_error_mask:
+> > > @@ -54,6 +55,7 @@ struct adis_data {
+> > >  	unsigned int glob_cmd_reg;
+> > >  	unsigned int msc_ctrl_reg;
+> > >  	unsigned int diag_stat_reg;
+> > > +	unsigned int prod_id_reg;
+> > >  
+> > >  	unsigned int self_test_mask;
+> > >  	unsigned int self_test_reg;
+> > > @@ -299,6 +301,7 @@ static inline int adis_read_reg_32(struct adis
+> > > *adis, unsigned int reg,
+> > >  
+> > >  int adis_enable_irq(struct adis *adis, bool enable);
+> > >  int __adis_check_status(struct adis *adis);
+> > > +int __adis_initial_startup(struct adis *adis);
+> > >  
+> > >  static inline int adis_check_status(struct adis *adis)
+> > >  {
+> > > @@ -311,7 +314,17 @@ static inline int adis_check_status(struct
+> > > adis *adis)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > -int adis_initial_startup(struct adis *adis);
+> > > +/* locked version of __adis_initial_startup() */
+> > > +static inline int adis_initial_startup(struct adis *adis)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	mutex_lock(&adis->state_lock);
+> > > +	ret = __adis_initial_startup(adis);
+> > > +	mutex_unlock(&adis->state_lock);
+> > > +
+> > > +	return ret;
+> > > +}
+> > >  
+> > >  int adis_single_conversion(struct iio_dev *indio_dev,
+> > >  	const struct iio_chan_spec *chan, unsigned int error_mask,  
 > > 
-> > So there are two things, lets discuss them independently. One is the
-> > device behind the controller object. I think I have given a
-> > recommendation above to keep the existing platform device for "int-sdw".
-> > This device can be PCI/ACPI/OF/Platform, we typically should not worry
-> > about it.
+> >   
 > 
-> I don't understand how a platform device can be PCI/ACPI/OF? what did you
-> mean here?
 
-What I meant is that keep the existing platform device for "int-sdw".
 
-And
-
-a master device for everyone across x86/arm/etc spectrum would be
-PCI/ACPI/OF/Platform and we should be agnostic and let these drivers add
-a bus and register that
-
-> > Second is we create the bus instance and that also create the
-> > sdw_master_device to represent the soundwire master device in sysfs,
-> > since this would be done by soundwire core (as I suggested), it would be
-> > independent of which type of driver is invoking this. In fact this needs
-> > to be completely independent of the driver calling this.
-> > 
-> > Intel code will call sdw_add_bus_master() and we would create a
-> > sdw_master_device for it and add the representation. So would the qcom
-> > code (btw with this, we wont need to do anything on qc code and it
-> > 'should just work (tm)'.
-> > 
-> > > It'd actually be counter productive to add device management at the bus
-> > > level, since we'd soon have incompatibilities between Intel, Qualcomm and
-> > > others. What is platform-specific should be handled outside of the bus
-> > > layer.
-> > 
-> > The vision I am thinking is that sdw_master_device is a representation
-> > of master for everyone independent of the platform it is being used.
-> > 
-> > Let me know if this helps
-> 
-> Sorry no, your reply just confused me completely.
-> 
-> The recommendation from Greg was "remove platform devices". Here's the quote
-> from his May 9, 2019 reply:
-> 
-> "So soundwire is creating platform devices?  Ick, no!  Don't do that,
-> create a "real" device that is the root of your bus and attach that to
-> the platform/pci/whatever device that is the parent of that device's
-> resources."
-
-Is soundwire subsystem creating platform devices, answer is no.
-
-The problem is we were using the master device (platform/of/pci/etc) for
-our own sysfs attributes, which was a mistake and I want to rectify
-that.
-
-The device behind the soundwire controller can be anything. If hardware
-creates a device for soundwire we should continue using that
-
-> If your suggestion is to keep platform devices as currently done, then I
-> will kindly ask that you speak with Greg and let me know what the agreement
-> is.
-> 
-> The second part of your reply gets more confusing, you are suggesting that
-> "Intel code will call sdw_add_bus_master() and we would create a
-> sdw_master_device for it and add the representation". That is in direct
-> contradiction with the notion of using platform devices. And it would by
-> construction break the Qualcomm controller code just merged weeks ago. Are
-> you suggesting I start changing Qualcomm code? Or that we add a new function
-> that does device creation+bus addition in one shot?
-> 
-> And last you didn't acknowledge my two technical points as to why a driver
-> is needed for this sdw_master_device.
-> 
-> So I am back to scratching my head on what the direction is? I just do not
-> understand your line of thought.
-
-Sorry to confuse you, I guess somewhere I missed to communicate that
-1. keep existing platform device for master (that solves your pm and
-asoc issue)
-2. add a sdw_master device, but we dont need driver, use that device for
-sdw sysfs attributes
-3. If possible, have one api, rather than 2 for bus and master device
-creation.
-
-> Maybe we need to stop the long sentences and use this decision flow:
-> 
-> a) is the master device a platform device (Yes/No)?
-
-For your case, yes. For QC case it will be of device
-
-> b) if No for a) then
-> b.1) is the master device created within sdw_add_bus_master()
-
-If possible that would be great. All I am trying here is to avoid having
-two APIs for registration and use a single APIs for drivers to call.
-
-> b.2) is the master device created before calling sdw_add_bus_master()
-
-IIUC, it should be called after, right?
-
-> 
-> Can you please clarify what your desired choices are on this last paragraph?
-
-Let me know if this helped.
-
--- 
-~Vinod
