@@ -2,143 +2,149 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBD8C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BC5C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F45A21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5293B2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:11:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHrs/RyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgBCPKa (ORCPT
+        id S1728742AbgBCPLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:10:30 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36316 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727988AbgBCPK1 (ORCPT
+        Mon, 3 Feb 2020 10:11:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31358 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728656AbgBCPLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:10:27 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 013F9JW7001610;
-        Mon, 3 Feb 2020 17:09:19 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id BB3D46032F; Mon,  3 Feb 2020 17:09:19 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, joel@jms.id.au
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v2 2/2] iio: adc: modify NPCM reset support
-Date:   Mon,  3 Feb 2020 17:09:17 +0200
-Message-Id: <20200203150917.176391-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200203150917.176391-1-tmaimon77@gmail.com>
-References: <20200203150917.176391-1-tmaimon77@gmail.com>
+        Mon, 3 Feb 2020 10:11:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580742674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yiCdfrSN5EVKEsI/Ra3J2Zu0bhodQqtE6L9IDdhIO3s=;
+        b=fHrs/RyJ6InA+90hSFUxneobIKTJoeYY2KrmGAGI9e1QXJdxOMbvm2gkWUQy6up9RJn/gu
+        N2DxnlvrH5W8GBz0mq6JOIAGjrE1YYGAZrvFDTT8uj8Y3SmyWCH7xSiY0+gZj22npp3y+A
+        EvL+soflEJjbboayFBUhpRRSDQHrcH0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-p0KRqx2fOHu3LXmG1YrSdA-1; Mon, 03 Feb 2020 10:11:09 -0500
+X-MC-Unique: p0KRqx2fOHu3LXmG1YrSdA-1
+Received: by mail-wr1-f70.google.com with SMTP id c6so8342599wrm.18
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:11:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=yiCdfrSN5EVKEsI/Ra3J2Zu0bhodQqtE6L9IDdhIO3s=;
+        b=JSt51ah1z64LPbqvX85oGZoswlmkXsvN9pjF7iQd3A/LpoMzHrkz+Rd4e0EqeyNNlc
+         rhG/R9RxPurEx75tfpmcsy1gxv4CDzz79xL/lJlHZ8Fijf0AkMAa9mC3S3UeMxsRa8jm
+         UuabcHOT4/GY4H5KzXjXeY/+sPn8qUDuwJ9IsBdDBlwsqIVqyCEGDXrkZYVJ6Nr8iUrU
+         cZOgf5KtDZHnZxo6QRwmop3B7nS/CrgR4z5BopIraXuMo5VCXgPGjNIB3gc9mozVy5nZ
+         RFzNBdE86+e/hLoueRDjU3fiYzHXcAj6zbyGpSPkySWBjj9tW4fASATyb/cKq7+EmcrC
+         kDow==
+X-Gm-Message-State: APjAAAUM7PFdzuxUljhvPoy8PIBkm/G4Xzj06MZfqxiT2M0WxPWgoe4y
+        cHH7gKHsabwk8rxaODKC9zfl/Ousm6t5wCA5KgG43bEO4K6P+8CdjoWiFK/TVAsndS2YNXIGPRn
+        9deU2b/e9ukcH6TgpFqfC1+k6
+X-Received: by 2002:a05:6000:1292:: with SMTP id f18mr16660807wrx.10.1580742668301;
+        Mon, 03 Feb 2020 07:11:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzAh+riVZBbe94jkHrX19MsZ8p6ppv9Z7/2yNDOtBFU1YrWfUl65HuNrx4GfZzIcc9XM4Mg2Q==
+X-Received: by 2002:a05:6000:1292:: with SMTP id f18mr16660782wrx.10.1580742668070;
+        Mon, 03 Feb 2020 07:11:08 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n13sm23763969wmd.21.2020.02.03.07.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 07:11:07 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization out of nested_enable_evmcs()
+In-Reply-To: <87a76niypi.fsf@vitty.brq.redhat.com>
+References: <20200115171014.56405-1-vkuznets@redhat.com> <20200115171014.56405-3-vkuznets@redhat.com> <A93CDB6E-0E46-4AA8-9B45-8F2EE3C723F5@oracle.com> <87a76niypi.fsf@vitty.brq.redhat.com>
+Date:   Mon, 03 Feb 2020 16:11:06 +0100
+Message-ID: <87h807ogdx.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify NPCM ADC reset support from
-direct register access to reset controller support.
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 
-please make sure to modify NPCM adc device tree
-parameters as described at nuvoton,npcm-adc.txt
-document for using this change.
+> Liran Alon <liran.alon@oracle.com> writes:
+>
+>>> On 15 Jan 2020, at 19:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>> 
+>>> With fine grained VMX feature enablement QEMU>=4.2 tries to do KVM_SET_MSRS
+>>> with default (matching CPU model) values and in case eVMCS is also enabled,
+>>> fails.
+>>> 
+>>> It would be possible to drop VMX feature filtering completely and make
+>>> this a guest's responsibility: if it decides to use eVMCS it should know
+>>> which fields are available and which are not. Hyper-V mostly complies to
+>>> this, however, there is at least one problematic control:
+>>> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES
+>>> which Hyper-V enables. As there is no 'apic_addr_field' in eVMCS, we
+>>> fail to handle this properly in KVM. It is unclear how this is supposed
+>>> to work, genuine Hyper-V doesn't expose the control so it is possible that
+>>> this is just a bug (in Hyper-V).
+>>
+>> Have you tried contacted someone at Hyper-V team about this?
+>>
+>
+> Yes, I have.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+I heard back from MS, they admited the bug and suggested us ... to hide
+the control from L1 when eVMCS is enabled. No surprises here. They also
+said the bug is unlikely to get fixed in the existing Hyper-V versions
+(2016 and 2019) so it seems we're stuck with the hack for awhile :-(
 
-diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-index a6170a37ebe8..83bad2d5575d 100644
---- a/drivers/iio/adc/npcm_adc.c
-+++ b/drivers/iio/adc/npcm_adc.c
-@@ -14,6 +14,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
- #include <linux/uaccess.h>
-+#include <linux/reset.h>
- 
- struct npcm_adc {
- 	bool int_status;
-@@ -23,13 +24,9 @@ struct npcm_adc {
- 	struct clk *adc_clk;
- 	wait_queue_head_t wq;
- 	struct regulator *vref;
--	struct regmap *rst_regmap;
-+	struct reset_control *reset;
- };
- 
--/* NPCM7xx reset module */
--#define NPCM7XX_IPSRST1_OFFSET		0x020
--#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
--
- /* ADC registers */
- #define NPCM_ADCCON	 0x00
- #define NPCM_ADCDATA	 0x04
-@@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
- 					       msecs_to_jiffies(10));
- 	if (ret == 0) {
- 		regtemp = ioread32(info->regs + NPCM_ADCCON);
--		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-+		if (regtemp & NPCM_ADCCON_ADC_CONV) {
- 			/* if conversion failed - reset ADC module */
--			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
--				     NPCM7XX_IPSRST1_ADC_RST);
-+			reset_control_assert(info->reset);
- 			msleep(100);
--			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
--				     0x0);
-+			reset_control_deassert(info->reset);
- 			msleep(100);
- 
- 			/* Enable ADC and start conversion module */
-@@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	struct npcm_adc *info;
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = pdev->dev.of_node;
- 
- 	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
- 	if (!indio_dev)
-@@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	if (IS_ERR(info->regs))
- 		return PTR_ERR(info->regs);
- 
-+	info->reset = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(info->reset))
-+		return PTR_ERR(info->reset);
-+
- 	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(info->adc_clk)) {
- 		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
-@@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
- 	div = div >> NPCM_ADCCON_DIV_SHIFT;
- 	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
- 
--	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
--		info->rst_regmap = syscon_regmap_lookup_by_compatible
--			("nuvoton,npcm750-rst");
--		if (IS_ERR(info->rst_regmap)) {
--			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
--			ret = PTR_ERR(info->rst_regmap);
--			goto err_disable_clk;
--		}
--	}
--
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq <= 0) {
- 		ret = -EINVAL;
+...
+
+>>> 
+>>> #endif /* __KVM_X86_VMX_EVMCS_H */
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index e3394c839dea..8eb74618b8d8 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -1849,8 +1849,14 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>> 	case MSR_IA32_VMX_BASIC ... MSR_IA32_VMX_VMFUNC:
+>>> 		if (!nested_vmx_allowed(vcpu))
+>>> 			return 1;
+>>> -		return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index,
+>>> -				       &msr_info->data);
+>>> +		if (vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index,
+>>> +				    &msr_info->data))
+>>> +			return 1;
+>>> +		if (!msr_info->host_initiated &&
+>>> +		    vmx->nested.enlightened_vmcs_enabled)
+>>> +			nested_evmcs_filter_control_msr(msr_info->index,
+>>> +							&msr_info->data);
+>>> +		break;
+>>
+>> Nit: It seems more elegant to me to put the call to nested_evmcs_filter_control_msr() inside vmx_get_vmx_msr().
+>>
+>
+> Sure, will move it there (in case we actually decide to merge this)
+>
+
+Thinking more about it, we can't check host_initiated in
+vmx_get_vmx_msr() as it's not passed there, this can probably get
+changed but I don't see a big difference so I'll probably keep the hack
+where it is now.
+
 -- 
-2.22.0
+Vitaly
 
