@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F416C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B0FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F28217BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0743521775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747629;
-	bh=bRDxASd4pXuwaIG0C6ZLI8ag5CYBoRgCK8NpwNg/rFI=;
+	s=default; t=1580747632;
+	bh=ACeJ2/+e6q1TL5FqdhhkxfO0iCy5+VdHQmJAaoOf/Oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjCS0GastIizrVP3/l+nZnb/fRKnK2UXfxh3tKykyvHPKbtwDNXLi2VH02XLHelw4
-	 EDb7oyXh/HFRVA1xg5l2mlvrzMNaDoHwBvUsSLvQoOfS4DNHFOFjRjuF+9BLN1OQJZ
-	 VYLHatfNRB1U/rc4pwifsURHvonR4OC3dqldhJL8=
+	b=J59gjJi57SZk+wflyzz/5c4skisrBAj4WpF978eT2FKuarI+b1DM3I0fVH1u5agdS
+	 lLRZjy6ICHQ2yRmc3y801ZomGYZ5ZwuQTYeGMxfhqkgI6YeihwhI3KunCsIzIUDA0d
+	 anc1QkUBzdKk7PTPeyKhhWuweK7AOppMJgCfOUk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgBCQds (ORCPT
+        id S1730672AbgBCQdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbgBCQdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:43 -0500
+        id S1730656AbgBCQds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:48 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 619912051A;
-        Mon,  3 Feb 2020 16:33:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21B052087E;
+        Mon,  3 Feb 2020 16:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747622;
-        bh=bRDxASd4pXuwaIG0C6ZLI8ag5CYBoRgCK8NpwNg/rFI=;
+        s=default; t=1580747627;
+        bh=ACeJ2/+e6q1TL5FqdhhkxfO0iCy5+VdHQmJAaoOf/Oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3jgazon0PEmbKJpi8cXh0WvZ/5scamVh0NSVkB8I4qxNmMVDBwz10UnGuXCUlKfV
-         S6SVFkTAq51uB0zQyKC/HYT0zpNBg0g8J1fXNYy1WJA5MyuJcneR4IgC9WqFBcwIPc
-         Ljzs06QvjkQLAd3wAvbg1lcnARtVMWpN59dzORCg=
+        b=L/agLq7ja1G52U5lQ3RWRBel380cvWXBq5C988jT/wCVJEVg7zYZ55h6svazSQBPv
+         RPeSfc8S7ivypOyv+FKnDmgEQjLrYJCF4ycZKIseNEyL2zpHrpGwSaaGuWOhC9+vmO
+         d7p1YvD/zXWL5AEbm9kRGC0WaqFkQvQu7SH0kxH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/70] Input: aiptek - use descriptors of current altsetting
-Date:   Mon,  3 Feb 2020 16:20:04 +0000
-Message-Id: <20200203161919.888636372@linuxfoundation.org>
+Subject: [PATCH 4.19 54/70] vti[6]: fix packet tx through bpf_redirect()
+Date:   Mon,  3 Feb 2020 16:20:06 +0000
+Message-Id: <20200203161920.155843437@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -61,36 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit cfa4f6a99fb183742cace65ec551b444852b8ef6 ]
+[ Upstream commit 95224166a9032ff5d08fca633d37113078ce7d01 ]
 
-Make sure to always use the descriptors of the current alternate setting
-to avoid future issues when accessing fields that may differ between
-settings.
+With an ebpf program that redirects packets through a vti[6] interface,
+the packets are dropped because no dst is attached.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-4-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This could also be reproduced with an AF_PACKET socket, with the following
+python script (vti1 is an ip_vti interface):
+
+ import socket
+ send_s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, 0)
+ # scapy
+ # p = IP(src='10.100.0.2', dst='10.200.0.1')/ICMP(type='echo-request')
+ # raw(p)
+ req = b'E\x00\x00\x1c\x00\x01\x00\x00@\x01e\xb2\nd\x00\x02\n\xc8\x00\x01\x08\x00\xf7\xff\x00\x00\x00\x00'
+ send_s.sendto(req, ('vti1', 0x800, 0, 0))
+
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/tablet/aiptek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_vti.c  | 13 +++++++++++--
+ net/ipv6/ip6_vti.c | 13 +++++++++++--
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-index dc2ad1cc8fe1d..8632ca509887d 100644
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -1726,7 +1726,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 960f4faaf2942..f5e5fcd908592 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -208,8 +208,17 @@ static netdev_tx_t vti_xmit(struct sk_buff *skb, struct net_device *dev,
+ 	int mtu;
  
- 	aiptek->inputdev = inputdev;
- 	aiptek->intf = intf;
--	aiptek->ifnum = intf->altsetting[0].desc.bInterfaceNumber;
-+	aiptek->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
- 	aiptek->inDelay = 0;
- 	aiptek->endDelay = 0;
- 	aiptek->previousJitterable = 0;
+ 	if (!dst) {
+-		dev->stats.tx_carrier_errors++;
+-		goto tx_error_icmp;
++		struct rtable *rt;
++
++		fl->u.ip4.flowi4_oif = dev->ifindex;
++		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++		if (IS_ERR(rt)) {
++			dev->stats.tx_carrier_errors++;
++			goto tx_error_icmp;
++		}
++		dst = &rt->dst;
++		skb_dst_set(skb, dst);
+ 	}
+ 
+ 	dst_hold(dst);
+diff --git a/net/ipv6/ip6_vti.c b/net/ipv6/ip6_vti.c
+index bfd39db3398a5..67ff206b6d619 100644
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -453,8 +453,17 @@ vti6_xmit(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
+ 	int err = -1;
+ 	int mtu;
+ 
+-	if (!dst)
+-		goto tx_err_link_failure;
++	if (!dst) {
++		fl->u.ip6.flowi6_oif = dev->ifindex;
++		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++		if (dst->error) {
++			dst_release(dst);
++			dst = NULL;
++			goto tx_err_link_failure;
++		}
++		skb_dst_set(skb, dst);
++	}
+ 
+ 	dst_hold(dst);
+ 	dst = xfrm_lookup(t->net, dst, fl, NULL, 0);
 -- 
 2.20.1
 
