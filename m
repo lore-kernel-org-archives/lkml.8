@@ -2,79 +2,110 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72834C3524A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54D8C3524A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4181A2073C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C02CtPWN"
+	by mail.kernel.org (Postfix) with ESMTP id 82BD520679
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 03:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgBCD0h (ORCPT
+        id S1727276AbgBCD30 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 22:26:37 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:34481 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgBCD0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 22:26:36 -0500
-Received: by mail-vs1-f68.google.com with SMTP id g15so8057006vsf.1;
-        Sun, 02 Feb 2020 19:26:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=VXRtO7E8+XfZ8B/bR9c2XcFihrbguDmpun3RyDc6APw=;
-        b=C02CtPWNFpcCoNhgOgnNW3jL67phNgf5gErTHAd85JFVuKZxWd8LW6pBBf/VHrZLj5
-         wrSZCz3aKb0tiBzEu0Apwg1wG+OhmM8pDe5r8dc1ASxt2nHApM2EWNDFc25oU9RPRVFc
-         yO/vD6sRXL2DWrUSHaf91hcFwxZG9ZHALJ1LHCEgYx8pUMnFjRKUnhvobiGQiS56IFOO
-         mJHxjmPjKi/7xVVG9Jr1nLxjAX3h/PZ14Ie6MOd2hfuByoHQUjbz13fNh91b8hZcQ5Zp
-         7gmnla1H6rTOLo0rMxuS5TXX35ycvEzVT5nzO/UyXRhoHYvRl5FTxluUg+6u8bfWUzhm
-         82RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=VXRtO7E8+XfZ8B/bR9c2XcFihrbguDmpun3RyDc6APw=;
-        b=Yl4738kY8v2u0x/ZBu2A2Y5IlHC80B7nPnRRFDtLoNv98o4drmcgjGkSdpsVYtrv1i
-         FeEH+4jP8mvQIz7LbMsdmvglOXHSrQhcaAeWSmvoyvzcpor/SR1zcc4bIu5WGRht9Qei
-         2bHziJwA0Mv3mxk/NLgSBuo5dzzbBBpdEK+FFmE5C7WUycJjayAFpzxvahD3wuRzg5Ei
-         Xj/L1vbVmgPEYH8sPeiNhUR6k1fXYRhguYj1364HTfX4HHUn7OdufR18a/3nfmGmwcMg
-         39ZtE/B+iB+6S0bycx05Mu9Rf+MKcPBxVoJA1IJJkSJ6DBLZzK+BMVG7SMdjXRgXWPIf
-         +gdA==
-X-Gm-Message-State: APjAAAUmlUH1crEYF6nC/CDDI0WkC2Rv+7h8UGvzhsG8x1lCeoT6xHjr
-        CsYPpSoHNHRDP+7r2U5lCNFtdWR9H6QXYYQYxhVGScXBicg=
-X-Google-Smtp-Source: APXvYqwm8J63Pn4S/RdTlqdqjAyycaCug01+tCM8+l/nzNtBAVI8yFMyzPtgA6zgxjVOxgyTrsq/0dmp8aQLgvcdLU8=
-X-Received: by 2002:a67:f315:: with SMTP id p21mr14721502vsf.39.1580700394763;
- Sun, 02 Feb 2020 19:26:34 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a67:5d02:0:0:0:0:0 with HTTP; Sun, 2 Feb 2020 19:26:34 -0800 (PST)
-In-Reply-To: <20200202050922.12402-3-masahiroy@kernel.org>
-References: <20200202050922.12402-1-masahiroy@kernel.org> <20200202050922.12402-3-masahiroy@kernel.org>
-From:   Justin Capella <justincapella@gmail.com>
-Date:   Sun, 2 Feb 2020 19:26:34 -0800
-Message-ID: <CAMrEMU9ZBAwOPsqeKw0sUF0EWnfO1-UtOKROD6T1AjYX_tWLXA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kallsyms: fix type of kallsyms_token_table[]
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sun, 2 Feb 2020 22:29:26 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2936 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727034AbgBCD30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 22:29:26 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id C98D5E13684D1791D165;
+        Mon,  3 Feb 2020 11:29:20 +0800 (CST)
+Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 3 Feb 2020 11:29:20 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 3 Feb 2020 11:29:20 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Mon, 3 Feb 2020 11:29:20 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+CC:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        =?iso-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: nVMX: set rflags to specify success in
+ handle_invvpid() default case
+Thread-Topic: [PATCH] KVM: nVMX: set rflags to specify success in
+ handle_invvpid() default case
+Thread-Index: AdXaOs5msQGrd2JlS/qT+AceqW9QkQ==
+Date:   Mon, 3 Feb 2020 03:29:19 +0000
+Message-ID: <668e0827d62c489cbf52b7bc5d27ba9b@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-unsigned char maybe? I understand printable chars unlikely to cause
-any trouble and probably a non issue, but the domain is different for
-char, and while I don't know of supported implementations where sizeof
-char isn't a byte, I think it's a possibility and perhaps why u8 was
-in use?
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> On Thu, Jan 23, 2020 at 10:22:24AM -0800, Jim Mattson wrote:
+>>> On Thu, Jan 23, 2020 at 1:54 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>> >
+>>> > On 23/01/20 10:45, Vitaly Kuznetsov wrote:
+>>> > >>> SDM says that "If an
+>>> > >>> unsupported INVVPID type is specified, the instruction fails." 
+>>> > >>> and this is similar to INVEPT and I decided to check what 
+>>> > >>> handle_invept() does. Well, it does BUG_ON().
+>>> > >>>
+>>> > >>> Are we doing the right thing in any of these cases?
+>>> > >>
+>>> > >> Yes, both INVEPT and INVVPID catch this earlier.
+>>> > >>
+>>> > >> So I'm leaning towards not applying Miaohe's patch.
+>>> > >
+>>> > > Well, we may at least want to converge on BUG_ON() for both 
+>>> > > handle_invvpid()/handle_invept(), there's no need for them to differ.
+>>> >
+>>> > WARN_ON_ONCE + nested_vmx_failValid would probably be better, if we 
+>>> > really want to change this.
+>>> >
+>>> > Paolo
+>>> 
+>>> In both cases, something is seriously wrong. The only plausible 
+>>> explanations are compiler error or hardware failure. It would be nice 
+>>> to handle *all* such failures with a KVM_INTERNAL_ERROR exit to 
+>>> userspace. (I'm also thinking of situations like getting a VM-exit 
+>> for
+>>>> INIT.)
+>>
+>> Ya.  Vitaly and I had a similar discussion[*].  The idea we tossed 
+>> around was to also mark the VM as having encountered a KVM/hardware 
+>> bug so that the VM is effectively dead.  That would also allow 
+>> gracefully handling bugs that are detected deep in the stack, i.e. 
+>> can't simply return 0 to get out to userspace.
+>
+>Yea, I was thinking about introducing a big hammer which would stop the whole VM as soon as possible to make it easier to debug such situations. Something like (not really tested):
+>
+Yea, please just ignore my origin patch and do what you want. :)
+I'm sorry for reply in such a big day. I'am just backing from a really hard festival. :(
