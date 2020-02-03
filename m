@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7B3C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DB4C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601A421741
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8B221741
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747601;
-	bh=umPH9Q9KzyoNAqubzv/F//6lCA5k+AIpbCZWryYqfGM=;
+	s=default; t=1580747606;
+	bh=jWRssr90GBfEJ4YHTI/skt6o02YDdSqapYNKQs8ZPNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKm0ZyDqDCexOeIsLjiEHySGb00yRH74XUl4p8x5DJ3/nNV1hPiQXjrPQIcxnFnNo
-	 ZhA8DgLF1c3ayzZQ3xOjOqI1y+pZqDtPot7vC7ugF34V3RCpNN1eRCzPnsspnwYhJx
-	 5YP/RUKGNHZJKPmIUpScJRQoG34CDeZDqL0bs0ac=
+	b=H0V0/TL/ZII3QrmNjfom7IkTriilS5z2P4Rh1hUWHT52DjfI04pX6s5teb4A1gt8X
+	 gaoH+VKgfjIAnoGJ1SDvsRIuBRlChyxdskA/iUeLf9fhGGbat1V+2pB4f/EWzPVc7X
+	 Lo3xllBdzKyEMiK6xkxIgv+EZoNTmSn6rG941bsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgBCQdU (ORCPT
+        id S1730580AbgBCQdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:33:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47232 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:33:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbgBCQdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:33:17 -0500
+        id S1730563AbgBCQdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:33:20 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555632082E;
-        Mon,  3 Feb 2020 16:33:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB3E621741;
+        Mon,  3 Feb 2020 16:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747596;
-        bh=umPH9Q9KzyoNAqubzv/F//6lCA5k+AIpbCZWryYqfGM=;
+        s=default; t=1580747599;
+        bh=jWRssr90GBfEJ4YHTI/skt6o02YDdSqapYNKQs8ZPNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDOmPMC7Qlc/dYiTnCb/VhCZDF+BMlD9PVSbGQHUcj5CaZFF4xgx6uXrurFRfJwcZ
-         y+lTXjyYJk6ex+F0KDrFSwlpvgEJYfOoFNeM7jLyj/aj2rJp4IUklqNONhFqganSyo
-         uBmtp3s1XZDJ0DgOMbEB4QijeRpGHYJ1W7231e/4=
+        b=V8MHyI2UrNRQG9U/WIFaGmlVDMWfEN136UQ6wmh1B+qqBB/pS3Bzmgd9ApTMMWawZ
+         GONN2+Iyed4Ecv+2gsX2IwhO2N69jn4mNdQ+u5yAj2Zw43C/FKG7fiKAUbJB0ZZF48
+         aQSai8E5dm5IvHkMUIdsKoxrHxzv30ZsxndFReY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/70] airo: Add missing CAP_NET_ADMIN check in AIROOLDIOCTL/SIOCDEVPRIVATE
-Date:   Mon,  3 Feb 2020 16:20:13 +0000
-Message-Id: <20200203161921.008885855@linuxfoundation.org>
+Subject: [PATCH 4.19 62/70] r8152: get default setting of WOL before initializing
+Date:   Mon,  3 Feb 2020 16:20:14 +0000
+Message-Id: <20200203161921.126096722@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161912.158976871@linuxfoundation.org>
 References: <20200203161912.158976871@linuxfoundation.org>
@@ -62,81 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit 78f7a7566f5eb59321e99b55a6fdb16ea05b37d1 ]
+[ Upstream commit 9583a3638dc07cc1878f41265e85ed497f72efcb ]
 
-The driver for Cisco Aironet 4500 and 4800 series cards (airo.c),
-implements AIROOLDIOCTL/SIOCDEVPRIVATE in airo_ioctl().
+Initailization would reset runtime suspend by tp->saved_wolopts, so
+the tp->saved_wolopts should be set before initializing.
 
-The ioctl handler copies an aironet_ioctl struct from userspace, which
-includes a command. Some of the commands are handled in readrids(),
-where the user controlled command is converted into a driver-internal
-value called "ridcode".
-
-There are two command values, AIROGWEPKTMP and AIROGWEPKNV, which
-correspond to ridcode values of RID_WEP_TEMP and RID_WEP_PERM
-respectively. These commands both have checks that the user has
-CAP_NET_ADMIN, with the comment that "Only super-user can read WEP
-keys", otherwise they return -EPERM.
-
-However there is another command value, AIRORRID, that lets the user
-specify the ridcode value directly, with no other checks. This means
-the user can bypass the CAP_NET_ADMIN check on AIROGWEPKTMP and
-AIROGWEPKNV.
-
-Fix it by moving the CAP_NET_ADMIN check out of the command handling
-and instead do it later based on the ridcode. That way regardless of
-whether the ridcode is set via AIROGWEPKTMP or AIROGWEPKNV, or passed
-in using AIRORID, we always do the CAP_NET_ADMIN check.
-
-Found by Ilja by code inspection, not tested as I don't have the
-required hardware.
-
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/cisco/airo.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/net/usb/r8152.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index 9344cf17d6b11..c3fe9bfff8122 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -7786,16 +7786,8 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
- 	case AIROGVLIST:    ridcode = RID_APLIST;       break;
- 	case AIROGDRVNAM:   ridcode = RID_DRVNAME;      break;
- 	case AIROGEHTENC:   ridcode = RID_ETHERENCAP;   break;
--	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;
--		/* Only super-user can read WEP keys */
--		if (!capable(CAP_NET_ADMIN))
--			return -EPERM;
--		break;
--	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;
--		/* Only super-user can read WEP keys */
--		if (!capable(CAP_NET_ADMIN))
--			return -EPERM;
--		break;
-+	case AIROGWEPKTMP:  ridcode = RID_WEP_TEMP;	break;
-+	case AIROGWEPKNV:   ridcode = RID_WEP_PERM;	break;
- 	case AIROGSTAT:     ridcode = RID_STATUS;       break;
- 	case AIROGSTATSD32: ridcode = RID_STATSDELTA;   break;
- 	case AIROGSTATSC32: ridcode = RID_STATS;        break;
-@@ -7809,6 +7801,12 @@ static int readrids(struct net_device *dev, aironet_ioctl *comp) {
- 		return -EINVAL;
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index db817d3c2bb8b..c5c188dc66268 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5259,6 +5259,11 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 
+ 	intf->needs_remote_wakeup = 1;
+ 
++	if (!rtl_can_wakeup(tp))
++		__rtl_set_wol(tp, 0);
++	else
++		tp->saved_wolopts = __rtl_get_wol(tp);
++
+ 	tp->rtl_ops.init(tp);
+ 	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+ 	set_ethernet_addr(tp);
+@@ -5272,10 +5277,6 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		goto out1;
  	}
  
-+	if (ridcode == RID_WEP_TEMP || ridcode == RID_WEP_PERM) {
-+		/* Only super-user can read WEP keys */
-+		if (!capable(CAP_NET_ADMIN))
-+			return -EPERM;
-+	}
-+
- 	if ((iobuf = kzalloc(RIDSIZE, GFP_KERNEL)) == NULL)
- 		return -ENOMEM;
- 
+-	if (!rtl_can_wakeup(tp))
+-		__rtl_set_wol(tp, 0);
+-
+-	tp->saved_wolopts = __rtl_get_wol(tp);
+ 	if (tp->saved_wolopts)
+ 		device_set_wakeup_enable(&udev->dev, true);
+ 	else
 -- 
 2.20.1
 
