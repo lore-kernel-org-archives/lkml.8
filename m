@@ -2,240 +2,96 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2562C33C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B95C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E9C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1FE20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 07:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="I74dLGoO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYXohi9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgBCHMH (ORCPT
+        id S1727352AbgBCHQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 02:12:07 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:41044 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbgBCHMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 02:12:05 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 489zXb1x5qz9tyK1;
-        Mon,  3 Feb 2020 08:11:59 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=I74dLGoO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id sUBt5xgKkoR0; Mon,  3 Feb 2020 08:11:59 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 489zXb0v4Mz9tyJn;
-        Mon,  3 Feb 2020 08:11:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1580713919; bh=vbwUE7eW4n0CeytBw4h62e+GSLr21YOno7Doo4/25XY=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=I74dLGoOef61oxp4O27Zd0yae/yQgmSs+jvGSaEg4axpBDSipFybOk1OeV0EL0oyd
-         hLiM4+YyiRPDpQ2DhV/C2CEZpwReIUHFXG8fjMi/5iyGnlS1uyJ10p4TM97ccRHNs8
-         xgYqOJ6/T6vbhTsI/QoOpjFYW+1fZ/oR9LL0dc9M=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE1018B791;
-        Mon,  3 Feb 2020 08:12:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id yr0slnhUa4ez; Mon,  3 Feb 2020 08:12:03 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 874018B752;
-        Mon,  3 Feb 2020 08:12:03 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2E04B652AD; Mon,  3 Feb 2020 07:12:02 +0000 (UTC)
-Message-Id: <6076aaa16f3119a766dc64afa2a039786830d7d0.1580713729.git.christophe.leroy@c-s.fr>
-In-Reply-To: <80ebd9075cd7c8b412c6d5d05f7542f9026642ef.1580713729.git.christophe.leroy@c-s.fr>
-References: <80ebd9075cd7c8b412c6d5d05f7542f9026642ef.1580713729.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 7/7] powerpc/32: use set_memory_attr()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  3 Feb 2020 07:12:02 +0000 (UTC)
+        Mon, 3 Feb 2020 02:16:30 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:29978 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725973AbgBCHQa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 02:16:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580714189; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=jUeEF/Zuy5Iv2uD5XELfW5OO2/vfRduEY6ZeD7zd/Vc=;
+ b=iYXohi9szRzXMJSru6EstvuO3ugHR6/9cbeaVpq/F+Nhy/dP1ela1t4RH//wbHQFVZfXvBy/
+ TGlOtuQxMefo8qlv6fEA3RtgqBztRGutqb6lNpkPdaufXLuM53XQDBZfX3TX42Kcqz6iwVtl
+ wB3pGhxHGFZQTrMZC/jMrCY0zEA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e37c8cd.7fcc923c9ae8-smtp-out-n03;
+ Mon, 03 Feb 2020 07:16:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59490C447AA; Mon,  3 Feb 2020 07:16:27 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B22F0C43383;
+        Mon,  3 Feb 2020 07:16:26 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Feb 2020 15:16:26 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 6/8] scsi: ufs: Add dev ref clock gating wait time
+ support
+In-Reply-To: <d51c7c51-482a-01c3-fae0-1e83f9df45ac@acm.org>
+References: <1579764349-15578-1-git-send-email-cang@codeaurora.org>
+ <1579764349-15578-7-git-send-email-cang@codeaurora.org>
+ <d51c7c51-482a-01c3-fae0-1e83f9df45ac@acm.org>
+Message-ID: <bcbd7e82b1ea6f653d5136e89e70c9f0@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use set_memory_attr() instead of the PPC32 specific change_page_attr()
+On 2020-01-26 11:34, Bart Van Assche wrote:
+> On 2020-01-22 23:25, Can Guo wrote:
+>> +	/* getting Specification Version in big endian format */
+>> +	hba->dev_info.spec_version = desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 
+>> 8 |
+>> +				      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
+> 
+> Please use get_unaligned_be16() instead of open-coding it.
+> 
+> Thanks,
+> 
+> Bart.
 
-change_page_attr() was checking that the address was not mapped by
-blocks and was handling highmem, but that's unneeded because the
-affected pages can't be in highmem and block mapping verification
-is already done by the callers.
+I am just keeping symmetry with the other device descriptors,
+for example w_manufacturer_id.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v3: no change
-v2: new
----
- arch/powerpc/mm/pgtable_32.c | 95 ++++--------------------------------
- 1 file changed, 10 insertions(+), 85 deletions(-)
+Thanks,
 
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 5fb90edd865e..3d92eaf3ee2f 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -23,6 +23,7 @@
- #include <linux/highmem.h>
- #include <linux/memblock.h>
- #include <linux/slab.h>
-+#include <linux/set_memory.h>
- 
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -121,99 +122,20 @@ void __init mapin_ram(void)
- 	}
- }
- 
--/* Scan the real Linux page tables and return a PTE pointer for
-- * a virtual address in a context.
-- * Returns true (1) if PTE was found, zero otherwise.  The pointer to
-- * the PTE pointer is unmodified if PTE is not found.
-- */
--static int
--get_pteptr(struct mm_struct *mm, unsigned long addr, pte_t **ptep, pmd_t **pmdp)
--{
--        pgd_t	*pgd;
--	pud_t	*pud;
--        pmd_t	*pmd;
--        pte_t	*pte;
--        int     retval = 0;
--
--        pgd = pgd_offset(mm, addr & PAGE_MASK);
--        if (pgd) {
--		pud = pud_offset(pgd, addr & PAGE_MASK);
--		if (pud && pud_present(*pud)) {
--			pmd = pmd_offset(pud, addr & PAGE_MASK);
--			if (pmd_present(*pmd)) {
--				pte = pte_offset_map(pmd, addr & PAGE_MASK);
--				if (pte) {
--					retval = 1;
--					*ptep = pte;
--					if (pmdp)
--						*pmdp = pmd;
--					/* XXX caller needs to do pte_unmap, yuck */
--				}
--			}
--		}
--        }
--        return(retval);
--}
--
--static int __change_page_attr_noflush(struct page *page, pgprot_t prot)
--{
--	pte_t *kpte;
--	pmd_t *kpmd;
--	unsigned long address;
--
--	BUG_ON(PageHighMem(page));
--	address = (unsigned long)page_address(page);
--
--	if (v_block_mapped(address))
--		return 0;
--	if (!get_pteptr(&init_mm, address, &kpte, &kpmd))
--		return -EINVAL;
--	__set_pte_at(&init_mm, address, kpte, mk_pte(page, prot), 0);
--	pte_unmap(kpte);
--
--	return 0;
--}
--
--/*
-- * Change the page attributes of an page in the linear mapping.
-- *
-- * THIS DOES NOTHING WITH BAT MAPPINGS, DEBUG USE ONLY
-- */
--static int change_page_attr(struct page *page, int numpages, pgprot_t prot)
--{
--	int i, err = 0;
--	unsigned long flags;
--	struct page *start = page;
--
--	local_irq_save(flags);
--	for (i = 0; i < numpages; i++, page++) {
--		err = __change_page_attr_noflush(page, prot);
--		if (err)
--			break;
--	}
--	wmb();
--	local_irq_restore(flags);
--	flush_tlb_kernel_range((unsigned long)page_address(start),
--			       (unsigned long)page_address(page));
--	return err;
--}
--
- void mark_initmem_nx(void)
- {
--	struct page *page = virt_to_page(_sinittext);
- 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
- 				 PFN_DOWN((unsigned long)_sinittext);
- 
- 	if (v_block_mapped((unsigned long)_stext + 1))
- 		mmu_mark_initmem_nx();
- 	else
--		change_page_attr(page, numpages, PAGE_KERNEL);
-+		set_memory_attr((unsigned long)_sinittext, numpages, PAGE_KERNEL);
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mark_rodata_ro(void)
- {
--	struct page *page;
- 	unsigned long numpages;
- 
- 	if (v_block_mapped((unsigned long)_sinittext)) {
-@@ -222,20 +144,18 @@ void mark_rodata_ro(void)
- 		return;
- 	}
- 
--	page = virt_to_page(_stext);
- 	numpages = PFN_UP((unsigned long)_etext) -
- 		   PFN_DOWN((unsigned long)_stext);
- 
--	change_page_attr(page, numpages, PAGE_KERNEL_ROX);
-+	set_memory_attr((unsigned long)_stext, numpages, PAGE_KERNEL_ROX);
- 	/*
- 	 * mark .rodata as read only. Use __init_begin rather than __end_rodata
- 	 * to cover NOTES and EXCEPTION_TABLE.
- 	 */
--	page = virt_to_page(__start_rodata);
- 	numpages = PFN_UP((unsigned long)__init_begin) -
- 		   PFN_DOWN((unsigned long)__start_rodata);
- 
--	change_page_attr(page, numpages, PAGE_KERNEL_RO);
-+	set_memory_attr((unsigned long)__start_rodata, numpages, PAGE_KERNEL_RO);
- 
- 	// mark_initmem_nx() should have already run by now
- 	ptdump_check_wx();
-@@ -245,9 +165,14 @@ void mark_rodata_ro(void)
- #ifdef CONFIG_DEBUG_PAGEALLOC
- void __kernel_map_pages(struct page *page, int numpages, int enable)
- {
-+	unsigned long addr = (unsigned long)page_address(page);
-+
- 	if (PageHighMem(page))
- 		return;
- 
--	change_page_attr(page, numpages, enable ? PAGE_KERNEL : __pgprot(0));
-+	if (enable)
-+		set_memory_attr(addr, numpages, PAGE_KERNEL);
-+	else
-+		set_memory_attr(addr, numpages, __pgprot(0));
- }
- #endif /* CONFIG_DEBUG_PAGEALLOC */
--- 
-2.25.0
-
+Can Guo.
