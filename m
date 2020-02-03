@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B142C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B310BC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AE92086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8609F20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBCPdY (ORCPT
+        id S1728078AbgBCPgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:33:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53804 "EHLO
+        Mon, 3 Feb 2020 10:36:02 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53828 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgBCPdX (ORCPT
+        with ESMTP id S1726272AbgBCPgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:33:23 -0500
+        Mon, 3 Feb 2020 10:36:02 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 9A0FC28F6C9
+        with ESMTPSA id 6CB6D28F822
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH 13/17] pwm: cros-ec: Remove cros_ec_cmd_xfer_status()
+Subject: Re: [PATCH 17/17] platform/chrome: Drop cros_ec_cmd_xfer_status()
 To:     Prashant Malani <pmalani@chromium.org>,
         linux-kernel@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Benson Leung <bleung@chromium.org>,
+Cc:     Benson Leung <bleung@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Evan Green <evgreen@chromium.org>
 References: <20200130203106.201894-1-pmalani@chromium.org>
- <20200130203106.201894-14-pmalani@chromium.org>
-Message-ID: <5d7cbb93-dfa0-11d3-1374-2e4044ead524@collabora.com>
-Date:   Mon, 3 Feb 2020 16:33:17 +0100
+ <20200130203106.201894-18-pmalani@chromium.org>
+Message-ID: <d4545a76-934d-0bc3-91a2-eb3385d03ef8@collabora.com>
+Date:   Mon, 3 Feb 2020 16:35:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200130203106.201894-14-pmalani@chromium.org>
+In-Reply-To: <20200130203106.201894-18-pmalani@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -50,85 +51,93 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+
 On 30/1/20 21:31, Prashant Malani wrote:
-> Convert one existing usage of cros_ec_cmd_xfer_status() to
-> cros_ec_send_cmd_msg(), which accomplishes the same thing but also does
-> the EC message struct setup,and is defined in platform/chrome and is
-> accessible by other modules.
-> 
-> For the other usage, switch it to using cros_ec_cmd_xfer(), since the
-> calling functions rely on the result field of the struct cros_ec_command
-> struct that is used.
+> Remove cros_ec_cmd_xfer_status() since all usages of that function
+> have been converted to cros_ec_send_cmd_msg().
 > 
 > Signed-off-by: Prashant Malani <pmalani@chromium.org>
 > ---
->  drivers/pwm/pwm-cros-ec.c | 27 +++++++++------------------
->  1 file changed, 9 insertions(+), 18 deletions(-)
+>  drivers/platform/chrome/cros_ec_proto.c     | 42 +++++----------------
+>  include/linux/platform_data/cros_ec_proto.h |  3 --
+>  2 files changed, 9 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index 89497448d21775..8bf610a6529e7e 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -32,25 +32,14 @@ static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chip *c)
->  
->  static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
->  {
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		struct ec_params_pwm_set_duty params;
-> -	} __packed buf;
-> -	struct ec_params_pwm_set_duty *params = &buf.params;
-> -	struct cros_ec_command *msg = &buf.msg;
-> -
-> -	memset(&buf, 0, sizeof(buf));
-> +	struct ec_params_pwm_set_duty params = {0};
->  
-> -	msg->version = 0;
-> -	msg->command = EC_CMD_PWM_SET_DUTY;
-> -	msg->insize = 0;
-> -	msg->outsize = sizeof(*params);
-> -
-> -	params->duty = duty;
-> -	params->pwm_type = EC_PWM_TYPE_GENERIC;
-> -	params->index = index;
-> +	params.duty = duty;
-> +	params.pwm_type = EC_PWM_TYPE_GENERIC;
-> +	params.index = index;
->  
-> -	return cros_ec_cmd_xfer_status(ec, msg);
-> +	return cros_ec_send_cmd_msg(ec, 0, EC_CMD_PWM_SET_DUTY, &params,
-> +				    sizeof(params), NULL, 0);
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index efd1c0b6a830c8..8b97702ba97393 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -542,35 +542,6 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
 >  }
+>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
 >  
->  static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
-> @@ -78,11 +67,13 @@ static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
->  	params->pwm_type = EC_PWM_TYPE_GENERIC;
->  	params->index = index;
+> -/**
+> - * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+> - * @ec_dev: EC device.
+> - * @msg: Message to write.
+> - *
+> - * This function is identical to cros_ec_cmd_xfer, except it returns success
+> - * status only if both the command was transmitted successfully and the EC
+> - * replied with success status. It's not necessary to check msg->result when
+> - * using this function.
+> - *
+> - * Return: The number of bytes transferred on success or negative error code.
+> - */
+> -int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> -			    struct cros_ec_command *msg)
+> -{
+> -	int ret;
+> -
+> -	ret = cros_ec_cmd_xfer(ec_dev, msg);
+> -	if (ret < 0) {
+> -		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
+> -	} else if (msg->result != EC_RES_SUCCESS) {
+> -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
+> -		return -EPROTO;
+> -	}
+> -
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+> -
+>  /**
+>   * cros_ec_send_cmd_msg() - Utility function to send commands to ChromeOS EC.
+>   * @ec: EC device struct.
+> @@ -581,10 +552,15 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer_status);
+>   * @indata: Data to be received from the EC.
+>   * @insize: Size of the &indata buffer.
+>   *
+> - * This function is a wrapper around &cros_ec_cmd_xfer_status, and performs
+> - * some of the common work involved with sending a command to the EC. This
+> - * includes allocating and filling up a &struct cros_ec_command message buffer,
+> - * and copying the received data to another buffer.
+> + * This function is similar to cros_ec_cmd_xfer(), except it returns success
+> + * status only if both the command was transmitted successfully and the EC
+> + * replied with success status. It's not necessary to check msg->result when
+> + * using this function.
+> + *
+> + * It also performs some of the common work involved with sending a command to
+> + * the EC. This includes allocating and filling up a
+> + * &struct cros_ec_command message buffer, and copying the received data to
+> + * another buffer.
+
+As I said, explain at the first chance for what is this helper, so you don't
+need to tweak the description here.
+
+>   *
+>   * Return: The number of bytes transferred on success or negative error code.
+>   */
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 166ce26bdd79eb..851bd9af582d94 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -198,9 +198,6 @@ int cros_ec_check_result(struct cros_ec_device *ec_dev,
+>  int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>  		     struct cros_ec_command *msg);
 >  
-> -	ret = cros_ec_cmd_xfer_status(ec, msg);
-> +	ret = cros_ec_cmd_xfer(ec, msg);
-
-Why? There is a good reason we introduced the cros_ec_cmd_xfer_status.
-
-IMO the purpose of introduce the new wrapper only makes sense if we can cover
-_all_ the cases, so we can remove cros_ec_cmd_xfer_status and make
-cros_ec_cmd_xfer private to cros_ec_proto.
-
-Is not possible to use the new wrapper here?
-
->  	if (result)
->  		*result = msg->result;
-
-Hmm, I see, that's the problem ...
-
-This driver will need a bit of rework but I think could be possible to use the
-wrapper.
-
->  	if (ret < 0)
->  		return ret;
-> +	else if (msg->result != EC_RES_SUCCESS)
-> +		return -EPROTO;
->  
->  	return resp->duty;
->  }
+> -int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+> -			    struct cros_ec_command *msg);
+> -
+>  int cros_ec_send_cmd_msg(struct cros_ec_device *ec_dev, unsigned int version,
+>  			 unsigned int command, void *outdata,
+>  			 unsigned int outsize, void *indata,
 > 
