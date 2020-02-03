@@ -3,214 +3,191 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF140C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245D420720
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954A920838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="e0+jollx";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RGHdvH/B"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zyIaKgcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBCWjK (ORCPT
+        id S1727140AbgBCWj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:39:10 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:40332 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726331AbgBCWjK (ORCPT
+        Mon, 3 Feb 2020 17:39:57 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:33118 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCWj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:39:10 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 013MaQbe032130;
-        Mon, 3 Feb 2020 14:39:00 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=6uK26NfEZFSQTDF18kDt2/imzB7aANwVwiR5mJot9ZQ=;
- b=e0+jollxekekSCLaCPxznowfXYBfZRJRpgcRyb/pHiimAY+R4OewqcjmND2mw5oSYjCI
- Fi6My8k0XUA7BR2b3e9AtTtvUinv/vv7XAskfndfIBlY/7W/VLcJmSXYFeYmlIkA0YQZ
- PeBaK/spv65/WedsnzdYrGyTxUAF2/nbkW4= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xxm8yapcp-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 03 Feb 2020 14:39:00 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 3 Feb 2020 14:38:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bx1thRfPAIAdndJtN39429qIvt5W9Rd6KHF/a/kpZ6LkzAAkI5cYFbfXUqh3JNlaCAsxT3IYe/W6IcPJzpHMkS6kt+CDwh2lHhN1x8TtnS4s9Fp/MM4hm5nD9/6jQpSvqD3WmwR8uCjRHZGeq/+nROLMWoi1vtFSqckTFHPH7sIKQm9aIoh4Acl3nBhmtVFSH4/sqzFpsY/NVlrF1SzdN1nd9ywBPmSNUcX5baIWcmyytN7eocPOyBpBCLEI5ucLjRA6l9REuuPv/KRJJc1N9IZHQsh8e7d4iL64aDxYvzT9RZj3KZur+S5Vy/GJIJdM1RltlGUTQFGuYgUPyGvJXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6uK26NfEZFSQTDF18kDt2/imzB7aANwVwiR5mJot9ZQ=;
- b=OV6wwVhyY3Lt7+xYBu/uugLHrusk8MxvJsBUq1gXsdVqZn2/fcM8A86LoD8JR9s1fAP1bTeiurqfmCCN1KJEfiTloaRP0MSo4BbIqgUtFkG0BxLrbfQ0jKbNVDpbgyOGgRE9S16NGlCPsTju5/8h5zfBfh1Q6x9UCuLPz2rJHS3uOcmFD77AFOV6vDv7z0+py3cHjHboILNmTjn+4WNIVmDhw/aLcKcAhZyOnjLdcAmtLbS9+6qysoK6wNDBcyeJBck54loAn/MOYOo8RULVJ0LM7HRqL2eHkCRpNNhvOep47NatOKyXCmihueSVUeL9EhS96f2m7hK4gaCi7cpBpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6uK26NfEZFSQTDF18kDt2/imzB7aANwVwiR5mJot9ZQ=;
- b=RGHdvH/BE1QvJ87AbyuwDjHUQ2kpJq46zif1Mi0X0XTaxOcaekevWQvLqnWGFtYQaJgnf/nrAYCMemEMAQizI8fkXKfe+ssBphMxyol4EKpOnYVdwUHnPs/KIWEPuaI5xY15b04yLDdfexZrjsTAJ6fItrfTBHCHFzHwU04GCyM=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2485.namprd15.prod.outlook.com (52.135.194.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.32; Mon, 3 Feb 2020 22:38:56 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2686.031; Mon, 3 Feb 2020
- 22:38:56 +0000
-Date:   Mon, 3 Feb 2020 14:38:49 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        Mon, 3 Feb 2020 17:39:57 -0500
+Received: by mail-qv1-f65.google.com with SMTP id z3so7669104qvn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 14:39:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Lnf5qSOR3Nb9OsfKa1i8yMz+LDP/mlxReDeXQiLk4Vg=;
+        b=zyIaKgcHYVH9w9aAnmil6tqVBOdVJTTFgTKxa3O/oFMqBDXZy4efUIziZf5MJCAgI9
+         1iJ/U/yFxHG8AtwZpKglJ1irzVfmlvh0iLnOR1jJxcbLXMfGwTH2qEp3nTR8/HgWk1Z+
+         ZcXifH8AgcKLonZ9a2qRKL6DVZ3s63Pe9NdNhF/fXKuO92C4/hbyB63i1AaFpzWqX0vE
+         zHAPxZn3RmDD0DNGcyF/xwzCHZgsmD/u3tBRLUSwf4nN9crZ6eGmszJ7I+9UrEuRbkaJ
+         4puwtMdVjCukC18pSuv2PhmGADKqof4AgUFibXH8Ge0c5BOBQ2yl8jUMolGfm7uPWY6C
+         7UCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Lnf5qSOR3Nb9OsfKa1i8yMz+LDP/mlxReDeXQiLk4Vg=;
+        b=ksXK/xDawetyhgT66A0j74FuZrc3W0AHdgDQ7eNo7ivw5ypshN/RrfOA8SoAZ2ZP7K
+         a0yG5yV2tzqdUerDzaGGeGEc0gGWOW31eoHDlaj3MSSaCcARARQzdtAsozOBt58OJYcG
+         Jgdyu5+69vEMRiyXezvUjbvcH1JzL1RwpnQe5eaRM7/uHFzhGOCkMYkX/MLLfDl/XrFK
+         SEHVYuJkE1jGGrJUAqPittgPGZVgZ/Ve5imwYpEAkZbImClSGpVbTKibCruhRFA8nofF
+         NW9AMQbuZNtSjTCu6FBEM3PVJ0dyRQXLSAvsOh8HzHd5b3R3Vk+SfSyVSIpYpOFJpKcp
+         ygfw==
+X-Gm-Message-State: APjAAAWiGHm5OloPmYPVQK4/AA5Ztn1tH3iYpqD85hwd6588I+/5NOzd
+        oa6eLCv/d1nqHwRnvtxldFmEyQ==
+X-Google-Smtp-Source: APXvYqzDmHTw9RvC1sAlfRuRhPRUYdvVcjiqgzOnuxMAmq0EQLjgGe/w/heUvyU3io0w81zdyzi8PQ==
+X-Received: by 2002:a0c:ffc9:: with SMTP id h9mr25301780qvv.50.1580769595745;
+        Mon, 03 Feb 2020 14:39:55 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:6320])
+        by smtp.gmail.com with ESMTPSA id w2sm10758228qtd.97.2020.02.03.14.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 14:39:54 -0800 (PST)
+Date:   Mon, 3 Feb 2020 17:39:54 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@kernel.org>,
         Shakeel Butt <shakeelb@google.com>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
         Bharata B Rao <bharata@linux.ibm.com>,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 21/28] mm: memcg/slab: use a single set of kmem_caches
- for all memory cgroups
-Message-ID: <20200203223849.GE6781@xps.dhcp.thefacebook.com>
+Subject: Re: [PATCH v2 12/28] mm: vmstat: use s32 for vm_node_stat_diff in
+ struct per_cpu_nodestat
+Message-ID: <20200203223954.GE6380@cmpxchg.org>
 References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-22-guro@fb.com>
- <20200203195048.GA4396@cmpxchg.org>
- <20200203205834.GA6781@xps.dhcp.thefacebook.com>
- <20200203221734.GA7345@cmpxchg.org>
+ <20200127173453.2089565-13-guro@fb.com>
+ <20200203175818.GF1697@cmpxchg.org>
+ <20200203182506.GA3700@xps.dhcp.thefacebook.com>
+ <20200203203450.GA6380@cmpxchg.org>
+ <20200203222853.GD6781@xps.dhcp.thefacebook.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203221734.GA7345@cmpxchg.org>
-X-ClientProxiedBy: MN2PR02CA0012.namprd02.prod.outlook.com
- (2603:10b6:208:fc::25) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
-MIME-Version: 1.0
-Received: from xps.dhcp.thefacebook.com (2620:10d:c091:480::ca34) by MN2PR02CA0012.namprd02.prod.outlook.com (2603:10b6:208:fc::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend Transport; Mon, 3 Feb 2020 22:38:53 +0000
-X-Originating-IP: [2620:10d:c091:480::ca34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2bd61cea-6dd3-40d4-89a0-08d7a8f9da14
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2485:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB24858B0D8148C528E88AA7CDBE000@BYAPR15MB2485.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0302D4F392
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(346002)(376002)(366004)(199004)(189003)(5660300002)(478600001)(66946007)(6506007)(54906003)(8936002)(316002)(55016002)(9686003)(6916009)(1076003)(66476007)(66556008)(6666004)(52116002)(86362001)(2906002)(7696005)(4326008)(8676002)(16526019)(186003)(81156014)(33656002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2485;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +MXGndJOdO3U+jO1Z5rwQF8OWyK3dcnqya/KO5Omh5zJePOdTpo2RSGvuzDHSg1G0WZOO8R3BvMYN7A91+T+VHF5VYQfRUe5oaOYS78Vuh4uHk7KhoenCxynJpavOaa87et3RJFGs2BShSN+w69bf3W3svmBAxyWJnMuV/7zrOp27vDJWwz9wKbqKPTwxOKpwFbiSoV8vYfZklcNWDF3NP74fOaicn/XR1QVa+a+nHCwzVLv8ZY6is0xDrCRcTDdsgKyrikeoPo6u2nQERfuJeEVV/TptxwVp/wWBwcKbTKCg+lF1jyqNZ4GoXsagWGwVMVzQM3wmKa2os4gB8pwDNluWZyTO9s53xFYfjuQAZVR0TblPASsvPPGKJvMGrP87UzEJcshAyhFXwVU+UXG0t6zaxWIpccktS9sKeh1c1oNlP0x1taB2508YCp7oL2c
-X-MS-Exchange-AntiSpam-MessageData: Yjxl8TkZAwrz3xKL3L9Fzpe+SPUjMnKaNgHRgDNC2rPKd6e1HafUFtA+HXesDXpPAYdrfM2Xr/sDUSMhYwByXMccpE844dnYOxava0r1LdJLsIqXGrmdSCE6kRFOVjoW19zQR9SsDOmNRtDp8S49OwvCrshqcw5Cl1MJXHWHGVo=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bd61cea-6dd3-40d4-89a0-08d7a8f9da14
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 22:38:56.1073
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AVnrvojwpOg5cj9Xed/bkGQGio/YRnGaX6EahfM8Tajzyj2lXgk7Ry0c28/o8FzJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2485
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-03_08:2020-02-02,2020-02-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- spamscore=0 suspectscore=5 mlxscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 phishscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002030163
-X-FB-Internal: deliver
+In-Reply-To: <20200203222853.GD6781@xps.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 05:17:34PM -0500, Johannes Weiner wrote:
-> On Mon, Feb 03, 2020 at 12:58:34PM -0800, Roman Gushchin wrote:
-> > On Mon, Feb 03, 2020 at 02:50:48PM -0500, Johannes Weiner wrote:
-> > > On Mon, Jan 27, 2020 at 09:34:46AM -0800, Roman Gushchin wrote:
-> > > > This is fairly big but mostly red patch, which makes all non-root
-> > > > slab allocations use a single set of kmem_caches instead of
-> > > > creating a separate set for each memory cgroup.
+On Mon, Feb 03, 2020 at 02:28:53PM -0800, Roman Gushchin wrote:
+> On Mon, Feb 03, 2020 at 03:34:50PM -0500, Johannes Weiner wrote:
+> > On Mon, Feb 03, 2020 at 10:25:06AM -0800, Roman Gushchin wrote:
+> > > On Mon, Feb 03, 2020 at 12:58:18PM -0500, Johannes Weiner wrote:
+> > > > On Mon, Jan 27, 2020 at 09:34:37AM -0800, Roman Gushchin wrote:
+> > > > > Currently s8 type is used for per-cpu caching of per-node statistics.
+> > > > > It works fine because the overfill threshold can't exceed 125.
+> > > > > 
+> > > > > But if some counters are in bytes (and the next commit in the series
+> > > > > will convert slab counters to bytes), it's not gonna work:
+> > > > > value in bytes can easily exceed s8 without exceeding the threshold
+> > > > > converted to bytes. So to avoid overfilling per-cpu caches and breaking
+> > > > > vmstats correctness, let's use s32 instead.
+> > > > > 
+> > > > > This doesn't affect per-zone statistics. There are no plans to use
+> > > > > zone-level byte-sized counters, so no reasons to change anything.
 > > > > 
-> > > > Because the number of non-root kmem_caches is now capped by the number
-> > > > of root kmem_caches, there is no need to shrink or destroy them
-> > > > prematurely. They can be perfectly destroyed together with their
-> > > > root counterparts. This allows to dramatically simplify the
-> > > > management of non-root kmem_caches and delete a ton of code.
+> > > > Wait, is this still necessary? AFAIU, the node counters will account
+> > > > full slab pages, including free space, and only the memcg counters
+> > > > that track actual objects will be in bytes.
+> > > > 
+> > > > Can you please elaborate?
 > > > 
-> > > This is definitely going in the right direction. But it doesn't quite
-> > > explain why we still need two sets of kmem_caches?
-> > > 
-> > > In the old scheme, we had completely separate per-cgroup caches with
-> > > separate slab pages. If a cgrouped process wanted to allocate a slab
-> > > object, we'd go to the root cache and used the cgroup id to look up
-> > > the right cgroup cache. On slab free we'd use page->slab_cache.
-> > > 
-> > > Now we have slab pages that have a page->objcg array. Why can't all
-> > > allocations go through a single set of kmem caches? If an allocation
-> > > is coming from a cgroup and the slab page the allocator wants to use
-> > > doesn't have an objcg array yet, we can allocate it on the fly, no?
+> > > It's weird to have a counter with the same name (e.g. NR_SLAB_RECLAIMABLE_B)
+> > > being in different units depending on the accounting scope.
+> > > So I do convert all slab counters: global, per-lruvec,
+> > > and per-memcg to bytes.
 > > 
-> > Well, arguably it can be done, but there are few drawbacks:
+> > Since the node counters tracks allocated slab pages and the memcg
+> > counter tracks allocated objects, arguably they shouldn't use the same
+> > name anyway.
 > > 
-> > 1) On the release path you'll need to make some extra work even for
-> >    root allocations: calculate the offset only to find the NULL objcg pointer.
+> > > Alternatively I can fork them, e.g. introduce per-memcg or per-lruvec
+> > > NR_SLAB_RECLAIMABLE_OBJ
+> > > NR_SLAB_UNRECLAIMABLE_OBJ
 > > 
-> > 2) There will be a memory overhead for root allocations
-> >    (which might or might not be compensated by the increase
-> >    of the slab utilization).
-> 
-> Those two are only true if there is a wild mix of root and cgroup
-> allocations inside the same slab, and that doesn't really happen in
-> practice. Either the machine is dedicated to one workload and cgroups
-> are only enabled due to e.g. a vendor kernel, or you have cgrouped
-> systems (like most distro systems now) that cgroup everything.
-> 
-> > 3) I'm working on percpu memory accounting that resembles the same scheme,
-> >    except that obj_cgroups vector is created for the whole percpu block.
-> >    There will be root- and memcg-blocks, and it will be expensive to merge them.
-> >    I kinda like using the same scheme here and there.
-> 
-> It's hard to conclude anything based on this information alone. If
-> it's truly expensive to merge them, then it warrants the additional
-> complexity. But I don't understand the desire to share a design for
-> two systems with sufficiently different constraints.
-> 
-> > Upsides?
+> > Can we alias them and reuse their slots?
 > > 
-> > 1) slab utilization might increase a little bit (but I doubt it will have
-> >    a huge effect, because both merging sets should be relatively big and well
-> >    utilized)
+> > 	/* Reuse the node slab page counters item for charged objects */
+> > 	MEMCG_SLAB_RECLAIMABLE = NR_SLAB_RECLAIMABLE,
+> > 	MEMCG_SLAB_UNRECLAIMABLE = NR_SLAB_UNRECLAIMABLE,
 > 
-> Right.
+> Yeah, lgtm.
 > 
-> > 2) eliminate memcg kmem_cache dynamic creation/destruction. it's nice,
-> >    but there isn't so much code left anyway.
-> 
-> There is a lot of complexity associated with the cache cloning that
-> isn't the lines of code, but the lifetime and synchronization rules.
-> 
-> And these two things are the primary aspects that make my head hurt
-> trying to review this patch series.
-> 
-> > So IMO it's an interesting direction to explore, but not something
-> > that necessarily has to be done in the context of this patchset.
-> 
-> I disagree. Instead of replacing the old coherent model and its
-> complexities with a new coherent one, you are mixing the two. And I
-> can barely understand the end result.
-> 
-> Dynamically cloning entire slab caches for the sole purpose of telling
-> whether the pages have an obj_cgroup array or not is *completely
-> insane*. If the controller had followed the obj_cgroup design from the
-> start, nobody would have ever thought about doing it like this.
+> Isn't MEMCG_ prefix bad because it makes everybody think that it belongs to
+> the enum memcg_stat_item?
 
-Having two sets of kmem_caches has nothing to do with the refcounting
-and obj_cgroup abstraction.
-Please, take a look at the final code.
+Maybe, not sure that's a problem. #define CG_SLAB_RECLAIMABLE perhaps?
 
-Thanks!
+> > > and keep global counters untouched. If going this way, I'd prefer to make
+> > > them per-memcg, because it will simplify things on charging paths:
+> > > now we do get task->mem_cgroup->obj_cgroup in the pre_alloc_hook(),
+> > > and then obj_cgroup->mem_cgroup in the post_alloc_hook() just to
+> > > bump per-lruvec counters.
+> > 
+> > I don't quite follow. Don't you still have to update the global
+> > counters?
+> 
+> Global counters are updated only if an allocation requires a new slab
+> page, which isn't the most common path.
+
+Right.
+
+> In generic case post_hook is required because it's the only place where
+> we have both page (to get the node) and memcg pointer.
+> 
+> If NR_SLAB_RECLAIMABLE is tracked only per-memcg (as MEMCG_SOCK),
+> then post_hook can handle only the rare "allocation failed" case.
+> 
+> I'm not sure here what's better.
+
+If it's tracked only per-memcg, you still have to account it every
+time you charge an object to a memcg, no? How is it less frequent than
+acconting at the lruvec level?
+
+> > > Btw, I wonder if we really need per-lruvec counters at all (at least
+> > > being enabled by default). For the significant amount of users who
+> > > have a single-node machine it doesn't bring anything except performance
+> > > overhead.
+> > 
+> > Yeah, for single-node systems we should be able to redirect everything
+> > to the memcg counters, without allocating and tracking lruvec copies.
+> 
+> Sounds good. It can lead to significant savings on single-node machines.
+> 
+> > 
+> > > For those who have multiple nodes (and most likely many many
+> > > memory cgroups) it provides way too many data except for debugging
+> > > some weird mm issues.
+> > > I guess in the absolute majority of cases having global per-node + per-memcg
+> > > counters will be enough.
+> > 
+> > Hm? Reclaim uses the lruvec counters.
+> 
+> Can you, please, provide some examples? It looks like it's mostly based
+> on per-zone lruvec size counters.
+
+It uses the recursive lruvec state to decide inactive_is_low(),
+whether refaults are occuring, whether to trim cache only or go for
+anon etc. We use it to determine refault distances and how many shadow
+nodes to shrink.
+
+Grep for lruvec_page_state().
+
+> Anyway, it seems to be a little bit off from this patchset, so let's
+> discuss it separately.
+
+True
