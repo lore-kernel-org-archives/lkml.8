@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C97C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3A9C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8458D21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891282082E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 18:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BdULmOCW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gi/MTaHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgBCSca (ORCPT
+        id S1730036AbgBCScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 13:32:30 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40007 "EHLO
+        Mon, 3 Feb 2020 13:32:36 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37707 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729954AbgBCSc1 (ORCPT
+        with ESMTP id S1727532AbgBCScc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 13:32:27 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k25so8252419pgt.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:32:26 -0800 (PST)
+        Mon, 3 Feb 2020 13:32:32 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so1302163pgl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 10:32:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RKN0WqAtpRXlZLQAbpsRUXVNFr6J7IAd3QgsbRQLWCk=;
-        b=BdULmOCWTTwykDLz/VlJIkPI0WyQDbO088Vq1dRFwoLFTk+mvm5+zUgCcI8G9c+QeK
-         pYKZPSenwIK8qffyRMZLBeUPZOKZ2QQzmfRLwVFDOE7CcY0jWv8kyhHspDW1mqhGKgZF
-         2MV7dPAEW4DzLGYDQtyAW8lGlWWo6JuKPwL+I=
+        bh=GcQPmK/EL5PoNkrImo6wzmVbqHzRjqrCxX5jeH1GDVc=;
+        b=Gi/MTaHsVWTX49DUKWopOV2+0N0eP8zKJ5xdlfwWhsT3f+OcxCe1lJktY9QLSZhIKz
+         9GB+xpaVIkOlaGWNG9Hw/9IChuRDtoHU5mDGq+BoryAYgWQBAbqS5Ru3Utnyhl0avZZu
+         0pr9cda/+qTDQotla82A6OnzXWzrW6dXE/Oz4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RKN0WqAtpRXlZLQAbpsRUXVNFr6J7IAd3QgsbRQLWCk=;
-        b=EgpN0EkUh53G+qm1Hs3K/p/RLY+Nia2jEWZ/Q37btOXFsjiep9O/yAzckwEJLlJEfW
-         h9fnbye08l3XlMjELH8xYLIQ0dQOoTKjx5038l9DFex7x2CfSzO9l3wj3ca9Q4KLOSml
-         Jv13GNHx5exVrYNtEdnbpIcfndcRdTI4m481ExbA0/byeYUaHAnlUQjXxwRRWSNlLchQ
-         fpQrVON1PCQxMYqZDf1CLiU/XgzC5uKQs4NQ2Qfx2j4BOJ+z6zmr5lMt28z3FmGckdwZ
-         554cenHsxeSB9ZehN2WHe98joKfwkGFwNrxNzS84DSRoIsHoYz0RzHGUb8umv8nxevvo
-         ivAg==
-X-Gm-Message-State: APjAAAUNkAGm+7iwPmuDb4lUL1SdyXt6Ddn4LdNkzBU/GANxVeyo0xKR
-        gbmbS5g1yM+fAV5vnnRvj134sQ==
-X-Google-Smtp-Source: APXvYqyucrWizz3g5g3rxQ3ARzLwqEguVciLlZpzkfUtkox3V5loKVi8ThNlpT37NInXwcHjLrCiHQ==
-X-Received: by 2002:a62:e217:: with SMTP id a23mr7651932pfi.50.1580754746509;
-        Mon, 03 Feb 2020 10:32:26 -0800 (PST)
+        bh=GcQPmK/EL5PoNkrImo6wzmVbqHzRjqrCxX5jeH1GDVc=;
+        b=KVEZJzNBoZ6kJBYjTjCY9B0vy1Fyggg8iq3CNsVUcLVcJeDccyQ48r4lu6eUQiIhSx
+         lcaf6dGFna/nTEg3COggj2Uxw9cfYaPCiG52eSe+MXIJzyyClpSUhoSISMUI7MKVDGm1
+         p3sOJLro8e06avXqCU+mDuMB6kdwK4YhOTGx5abAIHgUnT+oyM71k6A5tQsyPlHCoVZI
+         Bk5fW+fTa2Yl0ejloln7R20hKui/8pxTHkYBKuDsXhhcUpUXI5GlWq3eYxzSeEQ+CVP0
+         uWI9u/ACEQMYtIUxUlwLuWJtYljs8OVPtmGNkTm3sRUes3B/YcpV4qpJtEkPuL+E6z4C
+         FgEg==
+X-Gm-Message-State: APjAAAVUdINzdmqYmw+JXltywTNVr/LG6YZGuJ7XUDIE6xqI47osNSpA
+        DcCCSbsWjNssDlDUB4EMUgna+g==
+X-Google-Smtp-Source: APXvYqxZZESrsKizk1ZwzzsrnzuSxnKXSwRiJMTS+PwoYXAq69qJ2bPEUC3EQesTffzVikG7ozabhg==
+X-Received: by 2002:a63:6787:: with SMTP id b129mr26811249pgc.103.1580754750870;
+        Mon, 03 Feb 2020 10:32:30 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.25
+        by smtp.gmail.com with ESMTPSA id f9sm21009137pfd.141.2020.02.03.10.32.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 10:32:25 -0800 (PST)
+        Mon, 03 Feb 2020 10:32:30 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -64,11 +64,10 @@ Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
         kalyan_t@codeaurora.org, Mark Rutland <mark.rutland@arm.com>,
         linux-clk@vger.kernel.org, hoegsberg@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 11/15] dt-bindings: clock: Cleanup qcom,videocc bindings for sdm845/sc7180
-Date:   Mon,  3 Feb 2020 10:31:44 -0800
-Message-Id: <20200203103049.v4.11.I27bbd90045f38cd3218c259526409d52a48efb35@changeid>
+Subject: [PATCH v4 15/15] arm64: dts: sc7180: Add clock controller nodes
+Date:   Mon,  3 Feb 2020 10:31:48 -0800
+Message-Id: <20200203103049.v4.15.I1a4b93fb005791e29a9dcf288fc8bd459a555a59@changeid>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200203183149.73842-1-dianders@chromium.org>
 References: <20200203183149.73842-1-dianders@chromium.org>
@@ -79,179 +78,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the qcom,videocc bindings match the recent changes to the
-dispcc and gpucc.
+From: Taniya Das <tdas@codeaurora.org>
 
-1. Switched to using "bi_tcxo" instead of "xo".
+Add the display, video & graphics clock controller nodes supported on
+SC7180.
 
-2. Adds a description for the XO clock.  Not terribly important but
-   nice if it cleanly matches its cousins.
+NOTE: the dispcc needs input clocks from various PHYs that aren't in
+the device tree yet.  For now we'll leave these stubbed out with <0>,
+which is apparently the magic way to do this.  These clocks aren't
+really "optional" and this stubbing out method is apparently the best
+way to handle it.
 
-3. Updates the example to use the symbolic name for the RPMH clock and
-   also show that the real devices are currently using 2 address cells
-   / size cells and fixes the spacing on the closing brace.
-
-4. Split into 2 files.  In this case they could probably share one
-   file, but let's be consistent.
-
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
-Changes in v4:
-- Added Rob's review tag.
-- Fixed schema id to not have "bindings/" as per Rob.
-
+Changes in v4: None
 Changes in v3:
-- Added include file to description.
-- Split videocc bindings into 2 files.
+- Added videocc include file.
 - Unlike in v2, use internal name instead of purist name.
 
 Changes in v2:
-- Patch ("dt-bindings: clock: Cleanup qcom,videocc") new for v2.
+- Added includes
+- Changed various parent names to match bindings / driver
 
- .../bindings/clock/qcom,sc7180-videocc.yaml   | 63 +++++++++++++++++++
- ...,videocc.yaml => qcom,sdm845-videocc.yaml} | 27 ++++----
- 2 files changed, 77 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
- rename Documentation/devicetree/bindings/clock/{qcom,videocc.yaml => qcom,sdm845-videocc.yaml} (61%)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 47 ++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
-new file mode 100644
-index 000000000000..31df901884ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-videocc.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sc7180-videocc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Video Clock & Reset Controller Binding for SC7180
-+
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
-+
-+description: |
-+  Qualcomm video clock control module which supports the clocks, resets and
-+  power domains on SC7180.
-+
-+  See also dt-bindings/clock/qcom,videocc-sc7180.h.
-+
-+properties:
-+  compatible:
-+    const: qcom,sc7180-videocc
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+
-+  clock-names:
-+    items:
-+      - const: bi_tcxo
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@ab00000 {
-+      compatible = "qcom,sc7180-videocc";
-+      reg = <0 0x0ab00000 0 0x10000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>;
-+      clock-names = "bi_tcxo";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
-similarity index 61%
-rename from Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-rename to Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
-index 43cfc893a8d1..9d216c0f11d4 100644
---- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-videocc.yaml
-@@ -1,30 +1,31 @@
- # SPDX-License-Identifier: GPL-2.0-only
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/clock/qcom,videocc.yaml#
-+$id: http://devicetree.org/schemas/clock/qcom,sdm845-videocc.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8011c5fe2a31..57ff5e0f7ae6 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -5,8 +5,11 @@
+  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+  */
  
--title: Qualcomm Video Clock & Reset Controller Binding
-+title: Qualcomm Video Clock & Reset Controller Binding for SDM845
++#include <dt-bindings/clock/qcom,dispcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
++#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/power/qcom-aoss-qmp.h>
+@@ -1039,6 +1042,20 @@ pinmux {
+ 			};
+ 		};
  
- maintainers:
-   - Taniya Das <tdas@codeaurora.org>
- 
- description: |
-   Qualcomm video clock control module which supports the clocks, resets and
--  power domains.
-+  power domains on SDM845.
++		gpucc: clock-controller@5090000 {
++			compatible = "qcom,sc7180-gpucc";
++			reg = <0 0x05090000 0 0x9000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "bi_tcxo",
++				      "gcc_gpu_gpll0_clk_src",
++				      "gcc_gpu_gpll0_div_clk_src";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
 +
-+  See also dt-bindings/clock/qcom,videocc-sdm845.h.
+ 		qspi: spi@88dc000 {
+ 			compatible = "qcom,qspi-v1";
+ 			reg = <0 0x088dc000 0 0x600>;
+@@ -1151,6 +1168,36 @@ usb_1_dwc3: dwc3@a600000 {
+ 			};
+ 		};
  
- properties:
-   compatible:
--    enum:
--      - qcom,sc7180-videocc
--      - qcom,sdm845-videocc
-+    const: qcom,sdm845-videocc
- 
-   clocks:
--    maxItems: 1
-+    items:
-+      - description: Board XO source
- 
-   clock-names:
-     items:
--      - const: xo
-+      - const: bi_tcxo
- 
-   '#clock-cells':
-     const: 1
-@@ -48,15 +49,15 @@ required:
-   - '#power-domain-cells'
- 
- examples:
--  # Example of VIDEOCC with clock node properties for SDM845:
-   - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-     clock-controller@ab00000 {
-       compatible = "qcom,sdm845-videocc";
--      reg = <0xab00000 0x10000>;
--      clocks = <&rpmhcc 0>;
--      clock-names = "xo";
-+      reg = <0 0x0ab00000 0 0x10000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>;
-+      clock-names = "bi_tcxo";
-       #clock-cells = <1>;
-       #reset-cells = <1>;
-       #power-domain-cells = <1>;
--     };
-+    };
- ...
++		videocc: clock-controller@ab00000 {
++			compatible = "qcom,sc7180-videocc";
++			reg = <0 0x0ab00000 0 0x10000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "bi_tcxo";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
++		dispcc: clock-controller@af00000 {
++			compatible = "qcom,sc7180-dispcc";
++			reg = <0 0x0af00000 0 0x200000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
++				 <0>,
++				 <0>,
++				 <0>,
++				 <0>;
++			clock-names = "bi_tcxo",
++				      "gcc_disp_gpll0_clk_src",
++				      "dsi0_phy_pll_out_byteclk",
++				      "dsi0_phy_pll_out_dsiclk",
++				      "dp_phy_pll_link_clk",
++				      "dp_phy_pll_vco_div_clk";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
 -- 
 2.25.0.341.g760bfbb309-goog
 
