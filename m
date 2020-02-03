@@ -3,139 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44832C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BF0C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C21B20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D5320658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 13:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ihIKVH1V"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="sHxNUX+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgBCNSc (ORCPT
+        id S1728279AbgBCNTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 08:18:32 -0500
-Received: from mail-co1nam11on2044.outbound.protection.outlook.com ([40.107.220.44]:9920
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727429AbgBCNSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 08:18:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KwBErCodGjXin8UFqOcHYfzm62Z+eCisJUiYpMPUl9dGRQ5z+DBKZslkqW2pAU/fhqM9wkn7igUeHZwp4lK7CB4D1m4/mCUTAQGuljNrY6xOd0fb+TF1USo0gJW+c4HkbMyFaPDLCss/+XkAJ3v9RUVrIsYupQIRvz9NJ2cVUtYmSV3BHlRWbuYRiV7Eyrc3uzbBGovdDVkDb59CLfDFdHAfMRbXVNtGfxhxO5rufgNFJjJD/Y8yXkIau4qdS60+sLNy0i5LqbPibXOUIUMMM8N7kaD1HiYHyLZPh2GHqjE0yjlIBBXc2GB1LvglTz92PLEA1IoRGIxlDcnmrNosog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZUoOuWEFjbKdvPfh3uM4oMkbn2oyS/YWms6nxe2OUV8=;
- b=fk6d4UBeM2NB+/U9QlZLo4W9qQMSwXo2lR+2TCW4KHXHSDcgXZRCODJMYfCU8RBWPNX7konSASwvZT+daav7QN8h0fhh1wY2sTV8RK6YloKg9F5HxhvXdFDrSA1F/zCIzqoCTcLmvfc6NuGLQTK78dsMP2G0EgpYNyyI97vTiDpCkH7Dy9iDzexpgFpBRqqTBoDr7yovz+l3SYKKAKcZRln6YaxTE/lLz2MqvR3Kbxw4WS1l6vwl3PIURdNCY4qMQLR/UhjaEIyrlxbj6dIZMKNsHQmGTein2ZrFa6MUysY/04h2RnloU0tLi7Be0tpgSoZXqjO/HGrNNEm5/ULzNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 3 Feb 2020 08:19:25 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37477 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBCNTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 08:19:25 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v17so14590037ljg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 05:19:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZUoOuWEFjbKdvPfh3uM4oMkbn2oyS/YWms6nxe2OUV8=;
- b=ihIKVH1VubzkSjmUL1xGBcYrKYOxoS9OcH14t71te4c0po7kxJh7c6aOwNMMJWx75A/HEB6jkkY0L+DPkEfLnTrpJ/ZqbB02E+tt9XLn77sTGq0B+i14dp23aUOIS06gVJ7k3MGgYBeUjqhRBCojWomD6zc3MxB0wc0kF6tEZiI=
-Received: from BL0PR02CA0131.namprd02.prod.outlook.com (2603:10b6:208:35::36)
- by MWHPR02MB3341.namprd02.prod.outlook.com (2603:10b6:301:6c::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.33; Mon, 3 Feb
- 2020 13:18:19 +0000
-Received: from CY1NAM02FT064.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by BL0PR02CA0131.outlook.office365.com
- (2603:10b6:208:35::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.33 via Frontend
- Transport; Mon, 3 Feb 2020 13:18:18 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT064.mail.protection.outlook.com (10.152.74.64) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
- via Frontend Transport; Mon, 3 Feb 2020 13:18:18 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybcH-0003Ff-Ua; Mon, 03 Feb 2020 05:18:17 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybcC-0002w8-QA; Mon, 03 Feb 2020 05:18:12 -0800
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 013DI6Xt003776;
-        Mon, 3 Feb 2020 05:18:06 -0800
-Received: from [10.140.6.13] (helo=xhdharinik40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <harini.katakam@xilinx.com>)
-        id 1iybc5-0002t1-OQ; Mon, 03 Feb 2020 05:18:06 -0800
-From:   Harini Katakam <harini.katakam@xilinx.com>
-To:     nicolas.ferre@microchip.com, davem@davemloft.net,
-        claudiu.beznea@microchip.com, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michal.simek@xilinx.com, harinikatakamlinux@gmail.com,
-        harini.katakam@xilinx.com
-Subject: [PATCH v2 0/2] TSO bug fixes
-Date:   Mon,  3 Feb 2020 18:48:00 +0530
-Message-Id: <1580735882-7429-1-git-send-email-harini.katakam@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(199004)(189003)(9786002)(107886003)(4326008)(81166006)(81156014)(8676002)(8936002)(44832011)(4744005)(36756003)(356004)(6666004)(2906002)(5660300002)(7696005)(478600001)(2616005)(426003)(70586007)(70206006)(186003)(336012)(316002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB3341;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JVGRyQQaBReM02JrPoDmLBao0aPgpMTrxPDXDLtuBvs=;
+        b=sHxNUX+2LzpyRJMjJ5Qfj9YCDSX6ExJg/Bd8Kbu6D3J1Pm6xg2/nCBLBUPM+5aDgph
+         Vx13T6xRUazl2+5WDzyI2+KQ5Fwv9EnEICrEEivYt8zYofksOtWDQ0ieEYPnxb0jWoql
+         2KXNT1xLabVpDbI6yu0pfXCX+ZkkKbcyN9i+rhwy9QqfIGMVfaGyVA3Fl5FlrA0MARbM
+         fqCitH4ncSFtWXk3XtHIzHlxaXyvB4HPNozXmu/2hHRj2Rk8jnrIB7LYIzQ+bFvU3rx0
+         zfqTJdh5FWcWe4I1vVRvwPei1Q5hrFlirNIRHGzVETfP4olS+o7cqE6CGB4YvD5YrwQv
+         379g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JVGRyQQaBReM02JrPoDmLBao0aPgpMTrxPDXDLtuBvs=;
+        b=pv13vQDB9hWIJDNbMwTrOSqe4+1JWJRyOr2R+1V5nEdRoIksoGYdGjcHmPpDcz8ulU
+         90Y+sxTyTFgOOod5hjYueAL7+YGdU3bOHisF05s0fZdP7TWbiNZMac8+WlOX1tftE3Af
+         KZ5q89wMhgCC9Evg8GrwhlSakBgc8ztR3CuTpNEgwKt+YAuhG654pr969chu5gmrdZyx
+         0+tayCqnh9Ac3uzyvWUyMJSroZOn9JkVFwzMTN6+HmZVbYcT6QsnE77aQ8ocE4jPzj60
+         UeCfKk3cOi1vYPw+9mWNJ/R8hBBMS5rDYMuCV9NP7wLqMGv8URfiICmlxJyQQwRffdlc
+         U6wA==
+X-Gm-Message-State: APjAAAURrQVCf+KYTeYREccRtfA9wPDDZPs3ARDxAJw6QgQuiIDC3eAM
+        KtQumalIueFvBgcrPGqp/NlGqQ==
+X-Google-Smtp-Source: APXvYqw/kW5LBbvbpobmbtSlzot4JutREBTd02ZbvusFPkOi/RVuHv3ziJ7u01y8QC5aHMcpggWohA==
+X-Received: by 2002:a2e:94c8:: with SMTP id r8mr14014356ljh.28.1580735962743;
+        Mon, 03 Feb 2020 05:19:22 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id z205sm8831859lfa.52.2020.02.03.05.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 05:19:22 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 9F93C100DC8; Mon,  3 Feb 2020 16:19:34 +0300 (+03)
+Date:   Mon, 3 Feb 2020 16:19:34 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 03/12] mm/gup: pass a flags arg to __gup_device_*
+ functions
+Message-ID: <20200203131934.pxwmyemhgiqcb5j3@box>
+References: <20200201034029.4063170-1-jhubbard@nvidia.com>
+ <20200201034029.4063170-4-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 29516843-2501-46d8-f9ed-08d7a8ab88e3
-X-MS-TrafficTypeDiagnostic: MWHPR02MB3341:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB3341F796997A347C867A2F01C9000@MWHPR02MB3341.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0302D4F392
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tgcVO2gJSz2sDf2WMxTOQbNXiducNCOS4R62DDNv1XvoHSsgBg7Gxw8jdlRD+hYtcf0xLNOog5zBDqWbiwFe+0UBFaHQjHfJPqW5cJ6dGvwZIH44rH9Vi88CI1rEGxfXeqVuCAoxbamx4zgQXWSZenpt8SiQxvkOVoyGX/0zapVlkCoFQ/mFbH+GDHNRH0htV23poOgAK23Jz5Ncp3K0pJGK/gNvO0vOWj1DNbcaZHjFAS7S1DkDfm2Zp5NcLvPL3uTWMNoXePE9l80Ue5CxlNZCV4XvfqrwCuOyQjoTV+Y5P7RDP6OW3ObacuPRAskF/rr0z0972I2aeqCKkO8qdlxUKLJ4tmV/am+ewrgaMIa1G4dk2CSIycog+IqHR1DZyoRvuqhww+Q1NJUW22jVP8OUMgWvt3CRcPglF76+vxyNVvgnfMljdq+GCWIg+fAa
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2020 13:18:18.4089
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29516843-2501-46d8-f9ed-08d7a8ab88e3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3341
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200201034029.4063170-4-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An IP errata was recently discovered when testing TSO enabled versions
-with perf test tools where a false amba error is reported by the IP.
-Some ways to reproduce would be to use iperf or applications with payload
-descriptor sizes very close to 16K. Once the error is observed TXERR (or
-bit 6 of ISR) will be constantly triggered leading to a series of tx path
-error handling and clean up. Workaround the same by limiting this size to
-0x3FC0 as recommended by Cadence. There was no performance impact on 1G
-system that I tested with.
+On Fri, Jan 31, 2020 at 07:40:20PM -0800, John Hubbard wrote:
+> A subsequent patch requires access to gup flags, so pass the flags
+> argument through to the __gup_device_* functions.
+> 
+> Also placate checkpatch.pl by shortening a nearby line.
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> 
 
-Note on patch 1: The alignment code may be unused but leaving it there
-in case anyone is using UFO.
+Empty line here?
 
-Added Fixes tag to patch 1.
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-Harini Katakam (2):
-  net: macb: Remove unnecessary alignment check for TSO
-  net: macb: Limit maximum GEM TX length in TSO
-
- drivers/net/ethernet/cadence/macb_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-2.7.4
-
+ Kirill A. Shutemov
