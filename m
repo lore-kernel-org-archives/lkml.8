@@ -2,105 +2,133 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13D7C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55970C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742072080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B55D2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 19:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k6UcJN6a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHbIPC6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgBCTVr (ORCPT
+        id S1727097AbgBCTWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 14:21:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42964 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgBCTVr (ORCPT
+        Mon, 3 Feb 2020 14:22:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40608 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725372AbgBCTWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 14:21:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013J8Nt8062474;
-        Mon, 3 Feb 2020 19:21:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=42PnVMUCUUF2AUd5X4IjIG+YZrkroHrBto7UIqcdm7I=;
- b=k6UcJN6a9fj4bVBT2A+mewOERMrwluhFGS6TO46yiEjVlW/GQbem70esh85lKKCJAfeb
- NB0IZJAI5aL1C+PYERInCLic3pNuhCjaCDvpKpydWBSX0dJ3u+7iEGI57xEz0k02EyfO
- xgktd4o+vZfbcLCtjGlDpiQa6U9+nZFbqYkqcYi1h/pMPVTzQrfpelBtraaxyoAVYS6J
- 6P4ICg0TQHIaWDBSaGYBkX1H4Q9K86SUdcZwn+H83R6vx6PFSceBuIyNjFNS5YK3ytBh
- LDB9zNGxbvP/P/iiKxYwAVb+SsR5vaHQC3dUIqWqEt8lLobBTLJchFCK01JFof884cHG qQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xw0ru1yp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Feb 2020 19:21:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013J95eT071854;
-        Mon, 3 Feb 2020 19:21:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xwkfu7bd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Feb 2020 19:21:39 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 013JLbC1001799;
-        Mon, 3 Feb 2020 19:21:37 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Feb 2020 11:21:37 -0800
-Subject: Re: [PATCH] firmware: ti_sci: Correct the timeout type in
- ti_sci_do_xfer()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, ssantosh@kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>, nm@ti.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lokeshvutla@ti.com
-References: <20200122104009.15622-1-peter.ujfalusi@ti.com>
- <a63c23ec-d468-fc9b-3990-becd7c120df6@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <639ea3ea-ba16-ab23-2390-241bec6fab06@oracle.com>
-Date:   Mon, 3 Feb 2020 11:21:36 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Mon, 3 Feb 2020 14:22:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580757719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9MpZWTjMDAUxJVuxsB9yu8VexNaGThYoWC5vbsTHH2M=;
+        b=dHbIPC6KKiGrbBY7DjxTYKg6yF9GHzN1gaohBtO5H5EjwE+/D9IUFmpe9AwdSaaZ2YSItc
+        2ihVxCP88kGvuXky5/tPk7DMggv0Mh0qrGQnkxf1MM24sW6TBlvJHT9AXmkL5dCK/KJgJf
+        s7/p4ReW93DL4qAp/LSbGsjT3vsrYYQ=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-IyUNWXFfP2Kw9VCfrYpVJQ-1; Mon, 03 Feb 2020 14:21:58 -0500
+X-MC-Unique: IyUNWXFfP2Kw9VCfrYpVJQ-1
+Received: by mail-qt1-f199.google.com with SMTP id k27so10601950qtu.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 11:21:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9MpZWTjMDAUxJVuxsB9yu8VexNaGThYoWC5vbsTHH2M=;
+        b=rfSxNRFj0dBVis3e/aYsNimu0bcVw6JqQjszDBPoyeeb4cF9Sw52+1P6y8JVN48srL
+         Rqo65OqIp5T6JY2vGQqYlV5x6Al72Zt1RESI+TJSgdyYOjKoERfl53v6ZktaB5z1LAGe
+         0MVueJBoFMicICsRKNvrrPJJAgZ8gWfdSTrWF2qdnM0+1hmTahkT0VAdMkeGuRYjBYeC
+         csWJzZkb14LeRiih6SSlYo1TLosCeVDcaXnzOcSnKUg8yGFUuiIlsrJllSfR5eMoToGu
+         2yJn1OBrNi++xx6uccxFv2h9QNPyAk3uI8FSnhAifcangD5pj79wvMFdr736B+8Z601B
+         KhZg==
+X-Gm-Message-State: APjAAAXUlOt2b01L2byAGEhLoEJS5ixqJM6VCRIGraBeTGFlcebjT5Tf
+        f+T+TSE20qX6+IRbXJaj1OEy6mSctE3O5WTqxuWefO6w4rUeSAvmv7dcR8rMsQvcU11XCC4O9s8
+        0L9aWgZ4HVDJcDQzWJjrQVpQr
+X-Received: by 2002:a37:a390:: with SMTP id m138mr23602909qke.23.1580757717761;
+        Mon, 03 Feb 2020 11:21:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYKyAXIkCVY9EEUa5/pCCsPkLlLcI11dqxiZKszuC4tqFWBEUSuBmQZQsS8fkh+UrOgiA2uA==
+X-Received: by 2002:a37:a390:: with SMTP id m138mr23602885qke.23.1580757717490;
+        Mon, 03 Feb 2020 11:21:57 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c8:32::2])
+        by smtp.gmail.com with ESMTPSA id f59sm7396901qtb.75.2020.02.03.11.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 11:21:56 -0800 (PST)
+Date:   Mon, 3 Feb 2020 14:21:54 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH V4] sched/isolation: isolate from handling managed
+ interrupt
+Message-ID: <20200203192154.GG155875@xz-x1>
+References: <20200120091625.17912-1-ming.lei@redhat.com>
+ <87eevrei7h.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <a63c23ec-d468-fc9b-3990-becd7c120df6@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002030138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9520 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002030138
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87eevrei7h.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On 2/3/20 12:38 AM, Tero Kristo wrote:
-> On 22/01/2020 12:40, Peter Ujfalusi wrote:
->> msecs_to_jiffies() returns 'unsigned long' and the timeout parameter for
->> wait_for_completion_timeout() is also 'unsigned long'
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Wed, Jan 22, 2020 at 02:25:38PM +0100, Thomas Gleixner wrote:
+> Ming,
 > 
-> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+> Ming Lei <ming.lei@redhat.com> writes:
+> >  
+> > +static bool hk_should_isolate(struct irq_data *data,
+> > +			      const struct cpumask *affinity, unsigned int cpu)
+> > +{
 > 
-Can you collate all 3 patches in a series and repost
-with Tero's ack ? I will add that to next merge window
-queue.
+> the *affinity argument is unused.
+> 
+> I'll remove it myself.
 
-Regards,
-Santosh
+Hi, Ming, Thomas,
+
+The new "managed_irq" works for us, thanks for both of your work!
+
+However I just noticed that this new sub-parameter might break users
+if applied incorrectly to old kernels, because iiuc "isolcpus="
+parameter will not apply at all when there's unknown sub-parameters:
+
+static int __init housekeeping_isolcpus_setup(char *str)
+{
+	unsigned int flags = 0;
+
+	while (isalpha(*str)) {
+                ...
+                pr_warn("isolcpus: Error, unknown flag\n");
+                return 0;
+        }
+        ...
+}
+
+Then the same kernel parameter will break isolcpus= if the user
+reboots and switches to an older kernel.
+
+A solution to this could be that we introduce an isolated parameter
+for "managed_irq", then on the old kernels only the new parameter will
+be ignored rather than the whole "isolcpus=" parameter, so nothing
+will break.
+
+I'm not sure whether it's already too late for this, or if there's any
+better alternative.  Just raise this question up to see whether we
+still have chance to fix this up.
+
+Thanks,
+
+-- 
+Peter Xu
+
