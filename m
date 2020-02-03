@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992CDC3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB3C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666262087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B1621582
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747104;
-	bh=p2WfEJ8ZKgV4J+cESH1NT9VjmZZwXfOgTWMsFY15Pwk=;
+	s=default; t=1580747108;
+	bh=1r2RCV8odKMtOoVyQndG4Ht3SLQtgRn6H9Rb97NQ3ZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLeIyqXBYJW5F+WJiqZ3izEtVXG7bktOm4ZzOtTPpaiL4zrrgpP9IukqsoVFH9QR+
-	 udVMu/O3uKZltlHPH69UnaEO45AKSSVEZXCPUYiG3D+AKuvPsZeHY0+gzcIhYYaMBc
-	 h3XPfTpb0OaKZemUGf9x8JVWYuo8ZDitnmL+RIl0=
+	b=fYJVQRGl0V5KDNQq0z0TZ5qQqMtjWFKoNregiIvownH4lVwT2jasY2ovGBCdpoX9n
+	 +kTmm1m/yxZznQnYt/qA1xOjXi0ZaVrgvhOgyUwIvGDsz4XxhYRh5pviF+SmQuc24T
+	 OUDgWVc6L7qoniSYVOz1xXAWSkgWWtRk0nu4lSvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBCQZD (ORCPT
+        id S1728075AbgBCQZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:25:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:25:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbgBCQZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:25:00 -0500
+        id S1726369AbgBCQZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:05 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E072080C;
-        Mon,  3 Feb 2020 16:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7705821582;
+        Mon,  3 Feb 2020 16:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747100;
-        bh=p2WfEJ8ZKgV4J+cESH1NT9VjmZZwXfOgTWMsFY15Pwk=;
+        s=default; t=1580747104;
+        bh=1r2RCV8odKMtOoVyQndG4Ht3SLQtgRn6H9Rb97NQ3ZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yuFftj6/DW5PhQ4EYHw4DpJfB45Z2FGnNY9ZLVnaoYcCO+rfCUYm1qQQOyiJSS3j+
-         8UKjIib+/xGkjZ2JYxpMID27dK63EqHzx+rH+vcnzASfuhzLJIAIeRuUCJ/Oijy/Pp
-         +NXDXk58Fad/p1KMZ+PftH6cTLbcL1CkBgtdvmAY=
+        b=02pPZrLr9qbmR2c3X6sSAWFV1fYpecIOthqOOksWoFcUuooi+VFw5wp0cpRGmW/6d
+         PQ/nbxeVQKiSzghMvU1dA7Yyi2+9hJTyeYyAJhUJXz03wZSq8K4gIg05i7AvZNxfpS
+         ObBl6WnKgKlEkoyh9s3iJF5CYMyXZHWDJB3hdWxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 4.9 12/68] serial: 8250_bcm2835aux: Fix line mismatch on driver unbind
-Date:   Mon,  3 Feb 2020 16:19:08 +0000
-Message-Id: <20200203161906.890593314@linuxfoundation.org>
+        stable@vger.kernel.org, Arend van Spriel <arend@broadcom.com>,
+        Johan Hovold <johan@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 14/68] brcmfmac: fix interface sanity check
+Date:   Mon,  3 Feb 2020 16:19:10 +0000
+Message-Id: <20200203161907.302939137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -60,49 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit dc76697d7e933d5e299116f219c890568785ea15 upstream.
+commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
 
-Unbinding the bcm2835aux UART driver raises the following error if the
-maximum number of 8250 UARTs is set to 1 (via the 8250.nr_uarts module
-parameter or CONFIG_SERIAL_8250_RUNTIME_UARTS):
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-(NULL device *): Removing wrong port: a6f80333 != fa20408b
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-That's because bcm2835aux_serial_probe() retrieves UART line number 1
-from the devicetree and stores it in data->uart.port.line, while
-serial8250_register_8250_port() instead uses UART line number 0,
-which is stored in data->line.
-
-On driver unbind, bcm2835aux_serial_remove() uses data->uart.port.line,
-which contains the wrong number.  Fix it.
-
-The issue does not occur if the maximum number of 8250 UARTs is >= 2.
-
-Fixes: bdc5f3009580 ("serial: bcm2835: add driver for bcm2835-aux-uart")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.6+
-Cc: Martin Sperl <kernel@martin.sperl.org>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Link: https://lore.kernel.org/r/912ccf553c5258135c6d7e8f404a101ef320f0f4.1579175223.git.lukas@wunner.de
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Cc: Arend van Spriel <arend@broadcom.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_bcm2835aux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -119,7 +119,7 @@ static int bcm2835aux_serial_remove(stru
- {
- 	struct bcm2835aux_data *data = platform_get_drvdata(pdev);
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -1330,7 +1330,7 @@ brcmf_usb_probe(struct usb_interface *in
+ 		goto fail;
+ 	}
  
--	serial8250_unregister_port(data->uart.port.line);
-+	serial8250_unregister_port(data->line);
- 	clk_disable_unprepare(data->clk);
+-	desc = &intf->altsetting[0].desc;
++	desc = &intf->cur_altsetting->desc;
+ 	if ((desc->bInterfaceClass != USB_CLASS_VENDOR_SPEC) ||
+ 	    (desc->bInterfaceSubClass != 2) ||
+ 	    (desc->bInterfaceProtocol != 0xff)) {
+@@ -1343,7 +1343,7 @@ brcmf_usb_probe(struct usb_interface *in
  
- 	return 0;
+ 	num_of_eps = desc->bNumEndpoints;
+ 	for (ep = 0; ep < num_of_eps; ep++) {
+-		endpoint = &intf->altsetting[0].endpoint[ep].desc;
++		endpoint = &intf->cur_altsetting->endpoint[ep].desc;
+ 		endpoint_num = usb_endpoint_num(endpoint);
+ 		if (!usb_endpoint_xfer_bulk(endpoint))
+ 			continue;
 
 
