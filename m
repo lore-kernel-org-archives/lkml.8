@@ -2,94 +2,143 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59E3C3524E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5729BC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE8220661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7482070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cRJ/xczl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LsHCgmGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgBCJEN (ORCPT
+        id S1727883AbgBCJHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:04:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36497 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727133AbgBCJEN (ORCPT
+        Mon, 3 Feb 2020 04:07:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgBCJG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:04:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580720652;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=H6fxCf78eVhuUAJ68T4mXmDzlZwZiDCeV31HsdqoAPA=;
-        b=cRJ/xczlawbuqevs9NVEPeP2a+HphBQU4H0OgaBSNW25TJTpab8EV5d8xPKk4tfCLXHruK
-        3S/AExvdldWf4ve9RARETRCntFgQoeCmEBzZHBy0QZdRGo7q8xjjZZgbPppOXabbjCHq8N
-        1LgcVTzFv76ERgE7/faLXHaV15D2y/Q=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-Ak6DEi-yPEaSLEoRJzncuw-1; Mon, 03 Feb 2020 04:04:10 -0500
-X-MC-Unique: Ak6DEi-yPEaSLEoRJzncuw-1
-Received: by mail-wr1-f70.google.com with SMTP id t6so4803050wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:04:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H6fxCf78eVhuUAJ68T4mXmDzlZwZiDCeV31HsdqoAPA=;
-        b=ZBtxhITLx7xqUYBKaksNyEYYyEfM+parxJYySOrChRfFYdVI0RmwhtNX32StzbtZb+
-         f75N2Q2sUOKGCmLnwg2wettEe0Vlnp9EArCLIQUNWcla1UE8pcNLznSsD3rKaGAVxQRb
-         hnLKc6OCY7P3R39jKNMs+SL7OeOZV4k04sL3kQFI81ln2G4zHRvV2PZO9pAYtW/UlvFu
-         5EZ5/cN1AGdvbkdnoLzRU9BS2AM/OO9Q2l4ZvYO/vOdvFLHLB6wFP/TuUFQBF0uYTEBt
-         OK0yHUqhmH5gxj+D1o2XY+3YmeUgt0oCjGD1dCumlPD4juesHnOz+miOsBuafNKy90Z3
-         fcjw==
-X-Gm-Message-State: APjAAAU6Ue/m7R5cd1vuaUxWwAp4Yy+Klz4+fZnKRZH8MEt0ELSUTRFa
-        SGoHOjFFB75Fj6oIHh7zofBY/mR0QkgQ1PSNmb2aCYzZG2juBlvU7Sr4vr5B3IY+u40RYDo+Ie8
-        V5oT6nTrFhNcPMYy/U9XBreMb
-X-Received: by 2002:adf:e2cf:: with SMTP id d15mr14314706wrj.225.1580720649224;
-        Mon, 03 Feb 2020 01:04:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyYREAVG5O0ErdfVCjrJuHlKZLavmASH0lil9NjCzoWb7VUJmnMW/g8uhNveQrKDhLPzLxliw==
-X-Received: by 2002:adf:e2cf:: with SMTP id d15mr14314686wrj.225.1580720649063;
-        Mon, 03 Feb 2020 01:04:09 -0800 (PST)
-Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id z3sm7458497wrs.32.2020.02.03.01.04.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 01:04:08 -0800 (PST)
-Date:   Mon, 3 Feb 2020 10:04:06 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: Re: [PATCH liburing v2 1/1] test: add epoll test case
-Message-ID: <20200203090406.mlgmw2u7lv7a76vd@steredhat>
-References: <20200131142943.120459-1-sgarzare@redhat.com>
- <20200131142943.120459-2-sgarzare@redhat.com>
- <00610b2b-2110-36c2-d6ce-85599e46013f@kernel.dk>
+        Mon, 3 Feb 2020 04:06:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 013934fr088127;
+        Mon, 3 Feb 2020 09:06:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=8WgPDKN0FJnUuKUBLKIxeobzc7t0Hcs7X5V3wjF1qF0=;
+ b=LsHCgmGufai5qhkHeBqE7FZNDZB+nNdr1VIkClhVmmVBnP0vrrrqsyGzQXAsO5YvhFyn
+ O6Ji/TwMEED9xLA0SHaIYYc/eBTR+NYfFiFHw8lAkc8B98IOBCPUKkRC59xP/eszz66x
+ O3E9oCq0+zgIIUt3dpomej0ne1XSPTu+4Ru+KW9plKsJQz8IR+DWP3zppw1OKC95P0aF
+ 5Y9vDip0WXiAYtY7Cp/+Ab6CoT2BGl3WgxAGwPm0SGNXNIXzF2hZLZ3gOVlBk637s9TC
+ D79dARXZ5zRLAeITfA9pstDkGSIzuLpI35Awp5DJSMe+lViv+r4ybs7Klc14zSaRXNbS iQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xw19q69g5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 09:06:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01393JHS177625;
+        Mon, 3 Feb 2020 09:06:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xwjt3e3un-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 09:06:39 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01396Ywj008538;
+        Mon, 3 Feb 2020 09:06:35 GMT
+Received: from kadam (/41.210.143.134)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Feb 2020 01:06:31 -0800
+Date:   Mon, 3 Feb 2020 12:06:19 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     syzbot <syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "Wilson, Chris" <chris@chris-wilson.co.uk>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Miller <davem@davemloft.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        "Anholt, Eric" <eric@anholt.net>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in vgem_gem_dumb_create
+Message-ID: <20200203090619.GL1778@kadam>
+References: <000000000000ae2f81059d7716b8@google.com>
+ <CAKMK7uGivsYzP6h9rg0eN34YuOVbee6gnhdOxiys=M=4phK+kw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00610b2b-2110-36c2-d6ce-85599e46013f@kernel.dk>
+In-Reply-To: <CAKMK7uGivsYzP6h9rg0eN34YuOVbee6gnhdOxiys=M=4phK+kw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002030073
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002030073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 08:41:49AM -0700, Jens Axboe wrote:
-> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
-> > This patch add the epoll test case that has four sub-tests:
-> > - test_epoll
-> > - test_epoll_sqpoll
-> > - test_epoll_nodrop
-> > - test_epoll_sqpoll_nodrop
+On Sun, Feb 02, 2020 at 02:19:18PM +0100, Daniel Vetter wrote:
+> On Fri, Jan 31, 2020 at 11:28 PM syzbot
+> <syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    39bed42d Merge tag 'for-linus-hmm' of git://git.kernel.org..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=179465bee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2646535f8818ae25
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=0dc4444774d419e916c8
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16251279e00000
+> >
+> > The bug was bisected to:
+> >
+> > commit 7611750784664db46d0db95631e322aeb263dde7
+> > Author: Alex Deucher <alexander.deucher@amd.com>
+> > Date:   Wed Jun 21 16:31:41 2017 +0000
+> >
+> >     drm/amdgpu: use kernel is_power_of_2 rather than local version
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11628df1e00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=13628df1e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15628df1e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com
+> > Fixes: 761175078466 ("drm/amdgpu: use kernel is_power_of_2 rather than local version")
 > 
-> Since we have EPOLL_CTL now, any chance you could also include
-> a test case that uses that instead of epoll_ctl()?
+> Aside: This bisect line is complete nonsense ... I'm kinda at the
+> point where I'm assuming that syzbot bisect results are garbage, which
+> is maybe not what we want. I guess much stricter filtering for noise
+> is needed, dunno.
+> -Danile
 
-Sure, I'll add a test case for EPOLL_CTL!
+With race conditions the git bisect is often nonsense.
 
-Stefano
+regards,
+dan carpenter
 
