@@ -7,114 +7,104 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942E8C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2178CC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9C12086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E953C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 15:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cNVYE3f5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yo3ATNA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgBCPy4 (ORCPT
+        id S1728389AbgBCPzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 10:54:56 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39284 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbgBCPy4 (ORCPT
+        Mon, 3 Feb 2020 10:55:02 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45377 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbgBCPy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 10:54:56 -0500
-Received: by mail-yw1-f67.google.com with SMTP id h126so14088099ywc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:54:55 -0800 (PST)
+        Mon, 3 Feb 2020 10:54:59 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v19so15165385oic.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 07:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mSZpSSrX1gkn4q4BYYE/uc6pa2MZhYOZnx1rar1JeDU=;
-        b=cNVYE3f5rZHULQiCtnVROGU8SPrQJtN5P3gwxhWiT06FesW8t8EPhhvoRdCdyRSWGD
-         Pdm5AqvZeunWdsHx3WkHzH/yGWMo3CaukRjBhNGvY0s4oYi7yQXO9/jKDr/ejy+feAZj
-         Q18KO8xrDCFpIWVDH0NWdFT0VisoIEKDtEIa62V2Z/6PAIssAAuLx9fG84Qcht4+FMaW
-         sQ+3QJdZ38zsdrj3Y9kSNmHfdQpkDUXUDpDgTTRB7EyyPip6aAlC8VvFqbVOBoHIrneI
-         4T+9ya619FEA7beV6a+gPVNNdnlitPAzMqSABGEsAvG7f6BxBosnSxi8oZbGlMWmlS50
-         n6Fg==
+        bh=dgf71URhUKo2b+JGoC+JLVlsL/X5hBwyfojNmfsCYOE=;
+        b=Yo3ATNA0fsuI7QjC1JZ3Q3rmuAp3lsDLGlP3bTGe1BG3puDi0Ccm+P4BpEHT3x7i+Y
+         cmrF/ZvZM/7FcMIsG7h1eYOeEart4fDBof2CUozfgJCz0ObpEG8s6LjrtOsPoYNswGXO
+         KbPumgE2Qgz23VpgAm2UkqgHdwFM5Z9Vy/M+6f9i5ogcOweFv2DwvZtc+1SgdVcgkroz
+         C+uv/h6aKSs4J3cj9DVUEbfctPkIV4634t+3DZ2AGh1whCe5/WXE7qwwOMCqACSoB5C9
+         XxjAd3tjalgrtDXmItBSa5njGkbRf8aijyhurnAV8KW7gJAV59sEZJPMCjpFUUXfXw93
+         9J4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mSZpSSrX1gkn4q4BYYE/uc6pa2MZhYOZnx1rar1JeDU=;
-        b=gKAny6DMBIjP8eHEg3pMLPouPo1bPoOtDNDpoakJ1QbFfBq0HmMzUynpw/srxE+VU/
-         UeitBaMC0fANTeO6inMTpe2Ztk3vB9qZ5Urm7kZihMfX1ysR3ykcWX4DoAh/GaKPd+jJ
-         hJe2B82wQx1nhfyZaqo0cqMHMgWDbUP4UE7S9TIgybrf41Jk3Xqc/Fli5r8PdxC6hDvj
-         LeyOjucSdctNNVyhf/exlesNJJqJBSV+b/REZjDfUhASnz3Qu9UMg+U1tqAlfsToPHqM
-         CVHlqPtzQncrvAXPrMBe3WIzi5qcSsyk7lcM3VbM4eGGuJgRWv+hd43DbfLP/KBQqAVV
-         lYYA==
-X-Gm-Message-State: APjAAAXRwTTgHvZSni8tEhj337tV8whSWtb10RlBdW8QQG7VHX7rhAUO
-        jZZNwsnypxF6Frd9HFyeDGGj2lXUDqpOJwhWZp67BA==
-X-Google-Smtp-Source: APXvYqw+3unlJ461KJ9W2xUNJu4MNXa9KusyuC3+9ZFbWmbq/bJ4pMvRmLrikmQvqgpZZWmCsodpVf68GMu1iwZvj3A=
-X-Received: by 2002:a25:d112:: with SMTP id i18mr18684063ybg.364.1580745294734;
- Mon, 03 Feb 2020 07:54:54 -0800 (PST)
+        bh=dgf71URhUKo2b+JGoC+JLVlsL/X5hBwyfojNmfsCYOE=;
+        b=uPndRMm6FNkDi/l7jZr3XBKqEqP1StMZFFv54GiBUbhrKbB9VXHe9eZwgOvA8fQgXr
+         UuraByUechxAjOAm2XiAZ6OQVDWQINdjP0YGUo3YZDCZ4g/EvVCJ1WkMISUoohEwC6YQ
+         8FcfKDXWWV/PjurVj79PG4I8gYVSFixOtuhcPBecc/FBEt8D/fQCkXZG1bhorxoyJz0i
+         SVg5GvDlko5PS1OuASIgJ5+emYhx4NPB7WPcn7Y4cOxJVYWZoAvzFbEXDvuAvmosaF1B
+         MAt1rvZlvumdiWXPARVXEKmn/P14wT5fo6ydLDkyk7Ly601X0VFzkGPucRF5IhnE0gXW
+         lQ9A==
+X-Gm-Message-State: APjAAAW7eJLYLvWoPOoB16cxnrCqYHETbm3kP2HIysbakbwoCjnQ3VlM
+        qw3pfz81ojcNafG/UqeL7O1GFxfHSlbkrhPM1rBnXw==
+X-Google-Smtp-Source: APXvYqyKKc70OaT8UMs3uai3fU3zUSEujYZM/nuqWBuvVV/WutNpjFsZxAsdqNVwSshj1nNF2u2aHTW/qSlgO15Us5k=
+X-Received: by 2002:aca:b183:: with SMTP id a125mr15332483oif.83.1580745298563;
+ Mon, 03 Feb 2020 07:54:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20200131122421.23286-1-sjpark@amazon.com> <20200131122421.23286-3-sjpark@amazon.com>
- <CADVnQyk9xevY0kA9Sm9S9MOBNvcuiY+7YGBtGuoue+r+eizyOA@mail.gmail.com>
- <dd146bac-4e8a-4119-2d2b-ce6bf2daf7ce@gmail.com> <CADVnQy=Z0YRPY_0bxBpsZvECgamigESNKx6_-meNW5-6_N4kww@mail.gmail.com>
- <7d36a817-5519-8496-17cf-00eda5ed4ec7@gmail.com> <5a8c1658de8f49b2994d19d371c13c79@AcuMS.aculab.com>
-In-Reply-To: <5a8c1658de8f49b2994d19d371c13c79@AcuMS.aculab.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Mon, 3 Feb 2020 07:54:42 -0800
-Message-ID: <CANn89iLNRKGhkqDbx+Q38sB=rV8q=u8-ZsbmpHzcnJSHXdu9Lg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tcp: Reduce SYN resend delay if a suspicous ACK is received
+References: <20200131164308.GA5175@willie-the-truck> <CANn89i+CnezK81gZSLOy0w7MaZy0uT=xyxoKSTyZU3aMpzifOA@mail.gmail.com>
+ <20200131184322.GA11457@worktop.programming.kicks-ass.net>
+ <CANn89iLBL1qbrEucm2FU02oNbf=x3_4K93TmZ3yS2ZNWm8Qrsg@mail.gmail.com>
+ <CANn89i+pExLRqJxbamGv=uDi2kWY-1CKsh1DcAgfdh9DjpQx3A@mail.gmail.com> <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+In-Reply-To: <26258e70c35e4c108173a27317e64a0b@AcuMS.aculab.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 3 Feb 2020 16:54:47 +0100
+Message-ID: <CANpmjNNVstV4AJHtf0aht1xyj+_a-Kj4so4Mi1DpOWDPYN=-2Q@mail.gmail.com>
+Subject: Re: Confused about hlist_unhashed_lockless()
 To:     David Laight <David.Laight@aculab.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "sjpark@amazon.com" <sjpark@amazon.com>,
-        David Miller <davem@davemloft.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "aams@amazon.com" <aams@amazon.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        Yuchung Cheng <ycheng@google.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 7:40 AM David Laight <David.Laight@aculab.com> wrote:
+On Mon, 3 Feb 2020 at 16:45, David Laight <David.Laight@aculab.com> wrote:
 >
 > From: Eric Dumazet
-> > Sent: 31 January 2020 22:54
-> > On 1/31/20 2:11 PM, Neal Cardwell wrote:
+> > Sent: 31 January 2020 18:53
 > >
-> > > I looked into fixing this, but my quick reading of the Linux
-> > > tcp_rcv_state_process() code is that it should behave correctly and
-> > > that a connection in FIN_WAIT_1 that receives a FIN/ACK should move to
-> > > TIME_WAIT.
+> > On Fri, Jan 31, 2020 at 10:48 AM Eric Dumazet <edumazet@google.com> wrote:
 > > >
-> > > SeongJae, do you happen to have a tcpdump trace of the problematic
-> > > sequence where the "process A" ends up in FIN_WAIT_2 when it should be
-> > > in TIME_WAIT?
-> > >
-> > > If I have time I will try to construct a packetdrill case to verify
-> > > the behavior in this case.
 > >
-> > Unfortunately you wont be able to reproduce the issue with packetdrill,
-> > since it involved packets being processed at the same time (race window)
+> > > This is nice, now with have data_race()
+> > >
+> > > Remember these patches were sent 2 months ago, at a time we were
+> > > trying to sort out things.
+> > >
+> > > data_race() was merged a few days ago.
+> >
+> > Well, actually data_race() is not there yet anyway.
 >
-> You might be able to force the timing race by adding a sleep
-> in one of the code paths.
->
-> No good for a regression test, but ok for code testing.
+> Shouldn't it be NO_DATA_RACE() ??
 
-Please take a look at packetdrill, there is no possibility for it to
-send more than one packet at a time.
+Various options were considered, and based on feedback from Linus,
+decided 'data_race(..)' is the best option:
+  https://lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
 
-Even if we modify packetdrill adding the possibility of feeding
-packets to its tun device from multiple threads,
-the race is tiny and you would have to run the packetdrill thousands
-of times to eventually trigger the race once.
+It's meant to be as unobtrusive as possible, and an all-caps macro was
+ruled out.
 
-While the test SeongJae provided is using two threads and regular TCP
-stack over loopback interface,
-it triggers the race more reliably.
+Second, the "NO_" prefix would be incorrect, since it'd be the
+opposite of what it is. The macro is meant to document and mark a
+deliberate data race.
+
+Thanks,
+-- Marco
