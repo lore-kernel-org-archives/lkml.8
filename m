@@ -2,120 +2,123 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00C5C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C13AC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753212051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B59C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748536;
-	bh=ocQnE45in+xbYOOFvoH1JKbByBV73oSbjJmIlDx+q2U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NIOCxCMuPtbHEsJUxYDhvhT3w0ittQb/osQiUjxnTLGjCrAHP2PIlhdmsCZ3kPDu3
-	 ibzSHRAoweDvWy7f1KpO3VsGhHuwmom6+nTSEbUmwtrZyhA5dpN2+cNhegjC74nbj/
-	 l+ORgwI07djq6ghS6RKEVMpK09pniRQ+mzJ7zX/A=
+	s=default; t=1580748541;
+	bh=1B9KFmBU2O+i3TRJgBp+mYFM0mhthc/XGwP4UPSH3gg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dpSb/Cv6Z3TaN7cYUNTgwRXVnnytTzNnk6udM6ZafHMFYDLKVj67RZauX3EMbUkp/
+	 xUM5ikfQVbzkgXxUDK+MimkOxfqut9N1Pz5aOdGmQrPSXqKCY9D5vIOeRFweg6Ifmo
+	 Dk0dDtyxAH8GZoOJ4KEUAmXXnPIYcBOTwCYX+av8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgBCQsz (ORCPT
+        id S1728588AbgBCQZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:48:55 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:39669 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgBCQst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:48:49 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 013GlTEe023349;
-        Tue, 4 Feb 2020 01:47:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 013GlTEe023349
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580748450;
-        bh=8mL42oRIQaZwSHKJpmCbjvxiZ9pQrs0tUPVRqgWsB3g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Xf6D5Pz8FLxjB0pUEniUL8d6Ed4jC+q9Ida4tAqk5kb10+teGeZ49/u/IwWsuhhWV
-         M/jQKoFfkD3fUlYD7ld7oAddTE1/mdPlB0vR/m219WPjLBWMDKeswDdUSZdZlUxx+z
-         zZNmN8u9dAXQUksICYcG3dyvsjL8tLXLcKvJT6wM2vTUqxqEhVE89ca1FfJOo7a9bU
-         kA8DM2IulFoQrKjEqApSdSgHVSVwFipB/9af0t7BPeOlTUcxLz66xcD01EZgnbn4ZB
-         9I2QGjGI6505eg5Qqfi6P7ykfS8FEg8DnRPw3qWP21dchYjW+eOUEjGaQLk0tP11de
-         81KZ+ijPKQS0g==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org,
+        Mon, 3 Feb 2020 11:25:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728515AbgBCQZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:25:36 -0500
+Received: from localhost (unknown [104.132.45.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC5A2080C;
+        Mon,  3 Feb 2020 16:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580747135;
+        bh=1B9KFmBU2O+i3TRJgBp+mYFM0mhthc/XGwP4UPSH3gg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ck2P+xsl45LFf+1FO8KIbR7bJWRxgse7+/mrVGWpz5zKDbh1Xq01gRVjc542ruws8
+         9DJzVX4yo7DZXxKXpya7FLEbkpP7BTe1gypaLzgbuhz6Og2nSFJAlQ3A4kKV1dn59F
+         M1ZiN0FpoxhCqi0t/R/pvDgJoHQGAqItB0qMHzbY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
+        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
+        stable@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH] initramfs: do not show compression mode choice if INITRAMFS_SOURCE is empty
-Date:   Tue,  4 Feb 2020 01:47:08 +0900
-Message-Id: <20200203164708.17478-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH 4.9 26/68] vfs: fix do_last() regression
+Date:   Mon,  3 Feb 2020 16:19:22 +0000
+Message-Id: <20200203161909.354767167@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
+References: <20200203161904.705434837@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ddd09bcc899f ("initramfs: make compression options not
-depend on INITRAMFS_SOURCE"), Kconfig asks the compression mode for
-the built-in initramfs regardless of INITRAMFS_SOURCE.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-It is technically simpler, but pointless from a UI perspective,
-Linus says [1].
+commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
 
-When INITRAMFS_SOURCE is empty, usr/Makefile creates a tiny default
-cpio, which is so small that nobody cares about the compression.
+Brown paperbag time: fetching ->i_uid/->i_mode really should've been
+done from nd->inode.  I even suggested that, but the reason for that has
+slipped through the cracks and I went for dir->d_inode instead - made
+for more "obvious" patch.
 
-This commit hides the Kconfig choice in that case. The default cpio
-is embedded without compression, which was the original behavior.
+Analysis:
 
-[1]: https://lkml.org/lkml/2020/2/1/160
+ - at the entry into do_last() and all the way to step_into(): dir (aka
+   nd->path.dentry) is known not to have been freed; so's nd->inode and
+   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
+   inode of the file to get opened is not known.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+ - after step_into(): inode of the file to get opened is known; dir
+   might be pointing to freed memory/be negative/etc.
+
+ - at the call of may_create_in_sticky(): guaranteed to be out of RCU
+   mode; inode of the file to get opened is known and pinned; dir might
+   be garbage.
+
+The last was the reason for the original patch.  Except that at the
+do_last() entry we can be in RCU mode and it is possible that
+nd->path.dentry->d_inode has already changed under us.
+
+In that case we are going to fail with -ECHILD, but we need to be
+careful; nd->inode is pointing to valid struct inode and it's the same
+as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
+should use that.
+
+Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
+Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
+Cc: stable@kernel.org
+Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
+ fs/namei.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Linus,
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3260,8 +3260,8 @@ static int do_last(struct nameidata *nd,
+ 		   int *opened)
+ {
+ 	struct dentry *dir = nd->path.dentry;
+-	kuid_t dir_uid = dir->d_inode->i_uid;
+-	umode_t dir_mode = dir->d_inode->i_mode;
++	kuid_t dir_uid = nd->inode->i_uid;
++	umode_t dir_mode = nd->inode->i_mode;
+ 	int open_flag = op->open_flag;
+ 	bool will_truncate = (open_flag & O_TRUNC) != 0;
+ 	bool got_write = false;
 
-Will you directly pick up this if you are OK with it?
-
-
-
- usr/Kconfig  | 1 +
- usr/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/usr/Kconfig b/usr/Kconfig
-index 529caab1a328..bdf5bbd40727 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -102,6 +102,7 @@ config RD_LZ4
- 
- choice
- 	prompt "Built-in initramfs compression mode"
-+	depends on INITRAMFS_SOURCE != ""
- 	help
- 	  This option allows you to decide by which algorithm the builtin
- 	  initramfs will be compressed.  Several compression algorithms are
-diff --git a/usr/Makefile b/usr/Makefile
-index 18aed2ab98da..c12e6b15ce72 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -8,7 +8,7 @@
- # with unpack_to_rootfs(). Make size_append no-op.
- override size_append := :
- 
--compress-$(CONFIG_INITRAMFS_COMPRESSION_NONE)	:= shipped
-+compress-y					:= shipped
- compress-$(CONFIG_INITRAMFS_COMPRESSION_GZIP)	:= gzip
- compress-$(CONFIG_INITRAMFS_COMPRESSION_BZIP2)	:= bzip2
- compress-$(CONFIG_INITRAMFS_COMPRESSION_LZMA)	:= lzma
--- 
-2.17.1
 
