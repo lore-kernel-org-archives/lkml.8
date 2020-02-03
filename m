@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9666C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ED9C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B7321741
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DE32086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747241;
-	bh=oUvURxr++AigzS0CRsO75l4QfqQyceb3NEWxxlijn4w=;
+	s=default; t=1580747246;
+	bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELF5/eMJVZuqTXvi38rsaSc0NTYyKa7cXrQFlwcTlyWmL795qJBXrFdWIkSUaGno3
-	 KFo7F69SHk1WeaC4uHx/t982Ol2lMRpCMEfGdQr1I3emg5b7mAQ/edDUbwBvhmT6fF
-	 jH6EuJ1Z7DB4MCyBYXZviv2hVk/dEzkxLcGksoEc=
+	b=y9XvafdyqncOWJD2FeXWw5Y1KaxU4Tyx0G5mPptMcbnEAjf1f8DAgjvp8JZijeg/i
+	 VT6yj494NZwH52Sm0r+loSheNhPK5VyLA5B9ODrvmiFE5Io8f4ETRyUUB2cmp1uunO
+	 qoCRVbTUBOhusy8vcqAUyeGZgEagSqkIFqTKAE+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgBCQ1U (ORCPT
+        id S1728662AbgBCQ1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:27:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:27:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbgBCQ1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:27:18 -0500
+        id S1729379AbgBCQ1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:27:20 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7571B2087E;
-        Mon,  3 Feb 2020 16:27:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7EB521741;
+        Mon,  3 Feb 2020 16:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747236;
-        bh=oUvURxr++AigzS0CRsO75l4QfqQyceb3NEWxxlijn4w=;
+        s=default; t=1580747239;
+        bh=rOC8U+f1daTPhWJ4bxWs0HkmJ05pAb0NOy3PkAdNkRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjpr7Xiqny5g0MaRFUZnKVZLj9LQZ2frwx9fHyproQvFzTjgmsMLlcRnUhhkcYgcm
-         k1xdNVmbpe22GG2c256dUICt/DheZVHaMQuMzlHApPYi45AZ4cHxrX7TxheX8WThsa
-         sDCYUIfJMNp5xboFcSCrIB0g1C64HtkOdYkhitUY=
+        b=qNbi711BonNg2rF9xgQtNrMDaJslJRztE81FEhFZhvOFqCQK89PrfxFbBgXz0/MGN
+         O6Jsc+e2LimHRKFSxuMnSizC0q+9uK8mFS7pbz0tazk8o3VSqUQvgRV0mAd/gRr+1t
+         sixprfxm3jeYgv+tjYev/MmGfNVG88FH4qhZ5pFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Praveen Chaudhary <pchaudhary@linkedin.com>,
-        Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 68/68] net: Fix skb->csum update in inet_proto_csum_replace16().
-Date:   Mon,  3 Feb 2020 16:20:04 +0000
-Message-Id: <20200203161915.928840315@linuxfoundation.org>
+Subject: [PATCH 4.9 49/68] mac80211: Fix TKIP replay protection immediately after key setup
+Date:   Mon,  3 Feb 2020 16:19:45 +0000
+Message-Id: <20200203161913.035130758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161904.705434837@linuxfoundation.org>
 References: <20200203161904.705434837@linuxfoundation.org>
@@ -64,71 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Praveen Chaudhary <praveen5582@gmail.com>
+From: Jouni Malinen <j@w1.fi>
 
-[ Upstream commit 189c9b1e94539b11c80636bc13e9cf47529e7bba ]
+[ Upstream commit 6f601265215a421f425ba3a4850a35861d024643 ]
 
-skb->csum is updated incorrectly, when manipulation for
-NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
+TKIP replay protection was skipped for the very first frame received
+after a new key is configured. While this is potentially needed to avoid
+dropping a frame in some cases, this does leave a window for replay
+attacks with group-addressed frames at the station side. Any earlier
+frame sent by the AP using the same key would be accepted as a valid
+frame and the internal RSC would then be updated to the TSC from that
+frame. This would allow multiple previously transmitted group-addressed
+frames to be replayed until the next valid new group-addressed frame
+from the AP is received by the station.
 
-Fix:
-There is no need to update skb->csum in inet_proto_csum_replace16(),
-because update in two fields a.) IPv6 src/dst address and b.) L4 header
-checksum cancels each other for skb->csum calculation. Whereas
-inet_proto_csum_replace4 function needs to update skb->csum, because
-update in 3 fields a.) IPv4 src/dst address, b.) IPv4 Header checksum
-and c.) L4 header checksum results in same diff as L4 Header checksum
-for skb->csum calculation.
+Fix this by limiting the no-replay-protection exception to apply only
+for the case where TSC=0, i.e., when this is for the very first frame
+protected using the new key, and the local RSC had not been set to a
+higher value when configuring the key (which may happen with GTK).
 
-[ pablo@netfilter.org: a few comestic documentation edits ]
-Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
-Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
-Signed-off-by: Andy Stracner <astracner@linkedin.com>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Jouni Malinen <j@w1.fi>
+Link: https://lore.kernel.org/r/20200107153545.10934-1-j@w1.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/utils.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ net/mac80211/tkip.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/utils.c b/net/core/utils.c
-index cf5622b9ccc44..3317f90b32eb0 100644
---- a/net/core/utils.c
-+++ b/net/core/utils.c
-@@ -316,6 +316,23 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
- }
- EXPORT_SYMBOL(inet_proto_csum_replace4);
+diff --git a/net/mac80211/tkip.c b/net/mac80211/tkip.c
+index b3622823bad23..ebd66e8f46b3f 100644
+--- a/net/mac80211/tkip.c
++++ b/net/mac80211/tkip.c
+@@ -266,9 +266,21 @@ int ieee80211_tkip_decrypt_data(struct crypto_cipher *tfm,
+ 	if ((keyid >> 6) != key->conf.keyidx)
+ 		return TKIP_DECRYPT_INVALID_KEYIDX;
  
-+/**
-+ * inet_proto_csum_replace16 - update layer 4 header checksum field
-+ * @sum: Layer 4 header checksum field
-+ * @skb: sk_buff for the packet
-+ * @from: old IPv6 address
-+ * @to: new IPv6 address
-+ * @pseudohdr: True if layer 4 header checksum includes pseudoheader
-+ *
-+ * Update layer 4 header as per the update in IPv6 src/dst address.
-+ *
-+ * There is no need to update skb->csum in this function, because update in two
-+ * fields a.) IPv6 src/dst address and b.) L4 header checksum cancels each other
-+ * for skb->csum calculation. Whereas inet_proto_csum_replace4 function needs to
-+ * update skb->csum, because update in 3 fields a.) IPv4 src/dst address,
-+ * b.) IPv4 Header checksum and c.) L4 header checksum results in same diff as
-+ * L4 Header checksum for skb->csum calculation.
-+ */
- void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
- 			       const __be32 *from, const __be32 *to,
- 			       bool pseudohdr)
-@@ -327,9 +344,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
- 	if (skb->ip_summed != CHECKSUM_PARTIAL) {
- 		*sum = csum_fold(csum_partial(diff, sizeof(diff),
- 				 ~csum_unfold(*sum)));
--		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
--			skb->csum = ~csum_partial(diff, sizeof(diff),
--						  ~skb->csum);
- 	} else if (pseudohdr)
- 		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
- 				  csum_unfold(*sum)));
+-	if (rx_ctx->ctx.state != TKIP_STATE_NOT_INIT &&
+-	    (iv32 < rx_ctx->iv32 ||
+-	     (iv32 == rx_ctx->iv32 && iv16 <= rx_ctx->iv16)))
++	/* Reject replays if the received TSC is smaller than or equal to the
++	 * last received value in a valid message, but with an exception for
++	 * the case where a new key has been set and no valid frame using that
++	 * key has yet received and the local RSC was initialized to 0. This
++	 * exception allows the very first frame sent by the transmitter to be
++	 * accepted even if that transmitter were to use TSC 0 (IEEE 802.11
++	 * described TSC to be initialized to 1 whenever a new key is taken into
++	 * use).
++	 */
++	if (iv32 < rx_ctx->iv32 ||
++	    (iv32 == rx_ctx->iv32 &&
++	     (iv16 < rx_ctx->iv16 ||
++	      (iv16 == rx_ctx->iv16 &&
++	       (rx_ctx->iv32 || rx_ctx->iv16 ||
++		rx_ctx->ctx.state != TKIP_STATE_NOT_INIT)))))
+ 		return TKIP_DECRYPT_REPLAY;
+ 
+ 	if (only_iv) {
 -- 
 2.20.1
 
