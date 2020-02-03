@@ -2,134 +2,80 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261FFC35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2623C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED95520679
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580692596;
-	bh=h5+IEXWEPCyGTWzUVz/UaYhCn0fyf90iz/8etr1A8Aw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e0OVstcl2N8+nSFT65p0NJUa3ly47mhYpY0PEqksNIrf68XLR9BvzAoDvgt9+Z0So
-	 qT+qMnFpK8Fq37I8AaT5NPNLn6WMC/G6039+boG3qVr9imtgIbRWIHcgcRSTW+SpYJ
-	 /KLpkXwmRp64RlgW6Cp/H9wLGNFtGh4t9CrwC1qo=
+	by mail.kernel.org (Postfix) with ESMTP id 9547620679
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 01:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XCcsIbra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgBCBQf (ORCPT
+        id S1727167AbgBCBRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Feb 2020 20:16:35 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:52136 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgBCBQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Feb 2020 20:16:34 -0500
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0131GGTU029545;
-        Mon, 3 Feb 2020 10:16:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0131GGTU029545
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1580692577;
-        bh=b19D1AbJ2hryu1fHOZp3o3F9T3zMTyA7G0L+R1skFec=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HY44w/A1h0VHq4bQjljFy7BtofqPboJ3MYZ0/8pMk9ngdTrztkV8Lzk5Fs28EUyuN
-         iQPC6nEqgyUOzMNSj+NkptO8L7sLG08cS1KTs33xDmGtURt32UHA0jtGP3fCRxihSe
-         iDny0uHIAV+omSQCZX2GYY2OK/GtBgv+z6V7PP8TmOZz2h5pL4/chf5B5C6j2lcx5T
-         pHJNyX6R1TnjqzvieznOXPG40G+DldtOPb1a34ltJG+1OW61cJhfCvkkJNV7DO6j5+
-         UnBCHpaSnVhx12qDI1xBILCgFpa3GPm47m4Gk0LXs+YMQUSpyWihDP6crFfpmD6LZ/
-         nhPsIWL9jmPZA==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id b69so3400338vke.9;
-        Sun, 02 Feb 2020 17:16:17 -0800 (PST)
-X-Gm-Message-State: APjAAAUP3i1jrdXbdAE5RYYXGnBwYu1DIzzCInwCtlVX2OeBcbBnT7Ko
-        2nvs8s2JX0+KJCcotK61XM7PKMVT1uRB86bmhjU=
-X-Google-Smtp-Source: APXvYqw7Btcno4Kw0/kDabQq/zVWLz8wD83Yq/7gxs8FQVHeQX1S2usAAF6Bt6SF4el93IikqzefZIwNooIG59uIl6E=
-X-Received: by 2002:a1f:72c3:: with SMTP id n186mr12419152vkc.12.1580692576167;
- Sun, 02 Feb 2020 17:16:16 -0800 (PST)
+        Sun, 2 Feb 2020 20:17:37 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:33544 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgBCBRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Feb 2020 20:17:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Pg3gkrEgnoEJZvScerIJAe8qFqPzR9YYna0FwRjFm7o=; b=XCcsIbraVVxu09hQ48MivZvB0t
+        UfJy4x1mw9yDLP+x8cZ+XbGcFpTZUiDqyRoue72qfI581UN5Jykk2p1hEzYKxDqeLBbgk314swsyB
+        ape3NVBZ5LfqKd9/r36MIY1wunNIB2XtQlliGPOMr3VWdjfNDvj+QYXHNsgC7YcN91qs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iyQMm-0007wh-5O; Mon, 03 Feb 2020 02:17:32 +0100
+Date:   Mon, 3 Feb 2020 02:17:32 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org,
+        opendmb@gmail.com, davem@davemloft.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, wahrenst@gmx.net,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH 2/6] net: bcmgenet: refactor phy mode configuration
+Message-ID: <20200203011732.GB30319@lunn.ch>
+References: <20200201074625.8698-1-jeremy.linton@arm.com>
+ <20200201074625.8698-3-jeremy.linton@arm.com>
+ <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
 MIME-Version: 1.0
-References: <CAK7LNAS625YwKpv4wfKO78+Rexe2fP5pLDbMD4r71wwiQfN0Ng@mail.gmail.com>
- <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
-In-Reply-To: <CAHk-=wiTEVwmj-PH98reZTibx+C_GLwAmXO0RFmJa9weZcg70g@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 3 Feb 2020 10:15:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com>
-Message-ID: <CAK7LNAQwJVnVti4cX2GHdekD0mx1Kc2A3xvsE63WhHAGvgW2QA@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] Kbuild updates for v5.6-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2d45990-af71-60c3-a210-b23dabb9ba32@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Feb 01, 2020 at 08:24:14AM -0800, Florian Fainelli wrote:
+> 
+> 
+> On 1/31/2020 11:46 PM, Jeremy Linton wrote:
+> > The DT phy mode is similar to what we want for ACPI
+> > lets factor it out of the of path, and change the
+> > of_ call to device_. Further if the phy-mode property
+> > cannot be found instead of failing the driver load lets
+> > just default it to RGMII.
+> 
+> Humm no please do not provide a fallback, if we cannot find a valid
+> 'phy-mode' property we error out. This controller can be used with a
+> variety of configurations (internal EPHY/GPHY, MoCA, external
+> MII/Reverse MII/RGMII) and from a support perspective it is much easier
+> for us if the driver errors out if one of those essential properties are
+> omitted.
 
-On Sun, Feb 2, 2020 at 3:45 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Jan 31, 2020 at 8:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> >  - simplify built-in initramfs creation
->
-> Hmm.
->
-> This may simplify it from a _technical_ angle, but it seems to be a
-> fairly annoying step backwards from a UI perspective.
->
-> Now Kconfig asks a completely pointless question that most people have
-> absolutely zero interest in. The old situation was better, I feel.
->
-> Basically, I feel that from a "get normal users to test development
-> kernels", our Kconfig pain ends up being the biggest hurdle by far.
->
-> The kernel is easy to build and doesn't really require all that much
-> infrastructure, but generating the config - particularly when it
-> changes over time and you can't just say "just use the distro config"
-> - is a big step for people.
->
-> So honestly, while I've pulled this, I feel that this kind of change
-> is going _exactly_ the wrong way when it asks people questions that
-> they don't care one whit about.
->
-> If I as a kernel developer can't find it in myself to care and go "why
-> does it ask this new question", then that should tell you something.
->
-> Why do we have this choice in the first place?
+Hi Florian
 
+Does any of the silicon variants have two or more MACs sharing one
+MDIO bus? I'm thinking about the next patch in the series.
 
-
-Generally, initramfs is passed from a boot-loader,
-but some architectures embed initramfs into vmlinux
-(perhaps due to poor boot-loader support??)
-
-arch/arc/configs/tb10x_defconfig:CONFIG_INITRAMFS_SOURCE="../tb10x-rootfs.cpio"
-arch/unicore32/configs/defconfig:#CONFIG_INITRAMFS_SOURCE="arch/unicore/ramfs/ramfs_config"
-arch/xtensa/configs/cadence_csp_defconfig:CONFIG_INITRAMFS_SOURCE="$$KERNEL_INITRAMFS_SOURCE"
-
-So, data-compression is useful - that's is what I understand.
-
-
-For major architectures, vmlinux embeds a tiny initramfs,
-which is generated based on usr/default_cpio_list.
-
-We do not need data-compression for such a small cpio,
-but handling it in a consistent way is sensible.
-This is annoying from the users' PoV, I admit.
-
-
-
-> And no, it's not a
-> "simplification" to make life more complex for users.
->
->                    Linus
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+     Thanks
+	Andrew
