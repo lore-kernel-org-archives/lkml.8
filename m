@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B42C35249
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905A3C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631F321775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF7E217BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747692;
-	bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
+	s=default; t=1580747699;
+	bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMqF4ukdGLywJ8jv8PDxltpf3w5R9uwfTm7/c/IJWyovN22RtdVVHwv/+2hmkDF3x
-	 TCTvLGTHJ3tEXLVYlGtJCvG2535Mpi+ZTUtYyTt2xLqwgeAHTFch/dXRU82UNl38A0
-	 4lRpbcgPEdeIRVJqoeTdCDqPbcazvoFJDSQcmS/k=
+	b=C+PsOmB+fAbjed/cNilchK/0//PrgvDG4KpN/Y87ojtVYDQnkep5YpXOrQOcWjAiU
+	 Jv+/O6SQjzULz+jE/Z89JjQ1HNV8lLtLD5JmH/ITNHixvG5r4/4uBjE/E2l9+/+hhw
+	 XFZM8DB7jRyFClYr7k4DvKVe12826fQAsylnPtyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbgBCQev (ORCPT
+        id S1730880AbgBCQe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49272 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:34:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730853AbgBCQer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:47 -0500
+        id S1730865AbgBCQew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:52 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B87C20CC7;
-        Mon,  3 Feb 2020 16:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF9C20CC7;
+        Mon,  3 Feb 2020 16:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747686;
-        bh=+5JA2poJMjR7STyvd8Wt5wYwpE8j6WD4wo/41oMHMv0=;
+        s=default; t=1580747691;
+        bh=IO9VbcI3uUwDUmwFpNRvGb7+MdliZwybJcqPxKfZbI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E27yGvk+Tb5OtpA9V5MYo4z1BdzHFFugjHOiHxv757oeSYg0ZFUesHt4dp7glYwIA
-         UAFSZaun6jNHMco9BaG82bDqMwDbRZuCMuNUmDj1qDARQK77vAr3K0Qhx/M8SqoF9k
-         6MhdZHwcrKtlKJILiHkH45iPOtBzR0qwcKKu7DOY=
+        b=ZrQNz0JNYn4Z+CVhCEd5Yc/+yE3h4DzuwtUYks0Mgukid9J+ZquJMRcnY73CCbGgO
+         kdG7a6ftyynXcdmDvpmofjRz+l6cUr5mYVdyynuSF3QgF5dtRoRQ8EN3d9x0I3/jBL
+         WkRSZ9bF/4x/wePKb0PN+uqxDURYdSmAjXUC/5MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 28/90] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Mon,  3 Feb 2020 16:19:31 +0000
-Message-Id: <20200203161921.342861160@linuxfoundation.org>
+Subject: [PATCH 5.4 30/90] tools lib traceevent: Fix memory leakage in filter_event
+Date:   Mon,  3 Feb 2020 16:19:33 +0000
+Message-Id: <20200203161921.721006505@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -60,54 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
+[ Upstream commit f84ae29a6169318f9c929720c49d96323d2bbab9 ]
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+It is necessary to call free_arg(arg) when add_filter_type() returns NULL
+in filter_event().
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191209063549.59941-1-hewenliang4@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 9a94c96b0350e..a813a0cf3ff39 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -29,6 +29,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index f3cbf86e51acf..20eed719542e5 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1228,8 +1228,10 @@ filter_event(struct tep_event_filter *filter, struct tep_event *event,
+ 	}
  
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
+ 	filter_type = add_filter_type(filter, event->id);
+-	if (filter_type == NULL)
++	if (filter_type == NULL) {
++		free_arg(arg);
+ 		return TEP_ERRNO__MEM_ALLOC_FAILED;
++	}
+ 
+ 	if (filter_type->filter)
+ 		free_arg(filter_type->filter);
 -- 
 2.20.1
 
