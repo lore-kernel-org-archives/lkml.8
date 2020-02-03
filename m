@@ -2,262 +2,99 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E02FC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B459CC3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBCE2082E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9372086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb2qXbEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgBCMtr (ORCPT
+        id S1728070AbgBCMxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:49:47 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2351 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727425AbgBCMtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:49:47 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1E05179899897B42BEEF;
-        Mon,  3 Feb 2020 12:49:45 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 3 Feb 2020 12:49:44 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 3 Feb 2020
- 12:49:44 +0000
-Date:   Mon, 3 Feb 2020 12:49:42 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-CC:     <alastair@d-silva.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Keith Busch" <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        "=?ISO-8859-1?Q?C=E9dric?= Le Goater" <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Hari Bathini" <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Greg Kurz" <groug@kaod.org>, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 07/27] ocxl: Add functions to map/unmap LPC memory
-Message-ID: <20200203124942.00003b68@Huawei.com>
-In-Reply-To: <20191203034655.51561-8-alastair@au1.ibm.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-        <20191203034655.51561-8-alastair@au1.ibm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 3 Feb 2020 07:53:35 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42260 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgBCMxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:53:34 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e8so3217447plt.9;
+        Mon, 03 Feb 2020 04:53:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
+        b=Rb2qXbEoBWs7d+Nii1uAAhEC5ATNVcKqnSsAQ57yKx/Nes3NssuIoBMh81ho9c+hyG
+         0clFIPoVcUMCnxRq1yLQHno2dmmwyzVwP04QJbj2T3EJKGSL6cJ5nfxCEhPtX2LX15WN
+         QIWF9Jtht9xDHrZ+2kVrCq+VmYKgRrRub1M5okBag25cbJrkPnfAFRAqiNHmXQurlAPq
+         /tO6OH9LHJZSL4iSvpFCW2i7ZwMf4GpkFBGP5NZT3HpH0Ok0a+4TkTYTIfU4AQweMBaF
+         3cIdB7btebTX7sANEqzlbAA2SqMC0f6Jww15MPqYq6RZJ5b9buhzaTk/0Re4h85dflhU
+         Of4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
+        b=oD6XY0WJ2d0sJFdOPZ73IFm1C+L1M+RzTIfDMirs6Ir1UFA13JXDjryczbhS9oqRch
+         2yj8cnD8hpkOyhoM3b3j6Tmg7j6Wuvekc/TzE348NIBgfCR9AwwGFCLd8nc2tX/LZCxT
+         gUsfyvsFJtfBuREm+8vzvXS83xy5s4Yl0ngqh0ZkCK9NkOuE8voxED61fs+nVFNOfU49
+         PVsezk2URLvtRrz6ut76nU30gveUKt2R+C7l0BccfFNDZAeCIoJVd/XlLkRnzbH/fYYE
+         oeXipfZjlChhwecFLfLC1Vc7xH6PiTVpxNZWJ01t38qtx+EmF6+wZlL5rwcuOBZpkD53
+         Wldg==
+X-Gm-Message-State: APjAAAVZWiiYQghmD52ZUEk/LuvkErNlHsZX8WNcPeOto7vqF3o5KdnN
+        Lab+aLPDfEFhCzhtnJNPitc=
+X-Google-Smtp-Source: APXvYqxxwozPvOlt7D3pUmlPv7ZHqnNAe5uYIAMEgCjobqoM7le5Sish89wfUBjG1egNCN7Cfc4bDA==
+X-Received: by 2002:a17:902:104:: with SMTP id 4mr1436768plb.24.1580734413877;
+        Mon, 03 Feb 2020 04:53:33 -0800 (PST)
+Received: from localhost.localdomain ([27.59.202.234])
+        by smtp.gmail.com with ESMTPSA id 26sm12723577pjk.3.2020.02.03.04.53.29
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 03 Feb 2020 04:53:32 -0800 (PST)
+From:   sachin agarwal <asachin591@gmail.com>
+X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
+To:     linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andy@kernel.org, asachin591@gmail.com
+Subject: [PATCH 5/6] gpio: ich: fixed a typo
+Date:   Mon,  3 Feb 2020 18:22:55 +0530
+Message-Id: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Dec 2019 14:46:35 +1100
-Alastair D'Silva <alastair@au1.ibm.com> wrote:
+From: sachin agarwal <asachin591@gmail.com>
 
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Add functions to map/unmap LPC memory
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  drivers/misc/ocxl/config.c        |  4 +++
->  drivers/misc/ocxl/core.c          | 50 +++++++++++++++++++++++++++++++
->  drivers/misc/ocxl/ocxl_internal.h |  3 ++
->  include/misc/ocxl.h               | 18 +++++++++++
->  4 files changed, 75 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index c8e19bfb5ef9..fb0c3b6f8312 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct pci_dev *dev,
->  		afu->special_purpose_mem_size =
->  			total_mem_size - lpc_mem_size;
->  	}
-> +
-> +	dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and special purpose memory of %#llx bytes\n",
-> +		afu->lpc_mem_size, afu->special_purpose_mem_size);
-> +
+we had written "Mangagment" rather than "Management".
 
-If we are being fussy, this block has nothing todo with the rest of the patch
-so we should be seeing it here.
+Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+---
+ drivers/gpio/gpio-ich.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  	return 0;
->  }
->  
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> index 2531c6cf19a0..98611faea219 100644
-> --- a/drivers/misc/ocxl/core.c
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -210,6 +210,55 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
->  	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
->  }
->  
-> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +	if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
-> +		return 0;
-> +
-> +	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-> +	if (afu->lpc_base_addr == 0)
-> +		return -EINVAL;
-> +
-> +	if (afu->config.lpc_mem_size) {
-
-I was happy with the explicit check on 0 above, but we should be consistent.  Either
-we make use of 0 == false, or we don't and explicitly check vs 0.
-
-Hence
-
-if (afu->config.pc_mem_size != 0) { 
-
-here or
-
-if (!(afu->config.pc_mem_size + afu->config.special_purpose_mem_size))
-	return 0;
-
-above.
-
-> +		afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
-> +		afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
-> +	}
-> +
-> +	if (afu->config.special_purpose_mem_size) {
-> +		afu->special_purpose_res.start = afu->lpc_base_addr +
-> +						 afu->config.special_purpose_mem_offset;
-> +		afu->special_purpose_res.end = afu->special_purpose_res.start +
-> +					       afu->config.special_purpose_mem_size - 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-> +
-> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	return &afu->lpc_res;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-> +
-> +static void unmap_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +	if (afu->lpc_res.start || afu->special_purpose_res.start) {
-> +		void *link = afu->fn->link;
-> +
-> +		ocxl_link_lpc_release(link, dev);
-> +
-> +		afu->lpc_res.start = 0;
-> +		afu->lpc_res.end = 0;
-> +		afu->special_purpose_res.start = 0;
-> +		afu->special_purpose_res.end = 0;
-> +	}
-> +}
-> +
->  static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->  {
->  	int rc;
-> @@ -251,6 +300,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->  
->  static void deconfigure_afu(struct ocxl_afu *afu)
->  {
-> +	unmap_lpc_mem(afu);
-
-Hmm. This breaks the existing balance between configure_afu and deconfigure_afu.
-
-Given comments below on why we don't do map_lpc_mem in the afu bring up
-(as it's a shared operation) it seems to me that we should be doing this
-outside of the afu deconfigure.  Perhaps ocxl_function_close is appropriate?
-I don't know this infrastructure well enough to be sure.
-
-If it does need to be here, then a comment to give more info on
-why would be great!
-
->  	unmap_mmio_areas(afu);
->  	reclaim_afu_pasid(afu);
->  	reclaim_afu_actag(afu);
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 20b417e00949..9f4b47900e62 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -52,6 +52,9 @@ struct ocxl_afu {
->  	void __iomem *global_mmio_ptr;
->  	u64 pp_mmio_start;
->  	void *private;
-> +	u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
-> +	struct resource lpc_res;
-> +	struct resource special_purpose_res;
->  };
->  
->  enum ocxl_context_status {
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 06dd5839e438..6f7c02f0d5e3 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -212,6 +212,24 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
->  
->  // AFU Metadata
->  
-> +/**
-> + * Map the LPC system & special purpose memory for an AFU
-> + *
-> + * Do not call this during device discovery, as there may me multiple
-> + * devices on a link, and the memory is mapped for the whole link, not
-> + * just one device. It should only be called after all devices have
-> + * registered their memory on the link.
-> + *
-> + * afu: The AFU that has the LPC memory to map
-Run kernel-doc over these files and fix all the errors + warnings.
-
-@afu: ..
-
-and missing function name etc.
-
-
-> + */
-> +extern int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-> +
-> +/**
-> + * Get the physical address range of LPC memory for an AFU
-> + * afu: The AFU associated with the LPC memory
-> + */
-> +extern struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-> +
->  /**
->   * Get a pointer to the config for an AFU
->   *
-
+diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
+index 2f086d0aa1f4..9960bb8b0f5b 100644
+--- a/drivers/gpio/gpio-ich.c
++++ b/drivers/gpio/gpio-ich.c
+@@ -89,7 +89,7 @@ static struct {
+ 	struct device *dev;
+ 	struct gpio_chip chip;
+ 	struct resource *gpio_base;	/* GPIO IO base */
+-	struct resource *pm_base;	/* Power Mangagment IO base */
++	struct resource *pm_base;	/* Power Management IO base */
+ 	struct ichx_desc *desc;	/* Pointer to chipset-specific description */
+ 	u32 orig_gpio_ctrl;	/* Orig CTRL value, used to restore on exit */
+ 	u8 use_gpio;		/* Which GPIO groups are usable */
+-- 
+2.24.1
 
