@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD1BC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7BC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349042080C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE042087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747377;
-	bh=etC/B8dEpS/6lnY1kBW+7QBYg5mcAEoucXW2nGYOFC0=;
+	s=default; t=1580747380;
+	bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jUbmxzKtEb/dwLkwWk1iqCRQnyKEnTFkZ44/ZYg74xvZeoq53gAzvgu2eRYkQSAd0
-	 ZroUiVG9ud5NFNJeicvnFfAmefT9Z3MmrUF2pbdUnavpaducjw2yLyfwTmELDn3ZKg
-	 QxI7BVj11/G4fuEb2LTkh7k2u9rn90u5m0tA8+3U=
+	b=zY6Ggraj9/AZpW/9qzNoyiVvuuEnhiCSLQSs499uYJub4pbDa4Q38oH9vLlC0+0Hl
+	 6hKpgtZKg0AGtYRWDPxNnW/Tf8zLdY7NtCDRXap73+o4TuWZYIFA1NDKjYeZFt9hqS
+	 Aa8W3cTxF5ZaCKXD8kg7HkmoZ0joTrPmFe9fIWnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgBCQ3g (ORCPT
+        id S1729828AbgBCQ3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729790AbgBCQ32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:28 -0500
+        id S1729801AbgBCQ3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:31 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F4292080C;
-        Mon,  3 Feb 2020 16:29:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1660620838;
+        Mon,  3 Feb 2020 16:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747368;
-        bh=etC/B8dEpS/6lnY1kBW+7QBYg5mcAEoucXW2nGYOFC0=;
+        s=default; t=1580747370;
+        bh=4BulwQtBrg3DU3XdrFtI9JrA+USSSeddWgbxypc0wxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UIofZpYNYCkv1B6XC8DMD22OsFBLZIuN1QPH8hIZ8h/stZt/se/6nnz2p3ZWLAyx8
-         k01/SVGsWuh4W222vvZPtEmHZkZsk6VkpHxOwpgWnE/uFsep8zD0l3B/Tm3m/e7TwN
-         74P7LAgBvBkOnVIMc7WXGKBdOFCfZkqzVBvcgyZ4=
+        b=iFdBYVDI99FhEsNi+4bSMFntX9IV57GcQhOoYAYEwc+hFWb2CIFd5Qv4YUOVF8+GC
+         HiVEBsQLguYlpViLzDjtX2dGDk9FbFm9R0/p4EOkvwEK1Vkmbm1eV0UsbcI5zZk5sB
+         kkzPa/TFcUHTJDEEVxroCkCNXvmRnRvuFfYOoNFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/89] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
-Date:   Mon,  3 Feb 2020 16:19:38 +0000
-Message-Id: <20200203161923.881988686@linuxfoundation.org>
+Subject: [PATCH 4.14 54/89] ARM: dts: beagle-x15-common: Model 5V0 regulator
+Date:   Mon,  3 Feb 2020 16:19:39 +0000
+Message-Id: <20200203161923.975475988@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -61,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
+[ Upstream commit e17e7c498d4f734df93c300441e100818ed58168 ]
 
-Current USB3503 driver ignores GPIO polarity and always operates as if the
-GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-USB3503 chip applications to match the chip specification and common
-convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-to fix the USB3503 driver to properly use generic GPIO bindings and read
-polarity from DT.
+On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
+connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
+which is connected to the COMQ port. Model 5V0 regulator here in order
+for it to be used in am57xx-evm to model 3V6 regulator.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index 716a205c6dbbe..1fed3231f5c18 100644
---- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -90,7 +90,7 @@
- 		initial-mode = <1>; /* initialize in HUB mode */
- 		disabled-ports = <1>;
- 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
--		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
-+		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
- 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
- 		refclk-frequency = <19200000>;
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 49aeecd312b4b..d578a9f7e1a0e 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -32,6 +32,27 @@
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
  	};
+ 
++	main_12v0: fixedregulator-main_12v0 {
++		/* main supply */
++		compatible = "regulator-fixed";
++		regulator-name = "main_12v0";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	evm_5v0: fixedregulator-evm_5v0 {
++		/* Output of TPS54531D */
++		compatible = "regulator-fixed";
++		regulator-name = "evm_5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v0>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vdd_3v3: fixedregulator-vdd_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vdd_3v3";
 -- 
 2.20.1
 
