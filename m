@@ -2,192 +2,114 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF140C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166ABC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954A920838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zyIaKgcH"
+	by mail.kernel.org (Postfix) with ESMTP id CA4E020838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgBCWj5 (ORCPT
+        id S1727151AbgBCWnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:39:57 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:33118 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgBCWj5 (ORCPT
+        Mon, 3 Feb 2020 17:43:45 -0500
+Received: from outgoing14.flk.host-h.net ([197.242.87.48]:58217 "EHLO
+        outgoing14.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCWno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:39:57 -0500
-Received: by mail-qv1-f65.google.com with SMTP id z3so7669104qvn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 14:39:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Lnf5qSOR3Nb9OsfKa1i8yMz+LDP/mlxReDeXQiLk4Vg=;
-        b=zyIaKgcHYVH9w9aAnmil6tqVBOdVJTTFgTKxa3O/oFMqBDXZy4efUIziZf5MJCAgI9
-         1iJ/U/yFxHG8AtwZpKglJ1irzVfmlvh0iLnOR1jJxcbLXMfGwTH2qEp3nTR8/HgWk1Z+
-         ZcXifH8AgcKLonZ9a2qRKL6DVZ3s63Pe9NdNhF/fXKuO92C4/hbyB63i1AaFpzWqX0vE
-         zHAPxZn3RmDD0DNGcyF/xwzCHZgsmD/u3tBRLUSwf4nN9crZ6eGmszJ7I+9UrEuRbkaJ
-         4puwtMdVjCukC18pSuv2PhmGADKqof4AgUFibXH8Ge0c5BOBQ2yl8jUMolGfm7uPWY6C
-         7UCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lnf5qSOR3Nb9OsfKa1i8yMz+LDP/mlxReDeXQiLk4Vg=;
-        b=ksXK/xDawetyhgT66A0j74FuZrc3W0AHdgDQ7eNo7ivw5ypshN/RrfOA8SoAZ2ZP7K
-         a0yG5yV2tzqdUerDzaGGeGEc0gGWOW31eoHDlaj3MSSaCcARARQzdtAsozOBt58OJYcG
-         Jgdyu5+69vEMRiyXezvUjbvcH1JzL1RwpnQe5eaRM7/uHFzhGOCkMYkX/MLLfDl/XrFK
-         SEHVYuJkE1jGGrJUAqPittgPGZVgZ/Ve5imwYpEAkZbImClSGpVbTKibCruhRFA8nofF
-         NW9AMQbuZNtSjTCu6FBEM3PVJ0dyRQXLSAvsOh8HzHd5b3R3Vk+SfSyVSIpYpOFJpKcp
-         ygfw==
-X-Gm-Message-State: APjAAAWiGHm5OloPmYPVQK4/AA5Ztn1tH3iYpqD85hwd6588I+/5NOzd
-        oa6eLCv/d1nqHwRnvtxldFmEyQ==
-X-Google-Smtp-Source: APXvYqzDmHTw9RvC1sAlfRuRhPRUYdvVcjiqgzOnuxMAmq0EQLjgGe/w/heUvyU3io0w81zdyzi8PQ==
-X-Received: by 2002:a0c:ffc9:: with SMTP id h9mr25301780qvv.50.1580769595745;
-        Mon, 03 Feb 2020 14:39:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:6320])
-        by smtp.gmail.com with ESMTPSA id w2sm10758228qtd.97.2020.02.03.14.39.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 14:39:54 -0800 (PST)
-Date:   Mon, 3 Feb 2020 17:39:54 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2 12/28] mm: vmstat: use s32 for vm_node_stat_diff in
- struct per_cpu_nodestat
-Message-ID: <20200203223954.GE6380@cmpxchg.org>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200127173453.2089565-13-guro@fb.com>
- <20200203175818.GF1697@cmpxchg.org>
- <20200203182506.GA3700@xps.dhcp.thefacebook.com>
- <20200203203450.GA6380@cmpxchg.org>
- <20200203222853.GD6781@xps.dhcp.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203222853.GD6781@xps.dhcp.thefacebook.com>
+        Mon, 3 Feb 2020 17:43:44 -0500
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1iykRP-0000rs-Bd; Tue, 04 Feb 2020 00:43:41 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1iykRJ-0001Vj-NY; Tue, 04 Feb 2020 00:43:33 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] [media] dt-bindings: Add binding for rk3228 rga
+Date:   Mon,  3 Feb 2020 22:40:15 +0000
+Message-Id: <4e66b3f029c56d7c7709d39ed15894b86f51fd37.1580768038.git.justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1580768038.git.justin.swartz@risingedge.co.za>
+References: <cover.1580768038.git.justin.swartz@risingedge.co.za>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0S9sfM/nP8gxoqs1zeWkeM2pSDasLI4SayDByyq9LIhVqbrFGdjgeSyW
+ oSIHDV2bc0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
+ qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
+ Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
+ rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
+ hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
+ WaWokZC3JOaEfAcg3rPhhfcX+ST1SQvvWvLhLE4Lpnngg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
+ XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXVZLiWGA8pLp3rHN0URF1jrY
+ Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
+ ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
+ nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
+ MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
+ LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJIBENKYpiYAj5ry18Gfzy
+ UyGWHsbQ5DjCOMluv3aOz8NWzD3Mi+V2OEt0i8esRYoCB983CNy2/HP4CS/B6ymwJqdrYqktDHCy
+ f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
+ TkqtzdSFBbSbobZulyTUYjC74vrhaiUYgcoraGjU35GVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
+ tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
+ UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
+ 3JAjgow=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 02:28:53PM -0800, Roman Gushchin wrote:
-> On Mon, Feb 03, 2020 at 03:34:50PM -0500, Johannes Weiner wrote:
-> > On Mon, Feb 03, 2020 at 10:25:06AM -0800, Roman Gushchin wrote:
-> > > On Mon, Feb 03, 2020 at 12:58:18PM -0500, Johannes Weiner wrote:
-> > > > On Mon, Jan 27, 2020 at 09:34:37AM -0800, Roman Gushchin wrote:
-> > > > > Currently s8 type is used for per-cpu caching of per-node statistics.
-> > > > > It works fine because the overfill threshold can't exceed 125.
-> > > > > 
-> > > > > But if some counters are in bytes (and the next commit in the series
-> > > > > will convert slab counters to bytes), it's not gonna work:
-> > > > > value in bytes can easily exceed s8 without exceeding the threshold
-> > > > > converted to bytes. So to avoid overfilling per-cpu caches and breaking
-> > > > > vmstats correctness, let's use s32 instead.
-> > > > > 
-> > > > > This doesn't affect per-zone statistics. There are no plans to use
-> > > > > zone-level byte-sized counters, so no reasons to change anything.
-> > > > 
-> > > > Wait, is this still necessary? AFAIU, the node counters will account
-> > > > full slab pages, including free space, and only the memcg counters
-> > > > that track actual objects will be in bytes.
-> > > > 
-> > > > Can you please elaborate?
-> > > 
-> > > It's weird to have a counter with the same name (e.g. NR_SLAB_RECLAIMABLE_B)
-> > > being in different units depending on the accounting scope.
-> > > So I do convert all slab counters: global, per-lruvec,
-> > > and per-memcg to bytes.
-> > 
-> > Since the node counters tracks allocated slab pages and the memcg
-> > counter tracks allocated objects, arguably they shouldn't use the same
-> > name anyway.
-> > 
-> > > Alternatively I can fork them, e.g. introduce per-memcg or per-lruvec
-> > > NR_SLAB_RECLAIMABLE_OBJ
-> > > NR_SLAB_UNRECLAIMABLE_OBJ
-> > 
-> > Can we alias them and reuse their slots?
-> > 
-> > 	/* Reuse the node slab page counters item for charged objects */
-> > 	MEMCG_SLAB_RECLAIMABLE = NR_SLAB_RECLAIMABLE,
-> > 	MEMCG_SLAB_UNRECLAIMABLE = NR_SLAB_UNRECLAIMABLE,
-> 
-> Yeah, lgtm.
-> 
-> Isn't MEMCG_ prefix bad because it makes everybody think that it belongs to
-> the enum memcg_stat_item?
+Indicate that the rk3228 rga is compatible with that of the rk3288.
 
-Maybe, not sure that's a problem. #define CG_SLAB_RECLAIMABLE perhaps?
+But if any rk3228-specific quirks are identified in future that
+require handling logic that differs from what is provided for the
+rk3288, then allow for the compatibility string "rockchip,rk3228-rga"
+to be matched instead of "rockchip,rk3288-rga".
 
-> > > and keep global counters untouched. If going this way, I'd prefer to make
-> > > them per-memcg, because it will simplify things on charging paths:
-> > > now we do get task->mem_cgroup->obj_cgroup in the pre_alloc_hook(),
-> > > and then obj_cgroup->mem_cgroup in the post_alloc_hook() just to
-> > > bump per-lruvec counters.
-> > 
-> > I don't quite follow. Don't you still have to update the global
-> > counters?
-> 
-> Global counters are updated only if an allocation requires a new slab
-> page, which isn't the most common path.
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ Documentation/devicetree/bindings/media/rockchip-rga.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Right.
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+index fd5276abf..c53a8e513 100644
+--- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
++++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+@@ -6,8 +6,9 @@ BitBLT, alpha blending and image blur/sharpness.
+ 
+ Required properties:
+ - compatible: value should be one of the following
+-		"rockchip,rk3288-rga";
+-		"rockchip,rk3399-rga";
++  "rockchip,rk3228-rga", "rockchip,rk3288-rga": for Rockchip RK3228
++  "rockchip,rk3288-rga": for Rockchip RK3288
++  "rockchip,rk3399-rga": for Rockchip RK3399
+ 
+ - interrupts: RGA interrupt specifier.
+ 
+-- 
+2.11.0
 
-> In generic case post_hook is required because it's the only place where
-> we have both page (to get the node) and memcg pointer.
-> 
-> If NR_SLAB_RECLAIMABLE is tracked only per-memcg (as MEMCG_SOCK),
-> then post_hook can handle only the rare "allocation failed" case.
-> 
-> I'm not sure here what's better.
-
-If it's tracked only per-memcg, you still have to account it every
-time you charge an object to a memcg, no? How is it less frequent than
-acconting at the lruvec level?
-
-> > > Btw, I wonder if we really need per-lruvec counters at all (at least
-> > > being enabled by default). For the significant amount of users who
-> > > have a single-node machine it doesn't bring anything except performance
-> > > overhead.
-> > 
-> > Yeah, for single-node systems we should be able to redirect everything
-> > to the memcg counters, without allocating and tracking lruvec copies.
-> 
-> Sounds good. It can lead to significant savings on single-node machines.
-> 
-> > 
-> > > For those who have multiple nodes (and most likely many many
-> > > memory cgroups) it provides way too many data except for debugging
-> > > some weird mm issues.
-> > > I guess in the absolute majority of cases having global per-node + per-memcg
-> > > counters will be enough.
-> > 
-> > Hm? Reclaim uses the lruvec counters.
-> 
-> Can you, please, provide some examples? It looks like it's mostly based
-> on per-zone lruvec size counters.
-
-It uses the recursive lruvec state to decide inactive_is_low(),
-whether refaults are occuring, whether to trim cache only or go for
-anon etc. We use it to determine refault distances and how many shadow
-nodes to shrink.
-
-Grep for lruvec_page_state().
-
-> Anyway, it seems to be a little bit off from this patchset, so let's
-> discuss it separately.
-
-True
