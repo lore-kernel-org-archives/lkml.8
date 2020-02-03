@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D9DC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831CEC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6031920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6B92087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747805;
-	bh=zq1mM+BQtoXxabfk7Zvlh7qUAaowYSCbfMa5RRK5uS0=;
+	s=default; t=1580747810;
+	bh=k1u6+l4ImzTwBq1QY2DMDIFsiPThilxBmkl8gjpHXcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ESQ+gEbx++sCzVQqCGGMqfhDTc5CGFv8+hIW+jt+OIpr2edkamzsYlW5nJCzHiziz
-	 23V79QLn9H7ODdmzfYIhha72kmnGDvesPzwWXuv1pq2ZAhPJ4DKBdRQYRL5gCf459Y
-	 DnyOGUJBJf7knlBmWXtAoGuIWHgbBJIvpWIDnoAI=
+	b=mNjSvGn9GsdqqkDY81y8OvaVavp3BZWCbWdL62lmHagLtiZXSMAxuzAZsr252O1u9
+	 N6+WLPtPb5yo719drFDBbg+fjrpHBOFp9Q619C/J0xQUP5Dxp5ILfkMvui5w5Jy9Vi
+	 /vB0p6fg37cIqDEAM5o0aHFZGYMEcnuXf5i5vRQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731213AbgBCQgo (ORCPT
+        id S1731230AbgBCQgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52032 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731202AbgBCQgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:40 -0500
+        id S1730911AbgBCQgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:47 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 263EB2087E;
-        Mon,  3 Feb 2020 16:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F62A20721;
+        Mon,  3 Feb 2020 16:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747799;
-        bh=zq1mM+BQtoXxabfk7Zvlh7qUAaowYSCbfMa5RRK5uS0=;
+        s=default; t=1580747806;
+        bh=k1u6+l4ImzTwBq1QY2DMDIFsiPThilxBmkl8gjpHXcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHFPvD1jW6cMgh3/6Jg/C6DTwXqsJ3zuBHDmX6hIFnkp/d6FlcJOhi+cirDZJLz5k
-         N1+YYjF1IgTyTwcv/hD0etMzR1VWF+hPW8WzZtWMOhfXnsCNNHrzGKJxbeSR0Nqg8i
-         yHydys+qzFmYwzvv6ktFhMElAGLfpDPgL/ex0TDE=
+        b=PFMDNelNFEQPWclazUN5nHRle+mO6Yl06mTpXwdtJrEPDQzlbP/HMnh8hcq/COYP/
+         T404B1dOCaDt+spjTNoBcN6IrJvD71WPeruY6grcggB5uSirK/T7gsFg62t1OkxDmm
+         9qLVDXs8EMmCNh7g74WL2pE0r7zR5IyG0+6g42U0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 76/90] r8152: disable U2P3 for RTL8153B
-Date:   Mon,  3 Feb 2020 16:20:19 +0000
-Message-Id: <20200203161926.561975576@linuxfoundation.org>
+Subject: [PATCH 5.4 78/90] r8152: disable test IO for RTL8153B
+Date:   Mon,  3 Feb 2020 16:20:21 +0000
+Message-Id: <20200203161926.755377982@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,45 +62,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit 809a7fc6593f288d6f820ef6cc57b9d69b5f9474 ]
+[ Upstream commit d7f1b59655efb5a285d227c8f9853a98eab5c2fd ]
 
-Enable U2P3 may miss zero packet for bulk-in.
+For RTL8153B with QFN32, disable test IO. Otherwise, it may cause
+abnormal behavior for the device randomly.
 
 Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/usb/r8152.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index df993a1c60c0e..debab2c27f638 100644
+index 2d3374a373f83..1f61859baa531 100644
 --- a/drivers/net/usb/r8152.c
 +++ b/drivers/net/usb/r8152.c
-@@ -3175,7 +3175,6 @@ static void rtl8153b_runtime_enable(struct r8152 *tp, bool enable)
- 		r8153b_ups_en(tp, false);
- 		r8153_queue_wake(tp, false);
- 		rtl_runtime_suspend_enable(tp, false);
--		r8153_u2p3en(tp, true);
- 		r8153b_u1u2en(tp, true);
- 	}
- }
-@@ -3703,7 +3702,6 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
+@@ -298,6 +298,7 @@
+ /* PLA_PHY_PWR */
+ #define TX_10M_IDLE_EN		0x0080
+ #define PFM_PWM_SWITCH		0x0040
++#define TEST_IO_OFF		BIT(4)
  
- 	r8153_aldps_en(tp, true);
- 	r8152b_enable_fc(tp);
--	r8153_u2p3en(tp, true);
+ /* PLA_MAC_PWR_CTRL */
+ #define D3_CLK_GATED_EN		0x00004000
+@@ -4540,6 +4541,15 @@ static void r8153b_init(struct r8152 *tp)
+ 	ocp_data &= ~PLA_MCU_SPDWN_EN;
+ 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_MAC_PWR_CTRL3, ocp_data);
  
- 	set_bit(PHY_RESET, &tp->flags);
- }
-@@ -4055,7 +4053,6 @@ static void rtl8153b_up(struct r8152 *tp)
- 	ocp_write_dword(tp, MCU_TYPE_USB, USB_RX_BUF_TH, RX_THR_B);
++	if (tp->version == RTL_VER_09) {
++		/* Disable Test IO for 32QFN */
++		if (ocp_read_byte(tp, MCU_TYPE_PLA, 0xdc00) & BIT(5)) {
++			ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_PHY_PWR);
++			ocp_data |= TEST_IO_OFF;
++			ocp_write_word(tp, MCU_TYPE_PLA, PLA_PHY_PWR, ocp_data);
++		}
++	}
++
+ 	set_bit(GREEN_ETHERNET, &tp->flags);
  
- 	r8153_aldps_en(tp, true);
--	r8153_u2p3en(tp, true);
- 	r8153b_u1u2en(tp, true);
- }
- 
+ 	/* rx aggregation */
 -- 
 2.20.1
 
