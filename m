@@ -2,80 +2,123 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B24C3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE53C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0EC20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580723748;
-	bh=0oz4rNG3jjtawfvHWTDokHCv83TnzaSNGD1zVS/V4dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wAJpzUs1Wv8VooOivhpK111vLkjAr16nIXj/or/n076sIRyjonnHltO08ea/RyTIz
-	 tq4lRlJSRMy7CJ8TUgDMDMWjO6RldI//DJbEV+JJ0KE5ixPJRA3iatn0Z+++Rcl65D
-	 IG46EgBNcISX2tuEqWCQSJYGuVWTrx9Va89eTR6E=
+	by mail.kernel.org (Postfix) with ESMTP id 0711720838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:58:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WoEUl4OI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgBCJzs (ORCPT
+        id S1727305AbgBCJ63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:55:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgBCJzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:55:47 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4655B20661;
-        Mon,  3 Feb 2020 09:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580723405;
-        bh=0oz4rNG3jjtawfvHWTDokHCv83TnzaSNGD1zVS/V4dY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GcT4St4kKU2H7JjnBVMcqbcCg0FspLM1F1Nl+i7C8clTuKXUIZN8Wi/OPJJBR6p5L
-         tmu5abEVTbBoSJg6u1D6Pk5xx8mSQf5NEFbQ+IiN5BtI08fhDC6QsOroWVym7hKBkR
-         PsV/M6Po4uYND5Syb/1M/uy1NlmlVDr9+zZeom+M=
-Date:   Mon, 3 Feb 2020 09:50:00 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
-Message-ID: <20200203095000.GB1721@willie-the-truck>
-References: <20200131124531.623136425@infradead.org>
+        Mon, 3 Feb 2020 04:58:29 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:37180 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgBCJ62 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 04:58:28 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0139r4Zl146734;
+        Mon, 3 Feb 2020 09:58:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=4+fD8usrrX6aqnYnl2AoNHWt1yCoOyQyBn9Zwn1ExN0=;
+ b=WoEUl4OIKL1Ag/ibRqDqLDKt+XcRjiZcA0Jl1QHYOTBvjzSPEh0rPQHu8/ldWDON6NqS
+ KCiZa1Qk/m9CUUjIgozZu6zMFBfQQ/Wbl1HSTm0fxqyJXhG9BFoWGpTQT4i8DCdO2ka7
+ iowAfzdpMrCuWu+CnbWPeSxAKtLnAisi5DmglSOKh0acva02k8hwzVvrpBwJhH9Euapo
+ kk//J2siV6pzzepcD+UFYPgi42PeHmfSNPYUbgLVslRH9jWa1OjlOa3mybKSOJefTHOi
+ hT63CwLsl92tsMo7G9VN5JkmZWqKeGav3+doCC6lLitnl7T1NNnqzywdJ3gip4dFzKqT Iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xwyg9avtg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 09:58:06 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0139rxMR123793;
+        Mon, 3 Feb 2020 09:56:06 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xwjt3htqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Feb 2020 09:56:05 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0139u1q3008752;
+        Mon, 3 Feb 2020 09:56:04 GMT
+Received: from kadam (/41.210.143.134)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Feb 2020 01:56:01 -0800
+Date:   Mon, 3 Feb 2020 12:55:53 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     macro@linux-mips.org, ralf@linux-mips.org, davem@davemloft.net,
+        akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] defxx: Fix a sentinel at the end of a 'eisa_device_id'
+ structure
+Message-ID: <20200203095553.GN1778@kadam>
+References: <20200202142341.22124-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200131124531.623136425@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200202142341.22124-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002030078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9519 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002030078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 01:45:31PM +0100, Peter Zijlstra wrote:
-> In order to faciliate Will's READ_ONCE() patches:
+On Sun, Feb 02, 2020 at 03:23:41PM +0100, Christophe JAILLET wrote:
+> 'struct eisa_device_id' must be ended by an empty string, not a NULL
+> pointer. Otherwise, a NULL pointer dereference may occur in
+> 'eisa_bus_match()'.
 > 
->   https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
+> Also convert some spaces to tab to please 'checkpatch.pl'.
 > 
-> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
-> are tested using ARAnyM/68040.
+> Fixes: e89a2cfb7d7b ("[TC] defxx: TURBOchannel support")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/net/fddi/defxx.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Michael tested the previous version on his Atari Falcon/68030.
-> 
-> Build tested for sun3/coldfire.
-> 
-> Please consider!
+> diff --git a/drivers/net/fddi/defxx.c b/drivers/net/fddi/defxx.c
+> index 077c68498f04..7ef0c57f07c6 100644
+> --- a/drivers/net/fddi/defxx.c
+> +++ b/drivers/net/fddi/defxx.c
+> @@ -3768,11 +3768,11 @@ static void dfx_pci_unregister(struct pci_dev *pdev)
+>  
+>  #ifdef CONFIG_EISA
+>  static const struct eisa_device_id dfx_eisa_table[] = {
+> -        { "DEC3001", DEFEA_PROD_ID_1 },
+> -        { "DEC3002", DEFEA_PROD_ID_2 },
+> -        { "DEC3003", DEFEA_PROD_ID_3 },
+> -        { "DEC3004", DEFEA_PROD_ID_4 },
+> -        { }
+> +	{ "DEC3001", DEFEA_PROD_ID_1 },
+> +	{ "DEC3002", DEFEA_PROD_ID_2 },
+> +	{ "DEC3003", DEFEA_PROD_ID_3 },
+> +	{ "DEC3004", DEFEA_PROD_ID_4 },
+> +	{ "" }
 
-Apart from the two written by me:
+You haven't changed runtime at all.  :P (struct eisa_device_id)->sig[]
+is an array, not a pointer.  There is no NULL dereference because an
+array in the middle of another array can't be NULL.
 
-Acked-by: Will Deacon <will@kernel.org>
+regards,
+dan carpenter
 
-Cheers,
-
-Will
