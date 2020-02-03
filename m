@@ -2,115 +2,179 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7BDC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF4FC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C8320720
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41F820720
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 23:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRl7kEaz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zf4BLBA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBCX06 (ORCPT
+        id S1727063AbgBCXbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 18:26:58 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46184 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgBCX06 (ORCPT
+        Mon, 3 Feb 2020 18:31:46 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39727 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgBCXbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 18:26:58 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a22so16510066oid.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:26:57 -0800 (PST)
+        Mon, 3 Feb 2020 18:31:45 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 84so8431701pfy.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 15:31:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=7PxxR1GHzdRYycbWi00wyis2Uv32fIAZsG7I2NFRsIw=;
-        b=lRl7kEazMGZ0aJYBJaZOQQ5GyJy5smLO4fSz59JEidrYoVvgNAeu8G+Hq01N3IG0Wt
-         GcO5t5AcYet5PTGky992RAU4BYSPrXqyBHCWZVMiEuvTb2FayVBeWUYfr5drb1onrv5r
-         434b1B486q9Puk65Q+hCeY1Re26uRfXiU6V1YWmrzqvGs1QvF3GTM2i46MEMvnvCL5uZ
-         26xMlFMquu9fiLm1ZTvHJNXW9ZVcaXZO7sCi011C5/s/UEhWQXTGdI21lCxBFLCyG4/N
-         gjn1mdv/f04vJlTtyt8q2hwVIQsuXOTMm5XBr1z9al/K74+Bm1oehy+1OwWl27hc8f5X
-         UsQw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XGNxCxtoGDp+8cXtqCNq+umjrj7BBwnr/1CarpNQDow=;
+        b=Zf4BLBA33ovQTs19yyX6WoAUz8Zzi5NHrDyFtSRCEdaayqM1QIHAMeKBKdVu0zrOXq
+         KnrsACkNHOl7zushehwUJ5H8+RYQpP0PpBZ/ieM61RhlNMZuzQRlnWZLJMcJj7BabDq5
+         iNKAuTtqGwnSBcvmGAkIbyKMP3snJQAwnqzKlQ/3SsK0kcA9n3nSHC5F2klihcWk2j5q
+         Jb3wGG1CcJVnP1nuv3Kn7xF54yrSTJc8ceuwTNYEP8eRCvP9OP+10TZKUeV96hc7Op9+
+         DhDt0we2rYE0t+hXRF3YKUtbQi8ZupPG30e+jGMJ33SovSUXMtzRvEK0E14Ekxsjzb+i
+         P8Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=7PxxR1GHzdRYycbWi00wyis2Uv32fIAZsG7I2NFRsIw=;
-        b=H9xBuMQpwzQ9B85q4JWvuw40+bCGjY6UeRdqefLuYpFIRoxUoG94YcC/s1m4cDvRst
-         jbn65VTXtsjpGuKwuNiejBbmsbK/vyzbIl37s99yv0Y7gBm6WMjVf+qRSDc4qE2YfT4d
-         FnA4Ej6zcGNvqxT8Xa24SvFcpuS/DGQFXOPIiJfKA5iDr1UKcdt8PsiUkA0CVutv9MVL
-         KguR5NQSU/vtz572MQ3S6v+kyo9wosQvifMe1kt1H8Ya0OqQNN2ntJ95puSkrmGFsJLg
-         akPst4wCFdPIX3Ot6p1OSKo2ABJlLKVWVJMkSJznLG5ZSD+vrMgWm8Zh9noAhdVbmcpa
-         oWbg==
-X-Gm-Message-State: APjAAAVQ9EOcgWr4Kdes62jAQZFvkuS5NF/uixvhQbgSgUxW8iuptzms
-        LeBqPIqwaFUsDxeoiEodpyD4wc2GIyRXJF9cznQ=
-X-Google-Smtp-Source: APXvYqzCVSOmE/7CGjSxr8z/VVtC3D8eo9OyTml6D6R4PWfUHm/aXYct9eXk9L00tlcvpbTKk2N0nD0hatGuIMMDhgs=
-X-Received: by 2002:aca:815:: with SMTP id 21mr1230178oii.52.1580772417222;
- Mon, 03 Feb 2020 15:26:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XGNxCxtoGDp+8cXtqCNq+umjrj7BBwnr/1CarpNQDow=;
+        b=qKRaEkCyjnoP/y3OudpN9Wvt1k6lhtG9hnVqIvsumQP0iUJSw9/kSBgW9tF6VQ9WtR
+         h+zzicCp03EZ8sO6oslD8bfHc3NNcd4hyfkRVU9RlUci/WY/nED2KohdBxKS+pEcqsA2
+         y+iGdVDGLSnT7hu7n/cts6992zayOnyw+StcU+Qm/EsG6LIDDHPiII9LiEmpg/9NfssR
+         7M999U7G18cU4GsX6HNGOSDjvZIQov0iKSklmk36D1ExwH5d3jtNZhjl4LwMrFXsu6yN
+         z3OzOyuSS3+gpZLatllTi5iX72OaYDGhp42oG1+oLenQf2i0w8I6BrQPR1YNs8/WJQRv
+         USTg==
+X-Gm-Message-State: APjAAAXlnMwEJ1mB0T1JY7M1EaABcIimklLy/adPWw7vtzPdqXONLiGt
+        9UbwESQX7pCu/qHerdvkIqbc6g==
+X-Google-Smtp-Source: APXvYqyCCGOrUZ9ASeMIJ6mqBRwpGQqSbvV3UlCvjqN3zMfGsZDYOyhgRD7u3sbBrwMLEggMT+Q29w==
+X-Received: by 2002:a63:7053:: with SMTP id a19mr26365083pgn.377.1580772703136;
+        Mon, 03 Feb 2020 15:31:43 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m101sm557380pje.13.2020.02.03.15.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 15:31:42 -0800 (PST)
+Date:   Mon, 3 Feb 2020 15:31:40 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
+        seanpaul@chromium.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Clark <robdclark@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/9] drm/bridge: ti-sn65dsi86: Split the setting of
+ the dp and dsi rates
+Message-ID: <20200203233140.GA311651@builder>
+References: <20191218223530.253106-1-dianders@chromium.org>
+ <20191218143416.v3.1.Icb765d5799e9651e5249c0c27627ba33a9e411cf@changeid>
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 4 Feb 2020 09:26:45 +1000
-Message-ID: <CAPM=9tyPRUfbZZtVWWxs95aLkuaXkenwGU+QfR3N6NLRn+PsHg@mail.gmail.com>
-Subject: [git pull] drm ttm/mm for 5.6-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218143416.v3.1.Icb765d5799e9651e5249c0c27627ba33a9e411cf@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed 18 Dec 14:35 PST 2019, Douglas Anderson wrote:
 
-Thomas Hellstrom has some more changes to the TTM layer that needed a
-patch to the mm subsystem, this adds a new mm API
-vmf_insert_mixed_prot to avoid an ugly hack that has limitations in
-the TTM layer.
+> These two things were in one function.  Split into two.  This looks
+> like it's duplicating some code, but don't worry.  This is is just in
+> preparation for future changes.
+> 
+> This is intended to have zero functional change and will just make
+> future patches easier to understand.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Rob Clark <robdclark@gmail.com>
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-Should be all correctly acked.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
-Dave.
+Bjorn
 
-drm-next-2020-02-04:
-drm ttm/mm changes for 5.6-rc1
-The following changes since commit d47c7f06268082bc0082a15297a07c0da59b0fc4:
-
-  Merge branch 'linux-5.6' of git://github.com/skeggsb/linux into
-drm-next (2020-01-30 15:18:38 +1000)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-next-2020-02-04
-
-for you to fetch changes up to b45f1b3b585e195a7daead16d914e164310b1df6:
-
-  Merge branch 'ttm-prot-fix' of
-git://people.freedesktop.org/~thomash/linux into drm-next (2020-01-31
-16:58:35 +1000)
-
-----------------------------------------------------------------
-drm ttm/mm changes for 5.6-rc1
-
-----------------------------------------------------------------
-Dave Airlie (1):
-      Merge branch 'ttm-prot-fix' of
-git://people.freedesktop.org/~thomash/linux into drm-next
-
-Thomas Hellstrom (2):
-      mm: Add a vmf_insert_mixed_prot() function
-      mm, drm/ttm: Fix vm page protection handling
-
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 22 ++++++++++++++-------
- include/linux/mm.h              |  2 ++
- include/linux/mm_types.h        |  7 ++++++-
- mm/memory.c                     | 44 +++++++++++++++++++++++++++++++++++++----
- 4 files changed, 63 insertions(+), 12 deletions(-)
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 33 +++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index 43abf01ebd4c..2fb9370a76e6 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -417,6 +417,24 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn_bridge *pdata)
+>  			   REFCLK_FREQ(i));
+>  }
+>  
+> +static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
+> +{
+> +	unsigned int bit_rate_mhz, clk_freq_mhz;
+> +	unsigned int val;
+> +	struct drm_display_mode *mode =
+> +		&pdata->bridge.encoder->crtc->state->adjusted_mode;
+> +
+> +	/* set DSIA clk frequency */
+> +	bit_rate_mhz = (mode->clock / 1000) *
+> +			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
+> +	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
+> +
+> +	/* for each increment in val, frequency increases by 5MHz */
+> +	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
+> +		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
+> +	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+> +}
+> +
+>  /**
+>   * LUT index corresponds to register value and
+>   * LUT values corresponds to dp data rate supported
+> @@ -426,22 +444,16 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
+>  	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
+>  };
+>  
+> -static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
+> +static void ti_sn_bridge_set_dp_rate(struct ti_sn_bridge *pdata)
+>  {
+> -	unsigned int bit_rate_mhz, clk_freq_mhz, dp_rate_mhz;
+> -	unsigned int val, i;
+> +	unsigned int bit_rate_mhz, dp_rate_mhz;
+> +	unsigned int i;
+>  	struct drm_display_mode *mode =
+>  		&pdata->bridge.encoder->crtc->state->adjusted_mode;
+>  
+>  	/* set DSIA clk frequency */
+>  	bit_rate_mhz = (mode->clock / 1000) *
+>  			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
+> -	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
+> -
+> -	/* for each increment in val, frequency increases by 5MHz */
+> -	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
+> -		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
+> -	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+>  
+>  	/* set DP data rate */
+>  	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
+> @@ -510,7 +522,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>  			   val);
+>  
+>  	/* set dsi/dp clk frequency value */
+> -	ti_sn_bridge_set_dsi_dp_rate(pdata);
+> +	ti_sn_bridge_set_dsi_rate(pdata);
+> +	ti_sn_bridge_set_dp_rate(pdata);
+>  
+>  	/* enable DP PLL */
+>  	regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 1);
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
