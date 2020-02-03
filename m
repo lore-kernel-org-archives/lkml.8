@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA97C35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA37C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDF12086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F7D2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580748095;
-	bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
+	s=default; t=1580748100;
+	bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+lVIB9ByxAjT+I2Kj4JjqIYcaHRTWlgoqX3mgtoxiieGlQHQlfT0GLy+xFW6quuw
-	 bSshIKBcjGB9rZHT/C0sZ6TxO6dlWfUiINbQ2NsAEc//cJFp6f/66SHt6Zck42G4jM
-	 gm6ZX4MWHC1ps/GARy2Y9FAyrL28b6Vi0n5trzVk=
+	b=qwLiK8jOxyr0wMsjURGat557GP1IVI71Bz9+vO6OVTBQ1euwPWhTQxosolujscoGC
+	 UPIm7SD+k1gNmOTC4Pi5R3G3B73dA5S4Rp9l03ekRCdLxuf2isvQu2QiCzsyr480lh
+	 t+xXbkHGqibSCcoyz+pwApvIkEVEs7B79HjSI7Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgBCQez (ORCPT
+        id S1731555AbgBCQlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:34:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:41:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbgBCQeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:34:50 -0500
+        id S1730839AbgBCQem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:34:42 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B82120CC7;
-        Mon,  3 Feb 2020 16:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E982082E;
+        Mon,  3 Feb 2020 16:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747689;
-        bh=7uUGsk4n0XXVgZsu9YNHGZEaSX4/OsqDtUdjcRoeTZY=;
+        s=default; t=1580747681;
+        bh=8q1Jas/q+s5IaRxGYxL9jFMJFjlPUTIRXcKAPTYK13U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kEZ++spOmYn25tzEzKOh/AFYbmtyKRXmouJBQLHULhaDUgaCus1bxsj2cqsNC24v
-         mNHqUFBk3vThGikdpJU8gfXpRyp98zbH50ndQ/XXg7GQ5ZDgWHLTVSY/GxxJM/isqE
-         sYZzlPUsOKMeCWCpu0WYrqX/4qtiNFEDz3YjUTAY=
+        b=NiZc+h7d9IZaf2iTzbKwDyveEdFS1zZwrCxqNqD0x1sLRG7oGQwIjoxjF+Xkn3bU7
+         FH4TJWJLOWtfZ4xn8AhYmz2SXm4uFxqhiS2UdBapwNRj66VRy5+AZu87Uh+Ou4N1W2
+         5ZHmYc6nCoAZxLaj9VgKHk9snC+T1RrrE0OA94VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 29/90] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-Date:   Mon,  3 Feb 2020 16:19:32 +0000
-Message-Id: <20200203161921.600701756@linuxfoundation.org>
+Subject: [PATCH 5.4 26/90] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+Date:   Mon,  3 Feb 2020 16:19:29 +0000
+Message-Id: <20200203161921.061213173@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,53 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 03729cfa0d543bc996bf959e762ec999afc8f3d2 ]
+[ Upstream commit 1c226017d3ec93547b58082bdf778d9db7401c95 ]
 
-Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
-checks the value of the static variable m3_ipc_state to see if the
-wkup_m3 is ready. Currently this is populated during probe before
-rproc_boot has been called, meaning there is a window of time that
-wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
-ready, leading to invalid IPC calls to the wkup_m3 and system
-instability.
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-To avoid this, move the population of the m3_ipc_state variable until
-after rproc_boot has succeeded to guarantee a valid and usable handle
-is always returned.
-
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/wkup_m3_ipc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/ti/wkup_m3_ipc.c b/drivers/soc/ti/wkup_m3_ipc.c
-index 378369d9364ae..e9ece45d7a333 100644
---- a/drivers/soc/ti/wkup_m3_ipc.c
-+++ b/drivers/soc/ti/wkup_m3_ipc.c
-@@ -419,6 +419,8 @@ static void wkup_m3_rproc_boot_thread(struct wkup_m3_ipc *m3_ipc)
- 	ret = rproc_boot(m3_ipc->rproc);
- 	if (ret)
- 		dev_err(dev, "rproc_boot failed\n");
-+	else
-+		m3_ipc_state = m3_ipc;
- 
- 	do_exit(0);
- }
-@@ -505,8 +507,6 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
- 		goto err_put_rproc;
- 	}
- 
--	m3_ipc_state = m3_ipc;
--
- 	return 0;
- 
- err_put_rproc:
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index fb928503ad45d..d9be511f054f0 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -101,7 +101,7 @@
+ 		initial-mode = <1>; /* initialize in HUB mode */
+ 		disabled-ports = <1>;
+ 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+-		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
+ 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
+ 		refclk-frequency = <19200000>;
+ 	};
 -- 
 2.20.1
 
