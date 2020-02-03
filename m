@@ -2,139 +2,179 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9825C3524F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF14C33CAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D782084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FB620658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 12:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="krt68/O4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tXTcfqdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgBCMTf (ORCPT
+        id S1727946AbgBCMXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 07:19:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36350 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgBCMTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 07:19:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8D080B1C8;
-        Mon,  3 Feb 2020 12:19:30 +0000 (UTC)
-Subject: Re: [PATCH 1/1] mm: sysctl: add panic_on_inconsistent_mm sysctl
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Grzegorz Halat <ghalat@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, ssaner@redhat.com, atomlin@redhat.com,
-        oleksandr@redhat.com, vbendel@redhat.com, kirill@shutemov.name,
-        khlebnikov@yandex-team.ru, borntraeger@de.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Qian Cai <cai@lca.pw>
-References: <20200129180851.551109-1-ghalat@redhat.com>
- <d47a5f31-5862-b0a9-660c-48105f4f049b@suse.cz>
- <202001301128.1CBD1BA52@keescook>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1cb86d36-7620-be11-7833-0b3bab3c5c1f@suse.cz>
-Date:   Mon, 3 Feb 2020 13:19:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 3 Feb 2020 07:23:33 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:43495 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726272AbgBCMXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 07:23:32 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 5C70677F;
+        Mon,  3 Feb 2020 07:23:31 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 03 Feb 2020 07:23:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=mK5GRvMA6OUDoG2czNoAx6gpqcM
+        IiYNtIFDTy+GwdtA=; b=krt68/O4eS+hXbPUoQNMUGLZE0YG23MSyhZrBmCY8YH
+        k+ut/AKHHKapO6RMewDROM9/XDqTjEsA9rCdtw+NRkMXVRR5iXMVj7R1r/2OZETh
+        1ggYYGMpjo/LvgByLYJQmuoAOdqSRiisZk0nnHSZZvFh4NI9HkOdSm6Lbu2aZY2t
+        Q9sK/V+QPbx0Vfk2K+MDPmAGKwy016w2i1i9gFne7l0fdUS6sz1NTlYWJGNnc51Z
+        D4X+SmikI92MewdExBbPGZJXzYSQNQ5bbPDh3iE3Pf/slRIyHCTI4SlQfMeUapLq
+        YAhIkF5obLki6wO/OHzdOg3DsLqOEbytLQhMLtPgNRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=mK5GRv
+        MA6OUDoG2czNoAx6gpqcMIiYNtIFDTy+GwdtA=; b=tXTcfqdNu5grN+uQaNB053
+        DOK96ZgPPwapBCsP82XtlqVoIGkhB1KQRhpzXKX0fgLN9fEjWb7FBtiuF4i+GfIb
+        WrqFo5gAWpWdW3D3g149oJPA5UOqcFWdilwrGkGcz29ud3jz327gw6HQhu6/u0Ww
+        3M+5lT0wBJdSU1WyphxQ/UGK+/qjf/dc9TePaWOIhQPupkil3OaZTtxe4OFOI1p8
+        b4mmlj20Se0G/NjFb/gDUlMQRLSNMOxfU50AmsBM6lMU/DLznm6ntb2fQd4ZLbEm
+        /ENpshOWwCagb8SrOnElNnCXDoHzQXEGf4+Hd23zPTRGAJteSZLkye4AclUFc2DQ
+        ==
+X-ME-Sender: <xms:wRA4Xt27TgAGyDexAd-cK8HZF69HRne4pP5OInIOYFAEDuk3GacaQA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrgeejgdefkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrieekrdejieenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrh
+    hnohdrthgvtghh
+X-ME-Proxy: <xmx:wRA4XujZSucYxluqlAxtlUQeR4R-dWzAIQAUl8bQC5-f9brEBuZNYw>
+    <xmx:wRA4XuVlru235DfEwyWpXyi4rwSgz7vcgoCxbH1U1oODHoCDzx-Tcw>
+    <xmx:wRA4XtDaMZza1bdRRFSwwXQ2cx7WHjCOVl13HBqcr65LJGJ6IghKew>
+    <xmx:wxA4XtCUfrxeJgghef7tzHaq9ZspKYVKe-5GpWdfGk8oZDtyvN_TwQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3087D3280060;
+        Mon,  3 Feb 2020 07:23:29 -0500 (EST)
+Date:   Mon, 3 Feb 2020 13:23:27 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 1/1] drm: sun4i: hdmi: Add support for sun4i HDMI
+ encoder audio
+Message-ID: <20200203122327.fviddfbkfn2bgycn@gilmour.lan>
+References: <20200128140642.8404-1-stefan@olimex.com>
+ <20200128140642.8404-2-stefan@olimex.com>
+ <20200129164321.34mornbi3xvx5dys@gilmour.lan>
+ <64676a4b-e149-146c-81b4-7fd5e792efc5@olimex.com>
 MIME-Version: 1.0
-In-Reply-To: <202001301128.1CBD1BA52@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="us6nvolmdwutyb6n"
+Content-Disposition: inline
+In-Reply-To: <64676a4b-e149-146c-81b4-7fd5e792efc5@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/30/20 8:28 PM, Kees Cook wrote:
-> On Thu, Jan 30, 2020 at 03:44:50PM +0100, Vlastimil Babka wrote:
->> On 1/29/20 7:08 PM, Grzegorz Halat wrote:
->>> Memory management subsystem performs various checks at runtime,
->>> if an inconsistency is detected then such event is being logged and kernel
->>> continues to run. While debugging such problems it is helpful to collect
->>> memory dump as early as possible. Currently, there is no easy way to panic
->>> kernel when such error is detected.
->>>
->>> It was proposed[1] to panic the kernel if panic_on_oops is set but this
->>> approach was not accepted. One of alternative proposals was introduction of
->>> a new sysctl.
->>>
->>> Add a new sysctl - panic_on_inconsistent_mm. If the sysctl is set then the
->>> kernel will be crashed when an inconsistency is detected by memory
->>> management. This currently means panic when bad page or bad PTE
->>> is detected(this may be extended to other places in MM).
->>
->> I wonder, should enabling the sysctl also effectively convert VM_WARN...
->> to VM_BUG... ?
-> 
-> There is already panic_on_warn sysctl... wouldn't that be sufficient?
 
-True, forgot about it. Thanks.
+--us6nvolmdwutyb6n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Thu, Jan 30, 2020 at 08:20:55AM +0200, Stefan Mavrodiev wrote:
+> On 1/29/20 6:43 PM, Maxime Ripard wrote:
+> > On Tue, Jan 28, 2020 at 04:06:42PM +0200, Stefan Mavrodiev wrote:
+> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> > > index 68d4644ac2dc..4cd35c97c503 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> > > @@ -23,6 +23,8 @@
+> > >   #include <drm/drm_print.h>
+> > >   #include <drm/drm_probe_helper.h>
+> > >
+> > > +#include <sound/soc.h>
+> > > +
+> > >   #include "sun4i_backend.h"
+> > >   #include "sun4i_crtc.h"
+> > >   #include "sun4i_drv.h"
+> > > @@ -87,6 +89,10 @@ static void sun4i_hdmi_disable(struct drm_encoder *encoder)
+> > >
+> > >   	DRM_DEBUG_DRIVER("Disabling the HDMI Output\n");
+> > >
+> > > +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
+> > > +	sun4i_hdmi_audio_destroy(hdmi);
+> > > +#endif
+> > > +
+> > >   	val = readl(hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> > >   	val &= ~SUN4I_HDMI_VID_CTRL_ENABLE;
+> > >   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> > > @@ -114,6 +120,11 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
+> > >   		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
+> > >
+> > >   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+> > > +
+> > > +#ifdef CONFIG_DRM_SUN4I_HDMI_AUDIO
+> > > +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
+> > > +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
+> > > +#endif
+> > I really don't think we should be creating / removing the audio card
+> > at enable / disable time.
+>
+> For me it's unnatural to have sound card all the time, even when the HDMI
+> is not plugged-in.
+
+It's also a matter of being consistent: pretty much everyone else is
+doing it:
+  * vc4 (RaspberryPi)
+    https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/vc4/vc4_hdmi.c#L1437
+
+  * omap
+    https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/omapdrm/dss/hdmi4.c#L620
+
+  * sti
+    https://elixir.bootlin.com/linux/v5.5.1/source/drivers/gpu/drm/sti/sti_hdmi.c#L1310
+
+  * msm
+    https://elixir.bootlin.com/linux/v5.5.1/source/drivers/gpu/drm/msm/hdmi/hdmi.c#L597
+
+etc...
+
+If we were to think about this at a more theorical level though, it's
+pretty much the same case than having a sound card but no headphone
+attached, or having a display engine but no display attached. In both
+case, you register the driver before having a sink, you just let the
+userspace know that there's nothing connected on the other end.
+
+Maxime
+
+--us6nvolmdwutyb6n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXjgQvwAKCRDj7w1vZxhR
+xdqwAP90ShOJxBbtMrBiG8v3E0faJeHq3afqOhYkhGvBsaMulgEAiXnhh/hbOEYk
+AIT/bNNWkq+0/C1clN/tSxpR02pJMwI=
+=ubu/
+-----END PGP SIGNATURE-----
+
+--us6nvolmdwutyb6n--
