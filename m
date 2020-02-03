@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CDCC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8D6C35249
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8828420838
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABFE20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747383;
-	bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
+	s=default; t=1580747386;
+	bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0Xt7FI5b1x0ZlV+bKnV59xMoihRxRETgPRJ6z6KFDBnwSnnU2kvIPXr/Cic+8ofy
-	 mcqHUVN1inREMtA7aPE9GDEJbu1uWdnSVaiKY5TPEZHUAVEPXNLHrj6GoysPck9tXf
-	 VwKsK0hZPQdpD736lkJg5x1dMBwFDLNrN+C+oWIw=
+	b=w5KearwVBDTCUHhxWg02JIddYU6Tn8MP0qc2FIc/VJEGvzQ/hJFPdO3zAVEcI2nKo
+	 w8kCKUVDD1eY0MvWltzZwteKr8MhrxGhg9KjgkSzyOhjGIqVEsyAyeIcaFmSJekNs2
+	 zSY+TqeYU4ESTpWujj7JlIMEv4I8XBnAeErkqMYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgBCQ3m (ORCPT
+        id S1729848AbgBCQ3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:29:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:29:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729816AbgBCQ3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:29:36 -0500
+        id S1729822AbgBCQ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:29:38 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE36720838;
-        Mon,  3 Feb 2020 16:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546EC21744;
+        Mon,  3 Feb 2020 16:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747375;
-        bh=9xxOYi/YEdFwBEYSfI0Cp6t4PmZf83zOIdobzxHARN4=;
+        s=default; t=1580747377;
+        bh=CslaSSQI+Lm9q11vj17D/LgMKJ+dG/2Gb2LaHCRJXVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i47bGTgheEJv641P62J603WrTHe+vden7vfzO7Sy85vCWPu806q5f+ammjWWY44wU
-         8ka79OmHoHOWvi4ghp5rMfVAypr30TzFQYGN+L3O+g9xcimaHqNp3/FZLNyVBRaqvK
-         GXuuMymkudxfp5+FNKO7iYXPtASdoOK3ym8/s9n8=
+        b=wEEu/3zPBe0+yhqf9ntF9sICck6z70lbZ+YdSbSGm+Gcc7MEbHWGtwivIc351bB1h
+         b/UiL8Duf3JTf+mVX1Mw6bPbN/pq209pNHV1Elpap++c2Uww3GIAq/d7JzdSOxk+Qx
+         byzxGF+/D4/Rqhd8hrbGp7GYZCI9S0CwCR7EnqEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/89] mac80211: mesh: restrict airtime metric to peered established plinks
-Date:   Mon,  3 Feb 2020 16:19:41 +0000
-Message-Id: <20200203161924.166007733@linuxfoundation.org>
+Subject: [PATCH 4.14 57/89] clk: mmp2: Fix the order of timer mux parents
+Date:   Mon,  3 Feb 2020 16:19:42 +0000
+Message-Id: <20200203161924.254260816@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161916.847439465@linuxfoundation.org>
 References: <20200203161916.847439465@linuxfoundation.org>
@@ -60,53 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 02a614499600af836137c3fbc4404cd96365fff2 ]
+[ Upstream commit 8bea5ac0fbc5b2103f8779ddff216122e3c2e1ad ]
 
-The following warning is triggered every time an unestablished mesh peer
-gets dumped. Checks if a peer link is established before retrieving the
-airtime link metric.
+Determined empirically, no documentation is available.
 
-[ 9563.022567] WARNING: CPU: 0 PID: 6287 at net/mac80211/mesh_hwmp.c:345
-               airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022697] Hardware name: PC Engines apu2/apu2, BIOS v4.10.0.3
-[ 9563.022756] RIP: 0010:airtime_link_metric_get+0xa2/0xb0 [mac80211]
-[ 9563.022838] Call Trace:
-[ 9563.022897]  sta_set_sinfo+0x936/0xa10 [mac80211]
-[ 9563.022964]  ieee80211_dump_station+0x6d/0x90 [mac80211]
-[ 9563.023062]  nl80211_dump_station+0x154/0x2a0 [cfg80211]
-[ 9563.023120]  netlink_dump+0x17b/0x370
-[ 9563.023130]  netlink_recvmsg+0x2a4/0x480
-[ 9563.023140]  ____sys_recvmsg+0xa6/0x160
-[ 9563.023154]  ___sys_recvmsg+0x93/0xe0
-[ 9563.023169]  __sys_recvmsg+0x7e/0xd0
-[ 9563.023210]  do_syscall_64+0x4e/0x140
-[ 9563.023217]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The OLPC XO-1.75 laptop used parent 1, that one being VCTCXO/4 (65MHz), but
+thought it's a VCTCXO/2 (130MHz). The mmp2 timer driver, not knowing
+what is going on, ended up just dividing the rate as of
+commit f36797ee4380 ("ARM: mmp/mmp2: dt: enable the clock")'
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191203180644.70653-1-markus.theil@tu-ilmenau.de
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20191218190454.420358-3-lkundrak@v3.sk
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/mmp/clk-of-mmp2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index fab0764c315fe..994dde6e5f9d9 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -326,6 +326,9 @@ static u32 airtime_link_metric_get(struct ieee80211_local *local,
- 	unsigned long fail_avg =
- 		ewma_mesh_fail_avg_read(&sta->mesh->fail_avg);
+diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
+index d083b860f0833..10689d8cd3867 100644
+--- a/drivers/clk/mmp/clk-of-mmp2.c
++++ b/drivers/clk/mmp/clk-of-mmp2.c
+@@ -134,7 +134,7 @@ static DEFINE_SPINLOCK(ssp3_lock);
+ static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
  
-+	if (sta->mesh->plink_state != NL80211_PLINK_ESTAB)
-+		return MAX_METRIC;
-+
- 	/* Try to get rate based on HW/SW RC algorithm.
- 	 * Rate is returned in units of Kbps, correct this
- 	 * to comply with airtime calculation units
+ static DEFINE_SPINLOCK(timer_lock);
+-static const char *timer_parent_names[] = {"clk32", "vctcxo_2", "vctcxo_4", "vctcxo"};
++static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
+ 
+ static DEFINE_SPINLOCK(reset_lock);
+ 
 -- 
 2.20.1
 
