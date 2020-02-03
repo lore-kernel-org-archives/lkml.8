@@ -2,99 +2,187 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE001C3524D
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C503BC35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC8C20732
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580770276;
-	bh=WnMnyvktE5IVTSQXx7/xkKQiDMFaDuYtisTeopfQFkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gI+aWiKT8/Gt9HDJavrMpCIZuTZa+xJqFuYh0ALDO8yn1HeaAj3aSdITwFUVftAyd
-	 79pTeydRlXpB84CwWFu7ku1Vq6cIHmGc49xrdwgP+mp9rUGow/g+KtX/z4Ld6dj4g9
-	 AGxsv8BS7RP+oRe2c31uiVzwSQKg9G1ewkngZ5Tc=
+	by mail.kernel.org (Postfix) with ESMTP id 7D42E20674
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 22:55:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n/Ewrsn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgBCWvQ (ORCPT
+        id S1726984AbgBCWzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 17:51:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbgBCWvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 17:51:15 -0500
-Received: from localhost (unknown [167.98.85.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3453020720;
-        Mon,  3 Feb 2020 22:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580770273;
-        bh=WnMnyvktE5IVTSQXx7/xkKQiDMFaDuYtisTeopfQFkM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mdP89jz3i3RSrWtttLc7Q9Phh/NELRf5ul9nrtBTbS86lH8+/hoUvTCtgm30WLZ3r
-         QZYsEvNgU9KiUbvuwHtAaNMNBowAgiB6uDLFP2v+WweIA4l2ZpnA/mUJ7jvCpP4LE3
-         HCHhSBW38A5OALVVOponY/uOa00xma8K6wGWol54=
-Date:   Mon, 3 Feb 2020 22:51:11 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.5 00/23] 5.5.2-stable review
-Message-ID: <20200203225111.GA3925646@kroah.com>
-References: <20200203161902.288335885@linuxfoundation.org>
- <10cd3c5f-0a2a-f73c-f071-17d1cc33531b@nvidia.com>
+        Mon, 3 Feb 2020 17:55:07 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38554 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbgBCWzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 17:55:07 -0500
+Received: by mail-pj1-f68.google.com with SMTP id j17so449474pjz.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 14:55:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mbd+zaPlNPETe1wNA306kmUlthg3io89NNBcl5Um8vU=;
+        b=n/Ewrsn6zdfXe+bDAPIGD3w+zw4BtAel/beC+kb+eyNw7L+wdmw0WycYfTb+hrX45N
+         UMpWIU68uCzrqj6QiPu6oMWFMX7SP3MQsbww6/U+vfGNTz0scu4T3mWiY9wxCfZ98KG0
+         83shKxfKPXp0wg3ErXxx0Z5mDtDXAsVKoV018=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mbd+zaPlNPETe1wNA306kmUlthg3io89NNBcl5Um8vU=;
+        b=Evd/IWPbt3a8f24O4kOKBDPiyhbOBhQvJxqMaEuzwTOUg8A2cf8FsxpKL2vbqKg4F/
+         RTkKJDcpXDx4YHqWprUh3rwgU/DhgfgVSMfwEuboEZumrG3Mg/lGuEFDhRceF5T9zPnq
+         D2NP2P3QRVoNFHn/rvXBEy6diJMWXwHv/ZDdabDmygXZuIRWoFEeps3aMvXmqwkp3/m3
+         BS4OJe7iQxc48pz7K+jnd6Uwz7+IGSjgVKEu8Qe+NKq3phjUWcqn/HedyjZh7JDIXmtr
+         Fx2apBvIFpHEMwLAlklWZv4YVre75RdUX6LY0artYy17iUmyzP7pRm6ewLUh+WN/Kiey
+         kqGA==
+X-Gm-Message-State: APjAAAWQtqtsZYApwZPP6ICDQSKzFfnc+mul8P7azQgdW1ZwH+jFH/OK
+        8WJ7iavf0pNT2MeJcuksCwU5ZnlwS8KxVA==
+X-Google-Smtp-Source: APXvYqx+jsm3aHRpCZuleYPzRToyAAYttUTLXeKsaQz19t5aTxTKSmQrhHknk2sbFio8XQdVRyUMJw==
+X-Received: by 2002:a17:902:7d8c:: with SMTP id a12mr26028586plm.47.1580770504903;
+        Mon, 03 Feb 2020 14:55:04 -0800 (PST)
+Received: from yichengli2.mtv.corp.google.com ([2620:15c:202:201:fd9f:cb79:f2f4:c8c7])
+        by smtp.gmail.com with ESMTPSA id k5sm485229pju.29.2020.02.03.14.55.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Feb 2020 14:55:04 -0800 (PST)
+From:   Yicheng Li <yichengli@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org, lee.jones@linaro.org, gwendal@chromium.org,
+        andriy.shevchenko@linux.intel.com, Jonathan.Cameron@huawei.com,
+        evgreen@chromium.org, rushikesh.s.kadam@intel.com,
+        yichengli@chromium.org, tglx@linutronix.de
+Subject: [PATCH v6] platform/chrome: cros_ec: Query EC protocol version if EC transitions between RO/RW
+Date:   Mon,  3 Feb 2020 14:53:56 -0800
+Message-Id: <20200203225356.203946-1-yichengli@chromium.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10cd3c5f-0a2a-f73c-f071-17d1cc33531b@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 09:40:21PM +0000, Jon Hunter wrote:
-> 
-> On 03/02/2020 16:20, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.2 release.
-> > There are 23 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed, 05 Feb 2020 16:17:59 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.2-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.5:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.5.2-rc1-g8dc0cb8ae177
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
+RO and RW of EC may have different EC protocol version. If EC transitions
+between RO and RW, but AP does not reboot (this is true for fingerprint
+microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+still uses the protocol version queried before transition, which can
+cause problems. In the case of fingerprint microcontroller, this causes
+AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+interrupt handler, which in turn prevents RO to clear the interrupt
+line to AP, in an infinite loop.
 
-Thanks for testing all of these so quickly and letting me know.
+Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+might have been a transition between RO and RW, so re-query the protocol.
 
-greg k-h
+Signed-off-by: Yicheng Li <yichengli@chromium.org>
+---
+Hi Enric and Marek,
+
+> This patch landed recently in linux-next as commit
+> 241a69ae8ea8e2defec751fe55dac1287aa044b8. Sadly, it causes following
+> kernel oops on any key press on Samsung Exynos-based Chromebooks (Snow,
+> Peach-Pit and Peach-Pi):
+
+
+> Many thanks for report the issue, we will take a look ASAP and revert
+> this commit meanwhile.
+
+
+> Simply removing the BUG_ON() from cros_ec_get_host_event() function
+> fixes the issue, but I don't know the protocol details to judge if this
+> is the correct way of fixing it.
+
+The issue was those Samsung Chromebooks (Snow, Peach-Pit and Peach-Pi)
+do not support mkbp events, yet we applied the same thing to them, which
+we shouldn't. This v6 should fix it: I Just added a check
+
+	if (ec_dev->mkbp_event_supported)
+
+in cros_ec_register().
+
+
+
+drivers/platform/chrome/cros_ec.c           | 29 +++++++++++++++++++++
+ include/linux/platform_data/cros_ec_proto.h |  3 +++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 9b2d07422e17..f16804db805b 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 	return ret;
+ }
+ 
++static int cros_ec_ready_event(struct notifier_block *nb,
++	unsigned long queued_during_suspend, void *_notify)
++{
++	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
++						     notifier_ready);
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
++		mutex_lock(&ec_dev->lock);
++		cros_ec_query_all(ec_dev);
++		mutex_unlock(&ec_dev->lock);
++		return NOTIFY_OK;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ /**
+  * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+  * @ec_dev: Device to register.
+@@ -201,6 +218,18 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+ 		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
+ 			err);
+ 
++	if (ec_dev->mkbp_event_supported) {
++		/*
++		 * Register the notifier for EC_HOST_EVENT_INTERFACE_READY
++		 * event.
++		 */
++		ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
++		err = blocking_notifier_chain_register(
++			&ec_dev->event_notifier, &ec_dev->notifier_ready);
++		if (err)
++			return err;
++	}
++
+ 	dev_info(dev, "Chrome EC device registered\n");
+ 
+ 	return 0;
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index 0d4e4aaed37a..a1c545c464e7 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -121,6 +121,8 @@ struct cros_ec_command {
+  * @event_data: Raw payload transferred with the MKBP event.
+  * @event_size: Size in bytes of the event data.
+  * @host_event_wake_mask: Mask of host events that cause wake from suspend.
++ * @notifier_ready: The notifier_block to let the kernel re-query EC
++ *      communication protocol when the EC sends EC_HOST_EVENT_INTERFACE_READY.
+  * @ec: The platform_device used by the mfd driver to interface with the
+  *      main EC.
+  * @pd: The platform_device used by the mfd driver to interface with the
+@@ -161,6 +163,7 @@ struct cros_ec_device {
+ 	int event_size;
+ 	u32 host_event_wake_mask;
+ 	u32 last_resume_result;
++	struct notifier_block notifier_ready;
+ 
+ 	/* The platform devices used by the mfd driver */
+ 	struct platform_device *ec;
+-- 
+2.24.1
+
