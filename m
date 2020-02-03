@@ -2,139 +2,127 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC65BC3524E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6C8C3524F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9293820661
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZXnNB0D"
+	by mail.kernel.org (Postfix) with ESMTP id BA02F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 09:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgBCJDP (ORCPT
+        id S1727868AbgBCJDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 04:03:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40474 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727308AbgBCJDP (ORCPT
+        Mon, 3 Feb 2020 04:03:55 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:44332 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgBCJDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 04:03:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580720593;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QS5DhuU6CK4wbCVngU1PiTIKsJWzHpQ1TW55BC4N5Uk=;
-        b=IZXnNB0DOYQuEkj6LyIS4l5Q7a3tvKRIX4/Pr+2rRCQP5PrBQ+eznUezD+lEhk53XABvQF
-        YBtgsDIGcGJ8Bs1RdQkc8ZriYW8Oronr/LnaZumIxSX7zDY9NJjb1Hx/Yx+rKgaSVIbDnf
-        ymy/CCtl9dAQ5eXyeDMCKRXuQ8IfzFo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-OMm89g0cPG2M720TmisTDg-1; Mon, 03 Feb 2020 04:03:11 -0500
-X-MC-Unique: OMm89g0cPG2M720TmisTDg-1
-Received: by mail-wm1-f70.google.com with SMTP id m21so3758085wmg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Feb 2020 01:03:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QS5DhuU6CK4wbCVngU1PiTIKsJWzHpQ1TW55BC4N5Uk=;
-        b=MCVwkEVlFOSUBPjC6sf8MJ5i3NikCCMVyCmKt3w4W1twZrjLsdoGd24QlkwhC85dK2
-         1gMM1TcV9plqZk5wH2OJD0Rto6YkjUjvAwUHo44dkFB7G+Y3gJm8QEDiFl1k8tqTTKiu
-         CsEaCbkSTBDExxW+qx5J3Frn4FV35UtVKSDHYat7gSLf//sv/yMQiMqNonrgo3QudPcx
-         vKNb3tbNQoxxDPZnWehr6S5xGAypFAcqcjYKNfS6bwmDfvMQw+AgIQVeO4IP9bIeqrcD
-         o3o5qEQFzZ0Jm3pTZqpvuZ7kbMKZsDSEAYFb+Fhf7cMOGubukPDu3R5PeOPAK+YymSeG
-         3UFg==
-X-Gm-Message-State: APjAAAVZH4cquQoKDmLuSFbEZeYaEVz7Z7lz5A0bAt/JrU0dEN56ZQ5M
-        k1yKSvm8VXYLtiUasadloTsC1IHWYpmsOSTT9XelXf1nXtsNWopg4OEexD0VXbHMdnJD5YyYsYD
-        HcRQ0lrUNpQO6RBuiYWVAF1La
-X-Received: by 2002:adf:f3cd:: with SMTP id g13mr14468724wrp.54.1580720590378;
-        Mon, 03 Feb 2020 01:03:10 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz0JZN0rHbvb/Lu2ak4/sjEHlVgc/AoTaAYJxDdu2O/mLRd8Vkl39m/5i4aqwiKZvESy1fumw==
-X-Received: by 2002:adf:f3cd:: with SMTP id g13mr14468698wrp.54.1580720590131;
-        Mon, 03 Feb 2020 01:03:10 -0800 (PST)
-Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id f189sm24145163wmf.16.2020.02.03.01.03.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2020 01:03:09 -0800 (PST)
-Date:   Mon, 3 Feb 2020 10:03:07 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: Re: [PATCH liburing v2 0/1] test: add epoll test case
-Message-ID: <CAGxU2F4kKCGeg0xrGsAkj=ZWkfbswxswm6QF2EzDH_6+QQk5Zg@mail.gmail.com>
-References: <20200131142943.120459-1-sgarzare@redhat.com>
- <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+        Mon, 3 Feb 2020 04:03:54 -0500
+Received: from [10.7.0.4] (10.28.11.250) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 3 Feb
+ 2020 17:04:25 +0800
+Subject: Re: [PATCH v6 5/5] clk: meson: a1: add support for Amlogic A1
+ Peripheral clock driver
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200116080440.118679-1-jian.hu@amlogic.com>
+ <20200116080440.118679-6-jian.hu@amlogic.com>
+ <20200129054253.6F8CD2071E@mail.kernel.org>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <3e103a45-62d4-1a10-e4af-5a4c588162d6@amlogic.com>
+Date:   Mon, 3 Feb 2020 17:04:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ebc2efdb-4e7f-0db9-ef04-c02aac0b08b1@kernel.dk>
+In-Reply-To: <20200129054253.6F8CD2071E@mail.kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.11.250]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 4:39 PM Jens Axboe <axboe@kernel.dk> wrote:
-> On 1/31/20 7:29 AM, Stefano Garzarella wrote:
-> > Hi Jens,
-> > this is a v2 of the epoll test.
-> >
-> > v1 -> v2:
-> >     - if IORING_FEAT_NODROP is not available, avoid to overflow the CQ
-> >     - add 2 new tests to test epoll with IORING_FEAT_NODROP
-> >     - cleanups
-> >
-> > There are 4 sub-tests:
-> >     1. test_epoll
-> >     2. test_epoll_sqpoll
-> >     3. test_epoll_nodrop
-> >     4. test_epoll_sqpoll_nodrop
-> >
-> > In the first 2 tests, I try to avoid to queue more requests than we have room
-> > for in the CQ ring. These work fine, I have no faults.
->
-> Thanks!
->
-> > In the tests 3 and 4, if IORING_FEAT_NODROP is supported, I try to submit as
-> > much as I can until I get a -EBUSY, but they often fail in this way:
-> > the submitter manages to submit everything, the receiver receives all the
-> > submitted bytes, but the cleaner loses completion events (I also tried to put a
-> > timeout to epoll_wait() in the cleaner to be sure that it is not related to the
-> > patch that I send some weeks ago, but the situation doesn't change, it's like
-> > there is still overflow in the CQ).
-> >
-> > Next week I'll try to investigate better which is the problem.
->
-> Does it change if you have an io_uring_enter() with GETEVENTS set? I wonder if
-> you just pruned the CQ ring but didn't flush the internal side.
+Hi, Stephen
 
-Yes, If I use the io_uring_wait_cqe() instead of io_uring_peek_cqe() all
-the tests work great, but it is blocking and the epoll_wait() it is used
-only the first time.
+Thanks for your review
 
->
-> > I hope my test make sense, otherwise let me know what is wrong.
->
-> I'll take a look...
-
-Thanks!
-
->
-> > Anyway, when I was exploring the library, I had a doubt:
-> > - in the __io_uring_get_cqe() should we call sys_io_uring_enter() also if
-> >   submit and wait_nr are zero, but IORING_SQ_NEED_WAKEUP is set in the
-> >   sq.kflags?
->
-> It's a submission side thing, the completion side shouldn't care. That
-> flag is only relevant if you're submitting IO with SQPOLL. Then it tells
-> you that the thread needs to get woken up, which you need io_uring_enter()
-> to do. But for just reaping completions and not needing to submit
-> anything new, we don't care if the thread is sleeping.
-
-Thank you for clarifying that,
-Stefano
-
+On 2020/1/29 13:42, Stephen Boyd wrote:
+> Quoting Jian Hu (2020-01-16 00:04:40)
+>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+>> new file mode 100644
+>> index 000000000000..2cf20ae1db75
+>> --- /dev/null
+>> +++ b/drivers/clk/meson/a1.c
+>> @@ -0,0 +1,2249 @@
+> [...]
+>> +       &a1_ceca_32k_clkout,
+>> +       &a1_cecb_32k_clkin,
+>> +       &a1_cecb_32k_div,
+>> +       &a1_cecb_32k_sel_pre,
+>> +       &a1_cecb_32k_sel,
+>> +       &a1_cecb_32k_clkout,
+>> +};
+>> +
+>> +static struct regmap_config clkc_regmap_config = {
+> 
+> Can this be const?
+OK, I will add const in next v8 version.
+> 
+>> +       .reg_bits       = 32,
+>> +       .val_bits       = 32,
+>> +       .reg_stride     = 4,
+>> +};
+>> +
+>> +static int meson_a1_periphs_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct resource *res;
+>> +       void __iomem *base;
+>> +       struct regmap *map;
+>> +       int ret, i;
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +
+>> +       base = devm_ioremap_resource(dev, res);
+> 
+> Can you use the combination function that does the get resource and
+> ioremap in one function?
+OK, I will use 'devm_platform_ioremap_resource' here.
+> 
+>> +       if (IS_ERR(base))
+>> +               return PTR_ERR(base);
+>> +
+>> +       map = devm_regmap_init_mmio(dev, base, &clkc_regmap_config);
+>> +       if (IS_ERR(map))
+>> +               return PTR_ERR(map);
+>> +
+>> +       /* Populate regmap for the regmap backed clocks */
+> 
+> Seems like a useless comment.
+OK, I will remove it.
+> 
+>> +       for (i = 0; i < ARRAY_SIZE(a1_periphs_regmaps); i++)
+>> +               a1_periphs_regmaps[i]->map = map;
+>> +
+> 
+The same with a1-pll.c file, I will modify, too.
+> .
+> 
