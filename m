@@ -2,98 +2,102 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38C4C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44466C3524D
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8804920658
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:13:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktB4pnhK"
+	by mail.kernel.org (Postfix) with ESMTP id 1BF5E20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 10:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580724885;
+	bh=ett86Bst4w/w1XmSmfSTCsp2XAU1cH/u7rk3PBVlB0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VoIon1dQ022ppfRrTO3w9rvJmjBQOyCJ1/cJmDKneQQL2cRCVX+wd54fotCFcxgB0
+	 8SVCtUl9wG5TSMDOIMODCrOPD1CsaiXVoQnRXZYhME88G6gWDFA5SrCK0xU1fepSHG
+	 3QnrP712YYPmnp0KOKTDMIaxk32X7xTB+C1lLohM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbgBCKNc (ORCPT
+        id S1727794AbgBCKOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 05:13:32 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37353 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgBCKNc (ORCPT
+        Mon, 3 Feb 2020 05:14:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40547 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgBCKOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 05:13:32 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so6200379pjb.2;
-        Mon, 03 Feb 2020 02:13:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GD14FMeWoDKUquusWa5QP4XNkdd6IXnIuERNShAs1x4=;
-        b=ktB4pnhKlWRnPkz0racHaBHuc4IRVlnEqRkL7gFlMe/O5nOh48rXm+Sb2bhp49WEFK
-         BfL+re4bXVVbbKa8e9ULQxlulvWoouNli844YmkOhDNmLgQ7CQv9DoFN7ZSAgE6gv3h9
-         rQnNEM577Sal69BSvXTeKFEdLcc3W8FQdNXaOjRCqKGpnVFwQnkov4oXKL6aHPD6YoTP
-         ObrzvVGNgNf6X8E0c44bpGalQZutXWwGmRD/2S7WOFcFIBql+FFrLmAEs2Z8EybK9KCa
-         m3UjpwRmIfnru1/eIqeeZ2FpUCd6vjXOQzkbs2jrQPkk+PIKbHX93KR11VCIhpKiAq1q
-         83Yg==
+        Mon, 3 Feb 2020 05:14:44 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j104so17184815wrj.7;
+        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GD14FMeWoDKUquusWa5QP4XNkdd6IXnIuERNShAs1x4=;
-        b=XQ8F+oyM/Vq9vZkoFY1eHiF72HnvbmFjq5ep7To/zYds07R6yoWaWhpNsJnCImSKjE
-         9NcMBt0YoEDHIuijp8VFaFGLs2JqY9mBg5KZO7PiA89lyrkAUmmL6hBhPw+klamubKhm
-         Hx1cuJn8jcY/ebcr60EY/o0jfM9dsP/sijrTCcdwFPvOqsIqoOBiEzIpy/kyaa0vGiZ7
-         I7Yqmo1m/RlRhhPgKjATe/79k4y+0OMr0tpJkd16B2P8E71nUZHPq2c7SzjMhkw3+KCr
-         SjnAKMyCuMvXjNqRize/rEhpbLqB8AakoYI7/fFbOc5qkJZnKkYPNTnx15I5dhVmwALT
-         juOQ==
-X-Gm-Message-State: APjAAAU0HCgXprCvNGdxT7EAtJVEQ3SrIKM3iWcM4NSoMdTN1jwyPZW6
-        jY7LKHYxl39gtc/bggEYFrMUhcgXXVld03NZM8g=
-X-Google-Smtp-Source: APXvYqwGyhQNbP8YuInSmt7jSMBKWaXjhTPEzV9pZ9Pnd3o4H2NF3Q3L6Ro9oY5ldYGpbcNAhn/s7De7NMoPaHshqNI=
-X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr28825873pjc.20.1580724811635;
- Mon, 03 Feb 2020 02:13:31 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VeTk9NFWqY2AFFX1U47JHNOnYrtYJUipcDdzTnxdTw4=;
+        b=XjGEM5zQuiMM2+w0ue2qncdk/84TqjsZ+tE88qHyRiy82oonsahji6PskEo8i2jy9q
+         6orEtFX1r2LL02m4+WYHRvdqC8m+PNTJHdDqUJKIOKiE2bNYXr3ljyHT91KphRvFS+Ek
+         Gi5WI7GLqhhOezxkVvnCrOuEbGxI4y7v6rY0tcLJ+IM7a6nJhEmRDAqF7+acDBjmqbcY
+         uAl7AKUHXUbBHoqiXx03k9kCGu9NlJJ18ek1pOkF1pPPyyufiIGEs3lH6pVFYOjosqWl
+         LxICDm6M21T9SWDa1TaXjImckV2XXIMCuiBs/PTAInWZHxZ2gV8FFd+FYQTaq9kAvu59
+         1HeQ==
+X-Gm-Message-State: APjAAAX3GFOFHS55aaa0ZRR71hGjvajmjXBEpqtO+sLpVK8uP9GX5jct
+        XGmqUygdmMqLNuTtC9Imgdi9DMpyzg==
+X-Google-Smtp-Source: APXvYqy+FnFfJwsfZztZ3WYAtBH/oqT3NH+T+W2/hO9SuPbGror4fjsAxjEbIcawDdvgCPggf1l6zQ==
+X-Received: by 2002:adf:ff8c:: with SMTP id j12mr14349774wrr.354.1580724882064;
+        Mon, 03 Feb 2020 02:14:42 -0800 (PST)
+Received: from rob-hp-laptop ([212.187.182.163])
+        by smtp.gmail.com with ESMTPSA id k13sm24011191wrx.59.2020.02.03.02.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2020 02:14:41 -0800 (PST)
+Received: (nullmailer pid 814 invoked by uid 1000);
+        Mon, 03 Feb 2020 10:14:40 -0000
+Date:   Mon, 3 Feb 2020 10:14:40 +0000
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH 12/12] dt-bindings: arm: bcm: Convert BCM2835 firmware
+ binding to YAML
+Message-ID: <20200203101440.GA31848@bogus>
+References: <20200202211827.27682-1-f.fainelli@gmail.com>
+ <20200202211827.27682-13-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <20200201124301.21148-1-lukas.bulwahn@gmail.com> <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <20200202124306.54bcabea@cakuba.hsd1.ca.comcast.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:13:23 +0200
-Message-ID: <CAHp75VdVXqz7fab4MKH2jZozx4NGGkQnJyTWHDKCdgSwD2AtpA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: correct entries for ISDN/mISDN section
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        isdn4linux@listserv.isdn4linux.de, netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200202211827.27682-13-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 2, 2020 at 10:45 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> On Sat,  1 Feb 2020 13:43:01 +0100, Lukas Bulwahn wrote:
-> > Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
-> > isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
-> > the terminal slash for the two directories mISDN and hardware. Hence, all
-> > files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
-> > but were considered to be part of "THE REST".
-> >
-> > Rectify the situation, and while at it, also complete the section with two
-> > further build files that belong to that subsystem.
-> >
-> > This was identified with a small script that finds all files belonging to
-> > "THE REST" according to the current MAINTAINERS file, and I investigated
-> > upon its output.
-> >
-> > Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
->
-> Applied to net, thanks!
+On Sun,  2 Feb 2020 13:18:27 -0800, Florian Fainelli wrote:
+> Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
+> Verified with dt_binding_check and dtbs_check.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 --------
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 33 +++++++++++++++++++
+>  2 files changed, 33 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> 
 
-I'm not sure it's ready. I think parse-maintainers.pl will change few
-lines here.
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml: $id: path/filename 'arm/bcm/raspberrypi,bcm2835.yaml' doesn't match actual filename
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1232487
+Please check and re-submit.
