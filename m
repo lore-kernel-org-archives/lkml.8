@@ -2,52 +2,52 @@ Return-Path: <SRS0=ro3C=3X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831CEC35247
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40144C35247
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6B92087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BED20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Feb 2020 16:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580747810;
-	bh=k1u6+l4ImzTwBq1QY2DMDIFsiPThilxBmkl8gjpHXcM=;
+	s=default; t=1580747815;
+	bh=2bw8ONqF5wWv8EMEfFmi4FwVGAIpjIvCxuDNEcyGETE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNjSvGn9GsdqqkDY81y8OvaVavp3BZWCbWdL62lmHagLtiZXSMAxuzAZsr252O1u9
-	 N6+WLPtPb5yo719drFDBbg+fjrpHBOFp9Q619C/J0xQUP5Dxp5ILfkMvui5w5Jy9Vi
-	 /vB0p6fg37cIqDEAM5o0aHFZGYMEcnuXf5i5vRQU=
+	b=z8KtOMuKtvLVY2r8lpx0ajZi+buDWiwaIGVUULWGt0yDPxiERGrgO8ZWI/iHE2jkK
+	 NlFnQCUpkKstKxdJbdHdRyRXAQum+6/P7O2MqpgP4g/I0ZO1v60EZ0dv8OF2yeDKOj
+	 CSJGUw0eST3ZQxcK6TZFatyFuSg0PdhY4y3EtQXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbgBCQgt (ORCPT
+        id S1731239AbgBCQgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Feb 2020 11:36:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
+        Mon, 3 Feb 2020 11:36:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbgBCQgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Feb 2020 11:36:47 -0500
+        id S1730838AbgBCQgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Feb 2020 11:36:49 -0500
 Received: from localhost (unknown [104.132.45.99])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F62A20721;
-        Mon,  3 Feb 2020 16:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96CCF20721;
+        Mon,  3 Feb 2020 16:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580747806;
-        bh=k1u6+l4ImzTwBq1QY2DMDIFsiPThilxBmkl8gjpHXcM=;
+        s=default; t=1580747809;
+        bh=2bw8ONqF5wWv8EMEfFmi4FwVGAIpjIvCxuDNEcyGETE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFMDNelNFEQPWclazUN5nHRle+mO6Yl06mTpXwdtJrEPDQzlbP/HMnh8hcq/COYP/
-         T404B1dOCaDt+spjTNoBcN6IrJvD71WPeruY6grcggB5uSirK/T7gsFg62t1OkxDmm
-         9qLVDXs8EMmCNh7g74WL2pE0r7zR5IyG0+6g42U0=
+        b=jqOupMdTuz363J+xL3v8JMxm7qZY7xTu6Ssget5G6VU0t1PmRForoDnyYlVhPDp5I
+         eUI8KrJEbdpXuHpIaQnkbjZBmiegAzwllVEZXpNsiY+b/k22rzvLYvtm8T4hib0B+D
+         rPR3mxYZZcY2hTb2zd6ESxUkZMTOj1mPBDHmBTyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 78/90] r8152: disable test IO for RTL8153B
-Date:   Mon,  3 Feb 2020 16:20:21 +0000
-Message-Id: <20200203161926.755377982@linuxfoundation.org>
+Subject: [PATCH 5.4 79/90] r8152: avoid the MCU to clear the lanwake
+Date:   Mon,  3 Feb 2020 16:20:22 +0000
+Message-Id: <20200203161926.839801919@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200203161917.612554987@linuxfoundation.org>
 References: <20200203161917.612554987@linuxfoundation.org>
@@ -62,46 +62,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hayes Wang <hayeswang@realtek.com>
 
-[ Upstream commit d7f1b59655efb5a285d227c8f9853a98eab5c2fd ]
+[ Upstream commit 19813162895a696c5814d76e5f8fb6203d70f6e0 ]
 
-For RTL8153B with QFN32, disable test IO. Otherwise, it may cause
-abnormal behavior for the device randomly.
+Avoid the MCU to clear the lanwake after suspending. It may cause the
+WOL fail. Disable LANWAKE_CLR_EN before suspending. Besides,enable it
+and reset the lanwake status when resuming or initializing.
 
 Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/usb/r8152.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 2d3374a373f83..1f61859baa531 100644
+index 1f61859baa531..5f59affa94d0c 100644
 --- a/drivers/net/usb/r8152.c
 +++ b/drivers/net/usb/r8152.c
-@@ -298,6 +298,7 @@
- /* PLA_PHY_PWR */
- #define TX_10M_IDLE_EN		0x0080
- #define PFM_PWM_SWITCH		0x0040
-+#define TEST_IO_OFF		BIT(4)
+@@ -63,6 +63,7 @@
+ #define PLA_LED_FEATURE		0xdd92
+ #define PLA_PHYAR		0xde00
+ #define PLA_BOOT_CTRL		0xe004
++#define PLA_LWAKE_CTRL_REG	0xe007
+ #define PLA_GPHY_INTR_IMR	0xe022
+ #define PLA_EEE_CR		0xe040
+ #define PLA_EEEP_CR		0xe080
+@@ -90,6 +91,7 @@
+ #define PLA_TALLYCNT		0xe890
+ #define PLA_SFF_STS_7		0xe8de
+ #define PLA_PHYSTATUS		0xe908
++#define PLA_CONFIG6		0xe90a /* CONFIG6 */
+ #define PLA_BP_BA		0xfc26
+ #define PLA_BP_0		0xfc28
+ #define PLA_BP_1		0xfc2a
+@@ -286,6 +288,9 @@
+ #define LINK_ON_WAKE_EN		0x0010
+ #define LINK_OFF_WAKE_EN	0x0008
  
- /* PLA_MAC_PWR_CTRL */
- #define D3_CLK_GATED_EN		0x00004000
-@@ -4540,6 +4541,15 @@ static void r8153b_init(struct r8152 *tp)
- 	ocp_data &= ~PLA_MCU_SPDWN_EN;
- 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_MAC_PWR_CTRL3, ocp_data);
- 
-+	if (tp->version == RTL_VER_09) {
-+		/* Disable Test IO for 32QFN */
-+		if (ocp_read_byte(tp, MCU_TYPE_PLA, 0xdc00) & BIT(5)) {
-+			ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_PHY_PWR);
-+			ocp_data |= TEST_IO_OFF;
-+			ocp_write_word(tp, MCU_TYPE_PLA, PLA_PHY_PWR, ocp_data);
-+		}
-+	}
++/* PLA_CONFIG6 */
++#define LANWAKE_CLR_EN		BIT(0)
 +
- 	set_bit(GREEN_ETHERNET, &tp->flags);
+ /* PLA_CONFIG5 */
+ #define BWF_EN			0x0040
+ #define MWF_EN			0x0020
+@@ -342,6 +347,9 @@
+ /* PLA_BOOT_CTRL */
+ #define AUTOLOAD_DONE		0x0002
  
++/* PLA_LWAKE_CTRL_REG */
++#define LANWAKE_PIN		BIT(7)
++
+ /* PLA_SUSPEND_FLAG */
+ #define LINK_CHG_EVENT		BIT(0)
+ 
+@@ -4004,6 +4012,8 @@ static void rtl8152_down(struct r8152 *tp)
+ 
+ static void rtl8153_up(struct r8152 *tp)
+ {
++	u32 ocp_data;
++
+ 	if (test_bit(RTL8152_UNPLUG, &tp->flags))
+ 		return;
+ 
+@@ -4011,6 +4021,15 @@ static void rtl8153_up(struct r8152 *tp)
+ 	r8153_u2p3en(tp, false);
+ 	r8153_aldps_en(tp, false);
+ 	r8153_first_init(tp);
++
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
++	ocp_data |= LANWAKE_CLR_EN;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
++
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG);
++	ocp_data &= ~LANWAKE_PIN;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG, ocp_data);
++
+ 	r8153_aldps_en(tp, true);
+ 
+ 	switch (tp->version) {
+@@ -4029,11 +4048,17 @@ static void rtl8153_up(struct r8152 *tp)
+ 
+ static void rtl8153_down(struct r8152 *tp)
+ {
++	u32 ocp_data;
++
+ 	if (test_bit(RTL8152_UNPLUG, &tp->flags)) {
+ 		rtl_drop_queued_tx(tp);
+ 		return;
+ 	}
+ 
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
++	ocp_data &= ~LANWAKE_CLR_EN;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
++
+ 	r8153_u1u2en(tp, false);
+ 	r8153_u2p3en(tp, false);
+ 	r8153_power_cut_en(tp, false);
+@@ -4465,6 +4490,14 @@ static void r8153_init(struct r8152 *tp)
+ 	r8153_mac_clk_spd(tp, false);
+ 	usb_enable_lpm(tp->udev);
+ 
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
++	ocp_data |= LANWAKE_CLR_EN;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
++
++	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG);
++	ocp_data &= ~LANWAKE_PIN;
++	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG, ocp_data);
++
  	/* rx aggregation */
+ 	ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_USB_CTRL);
+ 	ocp_data &= ~(RX_AGG_DISABLE | RX_ZERO_EN);
 -- 
 2.20.1
 
